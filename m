@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E3C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390CEC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2AF121655
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10774213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MRAi30L3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gjRocc0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfFYMZ3 (ORCPT
+        id S1730973AbfFYM07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:25:29 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:32976 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbfFYMZ2 (ORCPT
+        Tue, 25 Jun 2019 08:26:59 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41038 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729997AbfFYM07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:25:28 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y17so12501581lfe.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:25:27 -0700 (PDT)
+        Tue, 25 Jun 2019 08:26:59 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 205so7256137ljj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:26:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VXFxBqw289PiWNcgire0HT3ql8msXi7Wbz9KDkqpi9s=;
-        b=MRAi30L3bCnSstOAPK/5ckcFQXdc0wInrW51IaGWdmmXBFt61il5F8ZihENHrES6Sz
-         A2gfTv6F6/mUQ1hGF0IliwV+O0FoVXmnwA27MN1197oDkrwe0Hi/euIeh0I/e8zRwLgI
-         B96q10pu6xOvJvT96ewCQmj7xRCeReAq/kigc7RqYiguG/g1LmS2U+Jqm5eZcB10V30P
-         n1xKUvlYhN7Wnj+Yn6gNqa//q0nip2EJKCYm4ov9IZvxiKcc17gouzhVRXMZya7Iff4C
-         lW2YQjDxDHSucaIJuJ9qvDTzQoa0DUBHFUUnsRd1LRv4Ks9d9wHsSNTg7RA2sbTLxnRZ
-         +rTQ==
+        bh=jkM0/+Y2mDTWRWvyb1EfYEosGBa2XCe1MpHMrOCqACs=;
+        b=gjRocc0M0csOsxcltg1nkQWWzkjs3PSER+yR2O1GOwKo2FVeeoBS8PgxAD1E6mjPxY
+         LLT3xmGdPMDMbbTnk6hBta7ypvxPkY6YPvTpZ+01Z0y098PfPKQ/+49XGlm2WDmMh5tl
+         D1coqelf7c3PUCElzY3sJ9LOc4F3XRV8vFhFCXIBISTf3Zg5DyOBweRq306XDmxj3zbr
+         QFf+mbnJOyKWRpw7ox/wP9s7TnI3bxPYYM/t6l1xHEx/ARZvPVDZZXiS28HhVjokMT8L
+         C/AmhzogK4YVADlvOLp6zZpxSrK0oXTk2Wyo8ngs/zRfpv9qxe/Ofch61mG2cQ8oZDX6
+         ZJPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VXFxBqw289PiWNcgire0HT3ql8msXi7Wbz9KDkqpi9s=;
-        b=tbxp51RScw52ATkacKEjR9jczOQ+oc63D8m2MCCI/oHhvg/FXBSBm9Q7EdEbbkFY1o
-         d+UZDgOQA7KfwLNB7RQp8NbYKO95W/kFwbTszCwUiGB0j3v5wP6MlG2D/cj7TkrggKUy
-         MNCGnSDjt/EkGHK6tEWohhRHlik7bfO2bbfypSl75F4zPzTd9vatrrH6KqXepnjfKDlG
-         dY65nyXC7aCDm6iC2u3R/Skv9NdVNH+EoGYtTbXogqTAPt7OCTlV223IPNbYeal7qmbS
-         GSOOI+0VHbCiOWiAdHChGlFNVqzhaKxfwuto7y7qEcOSTTWeU67k0vMdGHpnlFbpMOkk
-         QcCQ==
-X-Gm-Message-State: APjAAAUBBlfe0XPfG9yIW6/B1CMYhBB+xjwsKzuFF3ujsjTM/zLNnpns
-        8dRujvTf38A4F/H+actVRKLFhlBJYj1ZvQ847hd7CQ==
-X-Google-Smtp-Source: APXvYqwMJafEsEK9ql82gdFybiq+Gag7JQbBkAhot7eiscPpABkzdiTqqeOrWV0XFwZvPlNTuzHyscjkjG+lDDOrlRA=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr13951212lfu.141.1561465526510;
- Tue, 25 Jun 2019 05:25:26 -0700 (PDT)
+        bh=jkM0/+Y2mDTWRWvyb1EfYEosGBa2XCe1MpHMrOCqACs=;
+        b=pv9gKvB1DLdr1PU8WI3wJqqCXGNmdvR6SaTRHtjBWA0rgBV7cTFa5bUc1UEnizLUB7
+         BfgUCy7fQv6z9pzRU5hGYAyAdzRpjwDJIeccsXRDKO/HjKAVyk1LNt263+MKvWHJ9l1d
+         PFlbN1kY1i8/PNZx81OAEiBnOJr5HLy2U836+oNiJx0hF+YNEQJMOuFP8akvc2h8p6JB
+         +moBSsoI0/LlJVJdqG2sIGsfiHM6BFvBTtbcI/3twwtxlKjbO58+dL8NfnEm2B8qGgRg
+         WeRf1+kw33v4EF8QHgY0nKjKrYCBR8y2Qi0zdBC52eBp5iqD6AATfvdSweZkjPpfOTdO
+         yNJg==
+X-Gm-Message-State: APjAAAUAQykhknJpQucGfCUNxTa21b3BIbGfQum+l7Hv6D6aDIXe8l1p
+        v5NGBdr2Lw3SjCVviGFaLHcM6rSe4rU81ET3vG9jvw==
+X-Google-Smtp-Source: APXvYqwqmW7K+YRAv/jeZfMAYfAGHtHSP+nnNJ4VnkYeEMfCpom4R1Lx1FjpN+hjQApZV+HFHvgf/yn0v6vmuNYbGmo=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr9060553ljm.180.1561465617100;
+ Tue, 25 Jun 2019 05:26:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617215458.32688-1-chris.packham@alliedtelesis.co.nz> <20190617215458.32688-2-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20190617215458.32688-2-chris.packham@alliedtelesis.co.nz>
+References: <20190617215458.32688-1-chris.packham@alliedtelesis.co.nz> <20190617215458.32688-4-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190617215458.32688-4-chris.packham@alliedtelesis.co.nz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 14:25:15 +0200
-Message-ID: <CACRpkdbg3ewD0gexLk3+nF0ihyhnPPpWj13YDqxgvT_4urhbzg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: mvebu: Document bindings for 98DX1135
+Date:   Tue, 25 Jun 2019 14:26:45 +0200
+Message-ID: <CACRpkdbSS18us3o=v7ki_=8cLXYjfDd8q321xMCounXPh11GAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] pinctrl: mvebu: Add support for MV98DX1135
 To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -83,12 +83,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Mon, Jun 17, 2019 at 11:55 PM Chris Packham
 <chris.packham@alliedtelesis.co.nz> wrote:
 
-> The 98DX1135 is similar to the 98DX4122 except the MPP options differ.
+> The 98DX1135 is a switch chip with an integrated CPU. This is similar to
+> the 98DX4122 except the MPP assignments differ.
 >
 > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Patch applied as uncontroversial.
+Patch applied.
+I just assume this one has no dependency on the clock patches
+so I can merge it separately.
 
 Yours,
 Linus Walleij
