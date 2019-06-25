@@ -2,96 +2,95 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D641C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A1BC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3E22133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB11020652
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="0cm5Hn+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfFYH1B (ORCPT
+        id S1727316AbfFYH2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:27:01 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40695 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfFYH1B (ORCPT
+        Tue, 25 Jun 2019 03:28:18 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:47154 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfFYH2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:27:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e8so16226022otl.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:27:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Qkw0w8lvC08c786EpQGX2PIdXmdvbYBqHXJse34m3o=;
-        b=gvVX5CZyFWHbYmXHjH4/MtD5/k+9SoaguBjYui8eWO5/gSr/8S47ewJAeFvy/vXOOy
-         /ey4NlVB8dE/AUCG8COBU0T6ZDZ9e1ySPOExWcYgUBi7zsYXGAhlenWIpCcO7CUKBpMm
-         5oCo4v7H+eMJvqYUcbpbenYDVCwIU6qLQvJxW77K8xc0ys5q6urslrnUBcJnOuwXJViB
-         TkAMhBwWy7J/YLW5DENmAuqPHK0Un5bheXVMJbuItJli8i0jfLDWV+k6vYCrfL06GQDJ
-         4jpRmOwpCmsvg5TQGbc3rYdMc0GDqy40aP1d3jKOwheZNX/ogzaRfXebmc3bZfZfj8b4
-         o6zA==
-X-Gm-Message-State: APjAAAVjDbL87Z5vS+HQTVxqHvoR/GO2BHdJdOsNJ8JxPJ5Ml/gxSiNJ
-        r6UOyOY8IZ+DwuR8QLtQ9KehPje+puDxoxmb+kA=
-X-Google-Smtp-Source: APXvYqz5kpjmhQHLOOOnAPAkjsha+t1aYf/sUnzuNLLExvWSDtZeQwEE89t+NM6TZLU8/dKbki7oQhlqiOonWEwRSj8=
-X-Received: by 2002:a9d:529:: with SMTP id 38mr16990865otw.145.1561447620546;
- Tue, 25 Jun 2019 00:27:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190614102126.8402-1-hch@lst.de> <CAMuHMdVPU5RQyX4FnHFEhxXZeG3v0uh_-t2FB=vAzQ8_3u-gSw@mail.gmail.com>
- <20190625063228.GA29561@lst.de>
-In-Reply-To: <20190625063228.GA29561@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Jun 2019 09:26:48 +0200
-Message-ID: <CAMuHMdUNwERTRg4MbkkD62EtNhsU7kWVy6x4kB89rYh6ann0Pw@mail.gmail.com>
-Subject: Re: [RFC] switch m68k to use the generic remapping DMA allocator
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Jun 2019 03:28:18 -0400
+Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x5P7QdLL027637;
+        Tue, 25 Jun 2019 16:26:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x5P7QdLL027637
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561447599;
+        bh=5AaDSiMBTC0S/hgXdywuV5MWuEsJ//DnTJVaKA14u9c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0cm5Hn+D125z52GdMOnXdaEPCEsdcEhXfLpSzQ3SCrTKU91clpc4VaBk6CG6PJI0h
+         WjpI3Jsg5/USglOojuGprz2LUCpofbpGn+ANvqa3qdbdOptDHFNpjyTkgKnYy/MiM1
+         i0mAxtxcm8KXCfzsazvZhgmt+/cgo3Qo+uOxI//A3y2Au+LyAqiOq6kAVVNZmZLai8
+         Ib3LI/OjioN6qZVCj1ns1aPeLZF3Uk+q4UzDmlEgljGElYN8zCIQ8KwIGmBDwELgyS
+         UJrK9CuEMGuPQWqJpZ0VisQW4Ks4i/Sed4KSlVWtpf5CzgF1VozLCVf9YMS19JlhGM
+         MV71wsHjwPjFQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/build: add 'set -e' to mkcapflags.sh to delete broken capflags.c
+Date:   Tue, 25 Jun 2019 16:26:22 +0900
+Message-Id: <20190625072622.17679-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Without 'set -e', shell scripts continue running even after any
+error occurs. The missed 'set -e' is a typical bug in shell scripting.
 
-On Tue, Jun 25, 2019 at 8:33 AM Christoph Hellwig <hch@lst.de> wrote:
-> On Mon, Jun 17, 2019 at 08:53:55PM +0200, Geert Uytterhoeven wrote:
-> > On Fri, Jun 14, 2019 at 12:21 PM Christoph Hellwig <hch@lst.de> wrote:
-> > > can you take a look at the (untested) patches below?  They convert m68k
-> > > to use the generic remapping DMA allocator, which is also used by
-> > > arm64 and csky.
-> >
-> > Thanks. But what does this buy us?
->
-> A common dma mapping code base with everyone, including supporting
-> DMA allocations from atomic context, which the documentation and
-> API assume are there, but which don't work on m68k.
+For example, when a disk space shortage occurs while this script is
+running, it actually ends up with generating a truncated capflags.c.
 
-OK, thanks!
+Yet, mkcapflags.sh continues running and exits with 0. So, the build
+system assumes it has succeeded.
 
-> > bloat-o-meter says:
-> >
-> > add/remove: 75/0 grow/shrink: 11/6 up/down: 4122/-82 (4040)
->
-> What do these values stand for?  The code should grow a little as
-> we now need to include the the pool allocator for the above API
-> fix.
+It will not be re-generated in the next invocation of Make since its
+timestamp is newer than that of any of the source files.
 
-Last 3 values are "bytes added/removed (net increase)".
-So this increases the static kernel size by ca. 4 KiB.
+Add 'set -e' so that any error in this script is caught and propagated
+to the build system.
 
-Gr{oetje,eeting}s,
+Since 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special target"),
+Make automatically deletes the target on any failure. So, the broken
+capflags.c will be deleted automatically.
 
-                        Geert
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+ arch/x86/kernel/cpu/mkcapflags.sh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/mkcapflags.sh b/arch/x86/kernel/cpu/mkcapflags.sh
+index d0dfb892c72f..aed45b8895d5 100644
+--- a/arch/x86/kernel/cpu/mkcapflags.sh
++++ b/arch/x86/kernel/cpu/mkcapflags.sh
+@@ -4,6 +4,8 @@
+ # Generate the x86_cap/bug_flags[] arrays from include/asm/cpufeatures.h
+ #
+ 
++set -e
++
+ IN=$1
+ OUT=$2
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
