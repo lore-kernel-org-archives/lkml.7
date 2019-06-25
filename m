@@ -2,149 +2,97 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A463AC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684C5C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798372146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8BC214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KNzfVUUp"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RJvMZ0xf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfFYIfE (ORCPT
+        id S1730621AbfFYIfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:35:04 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55531 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfFYIfD (ORCPT
+        Tue, 25 Jun 2019 04:35:34 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39897 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfFYIfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:35:03 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8YJ8g3531510
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:34:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8YJ8g3531510
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561451660;
-        bh=fiP9agSJnu7+gpj/PqGK/hhgB0/v2ahUu3gAqA2yZws=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=KNzfVUUpbaQpFdTtIxtMX1cK5+X/yGbhNZcTzZkit5EsskbZgg1lwi3eIBFJ0v2Tb
-         ZH4ZuTpdZdnZp9Xetw7PPtkBU84jjvaOqVyxNBI1wTsAXflufBWPLfwxAJq3g3dt5v
-         1DEaXH4KmKFSXtviOknjftIH93cYjl6+xofLY5hBbcRUwXJgNs91N/8ODAfkt7E6Fh
-         3+Y2rPqew0YgNtbdYKvg+toE9fMLFdXEZeDYKUW3KhOYpkT13zJX3BPQcq7LQkBqp2
-         iJN79w/Pk4lmYvkYkMsWBLs0nVltIGpaeiQgbDIEMpvUPugNieT7T2KR33vPTelDUO
-         xS4LtM5xobuig==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8YJKp3531507;
-        Tue, 25 Jun 2019 01:34:19 -0700
-Date:   Tue, 25 Jun 2019 01:34:19 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Patrick Bellasi <tipbot@zytor.com>
-Message-ID: <tip-a87498ace58e23b62a572dc7267579ede4c8495c@git.kernel.org>
-Cc:     viresh.kumar@linaro.org, hpa@zytor.com, pjt@google.com,
-        vincent.guittot@linaro.org, tkjos@google.com,
-        linux-kernel@vger.kernel.org, smuckle@google.com,
-        peterz@infradead.org, mingo@kernel.org, joelaf@google.com,
-        tglx@linutronix.de, dietmar.eggemann@arm.com, balsini@android.com,
-        quentin.perret@arm.com, patrick.bellasi@arm.com,
-        morten.rasmussen@arm.com, rafael.j.wysocki@intel.com,
-        tj@kernel.org, juri.lelli@redhat.com, surenb@google.com,
-        torvalds@linux-foundation.org
-Reply-To: dietmar.eggemann@arm.com, balsini@android.com,
-          tglx@linutronix.de, morten.rasmussen@arm.com,
-          quentin.perret@arm.com, patrick.bellasi@arm.com,
-          rafael.j.wysocki@intel.com, tj@kernel.org, juri.lelli@redhat.com,
-          surenb@google.com, torvalds@linux-foundation.org,
-          viresh.kumar@linaro.org, hpa@zytor.com, pjt@google.com,
-          vincent.guittot@linaro.org, tkjos@google.com, smuckle@google.com,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          mingo@kernel.org, joelaf@google.com
-In-Reply-To: <20190621084217.8167-8-patrick.bellasi@arm.com>
-References: <20190621084217.8167-8-patrick.bellasi@arm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/uclamp: Reset uclamp values on RESET_ON_FORK
-Git-Commit-ID: a87498ace58e23b62a572dc7267579ede4c8495c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 04:35:34 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p24so12001203lfo.6
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 01:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dk5hrs4C1tt/nglJSF3HRfZ1Bert/xei53XsDQtZv3U=;
+        b=RJvMZ0xf0FFZturrGj3s8PD+dfTywtJeBO4V1p/DJyCQhQluUkFNKj08X91XvfwrJz
+         LYTzGaCoqmE8kPTb/FJMJhMTMPB1Q1j0T7j9lwCyYuGYBX6KfVSuZC9k7UjZhIQ4YUzf
+         Zzpe29mDXFXQjNGSPoelt2iWqCLm6UpMYgdCeoFj15fxzCaDsX4lsBug5NKZmS8x4lkF
+         /oFtdAD2gyPlgBWu5ETHYX3IVyBg/2IUZcgY9dDvxlY6Id8TKd7JvCTqHbHu5GQ7xIZI
+         ShCMiXk0NN3dKb4x2CHymD/nE+NsnXo1uivxDiLAMY9dab4IM1SrDQP0F95S2Z2zhQSr
+         gKmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dk5hrs4C1tt/nglJSF3HRfZ1Bert/xei53XsDQtZv3U=;
+        b=YBqjfUa5mV4N1WRIOpXM3ETWB21dv/FagqHm+R40SlALoUA4wKwz+JclvYmpEtjrAF
+         Y4+88JjqDjSZAIJUDxgyO+FfKephrNZHXhf1JAb7KXhOFPl23CVzH0gxHauWQO3co7wH
+         yoYRGb+g9PnuiIkRJ/6LFMk1Axr1wnk3kkJKgSZ7K+41//TZBN1XT7CiOIuW1flwcrJ8
+         ew1N2HEHQAweI3APSedYuibdtiJ+nge54EFn1PstSfwqLjMiUCSMInxvKi6qf2v7QJ1a
+         xWud28ftbZQ60mzizM9MwA6qGXd0MsCwbSHhwP+agW1bag+3jYa1hTYdl0S6iiBUbTT6
+         XFzA==
+X-Gm-Message-State: APjAAAXcuPwtUi7SIjbzoVDgkNLroWIRfUbzNVCjlXmseQnKZWLnqL8Q
+        48pOic01gyBsTgTtGLhMBE+ohdQKk0drMzK/wOC71Q==
+X-Google-Smtp-Source: APXvYqzjF2ta5Anb3SRj80V5eALP3RJBskJMY6xQfTjbjhnPfmrbwahJYk02lH0NXADJ1BXJc7sI0CSzU2xDanIpddo=
+X-Received: by 2002:ac2:446b:: with SMTP id y11mr73052242lfl.158.1561451732515;
+ Tue, 25 Jun 2019 01:35:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1561375453-3135-1-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.9999.1906241421550.22820@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1906241421550.22820@viisi.sifive.com>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Tue, 25 Jun 2019 14:04:56 +0530
+Message-ID: <CAJ2_jOFaS4ZU4m8sE0SFM0sL32Q8fUbg9jbRoEKHU1U2Zqp3YQ@mail.gmail.com>
+Subject: Re: [PATCH] riscv: dts: Re-organize SPI DT nodes
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a87498ace58e23b62a572dc7267579ede4c8495c
-Gitweb:     https://git.kernel.org/tip/a87498ace58e23b62a572dc7267579ede4c8495c
-Author:     Patrick Bellasi <patrick.bellasi@arm.com>
-AuthorDate: Fri, 21 Jun 2019 09:42:08 +0100
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 24 Jun 2019 19:23:47 +0200
+On Tue, Jun 25, 2019 at 2:53 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+> On Mon, 24 Jun 2019, Yash Shah wrote:
+>
+> > As per the General convention, define only device DT node in SOC DTSi
+> > file with status = "disabled" and enable device in Board DTS file with
+> > status = "okay"
+> >
+> > Reported-by: Anup Patel <anup@brainfault.org>
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>
+> This is a good start, but should also cover the other I/O devices in the
+> chip DT file.  The mandatory internal devices, like the PRCI and PLIC, can
+> stay the way they are.
 
-sched/uclamp: Reset uclamp values on RESET_ON_FORK
+Ok, I will send another patch which will cover the other I/O devices
+as well.  Please ignore this patch.
 
-A forked tasks gets the same clamp values of its parent however, when
-the RESET_ON_FORK flag is set on parent, e.g. via:
+- Yash
 
-   sys_sched_setattr()
-      sched_setattr()
-         __sched_setscheduler(attr::SCHED_FLAG_RESET_ON_FORK)
-
-the new forked task is expected to start with all attributes reset to
-default values.
-
-Do that for utilization clamp values too by checking the reset request
-from the existing uclamp_fork() call which already provides the required
-initialization for other uclamp related bits.
-
-Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alessio Balsini <balsini@android.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Quentin Perret <quentin.perret@arm.com>
-Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
-Cc: Steve Muckle <smuckle@google.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Link: https://lkml.kernel.org/r/20190621084217.8167-8-patrick.bellasi@arm.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index e9a669266fa9..ecc304ab906f 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1082,6 +1082,14 @@ static void uclamp_fork(struct task_struct *p)
- 
- 	for_each_clamp_id(clamp_id)
- 		p->uclamp[clamp_id].active = false;
-+
-+	if (likely(!p->sched_reset_on_fork))
-+		return;
-+
-+	for_each_clamp_id(clamp_id) {
-+		uclamp_se_set(&p->uclamp_req[clamp_id],
-+			      uclamp_none(clamp_id), false);
-+	}
- }
- 
- static void __init init_uclamp(void)
+>
+>
+> - Paul
