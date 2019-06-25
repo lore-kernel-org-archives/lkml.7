@@ -2,258 +2,123 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DAFC48BD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B33DC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4B120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2146420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:32:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UXhIQBFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfFYA2k (ORCPT
+        id S1729260AbfFYAcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:28:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50534 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbfFYA2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:28:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 45525ADD5;
-        Tue, 25 Jun 2019 00:28:38 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-csky@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Guo Ren <guoren@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH] csky: dts: Add NationalChip GX6605S
-Date:   Tue, 25 Jun 2019 02:28:29 +0200
-Message-Id: <20190625002829.17409-1-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Mon, 24 Jun 2019 20:32:55 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46743 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfFYAcz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 20:32:55 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d4so24257883edr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nBkBYYZc0s8xxqgkIM92IszAEEryF8hhcj8JV1SU20A=;
+        b=UXhIQBFYD2yMmcFMLp1puhsD2i9OksoE0tmnxr7K5BnwgNkxdyzcQboUIz9i20Lsz4
+         3m1RTIe30lWE24I7cvsZZLLhkZgDOCOIkk9ZbG6EosmpUQjxEvoya52YQrtLyV7zH9ed
+         epQ9slu7TgFvXvJ/O6QSeC0l0d5tfQ1BjsfsF+SeCivQZbElS/gZ18iF66YuOrQ/JcOD
+         zhFe4na0F79DpVOMYVK7Dpm3S34HraMbgjpZtfCF2h2d+s5CnnYrRGOohH7RQ9Wj0HSM
+         Xurwf4MZJZS7xJOqWZLSW/LSVgkO36dAgq2GlDTSVHZBaAcm83Tu0TMT9EcFBYadyl+r
+         OB+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nBkBYYZc0s8xxqgkIM92IszAEEryF8hhcj8JV1SU20A=;
+        b=GL8zZtSaBo8SMsAfjBblh400o+9X+DsXC9gtYPk8nKh8S3kIAgnsw2VCL3V1tX+srK
+         sZcosO96E+3an8wzvIQWDBXJ+PhYYBvuMnEvUTtcKZ9fdHICtjPQ7MlVGerlql2s21fG
+         oNHRoz+skuimbbEu7jFSpEPquhX5FV+lDADgT7rEJcvp0nCz71UIfBBEH88slw5DLSDt
+         QpHntHLUIOv0l0b7lciSzWL62n+O7o126OHTT6/Xy4CVbM0ayWyLkPUs6Rp9gSKU56Cm
+         kBubcvHVi7W0WPuCbN2DZ+avXDWZTOE6T2Gw+wmjxaCZ/99q2l0aejD6/xFWyApuHedF
+         EJ7A==
+X-Gm-Message-State: APjAAAU8cWAphHkg/Xy0hzI8oKpIgPYkAI9ZD/1h2CFuFcfJ3zfEomRR
+        cu/o6Ba3rvTFKyMUN+RjZvgwCWqYg1Oda3D5rUsqRA==
+X-Google-Smtp-Source: APXvYqzllDy+o0mw3P7xV2FKxd3VIsRlZU7rPG+3/Ts1FSD6sOvt+xhoMTQM+Dp6LA2x/CQ75QeVvVj+dgN2KOP+P5k=
+X-Received: by 2002:aa7:cdc6:: with SMTP id h6mr80176428edw.5.1561422773047;
+ Mon, 24 Jun 2019 17:32:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+ <5D036843.2010607@intel.com>
+In-Reply-To: <5D036843.2010607@intel.com>
+From:   Eric Hankland <ehankland@google.com>
+Date:   Mon, 24 Jun 2019 17:32:41 -0700
+Message-ID: <CAOyeoRXr4gmbBPq1RsStoPguiZB8Jxod-irYd3Dm_AGVcQRGSQ@mail.gmail.com>
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+To:     Wei Wang <wei.w.wang@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Device Trees for NationalChip GX6605S SoC (based on CK610 CPU) and its
-dev board. GxLoader expects as filename gx6605s.dtb, so keep that.
-The bootargs are prepared to boot from USB and to output to serial.
+Thanks for your feedback - I'll send out an updated version
+incorporating your comments shortly (assuming you don't have more
+after this).
 
-Compatibles for the SoC and board are left out for now.
+> > +struct kvm_pmu_whitelist {
+> > +       __u64 event_mask;
+>
+> Is this "ARCH_PERFMON_EVENTSEL_EVENT | ARCH_PERFMON_EVENTSEL_UMASK"?
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/csky/boot/dts/gx6605s.dts  | 104 ++++++++++++++++++++++++++++++++++++++++
- arch/csky/boot/dts/gx6605s.dtsi |  82 +++++++++++++++++++++++++++++++
- 2 files changed, 186 insertions(+)
- create mode 100644 arch/csky/boot/dts/gx6605s.dts
- create mode 100644 arch/csky/boot/dts/gx6605s.dtsi
+In most cases, I envision this being the case, but it's possible users
+may want other bits - see response to the next question below.
 
-diff --git a/arch/csky/boot/dts/gx6605s.dts b/arch/csky/boot/dts/gx6605s.dts
-new file mode 100644
-index 000000000000..f7511024ec6f
---- /dev/null
-+++ b/arch/csky/boot/dts/gx6605s.dts
-@@ -0,0 +1,104 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
-+/*
-+ * GX6605S dev board
-+ *
-+ * Copyright (c) 2019 Andreas Färber
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+#include "gx6605s.dtsi"
-+
-+/ {
-+	model = "Nationalchip GX6605S";
-+
-+	aliases {
-+		serial0 = &uart;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8 root=/dev/sda2 rw rootwait";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x04000000>;
-+	};
-+
-+	dummy_apb_clk: dummy-apb-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>; /* guesstimate */
-+		#clock-cells = <0>;
-+	};
-+
-+	buttons {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <100>;
-+		autorepeat;
-+
-+		button5 {
-+			label = "button5";
-+			linux,code = <103>;
-+			gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button6 {
-+			label = "button6";
-+			linux,code = <106>;
-+			gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button7 {
-+			label = "button7";
-+			linux,code = <28>;
-+			gpios = <&gpio 7 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button8 {
-+			label = "button8";
-+			linux,code = <105>;
-+			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button9 {
-+			label = "button9";
-+			linux,code = <108>;
-+			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			label = "led10";
-+			gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led1 {
-+			label = "led11";
-+			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "timer";
-+		};
-+
-+		led2 {
-+			label = "led12";
-+			gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		led3 {
-+			label = "led13";
-+			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+};
-+
-+&timer0 {
-+		clocks = <&dummy_apb_clk>;
-+};
-diff --git a/arch/csky/boot/dts/gx6605s.dtsi b/arch/csky/boot/dts/gx6605s.dtsi
-new file mode 100644
-index 000000000000..956af5674add
---- /dev/null
-+++ b/arch/csky/boot/dts/gx6605s.dtsi
-@@ -0,0 +1,82 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
-+/*
-+ * NationalChip GX6605S SoC
-+ *
-+ * Copyright (c) 2019 Andreas Färber
-+ */
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "csky,ck610";
-+			reg = <0>;
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&intc>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		timer0: timer@20a000 {
-+			compatible = "csky,gx6605s-timer";
-+			reg = <0x0020a000 0x400>;
-+			clocks = <&dummy_apb_clk>;
-+			interrupts = <10>;
-+		};
-+
-+		gpio: gpio@305000 {
-+			compatible = "wd,mbl-gpio";
-+			reg-names = "dirout", "dat", "set", "clr";
-+			reg = <0x00305000 0x4>,
-+			      <0x00305004 0x4>,
-+			      <0x00305008 0x4>,
-+			      <0x0030500c 0x4>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+
-+		uart: serial@403000 {
-+			compatible = "ns16550a";
-+			reg = <0x00403000 0x400>;
-+			interrupts = <15>;
-+			clock-frequency = <29491200>;
-+			reg-shift = <2>;
-+			reg-io-width = <1>;
-+		};
-+
-+		intc: interrupt-controller@500000 {
-+			compatible = "csky,gx6605s-intc";
-+			reg = <0x00500000 0x400>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		ehci_hcd: usb@900000 {
-+			compatible = "generic-ehci";
-+			reg = <0x00900000 0x400>;
-+			interrupts = <59>;
-+		};
-+
-+		ohci_hcd0: usb@a00000 {
-+			compatible = "generic-ohci";
-+			reg = <0x00a00000 0x400>;
-+			interrupts = <58>;
-+		};
-+
-+		ohci_hcd1: usb@b00000 {
-+			compatible = "generic-ohci";
-+			reg = <0x00b00000 0x400>;
-+			interrupts = <57>;
-+		};
-+	};
-+};
--- 
-2.16.4
+> > +       __u16 num_events;
+> > +       __u64 events[0];
+>
+> Can this be __u16?
+> The lower 16 bits (umask+eventsel) already determines what the event is.
 
+It looks like newer AMD processors also use bits 32-35 for eventsel
+(see AMD64_EVENTSEL_EVENT/AMD64_RAW_EVENT_MASK in
+arch/x86/include/asm/perf_event.h or a recent reference guide), though
+it doesn't look like this has made it to pmu_amd.c in kvm yet.
+Further, including the whole 64 bits could enable whitelisting some
+events with particular modifiers (e.g. in_tx=0, but not in_tx=1). I'm
+not sure if whitelisting with specific modifiers will be necessary,
+but we definitely need more than u16 if we want to support any AMD
+events that make use of those bits in the future.
+
+> > +       struct kvm_pmu_whitelist *whitelist;
+>
+> This could be per-VM and under rcu?
+I'll try this out in the next version.
+
+> Why not moving this filter to reprogram_gp_counter?
+>
+> You could directly compare "unit_mask, event_sel"  with whitelist->events[i]
+The reason is that this approach provides uniform behavior whether an
+event is programmed on a fixed purpose counter vs a general purpose
+one. Though I admit it's unlikely that instructions retired/cycles
+wouldn't be whitelisted (and ref cycles can't be programmed on gp
+counters), so it wouldn't be missing too much if I do move this to
+reprogram_gp_counter. What do you think?
+
+> I would directly return -EFAULT here.
+>
+> Same here.
+
+Sounds good - I'll fix that in the next version.
+
+> > +       pmu->whitelist = new;
+>
+> Forgot to copy the whitelist-ed events to new?
+Yep, somehow I deleted the lines that did this - thanks for pointing it out.
