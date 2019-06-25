@@ -2,96 +2,102 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D81EC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4523DC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7216208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D559208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxFQm0f8"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="K/4eFNIq";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FYMt7zlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfFYQ1E (ORCPT
+        id S1729450AbfFYQ1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:27:04 -0400
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:33856 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfFYQ1E (ORCPT
+        Tue, 25 Jun 2019 12:27:43 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60980 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfFYQ1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:27:04 -0400
-Received: by mail-pf1-f176.google.com with SMTP id c85so9754003pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=80CMW1CXgixxE6sp3uxeNp/J1zOPF5jkUw1uJmN2ooA=;
-        b=DxFQm0f8lcGNUUfWeI9tVAbwKiHoayrI4J2XSYTYvcWV8ZVs6z6dxn/PIOWMqNZiOs
-         NJYi0KcOk5FnNh/DsltqF1SaqzZUP/kNGSd4rYx3o0Mu9UksrNXcRozu+Hl7aCK3dKLV
-         kT/Vy4k7fSqvWuSuElS1wrItFrs1fs4YtHfMdflWHkMX/geaIMcPN8tQwpvrcoYDoLEo
-         uLSPMv+awtDaYfwIvNNyWGv21bY3vOA4ftH6pjK32fN2yOznmsTfIv6ViRAreYpYbDIj
-         PmPcWs7zeoIJOf+p+af2jzElTSzCr1sSRyvW+67Mk9T54byLqHXae8dI606kjHKINAkA
-         DuaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=80CMW1CXgixxE6sp3uxeNp/J1zOPF5jkUw1uJmN2ooA=;
-        b=sOkltesvwM8QOq3ak7evG19EKNbyvYQQ6BpMgV7e197xRjgO7HG8C7G+heXNVaTiNy
-         Et8pevJbfXkQhbS7uATPXbPjKJxRXnUj2rDQy4vQcOqQVBQpOq2FNrI+zCK+Wc191mcP
-         uctWTqU1+FwkHwwYkKD26IIfy3vAzXnMj2KU2tyzMo/+t/khxPFInAjQIoq7tC952yjz
-         tXsCWdlznFIg16aarPaz+WaSxrsNcol/49wEhiJrYJvQhuPWspNBSEgW/SE9b0ZNZAod
-         DL0hId93cpK9MeqxBBoBWsI8/k3oreMwjltnOIsegMrff/Kk2itlcGGAdYIFNnlLca8o
-         zHDQ==
-X-Gm-Message-State: APjAAAVHabzA1O96DY0ZwTkV2VwrMP6Jk2aNh+Bo9bsZkMGFtl9zV3Up
-        0Sue6Uf0BBseZhCwChVMsY8/TWOCqDuO1yMMXlMCqg==
-X-Google-Smtp-Source: APXvYqyvmLAzpcjcizKNCO7b7pIAiexKr3wyd2w+TQPA1OgLRCokBKxEK4jllbhIN8ExEmTZ+xPB7+/+eRRtHo+9qQ4=
-X-Received: by 2002:a17:90a:ac11:: with SMTP id o17mr33384070pjq.134.1561480022872;
- Tue, 25 Jun 2019 09:27:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <1561464964.5154.63.camel@lca.pw> <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
- <1561467369.5154.67.camel@lca.pw> <00a78980-6b9c-5d5b-ed01-b28bb34be022@arm.com>
- <1561470705.5154.68.camel@lca.pw> <5113362e-1256-6712-6ce8-9599b1806cf1@arm.com>
- <1561472887.5154.72.camel@lca.pw> <668bbe72-b32b-8cee-ccad-d1f6110c6728@arm.com>
-In-Reply-To: <668bbe72-b32b-8cee-ccad-d1f6110c6728@arm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Jun 2019 09:26:51 -0700
-Message-ID: <CAKwvOdmCFjunXRbninTdqoDGPNJ6b7npgXLAPYGqFZas5ofNjw@mail.gmail.com>
-Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
- breaks clang build
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Jun 2019 12:27:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BB7BF608CE; Tue, 25 Jun 2019 16:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561480061;
+        bh=OQmDurrz4oeNBssRUIUWXCS8QrhdrRt1sbFPXIyNCxA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=K/4eFNIq4GRXMTG6YCm+xJUEsGKVok8IKCvSd7u7fwYRgRSH52ZIWBP4/S/KhB1F8
+         J1wk0dlzTZbUO7/4ercXe1fVz3MuJXfuk3ubHq3/2xMoIP4r+huj9pgmpt/I+gqCTT
+         f1lg6BviW+yDMiehBXM6I4yrkhAC+W+jF23nmwY4=
+Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: amasule@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 147816025A;
+        Tue, 25 Jun 2019 16:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561480060;
+        bh=OQmDurrz4oeNBssRUIUWXCS8QrhdrRt1sbFPXIyNCxA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FYMt7zlKERj993qidX4lwevPK0RPksf8hE013NRIDOBprvkaXDsCqiw78IbcwU4Ws
+         EZ1XT2AsKTrSdkaCmk/1NDJB/tlDBfjj+h4LKeKWrT031B4bBFLowGn+9hfQlvjWri
+         VECFMwPqnSadJg1fgGL5MOKkn73KZEvVRALVfbzY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 147816025A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
+From:   Aniket Masule <amasule@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
+Subject: [PATCH v3 0/4] media: venus: Update clock scaling and core selection
+Date:   Tue, 25 Jun 2019 21:57:20 +0530
+Message-Id: <1561480044-11834-1-git-send-email-amasule@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 7:54 AM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> Hi Qian,
->
-> ...
->
-> >
-> > but clang 7.0 is still use in many distros by default, so maybe this commit can
-> > be fixed by adding a conditional check to use "small" if clang version < 8.0.
-> >
->
-> Could you please verify that the patch below works for you?
+In this patch series, clock scaling and core selection methods are
+updated. Current clock scaling and core selection methods are same
+for vpu4 and previous versions. Introducing load calculations using
+vpp cycles, which indicates the cycles required by video hardware to
+process each macroblock. Clock scaling is now done more precisely using
+vpp cycles. Instance is assigned to core with minimum load, instead of
+of static assignment.
 
-Should it be checking against CONFIG_CLANG_VERSION, or better yet be
-using cc-option macro?
+Changes since v2 addressing the comments:
+ - Codec_data and vpp_cycles have renamed to codec_freq_data and
+   vpp_freq respectively.
+ - Conditional check in patch 4 for checking max cores available
+   is updated to VIDC_CORE_ID_2.
+ - venus_helper_decide_core renamed to venus_helper_set_core.
+ - scale_clocks_vpu4 renamed scale_clocks_v4.
+
+For comment on freq fied in clk_data structure, it is getting initialized
+and used in scale_clocks_v4 function. 
+
+
+Aniket Masule (4):
+  media: venus: Add codec data table
+  media: venus: Update clock scaling
+  media: venus: Add interface for load per core
+  media: venus: Update core selection
+
+ drivers/media/platform/qcom/venus/core.c       |  13 ++
+ drivers/media/platform/qcom/venus/core.h       |  15 ++
+ drivers/media/platform/qcom/venus/helpers.c    | 190 +++++++++++++++++++++++--
+ drivers/media/platform/qcom/venus/helpers.h    |   3 +-
+ drivers/media/platform/qcom/venus/hfi_helper.h |   1 +
+ drivers/media/platform/qcom/venus/hfi_parser.h |   5 +
+ drivers/media/platform/qcom/venus/vdec.c       |   6 +-
+ drivers/media/platform/qcom/venus/venc.c       |   6 +-
+ 8 files changed, 226 insertions(+), 13 deletions(-)
+
 -- 
-Thanks,
-~Nick Desaulniers
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
