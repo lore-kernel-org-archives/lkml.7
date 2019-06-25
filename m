@@ -2,204 +2,283 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A6C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCB4C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FEC20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:36:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OP2fTXcd"
+	by mail.kernel.org (Postfix) with ESMTP id CA9BB20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfFYEgb (ORCPT
+        id S1726838AbfFYEhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:36:31 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34519 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYEgb (ORCPT
+        Tue, 25 Jun 2019 00:37:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24994 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726413AbfFYEhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:36:31 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m29so17053322qtu.1;
-        Mon, 24 Jun 2019 21:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PYGdSGrmZfmtMRAQeIjWMBRqIG6xDBFrIGVgAav8rHY=;
-        b=OP2fTXcd/ihtKT1lLknC8yi44n3afuwSvoSaIF1wAyKbyK6hhd6gBuO2CYdhc9KhrQ
-         Bfehrx8MHErPpXAPIVhZbZwz20A0W0eenHtiehfwhn0dSzUDO1hMfyV9kIbxe+ik0xTL
-         R5F0KEAUGynXOhnOKac00ItRST+tcBSb5wmWd6aYAjl/OzqbR/GSGJ0ElzI8Yh0oksQm
-         GYGN8gbQnqpfpbWqkb3dALvol0VTsRS6UahcDwfzBOcwJzkCrj6srQOPs77Hani8myaS
-         xwqfZL1S9R8w6/HZsIkv9TaxPdlXC9Sg6cmQAo0WM4vokv5MuMHW9XQMJ9fAa8UDCk5U
-         puNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PYGdSGrmZfmtMRAQeIjWMBRqIG6xDBFrIGVgAav8rHY=;
-        b=pMsQndvuF3hJjsbTVtEliZHU3KSQrknoBy2yifhDz9gNPwBs9raC6/i6L4fleAYa3X
-         ybCVSB8lZk+/9eSr95t8pgIJuIpLqD9AKGPiaU97gQV6LMmOxGlwThJDgeA9JI+JEvWd
-         nfM41VV1m4fN9gq/bYRiS88LT9RaaIoDQds8UXKAQGSdDErNf6xrmz0w2i5YY5uZKGkI
-         aGWcQCILNGRBRWj83a4GDWpK3de8Mr1BnrcZRmpJROWAWGyHk9RXEf3quxFrJXQU1soz
-         nVLFZotYelsJrXHCV9SIeCEwnG9x1dGPRhsWE2f1QOR4iLYEXuM1Pw7mNxHQzrlGVVOx
-         zxCQ==
-X-Gm-Message-State: APjAAAWM/rC55axgDE1fC7by+92kIktI6vjmIjEWadCvazGHcghjmIlH
-        lYBbRNIddQFDXSjMdJL5zmwZEt2C1BbrTQA7T1+qXEXqKHY=
-X-Google-Smtp-Source: APXvYqwxd0iiNsB1bFrX8O3LalR5IW+ONRR/Hpb7naEqRQfTuoVI5DCl1U393mEgzv1sf982/7UhTWsAQMYO0onl0DU=
-X-Received: by 2002:ac8:2fb7:: with SMTP id l52mr105916304qta.93.1561437389900;
- Mon, 24 Jun 2019 21:36:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190621084040.GU7221@shao2-debian> <20190621161039.GF1383@mini-arch>
- <CAEf4Bzaajc27=YyMaOa8UFRz=xE7y6E+qLbPBPbvLADO2peXQg@mail.gmail.com>
- <20190621222745.GH1383@mini-arch> <f3aa0dc2-c959-1166-8b09-84781363f0e0@intel.com>
- <CAEf4BzaNBboGeU8xOxyW-aDzEPUQq-LidRzj8V08O=_TynkQOQ@mail.gmail.com> <20190624212422.GA10487@mini-arch>
-In-Reply-To: <20190624212422.GA10487@mini-arch>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 24 Jun 2019 21:36:18 -0700
-Message-ID: <CAEf4BzY5oSY_mzgEr7Jy7+mTUYvg8XeohjHRMZ5GJV7VbrEJ1w@mail.gmail.com>
-Subject: Re: [selftests/bpf] 69d96519db: kernel_selftests.bpf.test_socket_cookie.fail
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     Rong Chen <rong.a.chen@intel.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        bpf <bpf@vger.kernel.org>, lkp@01.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Jun 2019 00:37:35 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P4XfS5005309
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:34 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tbc928x38-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:34 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Tue, 25 Jun 2019 05:37:32 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 25 Jun 2019 05:37:29 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P4bJkf38928884
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 04:37:19 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C82F511C05B;
+        Tue, 25 Jun 2019 04:37:28 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9541011C04A;
+        Tue, 25 Jun 2019 04:37:27 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.35.87])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Jun 2019 04:37:27 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
+        patrick.bellasi@arm.com
+Subject: [RFCv3 0/8] TurboSched: A scheduler for sustaining Turbo Frequencies for longer durations
+Date:   Tue, 25 Jun 2019 10:07:18 +0530
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19062504-0012-0000-0000-0000032C1B4D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062504-0013-0000-0000-000021654EDC
+Message-Id: <20190625043726.21490-1-parth@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 2:24 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
->
-> On 06/24, Andrii Nakryiko wrote:
-> > On Sun, Jun 23, 2019 at 5:59 PM Rong Chen <rong.a.chen@intel.com> wrote:
-> > >
-> > > On 6/22/19 6:27 AM, Stanislav Fomichev wrote:
-> > > > On 06/21, Andrii Nakryiko wrote:
-> > > >> )
-> > > >>
-> > > >> On Fri, Jun 21, 2019 at 9:11 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
-> > > >>> On 06/21, kernel test robot wrote:
-> > > >>>> FYI, we noticed the following commit (built with gcc-7):
-> > > >>>>
-> > > >>>> commit: 69d96519dbf0bfa1868dc8597d4b9b2cdeb009d7 ("selftests/bpf: convert socket_cookie test to sk storage")
-> > > >>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> > > >>>>
-> > > >>>> in testcase: kernel_selftests
-> > > >>>> with following parameters:
-> > > >>>>
-> > > >>>>        group: kselftests-00
-> > > >>>>
-> > > >>>> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> > > >>>> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> > > >>>>
-> > > >>>>
-> > > >>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
-> > > >>>>
-> > > >>>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > > >>>>
-> > > >>>>
-> > > >>>> If you fix the issue, kindly add following tag
-> > > >>>> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > > >>>>
-> > > >>>> # selftests: bpf: test_socket_cookie
-> > > >>>> # libbpf: failed to create map (name: 'socket_cookies'): Invalid
-> > > >>>> # argument
-> > > >>> Another case of old clang trying to create a map that depends on BTF?
-> > > >>> Should we maybe switch those BTF checks in the kernel to return
-> > > >>> EOPNOTSUPP to make it easy to diagnose?
-> > > >> For older compilers that don't generate DATASEC/VAR, you'll see a clear message:
-> > > >>
-> > > >> libbpf: DATASEC '.maps' not found.
-> > > >>
-> > > >> So this must be something else. I just confirmed with clang version
-> > > >> 7.0.20180201 that for ./test_socket_cookie that's the first line
-> > > >> that's emitted on failure.
-> > > > Thanks for checking, I also took a look at the attached kernel_selftests.xz,
-> > > > here is what it has:
-> > > > 2019-06-21 11:58:35 ln -sf /usr/bin/clang-6.0 /usr/bin/clang
-> > > > 2019-06-21 11:58:35 ln -sf /usr/bin/llc-6.0 /usr/bin/llc
-> > > > ...
-> > > > # BTF libbpf test[1] (test_btf_haskv.o): SKIP. No ELF .BTF found
-> > > > # BTF libbpf test[2] (test_btf_nokv.o): SKIP. No ELF .BTF found
-> > > > ...
-> > > > # Test case #0 (btf_dump_test_case_syntax): test_btf_dump_case:71:FAIL
-> > > > # failed to load test BTF: -2
-> > > > # Test case #1 (btf_dump_test_case_ordering): test_btf_dump_case:71:FAIL
-> > > > # failed to load test BTF: -2
-> > > > ...
-> > > >
-> > > > And so on. So there is clearly an old clang that doesn't emit any
-> > > > BTF. And I also don't see your recent abd29c931459 before 69d96519dbf0 in
-> > > > linux-next, that's why it doesn't complain about missing/corrupt BTF.
-> >
-> > Ah, ok, that would explain it. But in any case, clang 6&7 is too old.
-> > Clang 8 or better yet clang 9 (for global data, datasec/var-dependent
-> > stuff) would be great.
-> While we are it: I think I have resolved the BTF story internally,
-> so if you want to go ahead and convert the rest of the tests to
-> BTF format, I would not object anymore ;-)
 
-Glad Clang update went so smooth for you :) I'm going to post an
-update to BTF-defined maps (see my updated proposal for updated
-approach), so might do the rest of conversion at that time.
+This is the 3rd version of the patchset to sustain Turbo frequencies for
+longer durations.
 
->
-> (I didn't expect it to be that easy initially, so sorry if I wasted
-> everyones time arguing about it).
+The previous versions can be found here:
+v2: https://lkml.org/lkml/2019/5/15/1258
+v1: https://lwn.net/Articles/783959/
 
-no worries :)
+The changes in this versions are:
+v[2] -> v[3]:
+- Added a new attribute in task_struct to allow per task jitter
+  classification so that scheduler can use this as request to change wakeup
+  path for task packing
+- Use syscall for jitter classification, removed cgroup based task
+  classification
+- Use mutex over spinlock to get rid of task sleeping problem
+- Changed _Bool->int everywhere
+- Split few patches to have arch specific code separate from core scheduler
+  code
+ToDo:
+- Recompute core capacity only during CPU-Hotplug operation
+- Remove smt capacity 
 
->
-> > > >
-> > > > We need to convince lkp people to upgrade clang, otherwise, I suppose,
-> > > > we'll get more of these reportings after your recent df0b77925982 :-(
-> > >
-> > > Thanks for the clarification, we'll upgrade clang asap.
-> >
-> > Thanks Rong!
-> >
-> > >
-> > > Best Regards,
-> > > Rong Chen
-> > >
-> > >
-> > > >
-> > > >>>> # libbpf: failed to load object './socket_cookie_prog.o'
-> > > >>>> # (test_socket_cookie.c:149: errno: Invalid argument) Failed to load
-> > > >>>> # ./socket_cookie_prog.o
-> > > >>>> # FAILED
-> > > >>>> not ok 15 selftests: bpf: test_socket_cookie
-> > > >>>>
-> > > >>>>
-> > > >>>>
-> > > >>>>
-> > > >>>> To reproduce:
-> > > >>>>
-> > > >>>>          # build kernel
-> > > >>>>        cd linux
-> > > >>>>        cp config-5.2.0-rc2-00598-g69d9651 .config
-> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
-> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
-> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
-> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
-> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
-> > > >>>>
-> > > >>>>
-> > > >>>>          git clone https://github.com/intel/lkp-tests.git
-> > > >>>>          cd lkp-tests
-> > > >>>>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> > > >>>>
-> > > >>>>
-> > > >>>>
-> > > >>>> Thanks,
-> > > >>>> Rong Chen
-> > > >>>>
-> > > >> <mega snip>
+v[1] -> v[2]:
+- No CPU bound tasks' classification, only jitter tasks are classified from
+  the cpu cgroup controller
+- Use of Spinlock rather than mutex to count number of jitters in the
+  system classified from cgroup
+- Architecture specific implementation of Core capacity multiplication
+  factor changes dynamically based on the number of active threads in the
+  core
+- Selection of non idle core in the system is bounded by DIE domain
+- Use of UCLAMP mechanism to classify jitter tasks
+- Removed "highutil_cpu_mask", and rather uses sd for DIE domain to find
+  better fit
+
+
+
+Abstract
+========
+
+The modern servers allows multiple cores to run at range of frequencies
+higher than rated range of frequencies. But the power budget of the system
+inhibits sustaining these higher frequencies for longer durations.
+
+However when certain cores are put to idle states, the power can be
+effectively channelled to other busy cores, allowing them to sustain the
+higher frequency.
+
+One way to achieve this is to pack tasks onto fewer cores keeping others
+idle, but it may lead to performance penalty for such tasks and sustaining
+higher frequencies proves to be of no benefit. But if one can identify
+unimportant low utilization tasks which can be packed on the already active
+cores then waking up of new cores can be avoided. Such tasks are short
+and/or bursty "jitter tasks" and waking up new core is expensive for such
+case.
+
+Current CFS algorithm in kernel scheduler is performance oriented and hence
+tries to assign any idle CPU first for the waking up of new tasks. This
+policy is perfect for major categories of the workload, but for jitter
+tasks, one can save energy by packing them onto the active cores and allow
+those cores to run at higher frequencies.
+
+These patch-set tunes the task wake up logic in scheduler to pack
+exclusively classified jitter tasks onto busy cores. The work involves the
+jitter tasks classifications by using syscall based mechanisms.
+
+In brief, if we can pack jitter tasks on busy cores then we can save power
+by keeping other cores idle and allow busier cores to run at turbo
+frequencies, patch-set tries to meet this solution in simplest manner.
+Though, there are some challenges in implementing it(like smt_capacity,
+un-needed arch hooks, etc) and I'm trying to work around that, it would be
+great to have a discussion around this patches.
+
+
+Implementation
+==============
+
+These patches uses UCLAMP mechanism[2] used to clamp utilization from the
+userspace, which can be used to classify the jitter tasks. The task wakeup
+logic uses this information to pack such tasks onto cores which are already
+running busy with CPU intensive tasks. The task packing is done at
+`select_task_rq_fair` only so that in case of wrong decision load balancer
+may pull the classified jitter tasks for maximizing performance.
+
+Any tasks clamped with cpu.util.max=1 (with sched_setattr syscall) are
+classified as jitter tasks. We define a core to be non-idle if it is over
+12.5% utilized of its capacity; the jitters are packed over these cores
+using First-fit approach.
+
+To demonstrate/benchmark, one can use a synthetic workload generator
+`turbo_bench.c`[1] available at
+https://github.com/parthsl/tools/blob/master/benchmarks/turbo_bench.c
+
+Following snippet demonstrates the use of TurboSched feature:
+```
+i=8; ./turbo_bench -t 30 -h $i -n $((i*2)) -j
+```
+
+Current implementation uses only jitter classified tasks to be packed on
+the first busy cores, but can be further optimized by getting userspace
+input of important tasks and keeping track of such tasks. This leads to
+optimized searching of non idle cores and also more accurate as userspace
+hints are safer than auto classified busy cores/tasks.
+
+
+Result
+======
+
+The patch-set proves to be useful for the system and the workload where
+frequency boost is found to be useful than packing tasks into cores. IBM
+POWER 9 system shows the benefit for a workload can be up to 13%.
+
+                Performance benefit of TurboSched w.r.t. CFS 
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+15 +-+                                  Performance benefit in %       +-+
+   |                         **                                          |
+   |                         ** **                                       |
+10 +-+                       ** ** **                                  +-+
+   |                         ** ** **                                    |
+   |                         ** ** **                                    |
+ 5 +-+                 ** ** ** ** **    **                            +-+
+   |                   ** ** ** ** ** ** ** **                           |
+   |                   ** ** ** ** ** ** ** ** ** **                     |
+   |                 * ** ** ** ** ** ** ** ** ** ** ** *                |
+ 0 +-+** ** ** ** ** * ** ** ** ** ** ** ** ** ** ** ** * ** ** ** ** **-+
+   |  ** ** ** **                                                        |
+   |  **                                                                 |
+-5 +-+                                                                 +-+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+      2  3  4  5  6  7 8  9 10 11 12 13 14 15 16 17 18 1920 21 22 23 24   
+                           No. of workload threads                        
+
+
+                      Frequency benefit of TurboSched w.r.t. CFS
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+15 +-+                                    Frequency benefit in %       +-+
+   |                         **                                          |
+   |                         **                                          |
+10 +-+            **         **                                        +-+
+   |              **         ** **                                       |
+   |        **    ** * **    ** **                                       |
+ 5 +-+      ** ** ** * ** ** ** **                                     +-+
+   |     ** ** ** ** * ** ** ** **    **                                 |
+   |  ** ** ** ** ** * ** ** ** ** ** **                                 |
+   |  ** ** ** ** ** * ** ** ** ** ** ** ** ** **                        |
+ 0 +-+** ** ** ** ** * ** ** ** ** ** ** ** ** ** ** ** * ** ** ** ** **-+
+   |                                                                     |
+   |                                                                     |
+-5 +-+                                                                 +-+
+   |  +  +  +  +  +  + +  +  +  +  +  +  +  +  +  +  +  + +  +  +  +  +  |
+   +--+--+--+--+--+--+-+--+--+--+--+--+--+--+--+--+--+--+-+--+--+--+--+--+
+      2  3  4  5  6  7 8  9 10 11 12 13 14 15 16 17 18 1920 21 22 23 24   
+                             No. of workload threads                      
+
+ 
+These numbers are w.r.t. `turbo_bench.c` multi-threaded test benchmark
+which can create two kinds of tasks: CPU bound (High Utilization) and
+Jitters (Low Utilization). N in X-axis represents N-CPU bound and N-Jitter
+tasks spawned.
+
+
+Series organization
+==============
+- Patches [01-03]: Jitter tasks classification using syscall
+- Patches [04-05]: Defines Core Capacity to limit task packing
+- Patches [06-08]: Tune CFS task wakeup logic to pack tasks onto busy
+  cores
+
+Series can be applied on top of Patrick Bellasi's UCLAMP RFCv9[2]
+patches with branch on tip/sched/core and UCLAMP_TASK_GROUP config
+options enabled.
+
+
+References
+==========
+
+[1] "Turbo_bench: Synthetic workload generator"
+https://github.com/parthsl/tools/blob/master/benchmarks/turbo_bench.c
+
+[2] "Patrick Bellasi, Add utilization clamping support"
+https://lkml.org/lkml/2019/5/15/212
+
+
+
+Parth Shah (8):
+  sched/core: Add manual jitter classification using sched_setattr
+    syscall
+  sched: Introduce switch to enable TurboSched mode
+  sched/core: Update turbo_sched count only when required
+  sched/fair: Define core capacity to limit task packing
+  powerpc: Define Core Capacity for POWER systems
+  sched/fair: Tune task wake-up logic to pack jitter tasks
+  sched/fair: Bound non idle core search within LLC domain
+  powerpc: Set turbo domain to NUMA node for task packing
+
+ arch/powerpc/include/asm/topology.h |   7 ++
+ arch/powerpc/kernel/smp.c           |  38 ++++++++
+ include/linux/sched.h               |   6 ++
+ kernel/sched/core.c                 |  35 +++++++
+ kernel/sched/fair.c                 | 141 +++++++++++++++++++++++++++-
+ kernel/sched/sched.h                |   9 ++
+ 6 files changed, 235 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
+
