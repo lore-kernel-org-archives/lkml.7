@@ -2,73 +2,110 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA2FC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE31C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B786D208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0C8213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfFYNZU (ORCPT
+        id S1729600AbfFYN0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:25:20 -0400
-Received: from mga12.intel.com ([192.55.52.136]:10373 "EHLO mga12.intel.com"
+        Tue, 25 Jun 2019 09:26:40 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53564 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbfFYNZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:25:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 06:25:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
-   d="scan'208";a="152298125"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2019 06:25:17 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hflRj-0002pk-OM; Tue, 25 Jun 2019 16:25:15 +0300
-Date:   Tue, 25 Jun 2019 16:25:15 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        wsa@the-dreams.de, jarkko.nikula@linux.intel.com,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, benjamin.tissoires@redhat.com,
-        jbroadus@gmail.com, patches@opensource.cirrus.com
-Subject: Re: [PATCH v6 4/7] i2c: core: Make i2c_acpi_get_irq available to the
- rest of the I2C core
-Message-ID: <20190625132515.GA9224@smile.fi.intel.com>
-References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
- <20190621100815.12417-5-ckeepax@opensource.cirrus.com>
- <20190625115011.GE2640@lahna.fi.intel.com>
- <20190625124245.GC54126@ediswmail.ad.cirrus.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625124245.GC54126@ediswmail.ad.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726916AbfFYN0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:26:39 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 850BD200BEC;
+        Tue, 25 Jun 2019 15:26:37 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7461C20077B;
+        Tue, 25 Jun 2019 15:26:37 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E7B6B2061E;
+        Tue, 25 Jun 2019 15:26:36 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mm: Init rates and parents configs for clocks
+Date:   Tue, 25 Jun 2019 16:26:31 +0300
+Message-Id: <1561469191-26840-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 01:42:45PM +0100, Charles Keepax wrote:
-> On Tue, Jun 25, 2019 at 02:50:11PM +0300, Mika Westerberg wrote:
+Add the initial configuration for clocks that need default parent and rate
+setting. This is based on the vendor tree clock provider parents and rates
+configuration except this is doing the setup in dts rather than using clock
+consumer API in a clock provider driver.
 
-> I would be happy to squash the two patches, and go back to the
-> i2c_client approach, if that was preferred and  as long as Andy
-> doesn't mind.
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 36 +++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-I don't.
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 232a741..ab92108 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -451,6 +451,42 @@
+ 					 <&clk_ext3>, <&clk_ext4>;
+ 				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+ 					      "clk_ext3", "clk_ext4";
++				assigned-clocks = <&clk IMX8MM_CLK_AUDIO_AHB>,
++						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
++						<&clk IMX8MM_SYS_PLL3>,
++						<&clk IMX8MM_VIDEO_PLL1>,
++						<&clk IMX8MM_CLK_NOC>,
++						<&clk IMX8MM_CLK_PCIE1_CTRL>,
++						<&clk IMX8MM_CLK_PCIE1_PHY>,
++						<&clk IMX8MM_CLK_CSI1_CORE>,
++						<&clk IMX8MM_CLK_CSI1_PHY_REF>,
++						<&clk IMX8MM_CLK_CSI1_ESC>,
++						<&clk IMX8MM_CLK_DISP_AXI>,
++						<&clk IMX8MM_CLK_DISP_APB>;
++				assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_800M>,
++						<0>,
++						<0>,
++						<0>,
++						<&clk IMX8MM_SYS_PLL3_OUT>,
++						<&clk IMX8MM_SYS_PLL2_250M>,
++						<&clk IMX8MM_SYS_PLL2_100M>,
++						<&clk IMX8MM_SYS_PLL2_1000M>,
++						<&clk IMX8MM_SYS_PLL2_1000M>,
++						<&clk IMX8MM_SYS_PLL1_800M>,
++						<&clk IMX8MM_SYS_PLL2_1000M>,
++						<&clk IMX8MM_SYS_PLL1_800M>;
++				assigned-clock-rates = <400000000>,
++							<400000000>,
++							<750000000>,
++							<594000000>,
++							<0>,
++							<0>,
++							<0>,
++							<0>,
++							<0>,
++							<0>,
++							<500000000>,
++							<200000000>;
+ 			};
+ 
+ 			src: reset-controller@30390000 {
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.7.4
 
