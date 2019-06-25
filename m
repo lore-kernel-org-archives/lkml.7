@@ -2,231 +2,175 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7011C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4E1C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9622C208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561479840;
-	bh=pJcCkyDo6kSR67LdVMnWHglk4ZS9fFq3zCHNdWbskvQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hdIO+BaJv4rv3dB1OCjZTWhxxsBnMOzb7l2+NAeusqBxZ1K/DpW4qwy8FFJQR8kJi
-	 DSmVcnVdtFNjjT/4DNrRCv/oSgMo1wKasht9WMB4w5F8AXCwVGADxyZJwCw+yJs5DI
-	 10C6UaTrU0ZD8V3lE5MGDpHTPk5KjeNoK8dRrk2E=
+	by mail.kernel.org (Postfix) with ESMTP id CC40A208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:25:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cMT8vG86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfFYQX7 (ORCPT
+        id S1728743AbfFYQZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:23:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34545 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfFYQX6 (ORCPT
+        Tue, 25 Jun 2019 12:25:06 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45786 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfFYQZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:23:58 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n5so17900452otk.1;
-        Tue, 25 Jun 2019 09:23:57 -0700 (PDT)
+        Tue, 25 Jun 2019 12:25:06 -0400
+Received: by mail-io1-f65.google.com with SMTP id e3so834201ioc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9MBXjiD979h+FiHJN8+t7NOeVh1GY/H389vrTRT+gaM=;
+        b=cMT8vG86Hg6neVu4tnHP4RQWf7KrqRGjMRZpr6M4IqNH71xoA2wOv6pWVSAMl9MEvv
+         jQ3jtKXoZUg0yBUD+miNwpnAzUXJj6MdM7QOrrpjJj2j2EQ/XjCLnWxCtUazzaOMGT8V
+         xMo7N7953TL1jVcw1m9EgimE5cBbiSix2UErpzX9Q4qJx5blYFlpv+RyjiMpfVFfR03C
+         kTz3LjQsPv8foYG9mPl7xGZ4SwrqDkXrmaB2LHCgqcUS105Yjz17GhaUqlgI9mX8Nhi4
+         qzhTHqG5AXUinw6GuCti0de80izSdiZih2WbfUANmI/0QZAsnaG+McztDmIWHRKIZfx/
+         l7iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uSdP7UKm4WLYMLtVhLBpxY7TViBn/YrfzYDpWCwidcM=;
-        b=OdxwhvVfCoFbWlhpErwJ6LSoeICrOtJDh2BwBvXnXQ6ym/4LJjiA1qZIea5W9Ocr68
-         +BxTfPRrtakB3Tv3PxX1hn+j+5YVofz3HqXwaQDcPj9zw1bg0SHlsKkNS8GV4kow+H+k
-         IlnqekOg9pnuUlaOjcL2W8aE/nj5zjxONN164S+Qr7o+52lKBAOYYLFgitMYkZu0aQPr
-         6XGN/dVr5x/ZmrTtHWnqCNylNe0RPGD+oVEFPqKl81fJSZubupoTH9/xoGb1VmUq4ukQ
-         LA9s1wT7l/vQ671RcQObMZlUrJsbaNMW97GNIl1z/8sSLOlyvU3Y3zQmlengrzaLsOzy
-         w7PQ==
-X-Gm-Message-State: APjAAAULED1QGrGgh+URAy6uDokucNmUovjg3g0O+KrI9hz0LyqM4QwU
-        X3Jgas6JNFMJ1MlBaHEke+2jAYUwTqe4RvNbkI8=
-X-Google-Smtp-Source: APXvYqwwUsY5xStaihgCfS3kxVuGmJgr1opwxgHBqNXcDzYTr9GEsLR5kWCakYY4KXAsFNz25LejwnwxCvkAc/7My14=
-X-Received: by 2002:a05:6830:8a:: with SMTP id a10mr5881905oto.167.1561479837395;
- Tue, 25 Jun 2019 09:23:57 -0700 (PDT)
+        bh=9MBXjiD979h+FiHJN8+t7NOeVh1GY/H389vrTRT+gaM=;
+        b=fhseudJqx9+hmOWd3kxrY17R6Q5KtZhClif9/4BvY82S5IN+xyboImWXM7eKpeT/wC
+         zFD+LGYqG0tn8kr3sIUTv8j2ce3jmJ4BF65bgh2GEGEMHhbGbXpTy3DaCZTvsGbNAqyk
+         kqYojKvXOfvQNYruTR7pl4jgQTVQmpSC8+RiUGLZkuv/m2afHLvEy5Z5gYUw4fPZvUgb
+         Olrg/a4tx0PaDOnJeTWJhSv3b+DW4Yjoygi6jNZUwQscHyuaXw+Xo1zSKSdGmxlzrR+O
+         okVn83wnaNEBGND/zWIVTdJfE4pv3U4GnsC2Mu0o2hKTYTHygsWrhaeXDpGS2Y0SNyr0
+         CELg==
+X-Gm-Message-State: APjAAAUxNvjAcIDQEl3bxlg4+pPBEfMcz/fBOa3Wi6vLNwHfjiFokEEa
+        SaSyjjke0NJf/syMa74SRrvqaevyF+XO1csjNLhAiQ==
+X-Google-Smtp-Source: APXvYqy/1yx6pCml0+o4hg0PH5iRgFbi5lBDtqd5gF0EH2yP5Hk/kC1hI6M/XU+t5NixF+fW5eWMOsVGyDE8QL2GR+E=
+X-Received: by 2002:a5e:820a:: with SMTP id l10mr43998333iom.283.1561479904800;
+ Tue, 25 Jun 2019 09:25:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <1668247.RaJIPSxJUN@kreacher> <CAJZ5v0hdtXqoK84DpYtyMSCnkR9zOHFiUPAzWZDtkFmEjyWD1g@mail.gmail.com>
- <CAJZ5v0gGdXmgc_9r2rbiadq4e31hngpjYQ40QoC6C0z19da_hQ@mail.gmail.com> <2287147.DxjcvLeq6l@kreacher>
-In-Reply-To: <2287147.DxjcvLeq6l@kreacher>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Jun 2019 18:23:46 +0200
-Message-ID: <CAJZ5v0gU9OedmZBNDGefG3GjS7FHRmgQ67eOcr2vXRrAg3zZbg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: PM: Skip devices in D0 for suspend-to-idle
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190620003244.261595-1-ndesaulniers@google.com>
+ <20190620074640.GA27228@brain-police> <CAKv+Gu_KCFCVxw_zAfzUf8DjD4DmhvaJEoqBsX_SigOse_NwYw@mail.gmail.com>
+ <CAKwvOdmQ+WdD8nvLz_VB_5atDi56fv485Xsn+mHJZKnyj6L-JA@mail.gmail.com>
+ <20190624095749.wasjfrgcda7ygdr5@willie-the-truck> <CAKv+Gu8G2GQGxmcAAy1XQ5gkN-2fJSWAKCQQm9T4skYdh5cT3Q@mail.gmail.com>
+ <20190625153918.GA53763@arrakis.emea.arm.com> <CAKv+Gu8Kz8fN-xKoEqPBiKWaEza6wUkbGxbKPPZxe14QzYLbJQ@mail.gmail.com>
+ <20190625160350.GC53763@arrakis.emea.arm.com>
+In-Reply-To: <20190625160350.GC53763@arrakis.emea.arm.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 25 Jun 2019 18:24:53 +0200
+Message-ID: <CAKv+Gu_DqkptEW8pN_XGcOGhBFqD=d-6NeC1OL==UvVb-+vbVQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: update and enable CONFIG_RANDOMIZE_BASE
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Olof Johansson <olof@lixom.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 1:09 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+On Tue, 25 Jun 2019 at 18:03, Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> On Tuesday, June 25, 2019 12:20:26 AM CEST Rafael J. Wysocki wrote:
-> > On Mon, Jun 24, 2019 at 11:37 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Mon, Jun 24, 2019 at 2:43 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+> On Tue, Jun 25, 2019 at 05:42:49PM +0200, Ard Biesheuvel wrote:
+> > On Tue, 25 Jun 2019 at 17:39, Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > On Mon, Jun 24, 2019 at 12:06:18PM +0200, Ard Biesheuvel wrote:
+> > > > On Mon, 24 Jun 2019 at 11:57, Will Deacon <will@kernel.org> wrote:
+> > > > > Thanks for having a look. It could be that we've fixed the issue Catalin was
+> > > > > running into in the past -- he was going to see if the problem persists with
+> > > > > mainline, since it was frequent enough that it was causing us to ignore the
+> > > > > results from our testing infrastructure when RANDOMIZE_BASE=y.
 > > > >
-> > > > Hi Rafael,
-> > > >
-> > > > On 13/06/2019 22:59, Rafael J. Wysocki wrote:
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > Commit d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > > > attempted to avoid a problem with devices whose drivers want them to
-> > > > > stay in D0 over suspend-to-idle and resume, but it did not go as far
-> > > > > as it should with that.
-> > > > >
-> > > > > Namely, first of all, the power state of a PCI bridge with a
-> > > > > downstream device in D0 must be D0 (based on the PCI PM spec r1.2,
-> > > > > sec 6, table 6-1, if the bridge is not in D0, there can be no PCI
-> > > > > transactions on its secondary bus), but that is not actively enforced
-> > > > > during system-wide PM transitions, so use the skip_bus_pm flag
-> > > > > introduced by commit d491f2b75237 for that.
-> > > > >
-> > > > > Second, the configuration of devices left in D0 (whatever the reason)
-> > > > > during suspend-to-idle need not be changed and attempting to put them
-> > > > > into D0 again by force is pointless, so explicitly avoid doing that.
-> > > > >
-> > > > > Fixes: d491f2b75237 ("PCI: PM: Avoid possible suspend-to-idle issue")
-> > > > > Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > >
-> > > > I have noticed a regression in both the mainline and -next branches on
-> > > > one of our boards when testing suspend. The bisect is point to this
-> > > > commit and reverting on top of mainline does fix the problem. So far I
-> > > > have not looked at this in close detail but kernel log is showing ...
+> > > > I had no idea this was the case. I can look into it if we are still
+> > > > seeing failures.
 > > >
-> > > Can you please collect a log like that, but with dynamic debug in
-> > > pci-driver.c enabled?
+> > > I've seen the panic below with 5.2-rc1, defconfig + RANDOMIZE_BASE=y in
+> > > a guest on TX2. It takes a few tries to trigger just with kaslr,
+> > > enabling lots of other DEBUG_* options makes the failures more
+> > > deterministic. I can't really say it's kaslr's fault here, only that I
+> > > used to consistently get it in this configuration. For some reason, I
+> > > can no longer reproduce it on arm64 for-next/core (or maybe it just
+> > > takes more tries and my script doesn't catch this).
 > > >
-> > > Note that reverting this commit is rather out of the question, so we
-> > > need to get to the bottom of the failure.
+> > > The fault is in the ip_tables module, the __this_cpu_read in
+> > > xt_write_recseq_begin() inlined in ipt_do_table(). The disassembled
+> > > sequence in my build:
+> > >
+> > > 0000000000000188 <ipt_do_table>:
+> > > ...
+> > >      258:       d538d080        mrs     x0, tpidr_el1
+> > >      25c:       aa1303f9        mov     x25, x19
+> > >      260:       b8606b34        ldr     w20, [x25, x0]
 > >
-> > I suspect that there is a problem with the pm_suspend_via_firmware()
-> > check which returns 'false' on the affected board, but the platform
-> > actually removes power from devices left in D0 during suspend.
+> > This was fixed recently by
 > >
-> > I guess it would be more appropriate to check something like
-> > pm_suspend_no_platform() which would return 'true' in the
-> > suspend-to-idle patch w/ ACPI.
+> > arm64/kernel: kaslr: reduce module randomization range to 2 GB
+> >
+> > (and arm64/module: deal with ambiguity in PRELxx relocation ranges to
+> > some extent)
 >
-> So I wonder if the patch below makes any difference?
+> Thanks. This explains it.
+>
+> And another weird case that triggers only with 64K pages, KASan and
+> KASLR combination (guest on TX2). My test script modprobes all the
+> modules it finds installed (including some test kernel modules like lock
+> torture). At some point during modprobing, vmalloc trips over the
+> WARN_ON(!pte_none(*pte)) in vmap_pte_range():
+>
 
-Mika, can you please test this one in combination with the other
-changes we've been working on?
+When KASAN and KASLR are both enabled, modules are allocated in the
+dedicated module window, since the vmalloc space is already shadowed
+by KASAN zero pages and so the modules must be kept out of it. since
+they have their own real shadow pages that are allocated on demand.
 
-I really don't expect to see problems, but just to be sure ...
+Looking at the backtrace, it seems like the failure may be due to the
+shadow space clashing, probably because the top of the module region
+exceeds MODULES_END.
 
-> ---
->  drivers/pci/pci-driver.c |    8 ++++----
->  include/linux/suspend.h  |   26 ++++++++++++++++++++++++--
->  kernel/power/suspend.c   |    3 +++
->  3 files changed, 31 insertions(+), 6 deletions(-)
->
-> Index: linux-pm/include/linux/suspend.h
-> ===================================================================
-> --- linux-pm.orig/include/linux/suspend.h
-> +++ linux-pm/include/linux/suspend.h
-> @@ -209,8 +209,9 @@ extern int suspend_valid_only_mem(suspen
->
->  extern unsigned int pm_suspend_global_flags;
->
-> -#define PM_SUSPEND_FLAG_FW_SUSPEND     (1 << 0)
-> -#define PM_SUSPEND_FLAG_FW_RESUME      (1 << 1)
-> +#define PM_SUSPEND_FLAG_FW_SUSPEND     BIT(0)
-> +#define PM_SUSPEND_FLAG_FW_RESUME      BIT(1)
-> +#define PM_SUSPEND_FLAG_NO_PLATFORM    BIT(2)
->
->  static inline void pm_suspend_clear_flags(void)
->  {
-> @@ -227,6 +228,11 @@ static inline void pm_set_resume_via_fir
->         pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
->  }
->
-> +static inline void pm_set_suspend_no_platform(void)
-> +{
-> +       pm_suspend_global_flags |= PM_SUSPEND_FLAG_NO_PLATFORM;
-> +}
-> +
->  /**
->   * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
->   *
-> @@ -268,6 +274,22 @@ static inline bool pm_resume_via_firmwar
->         return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
->  }
->
-> +/**
-> + * pm_suspend_no_platform - Check if platform may change device power states.
-> + *
-> + * To be called during system-wide power management transitions to sleep states
-> + * or during the subsequent system-wide transitions back to the working state.
-> + *
-> + * Return 'true' if the power states of devices remain under full control of the
-> + * kernel throughout the system-wide suspend and resume cycle in progress (that
-> + * is, if a device is put into a certain power state during suspend, it can be
-> + * expected to remain in that state during resume).
-> + */
-> +static inline bool pm_suspend_no_platform(void)
-> +{
-> +       return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_NO_PLATFORM);
-> +}
-> +
->  /* Suspend-to-idle state machnine. */
->  enum s2idle_states {
->         S2IDLE_STATE_NONE,      /* Not suspended/suspending. */
-> Index: linux-pm/kernel/power/suspend.c
-> ===================================================================
-> --- linux-pm.orig/kernel/power/suspend.c
-> +++ linux-pm/kernel/power/suspend.c
-> @@ -493,6 +493,9 @@ int suspend_devices_and_enter(suspend_st
->
->         pm_suspend_target_state = state;
->
-> +       if (state == PM_SUSPEND_TO_IDLE)
-> +               pm_set_suspend_no_platform();
-> +
->         error = platform_suspend_begin(state);
->         if (error)
->                 goto Close;
-> Index: linux-pm/drivers/pci/pci-driver.c
-> ===================================================================
-> --- linux-pm.orig/drivers/pci/pci-driver.c
-> +++ linux-pm/drivers/pci/pci-driver.c
-> @@ -870,7 +870,7 @@ static int pci_pm_suspend_noirq(struct d
->                         pci_dev->bus->self->skip_bus_pm = true;
->         }
->
-> -       if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-> +       if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
->                 dev_dbg(dev, "PCI PM: Skipped\n");
->                 goto Fixup;
->         }
-> @@ -925,10 +925,10 @@ static int pci_pm_resume_noirq(struct de
->         /*
->          * In the suspend-to-idle case, devices left in D0 during suspend will
->          * stay in D0, so it is not necessary to restore or update their
-> -        * configuration here and attempting to put them into D0 again may
-> -        * confuse some firmware, so avoid doing that.
-> +        * configuration here and attempting to put them into D0 again is
-> +        * pointless, so avoid doing that.
->          */
-> -       if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-> +       if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform()))
->                 pci_pm_default_resume_early(pci_dev);
->
->         pci_fixup_device(pci_fixup_resume_early, pci_dev);
->
->
->
+Does the below help at all? (patch soup courtesy of gmail, apologies)
+
+
+diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+index f713e2fc4d75..7e94e1f948c9 100644
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -32,6 +32,7 @@
+
+ void *module_alloc(unsigned long size)
+ {
++       u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
+        gfp_t gfp_mask = GFP_KERNEL;
+        void *p;
+
+@@ -39,9 +40,11 @@ void *module_alloc(unsigned long size)
+        if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
+                gfp_mask |= __GFP_NOWARN;
+
++       if (IS_ENABLED(CONFIG_KASAN))
++               module_alloc_end = MODULES_END;
++
+        p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+-                               module_alloc_base + MODULES_VSIZE,
+-                               gfp_mask, PAGE_KERNEL_EXEC, 0,
++                               module_alloc_end, gfp_mask, PAGE_KERNEL_EXEC, 0,
+                                NUMA_NO_NODE, __builtin_return_address(0));
+
+        if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
