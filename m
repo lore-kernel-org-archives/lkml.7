@@ -2,108 +2,164 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C454C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E72C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCB8204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E49215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJkcRi0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfFYMv1 (ORCPT
+        id S1731997AbfFYMvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:51:27 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:54606 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731674AbfFYMv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:51:27 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5663F1A07E6;
-        Tue, 25 Jun 2019 14:51:25 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 48D291A07DC;
-        Tue, 25 Jun 2019 14:51:25 +0200 (CEST)
-Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BC1272061E;
-        Tue, 25 Jun 2019 14:51:24 +0200 (CEST)
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH] arm64: dts: imx8mq: Init rates and parents configs for clocks
-Date:   Tue, 25 Jun 2019 15:51:21 +0300
-Message-Id: <1561467081-25701-1-git-send-email-abel.vesa@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 25 Jun 2019 08:51:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33299 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731674AbfFYMv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:51:29 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so9459953pfq.0;
+        Tue, 25 Jun 2019 05:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ChUqfbkNJtY1QVoFfhG4SYZiQSZDx5qq4T80tyOZU8Y=;
+        b=dJkcRi0eQAGd7DCe1OFlYbJ7wXvOC3ososcoWh2IsgW8/jf+yfbEC1EKf4RWEMwquI
+         l1aOrWH5IFWsTvFQJ8GKrPFOX9bJd8t5ZmFx9tZzYZxED4qkgIy7bP6h/hbNkFz8Pqlt
+         z6rQO0qvTKL/7nGXhxjG17ysKU6AEPqQ939gGKqf+4BNeuFHt40q/VvTjYpoDy8gpIMX
+         JOo9mv/GHk0F/bQAoMmKbTb520KsXEZT1FiuWm8LcfbQ70y4z+PQ6SSE9s8H2RtTVTwn
+         zFlvr83zzkuR9+ERoROBz3smDpIqUzqViELQxEjzq5GRTq8bxDlkGnJ5YYidJSPCUNIk
+         GdJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ChUqfbkNJtY1QVoFfhG4SYZiQSZDx5qq4T80tyOZU8Y=;
+        b=RrJVhMF6Geix7S8mfLV3vjrpV/aqfJoTTqWbucV1tzf7MLDxaBWzE/rIlyLF5vn0yB
+         whSGN4m3wFQipwSEqH3qzVZTeXESUMTeUGaFV48xnEBD3eli/7T3p9GaV2Zi/luX71Um
+         1Swr2wvpaR2Ip+Wy+x+u9n2AkPLLDrm+LPinf1q2u7UxgC+4BHiQBiVsoj/dVdpnuMGO
+         6Id1h1QjP1Ydzj28pr9P2+Vrw0YY0lbHXZnFMGlpAEaTc7y5PNJXzxns3/z5IxfWPvV+
+         dfe7tzqJGqRJl8KUo3Y0VSzEUMpcaYVUqOdl7j7p0dkqYfAtfQO+q3R0UmXueLM6CABs
+         y/lQ==
+X-Gm-Message-State: APjAAAXrYvS9S3ctkJTlUPX8slXERwWOwkuW3bW3fjpAA8GsFjtDIQtf
+        mTjsxFo4FjBUKY3ZJa105uo=
+X-Google-Smtp-Source: APXvYqzgqqbLbw1cC+98rhu4N+kdSFSfWgUwa1Qwo8yyNnBtVvr4/1BqqAP7009ikXjidkA77WW6EA==
+X-Received: by 2002:a63:dc50:: with SMTP id f16mr39307235pgj.447.1561467088625;
+        Tue, 25 Jun 2019 05:51:28 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id u10sm12405396pfh.54.2019.06.25.05.51.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 05:51:28 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        gregkh@linuxfoundation.org, allison@lohutok.net,
+        houweitaoo@gmail.com, tglx@linutronix.de, sean@geanix.com
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] can: mcp251x: add error check when wq alloc failed
+Date:   Tue, 25 Jun 2019 20:50:48 +0800
+Message-Id: <20190625125048.28849-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the initial configuration for clocks that need default parent and rate
-setting. This is based on the vendor tree clock provider parents and rates
-configuration except this is doing the setup in dts rather then using clock
-consumer API in a clock provider driver.
+add error check when workqueue alloc failed, and remove
+redundant code to make it clear
 
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 34 +++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/net/can/spi/mcp251x.c | 49 ++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 27 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index d09b808..e0abe02 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -489,6 +489,40 @@
- 				clock-names = "ckil", "osc_25m", "osc_27m",
- 				              "clk_ext1", "clk_ext2",
- 				              "clk_ext3", "clk_ext4";
-+				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
-+					<&clk IMX8MQ_CLK_AHB>,
-+					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
-+					<&clk IMX8MQ_CLK_AUDIO_AHB>,
-+					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
-+					<&clk IMX8MQ_CLK_NOC>,
-+					<&clk IMX8MQ_CLK_PCIE1_CTRL>,
-+					<&clk IMX8MQ_CLK_PCIE1_PHY>,
-+					<&clk IMX8MQ_CLK_PCIE2_CTRL>,
-+					<&clk IMX8MQ_CLK_PCIE2_PHY>,
-+					<&clk IMX8MQ_CLK_CSI1_CORE>,
-+					<&clk IMX8MQ_CLK_CSI1_PHY_REF>,
-+					<&clk IMX8MQ_CLK_CSI1_ESC>,
-+					<&clk IMX8MQ_CLK_CSI2_CORE>,
-+					<&clk IMX8MQ_CLK_CSI2_PHY_REF>,
-+					<&clk IMX8MQ_CLK_CSI2_ESC>;
-+				assigned-clock-parents = <0>,
-+						<&clk IMX8MQ_SYS1_PLL_133M>,
-+						<&clk IMX8MQ_SYS1_PLL_266M>,
-+						<&clk IMX8MQ_SYS2_PLL_500M>,
-+						<&clk IMX8MQ_CLK_27M>,
-+						<&clk IMX8MQ_SYS1_PLL_800M>,
-+						<&clk IMX8MQ_SYS2_PLL_250M>,
-+						<&clk IMX8MQ_SYS2_PLL_100M>,
-+						<&clk IMX8MQ_SYS2_PLL_250M>,
-+						<&clk IMX8MQ_SYS2_PLL_100M>,
-+						<&clk IMX8MQ_SYS1_PLL_266M>,
-+						<&clk IMX8MQ_SYS2_PLL_1000M>,
-+						<&clk IMX8MQ_SYS1_PLL_800M>,
-+						<&clk IMX8MQ_SYS1_PLL_266M>,
-+						<&clk IMX8MQ_SYS2_PLL_1000M>,
-+						<&clk IMX8MQ_SYS1_PLL_800M>;
-+				assigned-clock-rates = <593999999>;
-+
- 			};
+diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+index 44e99e3d7134..2aec934fab0c 100644
+--- a/drivers/net/can/spi/mcp251x.c
++++ b/drivers/net/can/spi/mcp251x.c
+@@ -664,17 +664,6 @@ static int mcp251x_power_enable(struct regulator *reg, int enable)
+ 		return regulator_disable(reg);
+ }
  
- 			src: reset-controller@30390000 {
+-static void mcp251x_open_clean(struct net_device *net)
+-{
+-	struct mcp251x_priv *priv = netdev_priv(net);
+-	struct spi_device *spi = priv->spi;
+-
+-	free_irq(spi->irq, priv);
+-	mcp251x_hw_sleep(spi);
+-	mcp251x_power_enable(priv->transceiver, 0);
+-	close_candev(net);
+-}
+-
+ static int mcp251x_stop(struct net_device *net)
+ {
+ 	struct mcp251x_priv *priv = netdev_priv(net);
+@@ -940,37 +929,43 @@ static int mcp251x_open(struct net_device *net)
+ 				   flags | IRQF_ONESHOT, DEVICE_NAME, priv);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "failed to acquire irq %d\n", spi->irq);
+-		mcp251x_power_enable(priv->transceiver, 0);
+-		close_candev(net);
+-		goto open_unlock;
++		goto out_close;
+ 	}
+ 
+ 	priv->wq = alloc_workqueue("mcp251x_wq", WQ_FREEZABLE | WQ_MEM_RECLAIM,
+ 				   0);
++	if (!priv->wq) {
++		ret = -ENOMEM;
++		goto out_clean;
++	}
+ 	INIT_WORK(&priv->tx_work, mcp251x_tx_work_handler);
+ 	INIT_WORK(&priv->restart_work, mcp251x_restart_work_handler);
+ 
+ 	ret = mcp251x_hw_reset(spi);
+-	if (ret) {
+-		mcp251x_open_clean(net);
+-		goto open_unlock;
+-	}
++	if (ret)
++		goto out_free_wq;
+ 	ret = mcp251x_setup(net, spi);
+-	if (ret) {
+-		mcp251x_open_clean(net);
+-		goto open_unlock;
+-	}
++	if (ret)
++		goto out_free_wq;
+ 	ret = mcp251x_set_normal_mode(spi);
+-	if (ret) {
+-		mcp251x_open_clean(net);
+-		goto open_unlock;
+-	}
++	if (ret)
++		goto out_free_wq;
+ 
+ 	can_led_event(net, CAN_LED_EVENT_OPEN);
+ 
+ 	netif_wake_queue(net);
++	mutex_unlock(&priv->mcp_lock);
+ 
+-open_unlock:
++	return 0;
++
++out_free_wq:
++	destroy_workqueue(priv->wq);
++out_clean:
++	free_irq(spi->irq, priv);
++	mcp251x_hw_sleep(spi);
++out_close:
++	mcp251x_power_enable(priv->transceiver, 0);
++	close_candev(net);
+ 	mutex_unlock(&priv->mcp_lock);
+ 	return ret;
+ }
 -- 
-2.7.4
+2.18.0
 
