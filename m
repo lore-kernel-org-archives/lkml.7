@@ -2,136 +2,87 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D707FC4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF22C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D1220644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:42:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ilPzVsZM"
+	by mail.kernel.org (Postfix) with ESMTP id E7593208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfFYBm1 (ORCPT
+        id S1730132AbfFYBpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:42:27 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:11769 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbfFYBm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:42:26 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190625014223epoutp0293bb438e64ba8019744102ce32e78698~rTYgs-w100817508175epoutp02Y
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 01:42:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190625014223epoutp0293bb438e64ba8019744102ce32e78698~rTYgs-w100817508175epoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561426943;
-        bh=Q+wSE1D1mkFPZ3kbjNBSBDW6V8ZYgQZcbvAOHEb9UBw=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=ilPzVsZM5LcPCnpIXO9KGG1sIxvKCVsnZgcdv8IOz8Jt7t0NgV/ldqJMLrTEz1eGD
-         ezbR+FYhwGnG8VocWUy3W6vEWC4mZN/U0SxROI/gO2lm2AKsr/FBBc2Iq0z2GmuVUq
-         3D5RqORgFlML4QAQtft/rtu/zIgCBDpTyx3muQ+4=
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.156]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190625014219epcas1p18d32dff3ac18bf156107086369b628a0~rTYdK9I8B2220822208epcas1p1V;
-        Tue, 25 Jun 2019 01:42:19 +0000 (GMT)
-X-AuditID: b6c32a35-973ff7000000102b-44-5d117bf69493
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F9.F9.04139.6FB711D5; Tue, 25 Jun 2019 10:42:14 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
-Reply-To: myungjoo.ham@samsung.com
-From:   MyungJoo Ham <myungjoo.ham@samsung.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Chanwoo Choi <cw00.choi@samsung.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <7561edbc-c17c-101a-b339-fc7f9968a470@gmail.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190625014214epcms1p1b8f2d76cd8cfdf3fdf517be08a92ccdf@epcms1p1>
-Date:   Tue, 25 Jun 2019 10:42:14 +0900
-X-CMS-MailID: 20190625014214epcms1p1b8f2d76cd8cfdf3fdf517be08a92ccdf
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdlhTT/dbtWCswfQJkhbXvzxntVj98TGj
-        RcusRSwWl3fNYbP43HuE0aLzyyw2i5+75rE4sHvsnHWX3aO3+R2bR9+WVYwenzfJBbBEZdtk
-        pCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAF2gpFCWmFMK
-        FApILC5W0rezKcovLUlVyMgvLrFVSi1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjOuPd9
-        NmvBHbGKSVfOsjQwdoh1MXJwSAiYSLxYEdfFyMUhJLCDUeL/whlsIHFeAUGJvzuEuxg5OYQF
-        3CS2XfvNAmILCShJNNzcxwwR15foeLCNEcRmE9CV2LrhLliNiICaxPKjf1hBZjILnGaS2Lz2
-        JxtIQkKAV2JG+1MWCFtaYvvyrWDNnAK2Et2/vjFBxEUlbq5+yw5jvz82nxHCFpFovXeWGcIW
-        lHjwczcjzJwZU/5DzayWuDZ9MTvIYgmBFkaJ3tVToIr0Jc7MPQn1mK/EyTVlIGEWAVWJ6Q/X
-        Q810keg5NRnsBmYBbYllC18zg5QzC2hKrN+lD1GiKLHz91xGiBI+iXdfe1hh3tox7wnU+WoS
-        h3YvgTpfRuL09IVQ4z0kXpzYxwoJ52Zmie7X89gmMCrMQgT1LCSbZyFsXsDIvIpRLLWgODc9
-        tdiwwBA5cjcxghOjlukOxinnfA4xCnAwKvHw/jgmECvEmlhWXJl7iFGCg1lJhHdpIlCINyWx
-        siq1KD++qDQntfgQoykwACYyS4km5wOTdl5JvKGpkbGxsYWJoZmpoaGSOG88980YIYH0xJLU
-        7NTUgtQimD4mDk6pBsZplrqcW6N2N0w8fa8+9uztw8ur1LLmzN3GdqzkoymzlYERo3bCsmXP
-        /35/sDuUT7ls/98rd/9lBpxwurIxyGCa8YX3eio3/j9baJFXaj2z7cM+j9Ce1SlnJqRPWGCr
-        y5fw8s4WsRffVePVD/Avj5jG2/dq/9PpjlsOX/CfqHLyR2RnypcTbOWmSizFGYmGWsxFxYkA
-        Ew20XKIDAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
-References: <7561edbc-c17c-101a-b339-fc7f9968a470@gmail.com>
-        <37db00bc-3a22-d1c2-7bdc-e27af42cd5c7@gmail.com>
-        <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
-        <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
-        <20190624111134epcms1p361aed3c72edd6eebc95408331c8d9739@epcms1p3>
-        <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
+        Mon, 24 Jun 2019 21:45:55 -0400
+Received: from mga03.intel.com ([134.134.136.65]:38321 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728104AbfFYBpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 21:45:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 18:45:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,413,1557212400"; 
+   d="scan'208";a="169623634"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Jun 2019 18:45:52 -0700
+Subject: Re: [x86/hotplug] e1056a25da:
+ WARNING:at_arch/x86/kernel/apic/apic.c:#setup_local_APIC
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, tipbuild@zytor.com, lkp@01.org
+References: <20190620021856.GP7221@shao2-debian>
+ <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <58ea508f-dc2e-8537-fe96-49cca0a7c799@intel.com>
+Date:   Tue, 25 Jun 2019 09:46:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sender : Dmitry Osipenko <digetx=40gmail.com>
->24.06.2019 14:11, MyungJoo Ham =D0=BF=D0=B8=D1=88=D0=B5=D1=82:=0D=0A>>>=0D=
-=0A>>>=20---------=20Original=20Message=20---------=0D=0A>>>=20Sender=20:=
-=20Dmitry=20Osipenko=20<digetx=40gmail.com>=0D=0A>>>=0D=0A>>>=2024.06.2019=
-=2010:34,=20MyungJoo=20Ham=20=D0=BF=D0=B8=D1=88=D0=B5=D1=82:=0D=0A>>>>>=0D=
-=0A>>>>>=20A=20question:=0D=0A>>>>>=0D=0A>>>>>=20Does=20this=20driver=20sup=
-port=20Tegra20=20as=20well?=0D=0A>>>>>=20I'm=20asking=20this=20because=20AR=
-CH_TEGRA=20includes=20ARCH_TEGRA_2x_SOC=0D=0A>>>>>=20according=20to=20/driv=
-ers/soc/tegra/Kconfig.=0D=0A>>>>>=0D=0A>>>>=0D=0A>>>>=20For=20this=20matter=
-,=20how=20about=20updating=20your=2013/16=20patch=20as=20follows?=0D=0A>>>>=
-=0D=0A>>=20=5B=5D=0D=0A>>>=0D=0A>>>=20Good=20call=21=20I'll=20update=20this=
-=20patch=20following=20yours=20suggestion,=20thanks.=0D=0A>>=20=0D=0A>>=20O=
-r,=20you=20may=20approve=20the=20modified=20commits=20here:=0D=0A>>=20https=
-://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/log/?h=3Dfor-nex=
-t=0D=0A>=20=0D=0A>Looks=20almost=20good=20to=20me=21=0D=0A>=20=0D=0A>I=20ju=
-st=20recalled=20that=20there=20is=20also=20a=2064bit=20variant=20of=20Tegra=
-124,=20the=20Tegra132.=20Hence=0D=0A>the=20Tegra30+=20Kconfig=20entry=20sho=
-uld=20look=20like=20this=20(it's=20also=20worthy=20to=20break=20the=20lines=
-=0D=0A>for=20readability):=0D=0A>=20=0D=0A>diff=20--git=20a/drivers/devfreq=
-/Kconfig=20b/drivers/devfreq/Kconfig=0D=0A>index=20ccb1a68c4b51..bd2efbc277=
-25=20100644=0D=0A>---=20a/drivers/devfreq/Kconfig=0D=0A>+++=20b/drivers/dev=
-freq/Kconfig=0D=0A>=40=40=20-94,7=20+94,10=20=40=40=20config=20ARM_EXYNOS_B=
-US_DEVFREQ=0D=0A>=20=0D=0A>=20config=20ARM_TEGRA_DEVFREQ=0D=0A>=20=20=20=20=
-=20=20=20=20tristate=20=22NVIDIA=20Tegra30/114/124/210=20DEVFREQ=20Driver=
-=22=0D=0A>-=20=20=20=20=20=20=20depends=20on=20ARCH_TEGRA=20=7C=7C=20COMPIL=
-E_TEST=0D=0A>+=20=20=20=20=20=20=20depends=20on=20ARCH_TEGRA_3x_SOC=20=20=
-=7C=7C=20ARCH_TEGRA_114_SOC=20=7C=7C=20=5C=0D=0A>+=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20=20ARCH_TEGRA_132_SOC=20=7C=7C=20ARCH_TEGRA_124_=
-SOC=20=7C=7C=20=5C=0D=0A>+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
-=20=20ARCH_TEGRA_210_SOC=20=7C=7C=20=5C=0D=0A>+=20=20=20=20=20=20=20=20=20=
-=20=20=20=20=20=20=20=20=20COMPILE_TEST=0D=0A>=20=20=20=20=20=20=20=20selec=
-t=20PM_OPP=0D=0A>=20=20=20=20=20=20=20=20help=0D=0A>=20=20=20=20=20=20=20=
-=20=20=20This=20adds=20the=20DEVFREQ=20driver=20for=20the=20Tegra=20family=
-=20of=20SoCs.=0D=0A>=20=0D=0A>Could=20you=20please=20adjust=20the=20patches=
-=20like=20I'm=20suggesting?=20I'll=20approve=20yours=20change=0D=0A>then=20=
-and=20won't=20re-spin=20the=20first=20batch=20of=20the=20patches.=0D=0A=0D=
-=0AI've=20adjusted=20as=20you=20suggested.=20It's=20pushed=20to=20the=20git=
-=20repo=20as=20well.=0D=0A=0D=0ACheers,=0D=0AMyungJoo.=0D=0A=0D=0A
+On 6/22/19 3:08 AM, Thomas Gleixner wrote:
+> On Thu, 20 Jun 2019, kernel test robot wrote:
+>
+>> FYI, we noticed the following commit (built with gcc-7):
+>>
+>> commit: e1056a25daa6460c95e92d7d6853d05ad62458f7 ("x86/hotplug: Silence APIC and NMI when CPU is dead")
+>> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git WIP.x86/ipi
+>>
+>> in testcase: locktorture
+>> with following parameters:
+>>
+>> 	runtime: 300s
+>> 	test: cpuhotplug
+>>
+>> test-description: This torture test consists of creating a number of kernel threads which acquire the lock and hold it for specific amount of time, thus simulating different critical region behaviors.
+>> test-url: https://www.kernel.org/doc/Documentation/locking/locktorture.txt
+>>
+>>
+>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
+> I cannot reproduce that issue. What's the underlying hardware machine?
+
+brand: Genuine Intel(R) CPU 000 @ 2.27GHz
+model: Westmere-EX
+memory: 256G
+nr_node: 4
+nr_cpu: 80
+
+Best Regards,
+Rong Chen
+
+
+>
+> Thanks,
+>
+> 	tglx
