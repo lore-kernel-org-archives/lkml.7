@@ -2,91 +2,152 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2C9C48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD05C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAF2213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90AF213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:15:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gmgD1+2a";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QTDbqujJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbfFYOO5 (ORCPT
+        id S1729896AbfFYOPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:14:57 -0400
-Received: from mga12.intel.com ([192.55.52.136]:12722 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbfFYOO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:14:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 07:14:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
-   d="scan'208";a="182899347"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 25 Jun 2019 07:14:49 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 25 Jun 2019 17:14:48 +0300
-Date:   Tue, 25 Jun 2019 17:14:48 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 2/2] ACPI: PM: Allow transitions to D0 to occur in
- special cases
-Message-ID: <20190625141448.GJ2640@lahna.fi.intel.com>
-References: <10419005.Mb09WM6RCc@kreacher>
- <2807567.5m5tnf7bLv@kreacher>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2807567.5m5tnf7bLv@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 25 Jun 2019 10:15:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43524 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfFYOPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:15:01 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id ACFFE60709; Tue, 25 Jun 2019 14:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561472100;
+        bh=l93+BVnlcMYbPv/B3MtkkvFbxlDUUawmAE3SnOFBacw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gmgD1+2aDCDUiWfEmSyUPM2v5JWRZ9MF0/0PVeT3NYZKrrJ0qir3b1NSo0RXU0djw
+         k1p5dJZ1m7xQOo7myXYz++CU9J7bIDxhQ+nw6eGgRdLqOTUQBquLAXzJuy8w3N0j5q
+         3/N3ij91Mao2vPjSzffkhpupgApoYKyV/nBMBjCE=
+Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 002576028D;
+        Tue, 25 Jun 2019 14:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561472097;
+        bh=l93+BVnlcMYbPv/B3MtkkvFbxlDUUawmAE3SnOFBacw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QTDbqujJQ5m8SgLELvYglSZwnr1b8JeXi3vNE7DPxwuQG8B3RxVGjRpG5eRUDmY7c
+         rW8NZO8/cv9XYRHRYuk8ktmE/5dfZHXPt0vwV9uJDygk8f7X5n9LrUsYFv28zX4OFF
+         8Nxgx1gwa6ApF9TbAmFeDRrbtDPFxt30uILzgMAc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 002576028D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+To:     linus.walleij@linaro.org, bjorn.andersson@linaro.org,
+        sboyd@kernel.org, timur@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>
+Subject: [PATCH v3] pinctrl: qcom: Add irq_enable callback for msm gpio
+Date:   Tue, 25 Jun 2019 19:44:46 +0530
+Message-Id: <1561472086-23360-1-git-send-email-neeraju@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:06:13PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> If a device with ACPI PM is left in D0 during a system-wide
-> transition to the S3 (suspend-to-RAM) or S4 (hibernation) sleep
-> state, the actual state of the device need not be D0 during resume
-> from it, although its power.state value will still reflect D0 (that
-> is, the power state from before the system-wide transition).
-> 
-> In that case, the acpi_device_set_power() call made to ensure that
-> the power state of the device will be D0 going forward has no effect,
-> because the new state (D0) is equal to the one reflected by the
-> device's power.state value.  That does not affect power resources,
-> which are taken care of by acpi_resume_power_resources() called from
-> acpi_pm_finish() during resume from system-wide sleep states, but it
-> still may be necessary to invoke _PS0 for the device on top of that
-> in order to finalize its transition to D0.
-> 
-> For this reason, modify acpi_device_set_power() to allow transitions
-> to D0 to occur even if D0 is the current power state of the device
-> according to its power.state value.
-> 
-> That will not affect power resources, which are assumed to be in
-> the right configuration already (as reflected by the current values
-> of their reference counters), but it may cause _PS0 to be evaluated
-> for the device.  However, evaluating _PS0 for a device already in D0
-> may lead to confusion in general, so invoke _PSC (if present) to
-> check the device's current power state upfront and only evaluate
-> _PS0 for it if _PSC has returned a power state different from D0.
-> [If _PSC is not present or the evaluation of it fails, the power
-> state of the device is assumed to be D0 at this point.]
-> 
-> Fixes: 20dacb71ad28 (ACPI / PM: Rework device power management to follow ACPI 6)
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Srinivas Ramana <sramana@codeaurora.org>
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Introduce the irq_enable callback which will be same as irq_unmask
+except that it will also clear the status bit before unmask.
+
+This will help in clearing any erroneous interrupts that would
+have got latched when the interrupt is not in use.
+
+There may be devices like UART which can use the same gpio line
+for data rx as well as a wakeup gpio when in suspend. The data that
+was flowing on the line may latch the interrupt and when we enable
+the interrupt before going to suspend, this would trigger the
+unexpected interrupt. This change helps clearing the interrupt
+so that these unexpected interrupts gets cleared.
+
+Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+---
+
+Changes since v2:
+- Renamed function to msm_gpio_irq_clear_unmask()
+
+ drivers/pinctrl/qcom/pinctrl-msm.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 6e319bc..0223755 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -729,7 +729,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
+-static void msm_gpio_irq_unmask(struct irq_data *d)
++static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+@@ -741,6 +741,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
++	if (status_clear) {
++		/*
++		 * clear the interrupt status bit before unmask to avoid
++		 * any erroneous interrupts that would have got latched
++		 * when the interrupt is not in use.
++		 */
++		val = msm_readl_intr_status(pctrl, g);
++		val &= ~BIT(g->intr_status_bit);
++		msm_writel_intr_status(val, pctrl, g);
++	}
++
+ 	val = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	val |= BIT(g->intr_enable_bit);
+@@ -751,6 +762,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
++static void msm_gpio_irq_enable(struct irq_data *d)
++{
++
++	msm_gpio_irq_clear_unmask(d, true);
++}
++
++static void msm_gpio_irq_unmask(struct irq_data *d)
++{
++	msm_gpio_irq_clear_unmask(d, false);
++}
++
+ static void msm_gpio_irq_ack(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -978,6 +1000,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	chip->need_valid_mask = msm_gpio_needs_valid_mask(pctrl);
+ 
+ 	pctrl->irq_chip.name = "msmgpio";
++	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
+ 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
+ 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
+ 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+
