@@ -2,112 +2,118 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91028C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EB5C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63866215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC76214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G3KRAhAG"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zYLTQY6f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730998AbfFYIwy (ORCPT
+        id S1731091AbfFYIw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:52:54 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40103 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbfFYIwx (ORCPT
+        Tue, 25 Jun 2019 04:52:57 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:24772 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730788AbfFYIwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:52:53 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a9so12052787lff.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 01:52:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6sVy1ZdjISYZ4x2JdrMT9LI1XuB2hh4y/prk76ssgW8=;
-        b=G3KRAhAGe1qA98XT+tNHwa6bfkqWZJ5R3S16P7b1ifCEGfzYc3qRb9OR5cQ1pA/RAD
-         sbtplkiwf81OLc1zT+WYjzWFq2429RCTZOnLkcf4QinyL/0XQ1lkYPiWnOCt0jOpliOo
-         yhcyXb2W1TyqBurZptQzuoYglnr+ocZF0b6rUitx9tlT23mwMsz41LZrAbd/h98BZGXu
-         YRDc8ns+UFRDXEk7nIKRpIJckJt2v5cEP4Mnwi1YeO1sXDVdVzo5vIsEFdDMZYf9Levx
-         tNjVXQJK9c3sLR59Hfb2xcviF5y9fxomKTljgGSey8+PPsn/LjsTdnytJS+AbSvsTmgA
-         TY5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6sVy1ZdjISYZ4x2JdrMT9LI1XuB2hh4y/prk76ssgW8=;
-        b=V1PAnKgH8G64ywvAlepf/uCSgzf3nph4EjNxW4buX5PTfogwV+xxF7wOw0JjAMsZWy
-         MZvBHI1OMfU1LGjk81PjXsqhkPKmY8TdwwnuaajVmqgmT9vSuz1SUWAygJ/oBbRKQsI+
-         3/Zkqu+o4m0NBisB7qWLRkHCXfzmkhDwk7KMD9ge1tNxjaxOQve8/sh9nsXrtOl3IvAT
-         BYNhm9RFWrwQKLx1YY53KcjcBAWHkJTj6xDAkbkNibqtmJB4TXDySKRokk7eTBnGa3nI
-         ovYZjZP4iV/Ycc36d3dkvEZwe6O65lf9RsbTibKbN51vrSCWxYshXlnnzwweInvbkI99
-         tH4g==
-X-Gm-Message-State: APjAAAV0iGIrtUdI7P7lbwt/gQzA4HEFwX3i9FseF2ZgtTUc1McZyofp
-        K6X+o0JsxpbckRloSQ7vU0wP7rCVXPmj49N8QlRMHA==
-X-Google-Smtp-Source: APXvYqyE2yJaybeR4mT7wbfZf/tS94S/SlU0cAeCtceLJiDRJCRt6joGVNWjbcfYTBxGjyPWLwAjVeBQRiHmFRfChkI=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr28602618lfc.60.1561452771554;
- Tue, 25 Jun 2019 01:52:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 10:52:40 +0200
-Message-ID: <CACRpkdb1MySnzCVGb6v1KovmgJtagKeSe+mrPvsVOJz_s198eA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Jun 2019 04:52:54 -0400
+Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x5P8pmsS025960;
+        Tue, 25 Jun 2019 17:51:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x5P8pmsS025960
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561452709;
+        bh=YXVIKxWcP6nUMETBeMDBbVPvinAIc3GMcFygU3uYYac=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zYLTQY6fXCrf0iusxvNAL8sGTmK4EWYgwmvFKhve7X5mSYbZ0JNLeXXMySQiR1mYp
+         GHNkUgwlbsfSLWS6mR5snYWfpH0V3LOkxgNKZPpmQ5zwUA2bUJBW4OkEIy9q0dpu5h
+         1PDikpIU0prTlseMfmUGieSR5A/ueJzOW5G50yAUvCjxcDdksw9+2lRCByIVWMKlLd
+         CfWqzO9LMY5H2qqdCxCzK6efBVtzP1VX5/LNHph3vbrt4I4HFMolQzTSEFbhL1F2AQ
+         oewaN6M7ur6C5L1RV2oej/oio9wKkbOeY20sjIYMNH8Uomg2KqWo+FpZey3sjR2hAi
+         IX4VX8tHps0LA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sam Ravnborg <sam@ravnborg.org>, Xi Wang <wangxi11@huawei.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: add more hints about SUBDIRS replacement
+Date:   Tue, 25 Jun 2019 17:51:27 +0900
+Message-Id: <20190625085127.9446-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+Commit 0126be38d988 ("kbuild: announce removal of SUBDIRS if used")
+added a hint about the 'SUBDIRS' replacement, but it was not clear
+enough.
 
-thanks for your patch. For some reason I managed to pick up
-patch 2 before patch 1. I applied this now with some fuzzing.
-(Please check the result.)
+Multiple people sent me similar questions, patches.
 
-On Thu, Jun 13, 2019 at 3:55 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+  https://lkml.org/lkml/2019/1/17/456
 
-> What is the point in surrounding the whole of declarations with
-> ifdef like this?
+I did not mean to suggest M= for building a subdirectory in the kernel
+tree.
 
-I don't know if it is generally good to have phrases posed as
-questions in a commit message, we prefer to have statements
-about the change not a polemic dialog.
+From the commit 669efc76b317 ("net: hns3: fix compile error"), people
+already (ab)use M=... to do that because it seems to work to some extent.
 
->   #ifdef CONFIG_FOO
->   int foo(void);
->   #endif
->
-> If CONFIG_FOO is not defined, all callers of foo() will fail
-> with implicit declaration errors since the top Makefile adds
-> -Werror-implicit-function-declaration to KBUILD_CFLAGS.
+Documentation/kbuild/kbuild.txt says M= and KBUILD_EXTMOD are used for
+building external modules.
 
-Maybe this flag was not in the top Makefile when the #ifdefs
-where introduced?
+In fact, Kbuild supports the single target '%/' for this purpose, but
+this may not be noticed much.
 
-> This breaks the build earlier when you are doing something wrong.
-> That's it.
+Kindly add more hints.
 
-Good idea.
+Makefile:213: ================= WARNING ================
+Makefile:214: 'SUBDIRS' will be removed after Linux 5.3
+Makefile:215:
+Makefile:216: If you are building an individual subdirectory
+Makefile:217: in the kernel tree, you can do like this:
+Makefile:218: $ make path/to/dir/you/want/to/build/
+Makefile:219: (Do not forget the trailing slash)
+Makefile:220:
+Makefile:221: If you are building an external module,
+Makefile:222: Please use 'M=' or 'KBUILD_EXTMOD' instead
+Makefile:223: ==========================================
 
-> Anyway, it will fail to link since the definition of foo() is not
-> compiled.
->
-> In summary, these ifdef are unneeded.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Pushing this to the zeroday builders and let's see what happens!
+ Makefile | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Yours,
-Linus Walleij
+diff --git a/Makefile b/Makefile
+index 7a7c17eb0cbf..823a39d940c6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -212,6 +212,13 @@ endif
+ ifdef SUBDIRS
+   $(warning ================= WARNING ================)
+   $(warning 'SUBDIRS' will be removed after Linux 5.3)
++  $(warning )
++  $(warning If you are building an individual subdirectory)
++  $(warning in the kernel tree, you can do like this:)
++  $(warning $$ make path/to/dir/you/want/to/build/)
++  $(warning (Do not forget the trailing slash))
++  $(warning )
++  $(warning If you are building an external module,)
+   $(warning Please use 'M=' or 'KBUILD_EXTMOD' instead)
+   $(warning ==========================================)
+   KBUILD_EXTMOD ?= $(SUBDIRS)
+-- 
+2.17.1
+
