@@ -2,230 +2,179 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190E8C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2608CC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8536215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3665215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HHlVD9LC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sz0I0sBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbfFYIrQ (ORCPT
+        id S1730881AbfFYIrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:47:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57723 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfFYIrQ (ORCPT
+        Tue, 25 Jun 2019 04:47:46 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38842 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfFYIrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:47:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8hnJ33533481
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:43:49 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8hnJ33533481
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561452230;
-        bh=UJyWbOXZasfdr0iSMfDvpdwATDMZcJ4qRcAeZiPEYnk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=HHlVD9LC77vtf0jwXbKfmhcpZnpVrEl7e908yx/GsTqVTbVd2AI0n/adJmlh2lsT+
-         GMfckyn5dPkC9gK/RqtX9pm+Z7jcpNRukAdspSBveZiOi/rqLxLsYGmhx5+gd79eIx
-         t8RTXlLi49O1XTqUEb8I0pQQ5+SKzUKALJS84mpaDL1qAwrXPVHvq9lyTpTs3DywA4
-         Wh7bHQ/dSAmXXP3YEiqfG/8cPQakY6+tHVRy20ioj/yOuAlSbbJ3J69n5VDGijLbMr
-         sV23Yoc32jxsGjjJqggxgnhIXj62uybbCYtmtc///OvzDqpQHlOLSG7acK+XDgRBI1
-         9del7FNsdQXkg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8hnAO3533478;
-        Tue, 25 Jun 2019 01:43:49 -0700
-Date:   Tue, 25 Jun 2019 01:43:49 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Ian Rogers <tipbot@zytor.com>
-Message-ID: <tip-fd7d55172d1e2e501e6da0a5c1de25f06612dc2e@git.kernel.org>
-Cc:     hpa@zytor.com, irogers@google.com, tglx@linutronix.de,
-        vincent.weaver@maine.edu, peterz@infradead.org, acme@kernel.org,
-        jolsa@redhat.com, bp@alien8.de, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        kan.liang@linux.intel.com, acme@redhat.com,
-        alexander.shishkin@linux.intel.com, eranian@google.com,
-        namhyung@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
-          alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-          eranian@google.com, acme@redhat.com, kan.liang@linux.intel.com,
-          vincent.weaver@maine.edu, peterz@infradead.org, hpa@zytor.com,
-          irogers@google.com, tglx@linutronix.de,
-          torvalds@linux-foundation.org, bp@alien8.de, acme@kernel.org,
-          jolsa@redhat.com
-In-Reply-To: <20190601082722.44543-1-irogers@google.com>
-References: <20190601082722.44543-1-irogers@google.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/cgroups: Don't rotate events for cgroups
- unnecessarily
-Git-Commit-ID: fd7d55172d1e2e501e6da0a5c1de25f06612dc2e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 04:47:46 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g4so8446105plb.5;
+        Tue, 25 Jun 2019 01:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=RPiWSabt5JgoWs5z40nQXXXKrZ3PBISZqfHALf5K1aM=;
+        b=Sz0I0sBTv0opAvby7bD8S71CXkhtdKHo78vR6Pn6+4QMdTxjy3//L76zw/vAWyUGy2
+         vKfyVT5cwJIU9ErBxIrO+aysfc4rTx+L/UUtpscmht6Koz4m7Gl11GDCRUma4OEjkjej
+         oS/b+OvxwZHQo6IVeUTzp8lTeVSaMKbzDDhUS+th3DsbNYlyGi2r6mNPduuV1hHFRvPm
+         m/r08YrTfe9d5CbOdyKFeHy3LBhTgBurgssT64IC2QErCcAMI0LxOT6fD8fHRf6Po8t6
+         cRJZYk763nI/p3n6PwsYfndJCXrBJOzx2wc5xjk/2b0IUA5veoKwxH4MGEgbYuwBFeCN
+         /YoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=RPiWSabt5JgoWs5z40nQXXXKrZ3PBISZqfHALf5K1aM=;
+        b=OTnr0kw4CQ5bq+Ovfd7x7Eqdd2j5PcU7i8pKDw1VDt5EE+8mUfDfpnnS2wHBnJS8yp
+         iU2wqVS42Bx6Y96dXZV4e/fwVKwoCNwZxlMfQPW4pZdZiUMnSuGtiffAGd6vFY2fqJV3
+         wZFY/4dUxL7mZd4c07IIuFFmH3Imiet9Pde264+CwWz1zUX3AnYWp+TcBZBc5lygPEXS
+         o7qpSv3l848JF6/p6rWZWQSHC0d+CVEeroaiKNagPy/D6pM7mSrknhdnLG1VbhHKI8Vx
+         dkbcc1ugkan7/0fZd4BcFPiqtrP/QMjdbQ69yTvekKKS1NkiMWLndcOjJ00zweKbJRLd
+         Zj4Q==
+X-Gm-Message-State: APjAAAXWxtOawAkRMOUe3KQ7EiMC5vXWJ67ojFsA8HbJG0y1AxLoSCDu
+        wkt236sk5GLnGzmImaGHQtI=
+X-Google-Smtp-Source: APXvYqxS9rd6025LvTXepoBuM+Fl4OiltcA6UGOv+QgfZAo2tiZuTDpVYaKa7WQBS7h9Ta9iSNENeQ==
+X-Received: by 2002:a17:902:7787:: with SMTP id o7mr7143805pll.120.1561452465723;
+        Tue, 25 Jun 2019 01:47:45 -0700 (PDT)
+Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
+        by smtp.gmail.com with ESMTPSA id k19sm6987917pgl.42.2019.06.25.01.47.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 01:47:44 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "kishon@ti.com" <kishon@ti.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH V8 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
+Thread-Topic: [PATCH V8 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
+Thread-Index: AQHVKk1mZn06E4x3n0K7Ma23pehWQqasEKv6
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Tue, 25 Jun 2019 08:47:39 +0000
+Message-ID: <PSXP216MB066244DBB956E189F6B88559AAE30@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
+References: <20190624052611.11279-1-vidyas@nvidia.com>
+ <20190624052611.11279-2-vidyas@nvidia.com>
+In-Reply-To: <20190624052611.11279-2-vidyas@nvidia.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  fd7d55172d1e2e501e6da0a5c1de25f06612dc2e
-Gitweb:     https://git.kernel.org/tip/fd7d55172d1e2e501e6da0a5c1de25f06612dc2e
-Author:     Ian Rogers <irogers@google.com>
-AuthorDate: Sat, 1 Jun 2019 01:27:22 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 24 Jun 2019 19:30:04 +0200
+On 6/24/19, 2:26 PM, Vidya Sagar wrote:
+>
+> Cleanup DBI read and write APIs by removing "__" (underscore) from their
+> names as there are no no-underscore versions and the underscore versions
+> are already doing what no-underscore versions typically do. It also remov=
+es
+> passing dbi/dbi2 base address as one of the arguments as the same can be
+> derived with in read and write APIs. Since dw_pcie_{readl/writel}_dbi()
+> APIs can't be used for ATU read/write as ATU base address could be
+> different from DBI base address, this patch attempts to implement
+> ATU read/write APIs using ATU base address without using
+> dw_pcie_{readl/writel}_dbi() APIs.
+>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes from v7:
+> * Based on suggestion from Jingoo Han, moved implementation of readl, wri=
+tel for ATU
+>   region to separate APIs dw_pcie_{read/write}_atu() in pcie-designware.c=
+ file and
+>   calling them from pcie-designware.h file.
+>
+> Changes from v6:
+> * Modified ATU read/write APIs to use implementation specific DBI read/wr=
+ite
+>   APIs if present.
+>
+> Changes from v5:
+> * Removed passing base address as one of the arguments as the same can be=
+ derived within
+>   the API itself.
+> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
+>
+> Changes from v4:
+> * This is a new patch in this series
+>
+>  drivers/pci/controller/dwc/pcie-designware.c | 28 +++++------
+>  drivers/pci/controller/dwc/pcie-designware.h | 51 +++++++++++++-------
+>  2 files changed, 45 insertions(+), 34 deletions(-)
 
-perf/cgroups: Don't rotate events for cgroups unnecessarily
+.......
 
-Currently perf_rotate_context assumes that if the context's nr_events !=
-nr_active a rotation is necessary for perf event multiplexing. With
-cgroups, nr_events is the total count of events for all cgroups and
-nr_active will not include events in a cgroup other than the current
-task's. This makes rotation appear necessary for cgroups when it is not.
+> +u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (pci->ops->read_dbi)
+> +		return pci->ops->read_dbi(pci, pci->atu_base, reg, size);
+> +
+> +	ret =3D dw_pcie_read(pci->atu_base + reg, size, &val);
+> +	if (ret)
+> +		dev_err(pci->dev, "Read ATU address failed\n");
+> +
+> +	return val;
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_read_atu);
 
-Add a perf_event_context flag that is set when rotation is necessary.
-Clear the flag during sched_out and set it when a flexible sched_in
-fails due to resources.
+Don't export dw_pcie_read_atu unnecessarily.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/20190601082722.44543-1-irogers@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- include/linux/perf_event.h |  5 +++++
- kernel/events/core.c       | 42 ++++++++++++++++++++++--------------------
- 2 files changed, 27 insertions(+), 20 deletions(-)
+> +
+> +void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 va=
+l)
+> +{
+> +	int ret;
+> +
+> +	if (pci->ops->write_dbi) {
+> +		pci->ops->write_dbi(pci, pci->atu_base, reg, size, val);
+> +		return;
+> +	}
+> +
+> +	ret =3D dw_pcie_write(pci->atu_base + reg, size, val);
+> +	if (ret)
+> +		dev_err(pci->dev, "Write ATU address failed\n");
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_write_atu);
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 3dc01cf98e16..2ddae518dce6 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -749,6 +749,11 @@ struct perf_event_context {
- 	int				nr_stat;
- 	int				nr_freq;
- 	int				rotate_disable;
-+	/*
-+	 * Set when nr_events != nr_active, except tolerant to events not
-+	 * necessary to be active due to scheduling constraints, such as cgroups.
-+	 */
-+	int				rotate_necessary;
- 	refcount_t			refcount;
- 	struct task_struct		*task;
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 118ad1aef6af..23efe6792abc 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2952,6 +2952,12 @@ static void ctx_sched_out(struct perf_event_context *ctx,
- 	if (!ctx->nr_active || !(is_active & EVENT_ALL))
- 		return;
- 
-+	/*
-+	 * If we had been multiplexing, no rotations are necessary, now no events
-+	 * are active.
-+	 */
-+	ctx->rotate_necessary = 0;
-+
- 	perf_pmu_disable(ctx->pmu);
- 	if (is_active & EVENT_PINNED) {
- 		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
-@@ -3319,10 +3325,13 @@ static int flexible_sched_in(struct perf_event *event, void *data)
- 		return 0;
- 
- 	if (group_can_go_on(event, sid->cpuctx, sid->can_add_hw)) {
--		if (!group_sched_in(event, sid->cpuctx, sid->ctx))
--			list_add_tail(&event->active_list, &sid->ctx->flexible_active);
--		else
-+		int ret = group_sched_in(event, sid->cpuctx, sid->ctx);
-+		if (ret) {
- 			sid->can_add_hw = 0;
-+			sid->ctx->rotate_necessary = 1;
-+			return 0;
-+		}
-+		list_add_tail(&event->active_list, &sid->ctx->flexible_active);
- 	}
- 
- 	return 0;
-@@ -3690,24 +3699,17 @@ ctx_first_active(struct perf_event_context *ctx)
- static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
- {
- 	struct perf_event *cpu_event = NULL, *task_event = NULL;
--	bool cpu_rotate = false, task_rotate = false;
--	struct perf_event_context *ctx = NULL;
-+	struct perf_event_context *task_ctx = NULL;
-+	int cpu_rotate, task_rotate;
- 
- 	/*
- 	 * Since we run this from IRQ context, nobody can install new
- 	 * events, thus the event count values are stable.
- 	 */
- 
--	if (cpuctx->ctx.nr_events) {
--		if (cpuctx->ctx.nr_events != cpuctx->ctx.nr_active)
--			cpu_rotate = true;
--	}
--
--	ctx = cpuctx->task_ctx;
--	if (ctx && ctx->nr_events) {
--		if (ctx->nr_events != ctx->nr_active)
--			task_rotate = true;
--	}
-+	cpu_rotate = cpuctx->ctx.rotate_necessary;
-+	task_ctx = cpuctx->task_ctx;
-+	task_rotate = task_ctx ? task_ctx->rotate_necessary : 0;
- 
- 	if (!(cpu_rotate || task_rotate))
- 		return false;
-@@ -3716,7 +3718,7 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
- 	perf_pmu_disable(cpuctx->ctx.pmu);
- 
- 	if (task_rotate)
--		task_event = ctx_first_active(ctx);
-+		task_event = ctx_first_active(task_ctx);
- 	if (cpu_rotate)
- 		cpu_event = ctx_first_active(&cpuctx->ctx);
- 
-@@ -3724,17 +3726,17 @@ static bool perf_rotate_context(struct perf_cpu_context *cpuctx)
- 	 * As per the order given at ctx_resched() first 'pop' task flexible
- 	 * and then, if needed CPU flexible.
- 	 */
--	if (task_event || (ctx && cpu_event))
--		ctx_sched_out(ctx, cpuctx, EVENT_FLEXIBLE);
-+	if (task_event || (task_ctx && cpu_event))
-+		ctx_sched_out(task_ctx, cpuctx, EVENT_FLEXIBLE);
- 	if (cpu_event)
- 		cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
- 
- 	if (task_event)
--		rotate_ctx(ctx, task_event);
-+		rotate_ctx(task_ctx, task_event);
- 	if (cpu_event)
- 		rotate_ctx(&cpuctx->ctx, cpu_event);
- 
--	perf_event_sched_in(cpuctx, ctx, current);
-+	perf_event_sched_in(cpuctx, task_ctx, current);
- 
- 	perf_pmu_enable(cpuctx->ctx.pmu);
- 	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+Don't export dw_pcie_write_atu unnecessarily.
+
+Best regards,
+Jingoo Han
+
+.....
