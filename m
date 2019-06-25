@@ -2,150 +2,92 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39E6C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C7DC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C4C20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F50D20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kRLzMzcD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YgGXKq67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfFYRSD (ORCPT
+        id S1729945AbfFYRTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:18:03 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51904 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbfFYRSC (ORCPT
+        Tue, 25 Jun 2019 13:19:35 -0400
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:45181 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbfFYRTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:18:02 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PHDjnK112356;
-        Tue, 25 Jun 2019 17:16:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=8YOHqT1H5m87NYapYKi5uOloFdOjAQsayzwyn6FBGsU=;
- b=kRLzMzcD4dDTxKKrIatPNQ8UbCC6dJVjee0v4WI+ASaqAGwEtXxAYgVRxpW7bi2F0kdN
- +8BkhOTIe/oZhPnAYc1tUS8V4kAmfxQ6VRRo827Ml89rmcehwrL0IvipIkWsyxIORYzM
- dFZwu3TFJ2jAetMYP79ISwOmGkO6y3D31aAPNJXhXBih2Gr5GYQy3VEltfIlToeYcYTA
- OPEtp5J5s9kqXfLt+XUPAuzKiT8ERVsbjZlleEopgqvRqrrBmDlDLaWMStCqCoAydaCU
- P+tj3IggCOnLZs/3nlNDQyjq5pVdz1NFvQtV5k0sEbhsON1T5kYdVRGZQlOdlAbybMLW JQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brt5t2e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 17:16:24 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PHFVC3141059;
-        Tue, 25 Jun 2019 17:16:23 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2t9acc7vvx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Jun 2019 17:16:23 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5PHGMB9143216;
-        Tue, 25 Jun 2019 17:16:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t9acc7vvk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 17:16:22 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5PHGJxo007776;
-        Tue, 25 Jun 2019 17:16:19 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 10:16:19 -0700
-Date:   Tue, 25 Jun 2019 10:16:16 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     dsterba@suse.cz, Christoph Hellwig <hch@infradead.org>,
-        matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
-        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
-        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 2/4] vfs: create a generic checking function for
- FS_IOC_FSSETXATTR
-Message-ID: <20190625171616.GB2230847@magnolia>
-References: <156116136742.1664814.17093419199766834123.stgit@magnolia>
- <156116138952.1664814.16552129914959122837.stgit@magnolia>
- <20190625105725.GB26085@infradead.org>
- <20190625170248.GS8917@twin.jikos.cz>
+        Tue, 25 Jun 2019 13:19:35 -0400
+Received: by mail-pl1-f176.google.com with SMTP id bi6so9186270plb.12;
+        Tue, 25 Jun 2019 10:19:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DOwCBQyZRzVGfYg9SNTddzZDAkrsd0M2owTZiePG8Y0=;
+        b=YgGXKq67re3Lt45hm2dx1e0cgK2kXEbyhwGGG/6S5n3yg+YKs0E1xfzmNt4gwDa3NU
+         1Hi0CuBKLTcaoAR15Nv9umUB2s0C3ZWtGeQUXUa2Mj25ijLQ+rhuAJ0P01CrINH2PRlP
+         cWQuhemKcXEnR7vuuUDnj+m4Cll7fn5d9Zov+7TX/Xnae/KIKQio6dPbJq39PAeO6nRI
+         aLrQ+nrYUNFmKpdpRi0cJTXk+is/fJqFaS6FGZx4gaNcGsAqMC3Slq3USWHY/JKF88zN
+         DZIdRTQiQsEdNo68FE4HbE423VCSaQCR5n/Z4sNf8/GZQHiqrGq5XNDP+D3nC2rU0FSo
+         F74A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DOwCBQyZRzVGfYg9SNTddzZDAkrsd0M2owTZiePG8Y0=;
+        b=pVIm1UuriS6dCnRjxN3SVd3yEu0q2JvnADB2ZMODpcb12qUYLMcyNCfZfg6Ajc7ArA
+         yaXIwsdGzuZhhjArIiFXjPg2C3e4WIo/rPnQae93q7eoeEEAhCGRb/Jc3Qtqlmls8W/x
+         DF01qaaO6ypmQrbNm0KyJELfwLhgVo64k4elbuxUKAjA7rVL0GxwXdvpOv4h2BRB0MGT
+         DzbpSz43MhlDbLdYUahVFl8p5ewrsV3tuCEMlSe54qINw9GrqEhfi1oQScvCJBFwsMqt
+         9SAdsBw4Spow75RjETEa7aX14o0CeEbeKDVHkyoWsCl5QMGUH0PQ//4mDtZf2D/VYK0Q
+         g6og==
+X-Gm-Message-State: APjAAAW6jE0wCk7EWoc8C5uYerHpqGBb45tofwv+wC1XU6DzSRZgGKpY
+        kWa2jZwxHQXMMAQsJ4VcPFpFfonqPAJc2+5ZTlimbw==
+X-Google-Smtp-Source: APXvYqw0kb2X1B48/T4JKum7mtgX1P5q8n7X+39Ox3+V7IHev2oOY8mTnadreHiVQbLC+pJrrj1pfTM91AHoY3/VOck=
+X-Received: by 2002:a17:902:20b:: with SMTP id 11mr23320790plc.78.1561483174312;
+ Tue, 25 Jun 2019 10:19:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625170248.GS8917@twin.jikos.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250130
+References: <20190625210821.6907304a@canb.auug.org.au>
+In-Reply-To: <20190625210821.6907304a@canb.auug.org.au>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 25 Jun 2019 12:19:22 -0500
+Message-ID: <CAH2r5msJzRBZSKua7VffD+dkHu+4xU=QQ3KGRKa34fm-6M9CRg@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the cifs tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 07:02:48PM +0200, David Sterba wrote:
-> On Tue, Jun 25, 2019 at 03:57:25AM -0700, Christoph Hellwig wrote:
-> > On Fri, Jun 21, 2019 at 04:56:29PM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > 
-> > > Create a generic checking function for the incoming FS_IOC_FSSETXATTR
-> > > fsxattr values so that we can standardize some of the implementation
-> > > behaviors.
-> > > 
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > Reviewed-by: Jan Kara <jack@suse.cz>
-> > > ---
-> > >  fs/btrfs/ioctl.c   |   21 +++++++++-------
-> > >  fs/ext4/ioctl.c    |   27 ++++++++++++++------
-> > >  fs/f2fs/file.c     |   26 ++++++++++++++-----
-> > >  fs/inode.c         |   17 +++++++++++++
-> > >  fs/xfs/xfs_ioctl.c |   70 ++++++++++++++++++++++++++++++----------------------
-> > >  include/linux/fs.h |    3 ++
-> > >  6 files changed, 111 insertions(+), 53 deletions(-)
-> > > 
-> > > 
-> > > diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-> > > index f408aa93b0cf..7ddda5b4b6a6 100644
-> > > --- a/fs/btrfs/ioctl.c
-> > > +++ b/fs/btrfs/ioctl.c
-> > > @@ -366,6 +366,13 @@ static int check_xflags(unsigned int flags)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static void __btrfs_ioctl_fsgetxattr(struct btrfs_inode *binode,
-> > > +				     struct fsxattr *fa)
-> > > +{
-> > > +	memset(fa, 0, sizeof(*fa));
-> > > +	fa->fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags);
-> > 
-> > Is there really much of a point in this helper? Epeciall as
-> > the zeroing could easily be done in the variable declaration
-> > line using
-> > 
-> > 	struct fsxattr fa = { };
-> 
-> Agreed, not counting the initialization the wrapper is merely another
-> name for btrfs_inode_flags_to_xflags. I also find it slightly confusing
-> that __btrfs_ioctl_fsgetxattr name is too close to the ioctl callback
-> implementation btrfs_ioctl_fsgetxattr but only does some initialization.
+Fixed
 
-Ok; it's easily enough changed to:
+On Tue, Jun 25, 2019 at 6:08 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Commit
+>
+>   c1ed2864526e ("smb3: minor cleanup of compound_send_recv")
+>
+> is missing a Signed-off-by from its committer.
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
-	struct fsxattr old_fa = {
-		.fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags),
-	};
 
---D
+
+-- 
+Thanks,
+
+Steve
