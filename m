@@ -2,268 +2,150 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1B8C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F78C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67DEB216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B062133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbfFYPHe convert rfc822-to-8bit (ORCPT
+        id S1732037AbfFYPIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:07:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:14395 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730777AbfFYPHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:07:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 08:07:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
-   d="scan'208";a="182907469"
-Received: from triedme-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.180])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Jun 2019 08:07:28 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Furquan Shaikh <furquan@google.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, rajatja@google.com,
-        marcheu@chromium.org, Furquan Shaikh <furquan@google.com>,
-        "Lee\, Shawn C" <shawn.c.lee@intel.com>
-Subject: Re: [PATCH] i915: intel_dp_aux_backlight: Fix max backlight calculations
-In-Reply-To: <20190618062628.133783-1-furquan@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190618062628.133783-1-furquan@google.com>
-Date:   Tue, 25 Jun 2019 18:09:20 +0300
-Message-ID: <87v9wtog67.fsf@intel.com>
+        Tue, 25 Jun 2019 11:08:43 -0400
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:47660 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731330AbfFYPIl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:08:41 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id CA9AD3F732;
+        Tue, 25 Jun 2019 17:08:33 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1mKKqNFww7JF; Tue, 25 Jun 2019 17:08:24 +0200 (CEST)
+Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
+        (Authenticated sender: mb547485)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 12E773F3B2;
+        Tue, 25 Jun 2019 17:08:23 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 17:08:23 +0200
+From:   Fredrik Noring <noring@nocrew.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>, laurentiu.tudor@nxp.com,
+        stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+        JuergenUrban@gmx.de
+Subject: [PATCH 2/2] usb: host: Fix excessive alignment restriction for local
+ memory allocations
+Message-ID: <20190625150823.GB2560@sx9>
+References: <20190611190343.GA18459@roeck-us.net>
+ <20190613134033.GA2489@sx9>
+ <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
+ <20190613153414.GA909@sx9>
+ <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
+ <20190614142816.GA2574@sx9>
+ <20190624063515.GA3296@lst.de>
+ <20190624125916.GA2516@sx9>
+ <20190625060000.GA28986@lst.de>
+ <20190625150558.GA2560@sx9>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
+In-Reply-To: <20190625150558.GA2560@sx9>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Furquan Shaikh <furquan@google.com> wrote:
-> Max backlight value for the panel was being calculated using byte
-> count i.e. 0xffff if 2 bytes are supported for backlight brightness
-> and 0xff if 1 byte is supported. However, EDP_PWMGEN_BIT_COUNT
-> determines the number of active control bits used for the brightness
-> setting. Thus, even if the panel uses 2 byte setting, it might not use
-> all the control bits. Thus, max backlight should be set based on the
-> value of EDP_PWMGEN_BIT_COUNT instead of assuming 65535 or 255.
->
-> Additionally, EDP_PWMGEN_BIT_COUNT was being updated based on the VBT
-> frequency which results in a different max backlight value. Thus,
-> setting of EDP_PWMGEN_BIT_COUNT is moved to setup phase instead of
-> enable so that max backlight can be calculated correctly. Only the
-> frequency divider is set during the enable phase using the value of
-> EDP_PWMGEN_BIT_COUNT.
+The PAGE_SHIFT alignment restriction to devm_gen_pool_create() quickly
+exhaust local memory because most allocations are much smaller than
+PAGE_SIZE. This causes USB device failures such as
 
-The eDP aux backlight is another fine example of simple made
-difficult. Ugh.
+	usb 1-2.1: reset full-speed USB device number 4 using sm501-usb
+	sd 1:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result: hostbyte=0x03 driverbyte=0x00
+	sd 1:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 08 7c 00 00 f0 00
+	print_req_error: I/O error, dev sda, sector 2172 flags 80700
 
-Shawn (Cc'd) has recently submitted patches to this code. Shawn, please
-also look through this and provide your comments, if any.
+when trying to boot from the SM501 USB controller on SH4 with QEMU.
 
-One comment inline.
+Align allocations as required but not necessarily much more than that.
+The HCCA, TD and ED structures align with 256, 32 and 16 byte memory
+boundaries, as specified by the Open HCI[1]. The min_alloc_order argument
+to devm_gen_pool_create is now somewhat arbitrarily set to 4 (16 bytes).
+Perhaps it could be somewhat lower for general buffer allocations.
 
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
-> Reviewed-by: Stéphane Marchesin <marcheu@chromium.org>
-> ---
->  drivers/gpu/drm/i915/intel_dp_aux_backlight.c | 132 ++++++++++++------
->  1 file changed, 88 insertions(+), 44 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/intel_dp_aux_backlight.c
-> index 357136f17f85..4636c8e8ae8a 100644
-> --- a/drivers/gpu/drm/i915/intel_dp_aux_backlight.c
-> +++ b/drivers/gpu/drm/i915/intel_dp_aux_backlight.c
-> @@ -110,61 +110,34 @@ static bool intel_dp_aux_set_pwm_freq(struct intel_connector *connector)
->  {
->  	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
->  	struct intel_dp *intel_dp = enc_to_intel_dp(&connector->encoder->base);
-> -	int freq, fxp, fxp_min, fxp_max, fxp_actual, f = 1;
-> -	u8 pn, pn_min, pn_max;
-> +	int freq, fxp, f, fxp_actual, fxp_min, fxp_max;
-> +	u8 pn;
->  
-> -	/* Find desired value of (F x P)
-> -	 * Note that, if F x P is out of supported range, the maximum value or
-> -	 * minimum value will applied automatically. So no need to check that.
-> -	 */
->  	freq = dev_priv->vbt.backlight.pwm_freq_hz;
-> -	DRM_DEBUG_KMS("VBT defined backlight frequency %u Hz\n", freq);
->  	if (!freq) {
->  		DRM_DEBUG_KMS("Use panel default backlight frequency\n");
->  		return false;
->  	}
->  
-> -	fxp = DIV_ROUND_CLOSEST(KHz(DP_EDP_BACKLIGHT_FREQ_BASE_KHZ), freq);
-> -
-> -	/* Use highest possible value of Pn for more granularity of brightness
-> -	 * adjustment while satifying the conditions below.
-> -	 * - Pn is in the range of Pn_min and Pn_max
-> -	 * - F is in the range of 1 and 255
-> -	 * - FxP is within 25% of desired value.
-> -	 *   Note: 25% is arbitrary value and may need some tweak.
-> -	 */
-> -	if (drm_dp_dpcd_readb(&intel_dp->aux,
-> -			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min) != 1) {
-> -		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap min\n");
-> +	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_EDP_PWMGEN_BIT_COUNT,
-> +			      &pn) < 0) {
-> +		DRM_DEBUG_KMS("Failed to read aux pwmgen bit count\n");
->  		return false;
->  	}
-> -	if (drm_dp_dpcd_readb(&intel_dp->aux,
-> -			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max) != 1) {
-> -		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap max\n");
-> -		return false;
-> -	}
-> -	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-> -	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
->  
-> +	fxp = DIV_ROUND_CLOSEST(KHz(DP_EDP_BACKLIGHT_FREQ_BASE_KHZ), freq);
-> +	f = clamp(DIV_ROUND_CLOSEST(fxp, 1 << pn), 1, 255);
-> +	fxp_actual = f << pn;
-> +
-> +	/* Ensure frequency is within 25% of desired value */
->  	fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
->  	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
-> -	if (fxp_min < (1 << pn_min) || (255 << pn_max) < fxp_max) {
-> -		DRM_DEBUG_KMS("VBT defined backlight frequency out of range\n");
-> -		return false;
-> -	}
->  
-> -	for (pn = pn_max; pn >= pn_min; pn--) {
-> -		f = clamp(DIV_ROUND_CLOSEST(fxp, 1 << pn), 1, 255);
-> -		fxp_actual = f << pn;
-> -		if (fxp_min <= fxp_actual && fxp_actual <= fxp_max)
-> -			break;
-> -	}
-> -
-> -	if (drm_dp_dpcd_writeb(&intel_dp->aux,
-> -			       DP_EDP_PWMGEN_BIT_COUNT, pn) < 0) {
-> -		DRM_DEBUG_KMS("Failed to write aux pwmgen bit count\n");
-> +	if (fxp_min > fxp_actual || fxp_actual > fxp_max) {
-> +		DRM_DEBUG_KMS("Actual frequency out of range\n");
->  		return false;
->  	}
-> +
->  	if (drm_dp_dpcd_writeb(&intel_dp->aux,
->  			       DP_EDP_BACKLIGHT_FREQ_SET, (u8) f) < 0) {
->  		DRM_DEBUG_KMS("Failed to write aux backlight freq\n");
-> @@ -224,16 +197,87 @@ static void intel_dp_aux_disable_backlight(const struct drm_connector_state *old
->  	set_aux_backlight_enable(enc_to_intel_dp(old_conn_state->best_encoder), false);
->  }
->  
-> +static u32 intel_dp_aux_calc_max_backlight(struct intel_connector *connector)
-> +{
-> +	struct drm_i915_private *dev_priv = to_i915(connector->base.dev);
-> +	struct intel_dp *intel_dp = enc_to_intel_dp(&connector->encoder->base);
-> +	u32 max_backlight = 0;
-> +	int freq, fxp, fxp_min, fxp_max, fxp_actual, f = 1;
-> +	u8 pn, pn_min, pn_max;
-> +
-> +	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_EDP_PWMGEN_BIT_COUNT, &pn)) {
-> +		pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-> +		max_backlight = (1 << pn) - 1;
-> +	}
+Reference:
 
-If the dpcd read fails, pn may be uninitialized; need to check the
-return value properly here.
+[1] "Open Host Controller Interface Specification for USB",
+    release 1.0a, Compaq, Microsoft, National Semiconductor, 1999,
+    pp. 16, 19, 33.
 
-Otherwise, seems fine, though unnecessarily complicated but that's
-hardly your fault...
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Fredrik Noring <noring@nocrew.org>
+---
+ drivers/usb/core/hcd.c      | 2 +-
+ drivers/usb/host/ohci-hcd.c | 4 ++--
+ drivers/usb/host/ohci-mem.c | 6 ++++--
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-
-BR,
-Jani.
-
-> +
-> +	/* Find desired value of (F x P)
-> +	 * Note that, if F x P is out of supported range, the maximum value or
-> +	 * minimum value will applied automatically. So no need to check that.
-> +	 */
-> +	freq = dev_priv->vbt.backlight.pwm_freq_hz;
-> +	DRM_DEBUG_KMS("VBT defined backlight frequency %u Hz\n", freq);
-> +	if (!freq) {
-> +		DRM_DEBUG_KMS("Use panel default backlight frequency\n");
-> +		return max_backlight;
-> +	}
-> +
-> +	fxp = DIV_ROUND_CLOSEST(KHz(DP_EDP_BACKLIGHT_FREQ_BASE_KHZ), freq);
-> +
-> +	/* Use highest possible value of Pn for more granularity of brightness
-> +	 * adjustment while satifying the conditions below.
-> +	 * - Pn is in the range of Pn_min and Pn_max
-> +	 * - F is in the range of 1 and 255
-> +	 * - FxP is within 25% of desired value.
-> +	 *   Note: 25% is arbitrary value and may need some tweak.
-> +	 */
-> +	if (drm_dp_dpcd_readb(&intel_dp->aux,
-> +			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min) != 1) {
-> +		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap min\n");
-> +		return max_backlight;
-> +	}
-> +	if (drm_dp_dpcd_readb(&intel_dp->aux,
-> +			       DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max) != 1) {
-> +		DRM_DEBUG_KMS("Failed to read pwmgen bit count cap max\n");
-> +		return max_backlight;
-> +	}
-> +	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-> +	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
-> +
-> +	fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
-> +	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
-> +	if (fxp_min < (1 << pn_min) || (255 << pn_max) < fxp_max) {
-> +		DRM_DEBUG_KMS("VBT defined backlight frequency out of range\n");
-> +		return max_backlight;
-> +	}
-> +
-> +	for (pn = pn_max; pn >= pn_min; pn--) {
-> +		f = clamp(DIV_ROUND_CLOSEST(fxp, 1 << pn), 1, 255);
-> +		fxp_actual = f << pn;
-> +		if (fxp_min <= fxp_actual && fxp_actual <= fxp_max)
-> +			break;
-> +	}
-> +
-> +	if (drm_dp_dpcd_writeb(&intel_dp->aux,
-> +			       DP_EDP_PWMGEN_BIT_COUNT, pn) < 0) {
-> +		DRM_DEBUG_KMS("Failed to write aux pwmgen bit count\n");
-> +		return max_backlight;
-> +	}
-> +
-> +	max_backlight = (1 << pn) - 1;
-> +
-> +	return max_backlight;
-> +}
-> +
->  static int intel_dp_aux_setup_backlight(struct intel_connector *connector,
->  					enum pipe pipe)
->  {
->  	struct intel_dp *intel_dp = enc_to_intel_dp(&connector->encoder->base);
->  	struct intel_panel *panel = &connector->panel;
->  
-> -	if (intel_dp->edp_dpcd[2] & DP_EDP_BACKLIGHT_BRIGHTNESS_BYTE_COUNT)
-> -		panel->backlight.max = 0xFFFF;
-> -	else
-> -		panel->backlight.max = 0xFF;
-> +	panel->backlight.max = intel_dp_aux_calc_max_backlight(connector);
-> +
-> +	if (!panel->backlight.max)
-> +		return -ENODEV;
->  
->  	panel->backlight.min = 0;
->  	panel->backlight.level = intel_dp_aux_get_backlight(connector);
-
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index b2362303d32f..48483fa71854 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -3014,7 +3014,7 @@ int usb_hcd_setup_local_mem(struct usb_hcd *hcd, phys_addr_t phys_addr,
+ 	int err;
+ 	void __iomem *local_mem;
+ 
+-	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, PAGE_SHIFT,
++	hcd->localmem_pool = devm_gen_pool_create(hcd->self.sysdev, 4,
+ 						  dev_to_node(hcd->self.sysdev),
+ 						  dev_name(hcd->self.sysdev));
+ 	if (IS_ERR(hcd->localmem_pool))
+diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
+index 5801858d867e..b457fdaff297 100644
+--- a/drivers/usb/host/ohci-hcd.c
++++ b/drivers/usb/host/ohci-hcd.c
+@@ -507,9 +507,9 @@ static int ohci_init (struct ohci_hcd *ohci)
+ 	ohci->prev_frame_no = IO_WATCHDOG_OFF;
+ 
+ 	if (hcd->localmem_pool)
+-		ohci->hcca = gen_pool_dma_alloc(hcd->localmem_pool,
++		ohci->hcca = gen_pool_dma_alloc_align(hcd->localmem_pool,
+ 						sizeof(*ohci->hcca),
+-						&ohci->hcca_dma);
++						&ohci->hcca_dma, 256);
+ 	else
+ 		ohci->hcca = dma_alloc_coherent(hcd->self.controller,
+ 						sizeof(*ohci->hcca),
+diff --git a/drivers/usb/host/ohci-mem.c b/drivers/usb/host/ohci-mem.c
+index 4afe27cc7e46..1425335c6baf 100644
+--- a/drivers/usb/host/ohci-mem.c
++++ b/drivers/usb/host/ohci-mem.c
+@@ -94,7 +94,8 @@ td_alloc (struct ohci_hcd *hc, gfp_t mem_flags)
+ 	struct usb_hcd	*hcd = ohci_to_hcd(hc);
+ 
+ 	if (hcd->localmem_pool)
+-		td = gen_pool_dma_zalloc(hcd->localmem_pool, sizeof(*td), &dma);
++		td = gen_pool_dma_zalloc_align(hcd->localmem_pool,
++				sizeof(*td), &dma, 32);
+ 	else
+ 		td = dma_pool_zalloc(hc->td_cache, mem_flags, &dma);
+ 	if (td) {
+@@ -137,7 +138,8 @@ ed_alloc (struct ohci_hcd *hc, gfp_t mem_flags)
+ 	struct usb_hcd	*hcd = ohci_to_hcd(hc);
+ 
+ 	if (hcd->localmem_pool)
+-		ed = gen_pool_dma_zalloc(hcd->localmem_pool, sizeof(*ed), &dma);
++		ed = gen_pool_dma_zalloc_align(hcd->localmem_pool,
++				sizeof(*ed), &dma, 16);
+ 	else
+ 		ed = dma_pool_zalloc(hc->ed_cache, mem_flags, &dma);
+ 	if (ed) {
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.21.0
+
