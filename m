@@ -7,135 +7,309 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127BBC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D6C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93672146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BEA20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqwXCb4M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMd9lD9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730887AbfFYOfu (ORCPT
+        id S1730926AbfFYOgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:35:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39598 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbfFYOfu (ORCPT
+        Tue, 25 Jun 2019 10:36:36 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33809 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728710AbfFYOgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:35:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id r185so3515490iod.6;
-        Tue, 25 Jun 2019 07:35:49 -0700 (PDT)
+        Tue, 25 Jun 2019 10:36:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so18204394wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:36:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H4FBl2kb9Q12PpnYpa3OFWNOR4QPgL14IwXIkF/APGc=;
-        b=AqwXCb4MR2+p96JwYF9xQiAb6f8jOSAJ14XqFgrLKa6BOu9+BQk7J0IYaqxikkKACl
-         MpsYVm3Tv07NyhtN88rdYHc6brn73Nei8wOK861KMG4PMMRIcCYs2Yxwj8F3eNZOy9Uw
-         s3fVQKbrim/sM5N2/yd7HLOtNkBpWnaGhq48VOG9Zthztr3LrY4NKVx/2kNVL4Ixbn0y
-         QK7VX9Ja9cb/SZABcPiFEVLkkKke9HtJuBoPQmApMXHehMTQP4n2nvsDPbUib8qupOqu
-         UyMiPrbhKj4TU9IYRXsBZGptM5M7lYvpAlN0UAVW4lA3+yPnfC64wCxjVUaF1kivLTb0
-         CgKw==
+        h=reply-to:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=nsiDQwwlUMya2NaloHB/g19Qxbl0uFlPZzS2rBPQg0o=;
+        b=FMd9lD9eHd2C7+rF9Z5/RFn3UymwzrNeQp5IKv6P1zaqVvzj68sYc4Voh5gAHtfxde
+         /6H1YkcdttQ1T5VaUryqBJXX4c34dBce43gHOuIQBWOcxegzsIR5iA3QGZ/stAJaiY/v
+         SfJmxDnEPHGeSCr3yRl0e82GKcey6ZCelZGchrFpA3/pwV2v9AZnX56QQpVtZXQNWnLI
+         vUKnzbpWnnfwOLD4DHLzY/cJqFP6PpTEZjkRrDVyhJAQgs1boNehX56VDVPiJdSrvuHx
+         WdbjlDPmYh0l0lWUFIeVYZ/rcw6b6p8zFV5SJXku4XyXGqgzJ16vqkcdkeoQb5xyuQgU
+         1xzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H4FBl2kb9Q12PpnYpa3OFWNOR4QPgL14IwXIkF/APGc=;
-        b=dkmaq8UABj7fS+toIvkbcVaqP9r+Yjbw6tNbsfpUaWbdAPH0FNf5aq5RZkXEf6qCC1
-         Kjx9Y7Cwl7YL0nBedaigyqDXWIhdGDLlTIE73VYDlPVTVdv8JpLm4hWH0xk9krB56scD
-         lqhOFLpzIie5qonfMPm+tm7thPxURJ/e7hsZuyW1xRJVZvlbxRywcfkopz6hqEPwbvMs
-         7AfZf0IPo1eY067DPE+9SwD/BCgUDjcrZN8jImi1J110qK+U/vRxsKzEftYCEPXOl6Eb
-         qdDCOOUzPkUPoNG9NdLzk//TMN2gVrS2B5jlRu2/WaqL+aOGRr+TU6oib3yxN+W8OTya
-         pTZA==
-X-Gm-Message-State: APjAAAVGBcaqFT/h6bTQ43zL5Q1491q/oSbnz3/N4S+VKtUZnAtWVma/
-        ghRHuR3mqeQP5AexqIDDFl32VMVYjMcG7Hjqeu12bMlT1k4=
-X-Google-Smtp-Source: APXvYqzY1wYzaxVeLZGo/x3Ina8bunvFlXLEAzmrewz/4RxLjz3A2w2qU1FGwreXznfAa7UKOq3PfU0/6lpK42MDqfo=
-X-Received: by 2002:a05:6638:149:: with SMTP id y9mr110950563jao.76.1561473349281;
- Tue, 25 Jun 2019 07:35:49 -0700 (PDT)
+        h=x-gm-message-state:reply-to:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=nsiDQwwlUMya2NaloHB/g19Qxbl0uFlPZzS2rBPQg0o=;
+        b=b3uAba2ohuCgF86VZpj5z5wDUKfz83uIRQyvaGBCWfsKjwFE6drXmh043mtqE2V4r8
+         bl6CcRnq6gFWDgkC9XZLtRCrxoLKXzKrqPG6gmC/VBL8v13jtgcNDOT3WKzwb6EEy3pp
+         dICC3CGyWpAOkvWBL4QaNdaMVYrcGXf61H6WFK7Sp9szAveGYmCostv/stYTlOh6VlOb
+         NaoUsv0AA3vKPan+YPHtLXWrGKh6Ahsupx3wdfK7bY4yRPX3g3VTS6v408yyNDgUPMTi
+         qs64dmIHzMucf5EZTY5USyKtlV6E8/Vj8dNfrRQcyP0bpceRInGS5xtA7ZsfyJMKBHiX
+         B1uQ==
+X-Gm-Message-State: APjAAAUbfYDgOTU2ZaFUa0jLo2FMBC+ba/RkOcQOOqBA4JpDIfjozmaV
+        yuLxUCyqQYWpxqlhlC+WNg9SCUSN
+X-Google-Smtp-Source: APXvYqzE/KqmSHY/7SiUS9iovra9CVFDhj9vICfRnFQA0hPN0anCAybqfL9mPZfG6BMjXepF3DTZMA==
+X-Received: by 2002:a5d:4a8d:: with SMTP id o13mr18069221wrq.350.1561473392182;
+        Tue, 25 Jun 2019 07:36:32 -0700 (PDT)
+Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id e11sm32885267wrc.9.2019.06.25.07.36.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 07:36:31 -0700 (PDT)
+Reply-To: christian.koenig@amd.com
+Subject: Re: [PATCH 1/2] dma-buf: add reservation_context for deadlock
+ handling
+To:     peterz@infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190625135507.80548-1-christian.koenig@amd.com>
+ <20190625141624.GU12905@phenom.ffwll.local>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+Message-ID: <9d64929c-0343-e6b0-a4fe-3af541abbd6a@gmail.com>
+Date:   Tue, 25 Jun 2019 16:36:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190624162726.17413-1-jlayton@kernel.org> <20190624162726.17413-4-jlayton@kernel.org>
-In-Reply-To: <20190624162726.17413-4-jlayton@kernel.org>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 25 Jun 2019 16:35:59 +0200
-Message-ID: <CAOi1vP_G9ybNs_QEn34cPvovAa=JB7G9F3FGy33QPH4yfST-iQ@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] ceph: don't NULL terminate virtual xattrs
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        agruenba@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190625141624.GU12905@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 6:27 PM Jeff Layton <jlayton@kernel.org> wrote:
+Am 25.06.19 um 16:16 schrieb Daniel Vetter:
+> On Tue, Jun 25, 2019 at 03:55:06PM +0200, Christian König wrote:
+>> The ww_mutex framework allows for detecting deadlocks when multiple
+>> threads try to acquire the same set of locks in different order.
+>>
+>> The problem is that handling those deadlocks was the burden of the user of
+>> the ww_mutex implementation and at least some users didn't got that right
+>> on the first try.
+>>
+>> So introduce a new reservation_context object which can be used to
+>> simplify the deadlock handling. This is done by tracking all locked
+>> reservation objects in the context as well as the last contended
+>> reservation object.
+>>
+>> When a deadlock occurse we now unlock all previously locked object and
+>> acquire the contended lock in the slow path. After this is done -EDEADLK
+>> is still returned to signal that all other locks now need to be
+>> re-acquired again.
+>>
+>> Signed-off-by: Christian König <christian.koenig@amd.com>
+>> ---
+>>   drivers/dma-buf/reservation.c | 82 +++++++++++++++++++++++++++++++++++
+>>   include/linux/reservation.h   | 38 ++++++++++++++++
+>>   2 files changed, 120 insertions(+)
+>>
+>> diff --git a/drivers/dma-buf/reservation.c b/drivers/dma-buf/reservation.c
+>> index 4d32e2c67862..9e53e42b053a 100644
+>> --- a/drivers/dma-buf/reservation.c
+>> +++ b/drivers/dma-buf/reservation.c
+>> @@ -55,6 +55,88 @@ EXPORT_SYMBOL(reservation_seqcount_class);
+>>   const char reservation_seqcount_string[] = "reservation_seqcount";
+>>   EXPORT_SYMBOL(reservation_seqcount_string);
+>>   
+>> +/**
+>> + * reservation_context_init - initialize a reservation context
+>> + * @ctx: the context to initialize
+>> + *
+>> + * Start using this reservation context to lock reservation objects for update.
+> Bunch of hyperlinks here for more consistent story would be really nice in
+> the kerneldoc.
 >
-> The convention with xattrs is to not store the termination with string
-> data, given that it returns the length. This is how setfattr/getfattr
-> operate.
+>> + */
+>> +void reservation_context_init(struct reservation_context *ctx)
+>> +{
+>> +	ww_acquire_init(&ctx->ctx, &reservation_ww_class);
+>> +	init_llist_head(&ctx->locked);
+>> +	ctx->contended = NULL;
+>> +}
+>> +EXPORT_SYMBOL(reservation_context_init);
+>> +
+>> +/**
+>> + * reservation_context_unlock_all - unlock all reservation objects
+>> + * @ctx: the context which holds the reservation objects
+>> + *
+>> + * Unlocks all reservation objects locked with this context.
+>> + */
+>> +void reservation_context_unlock_all(struct reservation_context *ctx)
+> I'd just call this reservation_unlock_all or so. Feel free to ignore the
+> bikeshed.
 >
-> Most of ceph's virtual xattr routines use snprintf to plop the string
-> directly into the destination buffer, but snprintf always NULL
-> terminates the string. This means that if we send the kernel a buffer
-> that is the exact length needed to hold the string, it'll end up
-> truncated.
->
-> Add a ceph_fmt_xattr helper function to format the string into an
-> on-stack buffer that is should always be large enough to hold the whole
-> thing and then memcpy the result into the destination buffer. If it does
-> turn out that the formatted string won't fit in the on-stack buffer,
-> then return -E2BIG and do a WARN_ONCE().
->
-> Change over most of the virtual xattr routines to use the new helper. A
-> couple of the xattrs are sourced from strings however, and it's
-> difficult to know how long they'll be. Just have those memcpy the result
-> in place after verifying the length.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/ceph/xattr.c | 84 ++++++++++++++++++++++++++++++++++---------------
->  1 file changed, 59 insertions(+), 25 deletions(-)
->
-> diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> index 9b77dca0b786..37b458a9af3a 100644
-> --- a/fs/ceph/xattr.c
-> +++ b/fs/ceph/xattr.c
-> @@ -109,22 +109,49 @@ static ssize_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
->         return ret;
->  }
->
-> +/*
-> + * The convention with strings in xattrs is that they should not be NULL
-> + * terminated, since we're returning the length with them. snprintf always
-> + * NULL terminates however, so call it on a temporary buffer and then memcpy
-> + * the result into place.
-> + */
-> +static int ceph_fmt_xattr(char *val, size_t size, const char *fmt, ...)
-> +{
-> +       int ret;
-> +       va_list args;
-> +       char buf[96]; /* NB: reevaluate size if new vxattrs are added */
-> +
-> +       va_start(args, fmt);
-> +       ret = vsnprintf(buf, size ? sizeof(buf) : 0, fmt, args);
-> +       va_end(args);
-> +
-> +       /* Sanity check */
-> +       if (size && ret + 1 > sizeof(buf)) {
-> +               WARN_ONCE(true, "Returned length too big (%d)", ret);
-> +               return -E2BIG;
-> +       }
-> +
-> +       if (ret <= size)
-> +               memcpy(val, buf, ret);
-> +       return ret;
-> +}
+>> +{
+>> +	struct reservation_object *obj, *next;
+>> +
+>> +	if (ctx->contended)
+>> +		ww_mutex_unlock(&ctx->contended->lock);
+>> +	ctx->contended = NULL;
+>> +
+>> +	llist_for_each_entry_safe(obj, next, ctx->locked.first, locked)
+>> +		ww_mutex_unlock(&obj->lock);
+>> +	init_llist_head(&ctx->locked);
+>> +}
+>> +EXPORT_SYMBOL(reservation_context_unlock_all);
+>> +
+>> +/**
+>> + * reservation_context_lock - lock a reservation object with deadlock handling
+>> + * @ctx: the context which should be used to lock the object
+>> + * @obj: the object which needs to be locked
+>> + * @interruptible: if we should wait interruptible or not
+>> + *
+>> + * Use @ctx to lock the reservation object. If a deadlock is detected we backoff
+>> + * by releasing all locked objects and use the slow path to lock the reservation
+>> + * object. After successfully locking in the slow path -EDEADLK is returned to
+>> + * signal that all other locks must be re-taken as well.
+>> + */
+>> +int reservation_context_lock(struct reservation_context *ctx,
+>> +			     struct reservation_object *obj,
+>> +			     bool interruptible)
+> reservation_lock_ctx is what we generally used in drm_modeset_lock, I like
+> that bikeshed a bit better.
 
-Nit: perhaps check size at the top and bail early instead of checking
-it at every step?
+Actually doesn't sound that good if you ask me.
 
-Thanks,
+Is reservation_lock_ctx the name of the function or the name of the 
+structure?
 
-                Ilya
+> Also to stay in style I think the explicit set of functions is much
+> better, i.e. reservation_lock_ctx, reservation_lock_interruptible_ctx and
+> reservation_trylock_ctx (later useful for lru applications where you still
+> want to drop the entire pile with resrvation_unlock_ctx).
+
+The problem is that I then will duplicate a lot of logic between 
+reservation_lock_ctx and reservation_lock_interruptible_ctx.
+
+> That's what all the other locking things do. ttm_bo_reserve has a long
+> list of parameters, and I can never remember which is which. I don't think
+> that's a great style.
+
+Yeah, I don't really like that either. It is one of the reasons why I 
+want to get rid of it.
+
+But duplicating implementations is not a good idea either. We could go 
+down the wait_event_* wait of doing thins and implement everything in 
+macros, but I don't really like that either.
+
+> Another option for interruptible vs. not is to store that in the
+> reservation_context and dtrt. Since generally interruptible or not is a
+> propery of the top-level handler - you need be able to pass EDEADLCK all
+> the way up anyway.
+>
+>> +{
+>> +	int ret = 0;
+>> +
+>> +	if (unlikely(ctx->contended == obj))
+>> +		ctx->contended = NULL;
+> Imo cleaner to handle that with EALREADY filtering from the ww_mutex_lock.
+
+How do you want to do this? EALREADY handling is different for different 
+users of this API.
+
+Christian.
+
+>
+>> +	else if (interruptible)
+>> +		ret = ww_mutex_lock_interruptible(&obj->lock, &ctx->ctx);
+>> +	else
+>> +		ret = ww_mutex_lock(&obj->lock, &ctx->ctx);
+>> +
+>> +	if (likely(!ret)) {
+>> +		/* don't use llist_add here, we have separate locking */
+>> +		obj->locked.next = ctx->locked.first;
+>> +		ctx->locked.first = &obj->locked;
+>> +		return 0;
+>> +	}
+>> +	if (unlikely(ret != -EDEADLK))
+>> +		return ret;
+>> +
+>> +	reservation_context_unlock_all(ctx);
+>> +
+>> +	if (interruptible) {
+>> +		ret = ww_mutex_lock_slow_interruptible(&obj->lock, &ctx->ctx);
+>> +		if (unlikely(ret))
+>> +			return ret;
+>> +	} else {
+>> +		ww_mutex_lock_slow(&obj->lock, &ctx->ctx);
+>> +	}
+>> +
+>> +	ctx->contended = obj;
+>> +	return -EDEADLK;
+>> +}
+>> +EXPORT_SYMBOL(reservation_context_lock);
+>> +
+>>   /**
+>>    * reservation_object_reserve_shared - Reserve space to add shared fences to
+>>    * a reservation_object.
+>> diff --git a/include/linux/reservation.h b/include/linux/reservation.h
+>> index ee750765cc94..a8a52e5d3e80 100644
+>> --- a/include/linux/reservation.h
+>> +++ b/include/linux/reservation.h
+>> @@ -44,11 +44,48 @@
+>>   #include <linux/slab.h>
+>>   #include <linux/seqlock.h>
+>>   #include <linux/rcupdate.h>
+>> +#include <linux/llist.h>
+>>   
+>>   extern struct ww_class reservation_ww_class;
+>>   extern struct lock_class_key reservation_seqcount_class;
+>>   extern const char reservation_seqcount_string[];
+>>   
+>> +/**
+>> + * struct reservation_context - context to lock reservation objects
+>> + * @ctx: ww_acquire_ctx used for deadlock detection
+>> + * @locked: list of reservation objects locked in this context
+>> + * @contended: contended reservation object
+>> + */
+>> +struct reservation_context {
+>> +	struct ww_acquire_ctx ctx;
+>> +	struct llist_head locked;
+>> +	struct reservation_object *contended;
+>> +};
+>> +
+>> +/**
+>> + * reservation_context_done - wrapper for ww_acquire_done
+>> + * @ctx: the reservation context which is done with locking
+>> + */
+>> +static inline void reservation_context_done(struct reservation_context *ctx)
+>> +{
+>> +	ww_acquire_done(&ctx->ctx);
+>> +}
+>> +
+>> +/**
+>> + * reservation_context_fini - wrapper for ww_acquire_fini
+>> + * @ctx: the reservation context which is finished
+>> + */
+>> +static inline void reservation_context_fini(struct reservation_context *ctx)
+>> +{
+>> +	ww_acquire_fini(&ctx->ctx);
+>> +}
+>> +
+>> +void reservation_context_init(struct reservation_context *ctx);
+>> +void reservation_context_unlock_all(struct reservation_context *ctx);
+>> +int reservation_context_lock(struct reservation_context *ctx,
+>> +			     struct reservation_object *obj,
+>> +			     bool interruptible);
+> Needs a __must_check.
+>
+>> +
+>>   /**
+>>    * struct reservation_object_list - a list of shared fences
+>>    * @rcu: for internal use
+>> @@ -71,6 +108,7 @@ struct reservation_object_list {
+>>    */
+>>   struct reservation_object {
+>>   	struct ww_mutex lock;
+>> +	struct llist_node locked;
+>>   	seqcount_t seq;
+>>   
+>>   	struct dma_fence __rcu *fence_excl;
+> Aside from the nits&bikesheds, I like.
+> -Daniel
+>
+>> -- 
+>> 2.17.1
+>>
+
