@@ -2,156 +2,89 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5B9C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 052A0C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C1342084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fygl8X6n"
+	by mail.kernel.org (Postfix) with ESMTP id D35AB2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfFYVpy (ORCPT
+        id S1726544AbfFYVrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 17:45:54 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36651 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFYVpx (ORCPT
+        Tue, 25 Jun 2019 17:47:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:53024 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbfFYVrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 17:45:53 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w7so326904oic.3;
-        Tue, 25 Jun 2019 14:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JjiTBZ0hm0NbqUS5/4bd1p2NmNnTTnu1Dvo2Kh058WY=;
-        b=Fygl8X6neXLKligulReeilyoG0dSjibvXxzB5K3QiSEGWUHn53omMxJXVy6dtXuree
-         kapPpf24Ab1SCrm8PcyefWC/Whia9xV1+TwqVpAQZ7sZAUkrSZNwMphtaXACYNcTJHJi
-         rSbPkODKXdqJ9kDKvCdN+77fOhnStuSZ0bF2Xqy2yzt3JWH+DpJoMrRKy2Uq4anb3f6Q
-         uGwTxo4t3VZXMKgs26OTPKLVpHtn2kXEeFXsnjj/byWFUM0K29RXkjfBg2MCKGWF5yM3
-         NTS0mPV+wehGpSuUUPtDptFBNn49ZtpRemI0eP+XnGCfBt18sdjjIrYnBETTN3fEfdUQ
-         gs3w==
+        Tue, 25 Jun 2019 17:47:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id p12so28033463iog.19
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 14:47:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JjiTBZ0hm0NbqUS5/4bd1p2NmNnTTnu1Dvo2Kh058WY=;
-        b=iqWVFCd940IYIdJ/FYj4W3p7VXX5racRZQILLgG6J95qrBbPSqzABgMTzhYaD9+S2y
-         cuhpe5pccyjgtJxTDBW83Emj9noJ1Lx3xSosdBc/VeM9jhzzdMgnYnAQBtG9cViqADLz
-         lRUDw4L3s9VLQ7rGUw+RfaNL+CLqHsP15TSozjR83mHApAd3xBZ7CfFk8dqKdI6HR1SR
-         EGczUDhqemqtXMZ+TPF4IsTszubi2l5JO5UoaOEP35fV9BFS0ymJOOsDO7GXgs8fLQNs
-         mUCDcoIWSI0/Qz6sO5elLbEsjaWvjNNDaLyr/nFl/Nw+4bLGEtilTLE+AS+9BBZDfOcz
-         pnaA==
-X-Gm-Message-State: APjAAAWmdtK3BIUS674PmQHqIgHMBaPSjlBREByKIXj1mcL5ZfC2UQ05
-        SMdquZpCoo2x2LAxM84dfhDBPgTA
-X-Google-Smtp-Source: APXvYqyvvvk+AYvxBruu9uR3BNyKTd9Flkw47/n6y+yQBiIPTNOFBXO56QK9Z9AECIulsn+YmQwmlA==
-X-Received: by 2002:aca:3a55:: with SMTP id h82mr2257138oia.49.1561499152775;
-        Tue, 25 Jun 2019 14:45:52 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id l145sm5772594oib.6.2019.06.25.14.45.51
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 14:45:52 -0700 (PDT)
-Subject: Re: [PATCH 1/4] b43legacy: remove b43legacy_dma_set_mask
-To:     Christoph Hellwig <hch@lst.de>, Kalle Valo <kvalo@codeaurora.org>
-Cc:     b43-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190625102932.32257-1-hch@lst.de>
- <20190625102932.32257-2-hch@lst.de>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <55cf8864-3fa8-a0ed-0887-39ea21085492@lwfinger.net>
-Date:   Tue, 25 Jun 2019 16:45:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=yOoMpaVT6dXrWDNYoDhSc/rJDkj0e0b8QMQijEfQWZE=;
+        b=r9DdrN4yyJKcrv3njAUmcH8pqsKEbKYHOE1337Yrm32TMmmlPKqIHCpF09PXjQuD0n
+         2hJD6xRI0DyVuDmk7tCXxzqpIoXpibIEMiwmr8t5El5MZnjxKESEhTQJYATiaVTgdUrT
+         Pzhm9VuZ7vNE7zdNP0TDkkXfH+AZd+uRL00TOhgvVhmkzzYqhddfWUt6PFDxLDbyjXz2
+         nnFCNW/+eJYnf/pg05Vdb+RhH6pi6XEGEClF3vb9kilDA/rykgNxAdt8pbWnjez/MkOH
+         Fu77+vFVZGpG0IRAF8knPdyZuBYxto8TeOqmifkhfMIUQnt9Oe1Osx2TjAONGF/Zp4Sc
+         v4PQ==
+X-Gm-Message-State: APjAAAV6Xl55uZj7xVuHVJiuKNafRELGHjGDLzGEDuX04bPMy6OTlgF5
+        hc/BloGfyLiQ3kIS7X2f0Sl3exPtEDrmFUAMaODkQ/fjLc8K
+X-Google-Smtp-Source: APXvYqyU1bxNICbJ8wES5sEXzxyS4g5ky0U0eMrzt2+0Hx2a7cmFllMtVHCMyUaMViswWU1qNtYw1qyRQRN2aVKMz96o+CWBaG/+
 MIME-Version: 1.0
-In-Reply-To: <20190625102932.32257-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a02:5a89:: with SMTP id v131mr629757jaa.130.1561499227626;
+ Tue, 25 Jun 2019 14:47:07 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 14:47:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c7a272058c2cde21@google.com>
+Subject: kernel panic: stack is corrupted in validate_chain
+From:   syzbot <syzbot+6ba34346b252f2d497c7@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/19 5:29 AM, Christoph Hellwig wrote:
-> These days drivers are not required to fallback to smaller DMA masks,
-> but can just set the largest mask they support, removing the need for
-> this trial and error logic.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/net/wireless/broadcom/b43legacy/dma.c | 39 +------------------
->   1 file changed, 1 insertion(+), 38 deletions(-)
+Hello,
 
-The patches work for PPC32 for both b43legacy and b43.
+syzbot found the following crash on:
 
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
+HEAD commit:    249155c2 Merge branch 'parisc-5.2-4' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a4572da00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=6ba34346b252f2d497c7
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135e34eea00000
 
-Thanks,
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6ba34346b252f2d497c7@syzkaller.appspotmail.com
 
-Larry
+Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:  
+validate_chain+0x69fc/0x84f0 kernel/locking/lockdep.c:161
+CPU: 0 PID: 8300 Comm: syz-executor.4 Not tainted 5.2.0-rc6+ #7
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+Shutting down cpus with NMI
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-> 
-> diff --git a/drivers/net/wireless/broadcom/b43legacy/dma.c b/drivers/net/wireless/broadcom/b43legacy/dma.c
-> index 2ce1537d983c..0c2de20622e3 100644
-> --- a/drivers/net/wireless/broadcom/b43legacy/dma.c
-> +++ b/drivers/net/wireless/broadcom/b43legacy/dma.c
-> @@ -797,43 +797,6 @@ void b43legacy_dma_free(struct b43legacy_wldev *dev)
->   	dma->tx_ring0 = NULL;
->   }
->   
-> -static int b43legacy_dma_set_mask(struct b43legacy_wldev *dev, u64 mask)
-> -{
-> -	u64 orig_mask = mask;
-> -	bool fallback = false;
-> -	int err;
-> -
-> -	/* Try to set the DMA mask. If it fails, try falling back to a
-> -	 * lower mask, as we can always also support a lower one. */
-> -	while (1) {
-> -		err = dma_set_mask_and_coherent(dev->dev->dma_dev, mask);
-> -		if (!err)
-> -			break;
-> -		if (mask == DMA_BIT_MASK(64)) {
-> -			mask = DMA_BIT_MASK(32);
-> -			fallback = true;
-> -			continue;
-> -		}
-> -		if (mask == DMA_BIT_MASK(32)) {
-> -			mask = DMA_BIT_MASK(30);
-> -			fallback = true;
-> -			continue;
-> -		}
-> -		b43legacyerr(dev->wl, "The machine/kernel does not support "
-> -		       "the required %u-bit DMA mask\n",
-> -		       (unsigned int)dma_mask_to_engine_type(orig_mask));
-> -		return -EOPNOTSUPP;
-> -	}
-> -	if (fallback) {
-> -		b43legacyinfo(dev->wl, "DMA mask fallback from %u-bit to %u-"
-> -			"bit\n",
-> -			(unsigned int)dma_mask_to_engine_type(orig_mask),
-> -			(unsigned int)dma_mask_to_engine_type(mask));
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->   int b43legacy_dma_init(struct b43legacy_wldev *dev)
->   {
->   	struct b43legacy_dma *dma = &dev->dma;
-> @@ -844,7 +807,7 @@ int b43legacy_dma_init(struct b43legacy_wldev *dev)
->   
->   	dmamask = supported_dma_mask(dev);
->   	type = dma_mask_to_engine_type(dmamask);
-> -	err = b43legacy_dma_set_mask(dev, dmamask);
-> +	err = dma_set_mask_and_coherent(dev->dev->dma_dev, dmamask);
->   	if (err) {
->   #ifdef CONFIG_B43LEGACY_PIO
->   		b43legacywarn(dev->wl, "DMA for this device not supported. "
-> 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
