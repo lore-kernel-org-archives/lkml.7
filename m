@@ -2,125 +2,131 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829A3C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B13C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5221420665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D234720665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ICNF3PTZ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MGJoayUh";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Rt7267vp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfFYEo6 (ORCPT
+        id S1727177AbfFYEp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:44:58 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35306 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFYEo5 (ORCPT
+        Tue, 25 Jun 2019 00:45:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50670 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbfFYEp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:44:57 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j19so15933516otq.2;
-        Mon, 24 Jun 2019 21:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Wp4HQypqw0rNbItr1Xs0WBR6fHG0G9gjAl5KxurVdE=;
-        b=ICNF3PTZ1ZfG+bAeY8F8Pp7sQzesnEsLfQyVK4xXEW0fE9JbdoeEwICCri9MhuwgDe
-         bm/0ejdD98vhkuaDReGiErs7EaKJphiOdNIOX5OTwKFKRbuUyOxVIAk4bHBff8k+v4sW
-         T7OmIR81tdf3Fy8cR5DX0+mQ0tZ/Wu4tdvEcn1ySqLThg5Z+Cqiyv07RISHe3YwpWKkU
-         mNX0GQfIvmuXGqm24S4OcATnGcJC5dp2nIjKXJ/eVlclscTS4ifWJKJt3gXQIn8V6JDV
-         mBBDQVVDx+ijpZkFkPqRJLSkoToQRF0nF2/Dh+zYJ2NvIUQ+MXj1dcWGXJ7WX+IKrAi0
-         Ackw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Wp4HQypqw0rNbItr1Xs0WBR6fHG0G9gjAl5KxurVdE=;
-        b=Xv186QGPgZP13JAw3vR3DBIJoOTcqbIY4jRNPEBRir2O3epY3OQvJUiFqxRaKKV1xj
-         C38jEqXAfy6wujtyZdBzMqnixEtVMbIYJO5s2tHDWqIQ/EV+CmWWc8GAFEAjBJ6opjNH
-         UvrLyl0s7mGX6iLpd7Fxr/AJXhnfRMNGdF2F3R/+AdcGmgeO3PBW/lQiRKnVIoWB82Ig
-         b4/ysTvtNUVi+9F9m0X5g7QJsXyFYT7pq61L4Vj4AzDrDWQxgP+Fmu2ZqJxpVr8MhZXs
-         Nu4SJvPnHS9pWn2tyTl20upmR02WPy5dsAvYA4C9wsKYBVWoWQXkAIa5eYeS7eySVmEv
-         /Agw==
-X-Gm-Message-State: APjAAAVo9zEl5O5telJB5IZaLgCAmVsHKOstqNaqZLUDiGZa1bcOK49O
-        C48aMcu5GvZG/ie3bbY4W3yuArIcuUI9W+KaaMzC0Y8C
-X-Google-Smtp-Source: APXvYqxsOdEMaHKmim8mpE6aFtY/5w9wT+CBAa2iQ2fftmNQo7l1oux8418VMI5kU7usdjz86T8c871EA6XxIf+xwSc=
-X-Received: by 2002:a9d:14a:: with SMTP id 68mr70034647otu.96.1561437896776;
- Mon, 24 Jun 2019 21:44:56 -0700 (PDT)
+        Tue, 25 Jun 2019 00:45:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6A45F60A00; Tue, 25 Jun 2019 04:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561437925;
+        bh=9V93ROdGlUSigSAlX7NoRRsuF7ozMoGNXJomxWmR4RI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=MGJoayUhyv9aKR5sR2O+WLwR/fc2b5RifCLvZV8Wz+57r7nZZeS5Hzevua140uDPB
+         9BF2p0Ht0NuZe7WztWxfAPVdWOKo38BLEJWVF286cA5S8cg/iPudwZf7wuoUEafPpz
+         kkmm44tO8RzjvMfOyE+43FARlFWbrpDj/ZS192Ew=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0385C608A5;
+        Tue, 25 Jun 2019 04:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561437924;
+        bh=9V93ROdGlUSigSAlX7NoRRsuF7ozMoGNXJomxWmR4RI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=Rt7267vpcZtphFsAY//Yx3Np8GMUbw8qWeqPHnExKN8K2oG0ZowGqBLOgPToazJ9O
+         PuQSO2QPhdy/aQUQyPfOM1fXziKhnutwXoZKS0f6yxylyTeHbjHvKLwAqLx2hu8WYa
+         nwPRuSU60YqvNI4WkYLxIxsnW2tGcEvmrgu5SmOs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0385C608A5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190617165836.4673-1-colin.king@canonical.com>
- <20190619051308.23582-1-martin.blumenstingl@googlemail.com>
- <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com> <CAFBinCDmYVPDMcwAAYhMfxxuTsG=xunduN58_8e20zE_Mhmb7Q@mail.gmail.com>
-In-Reply-To: <CAFBinCDmYVPDMcwAAYhMfxxuTsG=xunduN58_8e20zE_Mhmb7Q@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 25 Jun 2019 06:44:45 +0200
-Message-ID: <CAFBinCC-LLpfXQRFcKBbUpCfKc0S9Xtt60QrhEThsOFV-T7vFw@mail.gmail.com>
-Subject: Re: [PATCH] net: stmmac: add sanity check to device_property_read_u32_array
- call
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
-        kernel-janitors@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        peppe.cavallaro@st.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/2] mwifiex: dispatch/rotate from reorder table atomically
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190604205323.200361-2-briannorris@chromium.org>
+References: <20190604205323.200361-2-briannorris@chromium.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
+        Doug Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190625044525.6A45F60A00@smtp.codeaurora.org>
+Date:   Tue, 25 Jun 2019 04:45:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+Brian Norris <briannorris@chromium.org> wrote:
 
-On Thu, Jun 20, 2019 at 3:34 AM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Colin,
->
-> On Wed, Jun 19, 2019 at 8:55 AM Colin Ian King <colin.king@canonical.com> wrote:
-> >
-> > On 19/06/2019 06:13, Martin Blumenstingl wrote:
-> > > Hi Colin,
-> > >
-> > >> Currently the call to device_property_read_u32_array is not error checked
-> > >> leading to potential garbage values in the delays array that are then used
-> > >> in msleep delays.  Add a sanity check to the property fetching.
-> > >>
-> > >> Addresses-Coverity: ("Uninitialized scalar variable")
-> > >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > > I have also sent a patch [0] to fix initialize the array.
-> > > can you please look at my patch so we can work out which one to use?
-> > >
-> > > my concern is that the "snps,reset-delays-us" property is optional,
-> > > the current dt-bindings documentation states that it's a required
-> > > property. in reality it isn't, there are boards (two examples are
-> > > mentioned in my patch: [0]) without it.
-> > >
-> > > so I believe that the resulting behavior has to be:
-> > > 1. don't delay if this property is missing (instead of delaying for
-> > >    <garbage value> ms)
-> > > 2. don't error out if this property is missing
-> > >
-> > > your patch covers #1, can you please check whether #2 is also covered?
-> > > I tested case #2 when submitting my patch and it worked fine (even
-> > > though I could not reproduce the garbage values which are being read
-> > > on some boards)
-in the meantime I have tested your patch.
-when I don't set the "snps,reset-delays-us" property then I get the
-following error:
-  invalid property snps,reset-delays-us
+> mwifiex_11n_scan_and_dispatch() and
+> mwifiex_11n_dispatch_pkt_until_start_win() share similar patterns, where
+> they perform a few different actions on the same table, using the same
+> lock, but non-atomically. There have been other attempts to clean up
+> this sort of behavior, but they have had problems (incomplete;
+> introducing new deadlocks).
+> 
+> We can improve these functions' atomicity by queueing up our RX packets
+> in a list, to dispatch at the end of the function. This avoids problems
+> of another operation modifying the table in between our dispatch and
+> rotation operations.
+> 
+> This was inspired by investigations around this:
+> 
+>   http://lkml.kernel.org/linux-wireless/20181130175957.167031-1-briannorris@chromium.org
+>   Subject: [4.20 PATCH] Revert "mwifiex: restructure rx_reorder_tbl_lock usage"
+> 
+> While the original (now-reverted) patch had good intentions in
+> restructuring some of the locking patterns in this driver, it missed an
+> important detail: we cannot defer to softirq contexts while already in
+> an atomic context. We can help avoid this sort of problem by separating
+> the two steps of:
+> (1) iterating / clearing the mwifiex reordering table
+> (2) dispatching received packets to upper layers
+> 
+> This makes it much harder to make lock recursion mistakes, as these
+> two steps no longer need to hold the same locks.
+> 
+> Testing: I've played with a variety of stress tests, including download
+> stress tests on the same APs which caught regressions with commit
+> 5188d5453bc9 ("mwifiex: restructure rx_reorder_tbl_lock usage"). I've
+> primarily tested on Marvell 8997 / PCIe, although I've given 8897 / SDIO
+> a quick spin as well.
+> 
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Acked-by: Ganapathi Bhat <gbhat@marvell.com>
 
-my patch has landed in the meantime: [0]
-how should we proceed with your patch?
+New warning:
 
+drivers/net/wireless/marvell/mwifiex/wmm.c: In function 'mwifiex_wmm_process_tx':
+drivers/net/wireless/marvell/mwifiex/wmm.c:1438:4: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
+    mwifiex_11n_aggregate_pkt(priv, ptr, ptr_index, flags);
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/wmm.c:1406:16: note: 'flags' was declared here
+  unsigned long flags;
+                ^~~~~
 
-Martin
+2 patches set to Changes Requested.
 
+10976083 [1/2] mwifiex: dispatch/rotate from reorder table atomically
+10976087 [2/2] mwifiex: don't disable hardirqs; just softirqs
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c?id=84ce4d0f9f55b4f4ca4d4edcbb54a23d9dad1aae
+-- 
+https://patchwork.kernel.org/patch/10976083/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
