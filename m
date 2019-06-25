@@ -2,99 +2,149 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D17C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F05AC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8B020665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:07:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kXOt0tAt"
+	by mail.kernel.org (Postfix) with ESMTP id E622120863
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfFYHH0 (ORCPT
+        id S1729838AbfFYHIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:07:26 -0400
-Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:16683
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        Tue, 25 Jun 2019 03:08:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53242 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726397AbfFYHHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:07:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j8HKRmA0t2b9qClhq3yOLc/W8mjm7O8q2IAz2vweakY=;
- b=kXOt0tAtd8qN/+TyU6D5Y+thZdulEJCTrjMB8OmySXT1SDvOhl39L32hhG9omwPVwBs7+fA6MYYa3H+Pnpe/eoKgnp9CT9IzwvwDdXWJABmGw+ONjQeIjG1Em7qGK6HDfbK70In9Mu4lNkA3ZmKwSmLZpOnJvbU1Ve9EpyUsA2Y=
-Received: from DB7PR04MB5178.eurprd04.prod.outlook.com (20.176.236.22) by
- DB7PR04MB4028.eurprd04.prod.outlook.com (52.134.108.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 07:07:20 +0000
-Received: from DB7PR04MB5178.eurprd04.prod.outlook.com
- ([fe80::2c71:9f2f:8db1:a290]) by DB7PR04MB5178.eurprd04.prod.outlook.com
- ([fe80::2c71:9f2f:8db1:a290%4]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
- 07:07:20 +0000
-From:   Jacky Bai <ping.bai@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: Recall: [PATCH 2/2] clk: imx8mm: GPT1 clock mux option #5 should be
- sys_pll1_80m
-Thread-Topic: [PATCH 2/2] clk: imx8mm: GPT1 clock mux option #5 should be
- sys_pll1_80m
-Thread-Index: AQHVKyShV/C541yfwEOXsooxpsWQLg==
-X-CallingTelephoneNumber: IPM.Note
-X-VoiceMessageDuration: 1
-X-FaxNumberOfPages: 0
-Date:   Tue, 25 Jun 2019 07:07:20 +0000
-Message-ID: <DB7PR04MB5178A84F3FC1BCF4843D441587E30@DB7PR04MB5178.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ping.bai@nxp.com; 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1f37cb83-06dd-4085-2cc4-08d6f93bc422
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB4028;
-x-ms-traffictypediagnostic: DB7PR04MB4028:
-x-microsoft-antispam-prvs: <DB7PR04MB402867C44C9B3F561BDFE36487E30@DB7PR04MB4028.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(346002)(366004)(136003)(189003)(199004)(66476007)(66446008)(316002)(73956011)(25786009)(71190400001)(71200400001)(186003)(26005)(74316002)(305945005)(64756008)(102836004)(66556008)(6506007)(486006)(14454004)(66066001)(558084003)(2906002)(7736002)(256004)(7696005)(110136005)(8676002)(68736007)(6436002)(86362001)(9686003)(2201001)(55016002)(8936002)(81156014)(4326008)(52536014)(6116002)(3846002)(81166006)(5660300002)(2501003)(478600001)(66946007)(99286004)(76116006)(476003)(53936002)(33656002)(32563001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4028;H:DB7PR04MB5178.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FtnHWyYqCLiNAuSRL/8vDldZWPex35pheTa9W+j7UixI8Ilt16g8YwwgWWibfIEX6I1gxFafuh2GM8WeNwv4FD8Nb8aBrW4tiFupgcTFx0JWbajiIWvAbmY1FTlY0A6/+Pid6qeZWd2kCRCo0OPAWjjqN1Z9wh7S2MpF+tFfIhtrYAv/oDmjU54IXUv5vOFviI6dFsBdFuWSLFVKJp/9zRkKFYN23UIwRsY8mdw3b4yedSL+yAlI9j6/GsIgHTkAioxzBMLusXRc2HidHrwiPuwufY/2FmxF1/i1qo/YciTKqMdVET9kCrB2VILKSeA+I3q2EwS9UYn3OMJZHbjRKbyzXK57IbSGsOEXuts6mPbwmFq/xfpA/IEZOZjS/f7XV/jAbNQ9lzvulfVoDRMd3oIndc0UTH9X68b3NMdPLLI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726397AbfFYHIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:08:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 05584ADF2;
+        Tue, 25 Jun 2019 07:08:05 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id E62D81E2F23; Tue, 25 Jun 2019 09:08:04 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 09:08:04 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-efi@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, yuchao0@huawei.com,
+        linux-mm@kvack.org, clm@fb.com, adilger.kernel@dilger.ca,
+        matthew.garrett@nebula.com, linux-nilfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, devel@lists.orangefs.org,
+        josef@toxicpanda.com, reiserfs-devel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, dsterba@suse.com, jaegeuk@kernel.org,
+        tytso@mit.edu, ard.biesheuvel@linaro.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        jk@ozlabs.org, jack@suse.com, linux-fsdevel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com
+Subject: Re: [Ocfs2-devel] [PATCH 2/7] vfs: flush and wait for io when
+ setting the immutable flag via SETFLAGS
+Message-ID: <20190625070804.GA31527@quack2.suse.cz>
+References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+ <156116142734.1664939.5074567130774423066.stgit@magnolia>
+ <20190624113737.GG32376@quack2.suse.cz>
+ <20190624215817.GE1611011@magnolia>
+ <20190625030439.GA5379@magnolia>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f37cb83-06dd-4085-2cc4-08d6f93bc422
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 07:07:20.6915
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ping.bai@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4028
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625030439.GA5379@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacky Bai would like to recall the message, "[PATCH 2/2] clk: imx8mm: GPT1 =
-clock mux option #5 should be sys_pll1_80m".=
+On Mon 24-06-19 20:04:39, Darrick J. Wong wrote:
+> On Mon, Jun 24, 2019 at 02:58:17PM -0700, Darrick J. Wong wrote:
+> > On Mon, Jun 24, 2019 at 01:37:37PM +0200, Jan Kara wrote:
+> > > On Fri 21-06-19 16:57:07, Darrick J. Wong wrote:
+> > > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > > 
+> > > > When we're using FS_IOC_SETFLAGS to set the immutable flag on a file, we
+> > > > need to ensure that userspace can't continue to write the file after the
+> > > > file becomes immutable.  To make that happen, we have to flush all the
+> > > > dirty pagecache pages to disk to ensure that we can fail a page fault on
+> > > > a mmap'd region, wait for pending directio to complete, and hope the
+> > > > caller locked out any new writes by holding the inode lock.
+> > > > 
+> > > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > 
+> > > Seeing the way this worked out, is there a reason to have separate
+> > > vfs_ioc_setflags_flush_data() instead of folding the functionality in
+> > > vfs_ioc_setflags_check() (possibly renaming it to
+> > > vfs_ioc_setflags_prepare() to indicate it does already some changes)? I
+> > > don't see any place that would need these two separated...
+> > 
+> > XFS needs them to be separated.
+> > 
+> > If we even /think/ that we're going to be setting the immutable flag
+> > then we need to grab the IOLOCK and the MMAPLOCK to prevent further
+> > writes while we drain all the directio writes and dirty data.  IO
+> > completions for the write draining can take the ILOCK, which means that
+> > we can't have grabbed it yet.
+> > 
+> > Next, we grab the ILOCK so we can check the new flags against the inode
+> > and then update the inode core.
+> > 
+> > For most filesystems I think it suffices to inode_lock and then do both,
+> > though.
+> 
+> Heh, lol, that applies to fssetxattr, not to setflags, because xfs
+> setflags implementation open-codes the relevant fssetxattr pieces.
+> So for setflags we can combine both parts into a single _prepare
+> function.
+
+Yeah. Also for fssetxattr we could use the prepare helper at least for
+ext4, f2fs, and btrfs where the situation isn't so complex as for xfs to
+save some boilerplate code.
+
+								Honza
+
+> > > > +/*
+> > > > + * Flush all pending IO and dirty mappings before setting S_IMMUTABLE on an
+> > > > + * inode via FS_IOC_SETFLAGS.  If the flush fails we'll clear the flag before
+> > > > + * returning error.
+> > > > + *
+> > > > + * Note: the caller should be holding i_mutex, or else be sure that
+> > > > + * they have exclusive access to the inode structure.
+> > > > + */
+> > > > +static inline int vfs_ioc_setflags_flush_data(struct inode *inode, int flags)
+> > > > +{
+> > > > +	int ret;
+> > > > +
+> > > > +	if (!vfs_ioc_setflags_need_flush(inode, flags))
+> > > > +		return 0;
+> > > > +
+> > > > +	inode_set_flags(inode, S_IMMUTABLE, S_IMMUTABLE);
+> > > > +	ret = inode_flush_data(inode);
+> > > > +	if (ret)
+> > > > +		inode_set_flags(inode, 0, S_IMMUTABLE);
+> > > > +	return ret;
+> > > > +}
+> > > 
+> > > Also this sets S_IMMUTABLE whenever vfs_ioc_setflags_need_flush() returns
+> > > true. That is currently the right thing but seems like a landmine waiting
+> > > to trip? So I'd just drop the vfs_ioc_setflags_need_flush() abstraction to
+> > > make it clear what's going on.
+> > 
+> > Ok.
+> > 
+> > --D
+> > 
+> > > 
+> > > 								Honza
+> > > -- 
+> > > Jan Kara <jack@suse.com>
+> > > SUSE Labs, CR
+> > 
+> > _______________________________________________
+> > Ocfs2-devel mailing list
+> > Ocfs2-devel@oss.oracle.com
+> > https://oss.oracle.com/mailman/listinfo/ocfs2-devel
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
