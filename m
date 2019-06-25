@@ -2,247 +2,162 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 333FBC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D40C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF5520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="biXWqaky"
+	by mail.kernel.org (Postfix) with ESMTP id 762C920883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfFYJbm (ORCPT
+        id S1731570AbfFYJbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:31:42 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45754 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbfFYJbl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:31:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so16994351wre.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 02:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Toj+LJIB4PKggH1iYkdWD6WYjNSZkZdJZmfKxIdgNOM=;
-        b=biXWqakyslc/OXZwQ+Upfk9PMvx5lMCOSMIB9fOiT62/BwStJIEMD8hhIZj64MC0iE
-         R+eAmt4ZBd4HuMpLGKvl8S1MyHBeUXhkemkQPn4vbEzZkbQg9NB89HDEsZfolFZoSwQM
-         kq7QCAlLW1Zsar5w4f6WMp6HbV2Lez1WCwh9/MdwukTSm4jTDcCJGDi0R3j0192Rrlu1
-         44Yqs6Prjl0MKH9QYjBdWb9s1g/bnJYImDb8HU8SqasCKChi/efEoWsGE/FLjEgGi3k2
-         WGBCIlsap9oBn2dTHFkdkLFb0ijKBsJHiyG3srWMby0xQf1hMq+CirMTZJhYCegyludE
-         NEFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Toj+LJIB4PKggH1iYkdWD6WYjNSZkZdJZmfKxIdgNOM=;
-        b=sBawxMEMK+9Jvah5y2EByT2dkMUtY+rLUeFvBL8YvlKMZJ5Cbdz7yGTXhWt5mW4fnw
-         Eg6DtZOA3z27QycgQErz8k1Ht/UzfY6TmNz35mSfrzbktL+YoDR23MwGbtQsnT5zN/N4
-         qOWMYXp47wliOyBo915HN2Cu9Zklt7AtGKIeiR7z5kl3Obw7m7L1yt6qjy0TnL5Z+5aS
-         RUZIHblj5Yp8g+Bj+3MstJ41w9e84AfF8ePNefR16yVE5WM/fb29vCVUqS6zbTGJ616u
-         c9qvdgjpMv+R8PpHKdsaiuxHh/xTxI0tGnCp2wdINYFxXx9ZJ8LkPG15TJ5uJqV3IU2r
-         yFJw==
-X-Gm-Message-State: APjAAAV/6xuAxUQskfJms7w8vam5fcUpBMi6l5sccaycSYAcsVsy5D/V
-        6AB4cC6tRj+AMqDZ5PyRwsNrTw==
-X-Google-Smtp-Source: APXvYqx3pLQItdPselIyeEnN0nT5U01EEfJwpGcin9np6Y2GdTYDM+GrxpQmsENZMBQMi4hmSOPOqw==
-X-Received: by 2002:a5d:4489:: with SMTP id j9mr70765943wrq.15.1561455098468;
-        Tue, 25 Jun 2019 02:31:38 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id f2sm19221175wrq.48.2019.06.25.02.31.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 02:31:37 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 11:31:37 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net, mszeredi@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/25] fsinfo: Add syscalls to other arches [ver #14]
-Message-ID: <20190625093136.rxljcdgruca37cuh@brauner.io>
-References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
- <156138534520.25627.6299627770679918852.stgit@warthog.procyon.org.uk>
+        Tue, 25 Jun 2019 05:31:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:36740 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728506AbfFYJbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:31:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B040360;
+        Tue, 25 Jun 2019 02:31:49 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7C2C3F71E;
+        Tue, 25 Jun 2019 02:31:46 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 10:31:44 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: Re: [PATCH v10 12/16] sched/core: uclamp: Extend CPU's cgroup
+ controller
+Message-ID: <20190625093144.g6forddrdql5lotv@e110439-lin>
+References: <20190621084217.8167-1-patrick.bellasi@arm.com>
+ <20190621084217.8167-13-patrick.bellasi@arm.com>
+ <20190622150332.GM657710@devbig004.ftw2.facebook.com>
+ <20190624172906.3d3w6352ji4izjgo@e110439-lin>
+ <20190624175215.GR657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156138534520.25627.6299627770679918852.stgit@warthog.procyon.org.uk>
+In-Reply-To: <20190624175215.GR657710@devbig004.ftw2.facebook.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:09:05PM +0100, David Howells wrote:
-> Add the fsinfo syscall to the other arches.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
-> 
->  arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
->  arch/arm/tools/syscall.tbl                  |    1 +
->  arch/arm64/include/asm/unistd.h             |    2 +-
+On 24-Jun 10:52, Tejun Heo wrote:
 
-I think you missed
+> Hey, Patrick.
 
-arch/arm64/include/asm/unistd32.h
+Hi,
 
-?
-
->  arch/ia64/kernel/syscalls/syscall.tbl       |    1 +
->  arch/m68k/kernel/syscalls/syscall.tbl       |    1 +
->  arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
->  arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
->  arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
->  arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
->  arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
->  arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
->  arch/s390/kernel/syscalls/syscall.tbl       |    1 +
->  arch/sh/kernel/syscalls/syscall.tbl         |    1 +
->  arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
->  arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
->  15 files changed, 15 insertions(+), 1 deletion(-)
+> On Mon, Jun 24, 2019 at 06:29:06PM +0100, Patrick Bellasi wrote:
+> > > I kinda wonder whether the term bandwidth is a bit confusing because
+> > > it's also used for cpu.max/min.  Would just calling it frequency be
+> > > clearer?
+> > 
+> > Maybe I should find a better way to express the concept above.
+> > 
+> > I agree that bandwidth is already used by cpu.{max,min}, what I want
+> > to call out is that clamps allows to enrich that concept.
+> > 
+> > By hinting the scheduler on min/max required utilization we can better
+> > defined the amount of actual CPU cycles required/allowed.
+> > That's a bit more precise bandwidth control compared to just rely on
+> > temporal runnable/period limits.
 > 
-> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-> index 9e7704e44f6d..624d01c3c8eb 100644
-> --- a/arch/alpha/kernel/syscalls/syscall.tbl
-> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
-> @@ -473,3 +473,4 @@
->  541	common	fsconfig			sys_fsconfig
->  542	common	fsmount				sys_fsmount
->  543	common	fspick				sys_fspick
-> +544	common	fsinfo				sys_fsinfo
-> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-> index aaf479a9e92d..ad608b49808c 100644
-> --- a/arch/arm/tools/syscall.tbl
-> +++ b/arch/arm/tools/syscall.tbl
-> @@ -447,3 +447,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-> index 70e6882853c0..e8f7d95a1481 100644
-> --- a/arch/arm64/include/asm/unistd.h
-> +++ b/arch/arm64/include/asm/unistd.h
-> @@ -44,7 +44,7 @@
->  #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
->  #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
->  
-> -#define __NR_compat_syscalls		434
-> +#define __NR_compat_syscalls		435
->  #endif
->  
->  #define __ARCH_WANT_SYS_CLONE
-> diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-> index e01df3f2f80d..68314763ad16 100644
-> --- a/arch/ia64/kernel/syscalls/syscall.tbl
-> +++ b/arch/ia64/kernel/syscalls/syscall.tbl
-> @@ -354,3 +354,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-> index 7e3d0734b2f3..ee73a7534b1b 100644
-> --- a/arch/m68k/kernel/syscalls/syscall.tbl
-> +++ b/arch/m68k/kernel/syscalls/syscall.tbl
-> @@ -433,3 +433,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-> index 26339e417695..7bc067f4b713 100644
-> --- a/arch/microblaze/kernel/syscalls/syscall.tbl
-> +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-> @@ -439,3 +439,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> index 0e2dd68ade57..29b76bd67cc0 100644
-> --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-> @@ -372,3 +372,4 @@
->  431	n32	fsconfig			sys_fsconfig
->  432	n32	fsmount				sys_fsmount
->  433	n32	fspick				sys_fspick
-> +434	n32	fsinfo				sys_fsinfo
-> diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-> index 5eebfa0d155c..349fb30bb8b5 100644
-> --- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-> @@ -348,3 +348,4 @@
->  431	n64	fsconfig			sys_fsconfig
->  432	n64	fsmount				sys_fsmount
->  433	n64	fspick				sys_fspick
-> +434	n64	fsinfo				sys_fsinfo
-> diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-> index 3cc1374e02d0..71057426b503 100644
-> --- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-> +++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-> @@ -421,3 +421,4 @@
->  431	o32	fsconfig			sys_fsconfig
->  432	o32	fsmount				sys_fsmount
->  433	o32	fspick				sys_fspick
-> +434	o32	fsinfo				sys_fsinfo
-> diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-> index c9e377d59232..32cff48a1ebd 100644
-> --- a/arch/parisc/kernel/syscalls/syscall.tbl
-> +++ b/arch/parisc/kernel/syscalls/syscall.tbl
-> @@ -430,3 +430,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-> index 103655d84b4b..e5755eb6fb84 100644
-> --- a/arch/powerpc/kernel/syscalls/syscall.tbl
-> +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-> @@ -515,3 +515,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-> index e822b2964a83..bcd54116e107 100644
-> --- a/arch/s390/kernel/syscalls/syscall.tbl
-> +++ b/arch/s390/kernel/syscalls/syscall.tbl
-> @@ -436,3 +436,4 @@
->  431  common	fsconfig		sys_fsconfig			sys_fsconfig
->  432  common	fsmount			sys_fsmount			sys_fsmount
->  433  common	fspick			sys_fspick			sys_fspick
-> +434	common	fsinfo			sys_fsinfo			sys_fsinfo
-> diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-> index 016a727d4357..0320a5c63cbd 100644
-> --- a/arch/sh/kernel/syscalls/syscall.tbl
-> +++ b/arch/sh/kernel/syscalls/syscall.tbl
-> @@ -436,3 +436,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-> index e047480b1605..f81b1f9402bd 100644
-> --- a/arch/sparc/kernel/syscalls/syscall.tbl
-> +++ b/arch/sparc/kernel/syscalls/syscall.tbl
-> @@ -479,3 +479,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
-> diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-> index 5fa0ee1c8e00..729795148850 100644
-> --- a/arch/xtensa/kernel/syscalls/syscall.tbl
-> +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-> @@ -404,3 +404,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +434	common	fsinfo				sys_fsinfo
+> I see.  I wonder whether it's overloading the same term too subtly
+> tho.  It's great to document how they interact but it *might* be
+> easier for readers if a different term is used even if the meaning is
+> essentially the same.  Anyways, it's a nitpick.  Please feel free to
+> ignore.
+
+Got it, will try come up with a better description in the v11 to avoid
+confusion and better explain the "improvements" without polluting too
+much the original concept.
+
+> > > > +	tg = css_tg(of_css(of));
+> > > > +	if (tg == &root_task_group) {
+> > > > +		ret = -EINVAL;
+> > > > +		goto out;
+> > > > +	}
+> > > 
+> > > I don't think you need the above check.
+> > 
+> > Don't we want to forbid attributes tuning from the root group?
 > 
+> Yeah, that's enforced by NOT_ON_ROOT flag, right?
+
+Oh right, since we don't show them we can't write them :)
+
+> > > So, uclamp.max limits the maximum freq% can get and uclamp.min limits
+> > > hte maximum freq% protection can get in the subtree.  Let's say
+> > > uclamp.max is 50% and uclamp.min is 100%.
+> > 
+> > That's not possible, in the current implementation we always enforce
+> > the limit (uclamp.max) to be _not smaller_ then the protection
+> > (uclamp.min).
+> > 
+> > Indeed, in principle, it does not make sense to ask for a minimum
+> > utilization (i.e. frequency boosting) which is higher then the
+> > maximum allowed utilization (i.e. frequency capping).
+> 
+> Yeah, I'm trying to explain actually it does.
+> 
+> > > It means that protection is not limited but the actual freq% is
+> > > limited upto 50%, which isn't necessarily invalid.
+> > > For a simple example, a user might be saying
+> > > that they want to get whatever protection they can get from its parent
+> > > but wanna limit eventual freq at 50% and it isn't too difficult to
+> > > imagine cases where the two knobs are configured separately especially
+> > > configuration is being managed hierarchically / automatically.
+> > 
+> > That's not my understanding, in v10 by default when we create a
+> > subgroup we assign it uclamp.min=0%, meaning that we don't boost
+> > frequencies.
+> > 
+> > It seems instead that you are asking to set uclamp.min=100% by
+> > default, so that the effective value will give us whatever the father
+> > allow. Is that correct?
+> 
+> No, the defaults are fine.  I'm trying to say that min/max
+> configurations don't need to be coupled like this and there are valid
+> use cases where the configured min is higher than max when
+> configurations are nested and managed automatically.
+> 
+> Limits always trump protection in effect of course but please don't
+> limit what can be configured.
+
+Got it, thanks!
+
+Will fix it in v11.
+
+> Thanks.
+> 
+> --
+> tejun
+
+Cheers,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
