@@ -2,156 +2,157 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7415AC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FC9C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4519620656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C9820644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OCpLaY2I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bF+QFKxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbfFYLCY (ORCPT
+        id S1730019AbfFYLDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:02:24 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55968 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfFYLCY (ORCPT
+        Tue, 25 Jun 2019 07:03:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37062 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfFYLDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:02:24 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PAxxMr177500;
-        Tue, 25 Jun 2019 11:01:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=B2zsKIoRAShW+y2NyCEXOSxGQYTAtwaazZmMjEodyZ8=;
- b=OCpLaY2IF7JosIlxBkL5z+C6J6pDZgAGpE5VAHMrOK0QoZyfAVntL3gJ0wbBqeALTtrV
- liu8QqcPTFm+zofwM6Km6G9TeVdiU4xkFKiGZfMwMqDracIOztM3/iN5Az6gDzv2Cd0N
- 0FwzYq4B/mKONmqBkrJf700Qx8OpQOQ/7jNy+L9SM2UX5dHjejKczUKTe1lTOncA84Em
- VZUab5EIESL2HXo2WHneToCz2fPIIcG2BLjsBxDGC/7azL1AcNRlajwo0U2t5ukBEX0E
- 7EMg729E4UuLtnWmfSamjWb4/tFLjrF8F5po4yea+VFPO2oj6/SbzlYjRrVXEpDgU7MV Fg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2t9brt3pd1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 11:01:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PB030j010029;
-        Tue, 25 Jun 2019 11:01:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t99f3tbn0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 11:01:40 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5PB1drN020837;
-        Tue, 25 Jun 2019 11:01:39 GMT
-Received: from [192.168.14.112] (/109.64.216.174)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 04:01:39 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH] x86/kvm/nVMCS: fix VMCLEAR when Enlightened VMCS is in
- use
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <87lfxqdp3n.fsf@vitty.brq.redhat.com>
-Date:   Tue, 25 Jun 2019 14:01:36 +0300
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E7C72E0C-B44F-4CE6-8325-EA32521D75B7@oracle.com>
-References: <20190624133028.3710-1-vkuznets@redhat.com>
- <CEFF2A14-611A-417C-BC0A-8814862F26C6@oracle.com>
- <87lfxqdp3n.fsf@vitty.brq.redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906250089
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250089
+        Tue, 25 Jun 2019 07:03:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=542HpBtIxMw7m821MDGhNcvG3Hp3ks6DyM341W05HKE=; b=bF+QFKxbPSnle9UAvXDU6eRA7
+        2TPlDKOFhkrsh1hxhtRJx3ov0pkdxOCNzAhip4QrCdep6tZFZ25uSsI4/8TzJSvkqzCMuF7fsITkx
+        S0oolCLV4PQfoCZIviuHWbMq5e+mhr4o/zfriCpMFZL2c2Ihn5tQwMY7RrpifSh5v6ZJPvZWirJ7+
+        YgV+4c9v5CpcODIq2+IEhf9AiCbi+TJpXRt1Cmezv3eFvqmdCohWLnGE6P0Ak8I7fnr6v4ymB/AZO
+        XOBAbIKN/EAgi2I/JXb6Y0DrHl+WYMD/HfMPRmugaqvgrZEk+cvtsPnJVUK8xRDcjBIaegprwKASW
+        Q2CP++nXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfjE7-0002ts-2p; Tue, 25 Jun 2019 11:03:03 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F29F209FD684; Tue, 25 Jun 2019 13:03:01 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 13:03:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in mark_lock
+Message-ID: <20190625110301.GX3419@hirez.programming.kicks-ass.net>
+References: <0000000000005aedf1058c1bf7e8@google.com>
+ <alpine.DEB.2.21.1906250820060.32342@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906250820060.32342@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 25, 2019 at 08:20:56AM +0200, Thomas Gleixner wrote:
+> On Mon, 24 Jun 2019, syzbot wrote:
 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    dc636f5d Add linux-next specific files for 20190620
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=162b68b1a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=99c104b0092a557b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=a861f52659ae2596492b
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110b24f6a00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com
+> > 
+> > ------------[ cut here ]------------
+> > DEBUG_LOCKS_WARN_ON(1)
+> > WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167 hlock_class
+> > kernel/locking/lockdep.c:167 [inline]
+> > WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167 hlock_class
+> > kernel/locking/lockdep.c:156 [inline]
+> > WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167
+> > mark_lock+0x22b/0x11e0 kernel/locking/lockdep.c:3594
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 0 PID: 9968 Comm: syz-executor.2 Not tainted 5.2.0-rc5-next-20190620 #19
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google
+> > 01/01/2011
+> > Call Trace:
+> > <IRQ>
+> > __dump_stack lib/dump_stack.c:77 [inline]
+> > dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> > panic+0x2dc/0x755 kernel/panic.c:219
+> > __warn.cold+0x20/0x4c kernel/panic.c:576
+> > report_bug+0x263/0x2b0 lib/bug.c:186
+> > fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> > fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> > do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+> > do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+> > invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+> > RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
+> > RIP: 0010:hlock_class kernel/locking/lockdep.c:156 [inline]
+> > RIP: 0010:mark_lock+0x22b/0x11e0 kernel/locking/lockdep.c:3594
+> > Code: d0 7c 08 84 d2 0f 85 33 0f 00 00 44 8b 15 4d 14 4a 08 45 85 d2 75 b6 48
+> > c7 c6 c0 a6 8b 87 48 c7 c7 00 a7 8b 87 e8 ad e6 eb ff <0f> 0b 31 db e9 a8 fe
+> > ff ff 48 c7 c7 80 71 86 8a e8 f0 95 53 00 e9
+> > RSP: 0018:ffff8880ae809ad0 EFLAGS: 00010082
+> > RAX: 0000000000000000 RBX: 0000000000000f1d RCX: 0000000000000000
+> > RDX: 0000000000010000 RSI: ffffffff815b37e6 RDI: ffffed1015d0134c
+> > RBP: ffff8880ae809b20 R08: ffff88808662e0c0 R09: fffffbfff11b3285
+> > R10: fffffbfff11b3284 R11: ffffffff88d99423 R12: 0000000000000000
+> > R13: ffff88808662e9c8 R14: 000000000000004f R15: 00000000000c4f1d
+> > mark_usage kernel/locking/lockdep.c:3485 [inline]
+> > __lock_acquire+0x1e1a/0x4680 kernel/locking/lockdep.c:3839
+> > lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4418
+> > __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+> > _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+> > try_to_wake_up+0x90/0x1430 kernel/sched/core.c:2000
+> > wake_up_process+0x10/0x20 kernel/sched/core.c:2114
 
-> On 25 Jun 2019, at 11:51, Vitaly Kuznetsov <vkuznets@redhat.com> =
-wrote:
->=20
-> Liran Alon <liran.alon@oracle.com> writes:
->=20
->>> On 24 Jun 2019, at 16:30, Vitaly Kuznetsov <vkuznets@redhat.com> =
-wrote:
->>>=20
->>>=20
->>> +bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 *evmptr)
->>=20
->> I prefer to rename evmptr to evmcs_ptr. I think it=E2=80=99s more =
-readable and sufficiently short.
->> In addition, I think you should return either -1ull or =
-assist_page.current_nested_vmcs.
->> i.e. Don=E2=80=99t return evmcs_ptr by pointer but instead as a =
-return-value
->> and get rid of the bool.
->=20
-> Actually no, sorry, I'm having second thoughts here: in =
-handle_vmclear()
-> we don't care about the value of evmcs_ptr, we only want to check that
-> enlightened vmentry bit is enabled in assist page. If we switch to
-> checking evmcs_ptr against '-1', for example, we will make '-1' a =
-magic
-> value which is not in the TLFS. Windows may decide to use it for
-> something else - and we will get a hard-to-debug bug again.
+That's trying to acquire p->pi_lock, and the DEBUG_LOCKS_WARN_ON() that
+triggers has the comment:
 
-I=E2=80=99m not sure I understand.
-You are worried that when guest have setup a valid assist-page and set =
-enlighten_vmentry to true,
-that assist_page.current_nested_vmcs can be -1ull and still be =
-considered a valid eVMCS?
-I don't think that's reasonable.
+  /*
+   * Someone passed in garbage, we give up.
+   */
 
-i.e. I thought about having this version of the method:
+Which seems to indicate we triggered some use-after-free or other
+corruption scenario (@p is buggered in any case).
 
-+u64 nested_enlightened_vmentry(struct kvm_vcpu *vcpu)
-+{
-+	struct hv_vp_assist_page assist_page;
-+
-+	if (unlikely(!kvm_hv_get_assist_page(vcpu, &assist_page)))
-+		return -1ull;
-+
-+	if (unlikely(!assist_page.enlighten_vmentry))
-+		return -1ull;
-+
-+	return assist_page.current_nested_vmcs;
-+}
-+
+> > hrtimer_wakeup+0x48/0x60 kernel/time/hrtimer.c:1636
+> > __run_hrtimer kernel/time/hrtimer.c:1388 [inline]
+> > __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1450
+> > hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1508
+> > local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
+> > smp_apic_timer_interrupt+0x12a/0x5b0 arch/x86/kernel/apic/apic.c:1066
+> > apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+> > </IRQ>
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
 
--Liran
+If we look at the 'console output' provided above, we'll see that
+there's two CPUs going *splat* at the same time, the above is first, but
+the second does:
 
->=20
-> If you still dislike nested_enlightened_vmentry() having the side =
-effect
-> of fetching evmcs_ptr I can get rid of it by splitting the function =
-into
-> two, however, it will be less efficient for
-> nested_vmx_handle_enlightened_vmptrld(). Or we can just leave things =
-as
-> they are there and use the newly introduced function in =
-handle_vmclear()
-> only.
->=20
-> --=20
-> Vitaly
+[   93.859778][ T9977] kasan: GPF could be caused by NULL-ptr deref or user memory access
+[   93.869482][ T9977] general protection fault: 0000 [#1] PREEMPT SMP KASAN
+[   93.881836][ T9977] CPU: 1 PID: 9977 Comm: syz-executor.4 Not tainted 5.2.0-rc5-next-20190620 #19
 
+[   94.102920][ T9977]  do_exit+0x81b/0x2f60
+
+which also indicates things went sideways fast.
+
+I'm not sure I've got enough hints to figure out where it goes
+side-ways, but it sure did.
+
+Maybe someone forgot to cancel a timer before freeing?
