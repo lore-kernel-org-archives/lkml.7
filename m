@@ -2,277 +2,113 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B39AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C857C48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612A420645
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3404E2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:43:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ETDkH+Sg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfFYXgc (ORCPT
+        id S1726359AbfFYXnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:36:32 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:57156 "EHLO smtp.infotech.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfFYXgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:36:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id C9A83204192;
-        Wed, 26 Jun 2019 01:36:28 +0200 (CEST)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PUd5Hi81u7lR; Wed, 26 Jun 2019 01:36:22 +0200 (CEST)
-Received: from [192.168.48.23] (host-45-58-224-183.dyn.295.ca [45.58.224.183])
-        by smtp.infotech.no (Postfix) with ESMTPA id DFA88204163;
-        Wed, 26 Jun 2019 01:36:19 +0200 (CEST)
-Reply-To: dgilbert@interlog.com
-Subject: Re: [PATCH] scsi: convert to rst for documenation
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Phong Tran <tranmanphong@gmail.com>
-Cc:     skhan@linuxfoundation.org, martin.petersen@oracle.com,
-        axboe@kernel.dk, avri.altman@wdc.com, beanhuo@micron.com,
-        evgreen@chromium.org, henrik@austad.us, jpittman@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-scsi@vger.kernel.org
-References: <20190622151947.29115-1-tranmanphong@gmail.com>
- <20190625153658.53ad0e18@lwn.net>
-From:   Douglas Gilbert <dgilbert@interlog.com>
-Message-ID: <0e3c88da-e643-a60f-4a5a-92c3c7a2fbb1@interlog.com>
-Date:   Tue, 25 Jun 2019 19:36:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 19:43:45 -0400
+Received: from mail-eopbgr740050.outbound.protection.outlook.com ([40.107.74.50]:41394
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725782AbfFYXnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:43:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=13Sl8mF6O63R0DMug/w9E0Qgshwu1JbpMmKNbx/I+Nc=;
+ b=ETDkH+SgSfkAEYx0U5QSi6oLiUTSbm3huSgRdRA+a/13MTsRnV5xvuFxYnfLwQQagJUvHprrHvmjSr+VVdaQuNcWn1fKf9kS81FbOd5PuE6iz0MqVrmR0WLy2n7k+9JcT3p/LbVmkbYPYXAo3MKtJ8HI0LPo1mfZwA88T902v5E=
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.40.14) by
+ DM5PR12MB1818.namprd12.prod.outlook.com (10.175.92.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Tue, 25 Jun 2019 23:43:37 +0000
+Received: from DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::180c:ff0c:37e6:a482]) by DM5PR12MB1449.namprd12.prod.outlook.com
+ ([fe80::180c:ff0c:37e6:a482%10]) with mapi id 15.20.2008.017; Tue, 25 Jun
+ 2019 23:43:37 +0000
+From:   "Hook, Gary" <Gary.Hook@amd.com>
+To:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Subject: [PATCH v2 0/2] Clean up crypto documentation
+Thread-Topic: [PATCH v2 0/2] Clean up crypto documentation
+Thread-Index: AQHVK6/O2ulgN25geEeArre8s+tJHg==
+Date:   Tue, 25 Jun 2019 23:43:36 +0000
+Message-ID: <156150616764.22527.16524544899486041609.stgit@taos>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR02CA0012.namprd02.prod.outlook.com
+ (2603:10b6:805:a2::25) To DM5PR12MB1449.namprd12.prod.outlook.com
+ (2603:10b6:4:10::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Gary.Hook@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 407acde8-a9e7-4143-2e10-08d6f9c6f14f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1818;
+x-ms-traffictypediagnostic: DM5PR12MB1818:
+x-microsoft-antispam-prvs: <DM5PR12MB18187B19F7A945C7D709474DFDE30@DM5PR12MB1818.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(376002)(136003)(39860400002)(366004)(396003)(346002)(199004)(189003)(4744005)(25786009)(99286004)(33716001)(81166006)(2201001)(81156014)(5660300002)(8936002)(53936002)(7736002)(66066001)(9686003)(6116002)(6512007)(3846002)(6486002)(305945005)(8676002)(6436002)(2501003)(66946007)(256004)(73956011)(478600001)(14454004)(68736007)(2906002)(316002)(64756008)(102836004)(386003)(6506007)(72206003)(66476007)(186003)(71200400001)(52116002)(103116003)(476003)(71190400001)(110136005)(486006)(66556008)(66446008)(26005)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1818;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AXrBk6GoNW0GSLGxKmgmxZUS1NedZBzJvDPnC5+0kBF3qyzko1H9tPF9YLCy9tUMpWOdUw7s6EDjG4aOkXX/7STs5IA1a2AHsLj30QgXA/o3pZWkZhnnxBVObCYs7a82knn6fT8qFZhGE73zW9/mcdGpYl03odNOadCArPYUa3gxOJNbNs4pbCYvq2DrIkjHc1ould5K1cLvc/ktYNOF+y00m7DyEnIMy8u6jNIZ0sITFerqM09doWzumM9Rva3erHeRjeEDEAW4UqEgwr9ef9/Aet/ans9pLLr0qQmeKC4nGT4I+NVbEZejLXpzpDaFwTK2c+r3dh35sC3Fwbs1bf68+HsqM9NjIkHiN8YXIrKND4VXZtQLY4ujaltOT+2U6ZDbJocE0k23ZcIBgCpfJm/uTKkW4oTmE+z8ZBjiH2I=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7C9E199BDD620C49AF80CBEA8317743B@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190625153658.53ad0e18@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 407acde8-a9e7-4143-2e10-08d6f9c6f14f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 23:43:36.9585
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ghook@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1818
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please see below.
+Tidy up the crypto documentation by filling in some variable
+descriptions, make some grammatical corrections, and enhance
+formatting.
 
-On 2019-06-25 5:36 p.m., Jonathan Corbet wrote:
-> On Sat, 22 Jun 2019 22:19:47 +0700
-> Phong Tran <tranmanphong@gmail.com> wrote:
-> 
->> - Update to the link in documenation
->> - Remove trailing white space
->> - Adaptation the sphinx doc syntax
->>
->> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-> 
-> Thanks for working to improve the documentation!  That said, I think this
-> patch needs a fair amount of work before we are ready to accept it.  I'll
-> only get partway in, but it should be enough to start with.
-> 
-> The first overall thing I would like to point out (and hopefully the SCSI
-> folks won't fight me too much on this) is that Documentation/scsi is the
-> wrong place for much of this stuff.  We are doing our best to organize the
-> documentation with the audience in mind.  So, for example, documents that
-> are of interest to system administrators should go into
-> Documentation/admin-guide.  Information for driver developers should go in
-> Documentation/driver-api.  And so on.
-> 
-> [...]
-> 
->> diff --git a/Documentation/scsi/link_power_management_policy.rst b/Documentation/scsi/link_power_management_policy.rst
->> new file mode 100644
->> index 000000000000..170f58c94cac
->> --- /dev/null
->> +++ b/Documentation/scsi/link_power_management_policy.rst
->> @@ -0,0 +1,22 @@
->> +SCSI Power Management Policy
->> +============================
->> +Its
->> +This parameter allows the user to set the link (interface) power management.
->> +There are 3 possible options:
-> 
-> This isn't your fault, but...*which* parameter allows this?  The document
-> describes the values, but not where they can be set.  That makes it less
-> than fully useful.
-> 
->> ++-------------------+------------------------------------------------------+
->> +| Value             | Effect                                               |
->> ++===================+======================================================+
->> +| min_power         | Tell the controller to try to make the link use the  |
->> +|                   | least possible power when possible. This may         |
->> +|                   | sacrifice some performance due to increased latency  |
->> +|                   | when coming out of lower power states.               |
->> ++-------------------+------------------------------------------------------+
->> +| max_performance   | Generally, this means no power management. Tell      |
->> +|                   | the controller to have performance be a priority     |
->> +|                   | over power management.                               |
->> ++-------------------+------------------------------------------------------+
->> +| medium_power      | Tell the controller to enter a lower power state     |
->> +|                   | when possible, but do not enter the lowest power     |
->> +|                   | state, thus improving latency over min_power setting.|
->> ++-------------------+------------------------------------------------------+
-> 
-> [...]
-> 
->> diff --git a/Documentation/scsi/scsi-changer.txt b/Documentation/scsi/scsi-changer.rst
->> similarity index 71%
->> rename from Documentation/scsi/scsi-changer.txt
->> rename to Documentation/scsi/scsi-changer.rst
->> index ade046ea7c17..a4923873c77b 100644
->> --- a/Documentation/scsi/scsi-changer.txt
->> +++ b/Documentation/scsi/scsi-changer.rst
->> @@ -1,4 +1,3 @@
->> -
->>   README for the SCSI media changer driver
->>   ========================================
->>   
->> @@ -10,7 +9,7 @@ common small CD-ROM changers, neither one-lun-per-slot SCSI changers
->>   nor IDE drives.
->>   
->>   Userland tools available from here:
->> -	http://linux.bytesex.org/misc/changer.html
->> +    http://linux.bytesex.org/misc/changer.html
->>   
->>   
->>   General Information
->> @@ -28,15 +27,17 @@ The SCSI changer model is complex, compared to - for example - IDE-CD
->>   changers. But it allows to handle nearly all possible cases. It knows
->>   4 different types of changer elements:
->>   
->> +::
-> 
-> Two notes:
-> 
->   - You can put the double colon on the line above ("...elements::") and
->     don't need to make a separate line for it.
-> 
->   - But, more to the point, please avoid the temptation to use a literal
->     block for something that doesn't actually require that treatment. This
->     should be reworked as an RST definition list.
-> 
->>     media transport - this one shuffles around the media, i.e. the
->>                       transport arm.  Also known as "picker".
->>     storage         - a slot which can hold a media.
->>     import/export   - the same as above, but is accessible from outside,
->>                       i.e. there the operator (you !) can use this to
->>                       fill in and remove media from the changer.
->> -		    Sometimes named "mailslot".
->> +            Sometimes named "mailslot".
->>     data transfer   - this is the device which reads/writes, i.e. the
->> -		    CD-ROM / Tape / whatever drive.
->> +            CD-ROM / Tape / whatever drive.
-> 
-> [...]
-> 
->> diff --git a/Documentation/scsi/scsi-generic.txt b/Documentation/scsi/scsi-generic.rst
->> similarity index 70%
->> rename from Documentation/scsi/scsi-generic.txt
->> rename to Documentation/scsi/scsi-generic.rst
->> index 51be20a6a14d..8356810160f0 100644
->> --- a/Documentation/scsi/scsi-generic.txt
->> +++ b/Documentation/scsi/scsi-generic.rst
->> @@ -1,8 +1,10 @@
->> -            Notes on Linux SCSI Generic (sg) driver
->> -            ---------------------------------------
->> -                                                        20020126
->> +=======================================
->> +Notes on Linux SCSI Generic (sg) driver
->> +=======================================
->> +20020126
->> +
->>   Introduction
->> -============
->> +------------
->>   The SCSI Generic driver (sg) is one of the four "high level" SCSI device
->>   drivers along with sd, st and sr (disk, tape and CDROM respectively). Sg
->>   is more generalized (but lower level) than its siblings and tends to be
->> @@ -16,20 +18,20 @@ and examples.
->>   
->>   
->>   Major versions of the sg driver
->> -===============================
->> +-------------------------------
->>   There are three major versions of sg found in the linux kernel (lk):
->> -      - sg version 1 (original) from 1992 to early 1999 (lk 2.2.5) .
->> -	It is based in the sg_header interface structure.
->> +      - sg version 1 (original) from 1992 to early 1999 (lk 2.2.5) .
->> +        It is based in the sg_header interface structure.
->>         - sg version 2 from lk 2.2.6 in the 2.2 series. It is based on
->> -	an extended version of the sg_header interface structure.
->> +        an extended version of the sg_header interface structure.
->>         - sg version 3 found in the lk 2.4 series (and the lk 2.5 series).
->> -	It adds the sg_io_hdr interface structure.
->> +        It adds the sg_io_hdr interface structure.
-> 
-> Perhaps we don't *really* need to preserve information about what versions
-> were around in the 1990's?
-> 
->>   Sg driver documentation
->> -=======================
->> +-----------------------
->>   The most recent documentation of the sg driver is kept at the Linux
->> -Documentation Project's (LDP) site:
->> +Documentation Project's (LDP) site:
->>   http://www.tldp.org/HOWTO/SCSI-Generic-HOWTO
-> 
-> That document claims to have been last updated in 2002.  Is there really
-> nothing more recent than that?
+Changes since v1:
+ - Remove patch with superfluous change to index (patch 2)
+ - Remove unnecessary markup on function names in patch 3
+ - Un-add extraneous white space (patch 3)
 
-http://sg.danny.cz/sg/sg_v40.html
+---
 
-Last updated: yesterday.
-
->>   This describes the sg version 3 driver found in the lk 2.4 series.
-> 
-> ...and it's unclear to me that users of the 5.x kernel are much concerned
-> with what was found in 2.4.
-> 
-> That is the problem with this document in general.  I suspect that about
-> the only useful information left in it is the location of the sg3_utils
-> source.  I honestly don't think that it helps the documentation that much
-> to carry forward ancient information to the RST format.
-
-That old document is pretty damn accurate. At least one feature was
-quietly removed over the years. And some ioctls no longer do anything
-(see the ioctl table towards the end of the above document). The sg
-driver's public interface is a lot more stable than the kernel API behind
-it :-) . There is driver in FreeBSD that implements that interface, it's
-called scsi_sg .
-
-> Of course, doing this right by deleting obsolete information and updating
-> the documents to reflect current reality is a *lot* more work.  Probably
-> far more than you were thinking of signing up for.  If you were willing to
-> work on this, there may be somebody from the SCSI community who would be in
-> a position to help you with it.
-
-Hmmm.
-
-> Unfortunately, the SCSI community probably did not see this patch because
-> you didn't copy the linux-scsi list.  I'll fix that now, but they will not
-> have seen your original patch.  You should be sure to include them on
-> future postings.
-> 
-> I would like to make a suggestion, in addition to all of the above: rather
-> than trying to do a mass conversion in a single 4000-line patch, start with
-> a single file and post a patch doing just that one, being sure to include
-> the linux-scsi list.  That will give everybody something more workable to
-> start with.
-
-Editorial comments welcome.
-
-Martin Petersen wants to see that document reworked in order to market the
-new features that I am proposing. My approach is to document the code that
-I have in front of me ***, plus add a bit of historical context.
-
-I chose that format so I could add diagrams (using Libreoffice writer).
-Do those diagrams help?
-
-Doug Gilbert
+Gary R Hook (2):
+      crypto: doc - Add parameter documentation
+      crypto: doc - Fix formatting of new crypto engine content
 
 
-*** it helps me find bugs in my code and my documentation. I'm also testing
-     the code at the same time.
+ Documentation/crypto/api-skcipher.rst  |    2 -
+ Documentation/crypto/crypto_engine.rst |  111 +++++++++++++++++++++-------=
+----
+ include/linux/crypto.h                 |   11 +++
+ 3 files changed, 85 insertions(+), 39 deletions(-)
 
+--
