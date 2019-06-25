@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31194C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D6BC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12FDF20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DF320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfFYEh6 (ORCPT
+        id S1727381AbfFYEiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:37:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46872 "EHLO
+        Tue, 25 Jun 2019 00:38:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23186 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727055AbfFYEhr (ORCPT
+        by vger.kernel.org with ESMTP id S1726856AbfFYEhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:37:47 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P4X9b6108690
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:46 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb9pye3dk-1
+        Tue, 25 Jun 2019 00:37:39 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P4Xulq009021
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:38 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb9r3wshm-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:46 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:37 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Tue, 25 Jun 2019 05:37:44 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 25 Jun 2019 05:37:36 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 05:37:40 +0100
+        Tue, 25 Jun 2019 05:37:32 +0100
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P4bdxY49676486
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P4bV3B56688656
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 04:37:39 GMT
+        Tue, 25 Jun 2019 04:37:31 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49A0C11C050;
-        Tue, 25 Jun 2019 04:37:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C517011C04C;
+        Tue, 25 Jun 2019 04:37:31 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1826C11C04C;
-        Tue, 25 Jun 2019 04:37:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 936B411C04A;
+        Tue, 25 Jun 2019 04:37:30 +0000 (GMT)
 Received: from localhost.in.ibm.com (unknown [9.124.35.87])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 04:37:37 +0000 (GMT)
+        Tue, 25 Jun 2019 04:37:30 +0000 (GMT)
 From:   Parth Shah <parth@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
         patrick.bellasi@arm.com
-Subject: [RFCv3 7/8] sched/fair: Bound non idle core search within LLC domain
-Date:   Tue, 25 Jun 2019 10:07:25 +0530
+Subject: [RFCv3 2/8] sched: Introduce switch to enable TurboSched mode
+Date:   Tue, 25 Jun 2019 10:07:20 +0530
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190625043726.21490-1-parth@linux.ibm.com>
 References: <20190625043726.21490-1-parth@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19062504-0016-0000-0000-0000028C1180
+x-cbid: 19062504-0028-0000-0000-0000037D46BF
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062504-0017-0000-0000-000032E98141
-Message-Id: <20190625043726.21490-8-parth@linux.ibm.com>
+x-cbparentid: 19062504-0029-0000-0000-0000243D6686
+Message-Id: <20190625043726.21490-3-parth@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -74,49 +74,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch specifies the method which returns sched domain to limit the
-search for a non idle core. By default, limit the search in LLC domain
-which usually includes all the cores across the system.
+This patch creates a static key which allows to enable or disable
+TurboSched feature at runtime.
 
-The select_non_idle_core searches for the non idle cores across whole
-system. But in the systems with multiple NUMA domains, the Turbo frequency
-can be sustained within the NUMA domain without being affected from other
-NUMA. For such case, arch_turbo_domain can be tuned to change domain for
-non idle core search.
+This key is added in order to enable the TurboSched feature. The static key
+helps in optimizing the scheduler fast-path when the TurboSched feature is
+disabled.
+
+The patch also provides get/put methods to keep track of the tasks using
+the TurboSched feature. This allows to enable the feature on setting first
+task classified as jitter, similarly disable the feature on unsetting of
+such last task.
 
 Signed-off-by: Parth Shah <parth@linux.ibm.com>
 ---
- kernel/sched/fair.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kernel/sched/core.c  | 20 ++++++++++++++++++++
+ kernel/sched/sched.h |  9 +++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 9d11631ce18c..b049c9d73f1d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5973,6 +5973,13 @@ static inline bool core_underutilized(unsigned long core_util,
- 	return core_util < (core_capacity >> UNDERUTILIZED_THRESHOLD);
- }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 19c7204d6351..ef83725bd4b0 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -61,6 +61,26 @@ __read_mostly int scheduler_running;
+  */
+ int sysctl_sched_rt_runtime = 950000;
  
-+#ifndef arch_turbo_domain
-+static __always_inline struct cpumask *arch_turbo_domain(int cpu)
++DEFINE_STATIC_KEY_FALSE(__turbo_sched_enabled);
++static DEFINE_MUTEX(turbo_sched_lock);
++static int turbo_sched_count;
++
++void turbo_sched_get(void)
 +{
-+	return sched_domain_span(rcu_dereference(per_cpu(sd_llc, cpu)));
++	mutex_lock(&turbo_sched_lock);
++	if (!turbo_sched_count++)
++		static_branch_enable(&__turbo_sched_enabled);
++	mutex_unlock(&turbo_sched_lock);
 +}
-+#endif
++
++void turbo_sched_put(void)
++{
++	mutex_lock(&turbo_sched_lock);
++	if (!--turbo_sched_count)
++		static_branch_disable(&__turbo_sched_enabled);
++	mutex_unlock(&turbo_sched_lock);
++}
 +
  /*
-  * Try to find a non idle core in the system  with spare capacity
-  * available for task packing, thereby keeping minimal cores active.
-@@ -5983,7 +5990,8 @@ static int select_non_idle_core(struct task_struct *p, int prev_cpu, int target)
- 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(turbo_sched_mask);
- 	int iter_cpu, sibling;
+  * __task_rq_lock - lock the rq @p resides on.
+  */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index e5599b33ffb8..1f239a960a6d 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2426,3 +2426,12 @@ static inline bool sched_energy_enabled(void)
+ static inline bool sched_energy_enabled(void) { return false; }
  
--	cpumask_and(cpus, cpu_online_mask, p->cpus_ptr);
-+	cpumask_and(cpus, cpu_online_mask, arch_turbo_domain(prev_cpu));
-+	cpumask_and(cpus, cpus, p->cpus_ptr);
- 
- 	for_each_cpu_wrap(iter_cpu, cpus, prev_cpu) {
- 		unsigned long core_util = 0;
+ #endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
++
++void turbo_sched_get(void);
++void turbo_sched_put(void);
++DECLARE_STATIC_KEY_FALSE(__turbo_sched_enabled);
++
++static inline bool is_turbosched_enabled(void)
++{
++	return static_branch_unlikely(&__turbo_sched_enabled);
++}
 -- 
 2.17.1
 
