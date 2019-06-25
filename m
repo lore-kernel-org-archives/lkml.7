@@ -2,69 +2,142 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A60C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30DEC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0E720645
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5841215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:52:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfFYWun (ORCPT
+        id S1726430AbfFYWwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFYWum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:50:42 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E042086D;
-        Tue, 25 Jun 2019 22:50:40 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 18:50:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>, Zheng Yan <zyan@redhat.com>,
-        sage@redhat.com, agruenba@redhat.com,
-        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v2 0/3] ceph: don't NULL terminate virtual xattr values
-Message-ID: <20190625185039.08fa5a4f@gandalf.local.home>
-In-Reply-To: <d8218bd280f19ebbd38f396dbf4e763b945d40bd.camel@kernel.org>
-References: <20190619164528.31958-1-jlayton@kernel.org>
-        <20190620102410.GT9224@smile.fi.intel.com>
-        <7c12abe8a7e6cd3cfe9129a1e74d9c788ff2f1a9.camel@kernel.org>
-        <CAMuHMdUtwtruJtcUe4-YQJQ5h9B-WCcjK57hVMvxjnrZeFjrfA@mail.gmail.com>
-        <d8218bd280f19ebbd38f396dbf4e763b945d40bd.camel@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 25 Jun 2019 18:52:17 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:40498 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFYWwQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:52:16 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfuID-0001yb-63; Tue, 25 Jun 2019 22:52:01 +0000
+Date:   Tue, 25 Jun 2019 23:52:01 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v9 05/10] bpf,landlock: Add a new map type: inode
+Message-ID: <20190625225201.GJ17978@ZenIV.linux.org.uk>
+References: <20190625215239.11136-1-mic@digikod.net>
+ <20190625215239.11136-6-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190625215239.11136-6-mic@digikod.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 09:54:13 -0400
-Jeff Layton <jlayton@kernel.org> wrote:
+On Tue, Jun 25, 2019 at 11:52:34PM +0200, Mickaël Salaün wrote:
+> +/* must call iput(inode) after this call */
+> +static struct inode *inode_from_fd(int ufd, bool check_access)
+> +{
+> +	struct inode *ret;
+> +	struct fd f;
+> +	int deny;
+> +
+> +	f = fdget(ufd);
+> +	if (unlikely(!f.file || !file_inode(f.file))) {
+> +		ret = ERR_PTR(-EBADF);
+> +		goto put_fd;
+> +	}
 
-> > snprintf() to a temporary buffer, and memcpy() to the final destination.
-> > These are all fairly small buffers (most are single integer values),
-> > so the overhead should be minimal, right?
-> >   
-> 
-> Yeah. I was trying to avoid having to deal with a second buffer, but
-> this is not a performance-critical codepath, so maybe that's the best
-> option.
+Just when does one get a NULL file_inode()?  The reason I'm asking is
+that arseloads of code would break if one managed to create such
+a beast...
 
-Yes, this looks like the better solution than adding a new library
-function for other people to (ab)use.
+Incidentally, that should be return ERR_PTR(-EBADF); fdput() is wrong there.
 
--- Steve
+> +	}
+> +	/* check if the FD is tied to a mount point */
+> +	/* TODO: add this check when called from an eBPF program too */
+> +	if (unlikely(!f.file->f_path.mnt
+
+Again, the same question - when the hell can that happen?  If you are
+sitting on an exploitable roothole, do share it...
+
+ || f.file->f_path.mnt->mnt_flags &
+> +				MNT_INTERNAL)) {
+> +		ret = ERR_PTR(-EINVAL);
+> +		goto put_fd;
+
+What does it have to do with mountpoints, anyway?
+
+> +/* called from syscall */
+> +static int sys_inode_map_delete_elem(struct bpf_map *map, struct inode *key)
+> +{
+> +	struct inode_array *array = container_of(map, struct inode_array, map);
+> +	struct inode *inode;
+> +	int i;
+> +
+> +	WARN_ON_ONCE(!rcu_read_lock_held());
+> +	for (i = 0; i < array->map.max_entries; i++) {
+> +		if (array->elems[i].inode == key) {
+> +			inode = xchg(&array->elems[i].inode, NULL);
+> +			array->nb_entries--;
+
+Umm...  Is that intended to be atomic in any sense?
+
+> +			iput(inode);
+> +			return 0;
+> +		}
+> +	}
+> +	return -ENOENT;
+> +}
+> +
+> +/* called from syscall */
+> +int bpf_inode_map_delete_elem(struct bpf_map *map, int *key)
+> +{
+> +	struct inode *inode;
+> +	int err;
+> +
+> +	inode = inode_from_fd(*key, false);
+> +	if (IS_ERR(inode))
+> +		return PTR_ERR(inode);
+> +	err = sys_inode_map_delete_elem(map, inode);
+> +	iput(inode);
+> +	return err;
+> +}
+
+Wait a sec...  So we have those beasties that can have long-term
+references to arbitrary inodes stuck in them?  What will happen
+if you get umount(2) called while such a thing exists?
