@@ -2,92 +2,101 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C8AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9E2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F76520645
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D2F2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fkb9QrRb"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rvlsoXuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfFYXdS (ORCPT
+        id S1726385AbfFYXdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:33:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:42747 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbfFYXdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:33:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45YMsl1ysYz9s3Z;
-        Wed, 26 Jun 2019 09:33:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561505595;
-        bh=y1eG32qua6PhqAiVuAO6P1kOZFtVSk/MwLtTyC8MGsE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fkb9QrRbj//LRsIu9lXOvOrUiRoYIiFQsZPa6pgCLWNYPOp2dnEXnEZPzUiUKGeqQ
-         yimmxbMVdCiYo2XAR5lu+a6/w9HUk5dTFDcqNkZzC1LOqLsK15NS438bPUGUPOCUOi
-         CfKRf6J+blJVUs33h22MPwYdkZOr8ll6+xnrOIruD7Q9ei5RcuQuvov+G+7z2xlCwy
-         lGjyKbCEKAIw8X/jZ2mfpu56q/z+CjyRmO3lBPEyGey8DvQ1GlvgNZt5treR4xInI1
-         /p4wDeaOtA5cKhV0Lpv15cBCjPEQSk5OfcJQAonYj9BGY8V3zZLnbn4LRafRRN+Xm8
-         zOeRcedZyjTGg==
-Date:   Wed, 26 Jun 2019 09:32:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20190626093250.5c7cc243@canb.auug.org.au>
+        Tue, 25 Jun 2019 19:33:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47978 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbfFYXdU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:33:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXIFQ068416;
+        Tue, 25 Jun 2019 18:33:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561505598;
+        bh=t1N1fNUydejlrc13enmcaQ+yARdfCqgRqgTvctqS1/8=;
+        h=From:To:CC:Subject:Date;
+        b=rvlsoXuOILjneNcZZ11ZIZT5H03RwFLg/CcKuDVoroJrto0jBBohvtM53CDdAqDff
+         iW0geCvuaxqxawz7GzYJlXD+qwuH4wQCkEE2bLdxeuvjR5z65Owy8Mow0V18hFSoAZ
+         U5FZ1i/j/N89+qgNu6QRKzCGmgXMIwSCAzrZRRok=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5PNXIoF074196
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Jun 2019 18:33:18 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 25
+ Jun 2019 18:33:17 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 25 Jun 2019 18:33:17 -0500
+Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXHX2089251;
+        Tue, 25 Jun 2019 18:33:17 -0500
+Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x5PNXHm12151;
+        Tue, 25 Jun 2019 18:33:17 -0500 (CDT)
+From:   Suman Anna <s-anna@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Roger Quadros <rogerq@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/5] Minor ti-sysc cleanups
+Date:   Tue, 25 Jun 2019 18:33:10 -0500
+Message-ID: <20190625233315.22301-1-s-anna@ti.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/_cU8wxQxL6QxmCi4sLWZT8C"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_cU8wxQxL6QxmCi4sLWZT8C
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Tony,
 
-Hi all,
+The following series includes minor cleanup patches against the ti-sysc
+code. Patches are based on top of all your 5.3 staged branches. Feel free
+to pick them up for either 5.3 (if it is not too late) or 5.4 merge window. 
 
-Commits
+The first 4 patches are non-coding changes, and the last patch is a minor
+fixup cleaning up the code flow on failure error paths in sysc_probe()
+function. I have boot tested on the limited boards that I have - AM335x
+BeagleBone Black, AM437x IDK, AM57xx GP EVM, OMAP4 PandaBoard and OMAP5
+uEVM.
 
-  53d87b37a2a4 ("arm64: compat: No need for pre-ARMv7 barriers on an ARMv8 =
-system")
-  b4b12aca00d5 ("arm64: vdso: Remove unnecessary asm-offsets.c definitions")
-  4d33ebb02c45 ("vdso: Remove superfluous #ifdef __KERNEL__ in vdso/datapag=
-e.h")
+regards
+Suman
 
-are missing a Signed-off-by from their committer.
+Suman Anna (5):
+  MAINTAINERS: Add ti-sysc files under the OMAP2+ entry
+  dt-bindings: ti-sysc: Add SPDX license identifier
+  bus: ti-sysc: Switch to SPDX license identifier
+  bus: ti-sysc: Add missing kerneldoc comments
+  bus: ti-sysc: Simplify cleanup upon failures in sysc_probe()
 
---=20
-Cheers,
-Stephen Rothwell
+ MAINTAINERS                           |  2 ++
+ drivers/bus/ti-sysc.c                 | 31 +++++++++++++--------------
+ include/dt-bindings/bus/ti-sysc.h     |  1 +
+ include/linux/platform_data/ti-sysc.h |  7 ++++--
+ 4 files changed, 23 insertions(+), 18 deletions(-)
 
---Sig_/_cU8wxQxL6QxmCi4sLWZT8C
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+2.21.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0SryIACgkQAVBC80lX
-0GzxMQf/eUQTd1yP/D/HkdDSZaDGjSCXKjoIYk2l85WVbYglhdqFQgI7hjhCHKNT
-tQb2pZSFVQR22LTrk0ijvbo6s2bvc5rO6aBm2GQI/Wrp99PcTIEga07ZEwlcpddt
-QR0Re+b9Bf2RxquSBVh4KgdvdOKaZF9N17gKJRys9wIyyklAVXkvDtkyeEIkvdS3
-yNzd/eVKNya+v8JSdBmz/0WRsI0DaGj1IWDqBWU6eJZFD+cSliVdsduA6oQB3xsi
-jTn5wuW98xJDygXHWS/PxyEPQwN5+roQ1vgeQ5AOnnr4BkTd9xxOAaL22U8IQ7gk
-wEfrU7r5INEvlRvXYPKESM/DjwBPLA==
-=M3K1
------END PGP SIGNATURE-----
-
---Sig_/_cU8wxQxL6QxmCi4sLWZT8C--
