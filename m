@@ -2,133 +2,103 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6851CC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C661C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAB62085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DZxe9WXK"
+	by mail.kernel.org (Postfix) with ESMTP id 621AF208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561494236;
+	bh=ty8OSeUCz/5XvL7ic9s3yUJgWM1ofmFAG2h2f5h8eOQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=tS5Ia4OJffi4UTfMEeb1+04rlWWdGSPFOUsSpUmc0M0wUvfLE8kbhrX6Y1zw9xfBw
+	 wvR8pk9zc69Yq+vU4bBBptJOMQl/btkaJ4QkyN/yo7eiALvcm4rpFJlGNig2hQTZFp
+	 b70ahboxyxTXR1zyRRCRTlqGzZaQdi15LX2tMSEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfFYUWt (ORCPT
+        id S1727144AbfFYUXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:22:49 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44344 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfFYUWt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:22:49 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so28974116edr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IbaPTmVSK1Auuensg5mZK66IsBxApH2FblnD8ib5Dg0=;
-        b=DZxe9WXKrsmxaaroa2rbKK1EsEntZAaqVR/+UjyyI7hGgL3bekEganJsyf+fyFbk0X
-         PktDQ/QOboGkcqQb2mlJEWZ60RRAFBy6DQixbZ+b8tm+c4oLCvC4oKBiMlUvm+ludtHT
-         A88M05J210TfYPMN3036eGm3lcpipS7i2woEk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=IbaPTmVSK1Auuensg5mZK66IsBxApH2FblnD8ib5Dg0=;
-        b=BnDbSVjgroqksEiDYcJs+BKdr+kvpXVQQi858CVc4ly4tHXvBs0oIDYsiXpt0FuAwt
-         kjjnV98LSQLC1PxeCfwkRHKHd+34oIGj282cu9PYsExBE9lIDSPNbnLDF88nd9v6kQvg
-         0lHAylDyiDDpJQRzlusRln93ZEBzuooILM2Y1qZZsOZAw30TYpl6+Z/2BPEwcRn46wEU
-         6GhnWLPK97bD5CulR3wk/17Pn9Tp/y6hlhMP01i03mixQKr12EOcC1rt37awD7PCRY9j
-         YoLAL4TJUyxo68TsrPHVcOpK9n7ji8fpPAB0Hlon7+8TpsRfDSYrvJ0HHBcpmeOUTNmg
-         SalA==
-X-Gm-Message-State: APjAAAXM/hnTAZx3zlNOXMYrP9Ask8bjqiaKMmloRynYmt6FgedWWlzC
-        m/5PjtlMX6oqINw2l3eZ2iJDSg==
-X-Google-Smtp-Source: APXvYqzf4IQVb9h7Dov4iMeSGmus3NKT567mUeCO3NbEkQYOBEowGMzZ7rMIdDBuAYAw+tichO+cdg==
-X-Received: by 2002:a17:906:b211:: with SMTP id p17mr410520ejz.11.1561494168042;
-        Tue, 25 Jun 2019 13:22:48 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id s5sm4839873edh.3.2019.06.25.13.22.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 13:22:47 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 22:22:44 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Robert Beckett <bob.beckett@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 4/4] drm/imx: only send event on crtc disable if kept
- disabled
-Message-ID: <20190625202244.GG12905@phenom.ffwll.local>
-Mail-Followup-To: Robert Beckett <bob.beckett@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.1561483965.git.bob.beckett@collabora.com>
- <6599f538740632c5524bab86514b8ba026798537.1561483965.git.bob.beckett@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6599f538740632c5524bab86514b8ba026798537.1561483965.git.bob.beckett@collabora.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 25 Jun 2019 16:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfFYUXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:23:54 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B4B2085A;
+        Tue, 25 Jun 2019 20:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561494233;
+        bh=ty8OSeUCz/5XvL7ic9s3yUJgWM1ofmFAG2h2f5h8eOQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CITJOOm379AFpZGiqQaxvlLl8CMO38VIjXbovh/3uocIqEnmtaRAdl8ZZnNvzMF+t
+         7y0jyLhD6my9mIEPL31WT0Wn00z+MlSfk49SVd3BtPxyg4LZmFlXwHYPWXvlLS6DEh
+         KpNI+8QriqEKN54YTmS06SIeRqjo9OOOqloxzZ+s=
+Date:   Tue, 25 Jun 2019 13:23:53 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Doug Berger <opendmb@gmail.com>
+Cc:     linux-mm@kvack.org, Yue Hu <huyue2@yulong.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        =?UTF-8?Q?Micha=C5=82?= Nazarewicz <mina86@mina86.com>,
+        Laura Abbott <labbott@redhat.com>, Peng Fan <peng.fan@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cma: fail if fixed declaration can't be honored
+Message-Id: <20190625132353.ba16040d27366fae4ec5bef0@linux-foundation.org>
+In-Reply-To: <1561422051-16142-1-git-send-email-opendmb@gmail.com>
+References: <1561422051-16142-1-git-send-email-opendmb@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 06:59:15PM +0100, Robert Beckett wrote:
-> The event will be sent as part of the vblank enable during the modeset
-> if the crtc is not being kept disabled.
-> 
-> Fixes: 5f2f911578fb ("drm/imx: atomic phase 3 step 1: Use atomic configuration")
-> 
-> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+On Mon, 24 Jun 2019 17:20:51 -0700 Doug Berger <opendmb@gmail.com> wrote:
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-> ---
->  drivers/gpu/drm/imx/ipuv3-crtc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The description of the cma_declare_contiguous() function indicates
+> that if the 'fixed' argument is true the reserved contiguous area
+> must be exactly at the address of the 'base' argument.
 > 
-> diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
-> index e04d6efff1b5..c436a28d50e4 100644
-> --- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-> +++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-> @@ -94,7 +94,7 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
->  	drm_crtc_vblank_off(crtc);
->  
->  	spin_lock_irq(&crtc->dev->event_lock);
-> -	if (crtc->state->event) {
-> +	if (crtc->state->event && !crtc->state->active) {
->  		drm_crtc_send_vblank_event(crtc, crtc->state->event);
->  		crtc->state->event = NULL;
->  	}
-> -- 
-> 2.18.0
+> However, the function currently allows the 'base', 'size', and
+> 'limit' arguments to be silently adjusted to meet alignment
+> constraints. This commit enforces the documented behavior through
+> explicit checks that return an error if the region does not fit
+> within a specified region.
 > 
+> ...
+>
+> --- a/mm/cma.c
+> +++ b/mm/cma.c
+> @@ -278,6 +278,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
+>  	 */
+>  	alignment = max(alignment,  (phys_addr_t)PAGE_SIZE <<
+>  			  max_t(unsigned long, MAX_ORDER - 1, pageblock_order));
+> +	if (fixed && base & (alignment - 1)) {
+> +		ret = -EINVAL;
+> +		pr_err("Region at %pa must be aligned to %pa bytes\n",
+> +			&base, &alignment);
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+CMA functions do like to use pr_err() when the caller messed something
+up.  It should be using WARN_ON() or WARN_ON_ONCE(), mainly so we get a
+backtrace to find out which caller messed up.
+
+There are probably other sites which should be converted, but I think
+it would be best to get these new ones correct.  So something like
+
+	if (WARN_ONCE(fixed && base & (alignment - 1)),
+		      "region at %pa must be aligned to %pa bytes",
+		      &base, &alignment) {
+		ret = -EINVAL;
+		goto err;
+	}
+
+
