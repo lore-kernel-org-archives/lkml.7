@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08716C48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09B3C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC1A208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A3C2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732952AbfFYSZx (ORCPT
+        id S1732959AbfFYS0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 14:25:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:25643 "EHLO mga05.intel.com"
+        Tue, 25 Jun 2019 14:26:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:40351 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbfFYSZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 14:25:53 -0400
+        id S1727138AbfFYS0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 14:26:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 11:25:52 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 11:26:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
-   d="scan'208";a="172455613"
+   d="scan'208";a="172456162"
 Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
-  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2019 11:25:51 -0700
+  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2019 11:26:46 -0700
 Subject: Re: [PATCH v1 1/6] mm: Adjust shuffle code to allow for future
  coalescing
 To:     Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
@@ -85,8 +85,8 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-Message-ID: <dd694406-6384-d859-6ac6-ec6e6cffe4e8@intel.com>
-Date:   Tue, 25 Jun 2019 11:25:51 -0700
+Message-ID: <d8287bfe-8b34-895c-eff2-c88d0a3f76ae@intel.com>
+Date:   Tue, 25 Jun 2019 11:26:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
@@ -100,9 +100,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 6/19/19 3:33 PM, Alexander Duyck wrote:
-> 
 > This patch is meant to move the head/tail adding logic out of the shuffle
 > code and into the __free_one_page function since ultimately that is where
 > it is really needed anyway. By doing this we should be able to reduce the
 > overhead and can consolidate all of the list addition bits in one spot.
 
+This looks like a sane cleanup that can stand on its own.  It gives nice
+names (buddy_merge_likely()) to things that were just code blobs before.
+
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
