@@ -3,114 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B136DC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F22C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9251720883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7946620644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbfFYRdT (ORCPT
+        id S1732097AbfFYRfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:33:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:46208 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727652AbfFYRdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:33:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00E94360;
-        Tue, 25 Jun 2019 10:33:18 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F042D3F718;
-        Tue, 25 Jun 2019 10:33:16 -0700 (PDT)
-Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
- breaks clang build
-To:     Qian Cai <cai@lca.pw>, Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-References: <1561464964.5154.63.camel@lca.pw>
- <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
- <1561467369.5154.67.camel@lca.pw>
- <00a78980-6b9c-5d5b-ed01-b28bb34be022@arm.com>
- <1561470705.5154.68.camel@lca.pw>
- <5113362e-1256-6712-6ce8-9599b1806cf1@arm.com>
- <1561472887.5154.72.camel@lca.pw>
- <668bbe72-b32b-8cee-ccad-d1f6110c6728@arm.com>
- <CAKwvOdmCFjunXRbninTdqoDGPNJ6b7npgXLAPYGqFZas5ofNjw@mail.gmail.com>
- <193c179e-16ca-4b4e-2584-75e8f6c1819f@arm.com>
- <1561483888.5154.78.camel@lca.pw>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <b25d3952-abe5-def5-fe42-0300f0b4c73c@arm.com>
-Date:   Tue, 25 Jun 2019 18:33:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1561483888.5154.78.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Tue, 25 Jun 2019 13:35:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53440 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731856AbfFYRfy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:35:54 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PHWhlH025458
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:35:53 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tbp10dv5e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:35:53 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 25 Jun 2019 18:35:50 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 25 Jun 2019 18:35:45 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5PHZjvB52625554
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 17:35:45 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E2AF35204E;
+        Tue, 25 Jun 2019 17:35:44 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.8])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BCB9952059;
+        Tue, 25 Jun 2019 17:35:43 +0000 (GMT)
+Subject: Re: [PATCH v4 00/14] ima: introduce IMA Digest Lists extension
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        dmitry.kasatkin@huawei.com, mjg59@google.com,
+        Rob Landley <rob@landley.net>
+Cc:     linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
+Date:   Tue, 25 Jun 2019 13:35:33 -0400
+In-Reply-To: <88d368e6-5b3c-0206-23a0-dc3e0aa385f0@huawei.com>
+References: <20190614175513.27097-1-roberto.sassu@huawei.com>
+         <9029dd14-1077-ec89-ddc2-e677e16ad314@huawei.com>
+         <88d368e6-5b3c-0206-23a0-dc3e0aa385f0@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062517-0012-0000-0000-0000032C52A3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062517-0013-0000-0000-000021658924
+Message-Id: <1561484133.4066.16.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian,
+[Cc'ing Rob Landley]
 
-On 25/06/2019 18:31, Qian Cai wrote:
-> On Tue, 2019-06-25 at 18:00 +0100, Vincenzo Frascino wrote:
->> Hi Nick,
->>
->> On 25/06/2019 17:26, Nick Desaulniers wrote:
->>> On Tue, Jun 25, 2019 at 7:54 AM Vincenzo Frascino
->>> <vincenzo.frascino@arm.com> wrote:
->>>>
->>>> Hi Qian,
->>>>
->>>> ...
->>>>
->>>>>
->>>>> but clang 7.0 is still use in many distros by default, so maybe this
->>>>> commit can
->>>>> be fixed by adding a conditional check to use "small" if clang version <
->>>>> 8.0.
->>>>>
->>>>
->>>> Could you please verify that the patch below works for you?
->>>
->>> Should it be checking against CONFIG_CLANG_VERSION, or better yet be
->>> using cc-option macro?
->>>
->>
->> This is what I did in my proposed patch, but I was surprised that clang-7
->> generates relocations that clang-8 does not.
->>
->>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
->>   VDSOCHK arch/arm64/kernel/vdso/vdso.so.dbg
->> 00000000000009d0 R_AARCH64_JUMP_SLOT  _mcount
->>
->> arch/arm64/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
->> make[1]: *** [arch/arm64/kernel/vdso/Makefile:59:
->> arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
->> make: *** [arch/arm64/Makefile:180: vdso_prepare] Error 2
->>
->> This is the the result of the macro I introduced in lib/vdso/Makefile.
->>
->> And I just found out why. I forgot to add a "+" in the patch provided :)
->>
->> @Qian: Could you please retry with the one provided below?
->>
-> 
-> It works fine.
-> 
+On Tue, 2019-06-25 at 14:57 +0200, Roberto Sassu wrote:
+> Mimi, do you have any thoughts on this version?
 
-Thanks for the confirmation, I will push the patch in a short while.
+I need to look closer, but when I first looked these changes seemed to
+be really invasive.  Let's first work on getting the CPIO xattr
+support upstreamed.  Rob Landley said he was going to review and test
+them.  Do you have any documentation on how to set up a test
+environment?  I'd really appreciate if others would also help with
+reviewing the CPIO patches.
 
--- 
-Regards,
-Vincenzo
+thanks!
+
+Mimi
+
