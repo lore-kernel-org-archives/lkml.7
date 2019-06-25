@@ -2,108 +2,127 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096FCC48BD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F04C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BFA2077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FD820644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:28:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="t8pGBM6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbfFYC2O (ORCPT
+        id S1730445AbfFYC2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 22:28:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19071 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726774AbfFYC2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 22:28:13 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id CF33BFD7A6B6E20086B8;
-        Tue, 25 Jun 2019 10:28:10 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
- 10:28:04 +0800
-Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     David Miller <davem@davemloft.net>
-CC:     <hkallweit1@gmail.com>, <f.fainelli@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <kvm@vger.kernel.org>, "xuwei (O)" <xuwei5@huawei.com>
-References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
- <20190528.235806.323127882998745493.davem@davemloft.net>
- <6e9b41c9-6edb-be7f-07ee-5480162a227e@huawei.com>
-Message-ID: <5c06e5dd-cfb1-870c-a0a3-42397b59c734@huawei.com>
-Date:   Tue, 25 Jun 2019 10:28:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Mon, 24 Jun 2019 22:28:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:36197 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbfFYC2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 22:28:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XqpB6qXWz9sCJ;
+        Tue, 25 Jun 2019 12:28:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561429700;
+        bh=MSMkoQR214F5Kca8JxEJY32zLgsawr1UmWDfz49laZU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=t8pGBM6N4uNqXsemgg4zyIuouia1h9QSXTAHuAvR7vQBSRkJ0oYmmxSXU2YJzwQEb
+         7yOuO7478BYs4UHd9eFU/e3Ral0ipfznrfV5Q6alUmgasu0OMNPbtkMZWDd+iRTe2G
+         dT2UtkohRcRpA9CsI8lkAwDuuTIdtZRhABJvIgAZ91tmpNC/OzB4UrX9QVV8OFqnXm
+         2VA/Yx1MbgStBrUY/oCG+c0GNDy8JTld1OX51Eim3JEW+d84Pwby+83ETCvxJgdzNo
+         qrZQjo7biD7nLscOpes4Mcpp8/uy8FxJPEBEB6BSn5hv6nlP0YzLqqBDQEX8pZI8l5
+         m/WHzkavm510Q==
+Date:   Tue, 25 Jun 2019 12:28:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: linux-next: manual merge of the fbdev tree with the v4l-dvb tree
+Message-ID: <20190625122817.1f6657c7@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <6e9b41c9-6edb-be7f-07ee-5480162a227e@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ujqgfZAwnPLv8RKeU_TJR54"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/5/29 16:59, Yunsheng Lin wrote:
-> On 2019/5/29 14:58, David Miller wrote:
->> From: Yunsheng Lin <linyunsheng@huawei.com>
->> Date: Mon, 27 May 2019 09:47:54 +0800
->>
->>> When user has configured a large number of virtual netdev, such
->>> as 4K vlans, the carrier on/off operation of the real netdev
->>> will also cause it's virtual netdev's link state to be processed
->>> in linkwatch. Currently, the processing is done in a work queue,
->>> which may cause worker starvation problem for other work queue.
->>>
->>> This patch releases the cpu when link watch worker has processed
->>> a fixed number of netdev' link watch event, and schedule the
->>> work queue again when there is still link watch event remaining.
->>>
->>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>
->> Why not rtnl_unlock(); yield(); rtnl_lock(); every "100" events
->> processed?
->>
->> That seems better than adding all of this overhead to reschedule the
->> workqueue every 100 items.
-> 
-> One minor concern, the above solution does not seem to solve the cpu
-> starvation for other normal workqueue which was scheduled on the same
-> cpu as linkwatch. Maybe I misunderstand the workqueue or there is other
-> consideration here? :)
-> 
-> Anyway, I will implemet it as you suggested and test it before posting V2.
-> Thanks.
+--Sig_/ujqgfZAwnPLv8RKeU_TJR54
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi, David
+Hi all,
 
-I stress tested the above solution with a lot of vlan dev and qemu-kvm with
-vf passthrongh mode, the linkwatch wq sometimes block the irqfd_inject wq
-when they are scheduled on the same cpu, which may cause interrupt delay
-problem for vm.
+Today's linux-next merge of the fbdev tree got a conflict in:
 
-Rescheduling workqueue every 100 items does give irqfd_inject wq to run sooner,
-which alleviate the interrupt delay problems for vm.
+  drivers/media/pci/ivtv/ivtvfb.c
 
-So It is ok for me to fall back to reschedule the link watch wq every 100 items,
-or is there a better way to fix it properly?
+between commit:
 
+  2161536516ed ("media: media/pci: set device_caps in struct video_device")
 
+from the v4l-dvb tree and commit:
 
-> 
->>
->> .
->>
-> 
-> 
-> .
-> 
+  deb00d2785be ("fbdev: make unregister/unlink functions not fail")
 
+from the fbdev tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/media/pci/ivtv/ivtvfb.c
+index 800b3654cac5,299ff032f528..000000000000
+--- a/drivers/media/pci/ivtv/ivtvfb.c
++++ b/drivers/media/pci/ivtv/ivtvfb.c
+@@@ -1251,16 -1246,7 +1251,12 @@@ static int ivtvfb_callback_cleanup(stru
+  	struct osd_info *oi =3D itv->osd_info;
+ =20
+  	if (itv->v4l2_cap & V4L2_CAP_VIDEO_OUTPUT) {
+ +		itv->streams[IVTV_DEC_STREAM_TYPE_YUV].vdev.device_caps &=3D
+ +			~V4L2_CAP_VIDEO_OUTPUT_OVERLAY;
+ +		itv->streams[IVTV_DEC_STREAM_TYPE_MPG].vdev.device_caps &=3D
+ +			~V4L2_CAP_VIDEO_OUTPUT_OVERLAY;
+ +		itv->v4l2_cap &=3D ~V4L2_CAP_VIDEO_OUTPUT_OVERLAY;
+- 		if (unregister_framebuffer(&itv->osd_info->ivtvfb_info)) {
+- 			IVTVFB_WARN("Framebuffer %d is in use, cannot unload\n",
+- 				       itv->instance);
+- 			return 0;
+- 		}
++ 		unregister_framebuffer(&itv->osd_info->ivtvfb_info);
+  		IVTVFB_INFO("Unregister framebuffer %d\n", itv->instance);
+  		itv->ivtvfb_restore =3D NULL;
+  		ivtvfb_blank(FB_BLANK_VSYNC_SUSPEND, &oi->ivtvfb_info);
+
+--Sig_/ujqgfZAwnPLv8RKeU_TJR54
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0RhsEACgkQAVBC80lX
+0Gy8Ngf/U+gW1i/a3cwGmh294qAvV4VjmZLIoRCehie6fvs5vU/EWYsFocqf6o3f
+rs+Mq1NRPovdNiRyKo2oT8pPoGm76hhtwxXotyV8xFR4ePbA0C2LTlh6spoGaE8u
+qZqLelU6tvbu7MpqeS2sGBcEZlkr4ivIFklJXNtgUNYrVm4i4IufgUYsxxLpuEXT
+Ve8YHofQC9iykfHQ+CQER6o+Yiuqa8zq2+lNLX34fvIdhlr97Y7n6n8GEMuW5m5x
+SBMgTecgO/+ric+If+XEkbq8SYcJAy6rjNx1F2IALihf3ZKzwHfyCJwHmOkKJmiy
++xGXdF+VZXn5sw/9rKUNtoO//gLgjw==
+=xZfT
+-----END PGP SIGNATURE-----
+
+--Sig_/ujqgfZAwnPLv8RKeU_TJR54--
