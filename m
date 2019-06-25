@@ -2,284 +2,343 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDA5C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2722C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7DD120659
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:51:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rc2IdmhP"
+	by mail.kernel.org (Postfix) with ESMTP id AA08A20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561441923;
+	bh=zErfKkE0dDe6QPtP0QyHLUcT9ZshvVhRZjjZyN2wz2Y=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=wtDxM4Ct4KQkYUG4cxEXfG1uIwHMaWYY0Ks9Jpc3QUsyAjy7oROQuSR3jJlVl/ylJ
+	 pDrnWDIREDUf0jkgEaTp1j2Lt971yDSw0ZXvYJmwfMAqu6Rg+LSfeEis1Fk3PCV7FL
+	 cPiddZ6xptA/23lq3FlfqtzlwKQco1sXupiKodtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbfFYFv4 (ORCPT
+        id S1728871AbfFYFwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 01:51:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51490 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727648AbfFYFv4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 01:51:56 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5P5phWh124656;
-        Tue, 25 Jun 2019 00:51:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561441903;
-        bh=4ydtyfEhKGGW/Ym8YTJs7/FZVjb1PULXWMT5pJO9Yu4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Rc2IdmhPIIDtTjoavCEXOQ4rVB8Q//lJVmRKI622FOEg3yDnk6ulQcnscaukByUN8
-         2wgw2+zQDPKhC60Dmwfuk4I0D1SlC1zZYR+vmMTeMwulMYyQJGlqpbHUnEP2GYpa7q
-         9XHBYSigMEXUHRQPRiDTG5HBw3HOTGZEJLiElPH8=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5P5phq8066012
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Jun 2019 00:51:43 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 25
- Jun 2019 00:51:43 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 25 Jun 2019 00:51:42 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5P5pcQR064859;
-        Tue, 25 Jun 2019 00:51:39 -0500
-Subject: Re: [PATCH v7 1/5] mtd: cfi_cmdset_0002: Add support for polling
- status register
-To:     Tokunori Ikegami <ikegami.t@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190620172250.9102-1-vigneshr@ti.com>
- <20190620172250.9102-2-vigneshr@ti.com>
- <571484c7-0cf4-6a7d-6d7f-375cfb13ce8b@gmail.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <c35bf193-02e2-6fe4-3db3-5be757616239@ti.com>
-Date:   Tue, 25 Jun 2019 11:22:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 01:52:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727648AbfFYFwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 01:52:01 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD9D620659;
+        Tue, 25 Jun 2019 05:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561441920;
+        bh=zErfKkE0dDe6QPtP0QyHLUcT9ZshvVhRZjjZyN2wz2Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=0B7ngWSRJXWueNfl9+HEpVXsnBiiSlpMzd9OZAPrwPsFISRpJCOQrBMbiegQjFk5v
+         7av0muD9CL0u7/F4ZEr6N+V4JSCJL00pJVu8EVDZ2RRjkCw49Ddgzh2x+LVtJV+dHo
+         upR1Qhn8YGmC/xxecPoMRj6Okr41oRQbhXMJeEoE=
+Date:   Mon, 24 Jun 2019 22:51:58 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 12 open syzbot bugs in "net/wireless" subsystem
+Message-ID: <20190625055158.GF17703@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <571484c7-0cf4-6a7d-6d7f-375cfb13ce8b@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better.]
 
-On 24/06/19 10:16 PM, Tokunori Ikegami wrote:
-> 
-[...]
->>   +/*
->> + * Use status register to poll for Erase/write completion when DQ is not
->> + * supported. This is indicated by Bit[1:0] of SoftwareFeatures field in
->> + * CFI Primary Vendor-Specific Extended Query table 1.5
->> + */
->> +static int cfi_use_status_reg(struct cfi_private *cfi)
->> +{
->> +    struct cfi_pri_amdstd *extp = cfi->cmdset_priv;
->> +
->> +    return extp->MinorVersion >= '5' &&
->> +        (extp->SoftwareFeatures & 0x3) == 0x1;
-> 
-> Seems to be better to use defined values instead of 0x3 and 0x1 hard
-> coded values.
-> 
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 12 of them as possibly being bugs in the "net/wireless" subsystem.  I've
+listed these reports below, sorted by an algorithm that tries to list first the
+reports most likely to be still valid, important, and actionable.
 
-Ok
+Of these 12 bugs, 10 were seen in mainline in the last week.
 
->> +}
->> +
->> +static void cfi_check_err_status(struct map_info *map, unsigned long
->> adr)
->> +{
->> +    struct cfi_private *cfi = map->fldrv_priv;
->> +    map_word status;
->> +
->> +    if (!cfi_use_status_reg(cfi))
->> +        return;
->> +
->> +    cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-> 
-> Is it not necessary to set chip->start as the base parameter for
-> cfi_send_gen_cmd()?
-> 
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-Right now, I am not aware of any flash that supports status registers
-and are banked (that's when  chip->start can be non zero). Therefore I
-did not think of using chip->start.
-But anyways, I will fix this up to use chip->start here and elsewhere
-for next version, assuming there will be such chips in the future.
+If you believe I misattributed a bug to the "net/wireless" subsystem, please let
+me know, and if possible forward the report to the correct people or mailing
+list.
 
->> +             cfi->device_type, NULL);
->> +    status = map_read(map, adr);
->> +
->> +    if (map_word_bitsset(map, status, CMD(0x3a))) {
->> +        unsigned long chipstatus = MERGESTATUS(status);
->> +
->> +        if (chipstatus & CFI_SR_ESB)
->> +            pr_err("%s erase operation failed, status %lx\n",
->> +                   map->name, chipstatus);
->> +        if (chipstatus & CFI_SR_PSB)
->> +            pr_err("%s program operation failed, status %lx\n",
->> +                   map->name, chipstatus);
->> +        if (chipstatus & CFI_SR_WBASB)
->> +            pr_err("%s buffer program command aborted, status %lx\n",
->> +                   map->name, chipstatus);
->> +        if (chipstatus & CFI_SR_SLSB)
->> +            pr_err("%s sector write protected, status %lx\n",
->> +                   map->name, chipstatus);
->> +    }
->> +}
->>     /* #define DEBUG_CFI_FEATURES */
->>   @@ -744,8 +796,22 @@ static struct mtd_info *cfi_amdstd_setup(struct
->> mtd_info *mtd)
->>    */
->>   static int __xipram chip_ready(struct map_info *map, unsigned long
->> addr)
->>   {
->> +    struct cfi_private *cfi = map->fldrv_priv;
->>       map_word d, t;
->>   +    if (cfi_use_status_reg(cfi)) {
->> +        map_word ready = CMD(CFI_SR_DRB);
->> +        /*
->> +         * For chips that support status register, check device
->> +         * ready bit
->> +         */
->> +        cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-> 
-> Same comment as cfi_check_err_status() about the base address.
-> 
->> +                 cfi->device_type, NULL);
->> +        d = map_read(map, addr);
->> +
->> +        return map_word_andequal(map, d, ready, ready);
->> +    }
->> +
->>       d = map_read(map, addr);
->>       t = map_read(map, addr);
->>   @@ -769,8 +835,27 @@ static int __xipram chip_ready(struct map_info
->> *map, unsigned long addr)
->>    */
->>   static int __xipram chip_good(struct map_info *map, unsigned long
->> addr, map_word expected)
->>   {
->> +    struct cfi_private *cfi = map->fldrv_priv;
->>       map_word oldd, curd;
->>   +    if (cfi_use_status_reg(cfi)) {
->> +        map_word ready = CMD(CFI_SR_DRB);
->> +        map_word err = CMD(CFI_SR_PSB | CFI_SR_ESB);
-> 
-> Is it not necessary to check CFI_SR_WBASB and CFI_SR_SLSB that are
-> checked by cfi_check_err_status()?
-> 
+Here are the bugs:
 
-chip_good() is used to verify whether write or erase operation really
-succeeded. Looking at Cypress HyperFlash datasheets and app notes on
-status register polling, its enough to see if CFI_SR_PSB or CFI_SR_PSB
-is set to know if write or erase failed. Now, the reason for program or
-erase failure can be known by looking at CFI_SR_WBASB and CFI_SR_SLSB
-which is done for cfi_check_err_status().
-Therefore, I feel, its enough to look for CFI_SR_PSB or CFI_SR_ESB here.
+--------------------------------------------------------------------------------
+Title:              general protection fault in ath6kl_usb_alloc_urb_from_pipe
+Last occurred:      0 days ago
+Reported:           73 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=cd8b9cfe50a0bf36ee19eda2d7e2e06843dfbeaf
+Original thread:    https://lkml.kernel.org/lkml/0000000000008e825105865615e3@google.com/T/#u
 
-Thanks for the review!
+This bug has a C reproducer.
 
-Regards
-Vignesh
+No one has replied to the original thread for this bug yet.
 
->> +        /*
->> +         * For chips that support status register, check device
->> +         * ready bit and Erase/Program status bit to know if
->> +         * operation succeeded.
->> +         */
->> +        cfi_send_gen_cmd(0x70, cfi->addr_unlock1, 0, map, cfi,
-> 
-> Same as cfi_check_err_status() and chip_ready() about the base address.
-> 
->> +                 cfi->device_type, NULL);
->> +        curd = map_read(map, addr);
->> +
->> +        if (map_word_andequal(map, curd, ready, ready))
->> +            return !map_word_bitsset(map, curd, err);
->> +
->> +        return 0;
->> +    }
->> +
->>       oldd = map_read(map, addr);
->>       curd = map_read(map, addr);
->>   @@ -1644,6 +1729,7 @@ static int __xipram do_write_oneword(struct
->> map_info *map, struct flchip *chip,
->>       /* Did we succeed? */
->>       if (!chip_good(map, adr, datum)) {
->>           /* reset on all failures. */
->> +        cfi_check_err_status(map, adr);
->>           map_write(map, CMD(0xF0), chip->start);
->>           /* FIXME - should have reset delay before continuing */
->>   @@ -1901,6 +1987,7 @@ static int __xipram do_write_buffer(struct
->> map_info *map, struct flchip *chip,
->>        * See e.g.
->>        *
->> http://www.spansion.com/Support/Application%20Notes/MirrorBit_Write_Buffer_Prog_Page_Buffer_Read_AN.pdf
->>
->>        */
->> +    cfi_check_err_status(map, adr);
->>       cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
->>                cfi->device_type, NULL);
->>       cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
->> @@ -2107,6 +2194,7 @@ static int do_panic_write_oneword(struct
->> map_info *map, struct flchip *chip,
->>         if (!chip_good(map, adr, datum)) {
->>           /* reset on all failures. */
->> +        cfi_check_err_status(map, adr);
->>           map_write(map, CMD(0xF0), chip->start);
->>           /* FIXME - should have reset delay before continuing */
->>   @@ -2316,6 +2404,7 @@ static int __xipram do_erase_chip(struct
->> map_info *map, struct flchip *chip)
->>       /* Did we succeed? */
->>       if (ret) {
->>           /* reset on all failures. */
->> +        cfi_check_err_status(map, adr);
->>           map_write(map, CMD(0xF0), chip->start);
->>           /* FIXME - should have reset delay before continuing */
->>   @@ -2412,6 +2501,7 @@ static int __xipram do_erase_oneblock(struct
->> map_info *map, struct flchip *chip,
->>       /* Did we succeed? */
->>       if (ret) {
->>           /* reset on all failures. */
->> +        cfi_check_err_status(map, adr);
->>           map_write(map, CMD(0xF0), chip->start);
->>           /* FIXME - should have reset delay before continuing */
->>   diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
->> index 208c87cf2e3e..b50416169049 100644
->> --- a/include/linux/mtd/cfi.h
->> +++ b/include/linux/mtd/cfi.h
->> @@ -219,6 +219,11 @@ struct cfi_pri_amdstd {
->>       uint8_t  VppMin;
->>       uint8_t  VppMax;
->>       uint8_t  TopBottom;
->> +    /* Below field are added from version 1.5 */
->> +    uint8_t  ProgramSuspend;
->> +    uint8_t  UnlockBypass;
->> +    uint8_t  SecureSiliconSector;
->> +    uint8_t  SoftwareFeatures;
->>   } __packed;
->>     /* Vendor-Specific PRI for Atmel chips (command set 0x0002) */
+This looks like a bug in a net/wireless USB driver.
 
--- 
-Regards
-Vignesh
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+ead4037ec793e025e66f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000008e825105865615e3@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: trying to register non-static key in rtl_c2hcmd_launcher
+Last occurred:      0 days ago
+Reported:           73 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=9c910719e185e47dad63741d473518b365286eb7
+Original thread:    https://lkml.kernel.org/lkml/000000000000727264058653d9a7@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug has received 1 reply, 27 days ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1fcc5ef45175fc774231@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000727264058653d9a7@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: ODEBUG bug in rsi_probe
+Last occurred:      0 days ago
+Reported:           71 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=3b35267abf182bd98ba95c0943bc0f957e021101
+Original thread:    https://lkml.kernel.org/lkml/00000000000024bbd7058682eda1@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1d1597a5aa3679c65b9f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000024bbd7058682eda1@google.com
+
+--------------------------------------------------------------------------------
+Title:              INFO: trying to register non-static key in del_timer_sync (2)
+Last occurred:      0 days ago
+Reported:           73 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=26525f643f454dd7be0078423e3cdb0d57744959
+Original thread:    https://lkml.kernel.org/lkml/000000000000927a7b0586561537@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug has received 5 replies; the last was 12 days
+ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+dc4127f950da51639216@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 12 days ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/000000000000927a7b0586561537@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in zd_mac_clear
+Last occurred:      0 days ago
+Reported:           73 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=46e5ae5074764b5f0eed428a8c4989d9efbe9146
+Original thread:    https://lkml.kernel.org/lkml/00000000000075a7a6058653d977@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+74c65761783d66a9c97c@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000075a7a6058653d977@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: ath10k USB support is incomplete, don't expect anything to work!
+Last occurred:      0 days ago
+Reported:           46 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=8b74d6028d19ea25be1d3ee73502dc90833859d8
+Original thread:    https://lkml.kernel.org/lkml/000000000000a3ca70058872de7c@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug has received 1 reply, 46 days ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+c1b25598aa60dcd47e78@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000a3ca70058872de7c@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: invalid-free in rsi_91x_deinit
+Last occurred:      5 days ago
+Reported:           62 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=426fbebc1eac728afa08e52b1bcf8171c9413e29
+Original thread:    https://lkml.kernel.org/lkml/0000000000005ae4cd058731d407@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+7c72edfb407b2bd866ce@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000005ae4cd058731d407@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: slab-out-of-bounds Read in p54u_load_firmware_cb
+Last occurred:      5 days ago
+Reported:           49 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=a7d7aec13ac4d6981c15814acb900348d340dd70
+Original thread:    https://lkml.kernel.org/lkml/00000000000001de810588363aaf@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug has received 4 replies; the last was 9 hours
+ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+6d237e74cdc13f036473@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread, which had activity only 9 hours ago.  For the git send-email command to
+use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
+instructions" at https://lkml.kernel.org/r/00000000000001de810588363aaf@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in submit_rx_urb/usb_submit_urb
+Last occurred:      1 day ago
+Reported:           26 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=97fff2c33c48264fba4d185f5f0f0961bdcd2ae2
+Original thread:    https://lkml.kernel.org/lkml/0000000000004da71e058a06318b@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug has received 1 reply, 26 days ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000004da71e058a06318b@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in ar5523_submit_rx_cmd/usb_submit_urb
+Last occurred:      2 days ago
+Reported:           21 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=d4cdc65d1db112b294b568e0cff47bca7cd3edbd
+Original thread:    https://lkml.kernel.org/lkml/000000000000f4900f058a69d6c5@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug has received 1 reply, 21 days ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+6101b0c732dea13ea55b@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000f4900f058a69d6c5@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: uninit-value in rt2500usb_bbp_read
+Last occurred:      13 days ago
+Reported:           18 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f35d123de7d393019c1ed4d4e60dc66596ed62cd
+Original thread:    https://lkml.kernel.org/lkml/000000000000cf6a70058aa48695@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug has received 1 reply, 18 days ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+a106a5b084a6890d2607@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000cf6a70058aa48695@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in p54u_load_firmware_cb
+Last occurred:      11 days ago
+Reported:           49 days ago
+Branches:           Mainline (with usb-fuzzer patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=082c09653e43e33a6a56f8c57cf051eeacae9d5f
+Original thread:    https://lkml.kernel.org/lkml/000000000000050c5f0588363ad6@google.com/T/#u
+
+This bug has a syzkaller reproducer only.
+
+The original thread for this bug has received 13 replies; the last was 27 days
+ago.
+
+This looks like a bug in a net/wireless USB driver.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000050c5f0588363ad6@google.com
+
