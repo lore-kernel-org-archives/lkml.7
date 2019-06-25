@@ -2,577 +2,333 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BE1C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA68C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18FB4214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D07213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CcNfQghe"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Kc2FR3IN";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="pRWkOCjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbfFYMe1 (ORCPT
+        id S1729637AbfFYMen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:34:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56276 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfFYMe0 (ORCPT
+        Tue, 25 Jun 2019 08:34:43 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:40158 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726653AbfFYMem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:34:26 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a15so2631582wmj.5;
-        Tue, 25 Jun 2019 05:34:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CC4YE86QtOg4NxoeCs2Jrma7W56DR7TN4ZywVRYX0TY=;
-        b=CcNfQghezl4a6aeE43mpBy2cypM9gm0r7xrnXROurnilyPdkS1kmtv/eetb2oVqYwq
-         rGXx7TRHL4qR1PJzlK6U843sbuXp12BXHlbViMOx8Fv46mYu1oMiLP0azGMLTdm7ST2t
-         rejfYTTx3HW5z11eBlbVv7QduqYCwpCpZhGR5ReysZgsv6vs+7y443trE4KVRoGDKCl3
-         me5TsO9Tf7v1qEJ1V4rW9SO0KFc44CXYMrS2w6RneSvUTPX/rdzmyHgfEwyZW/c95oLK
-         vifdpRgMLFGkZ5FXB7/2YQam5RUjZRVpu23gAgraIYIP5TFFO4FlCXpKJFXejOLkw1M1
-         5ZVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CC4YE86QtOg4NxoeCs2Jrma7W56DR7TN4ZywVRYX0TY=;
-        b=Zat6hIxzaQtt+dxmaeOpWhuuhBrzY8LqZbFt3ebZDn1hj+0BcLalHGmDoDMsMsrAcN
-         BvM5wB3Mq+r/fzP3inY78Ic1l7xesYvZPZs+eP160NnRkkglbooqWEm05Yr3dPh9Xj9F
-         7Pw4kkmQ8AVbfEyCrIyzpfO/IcK4zBneSj/T6utAg6D7r8qxspRj5vSSZavOFX82MKHR
-         eO1gV1FjmJp4LGc3FlZRUg59yuQsrzSe4ARbxzZq8JagaBB+xp6FZH/uxovHw8tHFd/8
-         KSZFq2oZ6vA7y8bCTypbVy4CVATpfrCgmobapJN3R/d3VsJiq8HTpbOv1m60NxOUxKCb
-         Vnew==
-X-Gm-Message-State: APjAAAWg4Oscei974U22x8Bk0FiYYuS3w1+0Xi3e1AfYw5Pro4LLPxiD
-        IPvMSPzkVAjx+fQMhUOH/cCc81aB4rIgBw==
-X-Google-Smtp-Source: APXvYqylxpnjkG+TJmazS8HIvgK6sK0v9PRkBdWxXaH9fJEuKPxQlriZmfGHzMs+B+rXkpXHuy80SA==
-X-Received: by 2002:a1c:c583:: with SMTP id v125mr18666160wmf.158.1561466062750;
-        Tue, 25 Jun 2019 05:34:22 -0700 (PDT)
-Received: from localhost.localdomain ([212.146.100.6])
-        by smtp.gmail.com with ESMTPSA id j132sm1732006wmj.21.2019.06.25.05.34.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 05:34:22 -0700 (PDT)
-From:   Andra Danciu <andradanciu1997@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, festevam@gmail.com, aisheng.dong@nxp.com,
-        l.stach@pengutronix.de, angus@akkea.ca, vabhav.sharma@nxp.com,
-        pankaj.bansal@nxp.com, bhaskar.upadhaya@nxp.com, ping.bai@nxp.com,
-        manivannan.sadhasivam@linaro.org, richard.hu@technexion.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        matti.vaittinen@fi.rohmeurope.com, linux-imx@nxp.com,
-        daniel.baluta@nxp.com
-Subject: [PATCH v2] arm64: dts: fsl: pico-pi: Add a device tree for the PICO-PI-IMX8M
-Date:   Tue, 25 Jun 2019 15:34:07 +0300
-Message-Id: <20190625123407.15888-1-andradanciu1997@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 25 Jun 2019 08:34:42 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PCMgW4023488;
+        Tue, 25 Jun 2019 05:33:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=Xe6LkEZxFkRd/WTjSKucLrojQ+ICs1avXjuoJ2vFg38=;
+ b=Kc2FR3INTT0L7+w1tHbVsbD5KqLXAvSJyROAP4t7Y7AaEsaXiBNG7a+kCI62veAonyZ8
+ Djb/jkyuM03hopzHrRtNEEE4qOb1IFhorVJ6jI7XzcCo5eMDZOfA+4O92ox9ctACZabH
+ qWc0KJvEc34Vtir6tt+ifQjWFMGUMR/+CJQ= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2tb7gut8ra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jun 2019 05:33:20 -0700
+Received: from prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 25 Jun 2019 05:33:19 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx04.TheFacebook.com (2620:10d:c081:6::18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 25 Jun 2019 05:33:19 -0700
+Received: from NAM01-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 25 Jun 2019 05:33:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xe6LkEZxFkRd/WTjSKucLrojQ+ICs1avXjuoJ2vFg38=;
+ b=pRWkOCjBMM8BGO8KycL9kUFUQsVLlonN2qKQiHs4lXGV3fkp0COIwNSlfdkHM4g9j4MDHn8uNZjGn4fx8NMnO+owgSjqTdImCZlRJ9lxs9vnzsqU0Tdg318tMybEblbRbbpQhsnkAyghiUp+PNPI7Bm1svz+vWXWbJaQPzr6KpA=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1181.namprd15.prod.outlook.com (10.175.9.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 12:33:04 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d%6]) with mapi id 15.20.2008.017; Tue, 25 Jun 2019
+ 12:33:03 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
+        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>
+Subject: Re: [PATCH v6 5/6] khugepaged: enable collapse pmd for pte-mapped THP
+Thread-Topic: [PATCH v6 5/6] khugepaged: enable collapse pmd for pte-mapped
+ THP
+Thread-Index: AQHVKYdbTu9KGYA+hEyrpX71HNVoZKaqy94AgAASewCAAVGdAIAAIT6A
+Date:   Tue, 25 Jun 2019 12:33:03 +0000
+Message-ID: <77DBF8A2-DF3D-4635-A5E6-66D80A8BFA50@fb.com>
+References: <20190623054829.4018117-1-songliubraving@fb.com>
+ <20190623054829.4018117-6-songliubraving@fb.com>
+ <20190624131934.m6gbktixyykw65ws@box>
+ <24FB1072-E355-4F9D-855F-337C855C9AF9@fb.com>
+ <20190625103404.3ypizksnpopcgwdk@box>
+In-Reply-To: <20190625103404.3ypizksnpopcgwdk@box>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::1:b854]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 858f89df-2bfd-4554-d1f6-08d6f96944b4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1181;
+x-ms-traffictypediagnostic: MWHPR15MB1181:
+x-microsoft-antispam-prvs: <MWHPR15MB11817C001FFAC785C16B7F38B3E30@MWHPR15MB1181.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(396003)(366004)(136003)(189003)(199004)(14444005)(53936002)(256004)(8936002)(14454004)(66476007)(66446008)(5660300002)(81166006)(66556008)(76116006)(73956011)(8676002)(66946007)(81156014)(64756008)(99286004)(446003)(11346002)(2616005)(476003)(46003)(6246003)(68736007)(486006)(33656002)(478600001)(7736002)(305945005)(71190400001)(71200400001)(86362001)(229853002)(53546011)(6916009)(316002)(186003)(6486002)(2906002)(4326008)(102836004)(6436002)(25786009)(57306001)(54906003)(6116002)(50226002)(6512007)(36756003)(76176011)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1181;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hxgjeeUttwzu2e45bNmHoQY4Ys+5oPXhkRKmzqQnpF95YSSBenRneaYP20ucQH89IeCk9iJM6fb065G0ihKvA4HmO3WZe48Uj0j0kCgmuDO5E8FLBtCoThF5dBUBM2IRTusMa9hXDIfC9HMhOPBU5DQP/FMUda/jRBaAkykFr1S1n3I9gt5tkckBwAs67NV+/hpJl/lMhvUyH81SdICP1AQeO9L6veIJU/ye8wBJAEHlXdJq6tnxqjw/yk74f0pVOwqD4ftNCoTYEc56jVIi1ME4i0745H3Lf/34cWfkCGHjtDE5/vBdsl/8EVv/LQ7urnok+7Zv8qXXNApoVvqsQodtCpPvdz3+hVLzakUUSWwqjg4x1rBFxHmkHjZGUm4sCYgPTp2hadlmaCKI2GkxXwlxBm3/cBmROr+Rk+J+ZxY=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <55072553C2EAE7409F1689234ACA4FC6@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 858f89df-2bfd-4554-d1f6-08d6f96944b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 12:33:03.7796
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1181
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=858 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250099
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Hu <richard.hu@technexion.com>
 
-The current level of support yields a working console and is able to boot
-userspace from an initial ramdisk copied via u-boot in RAM.
 
-Additional subsystems that are active :
-	- Ethernet
-	- USB
+> On Jun 25, 2019, at 3:34 AM, Kirill A. Shutemov <kirill@shutemov.name> wr=
+ote:
+>=20
+> On Mon, Jun 24, 2019 at 02:25:42PM +0000, Song Liu wrote:
+>>=20
+>>=20
+>>> On Jun 24, 2019, at 6:19 AM, Kirill A. Shutemov <kirill@shutemov.name> =
+wrote:
+>>>=20
+>>> On Sat, Jun 22, 2019 at 10:48:28PM -0700, Song Liu wrote:
+>>>> khugepaged needs exclusive mmap_sem to access page table. When it fail=
+s
+>>>> to lock mmap_sem, the page will fault in as pte-mapped THP. As the pag=
+e
+>>>> is already a THP, khugepaged will not handle this pmd again.
+>>>>=20
+>>>> This patch enables the khugepaged to retry retract_page_tables().
+>>>>=20
+>>>> A new flag AS_COLLAPSE_PMD is introduced to show the address_space may
+>>>> contain pte-mapped THPs. When khugepaged fails to trylock the mmap_sem=
+,
+>>>> it sets AS_COLLAPSE_PMD. Then, at a later time, khugepaged will retry
+>>>> compound pages in this address_space.
+>>>>=20
+>>>> Since collapse may happen at an later time, some pages may already fau=
+lt
+>>>> in. To handle these pages properly, it is necessary to prepare the pmd
+>>>> before collapsing. prepare_pmd_for_collapse() is introduced to prepare
+>>>> the pmd by removing rmap, adjusting refcount and mm_counter.
+>>>>=20
+>>>> prepare_pmd_for_collapse() also double checks whether all ptes in this
+>>>> pmd are mapping to the same THP. This is necessary because some subpag=
+e
+>>>> of the THP may be replaced, for example by uprobe. In such cases, it
+>>>> is not possible to collapse the pmd, so we fall back.
+>>>>=20
+>>>> Signed-off-by: Song Liu <songliubraving@fb.com>
+>>>> ---
+>>>> include/linux/pagemap.h |  1 +
+>>>> mm/khugepaged.c         | 69 +++++++++++++++++++++++++++++++++++------
+>>>> 2 files changed, 60 insertions(+), 10 deletions(-)
+>>>>=20
+>>>> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+>>>> index 9ec3544baee2..eac881de2a46 100644
+>>>> --- a/include/linux/pagemap.h
+>>>> +++ b/include/linux/pagemap.h
+>>>> @@ -29,6 +29,7 @@ enum mapping_flags {
+>>>> 	AS_EXITING	=3D 4, 	/* final truncate in progress */
+>>>> 	/* writeback related tags are not used */
+>>>> 	AS_NO_WRITEBACK_TAGS =3D 5,
+>>>> +	AS_COLLAPSE_PMD =3D 6,	/* try collapse pmd for THP */
+>>>> };
+>>>>=20
+>>>> /**
+>>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>>> index a4f90a1b06f5..9b980327fd9b 100644
+>>>> --- a/mm/khugepaged.c
+>>>> +++ b/mm/khugepaged.c
+>>>> @@ -1254,7 +1254,47 @@ static void collect_mm_slot(struct mm_slot *mm_=
+slot)
+>>>> }
+>>>>=20
+>>>> #if defined(CONFIG_SHMEM) && defined(CONFIG_TRANSPARENT_HUGE_PAGECACHE=
+)
+>>>> -static void retract_page_tables(struct address_space *mapping, pgoff_=
+t pgoff)
+>>>> +
+>>>> +/* return whether the pmd is ready for collapse */
+>>>> +bool prepare_pmd_for_collapse(struct vm_area_struct *vma, pgoff_t pgo=
+ff,
+>>>> +			      struct page *hpage, pmd_t *pmd)
+>>>> +{
+>>>> +	unsigned long haddr =3D page_address_in_vma(hpage, vma);
+>>>> +	unsigned long addr;
+>>>> +	int i, count =3D 0;
+>>>> +
+>>>> +	/* step 1: check all mapped PTEs are to this huge page */
+>>>> +	for (i =3D 0, addr =3D haddr; i < HPAGE_PMD_NR; i++, addr +=3D PAGE_=
+SIZE) {
+>>>> +		pte_t *pte =3D pte_offset_map(pmd, addr);
+>>>> +
+>>>> +		if (pte_none(*pte))
+>>>> +			continue;
+>>>> +
+>>>> +		if (hpage + i !=3D vm_normal_page(vma, addr, *pte))
+>>>> +			return false;
+>>>> +		count++;
+>>>> +	}
+>>>> +
+>>>> +	/* step 2: adjust rmap */
+>>>> +	for (i =3D 0, addr =3D haddr; i < HPAGE_PMD_NR; i++, addr +=3D PAGE_=
+SIZE) {
+>>>> +		pte_t *pte =3D pte_offset_map(pmd, addr);
+>>>> +		struct page *page;
+>>>> +
+>>>> +		if (pte_none(*pte))
+>>>> +			continue;
+>>>> +		page =3D vm_normal_page(vma, addr, *pte);
+>>>> +		page_remove_rmap(page, false);
+>>>> +	}
+>>>> +
+>>>> +	/* step 3: set proper refcount and mm_counters. */
+>>>> +	page_ref_sub(hpage, count);
+>>>> +	add_mm_counter(vma->vm_mm, mm_counter_file(hpage), -count);
+>>>> +	return true;
+>>>> +}
+>>>> +
+>>>> +extern pid_t sysctl_dump_pt_pid;
+>>>> +static void retract_page_tables(struct address_space *mapping, pgoff_=
+t pgoff,
+>>>> +				struct page *hpage)
+>>>> {
+>>>> 	struct vm_area_struct *vma;
+>>>> 	unsigned long addr;
+>>>> @@ -1273,21 +1313,21 @@ static void retract_page_tables(struct address=
+_space *mapping, pgoff_t pgoff)
+>>>> 		pmd =3D mm_find_pmd(vma->vm_mm, addr);
+>>>> 		if (!pmd)
+>>>> 			continue;
+>>>> -		/*
+>>>> -		 * We need exclusive mmap_sem to retract page table.
+>>>> -		 * If trylock fails we would end up with pte-mapped THP after
+>>>> -		 * re-fault. Not ideal, but it's more important to not disturb
+>>>> -		 * the system too much.
+>>>> -		 */
+>>>> 		if (down_write_trylock(&vma->vm_mm->mmap_sem)) {
+>>>> 			spinlock_t *ptl =3D pmd_lock(vma->vm_mm, pmd);
+>>>> -			/* assume page table is clear */
+>>>> +
+>>>> +			if (!prepare_pmd_for_collapse(vma, pgoff, hpage, pmd)) {
+>>>> +				spin_unlock(ptl);
+>>>> +				up_write(&vma->vm_mm->mmap_sem);
+>>>> +				continue;
+>>>> +			}
+>>>> 			_pmd =3D pmdp_collapse_flush(vma, addr, pmd);
+>>>> 			spin_unlock(ptl);
+>>>> 			up_write(&vma->vm_mm->mmap_sem);
+>>>> 			mm_dec_nr_ptes(vma->vm_mm);
+>>>> 			pte_free(vma->vm_mm, pmd_pgtable(_pmd));
+>>>> -		}
+>>>> +		} else
+>>>> +			set_bit(AS_COLLAPSE_PMD, &mapping->flags);
+>>>> 	}
+>>>> 	i_mmap_unlock_write(mapping);
+>>>> }
+>>>> @@ -1561,7 +1601,7 @@ static void collapse_file(struct mm_struct *mm,
+>>>> 		/*
+>>>> 		 * Remove pte page tables, so we can re-fault the page as huge.
+>>>> 		 */
+>>>> -		retract_page_tables(mapping, start);
+>>>> +		retract_page_tables(mapping, start, new_page);
+>>>> 		*hpage =3D NULL;
+>>>>=20
+>>>> 		khugepaged_pages_collapsed++;
+>>>> @@ -1622,6 +1662,7 @@ static void khugepaged_scan_file(struct mm_struc=
+t *mm,
+>>>> 	int present, swap;
+>>>> 	int node =3D NUMA_NO_NODE;
+>>>> 	int result =3D SCAN_SUCCEED;
+>>>> +	bool collapse_pmd =3D false;
+>>>>=20
+>>>> 	present =3D 0;
+>>>> 	swap =3D 0;
+>>>> @@ -1640,6 +1681,14 @@ static void khugepaged_scan_file(struct mm_stru=
+ct *mm,
+>>>> 		}
+>>>>=20
+>>>> 		if (PageTransCompound(page)) {
+>>>> +			if (collapse_pmd ||
+>>>> +			    test_and_clear_bit(AS_COLLAPSE_PMD,
+>>>> +					       &mapping->flags)) {
+>>>=20
+>>> Who said it's the only PMD range that's subject to collapse? The bit ha=
+s
+>>> to be per-PMD, not per-mapping.
+>>=20
+>> I didn't assume this is the only PMD range that subject to collapse.=20
+>> So once we found AS_COLLAPSE_PMD, it will continue scan the whole mappin=
+g:
+>> retract_page_tables(), then continue.=20
+>=20
+> I still don't get it.
+>=20
+> Assume we have two ranges that subject to collapse. khugepaged_scan_file(=
+)
+> sees and clears AS_COLLAPSE_PMD. Tries to collapse the first range, fails
+> and set the bit again. khugepaged_scan_file() sees the second range,
+> clears the bit, but this time collapse is successful: the bit is still no=
+t
+> set, but it should be.
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Richard Hu <richard.hu@technexion.com>
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
----
-Changes since v1:
- - renamed wandboard-pi-8m.dts to pico-pi-8m.dts
- - removed pinctrl_csi1, pinctrl_wifi_ctrl
- - used generic name for pmic
- - removed gpo node
- - delete regulator-virtuals node
- - remove always-on property from buck1-8 and ldo3-7
- - remove pmic-buck-uses-i2c-dvs property for buck1-4
+Yeah, you are right. Current logic only covers multiple THPs within single
+call of khugepaged_scan_file(). I missed the case you just described.=20
 
- arch/arm64/boot/dts/freescale/Makefile       |   1 +
- arch/arm64/boot/dts/freescale/pico-pi-8m.dts | 458 +++++++++++++++++++++++++++
- 2 files changed, 459 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/pico-pi-8m.dts
+What do you think about the first 4 patches of set and the other set? If=20
+these patches look good, how about we get them in first? I will work on=20
+proper fix (or re-design) for 5/6 and 6/6 in the meanwhile.=20
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index c043aca66572..538422903e8a 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -26,3 +26,4 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-+dtb-$(CONFIG_ARCH_MXC) += pico-pi-8m.dtb
-diff --git a/arch/arm64/boot/dts/freescale/pico-pi-8m.dts b/arch/arm64/boot/dts/freescale/pico-pi-8m.dts
-new file mode 100644
-index 000000000000..23422c8fc43f
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/pico-pi-8m.dts
-@@ -0,0 +1,458 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018 Wandboard, Org.
-+ * Copyright 2017 NXP
-+ *
-+ * Author: Richard Hu <hakahu@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8mq.dtsi"
-+
-+/ {
-+	model = "PICO-PI-8M";
-+	compatible = "wand,imx8mq-pico-pi", "fsl,imx8mq";
-+
-+	chosen {
-+		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
-+		stdout-path = &uart1;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_otg_vbus>;
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio3 14 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+
-+	wand-pi-8m {
-+		pinctrl_otg_vbus: otgvbusgrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_DQS_GPIO3_IO14		0x19   /* USB OTG VBUS Enable */
-+			>;
-+		};
-+
-+		pinctrl_enet_3v3: enet3v3grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_GPIO1_IO00_GPIO1_IO0		0x19
-+			>;
-+		};
-+
-+		pinctrl_fec1: fec1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC		0x3
-+				MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO	0x23
-+				MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
-+				MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
-+				MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
-+				MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
-+				MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
-+				MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
-+				MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
-+				MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
-+				MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
-+				MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
-+				MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-+				MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-+				MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x19
-+			>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
-+				MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL			0x4000007f
-+				MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA			0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
-+				MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
-+			>;
-+		};
-+
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x49
-+				MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x49
-+				MX8MQ_IOMUXC_UART4_RXD_UART2_DCE_CTS_B		0x49
-+				MX8MQ_IOMUXC_UART4_TXD_UART2_DCE_RTS_B		0x49
-+			>;
-+		};
-+
-+		pinctrl_usdhc1: usdhc1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
-+				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
-+				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
-+				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
-+			>;
-+		};
-+
-+		pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
-+				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
-+				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
-+				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
-+			>;
-+		};
-+
-+		pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
-+				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
-+				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
-+				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
-+			>;
-+		};
-+
-+		pinctrl_usdhc2: usdhc2grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-+				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-+				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-+				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-+				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-+				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-+				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
-+				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
-+				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
-+				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
-+				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
-+				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
-+				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
-+				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
-+				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
-+				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
-+				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
-+				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
-+				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+			>;
-+		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
-+			>;
-+		};
-+
-+		pinctrl_pmic: pmicirq {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
-+			>;
-+		};
-+
-+		pinctrl_tusb320_irq: tusb320_irqgrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_DATA00_GPIO3_IO6	0x41
-+			>;
-+		};
-+
-+		pinctrl_typec_ss_sel: typec_ss_selgrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5		0x19
-+			>;
-+		};
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1 &pinctrl_enet_3v3>;
-+	phy-mode = "rgmii-id";
-+	pinctrl-assert-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+			at803x,led-act-blind-workaround;
-+			at803x,eee-disabled;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	typec_tusb320:tusb320@47 {
-+		compatible = "ti,tusb320";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tusb320_irq &pinctrl_typec_ss_sel>;
-+		reg = <0x47>;
-+		vbus-supply = <&reg_usb_otg_vbus>;
-+		ss-sel-gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+		tusb320,int-gpio = <&gpio3 6 GPIO_ACTIVE_LOW>;
-+		tusb320,select-mode = <0>;
-+		tusb320,dfp-power = <0>;
-+	};
-+
-+	pmic: pmic@4b {
-+		reg = <0x4b>;
-+		compatible = "rohm,bd71837";
-+		/* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-+		pinctrl-0 = <&pinctrl_pmic>;
-+		gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+
-+		regulators {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			buck1: BUCK1 {
-+				regulator-name = "buck1";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-ramp-delay = <1250>;
-+				rohm,dvs-run-voltage = <900000>;
-+				rohm,dvs-idle-voltage = <850000>;
-+				rohm,dvs-suspend-voltage = <800000>;
-+			};
-+
-+			buck2: BUCK2 {
-+				regulator-name = "buck2";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-ramp-delay = <1250>;
-+				rohm,dvs-run-voltage = <1000000>;
-+				rohm,dvs-idle-voltage = <900000>;
-+			};
-+
-+			buck3: BUCK3 {
-+				regulator-name = "buck3";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				rohm,dvs-run-voltage = <1000000>;
-+			};
-+
-+			buck4: BUCK4 {
-+				regulator-name = "buck4";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				rohm,dvs-run-voltage = <1000000>;
-+			};
-+
-+			buck5: BUCK5 {
-+				regulator-name = "buck5";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-boot-on;
-+			};
-+
-+			buck6: BUCK6 {
-+				regulator-name = "buck6";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+
-+			buck7: BUCK7 {
-+				regulator-name = "buck7";
-+				regulator-min-microvolt = <1605000>;
-+				regulator-max-microvolt = <1995000>;
-+				regulator-boot-on;
-+			};
-+
-+			buck8: BUCK8 {
-+				regulator-name = "buck8";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo1: LDO1 {
-+				regulator-name = "ldo1";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo2: LDO2 {
-+				regulator-name = "ldo2";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo3: LDO3 {
-+				regulator-name = "ldo3";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo4: LDO4 {
-+				regulator-name = "ldo4";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo5: LDO5 {
-+				regulator-name = "ldo5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo6: LDO6 {
-+				regulator-name = "ldo6";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo7: LDO7 {
-+				regulator-name = "ldo7";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&uart1 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usb3_phy0 {
-+	status = "okay";
-+};
-+
-+&usb_dwc3_0 {
-+	extcon = <&typec_tusb320>;
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb3_phy1 {
-+	status = "okay";
-+};
-+
-+&usb_dwc3_1 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
-+&A53_0 {
-+	operating-points = <
-+		/* kHz    uV */
-+		1500000 1000000
-+		1300000 1000000
-+		1000000 900000
-+		800000  900000
-+	>;
-+};
--- 
-2.11.0
+Thanks,
+Song
 
