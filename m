@@ -2,123 +2,121 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B33DC4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24351C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2146420663
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F263F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UXhIQBFY"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="M3Mx03zH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfFYAcz (ORCPT
+        id S1729336AbfFYAeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:32:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46743 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbfFYAcz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:32:55 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d4so24257883edr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nBkBYYZc0s8xxqgkIM92IszAEEryF8hhcj8JV1SU20A=;
-        b=UXhIQBFYD2yMmcFMLp1puhsD2i9OksoE0tmnxr7K5BnwgNkxdyzcQboUIz9i20Lsz4
-         3m1RTIe30lWE24I7cvsZZLLhkZgDOCOIkk9ZbG6EosmpUQjxEvoya52YQrtLyV7zH9ed
-         epQ9slu7TgFvXvJ/O6QSeC0l0d5tfQ1BjsfsF+SeCivQZbElS/gZ18iF66YuOrQ/JcOD
-         zhFe4na0F79DpVOMYVK7Dpm3S34HraMbgjpZtfCF2h2d+s5CnnYrRGOohH7RQ9Wj0HSM
-         Xurwf4MZJZS7xJOqWZLSW/LSVgkO36dAgq2GlDTSVHZBaAcm83Tu0TMT9EcFBYadyl+r
-         OB+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nBkBYYZc0s8xxqgkIM92IszAEEryF8hhcj8JV1SU20A=;
-        b=GL8zZtSaBo8SMsAfjBblh400o+9X+DsXC9gtYPk8nKh8S3kIAgnsw2VCL3V1tX+srK
-         sZcosO96E+3an8wzvIQWDBXJ+PhYYBvuMnEvUTtcKZ9fdHICtjPQ7MlVGerlql2s21fG
-         oNHRoz+skuimbbEu7jFSpEPquhX5FV+lDADgT7rEJcvp0nCz71UIfBBEH88slw5DLSDt
-         QpHntHLUIOv0l0b7lciSzWL62n+O7o126OHTT6/Xy4CVbM0ayWyLkPUs6Rp9gSKU56Cm
-         kBubcvHVi7W0WPuCbN2DZ+avXDWZTOE6T2Gw+wmjxaCZ/99q2l0aejD6/xFWyApuHedF
-         EJ7A==
-X-Gm-Message-State: APjAAAU8cWAphHkg/Xy0hzI8oKpIgPYkAI9ZD/1h2CFuFcfJ3zfEomRR
-        cu/o6Ba3rvTFKyMUN+RjZvgwCWqYg1Oda3D5rUsqRA==
-X-Google-Smtp-Source: APXvYqzllDy+o0mw3P7xV2FKxd3VIsRlZU7rPG+3/Ts1FSD6sOvt+xhoMTQM+Dp6LA2x/CQ75QeVvVj+dgN2KOP+P5k=
-X-Received: by 2002:aa7:cdc6:: with SMTP id h6mr80176428edw.5.1561422773047;
- Mon, 24 Jun 2019 17:32:53 -0700 (PDT)
+        Mon, 24 Jun 2019 20:34:19 -0400
+Received: from vps.xff.cz ([195.181.215.36]:57762 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727295AbfFYAeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 20:34:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1561422856; bh=SAEMPbmxeu7m0Y//z90oADzcHzVh2j7BB+u/AqgsHo8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M3Mx03zHZoWjWMLDUIXj+6JlO5AkAaCYhq9l+eHtkvD/bPeEvkhH+2Pdzk5eNkelh
+         Q69lpW/tPX5bJEyBits0Ogi5Lrxqdq7RypDZU95WByYtLSGWnsIqO8t7qeU5/X24Ej
+         Tz/LSsJ8eCvyrTUfK65aqQbuSiZPIjfLLdyhthPw=
+Date:   Tue, 25 Jun 2019 02:34:16 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+        edubezval@gmail.com, wens@csie.org, robh+dt@kernel.org,
+        mchehab+samsung@kernel.org, rui.zhang@intel.com,
+        paulmck@linux.ibm.com, davem@davemloft.net,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 08/11] thermal: sun8i: support ahb clocks
+Message-ID: <20190625003416.pxve36mrxmotg2bq@core.my.home>
+Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
+        Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+        edubezval@gmail.com, wens@csie.org, robh+dt@kernel.org,
+        mchehab+samsung@kernel.org, rui.zhang@intel.com,
+        paulmck@linux.ibm.com, davem@davemloft.net,
+        linux-arm-kernel@lists.infradead.org
+References: <20190623164206.7467-1-tiny.windzz@gmail.com>
+ <20190623164206.7467-9-tiny.windzz@gmail.com>
+ <20190624182333.di7avywtdvzwukms@flea>
 MIME-Version: 1.0
-References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
- <5D036843.2010607@intel.com>
-In-Reply-To: <5D036843.2010607@intel.com>
-From:   Eric Hankland <ehankland@google.com>
-Date:   Mon, 24 Jun 2019 17:32:41 -0700
-Message-ID: <CAOyeoRXr4gmbBPq1RsStoPguiZB8Jxod-irYd3Dm_AGVcQRGSQ@mail.gmail.com>
-Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
-To:     Wei Wang <wei.w.wang@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624182333.di7avywtdvzwukms@flea>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your feedback - I'll send out an updated version
-incorporating your comments shortly (assuming you don't have more
-after this).
+On Mon, Jun 24, 2019 at 08:23:33PM +0200, Maxime Ripard wrote:
+> On Sun, Jun 23, 2019 at 12:42:03PM -0400, Yangtao Li wrote:
+> > H3 has extra clock, so introduce something in ths_thermal_chip/ths_device
+> > and adds the process of the clock.
+> >
+> > This is pre-work for supprt it.
+> >
+> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > ---
+> >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+> >  1 file changed, 16 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> > index ed1c19bb27cf..04f53ffb6a14 100644
+> > --- a/drivers/thermal/sun8i_thermal.c
+> > +++ b/drivers/thermal/sun8i_thermal.c
+> > @@ -54,6 +54,7 @@ struct tsensor {
+> >  };
+> >
+> >  struct ths_thermal_chip {
+> > +	bool            has_ahb_clk;
+> >  	int		sensor_num;
+> >  	int		offset;
+> >  	int		scale;
+> > @@ -69,6 +70,7 @@ struct ths_device {
+> >  	struct regmap				*regmap;
+> >  	struct reset_control			*reset;
+> >  	struct clk				*bus_clk;
+> > +	struct clk                              *ahb_clk;
+> 
+> Hmm, thinking a bit about this, the name of those two clocks doesn't
+> make sense. AHB is the bus being used to access that device, so the
+> bus clock is the AHB clock.
+> 
+> What is that clock being used for?
 
-> > +struct kvm_pmu_whitelist {
-> > +       __u64 event_mask;
->
-> Is this "ARCH_PERFMON_EVENTSEL_EVENT | ARCH_PERFMON_EVENTSEL_UMASK"?
+To control the A/D and sample averaging logic, I suppose. It's controlled by the
+THS_CLK_REG (THS Clock Register) in H3 user manual.
 
-In most cases, I envision this being the case, but it's possible users
-may want other bits - see response to the next question below.
+bus_clk controls THS_GATING in BUS_CLK_GATING_REG2 (THS module is connected to
+APB bus).
 
-> > +       __u16 num_events;
-> > +       __u64 events[0];
->
-> Can this be __u16?
-> The lower 16 bits (umask+eventsel) already determines what the event is.
+I'd call it ths_clk and bus_clk.
 
-It looks like newer AMD processors also use bits 32-35 for eventsel
-(see AMD64_EVENTSEL_EVENT/AMD64_RAW_EVENT_MASK in
-arch/x86/include/asm/perf_event.h or a recent reference guide), though
-it doesn't look like this has made it to pmu_amd.c in kvm yet.
-Further, including the whole 64 bits could enable whitelisting some
-events with particular modifiers (e.g. in_tx=0, but not in_tx=1). I'm
-not sure if whitelisting with specific modifiers will be necessary,
-but we definitely need more than u16 if we want to support any AMD
-events that make use of those bits in the future.
+regards,
+	o.
 
-> > +       struct kvm_pmu_whitelist *whitelist;
->
-> This could be per-VM and under rcu?
-I'll try this out in the next version.
-
-> Why not moving this filter to reprogram_gp_counter?
->
-> You could directly compare "unit_mask, event_sel"  with whitelist->events[i]
-The reason is that this approach provides uniform behavior whether an
-event is programmed on a fixed purpose counter vs a general purpose
-one. Though I admit it's unlikely that instructions retired/cycles
-wouldn't be whitelisted (and ref cycles can't be programmed on gp
-counters), so it wouldn't be missing too much if I do move this to
-reprogram_gp_counter. What do you think?
-
-> I would directly return -EFAULT here.
->
-> Same here.
-
-Sounds good - I'll fix that in the next version.
-
-> > +       pmu->whitelist = new;
->
-> Forgot to copy the whitelist-ed events to new?
-Yep, somehow I deleted the lines that did this - thanks for pointing it out.
+> Maxime
+> 
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
