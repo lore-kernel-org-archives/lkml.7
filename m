@@ -2,179 +2,167 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2608CC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83701C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3665215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F96021655
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sz0I0sBT"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iRe6+A1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbfFYIrq (ORCPT
+        id S1730922AbfFYIsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:47:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38842 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfFYIrq (ORCPT
+        Tue, 25 Jun 2019 04:48:00 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53863 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfFYIr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:47:46 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g4so8446105plb.5;
-        Tue, 25 Jun 2019 01:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=RPiWSabt5JgoWs5z40nQXXXKrZ3PBISZqfHALf5K1aM=;
-        b=Sz0I0sBTv0opAvby7bD8S71CXkhtdKHo78vR6Pn6+4QMdTxjy3//L76zw/vAWyUGy2
-         vKfyVT5cwJIU9ErBxIrO+aysfc4rTx+L/UUtpscmht6Koz4m7Gl11GDCRUma4OEjkjej
-         oS/b+OvxwZHQo6IVeUTzp8lTeVSaMKbzDDhUS+th3DsbNYlyGi2r6mNPduuV1hHFRvPm
-         m/r08YrTfe9d5CbOdyKFeHy3LBhTgBurgssT64IC2QErCcAMI0LxOT6fD8fHRf6Po8t6
-         cRJZYk763nI/p3n6PwsYfndJCXrBJOzx2wc5xjk/2b0IUA5veoKwxH4MGEgbYuwBFeCN
-         /YoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=RPiWSabt5JgoWs5z40nQXXXKrZ3PBISZqfHALf5K1aM=;
-        b=OTnr0kw4CQ5bq+Ovfd7x7Eqdd2j5PcU7i8pKDw1VDt5EE+8mUfDfpnnS2wHBnJS8yp
-         iU2wqVS42Bx6Y96dXZV4e/fwVKwoCNwZxlMfQPW4pZdZiUMnSuGtiffAGd6vFY2fqJV3
-         wZFY/4dUxL7mZd4c07IIuFFmH3Imiet9Pde264+CwWz1zUX3AnYWp+TcBZBc5lygPEXS
-         o7qpSv3l848JF6/p6rWZWQSHC0d+CVEeroaiKNagPy/D6pM7mSrknhdnLG1VbhHKI8Vx
-         dkbcc1ugkan7/0fZd4BcFPiqtrP/QMjdbQ69yTvekKKS1NkiMWLndcOjJ00zweKbJRLd
-         Zj4Q==
-X-Gm-Message-State: APjAAAXWxtOawAkRMOUe3KQ7EiMC5vXWJ67ojFsA8HbJG0y1AxLoSCDu
-        wkt236sk5GLnGzmImaGHQtI=
-X-Google-Smtp-Source: APXvYqxS9rd6025LvTXepoBuM+Fl4OiltcA6UGOv+QgfZAo2tiZuTDpVYaKa7WQBS7h9Ta9iSNENeQ==
-X-Received: by 2002:a17:902:7787:: with SMTP id o7mr7143805pll.120.1561452465723;
-        Tue, 25 Jun 2019 01:47:45 -0700 (PDT)
-Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
-        by smtp.gmail.com with ESMTPSA id k19sm6987917pgl.42.2019.06.25.01.47.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 01:47:44 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "kishon@ti.com" <kishon@ti.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH V8 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
-Thread-Topic: [PATCH V8 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
-Thread-Index: AQHVKk1mZn06E4x3n0K7Ma23pehWQqasEKv6
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Tue, 25 Jun 2019 08:47:39 +0000
-Message-ID: <PSXP216MB066244DBB956E189F6B88559AAE30@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
-References: <20190624052611.11279-1-vidyas@nvidia.com>
- <20190624052611.11279-2-vidyas@nvidia.com>
-In-Reply-To: <20190624052611.11279-2-vidyas@nvidia.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Jun 2019 04:47:59 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8lZV63536042
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 25 Jun 2019 01:47:35 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8lZV63536042
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561452456;
+        bh=ryX8v7tj7G7wPWNZ8zfZ0V7lLgGrMj2/mk3YLXLmFqo=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=iRe6+A1zvkV7CTyV1VLkPAdiozK1z1Qh2jVGN6riSJ02W8p8wo+PvIF4NMyJIAVR3
+         WtulJVYExqt0z7qS78hV1RrmsCrJ2SrBeLYYzZMkBM2PIA17O4WBE/EV5sSNu1lgzt
+         y7f4qVhuv1i4jAiim+oO5SXbBo00mBT1YKiLojBAh0XfAomPAahtqEMaogDyUM20Y9
+         1HlzgU89AzW+xF7yFBp1/820KbypDdPlBaxbSdJMdCQrYSaUImI0mSgbFqlvyH4tti
+         KUt40cBZbemgcevBacQuYuzhCH1QdxazJ7xb8lldHkt661WfOpfmdpVfJ/FLsNd15v
+         RJoOkf0130jLQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8lYtu3536038;
+        Tue, 25 Jun 2019 01:47:34 -0700
+Date:   Tue, 25 Jun 2019 01:47:34 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kobe Wu <tipbot@zytor.com>
+Message-ID: <tip-9156e545765e467e6268c4814cfa609ebb16237e@git.kernel.org>
+Cc:     kobe-cp.wu@mediatek.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, tglx@linutronix.de,
+        linux-mediatek@lists.infradead.org, torvalds@linux-foundation.org,
+        wsd_upstream@mediatek.com, eason-yh.lin@mediatek.com,
+        will.deacon@arm.com
+Reply-To: will.deacon@arm.com, wsd_upstream@mediatek.com,
+          eason-yh.lin@mediatek.com, linux-mediatek@lists.infradead.org,
+          torvalds@linux-foundation.org, tglx@linutronix.de,
+          mingo@kernel.org, peterz@infradead.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com,
+          kobe-cp.wu@mediatek.com
+In-Reply-To: <1561365348-16050-1-git-send-email-kobe-cp.wu@mediatek.com>
+References: <1561365348-16050-1-git-send-email-kobe-cp.wu@mediatek.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lockdep: increase size of counters for
+ lockdep statistics
+Git-Commit-ID: 9156e545765e467e6268c4814cfa609ebb16237e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19, 2:26 PM, Vidya Sagar wrote:
->
-> Cleanup DBI read and write APIs by removing "__" (underscore) from their
-> names as there are no no-underscore versions and the underscore versions
-> are already doing what no-underscore versions typically do. It also remov=
-es
-> passing dbi/dbi2 base address as one of the arguments as the same can be
-> derived with in read and write APIs. Since dw_pcie_{readl/writel}_dbi()
-> APIs can't be used for ATU read/write as ATU base address could be
-> different from DBI base address, this patch attempts to implement
-> ATU read/write APIs using ATU base address without using
-> dw_pcie_{readl/writel}_dbi() APIs.
->
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes from v7:
-> * Based on suggestion from Jingoo Han, moved implementation of readl, wri=
-tel for ATU
->   region to separate APIs dw_pcie_{read/write}_atu() in pcie-designware.c=
- file and
->   calling them from pcie-designware.h file.
->
-> Changes from v6:
-> * Modified ATU read/write APIs to use implementation specific DBI read/wr=
-ite
->   APIs if present.
->
-> Changes from v5:
-> * Removed passing base address as one of the arguments as the same can be=
- derived within
->   the API itself.
-> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
->
-> Changes from v4:
-> * This is a new patch in this series
->
->  drivers/pci/controller/dwc/pcie-designware.c | 28 +++++------
->  drivers/pci/controller/dwc/pcie-designware.h | 51 +++++++++++++-------
->  2 files changed, 45 insertions(+), 34 deletions(-)
+Commit-ID:  9156e545765e467e6268c4814cfa609ebb16237e
+Gitweb:     https://git.kernel.org/tip/9156e545765e467e6268c4814cfa609ebb16237e
+Author:     Kobe Wu <kobe-cp.wu@mediatek.com>
+AuthorDate: Mon, 24 Jun 2019 16:35:48 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 25 Jun 2019 10:17:08 +0200
 
-.......
+locking/lockdep: increase size of counters for lockdep statistics
 
-> +u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size)
-> +{
-> +	int ret;
-> +	u32 val;
-> +
-> +	if (pci->ops->read_dbi)
-> +		return pci->ops->read_dbi(pci, pci->atu_base, reg, size);
-> +
-> +	ret =3D dw_pcie_read(pci->atu_base + reg, size, &val);
-> +	if (ret)
-> +		dev_err(pci->dev, "Read ATU address failed\n");
-> +
-> +	return val;
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_read_atu);
+When system has been running for a long time, signed integer
+counters are not enough for some lockdep statistics. Using
+unsigned long counters can satisfy the requirement. Besides,
+most of lockdep statistics are unsigned. It is better to use
+unsigned int instead of int.
 
-Don't export dw_pcie_read_atu unnecessarily.
+Remove unused variables.
+- max_recursion_depth
+- nr_cyclic_check_recursions
+- nr_find_usage_forwards_recursions
+- nr_find_usage_backwards_recursions
 
-> +
-> +void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 va=
-l)
-> +{
-> +	int ret;
-> +
-> +	if (pci->ops->write_dbi) {
-> +		pci->ops->write_dbi(pci, pci->atu_base, reg, size, val);
-> +		return;
-> +	}
-> +
-> +	ret =3D dw_pcie_write(pci->atu_base + reg, size, val);
-> +	if (ret)
-> +		dev_err(pci->dev, "Write ATU address failed\n");
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_write_atu);
+Signed-off-by: Kobe Wu <kobe-cp.wu@mediatek.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <linux-mediatek@lists.infradead.org>
+Cc: <wsd_upstream@mediatek.com>
+Cc: Eason Lin <eason-yh.lin@mediatek.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/1561365348-16050-1-git-send-email-kobe-cp.wu@mediatek.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/locking/lockdep_internals.h | 36 ++++++++++++++++--------------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
 
-Don't export dw_pcie_write_atu unnecessarily.
-
-Best regards,
-Jingoo Han
-
-.....
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index 150ec3f0c5b5..cc83568d5012 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -131,7 +131,6 @@ extern unsigned int nr_hardirq_chains;
+ extern unsigned int nr_softirq_chains;
+ extern unsigned int nr_process_chains;
+ extern unsigned int max_lockdep_depth;
+-extern unsigned int max_recursion_depth;
+ 
+ extern unsigned int max_bfs_queue_depth;
+ 
+@@ -160,25 +159,22 @@ lockdep_count_backward_deps(struct lock_class *class)
+  * and we want to avoid too much cache bouncing.
+  */
+ struct lockdep_stats {
+-	int	chain_lookup_hits;
+-	int	chain_lookup_misses;
+-	int	hardirqs_on_events;
+-	int	hardirqs_off_events;
+-	int	redundant_hardirqs_on;
+-	int	redundant_hardirqs_off;
+-	int	softirqs_on_events;
+-	int	softirqs_off_events;
+-	int	redundant_softirqs_on;
+-	int	redundant_softirqs_off;
+-	int	nr_unused_locks;
+-	int	nr_redundant_checks;
+-	int	nr_redundant;
+-	int	nr_cyclic_checks;
+-	int	nr_cyclic_check_recursions;
+-	int	nr_find_usage_forwards_checks;
+-	int	nr_find_usage_forwards_recursions;
+-	int	nr_find_usage_backwards_checks;
+-	int	nr_find_usage_backwards_recursions;
++	unsigned long  chain_lookup_hits;
++	unsigned int   chain_lookup_misses;
++	unsigned long  hardirqs_on_events;
++	unsigned long  hardirqs_off_events;
++	unsigned long  redundant_hardirqs_on;
++	unsigned long  redundant_hardirqs_off;
++	unsigned long  softirqs_on_events;
++	unsigned long  softirqs_off_events;
++	unsigned long  redundant_softirqs_on;
++	unsigned long  redundant_softirqs_off;
++	int            nr_unused_locks;
++	unsigned int   nr_redundant_checks;
++	unsigned int   nr_redundant;
++	unsigned int   nr_cyclic_checks;
++	unsigned int   nr_find_usage_forwards_checks;
++	unsigned int   nr_find_usage_backwards_checks;
+ 
+ 	/*
+ 	 * Per lock class locking operation stat counts
