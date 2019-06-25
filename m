@@ -2,123 +2,127 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D355C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D1BC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04EE5208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F755213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:55:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8kFT8Ue"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731198AbfFYOyl (ORCPT
+        id S1731410AbfFYOzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:54:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:43584 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730505AbfFYOyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:54:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DDA72B;
-        Tue, 25 Jun 2019 07:54:40 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 250683F718;
-        Tue, 25 Jun 2019 07:54:39 -0700 (PDT)
-Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
- breaks clang build
-To:     Qian Cai <cai@lca.pw>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        natechancellor@gmail.com, ndesaulniers@google.com
-References: <1561464964.5154.63.camel@lca.pw>
- <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
- <1561467369.5154.67.camel@lca.pw>
- <00a78980-6b9c-5d5b-ed01-b28bb34be022@arm.com>
- <1561470705.5154.68.camel@lca.pw>
- <5113362e-1256-6712-6ce8-9599b1806cf1@arm.com>
- <1561472887.5154.72.camel@lca.pw>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <668bbe72-b32b-8cee-ccad-d1f6110c6728@arm.com>
-Date:   Tue, 25 Jun 2019 15:54:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 25 Jun 2019 10:55:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44223 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730505AbfFYOzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:55:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r16so18217580wrl.11;
+        Tue, 25 Jun 2019 07:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nQl+kry098BAN4ziHwHdwhs+dskL6lReHJUDAXsmPwM=;
+        b=d8kFT8Uefh9+6U+HQxiWM6eBbwSmgwiJDtX31TzyClbisj7GCdOkXoDPDoUEkghrJV
+         gpG+dPSFaMwHFAVoh+lsnYJutX2SijP5xJs4s/tNgJ6IWEg/wFdyhLBYVzpR8LtoNdiu
+         mjnv4MYLek7bg1cdUoGvGDrhMY+Yn6YpbA/HyZjSPA7pJT6rBo9FC7XhTvvcq/8N9rnt
+         0/PP+PAVc/QicS8Vet7YQBzhf7ikc9+MoRqVoiIcnY8zJCnVbKnkoEl9k6UpuoAhFWDW
+         UletLRN3Omc8qy9UTXp0WTmUdy3XNXG4WHVpJvwsU+KeA/3OsMb4l2J69GRAjEIta3HG
+         qbgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nQl+kry098BAN4ziHwHdwhs+dskL6lReHJUDAXsmPwM=;
+        b=EO2E9hUalgjBYhEQSldRcV3NLAH+2WZ4FgkR2ErRMxr3PbxwWTphKlOjz/uNybfS9X
+         8l0woBBxD62glHW30qzIQahxkIT6Ngz3vL7hVg/oCl0LuY8TrKQI0KqSGiC1uiy1b7b8
+         gt1+OctRKue3bzQD8evBkXIQkhjYQvNND2c7CgqA9G8QPmVAlWcxacOVn0l9oht2ne+N
+         DsN1ClU5MsZKBYE3wzD4xu6rwy+82G0yXslSbpfOgm5Q1vht1Zt6mvYOgJq8WBVcLLfL
+         c7OqggHgPGVxcoic3hmrBLCYZLEW3WyFH3Abar94L2Sh875hvd3bAyozUW8vAjeRpkhD
+         7yJA==
+X-Gm-Message-State: APjAAAWExLnC5ABxtUi5KOl51l8uCCxl7NTmFH3twGuP2+IszA5ffsw0
+        X5qo8p/aH5RY+y86Ngr9ZwyhWUq/vTsJOiGLHqw=
+X-Google-Smtp-Source: APXvYqxrlHSWu1Sck5rxhiHDWTpobNGP630f6OXNYuENXzSYApE9EChSGqtoEftG3W1tObIPS5KaGNsMVyxeVqmItcI=
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr38064132wrn.160.1561474519785;
+ Tue, 25 Jun 2019 07:55:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1561472887.5154.72.camel@lca.pw>
-Content-Type: multipart/mixed;
- boundary="------------B290F18BD9914E255C67004C"
-Content-Language: en-US
+References: <cover.1561385989.git.zhangweiping@didiglobal.com>
+ <1ead341c6d603cf138aed62e31091f257cb19981.1561385989.git.zhangweiping@didiglobal.com>
+ <alpine.DEB.2.21.1906241740320.32342@nanos.tec.linutronix.de>
+ <20190625021411.GD23777@ming.t460p> <alpine.DEB.2.21.1906250811150.32342@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906250811150.32342@nanos.tec.linutronix.de>
+From:   Weiping Zhang <zwp10758@gmail.com>
+Date:   Tue, 25 Jun 2019 22:55:10 +0800
+Message-ID: <CAA70yB7xNf14-Ex1zq3mbBm_EEtLspmDDYBjOXibrMZS8r7ODQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] genirq/affinity: allow driver's discontigous
+ affinity set
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ming Lei <ming.lei@redhat.com>,
+        Weiping Zhang <zhangweiping@didiglobal.com>,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>, keith.busch@intel.com,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-nvme@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------B290F18BD9914E255C67004C
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Thomas Gleixner <tglx@linutronix.de> =E4=BA=8E2019=E5=B9=B46=E6=9C=8825=E6=
+=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=883:36=E5=86=99=E9=81=93=EF=BC=9A
+>
+> MIng,
+>
+> On Tue, 25 Jun 2019, Ming Lei wrote:
+> > On Mon, Jun 24, 2019 at 05:42:39PM +0200, Thomas Gleixner wrote:
+> > > On Mon, 24 Jun 2019, Weiping Zhang wrote:
+> > >
+> > > > The driver may implement multiple affinity set, and some of
+> > > > are empty, for this case we just skip them.
+> > >
+> > > Why? What's the point of creating empty sets? Just because is not a r=
+eal
+> > > good justification.
+> >
+> > Patch 5 will add 4 new sets for supporting NVMe's weighted round robin
+> > arbitration. It can be a headache to manage so many irq sets(now the to=
+tal
+> > sets can become 6) dynamically since size of anyone in the new 4 sets c=
+an
+> > be zero, so each particular set is assigned one static index for avoidi=
+ng
+> > the management trouble, then empty set will be seen by
+> > irq_create_affinity_masks().
+> >
+> > So looks skipping the empty set makes sense because the API will become
+> > easier to use than before.
+>
+Hello Ming,
+Thanks your detail explanation.
 
-Hi Qian,
+> That makes sense, but at least some of that information wants to be in th=
+e
+> change log and not some uninformative description of what the patch does.
+>
+> I was not Cc'ed on the rest of the patches so I had exactly zero context.
+>
+Hello Thomas,
 
-...
+I am sorry I didn't cc you the full patchset, I will add more detail
+description in
+commit message at V4.
 
-> 
-> but clang 7.0 is still use in many distros by default, so maybe this commit can
-> be fixed by adding a conditional check to use "small" if clang version < 8.0.
-> 
-
-Could you please verify that the patch below works for you?
-
-Thanks,
-Vincenzo
-
---->8----
-
-
---------------B290F18BD9914E255C67004C
-Content-Type: text/x-patch;
- name="0001-arm64-vdso-Fix-compilation-with-clang-8.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0001-arm64-vdso-Fix-compilation-with-clang-8.patch"
-
-From 0546f3bbea910cd26df8c2ff9ed1a59945bb1bec Mon Sep 17 00:00:00 2001
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Date: Tue, 25 Jun 2019 15:49:37 +0100
-Subject: [PATCH] arm64: vdso: Fix compilation with clang < 8
-
-clang versions previous to 8 do not support -mcmodel=tiny.
-
-Add a check to the vDSO Makefile for arm64 to remove the flag when these
-versions of the compiler are detected.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- arch/arm64/kernel/vdso/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-index ec81d28aeb5d..c11cbf71073f 100644
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -38,6 +38,11 @@ else
- CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -include $(c-gettimeofday-y)
- endif
- 
-+# Clang versions less than 8 do not support -mcmodel=tiny
-+ifeq ($(shell test $(CONFIG_CLANG_VERSION) -lt 80000; echo $$?),0)
-+CFLAGS_REMOVE_vgettimeofday.o = -mcmodel=tiny
-+endif
-+
- # Disable gcov profiling for VDSO code
- GCOV_PROFILE := n
- 
--- 
-2.22.0
-
-
---------------B290F18BD9914E255C67004C--
+> Thanks,
+>
+>         tglx
