@@ -2,88 +2,83 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C166C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44130C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0247020883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15DC920881
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:54:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561434835;
-	bh=E4nE1EjWI33jbz4SGyWmu9sYfD082jUQXQQfrNoLQXU=;
+	s=default; t=1561434844;
+	bh=XFOziIOM9oCu/OsWx9RnmlS+cF5ZLW17HEIlZAqOimY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zgEayYfOR1CHjPjPjH7CQXtqXwgvavDqSbmjcyQ4l7ZaMt9kgqhuamGTe3b5n49LY
-	 LD5QBuskOC9q1jRzCR58WUxJ6QP3rlExBRR+hAN+esfJWc2EXrBpv2gCBRCRhUl8RX
-	 ZvFTmqDjEYolEqriVfT4WWR9wSpiMI1h3I5Ex6pI=
+	b=ZGXAIQ7Zc/saxJmvE2TBHxcso6FyVLVWg9VU5VVKWUJ+PtQ+xXmMyAEauT5j3od8i
+	 rKLx36c6x/meuUMf0a44XtaM+P/xwQqxxCgT5YUD1wwBksl0UKl3g2TjOutDKQvTJY
+	 /JIjMRT0y9gdvnr2Lri61Bsg01FbXucTpHnlvvNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfFYDxx (ORCPT
+        id S1727494AbfFYDyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 23:53:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 23:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfFYDxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 23:53:51 -0400
+        id S1726833AbfFYDyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 23:54:01 -0400
 Received: from localhost (unknown [116.226.249.212])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8450520665;
-        Tue, 25 Jun 2019 03:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46DAB20881;
+        Tue, 25 Jun 2019 03:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561434830;
-        bh=E4nE1EjWI33jbz4SGyWmu9sYfD082jUQXQQfrNoLQXU=;
+        s=default; t=1561434840;
+        bh=XFOziIOM9oCu/OsWx9RnmlS+cF5ZLW17HEIlZAqOimY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qZ7XYeo+I3dPO32jVSB6vo+lkkvvs2U54y9HoEjCetrb+kFfpvNKInrA0qvFV3IPw
-         IOt7m52Bjp6jnuCYyATUxw1wgbaU9HAoFSXZHVEZj9cGM5NZa0d1grdnDe4CJ8ddBC
-         PFaIesiJ+pkH4VGEoyAaQYY1YbdOoOKJEJ6ubYLk=
-Date:   Tue, 25 Jun 2019 11:32:16 +0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Eiichi Tsukata <devel@etsukata.com>
-Cc:     jslaby@suse.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] tty: ldisc: Fix misuse of proc_dointvec
- "ldisc_autoload"
-Message-ID: <20190625033216.GA11902@kroah.com>
-References: <20190625030801.24538-1-devel@etsukata.com>
+        b=ZX3zvzlmNRbixI1+LVRfKTQyDeWhML4ya2bKjMyZ4vz3QOLIT8+uvcED6v14tRaER
+         4haun38H99VjEAFN/GUrWwuiXWjy+Dba35v3ZpruSScBfefS76bGrsNUM4/VcV//0z
+         8VIIVE0LCzZmJ5UtM4SeHg5DJQQFCthwS/cUGpDc=
+Date:   Tue, 25 Jun 2019 11:53:13 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sandeep Patil <sspatil@android.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
+ optimize probe ordering
+Message-ID: <20190625035313.GA13239@kroah.com>
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190624223707.GH203031@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625030801.24538-1-devel@etsukata.com>
+In-Reply-To: <20190624223707.GH203031@google.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:08:00PM +0900, Eiichi Tsukata wrote:
-> /proc/sys/dev/tty/ldisc_autoload assumes given value to be 0 or 1. Use
-> proc_dointvec_minmax instead of proc_dointvec.
-> 
-> Fixes: 7c0cca7c847e "(tty: ldisc: add sysctl to prevent autoloading of ldiscs)"
-> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-> ---
->  drivers/tty/tty_ldisc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
-> index e38f104db174..a8ea7a35c94e 100644
-> --- a/drivers/tty/tty_ldisc.c
-> +++ b/drivers/tty/tty_ldisc.c
-> @@ -863,7 +863,7 @@ static struct ctl_table tty_table[] = {
->  		.data		= &tty_ldisc_autoload,
->  		.maxlen		= sizeof(tty_ldisc_autoload),
->  		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec,
-> +		.proc_handler	= proc_dointvec_minmax,
->  		.extra1		= &zero,
->  		.extra2		= &one,
+On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
+> We are trying to make sure that all (most) drivers in an Aarch64 system can
+> be kernel modules for Android, like any other desktop system for
+> example. There are a number of problems we need to fix before that happens
+> ofcourse.
 
-Ah, nice catch.  But this really isn't an issue as if you use a bigger
-value, things will not "break", right?
+I will argue that this is NOT an android-specific issue.  If the goal of
+creating an arm64 kernel that will "just work" for a wide range of
+hardware configurations without rebuilding is going to happen, we need
+to solve this problem with DT.  This goal was one of the original wishes
+of the arm64 development effort, let's not loose sight of it as
+obviously, this is not working properly just yet.
+
+It just seems that Android is the first one to actually try and
+implement that goal :)
 
 thanks,
 
