@@ -2,197 +2,152 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDEEC4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A2FC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02F92077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:05:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="0k0CcKHQ"
+	by mail.kernel.org (Postfix) with ESMTP id EDA5E205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfFYCFJ (ORCPT
+        id S1730345AbfFYCFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 22:05:09 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35426 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729601AbfFYCFI (ORCPT
+        Mon, 24 Jun 2019 22:05:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39752 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729601AbfFYCFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 22:05:46 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P23buQ111765;
         Mon, 24 Jun 2019 22:05:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 488C6891A9;
-        Tue, 25 Jun 2019 14:05:05 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1561428305;
-        bh=+6URSfGtIdmUEn9Jok/S4j5d2CkYStHkZ1g8pNXng0E=;
-        h=From:To:CC:Subject:Date:References;
-        b=0k0CcKHQFnLwzTLuvJNcizX25qlsvfR4/h0JHu6wP2R8r0WiwGJF1d77CLG9OvbW8
-         +q8ppt+u/Pb9+Si21qLowc4HwYnxuTDEIBneMFHuTnU2dR4cLQ69NVEa4erK6Zoi+T
-         q5aMND/wS+kVACUSsJpIyboMj1IT0esbC6t+0HUeSI7Qkc7eHykIHs7kwLrZ+NtKmu
-         D0ynAAVrBnQcWWAI26AADyrWxOZVh9uD56z9cHYB2ooP0l5uHVS5gcazUAPlwg4Szi
-         mEXxdhwB/Azuw+KQvQ5fkGX3kEr0YSsYAw7Eg0ygcJugOmEfRlK0TE5kjArd3yAF1/
-         XCa45k36Q5pFA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d1181510001>; Tue, 25 Jun 2019 14:05:05 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 25 Jun 2019 14:05:05 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Tue, 25 Jun 2019 14:05:05 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-CC:     Jason Cooper <jason@lakedaemon.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Kirkwood PCI Express and bridges
-Thread-Topic: Kirkwood PCI Express and bridges
-Thread-Index: AQHVJ+ZHqWcIqP7kgUutSbOlaor9TQ==
-Date:   Tue, 25 Jun 2019 02:05:04 +0000
-Message-ID: <dc50b20e47d94f2294b3d8889d0468c4@svr-chch-ex1.atlnz.lc>
-References: <403548ec3a7543b08ca32e47a1465e70@svr-chch-ex1.atlnz.lc>
- <20190621073318.3bcd940e@windsurf>
- <936d1790c94f4b9c884bc79819b8b777@svr-chch-ex1.atlnz.lc>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.10]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tbadf86ad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Jun 2019 22:05:08 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5P24pEh004714;
+        Tue, 25 Jun 2019 02:05:07 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01dal.us.ibm.com with ESMTP id 2t9by6vkc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jun 2019 02:05:07 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P256HA11993670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 02:05:06 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB304B2064;
+        Tue, 25 Jun 2019 02:05:06 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8AA16B205F;
+        Tue, 25 Jun 2019 02:05:06 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.154.244])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Jun 2019 02:05:06 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 4B2C016C2F90; Mon, 24 Jun 2019 19:05:06 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 19:05:06 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Message-ID: <20190625020506.GQ26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190621105503.GI3436@hirez.programming.kicks-ass.net>
+ <20190621121630.GE26519@linux.ibm.com>
+ <20190621122927.GV3402@hirez.programming.kicks-ass.net>
+ <20190621133414.GF26519@linux.ibm.com>
+ <20190621174104.GA7519@linux.ibm.com>
+ <20190621175027.GA23260@linux.ibm.com>
+ <20190621234602.GA16286@linux.ibm.com>
+ <20190624231222.GA17497@lerouge>
+ <20190624234422.GP26519@linux.ibm.com>
+ <20190625004300.GB17497@lerouge>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625004300.GB17497@lerouge>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/06/19 4:08 PM, Chris Packham wrote:=0A=
-> Hi Thomas,=0A=
-> =0A=
-> On 21/06/19 6:17 PM, Thomas Petazzoni wrote:=0A=
->> Hello Chris,=0A=
->>=0A=
->> On Fri, 21 Jun 2019 04:03:27 +0000=0A=
->> Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:=0A=
->>=0A=
->>> I'm in the process of updating the kernel version used on our products=
-=0A=
->>> from 4.4 -> 5.1.=0A=
->>>=0A=
->>> We have one product that uses a Kirkwood CPU, IDT PCI bridge and Marvel=
-l=0A=
->>> Switch ASIC. The Switch ASIC presents as multiple PCI devices.=0A=
->>>=0A=
->>> The hardware setup looks like this=0A=
->>>                                         __________=0A=
->>> [ Kirkwood ] --- [ IDT 5T5 ] ---+---  |          |=0A=
->>>                                  +---  |  Switch  |=0A=
->>>                                  +---  |          |=0A=
->>>                                  +---  |__________|=0A=
->>>=0A=
->>> On the 4.4 based kernel things are fine=0A=
->>>=0A=
->>> [root@awplus flash]# lspci -t=0A=
->>> -[0000:00]---01.0-[01-06]----00.0-[02-06]--+-02.0-[03]----00.0=0A=
->>>                                               +-03.0-[04]----00.0=0A=
->>>                                               +-04.0-[05]----00.0=0A=
->>>                                               \-05.0-[06]----00.0=0A=
->>>=0A=
->>> But on the 5.1 based kernel things get a little weird=0A=
->>>=0A=
->>> [root@awplus flash]# lspci -t=0A=
->>> -[0000:00]---01.0-[01-06]--+-00.0-[02-06]--=0A=
->>>                               +-01.0=0A=
->>>                               +-02.0-[02-06]--=0A=
->>>                               +-03.0-[02-06]--=0A=
->>>                               +-04.0-[02-06]--=0A=
->>>                               +-05.0-[02-06]--=0A=
->>>                               +-06.0-[02-06]--=0A=
->>>                               +-07.0-[02-06]--=0A=
->>>                               +-08.0-[02-06]--=0A=
->>>                               +-09.0-[02-06]--=0A=
->>>                               +-0a.0-[02-06]--=0A=
->>>                               +-0b.0-[02-06]--=0A=
->>>                               +-0c.0-[02-06]--=0A=
->>>                               +-0d.0-[02-06]--=0A=
->>>                               +-0e.0-[02-06]--=0A=
->>>                               +-0f.0-[02-06]--=0A=
->>>                               +-10.0-[02-06]--=0A=
->>>                               +-11.0-[02-06]--=0A=
->>>                               +-12.0-[02-06]--=0A=
->>>                               +-13.0-[02-06]--=0A=
->>>                               +-14.0-[02-06]--=0A=
->>>                               +-15.0-[02-06]--=0A=
->>>                               +-16.0-[02-06]--=0A=
->>>                               +-17.0-[02-06]--=0A=
->>>                               +-18.0-[02-06]--=0A=
->>>                               +-19.0-[02-06]--=0A=
->>>                               +-1a.0-[02-06]--=0A=
->>>                               +-1b.0-[02-06]--=0A=
->>>                               +-1c.0-[02-06]--=0A=
->>>                               +-1d.0-[02-06]--=0A=
->>>                               +-1e.0-[02-06]--=0A=
->>>                               \-1f.0-[02-06]--+-02.0-[03]----00.0=0A=
->>>                                               +-03.0-[04]----00.0=0A=
->>>                                               +-04.0-[05]----00.0=0A=
->>>                                               \-05.0-[06]----00.0=0A=
->>>=0A=
->>>=0A=
->>> I'll start bisecting to see where things started going wrong. I just=0A=
->>> wondered if this rings any bells for anyone.=0A=
->>=0A=
->> I am almost sure that the culprit is=0A=
->> 1f08673eef1236f7d02d93fcf596bb8531ef0d12 ("PCI: mvebu: Convert to PCI=0A=
->> emulated bridge config space").=0A=
-> =0A=
-> The problem seems to pre-date this commit. I've gone back as far as 4.18=
-=0A=
-> and the problem still exists (in fact there are more duplicate devices).=
-=0A=
-> I'll keep going back (unfortunately due to out platform being out of=0A=
-> tree it's not a simple bisect).=0A=
-> =0A=
->> I still think it makes sense to share the bridge emulation code between=
-=0A=
->> the mvebu and aardvark drivers, but this sharing has required making=0A=
->> the code very different, with lots of subtle differences in behavior in=
-=0A=
->> how registers are emulated.=0A=
-> =0A=
-> Agreed. Bugs love to hide in duplicated code.=0A=
-> =0A=
-> I will admit to being ignorant about the need for an emulated bridge. I=
-=0A=
-> know it has something to do with the type of transaction used for the=0A=
-> downstream devices. I also know that these systems won't work without an=
-=0A=
-> emulated bridge.=0A=
-> =0A=
->> Unfortunately, I don't have access to one of these complicated PCI=0A=
->> setup with a HW switch on the way, so I couldn't test this kind of=0A=
->> setups.=0A=
->>=0A=
->> Do you mind helping with figuring out what the issues are ? That would=
-=0A=
->> be really nice.=0A=
-> =0A=
-> No problem. As I said I'll keep going to find a point where behaviour=0A=
-> turns bad for me. I suspect we might find other problems along the way.=
-=0A=
-> =0A=
-=0A=
-Some progress. Our defconfig had CONFIG_CMDLINE=3D"pci=3Dpcie_scan_all" in =
-=0A=
-it. This dated back to before we were using a devicetree with our =0A=
-kirkwood platforms. At some point this started having an effect on the =0A=
-emulated bridge.=0A=
+On Tue, Jun 25, 2019 at 02:43:00AM +0200, Frederic Weisbecker wrote:
+> On Mon, Jun 24, 2019 at 04:44:22PM -0700, Paul E. McKenney wrote:
+> > On Tue, Jun 25, 2019 at 01:12:23AM +0200, Frederic Weisbecker wrote:
+> > > On Fri, Jun 21, 2019 at 04:46:02PM -0700, Paul E. McKenney wrote:
+> > > > @@ -3097,13 +3126,21 @@ static void sched_tick_remote(struct work_struct *work)
+> > > >  	/*
+> > > >  	 * Run the remote tick once per second (1Hz). This arbitrary
+> > > >  	 * frequency is large enough to avoid overload but short enough
+> > > > -	 * to keep scheduler internal stats reasonably up to date.
+> > > > +	 * to keep scheduler internal stats reasonably up to date.  But
+> > > > +	 * first update state to reflect hotplug activity if required.
+> > > >  	 */
+> > > > +	os = atomic_read(&twork->state);
+> > > > +	if (os) {
+> > > > +		WARN_ON_ONCE(os != TICK_SCHED_REMOTE_OFFLINING);
+> > > > +		if (atomic_inc_not_zero(&twork->state))
+> > > > +			return;
+> > > 
+> > > Using inc makes me a bit nervous here. If we do so, we should somewhow
+> > > make sure that we never exceed a value higher than TICK_SCHED_REMOTE_OFFLINE
+> > > by accident.
+> > > 
+> > > atomic_xchg() is probably a bit costlier but also safer as it allows
+> > > us to check both the old and the new value. That path shouldn't be critically fast
+> > > after all.
+> > 
+> > It would need to be cmpxchg() to avoid messing with the state if
+> > the state were somehow TICK_SCHED_REMOTE_RUNNING, right?
+> 
+> Ah indeed! Nevermind, let's keep things as they are then.
+> 
+> > > > +	}
+> > > >  	queue_delayed_work(system_unbound_wq, dwork, HZ);
+> > > >  }
+> > > >  
+> > > >  static void sched_tick_start(int cpu)
+> > > >  {
+> > > > +	int os;
+> > > >  	struct tick_work *twork;
+> > > >  
+> > > >  	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+> > > > @@ -3112,15 +3149,20 @@ static void sched_tick_start(int cpu)
+> > > >  	WARN_ON_ONCE(!tick_work_cpu);
+> > > >  
+> > > >  	twork = per_cpu_ptr(tick_work_cpu, cpu);
+> > > > -	twork->cpu = cpu;
+> > > > -	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
+> > > > -	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
+> > > > +	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
+> > > > +	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
+> > > 
+> > > See if we use atomic_inc(), we would need to also WARN(os > TICK_SCHED_REMOTE_OFFLINE).
+> > 
+> > How about if I put that WARN() between the atomic_inc_not_zero() and
+> > the return, presumably also adding braces?
+> 
+> Yeah, unfortunately there is no atomic_add_not_zero_return().
+> I guess we can live with a check using atomic_read(). In the best
+> case it returns the fresh increment, otherwise it should be REMOTE_RUNNING.
+> 
+> In any case the (os > TICK_SCHED_REMOTE_OFFLINE) check applies.
+
+True, so with high probability a warning would be emitted.  Fair enough?
+
+							Thanx, Paul
