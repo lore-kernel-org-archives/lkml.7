@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE464C48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616D6C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A355A20645
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3911020657
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ehDaP4bL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JLrXHLUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfFYXda (ORCPT
+        id S1726523AbfFYXde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:33:30 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34984 "EHLO
+        Tue, 25 Jun 2019 19:33:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34982 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfFYXdY (ORCPT
+        with ESMTP id S1726402AbfFYXdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 19:33:24 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXMMg129970;
-        Tue, 25 Jun 2019 18:33:22 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXK5R129965;
+        Tue, 25 Jun 2019 18:33:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561505602;
-        bh=Hf5WBQjuZeCiIOSYjh2XZnVhPWosSAdGoW3RjyhnBbk=;
+        s=ti-com-17Q1; t=1561505600;
+        bh=AaEn5VvOrQB7kVbGaukqdgkiZnAJFPhqYV6Oez60VOU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ehDaP4bLobbPg5838f2bwcWPaClKhU0ZfDqadWiVkxdaB+LzNsWrvlCJczKJ9U5dC
-         GXssU8PCXam00m8jp3USZtVq03oa9BffdMTtXnoPaCiS0cB0wDHAge6GIHCtmH0Fjh
-         gwd1yO8C0Aqo0xKFXYFyXo7hQVkrLtBIm+yaBzqg=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5PNXMj3010797
+        b=JLrXHLUQRBKIi1tOwDABAyG48AytLCkkOx23UB/5yfx+9Hxde3TR7VgmDfehpHcUl
+         lPDRoBqGbthGwWyMX2UWePLVPSHNbUs/yQUxwI+l1i5u6GLMh9YDnqBJzjgFWqPiFQ
+         RxfpXAjJI56EZ1u4WUk2Npu8fvtS3INWRKBhsmZg=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5PNXKiV074235
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Jun 2019 18:33:22 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 25 Jun 2019 18:33:20 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 25
- Jun 2019 18:33:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 18:33:20 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 25 Jun 2019 18:33:21 -0500
+ Frontend Transport; Tue, 25 Jun 2019 18:33:20 -0500
 Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXLx3125267;
-        Tue, 25 Jun 2019 18:33:21 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXKAU089301;
+        Tue, 25 Jun 2019 18:33:20 -0500
 Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x5PNXLm12251;
-        Tue, 25 Jun 2019 18:33:21 -0500 (CDT)
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x5PNXJm12214;
+        Tue, 25 Jun 2019 18:33:19 -0500 (CDT)
 From:   Suman Anna <s-anna@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     Tero Kristo <t-kristo@ti.com>, Roger Quadros <rogerq@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Suman Anna <s-anna@ti.com>
-Subject: [PATCH 5/5] bus: ti-sysc: Simplify cleanup upon failures in sysc_probe()
-Date:   Tue, 25 Jun 2019 18:33:15 -0500
-Message-ID: <20190625233315.22301-6-s-anna@ti.com>
+Subject: [PATCH 1/5] MAINTAINERS: Add ti-sysc files under the OMAP2+ entry
+Date:   Tue, 25 Jun 2019 18:33:11 -0500
+Message-ID: <20190625233315.22301-2-s-anna@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190625233315.22301-1-s-anna@ti.com>
 References: <20190625233315.22301-1-s-anna@ti.com>
@@ -71,68 +71,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clocks are not yet parsed and prepared until after a successful
-sysc_get_clocks(), so there is no need to unprepare the clocks upon
-any failure of any of the prior functions in sysc_probe(). The current
-code path would have been a no-op because of the clock validity checks
-within sysc_unprepare(), but let's just simplify the cleanup path by
-returning the error directly.
-
-While at this, also fix the cleanup path for a sysc_init_resets()
-failure which is executed after the clocks are prepared.
+Add the ti-sysc source files under the OMAP2+ entry so that
+the get_maintainer script also generates the linux-omap
+list to be cc'd for all patches touching these files.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- drivers/bus/ti-sysc.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index ccdd1f0871f9..a7e704e0840d 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -2384,27 +2384,27 @@ static int sysc_probe(struct platform_device *pdev)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d0ed735994a5..d45c456bc051 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11526,6 +11526,7 @@ S:	Maintained
+ F:	arch/arm/mach-omap2/
+ F:	arch/arm/plat-omap/
+ F:	arch/arm/configs/omap2plus_defconfig
++F:	drivers/bus/ti-sysc.c
+ F:	drivers/i2c/busses/i2c-omap.c
+ F:	drivers/irqchip/irq-omap-intc.c
+ F:	drivers/mfd/*omap*.c
+@@ -11546,6 +11547,7 @@ F:	drivers/regulator/tps65910-regulator.c
+ F:	drivers/regulator/twl-regulator.c
+ F:	drivers/regulator/twl6030-regulator.c
+ F:	include/linux/platform_data/i2c-omap.h
++F:	include/linux/platform_data/ti-sysc.h
  
- 	error = sysc_init_dts_quirks(ddata);
- 	if (error)
--		goto unprepare;
-+		return error;
- 
- 	error = sysc_map_and_check_registers(ddata);
- 	if (error)
--		goto unprepare;
-+		return error;
- 
- 	error = sysc_init_sysc_mask(ddata);
- 	if (error)
--		goto unprepare;
-+		return error;
- 
- 	error = sysc_init_idlemodes(ddata);
- 	if (error)
--		goto unprepare;
-+		return error;
- 
- 	error = sysc_init_syss_mask(ddata);
- 	if (error)
--		goto unprepare;
-+		return error;
- 
- 	error = sysc_init_pdata(ddata);
- 	if (error)
--		goto unprepare;
-+		return error;
- 
- 	sysc_init_early_quirks(ddata);
- 
-@@ -2414,7 +2414,7 @@ static int sysc_probe(struct platform_device *pdev)
- 
- 	error = sysc_init_resets(ddata);
- 	if (error)
--		return error;
-+		goto unprepare;
- 
- 	error = sysc_init_module(ddata);
- 	if (error)
+ ONION OMEGA2+ BOARD
+ M:	Harvey Hunt <harveyhuntnexus@gmail.com>
 -- 
 2.21.0
 
