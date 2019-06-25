@@ -2,56 +2,57 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF769C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC55C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B562D208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76787208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="BSQDQqMm"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="V3ngQTsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbfFYTms (ORCPT
+        id S1729147AbfFYTmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:42:48 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37282 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbfFYTmq (ORCPT
+        Tue, 25 Jun 2019 15:42:50 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41300 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728768AbfFYTmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:42:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v14so19233806wrr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:42:45 -0700 (PDT)
+        Tue, 25 Jun 2019 15:42:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c2so19208167wrm.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3+Aquffi6xxyr2CyeenmJhaPhlacoKT7JNxgCsVZjdM=;
-        b=BSQDQqMm8sb1BTXcXTrqwQh+SMGC7m9pXyV3wQvB5Gjrb5n/ktfkOIsdMmAwQwTisI
-         qCWqRtzXPzxb09UZDgNJ2FypL0hPXXtLG0tOZs+VoKPqa+Gp8fes0G7m1mVrK3tYDJpo
-         ppgBuAxTKofatCFe3a++O2OxF8RREYOk0oP80=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nCISGYpVhbDUZBooq11pFuU2+JLufihV8fmI2MlKQk4=;
+        b=V3ngQTsaLqIqF7TzFh6XNjh79Gh1EyL5uZaziiNjq0FLjD3fH1sqkMEytNv8O3YwPd
+         DVEeJlvoUws0v0y8oOxwkz1XaTgwrRGLPTZXz47swy6hZxA2kwBzXr/0T2m6BTfs7SVd
+         rSBkXge4VJk/T/eh1joDvCtlj4xufcLDnC9D0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3+Aquffi6xxyr2CyeenmJhaPhlacoKT7JNxgCsVZjdM=;
-        b=awFVByAEL2foqBkl9N0YYzp4Tu+DLdm5UzGlunDDlt9n1KuMw85ixqCxFvk7BImA9C
-         cnyNPf/l21FZ9p0ymJZ9P8+MZTYm+4mXf/duJFSxrhnGxzZuWVhwUEXwcgp4YeN/mo5b
-         IiOI19GdApGY+lVaABdvTeZCBd3EXKkPaINGavmKq4/BqbCnBzX0nm/z5VrrjdEwsPQ/
-         tu2/ORI7RVEFZj1gwmP4sH74jrunFeiwVlL+zPyONMf6XR0eQrEbWJOvIovXxTz4KhEo
-         TB198wVRsanyoNSus9Pb8hx628PnoNfVkwIjkaHynY7mEc0ssPoi3xLRyKUnbmtEBdvY
-         bugA==
-X-Gm-Message-State: APjAAAXBgLre/QgypUzKqt5rz7M0MvszaRM3mREn4+Je8SJjwB3x/7y2
-        q+HDTW3CoSSsmV2IJrn+6Bd4oQ==
-X-Google-Smtp-Source: APXvYqxHguYSUA9u++NldJHYoA2g0cCl4GyrVhK5+i2Xaz1jraP699TP344NGZb/QSYRFXoxIhce2g==
-X-Received: by 2002:a5d:5283:: with SMTP id c3mr1196405wrv.268.1561491764769;
-        Tue, 25 Jun 2019 12:42:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nCISGYpVhbDUZBooq11pFuU2+JLufihV8fmI2MlKQk4=;
+        b=Kq4CiDS8cZ0l0l+69BEtr6A27DYMdTNEI3S8fk836cxXjeQEFpfwQWAYG+ol+PvQqc
+         pNVaKgksQt8uO1yE/seIc5rTDX1c31yJ46NMelGB0ZD67fduKpx/II81T5qxcjRlF5LI
+         0aVWP/CW7770kzyxuGToNXnHgdKVDSp5MAt9TXeQgYLmXj51rYvXYyxoZ2gwTZ7OUuJD
+         qvx7f3aFK/zF6bDzL+eUP11gNX8Ynii+Il+mhPilOaGBcjLFpDNtx2Ouk9sFO098GdQJ
+         O2gGeV4ifo1kyRudOhe7JEXTF3fdjO4/9swPjtmNX3TGnUgxfJULRWBRoOKNau+coAJ5
+         WGeA==
+X-Gm-Message-State: APjAAAXQyfmnNc/XzQA6iKuUjJoiUWWfJKjBz+xiZFUkRnL37f5VfEvJ
+        btbK1HzZIT57W8JpyFBUg8BsUA==
+X-Google-Smtp-Source: APXvYqyNgXnCNILDoy8+5U5tXxar92e+BVq+owk0l4GKapvSszJjZbwR63Kdzpqqdix/AVt37AOpXg==
+X-Received: by 2002:a5d:4f8a:: with SMTP id d10mr33245893wru.13.1561491766892;
+        Tue, 25 Jun 2019 12:42:46 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5aedb6.dynamic.kabel-deutschland.de. [95.90.237.182])
-        by smtp.gmail.com with ESMTPSA id q193sm84991wme.8.2019.06.25.12.42.43
+        by smtp.gmail.com with ESMTPSA id q193sm84991wme.8.2019.06.25.12.42.45
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 12:42:43 -0700 (PDT)
+        Tue, 25 Jun 2019 12:42:46 -0700 (PDT)
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
 To:     netdev@vger.kernel.org
 Cc:     Alban Crequy <alban@kinvolk.io>,
@@ -62,10 +63,12 @@ Cc:     Alban Crequy <alban@kinvolk.io>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
         Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v2 00/10] Test the 32bit narrow reads
-Date:   Tue, 25 Jun 2019 21:42:05 +0200
-Message-Id: <20190625194215.14927-1-krzesimir@kinvolk.io>
+Subject: [bpf-next v2 02/10] selftests/bpf: Avoid a clobbering of errno
+Date:   Tue, 25 Jun 2019 21:42:07 +0200
+Message-Id: <20190625194215.14927-3-krzesimir@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190625194215.14927-1-krzesimir@kinvolk.io>
+References: <20190625194215.14927-1-krzesimir@kinvolk.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,83 +76,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches try to test the fix made in commit e2f7fc0ac695 ("bpf:
-fix undefined behavior in narrow load handling"). The problem existed
-in the generated BPF bytecode that was doing a 32bit narrow read of a
-64bit field, so to test it the code would need to be executed.
-Currently the only such field exists in BPF_PROG_TYPE_PERF_EVENT,
-which was not supported by bpf_prog_test_run().
+Save errno right after bpf_prog_test_run returns, so we later check
+the error code actually set by bpf_prog_test_run, not by some libcap
+function.
 
-I'm sending these patches to bpf-next now as they introduce a new
-feature. But maybe some of those patches could go to the bpf branch?
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: 832c6f2c29ec ("bpf: test make sure to run unpriv test cases in test_verifier")
+Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
+---
+ tools/testing/selftests/bpf/test_verifier.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-
-There is a bit of yak shaving to do for the test to be run:
-
-1. Print why the program could not be run (patch 1).
-
-2. Some fixes for errno clobbering (patches 2 and 3).
-
-3. Using bpf_prog_test_run_xattr, so I can pass ctx_in stuff too
-   (patch 4).
-
-4. Adding ctx stuff to struct bpf_test (patch 5).
-
-5. Some tools headers syncing (patches 6 and 7).
-
-6. Implement bpf_prog_test_run for perf event programs and test it
-   (patches 8 and 9).
-
-
-The last point is where I'm least sure how things should be done
-properly:
-
-1. There is a bunch of stuff to prepare for the
-   bpf_perf_prog_read_value to work, and that stuff is very hacky. I
-   would welcome some hints about how to set up the perf_event and
-   perf_sample_data structs in a way that is a bit more future-proof
-   than just setting some fields in a specific way, so some other code
-   won't use some other fields (like setting event.oncpu to -1 to
-   avoid event.pmu to be used for reading the value of the event).
-
-2. The tests try to see if the test run for perf event sets up the
-   context properly, so they verify the struct pt_regs contents. They
-   way it is currently written Works For Me, but surely it won't work
-   on other arch. So what would be the way forward? Just put the test
-   case inside #ifdef __x86_64__?
-
-3. Another thing in tests - I'm trying to make sure that the
-   bpf_perf_prog_read_value helper works as it seems to be the only
-   bpf perf helper that takes the ctx as a parameter. Is that enough
-   or I should test other helpers too?
-
-
-About the test itself - I'm not sure if it will work on a big endian
-machine. I think it should, but I don't have anything handy here to
-verify it.
-
-Krzesimir Nowak (10):
-  selftests/bpf: Print a message when tester could not run a program
-  selftests/bpf: Avoid a clobbering of errno
-  selftests/bpf: Avoid another case of errno clobbering
-  selftests/bpf: Use bpf_prog_test_run_xattr
-  selftests/bpf: Allow passing more information to BPF prog test run
-  tools headers: Adopt compiletime_assert from kernel sources
-  tools headers: sync struct bpf_perf_event_data
-  bpf: Implement bpf_prog_test_run for perf event programs
-  selftests/bpf: Add tests for bpf_prog_test_run for perf events progs
-  selftests/bpf: Test correctness of narrow 32bit read on 64bit field
-
- kernel/trace/bpf_trace.c                      | 107 +++++++++++
- tools/include/linux/compiler.h                |  28 +++
- tools/include/uapi/linux/bpf_perf_event.h     |   1 +
- tools/testing/selftests/bpf/test_verifier.c   | 172 ++++++++++++++++--
- .../selftests/bpf/verifier/perf_event_run.c   |  93 ++++++++++
- .../bpf/verifier/perf_event_sample_period.c   |   8 +
- .../testing/selftests/bpf/verifier/var_off.c  |  20 ++
- 7 files changed, 414 insertions(+), 15 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/verifier/perf_event_run.c
-
+diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+index 9e17bda016ef..12589da13487 100644
+--- a/tools/testing/selftests/bpf/test_verifier.c
++++ b/tools/testing/selftests/bpf/test_verifier.c
+@@ -824,15 +824,17 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
+ 	__u32 size_tmp = sizeof(tmp);
+ 	uint32_t retval;
+ 	int err;
++	int saved_errno;
+ 
+ 	if (unpriv)
+ 		set_admin(true);
+ 	err = bpf_prog_test_run(fd_prog, 1, data, size_data,
+ 				tmp, &size_tmp, &retval, NULL);
++	saved_errno = errno;
+ 	if (unpriv)
+ 		set_admin(false);
+ 	if (err) {
+-		switch (errno) {
++		switch (saved_errno) {
+ 		case 524/*ENOTSUPP*/:
+ 			printf("Did not run the program (not supported) ");
+ 			return 0;
 -- 
 2.20.1
 
