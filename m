@@ -2,142 +2,107 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DBAC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE663C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1619620883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC2B208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:34:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="yvActXPp"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="N7sVQFks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfFYTa4 (ORCPT
+        id S1728153AbfFYTeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:30:56 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34186 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfFYTa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:30:56 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s49so28871604edb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8hFBKYM+mhnSbYOdJPqi+cF6rA4KH13Vh7o34AxMKhE=;
-        b=yvActXPpQAoyQKEPRQXuVUCTP75rnNZAveMhCnpAXScUu66tiz+DSyJ9qNbBVcimZH
-         0pfaF6B6lICAzFnmRl/k9hXLBSFe/gxf4fh6z1dzVlrmNoq4/ZumrCvGLJSaHNyg3Ans
-         V6NQpbCsBII8GSJFdi4s99NUcTonV/p4+kcQeWAp6+DdNgXrWXF8Xb1oKrUscxgdV5oN
-         9LQpeiBam0gjYioicWnO4UUfxJZoigvTF4VTFIed2RRQh88JIhCQiDa/1LacUu/3LOkl
-         yGx6Vd6fCyAsRoOtTTkaixLGLKuQSWEJbZF11D+kPmzYdrTPcg+E8OZhnXMyGTpTkBgK
-         laHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8hFBKYM+mhnSbYOdJPqi+cF6rA4KH13Vh7o34AxMKhE=;
-        b=hyl47graSzEXlpWwcIH72d1rBZTX/5Or4yuQU2IrlqdHs+h/zQvTU47nDFI+2ehEcI
-         DqnGK7jZlIuHZy7wAS2Gb75XHXL6qFWsfMAwSplQs1mrhiApjBDqprgL4iUOi7Ruy8lr
-         vQBwQWff3U09t8Op+VkPkIInUMtJ4Rfj95nh50wDefk+GPoPNODJzsz1EbxqT6jhnuYC
-         +p4/za1fcCPAVU/OjNoMufZObKGWr1jPsRt3wO6NdMp1LDRel9s43toOprH7HZ5bGjME
-         JTM1tRRL3ShzOVrn1kFcHpASN6H+T1jDXkOIDdF0+r4w2zhG9YFhwoJBxRfNEGB9O5JV
-         q1ag==
-X-Gm-Message-State: APjAAAXeEnJMuv0veRXlM43BbdJcZypgnsZnM5J3yQxOvupgvnV7k3KO
-        Apnw+aIsWSYysTu4YKq9DorZpA==
-X-Google-Smtp-Source: APXvYqzJYEP63mmmIVDYbtNLICyilUALTc4c09u1x+oOjaJeMui2oQ1CyK0f5l73QuE7q8AaAxX4Kw==
-X-Received: by 2002:a17:906:d797:: with SMTP id pj23mr209193ejb.223.1561491054480;
-        Tue, 25 Jun 2019 12:30:54 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id z22sm5042550edz.6.2019.06.25.12.30.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 12:30:53 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E4F5A1043B9; Tue, 25 Jun 2019 22:30:53 +0300 (+03)
-Date:   Tue, 25 Jun 2019 22:30:53 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] x86/boot/64: Fix crash if kernel images crosses page
- table boundary
-Message-ID: <20190625193053.g5zngehu3ozgzkeg@box>
-References: <20190620112345.28833-1-kirill.shutemov@linux.intel.com>
- <alpine.DEB.2.21.1906252100290.32342@nanos.tec.linutronix.de>
+        Tue, 25 Jun 2019 15:34:36 -0400
+Received: from mail-eopbgr30058.outbound.protection.outlook.com ([40.107.3.58]:25430
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726393AbfFYTeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:34:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Tzqa2ZxGdr1cYv6INDXAict2XLQRConadnG//yI8is4=;
+ b=N7sVQFkspVaTlLpZjrBIu6/LyC4ERDCauFoRi+/CMgJna8IYNNgViYdi+1hGsJCH/0hInc5ms8IvgHsxJ7Aj87cRo7nTlK/97eoM0M3jVF1bdGImWK0uAirLtxEA08/vU4dYjmA8obpuSotJx8fqIBFjlcLJrx6NTU0hwQ2emQQ=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4255.eurprd05.prod.outlook.com (52.133.12.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.15; Tue, 25 Jun 2019 19:34:31 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 19:34:31 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Colin King <colin.king@canonical.com>
+CC:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] RDMA/hns: fix spelling mistake "attatch" ->
+ "attach"
+Thread-Topic: [PATCH][next] RDMA/hns: fix spelling mistake "attatch" ->
+ "attach"
+Thread-Index: AQHVK40CeQZumWLkfE+IGoRpjX/74A==
+Date:   Tue, 25 Jun 2019 19:34:31 +0000
+Message-ID: <20190625193427.GA13242@mellanox.com>
+References: <20190624121649.3281-1-colin.king@canonical.com>
+In-Reply-To: <20190624121649.3281-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR01CA0032.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:69::45) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [66.187.232.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f85ba75-0942-49df-5c28-08d6f9a42544
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4255;
+x-ms-traffictypediagnostic: VI1PR05MB4255:
+x-microsoft-antispam-prvs: <VI1PR05MB42553A4D112069EF7B11CEB6CFE30@VI1PR05MB4255.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(346002)(39860400002)(136003)(396003)(366004)(189003)(199004)(446003)(6512007)(256004)(1076003)(4744005)(6436002)(11346002)(486006)(476003)(2616005)(71200400001)(71190400001)(86362001)(4326008)(14454004)(229853002)(102836004)(33656002)(26005)(6506007)(7736002)(68736007)(6486002)(99286004)(186003)(386003)(305945005)(6116002)(14444005)(316002)(3846002)(36756003)(66066001)(66476007)(66446008)(8936002)(478600001)(66556008)(25786009)(5660300002)(81156014)(81166006)(64756008)(6916009)(8676002)(2906002)(6246003)(66946007)(53936002)(73956011)(54906003)(52116002)(76176011)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4255;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XyfTnPU+Ry54bSvAxaRz+GEhgyrR27kV4gCQ737f778s1vX+8E/wbqBrvsZL3IkzaF9jDy38GM2T+7Zr/NHZ57S51/jrXrcafzRyIO0tVEjt6/kn0pVoM5+TyJFH2kGOD2hpZWWxdvtpImi4G4goo4/FR9W4E5EbfVvHYnj1Q6QuQ+HM/M6koFM4gTCByZ9fpXkST8kqYc1udaq0LYx9iW6bnYZzUu/cXAKZATfwQ4fHJkx75CirZeHiwyT7WoCFeHSqVrcxIBjzAZp0139U8eO2+sHih98E5Ftjq+yKyobJU/8/2kWbHWW7S3WhwfoJr+ogewNd91p3IMLqSs6uU7h8dExD6s7sJ5eqlor37s+hjg8mmcXyRjMERr784jmA6dsjD6An5sNVTOi7wxl/Q8Stzzu1uj0/wvtgZnZ793A=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C058B1AA2CB2E74692648DB987484356@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906252100290.32342@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f85ba75-0942-49df-5c28-08d6f9a42544
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 19:34:31.7761
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4255
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 09:04:39PM +0200, Thomas Gleixner wrote:
-> On Thu, 20 Jun 2019, Kirill A. Shutemov wrote:
-> > @@ -190,18 +190,18 @@ unsigned long __head __startup_64(unsigned long physaddr,
-> >  		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
-> >  		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
-> >  
-> > -		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
-> > -		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
-> > -		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
-> > +		i = physaddr >> P4D_SHIFT;
-> > +		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
-> > +		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
-> >  	} else {
-> >  		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
-> >  		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
-> >  		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
-> >  	}
-> >  
-> > -	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
-> > -	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
-> > -	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
-> > +	i = physaddr >> PUD_SHIFT;
-> > +	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
-> > +	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
-> >  
-> >  	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
-> >  	/* Filter out unsupported __PAGE_KERNEL_* bits: */
-> > @@ -211,8 +211,8 @@ unsigned long __head __startup_64(unsigned long physaddr,
-> >  	pmd_entry +=  physaddr;
-> >  
-> >  	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
-> > -		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
-> > -		pmd[idx] = pmd_entry + i * PMD_SIZE;
-> > +		int idx = i + (physaddr >> PMD_SHIFT);;
-> 
-> double semicolon
+On Mon, Jun 24, 2019 at 01:16:49PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> There is a spelling mistake in an dev_err message. Fix it.
+>=20
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Will fix.
+Applied to for-next, thanks
 
-> > +		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
-> 
-> This part is functionally equivivalent. So what's the value of this change?
-
-Precedence of operators were broken
-
-	idx =  i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
-
-reads by compiler as
-
-	idx = i + ((physaddr >> PMD_SHIFT) % PTRS_PER_PMD);
-
-not as
-
-	idx =  (i + (physaddr >> PMD_SHIFT)) % PTRS_PER_PMD;
-
-Therefore 'idx' can become >= PTRS_PER_PMD.
-
--- 
- Kirill A. Shutemov
+Jason
