@@ -2,211 +2,160 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6080AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC1BC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A467215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84120215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:49:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iLsrJ7ay"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="LNgGPyb0";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ePfW1TXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfFYIt0 (ORCPT
+        id S1731053AbfFYIts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:49:26 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55414 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730827AbfFYItY (ORCPT
+        Tue, 25 Jun 2019 04:49:48 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:15318 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730761AbfFYItr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:49:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gHuppSp/ZghuAvBBl8+jIRTry6/FzvqDEFCSJr4UlDU=; b=iLsrJ7ayLYr43BVsItan4uBkC
-        8CdYzDlODzNlzNr+KJaMXa5EVC1N7+rihKOsW0MAjq+bvKSZmfGFwUnnb6Or83al25a+VNKRAwN7m
-        F2c9EY7m7JH+5Ef+Eh4KO/lpW9N3sVMXohmf6kF7FzSFQKZcZJByFxJPoC71v326t998qSM9a85p6
-        nsxSR+Xpt9zMrW+d64KxY0WNrxgsBrq/dyWsGwrpd5gig+aAOBydwTEGDdyHuqdCoX9aSvxefzJi6
-        nroP0FPqeAjpaJkR21d7jhddc7laY7hBl4Xh3/wdRo/nHj6mxdL4MQ2KJZHeWlYtfE40YDxxuLhQy
-        kNzUzE1qA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfh8V-0003qT-3U; Tue, 25 Jun 2019 08:49:07 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6EA90209C9560; Tue, 25 Jun 2019 10:49:04 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 10:49:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, dvyukov@google.com, namhyung@kernel.org,
-        xiexiuqi@huawei.com,
-        syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com
-Subject: Re: [RFC PATCH] perf: Paper over the hw.target problems
-Message-ID: <20190625084904.GY3463@hirez.programming.kicks-ass.net>
-References: <278ac311-d8f3-2832-5fa1-522471c8c31c@huawei.com>
- <20190228140109.64238-1-alexander.shishkin@linux.intel.com>
- <20190308155429.GB10860@lakrids.cambridge.arm.com>
- <20190624121902.GE3436@hirez.programming.kicks-ass.net>
+        Tue, 25 Jun 2019 04:49:47 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P8naGa007262;
+        Tue, 25 Jun 2019 01:49:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=3FnkCdrwTPyKJrs5J3Y5+8mua+Sh8mAPFkf77Vo78Gk=;
+ b=LNgGPyb0GBLFlQ3khd80bXf+UMh2We3u4uRq/L3IHAQKrQnjqPpakOEmiIA24pYwZ64Y
+ 5tbSNW2b826irPjLkjt2bJixPZ/Y92s3rCmwMxUr/LBH8gCIFpdUjmeZSwljjrbQbO0f
+ ncAf4gkwyLLQfA5iKge5BMG4M5jcV11N+E0/x75fUd9mS8ae/FYfjsKSjt2ZxsusTr61
+ QlpWInvZ3djYMZTqFS6vyGq2MNH4dPWMyaZU1jWblMfBfZTipB38/EQR1IlC4vQZcLzF
+ 9BsRXSkVNWW9F5ay3Vq6Cc2APv7OLujR5b7LUAHtEGsQGQrjkHN5nP1W6k4kxC3sr8vf ng== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2058.outbound.protection.outlook.com [104.47.33.58])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2t9fwtvmfd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jun 2019 01:49:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3FnkCdrwTPyKJrs5J3Y5+8mua+Sh8mAPFkf77Vo78Gk=;
+ b=ePfW1TXgfKCn3Q2vQYRDBWu+YO1TLRRLLzVyB641A25zrHjojcoQ4dmaRfWrMd+55QEFzh+kgr7vaabV6tNHuxY5YhD0WF3rtxSQHn2PPUngbX4feuSkXbJ/okFeu48jle8EG3XAvqdxX0RGmwUqGOKbY23qSPg3c/K+INyK06g=
+Received: from SN2PR07MB2480.namprd07.prod.outlook.com (10.166.212.14) by
+ SN2PR07MB2589.namprd07.prod.outlook.com (10.167.15.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 08:49:33 +0000
+Received: from SN2PR07MB2480.namprd07.prod.outlook.com
+ ([fe80::7dc9:f52a:3020:d0ba]) by SN2PR07MB2480.namprd07.prod.outlook.com
+ ([fe80::7dc9:f52a:3020:d0ba%10]) with mapi id 15.20.2008.014; Tue, 25 Jun
+ 2019 08:49:33 +0000
+From:   Parshuram Raju Thombare <pthombar@cadence.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: RE: [PATCH v5 4/5] net: macb: add support for high speed interface
+Thread-Topic: [PATCH v5 4/5] net: macb: add support for high speed interface
+Thread-Index: AQHVKoYfMA9Li9EuT0O4O+K54hF+RKaq0c2AgAE8gRA=
+Date:   Tue, 25 Jun 2019 08:49:33 +0000
+Message-ID: <SN2PR07MB2480CF15E11D54DA8C3B7319C1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
+ <1561378355-14048-1-git-send-email-pthombar@cadence.com>
+ <20190624134755.u3oq3xr6uergnfs5@shell.armlinux.org.uk>
+In-Reply-To: <20190624134755.u3oq3xr6uergnfs5@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0yNGM1MWE1Zi05NzI2LTExZTktODRmOS0xMDY1MzBlNmVmM2VcYW1lLXRlc3RcMjRjNTFhNjAtOTcyNi0xMWU5LTg0ZjktMTA2NTMwZTZlZjNlYm9keS50eHQiIHN6PSIxNjAwIiB0PSIxMzIwNTkyNjE3MDM1Mzk2NzgiIGg9ImcwZnptVFRWUnBhZ3krMEVGTEtSbk5tZTFpWT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 557fc6dd-8be7-4032-b482-08d6f94a0bba
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN2PR07MB2589;
+x-ms-traffictypediagnostic: SN2PR07MB2589:
+x-microsoft-antispam-prvs: <SN2PR07MB25893EEB37CB0DB9CCD6598AC1E30@SN2PR07MB2589.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(376002)(136003)(346002)(199004)(189003)(36092001)(78486014)(5660300002)(68736007)(6436002)(86362001)(53936002)(107886003)(55016002)(256004)(9686003)(476003)(486006)(6916009)(99286004)(2906002)(76176011)(66066001)(6246003)(229853002)(7696005)(55236004)(6506007)(14454004)(33656002)(14444005)(186003)(478600001)(71190400001)(25786009)(3846002)(6116002)(11346002)(4326008)(446003)(102836004)(66946007)(66476007)(64756008)(81156014)(316002)(66446008)(7736002)(52536014)(66556008)(26005)(8936002)(8676002)(81166006)(76116006)(54906003)(71200400001)(74316002)(73956011)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR07MB2589;H:SN2PR07MB2480.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lulfLygIznYNL2sZyTYMbC+7MZPw+x8B8FSz7zjpJVpmSdaJaC94qTD1mbfHhiVhHWHz59vxC0TTRCjKBgSHaCafhhFJIQrGCIGNfemiw6k1BArsDuDZ+GX7G6Mq8uP84jVPi+eLEefY/jBfVM4HMSvap6hT9ujuwRHwxbFP71M5DKES5TgyQnd70lb1T8qil9eVEFopF0mDNoQHDDT9ah5J43T269CDDYwrUOrqpEfzSA7kq5jWmUzewsRPzxHtfzHOJ4lJMGR9uL8AxsNTXzwNpMBKlrXcSeXqrslhsRQu0jM3F+7YiO8wPVRPHDKrt2SdlOYfmisHWgIQZZBtQQqYKqmLCFyexrcQkr777PTXRUIRnu44l0uqRYbARnexyHUMK4lqIqCbpR2cezrkB00G3weNcPnyGiDGjjIf2WU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624121902.GE3436@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 557fc6dd-8be7-4032-b482-08d6f94a0bba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 08:49:33.8004
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR07MB2589
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=895 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 02:19:02PM +0200, Peter Zijlstra wrote:
-> 
-> 	close()						clone()
-> 
-> 							  copy_process()
-> 							    perf_event_init_task()
-> 							      perf_event_init_context()
-> 							        mutex_lock(parent_ctx->mutex)
-> 								inherit_task_group()
-> 								  inherit_group()
-> 								    inherit_event()
-> 								      mutex_lock(event->child_mutex)
-> 								      // expose event on child list
-> 								      list_add_tail()
-> 								      mutex_unlock(event->child_mutex)
-> 							        mutex_unlock(parent_ctx->mutex)
-> 
-> 							    ...
-> 							    goto bad_fork_*
-> 
-> 							  bad_fork_cleanup_perf:
-> 							    perf_event_free_task()
-> 
-> 	  perf_release()
-> 	    perf_event_release_kernel()
-> 	      list_for_each_entry()
-> 		mutex_lock(ctx->mutex)
-> 		mutex_lock(event->child_mutex)
-> 		// event is from the failing inherit
-> 		// on the other CPU
-> 		perf_remove_from_context()
-> 		list_move()
-> 		mutex_unlock(event->child_mutex)
-> 		mutex_unlock(ctx->mutex)
-> 
-> 							      mutex_lock(ctx->mutex)
-> 							      list_for_each_entry_safe()
-> 							        // event already stolen
-> 							      mutex_unlock(ctx->mutex)
-> 
-> 							    delayed_free_task()
-> 							      free_task()
-> 
-> 	     list_for_each_entry_safe()
-> 	       list_del()
-> 	       free_event()
-> 	         _free_event()
-> 		   // and so event->hw.target
-> 		   // is the already freed failed clone()
-> 		   if (event->hw.target)
-> 		     put_task_struct(event->hw.target)
-> 		       // WHOOPSIE, already quite dead
-> 
-> 
-> Which puts the lie to the the comment on perf_event_free_task();
-> 'unexposed, unused context' my ass.
-> 
-> Which is a 'fun' confluence of fail; copy_process() doing an
-> unconditional free_task() and not respecting refcounts, and perf having
-> creative locking. In particular:
-> 
->   82d94856fa22 ("perf/core: Fix lock inversion between perf,trace,cpuhp")
-> 
-> seems to have overlooked this 'fun' parade.
+>>  	switch (state->interface) {
+>>  	case PHY_INTERFACE_MODE_NA:
+>> +	case PHY_INTERFACE_MODE_USXGMII:
+>> +	case PHY_INTERFACE_MODE_10GKR:
+>> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
+>> +			phylink_set(mask, 10000baseCR_Full);
+>> +			phylink_set(mask, 10000baseER_Full);
+>> +			phylink_set(mask, 10000baseKR_Full);
+>> +			phylink_set(mask, 10000baseLR_Full);
+>> +			phylink_set(mask, 10000baseLRM_Full);
+>> +			phylink_set(mask, 10000baseSR_Full);
+>> +			phylink_set(mask, 10000baseT_Full);
+>> +			phylink_set(mask, 5000baseT_Full);
+>> +			phylink_set(mask, 2500baseX_Full);
+>> +			phylink_set(mask, 1000baseX_Full);
+>> +		}
+>If MACB_CAPS_GIGABIT_MODE_AVAILABLE is not set, are these interface
+>modes supported by the hardware?  If the PHY interface mode is not
+>supported, then the returned support mask must be cleared.[]=20
+There are some configs which uses this macro to limit data rate to 100M=20
+even if hardware support higher rates.
+Empty link mode mask is initialized at the beginning and supported link=20
+modes are added to it and at the end of this function this mask is AND'ed=20
+with supported mask.
 
-The below seems to cure things; it uses the fact that detached events
-still have a reference count on their context.
+>> +static inline void gem_mac_configure(struct macb *bp, int speed)
+>> +{
+>> +	if (bp->phy_interface =3D=3D PHY_INTERFACE_MODE_SGMII)
+>> +		gem_writel(bp, NCFGR, GEM_BIT(SGMIIEN) |
+>> +			   GEM_BIT(PCSSEL) |
+>> +			   gem_readl(bp, NCFGR));
+>Is this still necessary?
+Sorry, missed this. I will remove in next patch set.
 
-So perf_event_free_task() can detect when (child) events have gotten
-stolen and wait for it.
-
-The below (which includes a debug printk) confirms the reproducer
-triggered the problem by printing a 2 (where a 1 is expected).
-
-Thoughts?
-
----
- kernel/events/core.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 10c1dba9068c..e19d036125d1 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4463,12 +4463,16 @@ static void _free_event(struct perf_event *event)
- 	if (event->destroy)
- 		event->destroy(event);
- 
--	if (event->ctx)
--		put_ctx(event->ctx);
--
-+	/*
-+	 * Must be after ->destroy(), due to uprobe_perf_close() using
-+	 * hw.target, but before put_ctx() because of perf_event_free_task().
-+	 */
- 	if (event->hw.target)
- 		put_task_struct(event->hw.target);
- 
-+	if (event->ctx)
-+		put_ctx(event->ctx);
-+
- 	exclusive_event_destroy(event);
- 	module_put(event->pmu->module);
- 
-@@ -4648,10 +4652,20 @@ int perf_event_release_kernel(struct perf_event *event)
- 	mutex_unlock(&event->child_mutex);
- 
- 	list_for_each_entry_safe(child, tmp, &free_list, child_list) {
-+		void *var = &child->ctx->refcount;
-+
- 		list_del(&child->child_list);
- 		free_event(child);
-+
-+		/*
-+		 * Wake any perf_event_free_task() waiting for this event to be
-+		 * freed.
-+		 */
-+		smp_mb(); /* pairs with wait_var_event() */
-+		wake_up_var(var);
- 	}
- 
-+
- no_ctx:
- 	put_event(event); /* Must be the 'last' reference */
- 	return 0;
-@@ -11546,7 +11560,19 @@ void perf_event_free_task(struct task_struct *task)
- 			perf_free_event(event, ctx);
- 
- 		mutex_unlock(&ctx->mutex);
--		put_ctx(ctx);
-+
-+		/*
-+		 * perf_event_release_kernel() could've stolen some of our
-+		 * child events and still have them on its free_list. In that
-+		 * case it can do free_event() after the failing copy_process()
-+		 * has already freed the task, and get a UaF on
-+		 * event->hw.target.
-+		 *
-+		 * Wait for all events to drop their context reference.
-+		 */
-+		printk("%d\n", refcount_read(&ctx->refcount));
-+		wait_var_event(&ctx->refcount, refcount_read(&ctx->refcount) == 1);
-+		put_ctx(ctx); /* must be last */
- 	}
- }
- 
+Regards,
+Parshuram Thombare
