@@ -2,129 +2,154 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7010EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B709FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D58215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906D9215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="MXHqgWix"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SGdi2lfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbfFYI4A (ORCPT
+        id S1731193AbfFYI4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:56:00 -0400
-Received: from mail-eopbgr10098.outbound.protection.outlook.com ([40.107.1.98]:8229
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731075AbfFYIz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:55:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PVBfw4FpZxA3ulXfIcTeYrg035ssQsljb1ybKsRpAXE=;
- b=MXHqgWixyYYEB371MAJg07FcSiFCw4ZAHVtS8KGRk6u9e7p08CJqv2uRSuA9tz9XbAk5gdu4kgmXLML34t3978/B50ZyI/XL0erlq2IuxkMpm/5afF0jjsJ1A1UgA4TH7LzA1DhxGcE98bLoWgbz7kyCrhGUVIzajorCF7ICgnk=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3276.eurprd02.prod.outlook.com (52.134.70.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 08:55:53 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::29c5:d1ae:8855:3153]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::29c5:d1ae:8855:3153%3]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
- 08:55:53 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
- enable-ana-filt
-Thread-Topic: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
- enable-ana-filt
-Thread-Index: AQHVKyzC4r37a1Y+/0WA1Icg3nKpa6asETkA
-Date:   Tue, 25 Jun 2019 08:55:53 +0000
-Message-ID: <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
-References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
- <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR05CA0373.eurprd05.prod.outlook.com
- (2603:10a6:7:94::32) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 44d866fc-a538-4492-b1b6-08d6f94aedfa
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3276;
-x-ms-traffictypediagnostic: DB3PR0202MB3276:
-x-microsoft-antispam-prvs: <DB3PR0202MB3276C4C2028428DC154DF6B1BCE30@DB3PR0202MB3276.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(376002)(366004)(346002)(136003)(189003)(199004)(229853002)(476003)(2616005)(73956011)(6246003)(66946007)(64756008)(81156014)(66476007)(25786009)(8936002)(66556008)(81166006)(6512007)(99286004)(11346002)(6116002)(3846002)(8676002)(66446008)(7416002)(6436002)(14454004)(53936002)(66066001)(65806001)(65956001)(6486002)(5660300002)(7736002)(76176011)(446003)(58126008)(256004)(74482002)(26005)(102836004)(6506007)(53546011)(186003)(110136005)(386003)(71200400001)(86362001)(64126003)(31686004)(71190400001)(31696002)(68736007)(486006)(2201001)(508600001)(65826007)(36756003)(2906002)(2501003)(52116002)(316002)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3276;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: r8Yd/ep9rJWZ5EKFc03ek3d9o+3rR60qaNnYxRbXiFDr2dpTzpaxRJxvCaRyXtYevQ2ndMjNaJxZb448JJWKRCPIWVl3LZw+k5aZiBQc4wSv6JpoCW4WwkgcHpa1RIk10cH/mxNH4qwRjqhsvT5/JwZNtNRmTuOzWU/fRu0TN8xFq3wbzpwLNUKS9YZm6QXKLxKz3TOAaantLyIMiSh3JUQkswPPne74QXfZoGN+l9Eppnl0xL/1I9ZsU6v4cywTwxk6GVn7a+LYSVwXN7To/g3H8sm9U1Fkm/HwB/BlPWPmtteGh7W1xUhHD8ZAGfqJhDqrO2oKx6r9iliV6814v7ziX5ZnOEcfj3L6eQL/AQFSOure43qyvtDf7FI4ZeVus12wQt2+fezpPCUQPI9dyPueQftaXG+CJW0LbmLNo3Q=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1181221CAD0DF84EA05524BA6EC34C79@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 25 Jun 2019 04:56:44 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54453 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730791AbfFYI4n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:56:43 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g135so1942058wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 01:56:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O54HPskK78nRWjbEU9U57j8aKCfsNL7JehscZAlno5A=;
+        b=SGdi2lfP9LNdabm3TNsJ3sK0YrDDDjwaEDyUcxVGiOvPEdiOfRe1qLn1YK/u/cdQK5
+         +cCoahY+Hnwrmw3hvRUOaLj2sLzDGziRCP5T/cpfPfhbs6G2q8iBlsUjtbCTQKs2pLm8
+         gmysgaamVadEcHrfCRQU5tzq3qSlF8ma3gdJ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O54HPskK78nRWjbEU9U57j8aKCfsNL7JehscZAlno5A=;
+        b=j8ddfLICqj4H0Fa986X0hFHuTRoHm/IdVt9+f7XioddMFJiyp5qRBuTzTOTi7nz5pG
+         7H7rVmlvStxkX57uWP5O/ZVxdgR+dv1XHOLWCSSaJ052TjTRUuO5qMo2isbTwEFjxLuI
+         8D+ZMAzBFE+f8e8JtpOlfEv2IFeDzxP16PWp5Ipbe0wIgl8HaoZiqRtIbdWKAM9zNi9i
+         BDIEaQGFX5wU93BRqKOV7T6X3vP4/apeswo9jRqfFWWvZK/y2G+krubHkhpDb34JUyUS
+         zZ17iQ+LStljWFjkEQCzmRQ2ZQGqwV94wIy6m6Vj6N48mOeHbNJt6HMZgfxhGf68//Dx
+         UWfA==
+X-Gm-Message-State: APjAAAUd4VHESaVchCEjaAYOKy8H0HNwtGREi697CuX3zKDw0oDjKQ8e
+        pmfEC+kU3pLl8x/om42Ygh3jXQ==
+X-Google-Smtp-Source: APXvYqzmADKTXtLPyqX5Quh/j/9/3wLnmuCgRe+8tFU2rGMspNYo486PFBjI8H+mn2hDA4jliU+OMg==
+X-Received: by 2002:a1c:e108:: with SMTP id y8mr18567373wmg.65.1561453001499;
+        Tue, 25 Jun 2019 01:56:41 -0700 (PDT)
+Received: from [10.176.68.244] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id n3sm13039809wro.59.2019.06.25.01.56.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 01:56:40 -0700 (PDT)
+Subject: Re: nl80211 wlcore regression in next
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Eyal Reizer <eyalreizer@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+References: <20190625073837.GG5447@atomide.com>
+ <2570f4087d6e3356df34635a0380ec8ce06c9159.camel@sipsolutions.net>
+ <20190625080019.GH5447@atomide.com>
+ <7f74087fef1e554e0aeb82a6cec4113727487928.camel@sipsolutions.net>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <a863a74f-c6a9-b862-d17e-bc5f1dbe980a@broadcom.com>
+Date:   Tue, 25 Jun 2019 10:56:39 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44d866fc-a538-4492-b1b6-08d6f94aedfa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 08:55:53.7688
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3276
+In-Reply-To: <7f74087fef1e554e0aeb82a6cec4113727487928.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wNi0yNSAxMDowNSwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0K
-PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+IA0K
-PiBBZGQgYmluZGluZyBzcGVjaWZpY2F0aW9uIGZvciBhbmFsb2dpYyBmaWx0ZXIgaW5zaWRlIHRo
-ZSBpMmMgY29udHJvbGxlcg0KDQpzL2FuYWxvZ2ljL3RoZSBhbmFsb2cvDQoNCj4gU2lnbmVkLW9m
-Zi1ieTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29tPg0KPiAtLS0N
-Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0OTEudHh0IHwg
-NCArKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiBp
-bmRleCA4MjY4NTk1Li4yMGQzMzRjIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiBAQCAtMjMsNiArMjMsOSBAQCBP
-cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiAgLSBlbmFibGUtZGlnLWZpbHQ6IEVuYWJsZSB0aGUgYnVp
-bHQtaW4gZGlnaXRhbCBmaWx0ZXIgb24gdGhlIGkyYyBsaW5lcywNCj4gICAgc3BlY2lmaWNhbGx5
-IHJlcXVpcmVkIGRlcGVuZGluZyBvbiB0aGUgaGFyZHdhcmUgUENCL2JvYXJkIGFuZCBpZiB0aGUN
-Cj4gICAgdmVyc2lvbiBvZiB0aGUgY29udHJvbGxlciBpbmNsdWRlcyBpdC4NCj4gKy0gZW5hYmxl
-LWFuYS1maWx0OiBFbmFibGUgdGhlIGJ1aWx0LWluIGFuYWxvZ2ljIGZpbHRlciBvbiB0aGUgaTJj
-IGxpbmVzLA0KPiArICBzcGVjaWZpY2FsbHkgcmVxdWlyZWQgZGVwZW5kaW5nIG9uIHRoZSBoYXJk
-d2FyZSBQQ0IvYm9hcmQgYW5kIGlmIHRoZQ0KPiArICB2ZXJzaW9uIG9mIHRoZSBjb250cm9sbGVy
-IGluY2x1ZGVzIGl0Lg0KPiAgLSBDaGlsZCBub2RlcyBjb25mb3JtaW5nIHRvIGkyYyBidXMgYmlu
-ZGluZw0KPiAgDQo+ICBFeGFtcGxlcyA6DQo+IEBAIC02MCw2ICs2Myw3IEBAIGkyYzA6IGkyY0Bm
-ODAzNDYwMCB7DQo+ICAJYXRtZWwsZmlmby1zaXplID0gPDE2PjsNCj4gIAlpMmMtc2RhLWhvbGQt
-dGltZS1ucyA9IDwzMzY+Ow0KPiAgCWVuYWJsZS1kaWctZmlsdDsNCj4gKwllbmFibGUtYW5hLWZp
-bHQ7DQoNClBlcmhhcHMNCg0KCW1pY3JvY2hpcCxkaWdpdGFsLWZpbHRlcjsNCgltaWNyb2NoaXAs
-YW5hbG9nLWZpbHRlcjsNCg0KPw0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+ICANCj4gIAl3bTg3MzE6
-IHdtODczMUAxYSB7DQo+ICAJCWNvbXBhdGlibGUgPSAid204NzMxIjsNCj4gDQoNCg==
+On 6/25/2019 10:02 AM, Johannes Berg wrote:
+> On Tue, 2019-06-25 at 01:00 -0700, Tony Lindgren wrote:
+>> Hi,
+>>
+>> * Johannes Berg <johannes@sipsolutions.net> [190625 07:47]:
+>>> On Tue, 2019-06-25 at 00:38 -0700, Tony Lindgren wrote:
+>>>> Hi,
+>>>>
+>>>> Looks like at least drivers/net/wireless/ti wlcore driver has stopped
+>>>> working in Linux next with commit 901bb9891855 ("nl80211: require and
+>>>> validate vendor command policy"). Reverting the commit above makes it
+>>>> work again.
+>>>>
+>>>> It fails with the warning below, any ideas what goes wrong?
+>>>
+>>> Oops. For some reason, I neglected to check the vendor command usage
+>>> beyond hwsim.
+>>>
+>>> The patch below should work?
+>>
+>> Yeah thanks that fixes the issue for me:
+>>
+>> Tested-by: Tony Lindgren <tony@atomide.com>
+> 
+> Thanks, I'll drop that into my tree and hopefully will remember to send
+> it on soon.
+
+Hi Johannes,
+
+By chance noticed the patch included brcmfmac. So I tried, but I get 
+compile issue below. It is because ERR_PTR really is an inline function 
+so that is not working. So also need to patch that. I left the extra 
+braces around the error code although not strictly necessary.
+
+Regards,
+Arend
+---
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index 2d17e32..da8249b 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -4172,7 +4172,7 @@ struct sta_opmode_info {
+         u8 rx_nss;
+  };
+
+-#define VENDOR_CMD_RAW_DATA ((const struct nla_policy *)ERR_PTR(-ENODATA))
++#define VENDOR_CMD_RAW_DATA ((const struct nla_policy *)(-ENODATA))
+
+  /**
+   * struct wiphy_vendor_command - vendor command definition
+
+
+---8<--------------------------------------------------------------------
+   CC [M]  drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.o
+In file included from 
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c:18:0:
+./include/net/cfg80211.h:4175:29: error: initializer element is not constant
+  #define VENDOR_CMD_RAW_DATA ((const struct nla_policy *)ERR_PTR(-ENODATA))
+                              ^
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c:126:13: note: 
+in expansion of macro \u2018VENDOR_CMD_RAW_DATA\u2019
+    .policy = VENDOR_CMD_RAW_DATA,
+              ^
+./include/net/cfg80211.h:4175:29: note: (near initialization for 
+\u2018brcmf_vendor_cmds[0].policy\u2019)
+  #define VENDOR_CMD_RAW_DATA ((const struct nla_policy *)ERR_PTR(-ENODATA))
+                              ^
+drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c:126:13: note: 
+in expansion of macro \u2018VENDOR_CMD_RAW_DATA\u2019
+    .policy = VENDOR_CMD_RAW_DATA,
+              ^
+make[3]: *** [drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.o] 
+Error 1
