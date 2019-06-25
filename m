@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE266C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E671C48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C9C20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3764720883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732782AbfFYSCj (ORCPT
+        id S1732794AbfFYSCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 14:02:39 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58764 "EHLO
+        Tue, 25 Jun 2019 14:02:40 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58838 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbfFYSCi (ORCPT
+        with ESMTP id S1727233AbfFYSCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 14:02:38 -0400
+        Tue, 25 Jun 2019 14:02:39 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: bbeckett)
-        with ESMTPSA id CE79E28A3F3
+        with ESMTPSA id DE8FC28627D
 From:   Robert Beckett <bob.beckett@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -38,9 +38,9 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH v3 1/4] drm/vblank: warn on sending stale event
-Date:   Tue, 25 Jun 2019 18:59:12 +0100
-Message-Id: <a21034afa30246f31daa16e74a0772377a4791ef.1561483965.git.bob.beckett@collabora.com>
+Subject: [PATCH v3 4/4] drm/imx: only send event on crtc disable if kept disabled
+Date:   Tue, 25 Jun 2019 18:59:15 +0100
+Message-Id: <6599f538740632c5524bab86514b8ba026798537.1561483965.git.bob.beckett@collabora.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <cover.1561483965.git.bob.beckett@collabora.com>
 References: <cover.1561483965.git.bob.beckett@collabora.com>
@@ -49,51 +49,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Warn when about to send stale vblank info and add advice to
-documentation on how to avoid.
+The event will be sent as part of the vblank enable during the modeset
+if the crtc is not being kept disabled.
+
+Fixes: 5f2f911578fb ("drm/imx: atomic phase 3 step 1: Use atomic configuration")
 
 Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
 ---
- drivers/gpu/drm/drm_vblank.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 603ab105125d..7dabb2bdb733 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -918,6 +918,19 @@ EXPORT_SYMBOL(drm_crtc_arm_vblank_event);
-  *
-  * See drm_crtc_arm_vblank_event() for a helper which can be used in certain
-  * situation, especially to send out events for atomic commit operations.
-+ *
-+ * Care should be taken to avoid stale timestamps. If:
-+ *   - your driver has vblank support (i.e. dev->num_crtcs > 0)
-+ *   - the vblank irq is off (i.e. no one called drm_crtc_vblank_get)
-+ *   - from the vblank code's pov the pipe is still running (i.e. not
-+ *     in-between a drm_crtc_vblank_off()/on() pair)
-+ * If all of these conditions hold then drm_crtc_send_vblank_event is
-+ * going to give you a garbage timestamp and and sequence number (the last
-+ * recorded before the irq was disabled). If you call drm_crtc_vblank_get/put
-+ * around it, or after vblank_off, then either of those will have rolled things
-+ * forward for you.
-+ * So, drivers should call drm_crtc_vblank_off() before this function in their
-+ * crtc atomic_disable handlers.
-  */
- void drm_crtc_send_vblank_event(struct drm_crtc *crtc,
- 				struct drm_pending_vblank_event *e)
-@@ -925,8 +938,12 @@ void drm_crtc_send_vblank_event(struct drm_crtc *crtc,
- 	struct drm_device *dev = crtc->dev;
- 	u64 seq;
- 	unsigned int pipe = drm_crtc_index(crtc);
-+	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
- 	ktime_t now;
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index e04d6efff1b5..c436a28d50e4 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -94,7 +94,7 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	drm_crtc_vblank_off(crtc);
  
-+	WARN_ONCE(dev->num_crtcs > 0 && !vblank->enabled && !vblank->inmodeset,
-+		  "sending stale vblank info\n");
-+
- 	if (dev->num_crtcs > 0) {
- 		seq = drm_vblank_count_and_time(dev, pipe, &now);
- 	} else {
+ 	spin_lock_irq(&crtc->dev->event_lock);
+-	if (crtc->state->event) {
++	if (crtc->state->event && !crtc->state->active) {
+ 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+ 		crtc->state->event = NULL;
+ 	}
 -- 
 2.18.0
 
