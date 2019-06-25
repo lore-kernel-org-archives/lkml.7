@@ -2,148 +2,98 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2FDC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26302C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577C4208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:10:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J9xgagej"
+	by mail.kernel.org (Postfix) with ESMTP id 060592133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfFYLKW (ORCPT
+        id S1728685AbfFYLPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:10:22 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19234 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfFYLKV (ORCPT
+        Tue, 25 Jun 2019 07:15:11 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36250 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbfFYLPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:10:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d12011d0001>; Tue, 25 Jun 2019 04:10:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 25 Jun 2019 04:10:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 25 Jun 2019 04:10:19 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Jun
- 2019 11:10:17 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
- phylib logic
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
- <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
- <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
- <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
- <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
- <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
- <7f0f2ed0-f47c-4670-d169-25f0413c1fd3@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9D7024@DE02WEMBXB.internal.synopsys.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <113f37a2-c37f-cdb5-5194-4361d949258a@nvidia.com>
-Date:   Tue, 25 Jun 2019 12:10:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 07:15:11 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u8so2559913wmm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 04:15:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=pXjNCSKO+A8itxoJob/5aeE7uqcr9aKUUDE+2xRnOkY=;
+        b=k11s8DVJNaAw4WmkTVVXIAh6NRoaBBq9PgkuPl0Ec7KXvFXwz6/IJc5wG32uoInJB2
+         NLf7g6mU8WHR2NzlDSLr08FqEnDhF/SSUGbAHyUhbF4/N8WRofzZZ2YydyGWF/euhSEx
+         SOxwhFwYD099LSjhos4RPFCwzOTkEWnC29rqDooWKxoW48NLdk7/TlLm/hQy2WLr74mq
+         IxsinZeuYzXqKofdvacdTQWbOFesr5Q+TbGLLFPypSAseobubegEwHImClNcyUo+MqdY
+         EhY0wtR5KIgYkZphUbL/jKfnRIoo+oJoLR9TvkzNSbAZXyOikCvMkredNTMf3pogDj4F
+         3ekA==
+X-Gm-Message-State: APjAAAVbL0Tkdqaoc/8lSQnUq1HuHp/xrGOHGhcVi54w7QhroleOdxUj
+        6jxyL2k3uFgI9IOLPI8bQQzj/w==
+X-Google-Smtp-Source: APXvYqydRIoQjTJUQqXrm4rNvHj1Xk6V6w1I7qRMQSYy0w5DpXzkX2h8z8C/Hdm2U23nX7pt5y4hCQ==
+X-Received: by 2002:a05:600c:291:: with SMTP id 17mr18954242wmk.32.1561461309066;
+        Tue, 25 Jun 2019 04:15:09 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id d1sm12697836wru.41.2019.06.25.04.15.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 04:15:08 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH] x86/kvm/nVMCS: fix VMCLEAR when Enlightened VMCS is in use
+In-Reply-To: <E7C72E0C-B44F-4CE6-8325-EA32521D75B7@oracle.com>
+References: <20190624133028.3710-1-vkuznets@redhat.com> <CEFF2A14-611A-417C-BC0A-8814862F26C6@oracle.com> <87lfxqdp3n.fsf@vitty.brq.redhat.com> <E7C72E0C-B44F-4CE6-8325-EA32521D75B7@oracle.com>
+Date:   Tue, 25 Jun 2019 13:15:07 +0200
+Message-ID: <87ftnxex1g.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B9D7024@DE02WEMBXB.internal.synopsys.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561461021; bh=ywXSgknL1Gy2ftDz0c9HRG7PbJQeUv91vnO+i6OhLZ4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=J9xgagejO3vqCTRQb9mVBdvVaM+6AcQW66kLwwnvuI2Q2QFjL5mB27Vl6Cz/BnpGA
-         8q1wiF5aqsIAzrthX2fNUiwCuBAJ/8+UhijqgZTWdXuM5pBF1SBa2ZLuMB6kVmKArz
-         HKJyyAYvRK/4ZUajLTTLuRy5/mnhvxA2520aSqW4NAcx60w0gmLKL7ymNIYmjgyac3
-         YmK+jNHAADo2ONnQiaH9YKKlMoxqcUfxknGI4sX1N7mhctJx3X6DK2ws3zWwEfExd3
-         54fxDhZUGekKioLX2NBMATjSTb+SyVJSYOjE1Po1om4APyvq6p5eXt8To1IXtAad4T
-         HLVyGrWnpl/Hg==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Liran Alon <liran.alon@oracle.com> writes:
 
-On 25/06/2019 08:37, Jose Abreu wrote:
-> From: Jon Hunter <jonathanh@nvidia.com>
-> 
->> Any further feedback? I am still seeing this issue on today's -next.
-> 
-> Apologies but I was in FTO.
-> 
-> Is there any possibility you can just disable the ethX configuration in 
-> the rootfs mount and manually configure it after rootfs is done ?
-> 
-> I just want to make sure in which conditions this is happening (if in 
-> ifdown or ifup).
+>> On 25 Jun 2019, at 11:51, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>> 
+>> Liran Alon <liran.alon@oracle.com> writes:
+>> 
+>>>> On 24 Jun 2019, at 16:30, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>>> 
+>>>> 
+>>>> +bool nested_enlightened_vmentry(struct kvm_vcpu *vcpu, u64 *evmptr)
+>>> 
+>>> I prefer to rename evmptr to evmcs_ptr. I think it’s more readable and sufficiently short.
+>>> In addition, I think you should return either -1ull or assist_page.current_nested_vmcs.
+>>> i.e. Don’t return evmcs_ptr by pointer but instead as a return-value
+>>> and get rid of the bool.
+>> 
+>> Actually no, sorry, I'm having second thoughts here: in handle_vmclear()
+>> we don't care about the value of evmcs_ptr, we only want to check that
+>> enlightened vmentry bit is enabled in assist page. If we switch to
+>> checking evmcs_ptr against '-1', for example, we will make '-1' a magic
+>> value which is not in the TLFS. Windows may decide to use it for
+>> something else - and we will get a hard-to-debug bug again.
+>
+> I’m not sure I understand.
+> You are worried that when guest have setup a valid assist-page and set
+> enlighten_vmentry to true,
+> that assist_page.current_nested_vmcs can be -1ull and still be considered a valid eVMCS?
+> I don't think that's reasonable.
 
-I have been looking at this a bit closer and I can see the problem. What
-happens is that ...
-
-1. stmmac_mac_link_up() is called and priv->eee_active is set to false
-2. stmmac_eee_init() is called but because priv->eee_active is false,
-   timer_setup() for eee_ctrl_timer is never called.
-3. stmmac_eee_init() returns true and so then priv->eee_enabled is set 
-   to true.
-4. When stmmac_tx_clean() is called because priv->eee_enabled is set to    
-   true, mod_timer() is called for the eee_ctrl_timer, but because 
-   timer_setup() was never called, we hit the BUG defined at
-   kernel/time/timer.c:952, because no function is defined for the 
-   timer.
-
-The following fixes it for me ...
-
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -399,10 +399,13 @@ bool stmmac_eee_init(struct stmmac_priv *priv)
-        mutex_lock(&priv->lock);
- 
-        /* Check if it needs to be deactivated */
--       if (!priv->eee_active && priv->eee_enabled) {
--               netdev_dbg(priv->dev, "disable EEE\n");
--               del_timer_sync(&priv->eee_ctrl_timer);
--               stmmac_set_eee_timer(priv, priv->hw, 0, tx_lpi_timer);
-+       if (!priv->eee_active) {
-+               if (priv->eee_enabled) {
-+                       netdev_dbg(priv->dev, "disable EEE\n");
-+                       del_timer_sync(&priv->eee_ctrl_timer);
-+                       stmmac_set_eee_timer(priv, priv->hw, 0, tx_lpi_timer);
-+               }
-+               mutex_unlock(&priv->lock);
-                return false;
-        }
-
-It also looks like you have a potention deadlock in the current code
-because in the case of if (!priv->eee_active && priv->eee_enabled)
-you don't unlock the mutex. The above fixes this as well. I can send a
-formal patch if this looks correct. 
-
-Cheers
-Jon
+No, -1ull is not a valid eVMCS - but this shouldn't change VMCLEAR
+semantics as VMCLEAR has it's own argument. It's perfectly valid to try
+to put a eVMCS which was previously used on a different vCPU (and thus
+which is 'active') to non-active state. The fact that we don't have an
+active eVMCS on the vCPU doing VMCLEAR shouldn't matter at all.
 
 -- 
-nvpublic
+Vitaly
