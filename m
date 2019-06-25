@@ -2,130 +2,108 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B099BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096FCC48BD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D692077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BFA2077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbfFYC1V (ORCPT
+        id S1730425AbfFYC2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 22:27:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59594 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbfFYC1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 22:27:21 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 20BCF85365;
-        Tue, 25 Jun 2019 02:27:20 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CA1660BE2;
-        Tue, 25 Jun 2019 02:27:12 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 10:27:07 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     =?utf-8?B?d2VuYmluemVuZyjmm77mlofmlowp?= <wenbinzeng@tencent.com>
-Cc:     Wenbin Zeng <wenbin.zeng@gmail.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "keith.busch@intel.com" <keith.busch@intel.com>,
-        "hare@suse.com" <hare@suse.com>, "osandov@fb.com" <osandov@fb.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet
- mail)
-Message-ID: <20190625022706.GE23777@ming.t460p>
-References: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
- <20190625015512.GC23777@ming.t460p>
- <fe4f40e7bbf74311a47c9f3b981f8c53@tencent.com>
+        Mon, 24 Jun 2019 22:28:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19071 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726774AbfFYC2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 22:28:13 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CF33BFD7A6B6E20086B8;
+        Tue, 25 Jun 2019 10:28:10 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
+ 10:28:04 +0800
+Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
+ processing linkwatch wq
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <hkallweit1@gmail.com>, <f.fainelli@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <kvm@vger.kernel.org>, "xuwei (O)" <xuwei5@huawei.com>
+References: <1558921674-158349-1-git-send-email-linyunsheng@huawei.com>
+ <20190528.235806.323127882998745493.davem@davemloft.net>
+ <6e9b41c9-6edb-be7f-07ee-5480162a227e@huawei.com>
+Message-ID: <5c06e5dd-cfb1-870c-a0a3-42397b59c734@huawei.com>
+Date:   Tue, 25 Jun 2019 10:28:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fe4f40e7bbf74311a47c9f3b981f8c53@tencent.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 25 Jun 2019 02:27:20 +0000 (UTC)
+In-Reply-To: <6e9b41c9-6edb-be7f-07ee-5480162a227e@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:14:46AM +0000, wenbinzeng(曾文斌) wrote:
-> Hi Ming,
+On 2019/5/29 16:59, Yunsheng Lin wrote:
+> On 2019/5/29 14:58, David Miller wrote:
+>> From: Yunsheng Lin <linyunsheng@huawei.com>
+>> Date: Mon, 27 May 2019 09:47:54 +0800
+>>
+>>> When user has configured a large number of virtual netdev, such
+>>> as 4K vlans, the carrier on/off operation of the real netdev
+>>> will also cause it's virtual netdev's link state to be processed
+>>> in linkwatch. Currently, the processing is done in a work queue,
+>>> which may cause worker starvation problem for other work queue.
+>>>
+>>> This patch releases the cpu when link watch worker has processed
+>>> a fixed number of netdev' link watch event, and schedule the
+>>> work queue again when there is still link watch event remaining.
+>>>
+>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>
+>> Why not rtnl_unlock(); yield(); rtnl_lock(); every "100" events
+>> processed?
+>>
+>> That seems better than adding all of this overhead to reschedule the
+>> workqueue every 100 items.
 > 
-> > -----Original Message-----
-> > From: Ming Lei <ming.lei@redhat.com>
-> > Sent: Tuesday, June 25, 2019 9:55 AM
-> > To: Wenbin Zeng <wenbin.zeng@gmail.com>
-> > Cc: axboe@kernel.dk; keith.busch@intel.com; hare@suse.com; osandov@fb.com;
-> > sagi@grimberg.me; bvanassche@acm.org; linux-block@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; wenbinzeng(曾文斌) <wenbinzeng@tencent.com>
-> > Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet mail)
-> > 
-> > On Mon, Jun 24, 2019 at 11:24:07PM +0800, Wenbin Zeng wrote:
-> > > Currently hctx->cpumask is not updated when hot-plugging new cpus,
-> > > as there are many chances kblockd_mod_delayed_work_on() getting
-> > > called with WORK_CPU_UNBOUND, workqueue blk_mq_run_work_fn may run
-> > 
-> > There are only two cases in which WORK_CPU_UNBOUND is applied:
-> > 
-> > 1) single hw queue
-> > 
-> > 2) multiple hw queue, and all CPUs in this hctx become offline
-> > 
-> > For 1), all CPUs can be found in hctx->cpumask.
-> > 
-> > > on the newly-plugged cpus, consequently __blk_mq_run_hw_queue()
-> > > reporting excessive "run queue from wrong CPU" messages because
-> > > cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) returns false.
-> > 
-> > The message means CPU hotplug race is triggered.
-> > 
-> > Yeah, there is big problem in blk_mq_hctx_notify_dead() which is called
-> > after one CPU is dead, but still run this hw queue to dispatch request,
-> > and all CPUs in this hctx might become offline.
-> > 
-> > We have some discussion before on this issue:
-> > 
-> > https://lore.kernel.org/linux-block/CACVXFVN729SgFQGUgmu1iN7P6Mv5+puE78STz8hj
-> > 9J5bS828Ng@mail.gmail.com/
-> > 
+> One minor concern, the above solution does not seem to solve the cpu
+> starvation for other normal workqueue which was scheduled on the same
+> cpu as linkwatch. Maybe I misunderstand the workqueue or there is other
+> consideration here? :)
 > 
-> There is another scenario, you can reproduce it by hot-plugging cpus to kvm guests via qemu monitor (I believe virsh setvcpus --live can do the same thing), for example:
-> (qemu) cpu-add 1
-> (qemu) cpu-add 2
-> (qemu) cpu-add 3
-> 
-> In such scenario, cpu 1, 2 and 3 are not visible at boot, hctx->cpumask doesn't get synced when these cpus are added.
+> Anyway, I will implemet it as you suggested and test it before posting V2.
+> Thanks.
 
-It is CPU cold-plug, we suppose to support it.
+Hi, David
 
-The new added CPUs should be visible to hctx, since we spread queues
-among all possible CPUs(), please see blk_mq_map_queues() and
-irq_build_affinity_masks(), which is like static allocation on CPU
-resources.
+I stress tested the above solution with a lot of vlan dev and qemu-kvm with
+vf passthrongh mode, the linkwatch wq sometimes block the irqfd_inject wq
+when they are scheduled on the same cpu, which may cause interrupt delay
+problem for vm.
 
-Otherwise, you might use an old kernel or there is bug somewhere.
+Rescheduling workqueue every 100 items does give irqfd_inject wq to run sooner,
+which alleviate the interrupt delay problems for vm.
+
+So It is ok for me to fall back to reschedule the link watch wq every 100 items,
+or is there a better way to fix it properly?
+
+
 
 > 
-> > >
-> > > This patch added a cpu-hotplug handler into blk-mq, updating
-> > > hctx->cpumask at cpu-hotplug.
-> > 
-> > This way isn't correct, hctx->cpumask should be kept as sync with
-> > queue mapping.
+>>
+>> .
+>>
 > 
-> Please advise what should I do to deal with the above situation? Thanks a lot.
+> 
+> .
+> 
 
-As I shared in last email, there is one approach discussed, which seems
-doable.
-
-Thanks,
-Ming
