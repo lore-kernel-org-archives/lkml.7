@@ -2,61 +2,117 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A994C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7B5C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468FF204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DC220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:58:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rtyLtNjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732192AbfFYK4x (ORCPT
+        id S1732208AbfFYK6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:56:53 -0400
-Received: from gofer.mess.org ([88.97.38.141]:35075 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfFYK4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:56:52 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 2E5D260E3B; Tue, 25 Jun 2019 11:56:51 +0100 (BST)
-Date:   Tue, 25 Jun 2019 11:56:50 +0100
-From:   Sean Young <sean@mess.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] media: ttpci: add RC_CORE dependency
-Message-ID: <20190625105650.scnahq2e5xgdnt2c@gofer.mess.org>
-References: <20190617111718.2277220-1-arnd@arndb.de>
- <20190617111718.2277220-3-arnd@arndb.de>
+        Tue, 25 Jun 2019 06:58:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34410 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfFYK6A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:58:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w1VYtukMDFjClOBWrgBSEg29TnKHWzUm3jllxU3LtVU=; b=rtyLtNjDw4p6TnPt3CncrQp7X
+        Yig8xdu1UY0SGixxHVqiAUm4+cZrSK5chsUKK9EMREb+mlNfL9i+ASyJtGUl9lbRpApvZxGV6jgM8
+        CvJ01GtDiZvoVuwXj6AwcDh4cc8+cSuWzIQrsaZNRIdKkaxStTj45iVZnU96w90FX3npVKivwPQEp
+        LBlgmJK0t12LzaGtFfBZ3+6X6fbsF6fndebssjuzYDk0YQqRc2Eg5hv1jmmklxbKVcTpnNb2++kCp
+        EUgN7ABdtwwvX787EWwMu7qEOjjyXSgk6EygJw0HsQtj3+auaeg9xRyyL026ARdwIQi/Ag6aNi+qj
+        l/lkg6fsg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfj8f-0000HH-M9; Tue, 25 Jun 2019 10:57:25 +0000
+Date:   Tue, 25 Jun 2019 03:57:25 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 2/4] vfs: create a generic checking function for
+ FS_IOC_FSSETXATTR
+Message-ID: <20190625105725.GB26085@infradead.org>
+References: <156116136742.1664814.17093419199766834123.stgit@magnolia>
+ <156116138952.1664814.16552129914959122837.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617111718.2277220-3-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <156116138952.1664814.16552129914959122837.stgit@magnolia>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:16:53PM +0200, Arnd Bergmann wrote:
-> The ttpci driver now uses the rc-core, so we need to ensure it
-> is enabled:
+On Fri, Jun 21, 2019 at 04:56:29PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> ERROR: "rc_unregister_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
-> ERROR: "rc_allocate_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
-> ERROR: "rc_free_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
-> ERROR: "rc_keydown" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
-> ERROR: "rc_register_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> Create a generic checking function for the incoming FS_IOC_FSSETXATTR
+> fsxattr values so that we can standardize some of the implementation
+> behaviors.
 > 
-> Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/btrfs/ioctl.c   |   21 +++++++++-------
+>  fs/ext4/ioctl.c    |   27 ++++++++++++++------
+>  fs/f2fs/file.c     |   26 ++++++++++++++-----
+>  fs/inode.c         |   17 +++++++++++++
+>  fs/xfs/xfs_ioctl.c |   70 ++++++++++++++++++++++++++++++----------------------
+>  include/linux/fs.h |    3 ++
+>  6 files changed, 111 insertions(+), 53 deletions(-)
+> 
+> 
+> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> index f408aa93b0cf..7ddda5b4b6a6 100644
+> --- a/fs/btrfs/ioctl.c
+> +++ b/fs/btrfs/ioctl.c
+> @@ -366,6 +366,13 @@ static int check_xflags(unsigned int flags)
+>  	return 0;
+>  }
+>  
+> +static void __btrfs_ioctl_fsgetxattr(struct btrfs_inode *binode,
+> +				     struct fsxattr *fa)
+> +{
+> +	memset(fa, 0, sizeof(*fa));
+> +	fa->fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags);
 
-Thank you for the patch, unfortunately this was already fixed in
-commit 12e23ebb396e6ffea88b8c5e483059a297326afb (which was accepted
-after you sent your patch).
+Is there really much of a point in this helper? Epeciall as
+the zeroing could easily be done in the variable declaration
+line using
 
-Thanks
-Sean
+	struct fsxattr fa = { };
+
+> +	memset(fa, 0, sizeof(struct fsxattr));
+> +	fa->fsx_xflags = ext4_iflags_to_xflags(ei->i_flags & EXT4_FL_USER_VISIBLE);
+
+Overly lone line.
+
+> +	if (ext4_has_feature_project(inode->i_sb)) {
+> +		fa->fsx_projid = (__u32)from_kprojid(&init_user_ns,
+> +				ei->i_projid);
+
+The cast here looks bogus.  Same comment for f2fs.
