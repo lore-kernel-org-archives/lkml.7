@@ -2,209 +2,165 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB993C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C50C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D52206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB56206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SxUColHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbfFYBZd (ORCPT
+        id S1729994AbfFYB3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:25:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58304 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729374AbfFYBZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:25:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6C1AAE2C;
-        Tue, 25 Jun 2019 01:25:30 +0000 (UTC)
-Subject: Re: [PATCH] csky: dts: Add NationalChip GX6605S
-To:     Guo Ren <guoren@kernel.org>
-Cc:     linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20190625002829.17409-1-afaerber@suse.de>
- <CAJF2gTTnhTQK-mOyC+e8U8xrDwaoDUACb1R_zQfDCKwdKzc96w@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Linux GmbH
-Message-ID: <a27255d3-e21c-787d-c510-359d72f53a1c@suse.de>
-Date:   Tue, 25 Jun 2019 03:25:29 +0200
+        Mon, 24 Jun 2019 21:29:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34732 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727728AbfFYB3D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 21:29:03 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P1O3ai122691;
+        Tue, 25 Jun 2019 01:27:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=xzWudCQ+8i4nLaNS2ZZ42MaVwcl/EpXW3dPwWriyTbU=;
+ b=SxUColHZZQSspUhbeR+Sp8Ox1niDMcetEhn/Fi9NTQXA4iENyCSUk7kchWF518srcjxj
+ xOxVI0NtiyfC6MZq75rkL7Dq2rQ7MTBNM6BNCgEI8//uxf8B5AoQ+dLWfEn0wAqTDYFc
+ Bp9FhmA+Bup+b6Dlvk6XbVlEQBqqJ2yr0HzlhREvTSPeapmDgfQ3l2xLLHRQTwwmh1yv
+ G7lrUMcQ6NIUbdBpo0ogZP9NFmaMwBuhePc7NDLtJpQjU62sOOiBNi1oODX9d89JsPUN
+ zp+u07Fe+T+MhjpYI5oSXsHS4bhMM4GeLcy6P2Ser+Z1LC5ctw0NOZZX2jKDxoqJKP1u lw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2t9brt1agx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 01:27:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P1PplU114563;
+        Tue, 25 Jun 2019 01:27:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t99f3k3qq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 01:27:29 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5P1RO74020914;
+        Tue, 25 Jun 2019 01:27:25 GMT
+Received: from [10.182.69.106] (/10.182.69.106)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 18:27:24 -0700
+Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug
+To:     Wenbin Zeng <wenbin.zeng@gmail.com>
+Cc:     axboe@kernel.dk, keith.busch@intel.com, hare@suse.com,
+        ming.lei@redhat.com, osandov@fb.com, sagi@grimberg.me,
+        bvanassche@acm.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Wenbin Zeng <wenbinzeng@tencent.com>
+References: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+Message-ID: <d69e96cf-8f58-3b2a-d8d4-7b77589aefbd@oracle.com>
+Date:   Tue, 25 Jun 2019 09:30:16 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAJF2gTTnhTQK-mOyC+e8U8xrDwaoDUACb1R_zQfDCKwdKzc96w@mail.gmail.com>
+In-Reply-To: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906250008
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906250008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 25.06.19 um 02:45 schrieb Guo Ren:
-> Thx for the patch. No need seperate part into dtsi,
+Hi Wenbin,
 
-Sorry, I know from many arm contributions that using a .dtsi is the
-right thing here. It logically separates the chip from the board, even
-if there's only one evaluation board currently. Think about set-top
-boxes that someone might author a .dts for - they should be able to
-reuse the .dtsi for the SoC rather than copy it.
+On 6/24/19 11:24 PM, Wenbin Zeng wrote:
+> Currently hctx->cpumask is not updated when hot-plugging new cpus,
+> as there are many chances kblockd_mod_delayed_work_on() getting
+> called with WORK_CPU_UNBOUND, workqueue blk_mq_run_work_fn may run
+> on the newly-plugged cpus, consequently __blk_mq_run_hw_queue()
+> reporting excessive "run queue from wrong CPU" messages because
+> cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) returns false.
+> 
+> This patch added a cpu-hotplug handler into blk-mq, updating
+> hctx->cpumask at cpu-hotplug.
+> 
+> Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
+> ---
+>  block/blk-mq.c         | 29 +++++++++++++++++++++++++++++
+>  include/linux/blk-mq.h |  1 +
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index ce0f5f4..2e465fc 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -39,6 +39,8 @@
+>  #include "blk-mq-sched.h"
+>  #include "blk-rq-qos.h"
+>  
+> +static enum cpuhp_state cpuhp_blk_mq_online;
+> +
+>  static void blk_mq_poll_stats_start(struct request_queue *q);
+>  static void blk_mq_poll_stats_fn(struct blk_stat_callback *cb);
+>  
+> @@ -2215,6 +2217,21 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+>  	return -ENOMEM;
+>  }
+>  
+> +static int blk_mq_hctx_notify_online(unsigned int cpu, struct hlist_node *node)
+> +{
+> +	struct blk_mq_hw_ctx *hctx;
+> +
+> +	hctx = hlist_entry_safe(node, struct blk_mq_hw_ctx, cpuhp_online);
+> +
+> +	if (!cpumask_test_cpu(cpu, hctx->cpumask)) {
+> +		mutex_lock(&hctx->queue->sysfs_lock);
+> +		cpumask_set_cpu(cpu, hctx->cpumask);
+> +		mutex_unlock(&hctx->queue->sysfs_lock);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
 
-> just follow:
-> https://lore.kernel.org/linux-csky/1561376581-19568-1-git-send-email-guoren@kernel.org/T/#u
+As this callback is registered for each hctx, when a cpu is online, it is called
+for each hctx.
 
-Thanks for that pointer! I still think my node names are cleaner and
-also the structure of keeping clocks and gpio users outside of /soc. I
-see the value you use is 27 MHz, will try it tomorrow. I see you use
-nice KEY_ constants, whereas I just took the raw values from the dtb.
+Just taking a 4-queue nvme as example (regardless about other block like loop).
+Suppose cpu=2 (out of 0, 1, 2 and 3) is offline. When we online cpu=2,
 
-I notice that your patch doesn't have any Copyright header, how should I
-credit you in the resulting combined patch? I would then also add your
-SoB from the patch you linked to.
+blk_mq_hctx_notify_online() called: cpu=2 and blk_mq_hw_ctx->queue_num=3
+blk_mq_hctx_notify_online() called: cpu=2 and blk_mq_hw_ctx->queue_num=2
+blk_mq_hctx_notify_online() called: cpu=2 and blk_mq_hw_ctx->queue_num=1
+blk_mq_hctx_notify_online() called: cpu=2 and blk_mq_hw_ctx->queue_num=0
 
-More comments inline...
+There is no need to set cpu 2 for blk_mq_hw_ctx->queue_num=[3, 1, 0]. I am
+afraid this patch would erroneously set cpumask for blk_mq_hw_ctx->queue_num=[3,
+1, 0].
 
-> On Tue, Jun 25, 2019 at 8:28 AM Andreas Färber <afaerber@suse.de> wrote:
->>
->> Add Device Trees for NationalChip GX6605S SoC (based on CK610 CPU) and its
->> dev board. GxLoader expects as filename gx6605s.dtb, so keep that.
->> The bootargs are prepared to boot from USB and to output to serial.
->>
->> Compatibles for the SoC and board are left out for now.
->>
->> Signed-off-by: Andreas Färber <afaerber@suse.de>
->> ---
->>  arch/csky/boot/dts/gx6605s.dts  | 104 ++++++++++++++++++++++++++++++++++++++++
->>  arch/csky/boot/dts/gx6605s.dtsi |  82 +++++++++++++++++++++++++++++++
->>  2 files changed, 186 insertions(+)
->>  create mode 100644 arch/csky/boot/dts/gx6605s.dts
->>  create mode 100644 arch/csky/boot/dts/gx6605s.dtsi
->>
->> diff --git a/arch/csky/boot/dts/gx6605s.dts b/arch/csky/boot/dts/gx6605s.dts
->> new file mode 100644
->> index 000000000000..f7511024ec6f
->> --- /dev/null
->> +++ b/arch/csky/boot/dts/gx6605s.dts
-[...]
->> +       leds {
->> +               compatible = "gpio-leds";
->> +
->> +               led0 {
->> +                       label = "led10";
+I used to submit the below patch explaining above for removing a cpu and it is
+unfortunately not merged yet.
 
-I forgot to align the numbering here. The label matches the GPIO and
-what is printed on the board.
+https://patchwork.kernel.org/patch/10889307/
 
->> +                       gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "heartbeat";
 
-This green one stops blinking and stays on.
+Another thing is during initialization, the hctx->cpumask should already been
+set and even the cpu is offline. Would you please explain the case hctx->cpumask
+is not set correctly, e.g., how to reproduce with a kvm guest running
+scsi/virtio/nvme/loop?
 
->> +               };
->> +
->> +               led1 {
->> +                       label = "led11";
->> +                       gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "timer";
-
-This red one keeps blinking after the panic.
-
->> +               };
->> +
->> +               led2 {
->> +                       label = "led12";
->> +                       gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "default-on";
->> +               };
->> +
->> +               led3 {
->> +                       label = "led13";
->> +                       gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
->> +                       linux,default-trigger = "default-on";
-
-These two remain off. So I wonder whether the GPIO polarity is wrong?
-In the example usb.img the gpio-leds module is not loaded by default, so
-maybe it wasn't noticed before?
-
-Also, many arm boards use more complex LED labels with multiple parts
-separated by colon, like "boardname:name:function" or so.
-
->> +               };
->> +       };
-[...]
->> diff --git a/arch/csky/boot/dts/gx6605s.dtsi b/arch/csky/boot/dts/gx6605s.dtsi
->> new file mode 100644
->> index 000000000000..956af5674add
->> --- /dev/null
->> +++ b/arch/csky/boot/dts/gx6605s.dtsi
->> @@ -0,0 +1,82 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
->> +/*
->> + * NationalChip GX6605S SoC
->> + *
->> + * Copyright (c) 2019 Andreas Färber
->> + */
->> +
->> +/ {
->> +       #address-cells = <1>;
->> +       #size-cells = <1>;
->> +
->> +       cpus {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               cpu0: cpu@0 {
->> +                       device_type = "cpu";
->> +                       compatible = "csky,ck610";
->> +                       reg = <0>;
->> +               };
->> +       };
->> +
->> +       soc {
->> +               compatible = "simple-bus";
->> +               interrupt-parent = <&intc>;
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               ranges;
->> +
->> +               timer0: timer@20a000 {
->> +                       compatible = "csky,gx6605s-timer";
-
-The reason I left out the compatible for the SoC/board is that it looks
-unclean to me that you're using a "csky," vendor prefix for interrupt
-controller and timer instead of a new "nationalchip," prefix for the SoC
-vendor. Did I miss some reasoning for that, or did that slip through
-patch review?
-
-Being the first board we'd need to create a new YAML file to document
-them, I assume. Not sure what the best scope (=name) would be here.
-
->> +                       reg = <0x0020a000 0x400>;
->> +                       clocks = <&dummy_apb_clk>;
->> +                       interrupts = <10>;
->> +               };
-[...]
->> +               intc: interrupt-controller@500000 {
->> +                       compatible = "csky,gx6605s-intc";
-
-Here's the other SoC compatible.
-
->> +                       reg = <0x00500000 0x400>;
->> +                       interrupt-controller;
->> +                       #interrupt-cells = <1>;
->> +               };
-[snip]
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+Dongli Zhang
