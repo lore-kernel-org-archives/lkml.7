@@ -2,105 +2,125 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DEFC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BB2C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5EA214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:36:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HpzFOXWo"
+	by mail.kernel.org (Postfix) with ESMTP id 56DDE208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731601AbfFYMgy (ORCPT
+        id S1729282AbfFYMho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:36:54 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53480 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfFYMgw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:36:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so2646832wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:36:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9ZX4reNH1Y4oGZx//omW4y+4kXs+97gm3IKdBMyA4qA=;
-        b=HpzFOXWoy+175TZnrqU8T7yGRS2B6tYI96yqoa477Sr0PvZoubHe0dGEE8qR0w9FJ7
-         CG87WTWkE5tBOtH+TJYq6Z2JvVZYEi9F69fZ79Z+EGjKnngJSHH4QhxCA3u87A/nl0Fy
-         dRrf+rU+uWsBAdpFvOH25TJbTFOknCo7fbfhO5fkeJOMie3CbjWCJgcNd+6rqzhGp6jz
-         bjuIyDa1nNsgmc2kxyXTkMMKDr7TFy4CfcIwU3Ws3CjQ350eBLrdJPCVE5Q3Jz+1xt8Y
-         43Tkf62WO0jRZW4efWk19shXgogUl/d3voY4MWwz7kVVN3LiEp0euMMXxqMSF59GECjx
-         v/Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9ZX4reNH1Y4oGZx//omW4y+4kXs+97gm3IKdBMyA4qA=;
-        b=tOEj7gafwWznRRfR59UzttYYBLD1YvOvaozEbUqqwJhO6l8yAW+79GTavnmBJTWM3B
-         ++wr2YTjmrlAblIWRHw5zbYqX8cBH3wgPb2xEN1Ot0n8Wt2NwR26pgwV2wwXfE5/qxSv
-         oh18RFeiyXvwp5eNd63bucObSfbjDkRraCMbEHi3Q5gglTJUbEb8tk8VjbmyTlGMhvNP
-         lBInEX6TGmR1P6Uy/3pi2mzHNEcx7cEVyeHVluh2mzzZsRfl7rSXE8k0RdyjQ0qrKNC2
-         CpKeWEUIXmBjusiPUjq/SFwS16FZLYtP1Q/VsOVrNVeBY6XgpWDyTQISRsTqsaOU+PSg
-         jRaA==
-X-Gm-Message-State: APjAAAXE9i7xRssZLJi715aySY7ZBk3ezmqoR8aV2n9k/dxn++665QLv
-        jM8pPLnQNYzWqOLOgJd6ByQNsqbPP8w=
-X-Google-Smtp-Source: APXvYqzgY9PHUvM/ccsDS26S+XkhVdKSnIkiIIFWVo1bY8TU03TmD1YWUBru8miYVEDgfNd2A4wSag==
-X-Received: by 2002:a1c:cf0b:: with SMTP id f11mr20443151wmg.138.1561466210920;
-        Tue, 25 Jun 2019 05:36:50 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id n1sm10983882wrx.39.2019.06.25.05.36.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Jun 2019 05:36:50 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] arm64: dts: meson-g12a: add missing dwc2 phy-names
-Date:   Tue, 25 Jun 2019 14:36:47 +0200
-Message-Id: <20190625123647.26117-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 25 Jun 2019 08:37:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:40930 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbfFYMhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:37:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC02B2B;
+        Tue, 25 Jun 2019 05:37:42 -0700 (PDT)
+Received: from [70.10.37.10] (unknown [10.37.10.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBE593F71E;
+        Tue, 25 Jun 2019 05:37:39 -0700 (PDT)
+Subject: Re: RISC-V nommu support v2
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <mhng-6f11ed95-e3f3-41dc-93c5-1576928b373b@palmer-si-x1e>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <4b2ce641-1412-0e71-82be-07e3f0a6328a@arm.com>
+Date:   Tue, 25 Jun 2019 13:37:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <mhng-6f11ed95-e3f3-41dc-93c5-1576928b373b@palmer-si-x1e>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The G12A USB2 OTG capable PHY uses a 8bit large UTMI bus, and the OTG
-controller gets the PHY but width by probing the associated phy.
+On 6/25/19 8:31 AM, Palmer Dabbelt wrote:
+> On Mon, 24 Jun 2019 06:08:50 PDT (-0700), vladimir.murzin@arm.com wrote:
+>> On 6/24/19 12:54 PM, Christoph Hellwig wrote:
+>>> On Mon, Jun 24, 2019 at 12:47:07PM +0100, Vladimir Murzin wrote:
+>>>> Since you are using binfmt_flat which is kind of 32-bit only I was expecting to see
+>>>> CONFIG_COMPAT (or something similar to that, like ILP32) enabled, yet I could not
+>>>> find it.
+>>>
+>>> There is no such thing in RISC-V.  I don't know of any 64-bit RISC-V
+>>> cpu that can actually run 32-bit RISC-V code, although in theory that
+>>> is possible.  There also is nothing like the x86 x32 or mips n32 mode
+>>> available either for now.
+>>>
+>>> But it turns out that with a few fixes to binfmt_flat it can run 64-bit
+>>> binaries just fine.  I sent that series out a while ago, and IIRC you
+>>> actually commented on it.
+>>>
+>>
+>> True, yet my observation was that elf2flt utility assumes that address
+>> space cannot exceed 32-bit (for header and absolute relocations). So,
+>> from my limited point of view straightforward way to guarantee that would
+>> be to build incoming elf in 32-bit mode (it is why I mentioned COMPAT/ILP32).
+>>
+>> Also one of your patches expressed somewhat related idea
+>>
+>> "binfmt_flat isn't the right binary format for huge executables to
+>> start with"
+>>
+>> Since you said there is no support for compat/ilp32, probably I'm missing some
+>> toolchain magic?
+>>
+>> Cheers
+>> Vladimir
+> To:          Christoph Hellwig <hch@lst.de>
+> CC:          vladimir.murzin@arm.com
+> CC:          Christoph Hellwig <hch@lst.de>
+> CC:          Paul Walmsley <paul.walmsley@sifive.com>
+> CC:          Damien Le Moal <Damien.LeMoal@wdc.com>
+> CC:          linux-riscv@lists.infradead.org
+> CC:          linux-mm@kvack.org
+> CC:          linux-kernel@vger.kernel.org
+> Subject:     Re: RISC-V nommu support v2
+> In-Reply-To: <20190624131633.GB10746@lst.de>
+> 
+> On Mon, 24 Jun 2019 06:16:33 PDT (-0700), Christoph Hellwig wrote:
+>> On Mon, Jun 24, 2019 at 02:08:50PM +0100, Vladimir Murzin wrote:
+>>> True, yet my observation was that elf2flt utility assumes that address
+>>> space cannot exceed 32-bit (for header and absolute relocations). So,
+>>> from my limited point of view straightforward way to guarantee that would
+>>> be to build incoming elf in 32-bit mode (it is why I mentioned COMPAT/ILP32).
+>>>
+>>> Also one of your patches expressed somewhat related idea
+>>>
+>>> "binfmt_flat isn't the right binary format for huge executables to
+>>> start with"
+>>>
+>>> Since you said there is no support for compat/ilp32, probably I'm missing some
+>>> toolchain magic?
+>>
+>> There is no magic except for the tiny elf2flt patch, which for
+>> now is just in the buildroot repo pointed to in the cover letter
+>> (and which I plan to upstream once the kernel support has landed
+>> in Linus' tree).  We only support 32-bit code and data address spaces,
+>> but we otherwise use the normal RISC-V ABI, that is 64-bit longs and
+>> pointers.
+> 
+> The medlow code model on RISC-V essentially enforces this -- technically it
+> enforces a 32-bit region centered around address 0, but it's not that hard to
+> stay away from negative addresses.  That said, as long as elf2flt gives you an
+> error it should be fine because all medlow is going to do is give you a
+> different looking error message.
+> 
 
-By default it will use 16bit wide settings if a phy is not specified,
-in our case we specified the phy, but not the phy-names.
+Thanks for explanation!
 
-The dwc2 bindings specifies that if phys is present, phy-names shall be
-"usb2-phy".
-
-Adding phy-names = "usb2-phy" solves the OTG PHY bus configuration.
-
-Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index f8d43e3dcf20..1785552d450c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -2386,6 +2386,7 @@
- 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
- 				clock-names = "ddr";
- 				phys = <&usb2_phy1>;
-+				phy-names = "usb2-phy";
- 				dr_mode = "peripheral";
- 				g-rx-fifo-size = <192>;
- 				g-np-tx-fifo-size = <128>;
--- 
-2.21.0
-
+Vladimir
