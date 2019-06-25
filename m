@@ -2,74 +2,105 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D314C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D447AC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580D22085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B362054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbfFYHER (ORCPT
+        id S1729756AbfFYHEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:04:17 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:56198 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbfFYHEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:04:14 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A357200019;
-        Tue, 25 Jun 2019 09:04:13 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BD29E2006D7;
-        Tue, 25 Jun 2019 09:04:06 +0200 (CEST)
-Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6CAD6402FB;
-        Tue, 25 Jun 2019 15:03:58 +0800 (SGT)
-From:   Anson.Huang@nxp.com
-To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, ping.bai@nxp.com, peng.fan@nxp.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] clk: imx8mm: GPT1 clock mux option #5 should be sys_pll1_80m
-Date:   Tue, 25 Jun 2019 15:06:02 +0800
-Message-Id: <20190625070602.37670-2-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190625070602.37670-1-Anson.Huang@nxp.com>
-References: <20190625070602.37670-1-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 25 Jun 2019 03:04:21 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:47050 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729705AbfFYHEP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:04:15 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 4605767A7D4;
+        Tue, 25 Jun 2019 09:04:07 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 25 Jun
+ 2019 09:04:06 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Tue, 25 Jun 2019 09:04:06 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     liaoweixiong <liaoweixiong@allwinnertech.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "Richard Weinberger" <richard@nod.at>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+Thread-Topic: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+Thread-Index: AQHVKvG5vIRdXk03g0+SrXGJtaID9aarjwGAgABB7wA=
+Date:   Tue, 25 Jun 2019 07:04:06 +0000
+Message-ID: <97adf58f-4771-90f1-bdaf-5a9d00eef768@kontron.de>
+References: <1561424549-784-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <20190625030807.GA11074@kroah.com>
+In-Reply-To: <20190625030807.GA11074@kroah.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <82C2E515EE53D0458A0A48579DDDDAF9@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 4605767A7D4.ADE8A
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, gch981213@gmail.com, gregkh@linuxfoundation.org,
+        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, stable@vger.kernel.org,
+        vigneshr@ti.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
-
-i.MX8MM's GPT1 clock mux option #5 should be sys_pll1_80m,
-NOT sys_pll1_800m, correct it.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/clk/imx/clk-imx8mm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-index 516e68d..d1a84f7 100644
---- a/drivers/clk/imx/clk-imx8mm.c
-+++ b/drivers/clk/imx/clk-imx8mm.c
-@@ -293,7 +293,7 @@ static const char *imx8mm_pwm4_sels[] = {"osc_24m", "sys_pll2_100m", "sys_pll1_1
- 					 "sys_pll3_out", "clk_ext2", "sys_pll1_80m", "video_pll1_out", };
- 
- static const char *imx8mm_gpt1_sels[] = {"osc_24m", "sys_pll2_100m", "sys_pll1_400m", "sys_pll1_40m",
--					 "video_pll1_out", "sys_pll1_800m", "audio_pll1_out", "clk_ext1" };
-+					 "video_pll1_out", "sys_pll1_80m", "audio_pll1_out", "clk_ext1" };
- 
- static const char *imx8mm_wdog_sels[] = {"osc_24m", "sys_pll1_133m", "sys_pll1_160m", "vpu_pll_out",
- 					 "sys_pll2_125m", "sys_pll3_out", "sys_pll1_80m", "sys_pll2_166m", };
--- 
-2.7.4
-
+SGkgbGlhb3dlaXhpb25nLA0KDQpPbiAyNS4wNi4xOSAwNTowOCwgR3JlZyBLSCB3cm90ZToNCj4g
+T24gVHVlLCBKdW4gMjUsIDIwMTkgYXQgMDk6MDI6MjlBTSArMDgwMCwgbGlhb3dlaXhpb25nIHdy
+b3RlOg0KPj4gSW4gY2FzZSBvZiB0aGUgbGFzdCBwYWdlIGNvbnRhaW5pbmcgYml0ZmxpcHMgKHJl
+dCA+IDApLA0KPj4gc3BpbmFuZF9tdGRfcmVhZCgpIHdpbGwgcmV0dXJuIHRoYXQgbnVtYmVyIG9m
+IGJpdGZsaXBzIGZvciB0aGUgbGFzdA0KPj4gcGFnZS4gQnV0IHRvIG1lIGl0IGxvb2tzIGxpa2Ug
+aXQgc2hvdWxkIGluc3RlYWQgcmV0dXJuIG1heF9iaXRmbGlwcyBsaWtlDQo+PiBpdCBkb2VzIHdo
+ZW4gdGhlIGxhc3QgcGFnZSByZWFkIHJldHVybnMgd2l0aCAwLg0KPj4NCj4+IFNpZ25lZC1vZmYt
+Ynk6IGxpYW93ZWl4aW9uZyA8bGlhb3dlaXhpb25nQGFsbHdpbm5lcnRlY2guY29tPg0KPj4gUmV2
+aWV3ZWQtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGNvbGxhYm9yYS5jb20+
+DQo+PiBSZXZpZXdlZC1ieTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250
+cm9uLmRlPg0KPj4gRml4ZXM6IDc1MjlkZjQ2NTI0OCAoIm10ZDogbmFuZDogQWRkIGNvcmUgaW5m
+cmFzdHJ1Y3R1cmUgdG8gc3VwcG9ydCBTUEkgTkFORHMiKQ0KPj4gLS0tDQo+PiAgIGRyaXZlcnMv
+bXRkL25hbmQvc3BpL2NvcmUuYyB8IDIgKy0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
+aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiA8Zm9ybWxldHRlcj4NCj4gDQo+IFRoaXMgaXMg
+bm90IHRoZSBjb3JyZWN0IHdheSB0byBzdWJtaXQgcGF0Y2hlcyBmb3IgaW5jbHVzaW9uIGluIHRo
+ZQ0KPiBzdGFibGUga2VybmVsIHRyZWUuICBQbGVhc2UgcmVhZDoNCj4gICAgICBodHRwczovL3d3
+dy5rZXJuZWwub3JnL2RvYy9odG1sL2xhdGVzdC9wcm9jZXNzL3N0YWJsZS1rZXJuZWwtcnVsZXMu
+aHRtbA0KPiBmb3IgaG93IHRvIGRvIHRoaXMgcHJvcGVybHkuDQo+IA0KPiA8L2Zvcm1sZXR0ZXI+
+DQoNCkZZSSwgeW91IHNob3VsZCBub3Qgc2VuZCB0aGUgcGF0Y2ggdG8gc3RhYmxlQHZnZXIua2Vy
+bmVsLm9yZywgYnV0IA0KaW5zdGVhZCwgYXMgSSBzYWlkIGluIG15IG90aGVyIHJlcGx5LCBhZGQg
+dGhlIHRhZyAiQ2M6IA0Kc3RhYmxlQHZnZXIua2VybmVsLm9yZyIuIFNlZSAiT3B0aW9uIDEiIGlu
+IHRoZSBkb2N1bWVudCBHcmVnIHJlZmVycmVkIHRvLg0KDQpUaGFua3MsDQpGcmllZGVy
