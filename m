@@ -7,68 +7,63 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CF9C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9257C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 016C0204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D9F215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:38:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="R0nW3DNI"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qMGAk2W0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfFYIhm (ORCPT
+        id S1730669AbfFYIib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:37:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44909 "EHLO
+        Tue, 25 Jun 2019 04:38:31 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57547 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfFYIhm (ORCPT
+        with ESMTP id S1728774AbfFYIia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:37:42 -0400
+        Tue, 25 Jun 2019 04:38:30 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8bCeW3532160
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8bvcC3532221
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:37:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8bCeW3532160
+        Tue, 25 Jun 2019 01:37:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8bvcC3532221
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561451833;
-        bh=9OWmNZrsFeUsUQTMAeP1yRrYsAinw7/4KeT7uBB6goQ=;
+        s=2019061801; t=1561451878;
+        bh=jN6T068MbezBtUjC1FjYfBtOle/2afKpdoOjlrY8SKs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=R0nW3DNIesVxaFzGv15cO5ovmD8N2GKrCJCC2Sm1gM/vgCe7rs2/HQ3MKtRR1Kjtp
-         4cvvbSSNRzbykzt2vmXWmpTg9TO/rP0BJbSZL2v6np764F91Upv82i0vY+1jiuO+JL
-         qc+u5jQ+dxszaoHOAltA+SarukXqOPoocp3sWbx9UbSJ315ZT0huarCdVUWHRHB/ai
-         0ALDT/FauQ05UJWU2DYs2xq+McLZjB+zSzcx5TAxQE3Ek3HSNRjRD05By95y0a48mV
-         INcNo0Mh/P9/rGrz4n43R2yvs8mw5lddGQ2+NJtLssOaR134owATypZ3UaN3YrExkw
-         ZGmWTOrAFcisg==
+        b=qMGAk2W002ukx88cKhF6atpe/8O9W2qGpeUKiZ5okUwjHBGf7qyE99XWLrtdxmoab
+         qtN/vpssulYVW8FuO8U8XT1eaqmITYXyY6pqC3QBYXTgBGJMP3jz3Ox6ww/RSMzGyn
+         pINgJVRsvP/oassRBfpOcx7lPLcuoSFkml5DCmGH/iJ9YCuW+0O82Ibf+1+KnG3o9E
+         x9ADy5aDFA4WjTZdiXmzaObmwrf2gYytV8aqsy7Gd15jFDkq5mUV+Noz0c6hxbSWWY
+         fbw32ido6sKmLa28Drb9ndWFNy3VmPoCu5SrwTDeGRcpE6D6yPwPVXt6yjOU61jEtA
+         AEfSVfc7MGyvA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8bBQm3532157;
-        Tue, 25 Jun 2019 01:37:11 -0700
-Date:   Tue, 25 Jun 2019 01:37:11 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8bvGl3532218;
+        Tue, 25 Jun 2019 01:37:57 -0700
+Date:   Tue, 25 Jun 2019 01:37:57 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Patrick Bellasi <tipbot@zytor.com>
-Message-ID: <tip-af24bde8df2029f067dc46aff0393c8f18ff6e2f@git.kernel.org>
-Cc:     vincent.guittot@linaro.org, joelaf@google.com,
-        rafael.j.wysocki@intel.com, tglx@linutronix.de,
-        juri.lelli@redhat.com, mingo@kernel.org, balsini@android.com,
-        tj@kernel.org, linux-kernel@vger.kernel.org, smuckle@google.com,
-        hpa@zytor.com, morten.rasmussen@arm.com, surenb@google.com,
-        quentin.perret@arm.com, pjt@google.com, dietmar.eggemann@arm.com,
-        patrick.bellasi@arm.com, tkjos@google.com,
-        torvalds@linux-foundation.org, peterz@infradead.org,
-        viresh.kumar@linaro.org
-Reply-To: rafael.j.wysocki@intel.com, tglx@linutronix.de,
-          juri.lelli@redhat.com, mingo@kernel.org, balsini@android.com,
-          tj@kernel.org, vincent.guittot@linaro.org, joelaf@google.com,
-          surenb@google.com, quentin.perret@arm.com,
-          dietmar.eggemann@arm.com, pjt@google.com, smuckle@google.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          morten.rasmussen@arm.com, patrick.bellasi@arm.com,
-          tkjos@google.com, torvalds@linux-foundation.org,
-          peterz@infradead.org, viresh.kumar@linaro.org
-In-Reply-To: <20190621084217.8167-12-patrick.bellasi@arm.com>
-References: <20190621084217.8167-12-patrick.bellasi@arm.com>
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-98253a546a468d88b7e782ab67cdf447d3c7bbe2@git.kernel.org>
+Cc:     acme@kernel.org, vincent.weaver@maine.edu, peterz@infradead.org,
+        hpa@zytor.com, kan.liang@linux.intel.com, namhyung@kernel.org,
+        mingo@kernel.org, luto@kernel.org, acme@redhat.com,
+        jolsa@redhat.com, torvalds@linux-foundation.org,
+        alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org,
+        eranian@google.com, tglx@linutronix.de, bp@alien8.de,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org
+Reply-To: acme@kernel.org, vincent.weaver@maine.edu, peterz@infradead.org,
+          kan.liang@linux.intel.com, hpa@zytor.com, namhyung@kernel.org,
+          luto@kernel.org, mingo@kernel.org, acme@redhat.com,
+          jolsa@redhat.com, torvalds@linux-foundation.org,
+          alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org,
+          eranian@google.com, jolsa@kernel.org, tglx@linutronix.de,
+          bp@alien8.de, linux-kernel@vger.kernel.org
+In-Reply-To: <20190616140358.27799-2-jolsa@kernel.org>
+References: <20190616140358.27799-2-jolsa@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/uclamp: Add uclamp support to
- energy_compute()
-Git-Commit-ID: af24bde8df2029f067dc46aff0393c8f18ff6e2f
+Subject: [tip:perf/core] perf/x86: Add MSR probe interface
+Git-Commit-ID: 98253a546a468d88b7e782ab67cdf447d3c7bbe2
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -82,230 +77,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  af24bde8df2029f067dc46aff0393c8f18ff6e2f
-Gitweb:     https://git.kernel.org/tip/af24bde8df2029f067dc46aff0393c8f18ff6e2f
-Author:     Patrick Bellasi <patrick.bellasi@arm.com>
-AuthorDate: Fri, 21 Jun 2019 09:42:12 +0100
+Commit-ID:  98253a546a468d88b7e782ab67cdf447d3c7bbe2
+Gitweb:     https://git.kernel.org/tip/98253a546a468d88b7e782ab67cdf447d3c7bbe2
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Sun, 16 Jun 2019 16:03:51 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 24 Jun 2019 19:23:49 +0200
+CommitDate: Mon, 24 Jun 2019 19:28:31 +0200
 
-sched/uclamp: Add uclamp support to energy_compute()
+perf/x86: Add MSR probe interface
 
-The Energy Aware Scheduler (EAS) estimates the energy impact of waking
-up a task on a given CPU. This estimation is based on:
+Adding perf_msr_probe function to provide interface for
+checking up on MSR register and set the related attribute
+group visibility.
 
- a) an (active) power consumption defined for each CPU frequency
- b) an estimation of which frequency will be used on each CPU
- c) an estimation of the busy time (utilization) of each CPU
+User defines following struct for each MSR register:
 
-Utilization clamping can affect both b) and c).
+  struct perf_msr {
+       u64                       msr;
+       struct attribute_group   *grp;
+       bool                    (*test)(int idx, void *data);
+       bool                      no_check;
+  };
 
-A CPU is expected to run:
+Where:
+  msr      - is the MSR address
+  attrs    - is attribute groups array to add if the check passed
+  test     - is test function pointer
+  no_check - is bool that bypass the check and adds the
+              attribute without any test
 
- - on an higher than required frequency, but for a shorter time, in case
-   its estimated utilization will be smaller than the minimum utilization
-   enforced by uclamp
- - on a smaller than required frequency, but for a longer time, in case
-   its estimated utilization is bigger than the maximum utilization
-   enforced by uclamp
+The array of struct perf_msr is passed into:
 
-While compute_energy() already accounts clamping effects on busy time,
-the clamping effects on frequency selection are currently ignored.
+  perf_msr_probe(struct perf_msr *msr, int cnt, bool zero, void *data)
 
-Fix it by considering how CPU clamp values will be affected by a
-task waking up and being RUNNABLE on that CPU.
+Together with:
+  cnt  - which is the number of struct msr array elements
+  data - which is user pointer passed to the test function
+  zero - allow counters that returns zero on rdmsr
 
-Do that by refactoring schedutil_freq_util() to take an additional
-task_struct* which allows EAS to evaluate the impact on clamp values of
-a task being eventually queued in a CPU. Clamp values are applied to the
-RT+CFS utilization only when a FREQUENCY_UTIL is required by
-compute_energy().
+The perf_msr_probe will executed test code, read the MSR and
+check the value is != 0. If all these tests pass, related
+attribute group is kept visible.
 
-Do note that switching from ENERGY_UTIL to FREQUENCY_UTIL in the
-computation of the cpu_util signal implies that we are more likely to
-estimate the highest OPP when a RT task is running in another CPU of
-the same performance domain. This can have an impact on energy
-estimation but:
+Also adding PMU_EVENT_GROUP macro helper to define attribute
+group for single attribute. It will be used in following patches.
 
- - it's not easy to say which approach is better, since it depends on
-   the use case
- - the original approach could still be obtained by setting a smaller
-   task-specific util_min whenever required
-
-Since we are at that:
-
- - rename schedutil_freq_util() into schedutil_cpu_util(),
-   since it's not only used for frequency selection.
-
-Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alessio Balsini <balsini@android.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan <kan.liang@linux.intel.com>
+Cc: Liang
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Paul Turner <pjt@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Quentin Perret <quentin.perret@arm.com>
-Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
-Cc: Steve Muckle <smuckle@google.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Tejun Heo <tj@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Link: https://lkml.kernel.org/r/20190621084217.8167-12-patrick.bellasi@arm.com
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/20190616140358.27799-2-jolsa@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/cpufreq_schedutil.c |  9 +++++----
- kernel/sched/fair.c              | 40 ++++++++++++++++++++++++++++++++++------
- kernel/sched/sched.h             | 21 +++++++++------------
- 3 files changed, 48 insertions(+), 22 deletions(-)
+ arch/x86/events/Makefile |  2 +-
+ arch/x86/events/probe.c  | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ arch/x86/events/probe.h  | 29 +++++++++++++++++++++++++++++
+ 3 files changed, 75 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index d84e036a7536..636ca6f88c8e 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -196,8 +196,9 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
-  * based on the task model parameters and gives the minimal utilization
-  * required to meet deadlines.
-  */
--unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
--				  unsigned long max, enum schedutil_type type)
-+unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
-+				 unsigned long max, enum schedutil_type type,
-+				 struct task_struct *p)
- {
- 	unsigned long dl_util, util, irq;
- 	struct rq *rq = cpu_rq(cpu);
-@@ -230,7 +231,7 @@ unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
- 	 */
- 	util = util_cfs + cpu_util_rt(rq);
- 	if (type == FREQUENCY_UTIL)
--		util = uclamp_util(rq, util);
-+		util = uclamp_util_with(rq, util, p);
- 
- 	dl_util = cpu_util_dl(rq);
- 
-@@ -290,7 +291,7 @@ static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
- 	sg_cpu->max = max;
- 	sg_cpu->bw_dl = cpu_bw_dl(rq);
- 
--	return schedutil_freq_util(sg_cpu->cpu, util, max, FREQUENCY_UTIL);
-+	return schedutil_cpu_util(sg_cpu->cpu, util, max, FREQUENCY_UTIL, NULL);
- }
- 
- /**
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 28db7ce5c3a6..b798fe7ff7cd 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6231,11 +6231,21 @@ static unsigned long cpu_util_next(int cpu, struct task_struct *p, int dst_cpu)
- static long
- compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
- {
--	long util, max_util, sum_util, energy = 0;
-+	unsigned int max_util, util_cfs, cpu_util, cpu_cap;
-+	unsigned long sum_util, energy = 0;
-+	struct task_struct *tsk;
- 	int cpu;
- 
- 	for (; pd; pd = pd->next) {
-+		struct cpumask *pd_mask = perf_domain_span(pd);
+diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
+index 9cbfd34042d5..9e07f554333f 100644
+--- a/arch/x86/events/Makefile
++++ b/arch/x86/events/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-y					+= core.o
++obj-y					+= core.o probe.o
+ obj-y					+= amd/
+ obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
+ obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
+diff --git a/arch/x86/events/probe.c b/arch/x86/events/probe.c
+new file mode 100644
+index 000000000000..c2ede2f3b277
+--- /dev/null
++++ b/arch/x86/events/probe.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/export.h>
++#include <linux/types.h>
++#include <linux/bits.h>
++#include "probe.h"
 +
-+		/*
-+		 * The energy model mandates all the CPUs of a performance
-+		 * domain have the same capacity.
-+		 */
-+		cpu_cap = arch_scale_cpu_capacity(cpumask_first(pd_mask));
- 		max_util = sum_util = 0;
-+
- 		/*
- 		 * The capacity state of CPUs of the current rd can be driven by
- 		 * CPUs of another rd if they belong to the same performance
-@@ -6246,11 +6256,29 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
- 		 * it will not appear in its pd list and will not be accounted
- 		 * by compute_energy().
- 		 */
--		for_each_cpu_and(cpu, perf_domain_span(pd), cpu_online_mask) {
--			util = cpu_util_next(cpu, p, dst_cpu);
--			util = schedutil_energy_util(cpu, util);
--			max_util = max(util, max_util);
--			sum_util += util;
-+		for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
-+			util_cfs = cpu_util_next(cpu, p, dst_cpu);
-+
-+			/*
-+			 * Busy time computation: utilization clamping is not
-+			 * required since the ratio (sum_util / cpu_capacity)
-+			 * is already enough to scale the EM reported power
-+			 * consumption at the (eventually clamped) cpu_capacity.
-+			 */
-+			sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
-+						       ENERGY_UTIL, NULL);
-+
-+			/*
-+			 * Performance domain frequency: utilization clamping
-+			 * must be considered since it affects the selection
-+			 * of the performance domain frequency.
-+			 * NOTE: in case RT tasks are running, by default the
-+			 * FREQUENCY_UTIL's utilization can be max OPP.
-+			 */
-+			tsk = cpu == dst_cpu ? p : NULL;
-+			cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
-+						      FREQUENCY_UTIL, tsk);
-+			max_util = max(max_util, cpu_util);
- 		}
- 
- 		energy += em_pd_energy(pd->em_pd, max_util, sum_util);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 1783f6b4c2e0..802b1f3405f2 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2322,7 +2322,6 @@ static inline unsigned long capacity_orig_of(int cpu)
- }
- #endif
- 
--#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
- /**
-  * enum schedutil_type - CPU utilization type
-  * @FREQUENCY_UTIL:	Utilization used to select frequency
-@@ -2338,15 +2337,11 @@ enum schedutil_type {
- 	ENERGY_UTIL,
- };
- 
--unsigned long schedutil_freq_util(int cpu, unsigned long util_cfs,
--				  unsigned long max, enum schedutil_type type);
-+#ifdef CONFIG_CPU_FREQ_GOV_SCHEDUTIL
- 
--static inline unsigned long schedutil_energy_util(int cpu, unsigned long cfs)
--{
--	unsigned long max = arch_scale_cpu_capacity(cpu);
--
--	return schedutil_freq_util(cpu, cfs, max, ENERGY_UTIL);
--}
-+unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
-+				 unsigned long max, enum schedutil_type type,
-+				 struct task_struct *p);
- 
- static inline unsigned long cpu_bw_dl(struct rq *rq)
- {
-@@ -2375,11 +2370,13 @@ static inline unsigned long cpu_util_rt(struct rq *rq)
- 	return READ_ONCE(rq->avg_rt.util_avg);
- }
- #else /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
--static inline unsigned long schedutil_energy_util(int cpu, unsigned long cfs)
-+static inline unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
-+				 unsigned long max, enum schedutil_type type,
-+				 struct task_struct *p)
- {
--	return cfs;
++static umode_t
++not_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
 +	return 0;
- }
--#endif
-+#endif /* CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
- 
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- static inline unsigned long cpu_util_irq(struct rq *rq)
++}
++
++unsigned long
++perf_msr_probe(struct perf_msr *msr, int cnt, bool zero, void *data)
++{
++	unsigned long avail = 0;
++	unsigned int bit;
++	u64 val;
++
++	if (cnt >= BITS_PER_LONG)
++		return 0;
++
++	for (bit = 0; bit < cnt; bit++) {
++		if (!msr[bit].no_check) {
++			struct attribute_group *grp = msr[bit].grp;
++
++			grp->is_visible = not_visible;
++
++			if (msr[bit].test && !msr[bit].test(bit, data))
++				continue;
++			/* Virt sucks; you cannot tell if a R/O MSR is present :/ */
++			if (rdmsrl_safe(msr[bit].msr, &val))
++				continue;
++			/* Disable zero counters if requested. */
++			if (!zero && !val)
++				continue;
++
++			grp->is_visible = NULL;
++		}
++		avail |= BIT(bit);
++	}
++
++	return avail;
++}
++EXPORT_SYMBOL_GPL(perf_msr_probe);
+diff --git a/arch/x86/events/probe.h b/arch/x86/events/probe.h
+new file mode 100644
+index 000000000000..4c8e0afc5fb5
+--- /dev/null
++++ b/arch/x86/events/probe.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ARCH_X86_EVENTS_PROBE_H__
++#define __ARCH_X86_EVENTS_PROBE_H__
++#include <linux/sysfs.h>
++
++struct perf_msr {
++	u64			  msr;
++	struct attribute_group	 *grp;
++	bool			(*test)(int idx, void *data);
++	bool			  no_check;
++};
++
++unsigned long
++perf_msr_probe(struct perf_msr *msr, int cnt, bool no_zero, void *data);
++
++#define __PMU_EVENT_GROUP(_name)			\
++static struct attribute *attrs_##_name[] = {		\
++	&attr_##_name.attr.attr,			\
++	NULL,						\
++}
++
++#define PMU_EVENT_GROUP(_grp, _name)			\
++__PMU_EVENT_GROUP(_name);				\
++static struct attribute_group group_##_name = {		\
++	.name  = #_grp,					\
++	.attrs = attrs_##_name,				\
++}
++
++#endif /* __ARCH_X86_EVENTS_PROBE_H__ */
