@@ -2,133 +2,141 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86F4C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5838BC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4A7206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C17220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfFYD2j (ORCPT
+        id S1726702AbfFYDbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 23:28:39 -0400
-Received: from mail2.tencent.com ([163.177.67.195]:37401 "EHLO
-        mail2.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfFYD2i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 23:28:38 -0400
-Received: from EXHUB-SZMAIL04.tencent.com (unknown [10.14.6.35])
-        by mail2.tencent.com (Postfix) with ESMTP id CD15E8E75D;
-        Tue, 25 Jun 2019 11:28:36 +0800 (CST)
-Received: from EX-SZ006.tencent.com (10.28.6.30) by EXHUB-SZMAIL04.tencent.com
- (10.14.6.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 25 Jun 2019
- 11:28:36 +0800
-Received: from EX-SZ005.tencent.com (10.28.6.29) by EX-SZ006.tencent.com
- (10.28.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 25 Jun
- 2019 11:28:36 +0800
-Received: from EX-SZ005.tencent.com ([fe80::80ab:5a24:b62e:8246]) by
- EX-SZ005.tencent.com ([fe80::80ab:5a24:b62e:8246%4]) with mapi id
- 15.01.1713.004; Tue, 25 Jun 2019 11:28:36 +0800
-From:   =?utf-8?B?d2VuYmluemVuZyjmm77mlofmlowp?= <wenbinzeng@tencent.com>
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     Wenbin Zeng <wenbin.zeng@gmail.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "keith.busch@intel.com" <keith.busch@intel.com>,
-        "hare@suse.com" <hare@suse.com>, "osandov@fb.com" <osandov@fb.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet
- mail)
-Thread-Topic: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet
- mail)
-Thread-Index: AQHVKqDurKLV/sXBPUypS6FtYdqWkaarFq+AgACG9yD//4HzgIAAlnDw
-Date:   Tue, 25 Jun 2019 03:28:36 +0000
-Message-ID: <22a3941e6ddf468689918c1d15c035a8@tencent.com>
-References: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
- <20190625015512.GC23777@ming.t460p>
- <fe4f40e7bbf74311a47c9f3b981f8c53@tencent.com>
- <20190625022706.GE23777@ming.t460p>
-In-Reply-To: <20190625022706.GE23777@ming.t460p>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.14.87.251]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 24 Jun 2019 23:31:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32834 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbfFYDbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 23:31:34 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C986FC1EB1E8;
+        Tue, 25 Jun 2019 03:31:33 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C1F5C19936;
+        Tue, 25 Jun 2019 03:31:29 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 22:31:25 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Cheng Jian <cj.chengjian@huawei.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        mingo@redhat.com, huawei.libin@huawei.com, xiexiuqi@huawei.com,
+        yangyingliang@huawei.com, bobo.shaobowang@huawei.com
+Subject: Re: [PATCH] Revert "x86/module: Detect and skip invalid relocations"
+Message-ID: <20190625033125.7wcxeymke6zsdvdg@treble>
+References: <1561019068-132672-1-git-send-email-cj.chengjian@huawei.com>
+ <alpine.LSU.2.21.1906201028490.25778@pobox.suse.cz>
+ <alpine.DEB.2.21.1906220927460.5503@nanos.tec.linutronix.de>
+ <alpine.LSU.2.21.1906241150000.31030@pobox.suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.1906241150000.31030@pobox.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 25 Jun 2019 03:31:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWluZywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW5nIExl
-aSA8bWluZy5sZWlAcmVkaGF0LmNvbT4NCj4gU2VudDogVHVlc2RheSwgSnVuZSAyNSwgMjAxOSAx
-MDoyNyBBTQ0KPiBUbzogd2VuYmluemVuZyjmm77mlofmlowpIDx3ZW5iaW56ZW5nQHRlbmNlbnQu
-Y29tPg0KPiBDYzogV2VuYmluIFplbmcgPHdlbmJpbi56ZW5nQGdtYWlsLmNvbT47IGF4Ym9lQGtl
-cm5lbC5kazsga2VpdGguYnVzY2hAaW50ZWwuY29tOw0KPiBoYXJlQHN1c2UuY29tOyBvc2FuZG92
-QGZiLmNvbTsgc2FnaUBncmltYmVyZy5tZTsgYnZhbmFzc2NoZUBhY20ub3JnOw0KPiBsaW51eC1i
-bG9ja0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSF0gYmxrLW1xOiB1cGRhdGUgaGN0eC0+Y3B1bWFzayBhdCBjcHUtaG90
-cGx1ZyhJbnRlcm5ldCBtYWlsKQ0KPiANCj4gT24gVHVlLCBKdW4gMjUsIDIwMTkgYXQgMDI6MTQ6
-NDZBTSArMDAwMCwgd2VuYmluemVuZyjmm77mlofmlowpIHdyb3RlOg0KPiA+IEhpIE1pbmcsDQo+
-ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBNaW5nIExl
-aSA8bWluZy5sZWlAcmVkaGF0LmNvbT4NCj4gPiA+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMjUsIDIw
-MTkgOTo1NSBBTQ0KPiA+ID4gVG86IFdlbmJpbiBaZW5nIDx3ZW5iaW4uemVuZ0BnbWFpbC5jb20+
-DQo+ID4gPiBDYzogYXhib2VAa2VybmVsLmRrOyBrZWl0aC5idXNjaEBpbnRlbC5jb207IGhhcmVA
-c3VzZS5jb207DQo+ID4gPiBvc2FuZG92QGZiLmNvbTsgc2FnaUBncmltYmVyZy5tZTsgYnZhbmFz
-c2NoZUBhY20ub3JnOw0KPiA+ID4gbGludXgtYmxvY2tAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gd2VuYmluemVuZyjmm77mlofmlowpIDx3ZW5i
-aW56ZW5nQHRlbmNlbnQuY29tPg0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gYmxrLW1xOiB1
-cGRhdGUgaGN0eC0+Y3B1bWFzayBhdA0KPiA+ID4gY3B1LWhvdHBsdWcoSW50ZXJuZXQgbWFpbCkN
-Cj4gPiA+DQo+ID4gPiBPbiBNb24sIEp1biAyNCwgMjAxOSBhdCAxMToyNDowN1BNICswODAwLCBX
-ZW5iaW4gWmVuZyB3cm90ZToNCj4gPiA+ID4gQ3VycmVudGx5IGhjdHgtPmNwdW1hc2sgaXMgbm90
-IHVwZGF0ZWQgd2hlbiBob3QtcGx1Z2dpbmcgbmV3IGNwdXMsDQo+ID4gPiA+IGFzIHRoZXJlIGFy
-ZSBtYW55IGNoYW5jZXMga2Jsb2NrZF9tb2RfZGVsYXllZF93b3JrX29uKCkgZ2V0dGluZw0KPiA+
-ID4gPiBjYWxsZWQgd2l0aCBXT1JLX0NQVV9VTkJPVU5ELCB3b3JrcXVldWUgYmxrX21xX3J1bl93
-b3JrX2ZuIG1heSBydW4NCj4gPiA+DQo+ID4gPiBUaGVyZSBhcmUgb25seSB0d28gY2FzZXMgaW4g
-d2hpY2ggV09SS19DUFVfVU5CT1VORCBpcyBhcHBsaWVkOg0KPiA+ID4NCj4gPiA+IDEpIHNpbmds
-ZSBodyBxdWV1ZQ0KPiA+ID4NCj4gPiA+IDIpIG11bHRpcGxlIGh3IHF1ZXVlLCBhbmQgYWxsIENQ
-VXMgaW4gdGhpcyBoY3R4IGJlY29tZSBvZmZsaW5lDQo+ID4gPg0KPiA+ID4gRm9yIDEpLCBhbGwg
-Q1BVcyBjYW4gYmUgZm91bmQgaW4gaGN0eC0+Y3B1bWFzay4NCj4gPiA+DQo+ID4gPiA+IG9uIHRo
-ZSBuZXdseS1wbHVnZ2VkIGNwdXMsIGNvbnNlcXVlbnRseSBfX2Jsa19tcV9ydW5faHdfcXVldWUo
-KQ0KPiA+ID4gPiByZXBvcnRpbmcgZXhjZXNzaXZlICJydW4gcXVldWUgZnJvbSB3cm9uZyBDUFUi
-IG1lc3NhZ2VzIGJlY2F1c2UNCj4gPiA+ID4gY3B1bWFza190ZXN0X2NwdShyYXdfc21wX3Byb2Nl
-c3Nvcl9pZCgpLCBoY3R4LT5jcHVtYXNrKSByZXR1cm5zIGZhbHNlLg0KPiA+ID4NCj4gPiA+IFRo
-ZSBtZXNzYWdlIG1lYW5zIENQVSBob3RwbHVnIHJhY2UgaXMgdHJpZ2dlcmVkLg0KPiA+ID4NCj4g
-PiA+IFllYWgsIHRoZXJlIGlzIGJpZyBwcm9ibGVtIGluIGJsa19tcV9oY3R4X25vdGlmeV9kZWFk
-KCkgd2hpY2ggaXMNCj4gPiA+IGNhbGxlZCBhZnRlciBvbmUgQ1BVIGlzIGRlYWQsIGJ1dCBzdGls
-bCBydW4gdGhpcyBodyBxdWV1ZSB0bw0KPiA+ID4gZGlzcGF0Y2ggcmVxdWVzdCwgYW5kIGFsbCBD
-UFVzIGluIHRoaXMgaGN0eCBtaWdodCBiZWNvbWUgb2ZmbGluZS4NCj4gPiA+DQo+ID4gPiBXZSBo
-YXZlIHNvbWUgZGlzY3Vzc2lvbiBiZWZvcmUgb24gdGhpcyBpc3N1ZToNCj4gPiA+DQo+ID4gPiBo
-dHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1ibG9jay9DQUNWWEZWTjcyOVNnRlFHVWdtdTFp
-TjdQNk12NStwdQ0KPiA+ID4gRTc4U1R6OGhqDQo+ID4gPiA5SjViUzgyOE5nQG1haWwuZ21haWwu
-Y29tLw0KPiA+ID4NCj4gPg0KPiA+IFRoZXJlIGlzIGFub3RoZXIgc2NlbmFyaW8sIHlvdSBjYW4g
-cmVwcm9kdWNlIGl0IGJ5IGhvdC1wbHVnZ2luZyBjcHVzIHRvIGt2bSBndWVzdHMNCj4gdmlhIHFl
-bXUgbW9uaXRvciAoSSBiZWxpZXZlIHZpcnNoIHNldHZjcHVzIC0tbGl2ZSBjYW4gZG8gdGhlIHNh
-bWUgdGhpbmcpLCBmb3IgZXhhbXBsZToNCj4gPiAocWVtdSkgY3B1LWFkZCAxDQo+ID4gKHFlbXUp
-IGNwdS1hZGQgMg0KPiA+IChxZW11KSBjcHUtYWRkIDMNCj4gPg0KPiA+IEluIHN1Y2ggc2NlbmFy
-aW8sIGNwdSAxLCAyIGFuZCAzIGFyZSBub3QgdmlzaWJsZSBhdCBib290LCBoY3R4LT5jcHVtYXNr
-IGRvZXNuJ3QNCj4gZ2V0IHN5bmNlZCB3aGVuIHRoZXNlIGNwdXMgYXJlIGFkZGVkLg0KPiANCj4g
-SXQgaXMgQ1BVIGNvbGQtcGx1Zywgd2Ugc3VwcG9zZSB0byBzdXBwb3J0IGl0Lg0KPiANCj4gVGhl
-IG5ldyBhZGRlZCBDUFVzIHNob3VsZCBiZSB2aXNpYmxlIHRvIGhjdHgsIHNpbmNlIHdlIHNwcmVh
-ZCBxdWV1ZXMgYW1vbmcgYWxsDQo+IHBvc3NpYmxlIENQVXMoKSwgcGxlYXNlIHNlZSBibGtfbXFf
-bWFwX3F1ZXVlcygpIGFuZCBpcnFfYnVpbGRfYWZmaW5pdHlfbWFza3MoKSwNCj4gd2hpY2ggaXMg
-bGlrZSBzdGF0aWMgYWxsb2NhdGlvbiBvbiBDUFUgcmVzb3VyY2VzLg0KPiANCj4gT3RoZXJ3aXNl
-LCB5b3UgbWlnaHQgdXNlIGFuIG9sZCBrZXJuZWwgb3IgdGhlcmUgaXMgYnVnIHNvbWV3aGVyZS4N
-Cg0KSXQgdHVybnMgb3V0IHRoYXQgSSB3YXMgdXNpbmcgb2xkIGtlcm5lbCwgdmVyc2lvbiA0LjE0
-LCBJIHRlc3RlZCB0aGUgbGF0ZXN0IHZlcnNpb24sIGl0IHdvcmtzIHdlbGwgYXMgeW91IHNhaWQu
-IFRoYW5rIHlvdSB2ZXJ5IG11Y2guDQoNCj4gDQo+ID4NCj4gPiA+ID4NCj4gPiA+ID4gVGhpcyBw
-YXRjaCBhZGRlZCBhIGNwdS1ob3RwbHVnIGhhbmRsZXIgaW50byBibGstbXEsIHVwZGF0aW5nDQo+
-ID4gPiA+IGhjdHgtPmNwdW1hc2sgYXQgY3B1LWhvdHBsdWcuDQo+ID4gPg0KPiA+ID4gVGhpcyB3
-YXkgaXNuJ3QgY29ycmVjdCwgaGN0eC0+Y3B1bWFzayBzaG91bGQgYmUga2VwdCBhcyBzeW5jIHdp
-dGgNCj4gPiA+IHF1ZXVlIG1hcHBpbmcuDQo+ID4NCj4gPiBQbGVhc2UgYWR2aXNlIHdoYXQgc2hv
-dWxkIEkgZG8gdG8gZGVhbCB3aXRoIHRoZSBhYm92ZSBzaXR1YXRpb24/IFRoYW5rcyBhIGxvdC4N
-Cj4gDQo+IEFzIEkgc2hhcmVkIGluIGxhc3QgZW1haWwsIHRoZXJlIGlzIG9uZSBhcHByb2FjaCBk
-aXNjdXNzZWQsIHdoaWNoIHNlZW1zIGRvYWJsZS4NCj4gDQo+IFRoYW5rcywNCj4gTWluZw0KDQo=
+On Mon, Jun 24, 2019 at 12:00:33PM +0200, Miroslav Benes wrote:
+> On Sat, 22 Jun 2019, Thomas Gleixner wrote:
+> 
+> > Miroslav,
+> > 
+> > On Thu, 20 Jun 2019, Miroslav Benes wrote:
+> > > On Thu, 20 Jun 2019, Cheng Jian wrote:
+> > > 
+> > > > This reverts commit eda9cec4c9a12208a6f69fbe68f72a6311d50032.
+> > > > 
+> > > > Since commit (eda9cec4c9a1 'x86/module: Detect and skip invalid
+> > > > relocations') add some sanity check in apply_relocate_add, borke
+> > > > re-insmod a kernel module which has been patched before,
+> > > > 
+> > > > The relocation informations of the livepatch module have been
+> > > > overwritten since first patched, so if we rmmod and insmod the
+> > > > kernel module, these values are not zero anymore, when
+> > > > klp_module_coming doing, and that commit marks them as invalid
+> > > > invalid_relocation.
+> > > > 
+> > > > Then the following error occurs:
+> > > > 
+> > > > 	module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc (____ptrval____), val ffffffffc000236c
+> > > > 	livepatch: failed to initialize patch 'livepatch_0001_test' for module 'test' (-8)
+> > > > 	livepatch: patch 'livepatch_0001_test' failed for module 'test', refusing to load module 'test'
+> > > 
+> > > Oh yeah. First reported here 20180602161151.apuhs2dygsexmcg2@treble (LP ML 
+> > > only and there is no archive on lore.kernel.org yet. Sorry about that.). I 
+> > > posted v1 here 
+> > > https://lore.kernel.org/lkml/20180607092949.1706-1-mbenes@suse.cz/ and 
+> > > even started to work on v2 in March with arch-specific nullifying, but 
+> > > then I got sidetracked again. I'll move it up my todo list a bit.
+> > 
+> > so we need to revert it for now, right?
+> 
+> Not necessarily.
+> 
+> Quoting Josh from the original bug report:
+> "Possible ways to fix it:
+> 
+> 1) Remove the error check in apply_relocate_add().  I don't think we
+>    should do this, because the error is actually useful for detecting
+>    corrupt modules.  And also, powerpc has the similar error so this
+>    wouldn't be a universal solution.
+> 
+> 2) In klp_unpatch_object(), call an arch-specific arch_unpatch_object()
+>    which reverses any arch-specific patching: on x86, clearing all
+>    relocation targets to zero; on powerpc, converting the instructions
+>    after relative link branches to nops.  I don't think we should do
+>    this because it's not a global solution and requires fidgety
+>    arch-specific patching code.
+> 
+> 3) Don't allow patched modules to be removed.  I think this makes the
+>    most sense.  Nobody needs this functionality anyway (right?).
+> "
+> 
+> 1 would be the revert. We decided against it. The scenario (rmmod a 
+> module) is (supposedly) not that common in practice. Even the current bug 
+> report was triggered just in testing if I am not mistaken. Moreover, you 
+> need kpatch-build to properly set up relocation records. Upstream 
+> livepatch does not offer it as of now. That's why (I think) Josh thought 
+> the benefits of the check outweighed the disadvantage.
+> 
+> Then I tried to implement 3, but there were problems with it too. 2 
+> remains to be finished and then we can decide what the best approach is.
+> 
+> That being said... I am not against the reverting the commit per se, but 
+> we lived with it or quite a long time and no one has met it so far in 
+> "real life". I don't think it is the classic "we broke something, we have 
+> to revert" scenario.
+> 
+> Josh, any comment? I think your opinion matters here much more than mine.
+
+Agreed, as far as I know the problem is purely theoretical and we
+haven't seen any real-world bug reports, because people aren't reloading
+patched modules in the real world.
+
+If we were to revert the error checks in apply_relocate_add() then it
+could expose us to real-world regressions (which we have actually seen
+in the past).
+
+So I would vote to leave the error checks in place, at least until it
+becomes a real-world issue.  And in the meantime hopefully you can
+finish implementing #2 or #3 soon :-)
+
+-- 
+Josh
