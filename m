@@ -2,80 +2,145 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D52C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC1FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F4D2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5B320644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbfFYLrm (ORCPT
+        id S1732176AbfFYLuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:47:42 -0400
-Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:56312 "EHLO
-        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728527AbfFYLrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:47:41 -0400
-X-Greylist: delayed 309 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jun 2019 07:47:40 EDT
-Received: from lab-pc01.sra.uni-hannover.de (lab.sra.uni-hannover.de [130.75.33.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id 267C51F3F6;
-        Tue, 25 Jun 2019 13:42:30 +0200 (CEST)
-From:   Florian Knauf <florian.knauf@stud.uni-hannover.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@i4.cs.fau.de, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Florian Knauf <florian.knauf@stud.uni-hannover.de>,
-        Christian Ewert <christian.ewert@stud.uni-hannover.de>
-Subject: [PATCH] drivers/block/loop: Remove deprecated function, range check for max_loop
-Date:   Tue, 25 Jun 2019 13:40:56 +0200
-Message-Id: <20190625114056.8706-1-florian.knauf@stud.uni-hannover.de>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Jun 2019 07:50:18 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5186 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726931AbfFYLuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:50:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 04:50:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
+   d="scan'208";a="182871497"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 25 Jun 2019 04:50:12 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 25 Jun 2019 14:50:11 +0300
+Date:   Tue, 25 Jun 2019 14:50:11 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v6 4/7] i2c: core: Make i2c_acpi_get_irq available to the
+ rest of the I2C core
+Message-ID: <20190625115011.GE2640@lahna.fi.intel.com>
+References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
+ <20190621100815.12417-5-ckeepax@opensource.cirrus.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190621100815.12417-5-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the deprecated simple_strtol function from the option
-parsing logic in the loopback device driver. It also introduces a range
-check for the max_loop parameter to ensure that negative and out-of-range
-values (that cannot be represented by int max_loop) are ignored.
+On Fri, Jun 21, 2019 at 11:08:12AM +0100, Charles Keepax wrote:
+> In preparation for more refactoring make i2c_acpi_get_irq available
+> outside i2c-core-acpi.c.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+> 
+> Changes since v5:
+>  - Pass a struct device rather than acpi_device to i2c_acpi_get_irq,
+>    note this is more awkward than I would have liked as I am very
+>    unconvinced that adev->dev can actually be passed to
+>    ACPI_COMPANION. If anyone can answer that for sure that would be
+>    very helpful.
 
-Signed-off-by: Florian Knauf <florian.knauf@stud.uni-hannover.de>
-Signed-off-by: Christian Ewert <christian.ewert@stud.uni-hannover.de>
----
- drivers/block/loop.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+I don't think you can do that.
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 102d79575895..acdd028ed486 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -2289,7 +2289,17 @@ module_exit(loop_exit);
- #ifndef MODULE
- static int __init max_loop_setup(char *str)
- {
--	max_loop = simple_strtol(str, NULL, 0);
-+	long max_loop_long = 0;
-+
-+	/*
-+	 * Range check for max_loop: negative values and values not
-+	 * representable by int are ignored.
-+	 */
-+	if (kstrtol(str, 0, &max_loop_long) == 0 &&
-+			max_loop_long >= 0 &&
-+			max_loop_long <= INT_MAX)
-+		max_loop = (int) max_loop_long;
-+
- 	return 1;
- }
- 
--- 
-2.17.1
+I probably missed some previous discussion but what's wrong passing
+struct i2c_client instead and use ACPI_COMPANION() for that?
 
+> 
+> Thanks,
+> Charles
+> 
+>  drivers/i2c/i2c-core-acpi.c | 13 +++++++++++--
+>  drivers/i2c/i2c-core.h      |  7 +++++++
+>  2 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index c91492eaacd93..37bf80b35365f 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -145,8 +145,17 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+>  	return 1;
+>  }
+>  
+> -static int i2c_acpi_get_irq(struct acpi_device *adev)
+> +/**
+> + * i2c_acpi_get_irq - get device IRQ number from ACPI
+> + * @client: Pointer to the I2C client device
+
+I think this should be @dev now.
+
+> + *
+> + * Find the IRQ number used by a specific client device.
+> + *
+> + * Return: The IRQ number or an error code.
+> + */
+> +int i2c_acpi_get_irq(struct device *dev)
+>  {
+> +	struct acpi_device *adev = container_of(dev, struct acpi_device, dev);
+>  	struct list_head resource_list;
+>  	int irq = -ENOENT;
+>  	int ret;
+> @@ -199,7 +208,7 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
+>  		*adapter_handle = lookup.adapter_handle;
+>  
+>  	/* Then fill IRQ number if any */
+> -	info->irq = i2c_acpi_get_irq(adev);
+> +	info->irq = i2c_acpi_get_irq(&adev->dev);
+>  	if (info->irq < 0)
+>  		return info->irq;
+>  
+> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+> index 2a3b28bf826b1..1735ac17a957a 100644
+> --- a/drivers/i2c/i2c-core.h
+> +++ b/drivers/i2c/i2c-core.h
+> @@ -63,6 +63,8 @@ const struct acpi_device_id *
+>  i2c_acpi_match_device(const struct acpi_device_id *matches,
+>  		      struct i2c_client *client);
+>  void i2c_acpi_register_devices(struct i2c_adapter *adap);
+> +
+> +int i2c_acpi_get_irq(struct device *dev);
+>  #else /* CONFIG_ACPI */
+>  static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
+>  static inline const struct acpi_device_id *
+> @@ -71,6 +73,11 @@ i2c_acpi_match_device(const struct acpi_device_id *matches,
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline int i2c_acpi_get_irq(struct device *dev)
+> +{
+> +	return 0;
+> +}
+>  #endif /* CONFIG_ACPI */
+>  extern struct notifier_block i2c_acpi_notifier;
+>  
+> -- 
+> 2.11.0
