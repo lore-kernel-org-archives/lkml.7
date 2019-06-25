@@ -2,108 +2,142 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E271C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021E0C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285152085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C519B2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:31:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkFsChlN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kVCeUOih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfFYG36 (ORCPT
+        id S1728900AbfFYGa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:29:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46235 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbfFYG36 (ORCPT
+        Tue, 25 Jun 2019 02:30:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43115 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728574AbfFYGa7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:29:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 81so8897893pfy.13;
-        Mon, 24 Jun 2019 23:29:57 -0700 (PDT)
+        Tue, 25 Jun 2019 02:30:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so16384702wru.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 23:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yp1pZjIgM8j6nAWCJwr1RviA9TCpOdWc0/KD/+kueE8=;
-        b=nkFsChlNZt6IeXoodY2TGON55dXdvG9cyS5sonM/QFDihbw7N5eQ5pnSitRqcsn5XZ
-         zaNCV4RsHRiOCAHGMrj3lzKN4NPV2/3Q/MJBBlioBzksDgO9oSMQAdfgrOAgzxrdhrz8
-         igy3BH/2aytuFOizukyI1An0Xk1yxzXvef8Ilt7eiecBkcOFozeqAxwHKQI7FisPAHqr
-         x+SiDz5eixHJjZcVFVwIpP20LgJn6BqHsMZHS2sZrcTsowVQztyCTHCN7rSP3qppfNyY
-         Nrw8yFahwBmuE2ajQ1OOHMTyBBIyzzbjTr29CDsjjUKIxMfIL2K+9hP9ZEWM+1nXubGP
-         G+Sw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=x6yoOLge1MbtgvEjH/J5jaBEOcfczijGo4VV4KhuiO0=;
+        b=kVCeUOihCb+2UQgI9Nlb557kKSPReIfQ/OqOsRDgSFyC4Addjdo5FydjKaKx/tfHKQ
+         2C2DXms6KgT4ceP8Szn1fTWbP4n++BhKCH8XI/AcPNdU61x3Z1y9jf14jkErqFnnlF87
+         w4OA0O4N7l/91fhFSKHottpNXZ0zEZernlK+MEqQMKRdHjoileYXvpIFqCTjiUmPe5IJ
+         ANAoRMALZL1KYbXiyVW/Oq5Sb0XHfFTMnielWt1mi67shBAE42WFau4VOMzMj8L2oWxh
+         pVBCLvDBkeKAXYNbiecAw0oJyaVlxGwauSa47Q1GkrFiA57JDiBEAz5NMswD0CLYBmhc
+         hfTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yp1pZjIgM8j6nAWCJwr1RviA9TCpOdWc0/KD/+kueE8=;
-        b=Gdzrv9+Qv5sOp6BzdnYPvwM7H7dBpcbkMplkHWwejIYhtLXytpeimCEnzw+0MYCW1L
-         hyMivkO0H7gikpn3o6NaAFN5AxTIhZmKtsfmpvNgMt0WCVf0Hu4Wo8qTxhDMDKmwaSUD
-         ueHSY2ElqHZxd41x57iJYpKJrlznsacnUDL1rHuJaOoT+6VJBs8YhPqhcBK1IxA2L2IH
-         XTe8pGrzpUAHoETLTKj7rjvQ48+UFKctaxz6bjuxVFES22qR3P/Acx3qosbv5PKhq/1k
-         GCfmN9iNr1+KVuFgYf3UiVPtqCHC5QmRs40AnRSsYPx3kT4/CIJDIsNrGGJJR0t4IB1K
-         AHTA==
-X-Gm-Message-State: APjAAAUJV0i4/bPtRvrR/X7sHthSwTEZXpbq8/vLdWyo2IHvRfdmWI5n
-        PHpPsJThJhWv7MZKaXmCUcLmJaY3VaOhM6rsPmGgkg==
-X-Google-Smtp-Source: APXvYqzVcTKNjQWoRWqpshVelGz2/WVEbatr5RX3V5UecbE4d8qgv3csXOm9FYwbfR9FWhIFR3pRVjmDt9hAX76HG0E=
-X-Received: by 2002:a63:8b4c:: with SMTP id j73mr26925363pge.11.1561444196820;
- Mon, 24 Jun 2019 23:29:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=x6yoOLge1MbtgvEjH/J5jaBEOcfczijGo4VV4KhuiO0=;
+        b=NeXQ54NrdDJCoFAl6zRHVekce2MNZ9C/7baSsJaHfVC3Zix5rUzYdUu0AIVL45t/Tp
+         MtCi0wHUK2oERKVoaDKa5gvmCZVjjAli7KPAlWwxgDz159lbdMGubZ6snx1g2dmJW+W4
+         DlnpvqvjjdWBA5uCvvpM/AStuO06l2gnSCcEJfxaFGh48OnJ+AiSGkJafdf+zW+8SNCp
+         FqeFBXDZh+IKNSDSXvo2vVyUFWDxxPrVWeRdHF2puW1c73v1mBZ1Wjif004ve9QIXS/h
+         6MSTCyd3rng/dOkwBHbRExS6YSmxOkB96Eq+kcNIXU1C4cbWHACpvq7XE9FGkagpWSe2
+         sAXw==
+X-Gm-Message-State: APjAAAX6oLxhhX1Twf9wCbyHryOjs+SW9GSjvxtlridOepFLtMoUcuLm
+        CKDiLJQ1sJDTkQfo0HM9gf+CWQ==
+X-Google-Smtp-Source: APXvYqxVi7ekjFNL5CEovpagDv1xhsUAPchxMQqebKHZbVpFnJItx8zjOM+tCHOAPjJGWJ7zRznalw==
+X-Received: by 2002:a5d:42c5:: with SMTP id t5mr95136948wrr.5.1561444256592;
+        Mon, 24 Jun 2019 23:30:56 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id a2sm3431994wmj.9.2019.06.24.23.30.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 23:30:56 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 07:30:54 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] LM36274 Introduction
+Message-ID: <20190625063054.GD21119@dell>
+References: <20190605125634.7042-1-dmurphy@ti.com>
+ <20190624144217.GJ4699@dell>
+ <3d2aa88c-c21c-b3a9-c8d9-fdb3a8fc3858@ti.com>
 MIME-Version: 1.0
-References: <20190624163943.6721-1-colin.king@canonical.com>
-In-Reply-To: <20190624163943.6721-1-colin.king@canonical.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 25 Jun 2019 01:29:45 -0500
-Message-ID: <CAH2r5mvSOS3khpwQ5bZ4OrTcuMXmxB_oaUuVLqaivD1w5g9n9Q@mail.gmail.com>
-Subject: Re: [PATCH] cifs: fix typo in debug message with struct field ia_valid
-To:     Colin King <colin.king@canonical.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3d2aa88c-c21c-b3a9-c8d9-fdb3a8fc3858@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
+On Mon, 24 Jun 2019, Dan Murphy wrote:
 
-On Mon, Jun 24, 2019 at 3:25 PM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Field ia_valid is being debugged with the field name iavalid, fix this.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/cifs/inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-> index d7cc62252634..06a4892e9973 100644
-> --- a/fs/cifs/inode.c
-> +++ b/fs/cifs/inode.c
-> @@ -2415,7 +2415,7 @@ cifs_setattr_nounix(struct dentry *direntry, struct iattr *attrs)
->
->         xid = get_xid();
->
-> -       cifs_dbg(FYI, "setattr on file %pd attrs->iavalid 0x%x\n",
-> +       cifs_dbg(FYI, "setattr on file %pd attrs->ia_valid 0x%x\n",
->                  direntry, attrs->ia_valid);
->
->         if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_NO_PERM)
-> --
-> 2.20.1
->
+> Lee
+> 
+> On 6/24/19 9:42 AM, Lee Jones wrote:
+> > On Wed, 05 Jun 2019, Dan Murphy wrote:
+> > 
+> > > Hello
+> > > 
+> > > The v5 patchset missed adding in the new validation code.
+> > > Patch 1 of the v5 series was squashed into patch 4 of the v5 series.
+> > > So this will reduce the patchset by 1.
+> > > 
+> > > Sorry for the extra noise on the patchsets.  The change was lost when I converted
+> > > the patches from the mainline branch to the LED branch.
+> > > 
+> > > This change was made on top of the branch
+> > > 
+> > > repo: https://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+> > > branch: ti-lmu-led-drivers
+> > > 
+> > > 
+> > > Dan Murphy (5):
+> > >    dt-bindings: mfd: Add lm36274 bindings to ti-lmu
+> > >    mfd: ti-lmu: Add LM36274 support to the ti-lmu
+> > >    regulator: lm363x: Add support for LM36274
+> > >    dt-bindings: leds: Add LED bindings for the LM36274
+> > >    leds: lm36274: Introduce the TI LM36274 LED driver
+> > > 
+> > >   .../devicetree/bindings/leds/leds-lm36274.txt |  82 +++++++++
+> > >   .../devicetree/bindings/mfd/ti-lmu.txt        |  54 ++++++
+> > >   drivers/leds/Kconfig                          |   8 +
+> > >   drivers/leds/Makefile                         |   1 +
+> > >   drivers/leds/leds-lm36274.c                   | 174 ++++++++++++++++++
+> > >   drivers/mfd/Kconfig                           |   5 +-
+> > >   drivers/mfd/ti-lmu.c                          |  14 ++
+> > >   drivers/regulator/Kconfig                     |   2 +-
+> > >   drivers/regulator/lm363x-regulator.c          |  78 +++++++-
+> > >   include/linux/mfd/ti-lmu-register.h           |  23 +++
+> > >   include/linux/mfd/ti-lmu.h                    |   4 +
+> > >   11 files changed, 437 insertions(+), 8 deletions(-)
+> > >   create mode 100644 Documentation/devicetree/bindings/leds/leds-lm36274.txt
+> > >   create mode 100644 drivers/leds/leds-lm36274.c
+> > Can you finish of satisfying everyone's comments and re-send with all
+> > the Acks you've collected so far?  If you turn this around quickly,
+> > you might still get into v5.3.
+> > 
+> 
+> The changes were made by Jacek and I reviewed and tested them
+> 
+> https://lkml.org/lkml/2019/6/11/455
 
+Ah, this was related to the recent GIT PULL craziness.
+
+Thanks for letting me know.
 
 -- 
-Thanks,
-
-Steve
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
