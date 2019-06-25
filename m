@@ -2,106 +2,193 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E561C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C8CC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A02214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cj50z+yv"
+	by mail.kernel.org (Postfix) with ESMTP id 696CC204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfFYMH4 (ORCPT
+        id S1729388AbfFYMJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:07:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46994 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfFYMH4 (ORCPT
+        Tue, 25 Jun 2019 08:09:17 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43097 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfFYMJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:07:56 -0400
-Received: by mail-io1-f65.google.com with SMTP id i10so226050iol.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bfKN4YpaL6w4Kk3YgIsYRQp7M31VhMs8bgkDZeV/Vp4=;
-        b=cj50z+yvosF1BT1nYJbNU7aZhdDkf6cMobWD94Z+vcW94tJ1GuN8FHvkJ7rfsbEn8c
-         AnUb1S9bADCl3M7JYP6YM0agZiMZ4baKMeVmQqBMTgj1I83QRe0xtW0XY7OUjrUeb8tk
-         ou7LXyL7XM8gpP5a3J2fg3uidwsbOTQyOqXAo2FuWU4bAE1JJkAD/wynpDisQSAtGbHj
-         ctt+diADsmsdz/HBMFxn8cJuL8hn6NFRMawBLbvzxjvM6yxWJuDPQFJYVr7vZ26GwPkS
-         8NiHqVGBGRs+FaXsuXqZi7clKJHuysHsbQ6uthkTQWJJX2UjpfecbGwbxnynWrH49oLO
-         ntww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bfKN4YpaL6w4Kk3YgIsYRQp7M31VhMs8bgkDZeV/Vp4=;
-        b=a7okKWRyJ0H3OlrIOUvqEQ3ccB4aX783ueqUnWTaQOMPX9M5ZKo0ZoqeDtKgZIVUyF
-         EIHZ1UE0TsaXzM7YgPaNw0YPkPwgt+UHbQCfFHlJpiipeHoh+j4KNSCItDH+6b7YYW/C
-         vK9nQ16RAWyMdrxUTWVIb0qa/6OOsEYYCxDC3BWsSI6j2/gss7baK3pwF9ifWC8v+kuX
-         0JQuZsm20EXd/4KLFC+3HuccqT15QWlKeHzw1z8rO1bAC6GKoKuTha2upiKHiFGaUcXc
-         3iZZVMsc5Z9QF7j8BChs0DZY4SqbalKU//6TSNPhkp194RL1aw72DctXdJ9R9m+APPXN
-         6/cg==
-X-Gm-Message-State: APjAAAXwlj4Vp0wmV/vuknf7Q9RCOMNTm3k7aNED5NHwVJ7Q21TG4HSF
-        1KxuwRbrK3Qg0+/fpYiTXjVbr0m8O9pcezFKKDC1vw==
-X-Google-Smtp-Source: APXvYqzgOIFJj7sflWL6DOoRD6b4lz0xYBdry2ZMhuFVZtSLc77sm8zbI1qKkj2QKW47q5erWOWx9Hr6kk2ObsWG3G8=
-X-Received: by 2002:a02:c7c9:: with SMTP id s9mr131173089jao.82.1561464475045;
- Tue, 25 Jun 2019 05:07:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <0000000000005aedf1058c1bf7e8@google.com> <alpine.DEB.2.21.1906250820060.32342@nanos.tec.linutronix.de>
- <20190625110301.GX3419@hirez.programming.kicks-ass.net> <20190625110609.GA3463@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190625110609.GA3463@hirez.programming.kicks-ass.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 25 Jun 2019 14:07:42 +0200
-Message-ID: <CACT4Y+ZR9T9jGqx2aEijAzA8XP3W5gtGWtgubjW-WXBMirEAqA@mail.gmail.com>
-Subject: Re: WARNING in mark_lock
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>,
+        Tue, 25 Jun 2019 08:09:16 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 6e2dd8267a530f68; Tue, 25 Jun 2019 14:09:12 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH] PCI: PM/ACPI: Refresh all stale power state data in pci_pm_complete()
+Date:   Tue, 25 Jun 2019 14:09:12 +0200
+Message-ID: <6435024.1ODgWP2se3@kreacher>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 1:06 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Jun 25, 2019 at 01:03:01PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 25, 2019 at 08:20:56AM +0200, Thomas Gleixner wrote:
-> > > On Mon, 24 Jun 2019, syzbot wrote:
-> >
-> > > > syzbot found the following crash on:
-> > > >
-> > > > HEAD commit:    dc636f5d Add linux-next specific files for 20190620
-> > > > git tree:       linux-next
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=162b68b1a00000
->
-> syzcaller folks; why doesn't the above link include the actual kernel
-> boot, but only the userspace bits starting at syzcaller start?
->
-> I was trying to figure out the setup, but there's not enough information
-> here.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Hi Peter,
+In pci_pm_complete() there are checks to decide whether or not to
+resume devices that were left in runtime-suspend during the preceding
+system-wide transition into a sleep state.  They involve checking the
+current power state of the device and comparing it with the power
+state of it set before the preceding system-wide transition, but the
+platform component of the device's power state is not handled
+correctly in there.
 
-Usually there is too much after-boot output, so boot output is evicted
-anyway even if was preserved initially. Also usually it's not
-important (this is the first time this comes up). And also
-structurally boot is a separate procedure in syzkaller VM abstraction,
-a machine is booted, output is analyzed for potential crashes, then
-the machine is considered in a known good state and then some workload
-is started as a separate procedure and new output capturing starts
-from this point again.
+Namely, on platforms with ACPI, the device power state information
+needs to be updated with care, so that the reference counters of
+power resources used by the device (if any) are set to ensure that
+the refreshed power state of it will be maintained going forward.
 
-What info are you interested in? Can if be obtained after boot?
-Perhaps I can give it to you now. And there is also this long standing request:
-https://github.com/google/syzkaller/issues/466
-to collect some kind of "machine info" along with crashes. Perhaps we
-need to add the info you are looking for to that list.
+To that end, introduce a new ->refresh_state() platform PM callback
+for PCI devices, for asking the platform to refresh the device power
+state data and ensure that the corresponding power state will be
+maintained going forward, make it invoke acpi_device_update_power()
+(for devices with ACPI PM) on platforms with ACPI and make
+pci_pm_complete() use it, through a new pci_refresh_power_state()
+wrapper function.
+
+Fixes: a0d2a959d3da (PCI: Avoid unnecessary resume after direct-complete)
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/pci/pci-acpi.c   |    9 +++++++++
+ drivers/pci/pci-driver.c |    9 ++++++++-
+ drivers/pci/pci.c        |   21 +++++++++++++++++++++
+ drivers/pci/pci.h        |    4 ++++
+ 4 files changed, 42 insertions(+), 1 deletion(-)
+
+Index: linux-pm/drivers/pci/pci-acpi.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-acpi.c
++++ linux-pm/drivers/pci/pci-acpi.c
+@@ -691,6 +691,14 @@ static pci_power_t acpi_pci_get_power_st
+ 	return state_conv[state];
+ }
+ 
++static void acpi_pci_refresh_power_state(struct pci_dev *dev)
++{
++	struct acpi_device *adev = ACPI_COMPANION(&dev->dev);
++
++	if (adev && acpi_device_power_manageable(adev))
++		acpi_device_update_power(adev, NULL);
++}
++
+ static int acpi_pci_propagate_wakeup(struct pci_bus *bus, bool enable)
+ {
+ 	while (bus->parent) {
+@@ -748,6 +756,7 @@ static const struct pci_platform_pm_ops
+ 	.is_manageable = acpi_pci_power_manageable,
+ 	.set_state = acpi_pci_set_power_state,
+ 	.get_state = acpi_pci_get_power_state,
++	.refresh_state = acpi_pci_refresh_power_state,
+ 	.choose_state = acpi_pci_choose_state,
+ 	.set_wakeup = acpi_pci_wakeup,
+ 	.need_resume = acpi_pci_need_resume,
+Index: linux-pm/drivers/pci/pci.h
+===================================================================
+--- linux-pm.orig/drivers/pci/pci.h
++++ linux-pm/drivers/pci/pci.h
+@@ -51,6 +51,8 @@ int pci_bus_error_reset(struct pci_dev *
+  *
+  * @get_state: queries the platform firmware for a device's current power state
+  *
++ * @refresh_state: asks the platform to refresh the device's power state data
++ *
+  * @choose_state: returns PCI power state of given device preferred by the
+  *		  platform; to be used during system-wide transitions from a
+  *		  sleeping state to the working state and vice versa
+@@ -69,6 +71,7 @@ struct pci_platform_pm_ops {
+ 	bool (*is_manageable)(struct pci_dev *dev);
+ 	int (*set_state)(struct pci_dev *dev, pci_power_t state);
+ 	pci_power_t (*get_state)(struct pci_dev *dev);
++	void (*refresh_state)(struct pci_dev *dev);
+ 	pci_power_t (*choose_state)(struct pci_dev *dev);
+ 	int (*set_wakeup)(struct pci_dev *dev, bool enable);
+ 	bool (*need_resume)(struct pci_dev *dev);
+@@ -76,6 +79,7 @@ struct pci_platform_pm_ops {
+ 
+ int pci_set_platform_pm(const struct pci_platform_pm_ops *ops);
+ void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
++void pci_refresh_power_state(struct pci_dev *dev);
+ void pci_power_up(struct pci_dev *dev);
+ void pci_disable_enabled_device(struct pci_dev *dev);
+ int pci_finish_runtime_suspend(struct pci_dev *dev);
+Index: linux-pm/drivers/pci/pci.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci.c
++++ linux-pm/drivers/pci/pci.c
+@@ -777,6 +777,12 @@ static inline pci_power_t platform_pci_g
+ 	return pci_platform_pm ? pci_platform_pm->get_state(dev) : PCI_UNKNOWN;
+ }
+ 
++static inline void platform_pci_refresh_power_state(struct pci_dev *dev)
++{
++	if (pci_platform_pm && pci_platform_pm->refresh_state)
++		pci_platform_pm->refresh_state(dev);
++}
++
+ static inline pci_power_t platform_pci_choose_state(struct pci_dev *dev)
+ {
+ 	return pci_platform_pm ?
+@@ -938,6 +944,21 @@ void pci_update_current_state(struct pci
+ }
+ 
+ /**
++ * pci_refresh_power_state - Refresh the given device's power state data
++ * @dev: Target PCI device.
++ *
++ * Ask the platform to refresh the devices power state information and invoke
++ * pci_update_current_state() to update its current PCI power state.
++ */
++void pci_refresh_power_state(struct pci_dev *dev)
++{
++	if (platform_pci_power_manageable(dev))
++		platform_pci_refresh_power_state(dev);
++
++	pci_update_current_state(dev, dev->current_state);
++}
++
++/**
+  * pci_power_up - Put the given device into D0 forcibly
+  * @dev: PCI device to power up
+  */
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -710,7 +710,14 @@ static void pci_pm_complete(struct devic
+ 	if (pm_runtime_suspended(dev) && pm_resume_via_firmware()) {
+ 		pci_power_t pre_sleep_state = pci_dev->current_state;
+ 
+-		pci_update_current_state(pci_dev, pci_dev->current_state);
++		pci_refresh_power_state(pci_dev);
++		/*
++		 * On platforms with ACPI this check may also trigger for
++		 * devices sharing power resources if one of those power
++		 * resources has been activated as a result of a change of the
++		 * power state of another device sharing it.  However, in that
++		 * case it is also better to resume the device, in general.
++		 */
+ 		if (pci_dev->current_state < pre_sleep_state)
+ 			pm_request_resume(dev);
+ 	}
+
+
+
