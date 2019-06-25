@@ -2,99 +2,80 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56B2C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD931C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93479208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A8B208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="d0q2bEjQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbfFYOQy (ORCPT
+        id S1730087AbfFYORC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:16:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60954 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727070AbfFYOQx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:16:53 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PEEBfI029212;
-        Tue, 25 Jun 2019 10:16:26 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tbkc05dp8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jun 2019 10:16:25 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5PEFNpT028890;
-        Tue, 25 Jun 2019 14:16:25 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 2t9by6rkdy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jun 2019 14:16:25 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5PEGOtt31850842
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 14:16:24 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A08FB2066;
-        Tue, 25 Jun 2019 14:16:24 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17125B2065;
-        Tue, 25 Jun 2019 14:16:24 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 14:16:24 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 15CCA16C1085; Tue, 25 Jun 2019 07:16:24 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 07:16:24 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Message-ID: <20190625141624.GX26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190621174104.GA7519@linux.ibm.com>
- <20190621175027.GA23260@linux.ibm.com>
- <20190621234602.GA16286@linux.ibm.com>
- <20190624231222.GA17497@lerouge>
- <20190624234422.GP26519@linux.ibm.com>
- <20190625004300.GB17497@lerouge>
- <20190625075139.GT3436@hirez.programming.kicks-ass.net>
- <20190625122514.GA23880@lenoir>
- <20190625135430.GW26519@linux.ibm.com>
- <20190625140538.GC3419@hirez.programming.kicks-ass.net>
+        Tue, 25 Jun 2019 10:17:02 -0400
+Received: from mail.intenta.de ([178.249.25.132]:28384 "EHLO mail.intenta.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbfFYORC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:17:02 -0400
+X-Greylist: delayed 329 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jun 2019 10:17:01 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=mJlPfSkpI779CY+9JAH0jj86uoiwu0wyCkk8KI2WfiE=;
+        b=d0q2bEjQJE2TygXNNfiz+huBzdmhBgB0yiW9nfIfG40l6rOBViCdcRXObmtvNQDPbKQxSz7UnLao3itC18ElskcAtXS4TutpTk8+sOOdoBSlMejuk0zfcX2TdlcwydFh0WajpCPbxZSduFaZ5YRA744AGHPAz6j+KsjFwMWXPDRwubATJd8bIWc6xm5NTNuYpCQEKuLrZhqXBryUzzGakL1WMYigxEiIeWPZDoPLp0ga4PCd2dRCBMHhX8CkVUDnC05EcH9B1OyjlE6tF9TZv7R5kfjwPeSAiXGR0ue8aQ1ZBd5ztWFF6NoPQ/0HrU0mmbj64EVtdpKZJDeQ9JSE9A==;
+X-CTCH-RefID: str=0001.0A0C020D.5D122B8E.0089,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Date:   Tue, 25 Jun 2019 16:11:26 +0200
+From:   Helmut Grohne <helmut.grohne@intenta.de>
+To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+CC:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [LINUX PATCH v17 2/2] mtd: rawnand: pl353: Add basic driver for
+ arm pl353 smc nand interface
+Message-ID: <20190625141126.ggmxjcmdh76lguds@laureti-dev>
+References: <20190625044630.31717-1-naga.sureshkumar.relli@xilinx.com>
+ <20190625044630.31717-2-naga.sureshkumar.relli@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190625140538.GC3419@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250112
+In-Reply-To: <20190625044630.31717-2-naga.sureshkumar.relli@xilinx.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
+ (10.10.16.48)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 04:05:38PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 25, 2019 at 06:54:30AM -0700, Paul E. McKenney wrote:
-> > And it allows dispensing with the initialization.  How about like
-> > the following?
-> 
-> Looks good to me!
+Thank you for the quick update.
 
-Limited rcutorture testing looking good thus far.  Here is hoping!
+On Tue, Jun 25, 2019 at 06:46:30AM +0200, Naga Sureshkumar Relli wrote:
+> -> Tested Micron MT29F2G08ABAEAWP (On-die capable) and AMD/Spansion S34ML01G1.
 
-Frederic, you OK with this approach?
+I tested the v17 series with the MT29F2G08ABAEAWP. I can now mount
+existing jffs2 volumes without issues.
 
-							Thanx, Paul
+When running nandtest on a 64MB area, I no longer see lots of
+consecutive errors. However I see few (4-8) single byte errors for
+random locations on about half the runs. In comparison, I couldn't
+reproduce these on the older driver on v4.14.
+
+When writing random 1MB files on a fresh jffs2 filesystem and reading
+them back after umounting and mounting the filesystem, I got one faulty
+file in 50 attempts.
+
+So this driver mostly works for me, but I suspect that something
+(possibly the tested hardware) doesn't fully work yet. To say more, I'll
+need long term testing results. In the mean time, I'm in favour of
+merging the driver.
+
+Helmut
