@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1439C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663D1C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767D8204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEBA215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:47:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ehQo1iJY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xbo7XSFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfFYQro (ORCPT
+        id S1731354AbfFYQrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:47:44 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52520 "EHLO
+        Tue, 25 Jun 2019 12:47:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38215 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfFYQrk (ORCPT
+        with ESMTP id S1730679AbfFYQrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:47:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so3550460wms.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:47:40 -0700 (PDT)
+        Tue, 25 Jun 2019 12:47:43 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so3676191wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:47:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Xx1EmDNUL6NrJs1zybeQYATP7BtRS3ZxfHrchYlbb1w=;
-        b=ehQo1iJYS9sB9JFN2Xa22OZs9vsDho+0SpTjnu+gLJrGOR91YDeDq/PPd81moyZ2sY
-         0FyU9t0jreva8jyV04sH4pWQ70l6pRHZJbBWvSULWQngBX+Z9EdPpp8VUtNT8LxcsAHh
-         vDjKzTSGbPyFTth0SxzDdo/EeN3U2FXuXRuyJ3TxRvy0pEcSXC+KKU2wL+Z5fIRO2H+P
-         d9Vits6jzByP971MXaDurZbFM8FOV/kvXPKitcFxzyjSvvlNu2YsdbbzQjdSN7vX566V
-         qamvc45X6PPKW9gW0tctAb3tSHNSMZYpqHHqaWFj/NT0HYHWhFqZhwRFbJsoHe1X8UJn
-         kUjw==
+        bh=DnmUUmlBFAOJ6r0lO2j/n/ft2AG+WeYI8h0EcXuhXCs=;
+        b=Xbo7XSFN9rED5NZS/+c+eS51wLoYcSb+HfUkS0fXp+WEVZI/klmyc/xzDQcSk6kbda
+         PLkTwD+LzBS3AZ94fFA8beUaDPzXToHiAtQGtYgMEa7xGSHRnmt9i8HHb4RkAENDHe5e
+         IsL0oKoIDRchTHu/mEX4S5wUizdEf+RMRPLLMDrB7AmcmgO+P7E3pn73quB2Juy8UxTW
+         jEED9bkXwE57LB6U9SOCXArx0Oju7R8iZ1WfU5HvlkhPqgCsPcO1+tnAvFeSoPUrrDae
+         33cxR70DEVqATeHx9PamU6pz/v/4lzjTi/KGso5mz5Zz8Vhl6pl2nCo9mmky/EQOLFvo
+         3uUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Xx1EmDNUL6NrJs1zybeQYATP7BtRS3ZxfHrchYlbb1w=;
-        b=OEecLDedvG+EFCf6ystng3Cx9TX3LH8yO7U0ukJwISmdHGAeGUCTcI7mVb9Gozho9r
-         eGMsiW9Lv15dF0LDcYFkj+nw17/pJ2/vVZ7bltrtBCPdmsL56ysqJ/I5j5ZUoduxhERT
-         V16AV+5L+0dqkP6U5APWL0OQKFFu8gjJ35SDWDVmEyVW5AN0L87N8A+kQrHOqp/XypQV
-         gZLzSpcBmfs43z03XhnA5rNqr1sJw1VGxM+K+uayvP39YPAc/LpLD9Z+/fhuzUr+v5pI
-         e1ntbSly+dCZoXrnW0AF0P2fJsXq+BGuehxrDFHfH2P1flp3iLA5QCo5VAfQGP2BLDMS
-         n9Yw==
-X-Gm-Message-State: APjAAAXjOumt9WPQqLe2jM5Hu/RSgrceXmT4t7eEP2PbyYZ9EhQazH0B
-        edUqrOh6sasXWJ0iEbi4RNnEOw==
-X-Google-Smtp-Source: APXvYqzQegDiAysGwbSCaeJGZtZMZeEuUAmigshcMMK0ThMtUBYljkK/qXsHQTpNJjJTMGnl9rKg9w==
-X-Received: by 2002:a1c:cfc3:: with SMTP id f186mr19048286wmg.134.1561481259356;
-        Tue, 25 Jun 2019 09:47:39 -0700 (PDT)
+        bh=DnmUUmlBFAOJ6r0lO2j/n/ft2AG+WeYI8h0EcXuhXCs=;
+        b=c06fX+t4rQ4K0csdOjJRNR7VIQ3qW4jNP44oJ1uyfUS8wpUAQDf7JJmlAq9gPzxZ3s
+         2/qpTYlo+kowFKnoIC4FG3cImSVNQNa36bGRgzDwk3QjQdOL/IupLiazUDhvfe7xEDfL
+         RCRvUa2Qh1PAid9Xw79FlBW7bo4Slm8NMNyF2tMglzAhcr5lKwWvqHr4eRwwIszJNafQ
+         wsuHPCadEMGiUxEr7lzgJfR8pU8tfffWf3zhMjJ9Q2u1Vt9LtD/lDza7HwgaS7iRw85q
+         pMjyXDHrMd4cFvsXJRg48Ttt/dvBAfZeAAw3fYQyUOxdxFt/M58sFaJ8uLnjGaIQPQSb
+         AYJw==
+X-Gm-Message-State: APjAAAXjC/GlgF8U4UH0Wgmv723uUiTCiNE5cAYNzylEJRBNs2GNBWAV
+        L1WNydXtu7n5NYbOlTnayqWB8Q==
+X-Google-Smtp-Source: APXvYqw0MlFamdgw8IfuZ/mw6IFGIsihCgTjA9lyv6BtUZRI3MTMXO+uUOMmyuh2w+RBxwxPXQqvxw==
+X-Received: by 2002:a1c:cb4d:: with SMTP id b74mr14944322wmg.43.1561481260999;
+        Tue, 25 Jun 2019 09:47:40 -0700 (PDT)
 Received: from localhost.localdomain (30.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.30])
-        by smtp.gmail.com with ESMTPSA id d18sm42594476wrb.90.2019.06.25.09.47.37
+        by smtp.gmail.com with ESMTPSA id d18sm42594476wrb.90.2019.06.25.09.47.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Jun 2019 09:47:38 -0700 (PDT)
+        Tue, 25 Jun 2019 09:47:40 -0700 (PDT)
 From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 To:     jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, david.brown@linaro.org,
@@ -69,9 +69,9 @@ Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
-Subject: [PATCH v3 01/14] clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
-Date:   Tue, 25 Jun 2019 18:47:20 +0200
-Message-Id: <20190625164733.11091-2-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 02/14] mbox: qcom: add APCS child device for QCS404
+Date:   Tue, 25 Jun 2019 18:47:21 +0200
+Message-Id: <20190625164733.11091-3-jorge.ramirez-ortiz@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
@@ -82,63 +82,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Limit the GPLL0_AO_OUT_MAIN operating frequency as per its hardware
-specifications.
+There is clock controller functionality in the APCS hardware block of
+qcs404 devices similar to msm8916.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
 ---
- drivers/clk/qcom/clk-alpha-pll.c | 8 ++++++++
- drivers/clk/qcom/clk-alpha-pll.h | 1 +
- drivers/clk/qcom/gcc-qcs404.c    | 2 +-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index 0ced4a5a9a17..ef51f302bdf0 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -730,6 +730,14 @@ static long alpha_pll_huayra_round_rate(struct clk_hw *hw, unsigned long rate,
- 	return alpha_huayra_pll_round_rate(rate, *prate, &l, &a);
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index 705e17a5479c..a05dc3aabac7 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -89,16 +89,18 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
+-		apcs->clk = platform_device_register_data(&pdev->dev,
+-							  "qcom-apcs-msm8916-clk",
+-							  -1, NULL, 0);
+-		if (IS_ERR(apcs->clk))
+-			dev_err(&pdev->dev, "failed to register APCS clk\n");
+-	}
+-
+ 	platform_set_drvdata(pdev, apcs);
+ 
++	if (!of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") &&
++	    !of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global"))
++		return 0;
++
++	apcs->clk = platform_device_register_data(&pdev->dev,
++						  "qcom-apcs-msm8916-clk",
++						  -1, NULL, 0);
++	if (IS_ERR(apcs->clk))
++		dev_err(&pdev->dev, "failed to register APCS clk\n");
++
+ 	return 0;
  }
  
-+const struct clk_ops clk_alpha_pll_fixed_ops = {
-+	.enable = clk_alpha_pll_enable,
-+	.disable = clk_alpha_pll_disable,
-+	.is_enabled = clk_alpha_pll_is_enabled,
-+	.recalc_rate = clk_alpha_pll_recalc_rate,
-+};
-+EXPORT_SYMBOL_GPL(clk_alpha_pll_fixed_ops);
-+
- const struct clk_ops clk_alpha_pll_ops = {
- 	.enable = clk_alpha_pll_enable,
- 	.disable = clk_alpha_pll_disable,
-diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
-index 66755f0f84fc..6b4eb74706b4 100644
---- a/drivers/clk/qcom/clk-alpha-pll.h
-+++ b/drivers/clk/qcom/clk-alpha-pll.h
-@@ -104,6 +104,7 @@ struct alpha_pll_config {
- };
- 
- extern const struct clk_ops clk_alpha_pll_ops;
-+extern const struct clk_ops clk_alpha_pll_fixed_ops;
- extern const struct clk_ops clk_alpha_pll_hwfsm_ops;
- extern const struct clk_ops clk_alpha_pll_postdiv_ops;
- extern const struct clk_ops clk_alpha_pll_huayra_ops;
-diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
-index 29cf464dd2c8..18c6563889f3 100644
---- a/drivers/clk/qcom/gcc-qcs404.c
-+++ b/drivers/clk/qcom/gcc-qcs404.c
-@@ -330,7 +330,7 @@ static struct clk_alpha_pll gpll0_ao_out_main = {
- 			.parent_names = (const char *[]){ "cxo" },
- 			.num_parents = 1,
- 			.flags = CLK_IS_CRITICAL,
--			.ops = &clk_alpha_pll_ops,
-+			.ops = &clk_alpha_pll_fixed_ops,
- 		},
- 	},
- };
 -- 
 2.21.0
 
