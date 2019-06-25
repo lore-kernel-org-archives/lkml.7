@@ -2,583 +2,287 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D585C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3B9C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397F220883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1CC20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561500574;
+	bh=DjE8SaTP77AgEkZGHFhK5X8LouLq12BsaqfzP9ngz/I=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=K2EQg+y89+XvWmUIbbESpp3HXHIb3e0YLpxiKYYfS1vFjSiIHYI5BxqxeJsiTDmt9
+	 R6Z+DSKSOSeQB7H7zfMlKVdpfc0Aq9pKg/ppIOYuaFwjOSCIiEIIBwJVxmypP0qXl+
+	 PlOlnhT8I1GdKj4Xzp9VdaObia1WAZPaVLTuwf9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfFYWEy (ORCPT
+        id S1726393AbfFYWJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:04:54 -0400
-Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:48203 "EHLO
-        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfFYWEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:04:53 -0400
-Received: from smtp5.infomaniak.ch (smtp5.infomaniak.ch [83.166.132.18])
-        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x5PLrIZC019790
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 23:53:18 +0200
-Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
-        (authenticated bits=0)
-        by smtp5.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x5PLrHgZ038672;
-        Tue, 25 Jun 2019 23:53:17 +0200
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH bpf-next v9 02/10] bpf: Add eBPF program subtype and is_valid_subtype() verifier
-Date:   Tue, 25 Jun 2019 23:52:31 +0200
-Message-Id: <20190625215239.11136-3-mic@digikod.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625215239.11136-1-mic@digikod.net>
-References: <20190625215239.11136-1-mic@digikod.net>
+        Tue, 25 Jun 2019 18:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFYWJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:09:32 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F69B2086D;
+        Tue, 25 Jun 2019 22:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561500571;
+        bh=DjE8SaTP77AgEkZGHFhK5X8LouLq12BsaqfzP9ngz/I=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=xGpJopyMf3q67Rl7YXuEaWzZ0N1Egt0JY9+n2cyHwy+U2eF3Vxnv6uxT0Hba3lrml
+         j+OIEf0nqYsERNABoWjnruFVTQPaCMBqHLS0rPChGqXgFzfGS7rO5a1WyJqVXSBUAZ
+         aCdggekC26v1sq9FyWM7Sj3u5NBlurepRH6FZlk8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190624225759.18299-6-paul@crapouillou.net>
+References: <20190624225759.18299-1-paul@crapouillou.net> <20190624225759.18299-6-paul@crapouillou.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        James Hogan <jhogan@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v13 05/13] clk: ingenic: Add driver for the TCU clocks
+Cc:     Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Artur Rojek <contact@artur-rojek.eu>
+User-Agent: alot/0.8.1
+Date:   Tue, 25 Jun 2019 15:09:30 -0700
+Message-Id: <20190625220931.2F69B2086D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The goal of the program subtype is to be able to have different static
-fine-grained verifications for a unique program type.
+Quoting Paul Cercueil (2019-06-24 15:57:51)
+> diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
+> new file mode 100644
+> index 000000000000..6d667c4a2bd5
+> --- /dev/null
+> +++ b/drivers/clk/ingenic/tcu.c
+> @@ -0,0 +1,473 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * JZ47xx SoCs TCU clocks driver
+> + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/mfd/ingenic-tcu.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/syscore_ops.h>
+> +
+> +#include <dt-bindings/clock/ingenic,tcu.h>
+> +
+[...]
+> +
+> +static const struct ingenic_soc_info jz4740_soc_info =3D {
+> +       .num_channels =3D 8,
+> +       .has_ost =3D false,
+> +       .has_tcu_clk =3D true,
+> +};
+> +
+> +static const struct ingenic_soc_info jz4725b_soc_info =3D {
+> +       .num_channels =3D 6,
+> +       .has_ost =3D true,
+> +       .has_tcu_clk =3D true,
+> +};
+> +
+> +static const struct ingenic_soc_info jz4770_soc_info =3D {
+> +       .num_channels =3D 8,
+> +       .has_ost =3D true,
+> +       .has_tcu_clk =3D false,
+> +};
+> +
+> +static const struct of_device_id ingenic_tcu_of_match[] __initconst =3D {
+> +       { .compatible =3D "ingenic,jz4740-tcu", .data =3D &jz4740_soc_inf=
+o, },
+> +       { .compatible =3D "ingenic,jz4725b-tcu", .data =3D &jz4725b_soc_i=
+nfo, },
+> +       { .compatible =3D "ingenic,jz4770-tcu", .data =3D &jz4770_soc_inf=
+o, },
+> +       { }
+> +};
+> +
+> +static int __init ingenic_tcu_probe(struct device_node *np)
+> +{
+> +       const struct of_device_id *id =3D of_match_node(ingenic_tcu_of_ma=
+tch, np);
+> +       struct ingenic_tcu *tcu;
+> +       struct regmap *map;
+> +       unsigned int i;
+> +       int ret;
+> +
+> +       map =3D ingenic_tcu_get_regmap(np);
+> +       if (IS_ERR(map))
+> +               return PTR_ERR(map);
+> +
+> +       tcu =3D kzalloc(sizeof(*tcu), GFP_KERNEL);
+> +       if (!tcu)
+> +               return -ENOMEM;
+> +
+> +       tcu->map =3D map;
+> +       tcu->soc_info =3D id->data;
+> +
+> +       if (tcu->soc_info->has_tcu_clk) {
+> +               tcu->clk =3D of_clk_get_by_name(np, "tcu");
 
-The struct bpf_verifier_ops gets a new optional function:
-is_valid_subtype(). This new verifier is called at the beginning of the
-eBPF program verification to check if the (optional) program subtype is
-valid.
+Do you need to get the clk by name? Or can that clk be "known" to the
+TCU somehow so we can already have a direct clk pointer?
 
-The new helper bpf_load_program_xattr() enables to verify a program with
-subtypes.
+> +               if (IS_ERR(tcu->clk)) {
+> +                       ret =3D PTR_ERR(tcu->clk);
+> +                       pr_crit("Cannot get TCU clock\n");
+> +                       goto err_free_tcu;
+> +               }
+> +
+> +               ret =3D clk_prepare_enable(tcu->clk);
+> +               if (ret) {
+> +                       pr_crit("Unable to enable TCU clock\n");
+> +                       goto err_put_clk;
+> +               }
+> +       }
+> +
+> +       tcu->clocks =3D kzalloc(sizeof(*tcu->clocks) +
+> +                             sizeof(*tcu->clocks->hws) * TCU_CLK_COUNT,
+> +                             GFP_KERNEL);
+> +       if (!tcu->clocks) {
+> +               ret =3D -ENOMEM;
+> +               goto err_clk_disable;
+> +       }
+> +
+> +       tcu->clocks->num =3D TCU_CLK_COUNT;
+> +
+> +       for (i =3D 0; i < tcu->soc_info->num_channels; i++) {
+> +               ret =3D ingenic_tcu_register_clock(tcu, i, TCU_PARENT_EXT,
+> +                                                &ingenic_tcu_clk_info[i],
+> +                                                tcu->clocks);
+> +               if (ret) {
+> +                       pr_crit("cannot register clock %i\n", i);
+> +                       goto err_unregister_timer_clocks;
+> +               }
+> +       }
+> +
+> +       /*
+> +        * We set EXT as the default parent clock for all the TCU clocks
+> +        * except for the watchdog one, where we set the RTC clock as the
+> +        * parent. Since the EXT and PCLK are much faster than the RTC cl=
+ock,
+> +        * the watchdog would kick after a maximum time of 5s, and we mig=
+ht
+> +        * want a slower kicking time.
+> +        */
+> +       ret =3D ingenic_tcu_register_clock(tcu, TCU_CLK_WDT, TCU_PARENT_R=
+TC,
+> +                                        &ingenic_tcu_watchdog_clk_info,
+> +                                        tcu->clocks);
+> +       if (ret) {
+> +               pr_crit("cannot register watchdog clock\n");
+> +               goto err_unregister_timer_clocks;
+> +       }
+> +
+> +       if (tcu->soc_info->has_ost) {
+> +               ret =3D ingenic_tcu_register_clock(tcu, TCU_CLK_OST,
+> +                                                TCU_PARENT_EXT,
+> +                                                &ingenic_tcu_ost_clk_inf=
+o,
+> +                                                tcu->clocks);
+> +               if (ret) {
+> +                       pr_crit("cannot register ost clock\n");
+> +                       goto err_unregister_watchdog_clock;
+> +               }
+> +       }
+> +
+> +       ret =3D of_clk_add_hw_provider(np, of_clk_hw_onecell_get, tcu->cl=
+ocks);
+> +       if (ret) {
+> +               pr_crit("cannot add OF clock provider\n");
+> +               goto err_unregister_ost_clock;
+> +       }
+> +
+> +       ingenic_tcu =3D tcu;
+> +
+> +       return 0;
+> +
+> +err_unregister_ost_clock:
+> +       if (tcu->soc_info->has_ost)
+> +               clk_hw_unregister(tcu->clocks->hws[i + 1]);
+> +err_unregister_watchdog_clock:
+> +       clk_hw_unregister(tcu->clocks->hws[i]);
+> +err_unregister_timer_clocks:
+> +       for (i =3D 0; i < tcu->clocks->num; i++)
+> +               if (tcu->clocks->hws[i])
+> +                       clk_hw_unregister(tcu->clocks->hws[i]);
+> +       kfree(tcu->clocks);
+> +err_clk_disable:
+> +       if (tcu->soc_info->has_tcu_clk)
+> +               clk_disable_unprepare(tcu->clk);
+> +err_put_clk:
+> +       if (tcu->soc_info->has_tcu_clk)
+> +               clk_put(tcu->clk);
+> +err_free_tcu:
+> +       kfree(tcu);
+> +       return ret;
 
-For now, only Landlock eBPF programs are using a program subtype (see
-next commits) but this could be used by other program types in the
-future.
+Too bad this isn't a device with devm!
 
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: David S. Miller <davem@davemloft.net>
-Link: https://lkml.kernel.org/r/20160827205559.GA43880@ast-mbp.thefacebook.com
----
+> +}
+> +
+> +static int __maybe_unused tcu_pm_suspend(void)
+> +{
+> +       struct ingenic_tcu *tcu =3D ingenic_tcu;
+> +
+> +       if (tcu->clk)
+> +               clk_disable(tcu->clk);
 
-Changes since v8:
-* use bpf_load_program_xattr() instead of bpf_load_program() and add
-  bpf_verify_program_xattr() to deal with subtypes
-* remove put_extra() since there is no more "previous" field (for now)
+Do you need to unprepare? Or it just isn't possible because this is
+called from syscore and thus we can't sleep?
 
-Changes since v7:
-* rename LANDLOCK_SUBTYPE_* to LANDLOCK_*
-* move subtype in bpf_prog_aux and use only one bit for has_subtype
-  (suggested by Alexei Starovoitov)
-* wrap the prog_subtype with a prog_extra to be able to reference kernel
-  pointers:
-  * add an optional put_extra() function to struct bpf_prog_ops to be
-    able to free the pointed data
-  * replace all the prog_subtype with prog_extra in the struct
-    bpf_verifier_ops functions
-* remove the ABI field (requested by Alexei Starovoitov)
-* rename subtype fields
+> +
+> +       return 0;
+> +}
+> +
+> +static void __maybe_unused tcu_pm_resume(void)
+> +{
+> +       struct ingenic_tcu *tcu =3D ingenic_tcu;
+> +
+> +       if (tcu->clk)
+> +               clk_enable(tcu->clk);
+> +}
+> +
+> +static struct syscore_ops __maybe_unused tcu_pm_ops =3D {
+> +       .suspend =3D tcu_pm_suspend,
+> +       .resume =3D tcu_pm_resume,
+> +};
+> +
+> +static void __init ingenic_tcu_init(struct device_node *np)
+> +{
+> +       int ret =3D ingenic_tcu_probe(np);
+> +
+> +       if (ret)
+> +               pr_crit("Failed to initialize TCU clocks: %i\n", ret);
 
-Changes since v6:
-* rename Landlock version to ABI to better reflect its purpose
-* fix unsigned integer checks
-* fix pointer cast
-* constify pointers
-* rebase
+Should be %d instead of %i? Applies to all this file.
 
-Changes since v5:
-* use a prog_subtype pointer and make it future-proof
-* add subtype test
-* constify bpf_load_program()'s subtype argument
-* cleanup subtype initialization
-* rebase
-
-Changes since v4:
-* replace the "status" field with "version" (more generic)
-* replace the "access" field with "ability" (less confusing)
-
-Changes since v3:
-* remove the "origin" field
-* add an "option" field
-* cleanup comments
----
- include/linux/bpf.h                           |  8 +++++
- include/uapi/linux/bpf.h                      |  9 ++++++
- kernel/bpf/core.c                             |  1 +
- kernel/bpf/syscall.c                          | 32 ++++++++++++++++++-
- kernel/bpf/verifier.c                         | 11 +++++++
- net/core/filter.c                             | 25 ++++++++-------
- tools/include/uapi/linux/bpf.h                |  9 ++++++
- tools/lib/bpf/bpf.c                           | 10 +++++-
- tools/lib/bpf/bpf.h                           |  2 ++
- tools/lib/bpf/libbpf.map                      |  1 +
- tools/testing/selftests/bpf/test_verifier.c   | 26 +++++++++++++--
- .../testing/selftests/bpf/verifier/subtype.c  | 10 ++++++
- 12 files changed, 128 insertions(+), 16 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/verifier/subtype.c
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index a62e7889b0b6..da167d3afecc 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -294,6 +294,11 @@ bpf_ctx_record_field_size(struct bpf_insn_access_aux *aux, u32 size)
- 	aux->ctx_field_size = size;
- }
- 
-+/* specific data per program type */
-+struct bpf_prog_extra {
-+	union bpf_prog_subtype subtype;
-+};
-+
- struct bpf_prog_ops {
- 	int (*test_run)(struct bpf_prog *prog, const union bpf_attr *kattr,
- 			union bpf_attr __user *uattr);
-@@ -319,6 +324,8 @@ struct bpf_verifier_ops {
- 				  const struct bpf_insn *src,
- 				  struct bpf_insn *dst,
- 				  struct bpf_prog *prog, u32 *target_size);
-+	// TODO?: convert to bool (*is_valid_subtype)(struct bpf_prog *prog);
-+	bool (*is_valid_subtype)(struct bpf_prog_extra *prog_extra);
- };
- 
- struct bpf_prog_offload_ops {
-@@ -418,6 +425,7 @@ struct bpf_prog_aux {
- 		struct work_struct work;
- 		struct rcu_head	rcu;
- 	};
-+	struct bpf_prog_extra *extra;
- };
- 
- struct bpf_array {
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index b077507efa3f..ddae50373d58 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -355,6 +355,13 @@ struct bpf_stack_build_id {
- 	};
- };
- 
-+union bpf_prog_subtype {
-+	struct {
-+		__u32		type; /* enum landlock_hook_type */
-+		__aligned_u64	triggers; /* LANDLOCK_TRIGGER_* */
-+	} landlock_hook;
-+} __attribute__((aligned(8)));
-+
- union bpf_attr {
- 	struct { /* anonymous struct used by BPF_MAP_CREATE command */
- 		__u32	map_type;	/* one of enum bpf_map_type */
-@@ -409,6 +416,8 @@ union bpf_attr {
- 		__u32		line_info_rec_size;	/* userspace bpf_line_info size */
- 		__aligned_u64	line_info;	/* line info */
- 		__u32		line_info_cnt;	/* number of bpf_line_info records */
-+		__aligned_u64	prog_subtype;	/* bpf_prog_subtype address */
-+		__u32		prog_subtype_size;
- 	};
- 
- 	struct { /* anonymous struct used by BPF_OBJ_* commands */
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index ad3be85f1411..8ad392e52328 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -255,6 +255,7 @@ void __bpf_prog_free(struct bpf_prog *fp)
- {
- 	if (fp->aux) {
- 		free_percpu(fp->aux->stats);
-+		kfree(fp->aux->extra);
- 		kfree(fp->aux);
- 	}
- 	vfree(fp);
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 7713cf39795a..7dd3376904d4 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1596,7 +1596,7 @@ bpf_prog_load_check_attach_type(enum bpf_prog_type prog_type,
- }
- 
- /* last field in 'union bpf_attr' used by this command */
--#define	BPF_PROG_LOAD_LAST_FIELD line_info_cnt
-+#define	BPF_PROG_LOAD_LAST_FIELD prog_subtype_size
- 
- static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- {
-@@ -1686,6 +1686,36 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- 	if (err)
- 		goto free_prog;
- 
-+	/* copy eBPF program subtype from user space */
-+	if (attr->prog_subtype) {
-+		u32 size;
-+
-+		err = bpf_check_uarg_tail_zero(
-+				u64_to_user_ptr(attr->prog_subtype),
-+				sizeof(prog->aux->extra->subtype),
-+				attr->prog_subtype_size);
-+		if (err)
-+			goto free_prog;
-+		size = min_t(u32, attr->prog_subtype_size,
-+			     sizeof(prog->aux->extra->subtype));
-+
-+		prog->aux->extra = kzalloc(sizeof(*prog->aux->extra),
-+					   GFP_KERNEL | GFP_USER);
-+		if (!prog->aux->extra) {
-+			err = -ENOMEM;
-+			goto free_prog;
-+		}
-+		if (copy_from_user(&prog->aux->extra->subtype,
-+				   u64_to_user_ptr(attr->prog_subtype), size)
-+				   != 0) {
-+			err = -EFAULT;
-+			goto free_prog;
-+		}
-+	} else if (attr->prog_subtype_size != 0) {
-+		err = -EINVAL;
-+		goto free_prog;
-+	}
-+
- 	/* run eBPF verifier */
- 	err = bpf_check(&prog, attr, uattr);
- 	if (err < 0)
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 0e079b2298f8..930260683d0a 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -9167,6 +9167,17 @@ int bpf_check(struct bpf_prog **prog, union bpf_attr *attr,
- 	if (ret < 0)
- 		goto skip_full_check;
- 
-+	if (env->ops->is_valid_subtype) {
-+		if (!env->ops->is_valid_subtype(env->prog->aux->extra)) {
-+			ret = -EINVAL;
-+			goto err_unlock;
-+		}
-+	} else if (env->prog->aux->extra) {
-+		/* do not accept a subtype if the program does not handle it */
-+		ret = -EINVAL;
-+		goto err_unlock;
-+	}
-+
- 	if (bpf_prog_is_dev_bound(env->prog->aux)) {
- 		ret = bpf_prog_offload_verifier_prep(env->prog);
- 		if (ret)
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 2014d76e0d2a..0160237e5cd8 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -5846,7 +5846,8 @@ bool bpf_helper_changes_pkt_data(void *func)
- }
- 
- static const struct bpf_func_proto *
--bpf_base_func_proto(enum bpf_func_id func_id)
-+bpf_base_func_proto(enum bpf_func_id func_id,
-+		    const struct bpf_prog_extra *prog_extra)
- {
- 	switch (func_id) {
- 	case BPF_FUNC_map_lookup_elem:
-@@ -5902,7 +5903,7 @@ sock_filter_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_get_local_storage:
- 		return &bpf_get_local_storage_proto;
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -5942,7 +5943,7 @@ sock_addr_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_sk_storage_delete:
- 		return &bpf_sk_storage_delete_proto;
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -5959,7 +5960,7 @@ sk_filter_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_get_socket_uid:
- 		return &bpf_get_socket_uid_proto;
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -6096,7 +6097,7 @@ tc_cls_act_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_skb_ecn_set_ce_proto;
- #endif
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -6135,7 +6136,7 @@ xdp_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_tcp_check_syncookie_proto;
- #endif
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -6171,7 +6172,7 @@ sock_ops_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_tcp_sock_proto;
- #endif /* CONFIG_INET */
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -6197,7 +6198,7 @@ sk_msg_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_msg_pop_data:
- 		return &bpf_msg_pop_data_proto;
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -6237,7 +6238,7 @@ sk_skb_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_skc_lookup_tcp_proto;
- #endif
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -6248,7 +6249,7 @@ flow_dissector_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_skb_load_bytes:
- 		return &bpf_flow_dissector_load_bytes_proto;
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -6275,7 +6276,7 @@ lwt_out_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_skb_under_cgroup:
- 		return &bpf_skb_under_cgroup_proto;
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-@@ -8611,7 +8612,7 @@ sk_reuseport_func_proto(enum bpf_func_id func_id,
- 	case BPF_FUNC_skb_load_bytes_relative:
- 		return &sk_reuseport_load_bytes_relative_proto;
- 	default:
--		return bpf_base_func_proto(func_id);
-+		return bpf_base_func_proto(func_id, prog->aux->extra);
- 	}
- }
- 
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index b077507efa3f..ddae50373d58 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -355,6 +355,13 @@ struct bpf_stack_build_id {
- 	};
- };
- 
-+union bpf_prog_subtype {
-+	struct {
-+		__u32		type; /* enum landlock_hook_type */
-+		__aligned_u64	triggers; /* LANDLOCK_TRIGGER_* */
-+	} landlock_hook;
-+} __attribute__((aligned(8)));
-+
- union bpf_attr {
- 	struct { /* anonymous struct used by BPF_MAP_CREATE command */
- 		__u32	map_type;	/* one of enum bpf_map_type */
-@@ -409,6 +416,8 @@ union bpf_attr {
- 		__u32		line_info_rec_size;	/* userspace bpf_line_info size */
- 		__aligned_u64	line_info;	/* line info */
- 		__u32		line_info_cnt;	/* number of bpf_line_info records */
-+		__aligned_u64	prog_subtype;	/* bpf_prog_subtype address */
-+		__u32		prog_subtype_size;
- 	};
- 
- 	struct { /* anonymous struct used by BPF_OBJ_* commands */
-diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-index c7d7993c44bb..ecd894344bbd 100644
---- a/tools/lib/bpf/bpf.c
-+++ b/tools/lib/bpf/bpf.c
-@@ -227,6 +227,9 @@ int bpf_load_program_xattr(const struct bpf_load_program_attr *load_attr,
- 
- 	memset(&attr, 0, sizeof(attr));
- 	attr.prog_type = load_attr->prog_type;
-+	attr.prog_subtype = ptr_to_u64(load_attr->prog_subtype);
-+	attr.prog_subtype_size = load_attr->prog_subtype ?
-+		sizeof(*load_attr->prog_subtype) : 0;
- 	attr.expected_attach_type = load_attr->expected_attach_type;
- 	attr.insn_cnt = (__u32)load_attr->insns_cnt;
- 	attr.insns = ptr_to_u64(load_attr->insns);
-@@ -332,6 +335,11 @@ int bpf_load_program(enum bpf_prog_type type, const struct bpf_insn *insns,
- 	return bpf_load_program_xattr(&load_attr, log_buf, log_buf_sz);
- }
- 
-+int bpf_verify_program_xattr(union bpf_attr *attr, size_t attr_sz)
-+{
-+	return sys_bpf_prog_load(attr, attr_sz);
-+}
-+
- int bpf_verify_program(enum bpf_prog_type type, const struct bpf_insn *insns,
- 		       size_t insns_cnt, __u32 prog_flags, const char *license,
- 		       __u32 kern_version, char *log_buf, size_t log_buf_sz,
-@@ -351,7 +359,7 @@ int bpf_verify_program(enum bpf_prog_type type, const struct bpf_insn *insns,
- 	attr.kern_version = kern_version;
- 	attr.prog_flags = prog_flags;
- 
--	return sys_bpf_prog_load(&attr, sizeof(attr));
-+	return bpf_verify_program_xattr(&attr, sizeof(attr));
- }
- 
- int bpf_map_update_elem(int fd, const void *key, const void *value,
-diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
-index ff42ca043dc8..7cd600d49f9e 100644
---- a/tools/lib/bpf/bpf.h
-+++ b/tools/lib/bpf/bpf.h
-@@ -88,6 +88,7 @@ struct bpf_load_program_attr {
- 	__u32 line_info_cnt;
- 	__u32 log_level;
- 	__u32 prog_flags;
-+	const union bpf_prog_subtype *prog_subtype;
- };
- 
- /* Flags to direct loading requirements */
-@@ -102,6 +103,7 @@ LIBBPF_API int bpf_load_program(enum bpf_prog_type type,
- 				const struct bpf_insn *insns, size_t insns_cnt,
- 				const char *license, __u32 kern_version,
- 				char *log_buf, size_t log_buf_sz);
-+LIBBPF_API int bpf_verify_program_xattr(union bpf_attr *attr, size_t attr_sz);
- LIBBPF_API int bpf_verify_program(enum bpf_prog_type type,
- 				  const struct bpf_insn *insns,
- 				  size_t insns_cnt, __u32 prog_flags,
-diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-index 2c6d835620d2..48c9269a0496 100644
---- a/tools/lib/bpf/libbpf.map
-+++ b/tools/lib/bpf/libbpf.map
-@@ -107,6 +107,7 @@ LIBBPF_0.0.1 {
- 		bpf_set_link_xdp_fd;
- 		bpf_task_fd_query;
- 		bpf_verify_program;
-+		bpf_verify_program_xattr;
- 		btf__fd;
- 		btf__find_by_name;
- 		btf__free;
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index c5514daf8865..93faffd31fc3 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -105,6 +105,8 @@ struct bpf_test {
- 			__u64 data64[TEST_DATA_LEN / 8];
- 		};
- 	} retvals[MAX_TEST_RUNS];
-+	bool has_prog_subtype;
-+	union bpf_prog_subtype prog_subtype;
- };
- 
- /* Note we want this to be 64 bit aligned so that the end of our array is
-@@ -122,6 +124,11 @@ struct other_val {
- 	long long bar;
- };
- 
-+static inline __u64 ptr_to_u64(const void *ptr)
-+{
-+	return (__u64) (unsigned long) ptr;
-+}
-+
- static void bpf_fill_ld_abs_vlan_push_pop(struct bpf_test *self)
- {
- 	/* test: {skb->data[0], vlan_push} x 51 + {skb->data[0], vlan_pop} x 51 */
-@@ -856,6 +863,9 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 	int fixup_skips;
- 	__u32 pflags;
- 	int i, err;
-+	union bpf_attr attr;
-+	union bpf_prog_subtype *prog_subtype =
-+		test->has_prog_subtype ? &test->prog_subtype : NULL;
- 
- 	for (i = 0; i < MAX_NR_MAPS; i++)
- 		map_fds[i] = -1;
-@@ -881,8 +891,20 @@ static void do_test_single(struct bpf_test *test, bool unpriv,
- 		pflags |= BPF_F_STRICT_ALIGNMENT;
- 	if (test->flags & F_NEEDS_EFFICIENT_UNALIGNED_ACCESS)
- 		pflags |= BPF_F_ANY_ALIGNMENT;
--	fd_prog = bpf_verify_program(prog_type, prog, prog_len, pflags,
--				     "GPL", 0, bpf_vlog, sizeof(bpf_vlog), 4);
-+
-+	memset(&attr, 0, sizeof(attr));
-+	attr.prog_type = prog_type;
-+	attr.prog_subtype = ptr_to_u64(prog_subtype);
-+	attr.prog_subtype_size = prog_subtype ? sizeof(*prog_subtype) : 0;
-+	attr.insn_cnt = (__u32)prog_len;
-+	attr.insns = ptr_to_u64(prog);
-+	attr.license = ptr_to_u64("GPL");
-+	bpf_vlog[0] = 0;
-+	attr.log_buf = ptr_to_u64(bpf_vlog);
-+	attr.log_size = sizeof(bpf_vlog);
-+	attr.log_level = 4;
-+	attr.prog_flags = pflags;
-+	fd_prog = bpf_verify_program_xattr(&attr, sizeof(attr));
- 	if (fd_prog < 0 && !bpf_probe_prog_type(prog_type, 0)) {
- 		printf("SKIP (unsupported program type %d)\n", prog_type);
- 		skips++;
-diff --git a/tools/testing/selftests/bpf/verifier/subtype.c b/tools/testing/selftests/bpf/verifier/subtype.c
-new file mode 100644
-index 000000000000..cf614223d53f
---- /dev/null
-+++ b/tools/testing/selftests/bpf/verifier/subtype.c
-@@ -0,0 +1,10 @@
-+{
-+	"superfluous subtype",
-+	.insns = {
-+		BPF_MOV32_IMM(BPF_REG_0, 0),
-+		BPF_EXIT_INSN(),
-+	},
-+	.errstr = "",
-+	.result = REJECT,
-+	.has_prog_subtype = true,
-+},
--- 
-2.20.1
-
+> +
+> +       if (IS_ENABLED(CONFIG_PM_SLEEP))
+> +               register_syscore_ops(&tcu_pm_ops);
+> +}
