@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DE5C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A96CEC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB095208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F287208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hn0sJGMr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SJOSCbrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbfFYQfj (ORCPT
+        id S1729891AbfFYQe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:35:39 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42652 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729448AbfFYQe6 (ORCPT
+        Tue, 25 Jun 2019 12:34:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42649 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfFYQez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:34:58 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so18601161wrl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:34:56 -0700 (PDT)
+        Tue, 25 Jun 2019 12:34:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x17so18601022wrl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9jHnEFpHn7uzznoO3/dgHPquJFVDhGL7Sa3AB/IK/o8=;
-        b=hn0sJGMrU38ycKfPEcke4oemjMf5nF19She6rrogMdb5v0F2pBQBNKFb+k/+2MJbvv
-         x0AL7iJN38li9VNodfle2pG9gu9d2FJ3tvO7WCdfFllzJdndvifHLTLjRDM4aDml+Kuj
-         ARXR5bllOgDLUQO3pl4c5PKCRuEuqrBRd/sgqgOD1M5Honf1Q9rxMnOT9Gtrbba1Pc6q
-         WCixZR6JX0xgDU+5eMlm3aDNlNwAqfajTgyiKEnyZ2eYijvvzNfmrix4ZFYvnBzoboQW
-         vWSvbCOsW9ZdQYXrDXj4UOEBCHTBJKcTLpDkXcvPZbiDAcrZsqeJshpkE3iV/v/oMDyN
-         QHOw==
+        bh=2ZSWbqFAdYMHZSBHSRb1jfufvzOhyuDcLok5vmyDpAk=;
+        b=SJOSCbrBbZkjOqrPgnuNAn3R5vfXS6muglF3i2rYm4u0+9MfY8ZtiyCWhaoSYkXO8w
+         eOFkyeVW0jcrhK2bzRVm7OVFfxNNRuPXIaA1Pc5QIbfMItUzavJ+NDMN8n9e0L9FS8p6
+         tq7TTeGdzaX0136DmFa1LftA7xw+cPs//R7BxHfmQaa/vNwriSWQhE6HYmKQuFbGDxDq
+         Bg5erLaGp0cgJlgeiEOIPYKLnoR9icCMSctMhsB1HZzmQqp3udL5+Sn4pNOcL9yKERsx
+         Z5y5KpcxAJ9+MaE4zx8TVcaHvHGAnMEpPRGOC89hkmJe4zcmW8hColHnvm5z1nJEKHx+
+         Lt5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9jHnEFpHn7uzznoO3/dgHPquJFVDhGL7Sa3AB/IK/o8=;
-        b=fxu56WlzoCH+1h//ncqQRt2rO4W34iRRyn34xIKdhRN2pK8JiQA4WT5pHoL6HJarQW
-         POS/r183LGb/KBit45ojd42fN5gSOthmMlm5sJctxoxK59VDwuywCy0oD5TkNDQ9ygsZ
-         nrYCljuJsC/zYdOlP6jNeFZNd4RdRXBrGDbGVyELsukeKMoCDF22Y/t/aVGJwUPfIs3J
-         orlgrduG25cCJjdPzRirnBGgcQ5RQHhOGCQOcpjGkA4HXoTGpxI+LDkhX66+JQaEY1cl
-         awilOQnp5RwFUdf4x9LiEUJHMYtjO/P6J0dUh4BOVBeDqvnDwNMyIXh4d2GIN/ZQYJN0
-         TWiA==
-X-Gm-Message-State: APjAAAU9s7x5M3ioXY2Bh786bMr8q/4aI8CJtSjZEzd98mi5Co56/CNa
-        hpuQyiczq6lDNDXgp/n4h9A9yw==
-X-Google-Smtp-Source: APXvYqwy7zacb5a2dIAzBH+DNPJmE7Ud9HzGmZ8XgxvKZbiQHoYeDIvLxGo471H1Sy/xZiRyc+Eftg==
-X-Received: by 2002:a5d:4fc8:: with SMTP id h8mr26465755wrw.124.1561480495518;
-        Tue, 25 Jun 2019 09:34:55 -0700 (PDT)
+        bh=2ZSWbqFAdYMHZSBHSRb1jfufvzOhyuDcLok5vmyDpAk=;
+        b=Tv16+PDfbWmpduCIg+ueO8MrQAhGCcju4pvXJPaAfVH21+U5CCVDLXYGm0t5+4IwRm
+         mvKc+GqpV4YdtZASlk3YibHTmWvZjNEkbDfvmRWPO1S2KVnWSfbXWu1XkIhyVjrGL1oD
+         P+peE1V4cNmAAIxUPprGgsU0SUBO7QUQGQtHnW14SfmjkXAnQGXbEfgQGpnUadFR+aLb
+         Zyv4J3EriwQjmkkqn4RnMbMwzDOam7sFAaq28CliF3uj3j8UkYBj4TXktkuMSUPlSjBN
+         Dmpa5MCpeFbZkUQR08i2BOJxSWh1/prbMd/FvbeEQM7VIqPnTx8Z5O+NGSBnKZfTSdIM
+         5WmA==
+X-Gm-Message-State: APjAAAV3CBEsOo5PAqvcHHDQSmxYU5feNt5rBI33Y4+9yJO9rWQfmIFr
+        bngE4hbqDmN2ckK2TOLcW3Xb8qO0Gso=
+X-Google-Smtp-Source: APXvYqxBEmrDBznAn14GIGVfoHIVRb3pDwaOfikmLmN/GvkdUV1EAMzyMBq7WLZPIpw1AC69xAAo+Q==
+X-Received: by 2002:a05:6000:114b:: with SMTP id d11mr47787109wrx.167.1561480492966;
+        Tue, 25 Jun 2019 09:34:52 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id g8sm2683795wme.20.2019.06.25.09.34.54
+        by smtp.gmail.com with ESMTPSA id g8sm2683795wme.20.2019.06.25.09.34.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 09:34:54 -0700 (PDT)
+        Tue, 25 Jun 2019 09:34:52 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -67,9 +67,9 @@ To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 03/12] backlight: gpio: pull the non-pdata device probing code into probe()
-Date:   Tue, 25 Jun 2019 18:34:25 +0200
-Message-Id: <20190625163434.13620-4-brgl@bgdev.pl>
+Subject: [PATCH 01/12] backlight: gpio: allow to probe non-pdata devices from board files
+Date:   Tue, 25 Jun 2019 18:34:23 +0200
+Message-Id: <20190625163434.13620-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190625163434.13620-1-brgl@bgdev.pl>
 References: <20190625163434.13620-1-brgl@bgdev.pl>
@@ -82,77 +82,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-There's no good reason to have the generic probing code in a separate
-routine. This function is short and is inlined by the compiler anyway.
-Move it into probe under the pdata-specific part.
+Currently we can only probe devices that either use device tree or pass
+platform data to probe(). Rename gpio_backlight_probe_dt() to
+gpio_backlight_probe_prop() and use generic device properties instead
+of OF specific helpers. Reverse the logic checking the presence of
+platform data in probe(). This way we can probe devices() registered
+from machine code that neither have a DT node nor use platform data.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/video/backlight/gpio_backlight.c | 39 ++++++++----------------
- 1 file changed, 13 insertions(+), 26 deletions(-)
+ drivers/video/backlight/gpio_backlight.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-index 8adbc8d75097..89e10bccfd3c 100644
+index b9300f3e1ee6..654c19d3a81d 100644
 --- a/drivers/video/backlight/gpio_backlight.c
 +++ b/drivers/video/backlight/gpio_backlight.c
-@@ -54,30 +54,6 @@ static const struct backlight_ops gpio_backlight_ops = {
+@@ -54,15 +54,14 @@ static const struct backlight_ops gpio_backlight_ops = {
  	.check_fb	= gpio_backlight_check_fb,
  };
  
--static int gpio_backlight_probe_prop(struct platform_device *pdev,
--				     struct gpio_backlight *gbl)
--{
--	struct device *dev = &pdev->dev;
--	enum gpiod_flags flags;
--	int ret;
--
--	gbl->def_value = device_property_read_bool(dev, "default-on");
--	flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
--
--	gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
--	if (IS_ERR(gbl->gpiod)) {
--		ret = PTR_ERR(gbl->gpiod);
--
--		if (ret != -EPROBE_DEFER) {
--			dev_err(dev,
--				"Error: The gpios parameter is missing or invalid.\n");
--		}
--		return ret;
--	}
--
--	return 0;
--}
--
- static int gpio_backlight_probe(struct platform_device *pdev)
+-static int gpio_backlight_probe_dt(struct platform_device *pdev,
+-				   struct gpio_backlight *gbl)
++static int gpio_backlight_probe_prop(struct platform_device *pdev,
++				     struct gpio_backlight *gbl)
  {
- 	struct gpio_backlight_platform_data *pdata =
-@@ -86,6 +62,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
  	struct device *dev = &pdev->dev;
- 	struct backlight_device *bl;
- 	struct gpio_backlight *gbl;
-+	enum gpiod_flags flags;
+-	struct device_node *np = dev->of_node;
+ 	enum gpiod_flags flags;
  	int ret;
  
- 	gbl = devm_kzalloc(dev, sizeof(*gbl), GFP_KERNEL);
-@@ -116,9 +93,19 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+-	gbl->def_value = of_property_read_bool(np, "default-on");
++	gbl->def_value = device_property_read_bool(dev, "default-on");
+ 	flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+ 
+ 	gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
+@@ -86,26 +85,15 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 	struct backlight_properties props;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
+-	struct device_node *np = pdev->dev.of_node;
+ 	int ret;
+ 
+-	if (!pdata && !np) {
+-		dev_err(&pdev->dev,
+-			"failed to find platform data or device tree node.\n");
+-		return -ENODEV;
+-	}
+-
+ 	gbl = devm_kzalloc(&pdev->dev, sizeof(*gbl), GFP_KERNEL);
+ 	if (gbl == NULL)
+ 		return -ENOMEM;
+ 
+ 	gbl->dev = &pdev->dev;
+ 
+-	if (np) {
+-		ret = gpio_backlight_probe_dt(pdev, gbl);
+-		if (ret)
+-			return ret;
+-	} else {
++	if (pdata) {
+ 		/*
+ 		 * Legacy platform data GPIO retrieveal. Do not expand
+ 		 * the use of this code path, currently only used by one
+@@ -126,6 +114,10 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 		gbl->gpiod = gpio_to_desc(pdata->gpio);
  		if (!gbl->gpiod)
  			return -EINVAL;
- 	} else {
--		ret = gpio_backlight_probe_prop(pdev, gbl);
--		if (ret)
-+		gbl->def_value = device_property_read_bool(dev, "default-on");
-+		flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
-+
-+		gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
-+		if (IS_ERR(gbl->gpiod)) {
-+			ret = PTR_ERR(gbl->gpiod);
-+
-+			if (ret != -EPROBE_DEFER) {
-+				dev_err(dev,
-+					"Error: The gpios parameter is missing or invalid.\n");
-+			}
- 			return ret;
-+		}
++	} else {
++		ret = gpio_backlight_probe_prop(pdev, gbl);
++		if (ret)
++			return ret;
  	}
  
  	memset(&props, 0, sizeof(props));
