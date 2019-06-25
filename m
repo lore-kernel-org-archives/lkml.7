@@ -2,85 +2,104 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5F7C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF03C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68AA205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FA5208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:03:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VTIPyKy9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="OXSNzGJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731262AbfFYJCt (ORCPT
+        id S1731269AbfFYJDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:02:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35339 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731178AbfFYJCt (ORCPT
+        Tue, 25 Jun 2019 05:03:38 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:48862 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730986AbfFYJDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:02:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a25so12077319lfg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 02:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yAnfyWnFOYDee8zMa6y9jztBJ/ZakyyrgxyUeS9SKPk=;
-        b=VTIPyKy9yeL1CLurpOjrYVamSrhieiLVJEoow8oWGeRsHZSAljgcaUepPQvvF42YxR
-         cbI2kdi4FJJUj7FyIn+HA1YYf5SZO61xrLCJZ8SwIT/vlwHYFYlr1DKt3KPvDb0GO98U
-         djpU0kfQWMO9Cx7CpcJdL9JOSGErQOgK4QUnvbh8keFAaJRnte7AEUxaIe6tz3dnvXV4
-         xSA0se92p3tU8G1CCHc8OgNZw96IWnwE/l444vW5CYf9zyCzDolRreHp6bERM7hhYbdL
-         9jNBbwIvdyItWNl+ja3o9dz+gogP2mLvF0Xc9oPD3VVynNRnJGRQb12Cm5s7BSBT1K7u
-         XOoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yAnfyWnFOYDee8zMa6y9jztBJ/ZakyyrgxyUeS9SKPk=;
-        b=nkdfYj/2FK0YApRxl2XaS4eX3lqnFyp/QgFNfpYToCEDHYCHAN8JuGJYowWc7nGu2L
-         ZXYDKcTCb3MEafQJ0p2+NPUAJQCrvZh05Eg0c0VV83jW/wEaWi2oFZ4Wsx36oYraWDEA
-         QC8suoar1O9LRcUjLqS4aCpO0YnKLGRmCmziaQgAfBOQJQjOpls/1wNYv3++fOHiFDWz
-         z511i4ksTgVHb5McgupoHl+6tnK7UOuDr60GTl6UHJ4hBcK/MOasGlZQyQi3bY1ZY0a8
-         CCt3JwCo3F2FsQ4tToRQ+Ustf76oUiAaSYnYjz0tpViSC5KwZNngmwvOz1gcGDdkahnr
-         a/kQ==
-X-Gm-Message-State: APjAAAUsvFtjeWpVEDgoTTANUSrCSSqBU463JC1jJugvm9KLx4DAZFjo
-        JQjaGjpC6/BQ94VAqv98pRdaI4+h5t6IyQvuC1kZYQ==
-X-Google-Smtp-Source: APXvYqxUkwWXQfh5c8kcNKArsxvvB13HsHjkS45z9Ap8MZ0Ufk4J/xaEtDpod0hKb+77Crajqpbnow9w4KZxFqEBBhI=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr76015987lfn.165.1561453367171;
- Tue, 25 Jun 2019 02:02:47 -0700 (PDT)
+        Tue, 25 Jun 2019 05:03:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ePK/es7C9pQl0On21DFk5DyYv3Tc0aYNKzqwAwwTRqY=; b=OXSNzGJlNZz7zi2MsqJzCp2AX
+        +FjJH97SPooV/2cSGIjFIjfWtMQRJW1wdhfIheOEnl9jc4RHPnxtbcwpLPLlWtNnuv8AuCkJFAO0E
+        OItcc6VyP/ew6/OTLQXic3iP+50calRXZcLZ5LZA1G+VFKDWt9AtnrPwKsZD/9dise9lPFkbfwnWu
+        qclJm5T7ScGnAd0BnmZqMrys4Ko73zY/yYIJxlrEstE0DMS0zxdBIDT7sF7DsKlBxBYOfocDsDjnl
+        qookUjFBmnWf2OD7HJ32Cwivso7Y/Up5KvB0day0ukhjEuV6ke+uC2vdRgLrrXkYvifK+GprA/3Pr
+        4lr72uJ6Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58974)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hfhMP-0005Ke-Om; Tue, 25 Jun 2019 10:03:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hfhMK-00075B-AS; Tue, 25 Jun 2019 10:03:24 +0100
+Date:   Tue, 25 Jun 2019 10:03:24 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [PATCH v5 4/5] net: macb: add support for high speed interface
+Message-ID: <20190625090324.c6tq2neksatfwljw@shell.armlinux.org.uk>
+References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
+ <1561378355-14048-1-git-send-email-pthombar@cadence.com>
+ <20190624134755.u3oq3xr6uergnfs5@shell.armlinux.org.uk>
+ <SN2PR07MB2480CF15E11D54DA8C3B7319C1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-References: <1560789905-32307-1-git-send-email-info@metux.net>
-In-Reply-To: <1560789905-32307-1-git-send-email-info@metux.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 11:02:35 +0200
-Message-ID: <CACRpkdaavrDWNJnbRk4+m_GQnCKbCe_qYtOHQd2VvD_OrPbeSA@mail.gmail.com>
-Subject: Re: [PATCH] include: linux: gpio: add comments on #if/#else/#endif
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN2PR07MB2480CF15E11D54DA8C3B7319C1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:45 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+On Tue, Jun 25, 2019 at 08:49:33AM +0000, Parshuram Raju Thombare wrote:
+> >>  	switch (state->interface) {
+> >>  	case PHY_INTERFACE_MODE_NA:
+> >> +	case PHY_INTERFACE_MODE_USXGMII:
+> >> +	case PHY_INTERFACE_MODE_10GKR:
+> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
+> >> +			phylink_set(mask, 10000baseCR_Full);
+> >> +			phylink_set(mask, 10000baseER_Full);
+> >> +			phylink_set(mask, 10000baseKR_Full);
+> >> +			phylink_set(mask, 10000baseLR_Full);
+> >> +			phylink_set(mask, 10000baseLRM_Full);
+> >> +			phylink_set(mask, 10000baseSR_Full);
+> >> +			phylink_set(mask, 10000baseT_Full);
+> >> +			phylink_set(mask, 5000baseT_Full);
+> >> +			phylink_set(mask, 2500baseX_Full);
+> >> +			phylink_set(mask, 1000baseX_Full);
+> >> +		}
+> >If MACB_CAPS_GIGABIT_MODE_AVAILABLE is not set, are these interface
+> >modes supported by the hardware?  If the PHY interface mode is not
+> >supported, then the returned support mask must be cleared.[] 
+> There are some configs which uses this macro to limit data rate to 100M 
+> even if hardware support higher rates.
 
-> From: Enrico Weigelt <info@metux.net>
->
-> Improve readability a bit by commenting #if/#else/#endif statements
-> with the checked preprocessor symbols.
->
-> Signed-off-by: Enrico Weigelt <info@metux.net>
+I'm sorry, this response does not address my statement, maybe I wasn't
+clear enough.  I am asking about the *PHY* interface modes, in
+other words (e.g.) PHY_INTERFACE_MODE_USXGMII.
 
-OK then that looks better.
-
-Patch applied!
-
-Yours,
-Linus Walleij
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
