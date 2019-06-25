@@ -2,94 +2,143 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00003C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB33AC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9F320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DB520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="jdc1fzKw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pyn37ak+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfFYEDR (ORCPT
+        id S1727600AbfFYEER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:03:17 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36875 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYEDR (ORCPT
+        Tue, 25 Jun 2019 00:04:17 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39677 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfFYEER (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:03:17 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d15so11509127qkl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:03:16 -0700 (PDT)
+        Tue, 25 Jun 2019 00:04:17 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j2so8724656pfe.6;
+        Mon, 24 Jun 2019 21:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FJ6vOhR8gsLZwxlKYHLPUZqtUgr4v4H6itA1sGGZ9Tk=;
-        b=jdc1fzKwSnLWCxjoK/F97iKoVCwjrKexFSC5W4HkRjgPKaJ9dZBAeQ3tmG+z5EKoDs
-         Yf7/WkSSy8D6GBT2FmwhplNm3hw3wyF8WXw04XghQDosOssxWf3eT5SnJlZZSUndDteR
-         KT32Ui2g3sSzbzw7/XjMv45VaJ4jCjG1vMdv4=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=lKJzQsTdWRiDE4LC6jT5wD3fUjkhZSxKv66YO52/0Io=;
+        b=Pyn37ak+v6Ct7FBS87A6cqV6Q+HmCXkxXjRSAU2haW+C01rhiL8/FPl5o5feklwBgA
+         G4M6AYWdtoAwRn2baMYR9UeN+jEJPdrnXY3rjJ8X0gLAfKhK8SCf7cYLzDtSyQeIxJTb
+         Ur+1coG8C0o3hwaew4r74zMHsfBDLzxSCeDnZ73sC6Ghm02eWvB8oziMQ2UUBkYhGMeI
+         zjyhoe2OxMXzrCUabWztTeSSyAg0lY7heQP+t6WcEBI49MoamdLPcp4JTNcxx4E35hLb
+         uMhFcFScixboCUs6oI5I7wVHBM00sUpr2vblLlQe0OnnBdmPjW6xpXkh+21VDlgXHsNL
+         bv0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FJ6vOhR8gsLZwxlKYHLPUZqtUgr4v4H6itA1sGGZ9Tk=;
-        b=bn/xwrf4IydIvOW9POWOddw1R2BjOCimZUzJvYEZvzmU4u+NwzCbRJ7wnYfK5+1UKO
-         nh9AANOTC2CO8OdxyrFww2A80ZPdGDFbCDPqDra0CNo9MYxWqGRnVL8h/HPGE4+EERFA
-         DIzTV2aRGhpHuI9ziGVNoqwWxloYH8FRHfqlbd+vKnznzkCs4pqd3+jPLuqugl5Q5sKI
-         T39DzH9/ecluSU1JWSgsgHoj87jXPAIjI/VIRikkpmyXnIjTMTF8RhWK7dipDHwjtNAp
-         X9r7fPp1hPW/PhOEsXYroCHDw5Wgt16bO/+l0lJyqJGbV2UY0pa7JkFR1rUbCVnMR8ER
-         Tj2w==
-X-Gm-Message-State: APjAAAUM9Zzq0IRzAjs/cP2kDFD8glvgE1L96uNIisj0y/lgwj7tkGY2
-        Co6G5Lq2N1KAIhO8miWz15BqHftbc6RTIhj3Kk4=
-X-Google-Smtp-Source: APXvYqxZ6TRjZOlnmmH4bytr5/Tsq+O8wjOxumYNuuPJB734x6CCDZZty41MDJXzu2ORfw+MdY3DpoywinR2CxHcGyg=
-X-Received: by 2002:a37:a1d6:: with SMTP id k205mr105761153qke.171.1561435395958;
- Mon, 24 Jun 2019 21:03:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190621071342.17897-1-malat@debian.org> <20190621195555.20615-1-malat@debian.org>
-In-Reply-To: <20190621195555.20615-1-malat@debian.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 25 Jun 2019 04:03:04 +0000
-Message-ID: <CACPK8XdM7eub41ig2MBxX7BJpAsVbuL4HO9VM_5bR5BuXEX89A@mail.gmail.com>
-Subject: Re: [PATCH v2] lib/mpi: fix build with clang
-To:     Mathieu Malaterre <malat@debian.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=lKJzQsTdWRiDE4LC6jT5wD3fUjkhZSxKv66YO52/0Io=;
+        b=BFvf5LrvGWV5dVZAuBRemT00sTfq+13zfbOf+hs/WhzPfx9vMQ931PPaRFPCw39BsI
+         u7xoynoCWknTqM1/SXBDah+wVulS1O/ql3gGYeG6WvHPtxIHya6faASr653xYlQVAXea
+         pG0OT8fJZ+KXWbSKqSLy+OUWI9Frz1GXgp6Ngk1rDlOVaHiuZgWlct7RKh8Lf+3hnLZH
+         BYjS/iO1AxsXWcRlID+aW8WzufSaKo+VDOUQKBN1WI/mEfDpKY4C8SnX3xPq4xNnk2Q4
+         8FUcrEPnGGvDR/DjCFAAegnklGCaOkIS4LdS1+VnVQ3CD4iE0IEBM5P0uomG8iU5FB9/
+         b0Cg==
+X-Gm-Message-State: APjAAAVW0H/s5p54rt0u6+ldHx/k783PIdQRoqQB+81h9Y8qZEVlDFUi
+        IKzFnWPEFdOEY4iAUMWB1tY=
+X-Google-Smtp-Source: APXvYqxTiHp0SY/tY143tklMJob5/LblyUUsPs1ZUb+XI7s8nI5LiITkZ/gdXMBmlKhbq5C+PhtCVg==
+X-Received: by 2002:a17:90a:b883:: with SMTP id o3mr28893337pjr.50.1561435456007;
+        Mon, 24 Jun 2019 21:04:16 -0700 (PDT)
+Received: from debian.net.fpt ([58.187.168.105])
+        by smtp.gmail.com with ESMTPSA id b24sm12408944pfd.98.2019.06.24.21.04.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 21:04:15 -0700 (PDT)
+From:   Phong Tran <tranmanphong@gmail.com>
+To:     tranmanphong@gmail.com
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        alexander.sverdlin@gmail.com, allison@lohutok.net, andrew@lunn.ch,
+        ast@kernel.org, bgolaszewski@baylibre.com, bpf@vger.kernel.org,
+        daniel@iogearbox.net, daniel@zonque.org, dmg@turingmachine.org,
+        festevam@gmail.com, gerg@uclinux.org, gregkh@linuxfoundation.org,
+        gregory.clement@bootlin.com, haojian.zhuang@gmail.com,
+        hsweeten@visionengravers.com, illusionist.neo@gmail.com,
+        info@metux.net, jason@lakedaemon.net, jolsa@redhat.com,
+        kafai@fb.com, kernel@pengutronix.de, kgene@kernel.org,
+        krzk@kernel.org, kstewart@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk,
+        liviu.dudau@arm.com, lkundrak@v3.sk, lorenzo.pieralisi@arm.com,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, nsekhar@ti.com, peterz@infradead.org,
+        robert.jarzmik@free.fr, s.hauer@pengutronix.de,
+        sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
+        songliubraving@fb.com, sudeep.holla@arm.com, swinslow@gmail.com,
+        tglx@linutronix.de, tony@atomide.com, will@kernel.org, yhs@fb.com
+Subject: [PATCH V3 00/15] cleanup cppcheck signed shifting errors
+Date:   Tue, 25 Jun 2019 11:03:41 +0700
+Message-Id: <20190625040356.27473-1-tranmanphong@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190624135105.15579-1-tranmanphong@gmail.com>
+References: <20190624135105.15579-1-tranmanphong@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019 at 19:56, Mathieu Malaterre <malat@debian.org> wrote:
->
-> Remove superfluous casts on output operands to avoid warnings on the
-> following macros:
->
-> * add_ssaaaa(sh, sl, ah, al, bh, bl)
-> * sub_ddmmss(sh, sl, ah, al, bh, bl)
-> * umul_ppmm(ph, pl, m0, m1)
->
-> Special care has been taken to keep the diff as minimal as possible from
-> the original header file `longlong.h` from gcc, only importing the
-> minimal change to make the compilation with clang pass.
+This is also do as the suggestion of "Linux Kernel Mentorship Task List"
 
+https://wiki.linuxfoundation.org/lkmp/lkmp_task_list#cleanup_cppcheck_errors
+"Shifting signed 32-bit value by 31 bits is undefined behaviour errors"
 
-> Suggested-by: Joel Stanley <joel@jms.id.au>
-> Cc: Segher Boessenkool <segher@kernel.crashing.org>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> v2: Instead of passing compat flag to clang to behave as gcc, remove the superfluous cast
+Change Log:
 
-Thanks, I checked your patch against GCC's longlong.h and it looks good.
+V2: Using BIT() macro instead of (1UL << nr) 
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+V3: 
+* Update the comments from Russell King.
+* Update commit message and cover letter for clearly the reason as request
+  Peter Zijlstra
+* For avoiding the broken only change (1<<nr) pattern to BIT(nr)
 
-Cheers,
+Phong Tran (15):
+  arm: perf: cleanup cppcheck shifting error
+  ARM: davinci: cleanup cppcheck shifting errors
+  ARM: ep93xx: cleanup cppcheck shifting errors
+  ARM: exynos: cleanup cppcheck shifting error
+  ARM: footbridge: cleanup cppcheck shifting error
+  ARM: imx: cleanup cppcheck shifting errors
+  ARM: ks8695: cleanup cppcheck shifting error
+  ARM: mmp: cleanup cppcheck shifting errors
+  ARM: omap2: cleanup cppcheck shifting error
+  ARM: orion5x: cleanup cppcheck shifting errors
+  ARM: pxa: cleanup cppcheck shifting errors
+  ARM: vexpress: cleanup cppcheck shifting error
+  ARM: mm: cleanup cppcheck shifting errors
+  ARM: bpf: cleanup cppcheck shifting error
+  ARM: vfp: cleanup cppcheck shifting errors
 
-Joel
+ arch/arm/kernel/perf_event_v7.c    |   6 +-
+ arch/arm/mach-davinci/ddr2.h       |   6 +-
+ arch/arm/mach-ep93xx/soc.h         | 134 ++++++++++++++++++-------------------
+ arch/arm/mach-exynos/suspend.c     |   2 +-
+ arch/arm/mach-footbridge/dc21285.c |   2 +-
+ arch/arm/mach-imx/iomux-mx3.h      |  64 +++++++++---------
+ arch/arm/mach-ks8695/regs-pci.h    |   4 +-
+ arch/arm/mach-mmp/pm-mmp2.h        |  40 +++++------
+ arch/arm/mach-mmp/pm-pxa910.h      |  74 ++++++++++----------
+ arch/arm/mach-omap2/powerdomain.c  |   2 +-
+ arch/arm/mach-orion5x/pci.c        |   8 +--
+ arch/arm/mach-pxa/irq.c            |   4 +-
+ arch/arm/mach-vexpress/spc.c       |   4 +-
+ arch/arm/mm/fault.h                |   6 +-
+ arch/arm/net/bpf_jit_32.c          |   2 +-
+ arch/arm/vfp/vfpinstr.h            |   8 +--
+ 16 files changed, 183 insertions(+), 183 deletions(-)
+
+-- 
+2.11.0
+
