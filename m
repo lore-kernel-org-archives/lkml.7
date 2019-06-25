@@ -2,227 +2,294 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493F1C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B242FC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8A020652
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CkNE3X5p"
+	by mail.kernel.org (Postfix) with ESMTP id 80385204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561443462;
+	bh=bXlhdI9ovTKAAlaZggrah+Nip2Ai6/P8U32aNqEP8hA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=O0UoLuIPKf+KehwFn8vUkqQfenlKa4GqVVvp+PY15/uZTXhAnXOMxAnlN0E9y2U/N
+	 6Uy1zBMis15DpwWR9TqnFbtp4BImcxcNcp/zHtc56i8BfSSiHhPeWT/J/THcgqxqYJ
+	 YIzbg7WiwTv4CUOB+Qd4CLwIZ9pDX5K5X/fDAPBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbfFYGPe (ORCPT
+        id S1729192AbfFYGRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:15:34 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:49502 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfFYGPe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:15:34 -0400
-Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x5P6FPWt021421;
-        Tue, 25 Jun 2019 15:15:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x5P6FPWt021421
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561443325;
-        bh=niTmtVxWpZ2hyzHyFc7bG1KkBiNgtu3U3WVbxtL8umU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CkNE3X5pjbVxOxivrGRh6Bbb2pepJUSuvOsS8cdeF/9ww/ZoNbK1mv6u4CulgC2uv
-         jjCj9/Gmr0A1XTlomrFpJtrrkSTdnkxDXv3QJ5tNVwzEVss6NRaNxkwHJ5RMwKVuS+
-         DhXnRbNFBG2TRBr8TqN3DuwvV/8rajTWf3+7L6y7f4C3nybP1JuUA+dT9RpPJI5Sin
-         oWqwJLc8+vcqnBaRSjVW0frG1+m34U/UJ/aVsvFeBGAqXUlEx/XrVk3Vf+oP5pl1Ap
-         lBI6tRGd8YbQOugX3G5MVVgfbkdUthNSSyrmGSOwpiP1nvwJVOEZTjHo8KklbwQK1o
-         OjxAwpccESVaw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] fixdep: check return code of printf() and putchar()
-Date:   Tue, 25 Jun 2019 15:15:05 +0900
-Message-Id: <20190625061505.30107-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Jun 2019 02:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726495AbfFYGRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 02:17:40 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7D28204FD;
+        Tue, 25 Jun 2019 06:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561443458;
+        bh=bXlhdI9ovTKAAlaZggrah+Nip2Ai6/P8U32aNqEP8hA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=n64ZjPtnHIkteULXW0pN38hafA8uR+DZugkqREWIym4eGpI9opidBa8atBP/522Rp
+         XEy4UAdYb57qM7A4FaSHRBSm17gVNNfOmGJZ7dET3vDdMsqt1Ttg21fZZRtVjtAEt+
+         bEaWgWhOJZhFVA3PEibygk8GAO6txWvLl0N5yT00=
+Date:   Mon, 24 Jun 2019 23:17:37 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 11 open syzbot bugs in block subsystem
+Message-ID: <20190625061737.GG17703@sol.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there is not enough space on your storage device, the build will
-fail with 'No space left on device' error message.
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better.]
 
-The reason is obvious from the message, so you will free up some disk
-space, then you will resume the build.
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 11 of them as possibly being bugs in the block subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-However, sometimes you may still see a mysterious error message:
+Of these 11 bugs, 5 were seen in mainline in the last week.
 
-  unterminated call to function 'wildcard': missing ')'.
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
 
-If you run out of the disk space, fixdep may end up with generating
-incomplete .*.cmd files.
+If you believe I misattributed a bug to the block subsystem, please let me know,
+and if possible forward the report to the correct people or mailing list.
 
-For example, if the disk shortage occurs while fixdep is running
-print_dep(), the .*.cmd might be truncated like this:
+Here are the bugs:
 
-   $(wildcard include/config/
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in debugfs_remove (3)
+Last occurred:      0 days ago
+Reported:           257 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=6d5c55bc531f0ef83e8faca014cc123b4498f7a6
+Original thread:    https://lkml.kernel.org/lkml/000000000000140c370577db5ece@google.com/T/#u
 
-When you run 'make' next time, this broken .*.cmd will be included,
-then GNU Make will terminate parsing since it is a wrong syntax.
+This bug has a C reproducer.
 
-Once this happens, you need to run 'make clean' or delete the broken
-.*.cmd file manually.
+No one replied to the original thread for this bug.
 
-Even if you do not see any error message, the .*.cmd files after any
-error could be potentially incomplete, and unreliable. You may miss
-the re-compilation due to missing header dependency.
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+903b72a010ad6b7a40f2@syzkaller.appspotmail.com
 
-If printf() cannot output the string for disk shortage or whatever
-reason, it returns a negative return code, but currently fixdep does
-not check it at all. Consequently, fixdep *successfully* generates a
-broken .*.cmd file. Make never notices that since fixdep exits with 0,
-which means success.
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000140c370577db5ece@google.com
 
-Given the intended usage of fixdep, it must respect the return code of
-not only malloc(), but also printf() and putchar().
+--------------------------------------------------------------------------------
+Title:              WARNING in generic_make_request_checks
+Last occurred:      0 days ago
+Reported:           319 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=ff9ab4a23afa7553fb79f745a92be87ba4144508
+Original thread:    https://lkml.kernel.org/lkml/0000000000003c4e6d0572f85eb2@google.com/T/#u
 
-This seems a long-standing issue since the introduction of fixdep.
+This bug has a C reproducer.
 
-In old days, Kbuild tried to provide an extra safety by letting fixdep
-output to a temporary file and renaming it after everything is done:
+No one replied to the original thread for this bug.
 
-  scripts/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).tmp;\
-  rm -f $(depfile);                                                    \
-  mv -f $(dot-target).tmp $(dot-target).cmd)
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+21cfe1f803e0e158acf1@syzkaller.appspotmail.com
 
-It did not avoid the current issue; fixdep created a truncated tmp file
-reporting success, so the broken tmp would be renamed to a .*.cmd file.
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000003c4e6d0572f85eb2@google.com
 
-By propagating the error code to the build system, this problem should
-be solved because:
+--------------------------------------------------------------------------------
+Title:              WARNING in md_ioctl
+Last occurred:      1 day ago
+Reported:           421 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=fbf9eaea2e65bfcabb4e2750c3ab0892867edea1
+Original thread:    https://lkml.kernel.org/lkml/000000000000a52337056b065fb3@google.com/T/#u
 
-[1] Since commit 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special
-    target"), Make will delete the target automatically on any failure
-    in the recipe.
+This bug has a C reproducer.
 
-[2] Since commit 392885ee82d3 ("kbuild: let fixdep directly write to
-    .*.cmd files"), .*.cmd file is included only when the corresponding
-    target already exists.
+No one replied to the original thread for this bug.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+1e46a0864c1a6e9bd3d8@syzkaller.appspotmail.com
 
- scripts/basic/fixdep.c | 47 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 37 insertions(+), 10 deletions(-)
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000a52337056b065fb3@google.com
 
-diff --git a/scripts/basic/fixdep.c b/scripts/basic/fixdep.c
-index facbd603adf6..fea1d58bda68 100644
---- a/scripts/basic/fixdep.c
-+++ b/scripts/basic/fixdep.c
-@@ -99,6 +99,7 @@
- #include <unistd.h>
- #include <fcntl.h>
- #include <string.h>
-+#include <stdarg.h>
- #include <stdlib.h>
- #include <stdio.h>
- #include <ctype.h>
-@@ -109,6 +110,32 @@ static void usage(void)
- 	exit(1);
- }
- 
-+/*
-+ * In the intended usage of this program, the stdout is redirected to .*.cmd
-+ * The return code of printf() and putchar() must be checked to catch any error
-+ * like "No space left on device".
-+ */
-+static void xprintf(const char *format, ...)
-+{
-+	va_list ap;
-+	int ret;
-+
-+	va_start(ap, format);
-+	ret = vprintf(format, ap);
-+	if (ret < 0)
-+		exit(1);
-+	va_end(ap);
-+}
-+
-+static void xputchar(int c)
-+{
-+	int ret;
-+
-+	ret = putchar(c);
-+	if (ret == EOF)
-+		exit(1);
-+}
-+
- /*
-  * Print out a dependency path from a symbol name
-  */
-@@ -116,7 +143,7 @@ static void print_dep(const char *m, int slen, const char *dir)
- {
- 	int c, prev_c = '/', i;
- 
--	printf("    $(wildcard %s/", dir);
-+	xprintf("    $(wildcard %s/", dir);
- 	for (i = 0; i < slen; i++) {
- 		c = m[i];
- 		if (c == '_')
-@@ -124,10 +151,10 @@ static void print_dep(const char *m, int slen, const char *dir)
- 		else
- 			c = tolower(c);
- 		if (c != '/' || prev_c != '/')
--			putchar(c);
-+			xputchar(c);
- 		prev_c = c;
- 	}
--	printf(".h) \\\n");
-+	xprintf(".h) \\\n");
- }
- 
- struct item {
-@@ -324,13 +351,13 @@ static void parse_dep_file(char *m, const char *target)
- 				 */
- 				if (!saw_any_target) {
- 					saw_any_target = 1;
--					printf("source_%s := %s\n\n",
--					       target, m);
--					printf("deps_%s := \\\n", target);
-+					xprintf("source_%s := %s\n\n",
-+						target, m);
-+					xprintf("deps_%s := \\\n", target);
- 				}
- 				is_first_dep = 0;
- 			} else {
--				printf("  %s \\\n", m);
-+				xprintf("  %s \\\n", m);
- 			}
- 
- 			buf = read_file(m);
-@@ -353,8 +380,8 @@ static void parse_dep_file(char *m, const char *target)
- 		exit(1);
- 	}
- 
--	printf("\n%s: $(deps_%s)\n\n", target, target);
--	printf("$(deps_%s):\n", target);
-+	xprintf("\n%s: $(deps_%s)\n\n", target, target);
-+	xprintf("$(deps_%s):\n", target);
- }
- 
- int main(int argc, char *argv[])
-@@ -369,7 +396,7 @@ int main(int argc, char *argv[])
- 	target = argv[2];
- 	cmdline = argv[3];
- 
--	printf("cmd_%s := %s\n\n", target, cmdline);
-+	xprintf("cmd_%s := %s\n\n", target, cmdline);
- 
- 	buf = read_file(depfile);
- 	parse_dep_file(buf, target);
--- 
-2.17.1
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in relay_switch_subbuf
+Last occurred:      2 days ago
+Reported:           271 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=13849f0d9b1b818b087341691be6cc3ac6a6bfb7
+Original thread:    https://lkml.kernel.org/lkml/0000000000002e4a260576c1589d@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+29093015c21333d1c46d@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000002e4a260576c1589d@google.com
+
+--------------------------------------------------------------------------------
+Title:              memory leak in bio_copy_user_iov
+Last occurred:      8 days ago
+Reported:           6 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=3327fb1975fd130ad77d601f4facd655f0b5fa8c
+Original thread:    https://lkml.kernel.org/lkml/000000000000c75fb7058ba0c0e4@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+03e5c8ebd22cc6c3a8cb@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000c75fb7058ba0c0e4@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in kernfs_remove_by_name_ns
+Last occurred:      4 days ago
+Reported:           1 day ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=7cc35138dcc87c3cc819ad5e34eceab2360d4047
+Original thread:    https://lkml.kernel.org/lkml/0000000000001bbe63058bfd26d9@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b76f1b62f3f98711bd93@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000001bbe63058bfd26d9@google.com
+
+--------------------------------------------------------------------------------
+Title:              KMSAN: kernel-infoleak in copy_page_to_iter (2)
+Last occurred:      201 days ago
+Reported:           284 days ago
+Branches:           Mainline (with KMSAN patches)
+Dashboard link:     https://syzkaller.appspot.com/bug?id=78e9ad0e6952a3ca16e8234724b2fa92d041b9b8
+Original thread:    https://lkml.kernel.org/lkml/00000000000016eb330575bd2fab@google.com/T/#u
+
+This bug has a C reproducer.
+
+The original thread for this bug received 5 replies; the last was 40 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+2dcfeaf8cb49b05e8f1a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000016eb330575bd2fab@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in relay_close_buf
+Last occurred:      60 days ago
+Reported:           48 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=e4265490d26d6c01cd9bc79dc915ef0a1bf15046
+Original thread:    https://lkml.kernel.org/lkml/000000000000cff4d50588490e45@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug has received 1 reply, 48 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+58320b7171734bf79d26@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000cff4d50588490e45@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in debugfs_remove
+Last occurred:      70 days ago
+Reported:           62 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=fab43e1b35f4b1004751d97182979a68a8449388
+Original thread:    https://lkml.kernel.org/lkml/000000000000b20dd60587350ae0@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug has received 1 reply, 62 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+c091783d82e47615bb28@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000b20dd60587350ae0@google.com
+
+--------------------------------------------------------------------------------
+Title:              KASAN: use-after-free Read in disk_map_sector_rcu
+Last occurred:      108 days ago
+Reported:           171 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f81f92bd0974739a6c3ded8d0ea7aaafb039628e
+Original thread:    https://lkml.kernel.org/lkml/0000000000003804ff057ea47d37@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e01322aeded15e015bbd@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000003804ff057ea47d37@google.com
+
+--------------------------------------------------------------------------------
+Title:              general protection fault in relay_switch_subbuf
+Last occurred:      151 days ago
+Reported:           123 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=329e956ea2ff61441908dc7706656920c4ddb2e9
+Original thread:    https://lkml.kernel.org/lkml/000000000000336578058268a553@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+The original thread for this bug received 1 reply, 123 days ago.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+8e789999f280ccd6930f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000336578058268a553@google.com
 
