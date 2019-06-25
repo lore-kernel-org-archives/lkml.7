@@ -2,167 +2,126 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DBFC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09B5C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71BF2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE05208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="Ef0Cu/RE"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="B8LuQu66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfFYQam (ORCPT
+        id S1729159AbfFYQey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:30:42 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42358 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbfFYQal (ORCPT
+        Tue, 25 Jun 2019 12:34:54 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34349 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbfFYQex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:30:41 -0400
-Received: by mail-ed1-f67.google.com with SMTP id z25so27994697edq.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:30:40 -0700 (PDT)
+        Tue, 25 Jun 2019 12:34:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k11so18662600wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:34:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=kR0WUI8Wb/oooTRRXaBppmKY4itrnwNoAnfaDYxWCXg=;
-        b=Ef0Cu/REsmQg6MhTc0LYNFTuhGc/eYuhkoJy1MGD6n5TmP+cKrBx8wz8DHzN4qWA/w
-         vZojz0AdcMfxpwZJ7hgKiQr/hzQhMIThIwtXks+4SynHn8cJdogvib5h19034NVKrMAI
-         NjWd6xGzFc6MXM3hEvtByGou96H6k5pVi1RhgmUhXkvtUZTn8bireeiH0H5rmKaFfm32
-         I/VKCt/kPCSqGu1d2+flXrxMsqpEUghbeMhl4KnWUHVtkf6ud8zMVi9wgsEEysTlyCjC
-         jFfLAlDGpF7w1EyEsVC3njvZ7t9cUm8tcMvbOeiJOsDj8kUUmzeT+QI4FDBlt4BZ3PQZ
-         8iuw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RNjXZTa0eehs8U6TXIJ1xtY97Iu/6Eek+y81QQNtjK4=;
+        b=B8LuQu66bgMmpBHn0CbN+gVJmLWy3c3N7z8bxuh0JXGKTw6PWfsSrpdrk5mrFYRvmt
+         CeUcFrYqeCPgbiCJ+jIiEUE2NbmgnQFalb/wUcSM8ab3BddXyQ02/10RO9om9ObUS8VI
+         sGVmk+ffQ8YrqfA7m/lbU2K1B/9/tczAwT7KMOOrh4Sd13TAzAhT66t4CKX4s9yQH1PU
+         l8BYKVJU3d61u7wZ4h/eYquVn0tk1mbumj6t91PAzxrKbo2uiCe1uu/MMQkGxLylJ/5D
+         zHz02i20yGrgLom/qdpFn5k25qlFJq2s36M/p6mmBeIaxkvGXx1yijivOajz10lQ2ZDo
+         hrMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=kR0WUI8Wb/oooTRRXaBppmKY4itrnwNoAnfaDYxWCXg=;
-        b=MYj/HokH4B0NUlxta5wOIbNaBJAdxkmvSi4+X+oioWEbIxa+3Uisk6O369SJIZN5sm
-         YJ4sn5qWZlal116UiQalhrTrI2hEMd7TeRIIxgpQ6e+FEcINYVZaNVnzL8gXhvakCO3d
-         Ho8ipJyJSNIMKY1bbPrhnzIUtLkGrunP1antICObEXNL0eDnP9Js4RIB9GXAYEMphk4p
-         ZXdFiNGvjZfnApYlADJ4qjiWVJTVDKEqg+LuZUEVm0FkU90/Iw/h5++UerPdCOf32oBO
-         eI3mOkJJxgL+Q3cYguizdTHeXb5cE0plH92wGFjWfnrvuvJvEz4mpzNlwx6pDBUItyL/
-         g9PA==
-X-Gm-Message-State: APjAAAVpMNMNTwb3inXfUUNn1B2Zc29/Pmu+iHGxTGEAmW61WxcrD4QZ
-        WjueKwuE21kE/TAt6wXu0m/JdA==
-X-Google-Smtp-Source: APXvYqyj3S0faUmz2N4ooIsNesYDYB3kQPdxuPc/QEDIXsVTGkCor1MNCYdGo1SZ2+JpaeL+DTMdng==
-X-Received: by 2002:a17:906:487:: with SMTP id f7mr15597256eja.236.1561480239429;
-        Tue, 25 Jun 2019 09:30:39 -0700 (PDT)
-Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
-        by smtp.gmail.com with ESMTPSA id f3sm2477238ejo.90.2019.06.25.09.30.38
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RNjXZTa0eehs8U6TXIJ1xtY97Iu/6Eek+y81QQNtjK4=;
+        b=gns1/l7ByAbJcia1DdtzWK7AgrtfLvC01QLXowppSGzBcNXyAbm0CsMnjk6L7MN7kl
+         Okm2kmcdTjJiUXg9MrZlJtGJfpnDojFIiJps5Se/o0PRmyTBEa8L8EM8Jz5VdGsyuid0
+         sB3JiD67JNggYFI53WnbssTyxdoQdX6oHCe7VCpUiS+x8H1RCYKEC2Jbdi3drl2hnkD4
+         /j3eu9p23SoAyZxuxI8nHlJ/B5+kZg7RJaGKue6GGmmbvNXedIfn5lXhPeGchJ01V/hC
+         1s2otehIwdasGd+D3b0+GhIxzqzWEblN3GEqjBwVem73JUwNzGpiz5fmAbB7AoE08hIg
+         5Aww==
+X-Gm-Message-State: APjAAAWP4rjgpGP7PGWv4rOuQtx6WOTYyPhNbdMvU+419xtrKYyBXFD+
+        /X6Cgw4temSA8jThbCUSY5v0ew==
+X-Google-Smtp-Source: APXvYqwGZ61fCCBpD9shDosEmPm3n3rtBVEJAron1RaBsQFJZuBhiFZxaTmMz81yYUZI1bSgnfdGEg==
+X-Received: by 2002:a5d:5446:: with SMTP id w6mr106263069wrv.164.1561480491732;
+        Tue, 25 Jun 2019 09:34:51 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id g8sm2683795wme.20.2019.06.25.09.34.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 09:30:38 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <798FDD1F-415C-43CD-AC8E-3BEB08FD3AE4@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_05ED6925-114F-4BB9-8D0F-85B181FB037A";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 1/4] block: add zone open, close and finish support
-Date:   Tue, 25 Jun 2019 18:30:37 +0200
-In-Reply-To: <79ca395d-8019-9ec8-0c0b-194ca6d9eda0@acm.org>
-Cc:     =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        Matias Bjorling <Matias.Bjorling@wdc.com>
-To:     Bart Van Assche <bvanassche@acm.org>
-References: <20190621130711.21986-1-mb@lightnvm.io>
- <20190621130711.21986-2-mb@lightnvm.io>
- <ee5764fb-473a-f118-eaac-95478d885f6f@acm.org>
- <BYAPR04MB5749CEFBB45EA34BD3345CD686E00@BYAPR04MB5749.namprd04.prod.outlook.com>
- <cce08df0-0b4d-833d-64ce-f9b81f7ad7ca@lightnvm.io>
- <79ca395d-8019-9ec8-0c0b-194ca6d9eda0@acm.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 25 Jun 2019 09:34:51 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Lechner <david@lechnology.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 00/12] ARM: davinci: da850-evm: remove more legacy GPIO calls
+Date:   Tue, 25 Jun 2019 18:34:22 +0200
+Message-Id: <20190625163434.13620-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
---Apple-Mail=_05ED6925-114F-4BB9-8D0F-85B181FB037A
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+This is another small step on the path to liberating davinci from legacy
+GPIO API calls and shrinking the davinci GPIO driver by not having to
+support the base GPIO number anymore.
 
-> On 25 Jun 2019, at 17.55, Bart Van Assche <bvanassche@acm.org> wrote:
->=20
-> On 6/25/19 3:35 AM, Matias Bj=C3=B8rling wrote:
->> On 6/25/19 12:27 AM, Chaitanya Kulkarni wrote:
->>> On 6/24/19 12:43 PM, Bart Van Assche wrote:
->>>> static inline bool op_is_write(unsigned int op)
->>>> {
->>>>     return (op & 1);
->>>> }
->> The zone mgmt commands are neither write nor reads commands. I guess, =
-one could characterize them as write commands, but they don't write any =
-data, they update a state of a zone on a drive. One should keep it as =
-is? and make sure the zone mgmt commands don't get categorized as either =
-read/write.
->=20
-> Since the open, close and finish operations support modifying zone =
-data I propose to characterize these as write commands. How about the =
-following additional changes:
-> - Make bio_check_ro() refuse open/close/flush/reset zone operations =
-for read-only partitions (see also commit a32e236eb93e ("Partially =
-revert "block: fail op_is_write() requests to read-only partitions"") # =
-v4.18).
-> - In submit_bio(), change op_is_write(bio_op(bio)) ? "WRITE" : "READ" =
-into something that uses blk_op_str().
-> - Add open/close/flush zone support be added in blk_partition_remap().
->=20
-> Thanks,
->=20
-> Bart.
+This time we're removing the legacy calls used indirectly by the LCDC
+fbdev driver.
 
-Agreed. This is also what we do with REQ_OP_DISCARD and it makes things
-easier in the driver.
+The first three patches modify the GPIO backlight driver. The first
+of them adds the necessary functionality, the other two are just
+tweaks and cleanups.
 
-Apart from the return comment from Damien and Minwoo, the patch looks =
-good to me.
+Next two patches enable the GPIO backlight driver in
+davinci_all_defconfig.
 
-Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
+Patch 6/12 models the backlight GPIO as an actual GPIO backlight device.
 
+Patches 7-9 extend the fbdev driver with regulator support and convert
+the da850-evm board file to using it.
 
---Apple-Mail=_05ED6925-114F-4BB9-8D0F-85B181FB037A
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+Last three patches are improvements to the da8xx fbdev driver since
+we're already touching it in this series.
 
------BEGIN PGP SIGNATURE-----
+Bartosz Golaszewski (12):
+  backlight: gpio: allow to probe non-pdata devices from board files
+  backlight: gpio: use a helper variable for &pdev->dev
+  backlight: gpio: pull the non-pdata device probing code into probe()
+  ARM: davinci: refresh davinci_all_defconfig
+  ARM: davinci_all_defconfig: enable GPIO backlight
+  ARM: davinci: da850-evm: model the backlight GPIO as an actual device
+  fbdev: da8xx: add support for a regulator
+  ARM: davinci: da850-evm: switch to using a fixed regulator for lcdc
+  fbdev: da8xx: remove panel_power_ctrl() callback from platform data
+  fbdev: da8xx-fb: use devm_platform_ioremap_resource()
+  fbdev: da8xx-fb: drop a redundant if
+  fbdev: da8xx: use resource management for dma
 
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAl0STC0ACgkQPEYBfS0l
-eODeeg/8CeCql8ROfdygJuY5YBknnNtJ3MBG0pVnbVyzvejjnzJUDMmAPd6dkXe+
-CqFiJ2qBtgcqQawrGwUpwG+Z3a2lq0ts9KjDEh3XWDbERplM1i9kq89xAO8E8pLU
-J0zyzYyLMzp3v2Ht+UKhH37Ml2CcfUX5+fpwcF7GhNiVi03Z+g/MhA7uyZ3p52lC
-9tFNmpPGHP818kqFZIZu+TrfCDQFeiUu6F+ve8X3BowxS9dzwbiTYteBKny1cBZ5
-1whAbzLbStIbcKZs7An6/DCDebppZkC7HAf7ZJw4yobWOqUF2sTO3+UouYpuHNob
-WPpX1+bh84AyLGVp04c2G6iNBEYfDQMRovCJ8BMOTebmRuDk7OQmldNMbGDgLhGd
-ap/hGkASIUe43bFY1kVeVwAKIms8zUMBAJxHuhhQ1DErRLBEHBVtYTqQlHhX3b/L
-Z3Tcldt3h+tMBjiDSh1yZ6ZREIJ0aWU6V4uTFSZjpxD7p2NA8p/2zmS3tNjAiZZ4
-Ng0ENcfOPtmunqXKw1sUk7Zc5LWD8ybX3EKfU2iLfN/+N2DFl+q5w5WhKQOmBscb
-DdWJglfESr6FnesiiuR3a2fhm24LlhEmNmAcE9cu6UHFcWsoIef18q+1OOdQZp5h
-UGgljTYKj1Esl9iHL6/F/MPFIcpKbyFexxhY8EFlXfUO3/Amgrg=
-=xyg2
------END PGP SIGNATURE-----
+ arch/arm/configs/davinci_all_defconfig   |  28 +++---
+ arch/arm/mach-davinci/board-da850-evm.c  |  90 ++++++++++++-----
+ drivers/video/backlight/gpio_backlight.c |  67 +++++--------
+ drivers/video/fbdev/da8xx-fb.c           | 118 +++++++++++++----------
+ include/video/da8xx-fb.h                 |   1 -
+ 5 files changed, 165 insertions(+), 139 deletions(-)
 
---Apple-Mail=_05ED6925-114F-4BB9-8D0F-85B181FB037A--
+-- 
+2.21.0
+
