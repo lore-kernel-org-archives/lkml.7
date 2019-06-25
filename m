@@ -2,169 +2,391 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F82C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CF5C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC0A20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oDCIID4e"
+	by mail.kernel.org (Postfix) with ESMTP id 71F03214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561461643;
+	bh=mDmtSZT9O4MOjVflR3tL9B9hnhva1mWHHPxArvsOmsA=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=Nzst7H3mlsWHRIzTTDlVSDIzjvWx1Z+aCN+xfbxGU9HDFE84AN+LuQacv/j1CUvAg
+	 80zZ5kbJA3atrs5XqjR6LymglzkDJIobM11TT3YnTZmqoZ/pjyn0XAecRTWT427iBj
+	 cgX+1GcAgVT80Rlv+cB6OeSTaFTmRc8emzMzcdlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbfFYLUO (ORCPT
+        id S1730698AbfFYLUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:20:14 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:63109 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfFYLUO (ORCPT
+        Tue, 25 Jun 2019 07:20:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41730 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730665AbfFYLUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:20:14 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x5PBK6p4021676;
-        Tue, 25 Jun 2019 20:20:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x5PBK6p4021676
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561461608;
-        bh=EozDTvKOHcxfsnch/gqc5P65unHEyuMQ8uubcxmAZlM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=oDCIID4eTViowrKJm64kltyop6/yXFi4a2ne2EJNdeKBsXlpbk5LAz3XmX8AfmWfL
-         8CEq6IaPuCWnSpZWOWIiPr4CMraGKriEV0dr/scssIAkOoQ4tPdFZf/sWcGHhTErgP
-         uzz7xpwO38q+fHoB2SXfUDAGFds07jvr0L1ZGEE2+BxDxyNrHQwPE091iWCJKZFQ8y
-         CqAd43sbpPvZu06lGYYH6os07MhVCFJkVJ746HU7Fk8AcSr5M03G/W5iv5nQ1LUlU4
-         6ol4CQkJwTNbK2DDUBsnbh7qseqlivtSp/+N+V3oqdTU24RpIXXVYcI13t2Ave4WyT
-         Ufl80JYYkOmjg==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id l20so10627514vsp.3;
-        Tue, 25 Jun 2019 04:20:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAWqI4Elr7cLz+KisnO7gADGdW7IGrFIequShb6IrkeVZx50whlA
-        Q3htS0g83M4P49MV0mE91fjbPuY796F2c1iJUeg=
-X-Google-Smtp-Source: APXvYqz4C0jEV6JsmnAwXrS5jug/6D8+RpgLCkFumref4bUDIhrX+Gv/FiXLBqM2LQNc5AGO2JH8aSjrMd1YVy1QTpw=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr46893396vsl.155.1561461606319;
- Tue, 25 Jun 2019 04:20:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190521133257.GA21471@kroah.com> <CAK7LNASZWLwYC2E3vBkXhp7wt9zBWkFrR+NTnxTyLn1zO66a0w@mail.gmail.com>
- <eae2d0e80824cc84965c571a0ea097e14d3f498c.camel@perches.com>
-In-Reply-To: <eae2d0e80824cc84965c571a0ea097e14d3f498c.camel@perches.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 25 Jun 2019 20:19:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASR_vJS13GjZmqMC0DSO=kTVNprpsRgtK4QSLExRUQFtg@mail.gmail.com>
-Message-ID: <CAK7LNASR_vJS13GjZmqMC0DSO=kTVNprpsRgtK4QSLExRUQFtg@mail.gmail.com>
-Subject: Re: [GIT PULL] SPDX update for 5.2-rc1 - round 1
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spdx@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Jun 2019 07:20:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=uCSDwv+9yNyFyaDdq5UrkMrdBsIDHs9bJqFwZOUU2DM=; b=YdKxtgXohqjB
+        VmFHBY83p8zYneUta0Uc+fJkTmrKu2H1JROShQ/CNcvDOpJryXGYQRJMSRSA5goIB84OwJLFNV2Xd
+        HdaAp53YxSeNiPO1F53WTuvqoGbeUiUm/efACOg4P7t61VvqRS2R5QavEVrL43Dom4aW07qx6QMg3
+        vOcJU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hfjV7-00057o-R6; Tue, 25 Jun 2019 11:20:37 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 5F2E4440046; Tue, 25 Jun 2019 12:20:37 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: core: Expose some of core functions needed by couplers" to the regulator tree
+In-Reply-To: 
+X-Patchwork-Hint: ignore
+Message-Id: <20190625112037.5F2E4440046@finisterre.sirena.org.uk>
+Date:   Tue, 25 Jun 2019 12:20:37 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+The patch
 
-On Wed, May 22, 2019 at 3:37 PM Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2019-05-22 at 13:32 +0900, Masahiro Yamada wrote:
-> > On Tue, May 21, 2019 at 10:34 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> []
-> > >  - Add GPL-2.0-only or GPL-2.0-or-later tags to files where our scan
-> > >     tools can determine the license text in the file itself.  Where this
-> > >     happens, the license text is removed, in order to cut down on the
-> > >     700+ different ways we have in the kernel today, in a quest to get
-> > >     rid of all of these.
-> []
-> > I have been wondering for a while
-> > which version of spdx tags I should use in my work.
-> >
-> > I know the 'GPL-2.0' tag is already deprecated.
-> > (https://spdx.org/licenses/GPL-2.0.html)
-> >
-> > But, I saw negative reaction to this:
-> > https://lore.kernel.org/patchwork/patch/975394/
-> >
-> > Nor "-only" / "-or-later" are documented in
-> > Documentation/process/license-rules.rst
-> >
-> > In this patch series, Thomas used 'GPL-2.0-only' and 'GPL-2.0-or-later'
-> > instead of 'GPL-2.0' and 'GPL-2.0+'.
-> >
-> > Now, we have a great number of users of spdx v3 tags.
-> > $ git grep -P 'SPDX-License-Identifier.*(?:-or-later|-only)'| wc -l
-> > 4135
-> > So, what I understood is:
-> >
-> >   For newly added tags, '*-only' and '*-or-later' are preferred.
-> >
-> > (But, we do not convert existing spdx v2 tags globally.)
-> >
-> >
-> > "
-> > Joe's patch was not merged, but at least
-> > Documentation/process/license-rules.rst
-> > should be updated in my opinion.
-> >
-> > (Perhaps, checkpatch.pl can suggest newer tags in case
-> > patch submitters do not even know that deprecation.)
->
-> I'd still prefer the kernel use of a single SPDX style.
->
-> I don't know why the -only and -or-later forms were
-> used for this patch, but I like it.
->
-> I believe the -only and -or-later are more intelligible
-> as a trivial reading of
->
->         SPDX-License-Identifier: GPL-2.0
->
-> would generally mean to me the original
-> GPL-2.0 license without the elision of the
-> (or at your option, any later version) bits
->
-> whereas
->
->         SPDX-License-Identifier: GPL-2.0-only
->
-> seems fairly descriptive.
->
-> Is it agreed that the GPL-<v>-only and GPL-<v>-or-later
-> forms should be preferred for new SPDX identifiers?
->
-> If so, I'll submit a checkpatch patch.
+   regulator: core: Expose some of core functions needed by couplers
 
+has been applied to the regulator tree at
 
-Could you send a patch to update checkpatch and doc ?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-Similar discussion here too.
-https://lkml.org/lkml/2019/5/31/456
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-We need better documentation to stop wasting time for this.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-This should be separated from the
- /* ... */  vs // discussion.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Thanks.
+Thanks,
+Mark
 
+From d22b85a1b97d12a4940ef9d778f6122546736f78 Mon Sep 17 00:00:00 2001
+From: Dmitry Osipenko <digetx@gmail.com>
+Date: Mon, 24 Jun 2019 00:08:32 +0300
+Subject: [PATCH] regulator: core: Expose some of core functions needed by
+ couplers
 
-> I could also wire up a patch to checkpatch and docs to
-> remove the /* */
-> requirement for .h files and prefer
-> the generic // form for both .c and
-> .h files as the
-> current minimum tooling versions now all allow //
-> comments
-> .
->
->
+Expose some of internal functions that are required for implementation of
+customized regulator couplers.
 
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/core.c          | 58 ++++++++++++++-----------------
+ include/linux/regulator/coupler.h | 35 +++++++++++++++++++
+ 2 files changed, 62 insertions(+), 31 deletions(-)
 
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 12c870f790f5..b9bc45128b8c 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -100,7 +100,6 @@ struct regulator_supply_alias {
+ 
+ static int _regulator_is_enabled(struct regulator_dev *rdev);
+ static int _regulator_disable(struct regulator *regulator);
+-static int _regulator_get_voltage(struct regulator_dev *rdev);
+ static int _regulator_get_current_limit(struct regulator_dev *rdev);
+ static unsigned int _regulator_get_mode(struct regulator_dev *rdev);
+ static int _notifier_call_chain(struct regulator_dev *rdev,
+@@ -109,15 +108,12 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 				     int min_uV, int max_uV);
+ static int regulator_balance_voltage(struct regulator_dev *rdev,
+ 				     suspend_state_t state);
+-static int regulator_set_voltage_rdev(struct regulator_dev *rdev,
+-				      int min_uV, int max_uV,
+-				      suspend_state_t state);
+ static struct regulator *create_regulator(struct regulator_dev *rdev,
+ 					  struct device *dev,
+ 					  const char *supply_name);
+ static void _regulator_put(struct regulator *regulator);
+ 
+-static const char *rdev_get_name(struct regulator_dev *rdev)
++const char *rdev_get_name(struct regulator_dev *rdev)
+ {
+ 	if (rdev->constraints && rdev->constraints->name)
+ 		return rdev->constraints->name;
+@@ -431,8 +427,8 @@ static struct device_node *of_get_regulator(struct device *dev, const char *supp
+ }
+ 
+ /* Platform voltage constraint check */
+-static int regulator_check_voltage(struct regulator_dev *rdev,
+-				   int *min_uV, int *max_uV)
++int regulator_check_voltage(struct regulator_dev *rdev,
++			    int *min_uV, int *max_uV)
+ {
+ 	BUG_ON(*min_uV > *max_uV);
+ 
+@@ -464,9 +460,9 @@ static int regulator_check_states(suspend_state_t state)
+ /* Make sure we select a voltage that suits the needs of all
+  * regulator consumers
+  */
+-static int regulator_check_consumers(struct regulator_dev *rdev,
+-				     int *min_uV, int *max_uV,
+-				     suspend_state_t state)
++int regulator_check_consumers(struct regulator_dev *rdev,
++			      int *min_uV, int *max_uV,
++			      suspend_state_t state)
+ {
+ 	struct regulator *regulator;
+ 	struct regulator_voltage *voltage;
+@@ -577,7 +573,7 @@ static ssize_t regulator_uV_show(struct device *dev,
+ 	ssize_t ret;
+ 
+ 	regulator_lock(rdev);
+-	ret = sprintf(buf, "%d\n", _regulator_get_voltage(rdev));
++	ret = sprintf(buf, "%d\n", regulator_get_voltage_rdev(rdev));
+ 	regulator_unlock(rdev);
+ 
+ 	return ret;
+@@ -948,7 +944,7 @@ static int drms_uA_update(struct regulator_dev *rdev)
+ 			rdev_err(rdev, "failed to set load %d\n", current_uA);
+ 	} else {
+ 		/* get output voltage */
+-		output_uV = _regulator_get_voltage(rdev);
++		output_uV = regulator_get_voltage_rdev(rdev);
+ 		if (output_uV <= 0) {
+ 			rdev_err(rdev, "invalid output voltage found\n");
+ 			return -EINVAL;
+@@ -1061,7 +1057,7 @@ static void print_constraints(struct regulator_dev *rdev)
+ 
+ 	if (!constraints->min_uV ||
+ 	    constraints->min_uV != constraints->max_uV) {
+-		ret = _regulator_get_voltage(rdev);
++		ret = regulator_get_voltage_rdev(rdev);
+ 		if (ret > 0)
+ 			count += scnprintf(buf + count, len - count,
+ 					   "at %d mV ", ret / 1000);
+@@ -1120,7 +1116,7 @@ static int machine_constraints_voltage(struct regulator_dev *rdev,
+ 	if (rdev->constraints->apply_uV &&
+ 	    rdev->constraints->min_uV && rdev->constraints->max_uV) {
+ 		int target_min, target_max;
+-		int current_uV = _regulator_get_voltage(rdev);
++		int current_uV = regulator_get_voltage_rdev(rdev);
+ 
+ 		if (current_uV == -ENOTRECOVERABLE) {
+ 			/* This regulator can't be read and must be initialized */
+@@ -1130,7 +1126,7 @@ static int machine_constraints_voltage(struct regulator_dev *rdev,
+ 			_regulator_do_set_voltage(rdev,
+ 						  rdev->constraints->min_uV,
+ 						  rdev->constraints->max_uV);
+-			current_uV = _regulator_get_voltage(rdev);
++			current_uV = regulator_get_voltage_rdev(rdev);
+ 		}
+ 
+ 		if (current_uV < 0) {
+@@ -3072,7 +3068,7 @@ static int _regulator_call_set_voltage(struct regulator_dev *rdev,
+ 	struct pre_voltage_change_data data;
+ 	int ret;
+ 
+-	data.old_uV = _regulator_get_voltage(rdev);
++	data.old_uV = regulator_get_voltage_rdev(rdev);
+ 	data.min_uV = min_uV;
+ 	data.max_uV = max_uV;
+ 	ret = _notifier_call_chain(rdev, REGULATOR_EVENT_PRE_VOLTAGE_CHANGE,
+@@ -3096,7 +3092,7 @@ static int _regulator_call_set_voltage_sel(struct regulator_dev *rdev,
+ 	struct pre_voltage_change_data data;
+ 	int ret;
+ 
+-	data.old_uV = _regulator_get_voltage(rdev);
++	data.old_uV = regulator_get_voltage_rdev(rdev);
+ 	data.min_uV = uV;
+ 	data.max_uV = uV;
+ 	ret = _notifier_call_chain(rdev, REGULATOR_EVENT_PRE_VOLTAGE_CHANGE,
+@@ -3149,7 +3145,7 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 	unsigned int selector;
+ 	int old_selector = -1;
+ 	const struct regulator_ops *ops = rdev->desc->ops;
+-	int old_uV = _regulator_get_voltage(rdev);
++	int old_uV = regulator_get_voltage_rdev(rdev);
+ 
+ 	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
+ 
+@@ -3176,7 +3172,7 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 				best_val = ops->list_voltage(rdev,
+ 							     selector);
+ 			else
+-				best_val = _regulator_get_voltage(rdev);
++				best_val = regulator_get_voltage_rdev(rdev);
+ 		}
+ 
+ 	} else if (ops->set_voltage_sel) {
+@@ -3295,7 +3291,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 	 * changing the voltage.
+ 	 */
+ 	if (!regulator_ops_is_valid(rdev, REGULATOR_CHANGE_VOLTAGE)) {
+-		current_uV = _regulator_get_voltage(rdev);
++		current_uV = regulator_get_voltage_rdev(rdev);
+ 		if (min_uV <= current_uV && current_uV <= max_uV) {
+ 			voltage->min_uV = min_uV;
+ 			voltage->max_uV = max_uV;
+@@ -3332,8 +3328,8 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 	return ret;
+ }
+ 
+-static int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+-				      int max_uV, suspend_state_t state)
++int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
++			       int max_uV, suspend_state_t state)
+ {
+ 	int best_supply_uV = 0;
+ 	int supply_change_uV = 0;
+@@ -3361,7 +3357,7 @@ static int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
+ 
+ 		best_supply_uV += rdev->desc->min_dropout_uV;
+ 
+-		current_supply_uV = _regulator_get_voltage(rdev->supply->rdev);
++		current_supply_uV = regulator_get_voltage_rdev(rdev->supply->rdev);
+ 		if (current_supply_uV < 0) {
+ 			ret = current_supply_uV;
+ 			goto out;
+@@ -3412,7 +3408,7 @@ static int regulator_limit_voltage_step(struct regulator_dev *rdev,
+ 		return 1;
+ 
+ 	if (*current_uV < 0) {
+-		*current_uV = _regulator_get_voltage(rdev);
++		*current_uV = regulator_get_voltage_rdev(rdev);
+ 
+ 		if (*current_uV < 0)
+ 			return *current_uV;
+@@ -3517,7 +3513,7 @@ static int regulator_get_optimal_voltage(struct regulator_dev *rdev,
+ 		if (!_regulator_is_enabled(c_rdevs[i]))
+ 			continue;
+ 
+-		tmp_act = _regulator_get_voltage(c_rdevs[i]);
++		tmp_act = regulator_get_voltage_rdev(c_rdevs[i]);
+ 		if (tmp_act < 0)
+ 			return tmp_act;
+ 
+@@ -3559,7 +3555,7 @@ static int regulator_get_optimal_voltage(struct regulator_dev *rdev,
+ 	if (n_coupled > 1 && *current_uV == -1) {
+ 
+ 		if (_regulator_is_enabled(rdev)) {
+-			ret = _regulator_get_voltage(rdev);
++			ret = regulator_get_voltage_rdev(rdev);
+ 			if (ret < 0)
+ 				return ret;
+ 
+@@ -3923,7 +3919,7 @@ int regulator_sync_voltage(struct regulator *regulator)
+ }
+ EXPORT_SYMBOL_GPL(regulator_sync_voltage);
+ 
+-static int _regulator_get_voltage(struct regulator_dev *rdev)
++int regulator_get_voltage_rdev(struct regulator_dev *rdev)
+ {
+ 	int sel, ret;
+ 	bool bypassed;
+@@ -3940,7 +3936,7 @@ static int _regulator_get_voltage(struct regulator_dev *rdev)
+ 				return -EPROBE_DEFER;
+ 			}
+ 
+-			return _regulator_get_voltage(rdev->supply->rdev);
++			return regulator_get_voltage_rdev(rdev->supply->rdev);
+ 		}
+ 	}
+ 
+@@ -3956,7 +3952,7 @@ static int _regulator_get_voltage(struct regulator_dev *rdev)
+ 	} else if (rdev->desc->fixed_uV && (rdev->desc->n_voltages == 1)) {
+ 		ret = rdev->desc->fixed_uV;
+ 	} else if (rdev->supply) {
+-		ret = _regulator_get_voltage(rdev->supply->rdev);
++		ret = regulator_get_voltage_rdev(rdev->supply->rdev);
+ 	} else {
+ 		return -EINVAL;
+ 	}
+@@ -3981,7 +3977,7 @@ int regulator_get_voltage(struct regulator *regulator)
+ 	int ret;
+ 
+ 	regulator_lock_dependent(regulator->rdev, &ww_ctx);
+-	ret = _regulator_get_voltage(regulator->rdev);
++	ret = regulator_get_voltage_rdev(regulator->rdev);
+ 	regulator_unlock_dependent(regulator->rdev, &ww_ctx);
+ 
+ 	return ret;
+@@ -5377,7 +5373,7 @@ static void regulator_summary_show_subtree(struct seq_file *s,
+ 		   rdev->use_count, rdev->open_count, rdev->bypass_count,
+ 		   regulator_opmode_to_str(opmode));
+ 
+-	seq_printf(s, "%5dmV ", _regulator_get_voltage(rdev) / 1000);
++	seq_printf(s, "%5dmV ", regulator_get_voltage_rdev(rdev) / 1000);
+ 	seq_printf(s, "%5dmA ",
+ 		   _regulator_get_current_limit_unlocked(rdev) / 1000);
+ 
+diff --git a/include/linux/regulator/coupler.h b/include/linux/regulator/coupler.h
+index 98dd1f74d605..0212d6255e4e 100644
+--- a/include/linux/regulator/coupler.h
++++ b/include/linux/regulator/coupler.h
+@@ -52,11 +52,46 @@ struct regulator_coupler {
+ 
+ #ifdef CONFIG_REGULATOR
+ int regulator_coupler_register(struct regulator_coupler *coupler);
++const char *rdev_get_name(struct regulator_dev *rdev);
++int regulator_check_consumers(struct regulator_dev *rdev,
++			      int *min_uV, int *max_uV,
++			      suspend_state_t state);
++int regulator_check_voltage(struct regulator_dev *rdev,
++			    int *min_uV, int *max_uV);
++int regulator_get_voltage_rdev(struct regulator_dev *rdev);
++int regulator_set_voltage_rdev(struct regulator_dev *rdev,
++			       int min_uV, int max_uV,
++			       suspend_state_t state);
+ #else
+ static inline int regulator_coupler_register(struct regulator_coupler *coupler)
+ {
+ 	return 0;
+ }
++static inline const char *rdev_get_name(struct regulator_dev *rdev)
++{
++	return NULL;
++}
++static inline int regulator_check_consumers(struct regulator_dev *rdev,
++					    int *min_uV, int *max_uV,
++					    suspend_state_t state)
++{
++	return -EINVAL;
++}
++static inline int regulator_check_voltage(struct regulator_dev *rdev,
++					  int *min_uV, int *max_uV)
++{
++	return -EINVAL;
++}
++static inline int regulator_get_voltage_rdev(struct regulator_dev *rdev)
++{
++	return -EINVAL;
++}
++static inline int regulator_set_voltage_rdev(struct regulator_dev *rdev,
++					     int min_uV, int max_uV,
++					     suspend_state_t state)
++{
++	return -EINVAL;
++}
+ #endif
+ 
+ #endif
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
