@@ -2,121 +2,114 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6DAC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2231C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12166213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27F320644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qLdIAZqp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgaUm+qJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbfFYKsW (ORCPT
+        id S1729770AbfFYKuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:48:22 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46603 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfFYKsW (ORCPT
+        Tue, 25 Jun 2019 06:50:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40511 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfFYKuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:48:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so17247011wrw.13;
-        Tue, 25 Jun 2019 03:48:20 -0700 (PDT)
+        Tue, 25 Jun 2019 06:50:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so8761316pgj.7;
+        Tue, 25 Jun 2019 03:50:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
-         :references:user-agent:content-transfer-encoding;
-        bh=/YwqeNw4UunukhbJFUnuEIhTwSVj4RrsnNageK9oqjw=;
-        b=qLdIAZqpTqrUGvpCnFSi/SGB6/kU+eTummvrFzgm3zXWwKHLvS87uy8CUabOnnleH2
-         8SiMXa+PsY6j+K/ZQlEr8zInKfUPhWUL5fhElA5xIyNLw8q+eTJyuGFrP+oda/wAE2o/
-         eYLszT9ez+GczPcwhOaSzkg10MHG1ExpqeQG//IiLlSfb4GVtC8U/t51GkuPdQ6bJCbt
-         bNdTi9/4ZeFyEe4Lbsi3osTYGAt4aTv2/6Z5bnhTCEKioWkCycrV7+sl7sDnhwVZjOi6
-         qJ4woBeYEB2mCu+JgobWlefcuWvfxsifstMJeqOAUQekDknf9o59iQoTAEI60CPIn4v8
-         mL5w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r0LFmQkQla4HoW+LfNI4MhAT+RGO2NBR67tJFxhVMYA=;
+        b=RgaUm+qJjkLB9lZGfcuGq/HeAYlb0vYEym0EmhnTNGgxpxnhKV55KX8mCi6Sx3/HBg
+         vra836ZiOxIplDeGrc3xjW12mr4ggim0dnrCBbKGxKvE3QxkOZaNOuRPHAZLUU6IeRuF
+         6FV7ljhnPmLONQfPZ9qei8+iwCwfqCZtK59aJeC7i9a4sZmoHr7IxNx3NgTom5Bx4q0L
+         AckSssmUa0slmODVkOuz1ZrkcTd8g4Zq3Q0NsG9cU2EyxvvB6vb8AsFUdzrv09744GkW
+         SuIbjrnEgkCOFF7psj4zn2MkfLkcQDcASdnSw8c6HkjjtApMIjaQL2kWAmxz548PkFjC
+         Yxcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :in-reply-to:references:user-agent:content-transfer-encoding;
-        bh=/YwqeNw4UunukhbJFUnuEIhTwSVj4RrsnNageK9oqjw=;
-        b=LbP3sUF1Ez8wkBrHhVsxO6kF77HYCny2TrGgSj4SMA5Z9FxQf0sxOKLbvt241z15ji
-         jUbBGmmENt1qoO6NcLswUzPIw98sqeBAJVPU2X9zIfPEnxUPwGEZ71wTxd6bWBHp6tPm
-         vnebAlXEH857eLVEQKtTzbEnXgrqd6pgenEwFakreVjHBH3KpfQvI8DHhFeSxVyNB1pD
-         yq/VjRk6L+amx+XUWDVO/tffWlxw44FYYYS9sdkIBCo4e2alp1+OrGFiogUFXvqFY7Ch
-         gRbnv/kJnL4IWqaaJN4Dz7PRkyv5QvkWwT9DuQoXBtTb7G1JNAxuQ3pMRhrCL4MrSVSU
-         EGqQ==
-X-Gm-Message-State: APjAAAU9n6th0h0SN9kncMKcY8U7RzHMNNflEm0a1BPDQm0S35rNqcbp
-        TqzLAqqOJ2c81U1K+VBw6Omm6Iqf39ofyQ==
-X-Google-Smtp-Source: APXvYqzbsLqTnIBSznKPDtaHGmrBKP1M7k2HnizWsTquzdXflsk0JmtZkr3goY7PAUaqcOJ22+FWeQ==
-X-Received: by 2002:a5d:5446:: with SMTP id w6mr105019303wrv.164.1561459700098;
-        Tue, 25 Jun 2019 03:48:20 -0700 (PDT)
-Received: from localhost ([92.59.185.54])
-        by smtp.gmail.com with ESMTPSA id w23sm2292976wmi.45.2019.06.25.03.48.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 03:48:19 -0700 (PDT)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        <marc.zyngier@arm.com>
-Subject: Re: =?iso-8859-1?Q?d=5Flookup:_Unable_to_handle_kernel_paging_request?=
-Date:   Tue, 25 Jun 2019 12:48:17 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r0LFmQkQla4HoW+LfNI4MhAT+RGO2NBR67tJFxhVMYA=;
+        b=fa283lBrbuy5+CsMra9g2V5cWgdIZIG+AOpDRmG5GmBDp4/oeukt7AYRHKstNeyI7N
+         h1TlIs8EkDMeaBj2SFVzk/eIazxOcntmZfvowzilKIwr0OtU9IQqhzQXdxX7daTDX2TX
+         GTdGPEE5V3HxNqs8A2BNzpcExB1T0d3W1VN/jRYqVbwfx6hS89lpXMVpQ8vtdQD+WzBa
+         kGALmRI/s4YvPhRnqlS6qvMf8R6BC9YULbe7Uv3XH1u+hg6IkK7iyrQAxiSJT1NTucqB
+         O2XVaQopq2aZRbpzCgVKlC1JJ2+SIKXCSqHmE9rIGK/lNHYJby+TMkUS3GuoTROC/h53
+         +ViA==
+X-Gm-Message-State: APjAAAX98aYm/nYm/yRspli/w80Ax3k7g5xlci5lrcyLgquNV8lFF2e/
+        nO60NImGPKIxHSI2hm3vwjzBgWODRC777U1ybQ8=
+X-Google-Smtp-Source: APXvYqw8/WnFgJMq0p4EVEtYRG/6voqYxOv6BWVlhTC1mMcbdLLY8uqmSX0j90biOb9Jv2nuh8Ypn/SA+YCJ5Nc1bYM=
+X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr31470076pjb.20.1561459834178;
+ Tue, 25 Jun 2019 03:50:34 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <c53a0fb8-d640-4d58-b339-0a7ea10aa621@gmail.com>
-In-Reply-To: <20190625094602.GC13263@fuggles.cambridge.arm.com>
-References: <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
- <20190522162945.GN17978@ZenIV.linux.org.uk>
- <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
- <20190618183548.GB17978@ZenIV.linux.org.uk>
- <bf2b3aa6-bda1-43f1-9a01-e4ad3df81c0b@gmail.com>
- <20190619162802.GF17978@ZenIV.linux.org.uk>
- <bc774f6b-711e-4a20-ad85-c282f9761392@gmail.com>
- <20190619170940.GG17978@ZenIV.linux.org.uk>
- <cd84de0e-909e-4117-a20a-6cde42079267@gmail.com>
- <20190624114741.i542cb3wbhfbk4q4@willie-the-truck>
- <20190625094602.GC13263@fuggles.cambridge.arm.com>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190623063153.261546-1-dmitry.torokhov@gmail.com> <011d62995b20493f977ead43f4b494a2@AcuMS.aculab.com>
+In-Reply-To: <011d62995b20493f977ead43f4b494a2@AcuMS.aculab.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 25 Jun 2019 13:50:23 +0300
+Message-ID: <CAHp75VfJQp4TqfyvjGtFcnvN-md++9fQUis6a-dFKn_2OUN=0A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Input: edt-ft5x06 - use get_unaligned_be16()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Benoit Parrot <bparrot@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, June 25, 2019 11:46:02 AM CEST, Will Deacon wrote:
-> [+Marc]
+On Tue, Jun 25, 2019 at 11:44 AM David Laight <David.Laight@aculab.com> wrote:
 >
-> Hi again, Vicente,
+> From: Dmitry Torokhov
+> > Sent: 23 June 2019 07:32
+> >
+> > Instead of doing conversion by hand, let's use the proper accessors.
+> >
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >  drivers/input/touchscreen/edt-ft5x06.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > index c639ebce914c..ec770226e119 100644
+> > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/gpio/consumer.h>
+> >  #include <linux/input/mt.h>
+> >  #include <linux/input/touchscreen.h>
+> > +#include <asm/unaligned.h>
+> >
+> >  #define WORK_REGISTER_THRESHOLD              0x00
+> >  #define WORK_REGISTER_REPORT_RATE    0x08
+> > @@ -239,8 +240,8 @@ static irqreturn_t edt_ft5x06_ts_isr(int irq, void *dev_id)
+> >               if (tsdata->version == EDT_M06 && type == TOUCH_EVENT_DOWN)
+> >                       continue;
+> >
+> > -             x = ((buf[0] << 8) | buf[1]) & 0x0fff;
+> > -             y = ((buf[2] << 8) | buf[3]) & 0x0fff;
+> > +             x = get_unaligned_be16(buf) & 0x0fff;
+> > +             y = get_unaligned_be16(buf + 2) & 0x0fff;
 >
-> On Mon, Jun 24, 2019 at 12:47:41PM +0100, Will Deacon wrote:
->> On Sat, Jun 22, 2019 at 08:02:19PM +0200, Vicente Bergas wrote: ...
->
-> Before you rush over to LAKML, please could you provide your full dmesg
-> output from the kernel that was crashing (i.e. the dmesg you see in the
-> kexec'd kernel)? We've got a theory that the issue may be related to the
-> interrupt controller, and the dmesg output should help to establish whether=
+> You might as well delete the pointless masking with 0xff.
 
-> that is plausible or not.
->
-> Thanks,
->
-> Will
+Hmm... Does it guarantee the most significant nibble to be always 0?
+(Note 16-bit value and three f:s in the mask)
 
-Hi Will,
-the memtest test is still pending...
 
-Regarding interrupts, the kernel before kexec has this parameter:
-irqchip.gicv3_nolpi=3D1
-Thanks to Marc:
-https://freenode.irclog.whitequark.org/linux-rockchip/2018-11-20#23524255
-
-The kernel messages are here:
-https://paste.debian.net/1089170/
-https://paste.debian.net/1089171/
-
-Regards,
-  Vicen=C3=A7.
-
+-- 
+With Best Regards,
+Andy Shevchenko
