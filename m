@@ -2,216 +2,539 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFA6C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7CBC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A692146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39608214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F3FutycM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731696AbfFYOiD (ORCPT
+        id S1731773AbfFYOiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:38:03 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51525 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731516AbfFYOh7 (ORCPT
+        Tue, 25 Jun 2019 10:38:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52948 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730588AbfFYOiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:37:59 -0400
-X-Originating-IP: 90.88.16.156
-Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id B6C476000A;
-        Tue, 25 Jun 2019 14:37:47 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 16:37:47 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?utf-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v10 04/11] drm/sun4i: tcon: Compute
- DCLK dividers based on format, lanes
-Message-ID: <20190625143747.3czd7sit4waz75b6@flea>
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-5-jagan@amarulasolutions.com>
- <20190523204823.mx7l4ozklzdh7npn@flea>
- <CAMty3ZA0S=+8NBrQZvP6sFdzSYWqhNZL_KjkJAQ0jTc2RVivrw@mail.gmail.com>
- <20190604143016.fcx3ezmga244xakp@flea>
- <CAMty3ZAAK4RoE6g_LAZ-Q38On_1s_TTOz65YG7PVd88mwp-+4Q@mail.gmail.com>
- <20190613131626.7zbwvrvd4e7eafrc@flea>
- <CAMty3ZBDkMJkZm8FudNB1wQ+L-q3XVKa3zR2M0wZ5Uncdy_Ayg@mail.gmail.com>
- <20190624130442.ww4l3zctykr4i2e2@flea>
- <CAMty3ZB+eZUh5mr-LMZuEd_wrwLCN0mbf7arcRQHj8=uUNNq=Q@mail.gmail.com>
+        Tue, 25 Jun 2019 10:38:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7Nw8nB685y+6LL8lV2B7CzUbhlE0EkQRUBSQFuFoZsU=; b=F3FutycMquHOrZwEo5Hnp322WX
+        fqzMvokVNVRzLB78DDnSqYuk+SrJZBcnXDtKGd440OdqADtXmgaqppIxd/mAjimCV/kEc+J+QKKp3
+        vvJowGT3P3zBSrvH7uE/Xwlkme2oGngihWHwjaGrhqfqky7B3VBf6Ftl6j8zjKphGtVEKag5f+EfG
+        GMm3GpVKOxv0RZ5UWe3hPFE0uALmLpOMokws/zVIihukxy8JGCpPg2YU+ORzLsQJKbrBQ3yxn87KE
+        hyAbFL81krptwJXtt7ZWqGB+S05j4f+Is17FuWAxf5lgaoSoIwQ/bINlV1YOGUywljUt+625GCdYC
+        oeZErBYw==;
+Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfma1-00082h-Dc; Tue, 25 Jun 2019 14:37:54 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 11/16] mm: reorder code blocks in gup.c
+Date:   Tue, 25 Jun 2019 16:37:10 +0200
+Message-Id: <20190625143715.1689-12-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190625143715.1689-1-hch@lst.de>
+References: <20190625143715.1689-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4qhko7umufjvzvnc"
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZB+eZUh5mr-LMZuEd_wrwLCN0mbf7arcRQHj8=uUNNq=Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This moves the actually exported functions towards the end of the file,
+and reorders some functions to be in more logical blocks as a
+preparation for moving various stubs inline into the main functionality
+using IS_ENABLED().
 
---4qhko7umufjvzvnc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ mm/gup.c | 410 +++++++++++++++++++++++++++----------------------------
+ 1 file changed, 205 insertions(+), 205 deletions(-)
 
-On Mon, Jun 24, 2019 at 09:32:11PM +0530, Jagan Teki wrote:
-> On Mon, Jun 24, 2019 at 6:34 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Fri, Jun 14, 2019 at 05:33:23PM +0530, Jagan Teki wrote:
-> > > On Thu, Jun 13, 2019 at 7:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Wed, Jun 05, 2019 at 01:11:44PM +0530, Jagan Teki wrote:
-> > > > > On Tue, Jun 4, 2019 at 8:00 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > >
-> > > > > > On Fri, May 24, 2019 at 03:37:36PM +0530, Jagan Teki wrote:
-> > > > > > > On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, May 20, 2019 at 02:33:11PM +0530, Jagan Teki wrote:
-> > > > > > > > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
-> > > > > > > > > MIPI clock topology in Allwinner DSI controller.
-> > > > > > > > >
-> > > > > > > > > TCON dotclock driver is computing the desired DCLK divider based on
-> > > > > > > > > panel pixel clock along with input DCLK min, max divider values from
-> > > > > > > > > tcon driver and that would eventually set the pll-mipi clock rate.
-> > > > > > > > >
-> > > > > > > > > The current code is passing dsi min and max divider value as 4 via
-> > > > > > > > > tcon driver which would ended-up triggering below vblank wait timed out
-> > > > > > > > > warning on "bananapi,s070wv20-ct16" panel.
-> > > > > > > > >
-> > > > > > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > > > > > > > >  [CRTC:46:crtc-0] vblank wait timed out
-> > > > > > > > >  Modules linked in:
-> > > > > > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00025-g5186cdf10757-dirty #6
-> > > > > > > > >  Hardware name: Allwinner sun8i Family
-> > > > > > > > >  Workqueue: events deferred_probe_work_func
-> > > > > > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > > > > > > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
-> > > > > > > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > > > > > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > > > > > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > > > > > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > > > > > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > > > > > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > > > > > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > > > > > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
-> > > > > > > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
-> > > > > > > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
-> > > > > > > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > > > > > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > > > > > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > > > > > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > > > > > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > > > > > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > > > > > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > > > > > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > > > > > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > > > > > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > > > > > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > > > > > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > > > > > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b588>] (try_to_bring_up_master+0x164/0x1a0)
-> > > > > > > > >  [<c044b588>] (try_to_bring_up_master) from [<c044b658>] (__component_add+0x94/0x140)
-> > > > > > > > >  [<c044b658>] (__component_add) from [<c0445e0c>] (sun6i_dsi_probe+0x144/0x234)
-> > > > > > > > >  [<c0445e0c>] (sun6i_dsi_probe) from [<c0452ee4>] (platform_drv_probe+0x48/0x9c)
-> > > > > > > > >  [<c0452ee4>] (platform_drv_probe) from [<c04512bc>] (really_probe+0x1dc/0x2c8)
-> > > > > > > > >  [<c04512bc>] (really_probe) from [<c0451508>] (driver_probe_device+0x60/0x160)
-> > > > > > > > >  [<c0451508>] (driver_probe_device) from [<c044f794>] (bus_for_each_drv+0x74/0xb8)
-> > > > > > > > >  [<c044f794>] (bus_for_each_drv) from [<c045106c>] (__device_attach+0xd0/0x13c)
-> > > > > > > > >  [<c045106c>] (__device_attach) from [<c0450464>] (bus_probe_device+0x84/0x8c)
-> > > > > > > > >  [<c0450464>] (bus_probe_device) from [<c04508f0>] (deferred_probe_work_func+0x64/0x90)
-> > > > > > > > >  [<c04508f0>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > > > > > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > > > > > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > > > > > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > > > > > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > > > > > > > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > > > > > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > > > > > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > > > > > > >  ---[ end trace 4017fea4906ab391 ]---
-> > > > > > > > >
-> > > > > > > > > But accordingly to Allwinner A33, A64 BSP codes [1] [2] this divider
-> > > > > > > > > is clearly using 'format/lanes' for dsi divider value, dsi_clk.clk_div
-> > > > > > > > >
-> > > > > > > > > Which would compute the pll_freq and set a clock rate for it in
-> > > > > > > > > [3] and [4] respectively.
-> > > > > > > > >
-> > > > > > > > > The same issue has reproduced in A33, A64 with 4-lane and 2-lane devices
-> > > > > > > > > and got fixed with this computation logic 'format/lanes', so this patch
-> > > > > > > > > using dclk min and max dividers as per BSP.
-> > > > > > > > >
-> > > > > > > > > [1] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1106
-> > > > > > > > > [2] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L213
-> > > > > > > > > [3] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1127
-> > > > > > > > > [4] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1161
-> > > > > > > >
-> > > > > > > > In that mail, I've pointed out that clk_div isn't used for the TCON dclk divider:
-> > > > > > > > http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
-> > > > > > > >
-> > > > > > > > The only reply you've sent is that you indeed see that the divider is
-> > > > > > > > set to 4 in the BSP, but you're now saying that the BSP can change
-> > > > > > > > it. If so, then please point exactly the flaw in the explanation in
-> > > > > > > > that mail.
-> > > > > > >
-> > > > > > > Frankly, I have explained these details in commit message and previous
-> > > > > > > version patch[1] with print messages on the code.
-> > > > > > >
-> > > > > > > BSP has tcon_div and dsi_div. dsi_div is dynamic which depends on
-> > > > > > > bpp/lanes and it indeed depends on PLL computation (not tcon_div),
-> > > > > > > anyway I have explained again on this initial link you mentioned.
-> > > > > > > Please have a look and get back.
-> > > > > >
-> > > > > > I'll have a look, thanks.
-> > > > > >
-> > > > > > I've given your patches a try on my setup though, and this patch
-> > > > > > breaks it with vblank timeouts and some horizontal lines that looks
-> > > > > > like what should be displayed, but blinking and on the right of the
-> > > > > > display. The previous ones are fine though.
-> > > > >
-> > > > > Would you please send me the link of panel driver.
-> > > >
-> > > > It's drivers/gpu/drm/panel/panel-ronbo-rb070d30.c
-> > >
-> > > Look like this panel work even w/o any vendor sequence. it's similar
-> > > to the 4-lane panel I have with RGB888, so the dclk div is 6, is it
-> > > working with this divider?
-> >
-> > It works with 4, it doesn't work with 6.
->
-> Can be the pixel clock with associated timings can make this diff.
-> Would you send me the pixel clock, pll_rate and timings this panel
-> used it from BSP?
+diff --git a/mm/gup.c b/mm/gup.c
+index 7328890ad8d3..b29249581672 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1100,86 +1100,6 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 	return pages_done;
+ }
+ 
+-/*
+- * We can leverage the VM_FAULT_RETRY functionality in the page fault
+- * paths better by using either get_user_pages_locked() or
+- * get_user_pages_unlocked().
+- *
+- * get_user_pages_locked() is suitable to replace the form:
+- *
+- *      down_read(&mm->mmap_sem);
+- *      do_something()
+- *      get_user_pages(tsk, mm, ..., pages, NULL);
+- *      up_read(&mm->mmap_sem);
+- *
+- *  to:
+- *
+- *      int locked = 1;
+- *      down_read(&mm->mmap_sem);
+- *      do_something()
+- *      get_user_pages_locked(tsk, mm, ..., pages, &locked);
+- *      if (locked)
+- *          up_read(&mm->mmap_sem);
+- */
+-long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
+-			   unsigned int gup_flags, struct page **pages,
+-			   int *locked)
+-{
+-	/*
+-	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
+-	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
+-	 * vmas.  As there are no users of this flag in this call we simply
+-	 * disallow this option for now.
+-	 */
+-	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
+-		return -EINVAL;
+-
+-	return __get_user_pages_locked(current, current->mm, start, nr_pages,
+-				       pages, NULL, locked,
+-				       gup_flags | FOLL_TOUCH);
+-}
+-EXPORT_SYMBOL(get_user_pages_locked);
+-
+-/*
+- * get_user_pages_unlocked() is suitable to replace the form:
+- *
+- *      down_read(&mm->mmap_sem);
+- *      get_user_pages(tsk, mm, ..., pages, NULL);
+- *      up_read(&mm->mmap_sem);
+- *
+- *  with:
+- *
+- *      get_user_pages_unlocked(tsk, mm, ..., pages);
+- *
+- * It is functionally equivalent to get_user_pages_fast so
+- * get_user_pages_fast should be used instead if specific gup_flags
+- * (e.g. FOLL_FORCE) are not required.
+- */
+-long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
+-			     struct page **pages, unsigned int gup_flags)
+-{
+-	struct mm_struct *mm = current->mm;
+-	int locked = 1;
+-	long ret;
+-
+-	/*
+-	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
+-	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
+-	 * vmas.  As there are no users of this flag in this call we simply
+-	 * disallow this option for now.
+-	 */
+-	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
+-		return -EINVAL;
+-
+-	down_read(&mm->mmap_sem);
+-	ret = __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL,
+-				      &locked, gup_flags | FOLL_TOUCH);
+-	if (locked)
+-		up_read(&mm->mmap_sem);
+-	return ret;
+-}
+-EXPORT_SYMBOL(get_user_pages_unlocked);
+-
+ /*
+  * get_user_pages_remote() - pin user pages in memory
+  * @tsk:	the task_struct to use for page fault accounting, or
+@@ -1256,6 +1176,153 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
+ }
+ EXPORT_SYMBOL(get_user_pages_remote);
+ 
++/**
++ * populate_vma_page_range() -  populate a range of pages in the vma.
++ * @vma:   target vma
++ * @start: start address
++ * @end:   end address
++ * @nonblocking:
++ *
++ * This takes care of mlocking the pages too if VM_LOCKED is set.
++ *
++ * return 0 on success, negative error code on error.
++ *
++ * vma->vm_mm->mmap_sem must be held.
++ *
++ * If @nonblocking is NULL, it may be held for read or write and will
++ * be unperturbed.
++ *
++ * If @nonblocking is non-NULL, it must held for read only and may be
++ * released.  If it's released, *@nonblocking will be set to 0.
++ */
++long populate_vma_page_range(struct vm_area_struct *vma,
++		unsigned long start, unsigned long end, int *nonblocking)
++{
++	struct mm_struct *mm = vma->vm_mm;
++	unsigned long nr_pages = (end - start) / PAGE_SIZE;
++	int gup_flags;
++
++	VM_BUG_ON(start & ~PAGE_MASK);
++	VM_BUG_ON(end   & ~PAGE_MASK);
++	VM_BUG_ON_VMA(start < vma->vm_start, vma);
++	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
++	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
++
++	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
++	if (vma->vm_flags & VM_LOCKONFAULT)
++		gup_flags &= ~FOLL_POPULATE;
++	/*
++	 * We want to touch writable mappings with a write fault in order
++	 * to break COW, except for shared mappings because these don't COW
++	 * and we would not want to dirty them for nothing.
++	 */
++	if ((vma->vm_flags & (VM_WRITE | VM_SHARED)) == VM_WRITE)
++		gup_flags |= FOLL_WRITE;
++
++	/*
++	 * We want mlock to succeed for regions that have any permissions
++	 * other than PROT_NONE.
++	 */
++	if (vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC))
++		gup_flags |= FOLL_FORCE;
++
++	/*
++	 * We made sure addr is within a VMA, so the following will
++	 * not result in a stack expansion that recurses back here.
++	 */
++	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
++				NULL, NULL, nonblocking);
++}
++
++/*
++ * __mm_populate - populate and/or mlock pages within a range of address space.
++ *
++ * This is used to implement mlock() and the MAP_POPULATE / MAP_LOCKED mmap
++ * flags. VMAs must be already marked with the desired vm_flags, and
++ * mmap_sem must not be held.
++ */
++int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
++{
++	struct mm_struct *mm = current->mm;
++	unsigned long end, nstart, nend;
++	struct vm_area_struct *vma = NULL;
++	int locked = 0;
++	long ret = 0;
++
++	end = start + len;
++
++	for (nstart = start; nstart < end; nstart = nend) {
++		/*
++		 * We want to fault in pages for [nstart; end) address range.
++		 * Find first corresponding VMA.
++		 */
++		if (!locked) {
++			locked = 1;
++			down_read(&mm->mmap_sem);
++			vma = find_vma(mm, nstart);
++		} else if (nstart >= vma->vm_end)
++			vma = vma->vm_next;
++		if (!vma || vma->vm_start >= end)
++			break;
++		/*
++		 * Set [nstart; nend) to intersection of desired address
++		 * range with the first VMA. Also, skip undesirable VMA types.
++		 */
++		nend = min(end, vma->vm_end);
++		if (vma->vm_flags & (VM_IO | VM_PFNMAP))
++			continue;
++		if (nstart < vma->vm_start)
++			nstart = vma->vm_start;
++		/*
++		 * Now fault in a range of pages. populate_vma_page_range()
++		 * double checks the vma flags, so that it won't mlock pages
++		 * if the vma was already munlocked.
++		 */
++		ret = populate_vma_page_range(vma, nstart, nend, &locked);
++		if (ret < 0) {
++			if (ignore_errors) {
++				ret = 0;
++				continue;	/* continue at next VMA */
++			}
++			break;
++		}
++		nend = nstart + ret * PAGE_SIZE;
++		ret = 0;
++	}
++	if (locked)
++		up_read(&mm->mmap_sem);
++	return ret;	/* 0 or negative error code */
++}
++
++/**
++ * get_dump_page() - pin user page in memory while writing it to core dump
++ * @addr: user address
++ *
++ * Returns struct page pointer of user page pinned for dump,
++ * to be freed afterwards by put_page().
++ *
++ * Returns NULL on any kind of failure - a hole must then be inserted into
++ * the corefile, to preserve alignment with its headers; and also returns
++ * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
++ * allowing a hole to be left in the corefile to save diskspace.
++ *
++ * Called without mmap_sem, but after all other threads have been killed.
++ */
++#ifdef CONFIG_ELF_CORE
++struct page *get_dump_page(unsigned long addr)
++{
++	struct vm_area_struct *vma;
++	struct page *page;
++
++	if (__get_user_pages(current, current->mm, addr, 1,
++			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
++			     NULL) < 1)
++		return NULL;
++	flush_cache_page(vma, addr, page_to_pfn(page));
++	return page;
++}
++#endif /* CONFIG_ELF_CORE */
++
+ #if defined(CONFIG_FS_DAX) || defined (CONFIG_CMA)
+ static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
+ {
+@@ -1503,152 +1570,85 @@ long get_user_pages(unsigned long start, unsigned long nr_pages,
+ }
+ EXPORT_SYMBOL(get_user_pages);
+ 
+-/**
+- * populate_vma_page_range() -  populate a range of pages in the vma.
+- * @vma:   target vma
+- * @start: start address
+- * @end:   end address
+- * @nonblocking:
+- *
+- * This takes care of mlocking the pages too if VM_LOCKED is set.
++/*
++ * We can leverage the VM_FAULT_RETRY functionality in the page fault
++ * paths better by using either get_user_pages_locked() or
++ * get_user_pages_unlocked().
+  *
+- * return 0 on success, negative error code on error.
++ * get_user_pages_locked() is suitable to replace the form:
+  *
+- * vma->vm_mm->mmap_sem must be held.
++ *      down_read(&mm->mmap_sem);
++ *      do_something()
++ *      get_user_pages(tsk, mm, ..., pages, NULL);
++ *      up_read(&mm->mmap_sem);
+  *
+- * If @nonblocking is NULL, it may be held for read or write and will
+- * be unperturbed.
++ *  to:
+  *
+- * If @nonblocking is non-NULL, it must held for read only and may be
+- * released.  If it's released, *@nonblocking will be set to 0.
++ *      int locked = 1;
++ *      down_read(&mm->mmap_sem);
++ *      do_something()
++ *      get_user_pages_locked(tsk, mm, ..., pages, &locked);
++ *      if (locked)
++ *          up_read(&mm->mmap_sem);
+  */
+-long populate_vma_page_range(struct vm_area_struct *vma,
+-		unsigned long start, unsigned long end, int *nonblocking)
++long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
++			   unsigned int gup_flags, struct page **pages,
++			   int *locked)
+ {
+-	struct mm_struct *mm = vma->vm_mm;
+-	unsigned long nr_pages = (end - start) / PAGE_SIZE;
+-	int gup_flags;
+-
+-	VM_BUG_ON(start & ~PAGE_MASK);
+-	VM_BUG_ON(end   & ~PAGE_MASK);
+-	VM_BUG_ON_VMA(start < vma->vm_start, vma);
+-	VM_BUG_ON_VMA(end   > vma->vm_end, vma);
+-	VM_BUG_ON_MM(!rwsem_is_locked(&mm->mmap_sem), mm);
+-
+-	gup_flags = FOLL_TOUCH | FOLL_POPULATE | FOLL_MLOCK;
+-	if (vma->vm_flags & VM_LOCKONFAULT)
+-		gup_flags &= ~FOLL_POPULATE;
+-	/*
+-	 * We want to touch writable mappings with a write fault in order
+-	 * to break COW, except for shared mappings because these don't COW
+-	 * and we would not want to dirty them for nothing.
+-	 */
+-	if ((vma->vm_flags & (VM_WRITE | VM_SHARED)) == VM_WRITE)
+-		gup_flags |= FOLL_WRITE;
+-
+ 	/*
+-	 * We want mlock to succeed for regions that have any permissions
+-	 * other than PROT_NONE.
++	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
++	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
++	 * vmas.  As there are no users of this flag in this call we simply
++	 * disallow this option for now.
+ 	 */
+-	if (vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC))
+-		gup_flags |= FOLL_FORCE;
++	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
++		return -EINVAL;
+ 
+-	/*
+-	 * We made sure addr is within a VMA, so the following will
+-	 * not result in a stack expansion that recurses back here.
+-	 */
+-	return __get_user_pages(current, mm, start, nr_pages, gup_flags,
+-				NULL, NULL, nonblocking);
++	return __get_user_pages_locked(current, current->mm, start, nr_pages,
++				       pages, NULL, locked,
++				       gup_flags | FOLL_TOUCH);
+ }
++EXPORT_SYMBOL(get_user_pages_locked);
+ 
+ /*
+- * __mm_populate - populate and/or mlock pages within a range of address space.
++ * get_user_pages_unlocked() is suitable to replace the form:
+  *
+- * This is used to implement mlock() and the MAP_POPULATE / MAP_LOCKED mmap
+- * flags. VMAs must be already marked with the desired vm_flags, and
+- * mmap_sem must not be held.
++ *      down_read(&mm->mmap_sem);
++ *      get_user_pages(tsk, mm, ..., pages, NULL);
++ *      up_read(&mm->mmap_sem);
++ *
++ *  with:
++ *
++ *      get_user_pages_unlocked(tsk, mm, ..., pages);
++ *
++ * It is functionally equivalent to get_user_pages_fast so
++ * get_user_pages_fast should be used instead if specific gup_flags
++ * (e.g. FOLL_FORCE) are not required.
+  */
+-int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
++long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
++			     struct page **pages, unsigned int gup_flags)
+ {
+ 	struct mm_struct *mm = current->mm;
+-	unsigned long end, nstart, nend;
+-	struct vm_area_struct *vma = NULL;
+-	int locked = 0;
+-	long ret = 0;
++	int locked = 1;
++	long ret;
+ 
+-	end = start + len;
++	/*
++	 * FIXME: Current FOLL_LONGTERM behavior is incompatible with
++	 * FAULT_FLAG_ALLOW_RETRY because of the FS DAX check requirement on
++	 * vmas.  As there are no users of this flag in this call we simply
++	 * disallow this option for now.
++	 */
++	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
++		return -EINVAL;
+ 
+-	for (nstart = start; nstart < end; nstart = nend) {
+-		/*
+-		 * We want to fault in pages for [nstart; end) address range.
+-		 * Find first corresponding VMA.
+-		 */
+-		if (!locked) {
+-			locked = 1;
+-			down_read(&mm->mmap_sem);
+-			vma = find_vma(mm, nstart);
+-		} else if (nstart >= vma->vm_end)
+-			vma = vma->vm_next;
+-		if (!vma || vma->vm_start >= end)
+-			break;
+-		/*
+-		 * Set [nstart; nend) to intersection of desired address
+-		 * range with the first VMA. Also, skip undesirable VMA types.
+-		 */
+-		nend = min(end, vma->vm_end);
+-		if (vma->vm_flags & (VM_IO | VM_PFNMAP))
+-			continue;
+-		if (nstart < vma->vm_start)
+-			nstart = vma->vm_start;
+-		/*
+-		 * Now fault in a range of pages. populate_vma_page_range()
+-		 * double checks the vma flags, so that it won't mlock pages
+-		 * if the vma was already munlocked.
+-		 */
+-		ret = populate_vma_page_range(vma, nstart, nend, &locked);
+-		if (ret < 0) {
+-			if (ignore_errors) {
+-				ret = 0;
+-				continue;	/* continue at next VMA */
+-			}
+-			break;
+-		}
+-		nend = nstart + ret * PAGE_SIZE;
+-		ret = 0;
+-	}
++	down_read(&mm->mmap_sem);
++	ret = __get_user_pages_locked(current, mm, start, nr_pages, pages, NULL,
++				      &locked, gup_flags | FOLL_TOUCH);
+ 	if (locked)
+ 		up_read(&mm->mmap_sem);
+-	return ret;	/* 0 or negative error code */
+-}
+-
+-/**
+- * get_dump_page() - pin user page in memory while writing it to core dump
+- * @addr: user address
+- *
+- * Returns struct page pointer of user page pinned for dump,
+- * to be freed afterwards by put_page().
+- *
+- * Returns NULL on any kind of failure - a hole must then be inserted into
+- * the corefile, to preserve alignment with its headers; and also returns
+- * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
+- * allowing a hole to be left in the corefile to save diskspace.
+- *
+- * Called without mmap_sem, but after all other threads have been killed.
+- */
+-#ifdef CONFIG_ELF_CORE
+-struct page *get_dump_page(unsigned long addr)
+-{
+-	struct vm_area_struct *vma;
+-	struct page *page;
+-
+-	if (__get_user_pages(current, current->mm, addr, 1,
+-			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
+-			     NULL) < 1)
+-		return NULL;
+-	flush_cache_page(vma, addr, page_to_pfn(page));
+-	return page;
++	return ret;
+ }
+-#endif /* CONFIG_ELF_CORE */
++EXPORT_SYMBOL(get_user_pages_unlocked);
+ 
+ /*
+  * Fast GUP
+-- 
+2.20.1
 
-This board never had an Allwinner BSP
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---4qhko7umufjvzvnc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRIxuwAKCRDj7w1vZxhR
-xVscAP9pbjUMb+7sqNoi00MHqD8g9+AnFhyeTBWi07kSntTxvgEAqbLn4ybIstfr
-Lzg/6w2mQ3encbcK4zDbkflqVuTtnQ4=
-=Qu0L
------END PGP SIGNATURE-----
-
---4qhko7umufjvzvnc--
