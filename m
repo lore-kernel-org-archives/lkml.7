@@ -3,136 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B478EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E86C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951812063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1612063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfFYTyk (ORCPT
+        id S1728087AbfFYT5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:54:40 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37308 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726712AbfFYTyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:54:40 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hfrWI-0007CW-Rp; Tue, 25 Jun 2019 13:54:23 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
-Date:   Tue, 25 Jun 2019 13:54:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 25 Jun 2019 15:57:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44359 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfFYT5E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:57:04 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hfrYn-0007jr-Nv; Tue, 25 Jun 2019 21:56:57 +0200
+Date:   Tue, 25 Jun 2019 21:56:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] x86/boot/64: Fix crash if kernel images crosses page
+ table boundary
+In-Reply-To: <20190625193053.g5zngehu3ozgzkeg@box>
+Message-ID: <alpine.DEB.2.21.1906252155430.32342@nanos.tec.linutronix.de>
+References: <20190620112345.28833-1-kirill.shutemov@linux.intel.com> <alpine.DEB.2.21.1906252100290.32342@nanos.tec.linutronix.de> <20190625193053.g5zngehu3ozgzkeg@box>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190625170115.GA9746@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 25 Jun 2019, Kirill A. Shutemov wrote:
+> On Tue, Jun 25, 2019 at 09:04:39PM +0200, Thomas Gleixner wrote:
+> 
+> > > +		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
+> > 
+> > This part is functionally equivivalent. So what's the value of this change?
+> 
+> Precedence of operators were broken
+> 
+> 	idx =  i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
+> 
+> reads by compiler as
+> 
+> 	idx = i + ((physaddr >> PMD_SHIFT) % PTRS_PER_PMD);
+> 
+> not as
+> 
+> 	idx =  (i + (physaddr >> PMD_SHIFT)) % PTRS_PER_PMD;
+> 
+> Therefore 'idx' can become >= PTRS_PER_PMD.
+
+Indeed. Please mention it in the change log. I did not spot it right away.
+
+Thanks,
+
+	tglx
 
 
-On 2019-06-25 11:01 a.m., Christoph Hellwig wrote:
-> On Tue, Jun 25, 2019 at 09:57:52AM -0600, Logan Gunthorpe wrote:
->>> You assume all addressing is done by the PCI bus address.  If a device
->>> is addressing its own BAR there is no reason to use the PCI bus address,
->>> as it might have much more intelligent schemes (usually bar + offset).
->>
->> Yes, that will be a bit tricky regardless of what we do.
-> 
-> At least right now it isn't at all.  I've implemented support for
-> a draft NVMe proposal for that, and it basically boils down to this
-> in the p2p path:
-> 
-> 	addr = sg_phys(sg);
-> 
-> 	if (page->pgmap->dev == ctrl->dev && HAS_RELATIVE_ADDRESSING)
-> 		addr -= ctrl->cmb_start_addr;
-> 
-> 		// set magic flag in the SGL
-> 	} else {
-> 		addr -= pgmap->pci_p2pdma_bus_offset;
-> 	}
-> 
-> without the pagemap it would require a range compare instead, which
-> isn't all that hard either.
-> 
->>>>> Also duplicating the whole block I/O stack, including hooks all over
->>>>> the fast path is pretty much a no-go.
->>>>
->>>> There was very little duplicate code in the patch set. (Really just the
->>>> mapping code). There are a few hooks, but in practice not that many if
->>>> we ignore the WARN_ONs. We might be able to work to reduce this further.
->>>> The main hooks are: when we skip bouncing, when we skip integrity prep,
->>>> when we split, and when we map. And the patchset drops the PCI_P2PDMA
->>>> hook when we map. So we're talking about maybe three or four extra ifs
->>>> that would likely normally be fast due to the branch predictor.
->>>
->>> And all of those add code to the block layer fast path.
->>
->> If we can't add any ifs to the block layer, there's really nothing we
->> can do.
-> 
-> That is not what I said.  Of course we can.  But we rather have a
-> really good reason.  And adding a parallel I/O path violating the
-> highlevel model is not one.
-> 
->> So then we're committed to using struct page for P2P?
-> 
-> Only until we have a significantly better soltution.  And I think
-> using physical address in some form instead of pages is that,
-> adding a parallel path with dma_addr_t is not, it actually is worse
-> than the current code in many respects.
-
-Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
-that different. You still need roughly the same 'if' hooks for any
-backed memory that isn't in the linear mapping and you can't get a
-kernel mapping for directly.
-
-It wouldn't be too hard to do a similar patch set that uses something
-like phys_addr_t instead and have a request and queue flag for support
-of non-mappable memory. But you'll end up with very similar 'if' hooks
-and we'd have to clean up all bio-using drivers that access the struct
-pages directly.
-
-Though, we'd also still have the problem of how to recognize when the
-address points to P2PDMA and needs to be translated to the bus offset.
-The map-first inversion was what helped here because the driver
-submitting the requests had all the information. Though it could be
-another request flag and indicating non-mappable memory could be a flag
-group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
-
-If you think any of the above ideas sound workable I'd be happy to try
-to code up another prototype.
-
-Logan
