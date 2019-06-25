@@ -2,103 +2,72 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19677C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822FFC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA74F2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB4A20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfFYW3y (ORCPT
+        id S1726550AbfFYWaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:29:54 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:40222 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFYW3y (ORCPT
+        Tue, 25 Jun 2019 18:30:20 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:47007 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726077AbfFYWaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:29:54 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hftwb-0001ZR-4N; Tue, 25 Jun 2019 22:29:41 +0000
-Date:   Tue, 25 Jun 2019 23:29:41 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Tue, 25 Jun 2019 18:30:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TVCU4oo_1561501813;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TVCU4oo_1561501813)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Jun 2019 06:30:16 +0800
+Subject: Re: [v3 PATCH 3/4] mm: shrinker: make shrinker not depend on memcg
+ kmem
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     ktkhai@virtuozzo.com, kirill.shutemov@linux.intel.com,
+        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
+        shakeelb@google.com, rientjes@google.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/17] binfmt_flat: consolidate two version of
- flat_v2_reloc_t
-Message-ID: <20190625222941.GA1343@ZenIV.linux.org.uk>
-References: <20190613070903.17214-1-hch@lst.de>
- <20190613070903.17214-9-hch@lst.de>
+References: <1560376609-113689-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1560376609-113689-4-git-send-email-yang.shi@linux.alibaba.com>
+ <20190625151425.6fafced70f42e6db49496ac6@linux-foundation.org>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <3d099616-2fc6-fa4e-377c-2f406e3302f9@linux.alibaba.com>
+Date:   Tue, 25 Jun 2019 15:30:13 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613070903.17214-9-hch@lst.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190625151425.6fafced70f42e6db49496ac6@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 09:08:54AM +0200, Christoph Hellwig wrote:
-> Two branches of the ifdef maze actually have the same content, so merge
-> them.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/flat.h | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/flat.h b/include/linux/flat.h
-> index 2b7cda6e9c1b..19c586b74b99 100644
-> --- a/include/linux/flat.h
-> +++ b/include/linux/flat.h
-> @@ -69,15 +69,13 @@ struct flat_hdr {
->  typedef union {
->  	unsigned long	value;
->  	struct {
-> -# if defined(mc68000) && !defined(CONFIG_COLDFIRE)
-> +#if defined(__LITTLE_ENDIAN_BITFIELD) || \
-> +    (defined(mc68000) && !defined(CONFIG_COLDFIRE))
->  		signed long offset : 30;
->  		unsigned long type : 2;
->  # elif defined(__BIG_ENDIAN_BITFIELD)
->  		unsigned long type : 2;
->  		signed long offset : 30;
-> -# elif defined(__LITTLE_ENDIAN_BITFIELD)
-> -		signed long offset : 30;
-> -		unsigned long type : 2;
->  # else
->  #   	error "Unknown bitfield order for flat files."
->  # endif
-> -- 
-> 2.20.1
-> 
 
-FWIW, I wonder if keeping that type is worth bothering.
-Something like
-old_reloc(__be32 reloc)
-{
-	u32 v = be32_to_cpu(reloc);
-	int offset, type;
 
-#if (defined(mc68000) && !defined(CONFIG_COLDFIRE))
-	/* old m68k uses unusual format - type is in lower bits of octet 3 */
-	type = v % 4;
-	offset = (int)v / 4;
-#else
-	/* everything else (including coldfire) has it in upper bits of octet 0 */
-	type = v >> 30;
-	offset = (int)(v << 2) >> 2; /* or (v & 0x1fffffff) - (v & 0x20000000) * 4 */
-#endif
-	...
+On 6/25/19 3:14 PM, Andrew Morton wrote:
+> On Thu, 13 Jun 2019 05:56:48 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>
+>> Currently shrinker is just allocated and can work when memcg kmem is
+>> enabled.  But, THP deferred split shrinker is not slab shrinker, it
+>> doesn't make too much sense to have such shrinker depend on memcg kmem.
+>> It should be able to reclaim THP even though memcg kmem is disabled.
+>>
+>> Introduce a new shrinker flag, SHRINKER_NONSLAB, for non-slab shrinker.
+>> When memcg kmem is disabled, just such shrinkers can be called in
+>> shrinking memcg slab.
+> This causes a couple of compile errors with an allnoconfig build.
+> Please fix that and test any other Kconfig combinations which might
+> trip things up.
 
-and to hell with bitfields, aliasing unions, etc.  Unless I'm misreading
-the whole thing, that is...  Greg?
+I just tested !CONFIG_TRANSPARENT_HUGEPAGE, but I didn't test 
+!CONFIG_MEMCG. It looks we need keep the code for !CONFIG_MEMCG, will 
+post the corrected patches soon.
+
+
