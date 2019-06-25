@@ -2,108 +2,106 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF18EC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC995C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC4442133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943C32133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XIsccSIX"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AFTvSibq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbfFYOZQ (ORCPT
+        id S1730405AbfFYOZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:25:16 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58754 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfFYOZQ (ORCPT
+        Tue, 25 Jun 2019 10:25:46 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:45877 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfFYOZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QDHFsnBEJgM8MOF6BpnZs2ZdPuoYpXec9QhmGQ19BZw=; b=XIsccSIXyFHkR2444O904+knJF
-        MiXgca8G+E89SpvaA8rOnAhwY/vDKNQctjBfoWzsLcJlFLlgy1rHMKOoqzEe5nm/F+qXHIjGXeTrh
-        XDEuJAvYYp19m9Cbek5CbT8rkccWLCgCmRPI3lqYHwbhB4joVpHT7omJrmwCKqotaLGi+21I3GZIr
-        vJX0j6DJ8Uo/mgYDYoBLtH8Ahl3zNdMuno2pWCcgTx2YCnW8hTCr9+o7KYfHFTOK9S1H0sBYAkd75
-        hVDfRPJwWhr3DcrT1L7suTCwbENz2FuytcXS4o+c+JybOrKJkaLxQQ5Zo/VNU9AGKfLMl7bWKWaZw
-        XQC83BNw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfmNh-0001rE-9P; Tue, 25 Jun 2019 14:25:09 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1A518209FD684; Tue, 25 Jun 2019 16:25:08 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 16:25:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     mingo@redhat.com, valentin.schneider@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched/core: silence a warning in sched_init()
-Message-ID: <20190625142508.GE3419@hirez.programming.kicks-ass.net>
-References: <1561466662-22314-1-git-send-email-cai@lca.pw>
- <20190625135238.GA3419@hirez.programming.kicks-ass.net>
- <1561471459.5154.70.camel@lca.pw>
+        Tue, 25 Jun 2019 10:25:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1561472745; x=1593008745;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rJ5/pLRo7ybKRgcaV0iXG1cimiHcyqQC8+ssvElQ0LQ=;
+  b=AFTvSibqgTtL9eo1Wi5Wtvu1bRHkQnnnB0fylignl+xWSpVQ7xKcgjZY
+   5KjZe5om6RYUg0GpKiDU1b/l4CEEwsq5zf/WsoV86tsv/MN1sq/nwC1eJ
+   XTDI08pAO15Vd4XVKwUorwREddT9b2657m+kXK6HY87QXGMhthJjcYyln
+   w=;
+X-IronPort-AV: E=Sophos;i="5.62,416,1554768000"; 
+   d="scan'208";a="681980455"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 25 Jun 2019 14:25:33 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id C0E55A036C;
+        Tue, 25 Jun 2019 14:25:30 +0000 (UTC)
+Received: from EX13D02UWC002.ant.amazon.com (10.43.162.6) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 25 Jun 2019 14:25:29 +0000
+Received: from localhost (10.43.160.61) by EX13D02UWC002.ant.amazon.com
+ (10.43.162.6) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 25 Jun
+ 2019 14:25:28 +0000
+Date:   Tue, 25 Jun 2019 09:25:39 -0500
+From:   Patrick Williams <alpawi@amazon.com>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Benjamin Herrenschmidt <benh@amazon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 0/2] pinctl: armada-37xx: fix for pins 32+
+Message-ID: <20190625142539.GA33175@8c859006a84e.ant.amazon.com>
+References: <20190618160105.26343-1-alpawi@amazon.com>
+ <CACRpkdYgXZzvFKyvySWnsJ2_1pA1e_VHEY-QNzNYCikMUc_WVg@mail.gmail.com>
+ <871rzhlr7w.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561471459.5154.70.camel@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <871rzhlr7w.fsf@FE-laptop>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Originating-IP: [10.43.160.61]
+X-ClientProxiedBy: EX13D02UWC003.ant.amazon.com (10.43.162.199) To
+ EX13D02UWC002.ant.amazon.com (10.43.162.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:04:19AM -0400, Qian Cai wrote:
-> On Tue, 2019-06-25 at 15:52 +0200, Peter Zijlstra wrote:
+On Tue, Jun 25, 2019 at 03:38:59PM +0200, Gregory CLEMENT wrote:
+> First you can add my
+> Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-> Yes, -Wmissing-prototype makes no sense, but "-Wunused-but-set-variable" is
-> pretty valid to catch certain developer errors. For example,
-> 
-> https://lists.linuxfoundation.org/pipermail/iommu/2019-May/035680.html
-> 
-> > 
-> > As to this one, ideally the compiler would not be stupid, and understand
-> > the below, but alas.
-> 
-> Pretty sure that won't work, as the compiler will complain something like,
-> 
-> ISO C90 forbids mixed declarations and code
+Thanks for the review Gregory.
 
-No, it builds just fine, it's a new block and C allows new variables at
-every block start -- with the scope of that block.
+> Then as the second patch is a fix, you should add the fix tag: "Fixes:
+> 5715092a458c ("pinctrl: armada-37xx: Add gpio support") " as well as the
+> 'CC: <stable@vger.kernel.org>" tags.
+>
+> But your change in the first patch made this second patch more difficult
+> to backport.
+> ...
+> Maybe you could change the order of those 2 patches?
 
-And for our config, alloc_size is an unconditional 0, so it should DCE
-the whole block and with that our variable. But clearly the passes are
-the other way around :/
+Good points.  Will do both.
 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index fa43ce3962e7..cb652e165570 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -6369,7 +6369,7 @@ DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
-> >  
-> >  void __init sched_init(void)
-> >  {
-> > -	unsigned long alloc_size = 0, ptr;
-> > +	unsigned long alloc_size = 0;
-> >  	int i;
-> >  
-> >  	wait_bit_init();
-> > @@ -6381,7 +6381,7 @@ void __init sched_init(void)
-> >  	alloc_size += 2 * nr_cpu_ids * sizeof(void **);
-> >  #endif
-> >  	if (alloc_size) {
-> > -		ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
-> > +		unsigned long ptr = (unsigned long)kzalloc(alloc_size,
-> > GFP_NOWAIT);
-> >  
-> >  #ifdef CONFIG_FAIR_GROUP_SCHED
-> >  		root_task_group.se = (struct sched_entity **)ptr;
+> Actually, when I wrote "_update_reg" I was thinking to the update of the
+> variable, whereas with a function named "_calculate_reg" I am expecting
+> having the result as a return of the function.
+
+Understand.  I can see the ambiguity in both names.  How about
+"_update_reg_offset"?
+
+> Thanks,
+> 
+> Gregory
+> 
+-- 
+- Patrick
