@@ -2,77 +2,129 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A03C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86961C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E491A2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4A72080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfFYWDM (ORCPT
+        id S1726564AbfFYWD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:03:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44544 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFYWDM (ORCPT
+        Tue, 25 Jun 2019 18:03:27 -0400
+Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:52593 "EHLO
+        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFYWD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:03:12 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hftWn-0001Le-Q7; Wed, 26 Jun 2019 00:03:01 +0200
-Date:   Wed, 26 Jun 2019 00:03:01 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-cc:     Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 9/9] x86/apic: Use non-atomic operations when possible
-In-Reply-To: <c0473294-bf14-f9b8-325c-bc860361733a@intel.com>
-Message-ID: <alpine.DEB.2.21.1906260001510.32342@nanos.tec.linutronix.de>
-References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-10-namit@vmware.com> <c0473294-bf14-f9b8-325c-bc860361733a@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 25 Jun 2019 18:03:26 -0400
+X-Greylist: delayed 524 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jun 2019 18:03:24 EDT
+Received: from smtp5.infomaniak.ch (smtp5.infomaniak.ch [83.166.132.18])
+        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x5PLrGC3019781
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 23:53:17 +0200
+Received: from localhost (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        (authenticated bits=0)
+        by smtp5.infomaniak.ch (8.14.5/8.14.5) with ESMTP id x5PLrClH038556;
+        Tue, 25 Jun 2019 23:53:12 +0200
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thomas Graf <tgraf@suug.ch>, Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH bpf-next v9 01/10] fs,security: Add a new file access type: MAY_CHROOT
+Date:   Tue, 25 Jun 2019 23:52:30 +0200
+Message-Id: <20190625215239.11136-2-mic@digikod.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190625215239.11136-1-mic@digikod.net>
+References: <20190625215239.11136-1-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019, Dave Hansen wrote:
+For compatibility reason, MAY_CHROOT is always set with MAY_CHDIR.
+However, this new flag enable to differentiate a chdir form a chroot.
 
-> > diff --git a/arch/x86/kernel/apic/x2apic_cluster.c b/arch/x86/kernel/apic/x2apic_cluster.c
-> > index 7685444a106b..609e499387a1 100644
-> > --- a/arch/x86/kernel/apic/x2apic_cluster.c
-> > +++ b/arch/x86/kernel/apic/x2apic_cluster.c
-> > @@ -50,7 +50,7 @@ __x2apic_send_IPI_mask(const struct cpumask *mask, int vector, int apic_dest)
-> >  	cpumask_copy(tmpmsk, mask);
-> >  	/* If IPI should not be sent to self, clear current CPU */
-> >  	if (apic_dest != APIC_DEST_ALLINC)
-> > -		cpumask_clear_cpu(smp_processor_id(), tmpmsk);
-> > +		__cpumask_clear_cpu(smp_processor_id(), tmpmsk);
-> 
-> tmpmsk is on-stack, but it's a pointer to a per-cpu variable:
-> 
->         tmpmsk = this_cpu_cpumask_var_ptr(ipi_mask);
-> 
-> So this one doesn't appear as obviously correct as a mask which itself
-> is on the stack.  The other three look obviously OK, though.
+This is needed for the Landlock LSM to be able to evaluate a new root
+directory.
 
-It's still correct. The mask is per cpu and protected because interrupts
-are disabled. I noticed and wanted to amend the change log and forgot.
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Casey Schaufler <casey@schaufler-ca.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: John Johansen <john.johansen@canonical.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Stephen Smalley <sds@tycho.nsa.gov>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: linux-fsdevel@vger.kernel.org
+---
+ fs/open.c          | 3 ++-
+ include/linux/fs.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-
-	tglx
+diff --git a/fs/open.c b/fs/open.c
+index b5b80469b93d..e8767318fd03 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -494,7 +494,8 @@ int ksys_chroot(const char __user *filename)
+ 	if (error)
+ 		goto out;
+ 
+-	error = inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR);
++	error = inode_permission(path.dentry->d_inode, MAY_EXEC | MAY_CHDIR |
++			MAY_CHROOT);
+ 	if (error)
+ 		goto dput_and_out;
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f7fdfe93e25d..fa6c9d0c152b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -99,6 +99,7 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+ #define MAY_CHDIR		0x00000040
+ /* called from RCU mode, don't block */
+ #define MAY_NOT_BLOCK		0x00000080
++#define MAY_CHROOT		0x00000100
+ 
+ /*
+  * flags in file.f_mode.  Note that FMODE_READ and FMODE_WRITE must correspond
+-- 
+2.20.1
 
