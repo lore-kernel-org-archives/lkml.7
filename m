@@ -2,115 +2,281 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD1C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE47C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6E920644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:19:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="BuzjmLd0"
+	by mail.kernel.org (Postfix) with ESMTP id E326C2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbfFYNTT (ORCPT
+        id S1727457AbfFYNU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:19:19 -0400
-Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:10486
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727124AbfFYNTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:19:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bqW8mXs/egmq+6VjVchAJLm/CeTB6+pWTH+39SgH8HQ=;
- b=BuzjmLd0aU0CCxuLz/9agYS3aYlH1KhDwO9ByH7OHzm/ZHb7lujyyi5EHSIdaCLXLsOPjZs/6isvmHoqe/0xspWWq7nAO2VAoo/P7xGO9kSl5yrrzQccov8qOzMmFgzN/ltmfNqFXOYVMgiR1bwj5N9QT6F9ZXgFyMIpt3kuBXQ=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5790.eurprd05.prod.outlook.com (20.178.122.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 13:19:15 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
- 13:19:15 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Colin King <colin.king@canonical.com>
-CC:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] RDMA/hns: fix potential integer overflow on left
- shift
-Thread-Topic: [PATCH][next] RDMA/hns: fix potential integer overflow on left
- shift
-Thread-Index: AQHVK1iWGDv1GJpJkk+255M1+vphrA==
-Date:   Tue, 25 Jun 2019 13:19:15 +0000
-Message-ID: <20190625131911.GA10878@mellanox.com>
-References: <20190624214608.11765-1-colin.king@canonical.com>
-In-Reply-To: <20190624214608.11765-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM3PR05CA0132.eurprd05.prod.outlook.com
- (2603:10a6:207:2::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [66.187.232.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 82394f19-376c-4f25-318e-08d6f96fb861
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5790;
-x-ms-traffictypediagnostic: VI1PR05MB5790:
-x-microsoft-antispam-prvs: <VI1PR05MB57905DECE6891E4CB7B9CA23CFE30@VI1PR05MB5790.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(396003)(366004)(346002)(199004)(189003)(11346002)(2906002)(4326008)(446003)(26005)(102836004)(478600001)(3846002)(71200400001)(25786009)(6116002)(66946007)(8676002)(54906003)(71190400001)(8936002)(4744005)(186003)(305945005)(316002)(81156014)(81166006)(66476007)(66446008)(7736002)(64756008)(66556008)(1076003)(5660300002)(486006)(14444005)(229853002)(66066001)(86362001)(256004)(6486002)(476003)(73956011)(68736007)(6436002)(6512007)(53936002)(2616005)(6506007)(386003)(36756003)(14454004)(33656002)(76176011)(6916009)(99286004)(52116002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5790;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rqkTtUT+H4lLpwVvMvAcMsSgUauoZsssZN8fEwcgqQ+i3LxAcqmbVGS2NQtw0hg3GSpj37/ooauD7P8FxpPAgZo8kwZ9bK5TdLGtFHD3UpS9BUYLceEhH3Nt22DEBw8G3irrTXgysn8Gbs4Ozn+EW6ukglWnRaIyrwU4hyh410fe7utEKg+vvPbK91ahoWExF80f+5laBtenwD41Qgtba5xjU8tqqnU+ezXGHzE4ye7VAuWMFnxD5rLaR1CheA+TBLUNGx3EF6p4exM6FIX+qE2jCzqjUa2tEvuJ4b5A4oYkaSWy8UwLWwKKSaWUCWVjDfxHTQK3hIfbwicvl13RcnPAnUrT8em1EqoGHHQ69/dVAK/58Sg2hyJ+NrN5O6DEJNU5/clTur9LvdNHOqWuuFjmE8Z+SnA++olM/qLRjO0=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <62262B7684038143A1595B5CC61C0407@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Jun 2019 09:20:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:41862 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbfFYNU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:20:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2472D2B;
+        Tue, 25 Jun 2019 06:20:58 -0700 (PDT)
+Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAD143F718;
+        Tue, 25 Jun 2019 06:20:56 -0700 (PDT)
+Subject: Re: [PATCH 3/7] perf: arm64: Use rseq to test userspace access to pmu
+ counters
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, szabolcs.nagy@arm.com
+References: <20190611125315.18736-1-raphael.gault@arm.com>
+ <20190611125315.18736-4-raphael.gault@arm.com>
+ <20190611143346.GB28689@kernel.org>
+ <20190611165755.GG29008@lakrids.cambridge.arm.com>
+ <1620360283.42036.1560281622707.JavaMail.zimbra@efficios.com>
+From:   Raphael Gault <raphael.gault@arm.com>
+Message-ID: <7dbac943-890b-af16-d6a0-705b3cd609a1@arm.com>
+Date:   Tue, 25 Jun 2019 14:20:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82394f19-376c-4f25-318e-08d6f96fb861
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 13:19:15.4774
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5790
+In-Reply-To: <1620360283.42036.1560281622707.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:46:08PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> There is a potential integer overflow when int i is left shifted
-> as this is evaluated using 32 bit arithmetic but is being used in
-> a context that expects an expression of type dma_addr_t.  Fix this
-> by casting integer i to dma_addr_t before shifting to avoid the
-> overflow.
->=20
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 2ac0bc5e725e ("RDMA/hns: Add a group interfaces for optimizing buf=
-fers getting flow")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/infiniband/hw/hns/hns_roce_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Mathieu, Hi Szabolcs,
 
-Applied to for-next, thanks
+On 6/11/19 8:33 PM, Mathieu Desnoyers wrote:
+> ----- On Jun 11, 2019, at 6:57 PM, Mark Rutland mark.rutland@arm.com wrote:
+> 
+>> Hi Arnaldo,
+>>
+>> On Tue, Jun 11, 2019 at 11:33:46AM -0300, Arnaldo Carvalho de Melo wrote:
+>>> Em Tue, Jun 11, 2019 at 01:53:11PM +0100, Raphael Gault escreveu:
+>>>> Add an extra test to check userspace access to pmu hardware counters.
+>>>> This test doesn't rely on the seqlock as a synchronisation mechanism but
+>>>> instead uses the restartable sequences to make sure that the thread is
+>>>> not interrupted when reading the index of the counter and the associated
+>>>> pmu register.
+>>>>
+>>>> In addition to reading the pmu counters, this test is run several time
+>>>> in order to measure the ratio of failures:
+>>>> I ran this test on the Juno development platform, which is big.LITTLE
+>>>> with 4 Cortex A53 and 2 Cortex A57. The results vary quite a lot
+>>>> (running it with 100 tests is not so long and I did it several times).
+>>>> I ran it once with 10000 iterations:
+>>>> `runs: 10000, abort: 62.53%, zero: 34.93%, success: 2.54%`
+>>>>
+>>>> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+>>>> ---
+>>>>   tools/perf/arch/arm64/include/arch-tests.h    |   5 +-
+>>>>   tools/perf/arch/arm64/include/rseq-arm64.h    | 220 ++++++++++++++++++
+>>>
+>>> So, I applied the first patch in this series, but could you please break
+>>> this patch into at least two, one introducing the facility
+>>> (include/rseq*) and the second adding the test?
+>>>
+>>> We try to enforce this kind of granularity as down the line we may want
+>>> to revert one part while the other already has other uses and thus
+>>> wouldn't allow a straight revert.
+>>>
+>>> Also, can this go to tools/arch/ instead? Is this really perf specific?
+>>> Isn't there any arch/arm64/include files for the kernel that we could
+>>> mirror and have it checked for drift in tools/perf/check-headers.sh?
+>>
+>> The rseq bits aren't strictly perf specific, and I think the existing
+>> bits under tools/testing/selftests/rseq/ could be factored out to common
+>> locations under tools/include/ and tools/arch/*/include/.
+> 
+> Hi Mark,
+> 
+> Thanks for CCing me!
+> 
+> Or into a stand-alone librseq project:
+> 
+> https://github.com/compudj/librseq (currently a development branch in
+> my own github)
+> 
+> I don't see why this user-space code should sit in the kernel tree.
+> It is not tooling-specific.
+> 
+>>
+>>  From a scan, those already duplicate barriers and other helpers which
+>> already have definitions under tools/, which seems unfortunate. :/
+>>
+>> Comments below are for Raphael and Matthieu.
+>>
+>> [...]
+>>
+>>>> +static u64 noinline mmap_read_self(void *addr, int cpu)
+>>>> +{
+>>>> +	struct perf_event_mmap_page *pc = addr;
+>>>> +	u32 idx = 0;
+>>>> +	u64 count = 0;
+>>>> +
+>>>> +	asm volatile goto(
+>>>> +                     RSEQ_ASM_DEFINE_TABLE(0, 1f, 2f, 3f)
+>>>> +		     "nop\n"
+>>>> +                     RSEQ_ASM_STORE_RSEQ_CS(1, 0b, rseq_cs)
+>>>> +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
+>>>> +                     RSEQ_ASM_OP_R_LOAD(pc_idx)
+>>>> +                     RSEQ_ASM_OP_R_AND(0xFF)
+>>>> +		     RSEQ_ASM_OP_R_STORE(idx)
+>>>> +                     RSEQ_ASM_OP_R_SUB(0x1)
+>>>> +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
+>>>> +                     "msr pmselr_el0, " RSEQ_ASM_TMP_REG "\n"
+>>>> +                     "isb\n"
+>>>> +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
+> 
+> I really don't understand why the cpu_id needs to be compared 3 times
+> here (?!?)
+> 
+> Explicit comparison of the cpu_id within the rseq critical section
+> should be done _once_.
+> 
+> If the kernel happens to preempt and migrate the thread while in the
+> critical section, it's the kernel's job to move user-space execution
+> to the abort handler.
+> 
+>>>> +                     "mrs " RSEQ_ASM_TMP_REG ", pmxevcntr_el0\n"
+>>>> +                     RSEQ_ASM_OP_R_FINAL_STORE(cnt, 2)
+>>>> +		     "nop\n"
+>>>> +                     RSEQ_ASM_DEFINE_ABORT(3, abort)
+>>>> +                     :/* No output operands */
+>>>> +		     :  [cpu_id] "r" (cpu),
+>>>> +			[current_cpu_id] "Qo" (__rseq_abi.cpu_id),
+>>>> +			[rseq_cs] "m" (__rseq_abi.rseq_cs),
+>>>> +			[cnt] "m" (count),
+>>>> +			[pc_idx] "r" (&pc->index),
+>>>> +			[idx] "m" (idx)
+>>>> +                     :"memory"
+>>>> +                     :abort
+>>>> +                    );
+>>
+>> While baroque, this doesn't look as scary as I thought it would!
+> 
+> That's good to hear :)
+> 
+>>
+>> However, I'm very scared that this is modifying input operands without
+>> clobbering them. IIUC this is beacause we're trying to use asm goto,
+>> which doesn't permit output operands.
+> 
+> This is correct. What is wrong with modifying the target of "m" input
+> operands in an inline asm that has a "memory" clobber ?
+> 
+> gcc documentation at https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
+> states:
+> 
+> "An asm goto statement cannot have outputs. This is due to an internal
+> restriction of the compiler: control transfer instructions cannot have
+> outputs. If the assembler code does modify anything, use the "memory"
+> clobber to force the optimizers to flush all register values to memory
+> and reload them if necessary after the asm statement."
+> 
+> If there is a problem with this approach, an alternative would be to
+> pass &__rseq_abi.rseq.cs as a "r" input operand, explicitly dereference
+> it in the assembly, and use the "memory" clobber to ensure the compiler
+> knows that there are read/write references to memory.
+> 
+>> I'm very dubious to abusing asm goto in this way. Can we instead use a
+>> regular asm volatile block, and place the abort handler _within_ the
+>> asm? If performance is a concern, we can use .pushsection and
+>> .popsection to move that far away...
+> 
+> Let's dig into what would be needed in order to move the abort into the
+> asm block.
+> 
+> One approach would be to make that asm block return a nonzero value in
+> an output register, and put zero in that register in the non-abort case,
+> and then have a conditional check in C on that register to check
+> whether it needs to branch to the abort. This adds overhead we want
+> to avoid.
+> 
+> Another alternative would be to perform the entire abort handler in
+> the same assembly block as the rseq critical section. However, this
+> prevents us from going back to C to handle the abort, which is unwanted.
+> For instance, in the use-case of perf counters on aarch64, a good
+> fallback on abort would be to call the perf system call to read the
+> value of the performance counter. However, requiring that the abort be
+> implemented within the rseq assembly block would require that we
+> re-implement system call invocation in user-space for this, which
+> is rather annoying.
+> 
+>>
+>>>> +
+>>>> +	if (idx)
+>>>> +		count += READ_ONCE(pc->offset);
+>>
+>> I'm rather scared that from GCC's PoV, idx was initialized to zero, and
+>> not modified above (per the asm constraints). I realise that we've used
+>> an "m" constraint and clobbered memory, but I could well imagine that
+>> GCC can interpret that as needing to place a read-only copy in memory,
+>> but still being permitted to use the original value in a register. That
+>> would permit the above to be optimized away, since GCC knows no
+>> registers were clobbered, and thus idx must still be zero.
+> 
+> I suspect this is based on a rather conservative interpretation of the
+> following statement from https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html:
+> 
+> "The "memory" clobber tells the compiler that the assembly code performs memory
+> reads or writes to items other than those listed in the input and output operands"
+> 
+> Based on the previous sentence, it's tempting to conclude that the "m" input
+> operands content is not clobbered by the "memory" clobber.
+> 
+> however, it is followed by this:
+> 
+> "Further, the compiler does not assume that any values read from memory before an
+> asm remain unchanged after that asm; it reloads them as needed. Using the "memory"
+> clobber effectively forms a read/write memory barrier for the compiler."
+> 
+> Based on this last sentence, my understanding is that a "memory" clobber would
+> also clobber the content of any "m" operand.
+> 
+> If use of "m" (var) input-operand-as-output + "memory" clobber ends up being an
+> issue, we can always fall-back to "r" (&var) input operand + "memory" clobber,
+> which seems less ambiguous from a documentation standpoint.
+> 
+> I'd really like to have an authoritative answer from gcc folks before we start
+> changing this in all rseq asm for all architectures.
+> 
 
-Jason
+Hi Szabolcs, we would really appreciate to see what your opinion is on 
+this matter.
+
+>>
+>>>> +
+>>>> +	return count;
+>>
+>> ... and for similar reasons, always return zero here.
+>>
+>>>> +abort:
+>>>> +        pr_debug("Abort handler\n");
+>>>> +        exit(-2);
+>>>> +}
+>>
+>> Given the necessary complexity evident above, I'm also fearful that the
+>> sort of folk that want userspace counter access aren't going to bother
+>> with the above.
+> 
+> The abort handler should be implemented in C, simply invoking the perf
+> system call which lets the kernel perform the perf counter read.
+
+
+Thanks,
+
+-- 
+Raphael Gault
