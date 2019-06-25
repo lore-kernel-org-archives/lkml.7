@@ -2,82 +2,155 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF58C48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386FAC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54E8208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561506493;
-	bh=IIPnw17DMud2IaI5vgEyfR+P3UuBx+ITkJ6rG4E0/Zw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0ehvEglad/Q4YU6L7PkF4MD0rdxt8rX8Y8KSrKthaPYjVW0CU1ZznnhDKNuV3wmYe
-	 gjbZNzKWQgB1ocT+b/HttfIKVMHpZo/R8uP1NxJ+YFtXQ462Cl+RQUWFrWeAzWLW3X
-	 fPZiIHpjCc4VY7CbTrlZqV6SGsccKlY0qesDoTzQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0F722208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="g8AnEw7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfFYXsM (ORCPT
+        id S1726369AbfFYXxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfFYXsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:48:12 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905A92086D;
-        Tue, 25 Jun 2019 23:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561506491;
-        bh=IIPnw17DMud2IaI5vgEyfR+P3UuBx+ITkJ6rG4E0/Zw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YdV2OgLAzb3QWIbIVBE+1Nl4jWGTlSEpUeKyjuhshQ5iyMDWHYzMnPwdXtw4XiTNM
-         Qlxvmu3vya3XBKrFZhs2Es4bATlzE9X90mNaVtgT3Pb2Mf6AIFRrheD9lOiitAgGAM
-         aOWIXSJfI4ZF3nZLsa28aqfknN+f2T7fsNojlPCM=
-Date:   Tue, 25 Jun 2019 16:48:09 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     John Fastabend <john.fastabend@gmail.com>
-Cc:     syzbot <syzbot+8893700724999566d6a9@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, ast@kernel.org, cai@lca.pw,
-        crecklin@redhat.com, daniel@iogearbox.net, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: slab-out-of-bounds Write in validate_chain
-Message-ID: <20190625234808.GB116876@gmail.com>
-References: <000000000000e672c6058bd7ee45@google.com>
- <0000000000007724d6058c2dfc24@google.com>
+        Tue, 25 Jun 2019 19:53:36 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:30042 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726037AbfFYXxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:53:36 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PNmpcV011247
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 16:53:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=WYZxiREwAeaU2t88V8DNSwbVqkRoedXJSQJxp8fHgHM=;
+ b=g8AnEw7Nee6zUOfEHaIFdF2U2Apd6FhKQ98r8Kaqs7LYcIqS0iTu7YVgVMd95RvucnAy
+ gi6OLa9EEizO+f1oGGM3yP8Yp7HysNFeaR5vJy9l3GLH44rrTqS48GhA/pu/DL85W6Uv
+ XSxmFIwEQevIYRJmNQ2BsTBt9fUDhLOk85M= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2tbrmy150x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 16:53:34 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 25 Jun 2019 16:53:33 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 4223262E1F8B; Tue, 25 Jun 2019 16:53:33 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <peterz@infradead.org>, <oleg@redhat.com>, <rostedt@goodmis.org>,
+        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v7 1/4] mm: move memcmp_pages() and pages_identical()
+Date:   Tue, 25 Jun 2019 16:53:22 -0700
+Message-ID: <20190625235325.2096441-2-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190625235325.2096441-1-songliubraving@fb.com>
+References: <20190625235325.2096441-1-songliubraving@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000007724d6058c2dfc24@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=989 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250196
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+This patch moves memcmp_pages() to mm/util.c and pages_identical() to
+mm.h, so that we can use them in other files.
 
-On Tue, Jun 25, 2019 at 04:07:00PM -0700, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
-> Author: John Fastabend <john.fastabend@gmail.com>
-> Date:   Sat Jun 30 13:17:47 2018 +0000
-> 
->     bpf: sockhash fix omitted bucket lock in sock_close
-> 
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ include/linux/mm.h |  7 +++++++
+ mm/ksm.c           | 18 ------------------
+ mm/util.c          | 13 +++++++++++++
+ 3 files changed, 20 insertions(+), 18 deletions(-)
 
-Are you working on this?  This is the 6th open syzbot report that has been
-bisected to this commit, and I suspect it's the cause of many of the other
-30 open syzbot reports I assigned to the bpf subsystem too
-(https://lore.kernel.org/bpf/20190624050114.GA30702@sol.localdomain/).
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index dd0b5f4e1e45..0ab8c7d84cd0 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2891,5 +2891,12 @@ void __init setup_nr_node_ids(void);
+ static inline void setup_nr_node_ids(void) {}
+ #endif
+ 
++extern int memcmp_pages(struct page *page1, struct page *page2);
++
++static inline int pages_identical(struct page *page1, struct page *page2)
++{
++	return !memcmp_pages(page1, page2);
++}
++
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 3dc4346411e4..dbee2eb4dd05 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -1029,24 +1029,6 @@ static u32 calc_checksum(struct page *page)
+ 	return checksum;
+ }
+ 
+-static int memcmp_pages(struct page *page1, struct page *page2)
+-{
+-	char *addr1, *addr2;
+-	int ret;
+-
+-	addr1 = kmap_atomic(page1);
+-	addr2 = kmap_atomic(page2);
+-	ret = memcmp(addr1, addr2, PAGE_SIZE);
+-	kunmap_atomic(addr2);
+-	kunmap_atomic(addr1);
+-	return ret;
+-}
+-
+-static inline int pages_identical(struct page *page1, struct page *page2)
+-{
+-	return !memcmp_pages(page1, page2);
+-}
+-
+ static int write_protect_page(struct vm_area_struct *vma, struct page *page,
+ 			      pte_t *orig_pte)
+ {
+diff --git a/mm/util.c b/mm/util.c
+index 9834c4ab7d8e..750e586d50bc 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -755,3 +755,16 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+ out:
+ 	return res;
+ }
++
++int memcmp_pages(struct page *page1, struct page *page2)
++{
++	char *addr1, *addr2;
++	int ret;
++
++	addr1 = kmap_atomic(page1);
++	addr2 = kmap_atomic(page2);
++	ret = memcmp(addr1, addr2, PAGE_SIZE);
++	kunmap_atomic(addr2);
++	kunmap_atomic(addr1);
++	return ret;
++}
+-- 
+2.17.1
 
-Also, this is happening in mainline (v5.2-rc6).
-
-- Eric
