@@ -2,84 +2,108 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194A5C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38084C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27DF20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07434214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Bn6v7tL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfFYKSU (ORCPT
+        id S1731327AbfFYKUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:18:20 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44432 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbfFYKSU (ORCPT
+        Tue, 25 Jun 2019 06:20:12 -0400
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:54751 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfFYKUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:18:20 -0400
-Received: by mail-qt1-f194.google.com with SMTP id x47so17703174qtk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 03:18:19 -0700 (PDT)
+        Tue, 25 Jun 2019 06:20:12 -0400
+Received: by mail-wm1-f48.google.com with SMTP id g135so2203291wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 03:20:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=4gC840wcqb2NWmJlb40s55uXr+k2ykC6fzpFGRGyozU=;
+        b=Bn6v7tL1wJNpigI8o6I8fND6sLjYVqe6WpC3dg/VL0qgLrgb2SlMG2E8JJIcbVI1Up
+         GMvm5MoWz36C0Zv+hJqKLCCEUtoWRQUtET6WpAA0tDaJgRkuqWRBQl1m+5j9Y9hKVBCl
+         Dmd8MalDRgbkjiEz9VKY6NFsQ4RQAsHmeOyk8tlumM+hC/7sR0nBD4nWTiMpZXJeskGI
+         FIbxvOouxSGe1neHsoessOGN0sNu5y80NqJ4yu4/WY3QIW/nlmgroj/vDqUARjh5BvF+
+         RF8vfBaZK5klrprq7SzOqTfSzcEHJRajjvj0na942lqOnWlScBMEiqC1WSeL7vHycjre
+         1KNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PvRWz6V+haw2TlVaZgmCm6ymdnETNKgsFXH0cyBj35I=;
-        b=hvhcWdm3dt+AIaJh1xApZwhUdh1xGQIcRAbTfZjWIyDkBuS/rukUrrjcE5BW/QZfyY
-         hFLpW3WMp1Ya0pzoOfHTe789mCeVJ2dXmzWUehqkgKrjBSWftrmTNVIjEaR4RUDpesnT
-         kvMel19GMn2Tij7WjducyYNdBBJ6MmpvbtReyUK0RMBzKihREmBjDf4QMq/RaWRA8Twy
-         4MjqzEQvvb6ciYI/fVAAA4H6hTR+Fybx7ApJaeuF503dr//Hxhzw0M8d0IxUW06JRvKZ
-         GLs/lEQ1nR5KCL1pMCY8fgEuWYp5Rdm/gI/gcIIyOLqEuqqL0j/tXiTbdBrIP8U//2YI
-         AeTw==
-X-Gm-Message-State: APjAAAUHpXWPhanNFP4zl2pzdKB7VC2lOJebxgasMTIejSusNcbfPW8A
-        YNmfwfnTwBBNW0nb7ops2LVb9qrxziQtXkt2cm8C4Bii
-X-Google-Smtp-Source: APXvYqydUzs35RA7rjZwhf8dA2rUVA2XPh5DwCQotX74TATCvoQLOnxXE7G0PbbxpaF2uoKqS36oASNCYDDDwDej0xk=
-X-Received: by 2002:a0c:b758:: with SMTP id q24mr62213510qve.45.1561457899397;
- Tue, 25 Jun 2019 03:18:19 -0700 (PDT)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=4gC840wcqb2NWmJlb40s55uXr+k2ykC6fzpFGRGyozU=;
+        b=oRpeTV5w7fFRFyWpOmFQhGRGj/H4t1IQ1Lzrs3WLnqCfCgrjPKob3A2nLAImSz1zPn
+         49xXPz/wpQziBLO/XwyXts9a4UUqH1J+8tsq2MkMtytXXpPMNmDM2++L3eDhancMXpsc
+         jmjJhbGvEV5TPkEC3xNRg9OM6Wu8RD5PBf8p4FRkD1Ed/S5qGuugJw9ByWWCperOOQQT
+         AwZKI/5s20y2daxIupoEDjA+xn7qWCPN1VnH6lfWywZc6D7TJlQcvDzxRQSi7dOaCXp2
+         8/PrZGlt71ibkQzZ57OgIOzrjOtcatzU9BOPaFPX50PZ4HxHPY8m2SisnnW9grRC93UE
+         XwuA==
+X-Gm-Message-State: APjAAAWJhJdpB0am5zEpJEVyhefB+thhRHQrtq9+8+XYAPMxrfTtkVNe
+        0jvznj66BgiVPulYsATCjiS7dg==
+X-Google-Smtp-Source: APXvYqy65uNNx1zphPMrpMFrTeLQwBSANx3Mc0V0kRmstE7bTID7UBTheh+7l3O/6vT1/lrHedFYkw==
+X-Received: by 2002:a1c:ab06:: with SMTP id u6mr18869671wme.125.1561458010175;
+        Tue, 25 Jun 2019 03:20:10 -0700 (PDT)
+Received: from LAPTOP-V3S7NLPL ([217.38.71.146])
+        by smtp.gmail.com with ESMTPSA id a12sm9879061wrr.70.2019.06.25.03.20.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Jun 2019 03:20:09 -0700 (PDT)
+References: <xunyo92mox9h.fsf@redhat.com>
+User-agent: mu4e 0.9.18; emacs 25.2.2
+From:   Jiong Wang <jiong.wang@netronome.com>
+To:     Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Cc:     Jiong Wang <jiong.wang@netronome.com>,
+        linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Jiri Benc <jbenc@redhat.com>
+Subject: Re: ebpf: BPF_ALU32 | BPF_ARSH on BE arches
+In-reply-to: <xunyo92mox9h.fsf@redhat.com>
+Date:   Tue, 25 Jun 2019 11:20:07 +0100
+Message-ID: <87ef3i9dbc.fsf@netronome.com>
 MIME-Version: 1.0
-References: <20190625081912.14813-1-Jason@zx2c4.com>
-In-Reply-To: <20190625081912.14813-1-Jason@zx2c4.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 25 Jun 2019 12:18:01 +0200
-Message-ID: <CAK8P3a3nnrm0pebbA2fx9dHYwH7vkYWuJAQVWRzzQikOkXYqcQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] timekeeping: cleanup _fast_ variety of functions
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:19 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+
+Yauheni Kaliuta writes:
+
+> Hi!
 >
-> Hi Thomas,
+> Looks like the code:
 >
-> When Arnd and I discussed this prior, he thought it best that I separate
-> these two commits out into a separate patchset, because they might
-> require additional discussion or consideration from you. They seem
-> straightforward enough to me, but if deliberations require me to make
-> some tweaks, I'm happy to do so.
+>        ALU_ARSH_X:
+>                DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
+>                CONT;
+>        ALU_ARSH_K:
+>                DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
+>                CONT;
+>
+> works incorrectly on BE arches since it must operate on lower
+> parts of 64bit registers.
+>
+> See failure of test_verifier test 'arsh32 on imm 2' (#23 on
+> 5.2-rc6).
 
-One concern I had was whether we want to replace 'fast' with something
-else, such as 'in_nmi' that might be less confusing.  The current naming
-might be easy to confuse between 'fast' and 'coarse'.
+Ah, thanks for reporting this.
 
-Another point might be whether we actually need more than one
-kind of accessor for each time domain, given how rarely these are
-used. In theory we could have the full set of combinations of fast:
-monotonic/real/boottime/raw (but not clocktai) with ktime_t/ns/seconds/ts64
-for 16 versions.  We currently have four, and you are adding another
-four, but not the final eight. I'm not saying this is wrong, but
-it feels a bit arbitrary and could use an explanation why you feel that
-is the right subset.
+Should not taken the address directly, does the following fix resolved the
+failure?
 
-For coarse, we have ktime_t and ts64. The _seconds() accessors are
-coarse by definition, but we probably don't want to add _ns().
-We also don't have the combination of 'raw' with 'coarse' or 'seconds',
-as that seems to have no use case.
+        ALU_ARSH_X:
+                DST = (u64) (u32) ((s32) DST) >> SRC);
+                CONT;
+        ALU_ARSH_K:
+                DST = (u64) (u32) ((s32) DST) >> IMM);
+                CONT;
 
-      Arnd
+Regards,
+Jiong
