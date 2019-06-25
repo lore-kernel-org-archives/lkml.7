@@ -2,176 +2,177 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9705C4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B43C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84232206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD501206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gn85bRpx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OUeMHhIm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbfFYAnK (ORCPT
+        id S1729600AbfFYAoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:43:10 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35072 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729029AbfFYAnK (ORCPT
+        Mon, 24 Jun 2019 20:44:04 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40721 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbfFYAoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:43:10 -0400
-Received: by mail-qk1-f193.google.com with SMTP id l128so11260390qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:43:09 -0700 (PDT)
+        Mon, 24 Jun 2019 20:44:04 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a9so11348002lff.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:44:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e2ogumH57Dk+mOO0y5/CmcdAve3k/tPr0Lofkj3W1yQ=;
-        b=gn85bRpxX7rX0vPi2OF9kz6nsjSpDytW5uaW02EslXpNifmNJJW+bfXA/vNHvtnfyd
-         LEbGvEe0UTmhomOdUgl3WLDYKeBbP9GS8Ul3o4lm0omA18ix5UVvi5y53tJ9mWlSYZ+O
-         2tGmkRpE9D4p4h3dyylbbuMMhbJXozsVkMUW4=
+         :cc:content-transfer-encoding;
+        bh=CqsSVwEbnPYR+CbblI/s5YoLiQL9z41UI6Zu+9qXwWs=;
+        b=OUeMHhIm9MlrApudaCrTYD9zzrqDiS9ycnwcJlloFn/q2MLeodWmMItZXDp4Vg4Gyh
+         v8MezQ0whTrozGzNjjxhqvsbl3ZCOFQ2O2aT0vmXRFBO75XiazhaETouEjuCuONqc1S/
+         2WaE+Ic0oAothA6zinx7PtO/apd1i6c4Y2XVFEQqENkYXeOxqv5c3jB7OEWcqg9YnTvT
+         tH8NEz6ijfLClwj/pF2k01xXMyw6/zdf1wHAEjKYjt53eiQll7PfzhW7Xx9EaF2WoSKP
+         QxILUfPaeSk7UWL6JrkNgLx2aUz+BqNSqR4G68KIXeapdbwG1KZ1O3cU39WswOZgsqZ2
+         DAAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e2ogumH57Dk+mOO0y5/CmcdAve3k/tPr0Lofkj3W1yQ=;
-        b=uG7IdAhy8Axs9X/jVY2pPijNDmZA/bjN64ulRTRxJr23ipIJn5aRJjaZpoD1lICic7
-         L/cGP03q4sqPXl/lTmkb6hpJgrTwZ094sbjlGnjiaTVwccCEV8XaA7MfcEruwVaymQGi
-         7DcBP549lD02WGyIxKpnqZSJOpj0rEEaYNGdvPJLnGy+hqrRkmhu5xYnmh9ACiE9MV7N
-         Twkk7TiQ1zUHtIrUNyLpEQ9wTa55CV/a4pGjysba01b3g4A31E5+9MxgJ++IHnCCsXbb
-         B6Ot1dLRHYk78XfTWJCRFeTTNnk7GwDaAekogGmbI1iUlQZsXzhU8XkTQCnnRYKeGSr5
-         M/jA==
-X-Gm-Message-State: APjAAAWVeqPHJgY/J97ySWiKY4Wq+rlrwdxygYsaiRcwjCt5CV6J1Rrm
-        Pmp8AtTGV9K3ZffNIWR/tTRmE7lKLClllbo7ot6WyQ==
-X-Google-Smtp-Source: APXvYqwwA4s9JiBdyoHXEJ7/imxeIhWDD7nr1Z+Ib6NtNVV+u9MWlCR9lGtMIebURg5vdee28cPPsppvaqexL5f8k3E=
-X-Received: by 2002:a37:9c88:: with SMTP id f130mr19471044qke.457.1561423388940;
- Mon, 24 Jun 2019 17:43:08 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CqsSVwEbnPYR+CbblI/s5YoLiQL9z41UI6Zu+9qXwWs=;
+        b=uCSNpLR3VOWibqiLVBWn7nd0H7fV+ysAN5VryYMoAGGotSNH3QvRungRKZ5eWmNZOs
+         dNaF5CZTnJX9fTVbak6z/DL7DjFiiF125air2c3eKhcBSWW0QKuILy/qePoF4zGCdU2G
+         3BPidnypKj0BP1xxS8rWdY3H7C9xEAbQmqIhug3CDrl72cBDOOLA8h5dZcXdF1cAqnxg
+         S0a+v4abA2hguzt8ivWKsIWPYwfu2xEbdXNJuDOCYIY50LUW3QU312U+gvaGQkvp7/KU
+         xH98El6q3mTt3qtvhbdoFBI36kvEy9QDb306s2Bgn/sM/3fFTZbra8JvAyMiihaALZgr
+         yAFA==
+X-Gm-Message-State: APjAAAUQjVP5k6/e2oTJHuEV1nF9Ex4xu49lOmtfSiWe3iifugRi7c0f
+        Ai/uvOMJGCy2IUVKwTsihTKomCnzdRoQXG0Mz4Z6ZA==
+X-Google-Smtp-Source: APXvYqzzem/0Ye5O7fzYnTekrmrIgKpQ2UbojNG5AXpf/0bao9mx7yxd442XtUHharIhnZ53stYUrmPodJW+QoA81/M=
+X-Received: by 2002:a19:488e:: with SMTP id v136mr8494494lfa.192.1561423442252;
+ Mon, 24 Jun 2019 17:44:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190624080001.67222-1-jitao.shi@mediatek.com> <20190624080001.67222-3-jitao.shi@mediatek.com>
-In-Reply-To: <20190624080001.67222-3-jitao.shi@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 25 Jun 2019 08:42:57 +0800
-Message-ID: <CANMq1KDixwQN13o84Jp6E6tyfTQSZjiZSMzaNFZ02LEVPx0Z8g@mail.gmail.com>
-Subject: Re: [v2 2/2] drm/panel: support for auo, kd101n80-45na wuxga dsi
- video mode panel
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa cheng <cawa.cheng@mediatek.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
+References: <20190624092313.788773607@linuxfoundation.org>
+In-Reply-To: <20190624092313.788773607@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 25 Jun 2019 06:13:50 +0530
+Message-ID: <CA+G9fYuD6Enko_srw4NFPC_FsUPaLauLN4pp=AgxH6r-kaZ9Aw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/90] 4.19.56-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 4:00 PM Jitao Shi <jitao.shi@mediatek.com> wrote:
+On Mon, 24 Jun 2019 at 15:33, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
-> The most codes can be reuse.
-> So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
-> Add the different parts in driver data.
+> This is the start of the stable review cycle for the 4.19.56 release.
+> There are 90 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 40 +++++++++++++++++++
->  1 file changed, 40 insertions(+)
+> Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
+> Anything received after that time might be too late.
 >
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> index 6e06c8506623..d1ee43cfcbe2 100644
-> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> @@ -372,6 +372,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
->         {},
->  };
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.56-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
 >
-> +static const struct panel_init_cmd auo_init_cmd[] = {
-> +       _INIT_DELAY_CMD(24),
-> +       _INIT_DCS_CMD(0x11),
-> +       _INIT_DELAY_CMD(120),
-> +       _INIT_DCS_CMD(0x29),
-> +       _INIT_DELAY_CMD(120),
-> +       {},
-> +};
-> +
->  static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
->  {
->         return container_of(panel, struct boe_panel, base);
-> @@ -572,6 +581,34 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
->         .init_cmds = boe_init_cmd,
->  };
+> thanks,
 >
-> +static const struct drm_display_mode auo_default_mode = {
-> +       .clock = 157000,
-> +       .hdisplay = 1200,
-> +       .hsync_start = 1200 + 80,
-> +       .hsync_end = 1200 + 80 + 24,
-> +       .htotal = 1200 + 80 + 24 + 36,
-> +       .vdisplay = 1920,
-> +       .vsync_start = 1920 + 16,
-> +       .vsync_end = 1920 + 16 + 4,
-> +       .vtotal = 1920 + 16 + 4 + 16,
-> +       .vrefresh = 60,
-> +       .type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +};
-> +
-> +static const struct panel_desc auo_kd101n80_45na_desc = {
-> +       .modes = &auo_default_mode,
-> +       .bpc = 8,
-> +       .size = {
-> +               .width = 216,
-> +               .height = 135,
+> greg k-h
+>
 
-Same issue as the BOE panel:
-This is wrong, as this is a portrait panel, should be: width=135, height=216.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> +       },
-> +       .lanes = 4,
-> +       .format = MIPI_DSI_FMT_RGB888,
-> +       .mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> +                     MIPI_DSI_MODE_LPM,
-> +       .init_cmds = auo_init_cmd,
-> +};
-> +
->  static int boe_panel_get_modes(struct drm_panel *panel)
->  {
->         struct boe_panel *boe = to_boe_panel(panel);
-> @@ -695,6 +732,9 @@ static const struct of_device_id boe_of_match[] = {
->         { .compatible = "boe,tv101wum-nl6",
->           .data = &boe_tv101wum_nl6_desc
->         },
-> +       { .compatible = "auo,kd101n80-45na",
-> +         .data = &auo_kd101n80_45na_desc
-> +       },
->         { /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, boe_of_match);
-> --
-> 2.21.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.56-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: d8e5ade617e917a499d5d59b24e19e71f80886a8
+git describe: v4.19.55-92-gd8e5ade617e9
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.55-92-gd8e5ade617e9
+
+
+No regressions (compared to build v4.19.55)
+
+No fixes (compared to build v4.19.55)
+
+Ran 25252 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
