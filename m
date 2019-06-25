@@ -2,132 +2,97 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741F7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4F4C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4059B2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="hWuH37JS"
+	by mail.kernel.org (Postfix) with ESMTP id D23F3205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561501945;
+	bh=cSuQxxaq84YwOFPQHIHja20RlhSxafVamByUrHvRrDQ=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=iXt+nPBVSX77O93Z/CYBh3fvTxkmBbYCIHL82MkwLgD1yXE3PswAJ82o4lOff1PV2
+	 6brJ5T14zvP81z7tKnbG/isp2pKXLOEFLBCwMwXnNG0NrGsd2QYIBiiR9sxiGb8pF7
+	 7N/ebsJJjR4P5momFU5kmKxIZMJs/P6UmAFSjqSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfFYWaa (ORCPT
+        id S1726412AbfFYWcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:30:30 -0400
-Received: from mail-eopbgr720105.outbound.protection.outlook.com ([40.107.72.105]:12896
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726402AbfFYWa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:30:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amperemail.onmicrosoft.com; s=selector2-amperemail-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=euhzYvd1r7uvcEPyDcPjPn2ACbogTaQr3g8dE0atYmY=;
- b=hWuH37JS6kJL6fDrNgkLUCqW2NN7+VxEL8btwNK6VAonyk13RrN+Kd/w66VaVxd50OT33F2oRKfXGVEDU1VphkC5196a8KzRP1JH3/Y2Z58hVisVKF667W0ho3bvXg0VwxD1RBbLg6Hg4OwymaBvG+Q7wkGyW6z8/VpODif2Si4=
-Received: from DM6PR01MB4090.prod.exchangelabs.com (20.176.104.151) by
- DM6PR01MB5308.prod.exchangelabs.com (20.177.220.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 22:30:25 +0000
-Received: from DM6PR01MB4090.prod.exchangelabs.com
- ([fe80::f0f2:16e1:1db7:ccb3]) by DM6PR01MB4090.prod.exchangelabs.com
- ([fe80::f0f2:16e1:1db7:ccb3%7]) with mapi id 15.20.2008.017; Tue, 25 Jun 2019
- 22:30:25 +0000
-From:   Hoan Tran OS <hoan@os.amperecomputing.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-CC:     "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Hoan Tran OS <hoan@os.amperecomputing.com>
-Subject: [PATCH 1/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for
- NUMA
-Thread-Topic: [PATCH 1/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default
- for NUMA
-Thread-Index: AQHVK6WVXavbpwRBlkOB7/lZ/263cg==
-Date:   Tue, 25 Jun 2019 22:30:24 +0000
-Message-ID: <1561501810-25163-2-git-send-email-Hoan@os.amperecomputing.com>
-References: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
-In-Reply-To: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CY4PR22CA0052.namprd22.prod.outlook.com
- (2603:10b6:903:ae::14) To DM6PR01MB4090.prod.exchangelabs.com
- (2603:10b6:5:2a::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=hoan@os.amperecomputing.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [4.28.12.214]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 54d110de-2645-4945-6b5f-08d6f9bcb750
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR01MB5308;
-x-ms-traffictypediagnostic: DM6PR01MB5308:
-x-microsoft-antispam-prvs: <DM6PR01MB5308134E4F92AC83B9F41E0CF1E30@DM6PR01MB5308.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(136003)(39840400004)(346002)(396003)(199004)(189003)(256004)(14444005)(4326008)(53936002)(14454004)(4744005)(7736002)(52116002)(107886003)(50226002)(6486002)(81156014)(81166006)(64756008)(8936002)(66446008)(8676002)(6436002)(110136005)(26005)(5660300002)(99286004)(66946007)(73956011)(6506007)(76176011)(186003)(386003)(102836004)(66066001)(2906002)(446003)(305945005)(54906003)(2616005)(66556008)(66476007)(11346002)(316002)(476003)(6512007)(1511001)(478600001)(71190400001)(3846002)(71200400001)(7416002)(6116002)(86362001)(25786009)(68736007)(486006)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR01MB5308;H:DM6PR01MB4090.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: os.amperecomputing.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CEXZuBe95/lYRW5/9KlScxk8rGpPV293bD8Vi6Rh5tQlobN+G3BVpTMBkzIwLqZA3JnpW75P5jbhDcseEyaV4yQumftk8B4hwv9UnLNekXhEWoFpQuM69sMoA0BfDB16tqtN8FEcJ4PcaHSwBkwlYnSEnYUjIKeM031kkz9h1LtFXL0CL7cRcSpZ516oR3E862gIXjE5L2W6BAO3B9nvcTeqO2CqyOYm2JcOMmPIqcgWKlJcJ9Bhejmz3FyGkXfE9a5Z/hlRY3yCPNL6RrGvRY9INmmYGDJG9Mccl+HGbjtHkEhI/dBpJpOE39eflNG3de85pFPmdlgwoRPaMEYM586dCirgDs3L5jJ8uo9SX51LNFWysDoQ8HH+30UoMM1JQo3+JgEQEsjqQxM1O2ic9ZErXeDzueFsyIuXvfRrXR4=
+        Tue, 25 Jun 2019 18:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbfFYWcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:32:24 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B8EC2053B;
+        Tue, 25 Jun 2019 22:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561501943;
+        bh=cSuQxxaq84YwOFPQHIHja20RlhSxafVamByUrHvRrDQ=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=uOThxdWIbQIHssS8dVd8WO2sv4HnWY9Krnf6kAdWBWn+vn4mff8AGaU7SXJfDPhQh
+         R4W3J5zoId9HAY1DA6y3R2SF0uCSl/dNLEEHvscypDCrIjnWYyYi9IAO2n+zDnSwEJ
+         9POD0+D4ltW1DyG5nDqCpTX0MxTKdezfL79viuNE=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54d110de-2645-4945-6b5f-08d6f9bcb750
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 22:30:24.9479
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hoan@os.amperecomputing.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB5308
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1561453316-11481-1-git-send-email-abel.vesa@nxp.com>
+References: <1561453316-11481-1-git-send-email-abel.vesa@nxp.com>
+To:     Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: imx8mq: Mark AHB clock as critical
+Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 25 Jun 2019 15:32:22 -0700
+Message-Id: <20190625223223.3B8EC2053B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCBlbmFibGVzIENPTkZJR19OT0RFU19TUEFOX09USEVSX05PREVTIGJ5IGRlZmF1
-bHQNCmZvciBOVU1BLiBBcyBzb21lIE5VTUEgbm9kZXMgaGF2ZSBtZW1vcnkgcmFuZ2VzIHRoYXQg
-c3BhbiBvdGhlcg0Kbm9kZXMuIEV2ZW4gdGhvdWdoIGEgcGZuIGlzIHZhbGlkIGFuZCBiZXR3ZWVu
-IGEgbm9kZSdzIHN0YXJ0IGFuZA0KZW5kIHBmbnMsIGl0IG1heSBub3QgcmVzaWRlIG9uIHRoYXQg
-bm9kZS4NCg0KU2lnbmVkLW9mZi1ieTogSG9hbiBUcmFuIDxIb2FuQG9zLmFtcGVyZWNvbXB1dGlu
-Zy5jb20+DQotLS0NCiBtbS9wYWdlX2FsbG9jLmMgfCAyICstDQogMSBmaWxlIGNoYW5nZWQsIDEg
-aW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9tbS9wYWdlX2FsbG9j
-LmMgYi9tbS9wYWdlX2FsbG9jLmMNCmluZGV4IGQ2NmJjOGEuLjYzMzU1MDUgMTAwNjQ0DQotLS0g
-YS9tbS9wYWdlX2FsbG9jLmMNCisrKyBiL21tL3BhZ2VfYWxsb2MuYw0KQEAgLTE0MTMsNyArMTQx
-Myw3IEBAIGludCBfX21lbWluaXQgZWFybHlfcGZuX3RvX25pZCh1bnNpZ25lZCBsb25nIHBmbikN
-CiB9DQogI2VuZGlmDQogDQotI2lmZGVmIENPTkZJR19OT0RFU19TUEFOX09USEVSX05PREVTDQor
-I2lmZGVmIENPTkZJR19OVU1BDQogLyogT25seSBzYWZlIHRvIHVzZSBlYXJseSBpbiBib290IHdo
-ZW4gaW5pdGlhbGlzYXRpb24gaXMgc2luZ2xlLXRocmVhZGVkICovDQogc3RhdGljIGlubGluZSBi
-b29sIF9fbWVtaW5pdCBlYXJseV9wZm5faW5fbmlkKHVuc2lnbmVkIGxvbmcgcGZuLCBpbnQgbm9k
-ZSkNCiB7DQotLSANCjIuNy40DQoNCg==
+Quoting Abel Vesa (2019-06-25 02:01:56)
+> Keep the AHB clock always on since there is no driver to control it and
+> all the other clocks that use it as parent rely on it being always enable=
+d.
+>=20
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> ---
+>  drivers/clk/imx/clk-imx8mq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+> index 5fbc2a7..b48268b 100644
+> --- a/drivers/clk/imx/clk-imx8mq.c
+> +++ b/drivers/clk/imx/clk-imx8mq.c
+> @@ -398,7 +398,7 @@ static int imx8mq_clocks_probe(struct platform_device=
+ *pdev)
+>         clks[IMX8MQ_CLK_NOC_APB] =3D imx8m_clk_composite_critical("noc_ap=
+b", imx8mq_noc_apb_sels, base + 0x8d80);
+> =20
+>         /* AHB */
+> -       clks[IMX8MQ_CLK_AHB] =3D imx8m_clk_composite("ahb", imx8mq_ahb_se=
+ls, base + 0x9000);
+> +       clks[IMX8MQ_CLK_AHB] =3D imx8m_clk_composite_critical("ahb", imx8=
+mq_ahb_sels, base + 0x9000);
+
+Please add a comment into the code why it's critical.
+
+>         clks[IMX8MQ_CLK_AUDIO_AHB] =3D imx8m_clk_composite("audio_ahb", i=
+mx8mq_audio_ahb_sels, base + 0x9100);
+> =20
+>         /* IPG */
+> --=20
+> 2.7.4
+>=20
