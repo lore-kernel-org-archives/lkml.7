@@ -2,171 +2,99 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B0AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5788DC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1762084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256AC208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9CPOfod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfFYVrT (ORCPT
+        id S1726583AbfFYVrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 17:47:19 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:37746 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFYVrI (ORCPT
+        Tue, 25 Jun 2019 17:47:21 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43193 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbfFYVrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 17:47:08 -0400
-Received: by mail-io1-f70.google.com with SMTP id j18so40434ioj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 14:47:07 -0700 (PDT)
+        Tue, 25 Jun 2019 17:47:20 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 16so17744564ljv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 14:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z/7iY+DnLcZ0LezbOS35sy0HgPdj0Ewcwnm4oaB/nKo=;
+        b=W9CPOfods70wf/mb0mzHG5wJJRKM+sddo446tb0HsZyJTxvQCyJ/CtsdhdqbFMCGe0
+         m2CZRzhDrc2+rhlxoVr1/AN07ukD7FfT8PZuoF0kNl1Tq2rmvT5fxpDD20YOv/tN2yra
+         5ixXEccCb2M2cZtGDh+8vJqcltnX9vaCsn+T7VPMK4okAhweQMd03C9eoIuOk1m7KErs
+         FDvxQLdPA3NpqdXOfJisP9QM1eKoUJcnuEBZTqj40V0d8ujg4aON8dMMvINLzOxs9atc
+         gyF030AxBKO08/Om7d9GbN/WFuvZzWi+JPdqsdoiuPN7LukX4vv+/e2F+p0P5GQbgBOg
+         G5DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=UJMkyJRfZAWiYHQO3lkQRyIVJFbkUi74TqZBHCN7Auo=;
-        b=RqaZFcNiX2639ERBQQ/QWlIM4SQjfZM1Vw1spSEjeAyh+NmqicZ3bBZ4h72ZhlCduJ
-         OGzwHh9LZsXi8pjeL85QWAdQxSGXj84EnISGOjFYA03Nx76Jpaj/6OvOgc82tWPTGBhj
-         VumS+LlXl9qKkG9p89oPWVsGM6raWz55Hmoa6D0fs92VwWMwBckPWb4fFqVZ2npBDcL+
-         uXHGGm9qK8znMYpuMBX2/uh59vvDVk6YGJpSs+0pAoGA6mpcOFvcR2iTOcvNDKS0/gMU
-         gWQrK0yXQuWnQZLenavBTmeDrs4E63le6lhcAmF5T9OM14JDtW0BhQAZsnrVP0Z9bJLp
-         4etw==
-X-Gm-Message-State: APjAAAXsjPJBmcR92SjXRvXpjq1XDagOwjgSaBPcYwg5OEQ+PUK3kl5D
-        rxys0rp6s52sp4ge/BLozBwtLflqgjWXGvJFHcsTwq3Oh8gB
-X-Google-Smtp-Source: APXvYqyAaDeug+XSRMcY1hscRo0iI/PV7iVIJW/oB23694qZ8/PtfaNdxgoEdPyLafLNk9QV+H3egweaSrcC+TxpiPmjoWOpCZk4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z/7iY+DnLcZ0LezbOS35sy0HgPdj0Ewcwnm4oaB/nKo=;
+        b=sos+A+WLFXijrXyd6xnp0W0En4uYJBOMoUz+NqITcd1eUZS5ZgqWvIcOYVRw4D7051
+         rZaxttu8HSdaTlllYDuUlbx6UVQOMt7SGolnpE9TKyNL6Jg4R/cVd9Tog5vu+ocy4U8o
+         0O/TNsNnOCxj2s4ddM4qGyCoEjmEbRE9Q6Af7jZaJOzy49GzQ762DnMTFIOdsfDBjeJT
+         K6AIpNi1iDKSJ+MFke0QESZXIdGtygfTAz/zfZ88nXBRN9Sd17olMh7HJIyjsTkztPSn
+         aYEAOJg64xFVNYNamxou6iCeZtsJVkG4XAapL2JhJz7KMGDA+BlqhWWjKigq1iE/gtS8
+         i2fw==
+X-Gm-Message-State: APjAAAWZJP72Cp8t10lnGy/OgpkkNKmKa8Mn8gKPRHaBx8Q14TtQq2Em
+        bSEdnks9tKJ1Eenb4U0NN/NRFyNNRMUwG5nkWowNZQ==
+X-Google-Smtp-Source: APXvYqzMR10l93rViwuhFQNu55fJ5C0Pn/GPzn97xvFQHwI302OTE+IuljHXJI9gRVYElTANqxFQchnBMEROTxTabkA=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr463722ljm.180.1561499238305;
+ Tue, 25 Jun 2019 14:47:18 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b497:: with SMTP id d145mr1044980iof.17.1561499227149;
- Tue, 25 Jun 2019 14:47:07 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 14:47:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c05b7b058c2cde8a@google.com>
-Subject: BUG: unable to handle kernel paging request in coalesced_mmio_write
-From:   syzbot <syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-11-robh@kernel.org>
+ <CACRpkdYKE=zLJhmTeTWYGRCQNt3K8+rNNqsp5UDa2d31GG6Y2g@mail.gmail.com>
+ <CAL_Jsq+uCMKhUFgCCK3uUetL9OwokQPaq74GJHQS2VS=UjVH8w@mail.gmail.com>
+ <CACRpkdYnSZibUyhe5D8W259fCJBm05rG0_EmX+uoi=uqbrqEYA@mail.gmail.com> <CAL_Jsq+45dKRMdRCjfKgEkvsk1MLyeXnY4fjZmh50WLweyJfCg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+45dKRMdRCjfKgEkvsk1MLyeXnY4fjZmh50WLweyJfCg@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jun 2019 23:47:06 +0200
+Message-ID: <CACRpkdYEYcvxVai9kjLyz_Sudiz=JPD7oKU4sVL-bxOmWN0dkg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/15] dt-bindings: display: Convert tpo,tpg110 panel
+ to DT schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jun 25, 2019 at 4:26 PM Rob Herring <robh@kernel.org> wrote:
+> On Tue, Jun 25, 2019 at 2:26 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-syzbot found the following crash on:
+> > Can I simply just merge the panel-common patch as well and we
+> > are all happy?
+>
+> I have drm-misc commit rights too, so I'll apply the whole lot when it's ready.
+>
+> > I can also pick up more panel binding patches, IMO the yaml
+> > conversions are especially uncontroversial and should have low
+> > threshold for merging.
+>
+> Yes, but the threshold is at least 'make dt_binding_check' should not
+> break. But don't worry, there are 2 other breakages in linux-next
+> currently.
 
-HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=111932b1a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
-dashboard link: https://syzkaller.appspot.com/bug?extid=983c866c3dd6efa3662a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13299fc9a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134b2826a00000
+OK let's try to live with it for now, if it makes you too much trouble
+we can just revert it, accidents happen.
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=108f9e06a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=148f9e06a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-
-L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and  
-https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for  
-details.
-BUG: unable to handle page fault for address: ffffed12fb15ea1f
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 21fff0067 P4D 21fff0067 PUD 0
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8945 Comm: syz-executor116 Not tainted 5.2.0-rc5+ #57
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:coalesced_mmio_write+0x28a/0x4d0  
-arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:83
-Code: 38 d0 7c 08 84 d2 0f 85 55 02 00 00 41 8b 47 04 48 8d 14 40 49 8d 7c  
-d7 08 48 ba 00 00 00 00 00 fc ff df 48 89 fe 48 c1 ee 03 <80> 3c 16 00 0f  
-85 1b 02 00 00 48 8d 14 40 48 be 00 00 00 00 00 fc
-RSP: 0018:ffff8880a045f170 EFLAGS: 00010a02
-RAX: 00000000f7d5760a RBX: 0000000000000000 RCX: ffffffff81080faa
-RDX: dffffc0000000000 RSI: 1ffff112fb15ea1f RDI: ffff8897d8af50f8
-RBP: ffff8880a045f1c0 R08: ffff888089e483c0 R09: 0000000000000000
-R10: ffffed101408be1b R11: 0000000000000003 R12: 0000000000000001
-R13: ffff8880a55dbf10 R14: 0000000000000001 R15: ffff88809cac4000
-FS:  000055555573a940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffed12fb15ea1f CR3: 00000000a0aee000 CR4: 00000000001426f0
-Call Trace:
-  kvm_iodevice_write include/kvm/iodev.h:54 [inline]
-  __kvm_io_bus_write+0x29b/0x380  
-arch/x86/kvm/../../../virt/kvm/kvm_main.c:3701
-  kvm_io_bus_write+0x15c/0x290 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3726
-  vcpu_mmio_write arch/x86/kvm/x86.c:5029 [inline]
-  write_mmio+0x175/0x4e0 arch/x86/kvm/x86.c:5391
-  emulator_read_write_onepage+0x429/0xd50 arch/x86/kvm/x86.c:5460
-  emulator_read_write+0x1b7/0x5a0 arch/x86/kvm/x86.c:5509
-  emulator_write_emulated+0x3c/0x50 arch/x86/kvm/x86.c:5546
-  segmented_write+0xf0/0x150 arch/x86/kvm/emulate.c:1446
-  writeback arch/x86/kvm/emulate.c:1808 [inline]
-  writeback+0x3f4/0x6a0 arch/x86/kvm/emulate.c:1794
-  x86_emulate_insn+0x1de1/0x48f0 arch/x86/kvm/emulate.c:5695
-  x86_emulate_instruction+0xca3/0x1c50 arch/x86/kvm/x86.c:6509
-  kvm_mmu_page_fault+0x370/0x1870 arch/x86/kvm/mmu.c:5430
-  handle_ept_violation+0x1c8/0x500 arch/x86/kvm/vmx/vmx.c:5099
-  vmx_handle_exit+0x280/0x1540 arch/x86/kvm/vmx/vmx.c:5861
-  vcpu_enter_guest+0x1174/0x5f40 arch/x86/kvm/x86.c:8035
-  vcpu_run arch/x86/kvm/x86.c:8099 [inline]
-  kvm_arch_vcpu_ioctl_run+0x423/0x1740 arch/x86/kvm/x86.c:8307
-  kvm_vcpu_ioctl+0x4dc/0xf90 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2755
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4444e9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff46b48808 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fff46b48810 RCX: 00000000004444e9
-RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000402240 R09: 0000000000402240
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000405590
-R13: 0000000000405620 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-CR2: ffffed12fb15ea1f
----[ end trace 84ecc85af6872381 ]---
-RIP: 0010:coalesced_mmio_write+0x28a/0x4d0  
-arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:83
-Code: 38 d0 7c 08 84 d2 0f 85 55 02 00 00 41 8b 47 04 48 8d 14 40 49 8d 7c  
-d7 08 48 ba 00 00 00 00 00 fc ff df 48 89 fe 48 c1 ee 03 <80> 3c 16 00 0f  
-85 1b 02 00 00 48 8d 14 40 48 be 00 00 00 00 00 fc
-RSP: 0018:ffff8880a045f170 EFLAGS: 00010a02
-RAX: 00000000f7d5760a RBX: 0000000000000000 RCX: ffffffff81080faa
-RDX: dffffc0000000000 RSI: 1ffff112fb15ea1f RDI: ffff8897d8af50f8
-RBP: ffff8880a045f1c0 R08: ffff888089e483c0 R09: 0000000000000000
-R10: ffffed101408be1b R11: 0000000000000003 R12: 0000000000000001
-R13: ffff8880a55dbf10 R14: 0000000000000001 R15: ffff88809cac4000
-FS:  000055555573a940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffed12fb15ea1f CR3: 00000000a0aee000 CR4: 00000000001426f0
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Yours,
+Linus Walleij
