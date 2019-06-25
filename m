@@ -2,276 +2,216 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168F2C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFA6C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B54214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hU21sXIG"
+	by mail.kernel.org (Postfix) with ESMTP id B9A692146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731736AbfFYOiE (ORCPT
+        id S1731696AbfFYOiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:38:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52734 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731602AbfFYOiA (ORCPT
+        Tue, 25 Jun 2019 10:38:03 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51525 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731516AbfFYOh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:38:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cNb5LAit4OQE9csyW8Gi3qb52ub8bWsatrdoLvwwMmk=; b=hU21sXIGXyk/mxw1HaN+6x5I8z
-        REbMk/9AO2/RX7OUJZAz7uatsrDjVraOr2R7w7o1uB8bi/MLY5BSeHDuWcSqGT5qb92FfOOrlqA2v
-        xJ2Iaq6iLlaonDvnyUn5rB14ArrIZJHdVpacxQ/NwA3kG90jz2cLueycWPfxq6Rc616kRcKbJbsFJ
-        9M7rzU2H2ztN2yfxRYs2U9z7anC8kgI5e72AOG7KgDREQgaJjpXZnyVd6ke/dfDgqq7QTq53Ii19X
-        eiU1xmwauAPSmID0U5JtNbc8tf9F59Gh1UqNi4XjkgpBeJBDDaUvUaCvKXGZqrZ6jCSA0xo+6Fb3C
-        eS+bPF9g==;
-Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfmZy-00081q-2P; Tue, 25 Jun 2019 14:37:50 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 10/16] mm: rename CONFIG_HAVE_GENERIC_GUP to CONFIG_HAVE_FAST_GUP
-Date:   Tue, 25 Jun 2019 16:37:09 +0200
-Message-Id: <20190625143715.1689-11-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625143715.1689-1-hch@lst.de>
-References: <20190625143715.1689-1-hch@lst.de>
+        Tue, 25 Jun 2019 10:37:59 -0400
+X-Originating-IP: 90.88.16.156
+Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id B6C476000A;
+        Tue, 25 Jun 2019 14:37:47 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 16:37:47 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?utf-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v10 04/11] drm/sun4i: tcon: Compute
+ DCLK dividers based on format, lanes
+Message-ID: <20190625143747.3czd7sit4waz75b6@flea>
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-5-jagan@amarulasolutions.com>
+ <20190523204823.mx7l4ozklzdh7npn@flea>
+ <CAMty3ZA0S=+8NBrQZvP6sFdzSYWqhNZL_KjkJAQ0jTc2RVivrw@mail.gmail.com>
+ <20190604143016.fcx3ezmga244xakp@flea>
+ <CAMty3ZAAK4RoE6g_LAZ-Q38On_1s_TTOz65YG7PVd88mwp-+4Q@mail.gmail.com>
+ <20190613131626.7zbwvrvd4e7eafrc@flea>
+ <CAMty3ZBDkMJkZm8FudNB1wQ+L-q3XVKa3zR2M0wZ5Uncdy_Ayg@mail.gmail.com>
+ <20190624130442.ww4l3zctykr4i2e2@flea>
+ <CAMty3ZB+eZUh5mr-LMZuEd_wrwLCN0mbf7arcRQHj8=uUNNq=Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4qhko7umufjvzvnc"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZB+eZUh5mr-LMZuEd_wrwLCN0mbf7arcRQHj8=uUNNq=Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We only support the generic GUP now, so rename the config option to
-be more clear, and always use the mm/Kconfig definition of the
-symbol and select it from the arch Kconfigs.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
----
- arch/arm/Kconfig     | 5 +----
- arch/arm64/Kconfig   | 4 +---
- arch/mips/Kconfig    | 2 +-
- arch/powerpc/Kconfig | 2 +-
- arch/s390/Kconfig    | 2 +-
- arch/sh/Kconfig      | 2 +-
- arch/sparc/Kconfig   | 2 +-
- arch/x86/Kconfig     | 4 +---
- mm/Kconfig           | 2 +-
- mm/gup.c             | 4 ++--
- 10 files changed, 11 insertions(+), 18 deletions(-)
+--4qhko7umufjvzvnc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 8869742a85df..3879a3e2c511 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -73,6 +73,7 @@ config ARM
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
- 	select HAVE_EXIT_THREAD
-+	select HAVE_FAST_GUP if ARM_LPAE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-@@ -1596,10 +1597,6 @@ config ARCH_SELECT_MEMORY_MODEL
- config HAVE_ARCH_PFN_VALID
- 	def_bool ARCH_HAS_HOLES_MEMORYMODEL || !SPARSEMEM
- 
--config HAVE_GENERIC_GUP
--	def_bool y
--	depends on ARM_LPAE
--
- config HIGHMEM
- 	bool "High Memory Support"
- 	depends on MMU
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 697ea0510729..4a6ee3e92757 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -140,6 +140,7 @@ config ARM64
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
-+	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
-@@ -262,9 +263,6 @@ config GENERIC_CALIBRATE_DELAY
- config ZONE_DMA32
- 	def_bool y
- 
--config HAVE_GENERIC_GUP
--	def_bool y
--
- config ARCH_ENABLE_MEMORY_HOTPLUG
- 	def_bool y
- 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 64108a2a16d4..b1e42f0e4ed0 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -54,10 +54,10 @@ config MIPS
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_EXIT_THREAD
-+	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
--	select HAVE_GENERIC_GUP
- 	select HAVE_IDE
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_EXIT_ON_IRQ_STACK
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 8c1c636308c8..992a04796e56 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -185,12 +185,12 @@ config PPC
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS	if MPROFILE_KERNEL
- 	select HAVE_EBPF_JIT			if PPC64
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS	if !(CPU_LITTLE_ENDIAN && POWER7_CPU)
-+	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_ERROR_INJECTION
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
--	select HAVE_GENERIC_GUP
- 	select HAVE_HW_BREAKPOINT		if PERF_EVENTS && (PPC_BOOK3S || PPC_8xx)
- 	select HAVE_IDE
- 	select HAVE_IOREMAP_PROT
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 109243fdb6ec..aaff0376bf53 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -137,6 +137,7 @@ config S390
- 	select HAVE_DMA_CONTIGUOUS
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
-+	select HAVE_FAST_GUP
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_FENTRY
- 	select HAVE_FTRACE_MCOUNT_RECORD
-@@ -144,7 +145,6 @@ config S390
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_FUTEX_CMPXCHG if FUTEX
- 	select HAVE_GCC_PLUGINS
--	select HAVE_GENERIC_GUP
- 	select HAVE_KERNEL_BZIP2
- 	select HAVE_KERNEL_GZIP
- 	select HAVE_KERNEL_LZ4
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 6fddfc3c9710..f6b15ecc37a3 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -14,7 +14,7 @@ config SUPERH
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_PERF_EVENTS
- 	select HAVE_DEBUG_BUGVERBOSE
--	select HAVE_GENERIC_GUP
-+	select HAVE_FAST_GUP if MMU
- 	select ARCH_HAVE_CUSTOM_GPIO_H
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
- 	select ARCH_HAS_GCOV_PROFILE_ALL
-diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
-index 22435471f942..659232b760e1 100644
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -28,7 +28,7 @@ config SPARC
- 	select RTC_DRV_M48T59
- 	select RTC_SYSTOHC
- 	select HAVE_ARCH_JUMP_LABEL if SPARC64
--	select HAVE_GENERIC_GUP if SPARC64
-+	select HAVE_FAST_GUP if SPARC64
- 	select GENERIC_IRQ_SHOW
- 	select ARCH_WANT_IPC_PARSE_VERSION
- 	select GENERIC_PCI_IOMAP
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 7cd53cc59f0f..44500e0ed630 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -157,6 +157,7 @@ config X86
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_EISA
- 	select HAVE_EXIT_THREAD
-+	select HAVE_FAST_GUP
- 	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_GRAPH_TRACER
-@@ -2874,9 +2875,6 @@ config HAVE_ATOMIC_IOMAP
- config X86_DEV_DMA_OPS
- 	bool
- 
--config HAVE_GENERIC_GUP
--	def_bool y
--
- source "drivers/firmware/Kconfig"
- 
- source "arch/x86/kvm/Kconfig"
-diff --git a/mm/Kconfig b/mm/Kconfig
-index fe51f104a9e0..98dffb0f2447 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -132,7 +132,7 @@ config HAVE_MEMBLOCK_NODE_MAP
- config HAVE_MEMBLOCK_PHYS_MAP
- 	bool
- 
--config HAVE_GENERIC_GUP
-+config HAVE_FAST_GUP
- 	bool
- 
- config ARCH_KEEP_MEMBLOCK
-diff --git a/mm/gup.c b/mm/gup.c
-index 9b72f2ea3471..7328890ad8d3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1651,7 +1651,7 @@ struct page *get_dump_page(unsigned long addr)
- #endif /* CONFIG_ELF_CORE */
- 
- /*
-- * Generic Fast GUP
-+ * Fast GUP
-  *
-  * get_user_pages_fast attempts to pin user pages by walking the page
-  * tables directly and avoids taking locks. Thus the walker needs to be
-@@ -1683,7 +1683,7 @@ struct page *get_dump_page(unsigned long addr)
-  *
-  * This code is based heavily on the PowerPC implementation by Nick Piggin.
-  */
--#ifdef CONFIG_HAVE_GENERIC_GUP
-+#ifdef CONFIG_HAVE_FAST_GUP
- #ifdef CONFIG_GUP_GET_PTE_LOW_HIGH
- /*
-  * WARNING: only to be used in the get_user_pages_fast() implementation.
--- 
-2.20.1
+On Mon, Jun 24, 2019 at 09:32:11PM +0530, Jagan Teki wrote:
+> On Mon, Jun 24, 2019 at 6:34 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 05:33:23PM +0530, Jagan Teki wrote:
+> > > On Thu, Jun 13, 2019 at 7:28 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > >
+> > > > On Wed, Jun 05, 2019 at 01:11:44PM +0530, Jagan Teki wrote:
+> > > > > On Tue, Jun 4, 2019 at 8:00 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > >
+> > > > > > On Fri, May 24, 2019 at 03:37:36PM +0530, Jagan Teki wrote:
+> > > > > > > On Fri, May 24, 2019 at 2:18 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > > > > >
+> > > > > > > > On Mon, May 20, 2019 at 02:33:11PM +0530, Jagan Teki wrote:
+> > > > > > > > > pll-video => pll-mipi => tcon0 => tcon0-pixel-clock is the typical
+> > > > > > > > > MIPI clock topology in Allwinner DSI controller.
+> > > > > > > > >
+> > > > > > > > > TCON dotclock driver is computing the desired DCLK divider based on
+> > > > > > > > > panel pixel clock along with input DCLK min, max divider values from
+> > > > > > > > > tcon driver and that would eventually set the pll-mipi clock rate.
+> > > > > > > > >
+> > > > > > > > > The current code is passing dsi min and max divider value as 4 via
+> > > > > > > > > tcon driver which would ended-up triggering below vblank wait timed out
+> > > > > > > > > warning on "bananapi,s070wv20-ct16" panel.
+> > > > > > > > >
+> > > > > > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > > > > > > > >  [CRTC:46:crtc-0] vblank wait timed out
+> > > > > > > > >  Modules linked in:
+> > > > > > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00025-g5186cdf10757-dirty #6
+> > > > > > > > >  Hardware name: Allwinner sun8i Family
+> > > > > > > > >  Workqueue: events deferred_probe_work_func
+> > > > > > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > > > > > > > >  [<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+> > > > > > > > >  [<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > > > > > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > > > > > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > > > > > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > > > > > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > > > > > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > > > > > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > > > > > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+> > > > > > > > >  [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+> > > > > > > > >  [<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+> > > > > > > > >  [<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > > > > > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > > > > > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > > > > > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > > > > > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > > > > > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > > > > > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > > > > > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > > > > > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > > > > > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > > > > > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > > > > > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > > > > > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b588>] (try_to_bring_up_master+0x164/0x1a0)
+> > > > > > > > >  [<c044b588>] (try_to_bring_up_master) from [<c044b658>] (__component_add+0x94/0x140)
+> > > > > > > > >  [<c044b658>] (__component_add) from [<c0445e0c>] (sun6i_dsi_probe+0x144/0x234)
+> > > > > > > > >  [<c0445e0c>] (sun6i_dsi_probe) from [<c0452ee4>] (platform_drv_probe+0x48/0x9c)
+> > > > > > > > >  [<c0452ee4>] (platform_drv_probe) from [<c04512bc>] (really_probe+0x1dc/0x2c8)
+> > > > > > > > >  [<c04512bc>] (really_probe) from [<c0451508>] (driver_probe_device+0x60/0x160)
+> > > > > > > > >  [<c0451508>] (driver_probe_device) from [<c044f794>] (bus_for_each_drv+0x74/0xb8)
+> > > > > > > > >  [<c044f794>] (bus_for_each_drv) from [<c045106c>] (__device_attach+0xd0/0x13c)
+> > > > > > > > >  [<c045106c>] (__device_attach) from [<c0450464>] (bus_probe_device+0x84/0x8c)
+> > > > > > > > >  [<c0450464>] (bus_probe_device) from [<c04508f0>] (deferred_probe_work_func+0x64/0x90)
+> > > > > > > > >  [<c04508f0>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > > > > > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > > > > > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > > > > > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > > > > > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
+> > > > > > > > >  9fa0:                                     00000000 00000000 00000000 00000000
+> > > > > > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > > > > > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > > > > > > >  ---[ end trace 4017fea4906ab391 ]---
+> > > > > > > > >
+> > > > > > > > > But accordingly to Allwinner A33, A64 BSP codes [1] [2] this divider
+> > > > > > > > > is clearly using 'format/lanes' for dsi divider value, dsi_clk.clk_div
+> > > > > > > > >
+> > > > > > > > > Which would compute the pll_freq and set a clock rate for it in
+> > > > > > > > > [3] and [4] respectively.
+> > > > > > > > >
+> > > > > > > > > The same issue has reproduced in A33, A64 with 4-lane and 2-lane devices
+> > > > > > > > > and got fixed with this computation logic 'format/lanes', so this patch
+> > > > > > > > > using dclk min and max dividers as per BSP.
+> > > > > > > > >
+> > > > > > > > > [1] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1106
+> > > > > > > > > [2] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/disp_al.c#L213
+> > > > > > > > > [3] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1127
+> > > > > > > > > [4] https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/disp_lcd.c#L1161
+> > > > > > > >
+> > > > > > > > In that mail, I've pointed out that clk_div isn't used for the TCON dclk divider:
+> > > > > > > > http://lists.infradead.org/pipermail/linux-arm-kernel/2019-February/629596.html
+> > > > > > > >
+> > > > > > > > The only reply you've sent is that you indeed see that the divider is
+> > > > > > > > set to 4 in the BSP, but you're now saying that the BSP can change
+> > > > > > > > it. If so, then please point exactly the flaw in the explanation in
+> > > > > > > > that mail.
+> > > > > > >
+> > > > > > > Frankly, I have explained these details in commit message and previous
+> > > > > > > version patch[1] with print messages on the code.
+> > > > > > >
+> > > > > > > BSP has tcon_div and dsi_div. dsi_div is dynamic which depends on
+> > > > > > > bpp/lanes and it indeed depends on PLL computation (not tcon_div),
+> > > > > > > anyway I have explained again on this initial link you mentioned.
+> > > > > > > Please have a look and get back.
+> > > > > >
+> > > > > > I'll have a look, thanks.
+> > > > > >
+> > > > > > I've given your patches a try on my setup though, and this patch
+> > > > > > breaks it with vblank timeouts and some horizontal lines that looks
+> > > > > > like what should be displayed, but blinking and on the right of the
+> > > > > > display. The previous ones are fine though.
+> > > > >
+> > > > > Would you please send me the link of panel driver.
+> > > >
+> > > > It's drivers/gpu/drm/panel/panel-ronbo-rb070d30.c
+> > >
+> > > Look like this panel work even w/o any vendor sequence. it's similar
+> > > to the 4-lane panel I have with RGB888, so the dclk div is 6, is it
+> > > working with this divider?
+> >
+> > It works with 4, it doesn't work with 6.
+>
+> Can be the pixel clock with associated timings can make this diff.
+> Would you send me the pixel clock, pll_rate and timings this panel
+> used it from BSP?
 
+This board never had an Allwinner BSP
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--4qhko7umufjvzvnc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRIxuwAKCRDj7w1vZxhR
+xVscAP9pbjUMb+7sqNoi00MHqD8g9+AnFhyeTBWi07kSntTxvgEAqbLn4ybIstfr
+Lzg/6w2mQ3encbcK4zDbkflqVuTtnQ4=
+=Qu0L
+-----END PGP SIGNATURE-----
+
+--4qhko7umufjvzvnc--
