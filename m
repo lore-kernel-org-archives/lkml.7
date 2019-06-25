@@ -2,158 +2,123 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A972C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D355C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A879208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:53:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gKm9xX5r"
+	by mail.kernel.org (Postfix) with ESMTP id 04EE5208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbfFYOxC (ORCPT
+        id S1731198AbfFYOyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:53:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37184 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbfFYOxA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:53:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MzcmXp8wnK/YescI+t3wQCUL4rfo5P0eGxn4+g4lKJo=; b=gKm9xX5rUvPJALrOjuTi3wHRnY
-        VtwFqcCGoqmN27iGeAyRdfWsT0VbKGH0m3DOadYyfBND+sS7kXw7jWWkD6Cla56LK2lBFBb+w07mI
-        sBjrcjFDJQINx8Go+3IjUMHM0CtV/nstlTACekyxVHWTMWOshQ7iVkyZaubkKsWI17qXoxBu9LHKA
-        RqZEtF09074qEabmFG92iz3qUk5YWuWrFute3Mv6HgnBF4h6LU++U37tNRahp4GCPfDLRknurizyM
-        aq6GivP516xWNOcF2Q9S+pjGH9M5iIK4o0cgHrE4n+eFdf8U3g50wJabOwTbYo+KmbBJDMWN+/JfA
-        33jIt/MQ==;
-Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfmoY-0006mE-1Y; Tue, 25 Jun 2019 14:52:54 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] powerpc/powernv: remove the unused vas_win_paste_addr and vas_win_id functions
-Date:   Tue, 25 Jun 2019 16:52:39 +0200
-Message-Id: <20190625145239.2759-5-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625145239.2759-1-hch@lst.de>
-References: <20190625145239.2759-1-hch@lst.de>
+        Tue, 25 Jun 2019 10:54:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:43584 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730505AbfFYOyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:54:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DDA72B;
+        Tue, 25 Jun 2019 07:54:40 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 250683F718;
+        Tue, 25 Jun 2019 07:54:39 -0700 (PDT)
+Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
+ breaks clang build
+To:     Qian Cai <cai@lca.pw>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        natechancellor@gmail.com, ndesaulniers@google.com
+References: <1561464964.5154.63.camel@lca.pw>
+ <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
+ <1561467369.5154.67.camel@lca.pw>
+ <00a78980-6b9c-5d5b-ed01-b28bb34be022@arm.com>
+ <1561470705.5154.68.camel@lca.pw>
+ <5113362e-1256-6712-6ce8-9599b1806cf1@arm.com>
+ <1561472887.5154.72.camel@lca.pw>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <668bbe72-b32b-8cee-ccad-d1f6110c6728@arm.com>
+Date:   Tue, 25 Jun 2019 15:54:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1561472887.5154.72.camel@lca.pw>
+Content-Type: multipart/mixed;
+ boundary="------------B290F18BD9914E255C67004C"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two function have never been used anywhere in the kernel tree
-since they were added to the kernel.
+This is a multi-part message in MIME format.
+--------------B290F18BD9914E255C67004C
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi Qian,
+
+...
+
+> 
+> but clang 7.0 is still use in many distros by default, so maybe this commit can
+> be fixed by adding a conditional check to use "small" if clang version < 8.0.
+> 
+
+Could you please verify that the patch below works for you?
+
+Thanks,
+Vincenzo
+
+--->8----
+
+
+--------------B290F18BD9914E255C67004C
+Content-Type: text/x-patch;
+ name="0001-arm64-vdso-Fix-compilation-with-clang-8.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="0001-arm64-vdso-Fix-compilation-with-clang-8.patch"
+
+From 0546f3bbea910cd26df8c2ff9ed1a59945bb1bec Mon Sep 17 00:00:00 2001
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Date: Tue, 25 Jun 2019 15:49:37 +0100
+Subject: [PATCH] arm64: vdso: Fix compilation with clang < 8
+
+clang versions previous to 8 do not support -mcmodel=tiny.
+
+Add a check to the vDSO Makefile for arm64 to remove the flag when these
+versions of the compiler are detected.
+
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- arch/powerpc/include/asm/vas.h              | 10 ----------
- arch/powerpc/platforms/powernv/vas-window.c | 19 -------------------
- arch/powerpc/platforms/powernv/vas.h        | 20 --------------------
- 3 files changed, 49 deletions(-)
+ arch/arm64/kernel/vdso/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/vas.h b/arch/powerpc/include/asm/vas.h
-index 771456227496..9b5b7261df7b 100644
---- a/arch/powerpc/include/asm/vas.h
-+++ b/arch/powerpc/include/asm/vas.h
-@@ -167,14 +167,4 @@ int vas_copy_crb(void *crb, int offset);
-  */
- int vas_paste_crb(struct vas_window *win, int offset, bool re);
+diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+index ec81d28aeb5d..c11cbf71073f 100644
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -38,6 +38,11 @@ else
+ CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -include $(c-gettimeofday-y)
+ endif
  
--/*
-- * Return a system-wide unique id for the VAS window @win.
-- */
--extern u32 vas_win_id(struct vas_window *win);
--
--/*
-- * Return the power bus paste address associated with @win so the caller
-- * can map that address into their address space.
-- */
--extern u64 vas_win_paste_addr(struct vas_window *win);
- #endif /* __ASM_POWERPC_VAS_H */
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/platforms/powernv/vas-window.c
-index e59e0e60e5b5..e48c44cb3a16 100644
---- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -44,16 +44,6 @@ static void compute_paste_address(struct vas_window *window, u64 *addr, int *len
- 	pr_debug("Txwin #%d: Paste addr 0x%llx\n", winid, *addr);
- }
++# Clang versions less than 8 do not support -mcmodel=tiny
++ifeq ($(shell test $(CONFIG_CLANG_VERSION) -lt 80000; echo $$?),0)
++CFLAGS_REMOVE_vgettimeofday.o = -mcmodel=tiny
++endif
++
+ # Disable gcov profiling for VDSO code
+ GCOV_PROFILE := n
  
--u64 vas_win_paste_addr(struct vas_window *win)
--{
--	u64 addr;
--
--	compute_paste_address(win, &addr, NULL);
--
--	return addr;
--}
--EXPORT_SYMBOL(vas_win_paste_addr);
--
- static inline void get_hvwc_mmio_bar(struct vas_window *window,
- 			u64 *start, int *len)
- {
-@@ -1268,12 +1258,3 @@ int vas_win_close(struct vas_window *window)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(vas_win_close);
--
--/*
-- * Return a system-wide unique window id for the window @win.
-- */
--u32 vas_win_id(struct vas_window *win)
--{
--	return encode_pswid(win->vinst->vas_id, win->winid);
--}
--EXPORT_SYMBOL_GPL(vas_win_id);
-diff --git a/arch/powerpc/platforms/powernv/vas.h b/arch/powerpc/platforms/powernv/vas.h
-index f5493dbdd7ff..551affaddd59 100644
---- a/arch/powerpc/platforms/powernv/vas.h
-+++ b/arch/powerpc/platforms/powernv/vas.h
-@@ -448,26 +448,6 @@ static inline u64 read_hvwc_reg(struct vas_window *win,
- 	return in_be64(win->hvwc_map+reg);
- }
- 
--/*
-- * Encode/decode the Partition Send Window ID (PSWID) for a window in
-- * a way that we can uniquely identify any window in the system. i.e.
-- * we should be able to locate the 'struct vas_window' given the PSWID.
-- *
-- *	Bits	Usage
-- *	0:7	VAS id (8 bits)
-- *	8:15	Unused, 0 (3 bits)
-- *	16:31	Window id (16 bits)
-- */
--static inline u32 encode_pswid(int vasid, int winid)
--{
--	u32 pswid = 0;
--
--	pswid |= vasid << (31 - 7);
--	pswid |= winid;
--
--	return pswid;
--}
--
- static inline void decode_pswid(u32 pswid, int *vasid, int *winid)
- {
- 	if (vasid)
 -- 
-2.20.1
+2.22.0
 
+
+--------------B290F18BD9914E255C67004C--
