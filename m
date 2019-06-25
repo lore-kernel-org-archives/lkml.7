@@ -2,360 +2,134 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34851C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2218EC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2AD22064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDABF2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:53:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="OwjJ6MI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfFYQxD (ORCPT
+        id S1728509AbfFYQxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:53:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36978 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726599AbfFYQxD (ORCPT
+        Tue, 25 Jun 2019 12:53:47 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38373 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728247AbfFYQxr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:53:03 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PGqGiV067879;
-        Tue, 25 Jun 2019 12:52:41 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tbp92k4mj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jun 2019 12:52:40 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5PGoMOM029297;
-        Tue, 25 Jun 2019 16:52:39 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01dal.us.ibm.com with ESMTP id 2t9by71dyq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jun 2019 16:52:39 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5PGqcUG46793154
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 16:52:38 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D62A1B2064;
-        Tue, 25 Jun 2019 16:52:38 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8DB3B2067;
-        Tue, 25 Jun 2019 16:52:38 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 16:52:38 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id CF92616C1854; Tue, 25 Jun 2019 09:52:38 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 09:52:38 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Message-ID: <20190625165238.GJ26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190621234602.GA16286@linux.ibm.com>
- <20190624231222.GA17497@lerouge>
- <20190624234422.GP26519@linux.ibm.com>
- <20190625004300.GB17497@lerouge>
- <20190625075139.GT3436@hirez.programming.kicks-ass.net>
- <20190625122514.GA23880@lenoir>
- <20190625135430.GW26519@linux.ibm.com>
- <20190625140538.GC3419@hirez.programming.kicks-ass.net>
- <20190625141624.GX26519@linux.ibm.com>
- <20190625162058.GB23880@lenoir>
+        Tue, 25 Jun 2019 12:53:47 -0400
+Received: by mail-lf1-f66.google.com with SMTP id b11so13177191lfa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vHHgb54Q0BfAs8YIgZACGl/29xaSx7l4ApCtXBFbfN4=;
+        b=OwjJ6MI5fFr6MREqqCFmqZIKon79e5NOLq/VxpW1LVnpQzj0dwCFqePPRTogYiBhby
+         r32JOo+dOfsXvukpJTWY1IPSf31g8UoBj0ehc1OXlIgvPaVQdtmbCgqXqxJXGdfJuXai
+         NEuh0A+ak/VC3phXrNBXTREO9w1J2GqhC5JV+wiQN07JDZufLRNe3QRfjXWWLgRewhH7
+         wZQ5z0MVX0KejwbCkHRHUSEY8buIxdhhLa7A6gJEmRadxcoUvwpnIEkRvVvFjbFjAqwa
+         TvSMAH4KS+K5mx5D/BITgHTL0G5zurhcROtdK7aR2X8CGaMYQR+wxSlzfC6RBou1+R/k
+         b0sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vHHgb54Q0BfAs8YIgZACGl/29xaSx7l4ApCtXBFbfN4=;
+        b=DvGNbeGWYnT0V4s7jql7X+bLT82l0P8zCshNjc9FrsbHI6qAWI/m2I3iQbxD0+53ko
+         eihICvzUoSsFIlbLt11ikKNFCh8D/W28o0fV7X27QyaJDxDSTSagvCyv41XkA7S45W+R
+         33tP0s74mNFK/yu4kvZ6s2fLutXc6ZDL+vx0+/JSlEKk/+1cHmPPiKP2NoAFs9ynCClL
+         I2tzO+a2m8gpij8T+T2Kwd6x82v9pPEI734r6vC6X3lbmjGqH+nfAHyqrEMNTbNeFHHJ
+         l4CwjhzMtaEZHY2l738v79YG/JdpX2fB39o2mwgoY1aYUvD6meoLiuD1wYAQPEIRfEM8
+         JdVQ==
+X-Gm-Message-State: APjAAAVj7gCCCL8vZ26ozHId5OKl3nJus+lCn/u/qkZSTnFi+Ecx3xo2
+        kbx8zfHUNZmHBZVzMU6qyBJWYt9lycxYbgRxPL9W9A==
+X-Google-Smtp-Source: APXvYqx4NQnRORQnh6ff+Ahw2viJbUdzU4BvtAuyZw0wXevtQnU5aeLgOfwn81Z6lx4mhq2CtclLuDk/LYedTG6dyeU=
+X-Received: by 2002:a19:22d8:: with SMTP id i207mr24053341lfi.97.1561481624939;
+ Tue, 25 Jun 2019 09:53:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625162058.GB23880@lenoir>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250127
+References: <20190621130711.21986-1-mb@lightnvm.io> <20190621130711.21986-2-mb@lightnvm.io>
+ <ee5764fb-473a-f118-eaac-95478d885f6f@acm.org> <BYAPR04MB5749CEFBB45EA34BD3345CD686E00@BYAPR04MB5749.namprd04.prod.outlook.com>
+ <cce08df0-0b4d-833d-64ce-f9b81f7ad7ca@lightnvm.io> <79ca395d-8019-9ec8-0c0b-194ca6d9eda0@acm.org>
+ <BYAPR04MB5749977B2FFB5CDC8A254F5A86E30@BYAPR04MB5749.namprd04.prod.outlook.com>
+In-Reply-To: <BYAPR04MB5749977B2FFB5CDC8A254F5A86E30@BYAPR04MB5749.namprd04.prod.outlook.com>
+From:   =?UTF-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>
+Date:   Tue, 25 Jun 2019 18:53:34 +0200
+Message-ID: <CAOA7RkP83-6PgsKxzoa3i0bY7RW1R3Jh2zhLkywKsYJSnA3AMw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] block: add zone open, close and finish support
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@hansenpartnership.com>,
+        "agk@redhat.com" <agk@redhat.com>,
+        "snitzer@redhat.com" <snitzer@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 06:20:59PM +0200, Frederic Weisbecker wrote:
-> On Tue, Jun 25, 2019 at 07:16:24AM -0700, Paul E. McKenney wrote:
-> > On Tue, Jun 25, 2019 at 04:05:38PM +0200, Peter Zijlstra wrote:
-> > > On Tue, Jun 25, 2019 at 06:54:30AM -0700, Paul E. McKenney wrote:
-> > > > And it allows dispensing with the initialization.  How about like
-> > > > the following?
-> > > 
-> > > Looks good to me!
-> > 
-> > Limited rcutorture testing looking good thus far.  Here is hoping!
-> > 
-> > Frederic, you OK with this approach?
-> 
-> Yep, all good!
+On Tue, Jun 25, 2019 at 6:51 PM Chaitanya Kulkarni
+<Chaitanya.Kulkarni@wdc.com> wrote:
+>
+> On 06/25/2019 08:56 AM, Bart Van Assche wrote:
+> > On 6/25/19 3:35 AM, Matias Bj=C3=B8rling wrote:
+> >> On 6/25/19 12:27 AM, Chaitanya Kulkarni wrote:
+> >>> On 6/24/19 12:43 PM, Bart Van Assche wrote:
+> >>>> static inline bool op_is_write(unsigned int op)
+> >>>> {
+> >>>>      return (op & 1);
+> >>>> }
+> >>>>
+> >>>
+> >>
+> >> The zone mgmt commands are neither write nor reads commands. I guess,
+> >> one could characterize them as write commands, but they don't write an=
+y
+> >> data, they update a state of a zone on a drive. One should keep it as
+> >> is? and make sure the zone mgmt commands don't get categorized as eith=
+er
+> >> read/write.
+> >
+> > Since the open, close and finish operations support modifying zone data
+> > I propose to characterize these as write commands. How about the
+> > following additional changes:
+> > - Make bio_check_ro() refuse open/close/flush/reset zone operations for
+>                                           ^
+> Since finish also listed above which supports modifying data do we need
+> to add finish here with flush in above line ?
+>
+> > read-only partitions (see also commit a32e236eb93e ("Partially revert
+> > "block: fail op_is_write() requests to read-only partitions"") # v4.18)=
+.
+> > - In submit_bio(), change op_is_write(bio_op(bio)) ? "WRITE" : "READ"
+> > into something that uses blk_op_str().
+> Good idea, I've a patch for blk_op_str() and debugfs just waiting for
+> this to merge. Does it make sense to add that patch in this series ?
 
-Very well, the commit is as shown below.  This is on current -rcu,
-but feel free to take it if you would like, Peter.  Just let me know
-and I will mark it so that I don't push it myself.  (I need to keep
-it in -rcu until I rebase onto a version of mainline that contains
-it so as to avoid spurious rcutorture failures.)
+Ship it off separately. Your patches can go in first.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit b02b73cc95b6e3d912f36de20116b520cc3072c7
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Thu May 30 05:39:25 2019 -0700
-
-    time/tick-broadcast: Fix tick_broadcast_offline() lockdep complaint
-    
-    The TASKS03 and TREE04 rcutorture scenarios produce the following
-    lockdep complaint:
-    
-    ------------------------------------------------------------------------
-    
-    ================================
-    WARNING: inconsistent lock state
-    5.2.0-rc1+ #513 Not tainted
-    --------------------------------
-    inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-    migration/1/14 [HC0[0]:SC0[0]:HE1:SE1] takes:
-    (____ptrval____) (tick_broadcast_lock){?...}, at: tick_broadcast_offline+0xf/0x70
-    {IN-HARDIRQ-W} state was registered at:
-      lock_acquire+0xb0/0x1c0
-      _raw_spin_lock_irqsave+0x3c/0x50
-      tick_broadcast_switch_to_oneshot+0xd/0x40
-      tick_switch_to_oneshot+0x4f/0xd0
-      hrtimer_run_queues+0xf3/0x130
-      run_local_timers+0x1c/0x50
-      update_process_times+0x1c/0x50
-      tick_periodic+0x26/0xc0
-      tick_handle_periodic+0x1a/0x60
-      smp_apic_timer_interrupt+0x80/0x2a0
-      apic_timer_interrupt+0xf/0x20
-      _raw_spin_unlock_irqrestore+0x4e/0x60
-      rcu_nocb_gp_kthread+0x15d/0x590
-      kthread+0xf3/0x130
-      ret_from_fork+0x3a/0x50
-    irq event stamp: 171
-    hardirqs last  enabled at (171): [<ffffffff8a201a37>] trace_hardirqs_on_thunk+0x1a/0x1c
-    hardirqs last disabled at (170): [<ffffffff8a201a53>] trace_hardirqs_off_thunk+0x1a/0x1c
-    softirqs last  enabled at (0): [<ffffffff8a264ee0>] copy_process.part.56+0x650/0x1cb0
-    softirqs last disabled at (0): [<0000000000000000>] 0x0
-    
-    other info that might help us debug this:
-     Possible unsafe locking scenario:
-    
-           CPU0
-           ----
-      lock(tick_broadcast_lock);
-      <Interrupt>
-        lock(tick_broadcast_lock);
-    
-     *** DEADLOCK ***
-    
-    1 lock held by migration/1/14:
-     #0: (____ptrval____) (clockevents_lock){+.+.}, at: tick_offline_cpu+0xf/0x30
-    
-    stack backtrace:
-    CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.2.0-rc1+ #513
-    Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
-    Call Trace:
-     dump_stack+0x5e/0x8b
-     print_usage_bug+0x1fc/0x216
-     ? print_shortest_lock_dependencies+0x1b0/0x1b0
-     mark_lock+0x1f2/0x280
-     __lock_acquire+0x1e0/0x18f0
-     ? __lock_acquire+0x21b/0x18f0
-     ? _raw_spin_unlock_irqrestore+0x4e/0x60
-     lock_acquire+0xb0/0x1c0
-     ? tick_broadcast_offline+0xf/0x70
-     _raw_spin_lock+0x33/0x40
-     ? tick_broadcast_offline+0xf/0x70
-     tick_broadcast_offline+0xf/0x70
-     tick_offline_cpu+0x16/0x30
-     take_cpu_down+0x7d/0xa0
-     multi_cpu_stop+0xa2/0xe0
-     ? cpu_stop_queue_work+0xc0/0xc0
-     cpu_stopper_thread+0x6d/0x100
-     smpboot_thread_fn+0x169/0x240
-     kthread+0xf3/0x130
-     ? sort_range+0x20/0x20
-     ? kthread_cancel_delayed_work_sync+0x10/0x10
-     ret_from_fork+0x3a/0x50
-    
-    ------------------------------------------------------------------------
-    
-    To reproduce, run the following rcutorture test:
-    
-            tools/testing/selftests/rcutorture/bin/kvm.sh --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TASKS03 TREE04"
-    
-    It turns out that tick_broadcast_offline() was an innocent bystander.
-    After all, interrupts are supposed to be disabled throughout
-    take_cpu_down(), and therefore should have been disabled upon entry to
-    tick_offline_cpu() and thus to tick_broadcast_offline().  This suggests
-    that one of the CPU-hotplug notifiers was incorrectly enabling interrupts,
-    and leaving them enabled on return.
-    
-    Some debugging code showed that the culprit was sched_cpu_dying().
-    It had irqs enabled after return from sched_tick_stop().  Which in turn
-    had irqs enabled after return from cancel_delayed_work_sync().  Which is a
-    wrapper around __cancel_work_timer().  Which can sleep in the case where
-    something else is concurrently trying to cancel the same delayed work,
-    and as Thomas Gleixner pointed out on IRC, sleeping is a decidedly bad
-    idea when you are invoked from take_cpu_down(), regardless of the state
-    you leave interrupts in upon return.
-    
-    Code inspection located no reason why the delayed work absolutely
-    needed to be canceled from sched_tick_stop():  The work is not
-    bound to the outgoing CPU by design, given that the whole point is
-    to collect statistics without disturbing the outgoing CPU.
-    
-    This commit therefore simply drops the cancel_delayed_work_sync() from
-    sched_tick_stop().  Instead, a new ->state field is added to the tick_work
-    structure so that the delayed-work handler function sched_tick_remote()
-    can avoid reposting itself.  A cpu_is_offline() check is also added to
-    sched_tick_remote() to avoid mucking with the state of an offlined CPU
-    (though it does appear safe to do so).  The sched_tick_start() and
-    sched_tick_stop() functions also update ->state, and sched_tick_start()
-    also schedules the delayed work if ->state indicates that it is not
-    already in flight.
-    
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-    Cc: Ingo Molnar <mingo@redhat.com>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-    [ paulmck: Apply Peter Zijlstra and Frederic Weisbecker atomics feedback. ]
-    Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf0a29a..d7be6d4b6a0a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3050,8 +3050,36 @@ void scheduler_tick(void)
- 
- struct tick_work {
- 	int			cpu;
-+	atomic_t		state;
- 	struct delayed_work	work;
- };
-+/* Values for ->state, see diagram below. */
-+#define TICK_SCHED_REMOTE_OFFLINE	0
-+#define TICK_SCHED_REMOTE_OFFLINING	1
-+#define TICK_SCHED_REMOTE_RUNNING	2
-+
-+/*
-+ * State diagram for ->state:
-+ *
-+ *
-+ *          TICK_SCHED_REMOTE_OFFLINE
-+ *                    |   ^
-+ *                    |   |
-+ *                    |   | sched_tick_remote()
-+ *                    |   |
-+ *                    |   |
-+ *                    +--TICK_SCHED_REMOTE_OFFLINING
-+ *                    |   ^
-+ *                    |   |
-+ * sched_tick_start() |   | sched_tick_stop()
-+ *                    |   |
-+ *                    V   |
-+ *          TICK_SCHED_REMOTE_RUNNING
-+ *
-+ *
-+ * Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
-+ * and sched_tick_start() are happy to leave the state in RUNNING.
-+ */
- 
- static struct tick_work __percpu *tick_work_cpu;
- 
-@@ -3064,6 +3092,7 @@ static void sched_tick_remote(struct work_struct *work)
- 	struct task_struct *curr;
- 	struct rq_flags rf;
- 	u64 delta;
-+	int os;
- 
- 	/*
- 	 * Handle the tick only if it appears the remote CPU is running in full
-@@ -3077,7 +3106,7 @@ static void sched_tick_remote(struct work_struct *work)
- 
- 	rq_lock_irq(rq, &rf);
- 	curr = rq->curr;
--	if (is_idle_task(curr))
-+	if (is_idle_task(curr) || cpu_is_offline(cpu))
- 		goto out_unlock;
- 
- 	update_rq_clock(rq);
-@@ -3097,13 +3126,18 @@ static void sched_tick_remote(struct work_struct *work)
- 	/*
- 	 * Run the remote tick once per second (1Hz). This arbitrary
- 	 * frequency is large enough to avoid overload but short enough
--	 * to keep scheduler internal stats reasonably up to date.
-+	 * to keep scheduler internal stats reasonably up to date.  But
-+	 * first update state to reflect hotplug activity if required.
- 	 */
--	queue_delayed_work(system_unbound_wq, dwork, HZ);
-+	os = atomic_fetch_add_unless(&twork->state, -1, TICK_SCHED_REMOTE_RUNNING);
-+	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_OFFLINE);
-+	if (os == TICK_SCHED_REMOTE_RUNNING)
-+		queue_delayed_work(system_unbound_wq, dwork, HZ);
- }
- 
- static void sched_tick_start(int cpu)
- {
-+	int os;
- 	struct tick_work *twork;
- 
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-@@ -3112,15 +3146,20 @@ static void sched_tick_start(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
- 
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	twork->cpu = cpu;
--	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
--	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-+	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
-+	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
-+	if (os == TICK_SCHED_REMOTE_OFFLINE) {
-+		twork->cpu = cpu;
-+		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-+		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-+	}
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
- static void sched_tick_stop(int cpu)
- {
- 	struct tick_work *twork;
-+	int os;
- 
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
- 		return;
-@@ -3128,7 +3167,10 @@ static void sched_tick_stop(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
- 
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	cancel_delayed_work_sync(&twork->work);
-+	/* There cannot be competing actions, but don't rely on stop-machine. */
-+	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_OFFLINING);
-+	WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
-+	/* Don't cancel, as this would mess up the state machine. */
- }
- #endif /* CONFIG_HOTPLUG_CPU */
- 
-@@ -3136,7 +3178,6 @@ int __init sched_tick_offload_init(void)
- {
- 	tick_work_cpu = alloc_percpu(struct tick_work);
- 	BUG_ON(!tick_work_cpu);
--
- 	return 0;
- }
- 
+> > - Add open/close/flush zone support be added in blk_partition_remap().
+> same here for finish ?
+> >
+> > Thanks,
+> >
+> > Bart.
+> >
+>
