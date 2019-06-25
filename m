@@ -2,312 +2,102 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD5FC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CB5C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0F5208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5F0208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ni94Owio"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VjItwXPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfFYU2m (ORCPT
+        id S1726996AbfFYUah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:28:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44345 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbfFYU2h (ORCPT
+        Tue, 25 Jun 2019 16:30:37 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36599 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfFYUah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:28:37 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n2so9493431pgp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qq39ykktkvFBpmzRtbgM4tstWpOedFNE8kr26lh/InM=;
-        b=ni94OwioZx/gzf2szVloCDZTFFpJCo2YKSFZ2X9qr6bxYnBeEpnnagfszyXnnz51L8
-         DkJXaethFUsoHnz8KOQVG2ZSAlP6R4YiehiVV+cY7fw97Xus3XNQzLPLdgQULmgYaWnL
-         GEAS55DRith5+cQIVd4nDD9PnOpK5SEC0mcAjXyMYNE83XKQ2Jfbx9GzYoD6pnR9q88y
-         VjAnVY+gy9KsY/4+Tbda/+4DRlDyvSks4s9chgBxuZrKHnC3t/s2Oqm9eCfJpWO+nPcJ
-         ixgXgEVA9P9D5QKdeUq3VIirHZ16lxLB0iDdlrfqM9fruDTYYR+l+8zODcodp3flRnlv
-         dArA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qq39ykktkvFBpmzRtbgM4tstWpOedFNE8kr26lh/InM=;
-        b=tqlzgClguFD4+8XxnQeiGYv9S1295tDjzjC1xb0WLThaawJ61DHnEls6UGLisewQik
-         MLIu0ixvQnlDo/K/gH9k7YtkYzRtCID02W+770lckf76IVBVtzI9F0MsXncCE9P5ZEky
-         Sk943FJ59SJfX242Ya2WRj0IunUvxJqYASy2tpLLVu6geQnvxwFTrLUw1DaCRDmyIRx8
-         M8wC2QKZz4RpYvFZf/55ha+fWvVhulG9p5/1WDKePzZ9JRIFUbo9GBApcmMFNp1EuTGt
-         xHEP27/PUb/y6Hoi47b/7avS3Kw5wBv35r9qXzsScaLJgVnpvV7Oev9Po8OWxGT37p/Y
-         OALg==
-X-Gm-Message-State: APjAAAV+8ZTKApiFYbnbeSNgLaEjzKG0yuSBTqzpMbxsEewg2LxJZ0Op
-        wuN0K+l98LGlTKJ2Rs+VTyuR90Ignz9lAPx3jNo0Ag==
-X-Google-Smtp-Source: APXvYqzvk20XXdVFtm6zl0X1nrjaH0TttItfcdP9iwaQ+JKQIeNhKF1pa7VSVvlXNPpMAUzP/tv1oR2JBEXuSnWnLw4=
-X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr754020pjb.117.1561494516332;
- Tue, 25 Jun 2019 13:28:36 -0700 (PDT)
+        Tue, 25 Jun 2019 16:30:37 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 65CCE886BF;
+        Wed, 26 Jun 2019 08:30:33 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1561494633;
+        bh=1kY+bwPF4p0YA079A5v673sAjTxOqECEQoGaHNKiN3s=;
+        h=From:To:CC:Subject:Date:References;
+        b=VjItwXPkxG2jYM8fucFA+6U+KKGhMJlV1pdLCHpbaf911rG7qGBsY0AB0hlpWYuia
+         GERmgX6YTcY7luDgnRBGjpfrtQ7DM0drgyzazpNM+oY3TQger5V1kQJe6qWlzsiLvt
+         eNVRPu/JO7KHxEDJ0DEk/PYNC08SVexa9tmgu0aJUvTjJ55RdLs2S6kaM6DcJxVuZk
+         OiJ5TE4tEbuDLpxPAafNDfPX4P4qEQ/aN1E26WVnWZXJP5UZHm4KmP9EIKysdHFf87
+         TG+9MrQ4gB+8YmT+zVWnLdCSBrrkP9kfuQ9bBHlslQK+vdHrAtafiqh4jVcudHu8jf
+         fdQywZbAJ2sXg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d1284690001>; Wed, 26 Jun 2019 08:30:33 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 26 Jun 2019 08:30:33 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Wed, 26 Jun 2019 08:30:33 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 3/4] pinctrl: mvebu: Add support for MV98DX1135
+Thread-Topic: [PATCH v2 3/4] pinctrl: mvebu: Add support for MV98DX1135
+Thread-Index: AQHVJVdQehuQXtWHL0SatF2H1kpYDA==
+Date:   Tue, 25 Jun 2019 20:30:33 +0000
+Message-ID: <f08d52a1c4864c6981f3631523965cf5@svr-chch-ex1.atlnz.lc>
+References: <20190617215458.32688-1-chris.packham@alliedtelesis.co.nz>
+ <20190617215458.32688-4-chris.packham@alliedtelesis.co.nz>
+ <CACRpkdbSS18us3o=v7ki_=8cLXYjfDd8q321xMCounXPh11GAQ@mail.gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-2-brendanhiggins@google.com> <20190620001526.93426218BE@mail.kernel.org>
-In-Reply-To: <20190620001526.93426218BE@mail.kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 25 Jun 2019 13:28:25 -0700
-Message-ID: <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
-Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 5:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Brendan Higgins (2019-06-17 01:25:56)
-> > diff --git a/kunit/test.c b/kunit/test.c
-> > new file mode 100644
-> > index 0000000000000..d05d254f1521f
-> > --- /dev/null
-> > +++ b/kunit/test.c
-> > @@ -0,0 +1,210 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Base unit test (KUnit) API.
-> > + *
-> > + * Copyright (C) 2019, Google LLC.
-> > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > + */
-> > +
-> > +#include <linux/sched/debug.h>
-> > +#include <kunit/test.h>
-> > +
-> > +static bool kunit_get_success(struct kunit *test)
-> > +{
-> > +       unsigned long flags;
-> > +       bool success;
-> > +
-> > +       spin_lock_irqsave(&test->lock, flags);
-> > +       success = test->success;
-> > +       spin_unlock_irqrestore(&test->lock, flags);
->
-> I still don't understand the locking scheme in this code. Is the
-> intention to make getter and setter APIs that are "safe" by adding in a
-> spinlock that is held around getting and setting various members in the
-> kunit structure?
-
-Yes, your understanding is correct. It is possible for a user to write
-a test such that certain elements may be updated in different threads;
-this would most likely happen in the case where someone wants to make
-an assertion or an expectation in a thread created by a piece of code
-under test. Although this should generally be avoided, it is possible,
-and there are occasionally good reasons to do so, so it is
-functionality that we should support.
-
-Do you think I should add a comment to this effect?
-
-> In what situation is there more than one thread reading or writing the
-> kunit struct? Isn't it only a single process that is going to be
-
-As I said above, it is possible that the code under test may spawn a
-new thread that may make an expectation or an assertion. It is not a
-super common use case, but it is possible.
-
-> operating on this structure? And why do we need to disable irqs? Are we
-> expecting to be modifying the unit tests from irq contexts?
-
-There are instances where someone may want to test a driver which has
-an interrupt handler in it. I actually have (not the greatest) example
-here. Now in these cases, I expect someone to use a mock irqchip or
-some other fake mechanism to trigger the interrupt handler and not
-actual hardware; technically speaking in this case, it is not going to
-be accessed from a "real" irq context; however, the code under test
-should think that it is in an irq context; given that, I figured it is
-best to just treat it as a real irq context. Does that make sense?
-
-> > +
-> > +       return success;
-> > +}
-> > +
-> > +static void kunit_set_success(struct kunit *test, bool success)
-> > +{
-> > +       unsigned long flags;
-> > +
-> > +       spin_lock_irqsave(&test->lock, flags);
-> > +       test->success = success;
-> > +       spin_unlock_irqrestore(&test->lock, flags);
-> > +}
-> > +
-> > +static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-> > +{
-> > +       return vprintk_emit(0, level, NULL, 0, fmt, args);
-> > +}
-> > +
-> > +static int kunit_printk_emit(int level, const char *fmt, ...)
-> > +{
-> > +       va_list args;
-> > +       int ret;
-> > +
-> > +       va_start(args, fmt);
-> > +       ret = kunit_vprintk_emit(level, fmt, args);
-> > +       va_end(args);
-> > +
-> > +       return ret;
-> > +}
-> > +
-> > +static void kunit_vprintk(const struct kunit *test,
-> > +                         const char *level,
-> > +                         struct va_format *vaf)
-> > +{
-> > +       kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
-> > +}
-> > +
-> > +static bool kunit_has_printed_tap_version;
->
-> Can you please move this into function local scope in the function
-> below?
-
-Sure, that makes sense.
-
-> > +
-> > +static void kunit_print_tap_version(void)
-> > +{
-> > +       if (!kunit_has_printed_tap_version) {
-> > +               kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
-> > +               kunit_has_printed_tap_version = true;
-> > +       }
-> > +}
-> > +
-> [...]
-> > +
-> > +static bool kunit_module_has_succeeded(struct kunit_module *module)
-> > +{
-> > +       const struct kunit_case *test_case;
-> > +       bool success = true;
-> > +
-> > +       for (test_case = module->test_cases; test_case->run_case; test_case++)
-> > +               if (!test_case->success) {
-> > +                       success = false;
-> > +                       break;
->
-> Why not 'return false'?
-
-Also a good point. Will fix.
-
-> > +               }
-> > +
-> > +       return success;
->
-> And 'return true'?
-
-Will fix.
-
-> > +}
-> > +
-> > +static size_t kunit_module_counter = 1;
-> > +
-> > +static void kunit_print_subtest_end(struct kunit_module *module)
-> > +{
-> > +       kunit_print_ok_not_ok(false,
-> > +                             kunit_module_has_succeeded(module),
-> > +                             kunit_module_counter++,
-> > +                             module->name);
-> > +}
-> > +
-> > +static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
-> > +                                           size_t test_number)
-> > +{
-> > +       kunit_print_ok_not_ok(true,
-> > +                             test_case->success,
-> > +                             test_number,
-> > +                             test_case->name);
-> > +}
-> > +
-> > +void kunit_init_test(struct kunit *test, const char *name)
-> > +{
-> > +       spin_lock_init(&test->lock);
-> > +       test->name = name;
-> > +       test->success = true;
-> > +}
-> > +
-> > +/*
-> > + * Performs all logic to run a test case.
-> > + */
-> > +static void kunit_run_case(struct kunit_module *module,
-> > +                          struct kunit_case *test_case)
-> > +{
-> > +       struct kunit test;
-> > +       int ret = 0;
-> > +
-> > +       kunit_init_test(&test, test_case->name);
-> > +
-> > +       if (module->init) {
-> > +               ret = module->init(&test);
-> > +               if (ret) {
-> > +                       kunit_err(&test, "failed to initialize: %d\n", ret);
-> > +                       kunit_set_success(&test, false);
-> > +                       return;
-> > +               }
-> > +       }
-> > +
-> > +       if (!ret)
-> > +               test_case->run_case(&test);
->
-> Do we need this if condition? ret can only be set to non-zero above but
-> then we'll exit the function early so it seems unnecessary. Given that,
-> ret should probably be moved into the module->init path.
-
-Whoops. Sorry, another instance of how it evolved over time and I
-forgot why I did the check. Will fix.
-
-> > +
-> > +       if (module->exit)
-> > +               module->exit(&test);
-> > +
-> > +       test_case->success = kunit_get_success(&test);
-> > +}
-> > +
-
-Thanks!
+On 26/06/19 12:27 AM, Linus Walleij wrote:=0A=
+> On Mon, Jun 17, 2019 at 11:55 PM Chris Packham=0A=
+> <chris.packham@alliedtelesis.co.nz> wrote:=0A=
+> =0A=
+>> The 98DX1135 is a switch chip with an integrated CPU. This is similar to=
+=0A=
+>> the 98DX4122 except the MPP assignments differ.=0A=
+>>=0A=
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+>> Reviewed-by: Andrew Lunn <andrew@lunn.ch>=0A=
+> =0A=
+> Patch applied.=0A=
+> I just assume this one has no dependency on the clock patches=0A=
+> so I can merge it separately.=0A=
+=0A=
+Correct. There's no dependency between the patches but they're all =0A=
+needed to successfully boot a board.=0A=
