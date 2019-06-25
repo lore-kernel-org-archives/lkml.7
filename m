@@ -2,84 +2,107 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44130C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D48C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DC920881
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:54:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561434844;
-	bh=XFOziIOM9oCu/OsWx9RnmlS+cF5ZLW17HEIlZAqOimY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZGXAIQ7Zc/saxJmvE2TBHxcso6FyVLVWg9VU5VVKWUJ+PtQ+xXmMyAEauT5j3od8i
-	 rKLx36c6x/meuUMf0a44XtaM+P/xwQqxxCgT5YUD1wwBksl0UKl3g2TjOutDKQvTJY
-	 /JIjMRT0y9gdvnr2Lri61Bsg01FbXucTpHnlvvNo=
+	by mail.kernel.org (Postfix) with ESMTP id 1733C20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:59:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uId4Cc6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfFYDyC (ORCPT
+        id S1727521AbfFYD7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 23:54:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfFYDyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 23:54:01 -0400
-Received: from localhost (unknown [116.226.249.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46DAB20881;
-        Tue, 25 Jun 2019 03:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561434840;
-        bh=XFOziIOM9oCu/OsWx9RnmlS+cF5ZLW17HEIlZAqOimY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZX3zvzlmNRbixI1+LVRfKTQyDeWhML4ya2bKjMyZ4vz3QOLIT8+uvcED6v14tRaER
-         4haun38H99VjEAFN/GUrWwuiXWjy+Dba35v3ZpruSScBfefS76bGrsNUM4/VcV//0z
-         8VIIVE0LCzZmJ5UtM4SeHg5DJQQFCthwS/cUGpDc=
-Date:   Tue, 25 Jun 2019 11:53:13 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sandeep Patil <sspatil@android.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        David Collins <collinsd@codeaurora.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
- optimize probe ordering
-Message-ID: <20190625035313.GA13239@kroah.com>
-References: <20190604003218.241354-1-saravanak@google.com>
- <20190624223707.GH203031@google.com>
+        Mon, 24 Jun 2019 23:59:32 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44266 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfFYD7b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 23:59:31 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r15so11525575lfm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 20:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ne8A2cDgNm1H+XBCR1KqEC3IC1t0ovKTdfCojlwi1ao=;
+        b=uId4Cc6JusYfOzWPJIQyRNt9AB/zfpsO9gUP1iUtpXZ89/cmzWc7lekj6i8nwz2M0A
+         bkV802nW55R0ILIr7vIXoFFlip7GHgYo6ZNlQjiViz5HWzJq4PxZog4vDFA1POQ0lj5U
+         rVtOEFngdrWHOcSm3y9vtMsnD9W9K8rDlzl/2uG40E8Jpm+vLiGMewqeLyEiqafgPcTg
+         PjrYoSZ2A1xFy78Ya5+GQqIX4OIY0CpYYasoE9JFGUFlP+chhHyNr3m3dX4/ZCtbhdMT
+         bgIGjDX56mZndI1QxLfoigpNapdl4i5vp8Mb4w0hyrViVcNIH+aUilzy1h7kXD8j10WC
+         xelg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ne8A2cDgNm1H+XBCR1KqEC3IC1t0ovKTdfCojlwi1ao=;
+        b=r1OAERXTGcsTQhFb1mKCrxBXZY3UzBNJ+bS41OQKUf9svh3O9JBvdDHFy04X+u3OR1
+         7cVW5QbxCOPid63keaegQGtsuKuAZPomiaFMH9IWebP1kVH4nj/8qenA4DJ6syPmiQ92
+         mgJskbudUjVKvRbzakHGbjj1pfibHW7e/yK5kHCuFWH9kMVSZ4GChJgqLLbhpvft7qh+
+         WbjPxlAxFbd+NizlZCSB/x1IZosLEuxffhNt+sXLyYsOUGyTct3M/M76bVwTPNaUQu6r
+         naBJ1eZC/P6ytWnTQEgQ0tUwoz47Peey08dcrQM3PX0ibjvRJwmFERxR2ZmV2BhsCj+y
+         4MiA==
+X-Gm-Message-State: APjAAAULLrw7JiCW1b0iO69PaUmI8dUeGsNBPu0BzJiyhzGlrP/Hp1+j
+        K+c1izRsN2jDd1XEPfhY972enj2doexDjxL2V94=
+X-Google-Smtp-Source: APXvYqz66C0jiYfrR4IdvROVdrfJ3yjlWkj559yXVop6JDKW+edQk+UMJIr3y6QOSGaTpOV6lwg0OsD6BCsKmnlg4AU=
+X-Received: by 2002:ac2:44c5:: with SMTP id d5mr28686575lfm.134.1561435169542;
+ Mon, 24 Jun 2019 20:59:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624223707.GH203031@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190618011124.GA67760@archlinux-epyc>
+In-Reply-To: <20190618011124.GA67760@archlinux-epyc>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Tue, 25 Jun 2019 13:59:17 +1000
+Message-ID: <CAPM=9txaQ43GwOzXSE3prTRLbMt+ip=s_ssmFzWsfsTYdLssaw@mail.gmail.com>
+Subject: Re: arm32 build failure after abe882a39a9c ("drm/amd/display: fix
+ issue with eDP not detected on driver load")
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Anthony Koo <Anthony.Koo@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
-> We are trying to make sure that all (most) drivers in an Aarch64 system can
-> be kernel modules for Android, like any other desktop system for
-> example. There are a number of problems we need to fix before that happens
-> ofcourse.
+Hi Alex,
 
-I will argue that this is NOT an android-specific issue.  If the goal of
-creating an arm64 kernel that will "just work" for a wide range of
-hardware configurations without rebuilding is going to happen, we need
-to solve this problem with DT.  This goal was one of the original wishes
-of the arm64 development effort, let's not loose sight of it as
-obviously, this is not working properly just yet.
+please resolve this ASAP, I cannot pull your tree without this fixed
+as it breaks my arm builds here.
 
-It just seems that Android is the first one to actually try and
-implement that goal :)
+an 8 second delay there seems pointless and arbitary, an 8 sec delay
+there without a comment, seems like a lack of review.
 
-thanks,
+Dave.
 
-greg k-h
+On Tue, 18 Jun 2019 at 11:12, Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Hi all,
+>
+> After commit abe882a39a9c ("drm/amd/display: fix issue with eDP not
+> detected on driver load") in -next, arm32 allyesconfig builds start
+> failing at link time:
+>
+> arm-linux-gnueabi-ld: drivers/gpu/drm/amd/display/dc/core/dc_link.o: in
+> function `dc_link_detect':
+> dc_link.c:(.text+0x260c): undefined reference to `__bad_udelay'
+>
+> arm32 only allows a udelay value of up to 2000, see
+> arch/arm/include/asm/delay.h for more info.
+>
+> Please look into this when you have a chance!
+> Nathan
