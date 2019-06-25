@@ -2,126 +2,149 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22CCC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619D1C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0582133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A83F204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=animalcreek.com header.i=@animalcreek.com header.b="Pjjwt9K6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0TaaIeG1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OGyazNNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfFYQqQ (ORCPT
+        id S1730670AbfFYQrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:46:16 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:48577 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbfFYQqQ (ORCPT
+        Tue, 25 Jun 2019 12:47:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37751 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727694AbfFYQrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:46:16 -0400
-X-Greylist: delayed 524 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jun 2019 12:46:15 EDT
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 452053376;
-        Tue, 25 Jun 2019 12:37:28 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 25 Jun 2019 12:37:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=animalcreek.com;
-         h=date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=mesmtp;
-         bh=gSyJjIHjthT3a2SYIYJNLmRY+/ZGTrj+u+zCYKrjbOY=; b=Pjjwt9K6MhBJ
-        zIuUap8jIrsLK5wc0QVha0hXjF6ATPFKsLe/UK4gCKkpu4gJa3sb4sXewoHVwKYb
-        qYuzqpS43/PE7nIII03rzTXWvSujg6zxliCmmKQIbwPfy0D5ux99JMv+xyEA+DCg
-        zoVbLxyQQ30U8rAInLhkmHQuiAVpSWI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=gSyJjIHjthT3a2SYIYJNLmRY+/ZGTrj+u+zCYKrjb
-        OY=; b=0TaaIeG19hAjd3vPGddqd1WWw0wICU2LXquWcQhbdWOy/xTgmGnz8z9bH
-        wtXuiGUFghRvJ3lHfhKtQ7NSotX4m2sK+9LH50u9Bc7ZpU9oSxc2B9QUqDgZsonX
-        CNqhrnosdixhRCa2nYx3XLcKvE4MHPMes5pM6qL+sMeQ0/Nr6XjM8+A1BtPGowHN
-        MLJ+6vcUUJydtyWkkHRdzAPvDBVhxGgRg2xvAHrZpI5RhKMRA9t7xm6IQGvYHVSA
-        MwX0Pw6dzLvQSuo8lRVBR8Oba4CgR5VtgvQtweSJk9yQenSaqXXbuUyHZWZ0QfxL
-        S+59hWB7sWSizPQIcZbrc/isLk+Lw==
-X-ME-Sender: <xms:xk0SXXqoRo6-9c96z-V0VMIQ6RtwXK_Ym2YZ_RumZj1EaVMGTgiWTA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeggddutddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjghofgesthekredttderjeenucfhrhhomhepofgr
-    rhhkucfirhgvvghruceomhhgrhgvvghrsegrnhhimhgrlhgtrhgvvghkrdgtohhmqeenuc
-    fkphepieekrddvrdekjedrleehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmghhrvggv
-    rhesrghnihhmrghltghrvggvkhdrtghomhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:xk0SXdP-_PEWJQ-GUifoOwZaTe-qXfgM7G7CB3tp4tBAMJSOsKyDOw>
-    <xmx:xk0SXUOuKAjwZH2g5YDwcEKThKcJfID8Ufz3v0Y1DEYWMmqADeLI6w>
-    <xmx:xk0SXf1X98dcDEpn0tsLimeZC0jV4RBuOmwZjA3R3q8vsRcEN2-yzw>
-    <xmx:yE0SXUxtVKcHhRzMz8c54pIyl_w4XGLXQyskSEBczUBmZpyw1IX1_A>
-Received: from blue.animalcreek.com (ip68-2-87-95.ph.ph.cox.net [68.2.87.95])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A9A74380079;
-        Tue, 25 Jun 2019 12:37:26 -0400 (EDT)
-Received: by blue.animalcreek.com (Postfix, from userid 1000)
-        id D4B5AA22265; Tue, 25 Jun 2019 09:37:22 -0700 (MST)
-Date:   Tue, 25 Jun 2019 09:37:22 -0700
-From:   Mark Greer <mgreer@animalcreek.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Mark Greer <mgreer@animalcreek.com>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Dale Farnsworth <dale@farnsworth.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: DMA coherency in drivers/tty/serial/mpsc.c
-Message-ID: <20190625163722.GA18626@animalcreek.com>
-References: <20190625122641.GA4421@lst.de>
+        Tue, 25 Jun 2019 12:47:39 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f17so3684730wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ki+VzSGTFsj/B1hWzCc43szZIOhLClWHwnbSYjuQbx0=;
+        b=OGyazNNBNrB+Oxr5H3SCK2W5gmDg7OCqH0BGr3evGykb7Z1cB00bHqRvu1QPmqiHao
+         EZ2G2i57FL06K52n+NKyDHrDhGoW1tcVm34FHZGbPVuCuYnYL0WfqWdSNSdkISo/nNv3
+         TQN8GoipgP5I8Fh9IJCj3B5AqqB6Z7plJ5SiJX+j7KcFVhu0PbmDVGZoA+8T91wbWlUQ
+         mpohVIk5Ido1gMrrdufNxXBcUACcipO58yaC8eGizUbHwor6ucl/O66rmRXSm6sW8KvC
+         hQU/EvTpNhqIIkHUij37+I7D2IMsPywgcTjf+oMf+tzJXn/3PvHXG0NJ+tIk1lGQ//sK
+         6Hhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ki+VzSGTFsj/B1hWzCc43szZIOhLClWHwnbSYjuQbx0=;
+        b=Wdwd4m38h1v5eFedKhUACKtIg4jtziXhY0xJxvSzXrGXmkmiN9doh6wSmZW7NaOiAH
+         imk0lFKW9ogqIE0IO+xyNiD9IcaqTETZm06NrVzmY/cafpJ4rJnKwTrt6lgqbukuyBhB
+         sWOP30wTTRDV9kkFt7Tlb2+xRgzuS3SUoBolSpDFf2rmLZDNxRvXZ7iIZYHdxXMMeT2Y
+         +hyxFYgNd9qaOYEOq/GB6nn/bM1+rHl9h2a/viQqWjksEED+kmi4vrbDZ0OsHecW7sYO
+         LPZLUxHQsL/5dHbrgVB5XVjPjhCAI6cVmQKKFT8iiqNupv1vr5BRMZBr3RNhpkYVbjcR
+         i9iA==
+X-Gm-Message-State: APjAAAVelheZC6l8EtA1pvmZDE8wVdRWsBKM7Om/0s4IqWj6iFeUVwa3
+        h6pp6U7U1/+Q6uGMuGw1duQTKg==
+X-Google-Smtp-Source: APXvYqwtk11JIcLLQM6ZDLdonAWIlN0qcsSARfkrWxoExBaOvGl9oUIlARyhIXJM0RSZZegPcS6l3w==
+X-Received: by 2002:a1c:39d6:: with SMTP id g205mr19367540wma.85.1561481257696;
+        Tue, 25 Jun 2019 09:47:37 -0700 (PDT)
+Received: from localhost.localdomain (30.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.30])
+        by smtp.gmail.com with ESMTPSA id d18sm42594476wrb.90.2019.06.25.09.47.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 25 Jun 2019 09:47:37 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To:     jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        jassisinghbrar@gmail.com, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com,
+        arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de,
+        sibis@codeaurora.org, enric.balletbo@collabora.com,
+        jagan@amarulasolutions.com, olof@lixom.net
+Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
+        georgi.djakov@linaro.org, amit.kucheria@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
+Subject: [PATCH v3 00/14] Support CPU frequency scaling on QCS404
+Date:   Tue, 25 Jun 2019 18:47:19 +0200
+Message-Id: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190625122641.GA4421@lst.de>
-Organization: Animal Creek Technologies, Inc.
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:26:41PM +0200, Christoph Hellwig wrote:
-> Hi Paul, Dale and Mark (I hope this reaches the right Mark),
+The following patchset enables CPU frequency scaling support on the
+QCS404 (with dynamic voltage scaling).
 
-Hi Christoph.  Yes, you did reach the right Mark.  :)
+Patch 8 "clk: qcom: hfpll: CLK_IGNORE_UNUSED" is a bit controversial;
+in this platform, this PLL provides the clock signal to a CPU
+core. But in others it might not.
 
-> I've started auditing all users of DMA_ATTR_NON_CONSISTENT ot prepare
-> for major API improvements in that area.
-> 
-> One of the odd users is the mpsc ѕerial driver, which allocates DMA
-> memory with the above flag, and then actually properly calls
-> dma_cache_sync.  So far, so good.  But it turns out it also has
-> "#if defined(CONFIG_PPC32) && !defined(CONFIG_NOT_COHERENT_CACHE)"
-> ifdef blocks next to the dma_cache_sync calls that perform cache
-> maintainance for platforms that according to the ifdef claim to
-> be cache coherent.  According to the Kconfig the driver can
-> only build if the MV64X60 symbol is set, which is a ppc embedded 6xx
-> SOC, which appears to be configurable as either cache coherent, or
-> not.  But according to the code in the driver at least this device
-> always is not cache coherent.
-> 
-> It seems like we need to always mark that platform as potentially
-> not coherent, and then use the per-device flag to mark all device
-> except for this one as coherent.  Or did I miss anything?  Maybe
-> all this is actually dead code and can go away?
+We opted for the minimal ammount of changes without affecting the
+default functionality: simply bypassing the COMMON_CLK_DISABLE_UNUSED
+framework and letting the firwmare chose whether to enable or disable
+the clock at boot. However maybe a DT property and marking the clock
+as critical would be more appropriate for this PLL. we'd appreciate the
+maintainer's input on this topic.
 
-Yeah, the mpsc driver had lots of ugly cache related hacks because of
-cache coherency bugs in the early version of the MV64x60 bridge chips
-that it was embedded in.  That chip is pretty much dead now and I've
-removed core support for it from the powerpc tree.  Removing the mpsc
-driver is on my todo list but I've been busy and lazy.  So, to sum it
-up, don't spend any more time worrying about it as it should be removed.
+v2:
+   - dts: ms8916: apcs mux/divider: new bindings
+     (the driver can still support the old bindings)
+     
+   - qcs404.dtsi
+     fix apcs-hfpll definition
+     fix cpu_opp_table definition
+     
+   - GPLL0_AO_OUT operating frequency
+     define new alpha_pll_fixed_ops to limit the operating frequency
 
-I'll post a patch to do that tonight and I'm sorry for any time you've
-spent looking at it so far.
+v3:
+  - qcom-apcs-ipc-mailbox
+    replace goto to ease readability
+    
+  - apcs-msm8916.c
+    rework patch to use of_clk_parent_fill
 
-Mark
---
+  - hfpll.c
+    add relevant comments to the code
+
+  - qcs404.dtsi
+    add voltage scaling support
+
+Jorge Ramirez-Ortiz (14):
+  clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
+  mbox: qcom: add APCS child device for QCS404
+  mbox: qcom: replace integer with valid macro
+  dt-bindings: mailbox: qcom: Add clock-name optional property
+  clk: qcom: apcs-msm8916: get parent clock names from DT
+  clk: qcom: hfpll: get parent clock names from DT
+  clk: qcom: hfpll: register as clock provider
+  clk: qcom: hfpll: CLK_IGNORE_UNUSED
+  arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
+  arm64: dts: qcom: qcs404: Add OPP table
+  arm64: dts: qcom: qcs404: Add HFPLL node
+  arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
+  arm64: dts: qcom: qcs404: Add DVFS support
+  arm64: defconfig: Enable HFPLL
+
+ .../mailbox/qcom,apcs-kpss-global.txt         | 24 +++++++++--
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  3 +-
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          | 42 +++++++++++++++++++
+ arch/arm64/configs/defconfig                  |  1 +
+ drivers/clk/qcom/apcs-msm8916.c               | 23 ++++++++--
+ drivers/clk/qcom/clk-alpha-pll.c              |  8 ++++
+ drivers/clk/qcom/clk-alpha-pll.h              |  1 +
+ drivers/clk/qcom/gcc-qcs404.c                 |  2 +-
+ drivers/clk/qcom/hfpll.c                      | 25 ++++++++++-
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c       | 18 ++++----
+ 10 files changed, 130 insertions(+), 17 deletions(-)
+
+-- 
+2.21.0
+
