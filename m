@@ -2,57 +2,57 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0DBC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EF1C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9E92085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FB9208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="ItHyKFJ4"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="YCgwE95s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfFYTnV (ORCPT
+        id S1729385AbfFYTmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:43:21 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37814 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729255AbfFYTmx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 15:42:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f17so63682wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:42:52 -0700 (PDT)
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35451 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729039AbfFYTmu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:42:50 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f15so9335376wrp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=85UmCqjB/2q4FemAi0uqOHeKcTywLVBMQcPg1IVAqAM=;
-        b=ItHyKFJ4XKYckCqhHyWodBeiPoSVP0SJx+jL3mIeXqtPEFRqoYIQTpI9yaJjhvDtfN
-         BQl3rcGcAlTg36sUZLiD3au1iPVGbO7p9kY/FIwWRVv9Dfq9i2rWLxoGu1Do0wyYHoYK
-         iUQFdMcGCoqYvRLgIqdjeSvfS4xwLoaBpenmM=
+        bh=NZJAZB5vdXR/WpDyZLPJ4DPn0c9D938wugTs5ASTa68=;
+        b=YCgwE95siTWIMkFuGxiPLTfcpNRyh8nvZejCJIhLS+rzApzf7Mg54bJHdIR85mb4zc
+         kr/3cbL1I4W/m3elY3gDS3qqciSg8rWJa+GC/Tnypr6naIpx09ZJE3zTIvYkj0zUlqDw
+         YAdXxoHiXF1vPbrqDTgG8NdV99yiQO34OOCR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=85UmCqjB/2q4FemAi0uqOHeKcTywLVBMQcPg1IVAqAM=;
-        b=jcjWjN4KVSeN2ZtxsYyniNFWVNmwQmXa+9tuJNenIayCs+iUUqmu0gHxPq38Joa1k9
-         z4rx+o1w/APSIqNFog4C3Di3J7td0YYOr1huSqOgBEySEHqx3ncO8aNM2Tb/Tq6N3IcA
-         dULPCdE+Tzyyj8JApV1G4erUHsCKDgRiA19Djj89rbNRdFiSYfuaNqwLsmTjfAqFK9df
-         CStH7PjF2RdQuGiG02Gdb+6aOoLxYqb/aBHpeKON3WBVQdmNVdkuBBXnM0VLdWD1Lf0A
-         E154pNqPWlLuDY5PH7ydcRHCkgRa5muHXHbF2lTh1JAGZOc7UDX2053PmQzFef+BmddP
-         /P1A==
-X-Gm-Message-State: APjAAAUStrX4LvEdQmEBv6E47LS5YpqF4hbnKvptNP6y+RiJ7kxMfS3A
-        7nW7Vly4jaPf01Tp8+jDOqSHEw==
-X-Google-Smtp-Source: APXvYqzIMxgXlOTdo4m8VF3Ksi0pmsLJDIqlKPFVSelHYIH0PbCG3pg3PScZRGP+zhtfti6ZKyzEKQ==
-X-Received: by 2002:a05:600c:2388:: with SMTP id m8mr85591wma.23.1561491771995;
-        Tue, 25 Jun 2019 12:42:51 -0700 (PDT)
+        bh=NZJAZB5vdXR/WpDyZLPJ4DPn0c9D938wugTs5ASTa68=;
+        b=HYarOs7T0uGrNJnJPKylkpn7N7MbwbkS8BwtyIiV0W+QSK/Cszg+Ct+IwaScfe4dOX
+         kM5MShhF60gyFNFdWgCprxW/RBUKxE+awPYJry4wcxyscpM404nVHsr+LWwPcBaa7EhB
+         JsSo2R/hMoaaoy3WFmI61DZDz4Je9JtUU+YpCrMVJcSOn0S0gAxMdwTdi1UpU4fcCaYT
+         Poqnep5iHB9lo8EUI86zdTR81TmmNaHmXrdf2WwT1wErJP6NXCCLYw8k47izu9Z8giRI
+         C4aZ4xVvFjP6LIxY55DSiJTAqvmr8Sbuh1VIqXcNObyYgeNAl77dp8H0kCTLnOTCII3u
+         qebQ==
+X-Gm-Message-State: APjAAAUNO/yOVXtAL817adcSeGdgT4NJucjrcAC1G84F5YLJOgYALjKp
+        TMgFcewHAqtSNavj8ro5D0joZg==
+X-Google-Smtp-Source: APXvYqzkZHCEL5EQpFPRuu/3a/FjcmP7M2c2GZUqCNnvkP2hC06bFFvksfwNk0obOhjie/qywVWfqw==
+X-Received: by 2002:adf:fb8d:: with SMTP id a13mr25689557wrr.273.1561491768959;
+        Tue, 25 Jun 2019 12:42:48 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5aedb6.dynamic.kabel-deutschland.de. [95.90.237.182])
-        by smtp.gmail.com with ESMTPSA id q193sm84991wme.8.2019.06.25.12.42.51
+        by smtp.gmail.com with ESMTPSA id q193sm84991wme.8.2019.06.25.12.42.48
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 12:42:51 -0700 (PDT)
+        Tue, 25 Jun 2019 12:42:48 -0700 (PDT)
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
 To:     netdev@vger.kernel.org
 Cc:     Alban Crequy <alban@kinvolk.io>,
@@ -63,9 +63,9 @@ Cc:     Alban Crequy <alban@kinvolk.io>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
         Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v2 07/10] tools headers: sync struct bpf_perf_event_data
-Date:   Tue, 25 Jun 2019 21:42:12 +0200
-Message-Id: <20190625194215.14927-8-krzesimir@kinvolk.io>
+Subject: [bpf-next v2 04/10] selftests/bpf: Use bpf_prog_test_run_xattr
+Date:   Tue, 25 Jun 2019 21:42:09 +0200
+Message-Id: <20190625194215.14927-5-krzesimir@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190625194215.14927-1-krzesimir@kinvolk.io>
 References: <20190625194215.14927-1-krzesimir@kinvolk.io>
@@ -76,29 +76,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct bpf_perf_event_data in kernel headers has the addr field, which
-is missing in the tools version of the struct. This will be important
-for the bpf prog test run implementation for perf events as it will
-expect data to be an instance of struct bpf_perf_event_data, so the
-size of the data needs to match sizeof(bpf_perf_event_data).
+The bpf_prog_test_run_xattr function gives more options to set up a
+test run of a BPF program than the bpf_prog_test_run function.
+
+We will need this extra flexibility to pass ctx data later.
 
 Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 ---
- tools/include/uapi/linux/bpf_perf_event.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/bpf/test_verifier.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/tools/include/uapi/linux/bpf_perf_event.h b/tools/include/uapi/linux/bpf_perf_event.h
-index 8f95303f9d80..eb1b9d21250c 100644
---- a/tools/include/uapi/linux/bpf_perf_event.h
-+++ b/tools/include/uapi/linux/bpf_perf_event.h
-@@ -13,6 +13,7 @@
- struct bpf_perf_event_data {
- 	bpf_user_pt_regs_t regs;
- 	__u64 sample_period;
-+	__u64 addr;
- };
+diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+index 779e30b96ded..db1f0f758f81 100644
+--- a/tools/testing/selftests/bpf/test_verifier.c
++++ b/tools/testing/selftests/bpf/test_verifier.c
+@@ -822,14 +822,20 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
+ {
+ 	__u8 tmp[TEST_DATA_LEN << 2];
+ 	__u32 size_tmp = sizeof(tmp);
+-	uint32_t retval;
+ 	int err;
+ 	int saved_errno;
++	struct bpf_prog_test_run_attr attr = {
++		.prog_fd = fd_prog,
++		.repeat = 1,
++		.data_in = data,
++		.data_size_in = size_data,
++		.data_out = tmp,
++		.data_size_out = size_tmp,
++	};
  
- #endif /* _UAPI__LINUX_BPF_PERF_EVENT_H__ */
+ 	if (unpriv)
+ 		set_admin(true);
+-	err = bpf_prog_test_run(fd_prog, 1, data, size_data,
+-				tmp, &size_tmp, &retval, NULL);
++	err = bpf_prog_test_run_xattr(&attr);
+ 	saved_errno = errno;
+ 	if (unpriv)
+ 		set_admin(false);
+@@ -846,9 +852,9 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
+ 			return err;
+ 		}
+ 	}
+-	if (retval != expected_val &&
++	if (attr.retval != expected_val &&
+ 	    expected_val != POINTER_VALUE) {
+-		printf("FAIL retval %d != %d ", retval, expected_val);
++		printf("FAIL retval %d != %d ", attr.retval, expected_val);
+ 		return 1;
+ 	}
+ 
 -- 
 2.20.1
 
