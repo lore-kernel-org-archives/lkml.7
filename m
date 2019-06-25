@@ -2,114 +2,96 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2231C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363B9C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27F320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A86920644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgaUm+qJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="OqKckeaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfFYKuf (ORCPT
+        id S1729959AbfFYKvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:50:35 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40511 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfFYKuf (ORCPT
+        Tue, 25 Jun 2019 06:51:13 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:50514 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfFYKvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:50:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so8761316pgj.7;
-        Tue, 25 Jun 2019 03:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r0LFmQkQla4HoW+LfNI4MhAT+RGO2NBR67tJFxhVMYA=;
-        b=RgaUm+qJjkLB9lZGfcuGq/HeAYlb0vYEym0EmhnTNGgxpxnhKV55KX8mCi6Sx3/HBg
-         vra836ZiOxIplDeGrc3xjW12mr4ggim0dnrCBbKGxKvE3QxkOZaNOuRPHAZLUU6IeRuF
-         6FV7ljhnPmLONQfPZ9qei8+iwCwfqCZtK59aJeC7i9a4sZmoHr7IxNx3NgTom5Bx4q0L
-         AckSssmUa0slmODVkOuz1ZrkcTd8g4Zq3Q0NsG9cU2EyxvvB6vb8AsFUdzrv09744GkW
-         SuIbjrnEgkCOFF7psj4zn2MkfLkcQDcASdnSw8c6HkjjtApMIjaQL2kWAmxz548PkFjC
-         Yxcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r0LFmQkQla4HoW+LfNI4MhAT+RGO2NBR67tJFxhVMYA=;
-        b=fa283lBrbuy5+CsMra9g2V5cWgdIZIG+AOpDRmG5GmBDp4/oeukt7AYRHKstNeyI7N
-         h1TlIs8EkDMeaBj2SFVzk/eIazxOcntmZfvowzilKIwr0OtU9IQqhzQXdxX7daTDX2TX
-         GTdGPEE5V3HxNqs8A2BNzpcExB1T0d3W1VN/jRYqVbwfx6hS89lpXMVpQ8vtdQD+WzBa
-         kGALmRI/s4YvPhRnqlS6qvMf8R6BC9YULbe7Uv3XH1u+hg6IkK7iyrQAxiSJT1NTucqB
-         O2XVaQopq2aZRbpzCgVKlC1JJ2+SIKXCSqHmE9rIGK/lNHYJby+TMkUS3GuoTROC/h53
-         +ViA==
-X-Gm-Message-State: APjAAAX98aYm/nYm/yRspli/w80Ax3k7g5xlci5lrcyLgquNV8lFF2e/
-        nO60NImGPKIxHSI2hm3vwjzBgWODRC777U1ybQ8=
-X-Google-Smtp-Source: APXvYqw8/WnFgJMq0p4EVEtYRG/6voqYxOv6BWVlhTC1mMcbdLLY8uqmSX0j90biOb9Jv2nuh8Ypn/SA+YCJ5Nc1bYM=
-X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr31470076pjb.20.1561459834178;
- Tue, 25 Jun 2019 03:50:34 -0700 (PDT)
+        Tue, 25 Jun 2019 06:51:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B4pLAXyDPdI8tWudLeNzlKsY9ks2pK9PyrJ5hr7IryA=; b=OqKckeaCN4sEg3NvrAAopQHHy
+        p/MUnhzE2Rs8+JKnTJnWFJALJb0xRvcKxAHgk3K2t2i5KSO1Ni3FizlFz4B/Z+q0wH31F5U8L22T3
+        6/IyCytoKeec2KnYFcJtpLsjHiHJz4Y2pT02Znk4Bg/AenoBuYGjVS/tSKCur7bt/oACz4aFtwZp1
+        6PEzYC1UlmkLYm1TqihKjDLY+nJRZfjwFm7xKzACRqa5HRhiK3YmqOCuow1R66GMK064Hf4syylxQ
+        MpesAgk9z4ktv8v9UVjHF9Dvk4+aK0cvjypvcQVMZ1bv/FS4aWKEBay3iBHDeuSRzZfuwSeblxABy
+        F28vhKHtQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58984)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hfj2X-0005um-7v; Tue, 25 Jun 2019 11:51:05 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hfj2T-00079r-Lv; Tue, 25 Jun 2019 11:51:01 +0100
+Date:   Tue, 25 Jun 2019 11:51:01 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [PATCH v4 4/5] net: macb: add support for high speed interface
+Message-ID: <20190625105101.xvcwgt3jh5pk7p2x@shell.armlinux.org.uk>
+References: <1561281419-6030-1-git-send-email-pthombar@cadence.com>
+ <1561281806-13991-1-git-send-email-pthombar@cadence.com>
+ <20190623150902.GB28942@lunn.ch>
+ <CO2PR07MB2469FDA06C3F8848290013B8C1E00@CO2PR07MB2469.namprd07.prod.outlook.com>
+ <20190624131307.GA17872@lunn.ch>
+ <SN2PR07MB2480DBE64F2550C0135335EEC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190623063153.261546-1-dmitry.torokhov@gmail.com> <011d62995b20493f977ead43f4b494a2@AcuMS.aculab.com>
-In-Reply-To: <011d62995b20493f977ead43f4b494a2@AcuMS.aculab.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 25 Jun 2019 13:50:23 +0300
-Message-ID: <CAHp75VfJQp4TqfyvjGtFcnvN-md++9fQUis6a-dFKn_2OUN=0A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Input: edt-ft5x06 - use get_unaligned_be16()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Benoit Parrot <bparrot@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN2PR07MB2480DBE64F2550C0135335EEC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:44 AM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Dmitry Torokhov
-> > Sent: 23 June 2019 07:32
-> >
-> > Instead of doing conversion by hand, let's use the proper accessors.
-> >
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >  drivers/input/touchscreen/edt-ft5x06.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > index c639ebce914c..ec770226e119 100644
-> > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > @@ -27,6 +27,7 @@
-> >  #include <linux/gpio/consumer.h>
-> >  #include <linux/input/mt.h>
-> >  #include <linux/input/touchscreen.h>
-> > +#include <asm/unaligned.h>
-> >
-> >  #define WORK_REGISTER_THRESHOLD              0x00
-> >  #define WORK_REGISTER_REPORT_RATE    0x08
-> > @@ -239,8 +240,8 @@ static irqreturn_t edt_ft5x06_ts_isr(int irq, void *dev_id)
-> >               if (tsdata->version == EDT_M06 && type == TOUCH_EVENT_DOWN)
-> >                       continue;
-> >
-> > -             x = ((buf[0] << 8) | buf[1]) & 0x0fff;
-> > -             y = ((buf[2] << 8) | buf[3]) & 0x0fff;
-> > +             x = get_unaligned_be16(buf) & 0x0fff;
-> > +             y = get_unaligned_be16(buf + 2) & 0x0fff;
->
-> You might as well delete the pointless masking with 0xff.
+On Tue, Jun 25, 2019 at 08:26:29AM +0000, Parshuram Raju Thombare wrote:
+> Hi Andrew,
+> 
+> >What i'm saying is that the USXGMII rate is fixed. So why do you need a device
+> >tree property for the SERDES rate?
+> This is based on Cisco USXGMII specification, it specify USXGMII 5G and USXGMII 10G.
+> Sorry I can't share that document here.
 
-Hmm... Does it guarantee the most significant nibble to be always 0?
-(Note 16-bit value and three f:s in the mask)
+The closed nature of the USXGMII spec makes it very hard for us to know
+whether your implementation is correct or not.
 
+I have some documentation which suggests that USVGMII is a USXGMII link
+running at "5GR" rate as opposed to USXGMII running at "10GR" rate.
+
+So, I think 5G mode should be left out until it becomes clear that (a)
+we should specify it as USXGMII with a 5G rate, or as USVGMII.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
