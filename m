@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD50C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFFEC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB8C208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC36208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="AHkej/B1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="dsz03gRN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731811AbfFYQfM (ORCPT
+        id S1731725AbfFYQfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:35:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32782 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731640AbfFYQfI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 12:35:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so18683196wru.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:35:07 -0700 (PDT)
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35789 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731422AbfFYQfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 12:35:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c6so3660153wml.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ga+YwIrD2LqYZ2tJvuqiZTtIXkFbIASL3x6BxdYUV7E=;
-        b=AHkej/B1mfm2h6OHO9LRjul+QcnubPRDTF056QLWkadd6YmPrnjIQ0undO3cGCLteJ
-         vDiXd6NaEvKkuA/Ov1EU6GibR2fq54JcogmaTLJSE1w8VxFhBCKMQa6nMSc7ama2AQUQ
-         MXjYRzIQXao10HPHfkljNhFskfJ1miN0PiAO2WXQdrS+ZTVMirEH1Q6Xpg47b+c9njcv
-         +AACxr8d7oedC2TVbLqVhCM7LVV6mcxDlsoJqTfbUea3qLJwtE8gHdguCFLj0gCiAbWC
-         v37fEvz+TIlhi8gACKPDc1wJUhIQBhzZpszZhnPvYhMiEv2bxIIzjLBufGN9GEE3sxzT
-         cfTA==
+        bh=xjvgqiqZzglCEryM8XBbJiMmioEThPc/Ew98mkOW+30=;
+        b=dsz03gRN+B8sj18/khuc/IOGJ4ZAac3MpDKb3Zv/Bc9PoYBZsScWcIBR66+WT13q4A
+         tN8EW3Vfjzl0srOYa1HtJEj4YWDxKeLJeFxcOpAU1yqzULbgKdw7lI1k9uJYS2TLwLfq
+         nJu10QxZk+xzeoc8TdS7m0YAZ+oQffTcRYbFO9YXz55433gHQs5zlWTN1V3cyKJa1Q2A
+         iPJuT54NssEe53FbS36r8nVdcdRnBqTyep+QMieQHsg6JfL23Iqv4l0ggpRn13oHMR0p
+         AZG9QARW/pNBZ52Cg4cBykzft5A+BRios2hbeleUvawVzlsiZYnAcBm99WZBoCSgvzcU
+         PqsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ga+YwIrD2LqYZ2tJvuqiZTtIXkFbIASL3x6BxdYUV7E=;
-        b=UT08yQ/5+vz5laaT4OYPNDAQn/BQt+HCC5ze4ApbUmmqWJEY1WspjCHlbWR4p5BAep
-         knvo2I8zAq+MrCO+nxPQDuFxN53Bm5y5Nmn7zGgk0iN1UxQCybIdL6M/MhL9ExlU/hGw
-         UWaRUYxq6hVuh6e9zOkoWfVJkerQxhZRwMPAy9YfIfAKHVIWTYarbkCAm8JxgAlq80aE
-         5rrH7U1Ra5RObslkQ0Ma/MvumcCqiiZKFHsZkAEaWj6qNHMqFZSfyY017Jx+46KtjdIm
-         eqFUkQ1PCEeYwiP3RBHCBELRZS9/Q1rpQolk6ib/yhfzdEmSPIicLaHs9sHJ/ONIZPDw
-         /ktg==
-X-Gm-Message-State: APjAAAWI5c1eH/uj+HbzTQDe9w1r1yoe6rZt+Xf5v0I+12qIfd8xHO5L
-        xEJKnTEbBhyohstb2DlIvtQ9kclR6mo=
-X-Google-Smtp-Source: APXvYqyvWx9JbKk03RcDjA3pShyMvYT0hK97AL2s1HrAwQ3kyP6xBm3hM8uqoOdedFI3inNXlGh+zw==
-X-Received: by 2002:a5d:528b:: with SMTP id c11mr299403wrv.25.1561480506602;
-        Tue, 25 Jun 2019 09:35:06 -0700 (PDT)
+        bh=xjvgqiqZzglCEryM8XBbJiMmioEThPc/Ew98mkOW+30=;
+        b=iT+U46MlGAfz/s6FyubSEAxjc6PPSdasOr4IK4snznW6yLTGBbkY03ziTK7ZgtCtAN
+         hjVH9zu+SyrTXDUUg5DuTYHraJUQeS7DmKvhqu/CViARpXs3qpJFvPyICboQsevhQUmp
+         AMLbWqkhiWVCZh9ZGZyqB3go5cUMelttLWQKoUrZ/72Q8m13xiNlWRi+tkNpQhBOroLL
+         Mky0lhsWpvDnoZHG69jADBylpyeCO9Ib7aeD8SAV+bgQ9NwM3z9HhSf8x+bw9AqnW853
+         TEtcOHwgjGKXmdk05FliKbARpNMozzIjwCjZmpRv9W3aVoovJ06NdANG0JSBJkFn/dmK
+         lR8g==
+X-Gm-Message-State: APjAAAW8bOr4C+D1Gz4kawXGNe8OyDMa30LCaOsrGnUjhFHiz6HdvAdt
+        s/FlI5qpNcvELB+HBZr2bm0gyw==
+X-Google-Smtp-Source: APXvYqz13wXYAnILJ9E9trPlEzD6Yeo7CCy/mNFNreUVqazy0miJn87+1vh+k2XQcsjx0bfSNxAnqA==
+X-Received: by 2002:a1c:c74a:: with SMTP id x71mr20501151wmf.121.1561480504153;
+        Tue, 25 Jun 2019 09:35:04 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id g8sm2683795wme.20.2019.06.25.09.35.05
+        by smtp.gmail.com with ESMTPSA id g8sm2683795wme.20.2019.06.25.09.35.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 09:35:06 -0700 (PDT)
+        Tue, 25 Jun 2019 09:35:03 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -67,9 +67,9 @@ To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 12/12] fbdev: da8xx: use resource management for dma
-Date:   Tue, 25 Jun 2019 18:34:34 +0200
-Message-Id: <20190625163434.13620-13-brgl@bgdev.pl>
+Subject: [PATCH 10/12] fbdev: da8xx-fb: use devm_platform_ioremap_resource()
+Date:   Tue, 25 Jun 2019 18:34:32 +0200
+Message-Id: <20190625163434.13620-11-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190625163434.13620-1-brgl@bgdev.pl>
 References: <20190625163434.13620-1-brgl@bgdev.pl>
@@ -82,92 +82,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Use managed variants of dma alloc functions in the da8xx fbdev driver.
+Shrink the code a bit by using the new helper wrapping the calls to
+platform_get_resource() and devm_ioremap_resource() together.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/video/fbdev/da8xx-fb.c | 32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
+ drivers/video/fbdev/da8xx-fb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/video/fbdev/da8xx-fb.c b/drivers/video/fbdev/da8xx-fb.c
-index 6b11a8108108..22f79b3c2326 100644
+index 328de29c4933..4dda194d6b8f 100644
 --- a/drivers/video/fbdev/da8xx-fb.c
 +++ b/drivers/video/fbdev/da8xx-fb.c
-@@ -1087,10 +1087,6 @@ static int fb_remove(struct platform_device *dev)
+@@ -1339,7 +1339,6 @@ static int fb_probe(struct platform_device *device)
+ {
+ 	struct da8xx_lcdc_platform_data *fb_pdata =
+ 						dev_get_platdata(&device->dev);
+-	struct resource *lcdc_regs;
+ 	struct lcd_ctrl_config *lcd_cfg;
+ 	struct fb_videomode *lcdc_info;
+ 	struct fb_info *da8xx_fb_info;
+@@ -1357,8 +1356,7 @@ static int fb_probe(struct platform_device *device)
+ 	if (lcdc_info == NULL)
+ 		return -ENODEV;
  
- 	unregister_framebuffer(info);
- 	fb_dealloc_cmap(&info->cmap);
--	dma_free_coherent(par->dev, PALETTE_SIZE, par->v_palette_base,
--			  par->p_palette_base);
--	dma_free_coherent(par->dev, par->vram_size, par->vram_virt,
--			  par->vram_phys);
- 	pm_runtime_put_sync(&dev->dev);
- 	pm_runtime_disable(&dev->dev);
- 	framebuffer_release(info);
-@@ -1428,10 +1424,10 @@ static int fb_probe(struct platform_device *device)
- 	par->vram_size = roundup(par->vram_size/8, ulcm);
- 	par->vram_size = par->vram_size * LCD_NUM_BUFFERS;
- 
--	par->vram_virt = dma_alloc_coherent(par->dev,
--					    par->vram_size,
--					    &par->vram_phys,
--					    GFP_KERNEL | GFP_DMA);
-+	par->vram_virt = dmam_alloc_coherent(par->dev,
-+					     par->vram_size,
-+					     &par->vram_phys,
-+					     GFP_KERNEL | GFP_DMA);
- 	if (!par->vram_virt) {
- 		dev_err(&device->dev,
- 			"GLCD: kmalloc for frame buffer failed\n");
-@@ -1449,20 +1445,20 @@ static int fb_probe(struct platform_device *device)
- 		da8xx_fb_fix.line_length - 1;
- 
- 	/* allocate palette buffer */
--	par->v_palette_base = dma_alloc_coherent(par->dev, PALETTE_SIZE,
--						 &par->p_palette_base,
--						 GFP_KERNEL | GFP_DMA);
-+	par->v_palette_base = dmam_alloc_coherent(par->dev, PALETTE_SIZE,
-+						  &par->p_palette_base,
-+						  GFP_KERNEL | GFP_DMA);
- 	if (!par->v_palette_base) {
- 		dev_err(&device->dev,
- 			"GLCD: kmalloc for palette buffer failed\n");
- 		ret = -EINVAL;
--		goto err_release_fb_mem;
-+		goto err_release_fb;
- 	}
- 
- 	par->irq = platform_get_irq(device, 0);
- 	if (par->irq < 0) {
- 		ret = -ENOENT;
--		goto err_release_pl_mem;
-+		goto err_release_fb;
- 	}
- 
- 	da8xx_fb_var.grayscale =
-@@ -1480,7 +1476,7 @@ static int fb_probe(struct platform_device *device)
- 
- 	ret = fb_alloc_cmap(&da8xx_fb_info->cmap, PALETTE_SIZE, 0);
- 	if (ret)
--		goto err_release_pl_mem;
-+		goto err_release_fb;
- 	da8xx_fb_info->cmap.len = par->palette_sz;
- 
- 	/* initialize var_screeninfo */
-@@ -1534,14 +1530,6 @@ static int fb_probe(struct platform_device *device)
- err_dealloc_cmap:
- 	fb_dealloc_cmap(&da8xx_fb_info->cmap);
- 
--err_release_pl_mem:
--	dma_free_coherent(par->dev, PALETTE_SIZE, par->v_palette_base,
--			  par->p_palette_base);
--
--err_release_fb_mem:
--	dma_free_coherent(par->dev, par->vram_size, par->vram_virt,
--		          par->vram_phys);
--
- err_release_fb:
- 	framebuffer_release(da8xx_fb_info);
+-	lcdc_regs = platform_get_resource(device, IORESOURCE_MEM, 0);
+-	da8xx_fb_reg_base = devm_ioremap_resource(&device->dev, lcdc_regs);
++	da8xx_fb_reg_base = devm_platform_ioremap_resource(device, 0);
+ 	if (IS_ERR(da8xx_fb_reg_base))
+ 		return PTR_ERR(da8xx_fb_reg_base);
  
 -- 
 2.21.0
