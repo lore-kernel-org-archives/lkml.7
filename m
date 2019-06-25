@@ -2,200 +2,99 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAEBC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B343CC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715BA214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96793214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfFYJlX (ORCPT
+        id S1729541AbfFYJls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:41:23 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:36710 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbfFYJlW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:41:22 -0400
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id B42B867A8C9;
-        Tue, 25 Jun 2019 11:41:16 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 25 Jun
- 2019 11:41:16 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Tue, 25 Jun 2019 11:41:16 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Jeff Kletsky <lede@allycomm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     Jeff Kletsky <git-commits@allycomm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v2] mtd: spinand: Add initial support for Paragon PN26G0xA
-Thread-Topic: [PATCH v2] mtd: spinand: Add initial support for Paragon
- PN26G0xA
-Thread-Index: AQHVJfhz1ShSN5acYE2KqnOsUXxJMqasBsuA
-Date:   Tue, 25 Jun 2019 09:41:16 +0000
-Message-ID: <d614767b-7787-b8c7-f8f0-5083e4922b93@kontron.de>
-References: <20190618170805.7187-1-lede@allycomm.com>
-In-Reply-To: <20190618170805.7187-1-lede@allycomm.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <586B7E0AE71D8441B0F46998E96636F8@snt-world.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: B42B867A8C9.A1104
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: computersforpeace@gmail.com, dwmw2@infradead.org,
-        git-commits@allycomm.com, lede@allycomm.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com
+        Tue, 25 Jun 2019 05:41:48 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52252 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726557AbfFYJls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:41:48 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AB1C8200EC5;
+        Tue, 25 Jun 2019 11:41:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 905922001B1;
+        Tue, 25 Jun 2019 11:41:38 +0200 (CEST)
+Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AF9284028F;
+        Tue, 25 Jun 2019 17:41:29 +0800 (SGT)
+From:   yibin.gong@nxp.com
+To:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org,
+        dan.j.williams@intel.com, angelo@sysam.it
+Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH v5 0/6] add edma2 for i.mx7ulp
+Date:   Tue, 25 Jun 2019 17:43:18 +0800
+Message-Id: <20190625094324.19196-1-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmVmZiwNCg0KT24gMTguMDYuMTkgMTk6MDgsIEplZmYgS2xldHNreSB3cm90ZToNCj4gRnJv
-bTogSmVmZiBLbGV0c2t5IDxnaXQtY29tbWl0c0BhbGx5Y29tbS5jb20+DQo+IA0KPiBBZGQgaW5p
-dGlhbCBzdXBwb3J0IGZvciBQYXJhZ29uIFRlY2hub2xvZ3kNCj4gUE4yNkcwMUF4eHh4eCBhbmQg
-UE4yNkcwMkF4eHh4eCBTUEkgTkFORA0KPiANCj4gRGF0YXNoZWV0cyBhdmFpbGFibGUgYXQNCj4g
-aHR0cDovL3d3dy54dHh0ZWNoLmNvbS91cGZpbGUvMjAxNjA4MjUxNzI3NDU5MC5wZGYNCj4gaHR0
-cDovL3d3dy54dHh0ZWNoLmNvbS91cGZpbGUvMjAxNjA4MjUxNzI4MjMyOS5wZGYNCj4gDQo+IFNp
-Z25lZC1vZmYtYnk6IEplZmYgS2xldHNreSA8Z2l0LWNvbW1pdHNAYWxseWNvbW0uY29tPg0KPiAt
-LS0NCg0KQ2FuIHlvdSBwbGVhc2UgYWRkIGEgY2hhbmdlbG9nIGhlcmUgd2l0aCBhIGxpc3Qgb2Yg
-dGhpbmdzIHRoYXQgY2hhbmdlZCANCmZyb20gdjEgdG8gdjI/DQoNClRoYW5rcywNCkZyaWVkZXIN
-Cg0KPiAgIGRyaXZlcnMvbXRkL25hbmQvc3BpL01ha2VmaWxlICB8ICAgMiArLQ0KPiAgIGRyaXZl
-cnMvbXRkL25hbmQvc3BpL2NvcmUuYyAgICB8ICAgMSArDQo+ICAgZHJpdmVycy9tdGQvbmFuZC9z
-cGkvcGFyYWdvbi5jIHwgMTQ3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAg
-IGluY2x1ZGUvbGludXgvbXRkL3NwaW5hbmQuaCAgICB8ICAgMSArDQo+ICAgNCBmaWxlcyBjaGFu
-Z2VkLCAxNTAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL210ZC9uYW5kL3NwaS9wYXJhZ29uLmMNCj4gDQo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL210ZC9uYW5kL3NwaS9NYWtlZmlsZSBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL01ha2Vm
-aWxlDQo+IGluZGV4IDc1MzEyNTA4MjY0MC4uOTY2MmI5YzFkNWE5IDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL210ZC9uYW5kL3NwaS9NYWtlZmlsZQ0KPiArKysgYi9kcml2ZXJzL210ZC9uYW5kL3Nw
-aS9NYWtlZmlsZQ0KPiBAQCAtMSwzICsxLDMgQEANCj4gICAjIFNQRFgtTGljZW5zZS1JZGVudGlm
-aWVyOiBHUEwtMi4wDQo+IC1zcGluYW5kLW9ianMgOj0gY29yZS5vIGdpZ2FkZXZpY2UubyBtYWNy
-b25peC5vIG1pY3Jvbi5vIHRvc2hpYmEubyB3aW5ib25kLm8NCj4gK3NwaW5hbmQtb2JqcyA6PSBj
-b3JlLm8gZ2lnYWRldmljZS5vIG1hY3Jvbml4Lm8gbWljcm9uLm8gcGFyYWdvbi5vIHRvc2hpYmEu
-byB3aW5ib25kLm8NCj4gICBvYmotJChDT05GSUdfTVREX1NQSV9OQU5EKSArPSBzcGluYW5kLm8N
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYyBiL2RyaXZlcnMvbXRk
-L25hbmQvc3BpL2NvcmUuYw0KPiBpbmRleCA1NTZiZmRiMzQ0NTUuLmYwZjM1MjhhYWI4ZiAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9zcGkvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMv
-bXRkL25hbmQvc3BpL2NvcmUuYw0KPiBAQCAtNzU3LDYgKzc1Nyw3IEBAIHN0YXRpYyBjb25zdCBz
-dHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgKnNwaW5hbmRfbWFudWZhY3R1cmVyc1tdID0gew0K
-PiAgIAkmZ2lnYWRldmljZV9zcGluYW5kX21hbnVmYWN0dXJlciwNCj4gICAJJm1hY3Jvbml4X3Nw
-aW5hbmRfbWFudWZhY3R1cmVyLA0KPiAgIAkmbWljcm9uX3NwaW5hbmRfbWFudWZhY3R1cmVyLA0K
-PiArCSZwYXJhZ29uX3NwaW5hbmRfbWFudWZhY3R1cmVyLA0KPiAgIAkmdG9zaGliYV9zcGluYW5k
-X21hbnVmYWN0dXJlciwNCj4gICAJJndpbmJvbmRfc3BpbmFuZF9tYW51ZmFjdHVyZXIsDQo+ICAg
-fTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvc3BpL3BhcmFnb24uYyBiL2RyaXZl
-cnMvbXRkL25hbmQvc3BpL3BhcmFnb24uYw0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRl
-eCAwMDAwMDAwMDAwMDAuLjUyMzA3NjgxY2JkMA0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2Ry
-aXZlcnMvbXRkL25hbmQvc3BpL3BhcmFnb24uYw0KPiBAQCAtMCwwICsxLDE0NyBAQA0KPiArLy8g
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKy8qDQo+ICsgKiBDb3B5cmlnaHQg
-KEMpIDIwMTkgSmVmZiBLbGV0c2t5DQo+ICsgKg0KPiArICogQXV0aG9yOiBKZWZmIEtsZXRza3kg
-PGdpdC1jb21taXRzQGFsbHljb21tLmNvbT4NCj4gKyAqLw0KPiArDQo+ICsjaW5jbHVkZSA8bGlu
-dXgvZGV2aWNlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ICsjaW5jbHVkZSA8
-bGludXgvbXRkL3NwaW5hbmQuaD4NCj4gKw0KPiArDQo+ICsjZGVmaW5lIFNQSU5BTkRfTUZSX1BB
-UkFHT04JMHhhMQ0KPiArDQo+ICsNCj4gKyNkZWZpbmUgUE4yNkcwWEFfU1RBVFVTX0VDQ19CSVRN
-QVNLCQkoMyA8PCA0KQ0KPiArDQo+ICsjZGVmaW5lIFBOMjZHMFhBX1NUQVRVU19FQ0NfTk9ORV9E
-RVRFQ1RFRAkoMCA8PCA0KQ0KPiArI2RlZmluZSBQTjI2RzBYQV9TVEFUVVNfRUNDXzFfN19DT1JS
-RUNURUQJKDEgPDwgNCkNCj4gKyNkZWZpbmUgUE4yNkcwWEFfU1RBVFVTX0VDQ19FUlJPUkVECQko
-MiA8PCA0KQ0KPiArI2RlZmluZSBQTjI2RzBYQV9TVEFUVVNfRUNDXzhfQ09SUkVDVEVECQkoMyA8
-PCA0KQ0KPiArDQo+ICsNCj4gK3N0YXRpYyBTUElOQU5EX09QX1ZBUklBTlRTKHJlYWRfY2FjaGVf
-dmFyaWFudHMsDQo+ICsJCVNQSU5BTkRfUEFHRV9SRUFEX0ZST01fQ0FDSEVfUVVBRElPX09QKDAs
-IDIsIE5VTEwsIDApLA0KPiArCQlTUElOQU5EX1BBR0VfUkVBRF9GUk9NX0NBQ0hFX1g0X09QKDAs
-IDEsIE5VTEwsIDApLA0KPiArCQlTUElOQU5EX1BBR0VfUkVBRF9GUk9NX0NBQ0hFX0RVQUxJT19P
-UCgwLCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9YMl9P
-UCgwLCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9PUCh0
-cnVlLCAwLCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9P
-UChmYWxzZSwgMCwgMSwgTlVMTCwgMCkpOw0KPiArDQo+ICtzdGF0aWMgU1BJTkFORF9PUF9WQVJJ
-QU5UUyh3cml0ZV9jYWNoZV92YXJpYW50cywNCj4gKwkJU1BJTkFORF9QUk9HX0xPQURfWDQodHJ1
-ZSwgMCwgTlVMTCwgMCksDQo+ICsJCVNQSU5BTkRfUFJPR19MT0FEKHRydWUsIDAsIE5VTEwsIDAp
-KTsNCj4gKw0KPiArc3RhdGljIFNQSU5BTkRfT1BfVkFSSUFOVFModXBkYXRlX2NhY2hlX3Zhcmlh
-bnRzLA0KPiArCQlTUElOQU5EX1BST0dfTE9BRF9YNChmYWxzZSwgMCwgTlVMTCwgMCksDQo+ICsJ
-CVNQSU5BTkRfUFJPR19MT0FEKGZhbHNlLCAwLCBOVUxMLCAwKSk7DQo+ICsNCj4gKw0KPiArc3Rh
-dGljIGludCBwbjI2ZzB4YV9vb2JsYXlvdXRfZWNjKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBpbnQg
-c2VjdGlvbiwNCj4gKwkJCQkgICBzdHJ1Y3QgbXRkX29vYl9yZWdpb24gKnJlZ2lvbikNCj4gK3sN
-Cj4gKwlpZiAoc2VjdGlvbiA+IDMpDQo+ICsJCXJldHVybiAtRVJBTkdFOw0KPiArDQo+ICsJcmVn
-aW9uLT5vZmZzZXQgPSA2ICsgKDE1ICogc2VjdGlvbik7IC8qIDQgQkJNICsgMiB1c2VyIGJ5dGVz
-ICovDQo+ICsJcmVnaW9uLT5sZW5ndGggPSAxMzsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0K
-PiArDQo+ICtzdGF0aWMgaW50IHBuMjZnMHhhX29vYmxheW91dF9mcmVlKHN0cnVjdCBtdGRfaW5m
-byAqbXRkLCBpbnQgc2VjdGlvbiwNCj4gKwkJCQkgICBzdHJ1Y3QgbXRkX29vYl9yZWdpb24gKnJl
-Z2lvbikNCj4gK3sNCj4gKwlpZiAoc2VjdGlvbiA+IDQpDQo+ICsJCXJldHVybiAtRVJBTkdFOw0K
-PiArDQo+ICsJaWYgKHNlY3Rpb24gPT0gNCkgew0KPiArCQlyZWdpb24tPm9mZnNldCA9IDY0Ow0K
-PiArCQlyZWdpb24tPmxlbmd0aCA9IDY0Ow0KPiArCX0gZWxzZSB7DQo+ICsJCXJlZ2lvbi0+b2Zm
-c2V0ID0gNCArICgxNSAqIHNlY3Rpb24pOw0KPiArCQlyZWdpb24tPmxlbmd0aCA9IDI7DQo+ICsJ
-fQ0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgcG4yNmcweGFf
-ZWNjX2dldF9zdGF0dXMoc3RydWN0IHNwaW5hbmRfZGV2aWNlICpzcGluYW5kLA0KPiArCQkJCSAg
-IHU4IHN0YXR1cykNCj4gK3sNCj4gKwlzd2l0Y2ggKHN0YXR1cyAmIFBOMjZHMFhBX1NUQVRVU19F
-Q0NfQklUTUFTSykgew0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ19OT05FX0RFVEVDVEVE
-Og0KPiArCQlyZXR1cm4gMDsNCj4gKw0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ18xXzdf
-Q09SUkVDVEVEOg0KPiArCQlyZXR1cm4gNzsJLyogUmV0dXJuIHVwcGVyIGxpbWl0IGJ5IGNvbnZl
-bnRpb24gKi8NCj4gKw0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ184X0NPUlJFQ1RFRDoN
-Cj4gKwkJcmV0dXJuIDg7DQo+ICsNCj4gKwljYXNlIFBOMjZHMFhBX1NUQVRVU19FQ0NfRVJST1JF
-RDoNCj4gKwkJcmV0dXJuIC1FQkFETVNHOw0KPiArDQo+ICsJZGVmYXVsdDoNCj4gKwkJYnJlYWs7
-DQo+ICsJfQ0KPiArDQo+ICsJcmV0dXJuIC1FSU5WQUw7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgbXRkX29vYmxheW91dF9vcHMgcG4yNmcweGFfb29ibGF5b3V0ID0gew0KPiAr
-CS5lY2MgPSBwbjI2ZzB4YV9vb2JsYXlvdXRfZWNjLA0KPiArCS5mcmVlID0gcG4yNmcweGFfb29i
-bGF5b3V0X2ZyZWUsDQo+ICt9Ow0KPiArDQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3Bp
-bmFuZF9pbmZvIHBhcmFnb25fc3BpbmFuZF90YWJsZVtdID0gew0KPiArCVNQSU5BTkRfSU5GTygi
-UE4yNkcwMUEiLCAweGUxLA0KPiArCQkgICAgIE5BTkRfTUVNT1JHKDEsIDIwNDgsIDEyOCwgNjQs
-IDEwMjQsIDIxLCAxLCAxLCAxKSwNCj4gKwkJICAgICBOQU5EX0VDQ1JFUSg4LCA1MTIpLA0KPiAr
-CQkgICAgIFNQSU5BTkRfSU5GT19PUF9WQVJJQU5UUygmcmVhZF9jYWNoZV92YXJpYW50cywNCj4g
-KwkJCQkJICAgICAgJndyaXRlX2NhY2hlX3ZhcmlhbnRzLA0KPiArCQkJCQkgICAgICAmdXBkYXRl
-X2NhY2hlX3ZhcmlhbnRzKSwNCj4gKwkJICAgICAwLA0KPiArCQkgICAgIFNQSU5BTkRfRUNDSU5G
-TygmcG4yNmcweGFfb29ibGF5b3V0LA0KPiArCQkJCSAgICAgcG4yNmcweGFfZWNjX2dldF9zdGF0
-dXMpKSwNCj4gKwlTUElOQU5EX0lORk8oIlBOMjZHMDJBIiwgMHhlMiwNCj4gKwkJICAgICBOQU5E
-X01FTU9SRygxLCAyMDQ4LCAxMjgsIDY0LCAyMDQ4LCA0MSwgMSwgMSwgMSksDQo+ICsJCSAgICAg
-TkFORF9FQ0NSRVEoOCwgNTEyKSwNCj4gKwkJICAgICBTUElOQU5EX0lORk9fT1BfVkFSSUFOVFMo
-JnJlYWRfY2FjaGVfdmFyaWFudHMsDQo+ICsJCQkJCSAgICAgICZ3cml0ZV9jYWNoZV92YXJpYW50
-cywNCj4gKwkJCQkJICAgICAgJnVwZGF0ZV9jYWNoZV92YXJpYW50cyksDQo+ICsJCSAgICAgMCwN
-Cj4gKwkJICAgICBTUElOQU5EX0VDQ0lORk8oJnBuMjZnMHhhX29vYmxheW91dCwNCj4gKwkJCQkg
-ICAgIHBuMjZnMHhhX2VjY19nZXRfc3RhdHVzKSksDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgaW50
-IHBhcmFnb25fc3BpbmFuZF9kZXRlY3Qoc3RydWN0IHNwaW5hbmRfZGV2aWNlICpzcGluYW5kKQ0K
-PiArew0KPiArCXU4ICppZCA9IHNwaW5hbmQtPmlkLmRhdGE7DQo+ICsJaW50IHJldDsNCj4gKw0K
-PiArCS8qIFJlYWQgSUQgcmV0dXJucyBbMF1bTUlEXVtESURdICovDQo+ICsNCj4gKwlpZiAoaWRb
-MV0gIT0gU1BJTkFORF9NRlJfUEFSQUdPTikNCj4gKwkJcmV0dXJuIDA7DQo+ICsNCj4gKwlyZXQg
-PSBzcGluYW5kX21hdGNoX2FuZF9pbml0KHNwaW5hbmQsIHBhcmFnb25fc3BpbmFuZF90YWJsZSwN
-Cj4gKwkJCQkgICAgIEFSUkFZX1NJWkUocGFyYWdvbl9zcGluYW5kX3RhYmxlKSwNCj4gKwkJCQkg
-ICAgIGlkWzJdKTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJcmV0
-dXJuIDE7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFj
-dHVyZXJfb3BzIHBhcmFnb25fc3BpbmFuZF9tYW51Zl9vcHMgPSB7DQo+ICsJLmRldGVjdCA9IHBh
-cmFnb25fc3BpbmFuZF9kZXRlY3QsDQo+ICt9Ow0KPiArDQo+ICtjb25zdCBzdHJ1Y3Qgc3BpbmFu
-ZF9tYW51ZmFjdHVyZXIgcGFyYWdvbl9zcGluYW5kX21hbnVmYWN0dXJlciA9IHsNCj4gKwkuaWQg
-PSBTUElOQU5EX01GUl9QQVJBR09OLA0KPiArCS5uYW1lID0gIlBhcmFnb24iLA0KPiArCS5vcHMg
-PSAmcGFyYWdvbl9zcGluYW5kX21hbnVmX29wcywNCj4gK307DQo+IGRpZmYgLS1naXQgYS9pbmNs
-dWRlL2xpbnV4L210ZC9zcGluYW5kLmggYi9pbmNsdWRlL2xpbnV4L210ZC9zcGluYW5kLmgNCj4g
-aW5kZXggZmJjMDQyM2JiNGFlLi40ZWE1NThiZDNjNDYgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUv
-bGludXgvbXRkL3NwaW5hbmQuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L210ZC9zcGluYW5kLmgN
-Cj4gQEAgLTIyNyw2ICsyMjcsNyBAQCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgew0KPiAg
-IGV4dGVybiBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgZ2lnYWRldmljZV9zcGlu
-YW5kX21hbnVmYWN0dXJlcjsNCj4gICBleHRlcm4gY29uc3Qgc3RydWN0IHNwaW5hbmRfbWFudWZh
-Y3R1cmVyIG1hY3Jvbml4X3NwaW5hbmRfbWFudWZhY3R1cmVyOw0KPiAgIGV4dGVybiBjb25zdCBz
-dHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgbWljcm9uX3NwaW5hbmRfbWFudWZhY3R1cmVyOw0K
-PiArZXh0ZXJuIGNvbnN0IHN0cnVjdCBzcGluYW5kX21hbnVmYWN0dXJlciBwYXJhZ29uX3NwaW5h
-bmRfbWFudWZhY3R1cmVyOw0KPiAgIGV4dGVybiBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFj
-dHVyZXIgdG9zaGliYV9zcGluYW5kX21hbnVmYWN0dXJlcjsNCj4gICBleHRlcm4gY29uc3Qgc3Ry
-dWN0IHNwaW5hbmRfbWFudWZhY3R1cmVyIHdpbmJvbmRfc3BpbmFuZF9tYW51ZmFjdHVyZXI7DQo+
-ICAgDQo+IA==
+From: Robin Gong <yibin.gong@nxp.com>
+
+This patch set add new version of edma for i.mx7ulp, the main changes
+are as belows:
+ 1. only one dmamux.
+ 2. another clock dma_clk except dmamux clk.
+ 3. 16 independent interrupts instead of only one interrupt for
+    all channels
+For the first change, need modify fsl-edma-common.c and mcf-edma,
+so create the first two patches to prepare without any function impact.
+
+For the third change, need request single irq for every channel with
+the legacy handler. But actually 2 dma channels share one interrupt(16
+channel interrupts, but 32 channels.),ch0/ch16,ch1/ch17... For now, just
+simply request irq without IRQF_SHARED flag, since 16 channels are enough
+on i.mx7ulp whose M4 domain own some peripherals.
+
+change from v1:
+  1. check .data of 'of_device_id' in probe instead of compatible name.
+
+change from v2:
+  1. move the difference between edma and edma2 into driver data so that
+     no need version checking in fsl-edma.c.
+
+change from v3:
+  1. remove duplicated 'version' and 'dmamux_nr' in 'struct fsl_edma_engine'
+     since they are included in drvdata already.
+  2. downgrade print log level.
+  3. address some minor indent issues raised by Vinod.
+
+change from v4:
+  1. correct typo.
+
+Robin Gong (6):
+  dmaengine: fsl-edma: add drvdata for fsl-edma
+  dmaengine: fsl-edma-common: move dmamux register to another single
+    function
+  dmaengine: fsl-edma-common: version check for v2 instead
+  dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
+  dmaengine: fsl-edma: add i.mx7ulp edma2 version support
+  ARM: dts: imx7ulp: add edma device node
+
+ Documentation/devicetree/bindings/dma/fsl-edma.txt |  44 ++++++++-
+ arch/arm/boot/dts/imx7ulp.dtsi                     |  28 ++++++
+ drivers/dma/fsl-edma-common.c                      |  83 ++++++++++------
+ drivers/dma/fsl-edma-common.h                      |  14 ++-
+ drivers/dma/fsl-edma.c                             | 109 ++++++++++++++++++---
+ drivers/dma/mcf-edma.c                             |  11 ++-
+ 6 files changed, 239 insertions(+), 50 deletions(-)
+
+-- 
+2.7.4
+
