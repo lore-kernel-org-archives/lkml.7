@@ -2,89 +2,100 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A10C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE90FC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1C320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="J67zsiZK"
+	by mail.kernel.org (Postfix) with ESMTP id AEF3320644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729805AbfFYAyg (ORCPT
+        id S1729926AbfFYBAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:54:36 -0400
-Received: from onstation.org ([52.200.56.107]:41140 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbfFYAyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:54:35 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id A00813E887;
-        Tue, 25 Jun 2019 00:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1561424074;
-        bh=NAsqoWlx9/9+qIbcDabDQ+UDTfGjudulT8Oo+0tXCvI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J67zsiZKAXiJjMre2OBNUybwldCs6aHDQu+0Uc5xcrTIpQqFMWbseSzKviZxKCURf
-         KMYBHfiLrmpiLewUuLb54QaC7RHQFJji02lCaoufk0f5kK4C000ng3rjY8L8Po7Rqh
-         LY0DG6uvzPOcXnhmM3qX/7ItJN2H0sNHPEgmANbE=
-Date:   Mon, 24 Jun 2019 20:54:34 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device
- tree bindings for vibrator
-Message-ID: <20190625005434.GA6401@onstation.org>
-References: <20190516085018.2207-1-masneyb@onstation.org>
- <20190520142149.D56DA214AE@mail.kernel.org>
- <CACRpkdZxu1LfK11OHEx5L_4kyjMZ7qERpvDzFj5u3Pk2kD1qRA@mail.gmail.com>
- <20190529101231.GA14540@basecamp>
- <CACRpkdY-TcF7rizbPz=UcHrFvDgPJD68vbovNdcWP-aBYppp=g@mail.gmail.com>
- <20190623105332.GA25506@onstation.org>
- <CACRpkdYTaM+sBs-bhaXVtAwFtp6+_PWWJ_k9jobd7qB41HubDg@mail.gmail.com>
+        Mon, 24 Jun 2019 21:00:53 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:45179 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729336AbfFYBAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 21:00:52 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08014652|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.238094-0.0170177-0.744888;FP=0|0|0|0|0|-1|-1|-1;HT=e01l01425;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.Epjbx14_1561424445;
+Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.Epjbx14_1561424445)
+          by smtp.aliyun-inc.com(10.147.42.135);
+          Tue, 25 Jun 2019 09:00:46 +0800
+Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Peter Pan <peterpandong@micron.com>,
+        Chuanhong Guo <gch981213@gmail.com>
+Cc:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <1561378534-26119-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <f86e6750-6b4f-daf7-3f0c-1c5e63b5b95d@kontron.de>
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+Message-ID: <049081eb-355e-6671-310c-3083cbdb0abc@allwinnertech.com>
+Date:   Tue, 25 Jun 2019 09:00:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYTaM+sBs-bhaXVtAwFtp6+_PWWJ_k9jobd7qB41HubDg@mail.gmail.com>
+In-Reply-To: <f86e6750-6b4f-daf7-3f0c-1c5e63b5b95d@kontron.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:29:29AM +0200, Linus Walleij wrote:
-> On Sun, Jun 23, 2019 at 12:53 PM Brian Masney <masneyb@onstation.org> wrote:
-> 
-> > 2) Do what Linus suggests above. We can use v1 of this series from last
-> >    September (see below for link) that adds this to the pwm subsystem.
-> >    The locking would need to be added so that it won't conflict with the
-> >    clk subsystem. This can be tied into the input subsystem with the
-> >    existing pwm-vibra driver.
-> 
-> What I imagined was that the clk driver would double as a pwm driver.
-> Just register both interfaces.
-> 
-> There are already plenty of combines clk+reset drivers for example.
-> 
-> Otherwise I'm all for this approach (but that's just me).
+Um.. I am sorry. It is the first time for me to resend patch.
+I will send this patch again with correct tags.
 
-I agree that this makes sense. I especially like that it'll allow us
-to use the existing pwm-vibra driver in the input subsystem with this
-approach.
+On 2019/6/24 PM10:47, Schrempf Frieder wrote:
+> On 24.06.19 14:15, liaoweixiong wrote:
+>> In case of the last page containing bitflips (ret > 0),
+>> spinand_mtd_read() will return that number of bitflips for the last
+>> page. But to me it looks like it should instead return max_bitflips like
+>> it does when the last page read returns with 0.
+>>
+>> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+>> Acked-by: Boris Brezillon <boris.brezillon@collabora.com>
+>> Acked-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> Why did you change our Reviewed-by tags to Acked-by tags?
+> 
+>> Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
+>> ---
+>>   drivers/mtd/nand/spi/core.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+>> index 556bfdb..6b9388d 100644
+>> --- a/drivers/mtd/nand/spi/core.c
+>> +++ b/drivers/mtd/nand/spi/core.c
+>> @@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
+>>   		if (ret == -EBADMSG) {
+>>   			ecc_failed = true;
+>>   			mtd->ecc_stats.failed++;
+>> -			ret = 0;
+>>   		} else {
+>>   			mtd->ecc_stats.corrected += ret;
+>>   			max_bitflips = max_t(unsigned int, max_bitflips, ret);
+>>   		}
+>>   
+>> +		ret = 0;
+>>   		ops->retlen += iter.req.datalen;
+>>   		ops->oobretlen += iter.req.ooblen;
+>>   	}
 
-Brian
+-- 
+liaoweixiong
