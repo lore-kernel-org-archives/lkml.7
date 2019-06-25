@@ -2,110 +2,141 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D811EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8289C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBA72086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781102086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561503743;
-	bh=82RyR5pFqn05vyyNq4lzd/5m52MIeTMNFiRkCRUTQV0=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=Uh2PKErUz7igw/arD048xA65hKhmhB79khc9Ul2XArJMk5/wzIl00nHEJz/ctWKPT
-	 h2MDAP+8wROaJz9M5id1BhOMTMumVsZ+xJkFESzCcmIJ/SZefOHvgxoz5OmXGGYTDQ
-	 6OnYuNt9lpE1DmSV1hk5dMCCSTRqWuMf1HCmkY98=
+	s=default; t=1561503778;
+	bh=u8QGBQLBLPcy9EWlTj/ulmaIyseHUfCZBcKU4y2ppXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j38htOW0Zb3LkrA03ULfQ3OOgTZPgMIsu/If7PG+7eT320V7G2pMNk3Zsr6UdDlhv
+	 4xqmX+U4FU1gL7ALkJrt6EQf4dvSclPZMffFJuV4tCf8Y4qU08rFu8xg6zNKivMTxN
+	 bqfZ3VshJzBhAhMkuUEsb/isxPBcMfOD1C2n5lag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfFYXCW (ORCPT
+        id S1726463AbfFYXC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFYXCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:02:22 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1C772084B;
-        Tue, 25 Jun 2019 23:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561503741;
-        bh=82RyR5pFqn05vyyNq4lzd/5m52MIeTMNFiRkCRUTQV0=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=VxhOM3T0rDZQLYc6U+By4eyc5T1Fg6CRnnOjooSqYTLKhmT0WzIfRkbcCbpHuNkUd
-         SfdZrjYkzhyLLpm9MxCLhuxO6J1ugyIMAFleGIH7ckoKy9+stTLZIYRJk83AxLdGaZ
-         xithUTuimVB8qjTsllcRV1+jXFeDlIjceJxL68DU=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 25 Jun 2019 19:02:57 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42763 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFYXC4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:02:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k13so165620pgq.9;
+        Tue, 25 Jun 2019 16:02:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IAVXlfOigyJbEa5HhE6BwBcpEncScOxFXJXYNv1k45k=;
+        b=fkL5OZuDVWkej5ZG4VatI21hHWlzGJXK0Si9AQAW9zoGDwMiyZEPuYRirz3Q0aByJu
+         9VSHMOkGBUWW+0XoBoEXFmw+r8dtWGNTMbrgcKs5Y6TE4ftvqTFwaaqA+U2WFhJQIFlw
+         4KKH74x4Ywbb000a83LtPoyMHZ5lCRuW/S7lvrp3MQNb3camzLJIdH0ezPRKVp/yWlMv
+         3/Q1tmNtE2UScpSpGJSN7CWBf4L/z22TrszMAenhqm81+BrbizGlhy6Mq2867Dogh+6s
+         QTfxli/sBvaR+SMxqvkCI0RltTgT8RpA3KvJKAQJ31dHl2que9hlT0apwrDNqHfDlHEN
+         pogA==
+X-Gm-Message-State: APjAAAUEy5rjIl2ApPQlP2hKVqp/KAyOmZgVXhTaR1V8Qxen5rTjMWmm
+        DtEyG+GK0eMtcjV02R/Fmj4=
+X-Google-Smtp-Source: APXvYqzZBw/dqZhBTNHNMDfHye5/2eZRaAS1PSupftYRQhWIaCqeSFUapN9xTbqyZVwDxqRVbGqHHQ==
+X-Received: by 2002:a17:90a:ac13:: with SMTP id o19mr354796pjq.143.1561503775428;
+        Tue, 25 Jun 2019 16:02:55 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id r1sm92074pji.15.2019.06.25.16.02.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 16:02:54 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 64827401EB; Tue, 25 Jun 2019 23:02:53 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 23:02:53 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Message-ID: <20190625230253.GQ19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com>
+ <20190620001526.93426218BE@mail.kernel.org>
+ <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
+ <20190625214427.GN19023@42.do-not-panic.com>
+ <CAFd5g47OABqN127cPKqoCOA_Wr9w=LFh_0XkF7LXu2iY9sFkSw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <d8b20179-45ef-479a-47dc-390a4a2dfddf@i2se.com>
-References: <20190612182500.4097-1-nsaenzjulienne@suse.de> <6a9e1450-80ad-a13c-59d2-d0b39f25f67e@gmail.com> <7acfd967-0a82-5429-4eed-8b802e6620f5@i2se.com> <d8b20179-45ef-479a-47dc-390a4a2dfddf@i2se.com>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 0/7] cpufreq support for Raspberry Pi
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org, mbrugger@suse.de,
-        viresh.kumar@linaro.org, rjw@rjwysocki.net, eric@anholt.net,
-        bcm-kernel-feedback-list@broadcom.com, ptesarik@suse.com,
-        linux-rpi-kernel@lists.infradead.org, ssuloev@orpaltech.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 16:02:20 -0700
-Message-Id: <20190625230221.A1C772084B@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g47OABqN127cPKqoCOA_Wr9w=LFh_0XkF7LXu2iY9sFkSw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stefan Wahren (2019-06-22 02:54:47)
-> Hi Stephen,
-> hi Mike,
->=20
-> Am 13.06.19 um 06:31 schrieb Stefan Wahren:
-> > Hi Florian,
-> > hi Stephen,
-> >
-> > Am 13.06.19 um 05:31 schrieb Florian Fainelli:
-> >> On 6/12/2019 11:24 AM, Nicolas Saenz Julienne wrote:
-> >>> Hi all,
-> >>> this aims at adding cpufreq support to the Raspberry Pi family of
-> >>> boards.
-> >>>
-> >>> The series first factors out 'pllb' from clk-bcm2385 and creates a new
-> >>> clk driver that operates it over RPi's firmware interface[1]. We are
-> >>> forced to do so as the firmware 'owns' the pll and we're not allowed =
-to
-> >>> change through the register interface directly as we might race with =
-the
-> >>> over-temperature and under-voltage protections provided by the firmwa=
-re.
-> >>>
-> >>> Next it creates a minimal cpufreq driver that populates the CPU's opp
-> >>> table, and registers cpufreq-dt. Which is needed as the firmware
-> >>> controls the max and min frequencies available.
-> >>>
-> >>> This was tested on a RPi3b+ and RPI2b, both using multi_v7_defconfig =
-and
-> >>> arm64's defconfig.
-> >> How do we go about merging this? Stefan, will you pick up patch 3, 6 a=
-nd
-> >> 7 and submit them for 5.3/5.4? Viresh has already picked up patch 4.
-> > is it possible to let patches 1,2, 3 and 5 go via clk-tree?
-> >
-> > I would take care of 6 and 7.
-> >
-> > Stefan
-> are you fine with the series, since Viresh already picked up patch 4?
->=20
-> are you okay with my suggestion above?
->=20
+On Tue, Jun 25, 2019 at 03:14:45PM -0700, Brendan Higgins wrote:
+> On Tue, Jun 25, 2019 at 2:44 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > Since its a new architecture and since you seem to imply most tests
+> > don't require locking or even IRQs disabled, I think its worth to
+> > consider the impact of adding such extreme locking requirements for
+> > an initial ramp up.
+> 
+> Fair enough, I can see the point of not wanting to use irq disabled
+> until we get someone complaining about it, but I think making it
+> thread safe is reasonable. It means there is one less thing to confuse
+> a KUnit user and the only penalty paid is some very minor performance.
 
-Oh I missed this. I can apply the clk patches most likely assuming it
-doesn't break anything bisection-wise.
+One reason I'm really excited about kunit is speed... so by all means I
+think we're at a good point to analyze performance optimizationsm if
+they do make sense.
 
+While on the topic of parallization, what about support for running
+different test cases in parallel? Or at the very least different kunit
+modules in parallel.  Few questions come up based on this prospect:
+
+  * Why not support parallelism from the start?
+  * Are you opposed to eventually having this added? For instance, there is
+    enough code on lib/test_kmod.c for batching tons of kthreads each
+    one running its own thing for testing purposes which could be used
+    as template.
+  * If we eventually *did* support it:
+    - Would logs be skewed?
+    - Could we have a way to query: give me log for only kunit module
+      named "foo"?
+
+  Luis
