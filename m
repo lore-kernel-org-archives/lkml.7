@@ -2,102 +2,134 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CB5C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EA0C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5F0208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:30:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="VjItwXPk"
+	by mail.kernel.org (Postfix) with ESMTP id AE207208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfFYUah (ORCPT
+        id S1727034AbfFYUbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:30:37 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:36599 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfFYUah (ORCPT
+        Tue, 25 Jun 2019 16:31:17 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44578 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfFYUbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:30:37 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 65CCE886BF;
-        Wed, 26 Jun 2019 08:30:33 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1561494633;
-        bh=1kY+bwPF4p0YA079A5v673sAjTxOqECEQoGaHNKiN3s=;
-        h=From:To:CC:Subject:Date:References;
-        b=VjItwXPkxG2jYM8fucFA+6U+KKGhMJlV1pdLCHpbaf911rG7qGBsY0AB0hlpWYuia
-         GERmgX6YTcY7luDgnRBGjpfrtQ7DM0drgyzazpNM+oY3TQger5V1kQJe6qWlzsiLvt
-         eNVRPu/JO7KHxEDJ0DEk/PYNC08SVexa9tmgu0aJUvTjJ55RdLs2S6kaM6DcJxVuZk
-         OiJ5TE4tEbuDLpxPAafNDfPX4P4qEQ/aN1E26WVnWZXJP5UZHm4KmP9EIKysdHFf87
-         TG+9MrQ4gB+8YmT+zVWnLdCSBrrkP9kfuQ9bBHlslQK+vdHrAtafiqh4jVcudHu8jf
-         fdQywZbAJ2sXg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d1284690001>; Wed, 26 Jun 2019 08:30:33 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 26 Jun 2019 08:30:33 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Wed, 26 Jun 2019 08:30:33 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] pinctrl: mvebu: Add support for MV98DX1135
-Thread-Topic: [PATCH v2 3/4] pinctrl: mvebu: Add support for MV98DX1135
-Thread-Index: AQHVJVdQehuQXtWHL0SatF2H1kpYDA==
-Date:   Tue, 25 Jun 2019 20:30:33 +0000
-Message-ID: <f08d52a1c4864c6981f3631523965cf5@svr-chch-ex1.atlnz.lc>
-References: <20190617215458.32688-1-chris.packham@alliedtelesis.co.nz>
- <20190617215458.32688-4-chris.packham@alliedtelesis.co.nz>
- <CACRpkdbSS18us3o=v7ki_=8cLXYjfDd8q321xMCounXPh11GAQ@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Jun 2019 16:31:16 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so29009080edr.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:31:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ouCYZW6j2F9X9UEJz8UhFdPaz7qXxTi0skUGUYVPJg8=;
+        b=Rih6DhfVYzjSLN/jrAm1AEv9ZSVtPBLL3khJI+RiRZMkIOtbYCUEjaHWG6Jm1UMlC5
+         YQUl0CRX+aNXzBL3niHKFLWFhg23BlLVomNyEjHPyVdniu362EUfeXjno0mZwJDiykmL
+         crF3BF/uBdpq6YPmfnujq14wdIfypNsxyIsNYBXKO5ZPZwIg/CCf9feFEDLHQswSR9CX
+         VjOdzwpKjV13/cE1TKyYF8Aqk7UFHtY8S/qdyfjnPV6JaHjTzSp5CTjv1HxIT8bcGkcM
+         aPAxpZ+4ri/d9FR3A+s84bUqOVKOAWzhq5rHPryxm/LNdIz9kKUDD2i40ukZ2ZkRH/PR
+         tYkw==
+X-Gm-Message-State: APjAAAUy/hL+OoHV3rsefmrt07mJJwIqqjTklOyFw20kHoG9uuUZmHrQ
+        dc5h8QrWwyLsJW8QojfZv1HXhSuGau0=
+X-Google-Smtp-Source: APXvYqyL122t/uCNJpHnytCFoUf/GBY/eGn/znXIiwaj9GqmlBtdCqFtAzPv5mdjJZBYRas4njeaWg==
+X-Received: by 2002:aa7:c692:: with SMTP id n18mr486235edq.220.1561494674353;
+        Tue, 25 Jun 2019 13:31:14 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id g16sm5070792edc.76.2019.06.25.13.31.13
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 13:31:13 -0700 (PDT)
+Subject: Re: [PATCH v1] platform/x86: intel_int0002_vgpio: Get rid of custom
+ ICPU() macro
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190619145050.13876-1-andriy.shevchenko@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <bebb9c22-186d-8bd1-a12d-c97f22f2487a@redhat.com>
+Date:   Tue, 25 Jun 2019 22:31:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190619145050.13876-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/06/19 12:27 AM, Linus Walleij wrote:=0A=
-> On Mon, Jun 17, 2019 at 11:55 PM Chris Packham=0A=
-> <chris.packham@alliedtelesis.co.nz> wrote:=0A=
-> =0A=
->> The 98DX1135 is a switch chip with an integrated CPU. This is similar to=
-=0A=
->> the 98DX4122 except the MPP assignments differ.=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->> Reviewed-by: Andrew Lunn <andrew@lunn.ch>=0A=
-> =0A=
-> Patch applied.=0A=
-> I just assume this one has no dependency on the clock patches=0A=
-> so I can merge it separately.=0A=
-=0A=
-Correct. There's no dependency between the patches but they're all =0A=
-needed to successfully boot a board.=0A=
+Hi,
+
+On 19-06-19 16:50, Andy Shevchenko wrote:
+> Replace custom grown macro with generic INTEL_CPU_FAM6() one.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+> ---
+>   drivers/platform/x86/intel_int0002_vgpio.c | 22 +++++++---------------
+>   1 file changed, 7 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index 1694a9aec77c..d9542c661ddc 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -51,17 +51,6 @@
+>   #define GPE0A_STS_PORT			0x420
+>   #define GPE0A_EN_PORT			0x428
+>   
+> -#define BAYTRAIL			0x01
+> -#define CHERRYTRAIL			0x02
+> -
+> -#define ICPU(model, data) { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, data }
+> -
+> -static const struct x86_cpu_id int0002_cpu_ids[] = {
+> -	ICPU(INTEL_FAM6_ATOM_SILVERMONT, BAYTRAIL), /* Valleyview, Bay Trail  */
+> -	ICPU(INTEL_FAM6_ATOM_AIRMONT, CHERRYTRAIL), /* Braswell, Cherry Trail */
+> -	{}
+> -};
+> -
+>   /*
+>    * As this is not a real GPIO at all, but just a hack to model an event in
+>    * ACPI the get / set functions are dummy functions.
+> @@ -157,6 +146,12 @@ static struct irq_chip int0002_cht_irqchip = {
+>   	 */
+>   };
+>   
+> +static const struct x86_cpu_id int0002_cpu_ids[] = {
+> +	INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),	/* Valleyview, Bay Trail  */
+> +	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),	/* Braswell, Cherry Trail */
+> +	{}
+> +};
+> +
+>   static int int0002_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> @@ -210,10 +205,7 @@ static int int0002_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>   
+> -	if (cpu_id->driver_data == BAYTRAIL)
+> -		irq_chip = &int0002_byt_irqchip;
+> -	else
+> -		irq_chip = &int0002_cht_irqchip;
+> +	irq_chip = (struct irq_chip *)cpu_id->driver_data;
+>   
+>   	ret = gpiochip_irqchip_add(chip, irq_chip, 0, handle_edge_irq,
+>   				   IRQ_TYPE_NONE);
+> 
