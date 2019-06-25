@@ -2,89 +2,125 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9102C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFF9C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815732063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B276E2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g2V0fCvj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V6XaEGRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfFYNwZ (ORCPT
+        id S1727805AbfFYNwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:52:25 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44398 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfFYNwY (ORCPT
+        Tue, 25 Jun 2019 09:52:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37718 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfFYNwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:52:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r15so12660000lfm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 06:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1iPCXBWydY7xCYkvB8WzAfUNgl288BVJPxiE7eymZwc=;
-        b=g2V0fCvjO8+3g8khRYtLAnbQ17g4lqT6qVl4M0mCKmKWq+YJk1oLO9Zg92WOT9LoK3
-         OJ0TbgMvhLM3u8/sWKSIZnczTTXm3pxHjZ4hcg2+xP0SHdqLuUhWnjCO/nyI7mCxfOZe
-         pF55T17XglR3n4eL9/x16BxWXrtrXiwjNXvgCiX343miHdOa3JauxcHH2Pd3VPLIUbju
-         dBu/T9IuBycyeZef+ZDn9NmJB//VdJvSTJAMDSW+w5UCFyoprRYxlkFYYs2xjZMCWpWd
-         RF5Hj9cmTdbwLsAbZTQBlRpUofp+ZrJLl6R3kfCA1vvdesl9yKlln8Lfu898J7b2oa5c
-         iQ7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1iPCXBWydY7xCYkvB8WzAfUNgl288BVJPxiE7eymZwc=;
-        b=fS7+pOpziwCazuazzXHYUKppzDxg7mleYhqVxex1z+rdOAvePA2KJtSCJQRoLo/RTb
-         SkyhS81uiLaw9yd401kBtT2JiA9HgYr3RdaNtvMxP3qjuId6M7nmfaXIiRXH8k67hyf8
-         0eNjhNVWdlx6nK2VANFFAoQ+76cxg9Hz6SN0Z96HtsUgoxkHBg+rgAlSL6WCagV1mj+F
-         y5VgGma5oUUt7vNS7R4Q/PzMbbErUnyyu9XRsEDmMBN3nSNiKNR0QYg63sh94ynCh1Jp
-         MntuQCSEyC/cJcbLjie+131TkjimKSfP4Hr7OhIr6LsORwDdAfn5yJ58yoM4enqRjXUA
-         uLcQ==
-X-Gm-Message-State: APjAAAX7GtBhq0OJSCoJ1V+p75VZ0oWTPc7Rzy+OrBeOstxBs0yvDDZn
-        lNppiQr7PgYQoGzEtT7gvSyQdAQOdmhkYCJ8Hf1uRA==
-X-Google-Smtp-Source: APXvYqys2XmtNKJMpGTxiNNF5eq3ErgW9CVtNHeSeJ6lfHCqj5xUU5+RhbLY8XHHRGOBrv8+Gr2dB9NfGnaPQOSPrJ4=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr14173585lfu.141.1561470742590;
- Tue, 25 Jun 2019 06:52:22 -0700 (PDT)
+        Tue, 25 Jun 2019 09:52:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2AgL/t73Q0waWhszwMSp6rBmzxCxDTZMFIpT9EEU4hw=; b=V6XaEGRxmY3ZxkM2dJEbcdnBC
+        mQfNA6Au8IlT+pWdX7pT1furqbVYdt83np2q7mngecAm8I/CJxZ1wY3VO5oFXNdk9ISHZWvZRcjc4
+        Hz+tMsj0JipUE39zGZfmAqPVUNM3IOTjaADbMjFlPh12Vlf0Gwgf5reR4LP36lvhiP12hmMMAd+hq
+        FwtDOy0DQJw61kKbkXYh5UR4dNwciqSVIiSgwSacpB4QtMadZfsOP9GoV0SwEo8M1b7q6BGSsApz/
+        psqRE8mLdDR4VVha7W/wKzZl1XM/QMyB2Fg/U3wYD3UI/3IPxkFFtyLz/N2ycn1xJoRNJy0vsJhHH
+        5F+IYIocg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hflsG-0002e9-10; Tue, 25 Jun 2019 13:52:40 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 45A51202B4821; Tue, 25 Jun 2019 15:52:38 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 15:52:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     mingo@redhat.com, valentin.schneider@arm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched/core: silence a warning in sched_init()
+Message-ID: <20190625135238.GA3419@hirez.programming.kicks-ass.net>
+References: <1561466662-22314-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org>
- <CAGp9LzqyRQ0knQ8+NanTAC0VVqBudAFPuCQJiyymmabaT1Hyfw@mail.gmail.com>
-In-Reply-To: <CAGp9LzqyRQ0knQ8+NanTAC0VVqBudAFPuCQJiyymmabaT1Hyfw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 15:52:10 +0200
-Message-ID: <CACRpkdZmNug21=6rz9U8-G5ONPywjCh6_y8-=msY+Y8WvZEm5g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
-To:     Sean Wang <sean.wang@kernel.org>
-Cc:     Nicolas Boichat <drinkcat@chromium.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561466662-22314-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 6:20 AM Sean Wang <sean.wang@kernel.org> wrote:
+On Tue, Jun 25, 2019 at 08:44:22AM -0400, Qian Cai wrote:
+> Compiling a kernel with both FAIR_GROUP_SCHED=n and RT_GROUP_SCHED=n
+> will generate a warning using W=1,
+> 
+> kernel/sched/core.c: In function 'sched_init':
+> kernel/sched/core.c:5906:32: warning: variable 'ptr' set but not used
+> [-Wunused-but-set-variable]
+>   unsigned long alloc_size = 0, ptr;
+>                                 ^~~
+> 
+> It apparently the maintainers don't like the previous fix [1] which
+> contains ugly idefs, so silence it by appending the __maybe_unused
+> attribute for it instead.
+> 
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: Incorporate the feedback from Valentin.
+> 
+>  kernel/sched/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 874c427742a9..12b9b69c8a66 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5903,7 +5903,8 @@ int in_sched_functions(unsigned long addr)
+>  void __init sched_init(void)
+>  {
+>  	int i, j;
+> -	unsigned long alloc_size = 0, ptr;
+> +	unsigned long alloc_size = 0;
+> +	unsigned long __maybe_unused ptr;
+>  
 
-> The change is worth rewording the commit message you added above as an instance
-> and adding Fixes tag as a fixup to mean you're fixing the existing
-> problem in the driver.
->
-> And then Acked-by: Sean Wang <sean.wang@kernel.org>
+That still isn't particularly pretty.
 
-I'm waiting for an updated version of this patch.
+Why do we care about W=1 build noise? Some of that seems rather silly,
+like that -Wmissing-prototype nonsense.
 
-Yours,
-Linus Walleij
+As to this one, ideally the compiler would not be stupid, and understand
+the below, but alas.
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index fa43ce3962e7..cb652e165570 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6369,7 +6369,7 @@ DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
+ 
+ void __init sched_init(void)
+ {
+-	unsigned long alloc_size = 0, ptr;
++	unsigned long alloc_size = 0;
+ 	int i;
+ 
+ 	wait_bit_init();
+@@ -6381,7 +6381,7 @@ void __init sched_init(void)
+ 	alloc_size += 2 * nr_cpu_ids * sizeof(void **);
+ #endif
+ 	if (alloc_size) {
+-		ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
++		unsigned long ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 		root_task_group.se = (struct sched_entity **)ptr;
