@@ -2,120 +2,182 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBC4C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C489BC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55C8205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909B1205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cp3t67y8"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qc/1KMTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbfFYAMs (ORCPT
+        id S1729547AbfFYAM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:12:48 -0400
-Received: from ozlabs.org ([203.11.71.1]:34719 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729253AbfFYAMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:12:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Xmnl2h1kz9s8m;
-        Tue, 25 Jun 2019 10:12:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561421565;
-        bh=RF29SwNLX4Zp9qVZfkr5djvyTLxzcCy+4KGrM+1AKnI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cp3t67y8c8l/r4Jag48reE22yUnEvjnaaX6jknHDb6CUA0Pe9I6s5k/zeuIKGWvtU
-         /OHxlSIXMtIWWQylErpcngefKTIbmU59oMrUBzLlUvHe4YlzdQ7fBCZlK6DWqns3n/
-         65l+TfOGexQt8N9a2afBUe9vMjEm24kWUC+8f1WUu7vNp/UFx6CV5rD0fyWgBuUMVI
-         Kz8KNehD8U76S4QvqDYgIdcdjmJt45hwMqPzKQwNnmPrPtLwju1STRZxcEDFi7c4lp
-         ZsNOdm3n2THJwSlKKb45vt0SOeGrmiQItgi+itaPTkz7iv0louHkmiHiXRiEnO9laX
-         +ldf8kOGAs8tg==
-Date:   Tue, 25 Jun 2019 10:12:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>,
-        Thierry Reding <treding@nvidia.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: linux-next: manual merge of the tegra tree with the arm-soc tree
-Message-ID: <20190625101242.2eb0e418@canb.auug.org.au>
+        Mon, 24 Jun 2019 20:12:59 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:21510 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729419AbfFYAMx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 20:12:53 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P08VvG032472
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:12:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=sNQn/dOnZHgVylzBkIWRNq/AXNkb7iif//pYLPbgJ2I=;
+ b=qc/1KMTvYsBus8AHq5JcKSWdamajXwVOMhECHDrdcr8x2v9V9P7a65icFGihJURUqTfW
+ EWXTiFme7L9uOqgahFxEaUCPEDf4R0m9ijMiZL0g6+1F/XUMnYxAkqdPTgZn+DToSd9g
+ W7hJGB09EdtzQOZoxL6zqROXb0St/40Ye6E= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2tb7gur91t-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:12:52 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Mon, 24 Jun 2019 17:12:51 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id 680D962E206E; Mon, 24 Jun 2019 17:12:49 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
+        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
+        <akpm@linux-foundation.org>, <hdanton@sina.com>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v9 0/6] Enable THP for text section of non-shmem files
+Date:   Mon, 24 Jun 2019 17:12:40 -0700
+Message-ID: <20190625001246.685563-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/j/50enT86+rbCHdAEI3eYmM"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250000
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/j/50enT86+rbCHdAEI3eYmM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Changes v8 => v9:
+1. Fix bad use of IS_ENABLED (kbuild test robot)
 
-Hi all,
+Changes v7 => v8:
+1. Use IS_ENABLED wherever possible (Kirill A. Shutemov);
+2. Improve handling of !PageUptodate case (Kirill A. Shutemov);
+3. Add comment for calling lru_add_drain (Kirill A. Shutemov);
+4. Add more information about DENYWRITE dynamic (Johannes Weiner).
 
-Today's linux-next merge of the tegra tree got a conflict in:
+Changes v6 => v7:
+1. Avoid accessing vma without holding mmap_sem (Hillf Dayton)
+2. In collapse_file() use readahead API instead of gup API. This matches
+   better with existing logic for shmem.
+3. Add inline documentation for @nr_thps (kbuild test robot)
 
-  arch/arm64/configs/defconfig
+Changes v5 => v6:
+1. Improve THP stats in 3/6, (Kirill).
 
-between commit:
+Changes v4 => v5:
+1. Move the logic to drop THP from pagecache to open() path (Rik).
+2. Revise description of CONFIG_READ_ONLY_THP_FOR_FS.
 
-  39bab7bfb7d9 ("arm64: configs: Remove useless UEVENT_HELPER_PATH")
+Changes v3 => v4:
+1. Put the logic to drop THP from pagecache in a separate function (Rik).
+2. Move the function to drop THP from pagecache to exit_mmap().
+3. Revise confusing commit log 6/6.
 
-from the arm-soc tree and commit:
+Changes v2 => v3:
+1. Removed the limitation (cannot write to file with THP) by truncating
+   whole file during sys_open (see 6/6);
+2. Fixed a VM_BUG_ON_PAGE() in filemap_fault() (see 2/6);
+3. Split function rename to a separate patch (Rik);
+4. Updated condition in hugepage_vma_check() (Rik).
 
-  01d6fb565b4a ("arm64: defconfig: Add Tegra194 PCIe driver")
+Changes v1 => v2:
+1. Fixed a missing mem_cgroup_commit_charge() for non-shmem case.
 
-from the tegra tree.
+This set follows up discussion at LSF/MM 2019. The motivation is to put
+text section of an application in THP, and thus reduces iTLB miss rate and
+improves performance. Both Facebook and Oracle showed strong interests to
+this feature.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+To make reviews easier, this set aims a mininal valid product. Current
+version of the work does not have any changes to file system specific
+code. This comes with some limitations (discussed later).
 
---=20
-Cheers,
-Stephen Rothwell
+This set enables an application to "hugify" its text section by simply
+running something like:
 
-diff --cc arch/arm64/configs/defconfig
-index 3fb84219817a,6a9dc67bbfac..000000000000
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@@ -192,6 -191,8 +192,7 @@@ CONFIG_PCIE_QCOM=3D
-  CONFIG_PCIE_ARMADA_8K=3Dy
-  CONFIG_PCIE_KIRIN=3Dy
-  CONFIG_PCIE_HISI_STB=3Dy
-+ CONFIG_PCIE_TEGRA194=3Dm
- -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
-  CONFIG_DEVTMPFS=3Dy
-  CONFIG_DEVTMPFS_MOUNT=3Dy
-  CONFIG_HISILICON_LPC=3Dy
+          madvise(0x600000, 0x80000, MADV_HUGEPAGE);
 
---Sig_/j/50enT86+rbCHdAEI3eYmM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Before this call, the /proc/<pid>/maps looks like:
 
------BEGIN PGP SIGNATURE-----
+    00400000-074d0000 r-xp 00000000 00:27 2006927     app
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0RZvoACgkQAVBC80lX
-0GyVIggAmVr73GQ81DwKSfIkq5h/1I8FVxzB15jIuKSJe868pBbsapfalgxBPqmN
-mHU1B1F/pi+QOzHwu9g1aJOfVhSER4xGMmvRs7d3JMEvcuUqQUs9HTee24XnnUZr
-m7ozG8h2o1D3tjs03ZlIJPKHv4UXZ2c+07y55UvazAUJdXBzSrBJOu6wg4LGtSxr
-eLv338Tp9M/y86OhGpWw6C1ZLtQ7rgzD0kNnC8fM5ABdsKIl6/fs/XisCPqkCxj7
-cL1/7DMD6lTqHUex6wPidEpH7gn8Db9TovLmcbO2bn6X54oIymb0x+3XgG9PMQ0/
-b14+mH6qzYZNU9keacK+Nrm8fRThAg==
-=ReDA
------END PGP SIGNATURE-----
+After this call, part of the text section is split out and mapped to
+THP:
 
---Sig_/j/50enT86+rbCHdAEI3eYmM--
+    00400000-00425000 r-xp 00000000 00:27 2006927     app
+    00600000-00e00000 r-xp 00200000 00:27 2006927     app   <<< on THP
+    00e00000-074d0000 r-xp 00a00000 00:27 2006927     app
+
+Limitations:
+
+1. This only works for text section (vma with VM_DENYWRITE).
+2. Original limitation #2 is removed in v3.
+
+We gated this feature with an experimental config, READ_ONLY_THP_FOR_FS.
+Once we get better support on the write path, we can remove the config and
+enable it by default.
+
+Tested cases:
+1. Tested with btrfs and ext4.
+2. Tested with real work application (memcache like caching service).
+3. Tested with "THP aware uprobe":
+   https://patchwork.kernel.org/project/linux-mm/list/?series=131339
+
+This set (plus a few uprobe patches) is also available at
+
+   https://github.com/liu-song-6/linux/tree/uprobe-thp
+
+Please share your comments and suggestions on this.
+
+Thanks!
+
+Song Liu (6):
+  filemap: check compound_head(page)->mapping in filemap_fault()
+  filemap: update offset check in filemap_fault()
+  mm,thp: stats for file backed THP
+  khugepaged: rename collapse_shmem() and khugepaged_scan_shmem()
+  mm,thp: add read-only THP support for (non-shmem) FS
+  mm,thp: avoid writes to file with THP in pagecache
+
+ drivers/base/node.c    |   6 +++
+ fs/inode.c             |   3 ++
+ fs/namei.c             |  23 +++++++-
+ fs/proc/meminfo.c      |   4 ++
+ fs/proc/task_mmu.c     |   4 +-
+ include/linux/fs.h     |  32 +++++++++++
+ include/linux/mmzone.h |   2 +
+ mm/Kconfig             |  11 ++++
+ mm/filemap.c           |   9 ++--
+ mm/khugepaged.c        | 117 ++++++++++++++++++++++++++++++++---------
+ mm/rmap.c              |  12 +++--
+ mm/vmstat.c            |   2 +
+ 12 files changed, 189 insertions(+), 36 deletions(-)
+
+--
+2.17.1
