@@ -6,67 +6,50 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE1DC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB57DC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD1520644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6A52084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfFYKPV (ORCPT
+        id S1731262AbfFYKPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:15:21 -0400
-Received: from verein.lst.de ([213.95.11.211]:33465 "EHLO newverein.lst.de"
+        Tue, 25 Jun 2019 06:15:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:33470 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbfFYKPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:15:20 -0400
+        id S1727070AbfFYKPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:15:46 -0400
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 7E6E968C7B; Tue, 25 Jun 2019 12:14:46 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 12:14:45 +0200
+        id 93DE268B05; Tue, 25 Jun 2019 12:15:15 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 12:15:15 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Nikolay Borisov <nborisov@suse.com>
+To:     Dave Chinner <david@fromorbit.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
         Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
-Message-ID: <20190625101445.GK1462@lst.de>
-References: <20190624055253.31183-1-hch@lst.de> <20190624055253.31183-10-hch@lst.de> <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
+Subject: Re: [PATCH 12/12] iomap: add tracing for the address space
+ operations
+Message-ID: <20190625101515.GL1462@lst.de>
+References: <20190624055253.31183-1-hch@lst.de> <20190624055253.31183-13-hch@lst.de> <20190624234921.GE7777@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
+In-Reply-To: <20190624234921.GE7777@dread.disaster.area>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 07:06:22PM +0300, Nikolay Borisov wrote:
-> > +{
-> > +	struct list_head	tmp;
-> > +
-> > +	list_replace_init(&ioend->io_list, &tmp);
-> > +	xfs_destroy_ioend(ioend, error);
-> > +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
-> > +		xfs_destroy_ioend(ioend, error);
+On Tue, Jun 25, 2019 at 09:49:21AM +1000, Dave Chinner wrote:
+> > +#undef TRACE_SYSTEM
+> > +#define TRACE_SYSTEM iomap
 > 
-> nit: I'd prefer if the list_pop patch is right before this one since
-> this is the first user of it.
+> Can you add a comment somewhere here that says these tracepoints are
+> volatile and we reserve the right to change them at any time so they
+> don't form any sort of persistent UAPI that we have to maintain?
 
-I try to keep generic infrastructure first instead of interveawing
-it with subystem-specific patches.
-
-> Additionally, I don't think list_pop is
-> really a net-negative win 
-
-What is a "net-negative win" ?
-
-> in comparison to list_for_each_entry_safe
-> here. In fact this "delete the list" would seems more idiomatic if
-> implemented via list_for_each_entry_safe
-
-I disagree.  The for_each loops require an additional next iterator,
-and also don't clearly express what is going on, but require additional
-spotting of the list_del.
+Sure.  Note that we don't have any such comment in xfs either..
