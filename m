@@ -2,121 +2,219 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631BEC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EF3C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC22208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tok9Ai+i"
+	by mail.kernel.org (Postfix) with ESMTP id 13F5D208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732555AbfFYQDA (ORCPT
+        id S1732564AbfFYQD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:03:00 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45448 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731610AbfFYQC7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:02:59 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m206so12895483oib.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rkiN5Ln+LPD0we4Kre4BOb+XjSLjDB1oXBvT5k6ZR+o=;
-        b=tok9Ai+imw0ti/EcFot/UsIPStgqvfECCWrXyRjK/gRgacHLbWM7vCjubSkcj1Hpsj
-         q+6uM5UosQJb4cV2Z0kOIVkvNlDiA4GuY+UOfIh+NIvou+4acoWvbM3mVlLOW+gBkEx5
-         iZNWXcdrnv6kV2msgQkytXjMaUqWaoegxpAmM+2bBDZMnFi9D5H+LL+AVzVm3yhbJGEB
-         +i+K29BA6nW5BhZgVYTThD5y+9csIQJ41ugBlnXeWxNE8Qb0OGiG+66mWYT2yCZQAgLA
-         cSTx5fvaG5orxkvAzOaPtdrMPabY8gnQPqJbEwaTebYx2/hhPt+XMtWgxWi1dN4oE/lX
-         LrVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rkiN5Ln+LPD0we4Kre4BOb+XjSLjDB1oXBvT5k6ZR+o=;
-        b=C2DRTBYS2abdJg+cqIB5RrybgbHhJbH7RG+i7EssbrkDOo2SDESOASmURO60Ncqn8G
-         ibqv6SGVUbnBBtV1xk8MIZcyMdP3inHckDhu1jgyRV/aqVJdqYLLSIgB+iwz1gSAM0UC
-         YaqjfUCzqlU351r7zAaB6wXlcr/XAhp42Y4x8B/36TvqB2KSTfEq+yLQhTaYYPl0viNf
-         grfWCyCsUI21LsyaIEqj8kH8Aey1GK1u2+BDdjnRUb0ujDmoM0c7IuTndEVVgXxT0zS2
-         pumaryEQSh/VIVrsLbsX369f7ZfJEc5KmJTuzvmPE+lw5qYZ5yujKLOmGELccMtJ/1zH
-         WAmQ==
-X-Gm-Message-State: APjAAAWS1jWJSWDNSgNqNCQRhdkKDZa8JVCMBLv/lwNsZ9NS5Xt9jcFq
-        Ar1kzJQLyn0zTBoU3jt5SQ5RBZcBNxDaKuG/3zy/ng==
-X-Google-Smtp-Source: APXvYqzijRCdiCgtAS54hIkOnWrg0lv445xZzpHZwxTcEM+ri/YbV9SOX0mHFP5P3gGhqU5blgGoR/P8TmZa3pACDUE=
-X-Received: by 2002:aca:ec82:: with SMTP id k124mr14122051oih.73.1561478577981;
- Tue, 25 Jun 2019 09:02:57 -0700 (PDT)
+        Tue, 25 Jun 2019 12:03:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:44568 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731274AbfFYQD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 12:03:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BA252B;
+        Tue, 25 Jun 2019 09:03:55 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA2353F718;
+        Tue, 25 Jun 2019 09:03:52 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 17:03:50 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Olof Johansson <olof@lixom.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: defconfig: update and enable CONFIG_RANDOMIZE_BASE
+Message-ID: <20190625160350.GC53763@arrakis.emea.arm.com>
+References: <20190620003244.261595-1-ndesaulniers@google.com>
+ <20190620074640.GA27228@brain-police>
+ <CAKv+Gu_KCFCVxw_zAfzUf8DjD4DmhvaJEoqBsX_SigOse_NwYw@mail.gmail.com>
+ <CAKwvOdmQ+WdD8nvLz_VB_5atDi56fv485Xsn+mHJZKnyj6L-JA@mail.gmail.com>
+ <20190624095749.wasjfrgcda7ygdr5@willie-the-truck>
+ <CAKv+Gu8G2GQGxmcAAy1XQ5gkN-2fJSWAKCQQm9T4skYdh5cT3Q@mail.gmail.com>
+ <20190625153918.GA53763@arrakis.emea.arm.com>
+ <CAKv+Gu8Kz8fN-xKoEqPBiKWaEza6wUkbGxbKPPZxe14QzYLbJQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156140037171.2951909.7432584124511649643.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190625155956.00002dc4@huawei.com>
-In-Reply-To: <20190625155956.00002dc4@huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 25 Jun 2019 09:02:46 -0700
-Message-ID: <CAPcyv4haG=Pu_-Se+CiGOXHuM1qZH8uLP-Pbr_KgDmL3GOf25g@mail.gmail.com>
-Subject: Re: [PATCH v4 01/10] acpi/numa: Establish a new drivers/acpi/numa/ directory
-To:     Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc:     X86 ML <x86@kernel.org>, Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8Kz8fN-xKoEqPBiKWaEza6wUkbGxbKPPZxe14QzYLbJQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 8:01 AM Jonathan Cameron
-<jonathan.cameron@huawei.com> wrote:
->
-> On Mon, 24 Jun 2019 11:19:32 -0700
-> Dan Williams <dan.j.williams@intel.com> wrote:
->
-> > Currently hmat.c lives under an "hmat" directory which does not enhance
-> > the description of the file. The initial motivation for giving hmat.c
-> > its own directory was to delineate it as mm functionality in contrast to
-> > ACPI device driver functionality.
+On Tue, Jun 25, 2019 at 05:42:49PM +0200, Ard Biesheuvel wrote:
+> On Tue, 25 Jun 2019 at 17:39, Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Mon, Jun 24, 2019 at 12:06:18PM +0200, Ard Biesheuvel wrote:
+> > > On Mon, 24 Jun 2019 at 11:57, Will Deacon <will@kernel.org> wrote:
+> > > > Thanks for having a look. It could be that we've fixed the issue Catalin was
+> > > > running into in the past -- he was going to see if the problem persists with
+> > > > mainline, since it was frequent enough that it was causing us to ignore the
+> > > > results from our testing infrastructure when RANDOMIZE_BASE=y.
+> > >
+> > > I had no idea this was the case. I can look into it if we are still
+> > > seeing failures.
 > >
-> > As ACPI continues to play an increasing role in conveying
-> > memory location and performance topology information to the OS take the
-> > opportunity to co-locate these NUMA relevant tables in a combined
-> > directory.
+> > I've seen the panic below with 5.2-rc1, defconfig + RANDOMIZE_BASE=y in
+> > a guest on TX2. It takes a few tries to trigger just with kaslr,
+> > enabling lots of other DEBUG_* options makes the failures more
+> > deterministic. I can't really say it's kaslr's fault here, only that I
+> > used to consistently get it in this configuration. For some reason, I
+> > can no longer reproduce it on arm64 for-next/core (or maybe it just
+> > takes more tries and my script doesn't catch this).
 > >
-> > numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
-> > hmat.c.
->
-> Hi Dan,
->
-> srat.c now includes processing for the slit table which is a bit odd.
->
-> Now we could split this up in to a top level numa.c and then
-> srat.c, slit.c and hmat.c....
->
-> Does feel rather silly though.  Perhaps better to just leave it as
-> numa.c?
+> > The fault is in the ip_tables module, the __this_cpu_read in
+> > xt_write_recseq_begin() inlined in ipt_do_table(). The disassembled
+> > sequence in my build:
+> >
+> > 0000000000000188 <ipt_do_table>:
+> > ...
+> >      258:       d538d080        mrs     x0, tpidr_el1
+> >      25c:       aa1303f9        mov     x25, x19
+> >      260:       b8606b34        ldr     w20, [x25, x0]
+> 
+> This was fixed recently by
+> 
+> arm64/kernel: kaslr: reduce module randomization range to 2 GB
+> 
+> (and arm64/module: deal with ambiguity in PRELxx relocation ranges to
+> some extent)
 
-The srat and slit tables go hand in hand, I'm not too bothered by the
-fact that the slit table does not get top billing with its own source
-file name.
+Thanks. This explains it.
 
-The "numa" term is already in the path name, and calling numa.c leaves
-out hmat details which are also "numa".
+And another weird case that triggers only with 64K pages, KASan and
+KASLR combination (guest on TX2). My test script modprobes all the
+modules it finds installed (including some test kernel modules like lock
+torture). At some point during modprobing, vmalloc trips over the
+WARN_ON(!pte_none(*pte)) in vmap_pte_range():
 
-> I don't really feel strongly about this though.
+# modprobe <some random module>
+[  341.631037] WARNING: CPU: 3 PID: 737 at mm/vmalloc.c:153 vmap_page_range_noflush+0x300/0x410
+[  341.632433] Modules linked in: pwm_fan altera_freeze_bridge fpga_region fpga_bridge reset_meson_audio_arb cros_ec_baro cros_ec_sensors rockchip_saradc cros_ec_light_prox industrialio_triggered_buffer kfifo_buf cros_ec_sensors_core spi_meson_spifc spi_meson_spicc spi_bcm2835 spi_
+[  341.632533]  pwm_sun4i pwm_rcar aes_neon_bs chacha_neon chacha_generic sha3_generic aes_neon_blk sm3_generic sha512_arm64 test_udelay backtracetest locktorture torture br_netfilter bridge ip6table_mangle ip6table_nat nf_log_ipv6 ip6t_REJECT nf_reject_ipv6 ip6table_filter ip6_tab
+[  341.661768] CPU: 3 PID: 737 Comm: modprobe Tainted: G        W         5.2.0-rc3-00015-gd1b79ba6a070 #82
+[  341.663644] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+[  341.665065] pstate: 20400005 (nzCv daif +PAN -UAO)
+[  341.666027] pc : vmap_page_range_noflush+0x300/0x410
+[  341.667015] lr : map_vm_area+0x8c/0xd8
+[  341.667806] sp : ffffb618f4877690
+[  341.668488] x29: ffffb618f4877690 x28: ffff200026cc0008
+[  341.669552] x27: dfff200000000000 x26: ffff0400023f0000
+[  341.670611] x25: ffff200026bea818 x24: ffffb6193fd411f8
+[  341.671718] x23: ffff040002400000 x22: ffffb6193fd50000
+[  341.672769] x21: ffff040002400000 x20: ffff040004d7d503
+[  341.673836] x19: 0000000000000000 x18: ffffb618f11d65b0
+[  341.674903] x17: 0000000000002036 x16: ffff200024320da8
+[  341.675979] x15: 0000000000001000 x14: 00000000000001ba
+[  341.677043] x13: 0000000000054f18 x12: ffff0ffdb0c7a6b7
+[  341.678093] x11: 1fffeffdb0c7a6b6 x10: 1ffff6c327fa823f
+[  341.679197] x9 : ffff0400223f0000 x8 : 000036193fd50000
+[  341.680246] x7 : ffff200026bea000 x6 : 0000000000000001
+[  341.681362] x5 : 00000000f2f2f200 x4 : ffff200027c236c8
+[  341.682459] x3 : ffff0800023f0000 x2 : ffff7fed863d3580
+[  341.683517] x1 : 000036193fd411f8 x0 : 00e000005f880f93
+[  341.684582] Call trace:
+[  341.685089]  vmap_page_range_noflush+0x300/0x410
+[  341.686050]  map_vm_area+0x8c/0xd8
+[  341.686742]  __vmalloc_node_range+0x4e4/0x718
+[  341.687608]  kasan_module_alloc+0xb4/0x168
+[  341.688440]  module_alloc+0xc0/0x240
+[  341.689171]  load_module+0x18ac/0x65c0
+[  341.689970]  __se_sys_finit_module+0x138/0x148
+[  341.690849]  __arm64_sys_finit_module+0x68/0x98
+[  341.691765]  el0_svc_handler+0x14c/0x360
+[  341.692539]  el0_svc+0x8/0xc
+[  341.693167] ---[ end trace 1e09f33962be79c8 ]---
 
-Understood, I just did not see the justification for HMAT being off in
-its own directory when it is a direct extension of the existing
-ACPI_NUMA functionality, the other renames were my best effort to
-rationalize the code organization.
+From this point, the kernel gets into some weird state with a few other
+page faults at check_memory_region+0x64/0x1c8. Eventually, during
+poweroff, I get the splat below. It seems that even though vzalloc()
+allocated, the memory isn't there (which is not surprising given the
+above warning.
+
+[ 1016.168708] Unable to handle kernel paging request at virtual address ffff0400021c200a
+[ 1016.170104] Mem abort info:
+[ 1016.170598]   ESR = 0x96000007
+[ 1016.172011]   Exception class = DABT (current EL), IL = 32 bits
+[ 1016.173079]   SET = 0, FnV = 0
+[ 1016.173614]   EA = 0, S1PTW = 0
+[ 1016.174177] Data abort info:
+[ 1016.174688]   ISV = 0, ISS = 0x00000007
+[ 1016.175513]   CM = 0, WnR = 0
+[ 1016.176064] swapper pgtable: 64k pages, 48-bit VAs, pgdp=000000005dec0000
+[ 1016.177251] [ffff0400021c200a] pgd=00000000bfd50003, pud=00000000bfd50003, pmd=00000000bfd40003, pte=0000000000000000
+[ 1016.179155] Internal error: Oops: 96000007 [#4] PREEMPT SMP
+[ 1016.180122] Modules linked in: ghash_generic lcd pwm_fan altera_freeze_bridge fpga_region fpga_bridge reset_meson_audio_arb cros_ec_baro cros_ec_sensors rockchip_saradc cros_ec_light_prox industrialio_triggered_buffer kfifo_buf cros_ec_sensors_core spi_meson_spifc spi_meson_spic
+[ 1016.180226]  pwm_bcm2835 pwm_tegra pwm_sun4i pwm_rcar aes_neon_bs chacha_neon chacha_generic sha3_generic aes_neon_blk sm3_generic sha512_arm64 test_udelay backtracetest locktorture torture br_netfilter bridge ip6table_mangle ip6table_nat nf_log_ipv6 ip6t_REJECT nf_reject_ipv6 i
+[ 1016.212762] CPU: 1 PID: 1 Comm: systemd Tainted: G      D W         5.2.0-rc3-00015-gd1b79ba6a070 #82
+[ 1016.214653] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+[ 1016.216081] pstate: 20400005 (nzCv daif +PAN -UAO)
+[ 1016.217152] pc : n_tty_open+0x54/0x148
+[ 1016.217931] lr : n_tty_open+0x18/0x148
+[ 1016.218781] sp : ffffb618e0707660
+[ 1016.219505] x29: ffffb618e0707660 x28: ffffb618e0fe7b00
+[ 1016.220662] x27: 0000000000000000 x26: 0000000000020101
+[ 1016.221758] x25: 1ffff6c31f6dbd68 x24: 0000000000000000
+[ 1016.222866] x23: ffffb618f3069058 x22: 0000000000000000
+[ 1016.223987] x21: 000000010002bb56 x20: ffff200010e10000
+[ 1016.225097] x19: ffffb618f3069000 x18: 0000000000000000
+[ 1016.226200] x17: 0000000000000000 x16: 0000000000000000
+[ 1016.227296] x15: 0000000000000000 x14: 0000000000000000
+[ 1016.228364] x13: 1ffff6c31c0e0f93 x12: ffff0ffdb0c7f1df
+[ 1016.229479] x11: 1fffeffdb0c7f1de x10: 1ffff6c31c04d0e1
+[ 1016.230594] x9 : ffff200030e10000 x8 : 000036193fff0000
+[ 1016.231700] x7 : ffff200026bea000 x6 : 0000000000000008
+[ 1016.232812] x5 : 00000000f2f2f200 x4 : ffff200027c236c8
+[ 1016.233930] x3 : ffff240010e10000 x2 : 1fffe400021c200a
+[ 1016.235043] x1 : dfff200000000000 x0 : ffff200010e10050
+[ 1016.236149] Call trace:
+[ 1016.236693]  n_tty_open+0x54/0x148
+[ 1016.237409]  tty_ldisc_open.isra.1+0x94/0x128
+[ 1016.238334]  tty_ldisc_setup+0x40/0xd0
+[ 1016.239117]  tty_init_dev+0x180/0x3a0
+[ 1016.239906]  tty_open+0x438/0x780
+[ 1016.240627]  chrdev_open+0x194/0x408
+[ 1016.241385]  do_dentry_open+0x2ec/0xbf0
+[ 1016.242189]  vfs_open+0x8c/0xc0
+[ 1016.242862]  path_openat+0x694/0x3310
+[ 1016.243641]  do_filp_open+0x13c/0x200
+[ 1016.244402]  do_sys_open+0x1dc/0x320
+[ 1016.245181]  __arm64_sys_openat+0x88/0xc8
+[ 1016.246031]  el0_svc_handler+0x14c/0x360
+[ 1016.246867]  el0_svc+0x8/0xc
+[ 1016.247472] Code: d2c40001 f2fbffe1 d343fc02 f944c2b5 (38e16841)
+[ 1016.248794] ---[ end trace 1e09f33962be79ce ]---
+[ 1016.366872] printk: systemd: 46 output lines suppressed due to ratelimiting
+[ 1016.369964] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[ 1016.371385] SMP: stopping secondary CPUs
+[ 1016.372226] Kernel Offset: 0x141d0000 from 0xffff200010000000
+[ 1016.373378] PHYS_OFFSET: 0xffffc9e780000000
+[ 1016.374242] CPU features: 0x0002,23800438
+[ 1016.375049] Memory Limit: none
+[ 1016.375702] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+
+-- 
+Catalin
