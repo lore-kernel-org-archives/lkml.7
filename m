@@ -2,98 +2,139 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFF6C4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3012CC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D76205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04BE2077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHhGT9F1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIRno+AS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfFYAPo (ORCPT
+        id S1728422AbfFYAS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:15:44 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43035 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbfFYAPn (ORCPT
+        Mon, 24 Jun 2019 20:18:27 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42061 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfFYAS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:15:43 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i189so8412227pfg.10;
-        Mon, 24 Jun 2019 17:15:43 -0700 (PDT)
+        Mon, 24 Jun 2019 20:18:27 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay6so7762787plb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EU8WFDmhHgtaBQ2SUJhJWTVAXwevn93OKXGEhrS/B44=;
-        b=mHhGT9F1POSxJjgSSQrVWYtDWRfeB5ve9eOpiY/LBNsI6+oLuSglTITPKt06Hjv8p6
-         pQ66GBvZctpsYhDFYG3MCsP7/bH0GJ9qAQDGOZUJrLui6F8h/2AtWsJieNyiJFXiOH2N
-         XB6wmS+DS8j5L9DCvUfyccPiGbJ6MZa+PHMXPeiF4pGx1+ttTvlmZeKnPuPLrC5izVxI
-         pP2OKpt8j5t3fdbewzG0/Glnhuj++U2bKobFTtXBeaRnICO5ZfGHQamtcMWtW5zuNNB2
-         g3dtEjt1HW/b/Sra+0NngEIytar0RyWXzxR6fszSZFSXMbGW+TB3ej8AfAAuHSqRmEzq
-         //3A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mNNDPnLZx+KR0jVJlsU7XfT0ox6KotHr4SLhMC572uY=;
+        b=BIRno+AS454hBQbuQGJLmDsxNzU2PjmkxXG9qTatuiWkplhN1CHqCV/Ow8BoJdLZny
+         xX+0KWbI72KRstm2IUv2lrUGY3kQOuI+p+Eoq41Rp4wF22fbmVeQVEQ26UOUpjq4YznS
+         hopQhnxDOthZgau/MzcHHCnoAMHxo/bVipRQUQGzHkk1NLYEze99v8DblYC/XFXJOXOd
+         7aip1YZ3Fd4++t1pNyRpdAsIqb6fu4t5C9g3c7QnYtCB4G2ezO0lVbG5MFWLAOtSuSBv
+         oDCUDVeaDzHb7cw3OIGGkZKHk+zY/8w/sJVH5NcDYLg7MP1OsI4OsBRuHfJIvfY7U4kq
+         hhpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EU8WFDmhHgtaBQ2SUJhJWTVAXwevn93OKXGEhrS/B44=;
-        b=r5xakB+0hXE4L1ukJNiXd/yw+1BPkacx69OdSUDbkgZigL8FiE4EtqUBb//DMTBGvA
-         n4/Y/W7y8vclZSSUKEmhfVQgq25YlHtpv8Q1rJZC/9vfIGCso41eL0Z78a+HFk2i0rf3
-         +cJSkgedace1jy52IQiwMKs8JPBC25On2cXAZ2+rNpppx2MbIl306vVI7jvQV56QtEV5
-         0G5GwHJ3hV89QWIgPNr984T5tmIQQBmUTHtnFT/GuqT4/xIggOQQEu0uhMhpz24mJ/Vw
-         +RRhDdpOh4uMkcZCNQWfCvBHf5f8E08nFSOG27hxi+st8HvQC2nKmPAcyUO5H7IowvRI
-         mICw==
-X-Gm-Message-State: APjAAAWHDEvoUw0tZ5GNIq6EaDm5850v7RWi3jb2NMC6pXdgYNwJgtmB
-        5jbGeAbdFHOnLviDfWgYqvwrwjhZ
-X-Google-Smtp-Source: APXvYqw35rmzEA/jxzulA7c+cANRY6Ozz8Oa+7HibJBBNaeJJm4eyOeTaGjkl0/0Y+BOQtQ/nlvXDg==
-X-Received: by 2002:a17:90a:206a:: with SMTP id n97mr28150047pjc.10.1561421742982;
-        Mon, 24 Jun 2019 17:15:42 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k3sm11548789pgo.81.2019.06.24.17.15.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 17:15:42 -0700 (PDT)
-Subject: Re: [PATCH 5.1 000/121] 5.1.15-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190624092320.652599624@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <cce74c67-5844-a60e-8fbc-9ebb29bef826@roeck-us.net>
-Date:   Mon, 24 Jun 2019 17:15:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        bh=mNNDPnLZx+KR0jVJlsU7XfT0ox6KotHr4SLhMC572uY=;
+        b=qiAIEsnz/QbWTFURDUyC3uaZmZqFKuNiNp4yd7uMPg0c8/X28PITUwH56sDBNDh1V0
+         34Szb7QhjJQ/FGo09i9Mes2hGYDOHTP7f0vkxpb0y8PXyrrzEUvIIjqZ5o5jUiJh3qB0
+         jz8woBMK7TUgN9uYcpa/4NkFeV7w6IoBFrbs0bcLjK8R68BAafQleBRt/M7UO9AjTeF2
+         ZoKyCcd21g+1rbdqWe8TitsYyeTrSifFjzKEa4Od/+zoDJ7nseq5Ou2ob9QjdJB2EiSz
+         amROiFC9oI2deZxzTrBzZPC92SmnG3XDVSNcaX4Axk2iXFPecAsJ8NW/WasQN3FnBv2/
+         SU9A==
+X-Gm-Message-State: APjAAAUJGURb0xqJpUysZA56cRu1lRqHI4F3Khn/gNeMK0u2aPEJUPcc
+        lEZE+l2ifmf96mlohH5Jt7Kty77K
+X-Google-Smtp-Source: APXvYqyXJrBhQYRtTEGj63jfVn62kEduJJx7AIfCXeJMdRlvSUvKma51TGvNujEEFyIFltIBfb9S0Q==
+X-Received: by 2002:a17:902:20b:: with SMTP id 11mr18386661plc.78.1561421906556;
+        Mon, 24 Jun 2019 17:18:26 -0700 (PDT)
+Received: from bobo.ibm.com ([1.129.216.90])
+        by smtp.gmail.com with ESMTPSA id j64sm15893351pfb.126.2019.06.24.17.18.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 17:18:25 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Qais Yousef <qais.yousef@arm.com>
+Subject: [PATCH v2] kernel/isolation: Assert that a housekeeping CPU comes up at boot time
+Date:   Tue, 25 Jun 2019 10:17:20 +1000
+Message-Id: <20190625001720.19439-1-npiggin@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190624092320.652599624@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 2:55 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.15 release.
-> There are 121 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
-> Anything received after that time might be too late.
-> 
+With the change to allow the boot CPU0 to be isolated, it is possible
+to specify command line options that result in no housekeeping CPU
+online at boot.
 
-For v5.1.14-122-g815c105311e8:
+An 8 CPU system booted with "nohz_full=0-6 maxcpus=4", for example.
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 364 pass: 364 fail: 0
+It is not easily possible at housekeeping init time to know all the
+various SMP options that will result in an invalid configuration, so
+this patch adds a sanity check after SMP init, to ensure that a
+housekeeping CPU has been onlined.
 
-Guenter
+The panic is undesirable, but it's better than the alternative of an
+obscure non deterministic failure. The panic will reliably happen
+when advanced parameters are used incorrectly.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+v2: Fix a NULL pointer dereference when not overriding housekeeping,
+    noticed by kernel test robot and Qais, who fixed it and verified
+    the fix (thanks!)
+
+ kernel/sched/isolation.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 123ea07a3f3b..a9ca8628c1a2 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -63,6 +63,32 @@ void __init housekeeping_init(void)
+ 	WARN_ON_ONCE(cpumask_empty(housekeeping_mask));
+ }
+ 
++static int __init housekeeping_verify_smp(void)
++{
++	int cpu;
++
++	if (!housekeeping_flags)
++		return 0;
++
++	/*
++	 * Early housekeeping setup is done before CPUs come up, and there are
++	 * a range of options scattered around that can restrict which CPUs
++	 * come up. It is possible to pass in a combination of housekeeping
++	 * and SMP arguments that result in housekeeping assigned to an
++	 * offline CPU.
++	 *
++	 * Check that condition here after SMP comes up, and give a useful
++	 * error message rather than an obscure non deterministic crash or
++	 * hang later.
++	 */
++	for_each_online_cpu(cpu) {
++		if (cpumask_test_cpu(cpu, housekeeping_mask))
++			return 0;
++	}
++	panic("Housekeeping: nohz_full= or isolcpus= resulted in no online CPUs for housekeeping.\n");
++}
++core_initcall(housekeeping_verify_smp);
++
+ static int __init housekeeping_setup(char *str, enum hk_flags flags)
+ {
+ 	cpumask_var_t non_housekeeping_mask;
+-- 
+2.20.1
+
