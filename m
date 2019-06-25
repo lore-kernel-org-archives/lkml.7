@@ -2,168 +2,138 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990BAC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2435C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796BC208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB13208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbfFYMkb (ORCPT
+        id S1731166AbfFYMmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:40:31 -0400
-Received: from www62.your-server.de ([213.133.104.62]:33672 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfFYMka (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:40:30 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hfkkF-0006gG-F0; Tue, 25 Jun 2019 14:40:19 +0200
-Received: from [178.199.41.31] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hfkkF-000KK9-8D; Tue, 25 Jun 2019 14:40:19 +0200
-Subject: Re: [PATCH v3 2/2] bpf: Add selftests for bpf_perf_event_output
-To:     allanzhang <allanzhang@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190624235720.167067-1-allanzhang@google.com>
- <20190624235720.167067-3-allanzhang@google.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <260b127d-ee1b-3f62-5bc6-f9e7b339705f@iogearbox.net>
-Date:   Tue, 25 Jun 2019 14:40:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Tue, 25 Jun 2019 08:42:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48750 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726414AbfFYMmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:42:24 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 945B9AFF9;
+        Tue, 25 Jun 2019 12:42:22 +0000 (UTC)
+Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190624055253.31183-1-hch@lst.de>
+ <20190624055253.31183-10-hch@lst.de>
+ <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
+ <20190625101445.GK1462@lst.de>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <387a9e4b-6a15-5b08-6878-53ed5cfb9bb0@suse.com>
+Date:   Tue, 25 Jun 2019 15:42:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190624235720.167067-3-allanzhang@google.com>
+In-Reply-To: <20190625101445.GK1462@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25491/Tue Jun 25 10:02:48 2019)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/25/2019 01:57 AM, allanzhang wrote:
-> Software event output is only enabled by a few prog types.
-> This test is to ensure that all supported types are enbled for
 
-Nit, typo: enbled
 
-> bpf_perf_event_output sucessfully.
-
-Nit, typo: sucessfully
-
-> Signed-off-by: allanzhang <allanzhang@google.com>
-
-For SOB, could you add proper formatted name before the email?
-
-> ---
->  tools/testing/selftests/bpf/test_verifier.c   | 33 ++++++-
->  .../selftests/bpf/verifier/event_output.c     | 94 +++++++++++++++++++
->  2 files changed, 126 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/bpf/verifier/event_output.c
+On 25.06.19 г. 13:14 ч., Christoph Hellwig wrote:
+> On Mon, Jun 24, 2019 at 07:06:22PM +0300, Nikolay Borisov wrote:
+>>> +{
+>>> +	struct list_head	tmp;
+>>> +
+>>> +	list_replace_init(&ioend->io_list, &tmp);
+>>> +	xfs_destroy_ioend(ioend, error);
+>>> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
+>>> +		xfs_destroy_ioend(ioend, error);
+>>
+>> nit: I'd prefer if the list_pop patch is right before this one since
+>> this is the first user of it.
 > 
-> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-> index c5514daf8865..901a188e1eea 100644
-> --- a/tools/testing/selftests/bpf/test_verifier.c
-> +++ b/tools/testing/selftests/bpf/test_verifier.c
-> @@ -50,7 +50,7 @@
->  #define MAX_INSNS	BPF_MAXINSNS
->  #define MAX_TEST_INSNS	1000000
->  #define MAX_FIXUPS	8
-> -#define MAX_NR_MAPS	18
-> +#define MAX_NR_MAPS	19
->  #define MAX_TEST_RUNS	8
->  #define POINTER_VALUE	0xcafe4all
->  #define TEST_DATA_LEN	64
-> @@ -84,6 +84,7 @@ struct bpf_test {
->  	int fixup_map_array_wo[MAX_FIXUPS];
->  	int fixup_map_array_small[MAX_FIXUPS];
->  	int fixup_sk_storage_map[MAX_FIXUPS];
-> +	int fixup_map_event_output[MAX_FIXUPS];
->  	const char *errstr;
->  	const char *errstr_unpriv;
->  	uint32_t retval, retval_unpriv, insn_processed;
-> @@ -604,6 +605,28 @@ static int create_sk_storage_map(void)
->  	return fd;
->  }
->  
-> +static int create_event_output_map(void)
-> +{
-> +	struct bpf_create_map_attr attr = {
-> +		.name = "test_map",
-> +		.map_type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
-> +		.key_size = 4,
-> +		.value_size = 4,
-> +		.max_entries = 1,
-> +	};
-> +	int fd, btf_fd;
-> +
-> +	btf_fd = load_btf();
-> +	if (btf_fd < 0)
-> +		return -1;
-> +	attr.btf_fd = btf_fd;
-> +	fd = bpf_create_map_xattr(&attr);
+> I try to keep generic infrastructure first instead of interveawing
+> it with subystem-specific patches.
+> 
+>> Additionally, I don't think list_pop is
+>> really a net-negative win 
+> 
+> What is a "net-negative win" ?
 
-This does not look correct, BTF for spinlock does not belong to perf event array.
+What I meant was 'net-positive win', in terms of making the code more
+readable or optimised.
 
-> +	close(attr.btf_fd);
-> +	if (fd < 0)
-> +		printf("Failed to create event_output\n");
-> +	return fd;
-> +}
-> +
->  static char bpf_vlog[UINT_MAX >> 8];
->  
->  static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
-> @@ -627,6 +650,7 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
->  	int *fixup_map_array_wo = test->fixup_map_array_wo;
->  	int *fixup_map_array_small = test->fixup_map_array_small;
->  	int *fixup_sk_storage_map = test->fixup_sk_storage_map;
-> +	int *fixup_map_event_output = test->fixup_map_event_output;
->  
->  	if (test->fill_helper) {
->  		test->fill_insns = calloc(MAX_TEST_INSNS, sizeof(struct bpf_insn));
-> @@ -788,6 +812,13 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
->  			fixup_sk_storage_map++;
->  		} while (*fixup_sk_storage_map);
->  	}
-> +	if (*fixup_map_event_output) {
-> +		map_fds[18] = create_event_output_map();
-> +		do {
-> +			prog[*fixup_map_event_output].imm = map_fds[18];
-> +			fixup_map_event_output++;
-> +		} while (*fixup_map_event_output);
-> +	}
->  }
->  
->  static int set_admin(bool admin)
-> diff --git a/tools/testing/selftests/bpf/verifier/event_output.c b/tools/testing/selftests/bpf/verifier/event_output.c
-> new file mode 100644
-> index 000000000000..b25eabcfaa56
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/verifier/event_output.c
-> @@ -0,0 +1,94 @@
-> +/* instructions used to output a skb based software event, produced
-> + * from code snippet:
-> +struct TMP {
-> +  uint64_t tmp;
-> +} tt;
-> +tt.tmp = 5;
-> +bpf_perf_event_output(skb, &connection_tracking_event_map, 0,
-> +		      &tt, sizeof(tt));
-> +return 1;
-[...]
+> 
+>> in comparison to list_for_each_entry_safe
+>> here. In fact this "delete the list" would seems more idiomatic if
+>> implemented via list_for_each_entry_safe
+> 
+> I disagree.  The for_each loops require an additional next iterator,
+> and also don't clearly express what is going on, but require additional
+> spotting of the list_del.
+
+That is of course your opinion. At the very least we can agree to disagree.
+
+What I'm worried about, though, is now you've essentially introduced a
+new idiom to dispose of lists, which is used only in your code. If it
+doesn't become more widespread and gradually start replacing current
+list_for_each_entry_safe usage then you would have increased the public
+list interface to cater for one specific use case, just because it seems
+more natural to you. I guess only time will show whether it makes sense
+to have list_pop_entry
+
