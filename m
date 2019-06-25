@@ -2,185 +2,144 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D57C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E95C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEACB20883
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62A420883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfFZAD4 (ORCPT
+        id S1726537AbfFZAEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 20:03:56 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:47521 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726455AbfFZADz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 20:03:55 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TVCYVJX_1561507375;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TVCYVJX_1561507375)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 26 Jun 2019 08:03:03 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
-        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
-        shakeelb@google.com, rientjes@google.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [v4 PATCH 3/4] mm: shrinker: make shrinker not depend on memcg kmem
-Date:   Wed, 26 Jun 2019 08:02:40 +0800
-Message-Id: <1561507361-59349-4-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1561507361-59349-1-git-send-email-yang.shi@linux.alibaba.com>
-References: <1561507361-59349-1-git-send-email-yang.shi@linux.alibaba.com>
+        Tue, 25 Jun 2019 20:04:33 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45807 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726402AbfFZAEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 20:04:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 17:04:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,417,1557212400"; 
+   d="scan'208";a="188466243"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga002.fm.intel.com with ESMTP; 25 Jun 2019 17:04:30 -0700
+Date:   Tue, 25 Jun 2019 16:54:47 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v9 03/17] x86/split_lock: Align x86_capability to
+ unsigned long to avoid split locked access
+Message-ID: <20190625235447.GB245468@romley-ivt3.sc.intel.com>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-4-git-send-email-fenghua.yu@intel.com>
+ <746b5a8752cc40b1b954913f786ed9a6@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <746b5a8752cc40b1b954913f786ed9a6@AcuMS.aculab.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently shrinker is just allocated and can work when memcg kmem is
-enabled.  But, THP deferred split shrinker is not slab shrinker, it
-doesn't make too much sense to have such shrinker depend on memcg kmem.
-It should be able to reclaim THP even though memcg kmem is disabled.
+On Mon, Jun 24, 2019 at 03:12:49PM +0000, David Laight wrote:
+> From: Fenghua Yu
+> > Sent: 18 June 2019 23:41
+> > 
+> > set_cpu_cap() calls locked BTS and clear_cpu_cap() calls locked BTR to
+> > operate on bitmap defined in x86_capability.
+> > 
+> > Locked BTS/BTR accesses a single unsigned long location. In 64-bit mode,
+> > the location is at:
+> > base address of x86_capability + (bit offset in x86_capability / 64) * 8
+> > 
+> > Since base address of x86_capability may not be aligned to unsigned long,
+> > the single unsigned long location may cross two cache lines and
+> > accessing the location by locked BTS/BTR introductions will cause
+> > split lock.
+> > 
+> > To fix the split lock issue, align x86_capability to size of unsigned long
+> > so that the location will be always within one cache line.
+> > 
+> > Changing x86_capability's type to unsigned long may also fix the issue
+> > because x86_capability will be naturally aligned to size of unsigned long.
+> > But this needs additional code changes. So choose the simpler solution
+> > by setting the array's alignment to size of unsigned long.
+> 
+> As I've pointed out several times before this isn't the only int[] data item
+> in this code that gets passed to the bit operations.
+> Just because you haven't got a 'splat' from the others doesn't mean they don't
+> need fixing at the same time.
 
-Introduce a new shrinker flag, SHRINKER_NONSLAB, for non-slab shrinker.
-When memcg kmem is disabled, just such shrinkers can be called in
-shrinking memcg slab.
+As Thomas suggested in https://lkml.org/lkml/2019/4/25/353, patch #0017
+in this patch set implements WARN_ON_ONCE() to audit possible unalignment
+in atomic bit ops.
 
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- include/linux/shrinker.h |  3 ++-
- mm/vmscan.c              | 36 +++++++++++++++++++-----------------
- 2 files changed, 21 insertions(+), 18 deletions(-)
+This patch set just enables split lock detection first. Fixing ALL split
+lock issues might be practical after the patch is upstreamed and used widely.
 
-diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
-index 9443caf..9e112d6 100644
---- a/include/linux/shrinker.h
-+++ b/include/linux/shrinker.h
-@@ -69,7 +69,7 @@ struct shrinker {
- 
- 	/* These are for internal use */
- 	struct list_head list;
--#ifdef CONFIG_MEMCG_KMEM
-+#ifdef CONFIG_MEMCG
- 	/* ID in shrinker_idr */
- 	int id;
- #endif
-@@ -81,6 +81,7 @@ struct shrinker {
- /* Flags */
- #define SHRINKER_NUMA_AWARE	(1 << 0)
- #define SHRINKER_MEMCG_AWARE	(1 << 1)
-+#define SHRINKER_NONSLAB	(1 << 2)
- 
- extern int prealloc_shrinker(struct shrinker *shrinker);
- extern void register_shrinker_prepared(struct shrinker *shrinker);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 7889f58..187cacb 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -174,8 +174,7 @@ struct scan_control {
- static LIST_HEAD(shrinker_list);
- static DECLARE_RWSEM(shrinker_rwsem);
- 
--#ifdef CONFIG_MEMCG_KMEM
--
-+#ifdef CONFIG_MEMCG
- /*
-  * We allow subsystems to populate their shrinker-related
-  * LRU lists before register_shrinker_prepared() is called
-@@ -227,18 +226,7 @@ static void unregister_memcg_shrinker(struct shrinker *shrinker)
- 	idr_remove(&shrinker_idr, id);
- 	up_write(&shrinker_rwsem);
- }
--#else /* CONFIG_MEMCG_KMEM */
--static int prealloc_memcg_shrinker(struct shrinker *shrinker)
--{
--	return 0;
--}
- 
--static void unregister_memcg_shrinker(struct shrinker *shrinker)
--{
--}
--#endif /* CONFIG_MEMCG_KMEM */
--
--#ifdef CONFIG_MEMCG
- static bool global_reclaim(struct scan_control *sc)
- {
- 	return !sc->target_mem_cgroup;
-@@ -293,6 +281,15 @@ static bool memcg_congested(pg_data_t *pgdat,
- 
- }
- #else
-+static int prealloc_memcg_shrinker(struct shrinker *shrinker)
-+{
-+	return 0;
-+}
-+
-+static void unregister_memcg_shrinker(struct shrinker *shrinker)
-+{
-+}
-+
- static bool global_reclaim(struct scan_control *sc)
- {
- 	return true;
-@@ -579,7 +576,7 @@ static unsigned long do_shrink_slab(struct shrink_control *shrinkctl,
- 	return freed;
- }
- 
--#ifdef CONFIG_MEMCG_KMEM
-+#ifdef CONFIG_MEMCG
- static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 			struct mem_cgroup *memcg, int priority)
- {
-@@ -587,7 +584,7 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 	unsigned long ret, freed = 0;
- 	int i;
- 
--	if (!memcg_kmem_enabled() || !mem_cgroup_online(memcg))
-+	if (!mem_cgroup_online(memcg))
- 		return 0;
- 
- 	if (!down_read_trylock(&shrinker_rwsem))
-@@ -613,6 +610,11 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 			continue;
- 		}
- 
-+		/* Call non-slab shrinkers even though kmem is disabled */
-+		if (!memcg_kmem_enabled() &&
-+		    !(shrinker->flags & SHRINKER_NONSLAB))
-+			continue;
-+
- 		ret = do_shrink_slab(&sc, shrinker, priority);
- 		if (ret == SHRINK_EMPTY) {
- 			clear_bit(i, map->map);
-@@ -649,13 +651,13 @@ static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 	up_read(&shrinker_rwsem);
- 	return freed;
- }
--#else /* CONFIG_MEMCG_KMEM */
-+#else /* CONFIG_MEMCG */
- static unsigned long shrink_slab_memcg(gfp_t gfp_mask, int nid,
- 			struct mem_cgroup *memcg, int priority)
- {
- 	return 0;
- }
--#endif /* CONFIG_MEMCG_KMEM */
-+#endif /* CONFIG_MEMCG */
- 
- /**
-  * shrink_slab - shrink slab caches
--- 
-1.8.3.1
+> 
+> > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > ---
+> >  arch/x86/include/asm/processor.h | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> > index c34a35c78618..d3e017723634 100644
+> > --- a/arch/x86/include/asm/processor.h
+> > +++ b/arch/x86/include/asm/processor.h
+> > @@ -93,7 +93,9 @@ struct cpuinfo_x86 {
+> >  	__u32			extended_cpuid_level;
+> >  	/* Maximum supported CPUID level, -1=no CPUID: */
+> >  	int			cpuid_level;
+> > -	__u32			x86_capability[NCAPINTS + NBUGINTS];
+> > +	/* Aligned to size of unsigned long to avoid split lock in atomic ops */
+> 
+> Wrong comment.
+> Something like:
+> 	/* Align to sizeof (unsigned long) because the array is passed to the
+> 	 * atomic bit-op functions which require an aligned unsigned long []. */
 
+The problem we try to fix here is not because "the array is passed to the
+atomic bit-op functions which require an aligned unsigned long []".
+
+The problem is because of the possible split lock issue. If it's not because
+of split lock issue, there is no need to have this patch.
+
+So I would think my comment is right to point out explicitly why we need
+this alignment.
+
+> 
+> > +	__u32			x86_capability[NCAPINTS + NBUGINTS]
+> > +				__aligned(sizeof(unsigned long));
+> 
+> It might be better to use a union (maybe unnamed) here.
+
+That would be another patch. This patch just simply fixes the split lock
+issue.
+
+Thanks.
+
+-Fenghua
