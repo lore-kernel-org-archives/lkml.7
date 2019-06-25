@@ -2,137 +2,121 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2606EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6DAC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084EC215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12166213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:48:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qLdIAZqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfFYKot (ORCPT
+        id S1728626AbfFYKsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:44:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:19106 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbfFYKot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:44:49 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 12EA0BDC5EEDA6055D6F;
-        Tue, 25 Jun 2019 18:44:45 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
- 18:44:33 +0800
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-To:     Wei Xu <xuwei5@hisilicon.com>, <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>, <arnd@arndb.de>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
- <afaddac3-4f9c-c09d-09d1-9c3e71beaf7b@hisilicon.com>
-CC:     <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@huawei.com>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <1dc5a7b1-5476-d732-74ba-d044e63706fa@huawei.com>
-Date:   Tue, 25 Jun 2019 11:44:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Tue, 25 Jun 2019 06:48:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46603 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbfFYKsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:48:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so17247011wrw.13;
+        Tue, 25 Jun 2019 03:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=/YwqeNw4UunukhbJFUnuEIhTwSVj4RrsnNageK9oqjw=;
+        b=qLdIAZqpTqrUGvpCnFSi/SGB6/kU+eTummvrFzgm3zXWwKHLvS87uy8CUabOnnleH2
+         8SiMXa+PsY6j+K/ZQlEr8zInKfUPhWUL5fhElA5xIyNLw8q+eTJyuGFrP+oda/wAE2o/
+         eYLszT9ez+GczPcwhOaSzkg10MHG1ExpqeQG//IiLlSfb4GVtC8U/t51GkuPdQ6bJCbt
+         bNdTi9/4ZeFyEe4Lbsi3osTYGAt4aTv2/6Z5bnhTCEKioWkCycrV7+sl7sDnhwVZjOi6
+         qJ4woBeYEB2mCu+JgobWlefcuWvfxsifstMJeqOAUQekDknf9o59iQoTAEI60CPIn4v8
+         mL5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=/YwqeNw4UunukhbJFUnuEIhTwSVj4RrsnNageK9oqjw=;
+        b=LbP3sUF1Ez8wkBrHhVsxO6kF77HYCny2TrGgSj4SMA5Z9FxQf0sxOKLbvt241z15ji
+         jUbBGmmENt1qoO6NcLswUzPIw98sqeBAJVPU2X9zIfPEnxUPwGEZ71wTxd6bWBHp6tPm
+         vnebAlXEH857eLVEQKtTzbEnXgrqd6pgenEwFakreVjHBH3KpfQvI8DHhFeSxVyNB1pD
+         yq/VjRk6L+amx+XUWDVO/tffWlxw44FYYYS9sdkIBCo4e2alp1+OrGFiogUFXvqFY7Ch
+         gRbnv/kJnL4IWqaaJN4Dz7PRkyv5QvkWwT9DuQoXBtTb7G1JNAxuQ3pMRhrCL4MrSVSU
+         EGqQ==
+X-Gm-Message-State: APjAAAU9n6th0h0SN9kncMKcY8U7RzHMNNflEm0a1BPDQm0S35rNqcbp
+        TqzLAqqOJ2c81U1K+VBw6Omm6Iqf39ofyQ==
+X-Google-Smtp-Source: APXvYqzbsLqTnIBSznKPDtaHGmrBKP1M7k2HnizWsTquzdXflsk0JmtZkr3goY7PAUaqcOJ22+FWeQ==
+X-Received: by 2002:a5d:5446:: with SMTP id w6mr105019303wrv.164.1561459700098;
+        Tue, 25 Jun 2019 03:48:20 -0700 (PDT)
+Received: from localhost ([92.59.185.54])
+        by smtp.gmail.com with ESMTPSA id w23sm2292976wmi.45.2019.06.25.03.48.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 03:48:19 -0700 (PDT)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        <marc.zyngier@arm.com>
+Subject: Re: =?iso-8859-1?Q?d=5Flookup:_Unable_to_handle_kernel_paging_request?=
+Date:   Tue, 25 Jun 2019 12:48:17 +0200
 MIME-Version: 1.0
-In-Reply-To: <afaddac3-4f9c-c09d-09d1-9c3e71beaf7b@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Message-ID: <c53a0fb8-d640-4d58-b339-0a7ea10aa621@gmail.com>
+In-Reply-To: <20190625094602.GC13263@fuggles.cambridge.arm.com>
+References: <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
+ <20190522162945.GN17978@ZenIV.linux.org.uk>
+ <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
+ <20190618183548.GB17978@ZenIV.linux.org.uk>
+ <bf2b3aa6-bda1-43f1-9a01-e4ad3df81c0b@gmail.com>
+ <20190619162802.GF17978@ZenIV.linux.org.uk>
+ <bc774f6b-711e-4a20-ad85-c282f9761392@gmail.com>
+ <20190619170940.GG17978@ZenIV.linux.org.uk>
+ <cd84de0e-909e-4117-a20a-6cde42079267@gmail.com>
+ <20190624114741.i542cb3wbhfbk4q4@willie-the-truck>
+ <20190625094602.GC13263@fuggles.cambridge.arm.com>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2019 11:39, Wei Xu wrote:
-> Hi ARM-SoC team,
+On Tuesday, June 25, 2019 11:46:02 AM CEST, Will Deacon wrote:
+> [+Marc]
 >
-> Sorry, I forgot to mention that one or two patches in this patch set
-> are not pure fix.
-> We are also OK to queue for v5.3.
-> Thanks!
+> Hi again, Vicente,
 >
-
-Yes, specifically patch "lib: logic_pio: Enforce LOGIC_PIO_INDIRECT 
-region ops are set at registration" is a minor tidy/optimisation.
-
-Others are fixes or required for fixes.
-
-And adding for v5.3 is fine, then we can ensure that the necessary is 
-backported to stable when in mainline.
-
-Thanks,
-John
-
-> Best Regards,
-> Wei
+> On Mon, Jun 24, 2019 at 12:47:41PM +0100, Will Deacon wrote:
+>> On Sat, Jun 22, 2019 at 08:02:19PM +0200, Vicente Bergas wrote: ...
 >
-> On 6/25/2019 11:23 AM, Wei Xu wrote:
->> Hi ARM-SoC team,
->>
->> Please consider to pull the following changes.
->> Thanks!
->>
->> Best Regards,
->> Wei
->>
->> ---
->>
->> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
->>
->>   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
->>
->> are available in the Git repository at:
->>
->>   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
->>
->> for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
->>
->>   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
->>
->> ----------------------------------------------------------------
->> Hisilicon fixes for v5.2-rc
->>
->> - fixed RCU usage in logical PIO
->> - Added a function to unregister a logical PIO range in logical PIO
->>   to support the fixes in the hisi-lpc driver
->> - fixed and optimized hisi-lpc driver to avoid potential use-after-free
->>   and driver unbind crash
->>
->> ----------------------------------------------------------------
->> John Garry (6):
->>       lib: logic_pio: Fix RCU usage
->>       lib: logic_pio: Avoid possible overlap for unregistering regions
->>       lib: logic_pio: Add logic_pio_unregister_range()
->>       bus: hisi_lpc: Unregister logical PIO range to avoid potential use-after-free
->>       bus: hisi_lpc: Add .remove method to avoid driver unbind crash
->>       lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
->>
->>  drivers/bus/hisi_lpc.c    | 43 ++++++++++++++++++++----
->>  include/linux/logic_pio.h |  1 +
->>  lib/logic_pio.c           | 86 +++++++++++++++++++++++++++++++++--------------
->>  3 files changed, 99 insertions(+), 31 deletions(-)
->>
->
->
-> .
->
+> Before you rush over to LAKML, please could you provide your full dmesg
+> output from the kernel that was crashing (i.e. the dmesg you see in the
+> kexec'd kernel)? We've got a theory that the issue may be related to the
+> interrupt controller, and the dmesg output should help to establish whether=
 
+> that is plausible or not.
+>
+> Thanks,
+>
+> Will
+
+Hi Will,
+the memtest test is still pending...
+
+Regarding interrupts, the kernel before kexec has this parameter:
+irqchip.gicv3_nolpi=3D1
+Thanks to Marc:
+https://freenode.irclog.whitequark.org/linux-rockchip/2018-11-20#23524255
+
+The kernel messages are here:
+https://paste.debian.net/1089170/
+https://paste.debian.net/1089171/
+
+Regards,
+  Vicen=C3=A7.
 
