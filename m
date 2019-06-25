@@ -2,177 +2,149 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47311C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5D2C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 118CA214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DDB214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:38:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UK5LsYSq"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="o4bQtlTg";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="EP7LnWas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfFYJip (ORCPT
+        id S1731639AbfFYJiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:38:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37640 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729258AbfFYJio (ORCPT
+        Tue, 25 Jun 2019 05:38:50 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:62016 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729136AbfFYJit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:38:44 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v14so17063335wrr.4;
-        Tue, 25 Jun 2019 02:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qf/dovgdWTDk466aS2w6QCAW9lwJESqELVwht+4vdoM=;
-        b=UK5LsYSqWuafK78PCet8ADx8Ui+gLTbo/kd5PMPzHrB0UVrg8tMhSZfY9qYB7CY0d5
-         EuFsae5j40PmZqoQO0A91isoNZS2ySAlziToPDacxit7lura60G9CaPHYdWL1kKjXyD6
-         27u59DGDsxiFCrLeYB1H0t1uN2bZ5gP3CIFTtbvOtM3OAGcxqkbvcaDj5ZUK2kgLZbq0
-         xy0czAd+/PjiKY8rqVSS2HnYQMz4z6GcLeHH7p/ppyuIBgKX4IItydkKGnyZmKaPn/6K
-         zOBZBQhD7/HPxJxWFEPVTC2YZ1caA7ynvRoLYmsGlWuxPgeYcv58svHZ1ZHo6QvR+s7O
-         7HpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qf/dovgdWTDk466aS2w6QCAW9lwJESqELVwht+4vdoM=;
-        b=IXJZXeI3qohwpbNVYmKdmNLLW2V1JOezkDK/Ta+BRowHhNOWn/YA2LP91oh7Tb6PR3
-         0MjyCAUzK7TnW1udR7Yf+fftU3QRaOoaBWWF2hUMdBHhuPnViy9rt7S9Olygyh4dtBfZ
-         i83x+J5FFXxwYdxJxeVQjwmu23AJDc5V4Tjobnb4aAfyWOoqVU7UeE2htv8idCfcSV6w
-         lYZ6h3tL4HgM1I+/x5qh1EJASkxp1DK5AzVc5JQn8yPW549dliPf4J/iTZSN3TkMhWKP
-         wX7Fy5poodL/+kSE/IH9QsmSI3s+SybB3Qrpviak6+Rcn88UTRSUYpvXKF3dutdrKYx2
-         krMA==
-X-Gm-Message-State: APjAAAUQS+HriKYmT4uS+Bz98LlLsrkIhR5jjc7LXOhRx1nbXtT/uccS
-        v5AkoH1TfjgQFoyT0ugHNCI=
-X-Google-Smtp-Source: APXvYqw1+B5Zke9wCKXvrY6sFnQ6nzawXFqyztWPByGXC8pJ4XNb1PrX21ikjVB/ftfgcKA516vrTQ==
-X-Received: by 2002:adf:de90:: with SMTP id w16mr81130541wrl.217.1561455522093;
-        Tue, 25 Jun 2019 02:38:42 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id r12sm14936370wrt.95.2019.06.25.02.38.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 02:38:40 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 11:38:39 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-Message-ID: <20190625093839.GB1516@ulmo>
-References: <20190522163428.7078-1-paul@crapouillou.net>
- <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
- <20190621135608.GB11839@ulmo>
- <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
+        Tue, 25 Jun 2019 05:38:49 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P9bCmL012074;
+        Tue, 25 Jun 2019 02:38:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=Q7Kf655OodjWp6WsEX9d5KutreOSgwoib4Ogj+4yWa8=;
+ b=o4bQtlTgjQzlfcKTFd/ihbC5kFfw92A5AxJhc1X7dTgFRV6QgcrJsN+dWnGRJKun242h
+ zPxFjAMw10kXYDdLkIYiHnPhA9L0DoaMkR+QUl9bR1XnWL6n1nVcEwTwZ/rDnjQg6gCL
+ yiQnz2yYWGdTEcRw0AbrvmWVyhD9vRsfUxgtyjqYHMl97Q223QQXDm5U0uYpLNvWW7/W
+ ti6K/ODELnPJ8c5Fekl+GUsjFhIRf41UhF67MiVQ/rnWq+c1psCpyFy/UXEDI/EcLx4Q
+ CFdgTnuC3SqvafD2C5vcwbDQScIQeZ5Y6AdIDNS6evoAoi2y8vk0mlt99oM9wGi9DnFL PA== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2057.outbound.protection.outlook.com [104.47.41.57])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2t9gvsbwed-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 25 Jun 2019 02:38:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q7Kf655OodjWp6WsEX9d5KutreOSgwoib4Ogj+4yWa8=;
+ b=EP7LnWasYEFE++p1k/+24wg2qH/k2gFmAvpfq9/Tnq9uJ2UVJF6PBILub50cy47vljb2g764INeFUSM1xEaPG7fGuujz2axfcGXWN2Uikzyx8ENl2pHnMjTIefFBGPp2h1BsMAKySOaiIAYvVzCgCOtpz8HTzoFHK6ZncZ69ILg=
+Received: from SN2PR07MB2480.namprd07.prod.outlook.com (10.166.212.14) by
+ SN2PR07MB2672.namprd07.prod.outlook.com (10.167.15.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Tue, 25 Jun 2019 09:38:37 +0000
+Received: from SN2PR07MB2480.namprd07.prod.outlook.com
+ ([fe80::7dc9:f52a:3020:d0ba]) by SN2PR07MB2480.namprd07.prod.outlook.com
+ ([fe80::7dc9:f52a:3020:d0ba%10]) with mapi id 15.20.2008.014; Tue, 25 Jun
+ 2019 09:38:37 +0000
+From:   Parshuram Raju Thombare <pthombar@cadence.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: RE: [PATCH v5 2/5] net: macb: add support for sgmii MAC-PHY interface
+Thread-Topic: [PATCH v5 2/5] net: macb: add support for sgmii MAC-PHY
+ interface
+Thread-Index: AQHVKoXvEFWLlsIg00eQABDiRQGpFaaq0E4AgAFDHQCAAAiEAIAAAOSg
+Date:   Tue, 25 Jun 2019 09:38:37 +0000
+Message-ID: <SN2PR07MB24800C63DCBC143B3A802A6EC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
+ <1561378274-12357-1-git-send-email-pthombar@cadence.com>
+ <20190624134233.suowuortj5dcbxdg@shell.armlinux.org.uk>
+ <SN2PR07MB2480B53AFE512F46986A1CAFC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+ <20190625092930.ootk5nvbkqqvfbtd@shell.armlinux.org.uk>
+In-Reply-To: <20190625092930.ootk5nvbkqqvfbtd@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1mZmEyNzEzNC05NzJjLTExZTktODRmOS0xMDY1MzBlNmVmM2VcYW1lLXRlc3RcZmZhMjcxMzYtOTcyYy0xMWU5LTg0ZjktMTA2NTMwZTZlZjNlYm9keS50eHQiIHN6PSIxMDQ4IiB0PSIxMzIwNTkyOTExNDQ5MzUxMjciIGg9IlF3N1YxUEVwdmdObFgrT2FXZzRKVnRCVEtyTT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 35fca7ea-f6aa-4120-1694-08d6f950e67d
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN2PR07MB2672;
+x-ms-traffictypediagnostic: SN2PR07MB2672:
+x-microsoft-antispam-prvs: <SN2PR07MB267239DCFEED6B55F6E0CD66C1E30@SN2PR07MB2672.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(136003)(396003)(39860400002)(376002)(199004)(189003)(36092001)(66556008)(54906003)(66946007)(55236004)(316002)(102836004)(476003)(26005)(71190400001)(68736007)(55016002)(6916009)(78486014)(11346002)(74316002)(4744005)(86362001)(8936002)(6436002)(9686003)(52536014)(6116002)(71200400001)(446003)(305945005)(7736002)(256004)(25786009)(6506007)(99286004)(186003)(14454004)(3846002)(486006)(33656002)(53936002)(8676002)(66066001)(4326008)(478600001)(81166006)(229853002)(2906002)(6246003)(107886003)(7696005)(5660300002)(76116006)(81156014)(66476007)(73956011)(64756008)(66446008)(76176011)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR07MB2672;H:SN2PR07MB2480.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PClwevzwTAhjPFN0F60Ls8P/b30kdneJQm4ykLujE1eN4mU5d5RwDC2sdSO6lOQ0FJSPv77uFhuhZz0vd6FlZ0hVUstVFXxtSUIyMRYDSQZ2ptpWOrWNHBfXQqwXDKZWVZOJT668gTrBAswtA/SxvJrWT2bxkmGW1mAGC7XRdh46JB/uT4l1dvTB90o95V4mmIskC1vupHXCJyt7Cj3lMDJyXSDBGTofqdyMmezW4Ur2VMwHJvpLi3SP9TM7uE/tBxtET+rkzezdyYVZWDH42Gi3PQFZ9L6lyHQR4L9GF3XEsK1WeUBifjz+3okbLw522ti9C8UB6+oUm4NbcYOKuQTRt+ZFf93mBg5pDP/EOVZYYZg/rQfXHsDjx2AL3SVVmpeZv19HuB8ZYwBBw40uu+Ov1mXWYl8CXpIYG6tMIt8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
-Content-Disposition: inline
-In-Reply-To: <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35fca7ea-f6aa-4120-1694-08d6f950e67d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 09:38:37.7599
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR07MB2672
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=924 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---0eh6TmSyL6TZE2Uz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> >In which case, gem_phylink_validate() must clear the support mask when
+>> >SGMII mode is requested to indicate that the interface mode is not
+>> >supported.
+>> >The same goes for _all_ other PHY link modes that the hardware does not
+>> >actually support, such as PHY_INTERFACE_MODE_10GKR...
+>> If interface is not supported by hardware probe returns with error, so w=
+e don't
+>> net interface is not registered at all.
+>That does not negate my comment above.
+Sorry if I misunderstood your question, but hardware supports interfaces an=
+d based
+on that link modes are supported. So if interface is not supported by hardw=
+are,
+net device is not registered and there will be no phylink_validate call.
+If hardware support particular interface, link modes supported by interface
+are added to (not cleared from) supported mask, provided configs is not try=
+ing to limit=20
+data rate using GIGABIT_ENABLE* macro.
 
-On Mon, Jun 24, 2019 at 12:28:44PM +0100, Daniel Thompson wrote:
-> On Fri, Jun 21, 2019 at 03:56:08PM +0200, Thierry Reding wrote:
-> > On Fri, Jun 21, 2019 at 01:41:45PM +0100, Daniel Thompson wrote:
-> > > On 22/05/2019 17:34, Paul Cercueil wrote:
-> > > > When the driver probes, the PWM pin is automatically configured to =
-its
-> > > > default state, which should be the "pwm" function.
-> > >=20
-> > > At which point in the probe... and by who?
-> >=20
-> > The driver core will select the "default" state of a device right before
-> > calling the driver's probe, see:
-> >=20
-> > 	drivers/base/pinctrl.c: pinctrl_bind_pins()
-> >=20
-> > which is called from:
-> >=20
-> > 	drivers/base/dd.c: really_probe()
-> >=20
->=20
-> Thanks. I assumed it would be something like that... although given
-> pwm-backlight is essentially a wrapper driver round a PWM I wondered why
-> the pinctrl was on the backlight node (rather than the PWM node).
-
-I agree with this. We're defining the pin control state for the PWM pin,
-so in my opinion it should be the PWM driver that controls it.
-
-One reason why I think this is important is if we ever end up with a
-device that requires pins from two different controllers to be
-configured at runtime, then how would we model that? Since pin control
-states cannot be aggregated, so you'd have to have multiple "default"
-states, each for the pins that they control.
-
-On the other hand if we associate the pin control states with each of
-the resources that need those states, then when those resources are
-controlled, they will automatically know how to deal with the states.
-The top-level device (i.e. backlight) doesn't need to concern itself
-with those details.
-
-> Looking at the DTs in the upstream kernel it looks like ~20% of the
-> backlight drivers have pinctrl on the backlight node. Others presumable
-> have none or have it on the PWM node (and it looks like support for
-> sleeping the pins is *very* rare amoung the PWM drivers).
-
-I suspect that that's mostly a sign of our device trees and kernel
-subsystems still maturing. For example, I think it's fairly rare for a
-device to seamlessly take over the display configuration from the
-bootloader. Most of the time you'll just see things go black (that's
-actually one of the better cases) when the kernel takes over and then
-the backlight will come up again at some point.
-
-Taking over the bootloader's display configuration is pretty hard and
-there are numerous pieces to the puzzle (need to make sure clocks and
-power supplies are not automatically disabled after the initcalls,
-display drivers need to know how to read out hardware, claim whatever
-memory region the bootloader was using for a bootsplash, backlight is
-supposed to remain enabled if the bootloader turned it on, ...).
-
-I don't think the fact that PWM drivers don't support this implies that
-hardware doesn't support it. I think we've just never needed it before
-because we get away with it.
-
-Thierry
-
---0eh6TmSyL6TZE2Uz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0R650ACgkQ3SOs138+
-s6FApw//X6YPIMSBehRgeG/YYLTIA2NFvbDmGSL7AndIcj/QTu4qHzVehMDRtQOn
-wgw+SF/yRrqGryLdFI7EdfslMS++FvPSwtowwRt1BWGog372Q63Zgl0o147klX2/
-iXcoF7eBV9x9Ied+XVqjLs3Ag0BQAX9AV0MRnXmBz3IOicg3bU8n03xcyZCDAWvc
-w95lmRGM9z+iP2I3W73i+4+3hj6jgUztZsopwa0t56Bp8q0dcqX9Bm6ap+pcxAmX
-MPFcogA6k8Qj075yujpCCzY6Y3z4ZV2MRyIhA0f3PZnFl37+liS3gnDqdq5PXNXN
-+DVhI5rgB7ZOi1MSkPRgHbtn2XkOZ+ct1QW1dvd/Na4CuVny67/CfvshUOd7y+y9
-I9QPlEvlNGvBHtEbFGEAjF4VOH3j7moN48CK41hxkLBlcuQJ6s5MBGxNQaRK0UC2
-+QLrVgsQriv+NnzaLKEiGlBIJMRZjaRYYTpywXDI9nuiEEBPNppXbzyAamIZbcup
-nJapCAsSaO1h4WnmP0Alo0hjyW6kQx9aCoWWAySeUfVkeGPK6Ogqgteda+ob5qjc
-h20T6YzAa0Mky7j52RUPdHCxu7q6dRrNS5viGqyBSzyvkSZgYN3Fkys3x4dnLl/x
-McVvQdPQ51Os3ftQ3u03yRFdPJ34ZVV/kFy7Y7G0XSM9gEroD1I=
-=pSQv
------END PGP SIGNATURE-----
-
---0eh6TmSyL6TZE2Uz--
+Regards,
+Parshuram Thombare
