@@ -2,102 +2,253 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C858C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA47C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D3221783
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C12215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:45:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="mPu5dVWs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbfFYIo6 (ORCPT
+        id S1730820AbfFYIpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:44:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41309 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfFYIo6 (ORCPT
+        Tue, 25 Jun 2019 04:45:04 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:49633 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfFYIpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:44:58 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hfh3t-0000XF-62; Tue, 25 Jun 2019 10:44:21 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
-References: <20190607162349.18199-1-john.ogness@linutronix.de>
-        <20190607162349.18199-2-john.ogness@linutronix.de>
-        <20190618045117.GA7419@jagdpanzerIV> <87imt2bl0k.fsf@linutronix.de>
-        <20190625064543.GA19050@jagdpanzerIV>
-        <20190625071500.GB19050@jagdpanzerIV>
-Date:   Tue, 25 Jun 2019 10:44:19 +0200
-In-Reply-To: <20190625071500.GB19050@jagdpanzerIV> (Sergey Senozhatsky's
-        message of "Tue, 25 Jun 2019 16:15:00 +0900")
-Message-ID: <875zoujbq4.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 25 Jun 2019 04:45:03 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8gNT43533370
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 25 Jun 2019 01:42:23 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8gNT43533370
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561452144;
+        bh=cg42abpzc5s3kX2ncAxw3NJVpOj4sXnUSvXHK3AoXNE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=mPu5dVWsn/LvBKEErWynIV6akZ5Le6T/2F0Ubd0wfbVYbefm0n+FWHwFKw9k4V2Ji
+         BTf1NNeq5mAASAJzAVdAlh0lObkyBLU8F4wTvdqy8pfKq587v0fDrxwHWa7jrGMsxp
+         TW5VS81oeBde/ESEBpRmjYRCd5+aK6uWpuDvw5a4tCmquL62gG741oc22PQSUaqc76
+         8FiQ7DNddUIsC0X1kQaDa+YSLjDCCJKw+wTeHBBgHd/X4Lw27J4qodVTzsFoHNGbNL
+         V1Tj3dawwemJWg6bKnh1dzuNzdCDEjczbhWa9evlYAsa5YGvsXqAOT75pAgEqSsaZa
+         1ItejvuyXtBlQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8gMHA3533367;
+        Tue, 25 Jun 2019 01:42:22 -0700
+Date:   Tue, 25 Jun 2019 01:42:22 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
+Message-ID: <tip-5fc1bd84664a5152dcbdba0962c40a6a07fbd78b@git.kernel.org>
+Cc:     bp@alien8.de, hpa@zytor.com, kan.liang@linux.intel.com,
+        acme@kernel.org, torvalds@linux-foundation.org, luto@kernel.org,
+        namhyung@kernel.org, gregkh@linuxfoundation.org,
+        alexander.shishkin@linux.intel.com, vincent.weaver@maine.edu,
+        jolsa@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, acme@redhat.com, jolsa@kernel.org,
+        eranian@google.com, tglx@linutronix.de
+Reply-To: peterz@infradead.org, acme@redhat.com,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          jolsa@kernel.org, eranian@google.com, jolsa@redhat.com,
+          mingo@kernel.org, namhyung@kernel.org, luto@kernel.org,
+          torvalds@linux-foundation.org, vincent.weaver@maine.edu,
+          gregkh@linuxfoundation.org, alexander.shishkin@linux.intel.com,
+          bp@alien8.de, acme@kernel.org, hpa@zytor.com,
+          kan.liang@linux.intel.com
+In-Reply-To: <20190616140358.27799-8-jolsa@kernel.org>
+References: <20190616140358.27799-8-jolsa@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf/x86/rapl: Get attributes from new probe
+ framework
+Git-Commit-ID: 5fc1bd84664a5152dcbdba0962c40a6a07fbd78b
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-25, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->>>> +	struct prb_reserved_entry e;
->>>> +	char *s;
->>>> +
->>>> +	s = prb_reserve(&e, &rb, 32);
->>>> +	if (s) {
->>>> +		sprintf(s, "Hello, world!");
->>>> +		prb_commit(&e);
->>>> +	}
->>>
->>> A nit: snprintf().
->>>
->>> sprintf() is tricky, it may write "slightly more than was
->>> anticipated" bytes - all those string_nocheck(" disabled"),
->>> error_string("pK-error"), etc.
->> 
->> Agreed. Documentation should show good examples.
-> 
-> In vprintk_emit(), are we going to always reserve 1024-byte
-> records, since we don't know the size in advance, e.g.
-> 
-> 	printk("%pS %s\n", regs->ip, current->name)
-> 		prb_reserve(&e, &rb, ????);
-> 
-> or are we going to run vscnprintf() on a NULL buffer first,
-> then reserve the exactly required number of bytes and afterwards
-> vscnprintf(s) -> prb_commit(&e)?
+Commit-ID:  5fc1bd84664a5152dcbdba0962c40a6a07fbd78b
+Gitweb:     https://git.kernel.org/tip/5fc1bd84664a5152dcbdba0962c40a6a07fbd78b
+Author:     Jiri Olsa <jolsa@kernel.org>
+AuthorDate: Sun, 16 Jun 2019 16:03:57 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 24 Jun 2019 19:28:35 +0200
 
-(As suggested by Petr) I want to use vscnprintf() on a NULL
-buffer. However, a NULL buffer is not sufficient because things like the
-loglevel are sometimes added via %s (for example, in /dev/kmsg). So
-rather than a NULL buffer, I would use a small buffer on the stack
-(large enough to store loglevel/cont information). This way we can use
-vscnprintf() to get the exact size _and_ printk_get_level() will see
-enough of the formatted string to parse what it needs.
+perf/x86/rapl: Get attributes from new probe framework
 
-> I'm asking this because, well, if the most common usage
-> pattern (printk->prb_reserve) will always reserve fixed
-> size records (aka data blocks), then you _probably_ (??)
-> can drop the 'variable size records' requirement from prb
-> design and start looking at records (aka data blocks) as
-> fixed sized chunks of bytes, which are always located at
-> fixed offsets.
+We no longer need model specific attribute arrays,
+because we get all this detected in rapl_events_attrs.
 
-The average printk message size is well under 128 bytes. It would be
-quite wasteful to always reserve 1K blocks.
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan <kan.liang@linux.intel.com>
+Cc: Liang
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/20190616140358.27799-8-jolsa@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/intel/rapl.c | 89 --------------------------------------------
+ 1 file changed, 89 deletions(-)
 
-John Ogness
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index 00b2b5d82d58..460196c02bae 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -416,87 +416,6 @@ RAPL_EVENT_ATTR_STR(energy-ram.scale,     rapl_ram_scale, "2.3283064365386962890
+ RAPL_EVENT_ATTR_STR(energy-gpu.scale,     rapl_gpu_scale, "2.3283064365386962890625e-10");
+ RAPL_EVENT_ATTR_STR(energy-psys.scale,   rapl_psys_scale, "2.3283064365386962890625e-10");
+ 
+-static struct attribute *rapl_events_srv_attr[] = {
+-	EVENT_PTR(rapl_cores),
+-	EVENT_PTR(rapl_pkg),
+-	EVENT_PTR(rapl_ram),
+-
+-	EVENT_PTR(rapl_cores_unit),
+-	EVENT_PTR(rapl_pkg_unit),
+-	EVENT_PTR(rapl_ram_unit),
+-
+-	EVENT_PTR(rapl_cores_scale),
+-	EVENT_PTR(rapl_pkg_scale),
+-	EVENT_PTR(rapl_ram_scale),
+-	NULL,
+-};
+-
+-static struct attribute *rapl_events_cln_attr[] = {
+-	EVENT_PTR(rapl_cores),
+-	EVENT_PTR(rapl_pkg),
+-	EVENT_PTR(rapl_gpu),
+-
+-	EVENT_PTR(rapl_cores_unit),
+-	EVENT_PTR(rapl_pkg_unit),
+-	EVENT_PTR(rapl_gpu_unit),
+-
+-	EVENT_PTR(rapl_cores_scale),
+-	EVENT_PTR(rapl_pkg_scale),
+-	EVENT_PTR(rapl_gpu_scale),
+-	NULL,
+-};
+-
+-static struct attribute *rapl_events_hsw_attr[] = {
+-	EVENT_PTR(rapl_cores),
+-	EVENT_PTR(rapl_pkg),
+-	EVENT_PTR(rapl_gpu),
+-	EVENT_PTR(rapl_ram),
+-
+-	EVENT_PTR(rapl_cores_unit),
+-	EVENT_PTR(rapl_pkg_unit),
+-	EVENT_PTR(rapl_gpu_unit),
+-	EVENT_PTR(rapl_ram_unit),
+-
+-	EVENT_PTR(rapl_cores_scale),
+-	EVENT_PTR(rapl_pkg_scale),
+-	EVENT_PTR(rapl_gpu_scale),
+-	EVENT_PTR(rapl_ram_scale),
+-	NULL,
+-};
+-
+-static struct attribute *rapl_events_skl_attr[] = {
+-	EVENT_PTR(rapl_cores),
+-	EVENT_PTR(rapl_pkg),
+-	EVENT_PTR(rapl_gpu),
+-	EVENT_PTR(rapl_ram),
+-	EVENT_PTR(rapl_psys),
+-
+-	EVENT_PTR(rapl_cores_unit),
+-	EVENT_PTR(rapl_pkg_unit),
+-	EVENT_PTR(rapl_gpu_unit),
+-	EVENT_PTR(rapl_ram_unit),
+-	EVENT_PTR(rapl_psys_unit),
+-
+-	EVENT_PTR(rapl_cores_scale),
+-	EVENT_PTR(rapl_pkg_scale),
+-	EVENT_PTR(rapl_gpu_scale),
+-	EVENT_PTR(rapl_ram_scale),
+-	EVENT_PTR(rapl_psys_scale),
+-	NULL,
+-};
+-
+-static struct attribute *rapl_events_knl_attr[] = {
+-	EVENT_PTR(rapl_pkg),
+-	EVENT_PTR(rapl_ram),
+-
+-	EVENT_PTR(rapl_pkg_unit),
+-	EVENT_PTR(rapl_ram_unit),
+-
+-	EVENT_PTR(rapl_pkg_scale),
+-	EVENT_PTR(rapl_ram_scale),
+-	NULL,
+-};
+-
+ /*
+  * There are no default events, but we need to create
+  * "events" group (with empty attrs) before updating
+@@ -754,37 +673,30 @@ static int __init init_rapl_pmus(void)
+ 
+ struct intel_rapl_init_fun {
+ 	bool apply_quirk;
+-	struct attribute **attrs;
+ };
+ 
+ static const struct intel_rapl_init_fun snb_rapl_init __initconst = {
+ 	.apply_quirk = false,
+-	.attrs = rapl_events_cln_attr,
+ };
+ 
+ static const struct intel_rapl_init_fun hsx_rapl_init __initconst = {
+ 	.apply_quirk = true,
+-	.attrs = rapl_events_srv_attr,
+ };
+ 
+ static const struct intel_rapl_init_fun hsw_rapl_init __initconst = {
+ 	.apply_quirk = false,
+-	.attrs = rapl_events_hsw_attr,
+ };
+ 
+ static const struct intel_rapl_init_fun snbep_rapl_init __initconst = {
+ 	.apply_quirk = false,
+-	.attrs = rapl_events_srv_attr,
+ };
+ 
+ static const struct intel_rapl_init_fun knl_rapl_init __initconst = {
+ 	.apply_quirk = true,
+-	.attrs = rapl_events_knl_attr,
+ };
+ 
+ static const struct intel_rapl_init_fun skl_rapl_init __initconst = {
+ 	.apply_quirk = false,
+-	.attrs = rapl_events_skl_attr,
+ };
+ 
+ static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
+@@ -923,7 +835,6 @@ static int __init rapl_pmu_init(void)
+ 
+ 	rapl_init = (struct intel_rapl_init_fun *)id->driver_data;
+ 	apply_quirk = rapl_init->apply_quirk;
+-	rapl_pmu_events_group.attrs = rapl_init->attrs;
+ 
+ 	ret = rapl_check_hw_unit(apply_quirk);
+ 	if (ret)
