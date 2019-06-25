@@ -2,98 +2,92 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A1EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C8AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D581120657
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561505303;
-	bh=6+te7mpJt5x4SRywvdcyKAoVs6nKqWEZS+6deQkXGH8=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=1kMnW1Vi3mNnmI5EtlNDA6KV3d+DnMlFLythIOJ203iq/X30CqJDLcTTEGnG7Br5p
-	 G1HPcfsdU3w+cFmGuoonQ10OH1X+perXJUHuhPi+zHNuq8ha1GqvWsXA0V3n7GiNA+
-	 LBtIxFKgzziym0hXIJLu775o9exp2NNdwIDUI8oQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9F76520645
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fkb9QrRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfFYX2W (ORCPT
+        id S1726339AbfFYXdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58032 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 19:33:18 -0400
+Received: from ozlabs.org ([203.11.71.1]:42747 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFYX2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:28:22 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726068AbfFYXdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:33:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D4A20645;
-        Tue, 25 Jun 2019 23:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561505300;
-        bh=6+te7mpJt5x4SRywvdcyKAoVs6nKqWEZS+6deQkXGH8=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=mNi8EavtpgSP7114DE4Fp5biFG5wHsOt3mCwaHqAvPfToIR33ip/aGcRxUCsKxc0s
-         EXhLCkwtAoStCqe+GzLtuLgPgtQZ1pupbmDvgjVncKJH5h41SuyDXxIch7EZ52g+6a
-         B0t6ZoE7uS0Gi+Lpb5A0gDs/i/stm1Y4Kn4Lr/kU=
-Content-Type: text/plain; charset="utf-8"
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45YMsl1ysYz9s3Z;
+        Wed, 26 Jun 2019 09:33:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561505595;
+        bh=y1eG32qua6PhqAiVuAO6P1kOZFtVSk/MwLtTyC8MGsE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fkb9QrRbj//LRsIu9lXOvOrUiRoYIiFQsZPa6pgCLWNYPOp2dnEXnEZPzUiUKGeqQ
+         yimmxbMVdCiYo2XAR5lu+a6/w9HUk5dTFDcqNkZzC1LOqLsK15NS438bPUGUPOCUOi
+         CfKRf6J+blJVUs33h22MPwYdkZOr8ll6+xnrOIruD7Q9ei5RcuQuvov+G+7z2xlCwy
+         lGjyKbCEKAIw8X/jZ2mfpu56q/z+CjyRmO3lBPEyGey8DvQ1GlvgNZt5treR4xInI1
+         /p4wDeaOtA5cKhV0Lpv15cBCjPEQSk5OfcJQAonYj9BGY8V3zZLnbn4LRafRRN+Xm8
+         zOeRcedZyjTGg==
+Date:   Wed, 26 Jun 2019 09:32:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the tip tree
+Message-ID: <20190626093250.5c7cc243@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1561502227.10069.1@crapouillou.net>
-References: <20190624225759.18299-1-paul@crapouillou.net> <20190624225759.18299-6-paul@crapouillou.net> <20190625220931.2F69B2086D@mail.kernel.org> <1561502227.10069.1@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v13 05/13] clk: ingenic: Add driver for the TCU clocks
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        James Hogan <jhogan@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
-User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 16:28:20 -0700
-Message-Id: <20190625232820.D1D4A20645@mail.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/_cU8wxQxL6QxmCi4sLWZT8C"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Cercueil (2019-06-25 15:37:07)
-> >=20
-> > Do you need to get the clk by name? Or can that clk be "known" to the
-> > TCU somehow so we can already have a direct clk pointer?
->=20
-> This clock is provided by a separate driver, so I have to obtain the
-> clock pointer from devicetree.
+--Sig_/_cU8wxQxL6QxmCi4sLWZT8C
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ok.
+Hi all,
 
-> >>  +}
-> >>  +
-> >>  +static int __maybe_unused tcu_pm_suspend(void)
-> >>  +{
-> >>  +       struct ingenic_tcu *tcu =3D ingenic_tcu;
-> >>  +
-> >>  +       if (tcu->clk)
-> >>  +               clk_disable(tcu->clk);
-> >=20
-> > Do you need to unprepare? Or it just isn't possible because this is
-> > called from syscore and thus we can't sleep?
->=20
-> I thought that clk_disable() was enough. We don't actually need to
-> unprepare, do we? And yes, as you pointed out, this call cannot sleep.
+Commits
 
-Yeah unprepare isn't necessary, but it will be different on different
-platforms. This is a highly platform specific driver though so I suspect
-this is all fine.
+  53d87b37a2a4 ("arm64: compat: No need for pre-ARMv7 barriers on an ARMv8 =
+system")
+  b4b12aca00d5 ("arm64: vdso: Remove unnecessary asm-offsets.c definitions")
+  4d33ebb02c45 ("vdso: Remove superfluous #ifdef __KERNEL__ in vdso/datapag=
+e.h")
 
+are missing a Signed-off-by from their committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_cU8wxQxL6QxmCi4sLWZT8C
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0SryIACgkQAVBC80lX
+0GzxMQf/eUQTd1yP/D/HkdDSZaDGjSCXKjoIYk2l85WVbYglhdqFQgI7hjhCHKNT
+tQb2pZSFVQR22LTrk0ijvbo6s2bvc5rO6aBm2GQI/Wrp99PcTIEga07ZEwlcpddt
+QR0Re+b9Bf2RxquSBVh4KgdvdOKaZF9N17gKJRys9wIyyklAVXkvDtkyeEIkvdS3
+yNzd/eVKNya+v8JSdBmz/0WRsI0DaGj1IWDqBWU6eJZFD+cSliVdsduA6oQB3xsi
+jTn5wuW98xJDygXHWS/PxyEPQwN5+roQ1vgeQ5AOnnr4BkTd9xxOAaL22U8IQ7gk
+wEfrU7r5INEvlRvXYPKESM/DjwBPLA==
+=M3K1
+-----END PGP SIGNATURE-----
+
+--Sig_/_cU8wxQxL6QxmCi4sLWZT8C--
