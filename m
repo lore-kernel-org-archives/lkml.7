@@ -2,50 +2,51 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052A0C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4F0C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35AB2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A5A2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfFYVrJ (ORCPT
+        id S1726525AbfFYVrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 17:47:09 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:53024 "EHLO
+        Tue, 25 Jun 2019 17:47:08 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42781 "EHLO
         mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbfFYVrI (ORCPT
+        with ESMTP id S1726463AbfFYVrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 17:47:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id p12so28033463iog.19
+Received: by mail-io1-f71.google.com with SMTP id f22so21729ioj.9
         for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 14:47:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=yOoMpaVT6dXrWDNYoDhSc/rJDkj0e0b8QMQijEfQWZE=;
-        b=r9DdrN4yyJKcrv3njAUmcH8pqsKEbKYHOE1337Yrm32TMmmlPKqIHCpF09PXjQuD0n
-         2hJD6xRI0DyVuDmk7tCXxzqpIoXpibIEMiwmr8t5El5MZnjxKESEhTQJYATiaVTgdUrT
-         Pzhm9VuZ7vNE7zdNP0TDkkXfH+AZd+uRL00TOhgvVhmkzzYqhddfWUt6PFDxLDbyjXz2
-         nnFCNW/+eJYnf/pg05Vdb+RhH6pi6XEGEClF3vb9kilDA/rykgNxAdt8pbWnjez/MkOH
-         Fu77+vFVZGpG0IRAF8knPdyZuBYxto8TeOqmifkhfMIUQnt9Oe1Osx2TjAONGF/Zp4Sc
-         v4PQ==
-X-Gm-Message-State: APjAAAV6Xl55uZj7xVuHVJiuKNafRELGHjGDLzGEDuX04bPMy6OTlgF5
-        hc/BloGfyLiQ3kIS7X2f0Sl3exPtEDrmFUAMaODkQ/fjLc8K
-X-Google-Smtp-Source: APXvYqyU1bxNICbJ8wES5sEXzxyS4g5ky0U0eMrzt2+0Hx2a7cmFllMtVHCMyUaMViswWU1qNtYw1qyRQRN2aVKMz96o+CWBaG/+
+        bh=1nxJClCwHHDsphbxzN6zwr13SoEx8BA6KWW2qUzM9VA=;
+        b=MWNGe3psBRX39QHcoeT0S+oMVFGBf3dxsfNPdhpW1ks2rqmCVzJZa97NbzOrrn/d4b
+         yGefebZW4bEajDoUj0ODw68BUfPNmAy93b/fpe30dPMEzIrB2xnRpcOOORrs40kl/g2A
+         m/k/Ksgrib3MKgViOZ6G/0o12qF7zcC8ftqVXQWyUVFuNPC6dtJCV8+n8gVRyQeVaPNq
+         v5NNpHgZMM9q4/ZCoL5fC0XIZnIKKk8FTEBkY3ZHMB7hnNaJK24punescuY4uwOv+q+k
+         OUhAnjk0rr1pKw29HzS6AUVs5X8rsOJx3geLEdaiOc5oPG3h6ly49Eukdbs9lPqNFasK
+         IE2A==
+X-Gm-Message-State: APjAAAXui80FgtOmt4yH1TR7xGGboRltsudENnNRhV+DFFsOa5+ppBA6
+        lJHoXLDGPUZwAKaDyrECVHMgJ/2Sd2ohnaERgh+153mMLxi+
+X-Google-Smtp-Source: APXvYqx8OQEPqAzgRPPtCZ3+S1oFP/wVH1/fhG5WFRNy7Svhsk93G2qWsw8KCNnLRZYd4MffDAOZT5JL9p2WOPz+lVZ6OAsE6pbi
 MIME-Version: 1.0
-X-Received: by 2002:a02:5a89:: with SMTP id v131mr629757jaa.130.1561499227626;
+X-Received: by 2002:a6b:b709:: with SMTP id h9mr1126425iof.2.1561499227369;
  Tue, 25 Jun 2019 14:47:07 -0700 (PDT)
 Date:   Tue, 25 Jun 2019 14:47:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c7a272058c2cde21@google.com>
-Subject: kernel panic: stack is corrupted in validate_chain
-From:   syzbot <syzbot+6ba34346b252f2d497c7@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000c3bb59058c2cdef2@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in corrupted (4)
+From:   syzbot <syzbot+4b5d77fdf765668f9eba@syzkaller.appspotmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -56,27 +57,31 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    249155c2 Merge branch 'parisc-5.2-4' of git://git.kernel.o..
+HEAD commit:    4b972a01 Linux 5.2-rc6
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a4572da00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ba34346b252f2d497c7
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135e34eea00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17852b6ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e7c31a94f66cc0aa
+dashboard link: https://syzkaller.appspot.com/bug?extid=4b5d77fdf765668f9eba
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15252769a00000
+
+The bug was bisected to:
+
+commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+Author: John Fastabend <john.fastabend@gmail.com>
+Date:   Sat Jun 30 13:17:47 2018 +0000
+
+     bpf: sockhash fix omitted bucket lock in sock_close
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=146ae35ea00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=166ae35ea00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=126ae35ea00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6ba34346b252f2d497c7@syzkaller.appspotmail.com
+Reported-by: syzbot+4b5d77fdf765668f9eba@syzkaller.appspotmail.com
+Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
 
-Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:  
-validate_chain+0x69fc/0x84f0 kernel/locking/lockdep.c:161
-CPU: 0 PID: 8300 Comm: syz-executor.4 Not tainted 5.2.0-rc6+ #7
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+BUG: kernel NULL pointer dereference, address: 00000000000000fc
 
 
 ---
@@ -86,5 +91,6 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
