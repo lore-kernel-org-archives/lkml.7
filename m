@@ -2,87 +2,106 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF22C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED42BC4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7593208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD992077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbfFYBpz (ORCPT
+        id S1730164AbfFYBq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:45:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38321 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbfFYBpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:45:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 18:45:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,413,1557212400"; 
-   d="scan'208";a="169623634"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Jun 2019 18:45:52 -0700
-Subject: Re: [x86/hotplug] e1056a25da:
- WARNING:at_arch/x86/kernel/apic/apic.c:#setup_local_APIC
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, tipbuild@zytor.com, lkp@01.org
-References: <20190620021856.GP7221@shao2-debian>
- <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <58ea508f-dc2e-8537-fe96-49cca0a7c799@intel.com>
-Date:   Tue, 25 Jun 2019 09:46:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906212108150.5503@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 24 Jun 2019 21:46:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25772 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730134AbfFYBqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 21:46:24 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P1gQMe141317
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:46:23 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb7x0mng2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:46:22 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 25 Jun 2019 02:46:20 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 25 Jun 2019 02:46:16 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P1kFOe60752006
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 01:46:15 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B32D8A4062;
+        Tue, 25 Jun 2019 01:46:15 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6F738A405B;
+        Tue, 25 Jun 2019 01:46:14 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.18])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Jun 2019 01:46:14 +0000 (GMT)
+Subject: Re: [PATCH V31 07/25] kexec_file: Restrict at runtime if the kernel
+ is locked down
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Dave Young <dyoung@redhat.com>, James Morris <jmorris@namei.org>,
+        Jiri Bohac <jbohac@suse.cz>,
+        Linux API <linux-api@vger.kernel.org>,
+        kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 24 Jun 2019 21:46:03 -0400
+In-Reply-To: <CACdnJuvE-MbD42AJTrio=0RaN8SaWo-RHHt21z=3an1vtjTFhA@mail.gmail.com>
+References: <20190326182742.16950-1-matthewgarrett@google.com>
+         <20190326182742.16950-8-matthewgarrett@google.com>
+         <20190621064340.GB4528@localhost.localdomain>
+         <CACdnJut=J1YTpM4s6g5XWCEs+=X0Jvf8otfMg+w=_oqSZmf01Q@mail.gmail.com>
+         <20190624015206.GB2976@dhcp-128-65.nay.redhat.com>
+         <CACdnJusPtYLdg7ZPhBo=Y5EsBz6B+5M2zYscBrLcc89oNnPkdQ@mail.gmail.com>
+         <1561411657.4340.70.camel@linux.ibm.com>
+         <CACdnJuvE-MbD42AJTrio=0RaN8SaWo-RHHt21z=3an1vtjTFhA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19062501-0020-0000-0000-0000034D0FB6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062501-0021-0000-0000-000021A07C50
+Message-Id: <1561427163.4340.98.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906250011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/22/19 3:08 AM, Thomas Gleixner wrote:
-> On Thu, 20 Jun 2019, kernel test robot wrote:
->
->> FYI, we noticed the following commit (built with gcc-7):
->>
->> commit: e1056a25daa6460c95e92d7d6853d05ad62458f7 ("x86/hotplug: Silence APIC and NMI when CPU is dead")
->> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git WIP.x86/ipi
->>
->> in testcase: locktorture
->> with following parameters:
->>
->> 	runtime: 300s
->> 	test: cpuhotplug
->>
->> test-description: This torture test consists of creating a number of kernel threads which acquire the lock and hold it for specific amount of time, thus simulating different critical region behaviors.
->> test-url: https://www.kernel.org/doc/Documentation/locking/locktorture.txt
->>
->>
->> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 2G
-> I cannot reproduce that issue. What's the underlying hardware machine?
+On Mon, 2019-06-24 at 17:02 -0700, Matthew Garrett wrote:
+> On Mon, Jun 24, 2019 at 2:27 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> 
+> > I agree with Dave.  There should be a stub lockdown function to
+> > prevent enforcing lockdown when it isn't enabled.
+> 
+> Sorry, when what isn't enabled? If no LSMs are enforcing lockdown then
+> the check will return 0. The goal here is for distributions to be able
+> to ship a kernel that has CONFIG_KEXEC_SIG=y, CONFIG_KEXEC_SIG_FORCE=n
+> and at runtime be able to enforce a policy that requires signatures on
+> kexec payloads.
 
-brand: Genuine Intel(R) CPU 000 @ 2.27GHz
-model: Westmere-EX
-memory: 256G
-nr_node: 4
-nr_cpu: 80
+Never mind, the call can't be moved earlier.
 
-Best Regards,
-Rong Chen
-
-
->
-> Thanks,
->
-> 	tglx
