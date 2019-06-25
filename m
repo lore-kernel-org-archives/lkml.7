@@ -2,93 +2,155 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D89EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D0EC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517D2213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X5F7mPiW"
+	by mail.kernel.org (Postfix) with ESMTP id 26C0321655
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbfFYOhr (ORCPT
+        id S1730972AbfFYOkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:37:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52512 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbfFYOhp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:37:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=f4+tMQltbicxd4ALT4Rx3OQZpZ5MP+Ju7Cl4XLKLtrM=; b=X5F7mPiW6V3GpB2Dzy0uuiLcr
-        Q1nr0Z/bXKkYgiYtfSjd+rSbKATjF3Gdgd0mN3/vYrEMO/Wc/SRIgcRhLlvYadt94BdYFq6jdw/nP
-        AwhtIbzcbLCYlOTHif1Um8TqdW1pmhZSHImvIPJZMwHU/da3RXnjCfqDaWAe3BVBdltBFNznvQFOb
-        sRb3NYKvhSFrwhB734qJDCQWStHZJ257YIrBp8b33Xces5frH9sCRfyV0D74Bszew9YprhF9rXvKm
-        VWnBYQKDFqJSt5VR8xllP4qXZjXg2ARWfiP1d9zuj7aazxYYWmVgGyU3SQUIS3Xwx2oVWJEAJo7C7
-        SL9QNydbA==;
-Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfmZR-0007x9-Ll; Tue, 25 Jun 2019 14:37:18 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 25 Jun 2019 10:40:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58306 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730689AbfFYOkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:40:00 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 899CD30C585A;
+        Tue, 25 Jun 2019 14:39:44 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DBBB5620CF;
+        Tue, 25 Jun 2019 14:39:31 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: switch the remaining architectures to use generic GUP v4
-Date:   Tue, 25 Jun 2019 16:36:59 +0200
-Message-Id: <20190625143715.1689-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH-tip] locking/rwsem: Make handoff writer optimistically spin on owner
+Date:   Tue, 25 Jun 2019 10:39:13 -0400
+Message-Id: <20190625143913.24154-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 25 Jun 2019 14:39:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus and maintainers,
+When the handoff bit is set by a writer, no other tasks other than
+the setting writer itself is allowed to acquire the lock. If the
+to-be-handoff'ed writer goes to sleep, there will be a wakeup latency
+period where the lock is free, but no one can acquire it. That is less
+than ideal.
 
-below is a series to switch mips, sh and sparc64 to use the generic
-GUP code so that we only have one codebase to touch for further
-improvements to this code.  I don't have hardware for any of these
-architectures, and generally no clue about their page table
-management, so handle with care.
+To reduce that latency, the handoff writer will now optimistically spin
+on the owner if it happens to be a on-cpu writer. It will spin until
+it releases the lock and the to-be-handoff'ed writer can then acquire
+the lock immediately without any delay. Of course, if the owner is not
+a on-cpu writer, the to-be-handoff'ed writer will have to sleep anyway.
 
-Changes since v3:
- - improve a few commit messages
- - clean up gup_fast_permitted a bit more
- - split the code reordering in gup.c into a separate patch
- - drop the patch to pass argument in a structure for now
+The optimistic spinning code is also modified to not stop spinning
+when the handoff bit is set. This will prevent an occasional setting of
+handoff bit from causing a bunch of optimistic spinners from entering
+into the wait queue causing significant reduction in throughput.
 
-Changes since v2:
- - rebase to mainline to pick up the untagged_addr definition
- - fix the gup range check to be start <= end to catch the 0 length case
- - use pfn based version for the missing pud_page/pgd_page definitions
- - fix a wrong check in the sparc64 version of pte_access_permitted
+On a 1-socket 22-core 44-thread Skylake system, the AIM7 shared_memory
+workload was run with 7000 users. The throughput (jobs/min) of the
+following kernels were as follows:
 
-Changes since v1:
- - fix various issues found by the build bot
- - cherry pick and use the untagged_addr helper form Andrey
- - add various refactoring patches to share more code over architectures
- - move the powerpc hugepd code to mm/gup.c and sync it with the generic
-   hup semantics
+ 1) 5.2-rc6
+    - 8,092,486
+ 2) 5.2-rc6 + tip's rwsem patches
+    - 7,567,568
+ 3) 5.2-rc6 + tip's rwsem patches + this patch
+    - 7,954,545
+
+Using perf-record(1), the %cpu time used by rwsem_down_write_slowpath(),
+rwsem_down_write_failed() and their callees for the 3 kernels were 1.70%,
+5.46% and 2.08% respectively.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/locking/rwsem.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index 37524a47f002..5e022fbdb2bb 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -720,11 +720,12 @@ rwsem_spin_on_owner(struct rw_semaphore *sem, unsigned long nonspinnable)
+ 
+ 	rcu_read_lock();
+ 	for (;;) {
+-		if (atomic_long_read(&sem->count) & RWSEM_FLAG_HANDOFF) {
+-			state = OWNER_NONSPINNABLE;
+-			break;
+-		}
+-
++		/*
++		 * When a waiting writer set the handoff flag, it may spin
++		 * on the owner as well. Once that writer acquires the lock,
++		 * we can spin on it. So we don't need to quit even when the
++		 * handoff bit is set.
++		 */
+ 		new = rwsem_owner_flags(sem, &new_flags);
+ 		if ((new != owner) || (new_flags != flags)) {
+ 			state = rwsem_owner_state(new, new_flags, nonspinnable);
+@@ -970,6 +971,13 @@ static inline bool rwsem_reader_phase_trylock(struct rw_semaphore *sem,
+ {
+ 	return false;
+ }
++
++static inline int
++rwsem_spin_on_owner(struct rw_semaphore *sem, unsigned long nonspinnable)
++{
++	return 0;
++}
++#define OWNER_NULL	1
+ #endif
+ 
+ /*
+@@ -1190,6 +1198,18 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 
+ 		raw_spin_unlock_irq(&sem->wait_lock);
+ 
++		/*
++		 * After setting the handoff bit and failing to acquire
++		 * the lock, attempt to spin on owner to accelerate lock
++		 * transfer. If the previous owner is a on-cpu writer and it
++		 * has just released the lock, OWNER_NULL will be returned.
++		 * In this case, we attempt to acquire the lock again
++		 * without sleeping.
++		 */
++		if ((wstate == WRITER_HANDOFF) &&
++		    (rwsem_spin_on_owner(sem, 0) == OWNER_NULL))
++			goto trylock_again;
++
+ 		/* Block until there are no active lockers. */
+ 		for (;;) {
+ 			if (signal_pending_state(state, current))
+@@ -1224,7 +1244,7 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
+ 				break;
+ 			}
+ 		}
+-
++trylock_again:
+ 		raw_spin_lock_irq(&sem->wait_lock);
+ 	}
+ 	__set_current_state(TASK_RUNNING);
+-- 
+2.18.1
+
