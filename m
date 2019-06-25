@@ -2,85 +2,159 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23C7C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B0BC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D95213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:06:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cqZmHocI"
+	by mail.kernel.org (Postfix) with ESMTP id 7CF31208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbfFYJGs (ORCPT
+        id S1730480AbfFYJHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:06:48 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34291 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728365AbfFYJGr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:06:47 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y198so12091922lfa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 02:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0GWdIS+GEfUG5nPSEfqs5x6+drSTvkhfOWgKSNYIqN0=;
-        b=cqZmHocIds26v78FD0hZWzSrS1sS4RO1JTOTnN8GdiR69sKc9Bl3wRM71FrY4zT1UI
-         2vsZVEc1VurGWpnc5fWwWLl4opKF6oHPsEd3dElV1amNVtQIGlSao7tPhq2UjqktMn1z
-         vAL+TdvclegR8/3Ca7qwmr7qPJgP83KAGImVRlMbGIdW83lzO9t6hXOplajeOtyoWjhC
-         om3VFvDUVKBoqmnqzcGqXQQsL8X35lrBPCxMkTklJ1eWMbvabLwGMFhWj2sQD+HgrRbg
-         8LaKMdBhKqW4uIceY1H/7JwxRS8VVOB/1gFvgVEKkLViFWlS+TLW4X5uq6BVRqsaakET
-         zKyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0GWdIS+GEfUG5nPSEfqs5x6+drSTvkhfOWgKSNYIqN0=;
-        b=QaokoliEyqDYquVENTzx8w9AJFj7fWtRpxXfSU7kzJDATD5GUEWS6KoxiBwWOLwe0Z
-         C14Aez7LtOsIPIyByBJJa6YY7RuWEJIDgmT3NyY8jF77GcbjmvNcxKvYy123VEGqfb0d
-         5hcbOMYMD6Dk/8OkZAFDz5J/+HmKDWs6BByx6BKQAPcxMnMjVmS3iyEoUxQ1UY4InSVj
-         BSq0bCMlamXgLgTHaikzvfIBgG6LBvsHT9ESvSmWWyrc7/ixqL9l7o2S50p6RtabYbZC
-         UUaVkGlxXmOkVD2LfcitPAQYAMfDgzobek8SkQKyzSF2Z4cRWJlwWN4NVtzYQ2ArZyHE
-         9q7A==
-X-Gm-Message-State: APjAAAWr5cj9ZgoBKTjPU7WmiTi0l+5B/ByNQo4bNQiDENY0Kg47Slbh
-        4OE/3SpGeKJcmoYsDSu32bkBeFKWuta8UPIM89CIziNL
-X-Google-Smtp-Source: APXvYqyX8aIOrqvIiIi+XamilqaJJoRB2E+h33a7b9KRiEugg+bPenbcNtzmyITE1BuZOzB+C0AVayz8pq77sBi8xb4=
-X-Received: by 2002:a19:6a01:: with SMTP id u1mr13452923lfu.141.1561453605766;
- Tue, 25 Jun 2019 02:06:45 -0700 (PDT)
+        Tue, 25 Jun 2019 05:07:24 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27064 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728365AbfFYJHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:07:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 02:07:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
+   d="scan'208";a="245009051"
+Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
+  by orsmga001.jf.intel.com with ESMTP; 25 Jun 2019 02:07:20 -0700
+Message-ID: <5D11E58B.1060306@intel.com>
+Date:   Tue, 25 Jun 2019 17:12:43 +0800
+From:   Wei Wang <wei.w.wang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
 MIME-Version: 1.0
-References: <1560790160-3372-1-git-send-email-info@metux.net> <1560790160-3372-4-git-send-email-info@metux.net>
-In-Reply-To: <1560790160-3372-4-git-send-email-info@metux.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 25 Jun 2019 11:06:33 +0200
-Message-ID: <CACRpkdZG4qBUxcxEmov9pHMKhVu=C=gUssaviciuV_OsACB8Zg@mail.gmail.com>
-Subject: Re: [PATCH 4/7] drivers: gpio: ep93xx: devm_platform_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Eric Hankland <ehankland@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com> <5D036843.2010607@intel.com> <CAOyeoRXr4gmbBPq1RsStoPguiZB8Jxod-irYd3Dm_AGVcQRGSQ@mail.gmail.com>
+In-Reply-To: <CAOyeoRXr4gmbBPq1RsStoPguiZB8Jxod-irYd3Dm_AGVcQRGSQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:49 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
+On 06/25/2019 08:32 AM, Eric Hankland wrote:
+> Thanks for your feedback - I'll  send out an updated version
+ > incorporating your comments shortly (assuming you don't have more
+ > after this).
 
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.
+Actually I have another thing to discuss:
+probably we could consider to make this filter list white/black configurable
+from userspace. For example, userspace option: filter-list=white/black
+
+This reason is that for now, we start with only a couple of events to 
+whitelist.
+As people gradually add more (or future hardware has some enhancements to
+give you more confidence), finally there may have much more whitelisted 
+events.
+Then users could reuse this interface to switch to "filter-list=black",
+this will be more efficient, considering the amount of events to enlist 
+and the
+iteration of event comparisons.
+
+
+>>> +struct  kvm_pmu_whitelist { +       __u64 event_mask;
+ >>
+ >> Is this "ARCH_PERFMON_EVENTSEL_EVENT |
+ >> ARCH_PERFMON_EVENTSEL_UMASK"?
+ >
+ > In most cases, I envision this being the case, but it's possible
+ > users may want other bits - see response to the next question below.
+ >
+
+Probably we don't need this field to be passed from userspace?
+
+We could directly use AMD64_RAW_EVENTMASK_NB, which includes bit[35:32].
+Since those bits are reserved on Intel CPUs, have them as mask should be 
+fine.
+
+Alternatively, we could add this event_mask field to struct kvm_pmu, and 
+initalize
+it in the vendor specific intel_pmu_init or amd_pmu_init.
+
+Both options above look good to me.
+
+
+>>> +       __u16  num_events; +       __u64 events[0];
+ >>
+ >> Can this be __u16? The lower 16 bits (umask+eventsel) already
+ >> determines what the event is.
+ >
+ > It looks like newer AMD processors also use bits 32-35 for eventsel
+ > (see AMD64_EVENTSEL_EVENT/AMD64_RAW_EVENT_MASK in
+ > arch/x86/include/asm/perf_event.h or a recent reference guide),
+ > though it doesn't look like this has made it to pmu_amd.c in kvm
+ > yet.
+
+OK, thanks for the reminder on the AMD side. I'm fine to keep it __u64.
+
 >
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+ > Further, including the whole 64 bits could enable whitelisting some
+ > events with particular modifiers (e.g. in_tx=0, but not in_tx=1).
+ > I'm not sure if whitelisting with specific modifiers will be
+ > necessary,
 
-Patch applied.
+I think "eventsel+umask" should be enough to identify the event.
+Other modifiers could be treated with other options when needed (e.g. 
+AnyThread),
+otherwise it would complicate the case (e.g. double/trouble the number 
+of total events).
 
-Yours,
-Linus Walleij
+>
+ > but we definitely need more than u16 if we want to support any AMD
+ > events that make use of those bits in the future.
+ >
+ >>> +       struct kvm_pmu_whitelist *whitelist;
+ >>
+ >> This could be per-VM and under rcu?
+ > I'll try this out in the next version.
+ >
+ >> Why not moving this filter to reprogram_gp_counter?
+ >>
+ >> You could directly compare "unit_mask, event_sel"  with
+ >> whitelist->events[i]
+ > The reason is that this approach provides uniform behavior whether
+ > an event is programmed on a fixed purpose counter vs a general
+ > purpose one. Though I admit it's unlikely that instructions
+ > retired/cycles wouldn't be whitelisted (and ref cycles can't be
+ > programmed on gp counters), so it wouldn't be missing too much if I
+ > do move this to reprogram_gp_counter. What do you think?
+ >
+
+I'd prefer to moving it to reprogram_gp_counter, which
+simplifies the implementation (we don't need
+.get_event_code as you added in this version.), and it
+should also be faster.
+
+Another reason is that we are trying to build an alternative path
+of PMU virtualization, which makes the vPMU sits on the hardware
+directly, instead of the host perf subsystem. That path wouldn't
+go deeper to reprogram_pmc, which invloves the perf subsystem
+related implementation, but that path would still need this filter list.
+
+For the fixed counter, we could add a bitmap flag to kvm_arch,
+indicating which counter is whitelist-ed based on the
+"eventsel+umask" value passed from userspace. This flag is
+updated when updating the whitelist-ed events to kvm.
+For example, if userspace gives "00+01" (INST_RETIRED_ANY),
+then we enable fixed counter0 in the flag.
+
+When reprogram_fixed_counter, we check the flag and return
+if the related counter isn't whitelisted.
+
+Best,
+Wei
+
