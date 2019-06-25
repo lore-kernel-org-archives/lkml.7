@@ -2,127 +2,187 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3729AC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FA3C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C895214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C55621655
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="00ewTRfj"
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="KOe/7GGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbfFYKeW (ORCPT
+        id S1728685AbfFYKfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:34:22 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:50294 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728911AbfFYKeW (ORCPT
+        Tue, 25 Jun 2019 06:35:06 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44547 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbfFYKfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:34:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9JfX7iQmjBDo3pDtoFcbOTAp5d7caPSzcHl2kcohZp4=; b=00ewTRfjhB5xcHkCaHSWrzlCs
-        UmJq6O4dLdpKSXHs6+W+cNlWJuRUZ12vZ96fvGFdSpBcp34N5bj2xPlgqP/Lwd6C7aNb6JATsxAMJ
-        v2JKKzd9SgPjiB8tylyltZS9ONzOV7mA5ZuqPcTP6DF1VUbKK6JSZqTXXp/i5EXcpKbnmfVeDGP58
-        x5rQ7NT2Ax+fWzWWrfjznzz9XWOnTcBq6eAF1Gvvo7cRhO85j3RTp2joBahATc2faZP2D6a/yMm7u
-        AwF+z0rE5xT2ridICk/hVCJESkHYwc8lQkHzGKliFhfDwMm29THuhbp0HJ847L18Htxz2SbrZFUFd
-        YCCP+RwjQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58982)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hfimC-0005pp-Ny; Tue, 25 Jun 2019 11:34:12 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hfim8-00078r-VN; Tue, 25 Jun 2019 11:34:08 +0100
-Date:   Tue, 25 Jun 2019 11:34:08 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>
-Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        Tue, 25 Jun 2019 06:35:06 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r15so12219136lfm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 03:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EGjfhIk5TSN9FaIfuigOm3JkqdiZdbnqlP1fTL53QW4=;
+        b=KOe/7GGnb9guFoDqCfkS5NUn9D6GDW6anEPhkzSe4sb4u4e5wQeNrsV+R64/xpTuhl
+         iD7V2xuwQjeDUzbRsYt4GUeVK8aenCJTNrAxhSFS/H67p5oyemMuW9iUadPHrnaduQ5E
+         QZtGmJNZ43tCR3BKAqAYwxw9Z1vFM3bkyZknYFxHgYEHw338izNPCusYNFh8Dmu9CHLl
+         I3bpWPCznu0PuIxo6HsejEClDHD9NjC7ovnOrvczsFmU2k5U0CqIYS/MiOyZGjpNBBDE
+         5+vQLLFo+AeTwZpVBmCJqfOGp/Q++LuhMwNwjO5alq2BUMmVoXcpaOQESrx/69WsQZUU
+         NNlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EGjfhIk5TSN9FaIfuigOm3JkqdiZdbnqlP1fTL53QW4=;
+        b=a4c8Z68YR4z/PZftneEJNq1daheIk9a0EYKRGNEBmRmat4FwvhwTD+uaT430Dh/EVk
+         MjnI04QgTVlNQPPk3Wfiqr3Alke5jVgUItmwaWtjep/dbovz3WLrYq+jm8f5d0HIRWYK
+         eVHoRIcX99YJ84t9vG+LKom9TzS4UWs/wKpkXaotBdgm618r+NaJq1NlGOJmOCWQRQlZ
+         dk+c0/+r2kR0U6ZAEOY8VHjZJal2pz+EbCUm9QZezXWrvw+RmslKhnFcb8rFaOx1W650
+         b/KxdiAUDRKdCQAZdKBTcMLMnI5McTtOtRQyjZ/TcXh2EAnrLpnDgbj90NZa7wMq1cfE
+         iYKg==
+X-Gm-Message-State: APjAAAV6sBykDq9JfPhbaVKB1TikRwFPzdsnmJKVQKZiWT64I3sSyxZ9
+        XStCv+RxesqSVARtzSkt7/wvXg==
+X-Google-Smtp-Source: APXvYqwrNvD5m3v3LyKns+LBQyX4g8GF8KVIhTUjFGqgIDy4CqsHB0bpIJZ+Jvt3yL56+cH0RwtSvg==
+X-Received: by 2002:ac2:4c84:: with SMTP id d4mr77759447lfl.1.1561458903508;
+        Tue, 25 Jun 2019 03:35:03 -0700 (PDT)
+Received: from [192.168.0.36] (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
+        by smtp.googlemail.com with ESMTPSA id t21sm2214209ljg.60.2019.06.25.03.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 03:35:02 -0700 (PDT)
+Subject: Re: [PATCH 1/4] block: add zone open, close and finish support
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "agk@redhat.com" <agk@redhat.com>,
+        "snitzer@redhat.com" <snitzer@redhat.com>
+Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH v5 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190625103408.5rh2slqobruavyju@shell.armlinux.org.uk>
-References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
- <1561378274-12357-1-git-send-email-pthombar@cadence.com>
- <20190624134233.suowuortj5dcbxdg@shell.armlinux.org.uk>
- <SN2PR07MB2480B53AFE512F46986A1CAFC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
- <20190625092930.ootk5nvbkqqvfbtd@shell.armlinux.org.uk>
- <SN2PR07MB24800C63DCBC143B3A802A6EC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        Matias Bjorling <Matias.Bjorling@wdc.com>
+References: <20190621130711.21986-1-mb@lightnvm.io>
+ <20190621130711.21986-2-mb@lightnvm.io>
+ <ee5764fb-473a-f118-eaac-95478d885f6f@acm.org>
+ <BYAPR04MB5749CEFBB45EA34BD3345CD686E00@BYAPR04MB5749.namprd04.prod.outlook.com>
+From:   =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
+Message-ID: <cce08df0-0b4d-833d-64ce-f9b81f7ad7ca@lightnvm.io>
+Date:   Tue, 25 Jun 2019 12:35:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN2PR07MB24800C63DCBC143B3A802A6EC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <BYAPR04MB5749CEFBB45EA34BD3345CD686E00@BYAPR04MB5749.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 09:38:37AM +0000, Parshuram Raju Thombare wrote:
+On 6/25/19 12:27 AM, Chaitanya Kulkarni wrote:
+> On 6/24/19 12:43 PM, Bart Van Assche wrote:
+>> On 6/21/19 6:07 AM, Matias Bjørling wrote:
+>>> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+>>> index 95202f80676c..067ef9242275 100644
+>>> --- a/include/linux/blk_types.h
+>>> +++ b/include/linux/blk_types.h
+>>> @@ -284,13 +284,20 @@ enum req_opf {
+>>>     	REQ_OP_DISCARD		= 3,
+>>>     	/* securely erase sectors */
+>>>     	REQ_OP_SECURE_ERASE	= 5,
+>>> -	/* reset a zone write pointer */
+>>> -	REQ_OP_ZONE_RESET	= 6,
+>>>     	/* write the same sector many times */
+>>>     	REQ_OP_WRITE_SAME	= 7,
+>>>     	/* write the zero filled sector many times */
+>>>     	REQ_OP_WRITE_ZEROES	= 9,
+>>>     
+>>> +	/* reset a zone write pointer */
+>>> +	REQ_OP_ZONE_RESET	= 16,
+>>> +	/* Open zone(s) */
+>>> +	REQ_OP_ZONE_OPEN	= 17,
+>>> +	/* Close zone(s) */
+>>> +	REQ_OP_ZONE_CLOSE	= 18,
+>>> +	/* Finish zone(s) */
+>>> +	REQ_OP_ZONE_FINISH	= 19,
+>>> +
+>>>     	/* SCSI passthrough using struct scsi_request */
+>>>     	REQ_OP_SCSI_IN		= 32,
+>>>     	REQ_OP_SCSI_OUT		= 33,
+>>> @@ -375,6 +382,22 @@ static inline void bio_set_op_attrs(struct bio *bio, unsigned op,
+>>>     	bio->bi_opf = op | op_flags;
+>>>     }
+>>
+>> Are the new operation types ever passed to op_is_write()? The definition
+>> of that function is as follows:
+>>
+> May be we should change numbering since blktrace also relies on the
+> having on_is_write() without looking at the rq_ops().
 > 
-> >> >In which case, gem_phylink_validate() must clear the support mask when
-> >> >SGMII mode is requested to indicate that the interface mode is not
-> >> >supported.
-> >> >The same goes for _all_ other PHY link modes that the hardware does not
-> >> >actually support, such as PHY_INTERFACE_MODE_10GKR...
-> >> If interface is not supported by hardware probe returns with error, so we don't
-> >> net interface is not registered at all.
-> >That does not negate my comment above.
-> Sorry if I misunderstood your question, but hardware supports interfaces and based
-> on that link modes are supported. So if interface is not supported by hardware,
-> net device is not registered and there will be no phylink_validate call.
-> If hardware support particular interface, link modes supported by interface
-> are added to (not cleared from) supported mask, provided configs is not trying to limit 
-> data rate using GIGABIT_ENABLE* macro.
+> 197  * Data direction bit lookup
+>    198  */
+>    199 static const u32 ddir_act[2] = { BLK_TC_ACT(BLK_TC_READ),
+>    200                                  BLK_TC_ACT(BLK_TC_WRITE) };  <----
+>    201
+>    202 #define BLK_TC_RAHEAD           BLK_TC_AHEAD
+>    203 #define BLK_TC_PREFLUSH         BLK_TC_FLUSH
+>    204
+>    205 /* The ilog2() calls fall out because they're constant */
+>    206 #define MASK_TC_BIT(rw, __name) ((rw & REQ_ ## __name) << \
+>    207           (ilog2(BLK_TC_ ## __name) + BLK_TC_SHIFT - __REQ_ ##
+> __name))
+>    208
+>    209 /*
+>    210  * The worker for the various blk_add_trace*() types. Fills out a
+>    211  * blk_io_trace structure and places it in a per-cpu subbuffer.
+>    212  */
+>    213 static void __blk_add_trace(struct blk_trace *bt, sector_t sector,
+> int bytes,
+>    214                      int op, int op_flags, u32 what, int error,
+> int pdu_len,
+>    215                      void *pdu_data, union kernfs_node_id *cgid)
+>    216 {
+>    217         struct task_struct *tsk = current;
+>    218         struct ring_buffer_event *event = NULL;
+>    219         struct ring_buffer *buffer = NULL;
+>    220         struct blk_io_trace *t;
+>    221         unsigned long flags = 0;
+>    222         unsigned long *sequence;
+>    223         pid_t pid;
+>    224         int cpu, pc = 0;
+>    225         bool blk_tracer = blk_tracer_enabled;
+>    226         ssize_t cgid_len = cgid ? sizeof(*cgid) : 0;
+>    227
+>    228         if (unlikely(bt->trace_state != Blktrace_running &&
+> !blk_tracer))
+>    229                 return;
+>    230
+>    231         what |= ddir_act[op_is_write(op) ? WRITE : READ];  <---
+> 
+> 
+>> static inline bool op_is_write(unsigned int op)
+>> {
+>> 	return (op & 1);
+>> }
+>>
+> 
 
-Why do you want to use phylink?
-
-If you are only interested in supporting 10G PHYs, you don't need
-phylink for that.
-
-If you are interested in supporting SFPs as well, then using phylink
-makes sense, but you need to implement your phylink conversion properly,
-and that means supporting dynamic switching of the PHY interface mode,
-and allowing phylink to determine whether a PHY interface mode is
-supported or not.
-
-However, with what you've indicated through our discussion, your MAC
-does not support BASE-X modes, nor does it support 10GBASE-R, both of
-which are required for direct connection of SFP or SFP+ modules.
-
-The only phy link mode that you support which SFPs can make use of is
-SGMII, and that will only be useful for copper SFPs configured for
-SGMII mode.  It basically means you can not use any fiber SFPs.
-
-The only other way SFPs can be supported is via an intermediary PHY to
-convert the MAC interface to BASE-X, SGMII or 10GBASE-R, and we don't
-yet have support for that in mainline.
-
-So, given that you seem unwilling to take on board my comments, and
-your hardware does not appear support SFPs, I'm wondering what the
-point of this conversion actually is.
-
-As a result of our reviews, I've been improving the documentation for
-phylink, so there has been some positives coming out of this - which
-will hopefully help others to avoid the same mistakes.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+The zone mgmt commands are neither write nor reads commands. I guess, 
+one could characterize them as write commands, but they don't write any 
+data, they update a state of a zone on a drive. One should keep it as 
+is? and make sure the zone mgmt commands don't get categorized as either 
+read/write.
