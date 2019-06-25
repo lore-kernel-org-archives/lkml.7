@@ -2,60 +2,60 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948F5C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF373C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECBE20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E0620665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p+bcQPG1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K7gwR0Cy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfFYEE2 (ORCPT
+        id S1727735AbfFYEEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:04:28 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42769 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfFYEE1 (ORCPT
+        Tue, 25 Jun 2019 00:04:39 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34562 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfFYEEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:04:27 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k13so2057971pgq.9;
-        Mon, 24 Jun 2019 21:04:27 -0700 (PDT)
+        Tue, 25 Jun 2019 00:04:38 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c85so8735946pfc.1;
+        Mon, 24 Jun 2019 21:04:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=g9gX3zxll6zE+1uSeRtgAyQGhpa5fKumdosEKJfzBW0=;
-        b=p+bcQPG1DVyB7xMBrPkvvc0Ox5Iz9EBMpyV0raFeoKQmP6LJ0QzMVHaAG0yS8+BLqq
-         j6wQjW15M4RY2XkDn07BTZ15lUq4QJuhdY1LF8aZSFj0nao/xFNLqAL7vAA9EDYFysI2
-         jLMDupU8+Ap51UUyJSIQ/x00FJJ74rWTB5Oa6Db9anDfbGbl1dZ3CatqM8WAgKWxhFBX
-         DdXAIZtkucpinIk+H8T1a3me8wKz5PzH4NkG5YiHcbr5ds+PbhA+NsLIed16ouZzRcHg
-         WcO376mVd1S/qqWEoGnQvFVygb3NAf9CdhttjNtovc2CdIkRDR8onXzQfViYDoSyFYkj
-         05dw==
+        bh=DDy1WkQD0dK7gdWmitUgF418A+VoWDfrpb0wHmc1mYA=;
+        b=K7gwR0CyijlbY3YZc8B2x2u0/adB0A+/R04ABH63rc2y+6gv1B68/8FhSZKao0dYp4
+         mZx0Sn6E8g7yMaMUuxlnw9SnQ6k/XhG4BkSJfPNFKvVg2Fk8KKQtxyvM7+L1htTL3x/k
+         e0Qr2gFAhtRbwdPL1NkDO6gx/VILUsHza0JQLOIJ5LrXvITtdRgz4zrk7Vhapb/lRE+I
+         g5CaWjAYu8sx+pDTOp1mJ5q4+OgGIi7jgbIbu9Ies6tH7GcR/DC4KhavfLBpqhvW/4nx
+         JuYNJMS1Y8L6q1m0j4+cS58+ON+zI4s3ThYtsgjo16wK/LKYYzdoVVPjZm6t4vSLFglT
+         z9ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=g9gX3zxll6zE+1uSeRtgAyQGhpa5fKumdosEKJfzBW0=;
-        b=RLV1jo2V9xecEi6/+yz4OUCUYGjXxXf+Gg4cTJgwjnL/wtpSAZ6PRCqEs7iB7u79SV
-         ypp8UBjxrtlRozYCyAypwUVrlywkCzfHYDfVKpru/MlBzxxNs1UMdq4wXxRjyN2joJTt
-         Lc6LQhZ8uIGIn1XlZ725XyxPQvlg2ruW+lDDT69OqCAwHaXc0bgQG/93UEy70Hn++KZB
-         z7UEZr8t0CKFaEUhHc9CK9sYNV7N0chmXsp4HbpT4kOjzd9fQkekWtSz9hihsq9rzgci
-         wKDjxfI2NxHx053aNvzvLnyZHqpisFK2coycpy9BsLtRAck0CzQB7mIyejDw1LZnY1DR
-         mTLQ==
-X-Gm-Message-State: APjAAAXaRg69ROyGANamwt/gB2cmKca8UgKfck8EeicxQzRxzMPX/hbh
-        kdDlMV2vSGxHMqyXDo3Va5Q=
-X-Google-Smtp-Source: APXvYqyNN77OOXop+gEg4sOeYGo8mqh8bsP9mbQeXWgn4HKyTdkIWs0BlsqL+j9klhaVMVDd5jkLgw==
-X-Received: by 2002:a63:c006:: with SMTP id h6mr35712535pgg.285.1561435466679;
-        Mon, 24 Jun 2019 21:04:26 -0700 (PDT)
+        bh=DDy1WkQD0dK7gdWmitUgF418A+VoWDfrpb0wHmc1mYA=;
+        b=PKL0Qv0TBXO1IVAnBEB0F+vpdjSryHsotUN5knOadYoKWBV4ewYIBWFj+HowUVmwuC
+         XFvRck3u2z7xY9sT495jkSaH/7oxELbCIlpsGlMzpClUJa59Wfg08cYVCZrNWX7CRHnC
+         rb0Xh0mFIrDsd9hv1hpAFoJ2OlCAmPgTKHmt7EcwW//oYd2m4+csTAllxJwY3dxpPoDa
+         ygGZ7vGUVdKfpaDkNdngd89+ucoayyQqNjVGCmEsimxgHI96763VAB/fzC91uqUFSxv1
+         XemZOS8YMslKuAK+CXcU3LX/FoST7DsLmcxZJJKriiuldDZCIb3zXlgmAx+mGurzdNqf
+         tYMQ==
+X-Gm-Message-State: APjAAAW4Cpv3/kuv4d+PJ/W+IHKMHuPupRBMEWTTtPgIaQzzkFSfsKR0
+        S9qq4x6SZ17fzj2v3hE+E9s=
+X-Google-Smtp-Source: APXvYqzE/jneACOKQHIUzLdU0Rs2n+Lx05YqPiShfm/TNG5baavnFWWNvRflijx3fuT44ITIWu5wjQ==
+X-Received: by 2002:a63:2985:: with SMTP id p127mr34417218pgp.400.1561435477442;
+        Mon, 24 Jun 2019 21:04:37 -0700 (PDT)
 Received: from debian.net.fpt ([58.187.168.105])
-        by smtp.gmail.com with ESMTPSA id b24sm12408944pfd.98.2019.06.24.21.04.16
+        by smtp.gmail.com with ESMTPSA id b24sm12408944pfd.98.2019.06.24.21.04.27
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 21:04:25 -0700 (PDT)
+        Mon, 24 Jun 2019 21:04:36 -0700 (PDT)
 From:   Phong Tran <tranmanphong@gmail.com>
 To:     tranmanphong@gmail.com
 Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
@@ -78,9 +78,9 @@ Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
         sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
         songliubraving@fb.com, sudeep.holla@arm.com, swinslow@gmail.com,
         tglx@linutronix.de, tony@atomide.com, will@kernel.org, yhs@fb.com
-Subject: [PATCH V3 01/15] arm: perf: cleanup cppcheck shifting error
-Date:   Tue, 25 Jun 2019 11:03:42 +0700
-Message-Id: <20190625040356.27473-2-tranmanphong@gmail.com>
+Subject: [PATCH V3 02/15] ARM: davinci: cleanup cppcheck shifting errors
+Date:   Tue, 25 Jun 2019 11:03:43 +0700
+Message-Id: <20190625040356.27473-3-tranmanphong@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190625040356.27473-1-tranmanphong@gmail.com>
 References: <20190624135105.15579-1-tranmanphong@gmail.com>
@@ -96,26 +96,22 @@ change to use BIT() marco for improvement.
 
 Signed-off-by: Phong Tran <tranmanphong@gmail.com>
 ---
- arch/arm/kernel/perf_event_v7.c | 6 +++---
+ arch/arm/mach-davinci/ddr2.h | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/kernel/perf_event_v7.c b/arch/arm/kernel/perf_event_v7.c
-index a4fb0f8b8f84..2924d7910b10 100644
---- a/arch/arm/kernel/perf_event_v7.c
-+++ b/arch/arm/kernel/perf_event_v7.c
-@@ -697,9 +697,9 @@ static struct attribute_group armv7_pmuv2_events_attr_group = {
- /*
-  * Event filters for PMUv2
-  */
--#define	ARMV7_EXCLUDE_PL1	(1 << 31)
--#define	ARMV7_EXCLUDE_USER	(1 << 30)
--#define	ARMV7_INCLUDE_HYP	(1 << 27)
-+#define	ARMV7_EXCLUDE_PL1	BIT(31)
-+#define	ARMV7_EXCLUDE_USER	BIT(30)
-+#define	ARMV7_INCLUDE_HYP	BIT(27)
- 
- /*
-  * Secure debug enable reg
+diff --git a/arch/arm/mach-davinci/ddr2.h b/arch/arm/mach-davinci/ddr2.h
+index 4f7d7824b0c9..f2f56d16d7d5 100644
+--- a/arch/arm/mach-davinci/ddr2.h
++++ b/arch/arm/mach-davinci/ddr2.h
+@@ -1,5 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #define DDR2_SDRCR_OFFSET	0xc
+-#define DDR2_SRPD_BIT		(1 << 23)
+-#define DDR2_MCLKSTOPEN_BIT	(1 << 30)
+-#define DDR2_LPMODEN_BIT	(1 << 31)
++#define DDR2_SRPD_BIT		BIT(23)
++#define DDR2_MCLKSTOPEN_BIT	BIT(30)
++#define DDR2_LPMODEN_BIT	BIT(31)
 -- 
 2.11.0
 
