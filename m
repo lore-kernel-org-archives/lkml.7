@@ -2,93 +2,108 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2BDC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C454C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB86208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCB8204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:51:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbfFYMuT (ORCPT
+        id S1731959AbfFYMv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:50:19 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35353 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731674AbfFYMuT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:50:19 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so2823590qto.2;
-        Tue, 25 Jun 2019 05:50:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dt4FAsKSMoVKj0i+IMYCtujJr8k7Hly0E+J9au4yRjM=;
-        b=hvAHNFEl9TrZ0GflvnyPfz5PVP4Xm6zHwoBw1Db0aOq7iMNnj9B/ghuYP0/E57ZwpD
-         i816BgQHg/UAfYzzu1idnJu4WcoWfr/tr3YhGkYgkam+0sQ+Y2ObNWQzIzFU78fGjMlX
-         qM0l7uGUeAreppAgavPhSdAIuztJL1d8JtYk22Uj/YFHzLujXZRy3G9OSr2zP5hjwXYr
-         DzzaQd/NMdz8aBJ54IeaN+2TZW3Hn1gym7EuW/bAG/gOwxJvURuQYxwt+/+/TZ2KA3ci
-         NzTh4XRNsXpffEKvTiiPANIbR1xyhTcF2oXYk9sZN8KcT9yqq/Wr1W7KnfMUck5OLZsV
-         TxCA==
-X-Gm-Message-State: APjAAAU8tCUCZxxn6fsaO4LM55FLSBIPhQ2FjvkBlGT3nTO/LMQFT9qf
-        d+4fBJKmLQkdS8uW8ZFlnAbIcPMAL6ISxFrCu74pBvrV
-X-Google-Smtp-Source: APXvYqx4dJx2NgJZ6E9ESrrfFIuQiqpqiluOKZbPW2AmD3mqQsk/raxStvMwmqNVKtWebchKGbvkNoy6MZg+zOhuIBg=
-X-Received: by 2002:aed:2bc1:: with SMTP id e59mr114099487qtd.7.1561467018169;
- Tue, 25 Jun 2019 05:50:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190625085616.GA32399@lst.de> <ccfa78f3-35c2-1d26-98b5-b21a76b90e1e@physik.fu-berlin.de>
- <20190625112146.GA9580@angband.pl> <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
-In-Reply-To: <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 25 Jun 2019 14:50:01 +0200
-Message-ID: <CAK8P3a3irwwwCQ_kPh5BTg-jGGbJOj=3fhVrTDBUZgH1V7bpFQ@mail.gmail.com>
-Subject: Re: [RFC] remove arch/sh?
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Adam Borowski <kilobyte@angband.pl>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Jun 2019 08:51:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54606 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731674AbfFYMv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:51:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5663F1A07E6;
+        Tue, 25 Jun 2019 14:51:25 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 48D291A07DC;
+        Tue, 25 Jun 2019 14:51:25 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BC1272061E;
+        Tue, 25 Jun 2019 14:51:24 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mq: Init rates and parents configs for clocks
+Date:   Tue, 25 Jun 2019 15:51:21 +0300
+Message-Id: <1561467081-25701-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 2:02 PM John Paul Adrian Glaubitz
-<glaubitz@physik.fu-berlin.de> wrote:
->
-> Adam,
->
-> On 6/25/19 1:21 PM, Adam Borowski wrote:
-> >> We're still using sh4 in Debian
-> >
-> > I wouldn't call it "used": it has popcon of 1, and despite watching many
-> > Debian channels, I don't recall hearing a word about sh4 in quite a while.
->
-> So, according to your logic, Debian should drop the mips64el (popcon 1)
-> and riscv64 ports (popcon 2) [1]?
->
-> > Hardware development is dead: we were promised modern silicon by j-core
-> > after original patents expired, but after J2 nothing happened, there was
-> > silence from their side, and now https://j-core.org is down.
->
-> It's not dead. You can still run it on an FPGA, the code is freely available.
-> Plus, the architecture seems to be still in use in the industry [2].
+Add the initial configuration for clocks that need default parent and rate
+setting. This is based on the vendor tree clock provider parents and rates
+configuration except this is doing the setup in dts rather then using clock
+consumer API in a clock provider driver.
 
-It would be nice if one of the maintainers or the remaining users could go
-through the code though and figure out which bits are definitely dead
-(e.g. sh5), don't build, or are incomplete and not worked on for a long
-time, compared to the bits that are known to work and that someone
-is still using or at least playing with.
-I guess a lot of the SoCs that have no board support other than
-the Hitachi/Renesas reference platform can go away too, as any products
-based on those boards have long stopped updating their kernels.
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 34 +++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-       Arnd
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index d09b808..e0abe02 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -489,6 +489,40 @@
+ 				clock-names = "ckil", "osc_25m", "osc_27m",
+ 				              "clk_ext1", "clk_ext2",
+ 				              "clk_ext3", "clk_ext4";
++				assigned-clocks = <&clk IMX8MQ_VIDEO_PLL1>,
++					<&clk IMX8MQ_CLK_AHB>,
++					<&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
++					<&clk IMX8MQ_CLK_AUDIO_AHB>,
++					<&clk IMX8MQ_VIDEO_PLL1_REF_SEL>,
++					<&clk IMX8MQ_CLK_NOC>,
++					<&clk IMX8MQ_CLK_PCIE1_CTRL>,
++					<&clk IMX8MQ_CLK_PCIE1_PHY>,
++					<&clk IMX8MQ_CLK_PCIE2_CTRL>,
++					<&clk IMX8MQ_CLK_PCIE2_PHY>,
++					<&clk IMX8MQ_CLK_CSI1_CORE>,
++					<&clk IMX8MQ_CLK_CSI1_PHY_REF>,
++					<&clk IMX8MQ_CLK_CSI1_ESC>,
++					<&clk IMX8MQ_CLK_CSI2_CORE>,
++					<&clk IMX8MQ_CLK_CSI2_PHY_REF>,
++					<&clk IMX8MQ_CLK_CSI2_ESC>;
++				assigned-clock-parents = <0>,
++						<&clk IMX8MQ_SYS1_PLL_133M>,
++						<&clk IMX8MQ_SYS1_PLL_266M>,
++						<&clk IMX8MQ_SYS2_PLL_500M>,
++						<&clk IMX8MQ_CLK_27M>,
++						<&clk IMX8MQ_SYS1_PLL_800M>,
++						<&clk IMX8MQ_SYS2_PLL_250M>,
++						<&clk IMX8MQ_SYS2_PLL_100M>,
++						<&clk IMX8MQ_SYS2_PLL_250M>,
++						<&clk IMX8MQ_SYS2_PLL_100M>,
++						<&clk IMX8MQ_SYS1_PLL_266M>,
++						<&clk IMX8MQ_SYS2_PLL_1000M>,
++						<&clk IMX8MQ_SYS1_PLL_800M>,
++						<&clk IMX8MQ_SYS1_PLL_266M>,
++						<&clk IMX8MQ_SYS2_PLL_1000M>,
++						<&clk IMX8MQ_SYS1_PLL_800M>;
++				assigned-clock-rates = <593999999>;
++
+ 			};
+ 
+ 			src: reset-controller@30390000 {
+-- 
+2.7.4
+
