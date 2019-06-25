@@ -2,147 +2,117 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF487C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB7DC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA15A215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA82215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:51:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="j0XaP3yS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfFYIvQ convert rfc822-to-8bit (ORCPT
+        id S1731082AbfFYIvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:51:16 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:6540 "EHLO huawei.com"
+        Tue, 25 Jun 2019 04:51:31 -0400
+Received: from mail-eopbgr70098.outbound.protection.outlook.com ([40.107.7.98]:27223
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727770AbfFYIvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:51:15 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 300846512F1C986639E3;
-        Tue, 25 Jun 2019 16:51:13 +0800 (CST)
-Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 25 Jun 2019 16:51:12 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 25 Jun 2019 16:51:12 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
- Tue, 25 Jun 2019 16:51:12 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-CC:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dsahern@gmail.com" <dsahern@gmail.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Topic: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Index: AdUrMtZeJBRdmfpcd0eT0vsD259sjw==
-Date:   Tue, 25 Jun 2019 08:51:12 +0000
-Message-ID: <badbfdd3c6474994a481375dad2a51f3@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
+        id S1729806AbfFYIvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:51:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aNRey0Q/Xh555bd7+jbqJv2t7P70BgNv5KqDmeqs6ag=;
+ b=j0XaP3ySimDY/vPc8792zucRFEtZlXHME1hBISGieZ0GkA9qUV+ET/9+adn6zp5Jk01aIYryABiJILUD7bwRSvdiYOyTZddmJzu3FpCWD8xoDZvd9uVwCzww9UoJklPIDl8sfWKujmDcMmS8SOMT1K6FF2FYNdKxoGXOpX5xoTo=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3401.eurprd02.prod.outlook.com (52.134.73.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 08:51:27 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::29c5:d1ae:8855:3153]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::29c5:d1ae:8855:3153%3]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 08:51:27 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 9/9] ARM: dts: at91: sama5d4_xplained: add analogic
+ filter for i2c
+Thread-Topic: [PATCH v2 9/9] ARM: dts: at91: sama5d4_xplained: add analogic
+ filter for i2c
+Thread-Index: AQHVKyzD88KDJW5qrEyetFFZXOAmS6asD/kA
+Date:   Tue, 25 Jun 2019 08:51:27 +0000
+Message-ID: <8b964ca4-58b6-5560-b06a-da3ad98dd36d@axentia.se>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-10-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1561449642-26956-10-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0701CA0043.eurprd07.prod.outlook.com
+ (2603:10a6:3:9e::11) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 367c900a-b005-471b-1312-08d6f94a4f02
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3401;
+x-ms-traffictypediagnostic: DB3PR0202MB3401:
+x-microsoft-antispam-prvs: <DB3PR0202MB34019D0DA115AE19E0AC1AFBBCE30@DB3PR0202MB3401.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(39830400003)(366004)(136003)(199004)(189003)(71200400001)(71190400001)(66556008)(76176011)(5660300002)(66476007)(64756008)(66446008)(73956011)(6436002)(66946007)(486006)(7736002)(305945005)(186003)(508600001)(8936002)(6512007)(65826007)(64126003)(2501003)(52116002)(2906002)(99286004)(4744005)(31696002)(256004)(58126008)(6246003)(81156014)(7416002)(26005)(316002)(81166006)(8676002)(229853002)(110136005)(25786009)(68736007)(2616005)(11346002)(74482002)(14454004)(31686004)(65956001)(476003)(65806001)(66066001)(2201001)(6116002)(6486002)(36756003)(102836004)(6506007)(53546011)(446003)(53936002)(86362001)(386003)(3846002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3401;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pMOkyFz/1eyyAmnwxi1zallek3GFLVeFbMaR/87mjg4E90zBNF3kwD2HDIMKC4hxKuLZnxg256F+10NtZ9TljoNCtoopZZK4Relik5T4Y93VvITG/I1hACmqshNkupp7HBmM9aJC0w31Xxekvao0uFx75ShDUo5jCDYKh+AkYDSZyituOYTQlV/ai++Nddw6GZ8MvtTWjAVM++LiX+oNYImCVskVJgHFi6zf5BuxxS2/79hY1BCKlQQUnKfI1FCI/mwVZpwhyIvqyKVv0GnlkPULxJ1uDO1w2QHkxub8Coea3UDhmIhSUZuVgqaqFVsXGUcha+d2z7u2UTRtsjRAETY08jHSrJ2/bQ/4RO1ztn2VyDmThPHHaJb+npJbb8NxKEZK+lWbYNaBxkQbJNZoMrVk9bIsLDydCsPszEUE52Q=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <30346D7CF884B04D8E7CF466AED05481@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 367c900a-b005-471b-1312-08d6f94a4f02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 08:51:27.1214
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3401
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Wed, Jun 19, 2019 at 09:49:04AM +0000, linmiaohe wrote:
-> 
-> On 2019/6/18 23:58, Pablo Neira Ayuso wrote:
-> > On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
-> >> From: Miaohe Lin <linmiaohe@huawei.com>
-> >>
-> >> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
-> >> ipv4/ipv6 packets will be dropped because in device is vrf but out 
-> >> device is an enslaved device. So failed with the check of the 
-> >> rpfilter.
-> >>
-> >> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> >> ---
-> >> --- a/net/ipv4/netfilter/ipt_rpfilter.c
-> >> +++ b/net/ipv4/netfilter/ipt_rpfilter.c
-> >> @@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
-> >>  	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
-> >>  	flow.flowi4_tos = RT_TOS(iph->tos);
-> >>  	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
-> >> +	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
-> >>
-> >>  	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par),
-> >> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
-> >> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-> >> @@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
-> >>  	if (rpfilter_addr_linklocal(&iph->saddr)) {
-> >>  		lookup_flags |= RT6_LOOKUP_F_IFACE;
-> >>  		fl6.flowi6_oif = dev->ifindex;
-> >> -	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
-> >> +	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
-> >> +		   (netif_is_l3_master(dev)) ||
-> >> +		   (netif_is_l3_slave(dev)))
-> >>  		fl6.flowi6_oif = dev->ifindex;
-> >>
-> >>  	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags); @@
-> >> -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
-> >>  		goto out;
-> >>  	}
-> >>
-> >> +	if (netif_is_l3_master(dev)) {
-> >> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
-> >> +		if (!dev)
-> >> +			goto out;
-> >> +	}
-> > 
-> > So, for the l3 device cases this makes:
-> > 
-> > #1 ip6_route_lookup() to fetch the route, using the device in xt_in()
-> >    (the _LOOSE flag is ignored for the l3 device case).
-> > 
-> > #2 If this is a l3dev master, then you make a global lookup for the
-> >    device using IP6CB(skb)->iif.
-> > 
-> > #3 You check if route matches with the device, using the new device
-> >    from the lookup:
-> > 
-> >    if (rt->rt6i_idev->dev == dev ...
-> > 
-> > If there is no other way to fix this, OK, that's fair enough.
-> > 
-> > Still this fix looks a bit tricky to me.
-> > 
-> > And this assymmetric between the IPv4 and IPv6 codebase looks rare.
-> > 
-> > Probably someone can explain me this in more detail? I'd appreciate.
-> > 
-> > Thanks!
-> > 
-> Thanks for explaining.
->
-> Something must be wrong in all these helper function logic because this new code logic is hard to follow for the IPv6 chunk...
->
-> Can you explore a more readable fix?
->
-> So I'm not inclined to quickly take this patch.
->
-> Thanks.
-
-Thanks, I will try a more readable fix.
+T24gMjAxOS0wNi0yNSAxMDowNSwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0K
+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+IA0K
+PiBBZGQgcHJvcGVydHkgZm9yIGRpZ2l0YWwgZmlsdGVyIGZvciBpMmMwIG5vZGUgc2FtYTVkNF94
+cGxhaW5lZA0KDQpUaGlzIGRvZXMgbm90IG1hdGNoIHRoZSBiZWxvdyBodW5rLg0KDQpDaGVlcnMs
+DQpQZXRlcg0KDQo+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuIEhyaXN0ZXYgPGV1Z2VuLmhyaXN0ZXZA
+bWljcm9jaGlwLmNvbT4NCj4gLS0tDQo+ICBhcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDRf
+eHBsYWluZWQuZHRzIHwgMSArDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4g
+DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hdDkxLXNhbWE1ZDRfeHBsYWluZWQu
+ZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MS1zYW1hNWQ0X3hwbGFpbmVkLmR0cw0KPiBpbmRl
+eCBmZGZjMzdkLi4wNjA2OGRjIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hdDkx
+LXNhbWE1ZDRfeHBsYWluZWQuZHRzDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2F0OTEtc2Ft
+YTVkNF94cGxhaW5lZC5kdHMNCj4gQEAgLTQ5LDYgKzQ5LDcgQEANCj4gIAkJCX07DQo+ICANCj4g
+IAkJCWkyYzA6IGkyY0BmODAxNDAwMCB7DQo+ICsJCQkJZW5hYmxlLWFuYS1maWx0Ow0KPiAgCQkJ
+CXN0YXR1cyA9ICJva2F5IjsNCj4gIAkJCX07DQo+ICANCj4gDQoNCg==
