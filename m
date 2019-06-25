@@ -4,119 +4,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A586EC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477E8C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B95A214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A70208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ogYHOXQW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMxaRX3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbfFYMrn (ORCPT
+        id S1731823AbfFYMtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:47:43 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38597 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfFYMrm (ORCPT
+        Tue, 25 Jun 2019 08:49:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34964 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731674AbfFYMtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:47:42 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b11so12560345lfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:47:41 -0700 (PDT)
+        Tue, 25 Jun 2019 08:49:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c6so2868098wml.0;
+        Tue, 25 Jun 2019 05:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UFhUYimPUbqJq9B2d185T+4I4jO8FePpZz3MVN0qKNU=;
-        b=ogYHOXQWQHxY+WUNvJ6NBMM3oawP05M+8W110Ab+W6dfV3vnMshSdSFDTnAmaSV8OK
-         NWE/TBAas1XEaB4qUAYbzGDI+sENo2Vxzth6tkuOXZiqQrGf2XchCDKn7rMzbNofBmiD
-         RcLZ33XrszlkuQsrGMxfOwXm6J1fQl1KTwz84aGM1SE5JSmXFXRejnn2GC4eXCQJys0D
-         DefDnrMWtoEk2iXIQ6Emap2w6yghEq98xPpHunnR9kM8ZUijnYodoBXuItzGzXYIKLA+
-         jXg/i3AtpUshBkk3dTBYyvuvr2BPgRRH5rfTaGXgmQ+e5WnKOb+0OB/Uq5rkd8r8MHvO
-         sfHw==
+        bh=4xUgT7aGCNMiM6+pJAlVCJdOnTAGvivpttC+lajH2Zk=;
+        b=RMxaRX3I/OLifYCmIHSU3kqJ4b168Vo8N0BFMol+hKTY5YTpZkBTumY1mFAzZmD+O4
+         P3C/8SdsZN8w4r1GdaHOyg8esQC10POUI0rK/YsnV1XEDZbE2jAhBKFSoWspCLnENx+O
+         JjeQB9G4Q+fX7ijFEMK7wctWvU87pg0egPw/wFITvDu/I7HvDuR2zzQDy4VuyevGFn+Q
+         Hlqywucr9eFmU96ieUVWKGBGKixuX9Dape1GLEUKrni5+dIPuvLyD9tQAf4PTe4kBdup
+         wJhbxdgOwXSzLI+jf7NaX4ey0s0yIzpQ3JtSzxGoi4SIe6jXcGorwXuxTRbzycIelR8a
+         fXAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UFhUYimPUbqJq9B2d185T+4I4jO8FePpZz3MVN0qKNU=;
-        b=haTcEHJ9mIYfT10N2B5FFBDMFphJeSif3eXZ7Yh6T/Wlw0Fqcq4Eu9jf52OUA2Vr5s
-         ZBFfCAaD7BvcoNREw/mKq4BA1gFQRE48LFl6dBTy0xYiXKNNgMIHvoLsSpwsfAQtoYU3
-         Q/45ZdKqzM6NP7yex7wt1zecBBtGSHbBwq/gmHM1E+czalSey77oDWAlyAirC8jQeKbc
-         DoxPtBpSLaRvp7u3AP7h+FybVgZZWPdrudm2M/16FhZ97Ehu4eQjdcMHEuBNhyDiE5zA
-         OKXfN5GVz0Zd5jM0rNV65loA9ZNY6LOI/GR8eys1SkfgTXuVxVm1Rl4DukuLGnDwxjbQ
-         csqg==
-X-Gm-Message-State: APjAAAUob1DtGokqfM6+T8y5hHTpirHjfYRA9B7XpDA/tRGX2jZOp7+G
-        cLbfzhdXpscR1GXkA/TOQHic9Ya09LBAYq1fu9g=
-X-Google-Smtp-Source: APXvYqzzi59+QvPIsXn/jt+BeR1itzkIlVF3TXcm4+b60gbWyKye4ZAQFj4kE9voAwJnXESq5wq/CkF/MXimCFtfIaI=
-X-Received: by 2002:ac2:598d:: with SMTP id w13mr80180lfn.165.1561466860881;
- Tue, 25 Jun 2019 05:47:40 -0700 (PDT)
+        bh=4xUgT7aGCNMiM6+pJAlVCJdOnTAGvivpttC+lajH2Zk=;
+        b=jzkJqROruOaHumk2x+je3mjCQ1jKfx6zH5kiM+lR3WgIVK19I7qsEgRT0ZKfDmmFAN
+         DdW34WaUuXCfDy2aJbuabkuEGm9bnHlGbbaLHuHhexu4LpMG33Wz57KaQRukFq/BRuPX
+         QSjOt+UL9hA26WB0japPCVZCrLv327dsachmleQTeSS8GBiu1Kg7D2rbxkthBbcgPhHn
+         BZDcSbA8/TIhesltloX6P+dfi0oZJ1k8ScTso48IXvhEvkSndrkaZ3EfRQ40mBCiL0LH
+         qLjTd04gkaSS9QRJMFeXP1U/hTrz+wejgv0Mkr/jkTkMgsUFB/7lnhc2uAgU0BEBSzq+
+         S43A==
+X-Gm-Message-State: APjAAAUvdD6xYLFYeBJO0E4oZIR0BGSkZBmWYueil9Ll0mOO5DqVKa12
+        dEhpvitYasO9kcgWrnTkw6jSu0Kq+XBHRol+vE0=
+X-Google-Smtp-Source: APXvYqyK85BEt2usCU7nw683iQobdf3iUJnWwug9lnkrvy8wxZuZVoJRuIvq18hVNehfFJJUI7xcH4zBY28i/ubYmXg=
+X-Received: by 2002:a7b:cd15:: with SMTP id f21mr18613977wmj.99.1561466957977;
+ Tue, 25 Jun 2019 05:49:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190624161913.GA32270@embeddedor> <20190624193123.GI3436@hirez.programming.kicks-ass.net>
- <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com> <20190625071846.GN3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190625071846.GN3436@hirez.programming.kicks-ass.net>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 25 Jun 2019 14:47:29 +0200
-Message-ID: <CANiq72=zzZ+Cx8uM+5UW7HeB9XtbXRhXmC2y2tz5EzPX77gHMw@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Shawn Landden <shawn@git.icu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+References: <00000000000069c3140589f6d3b7@google.com>
+In-Reply-To: <00000000000069c3140589f6d3b7@google.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Tue, 25 Jun 2019 20:49:06 +0800
+Message-ID: <CADvbK_efF3owbMbeQbRMOvMZY3mzevxR7nzEcAJgJrEEdAYrpQ@mail.gmail.com>
+Subject: Re: memory leak in sctp_get_port_local
+To:     syzbot <syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com>
+Cc:     davem <davem@davemloft.net>, LKML <linux-kernel@vger.kernel.org>,
+        linux-sctp@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        network dev <netdev@vger.kernel.org>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlad Yasevich <vyasevich@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 9:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, May 29, 2019 at 2:28 AM syzbot
+<syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com> wrote:
 >
-> Can it build a kernel without patches yet? That is, why should I care
-> what LLVM does?
-
-Having more than a single compiler is always a good idea. You benefit
-from more warnings, more tooling, a second implementation for
-reference/comparison, etc.
-
-As for what is the current state, I think they are close, specially
-for aarch64, but I let Nick, Nathan et. al. answer that! :-) (Cc'd).
-They had a talk in FOSDEM 2019 about it, too.
-
-Also CC'ing Luc since he changed sparse to stop ignoring the attribute
-so that __has_attribute() would work, but I am not sure if there has
-been further work on supporting it properly.
-
-> > Also note that C2x may get [[fallthrough]]. See N2267 and N2335. At
-> > that point, surely tools/IDEs/analyzers will support it :-) The
-> > question is whether we want to wait that long to replace the comments.
+> Hello,
 >
-> #define __fallthrough [[fallthrough]]
+> syzbot found the following crash on:
 >
-> right?
+> HEAD commit:    cd6c84d8 Linux 5.2-rc2
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=101a184aa00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=64479170dcaf0e11
+> dashboard link: https://syzkaller.appspot.com/bug?extid=079bf326b38072f849d9
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13b5dbbca00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1038444aa00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com
+>
+> : Permanently added '10.128.0.127' (ECDSA) to the list of known hosts.
+> executing program
+> executing program
+> BUG: memory leak
+> unreferenced object 0xffff8881288ca380 (size 64):
+>    comm "softirq", pid 0, jiffies 4294944468 (age 13.410s)
+>    hex dump (first 32 bytes):
+>      21 4e 00 00 00 00 00 00 00 00 00 00 00 00 00 00  !N..............
+>      28 ae 85 23 81 88 ff ff 00 00 00 00 00 00 00 00  (..#............
+>    backtrace:
+>      [<0000000054ece54d>] kmemleak_alloc_recursive
+> include/linux/kmemleak.h:55 [inline]
+>      [<0000000054ece54d>] slab_post_alloc_hook mm/slab.h:439 [inline]
+>      [<0000000054ece54d>] slab_alloc mm/slab.c:3326 [inline]
+>      [<0000000054ece54d>] kmem_cache_alloc+0x134/0x270 mm/slab.c:3488
+>      [<00000000d992ea84>] sctp_bucket_create net/sctp/socket.c:8395 [inline]
+>      [<00000000d992ea84>] sctp_get_port_local+0x189/0x5b0
+> net/sctp/socket.c:8142
+>      [<0000000099206d90>] sctp_do_bind+0xcc/0x1e0 net/sctp/socket.c:402
+>      [<00000000b8795757>] sctp_bind+0x44/0x70 net/sctp/socket.c:302
+>      [<00000000672a44aa>] inet6_bind+0x40/0xb7 net/ipv6/af_inet6.c:445
+>      [<0000000001400e1c>] __sys_bind+0x11c/0x140 net/socket.c:1659
+>      [<00000000e69e8036>] __do_sys_bind net/socket.c:1670 [inline]
+>      [<00000000e69e8036>] __se_sys_bind net/socket.c:1668 [inline]
+>      [<00000000e69e8036>] __x64_sys_bind+0x1e/0x30 net/socket.c:1668
+>      [<000000001644bb1f>] do_syscall_64+0x76/0x1a0
+> arch/x86/entry/common.c:301
+>      [<00000000199a1ea2>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+will post a fix for this:
 
-Yes and no. The exact spelling we use does not matter much. My point
-with that paragraph was that since C2x will (maybe) add fallthrough,
-as C++17 did, every compiler/analyzer/IDE/etc. that is still missing
-support for it will have to eventually add it even if they ignore GNU
-attributes. At that point, I would guess most will likely add all
-spellings too.
+@@ -4816,6 +4816,7 @@ static int sctp_setsockopt(struct sock *sk, int
+level, int optname,
+ static int sctp_connect(struct sock *sk, struct sockaddr *addr,
+                        int addr_len, int flags)
+ {
++       struct sctp_bind_addr *bp = &sctp_sk(sk)->ep->base.bind_addr;
+        struct inet_sock *inet = inet_sk(sk);
+        struct sctp_af *af;
+        int err = 0;
+@@ -4826,12 +4827,13 @@ static int sctp_connect(struct sock *sk,
+struct sockaddr *addr,
+                 addr, addr_len);
 
-Cheers,
-Miguel
+        /* We may need to bind the socket. */
+-       if (!inet->inet_num) {
++       if (!bp->port) {
+                if (sk->sk_prot->get_port(sk, 0)) {
+                        release_sock(sk);
+                        return -EAGAIN;
+                }
+                inet->inet_sport = htons(inet->inet_num);
++               bp->port = inet->inet_sport;
+        }
+
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
