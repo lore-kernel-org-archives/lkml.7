@@ -2,116 +2,147 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCC5C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF487C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 093B3215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA15A215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbfFYIu4 (ORCPT
+        id S1730971AbfFYIvQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:50:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56572 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbfFYIu4 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:50:56 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3E8327FDFD;
-        Tue, 25 Jun 2019 08:50:56 +0000 (UTC)
-Received: from krava (unknown [10.43.17.81])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 45ED419723;
-        Tue, 25 Jun 2019 08:50:52 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 10:50:52 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v4 4/7] perf diff: Use hists to manage basic blocks per
- symbol
-Message-ID: <20190625085052.GC9574@krava>
-References: <1561041402-29444-1-git-send-email-yao.jin@linux.intel.com>
- <1561041402-29444-5-git-send-email-yao.jin@linux.intel.com>
- <20190624075718.GE5471@krava>
- <cdc87d42-8a5c-5b12-c746-896e3324cb35@linux.intel.com>
+        Tue, 25 Jun 2019 04:51:16 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:6540 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727770AbfFYIvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:51:15 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 300846512F1C986639E3;
+        Tue, 25 Jun 2019 16:51:13 +0800 (CST)
+Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 25 Jun 2019 16:51:12 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 25 Jun 2019 16:51:12 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
+ Tue, 25 Jun 2019 16:51:12 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+CC:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dsahern@gmail.com" <dsahern@gmail.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Thread-Topic: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Thread-Index: AdUrMtZeJBRdmfpcd0eT0vsD259sjw==
+Date:   Tue, 25 Jun 2019 08:51:12 +0000
+Message-ID: <badbfdd3c6474994a481375dad2a51f3@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cdc87d42-8a5c-5b12-c746-896e3324cb35@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 25 Jun 2019 08:50:56 +0000 (UTC)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 10:49:25PM +0800, Jin, Yao wrote:
-> 
-> 
-> On 6/24/2019 3:57 PM, Jiri Olsa wrote:
-> > On Thu, Jun 20, 2019 at 10:36:39PM +0800, Jin Yao wrote:
-> > 
-> > SNIP
-> > 
-> > > +
-> > > +static void *block_entry_zalloc(size_t size)
-> > > +{
-> > > +	return zalloc(size + sizeof(struct hist_entry));
-> > > +}
-> > > +
-> > > +static void block_entry_free(void *he)
-> > > +{
-> > > +	struct block_info *bi = ((struct hist_entry *)he)->block_info;
-> > > +
-> > > +	block_info__put(bi);
-> > > +	free(he);
-> > > +}
-> > > +
-> > > +struct hist_entry_ops block_entry_ops = {
-> > > +	.new    = block_entry_zalloc,
-> > > +	.free   = block_entry_free,
-> > > +};
-> > 
-> > hum, so there's already block_hist_ops moving that stuff into 'struct block_hist',
-> > which is great, but why don't we have 'struct block_entry' in here? that would
-> > keep the 'struct block_info'
-> > 
-> > thanks,
-> > jirka
-> > 
-> 
-> Hi Jiri,
-> 
-> If I define 'struct block_entry' as following and cast 'he' to 'struct
-> block_entry' in some places, such as in block_cmp(), we can get the 'struct
-> block_entry'.
-> 
-> struct block_entry {
-> 	struct block_info bi;
-> 	struct hist_entry he;
-> };
-> 
-> But I don't know when I can set the 'bi' of 'struct block_entry'. Before or
-> after calling hists__add_entry_xxx()? Before calling hists__add_entry_xxx(),
-> we don't know the hist_entry. After calling hists__add_entry_xxx(), actually
-> the hist_entry__cmp doesn't work (no bi ).
-> 
-> That's why I create block_info in hist_entry. Maybe I misunderstand what
-> your suggested, correct me if I'm wrong.
 
-ah you need the data already in place when calling hists__add_entry_block,
-because of the block_cmp sorting function.. ok, it's the same tyhing we
-do in c2c with mem_info.. I guess we can survive one pointer
+On Wed, Jun 19, 2019 at 09:49:04AM +0000, linmiaohe wrote:
+> 
+> On 2019/6/18 23:58, Pablo Neira Ayuso wrote:
+> > On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
+> >> From: Miaohe Lin <linmiaohe@huawei.com>
+> >>
+> >> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
+> >> ipv4/ipv6 packets will be dropped because in device is vrf but out 
+> >> device is an enslaved device. So failed with the check of the 
+> >> rpfilter.
+> >>
+> >> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> >> ---
+> >> --- a/net/ipv4/netfilter/ipt_rpfilter.c
+> >> +++ b/net/ipv4/netfilter/ipt_rpfilter.c
+> >> @@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
+> >>  	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
+> >>  	flow.flowi4_tos = RT_TOS(iph->tos);
+> >>  	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
+> >> +	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+> >>
+> >>  	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par),
+> >> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
+> >> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+> >> @@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+> >>  	if (rpfilter_addr_linklocal(&iph->saddr)) {
+> >>  		lookup_flags |= RT6_LOOKUP_F_IFACE;
+> >>  		fl6.flowi6_oif = dev->ifindex;
+> >> -	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
+> >> +	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
+> >> +		   (netif_is_l3_master(dev)) ||
+> >> +		   (netif_is_l3_slave(dev)))
+> >>  		fl6.flowi6_oif = dev->ifindex;
+> >>
+> >>  	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags); @@
+> >> -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+> >>  		goto out;
+> >>  	}
+> >>
+> >> +	if (netif_is_l3_master(dev)) {
+> >> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
+> >> +		if (!dev)
+> >> +			goto out;
+> >> +	}
+> > 
+> > So, for the l3 device cases this makes:
+> > 
+> > #1 ip6_route_lookup() to fetch the route, using the device in xt_in()
+> >    (the _LOOSE flag is ignored for the l3 device case).
+> > 
+> > #2 If this is a l3dev master, then you make a global lookup for the
+> >    device using IP6CB(skb)->iif.
+> > 
+> > #3 You check if route matches with the device, using the new device
+> >    from the lookup:
+> > 
+> >    if (rt->rt6i_idev->dev == dev ...
+> > 
+> > If there is no other way to fix this, OK, that's fair enough.
+> > 
+> > Still this fix looks a bit tricky to me.
+> > 
+> > And this assymmetric between the IPv4 and IPv6 codebase looks rare.
+> > 
+> > Probably someone can explain me this in more detail? I'd appreciate.
+> > 
+> > Thanks!
+> > 
+> Thanks for explaining.
+>
+> Something must be wrong in all these helper function logic because this new code logic is hard to follow for the IPv6 chunk...
+>
+> Can you explore a more readable fix?
+>
+> So I'm not inclined to quickly take this patch.
+>
+> Thanks.
 
-I'll check the rest
-
-thanks,
-jirka
+Thanks, I will try a more readable fix.
