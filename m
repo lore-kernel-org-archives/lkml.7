@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCBFC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E411DC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E2F20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3076215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfFYLZC (ORCPT
+        id S1730625AbfFYLYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:25:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41859 "EHLO
+        Tue, 25 Jun 2019 07:24:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41850 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727964AbfFYLYk (ORCPT
+        with ESMTP id S1726702AbfFYLYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:24:40 -0400
+        Tue, 25 Jun 2019 07:24:38 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hfjYw-0004rH-Nq; Tue, 25 Jun 2019 13:24:34 +0200
-Message-Id: <20190625112405.760253024@linutronix.de>
+        id 1hfjYv-0004r5-L9; Tue, 25 Jun 2019 13:24:33 +0200
+Message-Id: <20190625112405.573914765@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Jun 2019 13:13:56 +0200
+Date:   Tue, 25 Jun 2019 13:13:54 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
@@ -34,7 +34,7 @@ Cc:     x86@kernel.org, Robert Hodaszi <Robert.Hodaszi@digi.com>,
         Ido Schimmel <idosch@mellanox.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-serial@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
-Subject: [patch 3/5] x86/ioapic: Implement irq_inflight() callback
+Subject: [patch 1/5] genirq: Delay deactivation in free_irq()
 References: <20190625111353.863718167@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -43,99 +43,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an interrupt is shut down in free_irq() there might be an inflight
-interrupt which is not yet serviced pending in the IO-APIC remote IRR. That
-means the interrupt has been sent to the target CPUs local APIC, but the
-target CPU is in a state which delays the servicing.
+When interrupts are shutdown, they are immediately deactivated in the
+irqdomain hierarchy. While this looks obviously correct there is a subtle
+issue:
 
-So free_irq() would proceed to free resources and to clear the vector
-because synchronize_hardirq() does not see an interrupt handler in
-progress.
+There might be an interrupt in flight when free_irq() is invoking the
+shutdown. This is properly handled at the irq descriptor / primary handler
+level, but the deactivation might completely disable resources which are
+required to acknowledge the interrupt.
 
-That can trigger a spurious interrupt warning, which is harmless and just
-confuses users, but it also can leave the remote IRR in a stale state
-because once the handler is invoked the interrupt resources might be freed
-already and therefore acknowledgement is not possible anymore.
+Split the shutdown code and deactivate the interrupt after synchronization
+in free_irq(). Fixup all other usage sites where this is not an issue to
+invoke the combined shutdown_and_deactivate() function instead.
 
-Implement the new irq_inflight() callback for the IO-APIC irq chip. The
-callback is invoked from free_irq() via __synchronize_hardirq(). Check the
-remote IRR bit of the interrupt and return 'in flight' if it is set and the
-interrupt is configured in level mode. For edge mode the remote IRR has no
-meaning.
+This still might be an issue if the interrupt in flight servicing is
+delayed on a remote CPU beyond the invocation of synchronize_irq(), but
+that cannot be handled at that level and needs to be handled in the
+synchronize_irq() context.
 
-As this is only meaningful for level triggered interrupts this won't cure
-the potential spurious interrupt warning for edge triggered interrupts, but
-the edge trigger case does not result in stale hardware state. This has to
-be addressed at the vector/interrupt entry level seperately.
-
-Fixes: 464d12309e1b ("x86/vector: Switch IOAPIC to global reservation mode")
+Fixes: f8264e34965a ("irqdomain: Introduce new interfaces to support hierarchy irqdomains")
 Reported-by: Robert Hodaszi <Robert.Hodaszi@digi.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/kernel/apic/io_apic.c |   39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ kernel/irq/autoprobe.c  |    6 +++---
+ kernel/irq/chip.c       |    6 ++++++
+ kernel/irq/cpuhotplug.c |    2 +-
+ kernel/irq/internals.h  |    1 +
+ kernel/irq/manage.c     |   12 +++++++++++-
+ 5 files changed, 22 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1893,6 +1893,43 @@ static int ioapic_set_affinity(struct ir
- 	return ret;
- }
+--- a/kernel/irq/autoprobe.c
++++ b/kernel/irq/autoprobe.c
+@@ -90,7 +90,7 @@ unsigned long probe_irq_on(void)
+ 			/* It triggered already - consider it spurious. */
+ 			if (!(desc->istate & IRQS_WAITING)) {
+ 				desc->istate &= ~IRQS_AUTODETECT;
+-				irq_shutdown(desc);
++				irq_shutdown_and_deactivate(desc);
+ 			} else
+ 				if (i < 32)
+ 					mask |= 1 << i;
+@@ -127,7 +127,7 @@ unsigned int probe_irq_mask(unsigned lon
+ 				mask |= 1 << i;
  
-+/*
-+ * Interrupt shutdown masks the ioapic pin, but the interrupt might already
-+ * be on flight, but not yet serviced by the target CPU. That means
-+ * __synchronize_hardirq() would return and claim that everything is calmed
-+ * down. So free_irq() would proceed and deactivate the interrupt and free
-+ * resources.
-+ *
-+ * Once the target CPU comes around to service it it will find a cleared
-+ * vector and complain. While the spurious interrupt is harmless, the full
-+ * release of resources might prevent the interrupt from being acknowledged
-+ * which keeps the hardware in a weird state.
-+ *
-+ * Verify that the corresponding Remote-IRR bits are clear.
-+ */
-+static int ioapic_irq_inflight(struct irq_data *irqd)
-+{
-+	struct mp_chip_data *mcd = irqd->chip_data;
-+	struct IO_APIC_route_entry rentry;
-+	struct irq_pin_list *p;
-+	int ret = 0;
-+
-+	raw_spin_lock(&ioapic_lock);
-+	for_each_irq_pin(p, mcd->irq_2_pin) {
-+		rentry = __ioapic_read_entry(p->apic, p->pin);
-+		/*
-+		 * The remote IRR is only valid in level trigger mode. It's
-+		 * meaning is undefined for edge triggered interrupts.
-+		 */
-+		if (rentry.irr && rentry.trigger) {
-+			ret = 1;
-+			break;
-+		}
-+	}
-+	raw_spin_unlock(&ioapic_lock);
-+	return ret;
+ 			desc->istate &= ~IRQS_AUTODETECT;
+-			irq_shutdown(desc);
++			irq_shutdown_and_deactivate(desc);
+ 		}
+ 		raw_spin_unlock_irq(&desc->lock);
+ 	}
+@@ -169,7 +169,7 @@ int probe_irq_off(unsigned long val)
+ 				nr_of_irqs++;
+ 			}
+ 			desc->istate &= ~IRQS_AUTODETECT;
+-			irq_shutdown(desc);
++			irq_shutdown_and_deactivate(desc);
+ 		}
+ 		raw_spin_unlock_irq(&desc->lock);
+ 	}
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -314,6 +314,12 @@ void irq_shutdown(struct irq_desc *desc)
+ 		}
+ 		irq_state_clr_started(desc);
+ 	}
 +}
 +
- static struct irq_chip ioapic_chip __read_mostly = {
- 	.name			= "IO-APIC",
- 	.irq_startup		= startup_ioapic_irq,
-@@ -1902,6 +1939,7 @@ static struct irq_chip ioapic_chip __rea
- 	.irq_eoi		= ioapic_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_inflight		= ioapic_irq_inflight,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
++
++void irq_shutdown_and_deactivate(struct irq_desc *desc)
++{
++	irq_shutdown(desc);
+ 	/*
+ 	 * This must be called even if the interrupt was never started up,
+ 	 * because the activation can happen before the interrupt is
+--- a/kernel/irq/cpuhotplug.c
++++ b/kernel/irq/cpuhotplug.c
+@@ -116,7 +116,7 @@ static bool migrate_one_irq(struct irq_d
+ 		 */
+ 		if (irqd_affinity_is_managed(d)) {
+ 			irqd_set_managed_shutdown(d);
+-			irq_shutdown(desc);
++			irq_shutdown_and_deactivate(desc);
+ 			return false;
+ 		}
+ 		affinity = cpu_online_mask;
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -82,6 +82,7 @@ extern int irq_activate_and_startup(stru
+ extern int irq_startup(struct irq_desc *desc, bool resend, bool force);
  
-@@ -1914,6 +1952,7 @@ static struct irq_chip ioapic_ir_chip __
- 	.irq_eoi		= ioapic_ir_ack_level,
- 	.irq_set_affinity	= ioapic_set_affinity,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_inflight		= ioapic_irq_inflight,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
+ extern void irq_shutdown(struct irq_desc *desc);
++extern void irq_shutdown_and_deactivate(struct irq_desc *desc);
+ extern void irq_enable(struct irq_desc *desc);
+ extern void irq_disable(struct irq_desc *desc);
+ extern void irq_percpu_enable(struct irq_desc *desc, unsigned int cpu);
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/random.h>
+ #include <linux/interrupt.h>
++#include <linux/irqdomain.h>
+ #include <linux/slab.h>
+ #include <linux/sched.h>
+ #include <linux/sched/rt.h>
+@@ -1699,6 +1700,7 @@ static struct irqaction *__free_irq(stru
+ 	/* If this was the last handler, shut down the IRQ line: */
+ 	if (!desc->action) {
+ 		irq_settings_clr_disable_unlazy(desc);
++		/* Only shutdown. Deactivate after synchronize_irq() */
+ 		irq_shutdown(desc);
+ 	}
+ 
+@@ -1768,6 +1770,14 @@ static struct irqaction *__free_irq(stru
+ 		 * require it to deallocate resources over the slow bus.
+ 		 */
+ 		chip_bus_lock(desc);
++		/*
++		 * There is no interrupt on the fly anymore. Deactivate it
++		 * completely.
++		 */
++		raw_spin_lock_irqsave(&desc->lock, flags);
++		irq_domain_deactivate_irq(&desc->irq_data);
++		raw_spin_unlock_irqrestore(&desc->lock, flags);
++
+ 		irq_release_resources(desc);
+ 		chip_bus_sync_unlock(desc);
+ 		irq_remove_timings(desc);
+@@ -1855,7 +1865,7 @@ static const void *__cleanup_nmi(unsigne
+ 	}
+ 
+ 	irq_settings_clr_disable_unlazy(desc);
+-	irq_shutdown(desc);
++	irq_shutdown_and_deactivate(desc);
+ 
+ 	irq_release_resources(desc);
  
 
 
