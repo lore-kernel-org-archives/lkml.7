@@ -2,157 +2,149 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919ADC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B12C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A4FC208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C0F208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561490494;
+	bh=KQU6DtRDo3hq69qYXaCabKvz0AFsLEo4Om+nW8Oe1pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tFdnkeR4IE8lblmagoikIUGV5K9OtBSm305OnRHVAHyHnOjd48R/Exd2T+pVp0AFd
+	 B1HStpIkib4tUOPgeGTN9yb6koVH9b/qGZXhmaK5MwfPQe3m5v/AOED6J8218hlz7K
+	 mgxdtUohzDgGABvc/GWK8Hf3GaaFanbfe92wlpAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbfFYTUE (ORCPT
+        id S1729463AbfFYTVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:20:04 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56949 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfFYTUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:20:03 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hfqyv-0001Al-5M; Tue, 25 Jun 2019 21:19:53 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hfqys-0004bj-3v; Tue, 25 Jun 2019 21:19:50 +0200
-Date:   Tue, 25 Jun 2019 21:19:50 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-Message-ID: <20190625191950.2rvvputus4uavyjn@pengutronix.de>
-References: <20190522163428.7078-1-paul@crapouillou.net>
- <20190625074220.ckj7e7gwbszwknaa@pengutronix.de>
- <20190625095821.GD1516@ulmo>
+        Tue, 25 Jun 2019 15:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbfFYTVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:21:33 -0400
+Received: from linux-8ccs (ip5f5ade86.dynamic.kabel-deutschland.de [95.90.222.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDCE12086D;
+        Tue, 25 Jun 2019 19:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561490491;
+        bh=KQU6DtRDo3hq69qYXaCabKvz0AFsLEo4Om+nW8Oe1pA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FBbgI3b93JMMPtrCQg3sda3rEmd/fqazCAnYhjEGRmTmHCkbVfpuuRhlQCuGIMpnP
+         xxEECwHI1lzT35MlOfAWxqVt5tR5TYdsrIzWB+UW6vPN4ludYROqnrWD2McjhTTblu
+         zfx+7fp8CVJ8dUoW1ltjmKj4/QaQBr1TcWzReWRM=
+Date:   Tue, 25 Jun 2019 21:21:15 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        namit@vmware.com, cj.chengjian@huawei.com, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org
+Subject: Re: [PATCH] modules: fix compile error if don't have strict module
+ rwx
+Message-ID: <20190625192115.GA27913@linux-8ccs>
+References: <1561455628-50795-1-git-send-email-yangyingliang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190625095821.GD1516@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1561455628-50795-1-git-send-email-yangyingliang@huawei.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:58:21AM +0200, Thierry Reding wrote:
-> On Tue, Jun 25, 2019 at 09:42:20AM +0200, Uwe Kleine-König wrote:
-> > On Wed, May 22, 2019 at 06:34:28PM +0200, Paul Cercueil wrote:
-> > > When the driver probes, the PWM pin is automatically configured to its
-> > > default state, which should be the "pwm" function. However, at this
-> > > point we don't know the actual level of the pin, which may be active or
-> > > inactive. As a result, if the driver probes without enabling the
-> > > backlight, the PWM pin might be active, and the backlight would be
-> > > lit way before being officially enabled.
-> > 
-> > I'm not sure I understand the problem completely here. Let me try to
-> > summarize the problem you solve here:
-> > 
-> > The backlight device's default pinctrl contains the PWM function of the
-> > PWM pin. As the PWM is (or at least might be) in an undefined state the
-> > default pinctrl should only be switched to when it's clear if the
-> > backlight should be on or off.
-> > 
-> > So you use the "init"-pinctrl to keep the PWM pin in some (undriven?)
-> > state and by switching to "sleep" you prevent "default" getting active.
-> > 
-> > Did I get this right? If not, please correct me.
-> > 
-> > What is the PWM pin configured to in "init" in your case? Is the pinctrl
-> > just empty? Or is it a gpio-mode (together with a gpio-hog)?
-> > 
-> > My thoughts to this is are:
-> > 
-> >  a) This is a general problem that applies (I think) to most if not all
-> >     PWM consumers. If the PWM drives a motor, or makes your mobile
-> >     vibrate, or drives an LED, or a clk, the PWM shouldn't start
-> >     to do something before its consumer is ready.
-> 
-> Yes, it shouldn't start before it is explicitly told to do so by the
-> consumer. One exception is if the PWM was already set up by firmware
-> to run. So I think in general terms we always want the PWM to remain
-> in the current state upon probe.
++++ Yang Yingliang [25/06/19 17:40 +0800]:
+>If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is not defined,
+>we need stub for module_enable_nx() and module_enable_x().
+>
+>If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is defined, but
+>CONFIG_STRICT_MODULE_RWX is disabled, we need stub for
+>module_enable_nx.
+>
+>Move frob_text() outside of the CONFIG_STRICT_MODULE_RWX,
+>because it is needed anyway.
 
-In the end this means that also pinmuxing should not be touched when the
-PWM device probes.
+Maybe include a fixes tag?
 
-> The atomic PWM API was designed with that in mind. The original use-
-> case was to allow seamlessly taking over from a PWM regulator. In order
-> to do so, the driver needs to be able to read back the hardware state
-> and *not* initialize the PWM to some default state.
-> 
-> I think that same approach can be extended to backlights. The driver's
-> probe needs to determine what the current state of the backlight is and
-> preferable not touch it. And that basically propagates all the way to
-> the display driver, which ultimately needs to determine whether or not
-> the display configuration (including the backlight) is enabled.
+Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
 
-Are you ambitious enough to handle cases like: PWM is running (maybe
-because it cannot be disabled), but the pin is muxed to an "unconnected"
-configuration such that the pin doesn't oscillate? In this case you'd
-need an inspection function for pinmuxing.
+>Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>---
+> kernel/module.c | 13 +++++++++----
+> 1 file changed, 9 insertions(+), 4 deletions(-)
+>
+>diff --git a/kernel/module.c b/kernel/module.c
+>index c3ae34c..cfff441 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -1875,7 +1875,7 @@ static void mod_sysfs_teardown(struct module *mod)
+> 	mod_sysfs_fini(mod);
+> }
+>
+>-#ifdef CONFIG_STRICT_MODULE_RWX
+>+#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
 
-> >  b) Thierry made it quite clear[1] that the PWM pin should be configured
-> >     in a pinctrl of the pwm device, not the backlight (or more general:
-> >     the consumer) device.
-> > 
-> > While I don't entirely agree with b) I think that even a) alone
-> > justifies to think a bit more about the problem and preferably come up
-> > with a solution that helps other consumers, too. Ideally if the
-> > bootloader sets up the PWM to do something sensible, probing the
-> > lowlevel PWM driver and the consumer driver should not interfere with
-> > the bootloader's intention until the situation reaches a controlled
-> > state. (I.e. if the backlight was left on by the bootloader to show a
-> > nice logo, it should not flicker until a userspace program takes over
-> > the display device.)
-> 
-> Yes, exactly that.
-> 
-> > A PWM is special in contrast to other devices as its intended behaviour
-> > is only fixed once a consumer is present. Without a consumer it is
-> > unknown if the PWM is inverted or not. And so the common approach that
-> > pinctrl is setup by the device core only doesn't work without drawbacks
-> > for PWMs.
-> 
-> Actually I don't think PWMs are special in this regard. A GPIO, for
-> example, can also be active-low or active-high, and without a consumer
-> there's not enough context to determine which one it should be.
+Could you please explain why you introduced a new
+CONFIG_ARCH_HAS_STRICT_MODULE_RWX #ifdef block instead of just moving
+frob_text() and module_enable_x() outside of CONFIG_STRICT_MODULE_RWX?
 
-Right, PWMs are more similar to GPIOs than to (say) backlight devices.
-With your request to configure the pinmux for a PWM pin with the PWM
-device instead of its consumer you're making some things more difficult.
-For GPIOs it's quite common that they are muxed from their consumer
-because there the same problems are present.
+I do not have anything against it, although the nested #ifdef's are a
+bit painful to read. But I could not find a better way to do it :/
+It's awkward because we need module_enable_x() and frob_text()
+regardless of of CONFIG_STRICT_MODULE_RWX for x86, but other arches
+don't need to call module_enable_x(), they usually just call the empty stub.
 
-Best regards
-Uwe
+But I think having the CONFIG_ARCH_HAS_STRICT_MODULE_RWX block is OK,
+for the reason of limiting the scope of the calls rather than
+blanketly calling frob_text() andd module_enable_x() for arches that
+don't need to call them. Was that your reasoning as well?
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks,
+
+Jessica
+
+
+> /*
+>  * LKM RO/NX protection: protect module's text/ro-data
+>  * from modification and any data from execution.
+>@@ -1898,6 +1898,7 @@ static void frob_text(const struct module_layout *layout,
+> 		   layout->text_size >> PAGE_SHIFT);
+> }
+>
+>+#ifdef CONFIG_STRICT_MODULE_RWX
+> static void frob_rodata(const struct module_layout *layout,
+> 			int (*set_memory)(unsigned long start, int num_pages))
+> {
+>@@ -2010,15 +2011,19 @@ void set_all_modules_text_ro(void)
+> 	}
+> 	mutex_unlock(&module_mutex);
+> }
+>-#else
+>+#else /* !CONFIG_STRICT_MODULE_RWX */
+> static void module_enable_nx(const struct module *mod) { }
+>-#endif
+>-
+>+#endif /*  CONFIG_STRICT_MODULE_RWX */
+> static void module_enable_x(const struct module *mod)
+> {
+> 	frob_text(&mod->core_layout, set_memory_x);
+> 	frob_text(&mod->init_layout, set_memory_x);
+> }
+>+#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
+>+static void module_enable_nx(const struct module *mod) { }
+>+static void module_enable_x(const struct module *mod) { }
+>+#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
+>+
+>
+> #ifdef CONFIG_LIVEPATCH
+> /*
+>-- 
+>1.8.3
+>
