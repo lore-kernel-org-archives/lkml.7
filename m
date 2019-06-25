@@ -2,141 +2,103 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3F6C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82C0C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3E92086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8A92086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561500803;
+	bh=mJItMOQGYNAklYP5owznC4HSBi9DyiSSvN5DqZubvrE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1Y8gxTB2X50wylJgsdCENIx7rMCAla1IDWdzojLanzd0wGAvUqyEusugyFMk5a8go
+	 yn0sAZMC15Jf9QrrUq8oromw+56mW0Vf2gk8Wy59oCEqD9IAn/3jbMzl9ru5TKdfUO
+	 TZjk3Y6TskUscUQ/grW8tdxHt122sSJODB2Qa1g4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfFYWNO (ORCPT
+        id S1726605AbfFYWNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:13:14 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59764 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbfFYWNN (ORCPT
+        Tue, 25 Jun 2019 18:13:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43048 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfFYWNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:13:13 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id A67332608D3
-Received: by earth.universe (Postfix, from userid 1000)
-        id 781F33C08D5; Wed, 26 Jun 2019 00:13:08 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 00:13:08 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: power: supply: Add documentation for
- the VINDPM properties
-Message-ID: <20190625221308.youac2n3wr7ojvyk@earth.universe>
-References: <20190520180712.32405-1-angus@akkea.ca>
- <20190520180712.32405-3-angus@akkea.ca>
- <20190613230906.GA10492@bogus>
+        Tue, 25 Jun 2019 18:13:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so112770pgv.10;
+        Tue, 25 Jun 2019 15:13:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8gzPjoJjuhl8UL7VUOkU3jqXACXyJKi+qh78CzG1deI=;
+        b=QoeUWtoXykCX+Bq53a7A9bl2m/QOc95LCrsFNc/FWV8IUOqhYzou5SH/2BbNSr/pGt
+         TFFWVbvaDRX3tyClX1+NQ+wo0YVmPKQ8jC9K+I+5OgjfsC/NL7MBsm7uLpbx1lBgivFC
+         YndY34vehKuD1a63b0CbdGf5Y+BEbwNVWx+vzHt5SMPTTz1+RZRgKfaYMEO++NInpPnj
+         W9bh9+1AAAclOUzyFR4bpHiPX60/c1yeRY4QJw5ZlU5yFKZgR34Q/oCHbEVxDDcO53Zj
+         AngIY4/iLj1p6IBC1MKsZPExsciJh5QjgQDyMhIkn5rY5k71jPikZEQS9KLWBXrfG/fh
+         w4HQ==
+X-Gm-Message-State: APjAAAU01WyKGR61McyR5fW2lM44tHAZlgvfVxCYWTRImrLOOFEM3cso
+        /Az2SrYL9bU24yifMM/2Gzs=
+X-Google-Smtp-Source: APXvYqxWuXRncraTED2jeacoTPyN1fvtJGk3Zc52FbqH3XACtitgQolZjqrTP/UYKEopxq0KXI3bTw==
+X-Received: by 2002:a63:480e:: with SMTP id v14mr1871131pga.182.1561500800857;
+        Tue, 25 Jun 2019 15:13:20 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x3sm45355pja.7.2019.06.25.15.13.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 15:13:19 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id D102E401EB; Tue, 25 Jun 2019 22:13:18 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 22:13:18 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, peterz@infradead.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu,
+        yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com,
+        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
+        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v5 06/18] kbuild: enable building KUnit
+Message-ID: <20190625221318.GO19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-7-brendanhiggins@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ugu4qrkfrveoirjb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613230906.GA10492@bogus>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190617082613.109131-7-brendanhiggins@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 01:26:01AM -0700, Brendan Higgins wrote:
+> diff --git a/Kconfig b/Kconfig
+> index 48a80beab6853..10428501edb78 100644
+> --- a/Kconfig
+> +++ b/Kconfig
+> @@ -30,3 +30,5 @@ source "crypto/Kconfig"
+>  source "lib/Kconfig"
+>  
+>  source "lib/Kconfig.debug"
+> +
+> +source "kunit/Kconfig"
 
---ugu4qrkfrveoirjb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch would break compilation as kunit/Kconfig is not introduced. This
+would would also break bisectability on this commit. This change should
+either be folded in to the next patch, or just be a separate patch after
+the next one.
 
-Hi,
-
-On Thu, Jun 13, 2019 at 05:09:06PM -0600, Rob Herring wrote:
-> On Mon, May 20, 2019 at 11:07:12AM -0700, Angus Ainslie (Purism) wrote:
-> > Add documentation on how to control VINDPM from the devicetree.
-> >=20
-> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> > ---
-> >  .../devicetree/bindings/power/supply/bq25890.txt          | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt=
- b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> > index dc0568933359..fe8b709dd666 100644
-> > --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> > +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
-> > @@ -26,9 +26,15 @@ Optional properties:
-> >  - ti,use-ilim-pin: boolean, if present the ILIM resistor will be used =
-and the
-> >      input current will be the lower between the resistor setting and t=
-he IINLIM
-> >      register setting;
-> > +- ti,use-vinmin-threshold: boolean, if present the FORCE_VINDPM bit wi=
-ll be set
-> > +    and the input voltage limit will be configured based on "ti,vinmin=
--threshold"
->=20
-> Isn't presence of ti,vinmin-threshold enough to determine whether to set=
-=20
-> FORCE_VINDPM or not? Just get rid of the default being 4.4V.
->
-> >  - ti,thermal-regulation-threshold: integer, temperature above which th=
-e charge
-> >      current is lowered, to avoid overheating (in degrees Celsius). If =
-omitted,
-> >      the default setting will be used (120 degrees);
-> > +- ti,vinmin-threshold: integer, lower absolute threshold for VINDPM. I=
-f the
-> > +    voltage falls below this threshold the charge current is reduced u=
-ntil the
-> > +    input voltage rises above the input voltage limit. If omitted, the=
- default
-> > +    setting will be used (4.4V);
-
-We already have a "input-voltage-min-microvolt" property used by
-Maxim chargers, please resuse that for the bq25890 instead of
-creating a new property name.
-
--- Sebastian
-
-> > =20
-> >  Example:
-> > =20
-> > @@ -46,4 +52,6 @@ bq25890 {
-> > =20
-> >          ti,use-ilim-pin;
-> >          ti,thermal-regulation-threshold =3D <120>;
-> > +        ti,use-vinmin-threshold;
-> > +        ti,vinmin-threshold =3D <3900000>;
-> >  };
-> > --=20
-> > 2.17.1
-> >=20
-
---ugu4qrkfrveoirjb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0SnG0ACgkQ2O7X88g7
-+pqDwhAAiOvtNtH70ZGzXyF9hiF1W3q9vQnI/q7O7DvRkYaPpRTAGMkAQf/83U1F
-/RUm0zLghA48EfALEVqti+zMEg4FLpHW8TgaiblKHWKHF5mUbLoUO1sNi55VzEXu
-8rYeRIhHqjCQPta4cFW/reZoJ6QUtqnpUgT90xNjy5l26VLp0INpEzWi9luzn+Sg
-d7vW1T+hMcUJcCA26nobt/1pSK8vjGCKnxrAkNo2dsk6KU0zwtAJf25OSE7nJHkQ
-MXAMI7S9QK7F2C9DXsZ/AcPng6lTTccx86cZcvh5S0Pss5gKItQdLQcDqTYiF6B3
-8Zaj84rLyYuujPnVcDXMjhtnufE5PNMsebM7Ia3EFb0Zfuai1zv8gXicjdNxpZV8
-37zIVuJ5zPkd6wMJOPkOsACNF/lN4UJtBxxG94Bo1ACHLDVyDInb6drN0IEvBIlm
-KMU3bQT4tfTUBLIruAEdUR7AoJH4nWbPTuBUj0F0aQ554txdBMjJAHKm+TtQivMG
-Ha99S4c6wDFiDs/8wdX1reJOjB8G5AAwZXKywcVDDhfM1GolxtLgYWWWH8fdO0G1
-ECfdzda5L+EdAUFRFNoqQ8BjtAQzY2rMHLVGOMoRVObwyVPYAXhUO8dDuAp38Yqc
-+DOcJo0/CzuxmGymnTjiCKOBb0O4WMPIAznhprDjW1XlpPjzxN8=
-=/rvN
------END PGP SIGNATURE-----
-
---ugu4qrkfrveoirjb--
+  Luis
