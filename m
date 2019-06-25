@@ -2,130 +2,112 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CE8C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481CDC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6442084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:37:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lUsxVGOo"
+	by mail.kernel.org (Postfix) with ESMTP id 2966E2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbfFYRhx (ORCPT
+        id S1732187AbfFYRiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:37:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45704 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729974AbfFYRhx (ORCPT
+        Tue, 25 Jun 2019 13:38:00 -0400
+Received: from smtprelay0199.hostedemail.com ([216.40.44.199]:55667 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729974AbfFYRh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:37:53 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so17075822lje.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:37:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DNAZwCZByYTbwclhe+TRUuG+E9r9+02rmdbcNH7Mmz8=;
-        b=lUsxVGOoG1NO6l4C8BzqvLJGYIHn9NBTvfi1hvl8sbq9UfISi/DiG7NAMTPX3A/i0E
-         5rWz/pMBO/E3d0f9sMm9kXE75gp95sALBgULgsfBhzxf5z12LDfTN/01qbcpA3ZzhHeT
-         dwUc3LuFJyfUXlzHJ3/iezOHVorIUIrL9+sdryXG2MCffezNXIso9yvtiWIZOdAX6UbR
-         jg49EGCvuOpuQDO20Km1UaTjuWU0WeHrdv2dZKReL3eIF+pPQnhmhknzU4uwE9AC/BH3
-         jIX8WwQyF/8smrzi9HPNxpOH97gNbas05jDQK36KHgVuKxUa09Xu2yy1XAkmyyMNT76M
-         vixA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DNAZwCZByYTbwclhe+TRUuG+E9r9+02rmdbcNH7Mmz8=;
-        b=guyoyDo6xYb6X1XyI3Fb3iMrT0V4RM7R370P8REv/k2MM6sADgTGv5SUG2YWkVBnTn
-         UwLqNmypfEzSsphEUk6rt1NjDhy9MeaQ9q1GDysptWv45XlyYN6KYRtjDSU2ZIp3ZBOc
-         eZX/ayCegB1wNiwoWTFa38EzJ4zBw/iv2ki7jEBTCFh1jVpqrypF/riOt7RW2nFwBvEE
-         22wvykLgguiP7eVfWbH0lf//qJIUPlWCIRbZQacQ1CtPGLLF8NzMLA8hmzElEt7VQACj
-         zcJmUDLu1QAqMUMTw+UD6gbkAYIyQENhYwGtkiiApNqsi4QJEBY/6LulkKhCZzI7hFf+
-         G6Jw==
-X-Gm-Message-State: APjAAAWf/+E17dqunjBlrvheYsL0DK8yo8I3yc/dS8b1/h9rwHYaw9UJ
-        hDEivjw2NrMDAEliY01niuTlAaItYt5I+WMndMd6kg==
-X-Google-Smtp-Source: APXvYqyiObVIKA2qPWuAhfgFDYhZGh15UieP1P60TReILtL0Ua81Cv/VdkMO8Y95D5uCov0sYjjTNCX5npohSrG/GLU=
-X-Received: by 2002:a2e:9b81:: with SMTP id z1mr22408671lji.101.1561484271278;
- Tue, 25 Jun 2019 10:37:51 -0700 (PDT)
+        Tue, 25 Jun 2019 13:37:59 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 9D02718224D97;
+        Tue, 25 Jun 2019 17:37:57 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: tent74_2823a894be11f
+X-Filterd-Recvd-Size: 2858
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 25 Jun 2019 17:37:55 +0000 (UTC)
+Message-ID: <360e2cd7578450d1a24729bf4483d0e762c21dc5.camel@perches.com>
+Subject: Re: [PATCH] video: fbdev: s3c-fb: Mark expected switch fall-throughs
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+Date:   Tue, 25 Jun 2019 10:37:54 -0700
+In-Reply-To: <3e40f8c1-9699-2723-4e70-9e91ff256257@embeddedor.com>
+References: <20190625160103.GA13133@embeddedor>
+         <2bdbbd7909c5c4ad96d32c0c5be4690292132a34.camel@perches.com>
+         <3e40f8c1-9699-2723-4e70-9e91ff256257@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <1561420642-21186-1-git-send-email-alan.mikhak@sifive.com> <39cc44bb-28b8-0daf-b059-b78791c77eb1@intel.com>
-In-Reply-To: <39cc44bb-28b8-0daf-b059-b78791c77eb1@intel.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Tue, 25 Jun 2019 10:37:40 -0700
-Message-ID: <CABEDWGy1X_HfmnMF05VKzMW7pNMaY+EMRFkTFPmc7Y0evoWZqQ@mail.gmail.com>
-Subject: Re: [PATCH] nvme-pci: Avoid leak if pci_p2pmem_virt_to_bus() returns null
-To:     "Heitke, Kenneth" <kenneth.heitke@intel.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        keith.busch@intel.com, axboe@fb.com,
-        Christoph Hellwig <hch@lst.de>, sagi@grimberg.me,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:10 AM Heitke, Kenneth
-<kenneth.heitke@intel.com> wrote:
->
->
->
-> On 6/24/2019 5:57 PM, Alan Mikhak wrote:
-> > Modify nvme_alloc_sq_cmds() to call pci_free_p2pmem()
-> > to free the memory it allocated using pci_alloc_p2pmem()
-> > in case pci_p2pmem_virt_to_bus() returns null.
-> >
-> > Make sure not to call pci_free_p2pmem() if pci_alloc_p2pmem()
-> > returned null which can happen if CONFIG_PCI_P2PDMA is not
-> > configured.
-> >
-> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > ---
-> >   drivers/nvme/host/pci.c | 14 +++++++++-----
-> >   1 file changed, 9 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> > index 524d6bd6d095..5dfa067f6506 100644
-> > --- a/drivers/nvme/host/pci.c
-> > +++ b/drivers/nvme/host/pci.c
-> > @@ -1456,11 +1456,15 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
-> >
-> >       if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
-> >               nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
-> > -             nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
-> > -                                             nvmeq->sq_cmds);
-> > -             if (nvmeq->sq_dma_addr) {
-> > -                     set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
-> > -                     return 0;
-> > +             if (nvmeq->sq_cmds) {
-> > +                     nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
-> > +                                                     nvmeq->sq_cmds);
-> > +                     if (nvmeq->sq_dma_addr) {
-> > +                             set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
-> > +                             return 0;
-> > +                     }
-> > +
-> > +                     pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
->
-> Should the pointer be set to NULL here, just in case?
+On Tue, 2019-06-25 at 12:06 -0500, Gustavo A. R. Silva wrote:
+> 
+> On 6/25/19 11:52 AM, Joe Perches wrote:
+> > On Tue, 2019-06-25 at 11:01 -0500, Gustavo A. R. Silva wrote:
+> > > In preparation to enabling -Wimplicit-fallthrough, mark switch
+> > > cases where we are expecting to fall through.
+> > []
+> > > This patch is part of the ongoing efforts to enable
+> > > -Wimplicit-fallthrough.
+> > 
+> > Just enable the thing already.
+> > 
+> > If you stopped trying to do it all yourself, others
+> 
+> What are you talking about?
+> 
+> Anyone can enable it, I'm adding this to every commit:
+> 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
 
-Thanks Kenneth. The pointer gets immediately reassigned by the return
-value of the
-code that follows. There is no intervening reference to it between the calls to
-pci_free_p2pmem() and dma_alloc_coherent(). It should be safe without
-setting it to NULL.
+No one does that by default and almost no one
+is helping eliminate these.  Not even on th
 
-        nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, nvmeq->cq_size,
-                                &nvmeq->sq_dma_addr, GFP_KERNEL);
+Almost no one uses make W=<levels> either as it's
+generally extremely noisy and can emit a lot of
+false positives.
 
->
-> >               }
-> >       }
-> >
-> >
+> And I'll send a PR with a proper patch for the Makefile
+> during the next merge window.
+
+That's great.
+
+> If had the power I would have enabled this option since day 1,
+> so every developer can take care of their own code.
+
+You have always had the power to send a patch.
+
+You also seem to believe the build needs to be
+completely clean before enabling the switch.
+
+I don't.
+
+> Lately, you are not being of much help, Joe.
+
+<smile> What kind of help are you expecting?
+
+I'm not submitting patches adding fallthough comments
+as I think that's not a good form.  I've said so
+repeatedly.
+
+I believe I suggested months ago you default enable
+the compiler switch.
+
+So it's up to you to either do it or not.
+
+
