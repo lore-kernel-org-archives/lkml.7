@@ -2,130 +2,138 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B61C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600ACC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E9420883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372B5208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JxNg8q13"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ksyT2XyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfFYSEH (ORCPT
+        id S1732821AbfFYSFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 14:04:07 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42166 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfFYSEG (ORCPT
+        Tue, 25 Jun 2019 14:05:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52486 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfFYSFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 14:04:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s184so13216524oie.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 11:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v+ZhBSNWMG71/hoVLbHT+wkJMxkbtm8D8gJnUatkLjU=;
-        b=JxNg8q13dPoy4++bWTLKe91YyHwlNjFnbzSb9Om/uZZjmzDhnDweJK+SXVAHxvQJR0
-         312VGhMneNMNXAmSV6hMRZIzT4bIOEkHXQoVC3M4u9DoF+fAlTSvPDyjEiVH1eTZKAv6
-         dp2nCpruoX6QC/iIKdTTjv2kOKKIAnLDyxY0m5z6y8S0clG2ID2Kd3dCyQI6rh541kFT
-         eDdVfoEDrUI7YN4BuqjchbcpiBzhNte5u19MgaVZHdA1NCRepz4PjjVsuhg3X5n+bs85
-         X+HfBTjHRFVQoAtJFMiji2LpwQIjXK1seUAZDPl9j1P4iwnhlcEX3jRF05VVFomoae2Q
-         6U5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+ZhBSNWMG71/hoVLbHT+wkJMxkbtm8D8gJnUatkLjU=;
-        b=FJWLHRiEnncl7D+r/Y9U0neEiplvJDtrlrG2MbSqx3KYESwjAbZbDatdz6ehlCZBcF
-         5OISniMtQjvRCMS6aiJmtxFoZ68NKX0DDDezkgUE056ErxLxxWnV0LBFMvDezo5nwHIY
-         ca+mLv17OiLpJMbiEjyVQ1VDatuettynq7UTtFiiQxqQjn/Uh2k7hi6gFvmV7PWltrcT
-         bXn3F/yvLejdHMaqBd5PiKrnwqhR5HZ8Ur6DEJy2adddI1Pb0UvdZCYdtIgsJYbwXdZE
-         ytnggISC7L1LFAaV67urM7DNbZpcyvtzb8Fr/WGEwUr0kMVDBoOEd79qhGi8Sw5LV9kh
-         f4NA==
-X-Gm-Message-State: APjAAAXfaSCcbWJ3Twwk4vu1Vech36KriPFftiWzH4DXnbvsmkx3/Omo
-        mRWHHiHJFhJeb4mvtINKfwhfORFlisOlG76vsjn64A==
-X-Google-Smtp-Source: APXvYqz6T9TVXWGjVm88Qsyic/J7sZ8rY/3bbGIhMBzOCJnst1XOiiw6CA8iBdJBDNkwj6/NRoOe4+QnfOGQ8i6wx08=
-X-Received: by 2002:aca:d60c:: with SMTP id n12mr15532591oig.105.1561485845899;
- Tue, 25 Jun 2019 11:04:05 -0700 (PDT)
+        Tue, 25 Jun 2019 14:05:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PHwd8B149230;
+        Tue, 25 Jun 2019 18:03:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=q3PQ3FdT4Cu9ZFxkmPMEB5w+ChSGz6mW1jtUBkoDAvw=;
+ b=ksyT2XyNq/sBFuNf0kcEOahW5dSfpRm2xoyvLHIl5Mejyeb4JLMflOsVy5quxvpN67j2
+ IsKXQAf1HGSoM5FioAjK6ozKyUInygd/ml7l4zpRXtxh/UWz20oKY/FTMlcYaDZBA7N9
+ MY/zMgGVdosxoetsazUmPfKqNstqSPWvasVhjypJJqeFcHhDaP62mxpCpMaNSfCtaBX3
+ JdFoGt472fc1h8ZFinUmpgHsBMZcZBqagXk/T9NnnQ5VQ3pfbtpwxQaYR4yLbxZKG58n
+ MOx1qf1doyupoPytNdwt2e/QYdozJOX4KCvtmdKWmiW/VFWoTbAzfyslOGA2S3jKu5TS Qg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t9brt61nv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 18:03:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PI2jR6140649;
+        Tue, 25 Jun 2019 18:03:41 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 2t9p6ub7ds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Jun 2019 18:03:41 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5PI3fsX143158;
+        Tue, 25 Jun 2019 18:03:41 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2t9p6ub7dj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Jun 2019 18:03:41 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5PI3VCg025882;
+        Tue, 25 Jun 2019 18:03:31 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Jun 2019 11:03:31 -0700
+Date:   Tue, 25 Jun 2019 11:03:26 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
+        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] vfs: make immutable files actually immutable
+Message-ID: <20190625180326.GC2230847@magnolia>
+References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+ <20190625103631.GB30156@infradead.org>
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
-In-Reply-To: <20190625150053.GJ11400@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 25 Jun 2019 11:03:53 -0700
-Message-ID: <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625103631.GB30156@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=904 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906250136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 8:01 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
-> > On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
-> > > I asked for this simply because it was not exported historically. In
-> > > general I want to establish explicit export-type criteria so the
-> > > community can spend less time debating when to use EXPORT_SYMBOL_GPL
-> > > [1].
-> > >
-> > > The thought in this instance is that it is not historically exported
-> > > to modules and it is safer from a maintenance perspective to start
-> > > with GPL-only for new symbols in case we don't want to maintain that
-> > > interface long-term for out-of-tree modules.
-> > >
-> > > Yes, we always reserve the right to remove / change interfaces
-> > > regardless of the export type, but history has shown that external
-> > > pressure to keep an interface stable (contrary to
-> > > Documentation/process/stable-api-nonsense.rst) tends to be less for
-> > > GPL-only exports.
-> >
-> > Fully agreed.  In the end the decision is with the MM maintainers,
-> > though, although I'd prefer to keep it as in this series.
->
-> I am sorry but I am not really convinced by the above reasoning wrt. to
-> the allocator API and it has been a subject of many changes over time. I
-> do not remember a single case where we would be bending the allocator
-> API because of external modules and I am pretty sure we will push back
-> heavily if that was the case in the future.
+On Tue, Jun 25, 2019 at 03:36:31AM -0700, Christoph Hellwig wrote:
+> On Fri, Jun 21, 2019 at 04:56:50PM -0700, Darrick J. Wong wrote:
+> > Hi all,
+> > 
+> > The chattr(1) manpage has this to say about the immutable bit that
+> > system administrators can set on files:
+> > 
+> > "A file with the 'i' attribute cannot be modified: it cannot be deleted
+> > or renamed, no link can be created to this file, most of the file's
+> > metadata can not be modified, and the file can not be opened in write
+> > mode."
+> > 
+> > Given the clause about how the file 'cannot be modified', it is
+> > surprising that programs holding writable file descriptors can continue
+> > to write to and truncate files after the immutable flag has been set,
+> > but they cannot call other things such as utimes, fallocate, unlink,
+> > link, setxattr, or reflink.
+> 
+> I still think living code beats documentation.  And as far as I can
+> tell the immutable bit never behaved as documented or implemented
+> in this series on Linux, and it originated on Linux.
 
-This seems to say that you have no direct experience of dealing with
-changing symbols that that a prominent out-of-tree module needs? GPU
-drivers and the core-mm are on a path to increase their cooperation on
-memory management mechanisms over time, and symbol export changes for
-out-of-tree GPU drivers have been a significant source of friction in
-the past.
+The behavior has never been consistent -- since the beginning you can
+keep write()ing to a fd after the file becomes immutable, but you can't
+ftruncate() it.  I would really like to make the behavior consistent.
+Since the authors of nearly every new system call and ioctl since the
+late 1990s have interpreted S_IMMUTABLE to mean "immutable takes effect
+everywhere immediately" I resolved the inconsistency in favor of that
+interpretation.
 
-> So in this particular case I would go with consistency and export the
-> same way we do with other functions. Also we do not want people to
-> reinvent this API and screw that like we have seen in other cases when
-> external modules try reimplement core functionality themselves.
+I asked Ted what he thought that that userspace having the ability to
+continue writing to an immutable file, and he thought it was an
+implementation bug that had been there for 25 years.  Even he thought
+that immutable should take effect immediately everywhere.
 
-Consistency is a weak argument when the cost to the upstream community
-is negligible. If the same functionality was available via another /
-already exported interface *that* would be an argument to maintain the
-existing export policy. "Consistency" in and of itself is not a
-precedent we can use more widely in default export-type decisions.
+> If you want  hard cut off style immutable flag it should really be a
+> new API, but I don't really see the point.  It isn't like the usual
+> workload is to set the flag on a file actively in use.
 
-Effectively I'm arguing EXPORT_SYMBOL_GPL by default with a later
-decision to drop the _GPL. Similar to how we are careful to mark sysfs
-interfaces in Documentation/ABI/ that we are not fully committed to
-maintaining over time, or are otherwise so new that there is not yet a
-good read on whether they can be made permanent.
+FWIW Ted also thought that since it's rare for admins to set +i on a
+file actively in use we could just change it without forcing everyone
+onto a new api.
+
+--D
