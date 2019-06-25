@@ -2,254 +2,202 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67C9C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D24AC48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D382086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B61620883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="08Pac+YN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auX38eXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfFYXn7 (ORCPT
+        id S1726468AbfFYXon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:43:59 -0400
-Received: from mail-eopbgr740049.outbound.protection.outlook.com ([40.107.74.49]:62880
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfFYXn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:43:58 -0400
+        Tue, 25 Jun 2019 19:44:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44920 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfFYXon (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:44:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r15so212701lfm.11;
+        Tue, 25 Jun 2019 16:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t8Sxf+kFNcnxLM0pVY3/p0ey4q9dRRgmdKvZXWVcfuU=;
- b=08Pac+YNf0Wngrt9IRU3q1Eey51OMRuFAy3kxyhvUAw3JzOxqeb5jR9EAu4nmIAAGkVih11lt8eQE368qmGSn/W7aDWDL4DhoZSH1l5qPu8Q+JmUNs3uuzZpNZvhXGqBgizXYx5kTGBxH4rtFmUsS+RTYUtmp1pb4+0GHPEf90w=
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.40.14) by
- DM5PR12MB1818.namprd12.prod.outlook.com (10.175.92.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Tue, 25 Jun 2019 23:43:50 +0000
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::180c:ff0c:37e6:a482]) by DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::180c:ff0c:37e6:a482%10]) with mapi id 15.20.2008.017; Tue, 25 Jun
- 2019 23:43:50 +0000
-From:   "Hook, Gary" <Gary.Hook@amd.com>
-To:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>
-Subject: [PATCH v2 2/2] crypto: doc - Fix formatting of new crypto engine
- content
-Thread-Topic: [PATCH v2 2/2] crypto: doc - Fix formatting of new crypto engine
- content
-Thread-Index: AQHVK6/XqR/ma8kUnUmph7llIf8q0w==
-Date:   Tue, 25 Jun 2019 23:43:50 +0000
-Message-ID: <156150622886.22527.934327975584441429.stgit@taos>
-References: <156150616764.22527.16524544899486041609.stgit@taos>
-In-Reply-To: <156150616764.22527.16524544899486041609.stgit@taos>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR02CA0009.namprd02.prod.outlook.com
- (2603:10b6:805:a2::22) To DM5PR12MB1449.namprd12.prod.outlook.com
- (2603:10b6:4:10::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Gary.Hook@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 19fa43bf-4574-4bd2-3374-08d6f9c6f967
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1818;
-x-ms-traffictypediagnostic: DM5PR12MB1818:
-x-microsoft-antispam-prvs: <DM5PR12MB1818578977793058139AA1B5FDE30@DM5PR12MB1818.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(376002)(136003)(39860400002)(366004)(396003)(346002)(199004)(189003)(25786009)(99286004)(33716001)(81166006)(2201001)(81156014)(5660300002)(8936002)(53936002)(7736002)(66066001)(9686003)(6116002)(6512007)(3846002)(6486002)(305945005)(8676002)(6436002)(2501003)(66946007)(256004)(73956011)(478600001)(14454004)(68736007)(2906002)(316002)(64756008)(102836004)(386003)(6506007)(72206003)(66476007)(186003)(76176011)(71200400001)(52116002)(103116003)(476003)(11346002)(71190400001)(446003)(110136005)(14444005)(486006)(66556008)(66446008)(26005)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1818;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8p0zxaYpcwm/14Ld5ZXD6IHhuBGh85QEUBZIk0RDnpP+Sz3SNQbdrRdN6uUyQdbMxjxmIIMY+0dejuSSHtXeTqlnqTJTT73CvhPEZzf2GTXvG1Cfx+FbPo130L0pot2268koWPcTYb7lqGPItGryZty6v6xj24iF35tamChS+aboHfE/tUydVjeeQxSyYqBmYtuQ51nC8fNDYx/N6011bIlotk4fV0KF7Bwz0zz0V2noH568LQZ1dRyjI0ZDbl75kOh6ebQ3QF1C9mkbpsADDoOaIjmuLgmiJfN2Jhwk3i4p+kkf9ObbcbL5mSWig9EgI1ZpCIQqifogashj4IWP80nH93bM7maXtNGcKbfc84YyvS2GeskSCRBGa9sCpf779cCzyLD2hIbdh/j1z51OuV17xv5pCd/VEIL9ljanNPc=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27FEE38C9D454746B445E0556EBF0334@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FW5zKtDHKyO5aAIruWb2V48ESwvyNPIVuCfJymbkDwM=;
+        b=auX38eXGzDsU8d6XcVc1+ZvNlY1efuIdyjAi/jhsDMPRx1L7ZUMFfFQoyzjw3VX0jW
+         H9f9xQ1w/nn1sIY5Mc6Mjr8AkcQCdPstdTcKMeAve3gw3mO5169Ymf5B+hm6SL777U2d
+         yCI/ffMIguNj2ZpDbfLg+5UFrkOIt56Cldo3mNAHeGRAaCd34xjFEE3+hQcYxFLt18pd
+         dBDk5Y/IKu5PTU8MC1sXtEc2kY6j8UGrV64RybmvVroGbRFkwzyqn8JVCIY028pkjkOz
+         9xT/9tkmV7gy8wzQV/N3GPn4NiEVd+GP2BRp0RSOQBoq7VctbJV9/mSnw/dopAZ4k71E
+         yO0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FW5zKtDHKyO5aAIruWb2V48ESwvyNPIVuCfJymbkDwM=;
+        b=EJhOWgwQw19xAIlfVdNkWi83AxnplarSEFKKHG8g3aGJHgB/+TFMGOa6D8jahY1xSV
+         Fnmw9qDDivfkDdjgrebrXh6akyacqjGx7re/E0p926jdgT9FhxGtoYwHloCsLRqU/6X8
+         me9En/x9IIMNTfVrmjUYJNaYdQO/QrFvHfh6iHEDYubKf+uyo02WiE+SzA1syZATnuj8
+         gmfu3l0Ta8v1YJzjR5D+loFO33ID2gOZkak3yB3uKxdhaheNv5fAXn/XijVXHlppohTN
+         9cDwQmtRv7f1+4rkbATGuKMmiyEMu7q/cJhBodgBiNUxryymie4qCT8o9TCTKrejDXBi
+         J0QA==
+X-Gm-Message-State: APjAAAVvOQ43A2VWODV/NoIrsZKBtTpyub9J8MjlxfRt/XmbPCvSJQp2
+        Nho0O+jM5sv7dgX2gKARXrcLubqF
+X-Google-Smtp-Source: APXvYqxWT33a4cYevVGk10Ptx4SPhrGxh3kj6aZ3PB/20ObRd0dqFIFPT62sO9LMikfgumwveR1uPQ==
+X-Received: by 2002:ac2:4901:: with SMTP id n1mr714681lfi.153.1561506279968;
+        Tue, 25 Jun 2019 16:44:39 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id r20sm2041652ljr.20.2019.06.25.16.44.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 16:44:39 -0700 (PDT)
+Subject: Re: [PATCH v2] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190618115035.29250-1-digetx@gmail.com>
+ <8f48fcba-df7c-a313-2f84-0fa896e4ccec@nvidia.com>
+ <8470f28f-b903-c6ed-23bd-0cbd130f0798@gmail.com>
+Message-ID: <81648813-3a19-d390-fa9a-f2e0bf4e4d72@gmail.com>
+Date:   Wed, 26 Jun 2019 02:44:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19fa43bf-4574-4bd2-3374-08d6f9c6f967
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 23:43:50.5327
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ghook@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1818
+In-Reply-To: <8470f28f-b903-c6ed-23bd-0cbd130f0798@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tidy up the formatting/grammar in crypto_engine.rst. Use bulleted lists
-where appropriate.
+21.06.2019 0:58, Dmitry Osipenko пишет:
+> 20.06.2019 11:38, Jon Hunter пишет:
+>>
+>> On 18/06/2019 12:50, Dmitry Osipenko wrote:
+>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>> of data, hence it can report transfer's residual with more fidelity which
+>>> may be required in cases like audio playback. In particular this fixes
+>>> audio stuttering during playback in a chromiuim web browser. The patch is
+>>> based on the original work that was made by Ben Dooks. It was tested on
+>>> Tegra20 and Tegra30 devices.
+>>>
+>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>
+>>> Changelog:
+>>>
+>>> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>>>      to get words count if dma_desc is on free list as it will result
+>>>      in a NULL dereference because this case wasn't handled properly.
+>>>
+>>>      The residual value is now updated properly, avoiding potential
+>>>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>>>      instead of the subtraction.
+>>>
+>>>  drivers/dma/tegra20-apb-dma.c | 33 ++++++++++++++++++++++++++-------
+>>>  1 file changed, 26 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>> index 79e9593815f1..fed18bc46479 100644
+>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>> @@ -797,6 +797,28 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+>>> +					       struct tegra_dma_sg_req *sg_req)
+>>> +{
+>>> +	unsigned long status, wcount = 0;
+>>> +
+>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>> +		return 0;
+>>> +
+>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>> +
+>>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>> +
+>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>> +		wcount = status;
+>>> +
+>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>> +		return sg_req->req_len;
+>>> +
+>>> +	return get_current_xferred_count(tdc, sg_req, wcount);
+>>> +}
+>>> +
+>>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>>>  {
+>>> @@ -806,6 +828,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>  	enum dma_status ret;
+>>>  	unsigned long flags;
+>>>  	unsigned int residual;
+>>> +	unsigned int bytes = 0;
+>>>  
+>>>  	ret = dma_cookie_status(dc, cookie, txstate);
+>>>  	if (ret == DMA_COMPLETE)
+>>> @@ -825,6 +848,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>  	list_for_each_entry(sg_req, &tdc->pending_sg_req, node) {
+>>>  		dma_desc = sg_req->dma_desc;
+>>>  		if (dma_desc->txd.cookie == cookie) {
+>>> +			bytes = tegra_dma_sg_bytes_xferred(tdc, sg_req);
+>>>  			ret = dma_desc->dma_status;
+>>>  			goto found;
+>>>  		}
+>>> @@ -836,7 +860,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>  found:
+>>>  	if (dma_desc && txstate) {
+>>>  		residual = dma_desc->bytes_requested -
+>>> -			   (dma_desc->bytes_transferred %
+>>> +			   ((dma_desc->bytes_transferred + bytes) %
+>>>  			    dma_desc->bytes_requested);
+>>>  		dma_set_residue(txstate, residual);
+>>>  	}
+>>> @@ -1441,12 +1465,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>>  		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+>>>  		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>>>  	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+>>> -	/*
+>>> -	 * XXX The hardware appears to support
+>>> -	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
+>>> -	 * only used by this driver during tegra_dma_terminate_all()
+>>> -	 */
+>>> -	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+>>> +	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+>>>  	tdma->dma_dev.device_config = tegra_dma_slave_config;
+>>>  	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
+>>>  	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
+>>>
+>>
+>> Looks good to me. Thanks for fixing!
+>>
+>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> 
+> Thanks to you too for the review :)
+> 
 
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
----
- Documentation/crypto/crypto_engine.rst |  111 +++++++++++++++++++++-------=
-----
- 1 file changed, 73 insertions(+), 38 deletions(-)
+Please hold on this patch. I took another look at this and spotted unfortunate typo
+in the tests that I wrote and indeed wraparound happens before EOC bit is set, just
+like Ben told :(
 
-diff --git a/Documentation/crypto/crypto_engine.rst b/Documentation/crypto/=
-crypto_engine.rst
-index 1d56221dfe35..236c674d6897 100644
---- a/Documentation/crypto/crypto_engine.rst
-+++ b/Documentation/crypto/crypto_engine.rst
-@@ -1,50 +1,85 @@
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
--CRYPTO ENGINE
-+.. SPDX-License-Identifier: GPL-2.0
-+Crypto Engine
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
- Overview
- --------
--The crypto engine API (CE), is a crypto queue manager.
-+The crypto engine (CE) API is a crypto queue manager.
-=20
- Requirement
- -----------
--You have to put at start of your tfm_ctx the struct crypto_engine_ctx::
-+You must put, at the start of your transform context your_tfm_ctx, the str=
-ucture
-+crypto_engine:
-+
-+::
-=20
--  struct your_tfm_ctx {
--        struct crypto_engine_ctx enginectx;
--        ...
--  };
-+	struct your_tfm_ctx {
-+		struct crypto_engine engine;
-+		...
-+	};
-=20
--Why: Since CE manage only crypto_async_request, it cannot know the underly=
-ing
--request_type and so have access only on the TFM.
--So using container_of for accessing __ctx is impossible.
--Furthermore, the crypto engine cannot know the "struct your_tfm_ctx",
--so it must assume that crypto_engine_ctx is at start of it.
-+The crypto engine only manages asynchronous requests in the form of
-+crypto_async_request. It cannot know the underlying request type and thus =
-only
-+has access to the transform structure. It is not possible to access the co=
-ntext
-+using container_of. In addition, the engine knows nothing about your
-+structure "``struct your_tfm_ctx``". The engine assumes (requires) the pla=
-cement
-+of the known member ``struct crypto_engine`` at the beginning.
-=20
- Order of operations
- -------------------
--You have to obtain a struct crypto_engine via crypto_engine_alloc_init().
--And start it via crypto_engine_start().
--
--Before transferring any request, you have to fill the enginectx.
--- prepare_request: (taking a function pointer) If you need to do some proc=
-essing before doing the request
--- unprepare_request: (taking a function pointer) Undoing what's done in pr=
-epare_request
--- do_one_request: (taking a function pointer) Do encryption for current re=
-quest
--
--Note: that those three functions get the crypto_async_request associated w=
-ith the received request.
--So your need to get the original request via container_of(areq, struct you=
-rrequesttype_request, base);
--
--When your driver receive a crypto_request, you have to transfer it to
--the cryptoengine via one of:
--- crypto_transfer_ablkcipher_request_to_engine()
--- crypto_transfer_aead_request_to_engine()
--- crypto_transfer_akcipher_request_to_engine()
--- crypto_transfer_hash_request_to_engine()
--- crypto_transfer_skcipher_request_to_engine()
--
--At the end of the request process, a call to one of the following function=
- is needed:
--- crypto_finalize_ablkcipher_request
--- crypto_finalize_aead_request
--- crypto_finalize_akcipher_request
--- crypto_finalize_hash_request
--- crypto_finalize_skcipher_request
-+You are required to obtain a struct crypto_engine via ``crypto_engine_allo=
-c_init()``.
-+Start it via ``crypto_engine_start()``. When finished with your work, shut=
- down the
-+engine using ``crypto_engine_stop()`` and destroy the engine with
-+``crypto_engine_exit()``.
-+
-+Before transferring any request, you have to fill the context enginectx by
-+providing functions for the following:
-+
-+* ``prepare_crypt_hardware``: Called once before any prepare functions are
-+  called.
-+
-+* ``unprepare_crypt_hardware``: Called once after all unprepare functions =
-have
-+  been called.
-+
-+* ``prepare_cipher_request``/``prepare_hash_request``: Called before each
-+  corresponding request is performed. If some processing or other preparat=
-ory
-+  work is required, do it here.
-+
-+* ``unprepare_cipher_request``/``unprepare_hash_request``: Called after ea=
-ch
-+  request is handled. Clean up / undo what was done in the prepare functio=
-n.
-+
-+* ``cipher_one_request``/``hash_one_request``: Handle the current request =
-by
-+  performing the operation.
-+
-+Note that these functions access the crypto_async_request structure
-+associated with the received request. You are able to retrieve the origina=
-l
-+request by using:
-+
-+::
-+
-+	container_of(areq, struct yourrequesttype_request, base);
-+
-+When your driver receives a crypto_request, you must to transfer it to
-+the crypto engine via one of:
-+
-+* crypto_transfer_ablkcipher_request_to_engine()
-+
-+* crypto_transfer_aead_request_to_engine()
-+
-+* crypto_transfer_akcipher_request_to_engine()
-+
-+* crypto_transfer_hash_request_to_engine()
-+
-+* crypto_transfer_skcipher_request_to_engine()
-+
-+At the end of the request process, a call to one of the following function=
-s is needed:
-+
-+* crypto_finalize_ablkcipher_request()
-+
-+* crypto_finalize_aead_request()
-+
-+* crypto_finalize_akcipher_request()
-+
-+* crypto_finalize_hash_request()
-+
-+* crypto_finalize_skcipher_request()
-
+I'll be looking at this all again during next days. Looks like the EOC bit is set
+after a burst completion once hardware counter is reloaded.
