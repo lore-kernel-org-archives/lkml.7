@@ -2,116 +2,98 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B43C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DDCC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85FD520652
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WKw5jlJG"
+	by mail.kernel.org (Postfix) with ESMTP id B1DF42086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561447787;
+	bh=R4jNzRQw37JgF7x95aIa/iCUdU/hLNUV6njbwOGFUoM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wHlevZq00q01WVNQFk+P0yAVDtX+wpB9nXQaZQpgkjFXOIfjsXi03oissecRb61gC
+	 BTCm7Nw2Nwiz2nz5dJWvwU/S/fn3KyU36V3wxaDiEOAfVPpvYECKLQzKB0n+dUou2G
+	 lcrh4SdS4R8ZpC6ksM8ANIlXAVkqhoh2jlYgfvzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfFYH25 (ORCPT
+        id S1728309AbfFYH3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:28:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40231 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbfFYH24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:28:56 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P7S3973508765
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 00:28:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P7S3973508765
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561447684;
-        bh=DKnktSBBWht+QETywtp4eZvOxuNjdPNQATPDbmCp6xQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=WKw5jlJGHI4i5yC3AHTxtB5yVFaYo5afDiJPoOgn0fIJamqbSVEHUE1s4LHrcqRRF
-         2NGb0BJAOVsmbmvNVdMdQiNpAw22/NKMWT3ZZ93LHVXg99aDlwvazSDfSphdjzxoD5
-         pLVJDxgB+eNLx8eaA5IFH402Ncx94LbrfvBniO5rK3ADJyb7IF/KJWZDyg18hptX/M
-         WAN3ZusTR0mupym9h2WpfcpVvT2wwJKjqTWNuXw/yTrBtVyQjLxOao8tyaGaa8oA1U
-         klXJKxpgj/pzNfHVaeNGJqEFXTuLwITYUhAk9lrKWXsE1hn+kG98aHO3pWD0qDE/CE
-         OgaDhcfiPLVdA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P7S3vK3508762;
-        Tue, 25 Jun 2019 00:28:03 -0700
-Date:   Tue, 25 Jun 2019 00:28:03 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for YueHaibing <tipbot@zytor.com>
-Message-ID: <tip-bf10c97adbd0dc8fa65c35d5b0c0dc281a68ac8e@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org, hpa@zytor.com,
-        namit@vmware.com, hulkci@huawei.com, yuehaibing@huawei.com,
-        bristot@redhat.com, bp@alien8.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: yuehaibing@huawei.com, bp@alien8.de, mingo@kernel.org,
-          bristot@redhat.com, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          tglx@linutronix.de, peterz@infradead.org, hulkci@huawei.com,
-          namit@vmware.com
-In-Reply-To: <20190625034548.26392-1-yuehaibing@huawei.com>
-References: <20190625034548.26392-1-yuehaibing@huawei.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] x86/jump_label: Make tp_vec_nr static
-Git-Commit-ID: bf10c97adbd0dc8fa65c35d5b0c0dc281a68ac8e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 03:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbfFYH3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:29:45 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5588A20652;
+        Tue, 25 Jun 2019 07:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561447784;
+        bh=R4jNzRQw37JgF7x95aIa/iCUdU/hLNUV6njbwOGFUoM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MHYNPRO/hinfLrR7z1SR0mHpmHIrfaRWS31ESWqPRJaJ8Ehpq9EOUe2Bb5a00iCi0
+         9/N26lribFV1OcOLiKsUZJepFIlOjVDFsbK8cqLDnZW7f49yMOOPPc/hec7bkMx0sa
+         UV3xp5worvMmtfKMzi1SJeJBIXvxvmJHzB2s2pzA=
+Date:   Tue, 25 Jun 2019 00:29:42 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     bpf@vger.kernel.org
+Cc:     syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [net/bpf] Re: WARNING in mark_lock
+Message-ID: <20190625072942.GB30940@sol.localdomain>
+References: <0000000000005aedf1058c1bf7e8@google.com>
+ <alpine.DEB.2.21.1906250820060.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906250820060.32342@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  bf10c97adbd0dc8fa65c35d5b0c0dc281a68ac8e
-Gitweb:     https://git.kernel.org/tip/bf10c97adbd0dc8fa65c35d5b0c0dc281a68ac8e
-Author:     YueHaibing <yuehaibing@huawei.com>
-AuthorDate: Tue, 25 Jun 2019 11:45:48 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 25 Jun 2019 09:22:14 +0200
+[+bpf list]
 
-x86/jump_label: Make tp_vec_nr static
+On Tue, Jun 25, 2019 at 08:20:56AM +0200, Thomas Gleixner wrote:
+> On Mon, 24 Jun 2019, syzbot wrote:
+> 
+> > Hello,
+> 
+> CC++ Peterz 
+> 
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    dc636f5d Add linux-next specific files for 20190620
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=162b68b1a00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=99c104b0092a557b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=a861f52659ae2596492b
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110b24f6a00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com
 
-Fix sparse warning:
+The syz repro looks bpf related, and essentially the same repro is in lots of
+other open syzbot reports which I've assigned to the bpf subsystem...
+https://lore.kernel.org/lkml/20190624050114.GA30702@sol.localdomain/
 
-arch/x86/kernel/jump_label.c:106:5: warning:
- symbol 'tp_vec_nr' was not declared. Should it be static?
-
-It's only used in jump_label.c, so make it static.
-
-Fixes: ba54f0c3f7c4 ("x86/jump_label: Batch jump label updates")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: <bp@alien8.de>
-Cc: <hpa@zytor.com>
-Cc: <peterz@infradead.org>
-Cc: <bristot@redhat.com>
-Cc: <namit@vmware.com>
-Link: https://lkml.kernel.org/r/20190625034548.26392-1-yuehaibing@huawei.com
-
----
- arch/x86/kernel/jump_label.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
-index ea13808bf6da..044053235302 100644
---- a/arch/x86/kernel/jump_label.c
-+++ b/arch/x86/kernel/jump_label.c
-@@ -103,7 +103,7 @@ void arch_jump_label_transform(struct jump_entry *entry,
- 
- #define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_loc))
- static struct text_poke_loc tp_vec[TP_VEC_MAX];
--int tp_vec_nr = 0;
-+static int tp_vec_nr;
- 
- bool arch_jump_label_transform_queue(struct jump_entry *entry,
- 				     enum jump_label_type type)
+{"threaded":true,"repeat":true,"procs":6,"sandbox":"none","fault_call":-1,"tun":true,"netdev":true,"resetnet":true,"cgroups":true,"binfmt_misc":true,"close_fds":true,"tmpdir":true,"segv":true}
+bpf$MAP_CREATE(0x0, &(0x7f0000000280)={0xf, 0x4, 0x4, 0x400, 0x0, 0x1}, 0x3c)
+socket$rxrpc(0x21, 0x2, 0x800000000a)
+r0 = socket$inet6_tcp(0xa, 0x1, 0x0)
+setsockopt$inet6_tcp_int(r0, 0x6, 0x13, &(0x7f00000000c0)=0x100000001, 0x1d4)
+connect$inet6(r0, &(0x7f0000000140), 0x1c)
+bpf$MAP_CREATE(0x0, &(0x7f0000000000)={0x5}, 0xfffffffffffffdcb)
+bpf$MAP_CREATE(0x2, &(0x7f0000003000)={0x3, 0x0, 0x77fffb, 0x0, 0x10020000000, 0x0}, 0x2c)
+setsockopt$inet6_tcp_TCP_ULP(r0, 0x6, 0x1f, &(0x7f0000000040)='tls\x00', 0x4)
