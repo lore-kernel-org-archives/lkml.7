@@ -2,190 +2,97 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7A7C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B05C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6F4B2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595392085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731297AbfFYTDp (ORCPT
+        id S1731541AbfFYTE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:03:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59828 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727684AbfFYTDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:03:45 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9551E85363;
-        Tue, 25 Jun 2019 19:03:44 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-13.gru2.redhat.com [10.97.112.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 126B26012D;
-        Tue, 25 Jun 2019 19:03:44 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id D665110517A;
-        Tue, 25 Jun 2019 16:00:21 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x5PJ0H0G003435;
-        Tue, 25 Jun 2019 16:00:17 -0300
-Date:   Tue, 25 Jun 2019 16:00:13 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by
- posted interrupt
-Message-ID: <20190625190010.GA3377@amt.cnet>
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
- <1560770687-23227-3-git-send-email-wanpengli@tencent.com>
- <20190618133541.GA3932@amt.cnet>
- <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
- <20190619210346.GA13033@amt.cnet>
- <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
- <20190621214205.GA4751@amt.cnet>
- <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
+        Tue, 25 Jun 2019 15:04:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44287 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728658AbfFYTEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:04:55 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hfqkC-0006TO-T1; Tue, 25 Jun 2019 21:04:41 +0200
+Date:   Tue, 25 Jun 2019 21:04:39 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] x86/boot/64: Fix crash if kernel images crosses page
+ table boundary
+In-Reply-To: <20190620112345.28833-1-kirill.shutemov@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1906252100290.32342@nanos.tec.linutronix.de>
+References: <20190620112345.28833-1-kirill.shutemov@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 25 Jun 2019 19:03:44 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 04:53:53PM +0800, Wanpeng Li wrote:
-> On Sat, 22 Jun 2019 at 06:11, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> >
-> > On Fri, Jun 21, 2019 at 09:42:39AM +0800, Wanpeng Li wrote:
-> > > On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > >
-> > > > Hi Li,
-> > > >
-> > > > On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
-> > > > > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > > > >
-> > > > > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
-> > > > > > > From: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > >
-> > > > > > > Dedicated instances are currently disturbed by unnecessary jitter due
-> > > > > > > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> > > > > > > There is no hardware virtual timer on Intel for guest like ARM. Both
-> > > > > > > programming timer in guest and the emulated timer fires incur vmexits.
-> > > > > > > This patch tries to avoid vmexit which is incurred by the emulated
-> > > > > > > timer fires in dedicated instance scenario.
-> > > > > > >
-> > > > > > > When nohz_full is enabled in dedicated instances scenario, the emulated
-> > > > > > > timers can be offload to the nearest busy housekeeping cpus since APICv
-> > > > > > > is really common in recent years. The guest timer interrupt is injected
-> > > > > > > by posted-interrupt which is delivered by housekeeping cpu once the emulated
-> > > > > > > timer fires.
-> > > > > > >
-> > > > > > > The host admin should fine tuned, e.g. dedicated instances scenario w/
-> > > > > > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
-> > > > > > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root
-> > > > > > > mode, ~3% redis performance benefit can be observed on Skylake server.
-> > > > > > >
-> > > > > > > w/o patch:
-> > > > > > >
-> > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
-> > > > > > >
-> > > > > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
-> > > > > > >
-> > > > > > > w/ patch:
-> > > > > > >
-> > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
-> > > > > > >
-> > > > > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
-> > > > > > >
-> > > > > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > > > > > Cc: Radim Krčmář <rkrcmar@redhat.com>
-> > > > > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> > > > > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > > ---
-> > > > > > >  arch/x86/kvm/lapic.c            | 33 ++++++++++++++++++++++++++-------
-> > > > > > >  arch/x86/kvm/lapic.h            |  1 +
-> > > > > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
-> > > > > > >  arch/x86/kvm/x86.c              |  5 +++++
-> > > > > > >  arch/x86/kvm/x86.h              |  2 ++
-> > > > > > >  include/linux/sched/isolation.h |  2 ++
-> > > > > > >  kernel/sched/isolation.c        |  6 ++++++
-> > > > > > >  7 files changed, 44 insertions(+), 8 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > > > > > > index 87ecb56..9ceeee5 100644
-> > > > > > > --- a/arch/x86/kvm/lapic.c
-> > > > > > > +++ b/arch/x86/kvm/lapic.c
-> > > > > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
-> > > > > > >       return apic->vcpu->vcpu_id;
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
-> > > > > > > +{
-> > > > > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
-> > > > > > > +             kvm_hlt_in_guest(vcpu->kvm);
-> > > > > > > +}
-> > > > > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
-> > > > > >
-> > > > > > Paolo, can you explain the reasoning behind this?
-> > > > > >
-> > > > > > Should not be necessary...
-> > >
-> > > https://lkml.org/lkml/2019/6/5/436  "Here you need to check
-> > > kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to go
-> > > through kvm_apic_expired if the guest needs to be woken up from
-> > > kvm_vcpu_block."
-> >
-> > Ah, i think he means that a sleeping vcpu (in kvm_vcpu_block) must
-> > be woken up, if it receives a timer interrupt.
-> >
-> > But your patch will go through:
-> >
-> > kvm_apic_inject_pending_timer_irqs
-> > __apic_accept_irq ->
-> > vmx_deliver_posted_interrupt ->
-> > kvm_vcpu_trigger_posted_interrupt returns false
-> > (because vcpu->mode != IN_GUEST_MODE) ->
-> > kvm_vcpu_kick
-> >
-> > Which will wakeup the vcpu.
-> 
-> Hi Marcelo,
-> 
-> >
-> > Apart from this oops, which triggers when running:
-> > taskset -c 1 ./cyclictest -D 3600 -p 99 -t 1 -h 30 -m -n  -i 50000 -b 40
-> 
-> I try both host and guest use latest kvm/queue  w/ CONFIG_PREEMPT
-> enabled, and expose mwait as your config, however, there is no oops.
-> Can you reproduce steadily or encounter casually? Can you reproduce
-> w/o the patchset?
+On Thu, 20 Jun 2019, Kirill A. Shutemov wrote:
+> @@ -190,18 +190,18 @@ unsigned long __head __startup_64(unsigned long physaddr,
+>  		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
+>  		pgd[i + 1] = (pgdval_t)p4d + pgtable_flags;
+>  
+> -		i = (physaddr >> P4D_SHIFT) % PTRS_PER_P4D;
+> -		p4d[i + 0] = (pgdval_t)pud + pgtable_flags;
+> -		p4d[i + 1] = (pgdval_t)pud + pgtable_flags;
+> +		i = physaddr >> P4D_SHIFT;
+> +		p4d[(i + 0) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
+> +		p4d[(i + 1) % PTRS_PER_P4D] = (pgdval_t)pud + pgtable_flags;
+>  	} else {
+>  		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
+>  		pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
+>  		pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
+>  	}
+>  
+> -	i = (physaddr >> PUD_SHIFT) % PTRS_PER_PUD;
+> -	pud[i + 0] = (pudval_t)pmd + pgtable_flags;
+> -	pud[i + 1] = (pudval_t)pmd + pgtable_flags;
+> +	i = physaddr >> PUD_SHIFT;
+> +	pud[(i + 0) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
+> +	pud[(i + 1) % PTRS_PER_PUD] = (pudval_t)pmd + pgtable_flags;
+>  
+>  	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
+>  	/* Filter out unsupported __PAGE_KERNEL_* bits: */
+> @@ -211,8 +211,8 @@ unsigned long __head __startup_64(unsigned long physaddr,
+>  	pmd_entry +=  physaddr;
+>  
+>  	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
+> -		int idx = i + (physaddr >> PMD_SHIFT) % PTRS_PER_PMD;
+> -		pmd[idx] = pmd_entry + i * PMD_SIZE;
+> +		int idx = i + (physaddr >> PMD_SHIFT);;
 
-Hi Li,
+double semicolon
 
-Steadily.
+> +		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
 
-Do you have this as well:
+This part is functionally equivivalent. So what's the value of this change?
 
-Index: kvm/arch/x86/kvm/lapic.c
-===================================================================
---- kvm.orig/arch/x86/kvm/lapic.c
-+++ kvm/arch/x86/kvm/lapic.c
-@@ -129,8 +129,7 @@ static inline u32 kvm_x2apic_id(struct k
+Thanks,
 
- bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
- {
--       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
--               kvm_hlt_in_guest(vcpu->kvm);
-+       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu);
- }
- EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+	tglx
+
+
