@@ -2,90 +2,80 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD50C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E912C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E793213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E2421655
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfFYLTH (ORCPT
+        id S1730509AbfFYLTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:19:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51812 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730461AbfFYLTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:19:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AD39FAEFF;
-        Tue, 25 Jun 2019 11:19:05 +0000 (UTC)
+        Tue, 25 Jun 2019 07:19:36 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40726 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbfFYLTg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:19:36 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c70so12214014qkg.7;
+        Tue, 25 Jun 2019 04:19:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=64y1Jl3E54NVU84ingXkOpLnS+rsOVnSacEQOqg2J1w=;
+        b=sITr3gWmFmV/1WWOaIp5y6sCKtr6km7K3vakrQjKPJFKaY+00RSHnuzDLR1W7ObI5q
+         6Mpj6tXMx7IhlRb/z9Xb+1SDn6hqADI4/kjz1QZfjhaGzWVDKg4EJUmigicGjj2ESv3v
+         l5NbRnGBn/PYwG54oIiNCmjyru2OWPziqmu/uR+baryJdYjTN7qIfWbF3fIzLt4x3qSw
+         p0zqOto99gFBUaDyGX0W9YIRU8PSGukgtHLZIYbS+PKK2cvNfYe2H7mq8lHIzT0dA10R
+         1GHlRK0pP1Ysgs36yaXwHLUhab3p9w0aJ1aPqBLwhPKS3PZDjb7ZoDKDVPI8Ama20Fcs
+         B8jQ==
+X-Gm-Message-State: APjAAAVpi17ogyBrLXCu4S94X+AQAQ6oAhzQtZqChczdsTrYKU0tkzHy
+        XqpzuWMFhnaxpwEghpmcoQKusE4+H5qqPbsLmyI=
+X-Google-Smtp-Source: APXvYqw9dxyYhvOf0CehdbEXdFH0r5aphU3aqYN2yfOZgOz4pRBFGnfseg6WNMqky6w5nCWex/YYZ8R2T/XY4+uneMs=
+X-Received: by 2002:a37:ad12:: with SMTP id f18mr84085002qkm.3.1561461574892;
+ Tue, 25 Jun 2019 04:19:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Jun 2019 13:19:04 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Azat Khuzhin <azat@libevent.org>, Eric Wong <e@80x24.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/14] epoll: support pollable epoll from userspace
-In-Reply-To: <CAHk-=wgQaCDiH09ocVA=74ceg9XyS=kRDF5Hi=783shCaKVRWg@mail.gmail.com>
-References: <20190624144151.22688-1-rpenyaev@suse.de>
- <CAHk-=wgQaCDiH09ocVA=74ceg9XyS=kRDF5Hi=783shCaKVRWg@mail.gmail.com>
-Message-ID: <f0d2c829c72c63d08c8df46d2d32c2af@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+References: <20190617111718.2277220-1-arnd@arndb.de> <20190617111718.2277220-3-arnd@arndb.de>
+ <20190625105650.scnahq2e5xgdnt2c@gofer.mess.org>
+In-Reply-To: <20190625105650.scnahq2e5xgdnt2c@gofer.mess.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 25 Jun 2019 13:19:18 +0200
+Message-ID: <CAK8P3a2=wFMxLjNdTtHT9rDq8+xhwPmDJgbMCBqMjoSa9otk_A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] media: ttpci: add RC_CORE dependency
+To:     Sean Young <sean@mess.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-24 22:38, Linus Torvalds wrote:
-> On Mon, Jun 24, 2019 at 10:42 PM Roman Penyaev <rpenyaev@suse.de> 
-> wrote:
->> 
->> So harvesting events from userspace gives 15% gain.  Though bench_http
->> is not ideal benchmark, but at least it is the part of libevent and 
->> was
->> easy to modify.
->> 
->> Worth to mention that uepoll is very sensible to CPU, e.g. the gain 
->> above
->> is observed on desktop "Intel(R) Core(TM) i7-6820HQ CPU @ 2.70GHz", 
->> but on
->> "Intel(R) Xeon(R) Silver 4110 CPU @ 2.10GHz" measurements are almost 
->> the
->> same for both runs.
-> 
-> Hmm. 15% may be big in a big picture thing, but when it comes to what
-> is pretty much a micro-benchmark, I'm not sure how meaningful it is.
-> 
-> And the CPU sensitivity thing worries me. Did you check _why_ it
-> doesn't seem to make any difference on the Xeon 4110? Is it just
-> because at that point the machine has enough cores that you might as
-> well just sit in epoll() in the kernel and uepoll doesn't give you
-> much? Or is there something else going on?
+On Tue, Jun 25, 2019 at 12:56 PM Sean Young <sean@mess.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 01:16:53PM +0200, Arnd Bergmann wrote:
+> > The ttpci driver now uses the rc-core, so we need to ensure it
+> > is enabled:
+> >
+> > ERROR: "rc_unregister_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> > ERROR: "rc_allocate_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> > ERROR: "rc_free_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> > ERROR: "rc_keydown" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> > ERROR: "rc_register_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+> >
+> > Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Thank you for the patch, unfortunately this was already fixed in
+> commit 12e23ebb396e6ffea88b8c5e483059a297326afb (which was accepted
+> after you sent your patch).
 
-This http tool is a singlethreaded test, i.e. client and server
-work as a standalone processes and each has a single event thread
-for everything.
+That seems like a better fix, thanks for addressing the issue!
 
-According to what I saw there, is that events come slowly (or event
-loop acts faster?), so when time has come to harvest events there
-is nothing, we take a slow path and go to kernel in order to sleep.
-That does not explain the main "why", unfortunately.
-
-I would like to retest that adding more clients to the server, thus
-server is more likely to observe events in a ring, avoiding sleep.
-
---
-Roman
-
+      Arnd
