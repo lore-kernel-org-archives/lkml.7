@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D5AC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80713C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816CD2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC412146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mx5wCxAm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k2Z56jK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbfFYOi1 (ORCPT
+        id S1732007AbfFYOia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:38:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54228 "EHLO
+        Tue, 25 Jun 2019 10:38:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54268 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730758AbfFYOiZ (ORCPT
+        with ESMTP id S1731964AbfFYOi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:38:25 -0400
+        Tue, 25 Jun 2019 10:38:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IRyX7WezlAVDVbSdXLwEQAHdOH3yDAfA0drmqFGnM/g=; b=mx5wCxAmvZg0i6ol2LaSGyLT44
-        CxvPd/9fdlWmr2TxFf5RpjGlB2FY1BoBYpf+v+X8HSpJ0s0LdN/ijmpHTycSjpjShxE3zRR5drKFc
-        U/Zog/l582GPFD22R0swDs6BpMeeV2Ud4oOeEpKE+9rAJ/xEEjfVAnJM2D2BnTm7rmWApYQKyr0l9
-        a4OMUcW+x4vyahFylZB/x4EbDFmQPEAV4DjHt3WK+fVqg13S+BlhFUb4EYB8w2A0tF0vc4NE2v9wW
-        wUm+jx3C0i2aGls+NjKmOMMEizlMkujMCKOc6/NAtnG9tNswgPc/c6Q+H8rJLWAJg7b4b3dnP9/1i
-        htToIvAQ==;
+        bh=xf8xwUJqGTGhdY5pjBOHQgYHNWWmClOkIpScch6iAnk=; b=k2Z56jK2d5xI+yMTjSN6h/vuiP
+        u0SXzPC5Gaaj+zKYS9DBaui94DW5JdYiyeLGMMheoNYb7P1thRVfck4ZdTInGgIhRsvlkKuVafPuT
+        qoEpZkZKHIQ/5Yo/qDaES8pLnbs8H4v49XR4BJswGTUAtFhXZ6YE/EB8y06wbIQVXnxShdZGCT/mg
+        oO6SyoF/565YBqQO+A8hQbcrcVfzoWPdpW0JqHQjy9NjYjmi6vmVYpj0yblBNGtKd6ZM5x0og1UTB
+        RPTRcqRD3JNKL9CoM58cLDWs9bCXv7Bra0aDAA5QpvIx11coqbSOkucnqEEJaTJsAzvMcQnEY09x9
+        vYVBnHwg==;
 Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfmaE-00087r-Qt; Tue, 25 Jun 2019 14:38:07 +0000
+        id 1hfmaI-0008BD-Qf; Tue, 25 Jun 2019 14:38:11 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -55,9 +55,9 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>,
         linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/16] mm: switch gup_hugepte to use try_get_compound_head
-Date:   Tue, 25 Jun 2019 16:37:14 +0200
-Message-Id: <20190625143715.1689-16-hch@lst.de>
+Subject: [PATCH 16/16] mm: mark the page referenced in gup_hugepte
+Date:   Tue, 25 Jun 2019 16:37:15 +0200
+Message-Id: <20190625143715.1689-17-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190625143715.1689-1-hch@lst.de>
 References: <20190625143715.1689-1-hch@lst.de>
@@ -69,30 +69,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This applies the overflow fixes from 8fde12ca79aff
-("mm: prevent get_user_pages() from overflowing page refcount")
-to the powerpc hugepd code and brings it back in sync with the
-other GUP cases.
+All other get_user_page_fast cases mark the page referenced, so do
+this here as well.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- mm/gup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/gup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index 7077549bc8ea..e06447cff635 100644
+index e06447cff635..d9d022d835ca 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -2006,7 +2006,8 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
--	if (!page_cache_add_speculative(head, refs)) {
-+	head = try_get_compound_head(head, refs);
-+	if (!head) {
- 		*nr -= refs;
+@@ -2020,6 +2020,7 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
  		return 0;
  	}
+ 
++	SetPageReferenced(head);
+ 	return 1;
+ }
+ 
 -- 
 2.20.1
 
