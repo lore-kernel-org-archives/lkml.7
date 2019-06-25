@@ -2,126 +2,110 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997AAC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CCFC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7324B20883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:16:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="BJm2ynky"
+	by mail.kernel.org (Postfix) with ESMTP id C5769208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfFYRQ6 (ORCPT
+        id S1729101AbfFYRRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:16:58 -0400
-Received: from us-smtp-delivery-168.mimecast.com ([63.128.21.168]:25685 "EHLO
-        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726774AbfFYRQ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:16:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
-        s=mimecast20190405; t=1561483016;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6wby4VwGd4v/juwDj/Pjs39tiYp5vbhVxRLNw2VMNPU=;
-        b=BJm2ynkyqPeKysG4CGImgXM5W3kI1SwtavnujVegCHbFK0io+4CPue/Xhk1EB7uwHiOknS
-        Yrlp2AroPAfE3egLAoRLwDNQwVg5jpl+iT6+sHf7+0Qclf8glSoZ/uhrF55gsFYDSR3qlc
-        4zAuyigYlycotNFaYxGzn3yCtcCLK6E=
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com
- (mail-bl2nam02lp2052.outbound.protection.outlook.com [104.47.38.52]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-MiBPNs0ZNaaDQZS3HHksXw-1; Tue, 25 Jun 2019 13:16:54 -0400
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3691.namprd06.prod.outlook.com (10.167.236.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.17; Tue, 25 Jun 2019 17:16:52 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d66:fca6:b053:764f]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d66:fca6:b053:764f%6]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
- 17:16:52 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "userm57@yahoo.com" <userm57@yahoo.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-Thread-Topic: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-Thread-Index: AQHVJ9Vy3OcHKvmN50CYhgsoBzBu56arPlOAgABjq4CAAH9NAIAAgpiA
-Date:   Tue, 25 Jun 2019 17:16:52 +0000
-Message-ID: <1561483011.2343.6.camel@impinj.com>
-References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
-         <20190624195705.GD5690@piout.net>
-         <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
-         <20190625092926.GE5690@piout.net>
-In-Reply-To: <20190625092926.GE5690@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 07b33a57-490a-45ac-532b-08d6f990ea83
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3691;
-x-ms-traffictypediagnostic: MWHPR0601MB3691:
-x-microsoft-antispam-prvs: <MWHPR0601MB3691AB1A742F7DA70E22E631D3E30@MWHPR0601MB3691.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(39850400004)(136003)(346002)(396003)(199004)(189003)(446003)(11346002)(476003)(54906003)(2616005)(6246003)(2501003)(486006)(6116002)(3846002)(68736007)(71190400001)(71200400001)(66066001)(25786009)(14444005)(478600001)(256004)(4326008)(14454004)(103116003)(2906002)(86362001)(5660300002)(6436002)(36756003)(8676002)(186003)(26005)(73956011)(66446008)(64756008)(66476007)(66556008)(76176011)(66946007)(91956017)(76116006)(99286004)(6506007)(6512007)(102836004)(53936002)(316002)(229853002)(305945005)(110136005)(81156014)(81166006)(8936002)(7736002)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3691;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h1KPuWvUK/8loC3Sow2nned/kNlY6FwagCtTvRXDy6Ky1AXj37cs+LApYmb1Nn7wjM2QaBkwbbxeQDqD2n8l9fG/XOHYPDxafwxN9IpWSxqoStKrNlaDjGGeWhEAE74w7ydqNcvL1EV1DJDJhT0QzEuIbI9AIOotBSwI8HDYUHstDHUIns+65wnElnAFGF0IE05JkJr6vcCpe9uoolLo7XX/rEVqnlEunNbqP7bX0SddZUGUarsSLZvcYnyh4LwSbEPgz3r/hxZ+3mdZS+0zRIavirIDJLWD6rzidsKlfIWnWJWb/MkRrn8Xkn1+wqiTCDRFhuJ5M+xvuVwhOJ+hroeDSrYLNd8iGYtmTQoT3/GDDdCOqXu1/3+3LGDCSPm2XbJfadqwJc/YfJdW05e0TNtN2wjEXmDvr5gnfyJbpzk=
-Content-ID: <DDFEED856B81AF418949BC0D5A9D3AD7@namprd06.prod.outlook.com>
+        Tue, 25 Jun 2019 13:17:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:45974 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726774AbfFYRRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:17:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E48D360;
+        Tue, 25 Jun 2019 10:17:23 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB6273F718;
+        Tue, 25 Jun 2019 10:17:19 -0700 (PDT)
+Subject: Re: [PATCH v7 00/25] Unify vDSOs across more architectures
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
+ <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de>
+ <20190624184157.mu6n74a7qqa4z5z5@pburton-laptop>
+ <3ae7f595-0a15-0584-198e-b32fe3e3ea57@arm.com>
+ <20190625171118.wznk5nva3h3jetky@pburton-laptop>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <28ad9bf4-d639-f77c-8ac0-980f4f4595cd@arm.com>
+Date:   Tue, 25 Jun 2019 18:17:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07b33a57-490a-45ac-532b-08d6f990ea83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 17:16:52.3646
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tpiepho@impinj.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3691
-X-MC-Unique: MiBPNs0ZNaaDQZS3HHksXw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20190625171118.wznk5nva3h3jetky@pburton-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA2LTI1IGF0IDExOjI5ICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3cm90
-ZToNCj4gDQo+IA0KPiBVc2Vyc3BhY2UgaXMgY2VydGFpbmx5IGFkanVzdGluZyB0aGUgdGltZXpv
-bmUgYWZ0ZXIgdGhlIGtlcm5lbCBkaWQuIENhbg0KPiB5b3UgcnVuIHRoZSBzYW1lIGNvbW1hbmRz
-IHdpdGhvdXQgcnVubmluZyB5b3VyIGluaXQ/IA0KPiANCj4gT24gc3RhYmxlLCB5b3UgaGF2ZSAv
-ZXRjL2luaXQuZC9od2Nsb2NrLnNoIHRoYXQgc3RpbGwgcnVucyBhbmQgZG9lcyB0aGUNCj4gY29y
-cmVjdCB0aGluZy4gTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHN5c3RlbWQgYWxzbyBoYW5kbGVz
-IHRoZSBUWg0KPiBwcm9wZXJseSBhZnRlciBoY3Rvc3lzIChzZWUgY2xvY2tfaXNfbG9jYWx0aW1l
-KCkpLg0KPiANCj4gU2VyaW91c2x5LCBoY3Rvc3lzIGRvZXMgYSByZWFsbHkgYmFkIGpvYiBhdCBz
-ZXR0aW5nIHRoZSBzeXN0ZW0gdGltZSwgaXQNCj4gaXMgZ3VhcmFudGVlZCB0byBiZSBhbHdheXMg
-d3Jvbmcgb24gbW9zdCBwbGF0Zm9ybXMuIE15IHBsYW4gaXMgc3RpbGwgdG8NCj4gdHJ5IHRvIGdl
-dCBkaXN0cm9zIHRvIHN0b3AgZW5hYmxpbmcgaXQgYW5kIGRvIHRoYXQgcHJvcGVybHkgaW4NCj4g
-dXNlcnNwYWNlLiBUaGlzIGlzIGFscmVhZHkgb2sgd2hlbiB1c2luZyBzeXNWIGJ1dCBzeXN0ZW1k
-IHdvdWxkIG5lZWQgYQ0KPiBmZXcgY2hhbmdlcyB0byBzdG9wIHJlbHlpbmcgb24gaXQgd2hlbiB0
-aGVuIGlzIG5vIGh3Y2xvY2sgaW5pdHNjcmlwdC4NCj4gVW5mb3J0dW5hdGVseSwgSSBkaWRuJ3Qg
-aGF2ZSB0aW1lIHRvIHdvcmsgb24gdGhhdCB5ZXQuDQoNCmhjdG9zeXMgaXMgdmVyeSBoYW5keSBp
-biB0aGF0IGl0IHNldHMgdGhlIHN5c3RlbSB0aW1lIGJlZm9yZSBhbnkgbG9nDQptZXNzYWdlcyBh
-cmUgZ2VuZXJhdGVkLiAgRWl0aGVyIGluIGEgbWFpbiBib290IG9yIGluIGFuIGluaXRyYW1mcy4g
-DQpIYXZpbmcgcHJvcGVydHkgdGltZS1zdGFtcGVkIGxvZyBtZXNzYWdlcyBpcyB2ZXJ5IGltcG9y
-dGFudCBmb3INCm1hbmFnaW5nIGEgbGFyZ2UgZGVwbG95bWVudC4NCg0KSWYgdGhlIHN5c3RlbSB0
-aW1lIGlzIHNldCBieSBzb21lIHNjcmlwdCBvciBzeXN0ZW1kIHVuaXQsIHRoZW4gdGhlcmUNCndp
-bGwgYWx3YXlzIGJlIGFsbCB0aGUgdGhpbmdzIHRoYXQgbmVlZCB0byBydW4gYmVmb3JlIHRoYXQg
-c2NyaXB0IG9yDQp1bml0IGNhbiB3b3JrLiAgRS5nLiwgdWRldiBjcmVhdGluZyBydGMgZGV2aWNl
-IG5vZGVzLCBtb3VudGluZyAvc3lzIGFuZA0KL3Byb2MsIHN5c3RlbWQgZ2VuZXJhdG9yIGZvciBs
-b2NhbCBmaWxlIHN5c3RlbSB1bmlzLCB0aGUgb3RoZXIgcGFydHMgb2YNCnN5c3RlbWQgdG8gZG8g
-dGhhdCwgZXRjLiBBbGwgdGhpcyB3b24ndCBiZSBhYmxlIHRvIGxvZyB3aXRoIGNvcnJlY3QNCnN5
-c3RlbSB0aW1lLg0KDQoNCg==
+Hi Paul,
 
+On 25/06/2019 18:11, Paul Burton wrote:
+> Hi Vincenzo,
+> 
+> On Tue, Jun 25, 2019 at 12:16:55AM +0100, Vincenzo Frascino wrote:
+>> In the end I concluded that all the errors seen here depend on the fact that I
+>> tested my vdso implementation on MIPS32el only (as stated in the cover letter)
+>> and that when I tried to compile a 32BIT binary on a 64BIT configuration I did
+>> it wrongly for two reasons, for N32 and O32 binaries:
+>>  - we need to undefine CONFIG_64BIT and define CONFIG_32BIT
+>>  - we need to define CONFIG_GENERIC_ATOMIC64
+>>
+>> I have a fix for this (patch in attachment), but I do not have the hardware to
+>> test it. If you could provide some feedback would be appreciated (really want to
+>> see MIPS merged with the other archs in 5.3 :) ).
+> 
+> Thanks for the quick turnaround on your patch!
+> 
+> I'm certainly willing to test it, but in a few hours I'll be spending
+> the bulk of a day on airplanes[1] so it might take a few days until I
+> get to it.
+> 
+
+Sounds like a plan. Let us know when you have an update.
+
+> Thanks,
+>     Paul
+> 
+> [1] ...and travel isn't the hackathon it used to be with my 9 month old
+>     son around :)
+> 
+
+-- 
+Regards,
+Vincenzo
