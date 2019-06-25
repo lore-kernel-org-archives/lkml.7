@@ -2,211 +2,130 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8C1C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673C9C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD98C2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366992054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NC8qjC79";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AV2jdOHr"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AvhlBUnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbfFYHFN (ORCPT
+        id S1726846AbfFYHHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:05:13 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33808 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfFYHFN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:05:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D3F2F607DE; Tue, 25 Jun 2019 07:05:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561446312;
-        bh=4N/BCQSsMk9kqvdWn3ha3xLftdz1843VcRc6I5jXtM0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NC8qjC79C5Fg7PzYzQpqFRb69qRUqQgHKBtvpUS6OJx7HVuaWNh8T8O5MV4eP109S
-         1HgoTHqEw276dWOr1SJQ11TdQD4MOL8Z02NOq+HdHjgmcaLyhruNBD4wPkLHWqMCKn
-         3GRKotsRxMmyKjiZN9Im8dpa+XjW/uotsR/I8QBY=
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 810C660D35;
-        Tue, 25 Jun 2019 07:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561446309;
-        bh=4N/BCQSsMk9kqvdWn3ha3xLftdz1843VcRc6I5jXtM0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AV2jdOHrweSYZn30LLL2sFGVil30bCPNm7cJj9pLsh/jH55hcILm18varwhtbYW19
-         C0H5gi7AI1IYhrj534RIvAHUU+5U5zC8borvNyFNL7ZVAJGITUp27qUHyCjVClKqoE
-         tDcqvj0k/yeEs/3yNqTrDpjRR/GVXG3eE5n3JMWE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 810C660D35
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f52.google.com with SMTP id w13so25554723eds.4;
-        Tue, 25 Jun 2019 00:05:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAUs55jgZq7qQmiv7cXwwxfIxKkrNghJy6OgmWrurPXf8UmGa6ro
-        nRuQjgmamlWFfXCWWnpe209zTNlo/DKX3g/EdQ4=
-X-Google-Smtp-Source: APXvYqw4ea9lzM4JrtqZAtGHkuco3ytv6PJqElNZoVg2rFRo/Orhj9+G+vfP00mjoxzM/Bk8IOr2E4Su/rVWt/pFy7Q=
-X-Received: by 2002:a50:9413:: with SMTP id p19mr146764994eda.224.1561446308141;
- Tue, 25 Jun 2019 00:05:08 -0700 (PDT)
+        Tue, 25 Jun 2019 03:07:03 -0400
+Received: from mail-eopbgr30068.outbound.protection.outlook.com ([40.107.3.68]:64993
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726397AbfFYHHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:07:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xSaUhYJVgnfZeiXyUus4rXj5vvkqAzAGvjZw+VugLas=;
+ b=AvhlBUnrjkn7mbS4GcrlJbpXDuwSZsuw9aSZ1/NUzClnY+KNrv1a5SLHghxrYfPqlB5tOcQnAGhgsQmP3AxnK6Ej15b+KBrPrSCFFo/Dvi4bDw4EPO8gwRyOLJnSPC6kqbD/iZM+/Msm3EidXa/HOg3+q0sZPTQxPGG6eoRt0sw=
+Received: from DB7PR04MB5178.eurprd04.prod.outlook.com (20.176.236.22) by
+ DB7PR04MB5145.eurprd04.prod.outlook.com (20.176.235.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 07:06:56 +0000
+Received: from DB7PR04MB5178.eurprd04.prod.outlook.com
+ ([fe80::2c71:9f2f:8db1:a290]) by DB7PR04MB5178.eurprd04.prod.outlook.com
+ ([fe80::2c71:9f2f:8db1:a290%4]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 07:06:56 +0000
+From:   Jacky Bai <ping.bai@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/2] clk: imx8mm: GPT1 clock mux option #5 should be
+ sys_pll1_80m
+Thread-Topic: [PATCH 2/2] clk: imx8mm: GPT1 clock mux option #5 should be
+ sys_pll1_80m
+Thread-Index: AQHVKyQzJN5BE3akGkGXuEng8rXJJ6ar8rfA
+Date:   Tue, 25 Jun 2019 07:06:55 +0000
+Message-ID: <DB7PR04MB51783F81729B64AA16705BF587E30@DB7PR04MB5178.eurprd04.prod.outlook.com>
+References: <20190625070602.37670-1-Anson.Huang@nxp.com>
+ <20190625070602.37670-2-Anson.Huang@nxp.com>
+In-Reply-To: <20190625070602.37670-2-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ping.bai@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a41b646d-8d3a-4c1a-ae5d-08d6f93bb578
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB5145;
+x-ms-traffictypediagnostic: DB7PR04MB5145:
+x-microsoft-antispam-prvs: <DB7PR04MB51458C39F3B362F3EA30207687E30@DB7PR04MB5145.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1332;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(376002)(136003)(39860400002)(189003)(13464003)(199004)(66476007)(316002)(55016002)(446003)(9686003)(102836004)(2906002)(486006)(476003)(478600001)(305945005)(66066001)(11346002)(86362001)(2201001)(6116002)(25786009)(68736007)(3846002)(71190400001)(71200400001)(7736002)(6436002)(74316002)(52536014)(256004)(6246003)(14454004)(229853002)(33656002)(14444005)(7696005)(53936002)(99286004)(53546011)(81156014)(81166006)(186003)(6506007)(5660300002)(66946007)(73956011)(76176011)(76116006)(8676002)(8936002)(66556008)(64756008)(66446008)(2501003)(26005)(110136005)(4326008)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5145;H:DB7PR04MB5178.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nZn2e4pw2sw2vgiyGdthugprB1fWCIPLagiTQahvOXtv+UTKPLiJ+hTHtICsqiSK75jEP9hP6Ps4iXN3b7Y5oISTEtiPuc0Kn/wlK/I9TCw1qcLquOEcQ4C897hpmnGMWTC69M51EM3kKv+bervLF5tLp3uO7ZWaVnPE/YThTkBh51yged8U0L2JAseiqEOUgQVP5ubSr7juZwISd6l4aW3ydnULgbQRUD4TPTb4gDWVjkJ/lznUFJqqzh/l66ElUN5mK/5eG8ZpTdSIa8oadcb3TitRoIULzbQ56hLlv1dtjq/UVqDgy3tC9p0B9EFMSX5FM+iWNxHjdbwlq/c4XiN9dBkWCthcd3quZDSV9jYE2UtErm9wqf/H+EtdWYHRL4d0sW97QmInLCN8BZ2AzoOe7o1bSCm13qys7MdXXgw=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-4-vivek.gautam@codeaurora.org> <20190614040520.GK22737@tuxbook-pro>
- <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org> <20190618175218.GH4270@fuggles.cambridge.arm.com>
- <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com> <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
-In-Reply-To: <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Tue, 25 Jun 2019 12:34:56 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iF0TQtAy2JFXk6zjX5GpjeLFesqPZV6ezbDXmc85yvMEA@mail.gmail.com>
-Message-ID: <CAFp+6iF0TQtAy2JFXk6zjX5GpjeLFesqPZV6ezbDXmc85yvMEA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
- wait-for-safe logic
-To:     Will Deacon <will@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "robh+dt" <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a41b646d-8d3a-4c1a-ae5d-08d6f93bb578
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 07:06:56.1226
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ping.bai@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
-
-
-On Mon, Jun 24, 2019 at 10:33 PM Will Deacon <will@kernel.org> wrote:
->
-> [+Krishna]
->
-> Hi Vivek,
->
-> On Mon, Jun 24, 2019 at 03:58:32PM +0530, Vivek Gautam wrote:
-> > On Tue, Jun 18, 2019 at 11:22 PM Will Deacon <will.deacon@arm.com> wrote:
-> > > On Fri, Jun 14, 2019 at 02:48:07PM +0530, Vivek Gautam wrote:
-> > > > On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
-> > > > > On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
-> > > > > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > > > > > index 0ad086da399c..3c3ad43eda97 100644
-> > > > > > --- a/drivers/iommu/arm-smmu.c
-> > > > > > +++ b/drivers/iommu/arm-smmu.c
-> > > > > > @@ -39,6 +39,7 @@
-> > > > > >   #include <linux/pci.h>
-> > > > > >   #include <linux/platform_device.h>
-> > > > > >   #include <linux/pm_runtime.h>
-> > > > > > +#include <linux/qcom_scm.h>
-> > > > > >   #include <linux/slab.h>
-> > > > > >   #include <linux/spinlock.h>
-> > > > > > @@ -177,6 +178,7 @@ struct arm_smmu_device {
-> > > > > >           u32                             features;
-> > > > > >   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
-> > > > > > +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
-> > > > > >           u32                             options;
-> > > > > >           enum arm_smmu_arch_version      version;
-> > > > > >           enum arm_smmu_implementation    model;
-> > > > > > @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
-> > > > > >   static struct arm_smmu_option_prop arm_smmu_options[] = {
-> > > > > >           { ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
-> > > > > > + { ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
-> > > > > This should be added to the DT binding as well.
-> > > >
-> > > > Ah right. I missed that. Will add this and respin unless Robin and Will have
-> > > > concerns with this change.
-> > >
-> > > My only concern really is whether it's safe for us to turn this off. It's
-> > > clear that somebody went to a lot of effort to add this extra goodness to
-> > > the IP, but your benchmarks suggest they never actually tried it out after
-> > > they finished building it.
-> > >
-> > > Is there some downside I'm not seeing from disabling this stuff?
-> >
-> > This wait-for-safe is a TLB invalidation enhancement to help display
-> > and camera devices.
-> > The SMMU hardware throttles the invalidations so that clients such as
-> > display and camera can indicate when to start the invalidation.
-> > So the SMMU essentially reduces the rate at which invalidations are
-> > serviced from its queue. This also throttles the invalidations from
-> > other masters too.
-> >
-> > On sdm845, the software is expected to serialize the invalidation
-> > command loading into SMMU invalidation FIFO using hardware locks
-> > (downstream code [2]), and is also expected to throttle non-real time
-> > clients while waiting for SAFE==1 (downstream code[2]). We don't do
-> > any of these yet, and as per my understanding as this wait-for-safe is
-> > enabled by the bootloader in a one time config, this logic reduces
-> > performance of devices such as usb and ufs.
-> >
-> > There's isn't any downside from disabling this logic until we have all
-> > the pieces together from downstream in upstream kernels, and until we
-> > have sdm845 devices that are running with full display/gfx stack
-> > running. That's when we plan to revisit this and enable all the pieces
-> > to get display and USB/UFS working with their optimum performance.
->
-> Generally, I'd agree that approaching this incrementally makes sense, but
-> in this case you're adding new device-tree properties
-> ("qcom,smmu-500-fw-impl-safe-errata") in order to do so, which seems
-> questionable if they're only going to be used in the short-term and will
-> be obsolete once Linux knows how to drive the device properly.
-
-This device tree property will still be valid when we handle the wait-for-safe
-properly for sdm845.
-("qcom,smmu-500-fw-impl-safe-errata") property represents just that the
-firmware has handles to do the entire sequence -
-* read the secure register
-* set/reset the bits in the register to enable/disable wait-for-safe for certain
-  devices.
-And this is valid when firmware masks access to this register from any other
-EE.
-So we don't have to do anything that, for example, we were doing for sdm845
-based cheza's firmware [1] that implements simple scm handlers to read/write
-secure registers.
-
-And fyi, some of the newer SoCs too have this logic, and kernel can have that
-extra bit of page-table-ops to handle wait-safe toggling.
-
-[1] https://lore.kernel.org/patchwork/patch/983917/
->
-> Instead, I think this needs to be part of a separate file that is maintained
-> by you, which follows on from the work that Krishna is doing for nvidia
-> built on top of Robin's prototype patches:
->
-> http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
-
-Looking at this branch quickly, it seem there can be separate implementation
-level configuration file that can be added.
-But will this also handle separate page table ops when required in future.
-
-Best regards
-Vivek
-
->
-> Once we have that, you can key this behaviour off the compatible string
-> rather than having to add quirk properties to reflect the transient needs of
-> Linux.
->
-> Krishna -- how have you been getting on with the branch above?
->
-> Will
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+T0sgZm9yIG1lLg0KDQpCUg0KSmFja3kgQmFpDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+IEZyb206IEFuc29uLkh1YW5nQG54cC5jb20gW21haWx0bzpBbnNvbi5IdWFuZ0BueHAuY29t
+XQ0KPiBTZW50OiBUdWVzZGF5LCBKdW5lIDI1LCAyMDE5IDM6MDYgUE0NCj4gVG86IG10dXJxdWV0
+dGVAYmF5bGlicmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0K
+PiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFt
+QGdtYWlsLmNvbTsNCj4gTGVvbmFyZCBDcmVzdGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT47
+IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47DQo+IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAu
+Y29tPjsgbGludXgtY2xrQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkbC1s
+aW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggMi8yXSBjbGs6
+IGlteDhtbTogR1BUMSBjbG9jayBtdXggb3B0aW9uICM1IHNob3VsZCBiZQ0KPiBzeXNfcGxsMV84
+MG0NCj4gDQo+IEZyb206IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiANCj4g
+aS5NWDhNTSdzIEdQVDEgY2xvY2sgbXV4IG9wdGlvbiAjNSBzaG91bGQgYmUgc3lzX3BsbDFfODBt
+LCBOT1QNCj4gc3lzX3BsbDFfODAwbSwgY29ycmVjdCBpdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvY2xr
+L2lteC9jbGstaW14OG1tLmMgfCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xr
+LWlteDhtbS5jIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bW0uYw0KPiBpbmRleCA1MTZlNjhk
+Li5kMWE4NGY3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtbS5jDQo+
+ICsrKyBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OG1tLmMNCj4gQEAgLTI5Myw3ICsyOTMsNyBA
+QCBzdGF0aWMgY29uc3QgY2hhciAqaW14OG1tX3B3bTRfc2Vsc1tdID0NCj4geyJvc2NfMjRtIiwg
+InN5c19wbGwyXzEwMG0iLCAic3lzX3BsbDFfMQ0KPiAgCQkJCQkgInN5c19wbGwzX291dCIsICJj
+bGtfZXh0MiIsICJzeXNfcGxsMV84MG0iLA0KPiAidmlkZW9fcGxsMV9vdXQiLCB9Ow0KPiANCj4g
+IHN0YXRpYyBjb25zdCBjaGFyICppbXg4bW1fZ3B0MV9zZWxzW10gPSB7Im9zY18yNG0iLCAic3lz
+X3BsbDJfMTAwbSIsDQo+ICJzeXNfcGxsMV80MDBtIiwgInN5c19wbGwxXzQwbSIsDQo+IC0JCQkJ
+CSAidmlkZW9fcGxsMV9vdXQiLCAic3lzX3BsbDFfODAwbSIsDQo+ICJhdWRpb19wbGwxX291dCIs
+ICJjbGtfZXh0MSIgfTsNCj4gKwkJCQkJICJ2aWRlb19wbGwxX291dCIsICJzeXNfcGxsMV84MG0i
+LCAiYXVkaW9fcGxsMV9vdXQiLA0KPiAiY2xrX2V4dDEiIH07DQo+IA0KPiAgc3RhdGljIGNvbnN0
+IGNoYXIgKmlteDhtbV93ZG9nX3NlbHNbXSA9IHsib3NjXzI0bSIsICJzeXNfcGxsMV8xMzNtIiwN
+Cj4gInN5c19wbGwxXzE2MG0iLCAidnB1X3BsbF9vdXQiLA0KPiAgCQkJCQkgInN5c19wbGwyXzEy
+NW0iLCAic3lzX3BsbDNfb3V0IiwgInN5c19wbGwxXzgwbSIsDQo+ICJzeXNfcGxsMl8xNjZtIiwg
+fTsNCj4gLS0NCj4gMi43LjQNCg0K
