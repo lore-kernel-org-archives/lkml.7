@@ -2,795 +2,219 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E43BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B579BC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1782085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8191920665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:14:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GR+U3WMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbfFYHLw (ORCPT
+        id S1727773AbfFYHOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:11:52 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37532 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729777AbfFYHLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:11:46 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5DA751A0F5B;
-        Tue, 25 Jun 2019 09:11:44 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4EF4F1A0F4E;
-        Tue, 25 Jun 2019 09:11:44 +0200 (CEST)
-Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CC28D205E5;
-        Tue, 25 Jun 2019 09:11:43 +0200 (CEST)
-From:   Robert Chiras <robert.chiras@nxp.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v4 2/2] drm/panel: Add support for Raydium RM67191 panel driver
-Date:   Tue, 25 Jun 2019 10:11:14 +0300
-Message-Id: <1561446674-25084-3-git-send-email-robert.chiras@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561446674-25084-1-git-send-email-robert.chiras@nxp.com>
-References: <1561446674-25084-1-git-send-email-robert.chiras@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 25 Jun 2019 03:14:53 -0400
+Received: from mail-eopbgr70079.outbound.protection.outlook.com ([40.107.7.79]:4096
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726419AbfFYHOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:14:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IvcdrOKLhfCNdiesmDGwl/0cfO07l6aYiZCjZmwcJlM=;
+ b=GR+U3WMpVFSAXa58gxN1FClc7F+HzVUotXQyFgGlWcSS23Uqv3aRN5pHvN0RxQk+avplYiQ5M8xpVFsmSLwPWGRFOop2XtbxpnXgZmIKpJkWTfcg+rY504B0+IA9vMLClit7yk+7nBm/qpCG4nkWaGSerfE96czld3ZR2fkhaqI=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
+ VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 07:14:48 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a4a8:729f:e664:fa8]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a4a8:729f:e664:fa8%2]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 07:14:48 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error
+ path
+Thread-Topic: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error
+ path
+Thread-Index: AQHVKpYvC7hrWecAmkuNut7zTa078Kar9GvA
+Date:   Tue, 25 Jun 2019 07:14:48 +0000
+Message-ID: <VE1PR04MB66381156C0EC77F6308D637889E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20190624140731.24080-1-TheSven73@gmail.com>
+In-Reply-To: <20190624140731.24080-1-TheSven73@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c6dd3faa-b7ef-4462-e210-08d6f93ccf14
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6638;
+x-ms-traffictypediagnostic: VE1PR04MB6638:
+x-microsoft-antispam-prvs: <VE1PR04MB66382C4AF81C04FC64D2071589E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(366004)(346002)(376002)(13464003)(189003)(199004)(99286004)(7736002)(305945005)(14454004)(7696005)(229853002)(6436002)(9686003)(8936002)(86362001)(26005)(316002)(3846002)(6916009)(6116002)(1411001)(8676002)(68736007)(54906003)(71190400001)(53936002)(7416002)(6246003)(71200400001)(52536014)(4326008)(25786009)(33656002)(76116006)(73956011)(55016002)(81156014)(66476007)(81166006)(66556008)(66446008)(64756008)(66946007)(486006)(476003)(11346002)(2906002)(66066001)(5660300002)(446003)(186003)(102836004)(478600001)(14444005)(256004)(76176011)(74316002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6638;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: escAc2sAvC5UnL/6Du9+gDblS5g+hBhbo/7nk0sTvqfxvDHrmKKYinjAJCx6iuO0aIvVD8c0YF88bNwPPpU/fNZBPV448E758F0tf9dzh0dwu97qeRKq908W92Ynufg6LEFgraZyIDl0NecPE4r2d469m8aDtI0Sr8ynQszJyc5LgdYpOGFSg/simFUwiEpgBBoSw77buteaanJyQlffhb1sQTYlGS119fNAp7a2u4/Yj9rgCBFYkdr+qSgBX5fCR1pjpowv09ztHq8QwDdKyYag5LHI2sks1BxHTnPtTCu/F9Ahr1S4bQka0vTln5ds/8aevfjRU++klWJAgm1qyUriz7xPd/kGqkNxesbs3Vi0IL/sGTNcoAKa9/e85zJTiAbx9wWkgh37K3mcrqbH7dJPBvWeQYePwTblYUEC48A=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6dd3faa-b7ef-4462-e210-08d6f93ccf14
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 07:14:48.6710
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6638
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
-protocol).
-
-Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
- MAINTAINERS                                   |   6 +
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-raydium-rm67191.c | 673 ++++++++++++++++++++++++++
- 4 files changed, 689 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7a2f487..cd93030e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5089,6 +5089,12 @@ S:	Maintained
- F:	drivers/gpu/drm/qxl/
- F:	include/uapi/drm/qxl_drm.h
- 
-+DRM DRIVER FOR RAYDIUM RM67191 PANELS
-+M:	Robert Chiras <robert.chiras@nxp.com>
-+S:	Maintained
-+F:	drivers/gpu/drm/panel/panel-raydium-rm67191.c
-+F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
-+
- DRM DRIVER FOR RAGE 128 VIDEO CARDS
- S:	Orphan / Obsolete
- F:	drivers/gpu/drm/r128/
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index d9d931a..8be1ac1 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -159,6 +159,15 @@ config DRM_PANEL_RASPBERRYPI_TOUCHSCREEN
- 	  Pi 7" Touchscreen.  To compile this driver as a module,
- 	  choose M here.
- 
-+config DRM_PANEL_RAYDIUM_RM67191
-+	tristate "Raydium RM67191 FHD 1080x1920 DSI video mode panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Raydium RM67191 FHD
-+	  (1080x1920) DSI panel.
-+
- config DRM_PANEL_RAYDIUM_RM68200
- 	tristate "Raydium RM68200 720x1280 DSI video mode panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index fb0cb3a..1fc0f68 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
- obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
- obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
- obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
-+obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
- obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
- obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
-diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67191.c b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-new file mode 100644
-index 0000000..1735b0f
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-@@ -0,0 +1,673 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Raydium RM67191 MIPI-DSI panel driver
-+ *
-+ * Copyright 2019 NXP
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+#include <video/of_videomode.h>
-+#include <video/videomode.h>
-+
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_print.h>
-+
-+/* Panel specific color-format bits */
-+#define COL_FMT_16BPP 0x55
-+#define COL_FMT_18BPP 0x66
-+#define COL_FMT_24BPP 0x77
-+
-+/* Write Manufacture Command Set Control */
-+#define WRMAUCCTR 0xFE
-+
-+/* Manufacturer Command Set pages (CMD2) */
-+struct cmd_set_entry {
-+	u8 cmd;
-+	u8 param;
-+};
-+
-+/*
-+ * There is no description in the Reference Manual about these commands.
-+ * We received them from vendor, so just use them as is.
-+ */
-+static const struct cmd_set_entry manufacturer_cmd_set[] = {
-+	{0xFE, 0x0B},
-+	{0x28, 0x40},
-+	{0x29, 0x4F},
-+	{0xFE, 0x0E},
-+	{0x4B, 0x00},
-+	{0x4C, 0x0F},
-+	{0x4D, 0x20},
-+	{0x4E, 0x40},
-+	{0x4F, 0x60},
-+	{0x50, 0xA0},
-+	{0x51, 0xC0},
-+	{0x52, 0xE0},
-+	{0x53, 0xFF},
-+	{0xFE, 0x0D},
-+	{0x18, 0x08},
-+	{0x42, 0x00},
-+	{0x08, 0x41},
-+	{0x46, 0x02},
-+	{0x72, 0x09},
-+	{0xFE, 0x0A},
-+	{0x24, 0x17},
-+	{0x04, 0x07},
-+	{0x1A, 0x0C},
-+	{0x0F, 0x44},
-+	{0xFE, 0x04},
-+	{0x00, 0x0C},
-+	{0x05, 0x08},
-+	{0x06, 0x08},
-+	{0x08, 0x08},
-+	{0x09, 0x08},
-+	{0x0A, 0xE6},
-+	{0x0B, 0x8C},
-+	{0x1A, 0x12},
-+	{0x1E, 0xE0},
-+	{0x29, 0x93},
-+	{0x2A, 0x93},
-+	{0x2F, 0x02},
-+	{0x31, 0x02},
-+	{0x33, 0x05},
-+	{0x37, 0x2D},
-+	{0x38, 0x2D},
-+	{0x3A, 0x1E},
-+	{0x3B, 0x1E},
-+	{0x3D, 0x27},
-+	{0x3F, 0x80},
-+	{0x40, 0x40},
-+	{0x41, 0xE0},
-+	{0x4F, 0x2F},
-+	{0x50, 0x1E},
-+	{0xFE, 0x06},
-+	{0x00, 0xCC},
-+	{0x05, 0x05},
-+	{0x07, 0xA2},
-+	{0x08, 0xCC},
-+	{0x0D, 0x03},
-+	{0x0F, 0xA2},
-+	{0x32, 0xCC},
-+	{0x37, 0x05},
-+	{0x39, 0x83},
-+	{0x3A, 0xCC},
-+	{0x41, 0x04},
-+	{0x43, 0x83},
-+	{0x44, 0xCC},
-+	{0x49, 0x05},
-+	{0x4B, 0xA2},
-+	{0x4C, 0xCC},
-+	{0x51, 0x03},
-+	{0x53, 0xA2},
-+	{0x75, 0xCC},
-+	{0x7A, 0x03},
-+	{0x7C, 0x83},
-+	{0x7D, 0xCC},
-+	{0x82, 0x02},
-+	{0x84, 0x83},
-+	{0x85, 0xEC},
-+	{0x86, 0x0F},
-+	{0x87, 0xFF},
-+	{0x88, 0x00},
-+	{0x8A, 0x02},
-+	{0x8C, 0xA2},
-+	{0x8D, 0xEA},
-+	{0x8E, 0x01},
-+	{0x8F, 0xE8},
-+	{0xFE, 0x06},
-+	{0x90, 0x0A},
-+	{0x92, 0x06},
-+	{0x93, 0xA0},
-+	{0x94, 0xA8},
-+	{0x95, 0xEC},
-+	{0x96, 0x0F},
-+	{0x97, 0xFF},
-+	{0x98, 0x00},
-+	{0x9A, 0x02},
-+	{0x9C, 0xA2},
-+	{0xAC, 0x04},
-+	{0xFE, 0x06},
-+	{0xB1, 0x12},
-+	{0xB2, 0x17},
-+	{0xB3, 0x17},
-+	{0xB4, 0x17},
-+	{0xB5, 0x17},
-+	{0xB6, 0x11},
-+	{0xB7, 0x08},
-+	{0xB8, 0x09},
-+	{0xB9, 0x06},
-+	{0xBA, 0x07},
-+	{0xBB, 0x17},
-+	{0xBC, 0x17},
-+	{0xBD, 0x17},
-+	{0xBE, 0x17},
-+	{0xBF, 0x17},
-+	{0xC0, 0x17},
-+	{0xC1, 0x17},
-+	{0xC2, 0x17},
-+	{0xC3, 0x17},
-+	{0xC4, 0x0F},
-+	{0xC5, 0x0E},
-+	{0xC6, 0x00},
-+	{0xC7, 0x01},
-+	{0xC8, 0x10},
-+	{0xFE, 0x06},
-+	{0x95, 0xEC},
-+	{0x8D, 0xEE},
-+	{0x44, 0xEC},
-+	{0x4C, 0xEC},
-+	{0x32, 0xEC},
-+	{0x3A, 0xEC},
-+	{0x7D, 0xEC},
-+	{0x75, 0xEC},
-+	{0x00, 0xEC},
-+	{0x08, 0xEC},
-+	{0x85, 0xEC},
-+	{0xA6, 0x21},
-+	{0xA7, 0x05},
-+	{0xA9, 0x06},
-+	{0x82, 0x06},
-+	{0x41, 0x06},
-+	{0x7A, 0x07},
-+	{0x37, 0x07},
-+	{0x05, 0x06},
-+	{0x49, 0x06},
-+	{0x0D, 0x04},
-+	{0x51, 0x04},
-+};
-+
-+static const u32 rad_bus_formats[] = {
-+	MEDIA_BUS_FMT_RGB888_1X24,
-+	MEDIA_BUS_FMT_RGB666_1X18,
-+	MEDIA_BUS_FMT_RGB565_1X16,
-+};
-+
-+static const u32 rad_bus_flags = DRM_BUS_FLAG_DE_LOW |
-+				 DRM_BUS_FLAG_PIXDATA_NEGEDGE;
-+
-+struct rad_panel {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+
-+	struct gpio_desc *reset;
-+	struct backlight_device *backlight;
-+
-+	struct regulator_bulk_data *supplies;
-+	unsigned int num_supplies;
-+
-+	bool prepared;
-+	bool enabled;
-+};
-+
-+static const struct drm_display_mode default_mode = {
-+	.clock = 132000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 20,
-+	.hsync_end = 1080 + 20 + 2,
-+	.htotal = 1080 + 20 + 2 + 34,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 10,
-+	.vsync_end = 1920 + 10 + 2,
-+	.vtotal = 1920 + 10 + 2 + 4,
-+	.vrefresh = 60,
-+	.width_mm = 68,
-+	.height_mm = 121,
-+	.flags = DRM_MODE_FLAG_NHSYNC |
-+		 DRM_MODE_FLAG_NVSYNC,
-+};
-+
-+static inline struct rad_panel *to_rad_panel(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct rad_panel, panel);
-+}
-+
-+static int rad_panel_push_cmd_list(struct mipi_dsi_device *dsi)
-+{
-+	size_t i;
-+	size_t count = ARRAY_SIZE(manufacturer_cmd_set);
-+	int ret = 0;
-+
-+	for (i = 0; i < count; i++) {
-+		const struct cmd_set_entry *entry = &manufacturer_cmd_set[i];
-+		u8 buffer[2] = { entry->cmd, entry->param };
-+
-+		ret = mipi_dsi_generic_write(dsi, &buffer, sizeof(buffer));
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+};
-+
-+static int color_format_from_dsi_format(enum mipi_dsi_pixel_format format)
-+{
-+	switch (format) {
-+	case MIPI_DSI_FMT_RGB565:
-+		return COL_FMT_16BPP;
-+	case MIPI_DSI_FMT_RGB666:
-+	case MIPI_DSI_FMT_RGB666_PACKED:
-+		return COL_FMT_18BPP;
-+	case MIPI_DSI_FMT_RGB888:
-+		return COL_FMT_24BPP;
-+	default:
-+		return COL_FMT_24BPP; /* for backward compatibility */
-+	}
-+};
-+
-+static int rad_panel_prepare(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	int ret;
-+
-+	if (rad->prepared)
-+		return 0;
-+
-+	ret = regulator_bulk_enable(rad->num_supplies, rad->supplies);
-+	if (ret)
-+		return ret;
-+
-+	if (rad->reset) {
-+		gpiod_set_value_cansleep(rad->reset, 1);
-+		usleep_range(3000, 5000);
-+		gpiod_set_value_cansleep(rad->reset, 0);
-+		usleep_range(18000, 20000);
-+	}
-+
-+	rad->prepared = true;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_unprepare(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	int ret;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	/*
-+	 * Right after asserting the reset, we need to release it, so that the
-+	 * touch driver can have an active connection with the touch controller
-+	 * even after the display is turned off.
-+	 */
-+	if (rad->reset) {
-+		gpiod_set_value_cansleep(rad->reset, 1);
-+		usleep_range(15000, 17000);
-+		gpiod_set_value_cansleep(rad->reset, 0);
-+	}
-+
-+	ret = regulator_bulk_disable(rad->num_supplies, rad->supplies);
-+	if (ret)
-+		return ret;
-+
-+	rad->prepared = false;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_enable(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	struct mipi_dsi_device *dsi = rad->dsi;
-+	struct device *dev = &dsi->dev;
-+	int color_format = color_format_from_dsi_format(dsi->format);
-+	int ret;
-+
-+	if (rad->enabled)
-+		return 0;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	ret = rad_panel_push_cmd_list(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to send MCS (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	/* Select User Command Set table (CMD1) */
-+	ret = mipi_dsi_generic_write(dsi, (u8[]){ WRMAUCCTR, 0x00 }, 2);
-+	if (ret < 0)
-+		goto fail;
-+
-+	/* Software reset */
-+	ret = mipi_dsi_dcs_soft_reset(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to do Software Reset (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	usleep_range(15000, 17000);
-+
-+	/* Set DSI mode */
-+	ret = mipi_dsi_generic_write(dsi, (u8[]){ 0xC2, 0x0B }, 2);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set DSI mode (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set tear ON */
-+	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set tear ON (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set tear scanline */
-+	ret = mipi_dsi_dcs_set_tear_scanline(dsi, 0x380);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set tear scanline (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set pixel format */
-+	ret = mipi_dsi_dcs_set_pixel_format(dsi, color_format);
-+	DRM_DEV_DEBUG_DRIVER(dev, "Interface color format set to 0x%x\n",
-+			     color_format);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set pixel format (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Exit sleep mode */
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to exit sleep mode (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	usleep_range(5000, 7000);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set display ON (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	backlight_enable(rad->backlight);
-+
-+	rad->enabled = true;
-+
-+	return 0;
-+
-+fail:
-+	gpiod_set_value_cansleep(rad->reset, 1);
-+
-+	return ret;
-+}
-+
-+static int rad_panel_disable(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	struct mipi_dsi_device *dsi = rad->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	if (!rad->enabled)
-+		return 0;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	backlight_disable(rad->backlight);
-+
-+	usleep_range(10000, 12000);
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set display OFF (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	usleep_range(5000, 10000);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to enter sleep mode (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	rad->enabled = false;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_get_modes(struct drm_panel *panel)
-+{
-+	struct drm_connector *connector = panel->connector;
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(panel->drm, &default_mode);
-+	if (!mode) {
-+		DRM_DEV_ERROR(panel->dev, "failed to add mode %ux%ux@%u\n",
-+			  default_mode.hdisplay, default_mode.vdisplay,
-+			  default_mode.vrefresh);
-+		return -ENOMEM;
-+	}
-+
-+	drm_mode_set_name(mode);
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	drm_mode_probed_add(panel->connector, mode);
-+
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	connector->display_info.bus_flags = rad_bus_flags;
-+
-+	drm_display_info_set_bus_formats(&connector->display_info,
-+					 rad_bus_formats,
-+					 ARRAY_SIZE(rad_bus_formats));
-+	return 1;
-+}
-+
-+static int rad_bl_get_brightness(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	u16 brightness;
-+	int ret;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "\n");
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_get_display_brightness(dsi, &brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	bl->props.brightness = brightness;
-+
-+	return brightness & 0xff;
-+}
-+
-+static int rad_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	int ret = 0;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "New brightness: %d\n", bl->props.brightness);
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness(dsi, bl->props.brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct backlight_ops rad_bl_ops = {
-+	.update_status = rad_bl_update_status,
-+	.get_brightness = rad_bl_get_brightness,
-+};
-+
-+static const struct drm_panel_funcs rad_panel_funcs = {
-+	.prepare = rad_panel_prepare,
-+	.unprepare = rad_panel_unprepare,
-+	.enable = rad_panel_enable,
-+	.disable = rad_panel_disable,
-+	.get_modes = rad_panel_get_modes,
-+};
-+
-+static const char * const rad_supply_names[] = {
-+	"v3p3",
-+	"v1p8",
-+};
-+
-+static int rad_init_regulators(struct rad_panel *rad)
-+{
-+	struct device *dev = &rad->dsi->dev;
-+	int i;
-+
-+	rad->num_supplies = ARRAY_SIZE(rad_supply_names);
-+	rad->supplies = devm_kcalloc(dev, rad->num_supplies,
-+				     sizeof(*rad->supplies), GFP_KERNEL);
-+	if (!rad->supplies)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < rad->num_supplies; i++)
-+		rad->supplies[i].supply = rad_supply_names[i];
-+
-+	return devm_regulator_bulk_get(dev, rad->num_supplies, rad->supplies);
-+};
-+
-+static int rad_panel_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct device_node *np = dev->of_node;
-+	struct rad_panel *panel;
-+	struct backlight_properties bl_props;
-+	int ret;
-+	u32 video_mode;
-+
-+	panel = devm_kzalloc(&dsi->dev, sizeof(*panel), GFP_KERNEL);
-+	if (!panel)
-+		return -ENOMEM;
-+
-+	mipi_dsi_set_drvdata(dsi, panel);
-+
-+	panel->dsi = dsi;
-+
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags =  MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO |
-+			   MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+
-+	ret = of_property_read_u32(np, "video-mode", &video_mode);
-+	if (!ret) {
-+		switch (video_mode) {
-+		case 0:
-+			/* burst mode */
-+			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_BURST;
-+			break;
-+		case 1:
-+			/* non-burst mode with sync event */
-+			break;
-+		case 2:
-+			/* non-burst mode with sync pulse */
-+			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-+			break;
-+		default:
-+			dev_warn(dev, "invalid video mode %d\n", video_mode);
-+			break;
-+		}
-+	}
-+
-+	ret = of_property_read_u32(np, "dsi-lanes", &dsi->lanes);
-+	if (ret) {
-+		dev_err(dev, "Failed to get dsi-lanes property (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	panel->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+
-+	memset(&bl_props, 0, sizeof(bl_props));
-+	bl_props.type = BACKLIGHT_RAW;
-+	bl_props.brightness = 255;
-+	bl_props.max_brightness = 255;
-+
-+	panel->backlight = devm_backlight_device_register(dev, dev_name(dev),
-+							  dev, dsi, &rad_bl_ops,
-+							  &bl_props);
-+	if (IS_ERR(panel->backlight)) {
-+		ret = PTR_ERR(panel->backlight);
-+		dev_err(dev, "Failed to register backlight (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = rad_init_regulators(panel);
-+	if (ret)
-+		return ret;
-+
-+	drm_panel_init(&panel->panel);
-+	panel->panel.funcs = &rad_panel_funcs;
-+	panel->panel.dev = dev;
-+	dev_set_drvdata(dev, panel);
-+
-+	ret = drm_panel_add(&panel->panel);
-+	if (ret)
-+		return ret;
-+
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret)
-+		drm_panel_remove(&panel->panel);
-+
-+	return ret;
-+}
-+
-+static int rad_panel_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret)
-+		DRM_DEV_ERROR(dev, "Failed to detach from host (%d)\n",
-+			      ret);
-+
-+	drm_panel_remove(&rad->panel);
-+
-+	return 0;
-+}
-+
-+static void rad_panel_shutdown(struct mipi_dsi_device *dsi)
-+{
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+
-+	rad_panel_disable(&rad->panel);
-+	rad_panel_unprepare(&rad->panel);
-+}
-+
-+static const struct of_device_id rad_of_match[] = {
-+	{ .compatible = "raydium,rm67191", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rad_of_match);
-+
-+static struct mipi_dsi_driver rad_panel_driver = {
-+	.driver = {
-+		.name = "panel-raydium-rm67191",
-+		.of_match_table = rad_of_match,
-+	},
-+	.probe = rad_panel_probe,
-+	.remove = rad_panel_remove,
-+	.shutdown = rad_panel_shutdown,
-+};
-+module_mipi_dsi_driver(rad_panel_driver);
-+
-+MODULE_AUTHOR("Robert Chiras <robert.chiras@nxp.com>");
-+MODULE_DESCRIPTION("DRM Driver for Raydium RM67191 MIPI DSI panel");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+> -----Original Message-----
+> From: Sven Van Asbroeck <thesven73@gmail.com>
+> Subject: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error p=
+ath
+>=20
+> If probe() fails anywhere beyond the point where
+> sdma_get_firmware() is called, then a kernel oops may occur.
+>=20
+> Problematic sequence of events:
+> 1. probe() calls sdma_get_firmware(), which schedules the
+>    firmware callback to run when firmware becomes available,
+>    using the sdma instance structure as the context 2. probe() encounters=
+ an
+> error, which deallocates the
+>    sdma instance structure
+> 3. firmware becomes available, firmware callback is
+>    called with deallocated sdma instance structure 4. use after free - ke=
+rnel
+> oops !
+>=20
+> Solution: only attempt to load firmware when we're certain that probe() w=
+ill
+> succeed. This guarantees that the firmware callback's context will remain=
+ valid.
+>=20
+> Note that the remove() path is unaffected by this issue: the firmware loa=
+der will
+> increment the driver module's use count, ensuring that the module cannot =
+be
+> unloaded while the firmware callback is pending or running.
+>=20
+> To: Robin Gong <yibin.gong@nxp.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
+>  1 file changed, 27 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
+> 99d9f431ae2c..3f0f41d16e1c 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -2096,27 +2096,6 @@ static int sdma_probe(struct platform_device
+> *pdev)
+>  	if (pdata && pdata->script_addrs)
+>  		sdma_add_scripts(sdma, pdata->script_addrs);
+>=20
+> -	if (pdata) {
+> -		ret =3D sdma_get_firmware(sdma, pdata->fw_name);
+> -		if (ret)
+> -			dev_warn(&pdev->dev, "failed to get firmware from platform
+> data\n");
+> -	} else {
+> -		/*
+> -		 * Because that device tree does not encode ROM script address,
+> -		 * the RAM script in firmware is mandatory for device tree
+> -		 * probe, otherwise it fails.
+> -		 */
+> -		ret =3D of_property_read_string(np, "fsl,sdma-ram-script-name",
+> -					      &fw_name);
+> -		if (ret)
+> -			dev_warn(&pdev->dev, "failed to get firmware name\n");
+> -		else {
+> -			ret =3D sdma_get_firmware(sdma, fw_name);
+> -			if (ret)
+> -				dev_warn(&pdev->dev, "failed to get firmware from device
+> tree\n");
+> -		}
+> -	}
+> -
+>  	sdma->dma_device.dev =3D &pdev->dev;
+>=20
+>  	sdma->dma_device.device_alloc_chan_resources =3D
+> sdma_alloc_chan_resources; @@ -2161,6 +2140,33 @@ static int
+> sdma_probe(struct platform_device *pdev)
+>  		of_node_put(spba_bus);
+>  	}
+>=20
+> +	/*
+> +	 * Kick off firmware loading as the very last step:
+> +	 * attempt to load firmware only if we're not on the error path, becaus=
+e
+> +	 * the firmware callback requires a fully functional and allocated sdma
+> +	 * instance.
+> +	 */
+> +	if (pdata) {
+> +		ret =3D sdma_get_firmware(sdma, pdata->fw_name);
+> +		if (ret)
+> +			dev_warn(&pdev->dev, "failed to get firmware from platform
+> data\n");
+> +	} else {
+> +		/*
+> +		 * Because that device tree does not encode ROM script address,
+> +		 * the RAM script in firmware is mandatory for device tree
+> +		 * probe, otherwise it fails.
+> +		 */
+> +		ret =3D of_property_read_string(np, "fsl,sdma-ram-script-name",
+> +					      &fw_name);
+> +		if (ret)
+> +			dev_warn(&pdev->dev, "failed to get firmware name\n");
+> +		else {
+> +			ret =3D sdma_get_firmware(sdma, fw_name);
+> +			if (ret)
+> +				dev_warn(&pdev->dev, "failed to get firmware from device
+> tree\n");
+> +		}
+> +	}
+> +
+>  	return 0;
+>=20
+>  err_register:
+> --
+> 2.17.1
 
