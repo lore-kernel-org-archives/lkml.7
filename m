@@ -6,125 +6,157 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB08C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF777C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BF1206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E579206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:01:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Wd5IZQ/T"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="QeLvPWFo";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NP0D9O5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfFYAAC (ORCPT
+        id S1729120AbfFYABE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:00:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33589 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728694AbfFYAAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:00:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45XmW15DXgz9s8m;
-        Tue, 25 Jun 2019 09:59:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561420797;
-        bh=MlRWefn1WQf29R23/74S5YR8kTEjm7BUbnrp4hb4pGs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Wd5IZQ/TwZDx2wHrneA0oZBPbn144eU7UA14QqvfHVljPGEXvyabBasaKCgT+mRm2
-         cS7uOuMg/5aT1DXv7dtFMo0aNoB4RUSMukrGCwh3b8VYQKCLX0sCz7G5hBgJzenJy0
-         p+LynBuw7jqCC6sluWhO6gI33XxaSBTZ0EP95g+PWLqAkSvN+lwF3ZXIDJX7wkzNlD
-         xIrDVxq5vrwMb27NRo+/9Ht9h1vZ0Ze+4bStfW7wK/xJLwnCuTq1DGFtU5nWf0Wvrb
-         4ea1WVAFIumkAPD7VT/oPAyflc/XFrPpmK8BFfy8sBdcTrT3OWv72FzK2OSleV58lm
-         S4l7QmUc+cDDQ==
-Date:   Tue, 25 Jun 2019 09:59:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the samsung-krzk tree with the
- arm-soc tree
-Message-ID: <20190625095957.3b46dad2@canb.auug.org.au>
-In-Reply-To: <20190625095906.06c97e0c@canb.auug.org.au>
-References: <20190625095906.06c97e0c@canb.auug.org.au>
+        Mon, 24 Jun 2019 20:01:04 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:48140 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726631AbfFYABD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 20:01:03 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5ONrZGf019635;
+        Mon, 24 Jun 2019 17:00:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=1KUYvvy7TYx7gYz9XSqgufG67pt/omR2tMk9xUNO+dQ=;
+ b=QeLvPWFoo2jhj1J45Hr+XHbzxHRpQkyBfioCzhyEvcA0pqutkDs60qn/3SmxPD8ztWMJ
+ Djo8O/z7wUE3U+O6eKqPGd1VeXFbMUJYQR0sTUPZmF4ni7a2oxInZ+PJq1fIf6XC5xoi
+ iqNiKM5DxglYnIrdVVc9pCDJsMSnCkGWzU0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2tb3gw97kv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 24 Jun 2019 17:00:37 -0700
+Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
+ ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 24 Jun 2019 17:00:36 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 24 Jun 2019 17:00:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1KUYvvy7TYx7gYz9XSqgufG67pt/omR2tMk9xUNO+dQ=;
+ b=NP0D9O5SaHgT0NkB4pZ2FXKw9GIw04qLr1pv+QRkJpydj/P4ZrML7QAtXdLnQcfDwzw607VLIdVrgiRMlz5/RHb4LDb5JRlAVuUJ+LzZdw44MhUsaQ3c0t8LHl41vfR6bzBTHDc5ZlmSdeYKO+P32+GXeuX9skEDzHP5qiYeZNY=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1773.namprd15.prod.outlook.com (10.174.97.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Tue, 25 Jun 2019 00:00:35 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::400e:e329:ea98:aa0d%6]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 00:00:35 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     allanzhang <allanzhang@google.com>
+CC:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/2] bpf: Allow bpf_skb_event_output for more prog
+ types
+Thread-Topic: [PATCH v3 0/2] bpf: Allow bpf_skb_event_output for more prog
+ types
+Thread-Index: AQHVKuikUE/omfxviUSX95ATQSfH9KarfDQA
+Date:   Tue, 25 Jun 2019 00:00:35 +0000
+Message-ID: <C74526B1-7426-4F84-A5D3-DA444A17CFCD@fb.com>
+References: <20190624235720.167067-1-allanzhang@google.com>
+In-Reply-To: <20190624235720.167067-1-allanzhang@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:200::2:78ae]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d7412e4b-6c41-4849-0858-08d6f9002636
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1773;
+x-ms-traffictypediagnostic: MWHPR15MB1773:
+x-microsoft-antispam-prvs: <MWHPR15MB17733ECDECA64BEC28DB4E8FB3E30@MWHPR15MB1773.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(396003)(136003)(39860400002)(199004)(189003)(256004)(76176011)(14444005)(446003)(478600001)(50226002)(186003)(14454004)(8936002)(25786009)(2906002)(486006)(66946007)(66476007)(476003)(7736002)(73956011)(76116006)(66446008)(64756008)(66556008)(2616005)(305945005)(11346002)(102836004)(6506007)(81156014)(53546011)(81166006)(4326008)(54906003)(33656002)(8676002)(316002)(6512007)(68736007)(5660300002)(4744005)(6486002)(229853002)(6246003)(6916009)(6436002)(6116002)(99286004)(46003)(86362001)(36756003)(71190400001)(57306001)(71200400001)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1773;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9yJpQMC7NQ9qjEpdR1cGyZqAwL0DA+lnCbwdr+1PRkgO1CnQCulYR/tBvJi0wJlqjrMV5W6jPghs7rNPPGtVoQZTubGb465l//4RaDT5UfgBAqbuTNNKAmsE2wk1l/xVW+0uYh5lLSdl5SzvVHWolXgKchWN3TaGEGTbA7cq9wi0ZLNNqTXKFUOrm1JDW9Ri2uX7ZAKvF7oW0VvOdqP5dLt4Iw+CO7CM2aBN20P+EjsPLBoztIUyPd5NaGJ2DSZJPNZsfkFEd51P2kG/AlWst43S0MEG/DdVqOvmiGCfW/+T0FvOe2388sbuG94o9nHruADlVwRxCz+rXQ+qfzni3T986fYgxkM/LzIFOli+lwdf178/aNFuCDZl/yi0QKVXBLF03XlvFF7vTPGSiNKYaNWfUMiCmKj8den+cr+4TYg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3A32A135E791AF4CB3FE11154083D599@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/j=1nnD556ddK5QITS5c.k+J"; protocol="application/pgp-signature"
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7412e4b-6c41-4849-0858-08d6f9002636
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 00:00:35.3543
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1773
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=994 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906240189
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/j=1nnD556ddK5QITS5c.k+J
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-On Tue, 25 Jun 2019 09:59:06 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the samsung-krzk tree got a conflict in:
+> On Jun 24, 2019, at 4:57 PM, allanzhang <allanzhang@google.com> wrote:
 >=20
->   arch/arm/configs/s3c6400_defconfig
+> Software event output is only enabled by a few prog types right now (TC,
+> LWT out, XDP, sockops). Many other skb based prog types need
+> bpf_skb_event_output to produce software event.
 >=20
-> between commit:
+> Added socket_filter, cg_skb, sk_skb prog types to generate sw event.
 >=20
->   6c48edcc955a ("ARM: configs: Remove useless UEVENT_HELPER_PATH")
+> *** BLURB HERE ***
+    ^^^^^^ this should be removed.=20
+
+Please include bpf-next in the subject prefix.=20
+Please also include changes from v1 to v2 and v2 to v3 in the cover=20
+letter, like:
+
+changes v1 =3D> v2:
+1. ...
+2. ...
+
+Thanks,
+Song
+
+
 >=20
-> from the arm-soc tree and commit:
+> allanzhang (2):
+>  bpf: Allow bpf_skb_event_output for a few prog types
+>  bpf: Add selftests for bpf_perf_event_output
 >=20
->   5a96019ce5cd ("ARM: defconfig: samsung: Cleanup with savedefconfig")
+> net/core/filter.c                             |  6 ++
+> tools/testing/selftests/bpf/test_verifier.c   | 33 ++++++-
+> .../selftests/bpf/verifier/event_output.c     | 94 +++++++++++++++++++
+> 3 files changed, 132 insertions(+), 1 deletion(-)
+> create mode 100644 tools/testing/selftests/bpf/verifier/event_output.c
 >=20
-> from the samsung-krzk tree.
+> --=20
+> 2.22.0.410.gd8fdbe21b5-goog
 >=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm/configs/s3c6400_defconfig
-index 6eea99300f7f,34f9992ce8e9..000000000000
---- a/arch/arm/configs/s3c6400_defconfig
-+++ b/arch/arm/configs/s3c6400_defconfig
-@@@ -18,9 -15,12 +15,11 @@@ CONFIG_MACH_HMT=3D
-  CONFIG_MACH_SMARTQ5=3Dy
-  CONFIG_MACH_SMARTQ7=3Dy
-  CONFIG_MACH_WLF_CRAGG_6410=3Dy
-- CONFIG_AEABI=3Dy
-  CONFIG_CMDLINE=3D"console=3DttySAC0,115200 root=3D/dev/ram init=3D/linuxr=
-c initrd=3D0x51000000,6M ramdisk_size=3D6144"
-  CONFIG_VFP=3Dy
- -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
-+ CONFIG_MODULES=3Dy
-+ CONFIG_MODULE_UNLOAD=3Dy
-+ # CONFIG_BLK_DEV_BSG is not set
-  CONFIG_MTD=3Dy
-  CONFIG_MTD_RAW_NAND=3Dy
-  CONFIG_MTD_NAND_S3C2410=3Dy
-
---Sig_/j=1nnD556ddK5QITS5c.k+J
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0RY/0ACgkQAVBC80lX
-0GyPwAf/fkACeIarbbcK2fwJPoxLF6bKdjgUZAHoFGlNpMrB0LvwJ3+lO/zdCrEE
-lvMCss4LCr5E4RU9RuD8mG1BRoX2ltGwLcrsZITk8/dK6kd73wm8a/L5mZdk9eyd
-+vxUFucdOtb8sB5RDJVfif4cvtJj85vTufKcPxL0tsYylCsiN53Qs1Ru3GT+kjmA
-/QJa2hWRornUq953NkCkDJj1dDvNLKqd11XI+nqAmN1Ye1zEoHP4Z3x/MLhyFKuG
-IgLDr5wxVlk+5N+vlzOtWCbKVX6aAbvLX70KahFXoHed6yjc/DkKX0ULEjYtZs8P
-zgqkg3DWn3BZyB20Wvop8f5NZq7c2A==
-=ptDH
------END PGP SIGNATURE-----
-
---Sig_/j=1nnD556ddK5QITS5c.k+J--
