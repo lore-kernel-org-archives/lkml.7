@@ -2,201 +2,129 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6E1C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7010EC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D9821670
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D58215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:56:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="MXHqgWix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731142AbfFYIz5 (ORCPT
+        id S1731155AbfFYI4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:55:57 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:13548 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730923AbfFYIzz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:55:55 -0400
-X-UUID: 8a407f64fa044f7c9e5ff29f519f0d6e-20190625
-X-UUID: 8a407f64fa044f7c9e5ff29f519f0d6e-20190625
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2075891572; Tue, 25 Jun 2019 16:55:50 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 25 Jun
- 2019 16:55:48 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 25 Jun 2019 16:55:47 +0800
-Message-ID: <1561452947.32589.25.camel@mhfsdcap03>
-Subject: Re: [PATCH v7 09/10] usb: roles: add USB Type-B GPIO connector
- driver
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Tue, 25 Jun 2019 04:56:00 -0400
+Received: from mail-eopbgr10098.outbound.protection.outlook.com ([40.107.1.98]:8229
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731075AbfFYIz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:55:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PVBfw4FpZxA3ulXfIcTeYrg035ssQsljb1ybKsRpAXE=;
+ b=MXHqgWixyYYEB371MAJg07FcSiFCw4ZAHVtS8KGRk6u9e7p08CJqv2uRSuA9tz9XbAk5gdu4kgmXLML34t3978/B50ZyI/XL0erlq2IuxkMpm/5afF0jjsJ1A1UgA4TH7LzA1DhxGcE98bLoWgbz7kyCrhGUVIzajorCF7ICgnk=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3276.eurprd02.prod.outlook.com (52.134.70.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 08:55:53 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::29c5:d1ae:8855:3153]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::29c5:d1ae:8855:3153%3]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 08:55:53 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Yu Chen <chenyu56@huawei.com>,
-        "Nagarjuna Kristam" <nkristam@nvidia.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Date:   Tue, 25 Jun 2019 16:55:47 +0800
-In-Reply-To: <20190624095827.GA6501@kuha.fi.intel.com>
-References: <1560242680-23844-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1560242680-23844-10-git-send-email-chunfeng.yun@mediatek.com>
-         <20190624095827.GA6501@kuha.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
+ enable-ana-filt
+Thread-Topic: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
+ enable-ana-filt
+Thread-Index: AQHVKyzC4r37a1Y+/0WA1Icg3nKpa6asETkA
+Date:   Tue, 25 Jun 2019 08:55:53 +0000
+Message-ID: <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR05CA0373.eurprd05.prod.outlook.com
+ (2603:10a6:7:94::32) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 44d866fc-a538-4492-b1b6-08d6f94aedfa
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3276;
+x-ms-traffictypediagnostic: DB3PR0202MB3276:
+x-microsoft-antispam-prvs: <DB3PR0202MB3276C4C2028428DC154DF6B1BCE30@DB3PR0202MB3276.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39830400003)(376002)(366004)(346002)(136003)(189003)(199004)(229853002)(476003)(2616005)(73956011)(6246003)(66946007)(64756008)(81156014)(66476007)(25786009)(8936002)(66556008)(81166006)(6512007)(99286004)(11346002)(6116002)(3846002)(8676002)(66446008)(7416002)(6436002)(14454004)(53936002)(66066001)(65806001)(65956001)(6486002)(5660300002)(7736002)(76176011)(446003)(58126008)(256004)(74482002)(26005)(102836004)(6506007)(53546011)(186003)(110136005)(386003)(71200400001)(86362001)(64126003)(31686004)(71190400001)(31696002)(68736007)(486006)(2201001)(508600001)(65826007)(36756003)(2906002)(2501003)(52116002)(316002)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3276;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: r8Yd/ep9rJWZ5EKFc03ek3d9o+3rR60qaNnYxRbXiFDr2dpTzpaxRJxvCaRyXtYevQ2ndMjNaJxZb448JJWKRCPIWVl3LZw+k5aZiBQc4wSv6JpoCW4WwkgcHpa1RIk10cH/mxNH4qwRjqhsvT5/JwZNtNRmTuOzWU/fRu0TN8xFq3wbzpwLNUKS9YZm6QXKLxKz3TOAaantLyIMiSh3JUQkswPPne74QXfZoGN+l9Eppnl0xL/1I9ZsU6v4cywTwxk6GVn7a+LYSVwXN7To/g3H8sm9U1Fkm/HwB/BlPWPmtteGh7W1xUhHD8ZAGfqJhDqrO2oKx6r9iliV6814v7ziX5ZnOEcfj3L6eQL/AQFSOure43qyvtDf7FI4ZeVus12wQt2+fezpPCUQPI9dyPueQftaXG+CJW0LbmLNo3Q=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1181221CAD0DF84EA05524BA6EC34C79@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44d866fc-a538-4492-b1b6-08d6f94aedfa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 08:55:53.7688
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3276
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki,
-
-On Mon, 2019-06-24 at 12:58 +0300, Heikki Krogerus wrote:
-> Hi Chunfeng,
-> 
-> On Tue, Jun 11, 2019 at 04:44:39PM +0800, Chunfeng Yun wrote:
-> > Due to the requirement of usb-connector.txt binding, the old way
-> > using extcon to support USB Dual-Role switch is now deprecated
-> > when use Type-B connector.
-> > This patch introduces a driver of Type-B connector which typically
-> > uses an input GPIO to detect USB ID pin, and try to replace the
-> > function provided by extcon-usb-gpio driver
-> 
-> I'm sorry for asking this so late, but why is this driver a Type-B
-> specific driver (I really thought somebody had already asked this
-> question)?
-It's mainly used for Type-B connector with ID pin. 
-
-> 
-> I don't see anything Type-B specific in the driver. 
-It's need add another compatible "usb-b-connector" except the driver
-provided.
-
-> Basically it looks
-> to me like just a gpio based connection detection driver that would
-> work fine with for example uAB connectors..
-Yes, it is.
-> 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Tested-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> > ---
-> > v7 changes:
-> >   1. remove macro DEV_PMS_OPS suggested by Andy
-> >   2. add tested-by Nagarjuna
-> > 
-> > v6 changes:
-> >   1. get usb-role-swtich by usb_role_switch_get()
-> > 
-> > v5 changes:
-> >   1. put usb_role_switch when error happens suggested by Biju
-> >   2. don't treat bype-B connector as a virtual device suggested by Rob
-> > 
-> > v4 changes:
-> >   1. remove linux/gpio.h suggested by Linus
-> >   2. put node when error happens
-> > 
-> > v3 changes:
-> >   1. treat bype-B connector as a virtual device;
-> >   2. change file name again
-> > 
-> > v2 changes:
-> >   1. file name is changed
-> >   2. use new compatible
-> > ---
-> >  drivers/usb/roles/Kconfig           |  11 ++
-> >  drivers/usb/roles/Makefile          |   1 +
-> >  drivers/usb/roles/typeb-conn-gpio.c | 284 ++++++++++++++++++++++++++++
-> 
-> ..It also drives me crazy that you've put this driver under this
-> folder. It does not create a role switch so ideally it should not go
-> under driver/usb/roles/. 
-agree:)
-
-> I think a better place for it would be
-> drivers/usb/misc/, or actually, maybe it should go under
-> drivers/usb/common/?
-I'm not sure, but prefer misc/ folder.
-
-Hi Greg, 
-
-would you please give me some suggestions about this?  which folder I
-should put the driver into?
-
-> 
-> Could you still rename the driver to something like "usb-gpio.c" or
-> conn-gpio.c,
-I think about the name for a long time before, and have some doubt
-whether it's suitable to add typeb into the name.
-How about using usb-conn-gpio.c or conn-usb-gpio.c?
-
-Thanks a lot
-
->  or something else, and also move it under
-> drivers/usb/misc/ or drivers/usb/common/?
-> 
-> >  3 files changed, 296 insertions(+)
-> >  create mode 100644 drivers/usb/roles/typeb-conn-gpio.c
-> > 
-> > diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
-> > index f8b31aa67526..d1156e18a81a 100644
-> > --- a/drivers/usb/roles/Kconfig
-> > +++ b/drivers/usb/roles/Kconfig
-> > @@ -26,4 +26,15 @@ config USB_ROLES_INTEL_XHCI
-> >  	  To compile the driver as a module, choose M here: the module will
-> >  	  be called intel-xhci-usb-role-switch.
-> >  
-> > +config TYPEB_CONN_GPIO
-> > +	tristate "USB Type-B GPIO Connector"
-> 
-> USB GPIO connection detection driver?
-> 
-> > +	depends on GPIOLIB
-> > +	help
-> > +	  The driver supports USB role switch between host and device via GPIO
-> > +	  based USB cable detection, used typically if an input GPIO is used
-> > +	  to detect USB ID pin.
-> > +
-> > +	  To compile the driver as a module, choose M here: the module will
-> > +	  be called typeb-conn-gpio.ko
-> > +
-> >  endif # USB_ROLE_SWITCH
-> > diff --git a/drivers/usb/roles/Makefile b/drivers/usb/roles/Makefile
-> > index 757a7d2797eb..5d5620d9d113 100644
-> > --- a/drivers/usb/roles/Makefile
-> > +++ b/drivers/usb/roles/Makefile
-> > @@ -3,3 +3,4 @@
-> >  obj-$(CONFIG_USB_ROLE_SWITCH)		+= roles.o
-> >  roles-y					:= class.o
-> >  obj-$(CONFIG_USB_ROLES_INTEL_XHCI)	+= intel-xhci-usb-role-switch.o
-> > +obj-$(CONFIG_TYPEB_CONN_GPIO)		+= typeb-conn-gpio.o
-> > diff --git a/drivers/usb/roles/typeb-conn-gpio.c b/drivers/usb/roles/typeb-conn-gpio.c
-> > new file mode 100644
-> > index 000000000000..e3fba1656069
-> > --- /dev/null
-> > +++ b/drivers/usb/roles/typeb-conn-gpio.c
-> > @@ -0,0 +1,284 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-
-
+T24gMjAxOS0wNi0yNSAxMDowNSwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0K
+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+IA0K
+PiBBZGQgYmluZGluZyBzcGVjaWZpY2F0aW9uIGZvciBhbmFsb2dpYyBmaWx0ZXIgaW5zaWRlIHRo
+ZSBpMmMgY29udHJvbGxlcg0KDQpzL2FuYWxvZ2ljL3RoZSBhbmFsb2cvDQoNCj4gU2lnbmVkLW9m
+Zi1ieTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29tPg0KPiAtLS0N
+Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0OTEudHh0IHwg
+NCArKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiBp
+bmRleCA4MjY4NTk1Li4yMGQzMzRjIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPiBAQCAtMjMsNiArMjMsOSBAQCBP
+cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiAgLSBlbmFibGUtZGlnLWZpbHQ6IEVuYWJsZSB0aGUgYnVp
+bHQtaW4gZGlnaXRhbCBmaWx0ZXIgb24gdGhlIGkyYyBsaW5lcywNCj4gICAgc3BlY2lmaWNhbGx5
+IHJlcXVpcmVkIGRlcGVuZGluZyBvbiB0aGUgaGFyZHdhcmUgUENCL2JvYXJkIGFuZCBpZiB0aGUN
+Cj4gICAgdmVyc2lvbiBvZiB0aGUgY29udHJvbGxlciBpbmNsdWRlcyBpdC4NCj4gKy0gZW5hYmxl
+LWFuYS1maWx0OiBFbmFibGUgdGhlIGJ1aWx0LWluIGFuYWxvZ2ljIGZpbHRlciBvbiB0aGUgaTJj
+IGxpbmVzLA0KPiArICBzcGVjaWZpY2FsbHkgcmVxdWlyZWQgZGVwZW5kaW5nIG9uIHRoZSBoYXJk
+d2FyZSBQQ0IvYm9hcmQgYW5kIGlmIHRoZQ0KPiArICB2ZXJzaW9uIG9mIHRoZSBjb250cm9sbGVy
+IGluY2x1ZGVzIGl0Lg0KPiAgLSBDaGlsZCBub2RlcyBjb25mb3JtaW5nIHRvIGkyYyBidXMgYmlu
+ZGluZw0KPiAgDQo+ICBFeGFtcGxlcyA6DQo+IEBAIC02MCw2ICs2Myw3IEBAIGkyYzA6IGkyY0Bm
+ODAzNDYwMCB7DQo+ICAJYXRtZWwsZmlmby1zaXplID0gPDE2PjsNCj4gIAlpMmMtc2RhLWhvbGQt
+dGltZS1ucyA9IDwzMzY+Ow0KPiAgCWVuYWJsZS1kaWctZmlsdDsNCj4gKwllbmFibGUtYW5hLWZp
+bHQ7DQoNClBlcmhhcHMNCg0KCW1pY3JvY2hpcCxkaWdpdGFsLWZpbHRlcjsNCgltaWNyb2NoaXAs
+YW5hbG9nLWZpbHRlcjsNCg0KPw0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+ICANCj4gIAl3bTg3MzE6
+IHdtODczMUAxYSB7DQo+ICAJCWNvbXBhdGlibGUgPSAid204NzMxIjsNCj4gDQoNCg==
