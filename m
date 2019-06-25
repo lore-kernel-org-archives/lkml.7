@@ -2,66 +2,138 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4BCC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6A1C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 237C92085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0637C20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="udnhh+J/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbfFYGE1 (ORCPT
+        id S1728975AbfFYGEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:04:27 -0400
-Received: from namei.org ([65.99.196.166]:47546 "EHLO namei.org"
+        Tue, 25 Jun 2019 02:04:40 -0400
+Received: from ozlabs.org ([203.11.71.1]:35045 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfFYGE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:04:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x5P64Fvp031584;
-        Tue, 25 Jun 2019 06:04:15 GMT
-Date:   Tue, 25 Jun 2019 16:04:15 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Matthew Garrett <mjg59@google.com>
-cc:     LSM List <linux-security-module@vger.kernel.org>,
+        id S1726495AbfFYGEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 02:04:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Xwbj6HJ3z9s8m;
+        Tue, 25 Jun 2019 16:04:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561442675;
+        bh=gqgpgNuir0xa0VZxhOcjCH6I2s7E7+xdr3188tvHy/U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=udnhh+J/BQ1YYJeyPozym+yIvynscvlqdiOcawjpoeSk/Ku0KfSQWfLMFJ5rI3oTo
+         eqgwi2DnR7Os2ztXN8fuJrPwUYNsF5GhHpKnxERouvwpM6VTTwE0D/x5EtmtdGzVCH
+         nvlK+uhC/MDj8uPITxk4tKBI3FRucv4x7QP4PTpUiF7r/WPaKMSAvEQnN1p5JPDGxU
+         713qh8rWVvwDcO7ScVjc5oAipQc3LvfbXLts3sLPr/AEqGAhIuEO0wK/cy0UpY/ZyC
+         L7G9rRxLyDa76TTy63VNMEWyTt8gio6gtEL+mKhMvTxPcJCW12g1Ksw7E/aXXR3O7I
+         /tQVyKg8FmqQA==
+Date:   Tue, 25 Jun 2019 16:04:32 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Andy Lutomirski <luto@amacapital.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: Re: [PATCH V34 00/29] Lockdown as an LSM
-In-Reply-To: <CACdnJut2erF9ZKeJQ+uvWZeEnHh=stmEioi_P36DF9mN5i2RGQ@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.1906251601430.26271@namei.org>
-References: <20190622000358.19895-1-matthewgarrett@google.com> <alpine.LRH.2.21.1906250853290.7826@namei.org> <CACdnJut2erF9ZKeJQ+uvWZeEnHh=stmEioi_P36DF9mN5i2RGQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Christian Lamparter <chunkeey@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20190625160432.533aa140@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/oufE/.3INgAoB24nFYBeodF"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019, Matthew Garrett wrote:
+--Sig_/oufE/.3INgAoB24nFYBeodF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > We are still not resolved on granularity. Stephen has said he's not sure
-> > if a useful policy can be constructed with just confidentiality and
-> > integrity settings. I'd be interested to know JJ and Casey's thoughts on
-> > lockdown policy flexibility wrt their respective LSMs.
-> 
-> This implementation provides arbitrary granularity at the LSM level,
-> though the lockdown LSM itself only provides two levels. Other LSMs
-> can choose an appropriate level of exposure.
+Hi all,
 
-Ahh, OK, I only looked at the patchset description and had not looked at 
-V33 yet.
+After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-This is looking good.
+drivers/net/wireless/intersil/p54/txrx.c: In function 'p54_rx_data':
+drivers/net/wireless/intersil/p54/txrx.c:386:28: error: implicit declaratio=
+n of function 'ktime_get_boot_ns'; did you mean 'ktime_get_raw_ns'? [-Werro=
+r=3Dimplicit-function-declaration]
+   rx_status->boottime_ns =3D ktime_get_boot_ns();
+                            ^~~~~~~~~~~~~~~~~
+                            ktime_get_raw_ns
 
+Caused by commit
 
--- 
-James Morris
-<jmorris@namei.org>
+  c11c75ec784e ("p54: Support boottime in scan results")
 
+from the wireless-drivers-next tree interacting with commit
+
+  9285ec4c8b61 ("timekeeping: Use proper clock specifier names in functions=
+")
+
+from the tip tree.
+
+I have added the following merge fix patch:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 25 Jun 2019 15:55:36 +1000
+Subject: [PATCH] p54: fix up for ktime_get_boot_ns() name change
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/net/wireless/intersil/p54/txrx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intersil/p54/txrx.c b/drivers/net/wireles=
+s/intersil/p54/txrx.c
+index be6968454282..873fea59894f 100644
+--- a/drivers/net/wireless/intersil/p54/txrx.c
++++ b/drivers/net/wireless/intersil/p54/txrx.c
+@@ -383,7 +383,7 @@ static int p54_rx_data(struct p54_common *priv, struct =
+sk_buff *skb)
+=20
+ 	fc =3D ((struct ieee80211_hdr *)skb->data)->frame_control;
+ 	if (ieee80211_is_probe_resp(fc) || ieee80211_is_beacon(fc))
+-		rx_status->boottime_ns =3D ktime_get_boot_ns();
++		rx_status->boottime_ns =3D ktime_get_boottime_ns();
+=20
+ 	if (unlikely(priv->hw->conf.flags & IEEE80211_CONF_PS))
+ 		p54_pspoll_workaround(priv, skb);
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oufE/.3INgAoB24nFYBeodF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0RuXAACgkQAVBC80lX
+0Gy6rAf/dwngi30bPaG/rjkqs7iS/f+5HGQwWQ3OHRyai8ENCY0xP5QCXXiJ2T8X
+UPHxkcZI3Pd8WSQSsGk7QO22MKQVRuMZXZlUqd+QUmeGUY2ZrnrxbNaF3zqOjSkC
+SC+loQQF7ZDhunuuE6iKOGdAXhI29FVzLRlglWkR0XPNEIg/+TuX1orHq+75noND
+FWUXDq4JEs98kigxby8MzdlhBXuq0h60JMlnDZyey173O2KnMb1HetMXjntkPG28
+YxErKXWGDTjSiKkbpItOpXMwOZsLU9VnGP+AYjSCs52jvGQE8KDAjaorvfgESbfm
+bHe+L3S41avlNDwQYG7fsxmKySiIMQ==
+=Anm+
+-----END PGP SIGNATURE-----
+
+--Sig_/oufE/.3INgAoB24nFYBeodF--
