@@ -2,116 +2,97 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40510C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2485C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16BDA2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEkdwu9t"
+	by mail.kernel.org (Postfix) with ESMTP id 713BC208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561474857;
+	bh=NS7Z6qjdyIhvJdu4ABGngGy2FlwYuKNFBpRUeTymwpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ecOesZdjrKm+LlxOmMa7WvZ1N7F6qKPgEN2aBFji5gfwjLHOjmgHMFQAQSLCDCjl6
+	 8v0BlnYyFSQkB/ZLKke6lOuUUtKrI7Dehz2ijqG8WMOy+W20SVQpcoBdhi5+pnFNOL
+	 5qltPaYGdFccdtb9+3CrWVLQQxOi80dFZQOHJGw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfFYPAg (ORCPT
+        id S1732023AbfFYPA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:00:36 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34432 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731965AbfFYPAg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:00:36 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so993518iot.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 08:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WCu2izc+AwFs8dxkBWfG0kU/xQQY4HsLibUm2/EhQEg=;
-        b=XEkdwu9tbyxynV2UESVQpvwU3iwK3hOE1k9Q1V76kobtha4OFJg8EuxOwyr9iFmFCF
-         03+IP8ze/+IkOWgqwTpYK3IA+caa2YfQYz/eo6KfpwPMDhq0+7/rvOJSrpLmt6w+CQny
-         NEdRK0dC/Ou/b9ECjr3caBsF5fwJhkr+xfFWaaDRwrRWL3rhMeeWH8HFoBrAKmYGIkva
-         h4nN/l3U6DtLZdNSOnQL9Ih7R4Vh9q25kWm87wwuDzJtxPiQd0g9nyeidql+/whr0yY8
-         hRSCFlzTYLEpYV2kxsIbsi+thmD6DyDRJf9PwCSIWPW0GUf18A1wZrVKYFPGX3EEcJNl
-         GGvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WCu2izc+AwFs8dxkBWfG0kU/xQQY4HsLibUm2/EhQEg=;
-        b=Y+VnDNjgsgCqJzvWPcyXbokuoRinXzMmpbQ5Aut6DqrWr3U9fM53qugOKzKCAp++3S
-         RrsNpqN+9J32hqKNCrVCBU/Rc2iD5yGd7TD7OKWtV+Blj+cOxYVuQ+Vffle5vo68qglu
-         FZsqzT6hrVgvdUQnFu/Djqxm483hEH2AEHr9L2r/yuy3ozEh+ypT643tdIu8vpHcK/4Q
-         YqVMcb8Fb5KDF3r7KVHt+btkqGzt4XKfjECO+rHZn/hDHXl2QHuaK0u/Nb7G38qgJrrn
-         7ldDVNlIMHGNPNagZ+SuOjqTboZRYcTuer4plkkvkL36xxVt1USYTapYvio/KljCy9oy
-         0zSA==
-X-Gm-Message-State: APjAAAUqWlNiMnQBRH8IQYsz6WPMIHInEVRr11mC0J2InuoYen9di2Xy
-        G1gyKfhBMzoIZ0dGPXK283keL0iyFJOfNPCzCPp2Nc/hBOk=
-X-Google-Smtp-Source: APXvYqzeVOugDrWRv5GZLuCebGXK5dE6WckDZUY2y3Mwk6wopB+mgprQm2ZWsgT4yJQvT/jz99cbIBKpq58fNj+5zo0=
-X-Received: by 2002:a02:c90d:: with SMTP id t13mr112928904jao.62.1561474835326;
- Tue, 25 Jun 2019 08:00:35 -0700 (PDT)
+        Tue, 25 Jun 2019 11:00:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59058 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731153AbfFYPA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:00:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7BBA5AF4C;
+        Tue, 25 Jun 2019 15:00:54 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 17:00:53 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
+Message-ID: <20190625150053.GJ11400@dhcp22.suse.cz>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-6-hch@lst.de>
+ <20190620191733.GH12083@dhcp22.suse.cz>
+ <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+ <20190625072317.GC30350@lst.de>
 MIME-Version: 1.0
-References: <20190622000358.19895-1-matthewgarrett@google.com> <20190622000358.19895-29-matthewgarrett@google.com>
-In-Reply-To: <20190622000358.19895-29-matthewgarrett@google.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 25 Jun 2019 17:00:24 +0200
-Message-ID: <CAKv+Gu_0bSCdeUGQo=nnKU=mfHXu+-U+qXWqJpJGUd6dVZF61Q@mail.gmail.com>
-Subject: Re: [PATCH V34 28/29] efi: Restrict efivar_ssdt_load when the kernel
- is locked down
-To:     Matthew Garrett <matthewgarrett@google.com>
-Cc:     James Morris <jmorris@namei.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625072317.GC30350@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Jun 2019 at 02:05, Matthew Garrett <matthewgarrett@google.com> wrote:
->
-> efivar_ssdt_load allows the kernel to import arbitrary ACPI code from an
-> EFI variable, which gives arbitrary code execution in ring 0. Prevent
-> that when the kernel is locked down.
->
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: linux-efi@vger.kernel.org
+On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
+> On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
+> > I asked for this simply because it was not exported historically. In
+> > general I want to establish explicit export-type criteria so the
+> > community can spend less time debating when to use EXPORT_SYMBOL_GPL
+> > [1].
+> > 
+> > The thought in this instance is that it is not historically exported
+> > to modules and it is safer from a maintenance perspective to start
+> > with GPL-only for new symbols in case we don't want to maintain that
+> > interface long-term for out-of-tree modules.
+> > 
+> > Yes, we always reserve the right to remove / change interfaces
+> > regardless of the export type, but history has shown that external
+> > pressure to keep an interface stable (contrary to
+> > Documentation/process/stable-api-nonsense.rst) tends to be less for
+> > GPL-only exports.
+> 
+> Fully agreed.  In the end the decision is with the MM maintainers,
+> though, although I'd prefer to keep it as in this series.
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+I am sorry but I am not really convinced by the above reasoning wrt. to
+the allocator API and it has been a subject of many changes over time. I
+do not remember a single case where we would be bending the allocator
+API because of external modules and I am pretty sure we will push back
+heavily if that was the case in the future.
 
-> ---
->  drivers/firmware/efi/efi.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 55b77c576c42..9f92a013ab27 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -31,6 +31,7 @@
->  #include <linux/acpi.h>
->  #include <linux/ucs2_string.h>
->  #include <linux/memblock.h>
-> +#include <linux/security.h>
->
->  #include <asm/early_ioremap.h>
->
-> @@ -242,6 +243,11 @@ static void generic_ops_unregister(void)
->  static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
->  static int __init efivar_ssdt_setup(char *str)
->  {
-> +       int ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
-> +
-> +       if (ret)
-> +               return ret;
-> +
->         if (strlen(str) < sizeof(efivar_ssdt))
->                 memcpy(efivar_ssdt, str, strlen(str));
->         else
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+So in this particular case I would go with consistency and export the
+same way we do with other functions. Also we do not want people to
+reinvent this API and screw that like we have seen in other cases when
+external modules try reimplement core functionality themselves.
+
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
