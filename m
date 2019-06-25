@@ -2,168 +2,160 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FC8C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D6DC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A21208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8CF208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:42:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="dLxtDY6h";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="BkbtQe1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732448AbfFYPjZ (ORCPT
+        id S1731294AbfFYPmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:39:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:44256 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730803AbfFYPjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:39:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A2D62B;
-        Tue, 25 Jun 2019 08:39:24 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 971F53F718;
-        Tue, 25 Jun 2019 08:39:21 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 16:39:19 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Olof Johansson <olof@lixom.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] arm64: defconfig: update and enable CONFIG_RANDOMIZE_BASE
-Message-ID: <20190625153918.GA53763@arrakis.emea.arm.com>
-References: <20190620003244.261595-1-ndesaulniers@google.com>
- <20190620074640.GA27228@brain-police>
- <CAKv+Gu_KCFCVxw_zAfzUf8DjD4DmhvaJEoqBsX_SigOse_NwYw@mail.gmail.com>
- <CAKwvOdmQ+WdD8nvLz_VB_5atDi56fv485Xsn+mHJZKnyj6L-JA@mail.gmail.com>
- <20190624095749.wasjfrgcda7ygdr5@willie-the-truck>
- <CAKv+Gu8G2GQGxmcAAy1XQ5gkN-2fJSWAKCQQm9T4skYdh5cT3Q@mail.gmail.com>
+        Tue, 25 Jun 2019 11:42:37 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:64724 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfFYPmh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:42:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1561477396; x=1593013396;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=VRqwf+C4sabDSz/MSTSOMmrkEKnrYAIbmx9quKVJKe4=;
+  b=dLxtDY6h2zRGe1+JGieodV97WZXq4d0PjaXkafvf4Z9vEGQZwexVor8c
+   NfhDfBHpTByUj17h4C4BNBNckUTFOxZqzcXkLtMXLBpQycZii2bBFE5O5
+   qwgcLx+MawNuXG+zD1lHBF/fVwkGsSGjAuQPlWtltX7rzv5laLKMc6xkW
+   4xrppIg/mYSDzVL+M/1fgUtLXtrnn72WMiSGuYTlWG4LhkZU6xOaZjRGL
+   uK9ECXsoDGVIqs73WFF+TO0Y6gDsly3upQ9exH42fiEmvi9d9SpETMErE
+   qk3FWT/LcgWgQ5GbruyCHXWKG0BTBju26mpDrmLGOSF+5wVXQyFllJ8NA
+   g==;
+X-IronPort-AV: E=Sophos;i="5.63,416,1557158400"; 
+   d="scan'208";a="211296095"
+Received: from mail-by2nam05lp2054.outbound.protection.outlook.com (HELO NAM05-BY2-obe.outbound.protection.outlook.com) ([104.47.50.54])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Jun 2019 23:43:15 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=MQMk3XMSOqfKce32PyMcixsfrwOajF/nFiAZOlIQ88ZQgqcDqw7CtU/lTMSexxB0DWNOsNqCFqa4JIYA4HBr7Sd4yKp2YPyobGaxNeHuYwgQiysMC5mGmAmDIdsk4IpiZAQPHiQao5Fm5sYzxu2zvEj0H47mAH7aiUxHSeF3oRE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XPFF/HuIT28KSpL/BKM3dv4Ug/EORaCvMClrhYeRLV0=;
+ b=mdUUrVLBF3Ts0BAFDKgDjthwUckyNk5MYUPlLcijwxtdHU55AHOyzaH/QBOXOic2xVd1WcPd5CxbdIxpKWiDhtY4QGFafRDR86bw3VfAwahF20G4JwC2P+c6cXes2Za66G9GAWBMVhlITXe4JTP6hATDpdV+/HL/TJx+g7phAoY=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XPFF/HuIT28KSpL/BKM3dv4Ug/EORaCvMClrhYeRLV0=;
+ b=BkbtQe1eJdp67wlP/os4eXR+sxRmMzXSN2pj9HoZHHxH2btTG2N+SkB+fZ/WKTzOygyTTciBgPkNdbVeWPz1TT+uNUAlscgzcX/9gsDhNm+fgeRBa8vXjwCy7Pd7ap0VoPDQrbvw8HeARNb0Od2ZrYD0BYZnSENiRXqmuacDBOA=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.58.26) by
+ BYAPR04MB5607.namprd04.prod.outlook.com (20.179.56.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.17; Tue, 25 Jun 2019 15:42:35 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::fc2b:fcd4:7782:53d6]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::fc2b:fcd4:7782:53d6%7]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 15:42:35 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Florian Knauf <florian.knauf@stud.uni-hannover.de>,
+        Jens Axboe <axboe@kernel.dk>
+CC:     "linux-kernel@i4.cs.fau.de" <linux-kernel@i4.cs.fau.de>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Ewert <christian.ewert@stud.uni-hannover.de>
+Subject: Re: [PATCH] drivers/block/loop: Remove deprecated function, range
+ check for max_loop
+Thread-Topic: [PATCH] drivers/block/loop: Remove deprecated function, range
+ check for max_loop
+Thread-Index: AQHVK0vP1hG+6t1xhEGsUYH4DjqpSg==
+Date:   Tue, 25 Jun 2019 15:42:35 +0000
+Message-ID: <BYAPR04MB574936B98A60EB42B9A7C97886E30@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <20190625114056.8706-1-florian.knauf@stud.uni-hannover.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 905912b5-080b-4916-0592-08d6f983be9e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BYAPR04MB5607;
+x-ms-traffictypediagnostic: BYAPR04MB5607:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <BYAPR04MB560723836D7CA8849B3596B186E30@BYAPR04MB5607.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(39860400002)(136003)(366004)(346002)(189003)(199004)(74316002)(478600001)(3846002)(8936002)(6116002)(81166006)(8676002)(4326008)(81156014)(7736002)(68736007)(305945005)(76116006)(486006)(5660300002)(86362001)(71200400001)(71190400001)(14454004)(2906002)(14444005)(256004)(110136005)(9686003)(33656002)(55016002)(53936002)(229853002)(6436002)(54906003)(316002)(66066001)(25786009)(76176011)(99286004)(64756008)(186003)(66446008)(66556008)(26005)(446003)(72206003)(7696005)(476003)(52536014)(6246003)(53546011)(6506007)(102836004)(66476007)(66946007)(73956011);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB5607;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Cx6JtxyasIRkaO6BwRyEAyvX1JYlWOW5GtTCg30ittFgVhbuYidaCfzEECTUnjM00sS/OV2lFDonkAuRjHFJgpc/EPjs2Wyqu94FFo5AcBT/ClW/CSviNe+y9bIu774cIEmSock4KRnMmqumbAkSGqSoMk2JO+ULD/9JRSdhV6rez7WfmSWJ35JU4QSqX5VcF/RbfDUcRp4NF+5uxlCbm4dTkvletFUiIB+e7UEOK4a02tTQh4kwf0jGNP561PqRuK17iWKf/3XWEEOEurCtcOBo1l6T3J4PCu1g3awMcnepDcfSNScBGCuLQ1+o8zn4SxeeQBc+ho/ddU2V+sUO9Zl7Yxzcx9/fJRT6dgr9QNabccZGz9U7EWVFi5CDYKRsARI7FzrmmqKQUGjgzdTj9a2b9IhUvwyzJWJkYGVLF+8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8G2GQGxmcAAy1XQ5gkN-2fJSWAKCQQm9T4skYdh5cT3Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 905912b5-080b-4916-0592-08d6f983be9e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 15:42:35.2543
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Chaitanya.Kulkarni@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5607
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 12:06:18PM +0200, Ard Biesheuvel wrote:
-> On Mon, 24 Jun 2019 at 11:57, Will Deacon <will@kernel.org> wrote:
-> > Thanks for having a look. It could be that we've fixed the issue Catalin was
-> > running into in the past -- he was going to see if the problem persists with
-> > mainline, since it was frequent enough that it was causing us to ignore the
-> > results from our testing infrastructure when RANDOMIZE_BASE=y.
-> 
-> I had no idea this was the case. I can look into it if we are still
-> seeing failures.
-
-I've seen the panic below with 5.2-rc1, defconfig + RANDOMIZE_BASE=y in
-a guest on TX2. It takes a few tries to trigger just with kaslr,
-enabling lots of other DEBUG_* options makes the failures more
-deterministic. I can't really say it's kaslr's fault here, only that I
-used to consistently get it in this configuration. For some reason, I
-can no longer reproduce it on arm64 for-next/core (or maybe it just
-takes more tries and my script doesn't catch this).
-
-The fault is in the ip_tables module, the __this_cpu_read in
-xt_write_recseq_begin() inlined in ipt_do_table(). The disassembled
-sequence in my build:
-
-0000000000000188 <ipt_do_table>:
-...
-     258:       d538d080        mrs     x0, tpidr_el1
-     25c:       aa1303f9        mov     x25, x19
-     260:       b8606b34        ldr     w20, [x25, x0]
-
-# modprobe iptable_filter
-[   45.618896] Unable to handle kernel paging request at virtual address ffffeda0ffbe1388
-[   45.620545] Mem abort info:
-[   45.621035]   ESR = 0x96000005
-[   45.621559]   Exception class = DABT (current EL), IL = 32 bits
-[   45.622527]   SET = 0, FnV = 0
-[   45.623032]   EA = 0, S1PTW = 0
-[   45.623684] Data abort info:
-[   45.624192]   ISV = 0, ISS = 0x00000005
-[   45.624849]   CM = 0, WnR = 0
-[   45.625361] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 0000000026cb760e
-[   45.626537] [ffffeda0ffbe1388] pgd=00000000bfffa003, pud=0000000000000000
-[   45.627864] Internal error: Oops: 96000005 [#1] PREEMPT SMP
-[   45.628844] Modules linked in: iptable_filter cfg80211 rfkill 8021q garp crct10dif_ce stp mrp llc ip_tables x_tables ipv6
-[   45.630700] Process kworker/u8:5 (pid: 173, stack limit = 0x0000000047fc7e17)
-[   45.632056] CPU: 3 PID: 173 Comm: kworker/u8:5 Not tainted 5.2.0-rc1 #1
-[   45.633377] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-[   45.634752] Workqueue: rpciod rpc_async_schedule
-[   45.635684] pstate: 80400005 (Nzcv daif +PAN -UAO)
-[   45.636674] pc : ipt_do_table+0xd8/0x4b8 [ip_tables]
-[   45.637686] lr : ipt_do_table+0xc4/0x4b8 [ip_tables]
-[   45.638685] sp : ffff000010aa35a0
-[   45.639358] x29: ffff000010aa35a0 x28: ffffeda1f7eb0ce8
-[   45.640424] x27: ffffeda1e69f1380 x26: ffff5d2c2314a288
-[   45.641493] x25: ffff5d2c0cfbf388 x24: ffffeda1fb5a9000
-[   45.642556] x23: ffff5d2c2314a220 x22: 0000000000000003
-[   45.643636] x21: ffffeda1f79c15d8 x20: ffffeda1e69f1780
-[   45.644727] x19: ffff5d2c0cfbf388 x18: 0000000000000000
-[   45.645814] x17: 0000000000000000 x16: ffff5d2d0bc16d78
-[   45.646908] x15: 0000000000000000 x14: 0900000017ea6502
-[   45.647994] x13: 014a023b4751727f x12: 0000000000002238
-[   45.649060] x11: ffff5d2d0e0de000 x10: 0000000000004000
-[   45.650117] x9 : 000000000000000e x8 : ffffeda1fb5a9000
-[   45.651178] x7 : ffffeda1f7eb0c00 x6 : 00000000000000e8
-[   45.652263] x5 : 0000000000000080 x4 : 00009074f2c22000
-[   45.653286] x3 : 0000000000000200 x2 : ffffeda1fc41c440
-[   45.654314] x1 : ffff5d2c2314a000 x0 : 00009074f2c22000
-[   45.655382] Call trace:
-[   45.655896]  ipt_do_table+0xd8/0x4b8 [ip_tables]
-[   45.656825]  iptable_filter_hook+0x1c/0x28 [iptable_filter]
-[   45.657938]  nf_hook_slow+0x44/0xe8
-[   45.658647]  __ip_local_out+0x150/0x250
-[   45.659421]  ip_local_out+0x20/0x80
-[   45.660142]  __ip_queue_xmit+0x1b0/0x540
-[   45.660937]  ip_queue_xmit+0x10/0x18
-[   45.661661]  __tcp_transmit_skb+0x50c/0xad8
-[   45.662494]  tcp_write_xmit+0x6cc/0x1010
-[   45.663294]  __tcp_push_pending_frames+0x38/0xc0
-[   45.664236]  tcp_push+0x150/0x170
-[   45.664912]  tcp_sendmsg_locked+0xaa0/0xc40
-[   45.665754]  tcp_sendmsg+0x34/0x58
-[   45.666442]  inet_sendmsg+0x48/0x210
-[   45.667175]  sock_sendmsg+0x18/0x30
-[   45.667889]  xs_sendpages+0xfc/0x2d8
-[   45.668610]  xs_tcp_send_request+0x9c/0x1b0
-[   45.669454]  xprt_transmit+0x100/0x5b8
-[   45.670210]  call_transmit+0x8c/0xa0
-[   45.670938]  __rpc_execute+0xbc/0x580
-[   45.671687]  rpc_async_schedule+0x28/0x48
-[   45.672493]  process_one_work+0x244/0x680
-[   45.673306]  worker_thread+0x40/0x3f0
-[   45.674053]  kthread+0x128/0x130
-[   45.674710]  ret_from_fork+0x10/0x18
-[   45.675436] Code: b0f4f3d3 910e2273 d538d080 aa1303f9 (b8606b34)
-[   45.676665] ---[ end trace 9d1f75fe6e41c0d7 ]---
-[   45.677590] Kernel panic - not syncing: Fatal exception in interrupt
-[   45.678851] SMP: stopping secondary CPUs
-[   45.679670] Kernel Offset: 0x5d2cfb600000 from 0xffff000010000000
-[   45.680882] PHYS_OFFSET: 0xffff925ec0000000
-[   45.681727] CPU features: 0x002,23800438
-[   45.682518] Memory Limit: none
-[   45.683143] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
-
--- 
-Catalin
+Thanks for your patch.=0A=
+=0A=
+On 06/25/2019 04:47 AM, Florian Knauf wrote:=0A=
+> This patch removes the deprecated simple_strtol function from the option=
+=0A=
+> parsing logic in the loopback device driver. It also introduces a range=
+=0A=
+> check for the max_loop parameter to ensure that negative and out-of-range=
+=0A=
+> values (that cannot be represented by int max_loop) are ignored.=0A=
+>=0A=
+> Signed-off-by: Florian Knauf <florian.knauf@stud.uni-hannover.de>=0A=
+> Signed-off-by: Christian Ewert <christian.ewert@stud.uni-hannover.de>=0A=
+> ---=0A=
+>   drivers/block/loop.c | 12 +++++++++++-=0A=
+>   1 file changed, 11 insertions(+), 1 deletion(-)=0A=
+>=0A=
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c=0A=
+> index 102d79575895..acdd028ed486 100644=0A=
+> --- a/drivers/block/loop.c=0A=
+> +++ b/drivers/block/loop.c=0A=
+> @@ -2289,7 +2289,17 @@ module_exit(loop_exit);=0A=
+>   #ifndef MODULE=0A=
+>   static int __init max_loop_setup(char *str)=0A=
+>   {=0A=
+> -	max_loop =3D simple_strtol(str, NULL, 0);=0A=
+> +	long max_loop_long =3D 0;=0A=
+> +=0A=
+> +	/*=0A=
+> +	 * Range check for max_loop: negative values and values not=0A=
+> +	 * representable by int are ignored.=0A=
+> +	 */=0A=
+> +	if (kstrtol(str, 0, &max_loop_long) =3D=3D 0 &&=0A=
+Is there any specific reason to use kstrtol()?=0A=
+=0A=
+Since max_loop global variable is defined as an int, can we use kstrtoint()=
+?=0A=
+> +			max_loop_long >=3D 0 &&=0A=
+> +			max_loop_long <=3D INT_MAX)=0A=
+> +		max_loop =3D (int) max_loop_long;=0A=
+> +=0A=
+>   	return 1;=0A=
+>   }=0A=
+>=0A=
+>=0A=
+=0A=
