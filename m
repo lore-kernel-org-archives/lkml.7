@@ -2,100 +2,89 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17A0C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEBEC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4612084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F002084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:36:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZpriNPni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbfFYKge (ORCPT
+        id S1731927AbfFYKg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:36:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43724 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728377AbfFYKge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:36:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E2921ACCE;
-        Tue, 25 Jun 2019 10:36:32 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id A1B321E4323; Tue, 25 Jun 2019 12:30:19 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 12:30:19 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Steve Magnani <steve.magnani@digidescorp.com>
-Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org,
-        "Steven J . Magnani" <steve@digidescorp.com>
-Subject: Re: [PATCH 1/1] udf: Fix incorrect final NOT_ALLOCATED (hole) extent
- length
-Message-ID: <20190625103019.GA1994@quack2.suse.cz>
-References: <20190604123158.12741-1-steve@digidescorp.com>
- <20190604123158.12741-2-steve@digidescorp.com>
+        Tue, 25 Jun 2019 06:36:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55772 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfFYKg5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:36:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1VNqATdiMZjRjBl/SX9aDfK/cY5ROrczskzh7bEhyqQ=; b=ZpriNPniMtQfF3PzrXrZFLu9+
+        swp27pwzGA3dKtOql8ByZMlmC5XAUIK6Dd+GMHjf0qKANtiVkMY+kP24emwMCRR8Bd7PMgTyLe9QA
+        5OqMw/nvM9U3sRjirT+3roDKm/2t058rf3DiyN7fkLSlwMZ0SYle68bvh+fdV+mCDEdE0F8PxUYpO
+        6uADPC1wdetL3m6crno/ECGMbIBw4GF5RRX2ugGr6ltI3bjWVADicfMYipFtp/ocudq1CWBwDRZB8
+        y8f1S9n0qHQVZzv6yurSepPmJiIiCIwpzAKGBbc00350emRHfZhiQtGnClIv9oYZsJs4CbEdnWkcx
+        MCg3FRwHw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfioR-0001Ln-BN; Tue, 25 Jun 2019 10:36:31 +0000
+Date:   Tue, 25 Jun 2019 03:36:31 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
+        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] vfs: make immutable files actually immutable
+Message-ID: <20190625103631.GB30156@infradead.org>
+References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190604123158.12741-2-steve@digidescorp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04-06-19 07:31:58, Steve Magnani wrote:
-> In some cases, using the 'truncate' command to extend a UDF file results
-> in a mismatch between the length of the file's extents (specifically, due
-> to incorrect length of the final NOT_ALLOCATED extent) and the information
-> (file) length. The discrepancy can prevent other operating systems
-> (i.e., Windows 10) from opening the file.
+On Fri, Jun 21, 2019 at 04:56:50PM -0700, Darrick J. Wong wrote:
+> Hi all,
 > 
-> Two particular errors have been observed when extending a file:
+> The chattr(1) manpage has this to say about the immutable bit that
+> system administrators can set on files:
 > 
-> 1. The final extent is larger than it should be, having been rounded up
->    to a multiple of the block size.
+> "A file with the 'i' attribute cannot be modified: it cannot be deleted
+> or renamed, no link can be created to this file, most of the file's
+> metadata can not be modified, and the file can not be opened in write
+> mode."
 > 
-> B. The final extent is not shorter than it should be, due to not having
->    been updated when the file's information length was increased.
-> 
-> The first case could represent a design error, if coded intentionally
-> due to a misinterpretation of scantily-documented ECMA-167 "file tail"
-> rules. The standard specifies that the tail, if present, consists of
-> a sequence of "unrecorded and allocated" extents (only).
-> 
-> Signed-off-by: Steven J. Magnani <steve@digidescorp.com>
+> Given the clause about how the file 'cannot be modified', it is
+> surprising that programs holding writable file descriptors can continue
+> to write to and truncate files after the immutable flag has been set,
+> but they cannot call other things such as utimes, fallocate, unlink,
+> link, setxattr, or reflink.
 
-Thanks for the testcase and the patch! I finally got to reading through
-this in detail. In udf driver in Linux we are generally fine with the last
-extent being rounded up to the block size. udf_truncate_tail_extent() is
-generally responsible for truncating the last extent to appropriate size
-once we are done with the inode. However there are two problems with this:
+I still think living code beats documentation.  And as far as I can
+tell the immutable bit never behaved as documented or implemented
+in this series on Linux, and it originated on Linux.
 
-1) We used to do this inside udf_clear_inode() back in the old days but
-then switched to a different scheme in commit 2c948b3f86e5f "udf: Avoid IO
-in udf_clear_inode". So this actually breaks workloads where user calls
-truncate(2) directly and there's no place where udf_truncate_tail_extent()
-gets called.
-
-2) udf_extend_file() sets i_lenExtents == i_size although the last extent
-isn't properly rounded so even if udf_truncate_tail_extent() gets called
-(which is actually the case for truncate(1) which does open, ftruncate,
-close), it will think it has nothing to do and exit.
-
-Now 2) is easily fixed by setting i_lenExtents to real length of extents we
-have created. However that still leaves problem 1) which isn't easy to deal
-with. After some though I think that your solution of making
-udf_do_extend_file() always create appropriately sized extents makes
-sense. However I dislike the calling convention you've chosen. When
-udf_do_extend_file() needs to now byte length, then why not pass it to it
-directly, instead of somewhat cumbersome "sector length + byte offset"
-pair?
-
-Will you update the patch please? Thanks!
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+If you want  hard cut off style immutable flag it should really be a
+new API, but I don't really see the point.  It isn't like the usual
+workload is to set the flag on a file actively in use.
