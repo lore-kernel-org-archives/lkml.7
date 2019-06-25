@@ -2,118 +2,128 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30091C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA55C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0649B214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561450119;
-	bh=oB8iqr1i19hzHNCzE1bZqAZ7bPwZH73g0FCvB0iVx/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Byk3+cbrkaVoUyb0JHN+MycJdV1Ttn4ZRVMnIE4uRhul26PyPBgmTWz/d6FZh9wan
-	 YhYXP+oL4Dq9dMk33sNHJWmn+SOQdEfQlFAOEokmtDT4qgOJ23I9TJf+P1xnKUeVUq
-	 9l2Qzv4QKiSxv7S2YXzgRHrVEGX681Fq3QGXDb/M=
+	by mail.kernel.org (Postfix) with ESMTP id AD1B4214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfFYIIi (ORCPT
+        id S1729065AbfFYIJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:08:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfFYIIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:08:37 -0400
-Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2472720883;
-        Tue, 25 Jun 2019 08:08:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561450116;
-        bh=oB8iqr1i19hzHNCzE1bZqAZ7bPwZH73g0FCvB0iVx/I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JDOmCIxG0tXtzBe9WXSL+LgB3zwqi/iKj1oDSoZVEJe49hroTZIcWl/x51tIuo+aR
-         DJjDNWuC4PHacSRXt5opN5n7qNMPyGAThDdC2f1+2bY8oypObGfNYYisohJiUaabCS
-         qlfORgMCmllngGGTMBGAcZw6mdo9ibs6qGeTrHDE=
-Date:   Tue, 25 Jun 2019 16:08:30 +0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ignat Korchagin <ignat@cloudflare.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: Re: Linux 4.19 and GCC 9
-Message-ID: <20190625080830.GA19729@kroah.com>
-References: <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
- <20190517152200.GI8945@kernel.org>
- <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
- <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org>
- <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
- <20190610151407.GS21245@kernel.org>
- <20190610152542.GA4132@kroah.com>
- <20190610191417.GW21245@kernel.org>
- <CALrw=nFcp-+C7ceTFj=R=aG0Z5OpRRVXFoUxUoh=CjcfW79-+g@mail.gmail.com>
- <20190625075029.GC19452@kroah.com>
+        Tue, 25 Jun 2019 04:09:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37426 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726951AbfFYIJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:09:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA1A8AD43;
+        Tue, 25 Jun 2019 08:09:16 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 10:09:14 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] drivers/base/memory: Remove unneeded check in
+ remove_memory_block_devices
+Message-ID: <20190625080909.GA15394@linux>
+References: <20190625075227.15193-1-osalvador@suse.de>
+ <20190625075227.15193-2-osalvador@suse.de>
+ <3e820fee-f82f-3336-ff34-31c66dbbbbfe@redhat.com>
+ <0ed2f4ec-cc6f-8b81-46b0-d56d90ac1e86@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625075029.GC19452@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <0ed2f4ec-cc6f-8b81-46b0-d56d90ac1e86@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 03:50:29PM +0800, Greg KH wrote:
-> On Mon, Jun 24, 2019 at 11:42:34AM +0100, Ignat Korchagin wrote:
-> > Hi Greg,
+On Tue, Jun 25, 2019 at 10:03:31AM +0200, David Hildenbrand wrote:
+> On 25.06.19 10:01, David Hildenbrand wrote:
+> > On 25.06.19 09:52, Oscar Salvador wrote:
+> >> remove_memory_block_devices() checks for the range to be aligned
+> >> to memory_block_size_bytes, which is our current memory block size,
+> >> and WARNs_ON and bails out if it is not.
+> >>
+> >> This is the right to do, but we do already do that in try_remove_memory(),
+> >> where remove_memory_block_devices() gets called from, and we even are
+> >> more strict in try_remove_memory, since we directly BUG_ON in case the range
+> >> is not properly aligned.
+> >>
+> >> Since remove_memory_block_devices() is only called from try_remove_memory(),
+> >> we can safely drop the check here.
+> >>
+> >> To be honest, I am not sure if we should kill the system in case we cannot
+> >> remove memory.
+> >> I tend to think that WARN_ON and return and error is better.
 > > 
-> > > > For us it seems applying the following 4 mainline patches makes 4.19.x
-> > > > branch perf compile with GCC-9:
-> > > >
-> > > > 4d0f16d059ddb91424480d88473f7392f24aebdc: perf ui helpline: Use
-> > > > strlcpy() as a shorter form of strncpy() + explicit set nul
-> > > > b6313899f4ed2e76b8375cf8069556f5b94fbff0: perf help: Remove needless
-> > > > use of strncpy()
-> > > > 5192bde7d98c99f2cd80225649e3c2e7493722f7: perf header: Fix unchecked
-> > > > usage of strncpy()
-> > > > 97acec7df172cd1e450f81f5e293c0aa145a2797: perf data: Fix 'strncat may
-> > > > truncate' build failure with recent gcc
-> > > >
-> > > > I also checked that 4.19.49 compiles fine with GCC 9, although with a
-> > > > lot of warnings, mostly from objtool, like "warning: objtool:
-> > > > sock_register()+0xd: sibling call from callable instruction with
-> > > > modified stack frame". But it's a start.
-> > > >
-> > > > Can we apply the above-mentioned patches, please?
+> > I failed to parse this sentence.
 > > 
-> > > I'll look into these after the next round of kernels are released.  I
+> >>
+> >> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> >> ---
+> >>  drivers/base/memory.c | 4 ----
+> >>  1 file changed, 4 deletions(-)
+> >>
+> >> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> >> index 826dd76f662e..07ba731beb42 100644
+> >> --- a/drivers/base/memory.c
+> >> +++ b/drivers/base/memory.c
+> >> @@ -771,10 +771,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+> >>  	struct memory_block *mem;
+> >>  	int block_id;
+> >>  
+> >> -	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
+> >> -			 !IS_ALIGNED(size, memory_block_size_bytes())))
+> >> -		return;
+> >> -
+> >>  	mutex_lock(&mem_sysfs_mutex);
+> >>  	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+> >>  		mem = find_memory_block_by_id(block_id, NULL);
+> >>
 > > 
-> > Did you by any chance forget to queue these patches? :) (the build is
-> > still broken for GCC 9.1)
+> > As I said when I introduced this, I prefer to have such duplicate checks
+> > in place in case we have dependent code splattered over different files.
+> > (especially mm/ vs. drivers/base). Such simple checks avoid to document
+> > "start and size have to be aligned to memory blocks".
 > 
-> I am on the road and getting to backports for this stuff is on the
-> bottom of my list until next week at the earliest, sorry.
+> Lol, I even documented it as well. So yeah, if you're going to drop this
+> once, also drop the one in create_memory_block_devices().
 
-Oh nevermind, I just queued them up now.
+TBH, I would not mind sticking with it.
+What sticked out the most was that in the previous check, we BUG_on while
+here we just print out a warning, so it seemed quite "inconsistent" to me.
 
-If there are any other gcc9 patches that you see that I've missed,
-please let me know.
+And I only stumbled upon this when I was testing a kernel module that
+hot-removed memory in a different granularity.
 
-Now, to try to track down the fix for all of those build warnings, those
-need to get fixed up...
+Anyway, I do not really feel strong here, I can perfectly drop this patch as I
+would rather have the focus in the following-up patches, which are the important
+ones IMO.
 
-thanks,
+> 
+> > 
+> > If you still insist, then also remove the same sequence from
+> > create_memory_block_devices().
+> > 
+> 
+> 
+> -- 
+> 
+> Thanks,
+> 
+> David / dhildenb
+> 
 
-greg k-h
+-- 
+Oscar Salvador
+SUSE L3
