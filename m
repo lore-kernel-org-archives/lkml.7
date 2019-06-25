@@ -2,144 +2,162 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D6BC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2F8C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14DF320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EFE2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:40:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="JAQkq1NG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfFYEiJ (ORCPT
+        id S1726801AbfFYEkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:38:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23186 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726856AbfFYEhj (ORCPT
+        Tue, 25 Jun 2019 00:40:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41496 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfFYEkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:37:39 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P4Xulq009021
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:38 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb9r3wshm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:37 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Tue, 25 Jun 2019 05:37:36 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 05:37:32 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P4bV3B56688656
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 04:37:31 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C517011C04C;
-        Tue, 25 Jun 2019 04:37:31 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 936B411C04A;
-        Tue, 25 Jun 2019 04:37:30 +0000 (GMT)
-Received: from localhost.in.ibm.com (unknown [9.124.35.87])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 04:37:30 +0000 (GMT)
-From:   Parth Shah <parth@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        patrick.bellasi@arm.com
-Subject: [RFCv3 2/8] sched: Introduce switch to enable TurboSched mode
-Date:   Tue, 25 Jun 2019 10:07:20 +0530
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190625043726.21490-1-parth@linux.ibm.com>
-References: <20190625043726.21490-1-parth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19062504-0028-0000-0000-0000037D46BF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062504-0029-0000-0000-0000243D6686
-Message-Id: <20190625043726.21490-3-parth@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250036
+        Tue, 25 Jun 2019 00:40:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id m30so8760539pff.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=le7WO334hT4VkCM2URnTWxwFBKTdVFEc+iEv1d1vk2A=;
+        b=JAQkq1NGXNgoU/m+tted0n1/w0R7yPxZaTLHi0+Scb0s1JshebDxVQUwK1ZQhA7RPI
+         hgLkIXYHvMCKPZuGHg8kNz7dN5sm9shboEJ1FlyVd8nfKKYqKugS5eNYlJcX5U6ZZWPG
+         pFIEtMYgbeZRq5OnXSnwGT5rWV9ZvlOlsA2gv8p82peGT05PKGemuy9DVuD+8Md7Tgt4
+         P4nOBeEgslqB8w7+bIhLlGrX7o1lGF/1iYBrkPlPo1lR+5YgTKBIUZBgE4zQSRBbU5Js
+         Bm0JXmxu9RB7YgbEWcTebbw13HkU2xjOupxlaPdr8CIK58pFYzlH0ntY3tuKLaDYFMN3
+         OTGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=le7WO334hT4VkCM2URnTWxwFBKTdVFEc+iEv1d1vk2A=;
+        b=PasEE++3fRy4wTh4kIyaHVBtWjTUoNMx2B4wkIuBmVc2437mJsKSu5w7yl53YGKt4N
+         QLj4RgYnuGQi+BCZz/BJu03Nk/OuNXcwDQaReFW8C3PJPuofO0b+EY8urTTNfUCGyhA2
+         wG2QwbJ/MHXj8VxPOLKtLlPnczaHpcBt7wxJm2ht3rEyx2ZbJn4//YNWvBeer/eRkj+Y
+         6uGIOqqtSOgHWb04MShZbiD/2t/hpy1611DMSqF2eWJkPZnsDOd0rq0CNJfY5GKiOKPv
+         Br/kSqBcC37KayFHCL68xjxAsTkD2RYFTtMK93DLbPp4pgbOrh5RVeZYbvQAJadiakGO
+         /BCw==
+X-Gm-Message-State: APjAAAUsRFqienoIvIedxAeAr3q5yzR1pbdFBshJqU3y+1wCry0ea0DR
+        qmVuA0ncq2swO0TubD+Ko/UHE3M/Tdg=
+X-Google-Smtp-Source: APXvYqyZQUq9dHLCBzwmz1HqLf5A//Jwv6j4pE/03LAfoB9d1aBR1o4aBwFUo047BNpt0ZKxVJuuCQ==
+X-Received: by 2002:a17:90a:17c4:: with SMTP id q62mr29827494pja.104.1561437610254;
+        Mon, 24 Jun 2019 21:40:10 -0700 (PDT)
+Received: from etsukata.local (fs76eecbcd.tkyc008.ap.nuro.jp. [118.238.203.205])
+        by smtp.gmail.com with ESMTPSA id t96sm1124663pjb.1.2019.06.24.21.40.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Jun 2019 21:40:09 -0700 (PDT)
+Subject: Re: [PATCH 1/2] tty: ldisc: Fix misuse of proc_dointvec
+ "ldisc_autoload"
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     jslaby@suse.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20190625030801.24538-1-devel@etsukata.com>
+ <20190625033216.GA11902@kroah.com>
+From:   Eiichi Tsukata <devel@etsukata.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=devel@etsukata.com; keydata=
+ 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
+X-Enigmail-Draft-Status: N11100
+Message-ID: <ffef8850-7523-ad63-165d-2bde9a98e340@etsukata.com>
+Date:   Tue, 25 Jun 2019 13:40:05 +0900
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190625033216.GA11902@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch creates a static key which allows to enable or disable
-TurboSched feature at runtime.
 
-This key is added in order to enable the TurboSched feature. The static key
-helps in optimizing the scheduler fast-path when the TurboSched feature is
-disabled.
 
-The patch also provides get/put methods to keep track of the tasks using
-the TurboSched feature. This allows to enable the feature on setting first
-task classified as jitter, similarly disable the feature on unsetting of
-such last task.
+On 2019/06/25 12:32, Greg KH wrote:
+> On Tue, Jun 25, 2019 at 12:08:00PM +0900, Eiichi Tsukata wrote:
+>> /proc/sys/dev/tty/ldisc_autoload assumes given value to be 0 or 1. Use
+>> proc_dointvec_minmax instead of proc_dointvec.
+>>
+>> Fixes: 7c0cca7c847e "(tty: ldisc: add sysctl to prevent autoloading of ldiscs)"
+>> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+>> ---
+>>  drivers/tty/tty_ldisc.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+>> index e38f104db174..a8ea7a35c94e 100644
+>> --- a/drivers/tty/tty_ldisc.c
+>> +++ b/drivers/tty/tty_ldisc.c
+>> @@ -863,7 +863,7 @@ static struct ctl_table tty_table[] = {
+>>  		.data		= &tty_ldisc_autoload,
+>>  		.maxlen		= sizeof(tty_ldisc_autoload),
+>>  		.mode		= 0644,
+>> -		.proc_handler	= proc_dointvec,
+>> +		.proc_handler	= proc_dointvec_minmax,
+>>  		.extra1		= &zero,
+>>  		.extra2		= &one,
+> 
+> Ah, nice catch.  But this really isn't an issue as if you use a bigger
+> value, things will not "break", right?
+> 
 
-Signed-off-by: Parth Shah <parth@linux.ibm.com>
----
- kernel/sched/core.c  | 20 ++++++++++++++++++++
- kernel/sched/sched.h |  9 +++++++++
- 2 files changed, 29 insertions(+)
+Someone may misuse -1 to disable ldisc autoload, but basically it does not
+"break".
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 19c7204d6351..ef83725bd4b0 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -61,6 +61,26 @@ __read_mostly int scheduler_running;
-  */
- int sysctl_sched_rt_runtime = 950000;
- 
-+DEFINE_STATIC_KEY_FALSE(__turbo_sched_enabled);
-+static DEFINE_MUTEX(turbo_sched_lock);
-+static int turbo_sched_count;
-+
-+void turbo_sched_get(void)
-+{
-+	mutex_lock(&turbo_sched_lock);
-+	if (!turbo_sched_count++)
-+		static_branch_enable(&__turbo_sched_enabled);
-+	mutex_unlock(&turbo_sched_lock);
-+}
-+
-+void turbo_sched_put(void)
-+{
-+	mutex_lock(&turbo_sched_lock);
-+	if (!--turbo_sched_count)
-+		static_branch_disable(&__turbo_sched_enabled);
-+	mutex_unlock(&turbo_sched_lock);
-+}
-+
- /*
-  * __task_rq_lock - lock the rq @p resides on.
-  */
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index e5599b33ffb8..1f239a960a6d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2426,3 +2426,12 @@ static inline bool sched_energy_enabled(void)
- static inline bool sched_energy_enabled(void) { return false; }
- 
- #endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
-+
-+void turbo_sched_get(void);
-+void turbo_sched_put(void);
-+DECLARE_STATIC_KEY_FALSE(__turbo_sched_enabled);
-+
-+static inline bool is_turbosched_enabled(void)
-+{
-+	return static_branch_unlikely(&__turbo_sched_enabled);
-+}
--- 
-2.17.1
+Thanks,
 
+Eiichi
