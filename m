@@ -2,63 +2,150 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D15C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C2BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97330205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076BD2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:46:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561495604;
+	bh=4zflnPJOjSzJah74cHqrZgjnWn4XRJGSe8xqS8yMJt4=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=hJOrClJoDxBsql7hYRnPtTBaMAwPrM+xYRH4eppQ1rTbN8ihjvz+w0FrIlT+vtsId
+	 txBJvGiuygae10nRyIWv8DO0TMIKsDl+WLRbgUIyZDEVfvKjz21768yfMs5x0ixnAv
+	 hRfS6JKktgtqaFuL53qz+fBmXiu6Ihim4zwDXahk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfFYUqN (ORCPT
+        id S1727653AbfFYUqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:46:13 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50920 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYUqM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:46:12 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A11F712D8C0E8;
-        Tue, 25 Jun 2019 13:46:11 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 13:46:11 -0700 (PDT)
-Message-Id: <20190625.134611.1728588998382878928.davem@davemloft.net>
-To:     ivan.khoronzhuk@linaro.org
-Cc:     grygorii.strashko@ti.com, hawk@kernel.org, brouer@redhat.com,
-        saeedm@mellanox.com, leon@kernel.org, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com
-Subject: Re: [PATCH v4 net-next 0/4] net: ethernet: ti: cpsw: Add XDP
- support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
-References: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 25 Jun 2019 13:46:12 -0700 (PDT)
+        Tue, 25 Jun 2019 16:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfFYUqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:46:42 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D640E205ED;
+        Tue, 25 Jun 2019 20:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561495600;
+        bh=4zflnPJOjSzJah74cHqrZgjnWn4XRJGSe8xqS8yMJt4=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=1IBQKZ4QdO9mARvZO4fdimMmjFiTYyPvYCcleQH84/+xvmlxpz2ZLt+7vlYvJO/Rd
+         MetUEuXkt6V+Mf82FiEQb7OL3AjJEWviaNLdmYjswYyq7kIa5yAPxZ9jVKnmPmdfBU
+         +uvHaijX0g2RMbCAesFySwxy8qll5906VdBCxCO8=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com> <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>, jason@lakedaemon.net,
+        jonathanh@nvidia.com, linus.walleij@linaro.org,
+        marc.zyngier@arm.com, mark.rutland@arm.com, stefan@agner.ch,
+        tglx@linutronix.de, thierry.reding@gmail.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V3 06/17] clk: tegra: pll: save and restore pll context
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        skomatineni@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 25 Jun 2019 13:46:40 -0700
+Message-Id: <20190625204640.D640E205ED@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Date: Tue, 25 Jun 2019 20:59:44 +0300
+Quoting Sowjanya Komatineni (2019-06-18 00:46:20)
+> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+> index 1583f5fc992f..4b0ed8fc6268 100644
+> --- a/drivers/clk/tegra/clk-pll.c
+> +++ b/drivers/clk/tegra/clk-pll.c
+> @@ -1008,6 +1008,54 @@ static unsigned long clk_plle_recalc_rate(struct c=
+lk_hw *hw,
+>         return rate;
+>  }
+> =20
+> +void tegra_clk_sync_state_pll(struct clk_hw *hw)
+> +{
+> +       if (!__clk_get_enable_count(hw->clk))
+> +               clk_pll_disable(hw);
+> +       else
+> +               clk_pll_enable(hw);
+> +}
+> +
+> +static int tegra_clk_pll_save_context(struct clk_hw *hw)
+> +{
+> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+> +
+> +       pll->rate =3D clk_hw_get_rate(hw);
+> +
+> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb"))
+> +               pll->pllbase_ctx =3D pll_readl_base(pll);
+> +       else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco"))
+> +               pll->pllbase_ctx =3D pll_readl_base(pll) & (0xf << 16);
+> +
+> +       return 0;
+> +}
+> +
+> +static void tegra_clk_pll_restore_context(struct clk_hw *hw)
+> +{
+> +       struct tegra_clk_pll *pll =3D to_clk_pll(hw);
+> +       u32 val;
+> +
+> +       if (clk_pll_is_enabled(hw))
+> +               return;
+> +
+> +       if (!strcmp(__clk_get_name(hw->clk), "pll_mb")) {
 
-> This patchset adds XDP support for TI cpsw driver and base it on
-> page_pool allocator. It was verified on af_xdp socket drop,
-> af_xdp l2f, ebpf XDP_DROP, XDP_REDIRECT, XDP_PASS, XDP_TX.
+Is there any way to avoid doing a string comparison here, and instead do
+something like a pointer comparison? Or maybe look at some flag in the
+tegra_clk_pll to figure out what to do differently? Using a string
+comparison is not too nice. Or even have different clk ops for the
+different clks and then do different things in this restore clk_op?
 
-So happy to watch the progress of this patch set.
+> +               pll_writel_base(pll->pllbase_ctx, pll);
+> +       } else if (!strcmp(__clk_get_name(hw->clk), "pll_re_vco")) {
+> +               val =3D pll_readl_base(pll);
+> +               val &=3D ~(0xf << 16);
+> +               pll_writel_base(pll->pllbase_ctx | val, pll);
+> +       }
+> +
+> +       if (pll->params->set_defaults)
+> +               pll->params->set_defaults(pll);
+> +
+> +       clk_set_rate(hw->clk, pll->rate);
 
-Jesper and others, please review.
+Do you need to call clk_set_rate() here to change the frequency of the
+clk or just the parents of the clk, or both? I'd think that when we're
+restoring the clk the cached rate of the clk would match whatever we're
+restoring to, so this is a NOP. So does this do anything?
 
-Thank you.
+I'd prefer that the restore ops just restore the clk hardware state of
+the clk_hw passed in, and not try to fix up the entire tree around a
+certain clk, if that's even possible.
+
+> +
+> +       /* do not sync pllx state here. pllx is sync'd after dfll resume =
+*/
+> +       if (strcmp(__clk_get_name(hw->clk), "pll_x"))
+> +               tegra_clk_sync_state_pll(hw);
+> +}
+> +
+>  const struct clk_ops tegra_clk_pll_ops =3D {
+>         .is_enabled =3D clk_pll_is_enabled,
+>         .enable =3D clk_pll_enable,
+> @@ -1015,6 +1063,8 @@ const struct clk_ops tegra_clk_pll_ops =3D {
+>         .recalc_rate =3D clk_pll_recalc_rate,
+>         .round_rate =3D clk_pll_round_rate,
+>         .set_rate =3D clk_pll_set_rate,
+> +       .save_context =3D tegra_clk_pll_save_context,
+> +       .restore_context =3D tegra_clk_pll_restore_context,
