@@ -2,152 +2,121 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A33C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2216CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E27E2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:52:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="cg40kmVD"
+	by mail.kernel.org (Postfix) with ESMTP id D9B562063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfFYTwb (ORCPT
+        id S1728226AbfFYTxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:52:31 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35936 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727662AbfFYTwa (ORCPT
+        Tue, 25 Jun 2019 15:53:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44348 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbfFYTxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:52:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r6so97170oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w0iye/3d1d43WiqVq+yINWIQnPqAw8A16FUwAjTLITU=;
-        b=cg40kmVDe098Yeal1OpwCn3OtKBjzRnBRkGsDiRkJlBZmoYI19FP8EGzmZENBKS9gc
-         y85l2sQkHTXgqXraL4kaAGyPSS89BlMic0a5IYD4ijt8AaGI5dAMpm1LqTsvqtZ0PA18
-         /sFXK4G4VbfJsBTSuI7jnUNqry2IT3CR4rWFZDFAIwwgF0wpO56iBYn1OrWh8zMn5H5U
-         UiXxOJDTdDUZ1sp/qT4gDr5qxfq60VgObAV3QcEkH8aWy3k9rRcTQ+1xwDIMTbjb/rOl
-         vLBtj451wwdwT3Iv/y3LeY44bWSWgm5KwxP2Hkh4f45wvrSWUrzPcQdtg3gHbAGRQLJ3
-         R1iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w0iye/3d1d43WiqVq+yINWIQnPqAw8A16FUwAjTLITU=;
-        b=WVmNMGQRO8xcljcVjikSc6Q1ptBd/E5C4hPnnoPGgyklZihIX8c7mMhZQkfAlZPnnS
-         gNwUuEKfPkJVh1mTqWheDdTKaWQXLGaQC3y0spTl73fwayVUu6QX0hBCPq5zDg7i4KRG
-         AT/4EofbkFAHyvkIXOj5WwW0WuxwjM5ZorZUpZukHG6l9JCFcYGtJjZl2l8eYc6zJNAt
-         TukmA1adHULTM4jpM4xhGmicM5Zq957tXvFUiYRlDwkVxHvfDCCDF6E1+u/hR3bRM7VE
-         7eDihOmPwNKxxgE+ZR4036fI4hXxc8S2ft0tpoYgRtZLkD0ZQN4XmZeyK37XWQv0Kam+
-         Is4g==
-X-Gm-Message-State: APjAAAWVDgCzGmwf3js+Iyk+KSvP11arLAyK0xBz+vX4BF41Hh7NCM4I
-        h3XhF2b9jbGDCC3sRWXYgULMEd6CNXOBd5B634eD85v/
-X-Google-Smtp-Source: APXvYqx9tkQWIJH6qfCTM4r93Fn0JkGxBFjGh9k1TjumYyf0PnXcUjYDBWeUS/klLXmbZuWZeGlEsSD0mVmlPe4JDBw=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr50775oto.207.1561492348979;
- Tue, 25 Jun 2019 12:52:28 -0700 (PDT)
+        Tue, 25 Jun 2019 15:53:52 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hfrV9-0007Zz-1y; Tue, 25 Jun 2019 21:53:11 +0200
+Date:   Tue, 25 Jun 2019 21:53:09 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shawn Landden <shawn@git.icu>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+In-Reply-To: <20190625180525.GA119831@archlinux-epyc>
+Message-ID: <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
+References: <20190624161913.GA32270@embeddedor> <20190624193123.GI3436@hirez.programming.kicks-ass.net> <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com> <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com> <20190625071846.GN3436@hirez.programming.kicks-ass.net> <201906251009.BCB7438@keescook> <20190625180525.GA119831@archlinux-epyc>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
- <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com> <20190625190038.GK11400@dhcp22.suse.cz>
-In-Reply-To: <20190625190038.GK11400@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 25 Jun 2019 12:52:18 -0700
-Message-ID: <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:01 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 25-06-19 11:03:53, Dan Williams wrote:
-> > On Tue, Jun 25, 2019 at 8:01 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
-> > > > On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
-> > > > > I asked for this simply because it was not exported historically. In
-> > > > > general I want to establish explicit export-type criteria so the
-> > > > > community can spend less time debating when to use EXPORT_SYMBOL_GPL
-> > > > > [1].
-> > > > >
-> > > > > The thought in this instance is that it is not historically exported
-> > > > > to modules and it is safer from a maintenance perspective to start
-> > > > > with GPL-only for new symbols in case we don't want to maintain that
-> > > > > interface long-term for out-of-tree modules.
-> > > > >
-> > > > > Yes, we always reserve the right to remove / change interfaces
-> > > > > regardless of the export type, but history has shown that external
-> > > > > pressure to keep an interface stable (contrary to
-> > > > > Documentation/process/stable-api-nonsense.rst) tends to be less for
-> > > > > GPL-only exports.
-> > > >
-> > > > Fully agreed.  In the end the decision is with the MM maintainers,
-> > > > though, although I'd prefer to keep it as in this series.
-> > >
-> > > I am sorry but I am not really convinced by the above reasoning wrt. to
-> > > the allocator API and it has been a subject of many changes over time. I
-> > > do not remember a single case where we would be bending the allocator
-> > > API because of external modules and I am pretty sure we will push back
-> > > heavily if that was the case in the future.
-> >
-> > This seems to say that you have no direct experience of dealing with
-> > changing symbols that that a prominent out-of-tree module needs? GPU
-> > drivers and the core-mm are on a path to increase their cooperation on
-> > memory management mechanisms over time, and symbol export changes for
-> > out-of-tree GPU drivers have been a significant source of friction in
-> > the past.
->
-> I have an experience e.g. to rework semantic of some gfp flags and that is
-> something that users usualy get wrong and never heard that an out of
-> tree code would insist on an old semantic and pushing us to the corner.
->
-> > > So in this particular case I would go with consistency and export the
-> > > same way we do with other functions. Also we do not want people to
-> > > reinvent this API and screw that like we have seen in other cases when
-> > > external modules try reimplement core functionality themselves.
-> >
-> > Consistency is a weak argument when the cost to the upstream community
-> > is negligible. If the same functionality was available via another /
-> > already exported interface *that* would be an argument to maintain the
-> > existing export policy. "Consistency" in and of itself is not a
-> > precedent we can use more widely in default export-type decisions.
-> >
-> > Effectively I'm arguing EXPORT_SYMBOL_GPL by default with a later
-> > decision to drop the _GPL. Similar to how we are careful to mark sysfs
-> > interfaces in Documentation/ABI/ that we are not fully committed to
-> > maintaining over time, or are otherwise so new that there is not yet a
-> > good read on whether they can be made permanent.
->
-> Documentation/process/stable-api-nonsense.rst
+On Tue, 25 Jun 2019, Nathan Chancellor wrote:
+> On Tue, Jun 25, 2019 at 10:12:42AM -0700, Kees Cook wrote:
+> > On Tue, Jun 25, 2019 at 09:18:46AM +0200, Peter Zijlstra wrote:
+> > > Can it build a kernel without patches yet? That is, why should I care
+> > > what LLVM does?
+> > 
+> > Yes. LLVM trunk builds and boots x86 now. As for distro availability,
+> > AIUI, the asm-goto feature missed the 9.0 LLVM branch point, so it'll
+> > appear in the following release.
+> > 
+> > -- 
+> > Kees Cook
+> 
+> I don't think that's right. LLVM 9 hasn't been branched yet so it should
+> make it in.
+> 
+> http://lists.llvm.org/pipermail/llvm-dev/2019-June/133155.html
+> 
+> If anyone wants to play around with it before then, we wrote a
+> self-contained script that will build an LLVM toolchain suitable for
+> kernel development:
+> 
+> https://github.com/ClangBuiltLinux/tc-build
 
-That document has failed to preclude symbol export fights in the past
-and there is a reasonable argument to try not to retract functionality
-that had been previously exported regardless of that document.
+Useful!
 
-> Really. If you want to play with GPL vs. EXPORT_SYMBOL else this is up
-> to you but I do not see any technical argument to make this particular
-> interface to the page allocator any different from all others that are
-> exported to modules.
+But can the script please check for a minimal clang version required to
+build that thing.
 
-I'm failing to find any practical substance to your argument, but in
-the end I agree with Chrishoph, it's up to MM maintainers.
+The default clang-3.8 which is installed on Debian stretch explodes. The
+6.0 variant from backports works as advertised.
+
+Kernel builds with the new shiny compiler. Jump labels seem to be enabled.
+
+It complains about a few type conversions:
+
+ arch/x86/kvm/mmu.c:4596:39: warning: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Wconstant-conversion]
+                u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+                   ~~                               ^~
+
+but it also makes objtool unhappy:
+
+ arch/x86/events/intel/core.o: warning: objtool: intel_pmu_nhm_workaround()+0xb3: unreachable instruction
+ kernel/fork.o: warning: objtool: free_thread_stack()+0x126: unreachable instruction
+ mm/workingset.o: warning: objtool: count_shadow_nodes()+0x11f: unreachable instruction
+ arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool: get_fixed_ranges()+0x9b: unreachable instruction
+ arch/x86/kernel/platform-quirks.o: warning: objtool: x86_early_init_platform_quirks()+0x84: unreachable instruction
+ drivers/iommu/irq_remapping.o: warning: objtool: irq_remap_enable_fault_handling()+0x1d: unreachable instruction
+
+Kernel boots. As I'm currently benchmarking VDSO performance, this was
+obviosly my first test. Compared to the same kernel built with gcc6.3 the
+performance of the VDSO drops slightly.
+
+It's below 1%. Though I need to run the same tests on 4 other uarchs to get
+the full picture. This stuff is randomly changing behaviour accross uarchs
+depending on how the c source is arranged. So nothing to worry about (yet).
+
+Thanks,
+
+	tglx
+
