@@ -2,103 +2,98 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0DEC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 917C5C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE68208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="X6YyqVl8"
+	by mail.kernel.org (Postfix) with ESMTP id 6925D208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561494425;
+	bh=4DjDMXCFMiEPojnFZTh8l0f8w6EVPLy4ezbvE1XggGw=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=Jc40CCoTgXuuHmx0ku2p/xdOkHjbyEdu+swOYDCeasjCTG+2X3fBbcW9vQNBxjSc8
+	 oeipYr95SNbFUd86HeGrnsCdkS60djLCGPgEd4K5poSPbWw6l66sBJWSXK3v+rgcc2
+	 GGldBETirQU1GR7bomhVIo14vRnDH2HY2IAJ2wso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfFYU0e (ORCPT
+        id S1727676AbfFYU1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:26:34 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42267 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfFYU0d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:26:33 -0400
-Received: by mail-io1-f65.google.com with SMTP id u19so62975ior.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3dXZ1ZldviFyFOVz1FcLJwKSvcaZ1rjNgYTX6/8h5IQ=;
-        b=X6YyqVl8grKfhWkl+F5Utw8TrTHiNiBboyq2VqpLQiszWuDZHm0EGVYkSi7KNFcbHh
-         sJ0bmiq9v4oDJn5lkdHCvyfBuOK6citsYJGGWMD21WP0IhuQOJ9vDctIGuA29imxU5Ok
-         1PvG9vtlWtIiLkZiFjfvNUmDTQCYgZg1qc82Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3dXZ1ZldviFyFOVz1FcLJwKSvcaZ1rjNgYTX6/8h5IQ=;
-        b=Mi3O4Fmbh18gaGaXyS3kffsiynw7cErzK+kqCAwGD3jSBu1u7zJP6ve4eWsZTgITAV
-         7gxylx9JSQf2vdHk39HzhVY/m4zoeZISOpht03wS8rle8+gkiZwuftlpKreG9wL5EiHQ
-         xHXIjrFZtcZf//xwlQjfk67gDKVZrkp1IWdy24Rr3nWYGI+wS+NoQx588L2pRB9UoxpG
-         cZvo/JikFHJDcdaifgsFYSdt6IS36jO4De7sWfik5Q9BoalzUTHrWAreoALU0XwJSz4t
-         KjLdJ+vLF/pFWaGdoUS0xsPtF4Sw7U8e4Gg4nw9EnjKWk3Reio68cZXpnMUTKh7byF4L
-         q/pw==
-X-Gm-Message-State: APjAAAVUGWwvTNFR3TS4xqos3fUYkw4RR58IoqcPrAdJO7rgFIuUvT4b
-        BXzyLXZOYldHo0obntun/iTGsSvioO0YMpRmBDbiDpFQ+Vlkfw==
-X-Google-Smtp-Source: APXvYqw+CW2Mln6le7x4W9V5GIvhL/JhV1LrVv2fcHmykNwbbgpsGnOoW4T9YtXdSwCVPv4OQhW1kAmI1VONvnZYHGU=
-X-Received: by 2002:a5e:940b:: with SMTP id q11mr577045ioj.251.1561494392480;
- Tue, 25 Jun 2019 13:26:32 -0700 (PDT)
+        Tue, 25 Jun 2019 16:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbfFYU1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:27:03 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9A9B208CB;
+        Tue, 25 Jun 2019 20:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561494422;
+        bh=4DjDMXCFMiEPojnFZTh8l0f8w6EVPLy4ezbvE1XggGw=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=HGnMUm36tBd89ZCYMpakSYGFEW5Ra8p8ujQXGTZBj7wplR2/DDy55cLSCmDONvdHY
+         zvRbTWOTcuq+e3106aW7m2laV8C4uUGsBk5uzvJeZKwhWPPPmBSq+savdLyIs9SkPO
+         50vQuTR/sLQeXqmcCO0A4QBjA4XFwhvT87/QcdKc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190621225938.27030-1-lukenels@cs.washington.edu> <87h88f9bm3.fsf@netronome.com>
-In-Reply-To: <87h88f9bm3.fsf@netronome.com>
-From:   Luke Nelson <lukenels@cs.washington.edu>
-Date:   Tue, 25 Jun 2019 13:26:21 -0700
-Message-ID: <CADasFoCrWPg3=kchWzJX5vDeymV9wiL7GnPxWDg4rQETyF5TeA@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next] RV32G eBPF JIT
-To:     Jiong Wang <jiong.wang@netronome.com>
-Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190620150013.13462-6-narmstrong@baylibre.com>
+References: <20190620150013.13462-1-narmstrong@baylibre.com> <20190620150013.13462-6-narmstrong@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com,
+        khilman@baylibre.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC/RFT 05/14] soc: amlogic: meson-clk-measure: protect measure with a mutex
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
+        Neil Armstrong <narmstrong@baylibre.com>
+User-Agent: alot/0.8.1
+Date:   Tue, 25 Jun 2019 13:27:01 -0700
+Message-Id: <20190625202702.B9A9B208CB@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 9:45 AM Jiong Wang <jiong.wang@netronome.com> wrote=
-:
->
-> Looks to me 32-bit optimization is not enabled.
->
-> If you define bpf_jit_needs_zext to return true
->
->   bool bpf_jit_needs_zext(void)
->   {
->         return true;
->   }
->
-> Then you don't need to zero high 32-bit when writing 32-bit sub-register
-> and you just need to implement the explicit zero extension insn which is =
-a
-> special variant of BPF_MOV. This can save quite a few instructions. RV64
-> and arches like arm has implemented this, please search
-> "aux->verifier_zext".
->
-> And there is a doc for this optimization:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/Doc=
-umentation/bpf/bpf_design_QA.rst#n168
+Quoting Neil Armstrong (2019-06-20 08:00:04)
+> In order to protect clock measuring when multiple process asks for
+> a mesure, protect the main measure function with mutexes.
+>=20
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogi=
+c/meson-clk-measure.c
+> index 19d4cbc93a17..c470e24f1dfa 100644
+> --- a/drivers/soc/amlogic/meson-clk-measure.c
+> +++ b/drivers/soc/amlogic/meson-clk-measure.c
+> @@ -11,6 +11,8 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/regmap.h>
+> =20
+> +static DEFINE_MUTEX(measure_lock);
+> +
+>  #define MSR_CLK_DUTY           0x0
+>  #define MSR_CLK_REG0           0x4
+>  #define MSR_CLK_REG1           0x8
+> @@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *clk=
+_msr_id,
+>         unsigned int val;
+>         int ret;
+> =20
+> +       ret =3D mutex_lock_interruptible(&measure_lock);
 
-Thanks for the pointer. I'll add this optimization before sending out
-an updated version of the patch.
+Why interruptible?
 
-=E2=80=93 Luke
+> +       if (ret)
+> +               return ret;
+> +
+>         regmap_write(priv->regmap, MSR_CLK_REG0, 0);
+> =20
+>         /* Set measurement duration */
