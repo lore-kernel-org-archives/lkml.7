@@ -2,200 +2,116 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C47C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40510C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03622146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16BDA2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEkdwu9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbfFYPAX (ORCPT
+        id S1732002AbfFYPAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:00:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:19111 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730777AbfFYPAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:00:23 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BFEE264AAAB815BAB1F0;
-        Tue, 25 Jun 2019 23:00:16 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
- 23:00:11 +0800
-Date:   Tue, 25 Jun 2019 15:59:56 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <x86@kernel.org>, Len Brown <lenb@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        <peterz@infradead.org>, <vishal.l.verma@intel.com>,
-        <ard.biesheuvel@linaro.org>, <tglx@linutronix.de>,
-        <linux-acpi@vger.kernel.org>, <linux-nvdimm@lists.01.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 01/10] acpi/numa: Establish a new drivers/acpi/numa/
- directory
-Message-ID: <20190625155956.00002dc4@huawei.com>
-In-Reply-To: <156140037171.2951909.7432584124511649643.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <156140037171.2951909.7432584124511649643.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 25 Jun 2019 11:00:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34432 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731965AbfFYPAg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:00:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so993518iot.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 08:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WCu2izc+AwFs8dxkBWfG0kU/xQQY4HsLibUm2/EhQEg=;
+        b=XEkdwu9tbyxynV2UESVQpvwU3iwK3hOE1k9Q1V76kobtha4OFJg8EuxOwyr9iFmFCF
+         03+IP8ze/+IkOWgqwTpYK3IA+caa2YfQYz/eo6KfpwPMDhq0+7/rvOJSrpLmt6w+CQny
+         NEdRK0dC/Ou/b9ECjr3caBsF5fwJhkr+xfFWaaDRwrRWL3rhMeeWH8HFoBrAKmYGIkva
+         h4nN/l3U6DtLZdNSOnQL9Ih7R4Vh9q25kWm87wwuDzJtxPiQd0g9nyeidql+/whr0yY8
+         hRSCFlzTYLEpYV2kxsIbsi+thmD6DyDRJf9PwCSIWPW0GUf18A1wZrVKYFPGX3EEcJNl
+         GGvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WCu2izc+AwFs8dxkBWfG0kU/xQQY4HsLibUm2/EhQEg=;
+        b=Y+VnDNjgsgCqJzvWPcyXbokuoRinXzMmpbQ5Aut6DqrWr3U9fM53qugOKzKCAp++3S
+         RrsNpqN+9J32hqKNCrVCBU/Rc2iD5yGd7TD7OKWtV+Blj+cOxYVuQ+Vffle5vo68qglu
+         FZsqzT6hrVgvdUQnFu/Djqxm483hEH2AEHr9L2r/yuy3ozEh+ypT643tdIu8vpHcK/4Q
+         YqVMcb8Fb5KDF3r7KVHt+btkqGzt4XKfjECO+rHZn/hDHXl2QHuaK0u/Nb7G38qgJrrn
+         7ldDVNlIMHGNPNagZ+SuOjqTboZRYcTuer4plkkvkL36xxVt1USYTapYvio/KljCy9oy
+         0zSA==
+X-Gm-Message-State: APjAAAUqWlNiMnQBRH8IQYsz6WPMIHInEVRr11mC0J2InuoYen9di2Xy
+        G1gyKfhBMzoIZ0dGPXK283keL0iyFJOfNPCzCPp2Nc/hBOk=
+X-Google-Smtp-Source: APXvYqzeVOugDrWRv5GZLuCebGXK5dE6WckDZUY2y3Mwk6wopB+mgprQm2ZWsgT4yJQvT/jz99cbIBKpq58fNj+5zo0=
+X-Received: by 2002:a02:c90d:: with SMTP id t13mr112928904jao.62.1561474835326;
+ Tue, 25 Jun 2019 08:00:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+References: <20190622000358.19895-1-matthewgarrett@google.com> <20190622000358.19895-29-matthewgarrett@google.com>
+In-Reply-To: <20190622000358.19895-29-matthewgarrett@google.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 25 Jun 2019 17:00:24 +0200
+Message-ID: <CAKv+Gu_0bSCdeUGQo=nnKU=mfHXu+-U+qXWqJpJGUd6dVZF61Q@mail.gmail.com>
+Subject: Re: [PATCH V34 28/29] efi: Restrict efivar_ssdt_load when the kernel
+ is locked down
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     James Morris <jmorris@namei.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019 11:19:32 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Sat, 22 Jun 2019 at 02:05, Matthew Garrett <matthewgarrett@google.com> wrote:
+>
+> efivar_ssdt_load allows the kernel to import arbitrary ACPI code from an
+> EFI variable, which gives arbitrary code execution in ring 0. Prevent
+> that when the kernel is locked down.
+>
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: linux-efi@vger.kernel.org
 
-> Currently hmat.c lives under an "hmat" directory which does not enhance
-> the description of the file. The initial motivation for giving hmat.c
-> its own directory was to delineate it as mm functionality in contrast to
-> ACPI device driver functionality.
-> 
-> As ACPI continues to play an increasing role in conveying
-> memory location and performance topology information to the OS take the
-> opportunity to co-locate these NUMA relevant tables in a combined
-> directory.
-> 
-> numa.c is renamed to srat.c and moved to drivers/acpi/numa/ along with
-> hmat.c.
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-Hi Dan,
-
-srat.c now includes processing for the slit table which is a bit odd.
-
-Now we could split this up in to a top level numa.c and then
-srat.c, slit.c and hmat.c....
-
-Does feel rather silly though.  Perhaps better to just leave it as
-numa.c?
-
-I don't really feel strongly about this though.
-
-Jonathan
-
-> 
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/acpi/Kconfig       |    9 +--------
->  drivers/acpi/Makefile      |    3 +--
->  drivers/acpi/hmat/Makefile |    2 --
->  drivers/acpi/numa/Kconfig  |    7 ++++++-
->  drivers/acpi/numa/Makefile |    3 +++
->  drivers/acpi/numa/hmat.c   |    0 
->  drivers/acpi/numa/srat.c   |    0 
->  7 files changed, 11 insertions(+), 13 deletions(-)
->  delete mode 100644 drivers/acpi/hmat/Makefile
->  rename drivers/acpi/{hmat/Kconfig => numa/Kconfig} (72%)
->  create mode 100644 drivers/acpi/numa/Makefile
->  rename drivers/acpi/{hmat/hmat.c => numa/hmat.c} (100%)
->  rename drivers/acpi/{numa.c => numa/srat.c} (100%)
-> 
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index 283ee94224c6..82c4a31c8701 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -321,12 +321,6 @@ config ACPI_THERMAL
->  	  To compile this driver as a module, choose M here:
->  	  the module will be called thermal.
->  
-> -config ACPI_NUMA
-> -	bool "NUMA support"
-> -	depends on NUMA
-> -	depends on (X86 || IA64 || ARM64)
-> -	default y if IA64_GENERIC || IA64_SGI_SN2 || ARM64
-> -
->  config ACPI_CUSTOM_DSDT_FILE
->  	string "Custom DSDT Table file to include"
->  	default ""
-> @@ -475,8 +469,7 @@ config ACPI_REDUCED_HARDWARE_ONLY
->  	  If you are unsure what to do, do not enable this option.
->  
->  source "drivers/acpi/nfit/Kconfig"
-> -source "drivers/acpi/hmat/Kconfig"
-> -
-> +source "drivers/acpi/numa/Kconfig"
->  source "drivers/acpi/apei/Kconfig"
->  source "drivers/acpi/dptf/Kconfig"
->  
-> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> index 5d361e4e3405..f08a661274e8 100644
-> --- a/drivers/acpi/Makefile
-> +++ b/drivers/acpi/Makefile
-> @@ -55,7 +55,6 @@ acpi-$(CONFIG_X86)		+= acpi_cmos_rtc.o
->  acpi-$(CONFIG_X86)		+= x86/apple.o
->  acpi-$(CONFIG_X86)		+= x86/utils.o
->  acpi-$(CONFIG_DEBUG_FS)		+= debugfs.o
-> -acpi-$(CONFIG_ACPI_NUMA)	+= numa.o
->  acpi-$(CONFIG_ACPI_PROCFS_POWER) += cm_sbs.o
->  acpi-y				+= acpi_lpat.o
->  acpi-$(CONFIG_ACPI_LPIT)	+= acpi_lpit.o
-> @@ -80,7 +79,7 @@ obj-$(CONFIG_ACPI_PROCESSOR)	+= processor.o
->  obj-$(CONFIG_ACPI)		+= container.o
->  obj-$(CONFIG_ACPI_THERMAL)	+= thermal.o
->  obj-$(CONFIG_ACPI_NFIT)		+= nfit/
-> -obj-$(CONFIG_ACPI_HMAT)		+= hmat/
-> +obj-$(CONFIG_ACPI_NUMA)		+= numa/
->  obj-$(CONFIG_ACPI)		+= acpi_memhotplug.o
->  obj-$(CONFIG_ACPI_HOTPLUG_IOAPIC) += ioapic.o
->  obj-$(CONFIG_ACPI_BATTERY)	+= battery.o
-> diff --git a/drivers/acpi/hmat/Makefile b/drivers/acpi/hmat/Makefile
-> deleted file mode 100644
-> index 1c20ef36a385..000000000000
-> --- a/drivers/acpi/hmat/Makefile
-> +++ /dev/null
-> @@ -1,2 +0,0 @@
-> -# SPDX-License-Identifier: GPL-2.0-only
-> -obj-$(CONFIG_ACPI_HMAT) := hmat.o
-> diff --git a/drivers/acpi/hmat/Kconfig b/drivers/acpi/numa/Kconfig
-> similarity index 72%
-> rename from drivers/acpi/hmat/Kconfig
-> rename to drivers/acpi/numa/Kconfig
-> index 95a29964dbea..d14582387ed0 100644
-> --- a/drivers/acpi/hmat/Kconfig
-> +++ b/drivers/acpi/numa/Kconfig
-> @@ -1,4 +1,9 @@
-> -# SPDX-License-Identifier: GPL-2.0
-> +config ACPI_NUMA
-> +	bool "NUMA support"
-> +	depends on NUMA
-> +	depends on (X86 || IA64 || ARM64)
-> +	default y if IA64_GENERIC || IA64_SGI_SN2 || ARM64
+>  drivers/firmware/efi/efi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 55b77c576c42..9f92a013ab27 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/ucs2_string.h>
+>  #include <linux/memblock.h>
+> +#include <linux/security.h>
+>
+>  #include <asm/early_ioremap.h>
+>
+> @@ -242,6 +243,11 @@ static void generic_ops_unregister(void)
+>  static char efivar_ssdt[EFIVAR_SSDT_NAME_MAX] __initdata;
+>  static int __init efivar_ssdt_setup(char *str)
+>  {
+> +       int ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
 > +
->  config ACPI_HMAT
->  	bool "ACPI Heterogeneous Memory Attribute Table Support"
->  	depends on ACPI_NUMA
-> diff --git a/drivers/acpi/numa/Makefile b/drivers/acpi/numa/Makefile
-> new file mode 100644
-> index 000000000000..517a6c689a94
-> --- /dev/null
-> +++ b/drivers/acpi/numa/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +obj-$(CONFIG_ACPI_NUMA) += srat.o
-> +obj-$(CONFIG_ACPI_HMAT) += hmat.o
-> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/numa/hmat.c
-> similarity index 100%
-> rename from drivers/acpi/hmat/hmat.c
-> rename to drivers/acpi/numa/hmat.c
-> diff --git a/drivers/acpi/numa.c b/drivers/acpi/numa/srat.c
-> similarity index 100%
-> rename from drivers/acpi/numa.c
-> rename to drivers/acpi/numa/srat.c
-> 
-
-
+> +       if (ret)
+> +               return ret;
+> +
+>         if (strlen(str) < sizeof(efivar_ssdt))
+>                 memcpy(efivar_ssdt, str, strlen(str));
+>         else
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
