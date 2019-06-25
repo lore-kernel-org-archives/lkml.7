@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E44C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5FCC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DC1205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E0F205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbfFYUkl (ORCPT
+        id S1727071AbfFYUlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:40:41 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:60368 "EHLO
+        Tue, 25 Jun 2019 16:41:45 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:60407 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYUkl (ORCPT
+        with ESMTP id S1726053AbfFYUlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:40:41 -0400
+        Tue, 25 Jun 2019 16:41:44 -0400
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 32B4C2002F;
-        Tue, 25 Jun 2019 22:40:38 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 22:40:36 +0200
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 8F1AE2002F;
+        Tue, 25 Jun 2019 22:41:41 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 22:41:40 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -37,15 +37,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 4/5] dt-bindings: drm/panel: simple: add ortustech,
- com37h3m99dtc panel
-Message-ID: <20190625204036.GD18595@ravnborg.org>
+Subject: Re: [PATCH v3 5/5] dt-bindings: drm/panel: simple: add sharp,
+ lq070y3dg3b panel
+Message-ID: <20190625204140.GE18595@ravnborg.org>
 References: <cover.1559905870.git.hns@goldelico.com>
- <3e0720fbddfd7b35ad8551440544411485d8ad9f.1559905870.git.hns@goldelico.com>
+ <ee90ed56d2c294ce8ac3b44bf2229c5ab9f85e91.1559905870.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3e0720fbddfd7b35ad8551440544411485d8ad9f.1559905870.git.hns@goldelico.com>
+In-Reply-To: <ee90ed56d2c294ce8ac3b44bf2229c5ab9f85e91.1559905870.git.hns@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
@@ -59,24 +59,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 01:11:10PM +0200, H. Nikolaus Schaller wrote:
+On Fri, Jun 07, 2019 at 01:11:11PM +0200, H. Nikolaus Schaller wrote:
 > Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  .../display/panel/ortustech,com37h3m99dtc.txt        | 12 ++++++++++++
+>  .../bindings/display/panel/sharp,lq070y3dg3b.txt     | 12 ++++++++++++
 >  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/ortustech,com37h3m99dtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/ortustech,com37h3m99dtc.txt b/Documentation/devicetree/bindings/display/panel/ortustech,com37h3m99dtc.txt
+> diff --git a/Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt b/Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
 > new file mode 100644
-> index 000000000000..06a73c3f46b5
+> index 000000000000..95534b55ee5f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/ortustech,com37h3m99dtc.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/sharp,lq070y3dg3b.txt
 > @@ -0,0 +1,12 @@
-> +OrtusTech COM37H3M99DTC Blanview 3.7" VGA portrait TFT-LCD panel
+> +Sharp LQ070Y3DG3B 7.0" WVGA landscape TFT LCD panel
 > +
 > +Required properties:
-> +- compatible: should be "ortustech,com37h3m99dtc"
+> +- compatible: should be "sharp,lq070y3dg3b"
 > +
 > +Optional properties:
 > +- enable-gpios: GPIO pin to enable or disable the panel
