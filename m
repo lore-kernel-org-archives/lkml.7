@@ -2,133 +2,143 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBC4C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA9DC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54B720656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40271215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cBUI74WG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaU2CpSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbfFYL0e (ORCPT
+        id S1730622AbfFYLaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:26:34 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:53144 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729595AbfFYL0c (ORCPT
+        Tue, 25 Jun 2019 07:30:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38122 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728940AbfFYLaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:26:32 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 342E9C012A;
-        Tue, 25 Jun 2019 11:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561461991; bh=vVKDdL95YK7O617w/US4DS9xOUVhdNnWIgicamkGlvc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=cBUI74WG7KWVYQcH/H+W4D+8juUUQQnw2XABxipk1GJy/8RSoM8chZxwSzQKMGwbY
-         pq/RVHl5xA55IaEJ/3WSvIArG2kH2tSoUCSUDl/+OoZQMpv/vTWwkJFvuwvHngqrNe
-         IJuwBFrbxBDvrLBIksrtcwe2aX0yNBFqEM4IKfiSPoC+YgGN5DC0nThB57tJJ366uG
-         dmfYfqZ4pgHEBe1Pga4nnzryv0oZ2tQWJl0ZL38mNhghC24ttnG+hXSCvzTqaEZlOf
-         5Nw7emvKHJHORsJlg/dw6eX6yg8ZmEO5jYefHxtc8YauvxezNt5UC68Wru/SClbom7
-         J0FDSEXkMi4gw==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C6786A0065;
-        Tue, 25 Jun 2019 11:26:27 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 25 Jun 2019 04:25:43 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
- 25 Jun 2019 13:25:40 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Tue, 25 Jun 2019 07:30:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so15866508ljg.5;
+        Tue, 25 Jun 2019 04:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GrSlqTrfjDTebmzfMhekFIQ03hJAaaEIvyasOyrgdGQ=;
+        b=VaU2CpSwoLaCkJA70KwSxJ0Y4hBQSzr6GCIF3d/2vKmYsnAJ98uUD67CX7ROoIVEu9
+         AD2XU24rdlnNwSB3jqVxtlzPq0P4Cra9qaARXbnLQ5QLShlQoyksaAaFdlmmsIzccaT+
+         wwkFvo0CrRwksJtYB9/N0k+rgv47x71+z+9Ix0pF81+ds58SkQ5Tx4IGHn+FxWAndmku
+         oAVvCWJejcqecSIwT3RetqOfOJXDeixvMQthTULy6IznXWAmqBMQEhbWi9P42d52gj5n
+         wigZExHZbvBRGrQZex6hM//uuK/RNvNX3WKf1lx0NXZVQt6F6kNHxPmrv/7bgkAW4Bun
+         0A5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GrSlqTrfjDTebmzfMhekFIQ03hJAaaEIvyasOyrgdGQ=;
+        b=EY9HGvZxIGxUA2J8PcCwkiatUhCdxjvbS+qw0XSPRZM23lF/GHkDtYxteoM2rd4fzX
+         9M4muHRlENL7/RoyRnLx9yATylrJ1akUYieSVuXnXt7hn/3Wctzho8nRQH3zU/Qg2Vu6
+         Pu3O1OlY4hx9f0zu8dO/7K1T3ftGYq2GDr9qizrlb0X1R328eP0BDTy1OahIu01DQNdE
+         spoBcpZE2p9NCLdshEqF9WtzJaCngFDRZQsb/UFOs8c3SFnBBj47Y3nu36I/XScZlV6x
+         zq+1iT6TBzqOTo3QHgDsi5VnTeSrE0/oHmFn3SMcalIFiPkO1OaJvtukUdfmtza0HtKc
+         NWyg==
+X-Gm-Message-State: APjAAAWszUIHnl+X630hbkUXCKpiLlZGfdFVBMJFPF6HI5iRfWpqM/v0
+        6Ro1zwxo3IhKM1SoxmNE3cc=
+X-Google-Smtp-Source: APXvYqzWn4IVRrzmk2mj1JPP+8NJ6RlFFd8d53q/lJpzHV8OxKKuKphNXquiy/1j5sApPGrFtkE6Xg==
+X-Received: by 2002:a2e:3c1a:: with SMTP id j26mr38705844lja.230.1561462203119;
+        Tue, 25 Jun 2019 04:30:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id t4sm1020232ljh.9.2019.06.25.04.30.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 04:30:02 -0700 (PDT)
+Subject: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
+To:     myungjoo.ham@samsung.com
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "Heiner Kallweit" <hkallweit1@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: RE: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
- phylib logic
-Thread-Topic: [PATCH net-next 3/3] net: stmmac: Convert to phylink and
- remove phylib logic
-Thread-Index: AQHVIGkArVRmnWNiHUiOZ+Vq9aFNYKahDpUAgAAiuoD//+CkgIAAIfYQ///oM4CAAFRJgIAASacAgALGAQCAB4+TsIAAGyiAgAAlVRA=
-Date:   Tue, 25 Jun 2019 11:25:40 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B9D76C2@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
- <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
- <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
- <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
- <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
- <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
- <7f0f2ed0-f47c-4670-d169-25f0413c1fd3@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9D7024@DE02WEMBXB.internal.synopsys.com>
- <113f37a2-c37f-cdb5-5194-4361d949258a@nvidia.com>
-In-Reply-To: <113f37a2-c37f-cdb5-5194-4361d949258a@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.16]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+References: <7561edbc-c17c-101a-b339-fc7f9968a470@gmail.com>
+ <37db00bc-3a22-d1c2-7bdc-e27af42cd5c7@gmail.com>
+ <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
+ <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
+ <20190624111134epcms1p361aed3c72edd6eebc95408331c8d9739@epcms1p3>
+ <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
+ <20190625014214epcms1p1b8f2d76cd8cfdf3fdf517be08a92ccdf@epcms1p1>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7488653b-e8ec-27e6-0390-5e23481857e9@gmail.com>
+Date:   Tue, 25 Jun 2019 14:30:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190625014214epcms1p1b8f2d76cd8cfdf3fdf517be08a92ccdf@epcms1p1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+DQoNCj4gSSBoYXZlIGJlZW4g
-bG9va2luZyBhdCB0aGlzIGEgYml0IGNsb3NlciBhbmQgSSBjYW4gc2VlIHRoZSBwcm9ibGVtLiBX
-aGF0DQo+IGhhcHBlbnMgaXMgdGhhdCAuLi4NCj4gDQo+IDEuIHN0bW1hY19tYWNfbGlua191cCgp
-IGlzIGNhbGxlZCBhbmQgcHJpdi0+ZWVlX2FjdGl2ZSBpcyBzZXQgdG8gZmFsc2UNCj4gMi4gc3Rt
-bWFjX2VlZV9pbml0KCkgaXMgY2FsbGVkIGJ1dCBiZWNhdXNlIHByaXYtPmVlZV9hY3RpdmUgaXMg
-ZmFsc2UsDQo+ICAgIHRpbWVyX3NldHVwKCkgZm9yIGVlZV9jdHJsX3RpbWVyIGlzIG5ldmVyIGNh
-bGxlZC4NCj4gMy4gc3RtbWFjX2VlZV9pbml0KCkgcmV0dXJucyB0cnVlIGFuZCBzbyB0aGVuIHBy
-aXYtPmVlZV9lbmFibGVkIGlzIHNldCANCj4gICAgdG8gdHJ1ZS4NCj4gNC4gV2hlbiBzdG1tYWNf
-dHhfY2xlYW4oKSBpcyBjYWxsZWQgYmVjYXVzZSBwcml2LT5lZWVfZW5hYmxlZCBpcyBzZXQgdG8g
-ICAgDQo+ICAgIHRydWUsIG1vZF90aW1lcigpIGlzIGNhbGxlZCBmb3IgdGhlIGVlZV9jdHJsX3Rp
-bWVyLCBidXQgYmVjYXVzZSANCj4gICAgdGltZXJfc2V0dXAoKSB3YXMgbmV2ZXIgY2FsbGVkLCB3
-ZSBoaXQgdGhlIEJVRyBkZWZpbmVkIGF0DQo+ICAgIGtlcm5lbC90aW1lL3RpbWVyLmM6OTUyLCBi
-ZWNhdXNlIG5vIGZ1bmN0aW9uIGlzIGRlZmluZWQgZm9yIHRoZSANCj4gICAgdGltZXIuDQo+IA0K
-PiBUaGUgZm9sbG93aW5nIGZpeGVzIGl0IGZvciBtZSAuLi4NCj4gDQo+IC0tLSBhL2RyaXZlcnMv
-bmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL3N0bW1hY19tYWluLmMNCj4gKysrIGIvZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvc3RtbWFjX21haW4uYw0KPiBAQCAtMzk5LDEw
-ICszOTksMTMgQEAgYm9vbCBzdG1tYWNfZWVlX2luaXQoc3RydWN0IHN0bW1hY19wcml2ICpwcml2
-KQ0KPiAgICAgICAgIG11dGV4X2xvY2soJnByaXYtPmxvY2spOw0KPiAgDQo+ICAgICAgICAgLyog
-Q2hlY2sgaWYgaXQgbmVlZHMgdG8gYmUgZGVhY3RpdmF0ZWQgKi8NCj4gLSAgICAgICBpZiAoIXBy
-aXYtPmVlZV9hY3RpdmUgJiYgcHJpdi0+ZWVlX2VuYWJsZWQpIHsNCj4gLSAgICAgICAgICAgICAg
-IG5ldGRldl9kYmcocHJpdi0+ZGV2LCAiZGlzYWJsZSBFRUVcbiIpOw0KPiAtICAgICAgICAgICAg
-ICAgZGVsX3RpbWVyX3N5bmMoJnByaXYtPmVlZV9jdHJsX3RpbWVyKTsNCj4gLSAgICAgICAgICAg
-ICAgIHN0bW1hY19zZXRfZWVlX3RpbWVyKHByaXYsIHByaXYtPmh3LCAwLCB0eF9scGlfdGltZXIp
-Ow0KPiArICAgICAgIGlmICghcHJpdi0+ZWVlX2FjdGl2ZSkgew0KPiArICAgICAgICAgICAgICAg
-aWYgKHByaXYtPmVlZV9lbmFibGVkKSB7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIG5ldGRl
-dl9kYmcocHJpdi0+ZGV2LCAiZGlzYWJsZSBFRUVcbiIpOw0KPiArICAgICAgICAgICAgICAgICAg
-ICAgICBkZWxfdGltZXJfc3luYygmcHJpdi0+ZWVlX2N0cmxfdGltZXIpOw0KPiArICAgICAgICAg
-ICAgICAgICAgICAgICBzdG1tYWNfc2V0X2VlZV90aW1lcihwcml2LCBwcml2LT5odywgMCwgdHhf
-bHBpX3RpbWVyKTsNCj4gKyAgICAgICAgICAgICAgIH0NCj4gKyAgICAgICAgICAgICAgIG11dGV4
-X3VubG9jaygmcHJpdi0+bG9jayk7DQo+ICAgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7DQo+
-ICAgICAgICAgfQ0KPiANCj4gSXQgYWxzbyBsb29rcyBsaWtlIHlvdSBoYXZlIGEgcG90ZW50aW9u
-IGRlYWRsb2NrIGluIHRoZSBjdXJyZW50IGNvZGUNCj4gYmVjYXVzZSBpbiB0aGUgY2FzZSBvZiBp
-ZiAoIXByaXYtPmVlZV9hY3RpdmUgJiYgcHJpdi0+ZWVlX2VuYWJsZWQpDQo+IHlvdSBkb24ndCB1
-bmxvY2sgdGhlIG11dGV4LiBUaGUgYWJvdmUgZml4ZXMgdGhpcyBhcyB3ZWxsLiBJIGNhbiBzZW5k
-IGENCj4gZm9ybWFsIHBhdGNoIGlmIHRoaXMgbG9va3MgY29ycmVjdC4gDQoNClRoYW5rcyBmb3Ig
-bG9va2luZyBpbnRvIHRoaXMhIFRoZSBmaXggbG9va3MgY29ycmVjdCBzbyBpZiB5b3UgY291bGQg
-DQpzdWJtaXQgYSBwYXRjaCBpdCB3b3VsZCBiZSBncmVhdCENCg0KVGhhbmtzLA0KSm9zZSBNaWd1
-ZWwgQWJyZXUNCg==
+25.06.2019 4:42, MyungJoo Ham пишет:
+> Sender : Dmitry Osipenko <digetx@gmail.com>
+>> 24.06.2019 14:11, MyungJoo Ham пишет:
+>>>>
+>>>> --------- Original Message ---------
+>>>> Sender : Dmitry Osipenko <digetx@gmail.com>
+>>>>
+>>>> 24.06.2019 10:34, MyungJoo Ham пишет:
+>>>>>>
+>>>>>> A question:
+>>>>>>
+>>>>>> Does this driver support Tegra20 as well?
+>>>>>> I'm asking this because ARCH_TEGRA includes ARCH_TEGRA_2x_SOC
+>>>>>> according to /drivers/soc/tegra/Kconfig.
+>>>>>>
+>>>>>
+>>>>> For this matter, how about updating your 13/16 patch as follows?
+>>>>>
+>>> []
+>>>>
+>>>> Good call! I'll update this patch following yours suggestion, thanks.
+>>>
+>>> Or, you may approve the modified commits here:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/log/?h=for-next
+>>
+>> Looks almost good to me!
+>>
+>> I just recalled that there is also a 64bit variant of Tegra124, the Tegra132. Hence
+>> the Tegra30+ Kconfig entry should look like this (it's also worthy to break the lines
+>> for readability):
+>>
+>> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+>> index ccb1a68c4b51..bd2efbc27725 100644
+>> --- a/drivers/devfreq/Kconfig
+>> +++ b/drivers/devfreq/Kconfig
+>> @@ -94,7 +94,10 @@ config ARM_EXYNOS_BUS_DEVFREQ
+>>
+>> config ARM_TEGRA_DEVFREQ
+>>        tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
+>> -       depends on ARCH_TEGRA || COMPILE_TEST
+>> +       depends on ARCH_TEGRA_3x_SOC  || ARCH_TEGRA_114_SOC || \
+>> +                  ARCH_TEGRA_132_SOC || ARCH_TEGRA_124_SOC || \
+>> +                  ARCH_TEGRA_210_SOC || \
+>> +                  COMPILE_TEST
+>>        select PM_OPP
+>>        help
+>>          This adds the DEVFREQ driver for the Tegra family of SoCs.
+>>
+>> Could you please adjust the patches like I'm suggesting? I'll approve yours change
+>> then and won't re-spin the first batch of the patches.
+> 
+> I've adjusted as you suggested. It's pushed to the git repo as well.
+
+Thank you very much, looking good now!
