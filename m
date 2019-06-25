@@ -2,69 +2,96 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6712C48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFC2C48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB04A208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561503355;
-	bh=SYMcIFxgtO+dsktSi7jnPUjz1SSVD8CyNCsa+fKpnM0=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=lADF/3bNjQhn6yvzi5kGXjtFGFQM5//BKGYJ1c9o+moUzsRwmLkbUAmP9yKIiJJ2R
-	 lOu//bUm4oRdmnoFEShW8R2AS+f2LYg8Po4KXh5zk4zg0VxQ/oqDdm0+OA0fGn2BtV
-	 AGM4DsOetD71Pox9BiiIYszhAEoEe779wzTmoKUk=
+	by mail.kernel.org (Postfix) with ESMTP id 91563208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfFYWzy (ORCPT
+        id S1726401AbfFYW4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47092 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 18:56:11 -0400
+Received: from gate.crashing.org ([63.228.1.57]:48041 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbfFYWzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:55:54 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DBC2086D;
-        Tue, 25 Jun 2019 22:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561503353;
-        bh=SYMcIFxgtO+dsktSi7jnPUjz1SSVD8CyNCsa+fKpnM0=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=g41o+waZoBKq5DrPrSDLQQkj1KxdmRMY4drEZFcRcJDHvbKaxBgO3zuEuSXxQbXUU
-         OzU4FbO3HDIHoeqCPECNFtnQdsGRtXpPmHR45HScKLU8c/Sy5dx1Clt8hv4RYUBzIe
-         pAzGJ4rzOzyf8nmj94pY8kqCqfv1uLt4imf280J0=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190608105619.593-2-wsa+renesas@sang-engineering.com>
-References: <20190608105619.593-1-wsa+renesas@sang-engineering.com> <20190608105619.593-2-wsa+renesas@sang-engineering.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 01/34] clk: clk-cdce706: simplify getting the adapter of a client
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 15:55:52 -0700
-Message-Id: <20190625225553.10DBC2086D@mail.kernel.org>
+        id S1725782AbfFYW4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:56:11 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5PMu1jN032528;
+        Tue, 25 Jun 2019 17:56:02 -0500
+Message-ID: <ef566c4c2881c70d673e8a76c47084c2a024cd5e.camel@kernel.crashing.org>
+Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
+ glue directory
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Muchun Song <smuchun@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Prateek Sood <prsood@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        zhaowuyun@wingtech.com
+Date:   Wed, 26 Jun 2019 08:56:00 +1000
+In-Reply-To: <CAPSr9jExG2C6U0D2TN-PUxgi9waD5QkSR-icxNPP1w9nJx3GUQ@mail.gmail.com>
+References: <20190516142342.28019-1-smuchun@gmail.com>
+         <20190524190443.GB29565@kroah.com>
+         <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
+         <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
+         <20190618152859.GB1912@kroah.com>
+         <CAPSr9jFMKb1bQAbCFLqP2+fb60kcbyJ+cDspkL5FH28CNKFz3A@mail.gmail.com>
+         <20190618161340.GA13983@kroah.com>
+         <e3e064d85790a56b661ef9641e02c571540c6f44.camel@kernel.crashing.org>
+         <CAPSr9jExG2C6U0D2TN-PUxgi9waD5QkSR-icxNPP1w9nJx3GUQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Wolfram Sang (2019-06-08 03:55:40)
-> We have a dedicated pointer for that, so use it. Much easier to read and
-> less computation involved.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
+On Tue, 2019-06-25 at 23:06 +0800, Muchun Song wrote:
+> Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年6月19日周三
+> 上午5:51写道：
+> > 
+> > On Tue, 2019-06-18 at 18:13 +0200, Greg KH wrote:
+> > > 
+> > > Again, I am totally confused and do not see a patch in an email
+> > > that
+> > > I
+> > > can apply...
+> > > 
+> > > Someone needs to get people to agree here...
+> > 
+> > I think he was hoping you would chose which solution you prefered
+> > here
+> 
+> Yeah, right, I am hoping you would chose which solution you prefered
+> here.
+> Thanks.
+> 
+> > :-) His original or the one I suggested instead. I don't think
+> > there's
+> > anybody else with understanding of sysfs guts around to form an
+> > opinion.
+> > 
 
-Applied to clk-next
+Muchun, I don't think Greg still has the previous emails. He deals with
+too much to keep track of old stuff.
+
+Can you send both patches tagged as [OPT1] and [OPT2] along with a
+comment in one go so Greg can see both and decide ?
+
+I think looking at the refcount is fragile, I might be wrong, but I
+think it mostly paper over the root of the problem which is the fact
+that the lock isn't taken accross both operations, thus exposing the
+race. But I'm happy if Greg prefers your approach as long as it's
+fixed.
+
+Cheers,
+Ben.
 
