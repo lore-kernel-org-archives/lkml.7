@@ -2,114 +2,126 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38629C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA19C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D370205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561495184;
-	bh=j3KZFviB5Xle6qBDzGdMd3VNiDKlu0Os1FHRxXh+iWE=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=Uvo2wVxRhQZlygb1kXdkh9w8cJvphA+ZnZDnWrcyiaRMjwZJZ0AfAzY9++nuwMxKv
-	 g/3magzLfYCMzSJI/zNTSn1F174Qxb842beNeHTLbB3hxDDAyiXE2EqXg9SBsa1oNG
-	 +Isu6PBQNZP5gJyyO1e2OsAMW4tJHw6+iflt0zWc=
+	by mail.kernel.org (Postfix) with ESMTP id AFA07205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:39:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfFYUjm (ORCPT
+        id S1727702AbfFYUjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfFYUjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:39:42 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        Tue, 25 Jun 2019 16:39:47 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:60319 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfFYUjr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:39:47 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C94205ED;
-        Tue, 25 Jun 2019 20:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561495181;
-        bh=j3KZFviB5Xle6qBDzGdMd3VNiDKlu0Os1FHRxXh+iWE=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=xUFoVMMARF1CYfZ3FYmhyNeW9XHtmic9ocPCrbnTXm90L1w97pfhFjGEWr55wLxa4
-         ROSkUwmC8AKfCd63ZqTeQh1+ic2CEJIeGW/yM8H0Y67yBEdMYOnvEOkCOISqoh0h6t
-         tfDb3nBB6leXGBqFZc1m+hvKt4/dzPM7a92iMM+c=
-Content-Type: text/plain; charset="utf-8"
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 812222002F;
+        Tue, 25 Jun 2019 22:39:43 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 22:39:37 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, tomi.valkeinen@ti.com,
+        imirkin@alum.mit.edu, marek.belisko@gmail.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v3 1/5] drm/panel: simple: Add Sharp LQ070Y3DG3B panel
+ support
+Message-ID: <20190625203937.GB18595@ravnborg.org>
+References: <cover.1559905870.git.hns@goldelico.com>
+ <d16aaa1ac93e4f15c13cd7d621de95836257676a.1559905870.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1561373672-3533-1-git-send-email-abel.vesa@nxp.com>
-References: <1561373672-3533-1-git-send-email-abel.vesa@nxp.com>
-To:     Abel Vesa <abel.vesa@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: imx8mm: Switch to platform driver
-Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 13:39:40 -0700
-Message-Id: <20190625203941.15C94205ED@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d16aaa1ac93e4f15c13cd7d621de95836257676a.1559905870.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ztCEdXhiAAAA:8
+        a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=AypoIBVMmSo6Qq-R-C8A:9
+        a=CjuIK1q_8ugA:10 a=nCm3ceeH17rKjHWsMeRo:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Abel Vesa (2019-06-24 03:54:32)
-> In order to make the clock provider a platform driver
-> all the data and code needs to be outside of .init section.
-
-Yes, but why are you making this change in general?
-
->=20
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-[...]
-> @@ -480,7 +481,7 @@ static int __init imx8mm_clocks_init(struct device_no=
-de *ccm_node)
->         clks[IMX8MM_SYS_PLL2_500M] =3D imx_clk_fixed_factor("sys_pll2_500=
-m", "sys_pll2_out", 1, 2);
->         clks[IMX8MM_SYS_PLL2_1000M] =3D imx_clk_fixed_factor("sys_pll2_10=
-00m", "sys_pll2_out", 1, 1);
-> =20
-> -       np =3D ccm_node;
-> +       np =3D dev->of_node;
->         base =3D of_iomap(np, 0);
-
-If we're using platform device here it would be nice to also use
-platform device APIs to map memory and request resources, etc.
-
->         if (WARN_ON(!base))
->                 return -ENOMEM;
-> @@ -682,4 +683,19 @@ static int __init imx8mm_clocks_init(struct device_n=
-ode *ccm_node)
-> =20
->         return 0;
->  }
-> -CLK_OF_DECLARE_DRIVER(imx8mm, "fsl,imx8mm-ccm", imx8mm_clocks_init);
-> +
-> +static const struct of_device_id imx8mm_clk_of_match[] =3D {
-> +       { .compatible =3D "fsl,imx8mm-ccm" },
-> +       { /* Sentinel */ },
+On Fri, Jun 07, 2019 at 01:11:07PM +0200, H. Nikolaus Schaller wrote:
+> The change adds support for the Sharp LQ070Y3DG3B 7.0" TFT LCD panel.
+> 
+> Tested on Letux7004.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 569be4efd8d1..5b27829c5a78 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -2204,6 +2204,33 @@ static const struct panel_desc samsung_ltn140at29_301 = {
+>  	},
+>  };
+>  
+> +static const struct drm_display_mode sharp_lq070y3dg3b_mode = {
+> +	.clock = 33260,
+> +	.hdisplay = 800,
+> +	.hsync_start = 800 + 64,
+> +	.hsync_end = 800 + 64 + 128,
+> +	.htotal = 800 + 64 + 128 + 64,
+> +	.vdisplay = 480,
+> +	.vsync_start = 480 + 8,
+> +	.vsync_end = 480 + 8 + 2,
+> +	.vtotal = 480 + 8 + 2 + 35,
+> +	.vrefresh = 60,
+> +	.flags = DISPLAY_FLAGS_PIXDATA_POSEDGE,
 > +};
-> +MODULE_DEVICE_TABLE(of, imx8mm_clk_of_match);
 > +
-> +
-
-Nitpick: Drop the second newline.
-
-> +static struct platform_driver imx8mm_clk_driver =3D {
-> +       .probe =3D imx8mm_clocks_probe,
-> +       .driver =3D {
-> +               .name =3D "imx8mm-ccm",
-> +               .of_match_table =3D of_match_ptr(imx8mm_clk_of_match),
-> +       },
+> +static const struct panel_desc sharp_lq070y3dg3b = {
+> +	.modes = &sharp_lq070y3dg3b_mode,
+> +	.num_modes = 1,
+> +	.bpc = 8,
+> +	.size = {
+> +		.width = 152,	/* 152.4mm */
+> +		.height = 91,	/* 91.4mm */
+> +	},
+> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE |
+> +		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
 > +};
-> +module_platform_driver(imx8mm_clk_driver);
+> +
+>  static const struct drm_display_mode sharp_lq035q7db03_mode = {
+>  	.clock = 5500,
+>  	.hdisplay = 240,
+> @@ -2786,6 +2813,9 @@ static const struct of_device_id platform_of_match[] = {
+>  	}, {
+>  		.compatible = "sharp,lq035q7db03",
+>  		.data = &sharp_lq035q7db03,
+> +	}, {
+> +		.compatible = "sharp,lq070y3dg3b",
+> +		.data = &sharp_lq070y3dg3b,
+>  	}, {
+>  		.compatible = "sharp,lq101k1ly04",
+>  		.data = &sharp_lq101k1ly04,
+> -- 
+> 2.19.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
