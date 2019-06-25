@@ -2,2009 +2,647 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEXHASH_WORD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F8AC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361D3C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A4E2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561441713;
-	bh=XnBQJnnAsfttk5cAwCisphSXJXyHBCrfb9fFfS0wFgw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=QAr3au7YHt6jfZUqI4Q/2F4uxFqKexACuEJOWwpa9zkVwnJK8HOY5J5yoDlG67Ux1
-	 haPYDuRXUBSCwwkWmo0eVgT8OpDVZrtRZU4tDtz7/eR2NFqQmHIH054omi+GlUnt49
-	 C5uTTxoEEM1ki0rI2PBg49QILQ4+a1k3B9MhjF3I=
+	by mail.kernel.org (Postfix) with ESMTP id F22B520659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbfFYFsb (ORCPT
+        id S1728575AbfFYFsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 25 Jun 2019 01:48:36 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:34793 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbfFYFsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 01:48:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbfFYFs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 01:48:29 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B57AD20659;
-        Tue, 25 Jun 2019 05:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561441704;
-        bh=XnBQJnnAsfttk5cAwCisphSXJXyHBCrfb9fFfS0wFgw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rBauXp7qHadMNKApqIP4X/Ws87/fNKTupGArmWIQJA7GMJji6PiPN0y2WMRiKPidr
-         ZQkfA+72B24LeGKe5CfGH3SPlQSMHLeFjGITk7eIirdAsBTek/gynxDzmGF3krAgpC
-         hkqffMH5DgejQFssSTeddldCzX/fxhY+R4bg3ig4=
-Date:   Mon, 24 Jun 2019 22:48:22 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        David Ahern <dsahern@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 94 open syzbot bugs in net subsystem
-Message-ID: <20190625054822.GA17703@sol.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG3.macronix.com with ESMTP id x5P5mKt1093478;
+        Tue, 25 Jun 2019 13:48:21 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     miquel.raynal@bootlin.com, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        bbrezillon@kernel.org, dwmw2@infradead.org,
+        computersforpeace@gmail.com, vigneshr@ti.com, paul.burton@mips.com,
+        liang.yang@amlogic.com, richard@nod.at, anders.roxell@linaro.org,
+        christophe.kerello@st.com, paul@crapouillou.net,
+        jianxin.pan@amlogic.com, stefan@agner.ch,
+        devicetree@vger.kernel.org
+Cc:     juliensu@mxic.com.tw, lee.jones@linaro.org,
+        masonccyang@mxic.com.tw, broonie@kernel.org
+Subject: [PATCH v4 1/2] mtd: rawnand: Add Macronix Raw NAND controller
+Date:   Tue, 25 Jun 2019 14:10:55 +0800
+Message-Id: <1561443056-13766-2-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1561443056-13766-1-git-send-email-masonccyang@mxic.com.tw>
+X-MAIL: TWHMLLG3.macronix.com x5P5mKt1093478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better.]
-
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 94 of them as possibly being bugs in the net subsystem.  This category
-only includes the networking bugs that I couldn't assign to a more specific
-component (bpf, xfrm, bluetooth, tls, tipc, sctp, wireless, etc.).  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
-
-Of these 94 bugs, 21 were seen in mainline in the last week.
-
-Of these 94 bugs, 3 were bisected to commits from the following people:
-
-	David Ahern <dsahern@gmail.com>
-	Eric Dumazet <edumazet@google.com>
-	Florian Westphal <fw@strlen.de>
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the net subsystem, please let me know,
-and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in bond_start_xmit (2)
-Last occurred:      0 days ago
-Reported:           282 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a9d5a8daec53b47baf50dd4185ff471c637d9c07
-Original thread:    https://lkml.kernel.org/lkml/000000000000ab5ff60575e86bb9@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e5be16aa39ad6e755391@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ab5ff60575e86bb9@google.com
-
---------------------------------------------------------------------------------
-Title:              unregister_netdevice: waiting for DEV to become free (2)
-Last occurred:      0 days ago
-Reported:           313 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=bae9a2236bfede42cf3d219e6bf6740c583568a4
-Original thread:    https://lkml.kernel.org/lkml/00000000000056268e05737dcb95@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 27 replies; the last was 51 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000056268e05737dcb95@google.com
-
---------------------------------------------------------------------------------
-Title:              kernel BUG at net/core/skbuff.c:LINE! (3)
-Last occurred:      0 days ago
-Reported:           508 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=9c55af67ce995cf6c4f11ab6f5d3ee805d67fc00
-Original thread:    https://groups.google.com/d/msgid/syzkaller-bugs/001a114372a6074e6505642b7f72%40google.com
-
-This bug has a C reproducer.
-
-For some reason the original report email for this bug is missing from the LKML
-archive at lore.kernel.org, so my script couldn't check whether anyone has
-replied to it or not.  The Google Groups link above should still work, though. 
-Also try searching for the bug title.
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in ip6_parse_tlv
-Last occurred:      0 days ago
-Reported:           277 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a446d3718ee6322911a0c6d34db57909e1838fe7
-Original thread:    https://lkml.kernel.org/lkml/00000000000030779c057653b9ef@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f08ac29f2ac8aea19826@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000030779c057653b9ef@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in do_ip_vs_set_ctl
-Last occurred:      0 days ago
-Reported:           283 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=46ebfb92a8a812621a001ef04d90dfa459520fe2
-Original thread:    https://lkml.kernel.org/lkml/00000000000015a13b0575d8eae8@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+23b5f9e7caf61d9a3898@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000015a13b0575d8eae8@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in rollback_registered_many (2)
-Last occurred:      0 days ago
-Reported:           229 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=d39aca7a05a76d146ba96cddbb3242075d9171a7
-Original thread:    https://lkml.kernel.org/lkml/000000000000d9f094057a17b97b@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 1 reply, 73 days ago.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000d9f094057a17b97b@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in ip_rcv_core
-Last occurred:      7 days ago
-Reported:           281 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=abe95dc3e3e9667fc23b8d81f29ecad95c6f106f
-Original thread:    https://lkml.kernel.org/lkml/0000000000002407700575fb00f4@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2e406a9ac75bb71d4b7a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000002407700575fb00f4@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in ip6_dst_lookup_tail (2)
-Last occurred:      5 days ago
-Reported:           56 days ago
-Branches:           bpf-next, linux-next, net, and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=079bd8408abd95b492f127edf0df44ddc09d9405
-Original thread:    https://lkml.kernel.org/lkml/0000000000006b30f30587a5b569@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-This bug was bisected to:
-
-	commit f40b6ae2b612446dc970d7b51eeec47bd1619f82
-	Author: David Ahern <dsahern@gmail.com>
-	Date:   Thu May 23 03:27:55 2019 +0000
-
-	  ipv6: Move pcpu cached routes to fib6_nh
-
-The original thread for this bug has received 1 reply, 56 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+58d8f704b86e4e3fb4d3@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006b30f30587a5b569@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in gre_parse_header
-Last occurred:      0 days ago
-Reported:           1 day ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=af9d9384bbda6732044cf6335966df874a40cff1
-Original thread:    https://lkml.kernel.org/lkml/000000000000dc4531058bfb4605@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f583ce3d4ddf9836b27a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000dc4531058bfb4605@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in ax88772_bind
-Last occurred:      0 days ago
-Reported:           21 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=c4199edd5d559780b6f0fb3874fcc253f070786f
-Original thread:    https://lkml.kernel.org/lkml/00000000000008f06d058a6e9783@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+8a3fc6674bbc3978ed4e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000008f06d058a6e9783@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in bcmp
-Last occurred:      0 days ago
-Reported:           16 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=38933ca8abb1b8f0ee10c430f3a6c1f6a68a2519
-Original thread:    https://lkml.kernel.org/lkml/0000000000008f00f7058ad13ec8@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+d8b02c920ae8f3e0be75@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000008f00f7058ad13ec8@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in r871xu_drv_init
-Last occurred:      1 day ago
-Reported:           18 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3cd92b1d85428b128503bfa7a250294c9ae00bd8
-Original thread:    https://lkml.kernel.org/lkml/000000000000417702058aa80506@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6f5ecd144854c0d8580b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000417702058aa80506@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in gro_cells_destroy
-Last occurred:      1 day ago
-Reported:           165 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=1e493023b2e9f4b6738977af63ed5b521201e74a
-Original thread:    https://lkml.kernel.org/lkml/00000000000029bf02057f1e1596@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6fe674089f9deb9f7726@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000029bf02057f1e1596@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in fdb_create
-Last occurred:      0 days ago
-Reported:           0 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=7ca7d71ade3608a7f92ac4b8c9c499cf130e68a9
-Original thread:    https://lkml.kernel.org/lkml/0000000000005e6124058c0cbdbe@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+88533dc8b582309bf3ee@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005e6124058c0cbdbe@google.com
-
---------------------------------------------------------------------------------
-Title:              kernel BUG at net/ipv6/route.c:LINE! (2)
-Last occurred:      2 days ago
-Reported:           168 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=5789609f5b68813f3bf496c9786b9df683dbaa2f
-Original thread:    https://lkml.kernel.org/lkml/000000000000114562057edb528d@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+be0943c590bb47aefb9e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000114562057edb528d@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: null-ptr-deref Read in ip6_hold_safe
-Last occurred:      6 days ago
-Reported:           161 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=9b5576748203154c7b7703aac19d0a5adc8f987e
-Original thread:    https://lkml.kernel.org/lkml/00000000000075c0ef057f657b8d@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 1 reply, 161 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+8433ca0841e308ef4cc7@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000075c0ef057f657b8d@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in dev_get_by_index_rcu
-Last occurred:      1 day ago
-Reported:           123 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e9d52597e9cbdd22621b6790702c9fefe071af25
-Original thread:    https://lkml.kernel.org/lkml/00000000000095c8f005826888fd@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+48127bec5a5cd81411e3@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000095c8f005826888fd@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in unregister_netdevice_notifier (3)
-Last occurred:      1 day ago
-Reported:           127 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=1724d278c83ca6e6df100a2e320c10d991cf2bce
-Original thread:    https://lkml.kernel.org/lkml/0000000000009d787a0582128cbe@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0f1827363a305f74996f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000009d787a0582128cbe@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in __nf_hook_entries_try_shrink
-Last occurred:      4 days ago
-Reported:           11 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a00ae6ea26b62609c1df4d7f0d21e4a7635d8203
-Original thread:    https://lkml.kernel.org/lkml/0000000000005718ef058b3a0fcf@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c51f73e78e7e2ce3a31e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005718ef058b3a0fcf@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in ip_send_unicast_reply
-Last occurred:      3 days ago
-Reported:           138 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b2fcf1ea1f7f874f9ae3ede65e0f47e82a02b3a1
-Original thread:    https://lkml.kernel.org/lkml/0000000000005e6094058132a09a@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f1741fbf71635c029556@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005e6094058132a09a@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in usb_kill_anchored_urbs
-Last occurred:      13 days ago
-Reported:           13 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=18b605fd212e6e477e038c699430b44ca5946eac
-Original thread:    https://lkml.kernel.org/lkml/000000000000e84a3a058b0f9307@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+eb6ab607626fd1dac0f1@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e84a3a058b0f9307@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in tcp_sk_exit
-Last occurred:      7 days ago
-Reported:           138 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=24c7faa7497a843d2c714efffcc747853c55b669
-Original thread:    https://lkml.kernel.org/lkml/000000000000ddb37c0581329cc5@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f797267da5e5012d0920@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ddb37c0581329cc5@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in mii_nway_restart
-Last occurred:      15 days ago
-Reported:           20 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=835562bfa4dd92c72f323f29ad388c9cb4b0e63f
-Original thread:    https://lkml.kernel.org/lkml/000000000000f71859058a7cfdc8@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+1f53a30781af65d2c955@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000f71859058a7cfdc8@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in start_sync_thread
-Last occurred:      9 days ago
-Reported:           27 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=8383817177a44b0715b1d781b2e840212f364aec
-Original thread:    https://lkml.kernel.org/lkml/0000000000006d7e520589f6d3a9@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug has received 2 replies; the last was 13 days
-ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+7e2e50c8adfccd2e5041@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread, which had activity only 13 days ago.  For the git send-email command to
-use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
-instructions" at https://lkml.kernel.org/r/0000000000006d7e520589f6d3a9@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in cdev_del
-Last occurred:      18 days ago
-Reported:           27 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=dc0ead75c30e6aa27153b6cab86194e55e290a98
-Original thread:    https://lkml.kernel.org/lkml/000000000000532b860589f0669a@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000532b860589f0669a@google.com
-
---------------------------------------------------------------------------------
-Title:              kernel panic: stack is corrupted in __lock_acquire (4)
-Last occurred:      0 days ago
-Reported:           14 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b75c6f861ac07fc8410957c22e74802b4313ec3d
-Original thread:    https://lkml.kernel.org/lkml/0000000000009b3b80058af452ae@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000009b3b80058af452ae@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Write in skb_release_data (2)
-Last occurred:      88 days ago
-Reported:           252 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=8340d4b8c7304ff0b43490a1b69ab3833dd7ad20
-Original thread:    https://lkml.kernel.org/lkml/0000000000003ba80905783e9189@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 472c2e07eef045145bc1493cc94a01c87140780a
-	Author: Eric Dumazet <edumazet@google.com>
-	Date:   Fri Mar 22 15:56:39 2019 +0000
-
-	  tcp: add one skb cache for tx
-
-The original thread for this bug received 3 replies; the last was 90 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+580be3953ed99133804f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003ba80905783e9189@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in xt_compat_add_offset
-Last occurred:      24 days ago
-Reported:           122 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=28b6bf730a5e8d288db5c794d5c6ccc49f746d74
-Original thread:    https://lkml.kernel.org/lkml/00000000000081994205827ea9a0@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-This bug was bisected to:
-
-	commit 2035f3ff8eaa29cfb5c8e2160b0f6e85eeb21a95
-	Author: Florian Westphal <fw@strlen.de>
-	Date:   Mon Jan 21 20:54:36 2019 +0000
-
-	  netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000081994205827ea9a0@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in addrconf_dad_work
-Last occurred:      9 days ago
-Reported:           128 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=7293d6f37a448b017658dc1001452ff193cdb566
-Original thread:    https://lkml.kernel.org/lkml/0000000000001d37cd0582003c53@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f4290c15a8ab6dee87c9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001d37cd0582003c53@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in drain_workqueue
-Last occurred:      10 days ago
-Reported:           42 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4a4b04b94b33e7d1de6f1213355499ab529a3018
-Original thread:    https://lkml.kernel.org/lkml/000000000000caab290588c4083e@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+09139d1a5ed6b898e29d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000caab290588c4083e@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in __dev_mc_del
-Last occurred:      58 days ago
-Reported:           280 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a84ac404cf07db753e289b918981964b540359bd
-Original thread:    https://lkml.kernel.org/lkml/00000000000011d524057617eb4a@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0ffee94c5c059dbbc2a9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000011d524057617eb4a@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in __netif_receive_skb_core
-Last occurred:      56 days ago
-Reported:           438 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0c8e5c99b3db338c8956fcb7231eb1f7e2d707f9
-Original thread:    https://lkml.kernel.org/lkml/94eb2c059ce01f643c0569a228ee@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 3 replies; the last was 437 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+b202b7208664142954fa@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/94eb2c059ce01f643c0569a228ee@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: trying to register non-static key in __icmp_send
-Last occurred:      13 days ago
-Reported:           111 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=8375400c5f4e129bf049227adce14e4698a4bc33
-Original thread:    https://lkml.kernel.org/lkml/000000000000de803205836436dd@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f09d845ad631ed93737b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000de803205836436dd@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: ODEBUG bug in netdev_freemem (2)
-Last occurred:      0 days ago
-Reported:           0 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=96a64fde216dca408a5c25db4e57838c51e435aa
-Original thread:    https://lkml.kernel.org/lkml/000000000000d6a8ba058c0df076@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug has received 6 replies; the last was 5 hours
-ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c4521ac872a4ccc3afec@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread, which had activity only 5 hours ago.  For the git send-email command to
-use, or tips on how to reply if the thread isn't in your mailbox, see the "Reply
-instructions" at https://lkml.kernel.org/r/000000000000d6a8ba058c0df076@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: null-ptr-deref Write in dst_release
-Last occurred:      6 days ago
-Reported:           168 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e25580ce7d7f1e6c3bed77954ec56dfd7ce89805
-Original thread:    https://lkml.kernel.org/lkml/00000000000012073a057edb3996@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+1f4f4025b8564c8da9d4@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000012073a057edb3996@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in fib6_nh_init
-Last occurred:      5 days ago
-Reported:           20 days ago
-Branches:           bpf-next and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=29b9955ae85cdd2f20baf5d975763a446f2783df
-Original thread:    https://lkml.kernel.org/lkml/0000000000008ee293058a787e2d@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug has received 1 reply, 19 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+1b2927fda48c5bf2e931@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000008ee293058a787e2d@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: ODEBUG bug in del_timer (3)
-Last occurred:      35 days ago
-Reported:           48 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=d1853700c9f62752d8498e05189f5d0f21a55631
-Original thread:    https://lkml.kernel.org/lkml/000000000000dace5e0588529558@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-The original thread for this bug has received 1 reply, 47 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+13d91ed9bbcd7dc13230@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000dace5e0588529558@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: locking bug in lock_sock_nested
-Last occurred:      52 days ago
-Reported:           71 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a9f61ee7d10b848190610b0fe298bd9030a8288c
-Original thread:    https://lkml.kernel.org/lkml/000000000000e8cf3805867bd715@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+605a69fff339d9cc221e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e8cf3805867bd715@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in tcp_v6_connect
-Last occurred:      6 days ago
-Reported:           23 days ago
-Branches:           bpf-next and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=71eb43337087b631994f0811b2d84dfbc4bfcfc4
-Original thread:    https://lkml.kernel.org/lkml/000000000000aa7a27058a3ce9aa@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+5ee26b4e30c45930bd3c@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000aa7a27058a3ce9aa@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in __dev_mc_add
-Last occurred:      75 days ago
-Reported:           271 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0766d38c656abeace60621896d705743aeefed51
-Original thread:    https://lkml.kernel.org/lkml/0000000000005e2e530576c6f9ce@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 3 replies; the last was 269 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+001516d86dbe88862cec@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005e2e530576c6f9ce@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in IP6_ECN_decapsulate
-Last occurred:      372 days ago
-Reported:           277 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ca4ff394c64aec3684d0034896290c72a83b7077
-Original thread:    https://lkml.kernel.org/lkml/000000000000336563057653b9aa@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+bf7e6250c7ce248f3ec9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000336563057653b9aa@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in tick_sched_handle (3)
-Last occurred:      162 days ago
-Reported:           217 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=fce6ae4655ae3133b8b7410c3370bb2167c6324d
-Original thread:    https://lkml.kernel.org/lkml/0000000000007829c8057b0b58ed@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 2 replies; the last was 216 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+999bca54de2ee169c021@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007829c8057b0b58ed@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in strlcpy (2)
-Last occurred:      292 days ago
-Reported:           283 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ab0817a1599dd2fbbda6af5d5645ef92596fcb8e
-Original thread:    https://lkml.kernel.org/lkml/00000000000012463d0575d8eace@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c86cf7903306a6c201ba@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000012463d0575d8eace@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in ila_nf_input
-Last occurred:      17 days ago
-Reported:           160 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=6911f9daa3f3c89b595884f30b212e60e889d384
-Original thread:    https://lkml.kernel.org/lkml/0000000000003036f4057f81e98e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+03a25358f4cba0bc4cb6@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003036f4057f81e98e@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in __sock_release (2)
-Last occurred:      7 days ago
-Reported:           145 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=6997b9812b85ed88863bddecad772e8d3659e358
-Original thread:    https://lkml.kernel.org/lkml/000000000000559d460580ad5eeb@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+38b29941610a1cc735dc@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000559d460580ad5eeb@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: locking bug in udpv6_pre_connect
-Last occurred:      4 days ago
-Reported:           39 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=360cc28d22ff388dcda1dd642c5c77aa4b8b3e2d
-Original thread:    https://lkml.kernel.org/lkml/0000000000003028060588fac869@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+65f10c5aadc049eb5ef5@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003028060588fac869@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in ax88178_bind
-Last occurred:      19 days ago
-Reported:           17 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=d601416c178e3d67888024bdf7774477a034840b
-Original thread:    https://lkml.kernel.org/lkml/000000000000cba2b6058ac09eeb@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+abd25d675d47f23f188c@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000cba2b6058ac09eeb@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in vhci_hub_control
-Last occurred:      249 days ago
-Reported:           294 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=00aa2c9aba775f0761d3dabd7fb176964685051a
-Original thread:    https://lkml.kernel.org/lkml/00000000000075c8d70574f40fbc@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+600b03e0cf1b73bb23c4@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000075c8d70574f40fbc@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in ip6_hold_safe
-Last occurred:      8 days ago
-Reported:           123 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=16a5da76273f5052f30015161c9bd05153bc1172
-Original thread:    https://lkml.kernel.org/lkml/0000000000003209980582688c5b@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+ec03ae3a032901d10434@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003209980582688c5b@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: refcount bug in igmp_start_timer
-Last occurred:      71 days ago
-Reported:           310 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=667f1bd0ab632a49ca3daaa6967cc023b1c5b0c6
-Original thread:    https://lkml.kernel.org/lkml/0000000000002b42040573b8495a@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e28037ac1c96d2a86e89@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000002b42040573b8495a@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: user-memory-access Write in dst_release
-Last occurred:      11 days ago
-Reported:           168 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=c6269996e9feee38b279462027a03d4e49df1162
-Original thread:    https://lkml.kernel.org/lkml/000000000000a06f21057edc53c0@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+29ffc731816e0995ad54@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000a06f21057edc53c0@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in sit_tunnel_xmit
-Last occurred:      201 days ago
-Reported:           332 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=66bbedf52134d2359166806349088d36a6b6a254
-Original thread:    https://lkml.kernel.org/lkml/00000000000082e3a90571fadb4c@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+782ee96f9147673d8822@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000082e3a90571fadb4c@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in device_del
-Last occurred:      22 days ago
-Reported:           21 days ago
-Branches:           Mainline (with usb-fuzzer patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=2aa2f730c9d353ad29bb92acf8fd0b426ce1b393
-Original thread:    https://lkml.kernel.org/lkml/000000000000fa11f3058a69d67b@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug has received 2 replies; the last was 18 days
-ago.
-
-This looks like a bug in a net USB driver.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+93f2f45b19519b289613@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000fa11f3058a69d67b@google.com
-
---------------------------------------------------------------------------------
-Title:              KMSAN: uninit-value in gre_rcv (2)
-Last occurred:      111 days ago
-Reported:           271 days ago
-Branches:           Mainline (with KMSAN patches)
-Dashboard link:     https://syzkaller.appspot.com/bug?id=cf4a7c5922ce5ad229f97ed1eac213a12d427d1d
-Original thread:    https://lkml.kernel.org/lkml/0000000000007ce3ae0576c788e5@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+841c053d026900055032@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007ce3ae0576c788e5@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in do_ip_vs_set_ctl (2)
-Last occurred:      428 days ago
-Reported:           443 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=26aa22915f5e3b7ca2cfca76a939f12c25d624db
-Original thread:    https://lkml.kernel.org/lkml/94eb2c059ce0bca273056940d77d@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+7810ed2e0cb359580c17@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/94eb2c059ce0bca273056940d77d@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in icmpv6_xrlim_allow
-Last occurred:      9 days ago
-Reported:           20 days ago
-Branches:           bpf-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=d22f32efcb9496c8fa450f963bcce4d3e4cdf09d
-Original thread:    https://lkml.kernel.org/lkml/000000000000ae08b2058a785a4c@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+14536436e78408172703@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ae08b2058a785a4c@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: task hung in rtnetlink_rcv_msg
-Last occurred:      127 days ago
-Reported:           122 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=788ed2c7e973b69fd551ba6b5e21848dba2c1670
-Original thread:    https://lkml.kernel.org/lkml/000000000000c07a5805827e85d5@google.com/T/#u
-
-This bug has a C reproducer.
-
-The original thread for this bug received 7 replies; the last was 119 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+8218a8a0ff60c19b8eae@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000c07a5805827e85d5@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: bad unlock balance detected! (3)
-Last occurred:      90 days ago
-Reported:           120 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=342beb2b368a43cbb6533c00d758759b10fbc8d8
-Original thread:    https://lkml.kernel.org/lkml/000000000000685dc805829e835c@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 2 replies; the last was 90 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f3e3434787332dfc1c47@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000685dc805829e835c@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in tcp_enter_loss (2)
-Last occurred:      419 days ago
-Reported:           469 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b0bacf5645b1e60bbb14015bc0e23b9019621fc4
-Original thread:    https://groups.google.com/d/msgid/syzkaller-bugs/001a113f39820d16d50567379661%40google.com
-
-This bug has a C reproducer.
-
-For some reason the original report email for this bug is missing from the LKML
-archive at lore.kernel.org, so my script couldn't check whether anyone has
-replied to it or not.  The Google Groups link above should still work, though. 
-Also try searching for the bug title.
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in ip6_tnl_parse_tlv_enc_lim
-Last occurred:      211 days ago
-Reported:           280 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=b321cffb2022132bac9c54cbe0adcab20cfdd911
-Original thread:    https://lkml.kernel.org/lkml/0000000000005175bf057617c71d@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+68dce7caebd8543121de@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000005175bf057617c71d@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in tcp_sk_exit
-Last occurred:      24 days ago
-Reported:           109 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3901fe419ff5f17d6a1607b7d6d79c629a571946
-Original thread:    https://lkml.kernel.org/lkml/000000000000071b3c05838536b8@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+dfc9db054bca3a83f4a0@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000071b3c05838536b8@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in fib6_purge_rt (2)
-Last occurred:      14 days ago
-Reported:           62 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e017f309864dbdc2a6926d235e0ce85b6272dcfd
-Original thread:    https://lkml.kernel.org/lkml/000000000000caeb1c058734c654@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+d53d5d9b6793dc70eb9d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000caeb1c058734c654@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: user-memory-access Write in fib6_purge_rt (2)
-Last occurred:      13 days ago
-Reported:           20 days ago
-Branches:           net
-Dashboard link:     https://syzkaller.appspot.com/bug?id=29ea3db1b7655bdcf69bc0e3d8e5901623444640
-Original thread:    https://lkml.kernel.org/lkml/0000000000003f73d9058a785eec@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+420d3f70afb5d69d5a96@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003f73d9058a785eec@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: trying to register non-static key in icmp_send
-Last occurred:      125 days ago
-Reported:           146 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ea46a31df5253b18deb1e18c429c1483b111cbce
-Original thread:    https://lkml.kernel.org/lkml/0000000000007cd20e05809c2f96@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-The original thread for this bug received 1 reply, 92 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e1628a5e87492e6f1b76@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000007cd20e05809c2f96@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in bond_get_stats (2)
-Last occurred:      35 days ago
-Reported:           203 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ea28d585e25ade2dde266036c70df752bb3a0fcb
-Original thread:    https://lkml.kernel.org/lkml/000000000000dd0b51057c263f7f@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+de40a1dd58ea38aa9317@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000dd0b51057c263f7f@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in page_get_anon_vma
-Last occurred:      46 days ago
-Reported:           48 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=c275ff8b0b025c8a9baf06c3799d5c2efb919b56
-Original thread:    https://lkml.kernel.org/lkml/0000000000008aa0e4058849190e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+ed3e5c9a6a1e30a1bd2a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000008aa0e4058849190e@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in csum_and_copy_to_iter
-Last occurred:      214 days ago
-Reported:           212 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=602b1f5d93c8e231d50a1424c2fbc3318bcc6833
-Original thread:    https://lkml.kernel.org/lkml/0000000000001ecaa1057b6e4489@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-The original thread for this bug received 5 replies; the last was 210 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+ce18da013d76d837144d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001ecaa1057b6e4489@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in sch_direct_xmit
-Last occurred:      447 days ago
-Reported:           524 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3b9ee8a71fc404315ece5d56076775a2ed19ce1d
-Original thread:    https://lkml.kernel.org/lkml/089e0825d4a4d2cb2a0562e878f1@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+29cc278357da941e304e@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/089e0825d4a4d2cb2a0562e878f1@google.com
-
---------------------------------------------------------------------------------
-Title:              inconsistent lock state in ila_xlat_nl_cmd_del_mapping
-Last occurred:      309 days ago
-Reported:           314 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=be943a4399dcf3ed43bac2694a3b8957c6980409
-Original thread:    https://lkml.kernel.org/lkml/000000000000ae453e05735dcdb8@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+3db64bd48b29a825d2db@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ae453e05735dcdb8@google.com
-
---------------------------------------------------------------------------------
-Title:              kernel BUG at net/ipv4/ip_output.c:LINE!
-Last occurred:      155 days ago
-Reported:           346 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=d582be84c0efa34f4936e12227905b2c18989a25
-Original thread:    https://lkml.kernel.org/lkml/000000000000f68d660570dcddd8@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+90d5ec0c05e708f3b66d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000f68d660570dcddd8@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in sk_diag_fill
-Last occurred:      36 days ago
-Reported:           415 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=3968882ac771e7458b15f8086477f42d7ca6dec0
-Original thread:    https://lkml.kernel.org/lkml/000000000000169606056b793179@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 6 replies; the last was 405 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+c1872be62e587eae9669@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000169606056b793179@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: locking bug in icmp6_send (2)
-Last occurred:      15 days ago
-Reported:           13 days ago
-Branches:           net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=2ccdf5f785fdb1087d9dc106dd8bc71ea9a1fb58
-Original thread:    https://lkml.kernel.org/lkml/000000000000e64753058b06f83f@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+0ee50f3d30ce6a28b3cd@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e64753058b06f83f@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in fib6_purge_rt (2)
-Last occurred:      21 days ago
-Reported:           20 days ago
-Branches:           net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4174cd9494cb4571668f34ab96fcb2382554e6fb
-Original thread:    https://lkml.kernel.org/lkml/000000000000b6a7d2058a78736d@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f4812f31edd866494c9f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000b6a7d2058a78736d@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: slab-out-of-bounds Read in fib6_rule_lookup (2)
-Last occurred:      23 days ago
-Reported:           87 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=148148cb145574b07580d9e34877b4eef587ed31
-Original thread:    https://lkml.kernel.org/lkml/00000000000021ef3505853f988e@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+49f38f33f3c5d76cb19b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000021ef3505853f988e@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in __static_key_slow_dec_cpuslocked
-Last occurred:      51 days ago
-Reported:           48 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=753aa2e459553231bb71e1602b2cd27171a06d32
-Original thread:    https://lkml.kernel.org/lkml/000000000000759a89058848e747@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+a65e6ce239e4afe6c5e7@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000759a89058848e747@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in icmp_sk_exit
-Last occurred:      111 days ago
-Reported:           124 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0cbaf5f5094157a8d563c6c1cbe5ee20028a8902
-Original thread:    https://lkml.kernel.org/lkml/000000000000b436ad058255c528@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+3d7fa0f0de0f86d0eb4f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000b436ad058255c528@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: spinlock bad magic in __queue_work
-Last occurred:      90 days ago
-Reported:           138 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=27ee7c254659d57dd99215715f3db0ed20339941
-Original thread:    https://lkml.kernel.org/lkml/000000000000e063bb0581329cc0@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+636bcaf4b481f6b7343c@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e063bb0581329cc0@google.com
-
---------------------------------------------------------------------------------
-Title:              inconsistent lock state in ila_xlat_nl_cmd_add_mapping
-Last occurred:      309 days ago
-Reported:           314 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=481b4913494f0dcabc2e06e3158a3d042abdf985
-Original thread:    https://lkml.kernel.org/lkml/000000000000b14d8c05735dcdf8@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+eaaf6c4a6a8cb1869d86@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000b14d8c05735dcdf8@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: wild-memory-access Write in fib6_purge_rt
-Last occurred:      57 days ago
-Reported:           136 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e3ed1520f5d50c003569cc69066d780ef2ee9f18
-Original thread:    https://lkml.kernel.org/lkml/000000000000ca08dd0581649889@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+3dbea54db3674c0d57d6@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ca08dd0581649889@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in __queue_work
-Last occurred:      110 days ago
-Reported:           109 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=1401c87c1eac8167422bcdb28cf81647d894e8d2
-Original thread:    https://lkml.kernel.org/lkml/000000000000aec29a0583853924@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+b26e643d0aa2822e9c87@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000aec29a0583853924@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in remove_proc_entry (2)
-Last occurred:      61 days ago
-Reported:           215 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=fab7eb1ff4259eb5e6cb9067cba63ec7b1568b4d
-Original thread:    https://lkml.kernel.org/lkml/00000000000061c4cf057b306863@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+46d1fec9e51890edb1a6@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000061c4cf057b306863@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in skb_queue_tail
-Last occurred:      96 days ago
-Reported:           448 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=ab5525a0b79efd6a5dbb4deb3ccd3e93d9c03321
-Original thread:    https://lkml.kernel.org/lkml/0000000000003584570568da18dd@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 5 replies; the last was 446 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6b495100f17ca8554ab9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000003584570568da18dd@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in ipv6_rcv
-Last occurred:      44 days ago
-Reported:           107 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=6a14da2954543d26e61aeaefa0098d445854c5c1
-Original thread:    https://lkml.kernel.org/lkml/0000000000001b05b40583a46fd7@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6c54e67cc0b0c896aa4b@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000001b05b40583a46fd7@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: corrupted list in proto_register
-Last occurred:      37 days ago
-Reported:           37 days ago
-Branches:           net
-Dashboard link:     https://syzkaller.appspot.com/bug?id=a56a4bec03bf7561b1ec51fe929cba4018081b92
-Original thread:    https://lkml.kernel.org/lkml/000000000000e76a90058923eff3@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+7bc2817ec0ed18de9079@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000e76a90058923eff3@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in genl_rcv (2)
-Last occurred:      105 days ago
-Reported:           164 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f8a6b7d881874def4c37657fac2453f7551a7664
-Original thread:    https://lkml.kernel.org/lkml/000000000000827dbb057f2b85bb@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+cf29f8ae16ca7ceb483d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000827dbb057f2b85bb@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in ip_tunnel_lookup
-Last occurred:      85 days ago
-Reported:           161 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=0a2ec3432ccfbd144e44c746f5b7b04f7e12c989
-Original thread:    https://lkml.kernel.org/lkml/00000000000075901d057f6e5a97@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+4a0034797afb7e908ab4@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000075901d057f6e5a97@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: locking bug in try_to_grab_pending
-Last occurred:      132 days ago
-Reported:           131 days ago
-Branches:           net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=86c7f0dd3bfa4cd651bb37a04da2cfcabd860225
-Original thread:    https://lkml.kernel.org/lkml/0000000000006dc0290581ca413e@google.com/T/#u
-
-This bug has a syzkaller reproducer only.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+2b713236b28823cd4dff@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006dc0290581ca413e@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in neigh_change_state
-Last occurred:      182 days ago
-Reported:           194 days ago
-Branches:           bpf-next, linux-next, and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=9a91353fc2af7d4f3085766dadc9105304c7e7c4
-Original thread:    https://lkml.kernel.org/lkml/000000000000029056057cd141cb@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+6a3c02010a025ac7b7cf@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000029056057cd141cb@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in __dev_queue_xmit (2)
-Last occurred:      88 days ago
-Reported:           88 days ago
-Branches:           net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f9e1abb5bf1d75834c1906398efab4601265cad5
-Original thread:    https://lkml.kernel.org/lkml/000000000000ee01ef058529d74c@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+f8c40b4da41f3e8049c4@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ee01ef058529d74c@google.com
-
---------------------------------------------------------------------------------
-Title:              KASAN: use-after-free Read in do_raw_spin_trylock
-Last occurred:      154 days ago
-Reported:           153 days ago
-Branches:           net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=4041c245d773cebc8572b2c5cf01495d8f24f1cc
-Original thread:    https://lkml.kernel.org/lkml/0000000000000a300f058011d4da@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+fa0f7116270c30316624@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000000a300f058011d4da@google.com
-
---------------------------------------------------------------------------------
-Title:              INFO: rcu detected stall in gc_worker
-Last occurred:      68 days ago
-Reported:           153 days ago
-Branches:           net and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=298ba9ab760957e0ead590f868a922d7d74bf59a
-Original thread:    https://lkml.kernel.org/lkml/000000000000ada99c058010d943@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+655174276c47216abab5@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ada99c058010d943@google.com
-
---------------------------------------------------------------------------------
-Title:              general protection fault in ip6_dst_hoplimit
-Last occurred:      102 days ago
-Reported:           97 days ago
-Branches:           net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=e310a1a3031be03dae5de35cc6dd9782232fdfea
-Original thread:    https://lkml.kernel.org/lkml/000000000000df93f705846f0963@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-The original thread for this bug received 1 reply, 56 days ago.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+4c869fc20129562c53fa@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000df93f705846f0963@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in fib6_add (2)
-Last occurred:      65 days ago
-Reported:           206 days ago
-Branches:           bpf and net-next
-Dashboard link:     https://syzkaller.appspot.com/bug?id=757f2e8c1748d9d3b453b0ae3c33b1fbfe222d48
-Original thread:    https://lkml.kernel.org/lkml/0000000000000874de057be144e8@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+60cc5bc1296c8afcf739@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000000874de057be144e8@google.com
-
---------------------------------------------------------------------------------
-Title:              possible deadlock in dev_uc_sync_multiple
-Last occurred:      101 days ago
-Reported:           101 days ago
-Branches:           net
-Dashboard link:     https://syzkaller.appspot.com/bug?id=43071175d7c477c40dd1044a2ce30779a40ca4c0
-Original thread:    https://lkml.kernel.org/lkml/00000000000019ca8105842a9660@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+829513abde137358d25d@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000019ca8105842a9660@google.com
+Add a driver for Macronix raw NAND controller.
+
+Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+---
+ drivers/mtd/nand/raw/Kconfig     |   6 +
+ drivers/mtd/nand/raw/Makefile    |   1 +
+ drivers/mtd/nand/raw/mxic_nand.c | 551 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 558 insertions(+)
+ create mode 100644 drivers/mtd/nand/raw/mxic_nand.c
+
+diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
+index 5a711d8..9cff36a 100644
+--- a/drivers/mtd/nand/raw/Kconfig
++++ b/drivers/mtd/nand/raw/Kconfig
+@@ -407,6 +407,12 @@ config MTD_NAND_MTK
+ 	  Enables support for NAND controller on MTK SoCs.
+ 	  This controller is found on mt27xx, mt81xx, mt65xx SoCs.
+ 
++config MTD_NAND_MXIC
++	tristate "Macronix raw NAND controller"
++	depends on HAS_IOMEM || COMPILE_TEST
++	help
++	  This selects the Macronix raw NAND controller driver.
++
+ config MTD_NAND_TEGRA
+ 	tristate "NVIDIA Tegra NAND controller"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
+index efaf5cd..9b43fbf 100644
+--- a/drivers/mtd/nand/raw/Makefile
++++ b/drivers/mtd/nand/raw/Makefile
+@@ -54,6 +54,7 @@ obj-$(CONFIG_MTD_NAND_HISI504)	        += hisi504_nand.o
+ obj-$(CONFIG_MTD_NAND_BRCMNAND)		+= brcmnand/
+ obj-$(CONFIG_MTD_NAND_QCOM)		+= qcom_nandc.o
+ obj-$(CONFIG_MTD_NAND_MTK)		+= mtk_ecc.o mtk_nand.o
++obj-$(CONFIG_MTD_NAND_MXIC)		+= mxic_nand.o
+ obj-$(CONFIG_MTD_NAND_TEGRA)		+= tegra_nand.o
+ obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+= stm32_fmc2_nand.o
+ obj-$(CONFIG_MTD_NAND_MESON)		+= meson_nand.o
+diff --git a/drivers/mtd/nand/raw/mxic_nand.c b/drivers/mtd/nand/raw/mxic_nand.c
+new file mode 100644
+index 0000000..14c0b3b
+--- /dev/null
++++ b/drivers/mtd/nand/raw/mxic_nand.c
+@@ -0,0 +1,551 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 Macronix International Co., Ltd.
++ *
++ * Author:
++ *	Mason Yang <masonccyang@mxic.com.tw>
++ */
++
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/mtd/mtd.h>
++#include <linux/mtd/rawnand.h>
++#include <linux/mtd/nand_ecc.h>
++#include <linux/platform_device.h>
++
++#include "internals.h"
++
++#define HC_CFG			0x0
++#define HC_CFG_IF_CFG(x)	((x) << 27)
++#define HC_CFG_DUAL_SLAVE	BIT(31)
++#define HC_CFG_INDIVIDUAL	BIT(30)
++#define HC_CFG_NIO(x)		(((x) / 4) << 27)
++#define HC_CFG_TYPE(s, t)	((t) << (23 + ((s) * 2)))
++#define HC_CFG_TYPE_SPI_NOR	0
++#define HC_CFG_TYPE_SPI_NAND	1
++#define HC_CFG_TYPE_SPI_RAM	2
++#define HC_CFG_TYPE_RAW_NAND	3
++#define HC_CFG_SLV_ACT(x)	((x) << 21)
++#define HC_CFG_CLK_PH_EN	BIT(20)
++#define HC_CFG_CLK_POL_INV	BIT(19)
++#define HC_CFG_BIG_ENDIAN	BIT(18)
++#define HC_CFG_DATA_PASS	BIT(17)
++#define HC_CFG_IDLE_SIO_LVL(x)	((x) << 16)
++#define HC_CFG_MAN_START_EN	BIT(3)
++#define HC_CFG_MAN_START	BIT(2)
++#define HC_CFG_MAN_CS_EN	BIT(1)
++#define HC_CFG_MAN_CS_ASSERT	BIT(0)
++
++#define INT_STS			0x4
++#define INT_STS_EN		0x8
++#define INT_SIG_EN		0xc
++#define INT_STS_ALL		GENMASK(31, 0)
++#define INT_RDY_PIN		BIT(26)
++#define INT_RDY_SR		BIT(25)
++#define INT_LNR_SUSP		BIT(24)
++#define INT_ECC_ERR		BIT(17)
++#define INT_CRC_ERR		BIT(16)
++#define INT_LWR_DIS		BIT(12)
++#define INT_LRD_DIS		BIT(11)
++#define INT_SDMA_INT		BIT(10)
++#define INT_DMA_FINISH		BIT(9)
++#define INT_RX_NOT_FULL		BIT(3)
++#define INT_RX_NOT_EMPTY	BIT(2)
++#define INT_TX_NOT_FULL		BIT(1)
++#define INT_TX_EMPTY		BIT(0)
++
++#define HC_EN			0x10
++#define HC_EN_BIT		BIT(0)
++
++#define TXD(x)			(0x14 + ((x) * 4))
++#define RXD			0x24
++
++#define SS_CTRL(s)		(0x30 + ((s) * 4))
++#define LRD_CFG			0x44
++#define LWR_CFG			0x80
++#define RWW_CFG			0x70
++#define OP_READ			BIT(23)
++#define OP_DUMMY_CYC(x)		((x) << 17)
++#define OP_ADDR_BYTES(x)	((x) << 14)
++#define OP_CMD_BYTES(x)		(((x) - 1) << 13)
++#define OP_OCTA_CRC_EN		BIT(12)
++#define OP_DQS_EN		BIT(11)
++#define OP_ENHC_EN		BIT(10)
++#define OP_PREAMBLE_EN		BIT(9)
++#define OP_DATA_DDR		BIT(8)
++#define OP_DATA_BUSW(x)		((x) << 6)
++#define OP_ADDR_DDR		BIT(5)
++#define OP_ADDR_BUSW(x)		((x) << 3)
++#define OP_CMD_DDR		BIT(2)
++#define OP_CMD_BUSW(x)		(x)
++#define OP_BUSW_1		0
++#define OP_BUSW_2		1
++#define OP_BUSW_4		2
++#define OP_BUSW_8		3
++
++#define OCTA_CRC		0x38
++#define OCTA_CRC_IN_EN(s)	BIT(3 + ((s) * 16))
++#define OCTA_CRC_CHUNK(s, x)	((fls((x) / 32)) << (1 + ((s) * 16)))
++#define OCTA_CRC_OUT_EN(s)	BIT(0 + ((s) * 16))
++
++#define ONFI_DIN_CNT(s)		(0x3c + (s))
++
++#define LRD_CTRL		0x48
++#define RWW_CTRL		0x74
++#define LWR_CTRL		0x84
++#define LMODE_EN		BIT(31)
++#define LMODE_SLV_ACT(x)	((x) << 21)
++#define LMODE_CMD1(x)		((x) << 8)
++#define LMODE_CMD0(x)		(x)
++
++#define LRD_ADDR		0x4c
++#define LWR_ADDR		0x88
++#define LRD_RANGE		0x50
++#define LWR_RANGE		0x8c
++
++#define AXI_SLV_ADDR		0x54
++
++#define DMAC_RD_CFG		0x58
++#define DMAC_WR_CFG		0x94
++#define DMAC_CFG_PERIPH_EN	BIT(31)
++#define DMAC_CFG_ALLFLUSH_EN	BIT(30)
++#define DMAC_CFG_LASTFLUSH_EN	BIT(29)
++#define DMAC_CFG_QE(x)		(((x) + 1) << 16)
++#define DMAC_CFG_BURST_LEN(x)	(((x) + 1) << 12)
++#define DMAC_CFG_BURST_SZ(x)	((x) << 8)
++#define DMAC_CFG_DIR_READ	BIT(1)
++#define DMAC_CFG_START		BIT(0)
++
++#define DMAC_RD_CNT		0x5c
++#define DMAC_WR_CNT		0x98
++
++#define SDMA_ADDR		0x60
++
++#define DMAM_CFG		0x64
++#define DMAM_CFG_START		BIT(31)
++#define DMAM_CFG_CONT		BIT(30)
++#define DMAM_CFG_SDMA_GAP(x)	(fls((x) / 8192) << 2)
++#define DMAM_CFG_DIR_READ	BIT(1)
++#define DMAM_CFG_EN		BIT(0)
++
++#define DMAM_CNT		0x68
++
++#define LNR_TIMER_TH		0x6c
++
++#define RDM_CFG0		0x78
++#define RDM_CFG0_POLY(x)	(x)
++
++#define RDM_CFG1		0x7c
++#define RDM_CFG1_RDM_EN		BIT(31)
++#define RDM_CFG1_SEED(x)	(x)
++
++#define LWR_SUSP_CTRL		0x90
++#define LWR_SUSP_CTRL_EN	BIT(31)
++
++#define DMAS_CTRL		0x9c
++#define DMAS_CTRL_DIR_READ	BIT(31)
++#define DMAS_CTRL_EN		BIT(30)
++
++#define DATA_STROB		0xa0
++#define DATA_STROB_EDO_EN	BIT(2)
++#define DATA_STROB_INV_POL	BIT(1)
++#define DATA_STROB_DELAY_2CYC	BIT(0)
++
++#define IDLY_CODE(x)		(0xa4 + ((x) * 4))
++#define IDLY_CODE_VAL(x, v)	((v) << (((x) % 4) * 8))
++
++#define GPIO			0xc4
++#define GPIO_PT(x)		BIT(3 + ((x) * 16))
++#define GPIO_RESET(x)		BIT(2 + ((x) * 16))
++#define GPIO_HOLDB(x)		BIT(1 + ((x) * 16))
++#define GPIO_WPB(x)		BIT((x) * 16)
++
++#define HC_VER			0xd0
++
++#define HW_TEST(x)		(0xe0 + ((x) * 4))
++
++#define MXIC_NFC_MAX_CLK_HZ	50000000
++
++struct mxic_nand_ctlr {
++	struct clk *ps_clk;
++	struct clk *send_clk;
++	struct clk *send_dly_clk;
++	void __iomem *regs;
++	struct nand_controller controller;
++	void *priv;
++};
++
++struct mxic_nand_chip {
++	struct nand_chip chip;
++};
++
++static int mxic_nfc_clk_enable(struct mxic_nand_ctlr *nfc)
++{
++	int ret;
++
++	ret = clk_prepare_enable(nfc->send_clk);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(nfc->send_dly_clk);
++	if (ret)
++		goto err_send_dly_clk;
++
++	return ret;
++
++err_send_dly_clk:
++	clk_disable_unprepare(nfc->send_clk);
++
++	return ret;
++}
++
++static void mxic_nfc_clk_disable(struct mxic_nand_ctlr *nfc)
++{
++	clk_disable_unprepare(nfc->send_clk);
++	clk_disable_unprepare(nfc->send_dly_clk);
++}
++
++static void mxic_nfc_set_input_delay(struct mxic_nand_ctlr *nfc, u8 idly_code)
++{
++	writel(IDLY_CODE_VAL(0, idly_code) |
++	       IDLY_CODE_VAL(1, idly_code) |
++	       IDLY_CODE_VAL(2, idly_code) |
++	       IDLY_CODE_VAL(3, idly_code),
++	       nfc->regs + IDLY_CODE(0));
++	writel(IDLY_CODE_VAL(4, idly_code) |
++	       IDLY_CODE_VAL(5, idly_code) |
++	       IDLY_CODE_VAL(6, idly_code) |
++	       IDLY_CODE_VAL(7, idly_code),
++	       nfc->regs + IDLY_CODE(1));
++}
++
++static int mxic_nfc_clk_setup(struct mxic_nand_ctlr *nfc, unsigned long freq)
++{
++	int ret;
++
++	ret = clk_set_rate(nfc->send_clk, freq);
++	if (ret)
++		return ret;
++
++	ret = clk_set_rate(nfc->send_dly_clk, freq);
++	if (ret)
++		return ret;
++
++	/*
++	 * A constant delay range from 0x0 ~ 0x1F for input delay,
++	 * the unit is 78 ps, the max input delay is 2.418 ns.
++	 */
++	mxic_nfc_set_input_delay(nfc, 0xf);
++
++	/*
++	 * Phase degree = 360 * freq * output-delay
++	 * where output-delay is a constant value 1 ns in FPGA.
++	 *
++	 * Get Phase degree = 360 * freq * 1 ns
++	 *                  = 360 * freq * 1 sec / 1000000000
++	 *                  = 9 * freq / 25000000
++	 */
++	ret = clk_set_phase(nfc->send_dly_clk, 9 * freq / 25000000);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int mxic_nfc_set_freq(struct mxic_nand_ctlr *nfc, unsigned long freq)
++{
++	int ret;
++
++	if (freq > MXIC_NFC_MAX_CLK_HZ)
++		freq = MXIC_NFC_MAX_CLK_HZ;
++
++	mxic_nfc_clk_disable(nfc);
++	ret = mxic_nfc_clk_setup(nfc, freq);
++	if (ret)
++		return ret;
++
++	ret = mxic_nfc_clk_enable(nfc);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static void mxic_nfc_hw_init(struct mxic_nand_ctlr *nfc)
++{
++	writel(DATA_STROB_EDO_EN, nfc->regs + DATA_STROB);
++	writel(HC_CFG_NIO(8) | HC_CFG_TYPE(1, HC_CFG_TYPE_RAW_NAND) |
++	       HC_CFG_SLV_ACT(0) | HC_CFG_MAN_CS_EN |
++	       HC_CFG_IDLE_SIO_LVL(1), nfc->regs + HC_CFG);
++	writel(INT_STS_ALL, nfc->regs + INT_STS_EN);
++	writel(0x0, nfc->regs + ONFI_DIN_CNT(0));
++	writel(0, nfc->regs + LRD_CFG);
++	writel(0, nfc->regs + LRD_CTRL);
++	writel(0x0, nfc->regs + HC_EN);
++
++	/* Default 10 MHz to setup tRC_min/tWC_min:100 ns */
++	mxic_nfc_set_freq(nfc, 10000000);
++}
++
++static void mxic_nfc_cs_enable(struct mxic_nand_ctlr *nfc)
++{
++	writel(readl(nfc->regs + HC_CFG) | HC_CFG_MAN_CS_EN,
++	       nfc->regs + HC_CFG);
++	writel(HC_CFG_MAN_CS_ASSERT | readl(nfc->regs + HC_CFG),
++	       nfc->regs + HC_CFG);
++}
++
++static void mxic_nfc_cs_disable(struct mxic_nand_ctlr *nfc)
++{
++	writel(~HC_CFG_MAN_CS_ASSERT & readl(nfc->regs + HC_CFG),
++	       nfc->regs + HC_CFG);
++}
++
++static int  mxic_nfc_wait_ready(struct nand_chip *chip)
++{
++	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
++	u32 sts;
++
++	return readl_poll_timeout(nfc->regs + INT_STS, sts,
++				  sts & INT_RDY_PIN, 0, USEC_PER_SEC);
++}
++
++static int mxic_nfc_data_xfer(struct mxic_nand_ctlr *nfc, const void *txbuf,
++			      void *rxbuf, unsigned int len)
++{
++	unsigned int pos = 0;
++
++	while (pos < len) {
++		unsigned int nbytes = len - pos;
++		u32 data = 0xffffffff;
++		u32 sts;
++		int ret;
++
++		if (nbytes > 4)
++			nbytes = 4;
++
++		if (txbuf)
++			memcpy(&data, txbuf + pos, nbytes);
++
++		ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
++					 sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
++		if (ret)
++			return ret;
++
++		writel(data, nfc->regs + TXD(nbytes % 4));
++
++		if (rxbuf) {
++			ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
++						 sts & INT_TX_EMPTY, 0,
++						 USEC_PER_SEC);
++			if (ret)
++				return ret;
++
++			ret = readl_poll_timeout(nfc->regs + INT_STS, sts,
++						 sts & INT_RX_NOT_EMPTY, 0,
++						 USEC_PER_SEC);
++			if (ret)
++				return ret;
++
++			data = readl(nfc->regs + RXD);
++			data >>= (8 * (4 - nbytes));
++			memcpy(rxbuf + pos, &data, nbytes);
++			WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
++		} else {
++			readl(nfc->regs + RXD);
++		}
++		WARN_ON(readl(nfc->regs + INT_STS) & INT_RX_NOT_EMPTY);
++
++		pos += nbytes;
++	}
++
++	return 0;
++}
++
++static int mxic_nfc_exec_op(struct nand_chip *chip,
++			    const struct nand_operation *op, bool check_only)
++{
++	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
++	const struct nand_op_instr *instr = NULL;
++	int ret = 0;
++	unsigned int op_id;
++
++	mxic_nfc_cs_enable(nfc);
++
++	for (op_id = 0; op_id < op->ninstrs; op_id++) {
++		instr = &op->instrs[op_id];
++
++		switch (instr->type) {
++		case NAND_OP_CMD_INSTR:
++			writel(0, nfc->regs + HC_EN);
++			writel(HC_EN_BIT, nfc->regs + HC_EN);
++			writel(OP_CMD_BUSW(OP_BUSW_8) |  OP_DUMMY_CYC(0x3F) |
++			       OP_CMD_BYTES(0), nfc->regs + SS_CTRL(0));
++
++			ret = mxic_nfc_data_xfer(nfc,
++						 &instr->ctx.cmd.opcode,
++						 NULL, 1);
++			break;
++
++		case NAND_OP_ADDR_INSTR:
++			writel(OP_ADDR_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F) |
++			       OP_ADDR_BYTES(instr->ctx.addr.naddrs),
++			       nfc->regs + SS_CTRL(0));
++			ret = mxic_nfc_data_xfer(nfc,
++						 instr->ctx.addr.addrs, NULL,
++						 instr->ctx.addr.naddrs);
++			break;
++
++		case NAND_OP_DATA_IN_INSTR:
++			writel(0x0, nfc->regs + ONFI_DIN_CNT(0));
++			writel(OP_DATA_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F) |
++			       OP_READ, nfc->regs + SS_CTRL(0));
++			ret = mxic_nfc_data_xfer(nfc, NULL,
++						 instr->ctx.data.buf.in,
++						 instr->ctx.data.len);
++			break;
++
++		case NAND_OP_DATA_OUT_INSTR:
++			writel(instr->ctx.data.len,
++			       nfc->regs + ONFI_DIN_CNT(0));
++			writel(OP_DATA_BUSW(OP_BUSW_8) | OP_DUMMY_CYC(0x3F),
++			       nfc->regs + SS_CTRL(0));
++			ret = mxic_nfc_data_xfer(nfc,
++						 instr->ctx.data.buf.out, NULL,
++						 instr->ctx.data.len);
++			break;
++
++		case NAND_OP_WAITRDY_INSTR:
++			ret = mxic_nfc_wait_ready(chip);
++			break;
++		}
++	}
++
++	mxic_nfc_cs_disable(nfc);
++	return ret;
++}
++
++static int mxic_nfc_setup_data_interface(struct nand_chip *chip, int chipnr,
++					 const struct nand_data_interface *conf)
++{
++	struct mxic_nand_ctlr *nfc = nand_get_controller_data(chip);
++	const struct nand_sdr_timings *sdr;
++	unsigned long freq;
++
++	sdr = nand_get_sdr_timings(conf);
++	if (IS_ERR(sdr))
++		return PTR_ERR(sdr);
++
++	if (chipnr < 0)
++		return 0;
++
++	if (sdr->tRC_min)
++		freq = 1000000000 / (sdr->tRC_min / 1000);
++
++	return mxic_nfc_set_freq(nfc, freq);
++}
++
++static const struct nand_controller_ops mxic_nand_controller_ops = {
++	.exec_op = mxic_nfc_exec_op,
++	.setup_data_interface = mxic_nfc_setup_data_interface,
++};
++
++static int mxic_nfc_probe(struct platform_device *pdev)
++{
++	struct mtd_info *mtd;
++	struct mxic_nand_ctlr *nfc;
++	struct mxic_nand_chip *mxic_nand;
++	struct nand_chip *nand_chip;
++	struct resource *res;
++	int err;
++
++	nfc = devm_kzalloc(&pdev->dev, sizeof(struct mxic_nand_ctlr),
++			   GFP_KERNEL);
++	if (!nfc)
++		return -ENOMEM;
++
++	mxic_nand = devm_kzalloc(&pdev->dev, sizeof(struct mxic_nand_chip),
++				 GFP_KERNEL);
++	if (!mxic_nand)
++		return -ENOMEM;
++
++	nfc->ps_clk = devm_clk_get(&pdev->dev, "ps_clk");
++	if (IS_ERR(nfc->ps_clk))
++		return PTR_ERR(nfc->ps_clk);
++
++	nfc->send_clk = devm_clk_get(&pdev->dev, "send_clk");
++	if (IS_ERR(nfc->send_clk))
++		return PTR_ERR(nfc->send_clk);
++
++	nfc->send_dly_clk = devm_clk_get(&pdev->dev, "send_dly_clk");
++	if (IS_ERR(nfc->send_dly_clk))
++		return PTR_ERR(nfc->send_dly_clk);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
++	nfc->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(nfc->regs))
++		return PTR_ERR(nfc->regs);
++
++	nand_chip = &mxic_nand->chip;
++	mtd = nand_to_mtd(nand_chip);
++	mtd->dev.parent = &pdev->dev;
++	nand_chip->ecc.priv = NULL;
++	nand_set_flash_node(nand_chip, pdev->dev.of_node);
++	nand_chip->priv = nfc;
++	nfc->priv = nand_chip;
++
++	nfc->controller.ops = &mxic_nand_controller_ops;
++	nand_controller_init(&nfc->controller);
++	nand_chip->controller = &nfc->controller;
++
++	mxic_nfc_hw_init(nfc);
++
++	err = nand_scan(nand_chip, 1);
++	if (err)
++		goto fail;
++
++	err = mtd_device_register(mtd, NULL, 0);
++	if (err)
++		goto fail;
++
++	platform_set_drvdata(pdev, nfc);
++	return 0;
++
++fail:
++	mxic_nfc_clk_disable(nfc);
++	clk_disable_unprepare(nfc->ps_clk);
++	return err;
++}
++
++static int mxic_nfc_remove(struct platform_device *pdev)
++{
++	struct mxic_nand_ctlr *nfc = platform_get_drvdata(pdev);
++
++	nand_release(nfc->priv);
++	mxic_nfc_clk_disable(nfc);
++	clk_disable_unprepare(nfc->ps_clk);
++
++	return 0;
++}
++
++static const struct of_device_id mxic_nfc_of_ids[] = {
++	{ .compatible = "mxic,raw-nand-ctlr", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mxic_nfc_of_ids);
++
++static struct platform_driver mxic_nfc_driver = {
++	.probe = mxic_nfc_probe,
++	.remove = mxic_nfc_remove,
++	.driver = {
++		.name = "mxic-nfc",
++		.of_match_table = mxic_nfc_of_ids,
++	},
++};
++module_platform_driver(mxic_nfc_driver);
++
++MODULE_AUTHOR("Mason Yang <masonccyang@mxic.com.tw>");
++MODULE_DESCRIPTION("Macronix RAW NAND Flash Controller driver");
++MODULE_LICENSE("GPL v2");
+-- 
+1.9.1
 
