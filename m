@@ -2,105 +2,104 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E351C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93FEC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62FCD208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:47:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="CUMIS28l"
+	by mail.kernel.org (Postfix) with ESMTP id 83BF7216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732473AbfFYPru (ORCPT
+        id S1732489AbfFYPs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:47:50 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:39792 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726443AbfFYPrt (ORCPT
+        Tue, 25 Jun 2019 11:48:27 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44752 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfFYPs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:47:49 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PFhjts017774;
-        Tue, 25 Jun 2019 10:47:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type;
- s=PODMain02222019; bh=AU9lgQXgneIvc7cWJxJm5cU7a8ZdhB5OZwaVtO2oiAI=;
- b=CUMIS28lY4HANj3FDmm1kEsCaXAGwGN7TeQvK+poUo1H5F1V68d3fSytyN2rCk+fQdQA
- zMWKyVDGwjOnXDwNBw4MUbWZyE76V9bKrtj3EYcIs/NHDWpuqilQnI4sA7wGm6Lk2yjY
- PLLmMJX8taJMqygmI0oSQZwMJ/rlchQwqg6Cp02QBcKAIMrp3dna7hevQHAq6/JhN8aM
- jpOblrIiqWwtFuKmcjoCvKYgcymDXbsV574y6+69wsRfC0r3lppXC/L4SdcdXPyp6Yi+
- jZOoiaWUQZ+qszZ+ZrMXI8Jlgs/Ym2rCvPAG+9ffvle5SphIkR6vj/BEwcdRXYgsBhmq AQ== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail3.cirrus.com ([87.246.76.56])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2t9grnvx2u-1;
-        Tue, 25 Jun 2019 10:47:18 -0500
-Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
-        by mail3.cirrus.com (Postfix) with ESMTP id 01F7C6121AFE;
-        Tue, 25 Jun 2019 10:48:06 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 25 Jun
- 2019 16:47:17 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 25 Jun 2019 16:47:17 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7685244;
-        Tue, 25 Jun 2019 16:47:17 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH] irqchip: madera: Fixup SPDX headers
-Date:   Tue, 25 Jun 2019 16:47:17 +0100
-Message-ID: <20190625154717.28640-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 25 Jun 2019 11:48:27 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x47so18886795qtk.11;
+        Tue, 25 Jun 2019 08:48:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UM0dIusS/gwdu4c8O9SbMLiBQ6AfaMuOD/f2wf1DSM0=;
+        b=RfVP/YSHIeq6OEIFwBiAi3EiWtLzh9Q9AUz7CnT13RbOYKxIDrn5+A5hsG0/3bx2Z+
+         u5lw0fc7jf4GnUGz5vRuuyiT4iqcKkc8MJMyZuzFLPEF5bTgEfYkmvpbibXMYYB/Ut5D
+         2qfEHOAeH+kyx03C+vOwBM2J83NxNL2P1uRV/WtEtF5ILcEPYNTUxPGe5H/oubIaHA+G
+         q2LSJEdxsd5XAdc1npGXjboFoVmsb+7nup3Gk9CTKWL0KBOR2dMVgUtj5PHdwp8QHfwM
+         eSTvVz4xttnNx/d3Dasj7rP7vLgQ0ZtY1usPCd+k0xTJ6prXHYBZOQW0eDxFVKjcXXYq
+         WkfA==
+X-Gm-Message-State: APjAAAXnowdIA7qKtMgsJbv7q+AoVFoKX2PdZE9sd5OrOamRHYtndDT/
+        qYm+DcnBYGOO9NxjsGuI0ny5hziib4v6Fuh+15A5p+Rs
+X-Google-Smtp-Source: APXvYqyVchxTXULX5RiBGFf7pkDLgru/QLMdrSx0lNX8fcNNL8F7yHW1If4rQ0zSKCfUNzX8+NHSiNHEywkw8pWsVxw=
+X-Received: by 2002:a0c:9595:: with SMTP id s21mr32470026qvs.63.1561477705897;
+ Tue, 25 Jun 2019 08:48:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=710 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250119
+References: <20190625085616.GA32399@lst.de> <ccfa78f3-35c2-1d26-98b5-b21a76b90e1e@physik.fu-berlin.de>
+ <20190625112146.GA9580@angband.pl> <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
+ <CAK8P3a3irwwwCQ_kPh5BTg-jGGbJOj=3fhVrTDBUZgH1V7bpFQ@mail.gmail.com> <20190625142832.GD1506@brightrain.aerifal.cx>
+In-Reply-To: <20190625142832.GD1506@brightrain.aerifal.cx>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 25 Jun 2019 17:48:09 +0200
+Message-ID: <CAK8P3a0j_9fzZxhxqCMHfoJ5DdZpHFvANEPqs1pbP23TCei6ng@mail.gmail.com>
+Subject: Re: [RFC] remove arch/sh?
+To:     Rich Felker <dalias@libc.org>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GPL-2.0-only is the preferred way of expressing v2 of the GPL, update
-the code to use this.
+On Tue, Jun 25, 2019 at 4:28 PM Rich Felker <dalias@libc.org> wrote:
+> On Tue, Jun 25, 2019 at 02:50:01PM +0200, Arnd Bergmann wrote:
+> > don't build, or are incomplete and not worked on for a long
+> > time, compared to the bits that are known to work and that someone
+> > is still using or at least playing with.
+> > I guess a lot of the SoCs that have no board support other than
+> > the Hitachi/Renesas reference platform can go away too, as any products
+> > based on those boards have long stopped updating their kernels.
+>
+> My intent here was always, after getting device tree theoretically
+> working for some reasonable subset of socs/boards, drop the rest and
+> add them back as dts files (possibly plus some small drivers) only if
+> there's demand/complaint about regression.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/irqchip/irq-madera.c       | 2 +-
- include/linux/irqchip/irq-madera.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Do you still think that this is a likely scenario for the future though?
 
-diff --git a/drivers/irqchip/irq-madera.c b/drivers/irqchip/irq-madera.c
-index 8b81271c823c6..6b0457876941d 100644
---- a/drivers/irqchip/irq-madera.c
-+++ b/drivers/irqchip/irq-madera.c
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Interrupt support for Cirrus Logic Madera codecs
-  *
-diff --git a/include/linux/irqchip/irq-madera.h b/include/linux/irqchip/irq-madera.h
-index 1160fa3769ae6..3a46cadd38654 100644
---- a/include/linux/irqchip/irq-madera.h
-+++ b/include/linux/irqchip/irq-madera.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Interrupt support for Cirrus Logic Madera codecs
-  *
--- 
-2.11.0
+If nobody's actively working on the DT support for the old chips and
+this is unlikely to change soon, removing the known-broken bits earlier
+should at least make it easier to keep maintaining the working bits
+afterwards.
 
+FWIW, I went through the SH2, SH2A and SH3 based boards that
+are supported in the kernel and found almost all of them to
+be just reference platforms, with no actual product ever merged.
+IIRC the idea back then was that users would supply their
+own board files as an add-on patch, but I would consider all the
+ones that did to be obsolete now.
+
+HP Jornada 6xx is the main machine that was once supported, but
+given that according to the defconfig file it only comes with 4MB
+of RAM, it is unlikely to still boot any 5.x kernel, let alone user
+space (wikipedia claims there were models with 16MB of RAM,
+but that is still not a lot these days).
+
+"Magicpanel" was another product that is supported in theory, but
+the google search showed the 2007 patch for the required
+flash storage driver that was never merged.
+
+Maybe everything but J2 and SH4(a) can just get retired?
+
+     Arnd
