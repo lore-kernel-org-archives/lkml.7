@@ -3,161 +3,188 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2F8C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A8EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9EFE2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5E420665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="JAQkq1NG"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pFMn6N6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfFYEkL (ORCPT
+        id S1726895AbfFYEme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:40:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41496 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFYEkK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:40:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id m30so8760539pff.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=le7WO334hT4VkCM2URnTWxwFBKTdVFEc+iEv1d1vk2A=;
-        b=JAQkq1NGXNgoU/m+tted0n1/w0R7yPxZaTLHi0+Scb0s1JshebDxVQUwK1ZQhA7RPI
-         hgLkIXYHvMCKPZuGHg8kNz7dN5sm9shboEJ1FlyVd8nfKKYqKugS5eNYlJcX5U6ZZWPG
-         pFIEtMYgbeZRq5OnXSnwGT5rWV9ZvlOlsA2gv8p82peGT05PKGemuy9DVuD+8Md7Tgt4
-         P4nOBeEgslqB8w7+bIhLlGrX7o1lGF/1iYBrkPlPo1lR+5YgTKBIUZBgE4zQSRBbU5Js
-         Bm0JXmxu9RB7YgbEWcTebbw13HkU2xjOupxlaPdr8CIK58pFYzlH0ntY3tuKLaDYFMN3
-         OTGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=le7WO334hT4VkCM2URnTWxwFBKTdVFEc+iEv1d1vk2A=;
-        b=PasEE++3fRy4wTh4kIyaHVBtWjTUoNMx2B4wkIuBmVc2437mJsKSu5w7yl53YGKt4N
-         QLj4RgYnuGQi+BCZz/BJu03Nk/OuNXcwDQaReFW8C3PJPuofO0b+EY8urTTNfUCGyhA2
-         wG2QwbJ/MHXj8VxPOLKtLlPnczaHpcBt7wxJm2ht3rEyx2ZbJn4//YNWvBeer/eRkj+Y
-         6uGIOqqtSOgHWb04MShZbiD/2t/hpy1611DMSqF2eWJkPZnsDOd0rq0CNJfY5GKiOKPv
-         Br/kSqBcC37KayFHCL68xjxAsTkD2RYFTtMK93DLbPp4pgbOrh5RVeZYbvQAJadiakGO
-         /BCw==
-X-Gm-Message-State: APjAAAUsRFqienoIvIedxAeAr3q5yzR1pbdFBshJqU3y+1wCry0ea0DR
-        qmVuA0ncq2swO0TubD+Ko/UHE3M/Tdg=
-X-Google-Smtp-Source: APXvYqyZQUq9dHLCBzwmz1HqLf5A//Jwv6j4pE/03LAfoB9d1aBR1o4aBwFUo047BNpt0ZKxVJuuCQ==
-X-Received: by 2002:a17:90a:17c4:: with SMTP id q62mr29827494pja.104.1561437610254;
-        Mon, 24 Jun 2019 21:40:10 -0700 (PDT)
-Received: from etsukata.local (fs76eecbcd.tkyc008.ap.nuro.jp. [118.238.203.205])
-        by smtp.gmail.com with ESMTPSA id t96sm1124663pjb.1.2019.06.24.21.40.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Jun 2019 21:40:09 -0700 (PDT)
-Subject: Re: [PATCH 1/2] tty: ldisc: Fix misuse of proc_dointvec
- "ldisc_autoload"
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     jslaby@suse.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190625030801.24538-1-devel@etsukata.com>
- <20190625033216.GA11902@kroah.com>
-From:   Eiichi Tsukata <devel@etsukata.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=devel@etsukata.com; keydata=
- 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
-X-Enigmail-Draft-Status: N11100
-Message-ID: <ffef8850-7523-ad63-165d-2bde9a98e340@etsukata.com>
-Date:   Tue, 25 Jun 2019 13:40:05 +0900
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Tue, 25 Jun 2019 00:42:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35489 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfFYEme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 00:42:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Xtn14wLWz9s3l;
+        Tue, 25 Jun 2019 14:42:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561437750;
+        bh=UwC/SycKxBQXXOVo9JjVApfMRk/59lAz9BuN8MV+DhE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pFMn6N6pIU/IW0vD7eVGwM4yUznddhg/UvqqdTAG+OKRuCBo/kTrfyQyxKcRbRCah
+         X/wP4GzBvpkZes5gxoG6vaKNrBaTHSLfgHza+FjcNWIBK0oswMq7yoavazH2am0CdD
+         NhlBTwHSuxQLALWX+EAmNwjEi7Tw7JCDKaiE9pSIYKsy/EeOaRbieyD8vqCtILClMz
+         rXolte8LRIRw5iWkrdrYM0dKxCLul+bqXq7avHlwRc0iNY71aysVQA/kFWgI/0+HqL
+         Iv5U5sO4XYw7GgkShAc7QzR11+6gWkGkLcqj1Lz5Tj1hLIAkGvP1xzYdv0HfaGTAeI
+         uh85cBQ6acUhw==
+Date:   Tue, 25 Jun 2019 14:42:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the block tree with the jc_docs tree
+Message-ID: <20190625144226.48fff697@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190625033216.GA11902@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/wg5WgkPrM1OmU2xmNq0nrD5"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/wg5WgkPrM1OmU2xmNq0nrD5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2019/06/25 12:32, Greg KH wrote:
-> On Tue, Jun 25, 2019 at 12:08:00PM +0900, Eiichi Tsukata wrote:
->> /proc/sys/dev/tty/ldisc_autoload assumes given value to be 0 or 1. Use
->> proc_dointvec_minmax instead of proc_dointvec.
->>
->> Fixes: 7c0cca7c847e "(tty: ldisc: add sysctl to prevent autoloading of ldiscs)"
->> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
->> ---
->>  drivers/tty/tty_ldisc.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
->> index e38f104db174..a8ea7a35c94e 100644
->> --- a/drivers/tty/tty_ldisc.c
->> +++ b/drivers/tty/tty_ldisc.c
->> @@ -863,7 +863,7 @@ static struct ctl_table tty_table[] = {
->>  		.data		= &tty_ldisc_autoload,
->>  		.maxlen		= sizeof(tty_ldisc_autoload),
->>  		.mode		= 0644,
->> -		.proc_handler	= proc_dointvec,
->> +		.proc_handler	= proc_dointvec_minmax,
->>  		.extra1		= &zero,
->>  		.extra2		= &one,
-> 
-> Ah, nice catch.  But this really isn't an issue as if you use a bigger
-> value, things will not "break", right?
-> 
+Today's linux-next merge of the block tree got a conflict in:
 
-Someone may misuse -1 to disable ldisc autoload, but basically it does not
-"break".
+  Documentation/fault-injection/nvme-fault-injection.txt
 
-Thanks,
+between commit:
 
-Eiichi
+  10ffebbed550 ("docs: fault-injection: convert docs to ReST and rename to =
+*.rst")
+
+from the jc_docs tree and commit:
+
+  7e31d8215fd8 ("Documentation: nvme: add an example for nvme fault injecti=
+on")
+
+from the block tree.
+
+I fixed it up (I removed the file and applied the following patch) and
+can carry the fix as necessary. This is now fixed as far as linux-next
+is concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 25 Jun 2019 14:39:46 +1000
+Subject: [PATCH] Documentation: nvme: fix for change to rst
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ .../fault-injection/nvme-fault-injection.rst  | 58 +++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+
+diff --git a/Documentation/fault-injection/nvme-fault-injection.rst b/Docum=
+entation/fault-injection/nvme-fault-injection.rst
+index bbb1bf3e8650..cdb2e829228e 100644
+--- a/Documentation/fault-injection/nvme-fault-injection.rst
++++ b/Documentation/fault-injection/nvme-fault-injection.rst
+@@ -118,3 +118,61 @@ Message from dmesg::
+     cpu_startup_entry+0x6f/0x80
+     start_secondary+0x187/0x1e0
+     secondary_startup_64+0xa5/0xb0
++
++Example 3: Inject an error into the 10th admin command
++------------------------------------------------------
++
++::
++
++  echo 100 > /sys/kernel/debug/nvme0/fault_inject/probability
++  echo 10 > /sys/kernel/debug/nvme0/fault_inject/space
++  echo 1 > /sys/kernel/debug/nvme0/fault_inject/times
++  nvme reset /dev/nvme0
++
++Expected Result::
++
++  After NVMe controller reset, the reinitialization may or may not succeed.
++  It depends on which admin command is actually forced to fail.
++
++Message from dmesg::
++
++  nvme nvme0: resetting controller
++  FAULT_INJECTION: forcing a failure.
++  name fault_inject, interval 1, probability 100, space 1, times 1
++  CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.2.0-rc2+ #2
++  Hardware name: MSI MS-7A45/B150M MORTAR ARCTIC (MS-7A45), BIOS 1.50 04/2=
+5/2017
++  Call Trace:
++   <IRQ>
++   dump_stack+0x63/0x85
++   should_fail+0x14a/0x170
++   nvme_should_fail+0x38/0x80 [nvme_core]
++   nvme_irq+0x129/0x280 [nvme]
++   ? blk_mq_end_request+0xb3/0x120
++   __handle_irq_event_percpu+0x84/0x1a0
++   handle_irq_event_percpu+0x32/0x80
++   handle_irq_event+0x3b/0x60
++   handle_edge_irq+0x7f/0x1a0
++   handle_irq+0x20/0x30
++   do_IRQ+0x4e/0xe0
++   common_interrupt+0xf/0xf
++   </IRQ>
++  RIP: 0010:cpuidle_enter_state+0xc5/0x460
++  Code: ff e8 8f 5f 86 ff 80 7d c7 00 74 17 9c 58 0f 1f 44 00 00 f6 c4 02 =
+0f 85 69 03 00 00 31 ff e8 62 aa 8c ff fb 66 0f 1f 44 00 00 <45> 85 ed 0f 8=
+8 37 03 00 00 4c 8b 45 d0 4c 2b 45 b8 48 ba cf f7 53
++  RSP: 0018:ffffffff88c03dd0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdc
++  RAX: ffff9dac25a2ac80 RBX: ffffffff88d53760 RCX: 000000000000001f
++  RDX: 0000000000000000 RSI: 000000002d958403 RDI: 0000000000000000
++  RBP: ffffffff88c03e18 R08: fffffff75e35ffb7 R09: 00000a49a56c0b48
++  R10: ffffffff88c03da0 R11: 0000000000001b0c R12: ffff9dac25a34d00
++  R13: 0000000000000006 R14: 0000000000000006 R15: ffffffff88d53760
++   cpuidle_enter+0x2e/0x40
++   call_cpuidle+0x23/0x40
++   do_idle+0x201/0x280
++   cpu_startup_entry+0x1d/0x20
++   rest_init+0xaa/0xb0
++   arch_call_rest_init+0xe/0x1b
++   start_kernel+0x51c/0x53b
++   x86_64_start_reservations+0x24/0x26
++   x86_64_start_kernel+0x74/0x77
++   secondary_startup_64+0xa4/0xb0
++  nvme nvme0: Could not set queue count (16385)
++  nvme nvme0: IO queues not created
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wg5WgkPrM1OmU2xmNq0nrD5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0RpjIACgkQAVBC80lX
+0GyP9Af/U/hEpDvFinFPf840PORSHcwXp4ZtgYcfphgo11XxxKMzUTW97ddlzPbX
+S7ucLB36Kpv2e4k9PYsl4OiOf7CxTfbVAxPV9VqyXct5pU/Yd7N4FiaKMS3niZAW
+QvdaMDH198XuCGwAgB15QWIeGHFrKmZDBAqvedrwrPtr73NQmzYEekaKjz6N2Rf0
+O5jFfGucNhXHV/uWi4Oqi4jwmOkji0Z1TjNNyPTr6jBbKVnF5w6M0pNdSVv1ANdM
+841Ehpq0GApTq3eMZnNLruRNlIPEmZ10SbMG6fdh9bto4Tt7gVSo/3NWw/qoP4qt
+6e/X28mNGhaLdbPZ5W4RPRUulSKVhw==
+=oM6k
+-----END PGP SIGNATURE-----
+
+--Sig_/wg5WgkPrM1OmU2xmNq0nrD5--
