@@ -6,62 +6,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D9DC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9D4C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C701920665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F020220665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfFYEho (ORCPT
+        id S1727033AbfFYEho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 25 Jun 2019 00:37:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28096 "EHLO
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29492 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbfFYEhl (ORCPT
+        by vger.kernel.org with ESMTP id S1726943AbfFYEhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:37:41 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P4XBGA059032
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:40 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb9q4wx3e-1
+        Tue, 25 Jun 2019 00:37:42 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P4X8cN003245
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:42 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tbagtmd6g-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:40 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:37:41 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Tue, 25 Jun 2019 05:37:38 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 25 Jun 2019 05:37:39 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 05:37:34 +0100
+        Tue, 25 Jun 2019 05:37:37 +0100
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P4bXr139780544
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P4baEe54329510
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 04:37:33 GMT
+        Tue, 25 Jun 2019 04:37:36 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5312E11C050;
-        Tue, 25 Jun 2019 04:37:33 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4CEA611C052;
+        Tue, 25 Jun 2019 04:37:36 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17BDE11C052;
-        Tue, 25 Jun 2019 04:37:32 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1C47E11C050;
+        Tue, 25 Jun 2019 04:37:35 +0000 (GMT)
 Received: from localhost.in.ibm.com (unknown [9.124.35.87])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 04:37:31 +0000 (GMT)
+        Tue, 25 Jun 2019 04:37:34 +0000 (GMT)
 From:   Parth Shah <parth@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
         patrick.bellasi@arm.com
-Subject: [RFCv3 3/8] sched/core: Update turbo_sched count only when required
-Date:   Tue, 25 Jun 2019 10:07:21 +0530
+Subject: [RFCv3 5/8] powerpc: Define Core Capacity for POWER systems
+Date:   Tue, 25 Jun 2019 10:07:23 +0530
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190625043726.21490-1-parth@linux.ibm.com>
 References: <20190625043726.21490-1-parth@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19062504-0012-0000-0000-0000032C1B4F
+x-cbid: 19062504-0020-0000-0000-0000034D1730
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062504-0013-0000-0000-000021654EDE
-Message-Id: <20190625043726.21490-4-parth@linux.ibm.com>
+x-cbparentid: 19062504-0021-0000-0000-000021A0843D
+Message-Id: <20190625043726.21490-6-parth@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -74,44 +74,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the get/put methods to add/remove the use of TurboSched support, such
-that the feature is turned on only if there is atleast one jitter task.
+This patch tunes arch_scale_core_capacity for powerpc arch by scaling
+capacity w.r.t to the number of online SMT in the core such that for SMT-4,
+core capacity is 1.5x the capacity of sibling thread.
 
 Signed-off-by: Parth Shah <parth@linux.ibm.com>
 ---
- kernel/sched/core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/topology.h |  4 ++++
+ arch/powerpc/kernel/smp.c           | 33 +++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index ef83725bd4b0..c7b628d0be2b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1214,10 +1214,13 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 		 * Set task to jitter class if Max util is clamped to the least
- 		 * possible value
- 		 */
--		if (p->uclamp_req[UCLAMP_MAX].bucket_id == 0 && !p->is_jitter)
-+		if (p->uclamp_req[UCLAMP_MAX].bucket_id == 0 && !p->is_jitter) {
- 			p->is_jitter = 1;
--		else if (p->is_jitter)
-+			turbo_sched_get();
-+		} else if (p->is_jitter) {
- 			p->is_jitter = 0;
-+			turbo_sched_put();
-+		}
- 	}
- }
- 
-@@ -3215,6 +3218,9 @@ static struct rq *finish_task_switch(struct task_struct *prev)
- 		mmdrop(mm);
- 	}
- 	if (unlikely(prev_state == TASK_DEAD)) {
-+		if (unlikely(prev->is_jitter))
-+			turbo_sched_put();
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index f85e2b01c3df..1c777ee67180 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -132,6 +132,10 @@ static inline void shared_proc_topology_init(void) {}
+ #define topology_sibling_cpumask(cpu)	(per_cpu(cpu_sibling_map, cpu))
+ #define topology_core_cpumask(cpu)	(per_cpu(cpu_core_map, cpu))
+ #define topology_core_id(cpu)		(cpu_to_core_id(cpu))
++#define arch_scale_core_capacity	powerpc_scale_core_capacity
 +
- 		if (prev->sched_class->task_dead)
- 			prev->sched_class->task_dead(prev);
++unsigned long powerpc_scale_core_capacity(int first_smt,
++					  unsigned long smt_cap);
  
+ int dlpar_cpu_readd(int cpu);
+ #endif
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index ea6adbf6a221..149a3fbf8ed3 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1169,6 +1169,39 @@ static void remove_cpu_from_masks(int cpu)
+ }
+ #endif
+ 
++#ifdef CONFIG_SCHED_SMT
++/*
++ * Calculate capacity of a core based on the active threads in the core
++ * Scale the capacity of first SM-thread based on total number of
++ * active threads in the respective smt_mask.
++ *
++ * The scaling is done such that for
++ * SMT-4, core_capacity = 1.5x first_cpu_capacity
++ * and for SMT-8, core_capacity multiplication factor is 2x
++ *
++ * So, core_capacity multiplication factor = (1 + smt_mode*0.125)
++ *
++ * @first_cpu: First/any CPU id in the core
++ * @cap: Capacity of the first_cpu
++ */
++unsigned long powerpc_scale_core_capacity(int first_cpu,
++					  unsigned long cap)
++{
++	struct cpumask select_idles;
++	struct cpumask *cpus = &select_idles;
++	int cpu, smt_mode = 0;
++
++	cpumask_and(cpus, cpu_smt_mask(first_cpu), cpu_online_mask);
++
++	/* Find SMT mode from active SM-threads */
++	for_each_cpu(cpu, cpus)
++		smt_mode++;
++
++	/* Scale core capacity based on smt mode */
++	return smt_mode == 1 ? cap : ((cap * smt_mode) >> 3) + cap;
++}
++#endif
++
+ static inline void add_cpu_to_smallcore_masks(int cpu)
+ {
+ 	struct cpumask *this_l1_cache_map = per_cpu(cpu_l1_cache_map, cpu);
 -- 
 2.17.1
 
