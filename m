@@ -2,114 +2,87 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28558C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E53C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08215214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1666D208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jJ/aTvTt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfFYLHJ (ORCPT
+        id S1730427AbfFYLHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:07:09 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:55919 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730314AbfFYLHI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:07:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id f22so25817197ioh.22
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 04:07:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=qzgsIU1dRxRmXgOlEkre4AMGP4RvzeRe5DGSMkE/ppw=;
-        b=bvcsmyqxKHp5cOXnkOLlfic9sIr7KtqmCnboj+ewbu9YGJpbVuMZoPzrpV+0YveEbZ
-         D5KzFDUKolQzG5tyLUXYbOFg3zfAy6wfRevnptoAG7Cmw+NfoevxRHiY5t7gTEx86zIk
-         7nu8i2gvi0lCwnHueBXBUNfxxQUhCw4nqn848dRZYv1ldwr1IGs5qKAC0EFyr8/Vt/YU
-         WrHOk9rh1YWVjlYKLpk6hU0Ms9SRKI625xm/ueGhx3XyZYUCVFwzmyXeawj519SVkRBG
-         XYl5npINr65mjysUkdnF6eVy3vMhcL6Sh1+flGNht/VmSLqoQ/UCTZ7yHNYZajoBZ1xm
-         rsGQ==
-X-Gm-Message-State: APjAAAU/ezWeM5TIDhg7Os7i1YKNh5QS8Mwnc/sFcYrl/MarrZEEfpYm
-        btqIo05+bUg15tY/GDXyXNrG5CNHnRfaoYazfep8RxOFDT41
-X-Google-Smtp-Source: APXvYqx5xkRPTcPbrwX3dp6qoJ7Ik+fjSNqoEAi4q4LrTMrWd+mlMliOkXtkb0uRGSylTGfbpKB0hStImkiG+yiGncsw+j8B/92+
+        Tue, 25 Jun 2019 07:07:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42085 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730353AbfFYLHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:07:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Y3Jr0G8rz9sCJ;
+        Tue, 25 Jun 2019 21:07:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561460828;
+        bh=hihaKy7q1Hw5bYXccx1Cll49xww55TabiwALukVXZWw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jJ/aTvTtkzSN9TZ0pC0NtB/SLZsSu02TiC7sKVL1izYK6xqqIXHX+9vOT7K9IbXar
+         ycn+it9rK+CBAwnvSpadm/DTfU8BkdDzh109Ej99LStphbaOTOySTJ8ksIx0fWxecF
+         mdE4BPelZ3BkmwM9qIQ0SIC+dGIR5j07DfePCMSa5MIBxSEBkjQsc4Jb9NoAW3mfQ/
+         8xRmU8/0EgkuQv1PlB8VQI3S+qBObWKhswZefqJgknPBGA3F422j8SHxCq8fUFBQm4
+         M+3xSgVBi/8ETNxtVYRpojAYhBr1xQnBxV/Bo5DIWDktTgGjmrPS2KqLJTHOzSvU8w
+         MlnGzn/DY4v0A==
+Date:   Tue, 25 Jun 2019 21:07:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the parisc-hd tree
+Message-ID: <20190625210707.61e689bb@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:d615:: with SMTP id w21mr6768839iom.0.1561460827606;
- Tue, 25 Jun 2019 04:07:07 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 04:07:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f5d536058c23ed60@google.com>
-Subject: memory leak in genl_register_family
-From:   syzbot <syzbot+fc577f12f25f2ac3b211@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dsahern@gmail.com, johannes.berg@intel.com,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org,
-        mkubecek@suse.cz, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/9WQy1MhcKPOXptjUFW=p1sI"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/9WQy1MhcKPOXptjUFW=p1sI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+Hi all,
 
-HEAD commit:    4b972a01 Linux 5.2-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1305b385a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1db8bd6825f9661c
-dashboard link: https://syzkaller.appspot.com/bug?extid=fc577f12f25f2ac3b211
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bd1385a00000
+Commit
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fc577f12f25f2ac3b211@syzkaller.appspotmail.com
+  7148d434d451 ("parisc: asm: psw.h: missing header guard")
 
-BUG: memory leak
-unreferenced object 0xffff88812a7f0c80 (size 64):
-   comm "swapper/0", pid 1, jiffies 4294937561 (age 881.930s)
-   hex dump (first 32 bytes):
-     2f 64 65 76 69 63 65 73 2f 76 69 72 74 75 61 6c  /devices/virtual
-     2f 6e 65 74 2f 6c 6f 2f 71 75 65 75 65 73 2f 74  /net/lo/queues/t
-   backtrace:
-     [<00000000d629f5fa>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000d629f5fa>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000d629f5fa>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000d629f5fa>] __do_kmalloc mm/slab.c:3658 [inline]
-     [<00000000d629f5fa>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
-     [<000000003291d450>] kmalloc_array include/linux/slab.h:670 [inline]
-     [<000000003291d450>] genl_register_family net/netlink/genetlink.c:355  
-[inline]
-     [<000000003291d450>] genl_register_family+0x5e1/0x7e0  
-net/netlink/genetlink.c:322
-     [<00000000f8e2dd0d>] netlbl_unlabel_genl_init+0x15/0x17  
-net/netlabel/netlabel_unlabeled.c:1387
-     [<00000000189b4a0c>] netlbl_netlink_init+0x39/0x46  
-net/netlabel/netlabel_user.c:65
-     [<0000000083adc8f0>] netlbl_init+0x65/0xa8  
-net/netlabel/netlabel_kapi.c:1502
-     [<000000003a053024>] do_one_initcall+0x5c/0x2ca init/main.c:915
-     [<00000000d70991fc>] do_initcall_level init/main.c:983 [inline]
-     [<00000000d70991fc>] do_initcalls init/main.c:991 [inline]
-     [<00000000d70991fc>] do_basic_setup init/main.c:1009 [inline]
-     [<00000000d70991fc>] kernel_init_freeable+0x1af/0x26c init/main.c:1169
-     [<00000000232b80c4>] kernel_init+0x10/0x155 init/main.c:1087
-     [<000000006b3bb174>] ret_from_fork+0x1f/0x30  
-arch/x86/entry/entry_64.S:352
+is missing a Signed-off-by from its committer.
 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/9WQy1MhcKPOXptjUFW=p1sI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-----BEGIN PGP SIGNATURE-----
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0SAFsACgkQAVBC80lX
+0GxOuQf+PyX4A4K61SVryWsqXxLvnTaiQ7krd5+xLJbUQsRkmGpIC/FoD2rzUns1
+0jnnFuXNpjgzLm7Ezt8P2Kh2C16BIhfmp9+bpcWNBmXjvQCgGA0TJMTzKMAcTncS
+I0BS2ak/kF98GXJGW8hYB0qnSd52RjJpolG+tOuzr6F6117jp90wiK7Ch+J01sho
+tWCZIeOe8gtoqyfQ6bnxVmHIq+XAADYsgf6ugKHWhu0PcGMvQIkwA/e7r2P8loJn
+cNLf1nt4mP2HgHQtC2bG7YrZ5xJxHuvMZFYf7ZnCIpzY6lln2RqfEaToV991nqBe
+VhpHIWBdKLneqUo5l3DxgMU2Lqt/IA==
+=g3Fq
+-----END PGP SIGNATURE-----
+
+--Sig_/9WQy1MhcKPOXptjUFW=p1sI--
