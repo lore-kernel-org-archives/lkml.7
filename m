@@ -2,98 +2,115 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D6EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DACAC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3A22064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41AEB2133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbfFYRBs (ORCPT
+        id S1730345AbfFYRCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:01:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:36441 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728664AbfFYRBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:01:48 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id D3C0068B05; Tue, 25 Jun 2019 19:01:15 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 19:01:15 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190625170115.GA9746@lst.de>
-References: <20190620161240.22738-1-logang@deltatee.com> <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+        Tue, 25 Jun 2019 13:02:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57674 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727540AbfFYRCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:02:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 75B9FAF7A;
+        Tue, 25 Jun 2019 17:02:04 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id DA730DA8F6; Tue, 25 Jun 2019 19:02:48 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 19:02:48 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 2/4] vfs: create a generic checking function for
+ FS_IOC_FSSETXATTR
+Message-ID: <20190625170248.GS8917@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+References: <156116136742.1664814.17093419199766834123.stgit@magnolia>
+ <156116138952.1664814.16552129914959122837.stgit@magnolia>
+ <20190625105725.GB26085@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190625105725.GB26085@infradead.org>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 09:57:52AM -0600, Logan Gunthorpe wrote:
-> > You assume all addressing is done by the PCI bus address.  If a device
-> > is addressing its own BAR there is no reason to use the PCI bus address,
-> > as it might have much more intelligent schemes (usually bar + offset).
-> 
-> Yes, that will be a bit tricky regardless of what we do.
-
-At least right now it isn't at all.  I've implemented support for
-a draft NVMe proposal for that, and it basically boils down to this
-in the p2p path:
-
-	addr = sg_phys(sg);
-
-	if (page->pgmap->dev == ctrl->dev && HAS_RELATIVE_ADDRESSING)
-		addr -= ctrl->cmb_start_addr;
-
-		// set magic flag in the SGL
-	} else {
-		addr -= pgmap->pci_p2pdma_bus_offset;
-	}
-
-without the pagemap it would require a range compare instead, which
-isn't all that hard either.
-
-> >>> Also duplicating the whole block I/O stack, including hooks all over
-> >>> the fast path is pretty much a no-go.
-> >>
-> >> There was very little duplicate code in the patch set. (Really just the
-> >> mapping code). There are a few hooks, but in practice not that many if
-> >> we ignore the WARN_ONs. We might be able to work to reduce this further.
-> >> The main hooks are: when we skip bouncing, when we skip integrity prep,
-> >> when we split, and when we map. And the patchset drops the PCI_P2PDMA
-> >> hook when we map. So we're talking about maybe three or four extra ifs
-> >> that would likely normally be fast due to the branch predictor.
+On Tue, Jun 25, 2019 at 03:57:25AM -0700, Christoph Hellwig wrote:
+> On Fri, Jun 21, 2019 at 04:56:29PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > And all of those add code to the block layer fast path.
+> > Create a generic checking function for the incoming FS_IOC_FSSETXATTR
+> > fsxattr values so that we can standardize some of the implementation
+> > behaviors.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > ---
+> >  fs/btrfs/ioctl.c   |   21 +++++++++-------
+> >  fs/ext4/ioctl.c    |   27 ++++++++++++++------
+> >  fs/f2fs/file.c     |   26 ++++++++++++++-----
+> >  fs/inode.c         |   17 +++++++++++++
+> >  fs/xfs/xfs_ioctl.c |   70 ++++++++++++++++++++++++++++++----------------------
+> >  include/linux/fs.h |    3 ++
+> >  6 files changed, 111 insertions(+), 53 deletions(-)
+> > 
+> > 
+> > diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> > index f408aa93b0cf..7ddda5b4b6a6 100644
+> > --- a/fs/btrfs/ioctl.c
+> > +++ b/fs/btrfs/ioctl.c
+> > @@ -366,6 +366,13 @@ static int check_xflags(unsigned int flags)
+> >  	return 0;
+> >  }
+> >  
+> > +static void __btrfs_ioctl_fsgetxattr(struct btrfs_inode *binode,
+> > +				     struct fsxattr *fa)
+> > +{
+> > +	memset(fa, 0, sizeof(*fa));
+> > +	fa->fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags);
 > 
-> If we can't add any ifs to the block layer, there's really nothing we
-> can do.
+> Is there really much of a point in this helper? Epeciall as
+> the zeroing could easily be done in the variable declaration
+> line using
+> 
+> 	struct fsxattr fa = { };
 
-That is not what I said.  Of course we can.  But we rather have a
-really good reason.  And adding a parallel I/O path violating the
-highlevel model is not one.
-
-> So then we're committed to using struct page for P2P?
-
-Only until we have a significantly better soltution.  And I think
-using physical address in some form instead of pages is that,
-adding a parallel path with dma_addr_t is not, it actually is worse
-than the current code in many respects.
+Agreed, not counting the initialization the wrapper is merely another
+name for btrfs_inode_flags_to_xflags. I also find it slightly confusing
+that __btrfs_ioctl_fsgetxattr name is too close to the ioctl callback
+implementation btrfs_ioctl_fsgetxattr but only does some initialization.
