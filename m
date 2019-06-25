@@ -2,142 +2,96 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722B2C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65921C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4411320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CB1820644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:31:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="GcTgXpx1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bw7MDNV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfFYRad (ORCPT
+        id S1730012AbfFYRb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:30:33 -0400
-Received: from mail-eopbgr750122.outbound.protection.outlook.com ([40.107.75.122]:56192
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727652AbfFYRad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:30:33 -0400
+        Tue, 25 Jun 2019 13:31:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41831 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729411AbfFYRb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:31:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id y72so9291983pgd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:31:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rLaO9QWBVrbx1WHdWWcpHYHC7RcnT/IaFQfxF+WZUWQ=;
- b=GcTgXpx1p5Ev5wCCmWM868S5FeQxAVrewWsehXbfli40a4ZsnjOq+NBw4+Hndw3XXhfsfqRyBkC81NpnLU5LHkdNxJz3g+6FdWscnd1fh1D3h/02oVUW4BcOE4xGGQot60ZckFliV22JXypxbYsMKJqZivDlnf9C5ofCI5M+9QM=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1341.namprd22.prod.outlook.com (10.172.63.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 17:30:29 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.2008.017; Tue, 25 Jun 2019
- 17:30:28 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        "od@zcrc.me" <od@zcrc.me>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v13 04/13] mfd: Add Ingenic TCU driver
-Thread-Topic: [PATCH v13 04/13] mfd: Add Ingenic TCU driver
-Thread-Index: AQHVKuBSgPmYVawSQ0eFKnC+vy7xnKasoZqA
-Date:   Tue, 25 Jun 2019 17:30:28 +0000
-Message-ID: <20190625173026.dbvx44iwywnijjql@pburton-laptop>
-References: <20190624225759.18299-1-paul@crapouillou.net>
- <20190624225759.18299-5-paul@crapouillou.net>
-In-Reply-To: <20190624225759.18299-5-paul@crapouillou.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0063.prod.exchangelabs.com (2603:10b6:a03:94::40)
- To MWHPR2201MB1277.namprd22.prod.outlook.com (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a0554db2-ea68-411f-b3a9-08d6f992d0b8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1341;
-x-ms-traffictypediagnostic: MWHPR2201MB1341:
-x-microsoft-antispam-prvs: <MWHPR2201MB1341128582984F2461DC3983C1E30@MWHPR2201MB1341.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(396003)(136003)(39840400004)(376002)(346002)(199004)(189003)(66066001)(81166006)(446003)(33716001)(58126008)(476003)(8676002)(54906003)(6116002)(44832011)(186003)(81156014)(6246003)(316002)(11346002)(4326008)(7416002)(478600001)(53936002)(3846002)(26005)(305945005)(1076003)(7736002)(8936002)(14454004)(6512007)(6506007)(25786009)(76176011)(486006)(5660300002)(4744005)(102836004)(6916009)(6486002)(2906002)(386003)(6436002)(14444005)(71200400001)(71190400001)(256004)(99286004)(64756008)(66446008)(66556008)(66476007)(42882007)(73956011)(66946007)(9686003)(68736007)(52116002)(229853002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1341;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oB4wAzcuoF+S/KJh0iA8dcAOQUARodytMY4ybVoFZGXn4FkT2ZgLYT8cHfpaC/R2XP52B1GzdkuNk50IFMDM+Fr0vV/TMESh58fr7aDlVdC8hLr1e09doRZuk/Z64gh7VchexPbVQ08cTmiqu9yV8QSDW7zeFAeyJnGo7sP6MgmunELcc31UGXx0uCcKi4geXv1LMO2b3XXffrWK559fcTReCLD4vv69bfnHvuDA65GPJbxY83UDHbjNwosA9qzd7vHo8d0v/3hbeIN1zAzz1z2NhE6vyzsSC5cSpvw73YfyZdUw1Tu7BcEYK5MzwikT+pXhY3rv78bsI92u6Fjh21jxkTh7ZIPhHKDfxKf0BP+4QMGhBSjz50UHvmjm8TBHN+im6RfSePZ9RKnqew1Z9mTybRFWVFz5av0Z5yIy448=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9BAE9DD0984EBD4FBCD7F23175005B2A@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cyylc5vV7TsZGRDCyy7xYsgD/ATtR25Cso04lfIPhzc=;
+        b=Bw7MDNV5DpVOVq6ZsemLGJdp/8bE62eloGpw6B6Ewtu1fnalKbBFSV8P/w5xzliMo4
+         G1lYQ8FEww9Lh5Frfvnb3KbqG/Hw17/Krc3kHt+w6sLrMmk7iIR1om9tYD+HjpqQsOTl
+         epslcpbau6xLSLm3E3FOfJxAXpEON+d00o1CE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cyylc5vV7TsZGRDCyy7xYsgD/ATtR25Cso04lfIPhzc=;
+        b=l/dxerBcOdZlSiL0115BVT2gI6yprO+pqjNQx7xTjk2XXO4ObSB9HEvNYUcmgTVKi/
+         BNuuM5R73YirjHuN97YoClby9xHde/B9D2p1M12DgBlxVhn/LyedHBDSq/tdjozAP4CE
+         RkeqmPM6BWl1zLTPyji4qEvz22WEWs1K0+Le/E3QT72g6Q/mPC2lHYSb0rM6Sglr0yos
+         EtV0FubGrFIDonWB4kaDmhdJD+rY10G0tcoZa5t5ZVkIj75jJ3vJniBVfdQO7VfYtIqg
+         n8T2/EhuxqKC45KtOCY2CZIrp14zZ+FvXprF77UZLudr26GGawIRulS5iewNjNcc/C31
+         996w==
+X-Gm-Message-State: APjAAAWEa/j7K/bCzWSpTzDlLgLXeyLEGFzbfi7KXMRbqXSSmUlgU509
+        jk7RUwXx0pqHrH70fZTuMEoTtQ==
+X-Google-Smtp-Source: APXvYqyKVQEdx2DSisDXree3EW2eyfv9LAskBegykfDifXWazmrgiKraekkPr5majzLrVW1Vhcny7w==
+X-Received: by 2002:a63:7150:: with SMTP id b16mr1030790pgn.328.1561483887787;
+        Tue, 25 Jun 2019 10:31:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x8sm14704810pfa.46.2019.06.25.10.31.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Jun 2019 10:31:27 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 10:31:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
+Subject: Re: [PATCH] video: fbdev: s3c-fb: Mark expected switch fall-throughs
+Message-ID: <201906251029.08B862130@keescook>
+References: <20190625160103.GA13133@embeddedor>
+ <2bdbbd7909c5c4ad96d32c0c5be4690292132a34.camel@perches.com>
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0554db2-ea68-411f-b3a9-08d6f992d0b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 17:30:28.7845
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1341
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2bdbbd7909c5c4ad96d32c0c5be4690292132a34.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Tue, Jun 25, 2019 at 09:52:23AM -0700, Joe Perches wrote:
+> On Tue, 2019-06-25 at 11:01 -0500, Gustavo A. R. Silva wrote:
+> > In preparation to enabling -Wimplicit-fallthrough, mark switch
+> > cases where we are expecting to fall through.
+> []
+> > This patch is part of the ongoing efforts to enable
+> > -Wimplicit-fallthrough.
+> 
+> Just enable the thing already.
 
-On Tue, Jun 25, 2019 at 12:57:50AM +0200, Paul Cercueil wrote:
-> +static const struct of_device_id ingenic_tcu_of_match[] =3D {
-> +	{ .compatible =3D "ingenic,jz4740-tcu", .data =3D &jz4740_soc_info, },
-> +	{ .compatible =3D "ingenic,jz4725b-tcu", .data =3D &jz4725b_soc_info, }=
-,
-> +	{ .compatible =3D "ingenic,jz4770-tcu", .data =3D &jz4740_soc_info, },
-> +	{ }
-> +};
+Linus has been pretty clear about not wanting warning options enabled
+without first fixing all the cases it warns about first. If that's
+changed, then sure, let's do it; but we went through a lot of coordination
+with sfr for linux-next nag-mail coverage (where maintainers are now
+fixing it themselves) when this came up during the last kernel summit,
+and this approach was the agreed solution.
 
-Nit: why not order these numerically? ie. 25b, 40, 70.
-
-> +static struct regmap * __init ingenic_tcu_create_regmap(struct device_no=
-de *np)
-> +{
-> +	struct resource res;
-> +	void __iomem *base;
-> +	struct regmap *map;
-> +
-> +	if (!of_match_node(ingenic_tcu_of_match, np))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	base =3D of_io_request_and_map(np, 0, "TCU");
-> +	if (IS_ERR(base))
-> +		return ERR_PTR(PTR_ERR(base));
-
-This is equivalent to:
-
-    return ERR_CAST(base);
-
-Apart from those:
-
-    Reviewed-by: Paul Burton <paul.burton@mips.com>
-
-Thanks,
-    Paul
+-- 
+Kees Cook
