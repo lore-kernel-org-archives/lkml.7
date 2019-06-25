@@ -2,170 +2,312 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD99C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD5FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6EF208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0F5208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="OGCkGaQk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ni94Owio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfFYU2i (ORCPT
+        id S1728056AbfFYU2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:28:38 -0400
-Received: from us-smtp-delivery-168.mimecast.com ([63.128.21.168]:50296 "EHLO
-        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726447AbfFYU2h (ORCPT
+        Tue, 25 Jun 2019 16:28:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44345 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfFYU2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 16:28:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
-        s=mimecast20190405; t=1561494514;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5xtuLcxFclVBDACKCITHt4+pryJfnkK3LXxmKY2n4Kc=;
-        b=OGCkGaQk3LUkTtCwyGea3BNhtDjSdB5twwjMkZ6CxmJ7pEDeLx6PbJYpHIrKeIAyeBkxOZ
-        xQHmWoy6NdxpmHxfom0/UiPym5AxI7ARw83Y8w7fOPVqMo+x92HvNJ00hd6V5FX90X8oTw
-        6Wu+LWjNW0cEKWepqBOhgJ8IeuGzpfs=
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com
- (mail-by2nam03lp2051.outbound.protection.outlook.com [104.47.42.51]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-jmAhI484NJmdVCZf1QB--A-1; Tue, 25 Jun 2019 16:27:28 -0400
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3673.namprd06.prod.outlook.com (10.167.236.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Tue, 25 Jun 2019 20:27:12 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d66:fca6:b053:764f]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::2d66:fca6:b053:764f%6]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
- 20:27:12 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
-CC:     "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "userm57@yahoo.com" <userm57@yahoo.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>
-Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-Thread-Topic: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-Thread-Index: AQHVJ9Vy3OcHKvmN50CYhgsoBzBu56arPlOAgABjq4CAAH9NAIAAgpiAgAAiVoCAABLYgA==
-Date:   Tue, 25 Jun 2019 20:27:12 +0000
-Message-ID: <1561494431.2343.25.camel@impinj.com>
-References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
-         <20190624195705.GD5690@piout.net>
-         <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
-         <20190625092926.GE5690@piout.net> <1561483011.2343.6.camel@impinj.com>
-         <20190625191945.GH5690@piout.net>
-In-Reply-To: <20190625191945.GH5690@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9ed8e449-3489-45a0-233e-08d6f9ab813f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3673;
-x-ms-traffictypediagnostic: MWHPR0601MB3673:
-x-microsoft-antispam-prvs: <MWHPR0601MB3673F2BB7A2E6B4085DF5CD9D3E30@MWHPR0601MB3673.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(189003)(199004)(3846002)(6436002)(229853002)(6116002)(71190400001)(81156014)(81166006)(2906002)(71200400001)(4326008)(186003)(8936002)(8676002)(102836004)(486006)(5660300002)(36756003)(6512007)(14444005)(6916009)(6246003)(99286004)(5640700003)(103116003)(2616005)(7736002)(256004)(86362001)(53936002)(66946007)(76116006)(66476007)(91956017)(14454004)(305945005)(476003)(25786009)(446003)(66556008)(73956011)(64756008)(66446008)(6506007)(11346002)(54906003)(66066001)(498600001)(26005)(2351001)(68736007)(6486002)(76176011)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3673;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mHQsaBRHEaWqLV0D+Otgyx+XnDkejhx3YTxE6Z1TD7YEf55TOmCsWsVSls7KACinxDzp9Qu0G6xRL0YYrLJOEwvEGJFhyBcqyxCwe1+tkFQNdmAYfr2mwq8aHf0rDvufvK04w07Sutw1LYT0mkyv2KwnE2H9g4D5jrBr6QP6H79GDQIAdDImxYZes5W/vEBxzXMjptH6QuaJv+QcPlW1ioki+15+8c0xCX3GyMoB4TJiIkrA7NfSGqjsiBcNdmOEsLRfWGtXgj/3ZMAy9KM1jJ5796MivE4AfB2OsJ4StD3J3yJW7LwcqWn+hhu/k33yMA3ub9Vdb6pPJw9KlnipgcK4PYooPM8ImbOZDE4h88DsoZe18RqviuqT5Pa7sIRrRkRyhZsIq5/eur0hHhoZ9YhjBWS/7K9oIZzZHoiYJ58=
-Content-ID: <8BA9E5C61205744D85B7D2637AB90B9A@namprd06.prod.outlook.com>
+Received: by mail-pg1-f194.google.com with SMTP id n2so9493431pgp.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qq39ykktkvFBpmzRtbgM4tstWpOedFNE8kr26lh/InM=;
+        b=ni94OwioZx/gzf2szVloCDZTFFpJCo2YKSFZ2X9qr6bxYnBeEpnnagfszyXnnz51L8
+         DkJXaethFUsoHnz8KOQVG2ZSAlP6R4YiehiVV+cY7fw97Xus3XNQzLPLdgQULmgYaWnL
+         GEAS55DRith5+cQIVd4nDD9PnOpK5SEC0mcAjXyMYNE83XKQ2Jfbx9GzYoD6pnR9q88y
+         VjAnVY+gy9KsY/4+Tbda/+4DRlDyvSks4s9chgBxuZrKHnC3t/s2Oqm9eCfJpWO+nPcJ
+         ixgXgEVA9P9D5QKdeUq3VIirHZ16lxLB0iDdlrfqM9fruDTYYR+l+8zODcodp3flRnlv
+         dArA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qq39ykktkvFBpmzRtbgM4tstWpOedFNE8kr26lh/InM=;
+        b=tqlzgClguFD4+8XxnQeiGYv9S1295tDjzjC1xb0WLThaawJ61DHnEls6UGLisewQik
+         MLIu0ixvQnlDo/K/gH9k7YtkYzRtCID02W+770lckf76IVBVtzI9F0MsXncCE9P5ZEky
+         Sk943FJ59SJfX242Ya2WRj0IunUvxJqYASy2tpLLVu6geQnvxwFTrLUw1DaCRDmyIRx8
+         M8wC2QKZz4RpYvFZf/55ha+fWvVhulG9p5/1WDKePzZ9JRIFUbo9GBApcmMFNp1EuTGt
+         xHEP27/PUb/y6Hoi47b/7avS3Kw5wBv35r9qXzsScaLJgVnpvV7Oev9Po8OWxGT37p/Y
+         OALg==
+X-Gm-Message-State: APjAAAV+8ZTKApiFYbnbeSNgLaEjzKG0yuSBTqzpMbxsEewg2LxJZ0Op
+        wuN0K+l98LGlTKJ2Rs+VTyuR90Ignz9lAPx3jNo0Ag==
+X-Google-Smtp-Source: APXvYqzvk20XXdVFtm6zl0X1nrjaH0TttItfcdP9iwaQ+JKQIeNhKF1pa7VSVvlXNPpMAUzP/tv1oR2JBEXuSnWnLw4=
+X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr754020pjb.117.1561494516332;
+ Tue, 25 Jun 2019 13:28:36 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ed8e449-3489-45a0-233e-08d6f9ab813f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 20:27:12.1247
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tpiepho@impinj.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3673
-X-MC-Unique: jmAhI484NJmdVCZf1QB--A-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com> <20190620001526.93426218BE@mail.kernel.org>
+In-Reply-To: <20190620001526.93426218BE@mail.kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 25 Jun 2019 13:28:25 -0700
+Message-ID: <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA2LTI1IGF0IDIxOjE5ICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3cm90
-ZToNCj4gT24gMjUvMDYvMjAxOSAxNzoxNjo1MiswMDAwLCBUcmVudCBQaWVwaG8gd3JvdGU6DQo+
-ID4gT24gVHVlLCAyMDE5LTA2LTI1IGF0IDExOjI5ICswMjAwLCBBbGV4YW5kcmUgQmVsbG9uaSB3
-cm90ZToNCj4gPiA+IFVzZXJzcGFjZSBpcyBjZXJ0YWlubHkgYWRqdXN0aW5nIHRoZSB0aW1lem9u
-ZSBhZnRlciB0aGUga2VybmVsIGRpZC4gQ2FuDQo+ID4gPiB5b3UgcnVuIHRoZSBzYW1lIGNvbW1h
-bmRzIHdpdGhvdXQgcnVubmluZyB5b3VyIGluaXQ/IA0KPiA+ID4gDQo+ID4gPiBPbiBzdGFibGUs
-IHlvdSBoYXZlIC9ldGMvaW5pdC5kL2h3Y2xvY2suc2ggdGhhdCBzdGlsbCBydW5zIGFuZCBkb2Vz
-IHRoZQ0KPiA+ID4gY29ycmVjdCB0aGluZy4gTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHN5c3Rl
-bWQgYWxzbyBoYW5kbGVzIHRoZSBUWg0KPiA+ID4gcHJvcGVybHkgYWZ0ZXIgaGN0b3N5cyAoc2Vl
-IGNsb2NrX2lzX2xvY2FsdGltZSgpKS4NCj4gPiA+IA0KPiA+ID4gU2VyaW91c2x5LCBoY3Rvc3lz
-IGRvZXMgYSByZWFsbHkgYmFkIGpvYiBhdCBzZXR0aW5nIHRoZSBzeXN0ZW0gdGltZSwgaXQNCj4g
-PiA+IGlzIGd1YXJhbnRlZWQgdG8gYmUgYWx3YXlzIHdyb25nIG9uIG1vc3QgcGxhdGZvcm1zLiBN
-eSBwbGFuIGlzIHN0aWxsIHRvDQo+ID4gPiB0cnkgdG8gZ2V0IGRpc3Ryb3MgdG8gc3RvcCBlbmFi
-bGluZyBpdCBhbmQgZG8gdGhhdCBwcm9wZXJseSBpbg0KPiA+ID4gdXNlcnNwYWNlLiBUaGlzIGlz
-IGFscmVhZHkgb2sgd2hlbiB1c2luZyBzeXNWIGJ1dCBzeXN0ZW1kIHdvdWxkIG5lZWQgYQ0KPiA+
-ID4gZmV3IGNoYW5nZXMgdG8gc3RvcCByZWx5aW5nIG9uIGl0IHdoZW4gdGhlbiBpcyBubyBod2Ns
-b2NrIGluaXRzY3JpcHQuDQo+ID4gPiBVbmZvcnR1bmF0ZWx5LCBJIGRpZG4ndCBoYXZlIHRpbWUg
-dG8gd29yayBvbiB0aGF0IHlldC4NCj4gPiANCj4gPiBoY3Rvc3lzIGlzIHZlcnkgaGFuZHkgaW4g
-dGhhdCBpdCBzZXRzIHRoZSBzeXN0ZW0gdGltZSBiZWZvcmUgYW55IGxvZw0KPiA+IG1lc3NhZ2Vz
-IGFyZSBnZW5lcmF0ZWQuIEVpdGhlciBpbiBhIG1haW4gYm9vdCBvciBpbiBhbiBpbml0cmFtZnMu
-IA0KPiA+IEhhdmluZyBwcm9wZXJ0eSB0aW1lLXN0YW1wZWQgbG9nIG1lc3NhZ2VzIGlzIHZlcnkg
-aW1wb3J0YW50IGZvcg0KPiA+IG1hbmFnaW5nIGEgbGFyZ2UgZGVwbG95bWVudC4NCj4gPiANCj4g
-PiBJZiB0aGUgc3lzdGVtIHRpbWUgaXMgc2V0IGJ5IHNvbWUgc2NyaXB0IG9yIHN5c3RlbWQgdW5p
-dCwgdGhlbiB0aGVyZQ0KPiA+IHdpbGwgYWx3YXlzIGJlIGFsbCB0aGUgdGhpbmdzIHRoYXQgbmVl
-ZCB0byBydW4gYmVmb3JlIHRoYXQgc2NyaXB0IG9yDQo+ID4gdW5pdCBjYW4gd29yay4gRS5nLiwg
-dWRldiBjcmVhdGluZyBydGMgZGV2aWNlIG5vZGVzLCBtb3VudGluZyAvc3lzIGFuZA0KPiA+IC9w
-cm9jLCBzeXN0ZW1kIGdlbmVyYXRvciBmb3IgbG9jYWwgZmlsZSBzeXN0ZW0gdW5pcywgdGhlIG90
-aGVyIHBhcnRzIG9mDQo+ID4gc3lzdGVtZCB0byBkbyB0aGF0LCBldGMuIEFsbCB0aGlzIHdvbid0
-IGJlIGFibGUgdG8gbG9nIHdpdGggY29ycmVjdA0KPiA+IHN5c3RlbSB0aW1lLg0KPiA+IA0KPiAN
-Cj4gSSdkIGFyZ3VlIHRoYXQgdGhpcyBzeXN0ZW0gdGltZSBpcyBub3QgY29ycmVjdCBhbnl3YXkg
-YW5kIGhlbmNlIGlzIG5vdA0KPiB0aGF0IHVzZWZ1bC4gRXNwZWNpYWxseSBzaW5jZSB0aGUgYm9v
-dCB0aW1lIHRvIGFueXRoaW5nIHJlYWRpbmcgdGhlIFJUQw0KPiB3aWxsIHN0aWxsIGJlIHNtYWxs
-ZXIgdGhhbiB0aGUgbWF4aW11bSBlcnJvciBoY3Rvc3lzIGNhbiBoYXZlICh0aGF0IGlzDQo+IHVw
-IHRvIHR3byBzZWNvbmRzKS4gVGhpcyBpcyBldmVuIHdvcnNlIGlmIHRoZSBSVEMgc290cmVzIGxv
-Y2FsIHRpbWUuDQoNCldoeSB3b3VsZCB0aGUgc3lzdGVtIHRpbWUgYmUgaW5jb3JyZWN0IGJ5IG1v
-cmUgdGhhbiArLSA1MDAgbXMgcGx1cw0Kd2hhdGV2ZXIgdGhlIGRyaWZ0IHRoZSBSVEMgc2luY2Ug
-dGhlIGxhc3QgdGltZSBpdCB3YXMgY29ycmVjdGx5IHNldD8gDQpJcyB0aGVyZSBhbm90aGVyIHNv
-dXJjZSBvZiBlcnJvcj8NCg0KVGhlICstNTAwIG1zIGVycm9yIGNvdWxkIGJlIHJlZHVjZWQgYnkg
-dXNpbmcgYW4gdXBkYXRlIGludGVycnVwdCBpbg0KaGN0b3N5cy4NCg0KSWYgb25lIHdlcmUgdG8g
-bm90IHNldCB0aGUgUlRDIHRvIFVUQywgdGhlbiB5ZXMgdGhlcmUgaXMgYSBwcm9ibGVtLiANCkJ1
-dCBpdCdzIG1hbmFnZWFibGUuICBEb24ndCBkbyB0aGF0LiAgSSd2ZSBnb3QgbGFyZ2UgbnVtYmVy
-cyBvZg0KZW1iZWRkZWQgZGV2aWNlcyBJJ3ZlIGRlc2lnbmVkLiAgV2h5IHdvdWxkIEkgZGVzaWdu
-IHRoZW0gdG8gdXNlIGxvY2FsDQp0aW1lIGluIHRoZSBSVEM/ICANCg0KSWYgb25lIGRvZXMgc2V0
-IHRoZSBSVEMgdG8gbG9jYWwgdGltZSwgdGhlbiBpdCdzIGJhZCwgYnV0IG5vdA0KaW1wb3NzaWJs
-ZSB0byBkZWFsIHdpdGguICBUaGUgbG9nIG1lc3NhZ2VzIHRoYXQgaGF2ZSB0aW1lc3RhbXBzIGJl
-dHdlZW4NCmJvb3QgYW5kIHdoZW4gdGhlIHRpbWV6b25lIGlzIHNldCB3aWxsIGJlIGluIHRoZSB3
-cm9uZyB6b25lLiAgVGhlDQpuZWNlc3NhcnkgaW5mb3JtYXRpb24gdG8gY29ycmVjdCB0aGlzIGVy
-cm9yIGV4aXN0cy4gIEl0J3MgZmFyIGJldHRlcg0KdGhhbiBhbGwgdGltZXN0YW1wcyBhcyBKYW4g
-MXN0IDE5NzAuDQoNCj4gSW5zdGVhZCBvZiB1c2luZyBhIHN5c3RlbWQgdW5pdCwgd2UgY291bGQg
-bWFrZSBzeXN0ZW1kIHJlYWQgdGhlIFJUQyBhcw0KPiBzb29uIGFzIHBvc3NpYmxlIGFuZCBzZXQg
-dGhlIHN5c3RlbSB0aW1lIGNvcnJlY3RseSAoYXQgbGVhc3QsIHRoYXQgaXMgbXkNCg0KQnV0IHdo
-YXQgaXMgYXMgc29vbiBhcyBwb3NzaWJsZT8gIERvZXNuJ3QgaXQgbmVlZCAvZGV2L3J0YyBvciBt
-YXliZQ0KL3N5cy9jbGFzcy9ydGMgdG8gZXhpc3Q/ICBUaGF0IGRvZXNuJ3QgaGFwcGVuIGZvciBh
-IHdoaWxlIGFmdGVyIGJvb3QuDQoNCj4gcGxhbikuIFRoaXMgd291bGQgYmUgZXNwZWNpYWxseSB1
-c2VmdWwgd2hlbiB1c2luZyBOVFAgYmVjYXVzZSBhcyBhbHJlYWR5DQo+IHJlcG9ydGVkLCBpdCBt
-YXkgdGFrZSBhIGZldyBob3VycyB0byBhY3R1YWxseSBzeW5jaHJvbml6ZSBiZWNhdXNlDQo+IGhj
-dG9zeXMgZGlkbid0IHNldCB0aGUgY29ycmVjdCB0aW1lLg0KDQpJcyB0aGF0IHJlYWxseSBhIHBy
-b2JsZW0gaW4gaGN0b3N5cz8gIFVzdWFsbHkgb25lIGFsd2F5cyBkb2VzIHNvbWUgc29ydA0Kb2Yg
-bWFrZXN0ZXAgb3B0aW9uIGluIG50cCB0byBzZXQgcmF0aGVyIHRoYW4gc2tldyB0aGUgY2xvY2sg
-b24gc3RhcnQsDQpwZXJoYXBzIG9ubHkgaWYgdGhlIGVycm9yIGlzIHRvbyBncmVhdCwgdG8gYXZv
-aWQgc3luY2hyb25pemluZyB0YWtpbmcNCmFuIGV4Y2VlZGluZyBsb25nIHRpbWUuDQoNCkkgc2Vl
-IHRoaXMgYXMgdHdvIGJsYXRhbnQgc3lzdGVtIG1pc2NvbmZpZ3VyYXRpb25zLiAgT25lLCB0ZWxs
-aW5nIHRoZQ0Ka2VybmVsIHRvIHNldCB0aGUgdGltZSBiYXNlZCBvbiBhIFJUQyBzZXQgdG8gVVRD
-IGFuZCB0aGVuIG5vdCBzZXR0aW5nDQp0aGUgUlRDIHRvIFVUQy4gIEFuZCB0d28sIHNldHRpbmcg
-bnRwIHRvIG5vdCBzdGVwIHRoZSBjbG9jayBhbmQgZ2l2aW5nDQppdCBhIGh1Z2UgaW5pdGlhbCBl
-cnJvciB0byBkZWFsIHdpdGguDQoNCj4gDQo+IEkgd291bGQgYWdyZWUgdGhhdCB0aGVyZSBhcmUg
-cmVtYWluaW5nIHVzZSBjYXNlcyBmb3IgaGN0b3N5cywgZS5nLiB3aGVuDQo+IHdhbnRpbmcgdG8g
-Ym9vdCBhIHJvb3RmcyBvdmVyIGEgbmV0d29yayBmaWxlc3lzdGVtIGFuZCB3aXRob3V0IGFuDQo+
-IGluaXRyYW1mcy4NCj4g
+On Wed, Jun 19, 2019 at 5:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-06-17 01:25:56)
+> > diff --git a/kunit/test.c b/kunit/test.c
+> > new file mode 100644
+> > index 0000000000000..d05d254f1521f
+> > --- /dev/null
+> > +++ b/kunit/test.c
+> > @@ -0,0 +1,210 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Base unit test (KUnit) API.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#include <linux/sched/debug.h>
+> > +#include <kunit/test.h>
+> > +
+> > +static bool kunit_get_success(struct kunit *test)
+> > +{
+> > +       unsigned long flags;
+> > +       bool success;
+> > +
+> > +       spin_lock_irqsave(&test->lock, flags);
+> > +       success = test->success;
+> > +       spin_unlock_irqrestore(&test->lock, flags);
+>
+> I still don't understand the locking scheme in this code. Is the
+> intention to make getter and setter APIs that are "safe" by adding in a
+> spinlock that is held around getting and setting various members in the
+> kunit structure?
 
+Yes, your understanding is correct. It is possible for a user to write
+a test such that certain elements may be updated in different threads;
+this would most likely happen in the case where someone wants to make
+an assertion or an expectation in a thread created by a piece of code
+under test. Although this should generally be avoided, it is possible,
+and there are occasionally good reasons to do so, so it is
+functionality that we should support.
+
+Do you think I should add a comment to this effect?
+
+> In what situation is there more than one thread reading or writing the
+> kunit struct? Isn't it only a single process that is going to be
+
+As I said above, it is possible that the code under test may spawn a
+new thread that may make an expectation or an assertion. It is not a
+super common use case, but it is possible.
+
+> operating on this structure? And why do we need to disable irqs? Are we
+> expecting to be modifying the unit tests from irq contexts?
+
+There are instances where someone may want to test a driver which has
+an interrupt handler in it. I actually have (not the greatest) example
+here. Now in these cases, I expect someone to use a mock irqchip or
+some other fake mechanism to trigger the interrupt handler and not
+actual hardware; technically speaking in this case, it is not going to
+be accessed from a "real" irq context; however, the code under test
+should think that it is in an irq context; given that, I figured it is
+best to just treat it as a real irq context. Does that make sense?
+
+> > +
+> > +       return success;
+> > +}
+> > +
+> > +static void kunit_set_success(struct kunit *test, bool success)
+> > +{
+> > +       unsigned long flags;
+> > +
+> > +       spin_lock_irqsave(&test->lock, flags);
+> > +       test->success = success;
+> > +       spin_unlock_irqrestore(&test->lock, flags);
+> > +}
+> > +
+> > +static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+> > +{
+> > +       return vprintk_emit(0, level, NULL, 0, fmt, args);
+> > +}
+> > +
+> > +static int kunit_printk_emit(int level, const char *fmt, ...)
+> > +{
+> > +       va_list args;
+> > +       int ret;
+> > +
+> > +       va_start(args, fmt);
+> > +       ret = kunit_vprintk_emit(level, fmt, args);
+> > +       va_end(args);
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +static void kunit_vprintk(const struct kunit *test,
+> > +                         const char *level,
+> > +                         struct va_format *vaf)
+> > +{
+> > +       kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
+> > +}
+> > +
+> > +static bool kunit_has_printed_tap_version;
+>
+> Can you please move this into function local scope in the function
+> below?
+
+Sure, that makes sense.
+
+> > +
+> > +static void kunit_print_tap_version(void)
+> > +{
+> > +       if (!kunit_has_printed_tap_version) {
+> > +               kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
+> > +               kunit_has_printed_tap_version = true;
+> > +       }
+> > +}
+> > +
+> [...]
+> > +
+> > +static bool kunit_module_has_succeeded(struct kunit_module *module)
+> > +{
+> > +       const struct kunit_case *test_case;
+> > +       bool success = true;
+> > +
+> > +       for (test_case = module->test_cases; test_case->run_case; test_case++)
+> > +               if (!test_case->success) {
+> > +                       success = false;
+> > +                       break;
+>
+> Why not 'return false'?
+
+Also a good point. Will fix.
+
+> > +               }
+> > +
+> > +       return success;
+>
+> And 'return true'?
+
+Will fix.
+
+> > +}
+> > +
+> > +static size_t kunit_module_counter = 1;
+> > +
+> > +static void kunit_print_subtest_end(struct kunit_module *module)
+> > +{
+> > +       kunit_print_ok_not_ok(false,
+> > +                             kunit_module_has_succeeded(module),
+> > +                             kunit_module_counter++,
+> > +                             module->name);
+> > +}
+> > +
+> > +static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+> > +                                           size_t test_number)
+> > +{
+> > +       kunit_print_ok_not_ok(true,
+> > +                             test_case->success,
+> > +                             test_number,
+> > +                             test_case->name);
+> > +}
+> > +
+> > +void kunit_init_test(struct kunit *test, const char *name)
+> > +{
+> > +       spin_lock_init(&test->lock);
+> > +       test->name = name;
+> > +       test->success = true;
+> > +}
+> > +
+> > +/*
+> > + * Performs all logic to run a test case.
+> > + */
+> > +static void kunit_run_case(struct kunit_module *module,
+> > +                          struct kunit_case *test_case)
+> > +{
+> > +       struct kunit test;
+> > +       int ret = 0;
+> > +
+> > +       kunit_init_test(&test, test_case->name);
+> > +
+> > +       if (module->init) {
+> > +               ret = module->init(&test);
+> > +               if (ret) {
+> > +                       kunit_err(&test, "failed to initialize: %d\n", ret);
+> > +                       kunit_set_success(&test, false);
+> > +                       return;
+> > +               }
+> > +       }
+> > +
+> > +       if (!ret)
+> > +               test_case->run_case(&test);
+>
+> Do we need this if condition? ret can only be set to non-zero above but
+> then we'll exit the function early so it seems unnecessary. Given that,
+> ret should probably be moved into the module->init path.
+
+Whoops. Sorry, another instance of how it evolved over time and I
+forgot why I did the check. Will fix.
+
+> > +
+> > +       if (module->exit)
+> > +               module->exit(&test);
+> > +
+> > +       test_case->success = kunit_get_success(&test);
+> > +}
+> > +
+
+Thanks!
