@@ -2,116 +2,128 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E625C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4013AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A002085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rRbkzdR/"
+	by mail.kernel.org (Postfix) with ESMTP id 21A01214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfFYM4h (ORCPT
+        id S1730285AbfFYM5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:56:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34794 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728309AbfFYM4g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:56:36 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so17792343wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:56:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qkm/sR5hDVqHvpHouxyg9xpi0nH3BM7uRz/CI0HhLcc=;
-        b=rRbkzdR/iSJ0T7wrnOqEN3gyZIFvxf+yrv3oOHKAj8X/giJhNNapGy0bLZvuSxWqoy
-         CTDFhWWjDzlF4vY7BiTDM/avstUHEoCdYIV4ZN2mzkMDQTZM5uvqXY4puAjXMYJNqU/o
-         WxyR4s6RpgtJZ9MAbr29nu6JK+HchV0ZhC6PY4avIOL5GT/pihIkZojP1PRTizuBurbn
-         n/1Laf/xPS6pthwMmJiHMoVHMJjMEWmrt4IRdwoa+fVyGwVHCX1cGQ0l5PApUx8T13Ia
-         OCpIrfJaq1nk4kfqi3F8cxRFkw24Q2sM5QATrVHdSSbg/4Z86pZWSNBIbf0TvX0vER3S
-         8vrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qkm/sR5hDVqHvpHouxyg9xpi0nH3BM7uRz/CI0HhLcc=;
-        b=UHGRpF62Q8orUSaHfTtxoBWGYE2x3TNgVhnUyoWN2VLmMmDa/PXMW4Ji3WCHofo6eB
-         Z4IVSQXGTJpW5oW32blPleKKGZd3T4Yj5kfat4ojaZpsWX0D+aQuKHMZVV2TrMrKGKeZ
-         iyX1lybJWQ//8YiVrCY/J7pKXdsZmoqChCSkIJkZH1LHF/GMAFxo2FUmBoZnnRG5J0+F
-         i48tC3765DWN1kxfvHhBbsTkaywLVjJytiSE8Gg7/ulPy9eAbU7Fp78ZMOm1w438g1cq
-         bgIAMLZiPP6GEyNeinyi41kfMq991QzoAv5tdc0n0aJd690pxLzgzIWNSvl0igbc82Gd
-         c9Jg==
-X-Gm-Message-State: APjAAAUd5BfQsY28wtpZy1e+wquiXRNLc4i5Utsdaw28sqeoU8uz1H1w
-        A9YSAfw/ouIZ0aMlo7p0Gu1uyA==
-X-Google-Smtp-Source: APXvYqwKYsH2s/ZCuUhf0NqgerUa9YXoCsLcRdER1sXKnWMSunPYA+thz52eb+vjOxTEeRfQTQSw2Q==
-X-Received: by 2002:a5d:50cc:: with SMTP id f12mr36721980wrt.129.1561467393906;
-        Tue, 25 Jun 2019 05:56:33 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id o14sm11817057wrp.77.2019.06.25.05.56.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Jun 2019 05:56:33 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 13:56:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] mfd: ioc3: Add driver for SGI IOC3 chip
-Message-ID: <20190625125631.GH21119@dell>
-References: <20190613170636.6647-1-tbogendoerfer@suse.de>
- <20190613170636.6647-6-tbogendoerfer@suse.de>
- <20190625090451.GA9794@alpha.franken.de>
+        Tue, 25 Jun 2019 08:57:50 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33034 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728022AbfFYM5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:57:50 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 3E2D18746ED2E5F5F6B2;
+        Tue, 25 Jun 2019 13:57:48 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 25 Jun
+ 2019 13:57:37 +0100
+Subject: Re: [PATCH v4 00/14] ima: introduce IMA Digest Lists extension
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
+        <mjg59@google.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>
+References: <20190614175513.27097-1-roberto.sassu@huawei.com>
+ <9029dd14-1077-ec89-ddc2-e677e16ad314@huawei.com>
+Message-ID: <88d368e6-5b3c-0206-23a0-dc3e0aa385f0@huawei.com>
+Date:   Tue, 25 Jun 2019 14:57:45 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190625090451.GA9794@alpha.franken.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9029dd14-1077-ec89-ddc2-e677e16ad314@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019, Thomas Bogendoerfer wrote:
-
-> On Thu, Jun 13, 2019 at 07:06:31PM +0200, Thomas Bogendoerfer wrote:
-> > SGI IOC3 chip has integrated ethernet, keyboard and mouse interface.
-> > It also supports connecting a SuperIO chip for serial and parallel
-> > interfaces. IOC3 is used inside various SGI systemboards and add-on
-> > cards with different equipped external interfaces.
-> > 
-> > Support for ethernet and serial interfaces were implemented inside
-> > the network driver. This patchset moves out the not network related
-> > parts to a new MFD driver, which takes care of card detection,
-> > setup of platform devices and interrupt distribution for the subdevices.
-> > 
-> > Serial portion: Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> > ---
-> >  arch/mips/include/asm/sn/ioc3.h     |  345 +++----
-> >  arch/mips/sgi-ip27/ip27-timer.c     |   20 -
-> >  drivers/mfd/Kconfig                 |   13 +
-> >  drivers/mfd/Makefile                |    1 +
-> >  drivers/mfd/ioc3.c                  |  683 +++++++++++++
+On 6/17/2019 8:56 AM, Roberto Sassu wrote:
+> On 6/14/2019 7:54 PM, Roberto Sassu wrote:
+>> This patch set introduces a new IMA extension called IMA Digest Lists.
+>>
+>> At early boot, the extension preloads in kernel memory reference digest
+>> values, that can be compared with actual file digests when files are
+>> accessed in the system.
+>>
+>> The extension will open for new possibilities: PCR with predictable 
+>> value,
+>> that can be used for sealing policies associated to data or TPM keys;
+>> appraisal based on reference digests already provided by Linux 
+>> distribution
+>> vendors in the software packages.
+>>
+>> The first objective can be achieved because the PCR values does not 
+>> depend
+>> on which and when files are measured: the extension measures digest lists
+>> sequentially and files whose digest is not in the digest list.
+>>
+>> The second objective can be reached because the extension is able to
+>> extract reference measurements from packages (with a user space tool) and
+>> use it as a source for appraisal verification as the reference came from
+>> the security.ima xattr. This approach will also reduce the overhead as 
+>> only
+>> one signature is verified for many files (as opposed to one signature for
+>> each file with the current implementation).
+>>
+>> This version of the patch set provides a clear separation between current
+>> and new functionality. First, the new functionality must be explicitly
+>> enabled from the kernel command line. Second, results of operations
+>> performed by the extension can be distinguished from those obtained from
+>> the existing code: measurement entries created by the extension have a
+>> different PCR; mutable files appraised with the extension have a 
+>> different
+>> security.ima type.
+>>
+>> The review of this patch set should start from patch 11 and 12, which
+>> modify the IMA-Measure and IMA-Appraise submodules to use digest lists.
+>> Patch 1 to 5 are prerequisites. Patch 6 to 10 adds support for digest
+>> lists. Finally, patch 13 introduces two new policies to measure/appraise
+>> rootfs and patch 14 adds the documentation (including a flow chart to
+>> show how IMA has been modified).
+>>
+>> The user space tools to configure digest lists are available at:
+>>
+>> https://github.com/euleros/digest-list-tools/releases/tag/v0.3
+>>
+>> The patch set applies on top of linux-integrity/next-queued-testing
+>> (73589972b987).
+>>
+>> It is necessary to apply also:
+>> https://patchwork.kernel.org/cover/10957495/
 > 
-> Lee,
+> Another dependency is:
 > 
-> can you give me an indication, if the MFD changes are ok now
-> or if I need to improve it further.
+> https://patchwork.kernel.org/cover/10979341/
+> 
+> Roberto
+I uploaded this patch set and all the required dependencies to:
 
-I will do, when I get to them.
+https://github.com/euleros/linux/releases/tag/ima-digest-lists-v4
 
-My review list currently runs into the 50s.
+It should be easy to test. Let me know if you have questions about the
+installation.
+
+
+Mimi, do you have any thoughts on this version?
+
+Thanks
+
+Roberto
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
