@@ -2,153 +2,240 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E17CC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD07C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071062146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r80m0NId"
+	by mail.kernel.org (Postfix) with ESMTP id 63FF3208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfFYONq (ORCPT
+        id S1729649AbfFYOOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:13:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42763 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfFYONq (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:13:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so9551099pff.9
-        for <Linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nqUjvEpbHa4bmVVbiNY3TsSLDN/ESHjmI3nWhtZpm64=;
-        b=r80m0NIdXLhEvaCqjUKhJX37qFh2W1g6cDf7weUm9jbNptPWp80pEUI9opw6H9gm50
-         dNmhZXvCVB7xW0waafhq+LNBKV0JsgcA+qJLihBKEqAxTl87fkXs4vfs5m1RU6Ny1EUw
-         xzHPIbBFyf5f0niEY2MbY1DGMxmKWiAaYEZLHWvQXKC6NDcTNZnPWnviqEIe2vTnY2I8
-         v71WGhMfREL1Z5sxRTnGFOLtHP+T7LaFHL+uUCVZ+eGH8HuKVjbuAh7ZTJAEM7He/MYd
-         r3R2cpD5S2eqqQPrPqIOM5OJ1ikTC7a4MnE9EfCIyVJrY8VYTEmwMnScWHDiyGbLNS/r
-         46eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nqUjvEpbHa4bmVVbiNY3TsSLDN/ESHjmI3nWhtZpm64=;
-        b=HmV2L4tYuumFEcT+I51LuVBkbymCEJbFmhaP6AjdHPpEx+7puMvRtIVVoN6C7zKGvV
-         qYn5+BGmF33dtU3Ti/pgeU2OcN+IglYY03RmlR0kvrUeBlWGeY5mX+9SJNT3EW0o7SWG
-         rcFn3B8PCQeHk0XHYkaRn5bmuwLPC+gExVm18okiI24hIivYjzqGWMlZ5h7S2CFs+FNh
-         yBbQVlUaiXYFkYrcUdFKHNUZlI5JWSM1aDIXJ+O1GBVlUJhDloYQ+Rn5X3AKJQC2wUls
-         wOv/joMw7hqhQ1RKMk6NFypwXtmXHmbNIYVfsrBnUrZhLZ6xpbxancQOfHdU8kTetW47
-         gukA==
-X-Gm-Message-State: APjAAAUis4OBBSoR0RI+woPU+QrckTK87+caCHcB/LK1BWG0r1zHmy3P
-        hkCec2cPETq2/UKnLZvOZg==
-X-Google-Smtp-Source: APXvYqwBAkDTfGiLDfKt1+XLvKyU+gy/E6/TGdVcHhUhqGlY5n9j0/Z2+O2ED2nwS5zoHJYeucBMew==
-X-Received: by 2002:a63:4f46:: with SMTP id p6mr7708849pgl.268.1561472025302;
-        Tue, 25 Jun 2019 07:13:45 -0700 (PDT)
-Received: from mylaptop.redhat.com ([2408:8207:7826:5c10:8935:c645:2c30:74ef])
-        by smtp.gmail.com with ESMTPSA id d9sm15953790pgj.34.2019.06.25.07.13.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 07:13:44 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     Linux-mm@kvack.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Linux-kernel@vger.kernel.org
-Subject: [PATCHv3] mm/gup: speed up check_and_migrate_cma_pages() on huge page
-Date:   Tue, 25 Jun 2019 22:13:19 +0800
-Message-Id: <1561471999-6688-1-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
+        Tue, 25 Jun 2019 10:14:19 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:36434 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfFYOOT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:14:19 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hfmCx-0005G4-66; Tue, 25 Jun 2019 16:14:03 +0200
+Message-ID: <868e949b1fc8cf22307f579ab1f14543064bec20.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Alex Elder <elder@linaro.org>, Dan Williams <dcbw@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+Date:   Tue, 25 Jun 2019 16:14:00 +0200
+In-Reply-To: <7de004be-27b6-ac63-389d-8ea9d23d0361@linaro.org> (sfid-20190624_182121_787713_CF57399E)
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+         <e6ba8a9063e63506c0b88a70418d74ca4efe85cd.camel@sipsolutions.net>
+         <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org>
+         <84153d9e7c903084b492ceccc0dd98cbb32c12ac.camel@redhat.com>
+         <7de004be-27b6-ac63-389d-8ea9d23d0361@linaro.org>
+         (sfid-20190624_182121_787713_CF57399E)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both hugetlb and thp locate on the same migration type of pageblock, since
-they are allocated from a free_list[]. Based on this fact, it is enough to
-check on a single subpage to decide the migration type of the whole huge
-page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
-similar on other archs.
+Hi Alex,
 
-Furthermore, when executing isolate_huge_page(), it avoid taking global
-hugetlb_lock many times, and meanless remove/add to the local link list
-cma_page_list.
+I'll just pick a few or your messages and reply there - some other
+subthreads seem to have pretty much completed.
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Linux-kernel@vger.kernel.org
----
-v2 -> v3: fix page order to size convertion
+> Sorry for the delay.  There's a lot here to go through, and with
+> each message the picture is (slowly) getting a bit clearer for me.
+> Still, there are some broad tradeoffs to consider and I think we
+> need to get a little more specific again.  I'm going to start a
+> new thread (or rather re-subject a response to the very first one)
+> that tries to do a fresh start that takes into account the
+> discussion so far.
+> 
+> I will also be talking with some people inside Qualcomm (including
+> Subash) soon to make sure we don't miss any requirements or insights
+> they know of that I don't realize are important.
 
- mm/gup.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+That's much appreciated.
 
-diff --git a/mm/gup.c b/mm/gup.c
-index ddde097..03cc1f4 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1342,19 +1342,22 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
- 	LIST_HEAD(cma_page_list);
- 
- check_again:
--	for (i = 0; i < nr_pages; i++) {
-+	for (i = 0; i < nr_pages;) {
-+
-+		struct page *head = compound_head(pages[i]);
-+		long step = 1;
-+
-+		if (PageCompound(head))
-+			step = 1 << compound_order(head) - (pages[i] - head);
- 		/*
- 		 * If we get a page from the CMA zone, since we are going to
- 		 * be pinning these entries, we might as well move them out
- 		 * of the CMA zone if possible.
- 		 */
--		if (is_migrate_cma_page(pages[i])) {
--
--			struct page *head = compound_head(pages[i]);
--
--			if (PageHuge(head)) {
-+		if (is_migrate_cma_page(head)) {
-+			if (PageHuge(head))
- 				isolate_huge_page(head, &cma_page_list);
--			} else {
-+			else {
- 				if (!PageLRU(head) && drain_allow) {
- 					lru_add_drain_all();
- 					drain_allow = false;
-@@ -1369,6 +1372,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
- 				}
- 			}
- 		}
-+
-+		i += step;
- 	}
- 
- 	if (!list_empty(&cma_page_list)) {
--- 
-2.7.5
+> > Linux usually tries to keep drivers generic and focused; each driver is
+> > written for a specific function. For example, a USB device usually
+> > provides multiple USB interfaces which will be bound to different Linux
+> > drivers like a TTY, cdc-ether, QMI (via qmi_wwan), cdc-acm, etc.
+> 
+> So USB has some attributes similar to what we're talking about
+> here.  But if I'm not mistaken we want some sort of an overall
+> management scheme as well.
+
+Yes. For the record, I think the part about "keep drivers generic and
+focused" really only works for USB devices that expose different pieces
+that look like any other network device or a TTY device on the USB
+level, just the combination of these things (and knowing about that)
+really makes them a modem.
+
+For things like IPA or the (hypothetical) Intel driver we're talking
+about, it's still all managed by a single (PCIe) driver. For the Intel
+device in particular, even all the control channels are over exactly the
+same transport mechanism as the data channels.
+
+> > These drivers are often generic and we may not have enough information
+> > in one driver to know that the parent of this interface is a WWAN
+> > device. But another driver might. Since probing is asynchronous we may
+> > have cdc-acm bind to a device and provide a TTY before cdc-ether (which
+> > does know it's a WWAN) binds and provides the netdevice.
+> 
+> Is this why Johannes wanted to have a "maybe attach" method?
+
+Yes.
+
+> I don't like the "maybe" API unless there's no other way to do it.
+> 
+> Instead I think it would be better for the probing driver to register
+> with a whatever the WWAN core is, and then have the WWAN core be
+> responsible for pulling things all together when it receives a
+> request to do so.  I.e., something in user space should request
+> that a registered data interface be brought up, and at that
+> time everything "knows" it's implemented as part of a WWAN
+> device.
+
+Right, but then we just punt to userspace. Mostly we *do* (eventually!)
+know that it's a WWAN device, just not every component can detect it.
+Some components typically can.
+
+So for example, you might have a USB multi-function device with a
+network function (looks just like ethernet pretty much) but another TTY
+control channel that actually has some specific WWAN IDs, so that part
+can know it's a WWAN.
+
+Here, the ethernet function would need "maybe" attach, and the control
+channel would "definitively" attach, pulling it together as a WWAN
+device without requiring any more action or information.
+
+> So maybe:
+> - Hardware probe detects a WWAN device
+> - The drivers that detect the WWAN device register it with the
+>   WWAN core code.
+> - A control channel is instantiated at/before the time the WWAN
+>   device is registered
+> - Something in user space should manage the bring-up of any
+>   other things on the WWAN device thereafter
+
+But those things need to actually get connected first :-)
+
+In IPA/Intel case this is easy since it's a single driver. But if
+there's multi-function device with ethernet being a completely separate
+driver, the control channel cannot even reach that to tell it to create
+a new data channel.
+
+> > userspace should probably always create the netdevices (since they are
+> > always useless until userspace coordinates with the firmware about
+> > them) but that's not how things are yet.
+> 
+> That's too bad.  How hard would that be to change?
+
+Depends, but as I said above it's probably orthogonal to the question.
+The data channel driver would still need to attach to the WWAN device
+somehow so it becomes reachable by the control plane (note this isn't
+the same as "control channel" since the latter talks to the modem, the
+control plane talks to the kernel drivers).
+
+> > > - What causes a created channel to be removed?
+> > 
+> > Driver removal, userspace WWAN daemon terminating the packet data
+> > connection which the channel represents, the modem terminating the
+> > packet data connection (eg network initiated disconnect), etc.
+> 
+> OK this is as I expected.  Driver (or device) removal is somewhat
+> obvious, but you're confirming user space might request it as well.
+
+If userspace actually had the ability to create (data) channels, then it
+would have the ability to also remove them. Right now, this may or may
+not be supported by the drivers that act together to form the interfaces
+to a WWAN device.
+
+> > > - You distinguish between attaching a netdevice and (what
+> > >   I'll call) activating it.  What causes activation?
+> > 
+> > Can you describe what you mean by "activating"? Do you mean
+> > successfully TX/RX packets via the netdev and the outside world?
+> 
+> Johannes mentioned an API to "maybe attach" a device.  That begs
+> the question of what happens if this request does *not* attach.
+> Does the attach request have to be made again, or is it done
+> automatically with a notification, or something else?
+> 
+> So by "activation" I was trying to refer to the notion of this
+> subsequent successful attach.
+
+Oh. Well, what I was thinking that "maybe attach" would just be a sort
+of "in-limbo" WWAN device that doesn't get visible to userspace or the
+control plane until something did a "definitively attach" to it so it
+was known to be a WWAN device.
+
+The case of "maybe attach but never get to definitive attach" would be
+the case where the USB driver bound a real ethernet device, for example,
+not something that looks like an ethernet device but really is part of a
+modem.
+
+
+OTOH, "activating" a data channel is also needed somehow through the
+control channel by talking to the modem, i.e. making a connection. In
+the ideal case we'd not even *have* a netdev until it makes sense to
+create a data channel, but in reality a lot of devices have one around
+all the time (or even only support one), AFAICT.
+
+> > I read "attach" here as simply associating an existing netdev with the
+> > "parent" WWAN device. A purely Linux operation that is only book-
+> > keeping and may not have any interaction with the modem.
+> 
+> If that's the case I would want the "activation" to be a separate
+> step.  The attach would do the bookkeeping, and generally shouldn't
+> fail. An attached interface would be brought up ("activated")
+> separately and might fail if things aren't quite ready yet.
+
+Right, but netdevs need to be brought up anyway, and that can fail?
+
+> > > - How are the attributes of a WWAN device or channel set,
+> > >   or communicated?
+> > 
+> > Via netlink attributes when userspace asks the WWAN device to create a
+> > new channel. In the control methods I've seen, only userspace really
+> > knows the channel identifier that it and the modem have agreed on (eg
+> > what the MUX ID in the QMAP header would be, or the MBIM Session ID).
+> 
+> Yes, that's the way it's worked for rmnet and IPA.  Previously it
+> was IOCTL requests but it's currently hard-wired.
+
+Right. We're just trying to lift it out of the Qualcomm sphere into
+something more generically useful.
+
+johannes
 
