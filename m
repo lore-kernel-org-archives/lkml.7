@@ -2,59 +2,59 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED10C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF061C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86963213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892E020883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J0CIMS+x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vpflNEPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732725AbfFYSAQ (ORCPT
+        id S1732739AbfFYSAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 14:00:16 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42846 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732425AbfFYR76 (ORCPT
+        Tue, 25 Jun 2019 14:00:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38274 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731714AbfFYR74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:59:58 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x144so5852232lfa.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:59:56 -0700 (PDT)
+        Tue, 25 Jun 2019 13:59:56 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r9so17163694ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=BQmMDEf9H7Vaq7I5JuGUMaBd4qjuzhRid1mFRfo+/Y8=;
-        b=J0CIMS+xGTc1gyaqwn7p/IWVtcnle2qwDqeLgpQYBmLUd844qKmh9hmf+gGwQjJpFl
-         4wDvP0pDThaFoFXmuiXT6pVFH+BVPQKxk/KRUOIlnCYRoL9X9a5SJqPKjU4FtQn1Cocd
-         Ejxy8BPWqhPjJ5x99PBhx6kdDrDHjQIWCR4a52CTiyC6ggC3iDpfXEiAMbZtZprTIPSA
-         zVW3s/B1MucDD3fovnNEWbchVpRiALo7Hz1I9F6trAWGwucREaAAP6ZVUFRcS4FI6LTp
-         9UWUGs3ecs5OTlyqXgKvHV6OThieDv5oIYdRlOuBMgfNXEAlEwbNg+OwRnB7577frJF1
-         +fXg==
+        bh=QmxO/9gVmXF4taLxfCWA/1fSMjzT1beTSts3uWmQX/c=;
+        b=vpflNEPdlpmtF6ppcO+wcXweztt2Qm5bdsrxQRDQhamf0eRJO3Qogs94Fusq6ilfk7
+         8Yv+qjO4wUO2UeffXgyThzWBE5gKb5/Ds2EuvvI9tdPYrpT0RH7JRc7eLH9bVpBlmaCw
+         lBbMlmDWfRysM555kgVKaozbbGxl2M5NHQ3b4g+bgxrXWs2d/ozTRi6v4ACMW+FFHqJx
+         cQtIphyePbaGJxQr1YLejndiS5yg4f2KDd4TXXh0QaZFhM2RFdgxeSslwtZBcTPK1VOc
+         mykNN9euAXUjlTXC3xoF2PsYzhhKGuX83I6jzot/y3ZoxT3WN3fXHBY92ZotgSt8kLhB
+         cWjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=BQmMDEf9H7Vaq7I5JuGUMaBd4qjuzhRid1mFRfo+/Y8=;
-        b=W4gsh7VDtWP8ylnxGl2MFPhRHpaddqDu8DsLcMIsnO357ozOa2mK5z4NwCEBpJSakn
-         M5WK1ZWL4JXUo2Vs/O7RhKP9daustkovYdHjJUTE+o0TfQcZwNXtkwQP+WlhTkKxyT1U
-         PetpOfntXCNwIpY5sbTrEy8cFWCKHp9ddlsWIRFEzPAMR4QVlZzB2Uv2oLB7piep7wP+
-         rScLZe0tw1gTKdCjLAyy05tIucQG6Youkjw5OhPjaWV66JPFxYFIcIWoGX2+HiPDojGo
-         mmaxbxjoRwCudzJOu0vHpdeKb9MG4HeCz4pEOiEnXQ0V15MdJqg39I2YyTBBcqTi/BUf
-         OsJA==
-X-Gm-Message-State: APjAAAWFZL91rl/dc2EwlkgiEZaB7L7v7e0bfJtk4aIIpvCysLV8dnzx
-        Oe90CQxRAxyxWC1W217Khhj8eVUHSpQ=
-X-Google-Smtp-Source: APXvYqwWAKPamNzi/+HXxZsRtG5kfFXs0zlr+KbgCXLJytYkfESv+RZ3s9mqyq/k+d/IZconFSlokA==
-X-Received: by 2002:a19:7616:: with SMTP id c22mr26526lff.115.1561485595986;
-        Tue, 25 Jun 2019 10:59:55 -0700 (PDT)
+        bh=QmxO/9gVmXF4taLxfCWA/1fSMjzT1beTSts3uWmQX/c=;
+        b=Sa3RHyKDl2Bmup3pCnRGqO6998eEvOdwmTvSkwoT6BNNG+IyohYIq8uQGAJMmTJag8
+         5nOZ5AbNkBdQXQsO6dSVFgZdNfIBnmtV7vdd1LlHrhaCxSBtDxN7Se8Uz+Pvt0tJJ0To
+         rpRDK0MzyoJVjgd8RplBhom7l1VaDzfEWeFR56NnNCAYYAPWfBZcO4chgN5AzW8VcqAV
+         BImGuF1rUGGZ3Mh81qJuqowFxg7EPneO5gaj9wx1MIaaw+1v5pHWgk3MoWBYYq7Tb5rT
+         R2A7CMASEomyL3j7DeMm6uty6HFDPVj1eSAm4JvlU9RmOxXShMVv6N82YF7dmsZtwrlm
+         XGXA==
+X-Gm-Message-State: APjAAAU7DQbDZDnjBopDbvA52hIEva9DA+9K0mIgSMVyk6xORGRC/6yu
+        b6s+yyf3I6hyp/o7lNAjxtd0GA==
+X-Google-Smtp-Source: APXvYqzRrMmxMBDcTx6O99abQnVIATR0rqbY1dWjGz3KfpZrMapxfflSERdYFfXUHs3sjN+JLLx1fA==
+X-Received: by 2002:a05:651c:87:: with SMTP id 7mr67283361ljq.184.1561485593465;
+        Tue, 25 Jun 2019 10:59:53 -0700 (PDT)
 Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id g76sm2367597lje.43.2019.06.25.10.59.54
+        by smtp.gmail.com with ESMTPSA id g76sm2367597lje.43.2019.06.25.10.59.52
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 10:59:55 -0700 (PDT)
+        Tue, 25 Jun 2019 10:59:53 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     davem@davemloft.net, grygorii.strashko@ti.com, hawk@kernel.org,
         brouer@redhat.com, saeedm@mellanox.com, leon@kernel.org
@@ -64,9 +64,9 @@ Cc:     ast@kernel.org, linux-kernel@vger.kernel.org,
         daniel@iogearbox.net, jakub.kicinski@netronome.com,
         john.fastabend@gmail.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v4 net-next 3/4] net: ethernet: ti: davinci_cpdma: return handler status
-Date:   Tue, 25 Jun 2019 20:59:47 +0300
-Message-Id: <20190625175948.24771-4-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v4 net-next 1/4] net: core: page_pool: add user cnt preventing pool deletion
+Date:   Tue, 25 Jun 2019 20:59:45 +0300
+Message-Id: <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
 References: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
@@ -75,330 +75,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change is needed to return flush status of rx handler for
-flushing redirected xdp frames after processing channel packets.
-Do it as separate patch for simplicity.
+Add user counter allowing to delete pool only when no users.
+It doesn't prevent pool from flush, only prevents freeing the
+pool instance. Helps when no need to delete the pool and now
+it's user responsibility to free it by calling page_pool_free()
+while destroying procedure. It also makes to use page_pool_free()
+explicitly, not fully hidden in xdp unreg, which looks more
+correct after page pool "create" routine.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- drivers/net/ethernet/ti/cpsw.c          | 21 ++++++++++-----
- drivers/net/ethernet/ti/cpsw_ethtool.c  |  2 +-
- drivers/net/ethernet/ti/cpsw_priv.h     |  2 +-
- drivers/net/ethernet/ti/davinci_cpdma.c | 34 +++++++++++++++----------
- drivers/net/ethernet/ti/davinci_cpdma.h |  4 +--
- drivers/net/ethernet/ti/davinci_emac.c  | 18 ++++++++-----
- 6 files changed, 49 insertions(+), 32 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 8 +++++---
+ include/net/page_pool.h                           | 7 +++++++
+ net/core/page_pool.c                              | 7 +++++++
+ net/core/xdp.c                                    | 3 +++
+ 4 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 32b7b3b74a6b..726925df8d97 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -337,7 +337,7 @@ void cpsw_intr_disable(struct cpsw_common *cpsw)
- 	return;
- }
- 
--void cpsw_tx_handler(void *token, int len, int status)
-+int cpsw_tx_handler(void *token, int len, int status)
- {
- 	struct netdev_queue	*txq;
- 	struct sk_buff		*skb = token;
-@@ -355,6 +355,7 @@ void cpsw_tx_handler(void *token, int len, int status)
- 	ndev->stats.tx_packets++;
- 	ndev->stats.tx_bytes += len;
- 	dev_kfree_skb_any(skb);
-+	return 0;
- }
- 
- static void cpsw_rx_vlan_encap(struct sk_buff *skb)
-@@ -400,7 +401,7 @@ static void cpsw_rx_vlan_encap(struct sk_buff *skb)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 5e40db8f92e6..cb028de64a1d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -545,10 +545,8 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
  	}
- }
+ 	err = xdp_rxq_info_reg_mem_model(&rq->xdp_rxq,
+ 					 MEM_TYPE_PAGE_POOL, rq->page_pool);
+-	if (err) {
+-		page_pool_free(rq->page_pool);
++	if (err)
+ 		goto err_free;
+-	}
  
--static void cpsw_rx_handler(void *token, int len, int status)
-+static int cpsw_rx_handler(void *token, int len, int status)
- {
- 	struct cpdma_chan	*ch;
- 	struct sk_buff		*skb = token;
-@@ -434,7 +435,7 @@ static void cpsw_rx_handler(void *token, int len, int status)
+ 	for (i = 0; i < wq_sz; i++) {
+ 		if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ) {
+@@ -613,6 +611,8 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 	if (rq->xdp_prog)
+ 		bpf_prog_put(rq->xdp_prog);
+ 	xdp_rxq_info_unreg(&rq->xdp_rxq);
++	if (rq->page_pool)
++		page_pool_free(rq->page_pool);
+ 	mlx5_wq_destroy(&rq->wq_ctrl);
  
- 		/* the interface is going down, skbs are purged */
- 		dev_kfree_skb_any(skb);
--		return;
-+		return 0;
+ 	return err;
+@@ -643,6 +643,8 @@ static void mlx5e_free_rq(struct mlx5e_rq *rq)
  	}
  
- 	new_skb = netdev_alloc_skb_ip_align(ndev, cpsw->rx_packet_max);
-@@ -464,6 +465,8 @@ static void cpsw_rx_handler(void *token, int len, int status)
- 		WARN_ON(ret == -ENOMEM);
- 		dev_kfree_skb_any(new_skb);
+ 	xdp_rxq_info_unreg(&rq->xdp_rxq);
++	if (rq->page_pool)
++		page_pool_free(rq->page_pool);
+ 	mlx5_wq_destroy(&rq->wq_ctrl);
+ }
+ 
+diff --git a/include/net/page_pool.h b/include/net/page_pool.h
+index f07c518ef8a5..1ec838e9927e 100644
+--- a/include/net/page_pool.h
++++ b/include/net/page_pool.h
+@@ -101,6 +101,7 @@ struct page_pool {
+ 	struct ptr_ring ring;
+ 
+ 	atomic_t pages_state_release_cnt;
++	atomic_t user_cnt;
+ };
+ 
+ struct page *page_pool_alloc_pages(struct page_pool *pool, gfp_t gfp);
+@@ -183,6 +184,12 @@ static inline dma_addr_t page_pool_get_dma_addr(struct page *page)
+ 	return page->dma_addr;
+ }
+ 
++/* used to prevent pool from deallocation */
++static inline void page_pool_get(struct page_pool *pool)
++{
++	atomic_inc(&pool->user_cnt);
++}
++
+ static inline bool is_page_pool_compiled_in(void)
+ {
+ #ifdef CONFIG_PAGE_POOL
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index b366f59885c1..169b0e3c870e 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -48,6 +48,7 @@ static int page_pool_init(struct page_pool *pool,
+ 		return -ENOMEM;
+ 
+ 	atomic_set(&pool->pages_state_release_cnt, 0);
++	atomic_set(&pool->user_cnt, 0);
+ 
+ 	if (pool->p.flags & PP_FLAG_DMA_MAP)
+ 		get_device(pool->p.dev);
+@@ -70,6 +71,8 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+ 		kfree(pool);
+ 		return ERR_PTR(err);
  	}
 +
-+	return 0;
++	page_pool_get(pool);
+ 	return pool;
  }
+ EXPORT_SYMBOL(page_pool_create);
+@@ -356,6 +359,10 @@ static void __warn_in_flight(struct page_pool *pool)
  
- void cpsw_split_res(struct cpsw_common *cpsw)
-@@ -602,7 +605,8 @@ static int cpsw_tx_mq_poll(struct napi_struct *napi_tx, int budget)
- 		else
- 			cur_budget = txv->budget;
- 
--		num_tx += cpdma_chan_process(txv->ch, cur_budget);
-+		cpdma_chan_process(txv->ch, &cur_budget);
-+		num_tx += cur_budget;
- 		if (num_tx >= budget)
- 			break;
- 	}
-@@ -620,7 +624,8 @@ static int cpsw_tx_poll(struct napi_struct *napi_tx, int budget)
- 	struct cpsw_common *cpsw = napi_to_cpsw(napi_tx);
- 	int num_tx;
- 
--	num_tx = cpdma_chan_process(cpsw->txv[0].ch, budget);
-+	num_tx = budget;
-+	cpdma_chan_process(cpsw->txv[0].ch, &num_tx);
- 	if (num_tx < budget) {
- 		napi_complete(napi_tx);
- 		writel(0xff, &cpsw->wr_regs->tx_en);
-@@ -652,7 +657,8 @@ static int cpsw_rx_mq_poll(struct napi_struct *napi_rx, int budget)
- 		else
- 			cur_budget = rxv->budget;
- 
--		num_rx += cpdma_chan_process(rxv->ch, cur_budget);
-+		cpdma_chan_process(rxv->ch, &cur_budget);
-+		num_rx += cur_budget;
- 		if (num_rx >= budget)
- 			break;
- 	}
-@@ -670,7 +676,8 @@ static int cpsw_rx_poll(struct napi_struct *napi_rx, int budget)
- 	struct cpsw_common *cpsw = napi_to_cpsw(napi_rx);
- 	int num_rx;
- 
--	num_rx = cpdma_chan_process(cpsw->rxv[0].ch, budget);
-+	num_rx = budget;
-+	cpdma_chan_process(cpsw->rxv[0].ch, &num_rx);
- 	if (num_rx < budget) {
- 		napi_complete_done(napi_rx, num_rx);
- 		writel(0xff, &cpsw->wr_regs->rx_en);
-diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index f60dc1dfc443..7c19eebbabcc 100644
---- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-+++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -532,8 +532,8 @@ static int cpsw_update_channels_res(struct cpsw_priv *priv, int ch_num, int rx,
- 				    cpdma_handler_fn rx_handler)
+ void __page_pool_free(struct page_pool *pool)
  {
- 	struct cpsw_common *cpsw = priv->cpsw;
--	void (*handler)(void *, int, int);
- 	struct netdev_queue *queue;
-+	cpdma_handler_fn handler;
- 	struct cpsw_vector *vec;
- 	int ret, *ch, vch;
- 
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
-index 04795b97ee71..2ecb3af59fe9 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.h
-+++ b/drivers/net/ethernet/ti/cpsw_priv.h
-@@ -390,7 +390,7 @@ void cpsw_split_res(struct cpsw_common *cpsw);
- int cpsw_fill_rx_channels(struct cpsw_priv *priv);
- void cpsw_intr_enable(struct cpsw_common *cpsw);
- void cpsw_intr_disable(struct cpsw_common *cpsw);
--void cpsw_tx_handler(void *token, int len, int status);
-+int cpsw_tx_handler(void *token, int len, int status);
- 
- /* ethtool */
- u32 cpsw_get_msglevel(struct net_device *ndev);
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 8da46394c0e7..b96f5ae974ba 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -1191,15 +1191,16 @@ bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
- 	return free_tx_desc;
- }
- 
--static void __cpdma_chan_free(struct cpdma_chan *chan,
--			      struct cpdma_desc __iomem *desc,
--			      int outlen, int status)
-+static int __cpdma_chan_free(struct cpdma_chan *chan,
-+			     struct cpdma_desc __iomem *desc, int outlen,
-+			     int status)
- {
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
- 	struct cpdma_desc_pool		*pool = ctlr->pool;
- 	dma_addr_t			buff_dma;
- 	int				origlen;
- 	uintptr_t			token;
-+	int				ret;
- 
- 	token      = desc_read(desc, sw_token);
- 	origlen    = desc_read(desc, sw_len);
-@@ -1214,14 +1215,16 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
- 	}
- 
- 	cpdma_desc_free(pool, desc, 1);
--	(*chan->handler)((void *)token, outlen, status);
-+	ret = (*chan->handler)((void *)token, outlen, status);
++	/* free only if no users */
++	if (!atomic_dec_and_test(&pool->user_cnt))
++		return;
 +
-+	return ret;
- }
+ 	WARN(pool->alloc.count, "API usage violation");
+ 	WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
  
- static int __cpdma_chan_process(struct cpdma_chan *chan)
- {
-+	int				status, outlen, ret;
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
- 	struct cpdma_desc __iomem	*desc;
--	int				status, outlen;
- 	int				cb_status = 0;
- 	struct cpdma_desc_pool		*pool = ctlr->pool;
- 	dma_addr_t			desc_dma;
-@@ -1232,7 +1235,7 @@ static int __cpdma_chan_process(struct cpdma_chan *chan)
- 	desc = chan->head;
- 	if (!desc) {
- 		chan->stats.empty_dequeue++;
--		status = -ENOENT;
-+		ret = -ENOENT;
- 		goto unlock_ret;
- 	}
- 	desc_dma = desc_phys(pool, desc);
-@@ -1241,7 +1244,7 @@ static int __cpdma_chan_process(struct cpdma_chan *chan)
- 	outlen	= status & 0x7ff;
- 	if (status & CPDMA_DESC_OWNER) {
- 		chan->stats.busy_dequeue++;
--		status = -EBUSY;
-+		ret = -EBUSY;
- 		goto unlock_ret;
- 	}
+diff --git a/net/core/xdp.c b/net/core/xdp.c
+index 829377cc83db..04bdcd784d2e 100644
+--- a/net/core/xdp.c
++++ b/net/core/xdp.c
+@@ -372,6 +372,9 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
  
-@@ -1267,28 +1270,31 @@ static int __cpdma_chan_process(struct cpdma_chan *chan)
- 	else
- 		cb_status = status;
+ 	mutex_unlock(&mem_id_lock);
  
--	__cpdma_chan_free(chan, desc, outlen, cb_status);
--	return status;
-+	ret = __cpdma_chan_free(chan, desc, outlen, cb_status);
-+	return ret;
- 
- unlock_ret:
- 	spin_unlock_irqrestore(&chan->lock, flags);
--	return status;
-+	return ret;
- }
- 
--int cpdma_chan_process(struct cpdma_chan *chan, int quota)
-+int cpdma_chan_process(struct cpdma_chan *chan, int *quota)
- {
--	int used = 0, ret = 0;
-+	int used = 0, ret = 0, res = 0;
- 
- 	if (chan->state != CPDMA_STATE_ACTIVE)
- 		return -EINVAL;
- 
--	while (used < quota) {
-+	while (used < *quota) {
- 		ret = __cpdma_chan_process(chan);
- 		if (ret < 0)
- 			break;
-+		res |= ret;
- 		used++;
- 	}
--	return used;
++	if (type == MEM_TYPE_PAGE_POOL)
++		page_pool_get(xdp_alloc->page_pool);
 +
-+	*quota = used;
-+	return res;
- }
- 
- int cpdma_chan_start(struct cpdma_chan *chan)
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index 0271a20c2e09..69074738bef0 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -61,7 +61,7 @@ struct cpdma_chan_stats {
- struct cpdma_ctlr;
- struct cpdma_chan;
- 
--typedef void (*cpdma_handler_fn)(void *token, int len, int status);
-+typedef int (*cpdma_handler_fn)(void *token, int len, int status);
- 
- struct cpdma_ctlr *cpdma_ctlr_create(struct cpdma_params *params);
- int cpdma_ctlr_destroy(struct cpdma_ctlr *ctlr);
-@@ -85,7 +85,7 @@ int cpdma_chan_idle_submit_mapped(struct cpdma_chan *chan, void *token,
- 				  dma_addr_t data, int len, int directed);
- int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
- 			   int len, int directed);
--int cpdma_chan_process(struct cpdma_chan *chan, int quota);
-+int cpdma_chan_process(struct cpdma_chan *chan, int *quota);
- 
- int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable);
- void cpdma_ctlr_eoi(struct cpdma_ctlr *ctlr, u32 value);
-diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-index 5f4ece0d5a73..0b768a426848 100644
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -860,7 +860,7 @@ static struct sk_buff *emac_rx_alloc(struct emac_priv *priv)
- 	return skb;
- }
- 
--static void emac_rx_handler(void *token, int len, int status)
-+static int emac_rx_handler(void *token, int len, int status)
- {
- 	struct sk_buff		*skb = token;
- 	struct net_device	*ndev = skb->dev;
-@@ -871,7 +871,7 @@ static void emac_rx_handler(void *token, int len, int status)
- 	/* free and bail if we are shutting down */
- 	if (unlikely(!netif_running(ndev))) {
- 		dev_kfree_skb_any(skb);
--		return;
-+		return 0;
- 	}
- 
- 	/* recycle on receive error */
-@@ -892,7 +892,7 @@ static void emac_rx_handler(void *token, int len, int status)
- 	if (!skb) {
- 		if (netif_msg_rx_err(priv) && net_ratelimit())
- 			dev_err(emac_dev, "failed rx buffer alloc\n");
--		return;
-+		return 0;
- 	}
- 
- recycle:
-@@ -902,9 +902,11 @@ static void emac_rx_handler(void *token, int len, int status)
- 	WARN_ON(ret == -ENOMEM);
- 	if (unlikely(ret < 0))
- 		dev_kfree_skb_any(skb);
-+
-+	return 0;
- }
- 
--static void emac_tx_handler(void *token, int len, int status)
-+static int emac_tx_handler(void *token, int len, int status)
- {
- 	struct sk_buff		*skb = token;
- 	struct net_device	*ndev = skb->dev;
-@@ -917,6 +919,7 @@ static void emac_tx_handler(void *token, int len, int status)
- 	ndev->stats.tx_packets++;
- 	ndev->stats.tx_bytes += len;
- 	dev_kfree_skb_any(skb);
-+	return 0;
- }
- 
- /**
-@@ -1237,8 +1240,8 @@ static int emac_poll(struct napi_struct *napi, int budget)
- 		mask = EMAC_DM646X_MAC_IN_VECTOR_TX_INT_VEC;
- 
- 	if (status & mask) {
--		num_tx_pkts = cpdma_chan_process(priv->txchan,
--					      EMAC_DEF_TX_MAX_SERVICE);
-+		num_tx_pkts = EMAC_DEF_TX_MAX_SERVICE;
-+		cpdma_chan_process(priv->txchan, &num_tx_pkts);
- 	} /* TX processing */
- 
- 	mask = EMAC_DM644X_MAC_IN_VECTOR_RX_INT_VEC;
-@@ -1247,7 +1250,8 @@ static int emac_poll(struct napi_struct *napi, int budget)
- 		mask = EMAC_DM646X_MAC_IN_VECTOR_RX_INT_VEC;
- 
- 	if (status & mask) {
--		num_rx_pkts = cpdma_chan_process(priv->rxchan, budget);
-+		num_rx_pkts = budget;
-+		cpdma_chan_process(priv->rxchan, &num_rx_pkts);
- 	} /* RX processing */
- 
- 	mask = EMAC_DM644X_MAC_IN_VECTOR_HOST_INT;
+ 	trace_mem_connect(xdp_alloc, xdp_rxq);
+ 	return 0;
+ err:
 -- 
 2.17.1
 
