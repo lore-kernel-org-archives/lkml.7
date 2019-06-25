@@ -2,142 +2,157 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5DCC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95E6C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B64208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:03:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561492994;
-	bh=fqAZKzKRx/Ot2SysCdAhm3Xfrbk8RJvyM8hT/R8Gqro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gZd42xXC7cwxwlyGQDzXRaCqhAmJUWdAfcptDtIIDor0htRjhzfSW67rDHV1w+K/N
-	 Hc2jRxReHENNrqQP5pXCDTvEJ7nHkKW1ZLIobMz7xadNn5E76kzb4rFMGAxGW7rR+A
-	 In7LTEIbA/oOen1XLqJX0HIeiV/svGugpZ9oa7cI=
+	by mail.kernel.org (Postfix) with ESMTP id 9E7502063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Z2+2CN1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfFYUDN (ORCPT
+        id S1728061AbfFYUDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbfFYUDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:03:12 -0400
-Received: from localhost (unknown [167.220.24.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDA232063F;
-        Tue, 25 Jun 2019 20:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561492992;
-        bh=fqAZKzKRx/Ot2SysCdAhm3Xfrbk8RJvyM8hT/R8Gqro=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IJ9kVUyZoKeKYze/0ESHAr6cvMNpomazRxc1Qc94T0nUUDB9bdfT8pJJPM/hOe7J/
-         DSysRTMQw/z8NI19hSEace8e8M/tjrpoEzECdzEImctIwSAPAGnUcMGn3znc7w5Co5
-         zxTtS5TKXUdo9ckXSy5d34z84JEfmrxT6Gl7I/E0=
-Date:   Tue, 25 Jun 2019 16:03:10 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com, tee-dev@lists.linaro.org,
-        ilias.apalodimas@linaro.org, sumit.garg@linaro.org
-Subject: Re: [PATCH v6 2/2] fTPM: add documentation for ftpm driver
-Message-ID: <20190625200310.GC7898@sasha-vm>
-References: <20190625195209.13663-1-sashal@kernel.org>
- <20190625195209.13663-3-sashal@kernel.org>
- <b1f27a59-6759-c325-8db5-b2b0f944420c@infradead.org>
+        Tue, 25 Jun 2019 16:03:30 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35332 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfFYUDa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:03:30 -0400
+Received: by mail-ed1-f68.google.com with SMTP id w20so21354147edd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KHs83YFBfNQZy/EqTIBWhIx/tAhxAnDwbcWzGiKotfU=;
+        b=Z2+2CN1JavLtWBr2T1//ZKUDoABAKJ5zKuNVyzePsNE9TasWyMzfPaevhIMmrD1UeR
+         z3wJRNgVVcilRdlu2CiBDWSpt9mkj8kL0YPZVtYExVwxhnkjrlPzT7uJx62fHhu9DMsP
+         /uTZQQ2TO6IaS17xbaMUGi+TXmRL+dEuxiPOI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=KHs83YFBfNQZy/EqTIBWhIx/tAhxAnDwbcWzGiKotfU=;
+        b=qGTzW9WEw0901BcFC+ZP6h+lY0/KTr9RoLShHXcO1dSJgRosKzCaxSNBbGPFYuO3fO
+         /9hy724WcJtHSWlIy6kphHXRqwpJbV3w1BBkwKRorS7edTf/ojANXo6Hyj0F5MRJbJyF
+         TjZuENV/k0/Bqwpe6KHbMc8M/SsVH/0xQDJijJjjxDWi0nQG8zE9cwRGhJ176CW8VJ+S
+         xoIxhmyVoSog0CQt6gJpFACsWELTD7yC7aV4qcrNuZrkVk+1NrptPjTMLJ7U5kl3do0Y
+         Dfb6NyRi/xjONIuaNyEAIXR0FokkZu+c6Ln2i1PFE53ESA6dA/TbvLstTlhVJORsx6iL
+         16kw==
+X-Gm-Message-State: APjAAAU0xpLwgu3VR0Z/L+s9r2zSL/4yd0AnOi/KCb1amHTXdkSDwFa/
+        OY0Q27tuOearQun+XEXrCRPqjw==
+X-Google-Smtp-Source: APXvYqzWmKDhdveaUADlwWBYeUgo7D5urxpoW3hfNOobLVUCSmkrF5iNrK07R4dKXM7pAl9426NJYQ==
+X-Received: by 2002:a17:906:5c4a:: with SMTP id c10mr338323ejr.15.1561493007994;
+        Tue, 25 Jun 2019 13:03:27 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id z22sm5063953edz.6.2019.06.25.13.03.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 13:03:27 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 22:03:25 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Robert Beckett <bob.beckett@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/4] drm/imx: notify drm core before sending event
+ during crtc disable
+Message-ID: <20190625200324.GE12905@phenom.ffwll.local>
+Mail-Followup-To: Robert Beckett <bob.beckett@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1561483965.git.bob.beckett@collabora.com>
+ <066eb916ec920e0515367548e4af2ee28f9d0a43.1561483965.git.bob.beckett@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b1f27a59-6759-c325-8db5-b2b0f944420c@infradead.org>
+In-Reply-To: <066eb916ec920e0515367548e4af2ee28f9d0a43.1561483965.git.bob.beckett@collabora.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:59:02PM -0700, Randy Dunlap wrote:
->On 6/25/19 12:52 PM, Sasha Levin wrote:
->> This patch adds basic documentation to describe the new fTPM driver.
->>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  Documentation/security/tpm/index.rst        |  1 +
->>  Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
->>  2 files changed, 32 insertions(+)
->>  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
->>
->> diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
->> index af77a7bbb070..15783668644f 100644
->> --- a/Documentation/security/tpm/index.rst
->> +++ b/Documentation/security/tpm/index.rst
->> @@ -4,4 +4,5 @@ Trusted Platform Module documentation
->>
->>  .. toctree::
->>
->> +   tpm_ftpm_tee
->>     tpm_vtpm_proxy
->> diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
->> new file mode 100644
->> index 000000000000..29c2f8b5ed10
->> --- /dev/null
->> +++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
->> @@ -0,0 +1,31 @@
->> +=============================================
->> +Firmware TPM Driver
->> +=============================================
->> +
->> +| Authors:
->> +| Thirupathaiah Annapureddy <thiruan@microsoft.com>
->> +| Sasha Levin <sashal@kernel.org>
->> +
->> +This document describes the firmware Trusted Platform Module (fTPM)
->> +device driver.
->> +
->> +Introduction
->> +============
->> +
->> +This driver is a shim for a firmware implemented in ARM's TrustZone
->
->                         for firmware
->
->> +environment. The driver allows programs to interact with the TPM in the same
->> +way the would interact with a hardware TPM.
->
->       they
->
->> +
->> +Design
->> +======
->> +
->> +The driver acts as a thin layer that passes commands to and from a TPM
->> +implemented in firmware. The driver itself doesn't contain much logic and is
->> +used more like a dumb pipe between firmware and kernel/userspace.
->> +
->> +The firmware itself is based on the following paper:
->> +https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
->> +
->> +When the driver is loaded it will expose ``/dev/tpmX`` character devices to
->> +userspace which will enable userspace to communicate with the firmware tpm
->
->                                                                          TPM
->
->> +through this device.
->>
->
->Oh, that's the same comments that I made on 2019-06-18:
->https://marc.info/?l=linux-integrity&m=156087157019368&w=2
+On Tue, Jun 25, 2019 at 06:59:13PM +0100, Robert Beckett wrote:
+> Notify drm core before sending pending events during crtc disable.
+> This fixes the first event after disable having an old stale timestamp
+> by having drm_crtc_vblank_off update the timestamp to now.
+> 
+> This was seen while debugging weston log message:
+> Warning: computed repaint delay is insane: -8212 msec
+> 
+> This occured due to:
+> 1. driver starts up
+> 2. fbcon comes along and restores fbdev, enabling vblank
+> 3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
+> seq number and time set at current value
+> (some time later)
+> 4. weston starts and does a modeset
+> 5. atomic commit disables crtc while it does the modeset
+> 6. ipu_crtc_atomic_disable sends vblank with old seq number and time
+> 
+> Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
+> 
+> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
 
-Appologies Randy, I've missed it. I'll send a new ver in a moment.
-Thanks!
+Now that I understand what's going on here:
 
---
-Thanks,
-Sasha
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+> ---
+>  drivers/gpu/drm/imx/ipuv3-crtc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+> index 9cc1d678674f..e04d6efff1b5 100644
+> --- a/drivers/gpu/drm/imx/ipuv3-crtc.c
+> +++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+> @@ -91,14 +91,14 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+>  	ipu_dc_disable(ipu);
+>  	ipu_prg_disable(ipu);
+>  
+> +	drm_crtc_vblank_off(crtc);
+> +
+>  	spin_lock_irq(&crtc->dev->event_lock);
+>  	if (crtc->state->event) {
+>  		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+>  		crtc->state->event = NULL;
+>  	}
+>  	spin_unlock_irq(&crtc->dev->event_lock);
+> -
+> -	drm_crtc_vblank_off(crtc);
+>  }
+>  
+>  static void imx_drm_crtc_reset(struct drm_crtc *crtc)
+> -- 
+> 2.18.0
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
