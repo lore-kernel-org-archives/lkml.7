@@ -2,148 +2,292 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F39C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190AAC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE01C20645
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:03:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="eKRpeYo1"
+	by mail.kernel.org (Postfix) with ESMTP id E312020883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbfFYRD2 (ORCPT
+        id S1730273AbfFYREp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:03:28 -0400
-Received: from mout.gmx.net ([212.227.15.15]:44399 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbfFYRD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:03:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1561482205;
-        bh=0exmBa3v5Fx1E33w0NM7D+ZEc4ilILyfqTpdzWB8iqQ=;
-        h=X-UI-Sender-Class:To:From:Subject:Date;
-        b=eKRpeYo12R+UBTjglAVW4a3GVPG4o3FqxYdfsLbwbQem9/7+OSXG/sgkeBbVfuq9U
-         iDkHeS0QSt9KC+JCIYVBbVryfQJaUCHI2KRcdz/eZLnm3X69d8O+2jJCewlQlxf3BF
-         cxN8VWaeZTjPSjoR1EavkG2/LgcAnxRJBLfYoYZ8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.178.24] ([77.10.152.162]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MhU5R-1iASV63XPP-00eab4 for
- <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 19:03:25 +0200
-To:     Linux Kernel <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
-Subject: new dmesg message "dmesg-5.1.15:tty tty2: hash matches" with 5.1.15
-Openpgp: preference=signencrypt
-Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <06f0d820-c50e-52dc-4bac-707914b403e9@gmx.de>
-Date:   Tue, 25 Jun 2019 19:03:03 +0200
+        Tue, 25 Jun 2019 13:04:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58492 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727215AbfFYREp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:04:45 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id B33BB2604D6
+Subject: Re: [PATCH v3 6/8] iio: common: cros_ec_sensors: support protocol v3
+ message
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Enrico Granata <egranata@chromium.org>
+References: <cover.1560848479.git.fabien.lahoudere@collabora.com>
+ <ac3cdc104e59565d178dfa86f2727045224dc4da.1560848479.git.fabien.lahoudere@collabora.com>
+ <20190622111509.314d25bf@archlinux>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <373ba164-d174-9a2e-f9eb-ed0d6b7b4bb8@collabora.com>
+Date:   Tue, 25 Jun 2019 19:04:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190622111509.314d25bf@archlinux>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MX3saBcFFshQQ0InauTf9vAEmUJ+BrhdmaQGQaYWsfxqaxSEk2K
- RdLWRsqYzFazG6nqQFAMy8Fj0k+RDI43sltDpQqtVL0AbYEFSehBbmPYuyQHnywXGGmioh8
- 4mMcCbc6ogH+6hdTxRHLgV/yjSFzDzwRX8MKPay0Wn6r5D3Y+I0iLKgVijgQq5VF7LrXvnX
- F3CsWyx11ycp9XHhMjyuA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MV3O1OhHrwc=:Np6bOENOXMjz6zY4y0zyeS
- vHu3bK9EQBJDoW6x+cmje0ypd+7Cm58fWzaiWVQqLxCeQABqi+VOsi3tSeOr55K/rIbXi345r
- u3BZhJ81nqsvkD1TIxoj5KqNbOoFbSkF2uE+2EfZa/FfOk9AG78L5+fLxI9d90EiglVKlBaGX
- pR70KOjWdVP3J2Y9uFZ7GUi11+MRuEE21x9Y7/jknXkfGwT866SnmOxIKHflqv2vzgUKkxqmJ
- UubQfO2FU9vM/UXh2H0NwPTc4axYRfXNCBQU8IO7i6WRlcczXtHN1+PEubZGM1B+UNEsoI3rF
- onHz+Qvv3Dla4zBKIu8TF78iwV05xQfNOVohsCHWqapupoY1FSAizqAlfUQjfDlS0BLQ457Uc
- o0Ms3Eki/AE4ZnnZbcTmzlJc8nLsTOeYQLZb+wZpDv4zhBzAhUhkpSd09RCF5EX9+WyD9KjkV
- BkC1beU9tMLoCrtcYZLnd7Gv8JFZthNP/HGjDKHd8OF67DfPDlti2RyXLKG54raMipyUTWjYa
- UT7PgTLYVVuMThdaq/7tpnbKRk+1jWjqA/QDkyCjGtKhoCvWBMuBqRdSXgaqBx/CDp+d7DnuD
- qFcEY9X/jXxB7Ag6AfveBSAjxS6mO/qigqV5YVFnWq/P4ulEXB5NUUYhw24jTk2o4dHELSf9l
- rPa7OGw/9AgCHO7uxi3z7kgn8SogL7nCMkU/3fFSsYgh9tO23J4cd//y+/M3UODBtlUtcVfkZ
- 2tulL5ZY2E0TBq9Zd0kxGVmSxGOxp4r601TCbwRwtjVqcg7Nq5FxHujbG7T5wDWOG/DNiabK/
- 0UWzkoSZimyGNzbIuH0qmXih5mn7vj7F9dCHel9GTlPI913M9pP/gBN+2UiIjgwVdv3/dyDOY
- 36ZwQl4YLx0+DPoQjoZ5riOkFHtkOT1VivNzbFMQ2CZEm2UDP1fO6mFjqr/0tnMPTnhQvJ69m
- r6Myoxfexed2PIfH+ugsAk159XYPA7F2yU+lXSBqYGqoox/wC3JUA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at my docked ThinkPad T440s.
+Hi Fabien, Jonathan,
 
-I'm just curious what this does mean?
+cc'ing Gwendal and Enrico who might be interested on this patch.
 
-...
-sched_clock: Marking stable (765790894, 14019108)->(786693847, -6883845)
-registered taskstats version 1
-Loading compiled-in X.509 certificates
-alg: No test for pkcs1pad(rsa,sha1) (pkcs1pad(rsa-generic,sha1))
-Loaded X.509 cert 'Build time autogenerated kernel key: ac61161b25852a930a=
-9d67e7f2b9e5a9633ce42f'
-Btrfs loaded, crc32c=3Dcrc32c-generic
-PM:   Magic number: 7:467:945
-cpuid cpu0: hash matches
-tty tty2: hash matches
-processor cpu0: hash matches
-rtc_cmos 00:02: setting system clock to 2019-06-25T16:55:52 UTC (156148175=
-2)
-cfg80211: Loading compiled-in X.509 certificates for regulatory database
-cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
-platform regulatory.0: Direct firmware load for regulatory.db failed with =
-error -2
-cfg80211: failed to load regulatory.db
-...
+It'd be nice if we can land this patch before [1], otherwise the legacy support
+for cros-ec sensors on veyron minnie won't work and we will mess the kernel log
+with a couple of errors.
 
-TIA
-=2D-
-Toralf
-PGP C4EACDDE 0076E94E
+I just have a few comments that I think should be quick to respin.
 
+[1] https://lkml.org/lkml/2019/6/24/1464
+
+On 22/6/19 12:15, Jonathan Cameron wrote:
+> On Tue, 18 Jun 2019 11:06:37 +0200
+> Fabien Lahoudere <fabien.lahoudere@collabora.com> wrote:
+> 
+>> Version 3 of the EC protocol provides min and max frequencies for EC sensors.
+>>
+
+I think we are mixing two things. One is determine what version of the
+MOTIONSENSE command the EC has, and another one is add some default values
+supported by the third version. I'd split this in two separate patches, and fix
+the subject and the commit description.
+
+
+>> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+>> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+> Looks good to me. I'll pick up next time if no one else raises any
+> issues on this one.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 85 ++++++++++++++++++-
+>>  .../linux/iio/common/cros_ec_sensors_core.h   |  3 +
+>>  2 files changed, 87 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> index 57034e212fe1..2ce077b576a4 100644
+>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>> @@ -26,6 +26,66 @@ static char *cros_ec_loc[] = {
+>>  	[MOTIONSENSE_LOC_MAX] = "unknown",
+>>  };
+>>  
+>> +static void get_default_min_max_freq(enum motionsensor_type type,
+>> +				     u32 *min_freq,
+>> +				     u32 *max_freq)
+>> +{
+>> +	switch (type) {
+>> +	case MOTIONSENSE_TYPE_ACCEL:
+>> +	case MOTIONSENSE_TYPE_GYRO:
+>> +		*min_freq = 12500;
+>> +		*max_freq = 100000;
+>> +		break;
+>> +	case MOTIONSENSE_TYPE_MAG:
+>> +		*min_freq = 5000;
+>> +		*max_freq = 25000;
+>> +		break;
+>> +	case MOTIONSENSE_TYPE_PROX:
+>> +	case MOTIONSENSE_TYPE_LIGHT:
+>> +		*min_freq = 100;
+>> +		*max_freq = 50000;
+>> +		break;
+>> +	case MOTIONSENSE_TYPE_BARO:
+>> +		*min_freq = 250;
+>> +		*max_freq = 20000;
+>> +		break;
+>> +	case MOTIONSENSE_TYPE_ACTIVITY:
+>> +	default:
+>> +		*min_freq = 0;
+>> +		*max_freq = 0;
+>> +		break;
+>> +	}
+>> +}
+
+This is the second part. It adds default values for version 3. I'd send this
+part on the patch that adds support min/max freq.
+
+>> +
+>> +static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+>> +					     u16 cmd_offset, u16 cmd, u32 *mask)
+>> +{
+>> +	int ret;
+>> +	struct {
+>> +		struct cros_ec_command msg;
+>> +		union {
+>> +			struct ec_params_get_cmd_versions params;
+>> +			struct ec_response_get_cmd_versions resp;
+>> +		};
+>> +	} __packed buf = {
+>> +		.msg = {
+>> +			.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+>> +			.insize = sizeof(struct ec_response_get_cmd_versions),
+>> +			.outsize = sizeof(struct ec_params_get_cmd_versions)
+>> +			},
+>> +		.params = {.cmd = cmd}
+>> +	};
+>> +
+
+nit: Actually when someone is sending a command to the EC there is a bit of mess
+how to do it, some use dynamic allocations, other static. IMO is more readable
+have something that explicitly initializes the struct and then assigns the
+different fields. Something like this:
+
+
+        struct {
+                struct cros_ec_command cmd;
+                union {
+                        struct ec_params_get_cmd_versions params;
+                        struct ec_response_get_cmd_versions resp;
+                };
+        } __packed msg = {};
+        int ret;
+
+        msg.cmd.command = EC_CMD_GET_CMD_VERSIONS + cmd_offset;
+        msg.cmd.insize = sizeof(msg.resp);
+        msg.cmd.outsize = sizeof(msg.params);
+        msg.params.cmd = cmd;
+
+
+>> +	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+>> +	if (ret >= 0) {
+>> +		if (buf.msg.result == EC_RES_SUCCESS)
+
+Note that cros_ec_cmd_xfer_status returns a <0 on error and 0 or positive number
+when EC_RES_SUCCESS. So no need to double check the result.
+
+>> +			*mask = buf.resp.version_mask;
+>> +		else
+>> +			*mask = 0;
+>> +	}
+>> +	return ret;
+
+So, I think that all this can be reworked as
+
+        ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+        if (ret < 0)
+                return ret;
+
+        *mask = msg.resp.version_mask;
+
+        return 0;
+
+
+>> +}
+>> +
+>>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  			      int num_channels,
+>>  			      bool physical_device)
+>> @@ -35,6 +95,8 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  	struct cros_ec_dev *ec = dev_get_drvdata(pdev->dev.parent);
+>>  	struct cros_ec_sensor_platform *sensor_platform = dev_get_platdata(dev);
+>>  	struct iio_dev *indio_dev;
+>> +	u32 ver_mask;
+>> +	int ret;
+>>  
+>>  	if (num_channels > CROS_EC_SENSORS_CORE_MAX_CHANNELS)
+>>  		return -EINVAL;
+>> @@ -57,8 +119,16 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  
+>>  	mutex_init(&state->cmd_lock);
+>>  
+>> +	/* determine what version of MOTIONSENSE CMD EC has */
+
+nit: Capitalize
+
+>> +	ret = cros_ec_get_host_cmd_version_mask(state->ec,
+>> +						ec->cmd_offset,
+>> +						EC_CMD_MOTION_SENSE_CMD,
+>> +						&ver_mask);
+
+It will return <0 on error
+
+>> +	if (ret < 0 || ver_mask == 0)
+>> +		return -ENODEV;
+>> +
+
+so no need to check ver_mask
+
+        if (ret < 0)
+		return ret;
+
+
+>>  	/* Set up the host command structure. */
+>> -	state->msg->version = 2;
+>> +	state->msg->version = fls(ver_mask) - 1;
+>>  	state->msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+>>  	state->msg->outsize = sizeof(struct ec_params_motion_sense);
+>>  
+>> @@ -76,6 +146,19 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>>  		}
+>>  		state->type = state->resp->info.type;
+>>  		state->loc = state->resp->info.location;
+>> +
+>> +		/* Value to stop the device */
+>> +		state->frequency_range[0] = 0;
+>> +		if (state->msg->version < 3) {
+>> +			get_default_min_max_freq(state->resp->info.type,
+>> +						 &state->frequency_range[1],
+>> +						 &state->frequency_range[2]);
+>> +		} else {
+>> +			state->frequency_range[1] =
+>> +			    state->resp->info_3.min_frequency;
+>> +			state->frequency_range[2] =
+>> +			    state->resp->info_3.max_frequency;
+>> +		}
+
+This is part of the second patch.
+
+>>  	}
+>>  
+>>  	indio_dev->info = &state->info;
+>> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+>> index 3e6de427076e..89937ad242ef 100644
+>> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+>> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+>> @@ -74,6 +74,9 @@ struct cros_ec_sensors_core_state {
+>>  	int curr_sampl_freq;
+>>  	struct iio_info info;
+>>  	struct iio_chan_spec channels[CROS_EC_SENSORS_CORE_MAX_CHANNELS];
+>> +
+>> +	/* Disable, Min and Max Sampling Frequency in mHz */
+>> +	int frequency_range[3];
+>>  };
+>>  
+>>  /**
+> 
+> 
+
+As I said I'd send a first patch with the EC protocol bits separated of this
+patchset and create a second patch into this patchset with the min/max frequency
+bits.
+
+Thanks,
+~ Enric
