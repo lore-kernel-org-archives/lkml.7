@@ -2,94 +2,154 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07103C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF769C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD12F2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561491765;
-	bh=rnIbqwj/usshwkoKpQu2uh4UEE0YmQH9oiXkATZ0dNU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mLDBDItmaPI6Lvg+Q8ZNqJ9+4EO6zu6qUDWC+n+tVzxCOOpfO9SZQii9JRnZS+wnU
-	 FHSb0bBLjABQ9HNbLbpc+ZBdafAlBkjyKK1ND/ceDl4y/DgZGgpq2hHUBZ9RF3awaK
-	 +MaNfZnm1ACB+F76W4PSUxPgqO3xNgdUKG5/nzyg=
+	by mail.kernel.org (Postfix) with ESMTP id B562D208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="BSQDQqMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfFYTmn (ORCPT
+        id S1728865AbfFYTms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727579AbfFYTmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:42:43 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF460204FD;
-        Tue, 25 Jun 2019 19:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561491762;
-        bh=rnIbqwj/usshwkoKpQu2uh4UEE0YmQH9oiXkATZ0dNU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NBI714jRTbnZZD1qWzAqnrLmRuOYUzFtN/XrbYjYJetiy8f7JDhC4xHdyjcLLH2UG
-         bjAOY7VM3gtioo7KoEEi/vbBP1EVc1sdaHK7Zk3YH+nDAIGu4nmhRELdJAe01032WS
-         1+MzZHWDKiBMdIQp8a9XrIaXbQMwmv/VqR9KwT5Q=
-Date:   Tue, 25 Jun 2019 12:42:41 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        alexander.shishkin@linux.intel.com, ndesaulniers@google.com
-Subject: Re: [PATCH][V4] lib: fix __sysfs_match_string() helper when n != -1
-Message-Id: <20190625124241.8b963a256ebaa056d489bb15@linux-foundation.org>
-In-Reply-To: <20190625132812.GB9224@smile.fi.intel.com>
-References: <20190508111913.7276-1-alexandru.ardelean@analog.com>
-        <20190625130104.29904-1-alexandru.ardelean@analog.com>
-        <20190625132812.GB9224@smile.fi.intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Jun 2019 15:42:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37282 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727579AbfFYTmq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:42:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id v14so19233806wrr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kinvolk.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3+Aquffi6xxyr2CyeenmJhaPhlacoKT7JNxgCsVZjdM=;
+        b=BSQDQqMm8sb1BTXcXTrqwQh+SMGC7m9pXyV3wQvB5Gjrb5n/ktfkOIsdMmAwQwTisI
+         qCWqRtzXPzxb09UZDgNJ2FypL0hPXXtLG0tOZs+VoKPqa+Gp8fes0G7m1mVrK3tYDJpo
+         ppgBuAxTKofatCFe3a++O2OxF8RREYOk0oP80=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3+Aquffi6xxyr2CyeenmJhaPhlacoKT7JNxgCsVZjdM=;
+        b=awFVByAEL2foqBkl9N0YYzp4Tu+DLdm5UzGlunDDlt9n1KuMw85ixqCxFvk7BImA9C
+         cnyNPf/l21FZ9p0ymJZ9P8+MZTYm+4mXf/duJFSxrhnGxzZuWVhwUEXwcgp4YeN/mo5b
+         IiOI19GdApGY+lVaABdvTeZCBd3EXKkPaINGavmKq4/BqbCnBzX0nm/z5VrrjdEwsPQ/
+         tu2/ORI7RVEFZj1gwmP4sH74jrunFeiwVlL+zPyONMf6XR0eQrEbWJOvIovXxTz4KhEo
+         TB198wVRsanyoNSus9Pb8hx628PnoNfVkwIjkaHynY7mEc0ssPoi3xLRyKUnbmtEBdvY
+         bugA==
+X-Gm-Message-State: APjAAAXBgLre/QgypUzKqt5rz7M0MvszaRM3mREn4+Je8SJjwB3x/7y2
+        q+HDTW3CoSSsmV2IJrn+6Bd4oQ==
+X-Google-Smtp-Source: APXvYqxHguYSUA9u++NldJHYoA2g0cCl4GyrVhK5+i2Xaz1jraP699TP344NGZb/QSYRFXoxIhce2g==
+X-Received: by 2002:a5d:5283:: with SMTP id c3mr1196405wrv.268.1561491764769;
+        Tue, 25 Jun 2019 12:42:44 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5aedb6.dynamic.kabel-deutschland.de. [95.90.237.182])
+        by smtp.gmail.com with ESMTPSA id q193sm84991wme.8.2019.06.25.12.42.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 12:42:43 -0700 (PDT)
+From:   Krzesimir Nowak <krzesimir@kinvolk.io>
+To:     netdev@vger.kernel.org
+Cc:     Alban Crequy <alban@kinvolk.io>,
+        =?UTF-8?q?Iago=20L=C3=B3pez=20Galeiras?= <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Krzesimir Nowak <krzesimir@kinvolk.io>
+Subject: [bpf-next v2 00/10] Test the 32bit narrow reads
+Date:   Tue, 25 Jun 2019 21:42:05 +0200
+Message-Id: <20190625194215.14927-1-krzesimir@kinvolk.io>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 16:28:12 +0300 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+These patches try to test the fix made in commit e2f7fc0ac695 ("bpf:
+fix undefined behavior in narrow load handling"). The problem existed
+in the generated BPF bytecode that was doing a 32bit narrow read of a
+64bit field, so to test it the code would need to be executed.
+Currently the only such field exists in BPF_PROG_TYPE_PERF_EVENT,
+which was not supported by bpf_prog_test_run().
 
-> On Tue, Jun 25, 2019 at 04:01:04PM +0300, Alexandru Ardelean wrote:
-> > The documentation the `__sysfs_match_string()` helper mentions that `n`
-> > (the size of the given array) should be:
-> >  * @n: number of strings in the array or -1 for NULL terminated arrays
-> > 
-> > The behavior of the function is different, in the sense that it exits on
-> > the first NULL element in the array.
-> > 
-> > This patch changes the behavior, to exit the loop when a NULL element is
-> > found, and the size of the array is provided as -1.
-> > 
-> > All current users of __sysfs_match_string() & sysfs_match_string() provide
-> > contiguous arrays of strings, so this behavior change doesn't influence
-> > anything (at this point in time).
-> > 
-> > This behavior change allows for an array of strings to have NULL elements
-> > within the array, which will be ignored. This is particularly useful when
-> > creating mapping of strings and integers (as bitfields or other HW
-> > description).
-> 
-> Since it does nothing for current users and comes without an example,
-> it's hard to justify the need.
+I'm sending these patches to bpf-next now as they introduce a new
+feature. But maybe some of those patches could go to the bpf branch?
 
-Presumably "split this patch away from series" means there's some code
-which uses this.  A reference to this in the changelog would be good.
 
-> The code itself looks good to me.
+There is a bit of yak shaving to do for the test to be run:
 
-Sure.  But the kerneldoc description of __sysfs_match_string() could do
-with an update.
+1. Print why the program could not be run (patch 1).
 
+2. Some fixes for errno clobbering (patches 2 and 3).
+
+3. Using bpf_prog_test_run_xattr, so I can pass ctx_in stuff too
+   (patch 4).
+
+4. Adding ctx stuff to struct bpf_test (patch 5).
+
+5. Some tools headers syncing (patches 6 and 7).
+
+6. Implement bpf_prog_test_run for perf event programs and test it
+   (patches 8 and 9).
+
+
+The last point is where I'm least sure how things should be done
+properly:
+
+1. There is a bunch of stuff to prepare for the
+   bpf_perf_prog_read_value to work, and that stuff is very hacky. I
+   would welcome some hints about how to set up the perf_event and
+   perf_sample_data structs in a way that is a bit more future-proof
+   than just setting some fields in a specific way, so some other code
+   won't use some other fields (like setting event.oncpu to -1 to
+   avoid event.pmu to be used for reading the value of the event).
+
+2. The tests try to see if the test run for perf event sets up the
+   context properly, so they verify the struct pt_regs contents. They
+   way it is currently written Works For Me, but surely it won't work
+   on other arch. So what would be the way forward? Just put the test
+   case inside #ifdef __x86_64__?
+
+3. Another thing in tests - I'm trying to make sure that the
+   bpf_perf_prog_read_value helper works as it seems to be the only
+   bpf perf helper that takes the ctx as a parameter. Is that enough
+   or I should test other helpers too?
+
+
+About the test itself - I'm not sure if it will work on a big endian
+machine. I think it should, but I don't have anything handy here to
+verify it.
+
+Krzesimir Nowak (10):
+  selftests/bpf: Print a message when tester could not run a program
+  selftests/bpf: Avoid a clobbering of errno
+  selftests/bpf: Avoid another case of errno clobbering
+  selftests/bpf: Use bpf_prog_test_run_xattr
+  selftests/bpf: Allow passing more information to BPF prog test run
+  tools headers: Adopt compiletime_assert from kernel sources
+  tools headers: sync struct bpf_perf_event_data
+  bpf: Implement bpf_prog_test_run for perf event programs
+  selftests/bpf: Add tests for bpf_prog_test_run for perf events progs
+  selftests/bpf: Test correctness of narrow 32bit read on 64bit field
+
+ kernel/trace/bpf_trace.c                      | 107 +++++++++++
+ tools/include/linux/compiler.h                |  28 +++
+ tools/include/uapi/linux/bpf_perf_event.h     |   1 +
+ tools/testing/selftests/bpf/test_verifier.c   | 172 ++++++++++++++++--
+ .../selftests/bpf/verifier/perf_event_run.c   |  93 ++++++++++
+ .../bpf/verifier/perf_event_sample_period.c   |   8 +
+ .../testing/selftests/bpf/verifier/var_off.c  |  20 ++
+ 7 files changed, 414 insertions(+), 15 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/verifier/perf_event_run.c
+
+-- 
+2.20.1
 
