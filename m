@@ -2,160 +2,300 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520C1C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0482C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CD7208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A926208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:08:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DlsNVgfR"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ikKpGFU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbfFYOIB (ORCPT
+        id S1728860AbfFYOI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:08:01 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34017 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbfFYOIA (ORCPT
+        Tue, 25 Jun 2019 10:08:56 -0400
+Received: from mail.efficios.com ([167.114.142.138]:39880 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfFYOI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:08:00 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so27399313edb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=CAtg3PLJ+XKSV8dAF2QLAFWrkpUis1quRM8X3SddO/c=;
-        b=DlsNVgfRWTP8NpGGrX9t3Nbz1zo7ltZhwtKOk/Es+ZdbHwht+lr3TCIe70hcYOlrBR
-         ABPEEparLAqoeRRvZ5Pzq1cEVMTiKJ3tiqSO4M7ZzKp6aqKBOmxw686MYovwaEFXhy8l
-         NK+f1Jf6pSuG3cXFg7wdY+FYcdimxOYB8sVXQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=CAtg3PLJ+XKSV8dAF2QLAFWrkpUis1quRM8X3SddO/c=;
-        b=lkPpjKtioO7WS6HhRJnMr6zwQ6fUIct6hASneSRMbWWhMsGe93sK0mWpY2vqzqR6eX
-         WDtu3MrKGwZtpu1Z/HBWqNyWP0etqt3hpFN6L0fSoORC8cROGE8iQXsqOQRR1AKlLQzd
-         PTfNcpXUu6LzMJMy+YqDG69Y2xkMFCsp8+XvaY9osM2uG+UAte723tivk0Neo1If8pbD
-         Way7aS7SWzWs1s8eTQzzgzicjvZLwBSxlAlfegFR6KCDtDxSDkHvuOJL6wkI+xhRUNvH
-         aao4KaaDvhXa8N/KBOj/1MrJP2Ke1g/i33ihxB9orvZj6dGMTMAdf/y7EF5aISkeDGzy
-         kS/A==
-X-Gm-Message-State: APjAAAV4lmPxxoKg2ZsaBlxbwQXX0uBNGdkJWyxbl0Hb2/n5GqLG6oMW
-        a8veBIqci7VMmYjXQzxJYu6ntA==
-X-Google-Smtp-Source: APXvYqwnUNvO8RCgD+CoeE0AtlUeuwzv5wVl2MiDkEcmAY2cVmivLFNLtUKUMk2lZa5wxlyqXHk8gw==
-X-Received: by 2002:a50:92e1:: with SMTP id l30mr77999218eda.141.1561471678547;
-        Tue, 25 Jun 2019 07:07:58 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id w17sm4594091edi.15.2019.06.25.07.07.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 07:07:57 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 16:07:55 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Emil Velikov <emil.velikov@collabora.com>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux-samsung-soc@vger.kernel.org,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Inki Dae <inki.dae@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>, kernel@collabora.com,
-        Sean Paul <sean@poorly.run>,
-        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
-Subject: Re: [PATCH 0/2] Associate ddc adapters with connectors
-Message-ID: <20190625140755.GT12905@phenom.ffwll.local>
-Mail-Followup-To: Emil Velikov <emil.velikov@collabora.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        linux-samsung-soc@vger.kernel.org,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Inki Dae <inki.dae@samsung.com>, David Airlie <airlied@linux.ie>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org,
-        kernel@collabora.com, Sean Paul <sean@poorly.run>,
-        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
-References: <cover.1561452052.git.andrzej.p@collabora.com>
- <20190625100351.52ddptvb2gizaepi@shell.armlinux.org.uk>
- <817ccfba-754c-6a28-8d75-63f70605fd43@collabora.com>
- <20190625133639.GA16031@arch-x1c3>
+        Tue, 25 Jun 2019 10:08:56 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id E19D525BF95;
+        Tue, 25 Jun 2019 10:08:53 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id QyG8j99SOcIq; Tue, 25 Jun 2019 10:08:53 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 1327B25BF8C;
+        Tue, 25 Jun 2019 10:08:53 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1327B25BF8C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1561471733;
+        bh=ZqtVnpig7t9YimfV4x1WLgCndeFnHjjcXNpTezLm3iY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ikKpGFU7YciA3AINVWgB2B9+MmY7CrT/hs5z3j3oxwWAEKK2S1SmZPgPsklqhU/sZ
+         dVbCuHoeEemHI9rmi4u4fF2nBpb6d3g8CeifBMFFc5wSA2EkpBGZolMpd98gv4FgFR
+         OmSwoA1fzXFHXSW6KFX64T1cb/lePK1RyhQE8nvkEqduP7H40pR5Q7xFn4DdA2rV0H
+         ttFSsRciSrYDFHdjI3NpyoziASkSwoqT2a7fWZHbryF9WPXe9bHFnPZyNz8s56HtCj
+         1gE4FxU5B9vFc4yM5DWf9c/4PckPwnaG5uCJ4+YOw2pbhTU12A2Es0lsQcj+ElGfsb
+         C0L8HejwhA4fQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 9SYqnRt07nsl; Tue, 25 Jun 2019 10:08:52 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id E1BDC25BF85;
+        Tue, 25 Jun 2019 10:08:52 -0400 (EDT)
+Date:   Tue, 25 Jun 2019 10:08:52 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     shuah <shuah@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Fernandes <joelaf@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>
+Message-ID: <795143697.722.1561471732756.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190625091507.GA13263@fuggles.cambridge.arm.com>
+References: <20190617152304.23371-1-mathieu.desnoyers@efficios.com> <20190624172429.GA11133@fuggles.cambridge.arm.com> <1620037196.377.1561400426591.JavaMail.zimbra@efficios.com> <20190625091507.GA13263@fuggles.cambridge.arm.com>
+Subject: Re: [RFC PATCH 1/1] Revert "rseq/selftests: arm: use udf
+ instruction for RSEQ_SIG"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190625133639.GA16031@arch-x1c3>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Revert "rseq/selftests: arm: use udf instruction for RSEQ_SIG"
+Thread-Index: hgYsmTALHNxnmFiVR4MEQT9OBpRJPA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:36:39PM +0100, Emil Velikov wrote:
-> On 2019/06/25, Andrzej Pietrasiewicz wrote:
-> > Hi Russell,
-> > 
-> > W dniu 25.06.2019 o 12:03, Russell King - ARM Linux admin pisze:
-> > > On Tue, Jun 25, 2019 at 11:46:34AM +0200, Andrzej Pietrasiewicz wrote:
-> > > > It is difficult for a user to know which of the i2c adapters is for which
-> > > > drm connector. This series addresses this problem.
-> > > > 
-> > > > The idea is to have a symbolic link in connector's sysfs directory, e.g.:
-> > > > 
-> > > > ls -l /sys/class/drm/card0-HDMI-A-1/i2c-2
-> > > > lrwxrwxrwx 1 root root 0 Jun 24 10:42 /sys/class/drm/card0-HDMI-A-1/i2c-2 \
-> > > > 	-> ../../../../soc/13880000.i2c/i2c-2
-> > > 
-> > > Don't you want the symlink name to be "i2c" or something fixed, rather
-> > > than the name of the i2c adapter?  Otherwise, you seem to be encumbering
-> > > userspace with searching the directory to try and find the symlink.
-> > > 
-> > 
-> > Thank you for your comment. So you imagine something on the lines of:
-> > 
-> > lrwxrwxrwx 1 root root 0 Jun 24 10:42 /sys/class/drm/card0-HDMI-A-1/ddc \
-> >  	-> ../../../../soc/13880000.i2c/i2c-2
-> > 
-> > ?
-> > 
-> Fwiw my Intel machine lists a number of i2c devices:
-> /sys/class/drm/card0-DP-1/i2c-6
-> /sys/class/drm/card0-DP-2/i2c-7
-> /sys/class/drm/card0-eDP-1/i2c-5
-> 
-> Note: I haven't looked _if_ they relate to ones you're proposing here.
-> 
-> One thing worth mentioning is, the ones I've seen are not symlinks to
-> another sysfs entries. And there aren't any i2c nodes in /dev ...
-> 
-> Just a random food for thought :-)
+----- On Jun 25, 2019, at 5:15 AM, Will Deacon will.deacon@arm.com wrote:
 
-Those are the i2c-over-dp-aux controllers. I think we want to list these
-too.
+> On Mon, Jun 24, 2019 at 02:20:26PM -0400, Mathieu Desnoyers wrote:
+>> ----- On Jun 24, 2019, at 1:24 PM, Will Deacon will.deacon@arm.com wrote:
+>> 
+>> > On Mon, Jun 17, 2019 at 05:23:04PM +0200, Mathieu Desnoyers wrote:
+>> >> This reverts commit 2b845d4b4acd9422bbb668989db8dc36dfc8f438.
+>> >> 
+>> >> That commit introduces build issues for programs compiled in Thumb mode.
+>> >> Rather than try to be clever and emit a valid trap instruction on arm32,
+>> >> which requires special care about big/little endian handling on that
+>> >> architecture, just emit plain data. Data in the instruction stream is
+>> >> technically expected on arm32: this is how literal pools are
+>> >> implemented. Reverting to the prior behavior does exactly that.
+>> >> 
+>> >> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> >> CC: Peter Zijlstra <peterz@infradead.org>
+>> >> CC: Thomas Gleixner <tglx@linutronix.de>
+>> >> CC: Joel Fernandes <joelaf@google.com>
+>> >> CC: Catalin Marinas <catalin.marinas@arm.com>
+>> >> CC: Dave Watson <davejwatson@fb.com>
+>> >> CC: Will Deacon <will.deacon@arm.com>
+>> >> CC: Shuah Khan <shuah@kernel.org>
+>> >> CC: Andi Kleen <andi@firstfloor.org>
+>> >> CC: linux-kselftest@vger.kernel.org
+>> >> CC: "H . Peter Anvin" <hpa@zytor.com>
+>> >> CC: Chris Lameter <cl@linux.com>
+>> >> CC: Russell King <linux@arm.linux.org.uk>
+>> >> CC: Michael Kerrisk <mtk.manpages@gmail.com>
+>> >> CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+>> >> CC: Paul Turner <pjt@google.com>
+>> >> CC: Boqun Feng <boqun.feng@gmail.com>
+>> >> CC: Josh Triplett <josh@joshtriplett.org>
+>> >> CC: Steven Rostedt <rostedt@goodmis.org>
+>> >> CC: Ben Maurer <bmaurer@fb.com>
+>> >> CC: linux-api@vger.kernel.org
+>> >> CC: Andy Lutomirski <luto@amacapital.net>
+>> >> CC: Andrew Morton <akpm@linux-foundation.org>
+>> >> CC: Linus Torvalds <torvalds@linux-foundation.org>
+>> >> CC: Carlos O'Donell <carlos@redhat.com>
+>> >> CC: Florian Weimer <fweimer@redhat.com>
+>> >> ---
+>> >>  tools/testing/selftests/rseq/rseq-arm.h | 52 ++-------------------------------
+>> >>  1 file changed, 2 insertions(+), 50 deletions(-)
+>> >> 
+>> >> diff --git a/tools/testing/selftests/rseq/rseq-arm.h
+>> >> b/tools/testing/selftests/rseq/rseq-arm.h
+>> >> index 84f28f147fb6..5f262c54364f 100644
+>> >> --- a/tools/testing/selftests/rseq/rseq-arm.h
+>> >> +++ b/tools/testing/selftests/rseq/rseq-arm.h
+>> >> @@ -5,54 +5,7 @@
+>> >>   * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> >>   */
+>> >>  
+>> >> -/*
+>> >> - * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
+>> >> - * value 0x5de3. This traps if user-space reaches this instruction by mistake,
+>> >> - * and the uncommon operand ensures the kernel does not move the instruction
+>> >> - * pointer to attacker-controlled code on rseq abort.
+>> >> - *
+>> >> - * The instruction pattern in the A32 instruction set is:
+>> >> - *
+>> >> - * e7f5def3    udf    #24035    ; 0x5de3
+>> >> - *
+>> >> - * This translates to the following instruction pattern in the T16 instruction
+>> >> - * set:
+>> >> - *
+>> >> - * little endian:
+>> >> - * def3        udf    #243      ; 0xf3
+>> >> - * e7f5        b.n    <7f5>
+>> >> - *
+>> >> - * pre-ARMv6 big endian code:
+>> >> - * e7f5        b.n    <7f5>
+>> >> - * def3        udf    #243      ; 0xf3
+>> >> - *
+>> >> - * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
+>> >> - * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
+>> >> - * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
+>> >> - * (which match), so there is no need to reverse the endianness of the data
+>> >> - * representation of the signature. However, the choice between BE32 and BE8
+>> >> - * is done by the linker, so we cannot know whether code and data endianness
+>> >> - * will be mixed before the linker is invoked.
+>> >> - */
+>> >> -
+>> >> -#define RSEQ_SIG_CODE	0xe7f5def3
+>> >> -
+>> >> -#ifndef __ASSEMBLER__
+>> >> -
+>> >> -#define RSEQ_SIG_DATA							\
+>> >> -	({								\
+>> >> -		int sig;						\
+>> >> -		asm volatile ("b 2f\n\t"				\
+>> >> -			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
+>> >> -			      "2:\n\t"					\
+>> >> -			      "ldr %[sig], 1b\n\t"			\
+>> >> -			      : [sig] "=r" (sig));			\
+>> >> -		sig;							\
+>> >> -	})
+>> >> -
+>> >> -#define RSEQ_SIG	RSEQ_SIG_DATA
+>> >> -
+>> >> -#endif
+>> >> +#define RSEQ_SIG	0x53053053
+>> > 
+>> > I don't get why you're reverting back to this old signature value, when the
+>> > one we came up with will work well when interpreted as an instruction in the
+>> > *vast* majority of scenarios that people care about (A32/T32 little-endian).
+>> > I think you might be under-estimating just how dead things like BE32 really
+>> > are.
+>> 
+>> My issue is that the current .instr approach is broken for programs or functions
+>> built in Thumb mode, and I received no feedback on the solutions I proposed for
+>> those issues, which led me to propose a patch reverting to a simple .word.
+> 
+> I understand why you're moving from .inst to .word, but I don't understand
+> why that necessitates a change in the value. Why not .word 0xe7f5def3 ? You
+> could also flip the bytes around in case of big-endian, which would keep the
+> instruction coding clean for BE8.
 
-Btw to make this more useful maybe some default implementations for
-get_modes which automatically dtrt, as a helper? Probably could use that
-to squash quite a bit of boilerplate.
+As long as we state and document that this should not be expected to generate
+valid instructions on big endian prior to ARMv6, I'm OK with that approach, e.g.:
 
-Otherwise I like this. Biggest problem I'm seeing here is rolling this out
-everywhere, this is a lot of work. And without widespread adoptions it's
-not terribly useful for userspace.
--Daniel
+/*
+ * - ARM little endian
+ *
+ * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
+ * value 0x5de3. This traps if user-space reaches this instruction by mistake,
+ * and the uncommon operand ensures the kernel does not move the instruction
+ * pointer to attacker-controlled code on rseq abort.
+ *
+ * The instruction pattern in the A32 instruction set is:
+ *
+ * e7f5def3    udf    #24035    ; 0x5de3
+ *
+ * This translates to the following instruction pattern in the T16 instruction
+ * set:
+ *
+ * little endian:
+ * def3        udf    #243      ; 0xf3
+ * e7f5        b.n    <7f5>
+ *
+ * - ARMv6+ big endian:
+ *
+ * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
+ * code and big-endian data. The data value of the signature needs to have its
+ * byte order reversed to generate the trap instruction:
+ *
+ * Data: 0xf3def5e7
+ *
+ * Translates to this A32 instruction pattern:
+ *
+ * e7f5def3    udf    #24035    ; 0x5de3
+ *
+ * Translates to this T16 instruction pattern:
+ *
+ * def3        udf    #243      ; 0xf3
+ * e7f5        b.n    <7f5>
+ *
+ * - Prior to ARMv6 big endian:
+ *
+ * Prior to ARMv6, -mbig-endian generates big-endian code and data (which match),
+ * so the endianness of the data representation of the signature should not be
+ * reversed. However, the choice between BE32 and BE8 is done by the linker,
+ * so we cannot know whether code and data endianness will be mixed before the
+ * linker is invoked. So rather than try to play tricks with the linker, the rseq
+ * signature is simply data (not a trap instruction) prior to ARMv6 on big endian.
+ * This is why the signature is expressed as data (.word) rather than as instruction
+ * (.inst) in assembler.
+ */
+
+#ifdef __ARMEB__
+#define RSEQ_SIG    0xf3def5e7      /* udf    #24035    ; 0x5de3 (ARMv6+) */
+#else
+#define RSEQ_SIG    0xe7f5def3      /* udf    #24035    ; 0x5de3 */
+#endif
+
+> 
+>> > That said, when you ran into .inst.n/.inst.w issues, did you try something
+>> > along the lines of the WASM() macro we use in arch/arm/, which adds the ".w"
+>> > suffix when targetting Thumb?
+>> 
+>> AFAIU, the WASM macros depend on CONFIG_THUMB2_KERNEL, which may be fine within
+>> the kernel, but for user-space things are a bit more complex.
+>> 
+>> A compile-unit can be compiled as thumb, which will set a compiler define
+>> which we could use to detect thumb mode. However, unfortunately, a single
+>> function can also be compiled with an attribute selecting thumb mode, which
+>> AFAIU does not influence the preprocessor defines.
+> 
+> Thanks, I hadn't considered that case. I don't know the right way to handle
+> that in the toolchain, so using .word is probably the best bet in the
+> absence of any better suggestions from the tools folks.
+
+Emitting a no-op within an excluded section, and using the size of that no-op
+to restore the original mode is the best way I found, but I find it rather
+tricky and bug-prone, so I would rather prefer the .word approach.
+
+Thoughts ?
+
+Thanks,
+
+Mathieu
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
