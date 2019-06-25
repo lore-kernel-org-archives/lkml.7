@@ -2,125 +2,96 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4B1C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95E9C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90AD220656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AF620656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etColUTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbfFYGmM (ORCPT
+        id S1729539AbfFYGoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:42:12 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:41853 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727141AbfFYGmM (ORCPT
+        Tue, 25 Jun 2019 02:44:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52646 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfFYGoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:42:12 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=zhiyuan2048@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TV90xp4_1561444928;
-Received: from localhost(mailfrom:zhiyuan2048@linux.alibaba.com fp:SMTPD_---0TV90xp4_1561444928)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 25 Jun 2019 14:42:08 +0800
-From:   Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
-To:     zhiyuan2048@linux.alibaba.com, davem@davemloft.net,
-        idosch@mellanox.com, daniel@iogearbox.net, petrm@mellanox.com,
-        jiri@mellanox.com, tglx@linutronix.de, linmiaohe@huawei.com
-Cc:     zhabin@linux.alibaba.com, caspar@linux.alibaba.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: ipvlan: forward ingress packet to slave's l2 in l3s mode
-Date:   Tue, 25 Jun 2019 14:42:08 +0800
-Message-Id: <20190625064208.2256-1-zhiyuan2048@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 25 Jun 2019 02:44:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s3so1559306wms.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 23:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jWFfiQRv+wXGF01EPxBLO+kjrqa8LCaFNGNIzb7PzWI=;
+        b=etColUTKnj+q4z01FUw/FmoQ3vlLiTaTo0tQT/9uCpcak5Ncs00h5ZrwM44//WX/8v
+         ajCqkVurQbe6c4Ye2vwb6S6xTSiErUAQFaY7rICIvPOJ7Mp2ysWrCDsMujw/In2muCqZ
+         8Fok3pRz7sqdNhpt6S7KBAec2BgJtj1+ofjruL35EOCIF+Ab1Npt71ZyGeI5Ow81+pXD
+         MAy32yGZGfK8PfPprNpqjOaxpf4b7CnMcMOjeLT34qq91BRtwHp2EPhSOF98/aJ80z0J
+         8X/lUT4ZBU6CsV76lHbD036csjhIX7l9QsZ7z3QL/TZDNdsdbzCmGvJBTG8A6CF/WLBk
+         4Jtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jWFfiQRv+wXGF01EPxBLO+kjrqa8LCaFNGNIzb7PzWI=;
+        b=EHxM+x/dnWFt76KjcBaGp0xPFRCL+0LXUcY0L+4SYrWK7faqYjNGFmW3CmaLog5e6X
+         SMorEOvBOIGPBikSBx5fREY/cHTm87k43zvBcyGPK2idSgFAZ/uLpjBezBrU/VI3NnBy
+         B78zmFE/yKaJBIhQc8FXxYFUnQBKUx5My4Baq7h/dcAD5NpGHUpAOjGA/mVdZ5UeHuli
+         h8qDNspdaKTKTaarAmHT88LcxU3BsvSZNGR94jQjy1YHJPMdNh7ODDiU09/9uj7g3bWM
+         nJn8m7kB6jcrG5Z6dz6YzeVpnY5/dpCVFRR4Ta5s09qGB7r+IHG2q+w43sQmHnavYuLf
+         iGHg==
+X-Gm-Message-State: APjAAAVdadXb4TTJC5b+UJC1A4a4QiPYRaInhLOAEQupFAnQee2dg0HG
+        aZugmcjaLYIkRn819VR4BEmYkQ==
+X-Google-Smtp-Source: APXvYqxScvmDFOBo7wM6MTjdmz92wH4V3DTwqg2gYdmsd9YjYrDhPeBrrdzpuX7NOXWXYqYn6s0yLA==
+X-Received: by 2002:a7b:cc04:: with SMTP id f4mr9785913wmh.125.1561445053657;
+        Mon, 24 Jun 2019 23:44:13 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id m9sm11584290wrn.92.2019.06.24.23.44.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Jun 2019 23:44:12 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 07:44:11 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: Add link to ROHM BD71847 Datasheet
+Message-ID: <20190625064411.GE21119@dell>
+References: <20190613121237.GA8984@localhost.localdomain>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613121237.GA8984@localhost.localdomain>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ipvlan l3s mode,  ingress packet is switched to slave interface and
-delivers to l4 stack. This may cause two problems:
+On Thu, 13 Jun 2019, Matti Vaittinen wrote:
 
-  1. When slave is in an ns different from master, the behavior of stack
-  in slave ns may cause confusion for users. For example, iptables, tc,
-  and other l2/l3 functions are not available for ingress packet.
+> ROHM BD71847 PMIC datasheet was published.
+> Add datasheet link for BD71847 as well.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-  2. l3s mode is not used for tap device, and cannot support ipvtap. But
-  in VM or container based VM cases, tap device is a very common device.
+Applied, thanks.
 
-In l3s mode's input nf_hook, this patch calles the skb_forward_dev() to
-forward ingress packet to slave and uses nf_conntrack_confirm() to make
-conntrack work with new mode.
-
-Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
-Signed-off-by: Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
----
- drivers/net/ipvlan/ipvlan.h     |  9 ++++++++-
- drivers/net/ipvlan/ipvlan_l3s.c | 16 ++++++++++++++--
- 2 files changed, 22 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ipvlan/ipvlan.h b/drivers/net/ipvlan/ipvlan.h
-index 3837c897832e..48c814e24c3f 100644
---- a/drivers/net/ipvlan/ipvlan.h
-+++ b/drivers/net/ipvlan/ipvlan.h
-@@ -172,6 +172,14 @@ void ipvlan_link_delete(struct net_device *dev, struct list_head *head);
- void ipvlan_link_setup(struct net_device *dev);
- int ipvlan_link_register(struct rtnl_link_ops *ops);
- #ifdef CONFIG_IPVLAN_L3S
-+
-+#include <net/netfilter/nf_conntrack_core.h>
-+
-+static inline int ipvlan_confirm_conntrack(struct sk_buff *skb)
-+{
-+	return nf_conntrack_confirm(skb);
-+}
-+
- int ipvlan_l3s_register(struct ipvl_port *port);
- void ipvlan_l3s_unregister(struct ipvl_port *port);
- void ipvlan_migrate_l3s_hook(struct net *oldnet, struct net *newnet);
-@@ -206,5 +214,4 @@ static inline bool netif_is_ipvlan_port(const struct net_device *dev)
- {
- 	return rcu_access_pointer(dev->rx_handler) == ipvlan_handle_frame;
- }
--
- #endif /* __IPVLAN_H */
-diff --git a/drivers/net/ipvlan/ipvlan_l3s.c b/drivers/net/ipvlan/ipvlan_l3s.c
-index 943d26cbf39f..ed210002f593 100644
---- a/drivers/net/ipvlan/ipvlan_l3s.c
-+++ b/drivers/net/ipvlan/ipvlan_l3s.c
-@@ -95,14 +95,26 @@ static unsigned int ipvlan_nf_input(void *priv, struct sk_buff *skb,
- {
- 	struct ipvl_addr *addr;
- 	unsigned int len;
-+	int ret = NF_ACCEPT;
-+	bool success;
- 
- 	addr = ipvlan_skb_to_addr(skb, skb->dev);
- 	if (!addr)
- 		goto out;
- 
--	skb->dev = addr->master->dev;
- 	len = skb->len + ETH_HLEN;
--	ipvlan_count_rx(addr->master, len, true, false);
-+
-+	ret = ipvlan_confirm_conntrack(skb);
-+	if (ret != NF_ACCEPT) {
-+		ipvlan_count_rx(addr->master, len, false, false);
-+		goto out;
-+	}
-+
-+	skb_push_rcsum(skb, ETH_HLEN);
-+	success = dev_forward_skb(addr->master->dev, skb) == NET_RX_SUCCESS;
-+	ipvlan_count_rx(addr->master, len, success, false);
-+	return NF_STOLEN;
-+
- out:
- 	return NF_ACCEPT;
- }
 -- 
-2.18.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
