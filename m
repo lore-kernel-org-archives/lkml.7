@@ -2,96 +2,97 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95E9C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29848C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3AF620656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:44:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etColUTK"
+	by mail.kernel.org (Postfix) with ESMTP id 09CCE20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfFYGoQ (ORCPT
+        id S1729573AbfFYGoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:44:16 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52646 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfFYGoP (ORCPT
+        Tue, 25 Jun 2019 02:44:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40726 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbfFYGon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:44:15 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s3so1559306wms.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 23:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=jWFfiQRv+wXGF01EPxBLO+kjrqa8LCaFNGNIzb7PzWI=;
-        b=etColUTKnj+q4z01FUw/FmoQ3vlLiTaTo0tQT/9uCpcak5Ncs00h5ZrwM44//WX/8v
-         ajCqkVurQbe6c4Ye2vwb6S6xTSiErUAQFaY7rICIvPOJ7Mp2ysWrCDsMujw/In2muCqZ
-         8Fok3pRz7sqdNhpt6S7KBAec2BgJtj1+ofjruL35EOCIF+Ab1Npt71ZyGeI5Ow81+pXD
-         MAy32yGZGfK8PfPprNpqjOaxpf4b7CnMcMOjeLT34qq91BRtwHp2EPhSOF98/aJ80z0J
-         8X/lUT4ZBU6CsV76lHbD036csjhIX7l9QsZ7z3QL/TZDNdsdbzCmGvJBTG8A6CF/WLBk
-         4Jtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jWFfiQRv+wXGF01EPxBLO+kjrqa8LCaFNGNIzb7PzWI=;
-        b=EHxM+x/dnWFt76KjcBaGp0xPFRCL+0LXUcY0L+4SYrWK7faqYjNGFmW3CmaLog5e6X
-         SMorEOvBOIGPBikSBx5fREY/cHTm87k43zvBcyGPK2idSgFAZ/uLpjBezBrU/VI3NnBy
-         B78zmFE/yKaJBIhQc8FXxYFUnQBKUx5My4Baq7h/dcAD5NpGHUpAOjGA/mVdZ5UeHuli
-         h8qDNspdaKTKTaarAmHT88LcxU3BsvSZNGR94jQjy1YHJPMdNh7ODDiU09/9uj7g3bWM
-         nJn8m7kB6jcrG5Z6dz6YzeVpnY5/dpCVFRR4Ta5s09qGB7r+IHG2q+w43sQmHnavYuLf
-         iGHg==
-X-Gm-Message-State: APjAAAVdadXb4TTJC5b+UJC1A4a4QiPYRaInhLOAEQupFAnQee2dg0HG
-        aZugmcjaLYIkRn819VR4BEmYkQ==
-X-Google-Smtp-Source: APXvYqxScvmDFOBo7wM6MTjdmz92wH4V3DTwqg2gYdmsd9YjYrDhPeBrrdzpuX7NOXWXYqYn6s0yLA==
-X-Received: by 2002:a7b:cc04:: with SMTP id f4mr9785913wmh.125.1561445053657;
-        Mon, 24 Jun 2019 23:44:13 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id m9sm11584290wrn.92.2019.06.24.23.44.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Jun 2019 23:44:12 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 07:44:11 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mfd: Add link to ROHM BD71847 Datasheet
-Message-ID: <20190625064411.GE21119@dell>
-References: <20190613121237.GA8984@localhost.localdomain>
+        Tue, 25 Jun 2019 02:44:43 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hffBr-0006Jg-Fq; Tue, 25 Jun 2019 08:44:27 +0200
+Date:   Tue, 25 Jun 2019 08:44:26 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mathieu Malaterre <malat@debian.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v13 02/13] doc: Add doc for the Ingenic TCU hardware
+In-Reply-To: <20190624225759.18299-3-paul@crapouillou.net>
+Message-ID: <alpine.DEB.2.21.1906250840150.32342@nanos.tec.linutronix.de>
+References: <20190624225759.18299-1-paul@crapouillou.net> <20190624225759.18299-3-paul@crapouillou.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190613121237.GA8984@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019, Matti Vaittinen wrote:
+Paul,
 
-> ROHM BD71847 PMIC datasheet was published.
-> Add datasheet link for BD71847 as well.
+On Tue, 25 Jun 2019, Paul Cercueil wrote:
+
+> Add a documentation file about the Timer/Counter Unit (TCU) present in
+
+s/Add a /Add /
+
+> the Ingenic JZ47xx SoCs.
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> diff --git a/Documentation/mips/ingenic-tcu.txt b/Documentation/mips/ingenic-tcu.txt
+> new file mode 100644
+> index 000000000000..1a753805779c
+> --- /dev/null
+> +++ b/Documentation/mips/ingenic-tcu.txt
 
-Applied, thanks.
+There is a massive effort to convert the whole Documentation tree to rst
+format. Please do not introduce new txt files.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Also documentation wants a SPDX license identifier.
+
+> +Implementation
+> +--------------
+> +
+> +The functionalities of the TCU hardware are spread across multiple drivers:
+> +- boilerplate:      drivers/mfd/ingenic-tcu.c
+> +- clocks:           drivers/clk/ingenic/tcu.c
+> +- interrupts:       drivers/irqchip/irq-ingenic-tcu.c
+> +- timers:           drivers/clocksource/ingenic-timer.c
+> +- PWM:              drivers/pwm/pwm-jz4740.c
+> +- watchdog:         drivers/watchdog/jz4740_wdt.c
+> +- OST:              drivers/clocksource/ingenic-ost.c
+
+Hrm. These file names are going to be stale over time, but I have no better
+idea either.
+
+Thanks,
+
+	tglx
