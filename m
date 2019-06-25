@@ -2,147 +2,109 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A39C7C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12241C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D40208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4369208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="pY6wfuaF"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DFgF/0bz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfFYMnT (ORCPT
+        id S1731635AbfFYMoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:43:19 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:53860 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726414AbfFYMnT (ORCPT
+        Tue, 25 Jun 2019 08:44:37 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35735 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfFYMoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:43:19 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PCdVAc014779;
-        Tue, 25 Jun 2019 07:42:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=qJNJ0G7W0vE6s3OqOcOl2XdM6LMSlfN3u2FHbWa6UpQ=;
- b=pY6wfuaFA0Y6b8kBsHQZ1LZ+exgjvHhgzPHMeIjAZZXPjX8okcreo5O9WEre2RwJgr6D
- 1pNKdWyyczPHxNdS8iY1t+My/3+xJNsqQtRLyGvsHwKoS7nSdEkvzyeXhRwG+gWGiB9X
- a34N0U9SMZxePtSApUiRF/2Ffh4O7YyrJGJgNhIcc32w+Mo8bZ6AYJ4+SAzW4hFG/a21
- KQ03nLQ9JfZCKrPpq6W4cIYdAn0c8+zOVv3D7Lp/knGcJ299ZYeMdzmp7+8WIgmjjwTZ
- OSkX8KRUIJjdCfOBoQxa1SQmYOApjx2cimL081N3s8eDl85HzQtsWxRd64dgJv5mBqgd mA== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail3.cirrus.com ([87.246.76.56])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2t9grnvmb0-1;
-        Tue, 25 Jun 2019 07:42:46 -0500
-Received: from EDIEX01.ad.cirrus.com (ediex01.ad.cirrus.com [198.61.84.80])
-        by mail3.cirrus.com (Postfix) with ESMTP id B52846143C13;
-        Tue, 25 Jun 2019 07:43:33 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 25 Jun
- 2019 13:42:45 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 25 Jun 2019 13:42:45 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 38F612A1;
-        Tue, 25 Jun 2019 13:42:45 +0100 (BST)
-Date:   Tue, 25 Jun 2019 13:42:45 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     <wsa@the-dreams.de>, <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v6 4/7] i2c: core: Make i2c_acpi_get_irq available to the
- rest of the I2C core
-Message-ID: <20190625124245.GC54126@ediswmail.ad.cirrus.com>
-References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
- <20190621100815.12417-5-ckeepax@opensource.cirrus.com>
- <20190625115011.GE2640@lahna.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190625115011.GE2640@lahna.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250100
+        Tue, 25 Jun 2019 08:44:37 -0400
+Received: by mail-qk1-f193.google.com with SMTP id l128so12426495qke.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=vY1P3TR1JMlx3/olYt70oLIeMNySWo4qDa658Q/bTik=;
+        b=DFgF/0bzewn+n/PL9ZLvg7U/zHK/8dal4r9yQ0LFAoG7YdWsgL9+mY2gPNvTiC42qu
+         3gl4bEJtEonjcDSN473+7iOWwQmHIzHRbKCzmtu9Lql5jvnKD/TT2Q2pyREt7f53i3QH
+         zhfzWELhChmeTb1miNVPNGyZJL/GE7iGEvl37bBUnWf067fLYy0R17hn1TeT2afEn2vf
+         byCuSjvrD11zxjzf7lvYUABmCoBiXoHBSG5QZ4v1zftF5D9ucylJPWiiB80r9Yf3EtFZ
+         Jt5sVMYy9ugHMpGBpdZKG6hraqdoEHkA8HLdkygA8UAcovMFOuCGHsdqx4liopODijwN
+         3Ucw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vY1P3TR1JMlx3/olYt70oLIeMNySWo4qDa658Q/bTik=;
+        b=tHPS2Zy7TQ2Z/YcHsHBHqfz7+4gxLNTeUtfaAQ0TviS71dHHVRVdrJRIZB6cSkBZSl
+         EwdUw7E0qu5O8eW9NLCHzT/BdxWl286cK2kchtf8vuS4PrXljxOlUvc+QCmlLgB/937W
+         EGLveRvf0kbJUmdoilAZuvafSRGKgdZopljfsw29OVH7+toYk5NbTIQg7iw5n9LGg8l4
+         C7ssgKYbuf/dFjrW/7zLoVC77WxmJXZBcgcCmGlaKhh3cAyCoV0P+wDLKgCzxHVVtLb0
+         /DpF45RFLKTK00YFr+FUvn2Y17w84s6udKI4LTvQ7umD5vs7HxvyMUBEpBJwRPkchE9p
+         TtNQ==
+X-Gm-Message-State: APjAAAWFQbjuC6HtubmFhnRFXNs3v2MqpoXh/7+EVBk9IXA2HHfqFSiB
+        d12UGrWa/xHBeMM2aulynotA/g==
+X-Google-Smtp-Source: APXvYqxi7g7Njj3VFUtVK3/9ena26Iye8MvkzGjpZ3DmS6ZBB3kfoVLpg596dEN8oa5pyRriwQaWaw==
+X-Received: by 2002:ae9:e20c:: with SMTP id c12mr125438259qkc.210.1561466676265;
+        Tue, 25 Jun 2019 05:44:36 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id s25sm7119940qkm.130.2019.06.25.05.44.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 05:44:35 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     valentin.schneider@arm.com, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] sched/core: silence a warning in sched_init()
+Date:   Tue, 25 Jun 2019 08:44:22 -0400
+Message-Id: <1561466662-22314-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:50:11PM +0300, Mika Westerberg wrote:
-> On Fri, Jun 21, 2019 at 11:08:12AM +0100, Charles Keepax wrote:
-> > In preparation for more refactoring make i2c_acpi_get_irq available
-> > outside i2c-core-acpi.c.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> > 
-> > Changes since v5:
-> >  - Pass a struct device rather than acpi_device to i2c_acpi_get_irq,
-> >    note this is more awkward than I would have liked as I am very
-> >    unconvinced that adev->dev can actually be passed to
-> >    ACPI_COMPANION. If anyone can answer that for sure that would be
-> >    very helpful.
-> 
-> I don't think you can do that.
-> 
+Compiling a kernel with both FAIR_GROUP_SCHED=n and RT_GROUP_SCHED=n
+will generate a warning using W=1,
 
-Yeah I think we are pretty sure that is not possible, although
-not what is done in the patch, was just responding to on an
-earlier comment.
+kernel/sched/core.c: In function 'sched_init':
+kernel/sched/core.c:5906:32: warning: variable 'ptr' set but not used
+[-Wunused-but-set-variable]
+  unsigned long alloc_size = 0, ptr;
+                                ^~~
 
-> I probably missed some previous discussion but what's wrong passing
-> struct i2c_client instead and use ACPI_COMPANION() for that?
-> 
+It apparently the maintainers don't like the previous fix [1] which
+contains ugly idefs, so silence it by appending the __maybe_unused
+attribute for it instead.
 
-Really this is all about the splitting out the original patch
-into two patches, one to export the function and one to move its
-use to probe time. There isn't really any nice way to do it as two
-patches and still pass the i2c_client struct. Hence we ended up
-on this system with struct device.
+[1] https://lore.kernel.org/lkml/1559681162-5385-1-git-send-email-cai@lca.pw/
 
-I would be happy to squash the two patches, and go back to the
-i2c_client approach, if that was preferred and  as long as Andy
-doesn't mind.
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-> > 
-> > Thanks,
-> > Charles
-> > 
-> >  drivers/i2c/i2c-core-acpi.c | 13 +++++++++++--
-> >  drivers/i2c/i2c-core.h      |  7 +++++++
-> >  2 files changed, 18 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> > index c91492eaacd93..37bf80b35365f 100644
-> > --- a/drivers/i2c/i2c-core-acpi.c
-> > +++ b/drivers/i2c/i2c-core-acpi.c
-> > @@ -145,8 +145,17 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
-> >  	return 1;
-> >  }
-> >  
-> > -static int i2c_acpi_get_irq(struct acpi_device *adev)
-> > +/**
-> > + * i2c_acpi_get_irq - get device IRQ number from ACPI
-> > + * @client: Pointer to the I2C client device
-> 
-> I think this should be @dev now.
-> 
+v2: Incorporate the feedback from Valentin.
 
-Yes it should, sorry will fix that.
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-Charles
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 874c427742a9..12b9b69c8a66 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5903,7 +5903,8 @@ int in_sched_functions(unsigned long addr)
+ void __init sched_init(void)
+ {
+ 	int i, j;
+-	unsigned long alloc_size = 0, ptr;
++	unsigned long alloc_size = 0;
++	unsigned long __maybe_unused ptr;
+ 
+ 	wait_bit_init();
+ 
+-- 
+1.8.3.1
+
