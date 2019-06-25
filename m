@@ -2,57 +2,57 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3090CC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50A3C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05343204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1AD204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="BVEkDRbH"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="ezwmmbpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfFYTnB (ORCPT
+        id S1729923AbfFYTnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:43:01 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34077 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729561AbfFYTm5 (ORCPT
+        Tue, 25 Jun 2019 15:43:06 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45235 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729039AbfFYTmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:42:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so19257244wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:42:55 -0700 (PDT)
+        Tue, 25 Jun 2019 15:42:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so19187725wre.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:42:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kinvolk.io; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zL0HrEGZcpopHqyYMX9VRwzNkgb23WmEI/HU5IMtTxA=;
-        b=BVEkDRbH+o3abT8tZJB6lbPIuysqa31NjxF8psYZadQqZoC3npMhwO3pkjA47Tw4Z8
-         NF+zzCL8b8AmQrOt0o9xgWglRDk1vKqjauhGXgVmzpLdWVB+dJD5WSvf1PMneJGx5rTt
-         /vwmmE0bUo6tbLaP/IZc6HPlpiVFaNCxLrjfI=
+        bh=GYjG1Lhb9GkhJWf8rDSOngzQUr27dwmTkilGHyOxJxo=;
+        b=ezwmmbpI96qn7d0nlps1vQougMm1Q9ZuKhHJA061LKCWfJcuSek677hYBYPt2GrQNp
+         4jjfw7i3AH34Wyj1cm0NTZmery0+yNQHa5FApjy2583ztCDP79XP10eQPocFOoMGzUAr
+         +tNcFBJCfZygJnhjwrQ+emFbHw8lHXCe2ryqY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zL0HrEGZcpopHqyYMX9VRwzNkgb23WmEI/HU5IMtTxA=;
-        b=J3HSinqa7JcNXiPnnfDdM4D+IhFMI9XZNQ/WQfBWSDpHKRnJ5aprAa1Lt5wwBE71EQ
-         oSTTFJhmHuhR2pC4Ll2pj+cgCtrIqe8e9xpV1Kk0DfLjqX08cwBQ0w8mU2gRL4wYLS9M
-         5aIqqL27vsquU/k+2VjHX4wfIyT/clWclvEluHceLU6pjANtTC4tVOu6zl2ogNA2dfmR
-         2b9hwi4tlPV4nBzmQaYn370HONynQ/nZyG5Q7Ns++2Yl/IBUBCg3UZ2j8PHr9+en1Bzp
-         0q7fxwb/LyQV41tbD5NVcj8TVuBfeRVy1TDFqMC+NNQaxG2kbC4HWGMgTyy1bxPWlLwe
-         xq9A==
-X-Gm-Message-State: APjAAAV3acchv1IVS4Q9AsGyCJBDTAW+fNP4cQklMA0AfBtpKI1Rabh0
-        1ze+VXXUG36F2lIx49etZa7tl0p31WnGPg==
-X-Google-Smtp-Source: APXvYqw7ZhtPtJJKeACIFdzrIPq/5jZmewEt09VKOVwa/3AwdYJ9E78s6uTj9lixcfeh0NXc15N0yA==
-X-Received: by 2002:adf:a345:: with SMTP id d5mr36952398wrb.234.1561491775190;
-        Tue, 25 Jun 2019 12:42:55 -0700 (PDT)
+        bh=GYjG1Lhb9GkhJWf8rDSOngzQUr27dwmTkilGHyOxJxo=;
+        b=YY9X9yMV3cCkGRzTg3Ki5Ej2TUKl01KZmeK+B475+qB+H+xDr0APDRO+Dduh//LRsB
+         Y6bYPQ+Apn+XaM+eeUVbSeI/HUvKeGSBkZ/JR9God5572lpE5Ov5lct5bHibJSDrS4fh
+         HHQrisZXPd2uQ5YBvVujwM57EL27YIvkgxEdn7hoq3LruqK6fwABFclE6q94MqfIG5fw
+         g5Ag3v0TiyYKCxOR76BEMpLL32fXIeKNuFLzfUHE9xe5yc4MTgIvxyGq1ZZuD6ZtOaOo
+         icf/9zI1INdxXN6M495N74RCoQaW86iqXLZTlyW/8PALucsaKYmVuTlgxm1dT5cqkdFe
+         pMMA==
+X-Gm-Message-State: APjAAAU0+Wc5DZ9JJFHn9hjmb8Qq6vN4B3BVLGSPqeLAGhIDvlwg0GqM
+        23lhD6sR5b1ERooXuyh4SeyelA==
+X-Google-Smtp-Source: APXvYqxbqFLK0tCw8AhS5eD7rC076M0sJB+W5TjrXXMQc7znJkawkEk+T+05gkWan1hamp4QCoDVkA==
+X-Received: by 2002:adf:a38b:: with SMTP id l11mr35432560wrb.325.1561491773041;
+        Tue, 25 Jun 2019 12:42:53 -0700 (PDT)
 Received: from localhost.localdomain (ip5f5aedb6.dynamic.kabel-deutschland.de. [95.90.237.182])
-        by smtp.gmail.com with ESMTPSA id q193sm84991wme.8.2019.06.25.12.42.54
+        by smtp.gmail.com with ESMTPSA id q193sm84991wme.8.2019.06.25.12.42.52
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 12:42:54 -0700 (PDT)
+        Tue, 25 Jun 2019 12:42:52 -0700 (PDT)
 From:   Krzesimir Nowak <krzesimir@kinvolk.io>
 To:     netdev@vger.kernel.org
 Cc:     Alban Crequy <alban@kinvolk.io>,
@@ -63,9 +63,9 @@ Cc:     Alban Crequy <alban@kinvolk.io>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
         linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
         Krzesimir Nowak <krzesimir@kinvolk.io>
-Subject: [bpf-next v2 10/10] selftests/bpf: Test correctness of narrow 32bit read on 64bit field
-Date:   Tue, 25 Jun 2019 21:42:15 +0200
-Message-Id: <20190625194215.14927-11-krzesimir@kinvolk.io>
+Subject: [bpf-next v2 08/10] bpf: Implement bpf_prog_test_run for perf event programs
+Date:   Tue, 25 Jun 2019 21:42:13 +0200
+Message-Id: <20190625194215.14927-9-krzesimir@kinvolk.io>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190625194215.14927-1-krzesimir@kinvolk.io>
 References: <20190625194215.14927-1-krzesimir@kinvolk.io>
@@ -76,94 +76,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test the correctness of the 32bit narrow reads by reading both halves
-of the 64 bit field and doing a binary or on them to see if we get the
-original value.
+As an input, test run for perf event program takes struct
+bpf_perf_event_data as ctx_in and struct bpf_perf_event_value as
+data_in. For an output, it basically ignores ctx_out and data_out.
 
-It succeeds as it should, but with the commit e2f7fc0ac695 ("bpf: fix
-undefined behavior in narrow load handling") reverted, the test fails
-with a following message:
-
-> $ sudo ./test_verifier
-> ...
-> #967/p 32bit loads of a 64bit field (both least and most significant words) FAIL retval -1985229329 != 0
-> verification time 17 usec
-> stack depth 0
-> processed 8 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-> ...
-> Summary: 1519 PASSED, 0 SKIPPED, 1 FAILED
+The implementation sets an instance of struct bpf_perf_event_data_kern
+in such a way that the BPF program reading data from context will
+receive what we passed to the bpf prog test run in ctx_in. Also BPF
+program can call bpf_perf_prog_read_value to receive what was passed
+in data_in.
 
 Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 ---
- tools/testing/selftests/bpf/test_verifier.c   | 19 ++++++++++++++++++
- .../testing/selftests/bpf/verifier/var_off.c  | 20 +++++++++++++++++++
- 2 files changed, 39 insertions(+)
+ kernel/trace/bpf_trace.c                      | 107 ++++++++++++++++++
+ .../bpf/verifier/perf_event_sample_period.c   |   8 ++
+ 2 files changed, 115 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-index 6fa962014b64..444c1ea1e326 100644
---- a/tools/testing/selftests/bpf/test_verifier.c
-+++ b/tools/testing/selftests/bpf/test_verifier.c
-@@ -24,6 +24,7 @@
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index c102c240bb0b..2fa49ea8a475 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -16,6 +16,8 @@
  
- #include <sys/capability.h>
+ #include <asm/tlb.h>
  
-+#include <linux/compiler.h>
- #include <linux/unistd.h>
- #include <linux/filter.h>
- #include <linux/bpf_perf_event.h>
-@@ -341,6 +342,24 @@ static void bpf_fill_perf_event_test_run_check(struct bpf_test *self)
- 	self->fill_insns = NULL;
- }
++#include <trace/events/bpf_test_run.h>
++
+ #include "trace_probe.h"
+ #include "trace.h"
  
-+static void bpf_fill_32bit_loads(struct bpf_test *self)
+@@ -1160,7 +1162,112 @@ const struct bpf_verifier_ops perf_event_verifier_ops = {
+ 	.convert_ctx_access	= pe_prog_convert_ctx_access,
+ };
+ 
++static int pe_prog_test_run(struct bpf_prog *prog,
++			    const union bpf_attr *kattr,
++			    union bpf_attr __user *uattr)
 +{
-+	compiletime_assert(
-+		sizeof(struct bpf_perf_event_data) <= TEST_CTX_LEN,
-+		"buffer for ctx is too short to fit struct bpf_perf_event_data");
-+	compiletime_assert(
-+		sizeof(struct bpf_perf_event_value) <= TEST_DATA_LEN,
-+		"buffer for data is too short to fit struct bpf_perf_event_value");
++	void __user *ctx_in = u64_to_user_ptr(kattr->test.ctx_in);
++	void __user *data_in = u64_to_user_ptr(kattr->test.data_in);
++	u32 data_size_in = kattr->test.data_size_in;
++	u32 ctx_size_in = kattr->test.ctx_size_in;
++	u32 repeat = kattr->test.repeat;
++	u32 retval = 0, duration = 0;
++	int err = -EINVAL;
++	u64 time_start, time_spent = 0;
++	int i;
++	struct perf_sample_data sample_data = {0, };
++	struct perf_event event = {0, };
++	struct bpf_perf_event_data_kern real_ctx = {0, };
++	struct bpf_perf_event_data fake_ctx = {0, };
++	struct bpf_perf_event_value value = {0, };
 +
-+	struct bpf_perf_event_data ctx = {
-+		.sample_period = 0x0123456789abcdef,
-+	};
++	if (ctx_size_in != sizeof(fake_ctx))
++		goto out;
++	if (data_size_in != sizeof(value))
++		goto out;
 +
-+	memcpy(self->ctx, &ctx, sizeof(ctx));
-+	free(self->fill_insns);
-+	self->fill_insns = NULL;
++	if (copy_from_user(&fake_ctx, ctx_in, ctx_size_in)) {
++		err = -EFAULT;
++		goto out;
++	}
++	if (copy_from_user(&value, data_in, data_size_in)) {
++		err = -EFAULT;
++		goto out;
++	}
++
++	real_ctx.regs = &fake_ctx.regs;
++	real_ctx.data = &sample_data;
++	real_ctx.event = &event;
++	perf_sample_data_init(&sample_data, fake_ctx.addr,
++			      fake_ctx.sample_period);
++	event.cpu = smp_processor_id();
++	event.oncpu = -1;
++	event.state = PERF_EVENT_STATE_OFF;
++	local64_set(&event.count, value.counter);
++	event.total_time_enabled = value.enabled;
++	event.total_time_running = value.running;
++	/* make self as a leader - it is used only for checking the
++	 * state field
++	 */
++	event.group_leader = &event;
++
++	/* slightly changed copy pasta from bpf_test_run() in
++	 * net/bpf/test_run.c
++	 */
++	if (!repeat)
++		repeat = 1;
++
++	rcu_read_lock();
++	preempt_disable();
++	time_start = ktime_get_ns();
++	for (i = 0; i < repeat; i++) {
++		retval = BPF_PROG_RUN(prog, &real_ctx);
++
++		if (signal_pending(current)) {
++			err = -EINTR;
++			preempt_enable();
++			rcu_read_unlock();
++			goto out;
++		}
++
++		if (need_resched()) {
++			time_spent += ktime_get_ns() - time_start;
++			preempt_enable();
++			rcu_read_unlock();
++
++			cond_resched();
++
++			rcu_read_lock();
++			preempt_disable();
++			time_start = ktime_get_ns();
++		}
++	}
++	time_spent += ktime_get_ns() - time_start;
++	preempt_enable();
++	rcu_read_unlock();
++
++	do_div(time_spent, repeat);
++	duration = time_spent > U32_MAX ? U32_MAX : (u32)time_spent;
++	/* end of slightly changed copy pasta from bpf_test_run() in
++	 * net/bpf/test_run.c
++	 */
++
++	if (copy_to_user(&uattr->test.retval, &retval, sizeof(retval))) {
++		err = -EFAULT;
++		goto out;
++	}
++	if (copy_to_user(&uattr->test.duration, &duration, sizeof(duration))) {
++		err = -EFAULT;
++		goto out;
++	}
++	err = 0;
++out:
++	trace_bpf_test_finish(&err);
++	return err;
 +}
 +
- /* BPF_SK_LOOKUP contains 13 instructions, if you need to fix up maps */
- #define BPF_SK_LOOKUP(func)						\
- 	/* struct bpf_sock_tuple tuple = {} */				\
-diff --git a/tools/testing/selftests/bpf/verifier/var_off.c b/tools/testing/selftests/bpf/verifier/var_off.c
-index 8504ac937809..14d222f37081 100644
---- a/tools/testing/selftests/bpf/verifier/var_off.c
-+++ b/tools/testing/selftests/bpf/verifier/var_off.c
-@@ -246,3 +246,23 @@
+ const struct bpf_prog_ops perf_event_prog_ops = {
++	.test_run	= pe_prog_test_run,
+ };
+ 
+ static DEFINE_MUTEX(bpf_event_mutex);
+diff --git a/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c b/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c
+index 471c1a5950d8..16e9e5824d14 100644
+--- a/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c
++++ b/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c
+@@ -13,6 +13,8 @@
+ 	},
  	.result = ACCEPT,
- 	.prog_type = BPF_PROG_TYPE_LWT_IN,
- },
-+{
-+	"32bit loads of a 64bit field (both least and most significant words)",
-+	.insns = {
-+	BPF_LDX_MEM(BPF_W, BPF_REG_4, BPF_REG_1, offsetof(struct bpf_perf_event_data, sample_period)),
-+	BPF_LDX_MEM(BPF_W, BPF_REG_5, BPF_REG_1, offsetof(struct bpf_perf_event_data, sample_period) + 4),
-+	BPF_LDX_MEM(BPF_DW, BPF_REG_6, BPF_REG_1, offsetof(struct bpf_perf_event_data, sample_period)),
-+	BPF_ALU64_IMM(BPF_LSH, BPF_REG_5, 32),
-+	BPF_ALU64_REG(BPF_OR, BPF_REG_4, BPF_REG_5),
-+	BPF_ALU64_REG(BPF_XOR, BPF_REG_4, BPF_REG_6),
-+	BPF_MOV64_REG(BPF_REG_0, BPF_REG_4),
-+	BPF_EXIT_INSN(),
-+	},
-+	.result = ACCEPT,
-+	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
-+	.ctx = { 0, },
+ 	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
 +	.ctx_len = sizeof(struct bpf_perf_event_data),
-+	.data = { 0, },
 +	.data_len = sizeof(struct bpf_perf_event_value),
-+	.fill_helper = bpf_fill_32bit_loads,
-+},
+ },
+ {
+ 	"check bpf_perf_event_data->sample_period half load permitted",
+@@ -29,6 +31,8 @@
+ 	},
+ 	.result = ACCEPT,
+ 	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
++	.ctx_len = sizeof(struct bpf_perf_event_data),
++	.data_len = sizeof(struct bpf_perf_event_value),
+ },
+ {
+ 	"check bpf_perf_event_data->sample_period word load permitted",
+@@ -45,6 +49,8 @@
+ 	},
+ 	.result = ACCEPT,
+ 	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
++	.ctx_len = sizeof(struct bpf_perf_event_data),
++	.data_len = sizeof(struct bpf_perf_event_value),
+ },
+ {
+ 	"check bpf_perf_event_data->sample_period dword load permitted",
+@@ -56,4 +62,6 @@
+ 	},
+ 	.result = ACCEPT,
+ 	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
++	.ctx_len = sizeof(struct bpf_perf_event_data),
++	.data_len = sizeof(struct bpf_perf_event_value),
+ },
 -- 
 2.20.1
 
