@@ -2,120 +2,128 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F293C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F97C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E615120883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561500044;
-	bh=F3zOuj+AQCm4B3i9sQrKyEWYHwxAH26odI9Vxhs+EvI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ghG5L6oJYf3az+XeRtY1qkRxlL4SRBgfeAW3cyzqPzi343bXN3KTKwgq227RcuB7O
-	 p9yVv0UjLevcxq3aW9x+gnDkpgVLuF9zl8KGTrmfjlsN3G5X1xQLDRB+TtSmcAiA08
-	 /fkBv/LpjZn2NtnFQub6UbPKmYcNLp6mPDbhXtWw=
+	by mail.kernel.org (Postfix) with ESMTP id 1B3182080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfFYWAm (ORCPT
+        id S1726497AbfFYWCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 18:02:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61899 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbfFYWAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:00:42 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F962080C;
-        Tue, 25 Jun 2019 22:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561500041;
-        bh=F3zOuj+AQCm4B3i9sQrKyEWYHwxAH26odI9Vxhs+EvI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hxkgJe/pFbcy2wWEYYVcugv6LTv99BMAZVGwtVsElaZXu3NeeoVr7u5ZvvMtKXuhl
-         VfsD5X/2GkepCxINxodk4b0M6ZVxwm3RoAZAoPobGTwN4rcTC2prnyg4ExCfL3ujQb
-         n3OvN+ZqeLnPYNafzBYElyBLgUP29Ys135xarID0=
-Date:   Tue, 25 Jun 2019 15:00:40 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     ktkhai@virtuozzo.com, kirill.shutemov@linux.intel.com,
-        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
-        shakeelb@google.com, rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH 4/4] mm: thp: make deferred split shrinker memcg
- aware
-Message-Id: <20190625150040.feb6ea9d11fff73a57320a3c@linux-foundation.org>
-In-Reply-To: <1560376609-113689-5-git-send-email-yang.shi@linux.alibaba.com>
-References: <1560376609-113689-1-git-send-email-yang.shi@linux.alibaba.com>
-        <1560376609-113689-5-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726304AbfFYWCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:02:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 15:02:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,417,1557212400"; 
+   d="scan'208";a="172510548"
+Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2019 15:02:53 -0700
+Subject: Re: [PATCH 0/9] x86: Concurrent TLB flushes and other improvements
+To:     Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@surriel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190613064813.8102-1-namit@vmware.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <fcfeac95-b38c-5ec6-4fd9-9d7931d5ae2e@intel.com>
+Date:   Tue, 25 Jun 2019 15:02:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190613064813.8102-1-namit@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 05:56:49 +0800 Yang Shi <yang.shi@linux.alibaba.com> wrote:
+On 6/12/19 11:48 PM, Nadav Amit wrote:
+> Running sysbench on dax w/emulated-pmem, write-cache disabled, and
+> various mitigations (PTI, Spectre, MDS) disabled on Haswell:
+> 
+>  sysbench fileio --file-total-size=3G --file-test-mode=rndwr \
+>   --file-io-mode=mmap --threads=4 --file-fsync-mode=fdatasync run
+> 
+> 			events (avg/stddev)
+> 			-------------------
+>   5.2-rc3:		1247669.0000/16075.39
+>   +patchset:		1290607.0000/13617.56 (+3.4%)
 
-> Currently THP deferred split shrinker is not memcg aware, this may cause
-> premature OOM with some configuration. For example the below test would
-> run into premature OOM easily:
-> 
-> $ cgcreate -g memory:thp
-> $ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
-> $ cgexec -g memory:thp transhuge-stress 4000
-> 
-> transhuge-stress comes from kernel selftest.
-> 
-> It is easy to hit OOM, but there are still a lot THP on the deferred
-> split queue, memcg direct reclaim can't touch them since the deferred
-> split shrinker is not memcg aware.
-> 
-> Convert deferred split shrinker memcg aware by introducing per memcg
-> deferred split queue.  The THP should be on either per node or per memcg
-> deferred split queue if it belongs to a memcg.  When the page is
-> immigrated to the other memcg, it will be immigrated to the target
-> memcg's deferred split queue too.
-> 
-> Reuse the second tail page's deferred_list for per memcg list since the
-> same THP can't be on multiple deferred split queues.
-> 
-> ...
->
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4579,6 +4579,11 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
->  #ifdef CONFIG_CGROUP_WRITEBACK
->  	INIT_LIST_HEAD(&memcg->cgwb_list);
->  #endif
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	spin_lock_init(&memcg->deferred_split_queue.split_queue_lock);
-> +	INIT_LIST_HEAD(&memcg->deferred_split_queue.split_queue);
-> +	memcg->deferred_split_queue.split_queue_len = 0;
-> +#endif
->  	idr_replace(&mem_cgroup_idr, memcg, memcg->id.id);
->  	return memcg;
->  fail:
-> @@ -4949,6 +4954,14 @@ static int mem_cgroup_move_account(struct page *page,
->  		__mod_memcg_state(to, NR_WRITEBACK, nr_pages);
->  	}
->  
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +	if (compound && !list_empty(page_deferred_list(page))) {
-> +		spin_lock(&from->deferred_split_queue.split_queue_lock);
-> +		list_del(page_deferred_list(page));
+Why did you decide on disabling the side-channel mitigations?  While
+they make things slower, they're also going to be with us for a while,
+so they really are part of real-world testing IMNHO.  I'd be curious
+whether this set has more or less of an advantage when all the
+mitigations are on.
 
-It's worrisome that this page still appears to be on the deferred_list
-and that the above if() would still succeed.  Should this be
-list_del_init()?
-
-> +		from->deferred_split_queue.split_queue_len--;
-> +		spin_unlock(&from->deferred_split_queue.split_queue_lock);
-> +	}
-> +#endif
-
+Also, why only 4 threads?  Does this set help most when using a moderate
+number of threads since the local and remote cost are (relatively) close
+vs. a large system where doing lots of remote flushes is *way* more
+time-consuming than a local flush?
