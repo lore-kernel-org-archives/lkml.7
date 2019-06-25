@@ -2,127 +2,167 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F448C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7855C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8C9204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E6A215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfFYIQ7 (ORCPT
+        id S1729530AbfFYISE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:16:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38442 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728374AbfFYIQ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:16:58 -0400
-Received: from static-50-53-46-226.bvtn.or.frontiernet.net ([50.53.46.226] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1hfgdJ-0006B9-HT; Tue, 25 Jun 2019 08:16:53 +0000
-Subject: Re: [PATCH V34 00/29] Lockdown as an LSM
-To:     James Morris <jmorris@namei.org>,
-        Matthew Garrett <matthewgarrett@google.com>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20190622000358.19895-1-matthewgarrett@google.com>
- <alpine.LRH.2.21.1906250853290.7826@namei.org>
-From:   John Johansen <john.johansen@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Canonical
-Message-ID: <642487e9-f70c-c11b-bc61-ad366096e267@canonical.com>
-Date:   Tue, 25 Jun 2019 01:16:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 04:18:04 -0400
+Received: from mail.us.es ([193.147.175.20]:49906 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727887AbfFYISD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:18:03 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id B8867C1A6A
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:18:01 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id A07674CA14
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:18:01 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 939DA207DE; Tue, 25 Jun 2019 10:18:01 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 6CE66DA4D0;
+        Tue, 25 Jun 2019 10:17:59 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Tue, 25 Jun 2019 10:17:59 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 42A5F4265A32;
+        Tue, 25 Jun 2019 10:17:59 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 10:17:58 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dsahern@gmail.com" <dsahern@gmail.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Message-ID: <20190625081758.rgcyo2reabuxxd6e@salvia>
+References: <30442ee669c44d9db01fb374b73fd2dd@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.1906250853290.7826@namei.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30442ee669c44d9db01fb374b73fd2dd@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 4:01 PM, James Morris wrote:
-> On Fri, 21 Jun 2019, Matthew Garrett wrote:
+On Wed, Jun 19, 2019 at 09:49:04AM +0000, linmiaohe wrote:
 > 
->> Minor updates over V33 - security_is_locked_down renamed to
->> security_locked_down, return value of security_locked_down is returned
->> in most cases, one unnecessary patch was dropped, couple of minor nits
->> fixed.
-> 
-> Thanks for the respin.
-> 
-> We are still not resolved on granularity. Stephen has said he's not sure 
-> if a useful policy can be constructed with just confidentiality and 
-> integrity settings. I'd be interested to know JJ and Casey's thoughts on 
-> lockdown policy flexibility wrt their respective LSMs.
-> 
-> These are also "all or nothing" choices which may prevent deployment due 
-> to a user needing to allow (presumably controlled or mitigated) exceptions 
-> to the policy.
-> 
-> 
+> On 2019/6/18 23:58, Pablo Neira Ayuso wrote:
+> > On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
+> >> From: Miaohe Lin <linmiaohe@huawei.com>
+> >>
+> >> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
+> >> ipv4/ipv6 packets will be dropped because in device is vrf but out 
+> >> device is an enslaved device. So failed with the check of the 
+> >> rpfilter.
+> >>
+> >> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> >> ---
+> >> --- a/net/ipv4/netfilter/ipt_rpfilter.c
+> >> +++ b/net/ipv4/netfilter/ipt_rpfilter.c
+> >> @@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
+> >>  	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
+> >>  	flow.flowi4_tos = RT_TOS(iph->tos);
+> >>  	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
+> >> +	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+> >>
+> >>  	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par),
+> >> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
+> >> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+> >> @@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+> >>  	if (rpfilter_addr_linklocal(&iph->saddr)) {
+> >>  		lookup_flags |= RT6_LOOKUP_F_IFACE;
+> >>  		fl6.flowi6_oif = dev->ifindex;
+> >> -	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
+> >> +	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
+> >> +		   (netif_is_l3_master(dev)) ||
+> >> +		   (netif_is_l3_slave(dev)))
+> >>  		fl6.flowi6_oif = dev->ifindex;
+> >>
+> >>  	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags); @@
+> >> -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+> >>  		goto out;
+> >>  	}
+> >>
+> >> +	if (netif_is_l3_master(dev)) {
+> >> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
+> >> +		if (!dev)
+> >> +			goto out;
+> >> +	}
+> > 
+> > So, for the l3 device cases this makes:
+> > 
+> > #1 ip6_route_lookup() to fetch the route, using the device in xt_in()
+> >    (the _LOOSE flag is ignored for the l3 device case).
+> > 
+> > #2 If this is a l3dev master, then you make a global lookup for the
+> >    device using IP6CB(skb)->iif.
+> > 
+> > #3 You check if route matches with the device, using the new device
+> >    from the lookup:
+> > 
+> >    if (rt->rt6i_idev->dev == dev ...
+> > 
+> > If there is no other way to fix this, OK, that's fair enough.
+> > 
+> > Still this fix looks a bit tricky to me.
+> > 
+> > And this assymmetric between the IPv4 and IPv6 codebase looks rare.
+> > 
+> > Probably someone can explain me this in more detail? I'd appreciate.
+> > 
+> > Thanks!
+> > 
+>     Thanks for your reply. I will try to explain this in more detail.
+>     Vrf device will pass through netfilter hook twice. One with skb->dev=l3mdev
+> Slave device and another one with skb->dev=l3mdev master deivce.
+>     If a device is an l3mdev,  l3mdev_master_ifindex_rcu will return l3mdev
+> master device ifindex otherwise 0 . So for non l3mdev cases,  v4 version is
+> as same as the previous one. And for l3mdev cases,  flow.flowi4_oif
+> will be l3mdev master device ifindex, so we can do a fib lookup in l3mdev
+> domain as expected. Since fib_info_nh_uses_dev help us handle the case with
+> dev=l3mdev slave or master and  XT_RPFILTER_LOOSE do not lookup route
+> table, we finish v4.
+>     For v6 version we need to set fl6.flowi6_oif as we are supposed to lookup 
+> fib in l3mdev domain even in XT_RPFILTER_LOOSE mode.
+>     And fib result rt->rt6i_idev->dev is l3mdev slave device, we need change
+> dev to enslaved l3mdev device when dev passed in is l3mdev master device.
+>     The key is l3mdev will pass through netfilter hook twice with skb dev is l3mdev slave
+> and master . And we need to set flowi6_oif as fib lookup should in the l3mdev
+> domain.
 
-I haven't gotten a chance to play with this the way I want to so there is
-still a lot of questions regarding its interaction with apparmor and its
-policy, but from what I have seen so far it is looking good.
+Thanks for explaining.
 
-I expect the all or nothing choices may limit its deployments (we really
-need to play with this more to say) but we already face similar issues.
-There are options we provide at a distro level that we can't turn on by
-default, but we do recommend to more security conscious users.
+Something must be wrong in all these helper function logic because
+this new code logic is hard to follow for the IPv6 chunk...
 
-If lockdown was in kernel we would certainly make it available for our
-users, we have even had a few people ask about it.
+Can you explore a more readable fix?
+
+So I'm not inclined to quickly take this patch.
+
+Thanks.
