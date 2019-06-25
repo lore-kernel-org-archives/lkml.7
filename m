@@ -2,99 +2,102 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE367C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C858C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806E5215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D3221783
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbfFYIoe convert rfc822-to-8bit (ORCPT
+        id S1730802AbfFYIo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:44:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54386 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbfFYIod (ORCPT
+        Tue, 25 Jun 2019 04:44:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41309 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbfFYIo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:44:33 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-64-2CgliomXP9qa0e1tUxO66g-1; Tue, 25 Jun 2019 09:44:30 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 25 Jun 2019 09:44:29 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 25 Jun 2019 09:44:29 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Dmitry Torokhov' <dmitry.torokhov@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Benoit Parrot <bparrot@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2] Input: edt-ft5x06 - use get_unaligned_be16()
-Thread-Topic: [PATCH 1/2] Input: edt-ft5x06 - use get_unaligned_be16()
-Thread-Index: AQHVKY1hAj6tejpQ3kG1+0ev0Psa8KasERZw
-Date:   Tue, 25 Jun 2019 08:44:29 +0000
-Message-ID: <011d62995b20493f977ead43f4b494a2@AcuMS.aculab.com>
-References: <20190623063153.261546-1-dmitry.torokhov@gmail.com>
-In-Reply-To: <20190623063153.261546-1-dmitry.torokhov@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 25 Jun 2019 04:44:58 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hfh3t-0000XF-62; Tue, 25 Jun 2019 10:44:21 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+        <20190607162349.18199-2-john.ogness@linutronix.de>
+        <20190618045117.GA7419@jagdpanzerIV> <87imt2bl0k.fsf@linutronix.de>
+        <20190625064543.GA19050@jagdpanzerIV>
+        <20190625071500.GB19050@jagdpanzerIV>
+Date:   Tue, 25 Jun 2019 10:44:19 +0200
+In-Reply-To: <20190625071500.GB19050@jagdpanzerIV> (Sergey Senozhatsky's
+        message of "Tue, 25 Jun 2019 16:15:00 +0900")
+Message-ID: <875zoujbq4.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-X-MC-Unique: 2CgliomXP9qa0e1tUxO66g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov
-> Sent: 23 June 2019 07:32
+On 2019-06-25, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+>>>> +	struct prb_reserved_entry e;
+>>>> +	char *s;
+>>>> +
+>>>> +	s = prb_reserve(&e, &rb, 32);
+>>>> +	if (s) {
+>>>> +		sprintf(s, "Hello, world!");
+>>>> +		prb_commit(&e);
+>>>> +	}
+>>>
+>>> A nit: snprintf().
+>>>
+>>> sprintf() is tricky, it may write "slightly more than was
+>>> anticipated" bytes - all those string_nocheck(" disabled"),
+>>> error_string("pK-error"), etc.
+>> 
+>> Agreed. Documentation should show good examples.
 > 
-> Instead of doing conversion by hand, let's use the proper accessors.
+> In vprintk_emit(), are we going to always reserve 1024-byte
+> records, since we don't know the size in advance, e.g.
 > 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/input/touchscreen/edt-ft5x06.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> 	printk("%pS %s\n", regs->ip, current->name)
+> 		prb_reserve(&e, &rb, ????);
 > 
-> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> index c639ebce914c..ec770226e119 100644
-> --- a/drivers/input/touchscreen/edt-ft5x06.c
-> +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> @@ -27,6 +27,7 @@
->  #include <linux/gpio/consumer.h>
->  #include <linux/input/mt.h>
->  #include <linux/input/touchscreen.h>
-> +#include <asm/unaligned.h>
-> 
->  #define WORK_REGISTER_THRESHOLD		0x00
->  #define WORK_REGISTER_REPORT_RATE	0x08
-> @@ -239,8 +240,8 @@ static irqreturn_t edt_ft5x06_ts_isr(int irq, void *dev_id)
->  		if (tsdata->version == EDT_M06 && type == TOUCH_EVENT_DOWN)
->  			continue;
-> 
-> -		x = ((buf[0] << 8) | buf[1]) & 0x0fff;
-> -		y = ((buf[2] << 8) | buf[3]) & 0x0fff;
-> +		x = get_unaligned_be16(buf) & 0x0fff;
-> +		y = get_unaligned_be16(buf + 2) & 0x0fff;
+> or are we going to run vscnprintf() on a NULL buffer first,
+> then reserve the exactly required number of bytes and afterwards
+> vscnprintf(s) -> prb_commit(&e)?
 
-You might as well delete the pointless masking with 0xff.
+(As suggested by Petr) I want to use vscnprintf() on a NULL
+buffer. However, a NULL buffer is not sufficient because things like the
+loglevel are sometimes added via %s (for example, in /dev/kmsg). So
+rather than a NULL buffer, I would use a small buffer on the stack
+(large enough to store loglevel/cont information). This way we can use
+vscnprintf() to get the exact size _and_ printk_get_level() will see
+enough of the formatted string to parse what it needs.
 
-	David
+> I'm asking this because, well, if the most common usage
+> pattern (printk->prb_reserve) will always reserve fixed
+> size records (aka data blocks), then you _probably_ (??)
+> can drop the 'variable size records' requirement from prb
+> design and start looking at records (aka data blocks) as
+> fixed sized chunks of bytes, which are always located at
+> fixed offsets.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+The average printk message size is well under 128 bytes. It would be
+quite wasteful to always reserve 1K blocks.
 
+John Ogness
