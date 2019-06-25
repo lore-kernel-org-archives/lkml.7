@@ -4,63 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37B8C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07103C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2C4208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD12F2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561491480;
-	bh=tJdGNjp4NLA7f2CJGKITTf6uA4kMX96bLEi69D1RpFc=;
+	s=default; t=1561491765;
+	bh=rnIbqwj/usshwkoKpQu2uh4UEE0YmQH9oiXkATZ0dNU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qfFEuQ2aGHyDmtpBC/FJiM7oAYrxPWIi3OthA7jpRQ+mztbz0xs6+yUOG8iVyegoq
-	 b3s/sdeT/hppCH7yrARcFOfA1MFTVYBSBUcxp7OB+Rl+d90YK3ip685UVf5husCHxR
-	 Grwt7BT+eSj9XXO43Qo/OC6lpIrhowoEUaFLhVDw=
+	b=mLDBDItmaPI6Lvg+Q8ZNqJ9+4EO6zu6qUDWC+n+tVzxCOOpfO9SZQii9JRnZS+wnU
+	 FHSb0bBLjABQ9HNbLbpc+ZBdafAlBkjyKK1ND/ceDl4y/DgZGgpq2hHUBZ9RF3awaK
+	 +MaNfZnm1ACB+F76W4PSUxPgqO3xNgdUKG5/nzyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfFYTh7 (ORCPT
+        id S1727896AbfFYTmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46580 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 15:42:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726653AbfFYTh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:37:58 -0400
+        id S1727579AbfFYTmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:42:43 -0400
 Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C012D2085A;
-        Tue, 25 Jun 2019 19:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF460204FD;
+        Tue, 25 Jun 2019 19:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561491478;
-        bh=tJdGNjp4NLA7f2CJGKITTf6uA4kMX96bLEi69D1RpFc=;
+        s=default; t=1561491762;
+        bh=rnIbqwj/usshwkoKpQu2uh4UEE0YmQH9oiXkATZ0dNU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ShVOA7PYXmmz24tjLGDu1PYm64KCDa4yjeLXa3l6FjdwwPWxrgsVBDxgsovdp7feN
-         blu+puyvqldhGC0Wxv3kVwuVBCy18spQuzJMsEad+C5F0wrxmqqgxgvTR3f1e5CyBT
-         eX6OYwNFOGaN5Cpc8zEu5AANzUORLi6PZJBbAynU=
-Date:   Tue, 25 Jun 2019 12:37:57 -0700
+        b=NBI714jRTbnZZD1qWzAqnrLmRuOYUzFtN/XrbYjYJetiy8f7JDhC4xHdyjcLLH2UG
+         bjAOY7VM3gtioo7KoEEi/vbBP1EVc1sdaHK7Zk3YH+nDAIGu4nmhRELdJAe01032WS
+         1+MzZHWDKiBMdIQp8a9XrIaXbQMwmv/VqR9KwT5Q=
+Date:   Tue, 25 Jun 2019 12:42:41 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/16] mm: move the powerpc hugepd code to mm/gup.c
-Message-Id: <20190625123757.ec7e886747bb5a9bc364107d@linux-foundation.org>
-In-Reply-To: <20190625143715.1689-15-hch@lst.de>
-References: <20190625143715.1689-1-hch@lst.de>
-        <20190625143715.1689-15-hch@lst.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        alexander.shishkin@linux.intel.com, ndesaulniers@google.com
+Subject: Re: [PATCH][V4] lib: fix __sysfs_match_string() helper when n != -1
+Message-Id: <20190625124241.8b963a256ebaa056d489bb15@linux-foundation.org>
+In-Reply-To: <20190625132812.GB9224@smile.fi.intel.com>
+References: <20190508111913.7276-1-alexandru.ardelean@analog.com>
+        <20190625130104.29904-1-alexandru.ardelean@analog.com>
+        <20190625132812.GB9224@smile.fi.intel.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -70,15 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 16:37:13 +0200 Christoph Hellwig <hch@lst.de> wrote:
+On Tue, 25 Jun 2019 16:28:12 +0300 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> +static int gup_huge_pd(hugepd_t hugepd
+> On Tue, Jun 25, 2019 at 04:01:04PM +0300, Alexandru Ardelean wrote:
+> > The documentation the `__sysfs_match_string()` helper mentions that `n`
+> > (the size of the given array) should be:
+> >  * @n: number of strings in the array or -1 for NULL terminated arrays
+> > 
+> > The behavior of the function is different, in the sense that it exits on
+> > the first NULL element in the array.
+> > 
+> > This patch changes the behavior, to exit the loop when a NULL element is
+> > found, and the size of the array is provided as -1.
+> > 
+> > All current users of __sysfs_match_string() & sysfs_match_string() provide
+> > contiguous arrays of strings, so this behavior change doesn't influence
+> > anything (at this point in time).
+> > 
+> > This behavior change allows for an array of strings to have NULL elements
+> > within the array, which will be ignored. This is particularly useful when
+> > creating mapping of strings and integers (as bitfields or other HW
+> > description).
+> 
+> Since it does nothing for current users and comes without an example,
+> it's hard to justify the need.
 
-Naming nitlet: we have hugepd and we also have huge_pd.  We have
-hugepte and we also have huge_pte.  It make things a bit hard to
-remember and it would be nice to make it all consistent sometime.
+Presumably "split this patch away from series" means there's some code
+which uses this.  A reference to this in the changelog would be good.
 
-We're consistent with huge_pud and almost consistent with huge_pmd.
+> The code itself looks good to me.
 
-To be fully consistent I guess we should make all of them have the
-underscore.  Or not have it.  
+Sure.  But the kerneldoc description of __sysfs_match_string() could do
+with an update.
+
+
