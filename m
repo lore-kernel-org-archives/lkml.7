@@ -2,125 +2,204 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B58C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A6C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C34320656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FEC20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="d8JpBEyr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OP2fTXcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfFYEgF (ORCPT
+        id S1726804AbfFYEgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 00:36:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35472 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYEgE (ORCPT
+        Tue, 25 Jun 2019 00:36:31 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34519 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfFYEgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 00:36:04 -0400
-Received: by mail-qk1-f196.google.com with SMTP id l128so11557536qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:36:04 -0700 (PDT)
+        Tue, 25 Jun 2019 00:36:31 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m29so17053322qtu.1;
+        Mon, 24 Jun 2019 21:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=A4VoluwjYn3Ks0ZIkGlg8Yc+4trodUbg3aXJYu6f9aA=;
-        b=d8JpBEyr4bqLJ0bCZdULxxz6Wh0yxXPVAfduL/AaZ819HoTQMaSoA+uFWz8wU1O6Sw
-         0sMt9b5su3qhSP95Dg44UzOPaJA8RzF9imxVwUeD+4aKMLVzHfUAOhR6GE1uKFKedMDX
-         kgShTZ8oy5Po/Tk6nP/PmDmZWZalcc2M9gCOQ=
+        bh=PYGdSGrmZfmtMRAQeIjWMBRqIG6xDBFrIGVgAav8rHY=;
+        b=OP2fTXcd/ihtKT1lLknC8yi44n3afuwSvoSaIF1wAyKbyK6hhd6gBuO2CYdhc9KhrQ
+         Bfehrx8MHErPpXAPIVhZbZwz20A0W0eenHtiehfwhn0dSzUDO1hMfyV9kIbxe+ik0xTL
+         R5F0KEAUGynXOhnOKac00ItRST+tcBSb5wmWd6aYAjl/OzqbR/GSGJ0ElzI8Yh0oksQm
+         GYGN8gbQnqpfpbWqkb3dALvol0VTsRS6UahcDwfzBOcwJzkCrj6srQOPs77Hani8myaS
+         xwqfZL1S9R8w6/HZsIkv9TaxPdlXC9Sg6cmQAo0WM4vokv5MuMHW9XQMJ9fAa8UDCk5U
+         puNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A4VoluwjYn3Ks0ZIkGlg8Yc+4trodUbg3aXJYu6f9aA=;
-        b=aM+6UIX+m1sg2s2YsG7stDWVXaP62NkNoPKC7QmB+vVaq2of6rYJmBlOOpkBUdd5bW
-         EYZ+i9MlN8V3i/LhVq+6CJF5PPUlSfRoAXRvM5z5LiXgih1oSTPUouqNcux3kp3AADTd
-         qGz5gLhRDjLGmxNizmXZzh7z3rUMgkVrCpCTLte5sr1wvcdNtDYqvuQMsNVRk7Vf+Xi6
-         qnu8ucamsspOW/GyWcxAmn0s6aCg/c3eYkfYpyEcXtcAKCuPi+CrZ1EQPdLQsUlUuBHb
-         fEZfd3r3n6Y2+MjM0UB93hXfqzkisTQzvTh+KSRZrib0Jo+reh6rj6KtYmpQtzvfLjP3
-         2BKQ==
-X-Gm-Message-State: APjAAAUTXgv6zGSBTZueid4KqG1Q1e+HwJortpjLlkrWsPw2cMtGGkIX
-        GD6HZnj95w7dQGIFSYfvLC8phFEFwbTQAoHSk5Y=
-X-Google-Smtp-Source: APXvYqy0NjWIKEjqeTKAOAopWh+hj+cONUs6ND0MCiv0+3feFzpJJoC+Ah8VomnDUGVPq0bmEo7OH2v0Aka1lUAXGUg=
-X-Received: by 2002:a05:620a:16d6:: with SMTP id a22mr20459205qkn.414.1561437363245;
- Mon, 24 Jun 2019 21:36:03 -0700 (PDT)
+        bh=PYGdSGrmZfmtMRAQeIjWMBRqIG6xDBFrIGVgAav8rHY=;
+        b=pMsQndvuF3hJjsbTVtEliZHU3KSQrknoBy2yifhDz9gNPwBs9raC6/i6L4fleAYa3X
+         ybCVSB8lZk+/9eSr95t8pgIJuIpLqD9AKGPiaU97gQV6LMmOxGlwThJDgeA9JI+JEvWd
+         nfM41VV1m4fN9gq/bYRiS88LT9RaaIoDQds8UXKAQGSdDErNf6xrmz0w2i5YY5uZKGkI
+         aGWcQCILNGRBRWj83a4GDWpK3de8Mr1BnrcZRmpJROWAWGyHk9RXEf3quxFrJXQU1soz
+         nVLFZotYelsJrXHCV9SIeCEwnG9x1dGPRhsWE2f1QOR4iLYEXuM1Pw7mNxHQzrlGVVOx
+         zxCQ==
+X-Gm-Message-State: APjAAAWM/rC55axgDE1fC7by+92kIktI6vjmIjEWadCvazGHcghjmIlH
+        lYBbRNIddQFDXSjMdJL5zmwZEt2C1BbrTQA7T1+qXEXqKHY=
+X-Google-Smtp-Source: APXvYqwxd0iiNsB1bFrX8O3LalR5IW+ONRR/Hpb7naEqRQfTuoVI5DCl1U393mEgzv1sf982/7UhTWsAQMYO0onl0DU=
+X-Received: by 2002:ac8:2fb7:: with SMTP id l52mr105916304qta.93.1561437389900;
+ Mon, 24 Jun 2019 21:36:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <1548090958-25908-1-git-send-email-eajames@linux.ibm.com>
- <1780173.icGFXHrAMq@townsend> <CACPK8XfqSyMB4pWLffzx+8qOj+m54h=aWUhYsKMV4TQR0fKVUg@mail.gmail.com>
-In-Reply-To: <CACPK8XfqSyMB4pWLffzx+8qOj+m54h=aWUhYsKMV4TQR0fKVUg@mail.gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 25 Jun 2019 04:35:50 +0000
-Message-ID: <CACPK8Xfns=dSD5gaVJ--OkmVe7ggqF8acGsszdPqM1AqpPSAiA@mail.gmail.com>
-Subject: Re: [PATCH] fsi: sbefifo: Don't fail operations when in SBE IPL state
-To:     Alistair Popple <alistair@popple.id.au>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190621084040.GU7221@shao2-debian> <20190621161039.GF1383@mini-arch>
+ <CAEf4Bzaajc27=YyMaOa8UFRz=xE7y6E+qLbPBPbvLADO2peXQg@mail.gmail.com>
+ <20190621222745.GH1383@mini-arch> <f3aa0dc2-c959-1166-8b09-84781363f0e0@intel.com>
+ <CAEf4BzaNBboGeU8xOxyW-aDzEPUQq-LidRzj8V08O=_TynkQOQ@mail.gmail.com> <20190624212422.GA10487@mini-arch>
+In-Reply-To: <20190624212422.GA10487@mini-arch>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 24 Jun 2019 21:36:18 -0700
+Message-ID: <CAEf4BzY5oSY_mzgEr7Jy7+mTUYvg8XeohjHRMZ5GJV7VbrEJ1w@mail.gmail.com>
+Subject: Re: [selftests/bpf] 69d96519db: kernel_selftests.bpf.test_socket_cookie.fail
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     Rong Chen <rong.a.chen@intel.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        bpf <bpf@vger.kernel.org>, lkp@01.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Mon, 17 Jun 2019 at 05:41, Joel Stanley <joel@jms.id.au> wrote:
+On Mon, Jun 24, 2019 at 2:24 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
 >
-> On Mon, 17 Jun 2019 at 02:09, Alistair Popple <alistair@popple.id.au> wrote:
-> >
-> > On Monday, 21 January 2019 11:15:58 AM AEST Eddie James wrote:
-> > > SBE fifo operations should be allowed while the SBE is in any of the
-> > > "IPL" states. Operations should succeed in this state.
+> On 06/24, Andrii Nakryiko wrote:
+> > On Sun, Jun 23, 2019 at 5:59 PM Rong Chen <rong.a.chen@intel.com> wrote:
 > > >
-> > > Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > > On 6/22/19 6:27 AM, Stanislav Fomichev wrote:
+> > > > On 06/21, Andrii Nakryiko wrote:
+> > > >> )
+> > > >>
+> > > >> On Fri, Jun 21, 2019 at 9:11 AM Stanislav Fomichev <sdf@fomichev.me> wrote:
+> > > >>> On 06/21, kernel test robot wrote:
+> > > >>>> FYI, we noticed the following commit (built with gcc-7):
+> > > >>>>
+> > > >>>> commit: 69d96519dbf0bfa1868dc8597d4b9b2cdeb009d7 ("selftests/bpf: convert socket_cookie test to sk storage")
+> > > >>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> > > >>>>
+> > > >>>> in testcase: kernel_selftests
+> > > >>>> with following parameters:
+> > > >>>>
+> > > >>>>        group: kselftests-00
+> > > >>>>
+> > > >>>> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> > > >>>> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> > > >>>>
+> > > >>>>
+> > > >>>> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
+> > > >>>>
+> > > >>>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> > > >>>>
+> > > >>>>
+> > > >>>> If you fix the issue, kindly add following tag
+> > > >>>> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > > >>>>
+> > > >>>> # selftests: bpf: test_socket_cookie
+> > > >>>> # libbpf: failed to create map (name: 'socket_cookies'): Invalid
+> > > >>>> # argument
+> > > >>> Another case of old clang trying to create a map that depends on BTF?
+> > > >>> Should we maybe switch those BTF checks in the kernel to return
+> > > >>> EOPNOTSUPP to make it easy to diagnose?
+> > > >> For older compilers that don't generate DATASEC/VAR, you'll see a clear message:
+> > > >>
+> > > >> libbpf: DATASEC '.maps' not found.
+> > > >>
+> > > >> So this must be something else. I just confirmed with clang version
+> > > >> 7.0.20180201 that for ./test_socket_cookie that's the first line
+> > > >> that's emitted on failure.
+> > > > Thanks for checking, I also took a look at the attached kernel_selftests.xz,
+> > > > here is what it has:
+> > > > 2019-06-21 11:58:35 ln -sf /usr/bin/clang-6.0 /usr/bin/clang
+> > > > 2019-06-21 11:58:35 ln -sf /usr/bin/llc-6.0 /usr/bin/llc
+> > > > ...
+> > > > # BTF libbpf test[1] (test_btf_haskv.o): SKIP. No ELF .BTF found
+> > > > # BTF libbpf test[2] (test_btf_nokv.o): SKIP. No ELF .BTF found
+> > > > ...
+> > > > # Test case #0 (btf_dump_test_case_syntax): test_btf_dump_case:71:FAIL
+> > > > # failed to load test BTF: -2
+> > > > # Test case #1 (btf_dump_test_case_ordering): test_btf_dump_case:71:FAIL
+> > > > # failed to load test BTF: -2
+> > > > ...
+> > > >
+> > > > And so on. So there is clearly an old clang that doesn't emit any
+> > > > BTF. And I also don't see your recent abd29c931459 before 69d96519dbf0 in
+> > > > linux-next, that's why it doesn't complain about missing/corrupt BTF.
 > >
-> > This fixed the problem I was having trying to issue istep operations to the
-> > SBE.
-> >
-> > Tested-by: Alistair Popple <alistair@popple.id.au>
->
-> This one slipped through the cracks.
->
-> Fixes: 9f4a8a2d7f9d fsi/sbefifo: Add driver for the SBE FIFO
-> Reviewed-by: Joel Stanley <joel@jsm.id.au>
->
-> Greg, can you please queue this one up for 5.3?
+> > Ah, ok, that would explain it. But in any case, clang 6&7 is too old.
+> > Clang 8 or better yet clang 9 (for global data, datasec/var-dependent
+> > stuff) would be great.
+> While we are it: I think I have resolved the BTF story internally,
+> so if you want to go ahead and convert the rest of the tests to
+> BTF format, I would not object anymore ;-)
 
-Ping?
+Glad Clang update went so smooth for you :) I'm going to post an
+update to BTF-defined maps (see my updated proposal for updated
+approach), so might do the rest of conversion at that time.
 
 >
-> Cheers,
+> (I didn't expect it to be that easy initially, so sorry if I wasted
+> everyones time arguing about it).
+
+no worries :)
+
 >
-> Joel
->
-> > > ---
-> > >  drivers/fsi/fsi-sbefifo.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > We need to convince lkp people to upgrade clang, otherwise, I suppose,
+> > > > we'll get more of these reportings after your recent df0b77925982 :-(
 > > >
-> > > diff --git a/drivers/fsi/fsi-sbefifo.c b/drivers/fsi/fsi-sbefifo.c
-> > > index c7d13ac..f7665b3 100644
-> > > --- a/drivers/fsi/fsi-sbefifo.c
-> > > +++ b/drivers/fsi/fsi-sbefifo.c
-> > > @@ -290,11 +290,11 @@ static int sbefifo_check_sbe_state(struct sbefifo
-> > > *sbefifo) switch ((sbm & CFAM_SBM_SBE_STATE_MASK) >>
-> > > CFAM_SBM_SBE_STATE_SHIFT) { case SBE_STATE_UNKNOWN:
-> > >               return -ESHUTDOWN;
-> > > +     case SBE_STATE_DMT:
-> > > +             return -EBUSY;
-> > >       case SBE_STATE_IPLING:
-> > >       case SBE_STATE_ISTEP:
-> > >       case SBE_STATE_MPIPL:
-> > > -     case SBE_STATE_DMT:
-> > > -             return -EBUSY;
-> > >       case SBE_STATE_RUNTIME:
-> > >       case SBE_STATE_DUMP: /* Not sure about that one */
-> > >               break;
+> > > Thanks for the clarification, we'll upgrade clang asap.
 > >
+> > Thanks Rong!
 > >
+> > >
+> > > Best Regards,
+> > > Rong Chen
+> > >
+> > >
+> > > >
+> > > >>>> # libbpf: failed to load object './socket_cookie_prog.o'
+> > > >>>> # (test_socket_cookie.c:149: errno: Invalid argument) Failed to load
+> > > >>>> # ./socket_cookie_prog.o
+> > > >>>> # FAILED
+> > > >>>> not ok 15 selftests: bpf: test_socket_cookie
+> > > >>>>
+> > > >>>>
+> > > >>>>
+> > > >>>>
+> > > >>>> To reproduce:
+> > > >>>>
+> > > >>>>          # build kernel
+> > > >>>>        cd linux
+> > > >>>>        cp config-5.2.0-rc2-00598-g69d9651 .config
+> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig
+> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 prepare
+> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 modules_prepare
+> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 SHELL=/bin/bash
+> > > >>>>        make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 bzImage
+> > > >>>>
+> > > >>>>
+> > > >>>>          git clone https://github.com/intel/lkp-tests.git
+> > > >>>>          cd lkp-tests
+> > > >>>>          bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> > > >>>>
+> > > >>>>
+> > > >>>>
+> > > >>>> Thanks,
+> > > >>>> Rong Chen
+> > > >>>>
+> > > >> <mega snip>
