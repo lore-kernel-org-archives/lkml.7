@@ -3,172 +3,185 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9178C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30ECC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84ED0208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5E7A208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731288AbfFYJTi (ORCPT
+        id S1731283AbfFYJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:19:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41403 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfFYJTh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:19:37 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hfhbT-0001K7-LU; Tue, 25 Jun 2019 11:19:03 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
-References: <20190607162349.18199-1-john.ogness@linutronix.de>
-        <20190607162349.18199-2-john.ogness@linutronix.de>
-        <20190625085548.GA532@jagdpanzerIV>
-Date:   Tue, 25 Jun 2019 11:19:02 +0200
-In-Reply-To: <20190625085548.GA532@jagdpanzerIV> (Sergey Senozhatsky's message
-        of "Tue, 25 Jun 2019 17:55:48 +0900")
-Message-ID: <87blymhvjt.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 25 Jun 2019 05:20:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35246 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726443AbfFYJU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:20:26 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EA2B26ACADE6F2562ACA;
+        Tue, 25 Jun 2019 17:20:23 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
+ 17:20:15 +0800
+Date:   Tue, 25 Jun 2019 10:20:05 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Keith Busch <keith.busch@intel.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>, <linuxarm@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 0/4 V3] ACPI: Support generic initiator proximity
+ domains
+Message-ID: <20190625102005.00007ea2@huawei.com>
+In-Reply-To: <20190528123158.0000167a@huawei.com>
+References: <20190415174907.102307-1-Jonathan.Cameron@huawei.com>
+        <20190528123158.0000167a@huawei.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-25, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
-> [..]
->> +static void add_descr_list(struct prb_reserved_entry *e)
->> +{
->> +	struct printk_ringbuffer *rb = e->rb;
->> +	struct prb_list *l = &rb->descr_list;
->> +	struct prb_descr *d = e->descr;
->> +	struct prb_descr *newest_d;
->> +	unsigned long newest_id;
->> +
->> +	/* set as newest */
->> +	do {
->> +		/* MB5: synchronize add descr */
->> +		newest_id = smp_load_acquire(&l->newest);
->> +		newest_d = TO_DESCR(rb, newest_id);
->> +
->> +		if (newest_id == EOL)
->> +			WRITE_ONCE(d->seq, 1);
->> +		else
->> +			WRITE_ONCE(d->seq, READ_ONCE(newest_d->seq) + 1);
->> +		/*
->> +		 * MB5: synchronize add descr
->> +		 *
->> +		 * In particular: next written before cmpxchg
->> +		 */
->> +	} while (cmpxchg_release(&l->newest, newest_id, e->id) != newest_id);
->> +
->> +	if (unlikely(newest_id == EOL)) {
->> +		/* no previous newest means we *are* the list, set oldest */
->> +
->> +		/*
->> +		 * MB UNPAIRED
->> +		 *
->> +		 * In particular: Force cmpxchg _after_ cmpxchg on newest.
->> +		 */
->> +		WARN_ON_ONCE(cmpxchg_release(&l->oldest, EOL, e->id) != EOL);
+On Tue, 28 May 2019 12:31:58 +0100
+Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+Hi All,
 
-This WARN_ON_ONCE...
+This is your periodic Generic Initiator reminder service.  I'm still looking
+for review on all aspects of this series.
 
->> +	} else {
->> +		/* link to previous chain */
->> +
->> +		/*
->> +		 * MB6: synchronize link descr
->> +		 *
->> +		 * In particular: Force cmpxchg _after_ cmpxchg on newest.
->> +		 */
->> +		WARN_ON_ONCE(cmpxchg_release(&newest_d->next,
->> +					     EOL, e->id) != EOL);
+* ACPI for the table parsing code.
+* ARM64 for the architecture handling
+* x86 for the architecture handling.
+* Generic MM for the overall approach. In some sense it's not mm related in
+  of itself (as otherwise they wouldn't be Generic Initiator domains) but
+  it does result in different NUMA policy decisions from the current status
+  hence mm input would be great.
 
-... and this WARN_ON_ONCE should both really be BUG_ON. These situations
-will not happen. Actually, they should both be xchg_release(). But until
-everyone is happy with the memory barriers, I wanted to leave this bug
-checking in place.
+Any suggestions on people to add to the CC list to try and make some progress
+on this welcome as well.
 
->> +	}
->> +}
->
-> [..]
->
->> +char *prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
->> +		  unsigned int size)
->> +{
->> +	struct prb_datablock *b;
->> +	struct prb_descr *d;
->> +	char *buf;
->> +
->> +	if (size == 0)
->> +		return NULL;
->> +
->> +	size += sizeof(struct prb_datablock);
->> +	size = DATA_ALIGN_SIZE(size);
->> +	if (size > DATAARRAY_SIZE(rb))
->> +		return NULL;
->> +
->> +	e->rb = rb;
->> +
->> +	local_irq_save(e->irqflags);
->> +
->> +	if (!assign_descr(e))
->> +		goto err_out;
->> +
->> +	d = e->descr;
->> +	WRITE_ONCE(d->id, e->id);
->> +
->> +	if (!data_reserve(e, size)) {
->> +		/* put invalid descriptor on list, can still be traversed */
->> +		WRITE_ONCE(d->next, EOL);
->> +		add_descr_list(e);
->> +		goto err_out;
->> +	}
->
-> I'm wondering if prb can always report about its problems. Including the
-> cases when things "go rather bad".
->
-> Suppose we have
->
-> 	printk()
-> 	 prb_reserve()
-> 	  !data_reserve()
-> 	    add_descr_list()
-> 	     WARN_ON_ONCE()
-> 	      printk()
-> 	       prb_reserve()
-> 	        !assign_descr(e)   << lost WARN_ON's "printk" or "printks"?
->
-> In general, assuming that there might be more error printk-s either
-> called directly directly from prb->printk on indirectly, from
-> prb->ABC->printk.
->
-> Also note,
-> Lost printk-s are not going to be accounted as 'lost' automatically.
-> It seems that for printk() there is no way to find out that it has
-> recursed from printk->prb_commit but hasn't succeeded in storing
-> recursive messages. I'd say that prb_reserve() err_out should probably
-> &rb->lost++.
+If I don't hear anything I'll do a rebase post the coming merge window and
+resend.
 
-This is a good point. I have no problems with that. In that case, it
-should probably be called "fail" instead of "lost".
+Thanks,
 
-John Ogness
+Jonathan
+
+> Hi All,
+> 
+> Anyone had a change to take a look at this?
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> On Tue, 16 Apr 2019 01:49:03 +0800
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> 
+> > Changes since RFC V2.
+> > * RFC dropped as now we have x86 support, so the lack of guards in in the
+> > ACPI code etc should now be fine.
+> > * Added x86 support.  Note this has only been tested on QEMU as I don't have
+> > a convenient x86 NUMA machine to play with.  Note that this fitted together
+> > rather differently form arm64 so I'm particularly interested in feedback
+> > on the two solutions.
+> > 
+> > Since RFC V1.
+> > * Fix incorrect interpretation of the ACPI entry noted by Keith Busch
+> > * Use the acpica headers definitions that are now in mmotm.
+> > 
+> > It's worth noting that, to safely put a given device in a GI node, may
+> > require changes to the existing drivers as it's not unusual to assume
+> > you have local memory or processor core. There may be futher constraints
+> > not yet covered by this patch.
+> > 
+> > Original cover letter...
+> > 
+> > ACPI 6.3 introduced a new entity that can be part of a NUMA proximity domain.
+> > It may share such a domain with the existing options (memory, cpu etc) but it
+> > may also exist on it's own.
+> > 
+> > The intent is to allow the description of the NUMA properties (particulary
+> > via HMAT) of accelerators and other initiators of memory activity that are not
+> > the host processor running the operating system.
+> > 
+> > This patch set introduces 'just enough' to make them work for arm64 and x86.
+> > It should be trivial to support other architectures, I just don't suitable
+> > NUMA systems readily available to test.
+> > 
+> > There are a few quirks that need to be considered.
+> > 
+> > 1. Fall back nodes
+> > ******************
+> > 
+> > As pre ACPI 6.3 supporting operating systems do not have Generic Initiator
+> > Proximity Domains it is possible to specify, via _PXM in DSDT that another
+> > device is part of such a GI only node.  This currently blows up spectacularly.
+> > 
+> > Whilst we can obviously 'now' protect against such a situation (see the related
+> > thread on PCI _PXM support and the  threadripper board identified there as
+> > also falling into the  problem of using non existent nodes
+> > https://patchwork.kernel.org/patch/10723311/ ), there is no way to  be sure
+> > we will never have legacy OSes that are not protected  against this.  It would
+> > also be 'non ideal' to fallback to  a default node as there may be a better
+> > (non GI) node to pick  if GI nodes aren't available.
+> > 
+> > The work around is that we also have a new system wide OSC bit that allows
+> > an operating system to 'annouce' that it supports Generic Initiators.  This
+> > allows, the firmware to us DSDT magic to 'move' devices between the nodes
+> > dependent on whether our new nodes are there or not.
+> > 
+> > 2. New ways of assigning a proximity domain for devices
+> > *******************************************************
+> > 
+> > Until now, the only way firmware could indicate that a particular device
+> > (outside the 'special' set of cpus etc) was to be found in a particular
+> > Proximity Domain by the use of _PXM in DSDT.
+> > 
+> > That is equally valid with GI domains, but we have new options. The SRAT
+> > affinity structure includes a handle (ACPI or PCI) to identify devices
+> > with the system and specify their proximity domain that way.  If both _PXM
+> > and this are provided, they should give the same answer.
+> > 
+> > For now this patch set completely ignores that feature as we don't need
+> > it to start the discussion.  It will form a follow up set at some point
+> > (if no one else fancies doing it).
+> > 
+> > Jonathan Cameron (4):
+> >   ACPI: Support Generic Initiator only domains
+> >   arm64: Support Generic Initiator only domains
+> >   x86: Support Generic Initiator only proximity domains
+> >   ACPI: Let ACPI know we support Generic Initiator Affinity Structures
+> > 
+> >  arch/arm64/kernel/smp.c        |  8 +++++
+> >  arch/x86/include/asm/numa.h    |  2 ++
+> >  arch/x86/kernel/setup.c        |  1 +
+> >  arch/x86/mm/numa.c             | 14 ++++++++
+> >  drivers/acpi/bus.c             |  1 +
+> >  drivers/acpi/numa.c            | 62 +++++++++++++++++++++++++++++++++-
+> >  drivers/base/node.c            |  3 ++
+> >  include/asm-generic/topology.h |  3 ++
+> >  include/linux/acpi.h           |  1 +
+> >  include/linux/nodemask.h       |  1 +
+> >  include/linux/topology.h       |  7 ++++
+> >  11 files changed, 102 insertions(+), 1 deletion(-)
+> >   
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
