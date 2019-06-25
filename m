@@ -2,141 +2,214 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE65DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5072C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9164520659
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561502100;
-	bh=/kwIgl7T7RUB6O8AVjTRLgNL7U9K6Zhd50WUYjJcszk=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=n23eOar8kxiIu4ScVHjM5WHYwR4nXZBCHy4vrJRpcKfMmnuU27Q2h4RCErHJCl+6v
-	 dTxETeWCgkS9Y36xHLaf1vh2LTiwgvWwMQIrAHLDU4PIly0R7cIKDll+Xt1pPTAkFP
-	 eerp6rDw/TOfK6OPh0xyiN1YdwdXnz2o6J9o4iVk=
+	by mail.kernel.org (Postfix) with ESMTP id 7AABA20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfFYWe7 (ORCPT
+        id S1726440AbfFYWfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:34:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbfFYWe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:34:58 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FCBF205ED;
-        Tue, 25 Jun 2019 22:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561502097;
-        bh=/kwIgl7T7RUB6O8AVjTRLgNL7U9K6Zhd50WUYjJcszk=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=TJcRicsuQdvPQg9FeTYbsi/IhN1JdT58h299gkXyrGdyEDhz+ZXUCdRDp0ABWeF67
-         mfNgTTWW7vB2AB93S1BledWN7Ici0mXVLEkXdh1PtPnaCLdWvIrJvmKCZN0+p9w5ew
-         eHnOpg3F3NLVVen8lN7NjAb6z6kZ0nPHR1rtx0d4=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 25 Jun 2019 18:35:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59902 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFYWfl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:35:41 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id E0BD7260A4C
+Received: by earth.universe (Postfix, from userid 1000)
+        id C0DCE3C08D5; Wed, 26 Jun 2019 00:35:37 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 00:35:37 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, yj.chiang@mediatek.com,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] test_power: Add CURRENT and CHARGE_COUNTER properties
+Message-ID: <20190625223537.6dlcooifqfs2rv2b@earth.universe>
+References: <1557828298-16591-1-git-send-email-lecopzer.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <DB3PR0402MB3916F7F7D7CA801F5C0D0610F5ED0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190604015928.23157-1-Anson.Huang@nxp.com> <20190604015928.23157-3-Anson.Huang@nxp.com> <20190606162543.EFFB820645@mail.kernel.org> <DB3PR0402MB391625A0B3D838CE88C53E33F5100@DB3PR0402MB3916.eurprd04.prod.outlook.com> <20190607180039.611C7208C0@mail.kernel.org> <DB3PR0402MB391678C245944942EA2A7F62F5110@DB3PR0402MB3916.eurprd04.prod.outlook.com> <20190610151425.D8139207E0@mail.kernel.org> <DB3PR0402MB3916F7F7D7CA801F5C0D0610F5ED0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-To:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "s.hauer@pengutronix .de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH V3 3/4] clk: imx: Add support for i.MX8MN clock driver
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 15:34:56 -0700
-Message-Id: <20190625223457.1FCBF205ED@mail.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i4lf3yrmw6f6ubgm"
+Content-Disposition: inline
+In-Reply-To: <1557828298-16591-1-git-send-email-lecopzer.chen@mediatek.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Anson Huang (2019-06-10 19:06:22)
-> > >
-> > > Sorry, I am still a little confused, all the clock
-> > > register(clk_register()) are via each different clock types like
-> > > imx_clk_gate4/imx_clk_pll14xx, if using clk_hw_register, means we need
-> > > to re-write the clock driver using different clk register method, that
-> > > will make the driver completely different from i.mx8mq/i.mx8mm, they
-> > > are actually same series of SoC as i.mx8mn, it will introduce many
-> > confusion, is my understanding correct? And is it OK to just keep what =
-it is
-> > and make them all aligned?
-> > >
-> >=20
-> > Ok, the problem I'm trying to point out is that clk registrations need =
-to be
-> > undone, i.e. clk_unregister() needs to be called, when the driver fails=
- to
-> > probe. devm_*() is one way to do this, but if you have other ways of
-> > removing all the registered clks then that works too. Makes sense?
+
+--i4lf3yrmw6f6ubgm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, May 14, 2019 at 06:04:58PM +0800, Lecopzer Chen wrote:
+> From: "Lecopzer Chen" <lecopzer.chen@mediatek.com>
 >=20
-> Yes, it makes sense. Do you think it is OK to add an imx_unregister_clock=
-s() API, then
-> call it in every place of returning failure in .probe function? If yes, I=
- will add it and also
-> fix it in i.MX8MQ driver which uses platform driver model but does NOT ha=
-ndle this case.=20
+> Emulate battery current (variable) and battery CHARGE_COUNTER
+> (same as battery_capacity) properties.
 >=20
->         base =3D devm_platform_ioremap_resource(pdev, 0);
-> -       if (WARN_ON(IS_ERR(base)))
-> -               return PTR_ERR(base);
-> +       if (WARN_ON(IS_ERR(base))) {
-> +               ret =3D PTR_ERR(base);
-> +               goto unregister_clks;
-> +       }
+> Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+> Cc: YJ Chiang <yj.chiang@mediatek.com>
+
+Thanks for the patch and thanks for taking care of testing infrastructure.
+I don't think it's a good idea to use CHARGE_CAPACITY/CHARGE_NOW also for
+CHARGE_COUNTER. CHARGE_COUNTER may be negative, but capacity should not be
+negative. Also the patch should be splitted (one for the current feature and
+one for the charge counter feature). Last but not least I don't see any
+conversion from mA to =B5A. The userspace sysfs ABI should always
+return =B5A.
+
+-- Sebastian
+
+> ---
+>  drivers/power/supply/test_power.c | 33 +++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 >=20
->                 pr_err("failed to register clks for i.MX8MN\n");
-> -               return -EINVAL;
-> +               goto unregister_clks;
->         }
->=20
->         return 0;
-> +
-> +unregister_clks:
-> +       imx_unregister_clocks(clks, ARRAY_SIZE(clks));
-> +
-> +       return ret;
->=20
-> +void imx_unregister_clocks(struct clk *clks[], unsigned int count)
+> diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/tes=
+t_power.c
+> index 57246cdbd042..9f85060c84de 100644
+> --- a/drivers/power/supply/test_power.c
+> +++ b/drivers/power/supply/test_power.c
+> @@ -36,6 +36,7 @@ static int battery_present		=3D 1; /* true */
+>  static int battery_technology		=3D POWER_SUPPLY_TECHNOLOGY_LION;
+>  static int battery_capacity		=3D 50;
+>  static int battery_voltage		=3D 3300;
+> +static int battery_current		=3D 1600;
+> =20
+>  static bool module_initialized;
+> =20
+> @@ -101,6 +102,7 @@ static int test_power_get_battery_property(struct pow=
+er_supply *psy,
+>  		break;
+>  	case POWER_SUPPLY_PROP_CAPACITY:
+>  	case POWER_SUPPLY_PROP_CHARGE_NOW:
+> +	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
+>  		val->intval =3D battery_capacity;
+>  		break;
+>  	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
+> @@ -117,6 +119,10 @@ static int test_power_get_battery_property(struct po=
+wer_supply *psy,
+>  	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+>  		val->intval =3D battery_voltage;
+>  		break;
+> +	case POWER_SUPPLY_PROP_CURRENT_AVG:
+> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
+> +		val->intval =3D battery_current;
+> +		break;
+>  	default:
+>  		pr_info("%s: some properties deliberately report errors.\n",
+>  			__func__);
+> @@ -138,6 +144,7 @@ static enum power_supply_property test_power_battery_=
+props[] =3D {
+>  	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
+>  	POWER_SUPPLY_PROP_CHARGE_FULL,
+>  	POWER_SUPPLY_PROP_CHARGE_NOW,
+> +	POWER_SUPPLY_PROP_CHARGE_COUNTER,
+>  	POWER_SUPPLY_PROP_CAPACITY,
+>  	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
+>  	POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG,
+> @@ -147,6 +154,8 @@ static enum power_supply_property test_power_battery_=
+props[] =3D {
+>  	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+>  	POWER_SUPPLY_PROP_TEMP,
+>  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+> +	POWER_SUPPLY_PROP_CURRENT_AVG,
+> +	POWER_SUPPLY_PROP_CURRENT_NOW,
+>  };
+> =20
+>  static char *test_power_ac_supplied_to[] =3D {
+> @@ -450,6 +459,21 @@ static int param_set_battery_voltage(const char *key,
+> =20
+>  #define param_get_battery_voltage param_get_int
+> =20
+> +static int param_set_battery_current(const char *key,
+> +					const struct kernel_param *kp)
 > +{
-> +       unsigned i;
+> +	int tmp;
 > +
-> +       for (i =3D 0; i < count; i++)
-> +               clk_unregister(clks[i]);
+> +	if (1 !=3D sscanf(key, "%d", &tmp))
+> +		return -EINVAL;
+> +
+> +	battery_current =3D tmp;
+> +	signal_power_supply_changed(test_power_supplies[TEST_BATTERY]);
+> +	return 0;
 > +}
 > +
+> +#define param_get_battery_current param_get_int
+> +
+>  static const struct kernel_param_ops param_ops_ac_online =3D {
+>  	.set =3D param_set_ac_online,
+>  	.get =3D param_get_ac_online,
+> @@ -490,6 +514,11 @@ static const struct kernel_param_ops param_ops_batte=
+ry_voltage =3D {
+>  	.get =3D param_get_battery_voltage,
+>  };
+> =20
+> +static const struct kernel_param_ops param_ops_battery_current =3D {
+> +	.set =3D param_set_battery_current,
+> +	.get =3D param_get_battery_current,
+> +};
+> +
+>  #define param_check_ac_online(name, p) __param_check(name, p, void);
+>  #define param_check_usb_online(name, p) __param_check(name, p, void);
+>  #define param_check_battery_status(name, p) __param_check(name, p, void);
+> @@ -498,6 +527,7 @@ static const struct kernel_param_ops param_ops_batter=
+y_voltage =3D {
+>  #define param_check_battery_health(name, p) __param_check(name, p, void);
+>  #define param_check_battery_capacity(name, p) __param_check(name, p, voi=
+d);
+>  #define param_check_battery_voltage(name, p) __param_check(name, p, void=
+);
+> +#define param_check_battery_current(name, p) __param_check(name, p, void=
+);
+> =20
+> =20
+>  module_param(ac_online, ac_online, 0644);
+> @@ -528,6 +558,9 @@ MODULE_PARM_DESC(battery_capacity, "battery capacity =
+(percentage)");
+>  module_param(battery_voltage, battery_voltage, 0644);
+>  MODULE_PARM_DESC(battery_voltage, "battery voltage (millivolts)");
+> =20
+> +module_param(battery_current, battery_current, 0644);
+> +MODULE_PARM_DESC(battery_current, "battery current (milliampere)");
+> +
+>  MODULE_DESCRIPTION("Power supply driver for testing");
+>  MODULE_AUTHOR("Anton Vorontsov <cbouatmailru@gmail.com>");
+>  MODULE_LICENSE("GPL");
+> --=20
+> 2.18.0
 >=20
 
-Yes, looks better.
+--i4lf3yrmw6f6ubgm
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0SobYACgkQ2O7X88g7
++ppFxg/+KogtQlbL0EWEB9FBygjBTSsXfwoCrx39eIEIqGF9f/CIdn1k/2hI7OKk
+2yAYtdIhTJhUgwsjrjscsa7MJ5DnUHVHtzzG+yFGsTx2/86lEBryZ2eiTmCWIgj1
+Re12yKd6RN5eUouaqqnIZbilmTWbGQhvEAadB+rygUSfW3bI4f9tvZej1CONx0WV
+TSGfLD/XXcNBZgusXWsH6bslKGeV3YkRLZlc3tZAcW+mNhtMDfJbSJhZB1J5kKT1
+UZspF6sYr3PMaN7A10bqr0mFeFqd4V/RpFXReQoFO4+EPbS43KyPOFM63LdCeKXV
+YgdrGCndTraSbObv1RMQYpe5z3z2CBM9Uxok9zSNNMdxl+o6OAbHbKUTBRdWkCIV
+xo6frnnuFCH+Lj0KgXmcePwNaFC5svn8c6/uVv7hMs6g0afICw+ojOne/yf+jsTr
+iMfsEwLoR4+hwROrdzqId5LhgPY6INdpQXxNLIy8aAx4e73xSoct5DchamGtCaDl
+MVsCVbntiXjJfNgEI6rpVJrsRsHGBh0Ls0xHJhiT/pZpI3ci3D5eDGKLLKOshBGt
+k3BKxOkJc4frIf2iBgvy4XkP1ITvI1hiuX9WA6JYMSO0BE+tl1Feu8MFJPH4Hmbt
+jA6XHIS8Sw8G+PeO7rX5+CHuzUfCehxKc/rppLZck5eGl5Q6WnY=
+=0+K2
+-----END PGP SIGNATURE-----
+
+--i4lf3yrmw6f6ubgm--
