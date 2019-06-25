@@ -2,134 +2,282 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80B8C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA618C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB893208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLgMXanV"
+	by mail.kernel.org (Postfix) with ESMTP id BDEBE208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbfFYOpL (ORCPT
+        id S1731314AbfFYOpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:45:11 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38708 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730505AbfFYOpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:45:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so16538402ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=19byvgMooTxDLIKVTh81InKh4X1Q8jthyNGnpMWPTR8=;
-        b=lLgMXanVjEQcfCC9RLZP8uBcI+qZDhEJK3RhnXgJnRkmp8YmdmIanryeO/DXIyTczA
-         Qau20L/HQc5RzI56ASZ/J+q/SQyssmS80dEaB4v/jDB8ZrlWWu7TZZn6VEZg4Oh8DOux
-         VG4cG5O9G5SZGToAPJd4pMsri0a9UmL8H/UNlJgRSraTm1zQpI4cFVrqD5pzZWimcSsg
-         bu8fZQuw1RE69f00e1pRjQ0gFVWuGHkV9Q7Cjvt/pKdP/uNW5fJc4OZgowREyYzx6x0k
-         cVK0bs5DJSd2EkDG2csK+VrVn3P8CNa6+KcEUyuJy75LugOBVUPdU62yydCuAOOlfZd2
-         cd2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=19byvgMooTxDLIKVTh81InKh4X1Q8jthyNGnpMWPTR8=;
-        b=AsqPQa/vwEPjYCMsLqbW9mKsK8iaS4avLzFLC4F1+f4Oj3m7BxPwa3E18U6CORJoUs
-         PCZDiT86Cs/b69IKMNo5BHcob6txNldy33WqDl/rfAf9Tsp523KFo06nGYGPAriy1Gub
-         gFfSQrlh+4JcANAssH1JkjWXvt4+jtJKO1lmp5OBfn0kQ+BbgO9Xw46MCXdtl3FyJMi8
-         G5qlcKs5s9UsjLPGLwBSlyJOrmi33aLxzWzb8GXEedM4feJydnDwRPls6hWFccv/r4aa
-         Z6cgJfBTPu8Eru8zeC81tWjUNX7/qLmP3id7R9qMKDjYiW7D/6Uf9ymaZw8dRuA5SNYE
-         PobQ==
-X-Gm-Message-State: APjAAAXB0UDhPH5Ka2bImXb0Prcnm5t4/LZCkGEP4BhHRa00PCOtNRKG
-        87jFo/R04dHFNE4t2+QWdUk=
-X-Google-Smtp-Source: APXvYqzE+mgvqcRuw0XLGzJPuIidwv1afsSu+J/Ue9GwMrC/8NbuQdpemiOsmTQmluXQ0eeNwVCDOQ==
-X-Received: by 2002:a2e:970d:: with SMTP id r13mr73976367lji.126.1561473908776;
-        Tue, 25 Jun 2019 07:45:08 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id b62sm2287608ljb.71.2019.06.25.07.45.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 07:45:07 -0700 (PDT)
-Subject: Re: [v3 1/2] mtd: nand: Add Cadence NAND controller driver
-To:     Piotr Sroka <piotrs@cadence.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Stefan Agner <stefan@agner.ch>, linux-mtd@lists.infradead.org
-References: <20190614150638.28383-1-piotrs@cadence.com>
- <20190614150956.31244-1-piotrs@cadence.com>
- <dd96bd1b-e944-e95d-31c9-6dd1d0b5720f@gmail.com>
- <20190625130231.GA31865@global.cadence.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <20110899-d456-8403-f9be-663be5fcd07e@gmail.com>
-Date:   Tue, 25 Jun 2019 17:45:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 10:45:47 -0400
+Received: from mx.allycomm.com ([138.68.30.55]:28750 "EHLO mx.allycomm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730905AbfFYOpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:45:47 -0400
+Received: from JKLETSKY-MBP15.guidewire.com (unknown [199.91.43.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.allycomm.com (Postfix) with ESMTPSA id A27D92172D;
+        Tue, 25 Jun 2019 07:45:44 -0700 (PDT)
+Subject: Re: [PATCH v2] mtd: spinand: Add initial support for Paragon PN26G0xA
+Cc:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190618170805.7187-1-lede@allycomm.com>
+ <d614767b-7787-b8c7-f8f0-5083e4922b93@kontron.de>
+From:   Jeff Kletsky <lede@allycomm.com>
+Message-ID: <6b12e641-329c-2f8d-e547-4437cbd7af9f@allycomm.com>
+Date:   Tue, 25 Jun 2019 07:45:44 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190625130231.GA31865@global.cadence.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d614767b-7787-b8c7-f8f0-5083e4922b93@kontron.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.06.2019 16:02, Piotr Sroka пишет:
-> Hi Dmitry
-> 
-> The 06/16/2019 16:42, Dmitry Osipenko wrote:
->> EXTERNAL MAIL
->>
->>
->> 14.06.2019 18:09, Piotr Sroka пишет:
->>
->> Commit description is mandatory.
->>
->>> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
->>> ---
->>
->> [snip]
->>
->>> +
->>> +/* Cadnence NAND flash controller capabilities get from driver data. */
->>> +struct cadence_nand_dt_devdata {
->>> +    /* Skew value of the output signals of the NAND Flash interface. */
->>> +    u32 if_skew;
->>> +    /* It informs if aging feature in the DLL PHY supported. */
->>> +    u8 phy_dll_aging;
->>> +    /*
->>> +     * It informs if per bit deskew for read and write path in
->>> +     * the PHY is supported.
->>> +     */
->>> +    u8 phy_per_bit_deskew;
->>> +    /* It informs if slave DMA interface is connected to DMA engine. */
->>> +    u8 has_dma;
->>
->> There is no needed to dedicate 8 bits to a variable if you only care about a single
->> bit. You may write this as:
->>
->> bool has_dma : 1;
-> I modified it locally but it looks that checkpatch does not like such
-> notation
-> "WARNING: Avoid using bool as bitfield.  Prefer bool bitfields as
-> unsigned int or u<8|16|32>"
-> So maybe I will leave it as is.
+(Resend to lists only, due to multipart content in previous)
 
-You may also use the "u8 : 1" form then, to satisfy the checkpatch. Probably
-"unsigned int : 1" will be the best in this case, it's up to you.
+Of course!
+
+Thanks for taking the time to look at this.
+
+* Updated OOB-layout definitions to agree with
+    Table 10; ECC Protection and Spare Area
+    (PN26G01A pg. 36, PN26G02A pg. 35)
+
+* Corrected NAND_MEMORG for PN26G02A to 41, to agree with
+    Table 9; Error Management Details (PN26G02A pg. 34)
+
+Jeff
+
+On 6/25/19 2:41 AM, Schrempf Frieder wrote:
+
+> Hi Jeff,
+>
+> On 18.06.19 19:08, Jeff Kletsky wrote:
+>> From: Jeff Kletsky <git-commits@allycomm.com>
+>>
+>> Add initial support for Paragon Technology
+>> PN26G01Axxxxx and PN26G02Axxxxx SPI NAND
+>>
+>> Datasheets available at
+>> http://www.xtxtech.com/upfile/2016082517274590.pdf
+>> http://www.xtxtech.com/upfile/2016082517282329.pdf
+>>
+>> Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
+>> ---
+> Can you please add a changelog here with a list of things that changed
+> from v1 to v2?
+>
+> Thanks,
+> Frieder
+>
+>>    drivers/mtd/nand/spi/Makefile  |   2 +-
+>>    drivers/mtd/nand/spi/core.c    |   1 +
+>>    drivers/mtd/nand/spi/paragon.c | 147 +++++++++++++++++++++++++++++++++
+>>    include/linux/mtd/spinand.h    |   1 +
+>>    4 files changed, 150 insertions(+), 1 deletion(-)
+>>    create mode 100644 drivers/mtd/nand/spi/paragon.c
+>>
+>> diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
+>> index 753125082640..9662b9c1d5a9 100644
+>> --- a/drivers/mtd/nand/spi/Makefile
+>> +++ b/drivers/mtd/nand/spi/Makefile
+>> @@ -1,3 +1,3 @@
+>>    # SPDX-License-Identifier: GPL-2.0
+>> -spinand-objs := core.o gigadevice.o macronix.o micron.o toshiba.o winbond.o
+>> +spinand-objs := core.o gigadevice.o macronix.o micron.o paragon.o toshiba.o winbond.o
+>>    obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
+>> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+>> index 556bfdb34455..f0f3528aab8f 100644
+>> --- a/drivers/mtd/nand/spi/core.c
+>> +++ b/drivers/mtd/nand/spi/core.c
+>> @@ -757,6 +757,7 @@ static const struct spinand_manufacturer *spinand_manufacturers[] = {
+>>    	&gigadevice_spinand_manufacturer,
+>>    	&macronix_spinand_manufacturer,
+>>    	&micron_spinand_manufacturer,
+>> +	&paragon_spinand_manufacturer,
+>>    	&toshiba_spinand_manufacturer,
+>>    	&winbond_spinand_manufacturer,
+>>    };
+>> diff --git a/drivers/mtd/nand/spi/paragon.c b/drivers/mtd/nand/spi/paragon.c
+>> new file mode 100644
+>> index 000000000000..52307681cbd0
+>> --- /dev/null
+>> +++ b/drivers/mtd/nand/spi/paragon.c
+>> @@ -0,0 +1,147 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2019 Jeff Kletsky
+>> + *
+>> + * Author: Jeff Kletsky <git-commits@allycomm.com>
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mtd/spinand.h>
+>> +
+>> +
+>> +#define SPINAND_MFR_PARAGON	0xa1
+>> +
+>> +
+>> +#define PN26G0XA_STATUS_ECC_BITMASK		(3 << 4)
+>> +
+>> +#define PN26G0XA_STATUS_ECC_NONE_DETECTED	(0 << 4)
+>> +#define PN26G0XA_STATUS_ECC_1_7_CORRECTED	(1 << 4)
+>> +#define PN26G0XA_STATUS_ECC_ERRORED		(2 << 4)
+>> +#define PN26G0XA_STATUS_ECC_8_CORRECTED		(3 << 4)
+>> +
+>> +
+>> +static SPINAND_OP_VARIANTS(read_cache_variants,
+>> +		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
+>> +		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
+>> +		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
+>> +		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
+>> +		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+>> +		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
+>> +
+>> +static SPINAND_OP_VARIANTS(write_cache_variants,
+>> +		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
+>> +		SPINAND_PROG_LOAD(true, 0, NULL, 0));
+>> +
+>> +static SPINAND_OP_VARIANTS(update_cache_variants,
+>> +		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
+>> +		SPINAND_PROG_LOAD(false, 0, NULL, 0));
+>> +
+>> +
+>> +static int pn26g0xa_ooblayout_ecc(struct mtd_info *mtd, int section,
+>> +				   struct mtd_oob_region *region)
+>> +{
+>> +	if (section > 3)
+>> +		return -ERANGE;
+>> +
+>> +	region->offset = 6 + (15 * section); /* 4 BBM + 2 user bytes */
+>> +	region->length = 13;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int pn26g0xa_ooblayout_free(struct mtd_info *mtd, int section,
+>> +				   struct mtd_oob_region *region)
+>> +{
+>> +	if (section > 4)
+>> +		return -ERANGE;
+>> +
+>> +	if (section == 4) {
+>> +		region->offset = 64;
+>> +		region->length = 64;
+>> +	} else {
+>> +		region->offset = 4 + (15 * section);
+>> +		region->length = 2;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int pn26g0xa_ecc_get_status(struct spinand_device *spinand,
+>> +				   u8 status)
+>> +{
+>> +	switch (status & PN26G0XA_STATUS_ECC_BITMASK) {
+>> +	case PN26G0XA_STATUS_ECC_NONE_DETECTED:
+>> +		return 0;
+>> +
+>> +	case PN26G0XA_STATUS_ECC_1_7_CORRECTED:
+>> +		return 7;	/* Return upper limit by convention */
+>> +
+>> +	case PN26G0XA_STATUS_ECC_8_CORRECTED:
+>> +		return 8;
+>> +
+>> +	case PN26G0XA_STATUS_ECC_ERRORED:
+>> +		return -EBADMSG;
+>> +
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static const struct mtd_ooblayout_ops pn26g0xa_ooblayout = {
+>> +	.ecc = pn26g0xa_ooblayout_ecc,
+>> +	.free = pn26g0xa_ooblayout_free,
+>> +};
+>> +
+>> +
+>> +static const struct spinand_info paragon_spinand_table[] = {
+>> +	SPINAND_INFO("PN26G01A", 0xe1,
+>> +		     NAND_MEMORG(1, 2048, 128, 64, 1024, 21, 1, 1, 1),
+>> +		     NAND_ECCREQ(8, 512),
+>> +		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
+>> +					      &write_cache_variants,
+>> +					      &update_cache_variants),
+>> +		     0,
+>> +		     SPINAND_ECCINFO(&pn26g0xa_ooblayout,
+>> +				     pn26g0xa_ecc_get_status)),
+>> +	SPINAND_INFO("PN26G02A", 0xe2,
+>> +		     NAND_MEMORG(1, 2048, 128, 64, 2048, 41, 1, 1, 1),
+>> +		     NAND_ECCREQ(8, 512),
+>> +		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
+>> +					      &write_cache_variants,
+>> +					      &update_cache_variants),
+>> +		     0,
+>> +		     SPINAND_ECCINFO(&pn26g0xa_ooblayout,
+>> +				     pn26g0xa_ecc_get_status)),
+>> +};
+>> +
+>> +static int paragon_spinand_detect(struct spinand_device *spinand)
+>> +{
+>> +	u8 *id = spinand->id.data;
+>> +	int ret;
+>> +
+>> +	/* Read ID returns [0][MID][DID] */
+>> +
+>> +	if (id[1] != SPINAND_MFR_PARAGON)
+>> +		return 0;
+>> +
+>> +	ret = spinand_match_and_init(spinand, paragon_spinand_table,
+>> +				     ARRAY_SIZE(paragon_spinand_table),
+>> +				     id[2]);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 1;
+>> +}
+>> +
+>> +static const struct spinand_manufacturer_ops paragon_spinand_manuf_ops = {
+>> +	.detect = paragon_spinand_detect,
+>> +};
+>> +
+>> +const struct spinand_manufacturer paragon_spinand_manufacturer = {
+>> +	.id = SPINAND_MFR_PARAGON,
+>> +	.name = "Paragon",
+>> +	.ops = &paragon_spinand_manuf_ops,
+>> +};
+>> diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+>> index fbc0423bb4ae..4ea558bd3c46 100644
+>> --- a/include/linux/mtd/spinand.h
+>> +++ b/include/linux/mtd/spinand.h
+>> @@ -227,6 +227,7 @@ struct spinand_manufacturer {
+>>    extern const struct spinand_manufacturer gigadevice_spinand_manufacturer;
+>>    extern const struct spinand_manufacturer macronix_spinand_manufacturer;
+>>    extern const struct spinand_manufacturer micron_spinand_manufacturer;
+>> +extern const struct spinand_manufacturer paragon_spinand_manufacturer;
+>>    extern const struct spinand_manufacturer toshiba_spinand_manufacturer;
+>>    extern const struct spinand_manufacturer winbond_spinand_manufacturer;
+>>    
+>>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+>
+
