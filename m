@@ -8,133 +8,119 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3012CC4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7385EC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04BE2077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4748B20820
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIRno+AS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaZcsMGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfFYAS1 (ORCPT
+        id S1728493AbfFYAWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:18:27 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42061 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726414AbfFYAS1 (ORCPT
+        Mon, 24 Jun 2019 20:22:03 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34723 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfFYAWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:18:27 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay6so7762787plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:18:26 -0700 (PDT)
+        Mon, 24 Jun 2019 20:22:03 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c85so8444882pfc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mNNDPnLZx+KR0jVJlsU7XfT0ox6KotHr4SLhMC572uY=;
-        b=BIRno+AS454hBQbuQGJLmDsxNzU2PjmkxXG9qTatuiWkplhN1CHqCV/Ow8BoJdLZny
-         xX+0KWbI72KRstm2IUv2lrUGY3kQOuI+p+Eoq41Rp4wF22fbmVeQVEQ26UOUpjq4YznS
-         hopQhnxDOthZgau/MzcHHCnoAMHxo/bVipRQUQGzHkk1NLYEze99v8DblYC/XFXJOXOd
-         7aip1YZ3Fd4++t1pNyRpdAsIqb6fu4t5C9g3c7QnYtCB4G2ezO0lVbG5MFWLAOtSuSBv
-         oDCUDVeaDzHb7cw3OIGGkZKHk+zY/8w/sJVH5NcDYLg7MP1OsI4OsBRuHfJIvfY7U4kq
-         hhpg==
+        h=from:to:cc:subject:date:message-id;
+        bh=T7DwszIH6Vg5Lzuq4GDQX3dAFFq7h/uJlY/TUYoAObM=;
+        b=iaZcsMGUqQlurRX0i3Xesu0XzlVzbmR1e9NkBBm1eOP2eQKwMuaEkCSwig0P4FZA1t
+         4XzmWPIUy2ZbU000oUTQiitUAOOVWQUDLAFXAkqVTiB/BOKhCTI8l7kUvmlifG64c3rW
+         G0doKdrgaZxuLaqKGtytqAggvIYEbeKgbUQaThyWcgqe1gL6JQrN48jCBIoLKcrN0Uyf
+         BCfszognm0RtgIViZIrmPms1Au/eYGN9HSCvx49DyOu7ICf/HjihDNDZI3f6sS7tE7Yd
+         fuoYkr2lhZOhiaTAZFVY2EVM02mWpVULVolelLGF1+VCm0qaivdvGy/gwxEll+Mu77MY
+         SwaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mNNDPnLZx+KR0jVJlsU7XfT0ox6KotHr4SLhMC572uY=;
-        b=qiAIEsnz/QbWTFURDUyC3uaZmZqFKuNiNp4yd7uMPg0c8/X28PITUwH56sDBNDh1V0
-         34Szb7QhjJQ/FGo09i9Mes2hGYDOHTP7f0vkxpb0y8PXyrrzEUvIIjqZ5o5jUiJh3qB0
-         jz8woBMK7TUgN9uYcpa/4NkFeV7w6IoBFrbs0bcLjK8R68BAafQleBRt/M7UO9AjTeF2
-         ZoKyCcd21g+1rbdqWe8TitsYyeTrSifFjzKEa4Od/+zoDJ7nseq5Ou2ob9QjdJB2EiSz
-         amROiFC9oI2deZxzTrBzZPC92SmnG3XDVSNcaX4Axk2iXFPecAsJ8NW/WasQN3FnBv2/
-         SU9A==
-X-Gm-Message-State: APjAAAUJGURb0xqJpUysZA56cRu1lRqHI4F3Khn/gNeMK0u2aPEJUPcc
-        lEZE+l2ifmf96mlohH5Jt7Kty77K
-X-Google-Smtp-Source: APXvYqyXJrBhQYRtTEGj63jfVn62kEduJJx7AIfCXeJMdRlvSUvKma51TGvNujEEFyIFltIBfb9S0Q==
-X-Received: by 2002:a17:902:20b:: with SMTP id 11mr18386661plc.78.1561421906556;
-        Mon, 24 Jun 2019 17:18:26 -0700 (PDT)
-Received: from bobo.ibm.com ([1.129.216.90])
-        by smtp.gmail.com with ESMTPSA id j64sm15893351pfb.126.2019.06.24.17.18.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 17:18:25 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH v2] kernel/isolation: Assert that a housekeeping CPU comes up at boot time
-Date:   Tue, 25 Jun 2019 10:17:20 +1000
-Message-Id: <20190625001720.19439-1-npiggin@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T7DwszIH6Vg5Lzuq4GDQX3dAFFq7h/uJlY/TUYoAObM=;
+        b=t52fKkJdaJBelPlIB1Mk2Uyc2xcHL1lecag3Pmr+WMEfJHmdHb3LBwjZafMZA1nLqI
+         qjNNo/L0U6oE65RNGkIaBvDxpSg/XWEgFoQKLIy9ZKbC55EmBHoR5GxbmeyY618tViqk
+         nNpSltHomluc0HCw0YjvyDLsR5uLTOm7PGcUSBWEx2qocWqbgdQ9ADZAjpyM/tx2v2iE
+         +oWIPDgM+k3SGrRT6uu3kQG/5EjErmk29UL67ytVHeODL3jD3a898M++zAX6ESDDMmeo
+         MFdgdTtG+mIHIGQCvUp+nLNhIF2nKKdT9GglZwt/Oq/15nR04QF1aH2jSAcTEpFZdIMb
+         ol8g==
+X-Gm-Message-State: APjAAAVadouhRHzfXqTwpnJawpHxETmblMYQv+WeuaK2cIEeaLGFlQ4d
+        +NTUjPVR7xaAYGsBhUNwOw4=
+X-Google-Smtp-Source: APXvYqzPM49rOZ8vmVvwAtovOCK0SCaWGfo4w+Ak62VDZnpyFCw2j0kqppwfk3cfPTPcxEwFsSdKIQ==
+X-Received: by 2002:a63:a506:: with SMTP id n6mr30915336pgf.161.1561422122677;
+        Mon, 24 Jun 2019 17:22:02 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f197sm12607324pfa.161.2019.06.24.17.22.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 24 Jun 2019 17:22:02 -0700 (PDT)
+From:   Doug Berger <opendmb@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Yue Hu <huyue2@yulong.com>, Mike Rapoport <rppt@linux.ibm.com>,
+        =?UTF-8?q?Micha=C5=82=20Nazarewicz?= <mina86@mina86.com>,
+        Laura Abbott <labbott@redhat.com>, Peng Fan <peng.fan@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+Subject: [PATCH] cma: fail if fixed declaration can't be honored
+Date:   Mon, 24 Jun 2019 17:20:51 -0700
+Message-Id: <1561422051-16142-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the change to allow the boot CPU0 to be isolated, it is possible
-to specify command line options that result in no housekeeping CPU
-online at boot.
+The description of the cma_declare_contiguous() function indicates
+that if the 'fixed' argument is true the reserved contiguous area
+must be exactly at the address of the 'base' argument.
 
-An 8 CPU system booted with "nohz_full=0-6 maxcpus=4", for example.
+However, the function currently allows the 'base', 'size', and
+'limit' arguments to be silently adjusted to meet alignment
+constraints. This commit enforces the documented behavior through
+explicit checks that return an error if the region does not fit
+within a specified region.
 
-It is not easily possible at housekeeping init time to know all the
-various SMP options that will result in an invalid configuration, so
-this patch adds a sanity check after SMP init, to ensure that a
-housekeeping CPU has been onlined.
-
-The panic is undesirable, but it's better than the alternative of an
-obscure non deterministic failure. The panic will reliably happen
-when advanced parameters are used incorrectly.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Fixes: 5ea3b1b2f8ad ("cma: add placement specifier for "cma=" kernel parameter")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
-v2: Fix a NULL pointer dereference when not overriding housekeeping,
-    noticed by kernel test robot and Qais, who fixed it and verified
-    the fix (thanks!)
+ mm/cma.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
- kernel/sched/isolation.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 123ea07a3f3b..a9ca8628c1a2 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -63,6 +63,32 @@ void __init housekeeping_init(void)
- 	WARN_ON_ONCE(cpumask_empty(housekeeping_mask));
- }
- 
-+static int __init housekeeping_verify_smp(void)
-+{
-+	int cpu;
-+
-+	if (!housekeeping_flags)
-+		return 0;
-+
-+	/*
-+	 * Early housekeeping setup is done before CPUs come up, and there are
-+	 * a range of options scattered around that can restrict which CPUs
-+	 * come up. It is possible to pass in a combination of housekeeping
-+	 * and SMP arguments that result in housekeeping assigned to an
-+	 * offline CPU.
-+	 *
-+	 * Check that condition here after SMP comes up, and give a useful
-+	 * error message rather than an obscure non deterministic crash or
-+	 * hang later.
-+	 */
-+	for_each_online_cpu(cpu) {
-+		if (cpumask_test_cpu(cpu, housekeeping_mask))
-+			return 0;
+diff --git a/mm/cma.c b/mm/cma.c
+index 3340ef34c154..4973d253dc83 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -278,6 +278,12 @@ int __init cma_declare_contiguous(phys_addr_t base,
+ 	 */
+ 	alignment = max(alignment,  (phys_addr_t)PAGE_SIZE <<
+ 			  max_t(unsigned long, MAX_ORDER - 1, pageblock_order));
++	if (fixed && base & (alignment - 1)) {
++		ret = -EINVAL;
++		pr_err("Region at %pa must be aligned to %pa bytes\n",
++			&base, &alignment);
++		goto err;
 +	}
-+	panic("Housekeeping: nohz_full= or isolcpus= resulted in no online CPUs for housekeeping.\n");
-+}
-+core_initcall(housekeeping_verify_smp);
+ 	base = ALIGN(base, alignment);
+ 	size = ALIGN(size, alignment);
+ 	limit &= ~(alignment - 1);
+@@ -308,6 +314,13 @@ int __init cma_declare_contiguous(phys_addr_t base,
+ 	if (limit == 0 || limit > memblock_end)
+ 		limit = memblock_end;
+ 
++	if (base + size > limit) {
++		ret = -EINVAL;
++		pr_err("Size (%pa) of region at %pa exceeds limit (%pa)\n",
++			&size, &base, &limit);
++		goto err;
++	}
 +
- static int __init housekeeping_setup(char *str, enum hk_flags flags)
- {
- 	cpumask_var_t non_housekeeping_mask;
+ 	/* Reserve memory */
+ 	if (fixed) {
+ 		if (memblock_is_region_reserved(base, size) ||
 -- 
-2.20.1
+2.7.4
 
