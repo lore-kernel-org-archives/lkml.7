@@ -2,158 +2,202 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED54C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8643CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7786208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="m/iMZucc"
+	by mail.kernel.org (Postfix) with ESMTP id 5CAB9208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfFYJOR (ORCPT
+        id S1731233AbfFYJPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:14:17 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:56258 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728823AbfFYJOR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:14:17 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
-   d="scan'208";a="38780807"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jun 2019 02:14:16 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 25 Jun 2019 02:14:37 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 25 Jun 2019 02:14:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oQboUQZRVJ1cLGfCsaE2CbtP+tIP5CWRsoBrKFaRZT0=;
- b=m/iMZuccxjq4szPCOT4OPZPLTjt6SBjN2JAlemPxKe5pOH8mO49gl5/ZX01EcpRbP4KPNgZffGaCd6x+I6gTndI9tABGwlqWm3FfFnGFS+eTaPBVFhiZH/NHt63wK7BajnlwGUsBPQVwdzlSkiVTNTh1t0JMS6I+gGSeuUImIRM=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB0075.namprd11.prod.outlook.com (10.164.155.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 09:14:13 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::6476:ace0:bf3a:322]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::6476:ace0:bf3a:322%9]) with mapi id 15.20.2008.017; Tue, 25 Jun 2019
- 09:14:13 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <peda@axentia.se>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <wsa@the-dreams.de>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
- enable-ana-filt
-Thread-Topic: [PATCH v2 6/9] dt-bindings: i2c: at91: add binding for
- enable-ana-filt
-Thread-Index: AQHVKyyv+/RK0NIkBk254PAOuF5Z96asET2AgAAEBoA=
-Date:   Tue, 25 Jun 2019 09:14:13 +0000
-Message-ID: <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
-References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
- <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
- <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
-In-Reply-To: <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
-Accept-Language: ro-RO, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0401CA0016.eurprd04.prod.outlook.com
- (2603:10a6:800:4a::26) To DM5PR11MB1242.namprd11.prod.outlook.com
- (2603:10b6:3:14::8)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190625121017485
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f064436-3c8c-4001-82b1-08d6f94d7d8a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB0075;
-x-ms-traffictypediagnostic: DM5PR11MB0075:
-x-microsoft-antispam-prvs: <DM5PR11MB0075FD35D254E0E3DAFA9E98E8E30@DM5PR11MB0075.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(5660300002)(305945005)(53936002)(6116002)(3846002)(86362001)(14454004)(25786009)(6436002)(2201001)(53546011)(446003)(66066001)(31696002)(6506007)(386003)(476003)(99286004)(8936002)(102836004)(6246003)(2616005)(486006)(229853002)(68736007)(6512007)(76176011)(7736002)(6486002)(66446008)(66556008)(66476007)(8676002)(64756008)(31686004)(2501003)(52116002)(478600001)(110136005)(81166006)(11346002)(26005)(66946007)(73956011)(316002)(72206003)(36756003)(186003)(256004)(2906002)(71190400001)(71200400001)(81156014)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0075;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iBXj0ulX8MxhJ1vuQAQpi93D15L7Oog5P1541b8v8sz1uzVsUDHdKqXWCXUyqmDgXRq5yfEpFWmocxt3E/LPLGgacRQm0IqgsD/e1ZsiL5LPO3KG4PkFTnvkv06kB5nPTwQFIsWOgA8jHjqossrS10RO5rZYrQn8DxtKYBFdwuv/LzRG+WzeGSQl8UWBrQWE7GDDpctULz3pasaAKnjx+Q/yd5zoRlLXP2uz97lDedOLC2LUC4iARcj8rEZt7DAsyMtJFP7o2OkYYPy5uMRAUGW966XAHLFdo6QzVmgmUJ9hq5dvGwHAIV439i8+aACcMCkJCn1+Nvmd5AXCYm2kI46msP4o6JjwTayRAp4ENTMMk2/IFrwGoG+pJRdDgXaAcDnYoO/H9cMGTC9xIqS7E2uckmCUsBn5t5svSS33d7Y=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <21506B8E5B03ED40A516D9564C071A00@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 25 Jun 2019 05:15:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:36364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728365AbfFYJPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:15:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF806360;
+        Tue, 25 Jun 2019 02:15:19 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86CCB3F71E;
+        Tue, 25 Jun 2019 02:15:16 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 10:15:07 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     shuah <shuah@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Fernandes <joelaf@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>
+Subject: Re: [RFC PATCH 1/1] Revert "rseq/selftests: arm: use udf instruction
+ for RSEQ_SIG"
+Message-ID: <20190625091507.GA13263@fuggles.cambridge.arm.com>
+References: <20190617152304.23371-1-mathieu.desnoyers@efficios.com>
+ <20190624172429.GA11133@fuggles.cambridge.arm.com>
+ <1620037196.377.1561400426591.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f064436-3c8c-4001-82b1-08d6f94d7d8a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 09:14:13.5723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eugen.hristev@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1620037196.377.1561400426591.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDI1LjA2LjIwMTkgMTE6NTUsIFBldGVyIFJvc2luIHdyb3RlOg0KDQo+IA0KPiBPbiAy
-MDE5LTA2LTI1IDEwOjA1LCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBG
-cm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4g
-QWRkIGJpbmRpbmcgc3BlY2lmaWNhdGlvbiBmb3IgYW5hbG9naWMgZmlsdGVyIGluc2lkZSB0aGUg
-aTJjIGNvbnRyb2xsZXINCj4gDQo+IHMvYW5hbG9naWMvdGhlIGFuYWxvZy8NCj4gDQo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+
-PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5
-MS50eHQgfCA0ICsrKysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQ0KPj4N
-Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2ky
-Yy1hdDkxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0
-OTEudHh0DQo+PiBpbmRleCA4MjY4NTk1Li4yMGQzMzRjIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQNCj4+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvaTJjLWF0OTEudHh0DQo+PiBAQCAt
-MjMsNiArMjMsOSBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPj4gICAtIGVuYWJsZS1kaWctZmls
-dDogRW5hYmxlIHRoZSBidWlsdC1pbiBkaWdpdGFsIGZpbHRlciBvbiB0aGUgaTJjIGxpbmVzLA0K
-Pj4gICAgIHNwZWNpZmljYWxseSByZXF1aXJlZCBkZXBlbmRpbmcgb24gdGhlIGhhcmR3YXJlIFBD
-Qi9ib2FyZCBhbmQgaWYgdGhlDQo+PiAgICAgdmVyc2lvbiBvZiB0aGUgY29udHJvbGxlciBpbmNs
-dWRlcyBpdC4NCj4+ICstIGVuYWJsZS1hbmEtZmlsdDogRW5hYmxlIHRoZSBidWlsdC1pbiBhbmFs
-b2dpYyBmaWx0ZXIgb24gdGhlIGkyYyBsaW5lcywNCj4+ICsgIHNwZWNpZmljYWxseSByZXF1aXJl
-ZCBkZXBlbmRpbmcgb24gdGhlIGhhcmR3YXJlIFBDQi9ib2FyZCBhbmQgaWYgdGhlDQo+PiArICB2
-ZXJzaW9uIG9mIHRoZSBjb250cm9sbGVyIGluY2x1ZGVzIGl0Lg0KPj4gICAtIENoaWxkIG5vZGVz
-IGNvbmZvcm1pbmcgdG8gaTJjIGJ1cyBiaW5kaW5nDQo+PiAgIA0KPj4gICBFeGFtcGxlcyA6DQo+
-PiBAQCAtNjAsNiArNjMsNyBAQCBpMmMwOiBpMmNAZjgwMzQ2MDAgew0KPj4gICAJYXRtZWwsZmlm
-by1zaXplID0gPDE2PjsNCj4+ICAgCWkyYy1zZGEtaG9sZC10aW1lLW5zID0gPDMzNj47DQo+PiAg
-IAllbmFibGUtZGlnLWZpbHQ7DQo+PiArCWVuYWJsZS1hbmEtZmlsdDsNCj4gDQo+IFBlcmhhcHMN
-Cj4gDQo+IAltaWNyb2NoaXAsZGlnaXRhbC1maWx0ZXI7DQo+IAltaWNyb2NoaXAsYW5hbG9nLWZp
-bHRlcjsNCj4gDQo+ID8NCg0KSGkgUGV0ZXIsDQoNClRoYW5rcyBmb3IgcmV2aWV3aW5nLiBUaGUg
-bmFtZSBvZiB0aGUgcHJvcGVydHkgZG9lcyBub3QgbWF0dGVyIG11Y2ggdG8gDQptZSwgYW5kIHdl
-IGhhdmUgcHJvcGVydGllcyBwcmVmaXhlZCB3aXRoIHZlbmRvciwgYW5kIHNvbWUgYXJlIG5vdC4N
-Cg0KQEFsZXhhbmRyZSBCZWxsb25pOiB3aGljaCBuYW1lIHlvdSB0aGluayBpdCdzIGJlc3QgPw0K
-DQpFdWdlbg0KDQo+IA0KPiBDaGVlcnMsDQo+IFBldGVyDQo+IA0KPj4gICANCj4+ICAgCXdtODcz
-MTogd204NzMxQDFhIHsNCj4+ICAgCQljb21wYXRpYmxlID0gIndtODczMSI7DQo+Pg0KPiANCg==
+On Mon, Jun 24, 2019 at 02:20:26PM -0400, Mathieu Desnoyers wrote:
+> ----- On Jun 24, 2019, at 1:24 PM, Will Deacon will.deacon@arm.com wrote:
+> 
+> > On Mon, Jun 17, 2019 at 05:23:04PM +0200, Mathieu Desnoyers wrote:
+> >> This reverts commit 2b845d4b4acd9422bbb668989db8dc36dfc8f438.
+> >> 
+> >> That commit introduces build issues for programs compiled in Thumb mode.
+> >> Rather than try to be clever and emit a valid trap instruction on arm32,
+> >> which requires special care about big/little endian handling on that
+> >> architecture, just emit plain data. Data in the instruction stream is
+> >> technically expected on arm32: this is how literal pools are
+> >> implemented. Reverting to the prior behavior does exactly that.
+> >> 
+> >> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> >> CC: Peter Zijlstra <peterz@infradead.org>
+> >> CC: Thomas Gleixner <tglx@linutronix.de>
+> >> CC: Joel Fernandes <joelaf@google.com>
+> >> CC: Catalin Marinas <catalin.marinas@arm.com>
+> >> CC: Dave Watson <davejwatson@fb.com>
+> >> CC: Will Deacon <will.deacon@arm.com>
+> >> CC: Shuah Khan <shuah@kernel.org>
+> >> CC: Andi Kleen <andi@firstfloor.org>
+> >> CC: linux-kselftest@vger.kernel.org
+> >> CC: "H . Peter Anvin" <hpa@zytor.com>
+> >> CC: Chris Lameter <cl@linux.com>
+> >> CC: Russell King <linux@arm.linux.org.uk>
+> >> CC: Michael Kerrisk <mtk.manpages@gmail.com>
+> >> CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+> >> CC: Paul Turner <pjt@google.com>
+> >> CC: Boqun Feng <boqun.feng@gmail.com>
+> >> CC: Josh Triplett <josh@joshtriplett.org>
+> >> CC: Steven Rostedt <rostedt@goodmis.org>
+> >> CC: Ben Maurer <bmaurer@fb.com>
+> >> CC: linux-api@vger.kernel.org
+> >> CC: Andy Lutomirski <luto@amacapital.net>
+> >> CC: Andrew Morton <akpm@linux-foundation.org>
+> >> CC: Linus Torvalds <torvalds@linux-foundation.org>
+> >> CC: Carlos O'Donell <carlos@redhat.com>
+> >> CC: Florian Weimer <fweimer@redhat.com>
+> >> ---
+> >>  tools/testing/selftests/rseq/rseq-arm.h | 52 ++-------------------------------
+> >>  1 file changed, 2 insertions(+), 50 deletions(-)
+> >> 
+> >> diff --git a/tools/testing/selftests/rseq/rseq-arm.h
+> >> b/tools/testing/selftests/rseq/rseq-arm.h
+> >> index 84f28f147fb6..5f262c54364f 100644
+> >> --- a/tools/testing/selftests/rseq/rseq-arm.h
+> >> +++ b/tools/testing/selftests/rseq/rseq-arm.h
+> >> @@ -5,54 +5,7 @@
+> >>   * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> >>   */
+> >>  
+> >> -/*
+> >> - * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
+> >> - * value 0x5de3. This traps if user-space reaches this instruction by mistake,
+> >> - * and the uncommon operand ensures the kernel does not move the instruction
+> >> - * pointer to attacker-controlled code on rseq abort.
+> >> - *
+> >> - * The instruction pattern in the A32 instruction set is:
+> >> - *
+> >> - * e7f5def3    udf    #24035    ; 0x5de3
+> >> - *
+> >> - * This translates to the following instruction pattern in the T16 instruction
+> >> - * set:
+> >> - *
+> >> - * little endian:
+> >> - * def3        udf    #243      ; 0xf3
+> >> - * e7f5        b.n    <7f5>
+> >> - *
+> >> - * pre-ARMv6 big endian code:
+> >> - * e7f5        b.n    <7f5>
+> >> - * def3        udf    #243      ; 0xf3
+> >> - *
+> >> - * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
+> >> - * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
+> >> - * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
+> >> - * (which match), so there is no need to reverse the endianness of the data
+> >> - * representation of the signature. However, the choice between BE32 and BE8
+> >> - * is done by the linker, so we cannot know whether code and data endianness
+> >> - * will be mixed before the linker is invoked.
+> >> - */
+> >> -
+> >> -#define RSEQ_SIG_CODE	0xe7f5def3
+> >> -
+> >> -#ifndef __ASSEMBLER__
+> >> -
+> >> -#define RSEQ_SIG_DATA							\
+> >> -	({								\
+> >> -		int sig;						\
+> >> -		asm volatile ("b 2f\n\t"				\
+> >> -			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
+> >> -			      "2:\n\t"					\
+> >> -			      "ldr %[sig], 1b\n\t"			\
+> >> -			      : [sig] "=r" (sig));			\
+> >> -		sig;							\
+> >> -	})
+> >> -
+> >> -#define RSEQ_SIG	RSEQ_SIG_DATA
+> >> -
+> >> -#endif
+> >> +#define RSEQ_SIG	0x53053053
+> > 
+> > I don't get why you're reverting back to this old signature value, when the
+> > one we came up with will work well when interpreted as an instruction in the
+> > *vast* majority of scenarios that people care about (A32/T32 little-endian).
+> > I think you might be under-estimating just how dead things like BE32 really
+> > are.
+> 
+> My issue is that the current .instr approach is broken for programs or functions
+> built in Thumb mode, and I received no feedback on the solutions I proposed for
+> those issues, which led me to propose a patch reverting to a simple .word.
+
+I understand why you're moving from .inst to .word, but I don't understand
+why that necessitates a change in the value. Why not .word 0xe7f5def3 ? You
+could also flip the bytes around in case of big-endian, which would keep the
+instruction coding clean for BE8.
+
+> > That said, when you ran into .inst.n/.inst.w issues, did you try something
+> > along the lines of the WASM() macro we use in arch/arm/, which adds the ".w"
+> > suffix when targetting Thumb?
+> 
+> AFAIU, the WASM macros depend on CONFIG_THUMB2_KERNEL, which may be fine within
+> the kernel, but for user-space things are a bit more complex.
+> 
+> A compile-unit can be compiled as thumb, which will set a compiler define
+> which we could use to detect thumb mode. However, unfortunately, a single
+> function can also be compiled with an attribute selecting thumb mode, which
+> AFAIU does not influence the preprocessor defines.
+
+Thanks, I hadn't considered that case. I don't know the right way to handle
+that in the toolchain, so using .word is probably the best bet in the
+absence of any better suggestions from the tools folks.
+
+Will
