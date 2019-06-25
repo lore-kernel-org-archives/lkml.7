@@ -2,178 +2,253 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A50FC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB726C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30430205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B48A21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="GAvjog6f"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ksTJ0WpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfFYIcS (ORCPT
+        id S1730617AbfFYIcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:32:18 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44552 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730319AbfFYIcR (ORCPT
+        Tue, 25 Jun 2019 04:32:20 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33937 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730455AbfFYIcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:32:17 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so9078558pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 01:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9eMlPVY24HiKoID6dzydanFhmPA3RfckjVd3enlhBYw=;
-        b=GAvjog6fXTPDm8Zj/MWi+YqqZvAXOnu6RbEkNm5o349sRyL41W4ik/hRY7MZ9xx+Zj
-         r+V8ygpCfaszrP2WT6vlf1gDMbfTIs6+qs5J326zeINqVZZwq8Vf7W6723NjW72iLWIx
-         6yuJ1584bkhDREJNIlLoAoShh0kDZZ0uf6vrqc5AdAVNJHk+rlQ0r9NYo727QxUYthpT
-         hKfzg66UwBRtiZMHKY6+q5n6qOJINCNxIDrudolIg/5so4DrZaQjwBuExdv8TC8axN1Y
-         lctI9cz/YQHcsY/eJ0s/O/2ESh/2GN0Kv39qjif83PqLKjwhz8/chzwX5YcX8e8EYr1/
-         lFvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9eMlPVY24HiKoID6dzydanFhmPA3RfckjVd3enlhBYw=;
-        b=m9ja9DLSgnXcuojHk9rbgzxQ0D92l3XR8evgOBfaOIB3ze1vhdMdO7LXXLkkPYcO7U
-         WNopqKOUDn2qIgleUF3ICcI0cOFcAbyv7dp/MldNfDA9vH2GVLvM6FoW22e/I3IbbU72
-         pyq8BxzAF7pUz3wFSjHrQRgkHsPRntNME8J6u9szbBmgc0t2FkYiezOeQYtA4uUJDmvC
-         Mk2J0wagCRuGnbBXEpDJhqW8xg302k9n6FhhXAd0UNIuKRV+eFEYzrUR2sENi+EVRMHV
-         OY3ctPkN4tAuPIMB9gYxWw64MRmAST8+rdL40t+lAX7zjzSO6tPmi2EPu/Ut6pvfwRtJ
-         pH0A==
-X-Gm-Message-State: APjAAAW4FD3dCVV+LR5nPtSWtJ8WuOlBkrN8Qhu6pNvk4+aHTvpKGcr7
-        KKC8zCgo9uffIdz/FkTmMwfFyg==
-X-Google-Smtp-Source: APXvYqygKfikzR6BYrFJoIc7Gzyz3ec9Ws4XQBmlsZcPC5rySKVVebr0h4ft47XGnakA39G74h7DNw==
-X-Received: by 2002:a17:90a:ca0f:: with SMTP id x15mr29575281pjt.82.1561451536737;
-        Tue, 25 Jun 2019 01:32:16 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id v13sm14533710pfe.105.2019.06.25.01.32.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 01:32:16 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Daniel Drake <drake@endlessm.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH v3] Bluetooth: btrtl: HCI reset on close for Realtek BT chip
-Date:   Tue, 25 Jun 2019 16:30:51 +0800
-Message-Id: <20190625083051.7525-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <B8AD29F1-444A-4BB7-8C12-9C31EB974D11@holtmann.org>
-References: <B8AD29F1-444A-4BB7-8C12-9C31EB974D11@holtmann.org>
+        Tue, 25 Jun 2019 04:32:18 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8VUiY3530954
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 25 Jun 2019 01:31:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8VUiY3530954
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561451491;
+        bh=PqIDUKUUmeNFmTSXYdkT/JwB3XdwItIXvEyRMxSeKNI=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=ksTJ0WpPMxTWlTS8nGoYs023nQ0lS/g9qJOIdJQIFvz50g586SMw3kwe2QZ7ThYmd
+         lcDEgeDM+vLvsyv4EgqHQnEleFyfqoPOJa8l4qVbSYC7gkE0to+hsrOxE9htSNqjxZ
+         7azbUOQXJHFiLCwolYzXXQJSjqPrntBiM5JV965OoFKcyt/YjQcksiyY4JppUXk6k1
+         B+EAPPvSTtNwKCSsLpDtOTULzUZSArGb+Xj2z6p5gXyp/+8blVZ3SiiPC/ML76Undp
+         i7ZCqW5YGuamxNhulTsheRElN0mFm8YH8ZUuoZNiS4kQxaTJrx4FmD+9NuKUryOagT
+         tgDHaHhVJZ3jg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8VUk43530951;
+        Tue, 25 Jun 2019 01:31:30 -0700
+Date:   Tue, 25 Jun 2019 01:31:30 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Patrick Bellasi <tipbot@zytor.com>
+Message-ID: <tip-e496187da71070687b55ff455e7d8d7d7f0ae0b9@git.kernel.org>
+Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        surenb@google.com, joelaf@google.com, juri.lelli@redhat.com,
+        tj@kernel.org, vincent.guittot@linaro.org, smuckle@google.com,
+        quentin.perret@arm.com, balsini@android.com, mingo@kernel.org,
+        patrick.bellasi@arm.com, pjt@google.com,
+        rafael.j.wysocki@intel.com, viresh.kumar@linaro.org,
+        torvalds@linux-foundation.org, morten.rasmussen@arm.com,
+        dietmar.eggemann@arm.com, peterz@infradead.org, tkjos@google.com
+Reply-To: joelaf@google.com, surenb@google.com, tj@kernel.org,
+          juri.lelli@redhat.com, hpa@zytor.com, tglx@linutronix.de,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          quentin.perret@arm.com, balsini@android.com,
+          patrick.bellasi@arm.com, smuckle@google.com,
+          vincent.guittot@linaro.org, rafael.j.wysocki@intel.com,
+          pjt@google.com, tkjos@google.com, peterz@infradead.org,
+          viresh.kumar@linaro.org, dietmar.eggemann@arm.com,
+          morten.rasmussen@arm.com, torvalds@linux-foundation.org
+In-Reply-To: <20190621084217.8167-4-patrick.bellasi@arm.com>
+References: <20190621084217.8167-4-patrick.bellasi@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/uclamp: Enforce last task's UCLAMP_MAX
+Git-Commit-ID: e496187da71070687b55ff455e7d8d7d7f0ae0b9
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Realtek RTL8822BE BT chip on ASUS X420FA cannot be turned on correctly
-after on-off several times. Bluetooth daemon sets BT mode failed when
-this issue happens. Scanning must be active while turning off for this
-bug to be hit.
+Commit-ID:  e496187da71070687b55ff455e7d8d7d7f0ae0b9
+Gitweb:     https://git.kernel.org/tip/e496187da71070687b55ff455e7d8d7d7f0ae0b9
+Author:     Patrick Bellasi <patrick.bellasi@arm.com>
+AuthorDate: Fri, 21 Jun 2019 09:42:04 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 24 Jun 2019 19:23:45 +0200
 
-bluetoothd[1576]: Failed to set mode: Failed (0x03)
+sched/uclamp: Enforce last task's UCLAMP_MAX
 
-If BT is turned off, then turned on again, it works correctly again.
+When a task sleeps it removes its max utilization clamp from its CPU.
+However, the blocked utilization on that CPU can be higher than the max
+clamp value enforced while the task was running. This allows undesired
+CPU frequency increases while a CPU is idle, for example, when another
+CPU on the same frequency domain triggers a frequency update, since
+schedutil can now see the full not clamped blocked utilization of the
+idle CPU.
 
-According to the vendor driver, the HCI_QUIRK_RESET_ON_CLOSE flag is set
-during probing. So, this patch makes Realtek's BT reset on close to fix
-this issue.
+Fix this by using:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203429
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+  uclamp_rq_dec_id(p, rq, UCLAMP_MAX)
+    uclamp_rq_max_value(rq, UCLAMP_MAX, clamp_value)
+
+to detect when a CPU has no more RUNNABLE clamped tasks and to flag this
+condition.
+
+Don't track any minimum utilization clamps since an idle CPU never
+requires a minimum frequency. The decay of the blocked utilization is
+good enough to reduce the CPU frequency.
+
+Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alessio Balsini <balsini@android.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
+Cc: Steve Muckle <smuckle@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://lkml.kernel.org/r/20190621084217.8167-4-patrick.bellasi@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
-v2:
- - According to the vendor driver, it makes "all" Realtek's BT reset on
-   close. So, this version makes it the same.
- - Change to the new subject for all Realtek BT chips.
+ kernel/sched/core.c  | 49 ++++++++++++++++++++++++++++++++++++++++++++-----
+ kernel/sched/sched.h |  2 ++
+ 2 files changed, 46 insertions(+), 5 deletions(-)
 
-v3:
- - Fix the commit message and add the bug link.
- - Have btrtl_shutdown_realtek() which sends HCI reset command and as
-   the callback function of hdev->shutdown for Realtek BT instead of
-   setting HCI_QUIRK_RESET_ON_CLOSE flag.
-
- drivers/bluetooth/btrtl.c | 20 ++++++++++++++++++++
- drivers/bluetooth/btrtl.h |  6 ++++++
- drivers/bluetooth/btusb.c |  1 +
- 3 files changed, 27 insertions(+)
-
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 208feef63de4..d04b443cad1f 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -637,6 +637,26 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0a6eff8a278b..2dde735635ec 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -803,8 +803,36 @@ static inline void uclamp_se_set(struct uclamp_se *uc_se, unsigned int value)
+ 	uc_se->bucket_id = uclamp_bucket_id(value);
  }
- EXPORT_SYMBOL_GPL(btrtl_setup_realtek);
  
-+int btrtl_shutdown_realtek(struct hci_dev *hdev)
++static inline unsigned int
++uclamp_idle_value(struct rq *rq, unsigned int clamp_id,
++		  unsigned int clamp_value)
 +{
-+	struct sk_buff *skb;
-+	int ret;
-+
-+	/* According to the vendor driver, BT must be reset on close to avoid
-+	 * firmware crash.
++	/*
++	 * Avoid blocked utilization pushing up the frequency when we go
++	 * idle (which drops the max-clamp) by retaining the last known
++	 * max-clamp.
 +	 */
-+	skb = __hci_cmd_sync(hdev, HCI_OP_RESET, 0, NULL, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		ret = PTR_ERR(skb);
-+		bt_dev_err(hdev, "HCI reset during shutdown failed");
-+		return ret;
++	if (clamp_id == UCLAMP_MAX) {
++		rq->uclamp_flags |= UCLAMP_FLAG_IDLE;
++		return clamp_value;
 +	}
-+	kfree_skb(skb);
 +
-+	return 0;
++	return uclamp_none(UCLAMP_MIN);
 +}
-+EXPORT_SYMBOL_GPL(btrtl_shutdown_realtek);
 +
- static unsigned int btrtl_convert_baudrate(u32 device_baudrate)
++static inline void uclamp_idle_reset(struct rq *rq, unsigned int clamp_id,
++				     unsigned int clamp_value)
++{
++	/* Reset max-clamp retention only on idle exit */
++	if (!(rq->uclamp_flags & UCLAMP_FLAG_IDLE))
++		return;
++
++	WRITE_ONCE(rq->uclamp[clamp_id].value, clamp_value);
++}
++
+ static inline
+-unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id)
++unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id,
++				 unsigned int clamp_value)
  {
- 	switch (device_baudrate) {
-diff --git a/drivers/bluetooth/btrtl.h b/drivers/bluetooth/btrtl.h
-index f1676144fce8..10ad40c3e42c 100644
---- a/drivers/bluetooth/btrtl.h
-+++ b/drivers/bluetooth/btrtl.h
-@@ -55,6 +55,7 @@ void btrtl_free(struct btrtl_device_info *btrtl_dev);
- int btrtl_download_firmware(struct hci_dev *hdev,
- 			    struct btrtl_device_info *btrtl_dev);
- int btrtl_setup_realtek(struct hci_dev *hdev);
-+int btrtl_shutdown_realtek(struct hci_dev *hdev);
- int btrtl_get_uart_settings(struct hci_dev *hdev,
- 			    struct btrtl_device_info *btrtl_dev,
- 			    unsigned int *controller_baudrate,
-@@ -83,6 +84,11 @@ static inline int btrtl_setup_realtek(struct hci_dev *hdev)
- 	return -EOPNOTSUPP;
+ 	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+ 	int bucket_id = UCLAMP_BUCKETS - 1;
+@@ -820,7 +848,7 @@ unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id)
+ 	}
+ 
+ 	/* No tasks -- default clamp values */
+-	return uclamp_none(clamp_id);
++	return uclamp_idle_value(rq, clamp_id, clamp_value);
  }
  
-+static inline int btrtl_shutdown_realtek(struct hci_dev *hdev)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline int btrtl_get_uart_settings(struct hci_dev *hdev,
- 					  struct btrtl_device_info *btrtl_dev,
- 					  unsigned int *controller_baudrate,
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 50aed5259c2b..342e1de6bcba 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3184,6 +3184,7 @@ static int btusb_probe(struct usb_interface *intf,
- #ifdef CONFIG_BT_HCIBTUSB_RTL
- 	if (id->driver_info & BTUSB_REALTEK) {
- 		hdev->setup = btrtl_setup_realtek;
-+		hdev->shutdown = btrtl_shutdown_realtek;
+ /*
+@@ -845,6 +873,8 @@ static inline void uclamp_rq_inc_id(struct rq *rq, struct task_struct *p,
+ 	bucket = &uc_rq->bucket[uc_se->bucket_id];
+ 	bucket->tasks++;
  
- 		/* Realtek devices lose their updated firmware over suspend,
- 		 * but the USB hub doesn't notice any status change.
--- 
-2.22.0
-
++	uclamp_idle_reset(rq, clamp_id, uc_se->value);
++
+ 	/*
+ 	 * Local max aggregation: rq buckets always track the max
+ 	 * "requested" clamp value of its RUNNABLE tasks.
+@@ -871,6 +901,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+ 	struct uclamp_rq *uc_rq = &rq->uclamp[clamp_id];
+ 	struct uclamp_se *uc_se = &p->uclamp[clamp_id];
+ 	struct uclamp_bucket *bucket;
++	unsigned int bkt_clamp;
+ 	unsigned int rq_clamp;
+ 
+ 	lockdep_assert_held(&rq->lock);
+@@ -895,8 +926,10 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+ 	 * e.g. due to future modification, warn and fixup the expected value.
+ 	 */
+ 	SCHED_WARN_ON(bucket->value > rq_clamp);
+-	if (bucket->value >= rq_clamp)
+-		WRITE_ONCE(uc_rq->value, uclamp_rq_max_value(rq, clamp_id));
++	if (bucket->value >= rq_clamp) {
++		bkt_clamp = uclamp_rq_max_value(rq, clamp_id, uc_se->value);
++		WRITE_ONCE(uc_rq->value, bkt_clamp);
++	}
+ }
+ 
+ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+@@ -908,6 +941,10 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
+ 
+ 	for_each_clamp_id(clamp_id)
+ 		uclamp_rq_inc_id(rq, p, clamp_id);
++
++	/* Reset clamp idle holding when there is one RUNNABLE task */
++	if (rq->uclamp_flags & UCLAMP_FLAG_IDLE)
++		rq->uclamp_flags &= ~UCLAMP_FLAG_IDLE;
+ }
+ 
+ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+@@ -926,8 +963,10 @@ static void __init init_uclamp(void)
+ 	unsigned int clamp_id;
+ 	int cpu;
+ 
+-	for_each_possible_cpu(cpu)
++	for_each_possible_cpu(cpu) {
+ 		memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
++		cpu_rq(cpu)->uclamp_flags = 0;
++	}
+ 
+ 	for_each_clamp_id(clamp_id) {
+ 		uclamp_se_set(&init_task.uclamp[clamp_id],
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index cecc6baaba93..0d2ba8bb2cb3 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -870,6 +870,8 @@ struct rq {
+ #ifdef CONFIG_UCLAMP_TASK
+ 	/* Utilization clamp values based on CPU's RUNNABLE tasks */
+ 	struct uclamp_rq	uclamp[UCLAMP_CNT] ____cacheline_aligned;
++	unsigned int		uclamp_flags;
++#define UCLAMP_FLAG_IDLE 0x01
+ #endif
+ 
+ 	struct cfs_rq		cfs;
