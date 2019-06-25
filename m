@@ -2,29 +2,29 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C3AC4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4E1C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545BA20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0073B2077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbfFYDUW (ORCPT
+        id S1730277AbfFYDU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 23:20:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9508 "EHLO
+        Mon, 24 Jun 2019 23:20:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55086 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728442AbfFYDTg (ORCPT
+        by vger.kernel.org with ESMTP id S1727976AbfFYDTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Jun 2019 23:19:36 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P36jWV072966
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P36xjQ026136
         for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 23:19:34 -0400
 Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tb9pyc0by-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb9r3ur37-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 23:19:34 -0400
 Received: from localhost
@@ -36,14 +36,14 @@ Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Tue, 25 Jun 2019 04:19:22 +0100
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P3JLkE57212948
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P3JLoF36634626
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 25 Jun 2019 03:19:21 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2310FAE057;
+        by IMSVA (Postfix) with ESMTP id 67478AE056;
         Tue, 25 Jun 2019 03:19:21 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 76678AE056;
+        by IMSVA (Postfix) with ESMTP id 7663EAE055;
         Tue, 25 Jun 2019 03:19:20 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
@@ -51,7 +51,7 @@ Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1790BA01B9;
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3038AA0283;
         Tue, 25 Jun 2019 13:19:19 +1000 (AEST)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 To:     alastair@d-silva.org
@@ -84,16 +84,18 @@ Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
         ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
         linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v4 0/7] Hexdump Enhancements
-Date:   Tue, 25 Jun 2019 13:17:19 +1000
+Subject: [PATCH v4 2/7] lib/hexdump.c: Relax rowsize checks in hex_dump_to_buffer
+Date:   Tue, 25 Jun 2019 13:17:21 +1000
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190625031726.12173-1-alastair@au1.ibm.com>
+References: <20190625031726.12173-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19062503-0008-0000-0000-000002F6B5BD
+x-cbid: 19062503-0008-0000-0000-000002F6B5BE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062503-0009-0000-0000-00002263E424
-Message-Id: <20190625031726.12173-1-alastair@au1.ibm.com>
+x-cbparentid: 19062503-0009-0000-0000-00002263E425
+Message-Id: <20190625031726.12173-3-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -108,71 +110,285 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Apologies for the large CC list, it's a heads up for those responsible
-for subsystems where a prototype change in generic code causes a change
-in those subsystems.
+This patch removes the hardcoded row limits and allows for
+other lengths. These lengths must still be a multiple of
+groupsize.
 
-This series enhances hexdump.
+This allows structs that are not 16/32 bytes to display on
+a single line.
 
-These improve the readability of the dumped data in certain situations
-(eg. wide terminals are available, many lines of empty bytes exist, etc).
+This patch also expands the self-tests to test row sizes
+up to 64 bytes (though they can now be arbitrarily long).
 
-The default behaviour of hexdump is unchanged, however, the prototype
-for hex_dump_to_buffer() has changed, and print_hex_dump() has been
-renamed to print_hex_dump_ext(), with a wrapper replacing it for
-compatibility with existing code, which would have been too invasive to
-change.
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ lib/hexdump.c      | 49 +++++++++++++++++++++++++++++--------------
+ lib/test_hexdump.c | 52 ++++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 76 insertions(+), 25 deletions(-)
 
-Hexdump selftests have be run & confirmed passed.
-
-Changelog:
-V4:
- - Add missing header (linux/bits.h)
- - Fix comment formatting
- - Create hex_dump_to_buffer_ext & make hex_dump_to_buffer a wrapper
-V3:
- - Fix inline documention
- - use BIT macros
- - use u32 rather than u64 for flags
-V2:
- - Fix failing selftests
- - Fix precedence bug in 'Replace ascii bool in hex_dump_to_buffer...'
- - Remove hardcoded new lengths & instead relax the checks in
-   hex_dump_to_buffer, allocating the buffer from the heap instead of the
-   stack.
- - Replace the skipping of lines of 0x00/0xff with skipping lines of
-   repeated characters, announcing what has been skipped.
- - Add spaces as an optional N-group separator
- - Allow byte ordering to be maintained when HEXDUMP_RETAIN_BYTE_ORDERING
-   is set.
- - Updated selftests to cover 'Relax rowsize checks' &
-   'Optionally retain byte ordering'
-
-Alastair D'Silva (7):
-  lib/hexdump.c: Fix selftests
-  lib/hexdump.c: Relax rowsize checks in hex_dump_to_buffer
-  lib/hexdump.c: Optionally suppress lines of repeated bytes
-  lib/hexdump.c: Replace ascii bool in hex_dump_to_buffer with flags
-  lib/hexdump.c: Allow multiple groups to be separated by lines '|'
-  lib/hexdump.c: Allow multiple groups to be separated by spaces
-  lib/hexdump.c: Optionally retain byte ordering
-
- drivers/gpu/drm/i915/intel_engine_cs.c        |   5 +-
- drivers/isdn/hardware/mISDN/mISDNisar.c       |  10 +-
- drivers/mailbox/mailbox-test.c                |   8 +-
- drivers/net/ethernet/amd/xgbe/xgbe-drv.c      |   2 +-
- .../net/ethernet/synopsys/dwc-xlgmac-common.c |   2 +-
- drivers/net/wireless/ath/ath10k/debug.c       |   7 +-
- .../net/wireless/intel/iwlegacy/3945-mac.c    |   4 +-
- drivers/platform/chrome/wilco_ec/debugfs.c    |  10 +-
- drivers/scsi/scsi_logging.c                   |   8 +-
- drivers/staging/fbtft/fbtft-core.c            |   2 +-
- fs/seq_file.c                                 |   6 +-
- include/linux/printk.h                        |  75 ++++-
- lib/hexdump.c                                 | 267 +++++++++++++++---
- lib/test_hexdump.c                            | 154 +++++++---
- 14 files changed, 438 insertions(+), 122 deletions(-)
-
+diff --git a/lib/hexdump.c b/lib/hexdump.c
+index 81b70ed37209..870c8cbff1e1 100644
+--- a/lib/hexdump.c
++++ b/lib/hexdump.c
+@@ -12,6 +12,7 @@
+ #include <linux/errno.h>
+ #include <linux/kernel.h>
+ #include <linux/export.h>
++#include <linux/slab.h>
+ #include <asm/unaligned.h>
+ 
+ const char hex_asc[] = "0123456789abcdef";
+@@ -80,14 +81,15 @@ EXPORT_SYMBOL(bin2hex);
+  * hex_dump_to_buffer - convert a blob of data to "hex ASCII" in memory
+  * @buf: data blob to dump
+  * @len: number of bytes in the @buf
+- * @rowsize: number of bytes to print per line; must be 16 or 32
++ * @rowsize: number of bytes to print per line; must be a multiple of groupsize
+  * @groupsize: number of bytes to print at a time (1, 2, 4, 8; default = 1)
+  * @linebuf: where to put the converted data
+  * @linebuflen: total size of @linebuf, including space for terminating NUL
+  * @ascii: include ASCII after the hex output
+  *
+- * hex_dump_to_buffer() works on one "line" of output at a time, i.e.,
+- * 16 or 32 bytes of input data converted to hex + ASCII output.
++ * hex_dump_to_buffer() works on one "line" of output at a time, converting
++ * <groupsize> bytes of input to hexadecimal (and optionally printable ASCII)
++ * until <rowsize> bytes have been emitted.
+  *
+  * Given a buffer of u8 data, hex_dump_to_buffer() converts the input data
+  * to a hex + ASCII dump at the supplied memory location.
+@@ -116,16 +118,17 @@ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
+ 	int ascii_column;
+ 	int ret;
+ 
+-	if (rowsize != 16 && rowsize != 32)
+-		rowsize = 16;
+-
+-	if (len > rowsize)		/* limit to one line at a time */
+-		len = rowsize;
+ 	if (!is_power_of_2(groupsize) || groupsize > 8)
+ 		groupsize = 1;
+ 	if ((len % groupsize) != 0)	/* no mixed size output */
+ 		groupsize = 1;
+ 
++	if (rowsize % groupsize)
++		rowsize -= rowsize % groupsize;
++
++	if (len > rowsize)		/* limit to one line at a time */
++		len = rowsize;
++
+ 	ngroups = len / groupsize;
+ 	ascii_column = rowsize * 2 + rowsize / groupsize + 1;
+ 
+@@ -216,7 +219,7 @@ EXPORT_SYMBOL(hex_dump_to_buffer);
+  *  caller supplies trailing spaces for alignment if desired
+  * @prefix_type: controls whether prefix of an offset, address, or none
+  *  is printed (%DUMP_PREFIX_OFFSET, %DUMP_PREFIX_ADDRESS, %DUMP_PREFIX_NONE)
+- * @rowsize: number of bytes to print per line; must be 16 or 32
++ * @rowsize: number of bytes to print per line; must be a multiple of groupsize
+  * @groupsize: number of bytes to print at a time (1, 2, 4, 8; default = 1)
+  * @buf: data blob to dump
+  * @len: number of bytes in the @buf
+@@ -226,10 +229,9 @@ EXPORT_SYMBOL(hex_dump_to_buffer);
+  * to the kernel log at the specified kernel log level, with an optional
+  * leading prefix.
+  *
+- * print_hex_dump() works on one "line" of output at a time, i.e.,
+- * 16 or 32 bytes of input data converted to hex + ASCII output.
+  * print_hex_dump() iterates over the entire input @buf, breaking it into
+- * "line size" chunks to format and print.
++ * lines of rowsize/groupsize groups of input data converted to hex +
++ * (optionally) ASCII output.
+  *
+  * E.g.:
+  *   print_hex_dump(KERN_DEBUG, "raw data: ", DUMP_PREFIX_ADDRESS,
+@@ -246,17 +248,30 @@ void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
+ {
+ 	const u8 *ptr = buf;
+ 	int i, linelen, remaining = len;
+-	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
++	unsigned char *linebuf;
++	unsigned int linebuf_len;
+ 
+-	if (rowsize != 16 && rowsize != 32)
+-		rowsize = 16;
++	if (rowsize % groupsize)
++		rowsize -= rowsize % groupsize;
++
++	/*
++	 * Worst case line length:
++	 * 2 hex chars + space per byte in, 2 spaces, 1 char per byte in, NULL
++	 */
++	linebuf_len = rowsize * 3 + 2 + rowsize + 1;
++	linebuf = kzalloc(linebuf_len, GFP_KERNEL);
++	if (!linebuf) {
++		printk("%s%shexdump: Could not alloc %u bytes for buffer\n",
++			level, prefix_str, linebuf_len);
++		return;
++	}
+ 
+ 	for (i = 0; i < len; i += rowsize) {
+ 		linelen = min(remaining, rowsize);
+ 		remaining -= rowsize;
+ 
+ 		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
+-				   linebuf, sizeof(linebuf), ascii);
++				   linebuf, linebuf_len, ascii);
+ 
+ 		switch (prefix_type) {
+ 		case DUMP_PREFIX_ADDRESS:
+@@ -271,6 +286,8 @@ void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
+ 			break;
+ 		}
+ 	}
++
++	kfree(linebuf);
+ }
+ EXPORT_SYMBOL(print_hex_dump);
+ 
+diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
+index bef97a964582..5e54525a937c 100644
+--- a/lib/test_hexdump.c
++++ b/lib/test_hexdump.c
+@@ -14,15 +14,25 @@ static const unsigned char data_b[] = {
+ 	'\x70', '\xba', '\xc4', '\x24', '\x7d', '\x83', '\x34', '\x9b',	/* 08 - 0f */
+ 	'\xa6', '\x9c', '\x31', '\xad', '\x9c', '\x0f', '\xac', '\xe9',	/* 10 - 17 */
+ 	'\x4c', '\xd1', '\x19', '\x99', '\x43', '\xb1', '\xaf', '\x0c',	/* 18 - 1f */
++	'\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', /* 20 - 27 */
++	'\x0f', '\x0e', '\x0d', '\x0c', '\x0b', '\x0a', '\x09', '\x08', /* 28 - 2f */
++	'\x10', '\x11', '\x12', '\x13', '\x14', '\x15', '\x16', '\x17', /* 30 - 37 */
++	'\x1f', '\x1e', '\x1d', '\x1c', '\x1b', '\x1a', '\x19', '\x18', /* 38 - 3f */
+ };
+ 
+-static const unsigned char data_a[] = ".2.{....p..$}.4...1.....L...C...";
++static const unsigned char data_a[] = ".2.{....p..$}.4...1.....L...C..."
++				      "................................";
+ 
+ static const char * const test_data_1[] __initconst = {
+ 	"be", "32", "db", "7b", "0a", "18", "93", "b2",
+ 	"70", "ba", "c4", "24", "7d", "83", "34", "9b",
+ 	"a6", "9c", "31", "ad", "9c", "0f", "ac", "e9",
+ 	"4c", "d1", "19", "99", "43", "b1", "af", "0c",
++	"00", "01", "02", "03", "04", "05", "06", "07",
++	"0f", "0e", "0d", "0c", "0b", "0a", "09", "08",
++	"10", "11", "12", "13", "14", "15", "16", "17",
++	"1f", "1e", "1d", "1c", "1b", "1a", "19", "18",
++	NULL
+ };
+ 
+ static const char * const test_data_2_le[] __initconst = {
+@@ -30,6 +40,11 @@ static const char * const test_data_2_le[] __initconst = {
+ 	"ba70", "24c4", "837d", "9b34",
+ 	"9ca6", "ad31", "0f9c", "e9ac",
+ 	"d14c", "9919", "b143", "0caf",
++	"0100", "0302", "0504", "0706",
++	"0e0f", "0c0d", "0a0b", "0809",
++	"1110", "1312", "1514", "1716",
++	"1e1f", "1c1d", "1a1b", "1819",
++	NULL
+ };
+ 
+ static const char * const test_data_2_be[] __initconst = {
+@@ -37,26 +52,43 @@ static const char * const test_data_2_be[] __initconst = {
+ 	"70ba", "c424", "7d83", "349b",
+ 	"a69c", "31ad", "9c0f", "ace9",
+ 	"4cd1", "1999", "43b1", "af0c",
++	"0001", "0203", "0405", "0607",
++	"0f0e", "0d0c", "0b0a", "0908",
++	"1011", "1213", "1415", "1617",
++	"1f1e", "1d1c", "1b1a", "1918",
++	NULL
+ };
+ 
+ static const char * const test_data_4_le[] __initconst = {
+ 	"7bdb32be", "b293180a", "24c4ba70", "9b34837d",
+ 	"ad319ca6", "e9ac0f9c", "9919d14c", "0cafb143",
++	"03020100", "07060504", "0c0d0e0f", "08090a0b",
++	"13121110", "17161514", "1c1d1e1f", "18191a1b",
++	NULL
+ };
+ 
+ static const char * const test_data_4_be[] __initconst = {
+ 	"be32db7b", "0a1893b2", "70bac424", "7d83349b",
+ 	"a69c31ad", "9c0face9", "4cd11999", "43b1af0c",
++	"00010203", "04050607",	"0f0e0d0c", "0b0a0908",
++	"10111213", "14151617",	"1f1e1d1c", "1b1a1918",
++	NULL
+ };
+ 
+ static const char * const test_data_8_le[] __initconst = {
+ 	"b293180a7bdb32be", "9b34837d24c4ba70",
+ 	"e9ac0f9cad319ca6", "0cafb1439919d14c",
++	"0706050403020100", "08090a0b0c0d0e0f",
++	"1716151413121110", "18191a1b1c1d1e1f",
++	NULL
+ };
+ 
+ static const char * const test_data_8_be[] __initconst = {
+ 	"be32db7b0a1893b2", "70bac4247d83349b",
+ 	"a69c31ad9c0face9", "4cd1199943b1af0c",
++	"0001020304050607", "0f0e0d0c0b0a0908",
++	"1011121314151617", "1f1e1d1c1b1a1918",
++	NULL
+ };
+ 
+ #define FILL_CHAR	'#'
+@@ -75,9 +107,6 @@ static void __init test_hexdump_prepare_test(size_t len, int rowsize,
+ 	unsigned int i;
+ 	const bool is_be = IS_ENABLED(CONFIG_CPU_BIG_ENDIAN);
+ 
+-	if (rs != 16 && rs != 32)
+-		rs = 16;
+-
+ 	if (l > rs)
+ 		l = rs;
+ 
+@@ -97,7 +126,12 @@ static void __init test_hexdump_prepare_test(size_t len, int rowsize,
+ 	p = test;
+ 	for (i = 0; i < l / gs; i++) {
+ 		const char *q = *result++;
+-		size_t amount = strlen(q);
++		size_t amount;
++
++		if (!q)
++			break;
++
++		amount = strlen(q);
+ 
+ 		memcpy(p, q, amount);
+ 		p += amount;
+@@ -120,7 +154,7 @@ static void __init test_hexdump_prepare_test(size_t len, int rowsize,
+ 	*p = '\0';
+ }
+ 
+-#define TEST_HEXDUMP_BUF_SIZE		(32 * 3 + 2 + 32 + 1)
++#define TEST_HEXDUMP_BUF_SIZE		(64 * 3 + 2 + 64 + 1)
+ 
+ static void __init test_hexdump(size_t len, int rowsize, int groupsize,
+ 				bool ascii)
+@@ -216,7 +250,7 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
+ static void __init test_hexdump_overflow_set(size_t buflen, bool ascii)
+ {
+ 	unsigned int i = 0;
+-	int rs = (get_random_int() % 2 + 1) * 16;
++	int rs = (get_random_int() % 4 + 1) * 16;
+ 
+ 	do {
+ 		int gs = 1 << i;
+@@ -231,11 +265,11 @@ static int __init test_hexdump_init(void)
+ 	unsigned int i;
+ 	int rowsize;
+ 
+-	rowsize = (get_random_int() % 2 + 1) * 16;
++	rowsize = (get_random_int() % 4 + 1) * 16;
+ 	for (i = 0; i < 16; i++)
+ 		test_hexdump_set(rowsize, false);
+ 
+-	rowsize = (get_random_int() % 2 + 1) * 16;
++	rowsize = (get_random_int() % 4 + 1) * 16;
+ 	for (i = 0; i < 16; i++)
+ 		test_hexdump_set(rowsize, true);
+ 
 -- 
 2.21.0
 
