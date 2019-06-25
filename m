@@ -2,115 +2,166 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9466C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8291EC48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 967E320883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C372Ku1Z"
+	by mail.kernel.org (Postfix) with ESMTP id 61AD620883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbfFYWSr (ORCPT
+        id S1726383AbfFYWU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:18:47 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36408 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFYWSq (ORCPT
+        Tue, 25 Jun 2019 18:20:26 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60207 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFYWU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:18:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c13so134673pgg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 15:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=awYKMTwppxDTR6NBxb7uirnj6XnB7PgoXZkf4dMINis=;
-        b=C372Ku1ZgFRNfC9cCGooCD+UNHGZ1H8hEY3/fKmk7Yxv4op/f4FYDkT8fIvnMn+RoF
-         MwYC6cnSqKMHr5szUV4KjKSo3KoOr7O3R8UPhnL74TqJWVCDrlBu3bid2tR48jyE2piO
-         ITZkjVhRjNeQISKSNyKc0SNsU39N31UnmbEIdCQO+2F6qmCCfV8T8Wx2K8tAyNJuul3j
-         AzFn16lgCgqdyZ5Bk0kD4V1An8YjMu0ubj5cyvjtokRLNKCs3bUo31PrToRYnR3zwLut
-         AX3q+6gMK6LbyXyoF1LzaS61gap1dAKURQHPVGIfic1R9FRTgSWXdoPLD1oBW8DMaPxe
-         Gx/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=awYKMTwppxDTR6NBxb7uirnj6XnB7PgoXZkf4dMINis=;
-        b=toULtnjwGc+4p/f+RK0sYK8mjDG9f5Q/EKCDN+nVBot2zjwTHjVmM2NrC0vYfBjlDR
-         LEsPi+ga/dLuJmn9wmd9yEXUwWepnnC169qEo6YTrQv/LQpFBVSs+ffGk3USX9VnJBcH
-         Wa2nsnNNb0Sgk6T502d149U4mgH7pOxMnIf3W71365kCib+EC6nM6vs5R2ZI8jUmr1Cd
-         SyubFwrjhIu0/hl0D8bvBBlHrQcIZAKkv0z78r6nrtVJZt7XWSUVtU50DmDRbjHu2DvC
-         XsFxTnEyFz8vdoQHthrVY1LSQ5n9g9MBl6NJxJo84gDQCaCdrf8L3bQkv14hYldqIIgK
-         yCwQ==
-X-Gm-Message-State: APjAAAVaJ3ju8jb3ofBFUMiHBrbEWY2zzktCZB9XWuttBV3LLoanz8XP
-        sMTCrF+7zVHZmpzcNkGDuRqJ08k3+oCZUTqtZo4wuDTzJODawQ==
-X-Google-Smtp-Source: APXvYqw+q1fIASsmhBvTDOZ3GTmyUIocToZu4yXDv2KsVbBwQYDwrHYv5lWJIra5LmSUZY8aMZSdaee5y0LGjN6CNqA=
-X-Received: by 2002:a17:90a:ac11:: with SMTP id o17mr212067pjq.134.1561501125656;
- Tue, 25 Jun 2019 15:18:45 -0700 (PDT)
+        Tue, 25 Jun 2019 18:20:26 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id 31d07203676d00d2; Wed, 26 Jun 2019 00:20:23 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
+Date:   Wed, 26 Jun 2019 00:20:23 +0200
+Message-ID: <14605632.7Eqku7tdey@kreacher>
 MIME-Version: 1.0
-References: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
- <20190617222034.10799-8-linux@rasmusvillemoes.dk> <CAKwvOdn5fhCTqtciKBwAj3vYQMhi06annzxcdC1GjKxri=dHnw@mail.gmail.com>
- <12bd1adc-2258-ad5d-f6c9-079fdf0821b8@rasmusvillemoes.dk> <CAKwvOdkqy8=V17qEM_SMDEAh=UX5Y2-nj9EUkC169nEiXc_JzA@mail.gmail.com>
- <70aa7b96-e19d-5f8b-1ff6-af15715623e5@rasmusvillemoes.dk>
-In-Reply-To: <70aa7b96-e19d-5f8b-1ff6-af15715623e5@rasmusvillemoes.dk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Jun 2019 15:18:34 -0700
-Message-ID: <CAKwvOdkWo5yG7LrtGL_ht-XHFgNqx_t6rP+hHhcPyb+Ud1N+HA@mail.gmail.com>
-Subject: Re: [PATCH v6 7/8] dynamic_debug: add asm-generic implementation for DYNAMIC_DEBUG_RELATIVE_POINTERS
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 11:35 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> On 24/06/2019 23.53, Nick Desaulniers wrote:
-> > On Thu, Jun 20, 2019 at 1:46 PM Rasmus Villemoes
-> > <linux@rasmusvillemoes.dk> wrote:
-> >> Well, apart from booting, I've mostly just tested that the debugfs
-> >> control file is identical before and after enabling relative pointers,
-> >
-> > mainline x86_64 defconfig+CONFIG_DYNAMIC_DEBUG
-> > $ cat /dfs/dynamic_debug/control  | wc -l
-> > 2488
-> >
-> >
-> > mainline x86_64 defconfig+CONFIG_DYNAMIC_DEBUG+this patch series
-> > $ cat /dfs/dynamic_debug/control  | wc -l
-> > 2486
-> >
-> > (seems like maybe 2 are missing?  Let me try to collect a diff. Maybe
-> > 2 were removed in this series?)
->
-> Hm, no pr_debugs should have been added or removed. Perhaps you have a
-> slightly different set of modules loaded? Otherwise there's something
-> odd going on, and a diff would be really nice. It's possible that the
-> order of the lines are different, so you may have to sort them to get a
-> meaningful diff. (A diff is nice extra sanity check even if the line
-> count matches, of course).
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-You can fetch my logs from the latest commit to this dummy branch:
-https://github.com/ClangBuiltLinux/linux/commit/90096d926aaf94eb84584a4418fde7c8d42dddea
+There are platforms that do not call pm_set_suspend_via_firmware(),
+so pm_suspend_via_firmware() returns 'false' on them, but the power
+states of PCI devices (PCIe ports in particular) are changed as a
+result of powering down core platform components during system-wide
+suspend.  Thus the pm_suspend_via_firmware() checks in
+pci_pm_suspend_noirq() and pci_pm_resume_noirq() introduced by
+commit 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-
+idle") are not sufficient to determine that devices left in D0
+during suspend will remain in D0 during resume and so the bus-level
+power management can be skipped for them.
 
-Looking at `meld wo_patches.txt w_patches.txt`, it looks like:
-1. line numbers in some translation units are adjusted.  maybe this is
-intentional?
-2. pci_pm_suspend_noirq seems to exist twice(?) before your patches, once after
-3. xhci_urb_enqueue seems to exist three times before your patches, twice after
+For this reason, introduce a new global suspend flag,
+PM_SUSPEND_FLAG_NO_PLATFORM, set it for suspend-to-idle only
+and replace the pm_suspend_via_firmware() checks mentioned above
+with checks against this flag.
 
--- 
-Thanks,
-~Nick Desaulniers
+Fixes: 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-idle")
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/pci/pci-driver.c |    8 ++++----
+ include/linux/suspend.h  |   26 ++++++++++++++++++++++++--
+ kernel/power/suspend.c   |    3 +++
+ 3 files changed, 31 insertions(+), 6 deletions(-)
+
+Index: linux-pm/include/linux/suspend.h
+===================================================================
+--- linux-pm.orig/include/linux/suspend.h
++++ linux-pm/include/linux/suspend.h
+@@ -209,8 +209,9 @@ extern int suspend_valid_only_mem(suspen
+ 
+ extern unsigned int pm_suspend_global_flags;
+ 
+-#define PM_SUSPEND_FLAG_FW_SUSPEND	(1 << 0)
+-#define PM_SUSPEND_FLAG_FW_RESUME	(1 << 1)
++#define PM_SUSPEND_FLAG_FW_SUSPEND	BIT(0)
++#define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
++#define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
+ 
+ static inline void pm_suspend_clear_flags(void)
+ {
+@@ -227,6 +228,11 @@ static inline void pm_set_resume_via_fir
+ 	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
+ }
+ 
++static inline void pm_set_suspend_no_platform(void)
++{
++	pm_suspend_global_flags |= PM_SUSPEND_FLAG_NO_PLATFORM;
++}
++
+ /**
+  * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
+  *
+@@ -268,6 +274,22 @@ static inline bool pm_resume_via_firmwar
+ 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
+ }
+ 
++/**
++ * pm_suspend_no_platform - Check if platform may change device power states.
++ *
++ * To be called during system-wide power management transitions to sleep states
++ * or during the subsequent system-wide transitions back to the working state.
++ *
++ * Return 'true' if the power states of devices remain under full control of the
++ * kernel throughout the system-wide suspend and resume cycle in progress (that
++ * is, if a device is put into a certain power state during suspend, it can be
++ * expected to remain in that state during resume).
++ */
++static inline bool pm_suspend_no_platform(void)
++{
++	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_NO_PLATFORM);
++}
++
+ /* Suspend-to-idle state machnine. */
+ enum s2idle_states {
+ 	S2IDLE_STATE_NONE,      /* Not suspended/suspending. */
+Index: linux-pm/kernel/power/suspend.c
+===================================================================
+--- linux-pm.orig/kernel/power/suspend.c
++++ linux-pm/kernel/power/suspend.c
+@@ -493,6 +493,9 @@ int suspend_devices_and_enter(suspend_st
+ 
+ 	pm_suspend_target_state = state;
+ 
++	if (state == PM_SUSPEND_TO_IDLE)
++		pm_set_suspend_no_platform();
++
+ 	error = platform_suspend_begin(state);
+ 	if (error)
+ 		goto Close;
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -877,7 +877,7 @@ static int pci_pm_suspend_noirq(struct d
+ 			pci_dev->bus->self->skip_bus_pm = true;
+ 	}
+ 
+-	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
++	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
+ 		dev_dbg(dev, "PCI PM: Skipped\n");
+ 		goto Fixup;
+ 	}
+@@ -932,10 +932,10 @@ static int pci_pm_resume_noirq(struct de
+ 	/*
+ 	 * In the suspend-to-idle case, devices left in D0 during suspend will
+ 	 * stay in D0, so it is not necessary to restore or update their
+-	 * configuration here and attempting to put them into D0 again may
+-	 * confuse some firmware, so avoid doing that.
++	 * configuration here and attempting to put them into D0 again is
++	 * pointless, so avoid doing that.
+ 	 */
+-	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
++	if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform()))
+ 		pci_pm_default_resume_early(pci_dev);
+ 
+ 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+
+
+
