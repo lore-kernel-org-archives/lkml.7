@@ -2,174 +2,215 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C62C48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68959C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB91205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B930205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:50:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJ0ZXzXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfFYUr3 (ORCPT
+        id S1727168AbfFYUuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:47:29 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47968 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726053AbfFYUr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:47:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 13:47:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,417,1557212400"; 
-   d="p7s'?scan'208";a="313202257"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by orsmga004.jf.intel.com with ESMTP; 25 Jun 2019 13:47:28 -0700
-Received: from orsmsx126.amr.corp.intel.com (10.22.240.126) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 25 Jun 2019 13:47:27 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.95]) by
- ORSMSX126.amr.corp.intel.com ([169.254.4.136]) with mapi id 14.03.0439.000;
- Tue, 25 Jun 2019 13:47:27 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "jonas.rabenstein@studium.uni-erlangen.de" 
-        <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: Re: [PATCH v2 0/3] block: sed-opal: add support for shadow MBR done
- flag and write
-Thread-Topic: [PATCH v2 0/3] block: sed-opal: add support for shadow MBR
- done flag and write
-Thread-Index: AQHVEBZWhQ8AkVDDnEqL0mdelPmWUKatg5AA
-Date:   Tue, 25 Jun 2019 20:47:26 +0000
-Message-ID: <7ee5d705c12d770bf7566bce7d664bf733b25206.camel@intel.com>
-References: <1558471606-25139-1-git-send-email-zub@linux.fjfi.cvut.cz>
-In-Reply-To: <1558471606-25139-1-git-send-email-zub@linux.fjfi.cvut.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.232.115.162]
-Content-Type: multipart/signed; micalg=sha-1;
-        protocol="application/x-pkcs7-signature"; boundary="=-QSYtafHroO9uY8TINCAl"
+        Tue, 25 Jun 2019 16:50:05 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45701 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfFYUuF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 16:50:05 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j19so19987426qtr.12;
+        Tue, 25 Jun 2019 13:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=S3ThzB0FxOM43lC1HEahXxVTCZ708F6Vcodz7HniaZE=;
+        b=KJ0ZXzXcIbKjkt0vtSCVpLnvHNFsgh09BQvaDlX2cIajjSEJRD3sQEZ06utl5qCFUa
+         1O3bXsnM1MmOH5DsjYr3tA08qMxDgZJsNe+cb52zQSHF0rjf+cvuLXPCrhIZfkM7nF4f
+         6rvydx382/mUSU5iX6UNgFbo22l1CRLfyZ9Yp9uvNtAgrke+9OQuHf+KElua5K2uLyq/
+         FUTKJxtGWE5DOxcrsjldXQLSlb0ALM+/26F9pS61Qhjg64TSRYSlMVWITMhfRar6Uapg
+         WJrFBijBdSDWfi+3lQXyEVKv3Yzt9wMeOWozckx11Yqr583pB/vGIFNJ7Vc9JXMhIkec
+         vOuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=S3ThzB0FxOM43lC1HEahXxVTCZ708F6Vcodz7HniaZE=;
+        b=YxkfLVKSrxGvn4RS8BKMVONl4U9/3Ikm5LrALIUHzm2lI41OTUneJqfwSXF1S5+MUk
+         10lAwlO1qgB+y9tPnjKWTJo5aCW0ec+um6q7tcNyuwICzdEX/+quszi8zpM4WG/cENGQ
+         0CD+qt8+C2ZN75DjnQvcDudwcujafIH+aj2afraAeUqrjCwnKU37G6TGjBAjHtu448U0
+         ufXCj0+XjmGdSzNHzj1hd8uszAIHwbTt6HA0gyhF5T5nXy/AlGUyiXdST23gZ1oPrkey
+         P3Ya9hV5hhACCXx1HNCPu+fiT+iLsRaxjMR23hjiSoH1IqqbmWuEUU4o/GQIKmsSj+uW
+         2Yqg==
+X-Gm-Message-State: APjAAAWRiadi1LqocMcctTGsbOrLUzm7PBFHsTo7M0u3tWBkQAvlQZgi
+        Og1YvyM2r6u0sHIUQk9gKlZf7LpveCBIlUmn4sM=
+X-Google-Smtp-Source: APXvYqx5XvW72PBr4mzP6TPvyWK17Tww9Cw49TQ5skdGckn/X36eEwJeLI791JpLuYoOddkGNNaPUHlzdAHDYMIYamQ=
+X-Received: by 2002:a0c:d0b6:: with SMTP id z51mr256561qvg.3.1561495803720;
+ Tue, 25 Jun 2019 13:50:03 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190625182352.13918-1-natechancellor@gmail.com> <34F07894-FDE7-44F8-B7F2-E2003D550AD2@gmail.com>
+In-Reply-To: <34F07894-FDE7-44F8-B7F2-E2003D550AD2@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Tue, 25 Jun 2019 22:49:52 +0200
+Message-ID: <CAJ+HfNjKHG2dmu_juCJE5Xjo4HR4wqfk=yNPSAz8i7YbEWq6uw@mail.gmail.com>
+Subject: Re: [PATCH] xsk: Properly terminate assignment in xskq_produce_flush_desc
+To:     Jonathan Lemon <jonathan.lemon@gmail.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-QSYtafHroO9uY8TINCAl
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, 25 Jun 2019 at 22:04, Jonathan Lemon <jonathan.lemon@gmail.com> wro=
+te:
+>
+>
+>
+> On 25 Jun 2019, at 11:23, Nathan Chancellor wrote:
+>
+> > Clang warns:
+> >
+> > In file included from net/xdp/xsk_queue.c:10:
+> > net/xdp/xsk_queue.h:292:2: warning: expression result unused
+> > [-Wunused-value]
+> >         WRITE_ONCE(q->ring->producer, q->prod_tail);
+> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
+> >         __u.__val;                                      \
+> >         ~~~ ^~~~~
+> > 1 warning generated.
+> >
+> > The q->prod_tail assignment has a comma at the end, not a semi-colon.
+> > Fix that so clang no longer warns and everything works as expected.
+> >
+> > Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/544
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+> Nice find.
+>
+> Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+>
 
-These are still good with me and we'll likely have a similar future use
-for passing data through the ioctl.
+Yikes. Yes, nice find, indeed.
 
-Could we get this staged for 5.3?
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@intel.com>
 
-On Tue, 2019-05-21 at 22:46 +0200, David Kozub wrote:
-> This patch series extends SED Opal support: it adds IOCTL for setting the=
- shadow
-> MBR done flag which can be useful for unlocking an Opal disk on boot and =
-it adds
-> IOCTL for writing to the shadow MBR.
->=20
-> This applies on current master.
->=20
-> I successfully tested toggling the MBR done flag and writing the shadow M=
-BR
-> using some tools I hacked together[1] with a Samsung SSD 850 EVO drive.
->=20
-> Changes from v1:
-> * PATCH 2/3: remove check with access_ok, just rely on copy_from_user as
-> suggested in [2] (I tested passing data =3D=3D 0 and I got the expected E=
-FAULT)
->=20
-> [1] https://gitlab.com/zub2/opalctl
-> [2] https://lore.kernel.org/lkml/20190501134833.GB24132@infradead.org/
->=20
-> Jonas Rabenstein (3):
->   block: sed-opal: add ioctl for done-mark of shadow mbr
->   block: sed-opal: ioctl for writing to shadow mbr
->   block: sed-opal: check size of shadow mbr
->=20
->  block/opal_proto.h            |  16 ++++
->  block/sed-opal.c              | 157 +++++++++++++++++++++++++++++++++-
->  include/linux/sed-opal.h      |   2 +
->  include/uapi/linux/sed-opal.h |  20 +++++
->  4 files changed, 193 insertions(+), 2 deletions(-)
->=20
+The broader question is "Why does it work at all?", which is an "oh no" mom=
+ent.
 
---=-QSYtafHroO9uY8TINCAl
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
+The problematic functions are xsk_flush() and xsk_generic_rcv, where
+xskq_produce_flush_desc() is inlined. On the test machine, the GCC
+version is:
 
-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
-PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
-AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
-HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
-b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
-JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
-bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
-SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
-MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
-gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
-AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
-gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
-ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
-p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
-7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
-NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
-CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
-FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
-bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
-IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDYyNTIwNDcyNlowIwYJ
-KoZIhvcNAQkEMRYEFI1Xf8MGLVD983KUoHjwtrMARpJaMA0GCSqGSIb3DQEBAQUABIIBAFMqfdzS
-H6WhP7YBYq8nhjWRGyKRyFxRGzq4zzO8O8GkagZffVImWO5r0o/XSk71kDM3gOwjJ9jfALAiGAZG
-eICe4Y+ojOUgFPpmaunB66hIENeQlDtQwTxqtL1OslXuKOnz6A+m+LPzu5KMzUVR90yByNihumQ6
-dPKkwo1juIPNVMo49T3Lf83a6L/5YcUQxKfFgi3giDbfjBmrYTgoWsfPS3MkF/sGsUwyx7LEo8QR
-8Jn1+d4SKn4eTfelfJqaCD7q49l8ur1yKKstJm5VDc4BPyuxiKwU3s75WA3zb0JYHhSlKJyEuD+0
-wVJqI/SBDYy7SBV/QtgTGx13H4z0deoAAAAAAAA=
+$ gcc --version
+gcc (Ubuntu 7.4.0-1ubuntu1~18.04) 7.4.0
+Copyright (C) 2017 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+I when I diff the output, both .lst and .o:
+
+$ diff -u old.lst new.lst
+--- old.lst     2019-06-25 22:10:57.709591605 +0200
++++ new.lst     2019-06-25 22:10:35.301359865 +0200
+@@ -2480,7 +2480,7 @@
+     1566:      48 8b 87 e0 02 00 00    mov    0x2e0(%rdi),%rax
+ {
+     156d:      48 89 e5                mov    %rsp,%rbp
+-       q->prod_tail =3D q->prod_head,
++       q->prod_tail =3D q->prod_head;
+     1570:      8b 50 18                mov    0x18(%rax),%edx
+     1573:      89 50 1c                mov    %edx,0x1c(%rax)
+        WRITE_ONCE(q->ring->producer, q->prod_tail);
+@@ -2649,7 +2649,7 @@
+     16fb:      83 40 24 01             addl   $0x1,0x24(%rax)
+        xskq_produce_flush_desc(xs->rx);
+     16ff:      49 8b 86 e0 02 00 00    mov    0x2e0(%r14),%rax
+-       q->prod_tail =3D q->prod_head,
++       q->prod_tail =3D q->prod_head;
+     1706:      8b 50 18                mov    0x18(%rax),%edx
+        xs->sk.sk_data_ready(&xs->sk);
+     1709:      4c 89 f7                mov    %r14,%rdi
+
+$ diff -u <(gdb -batch -ex 'file old.o' -ex 'disassemble xsk_flush')
+<(gdb -batch -ex 'file new.o' -ex 'disassemble xsk_flush') && echo
+"Whew"
+Whew
+
+$ diff -u <(gdb -batch -ex 'file old.o' -ex 'disassemble
+xsk_generic_rcv') <(gdb -batch -ex 'file new.o' -ex 'disassemble
+xsk_generic_rcv') && echo "Whew"
+Whew
+
+struct xsk_queue {
+        u64                        chunk_mask;           /*     0   0x8 */
+        u64                        size;                 /*   0x8   0x8 */
+        u32                        ring_mask;            /*  0x10   0x4 */
+        u32                        nentries;             /*  0x14   0x4 */
+        u32                        prod_head;            /*  0x18   0x4 */
+        u32                        prod_tail;            /*  0x1c   0x4 */
+        u32                        cons_head;            /*  0x20   0x4 */
+        u32                        cons_tail;            /*  0x24   0x4 */
+        struct xdp_ring *          ring;                 /*  0x28   0x8 */
+        u64                        invalid_descs;        /*  0x30   0x8 */
+
+        /* size: 56, cachelines: 1, members: 10 */
+        /* last cacheline: 56 bytes */
+};
+
+So, it appears that the generated code is equal, both in xsk_flush()
+and xsk_generic_rcv() where flush was inlined. I'll be digging into
+more GCC versions, and observe the generated code.
+
+Regardless, this was a really good find. Thank you very much! Clang is
+added to my kernel build workflow from now on...
 
 
---=-QSYtafHroO9uY8TINCAl--
+Bj=C3=B6rn
+
+
+
+>
+> > ---
+> >  net/xdp/xsk_queue.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
+> > index 88b9ae24658d..cba4a640d5e8 100644
+> > --- a/net/xdp/xsk_queue.h
+> > +++ b/net/xdp/xsk_queue.h
+> > @@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct
+> > xsk_queue *q)
+> >       /* Order producer and data */
+> >       smp_wmb(); /* B, matches C */
+> >
+> > -     q->prod_tail =3D q->prod_head,
+> > +     q->prod_tail =3D q->prod_head;
+> >       WRITE_ONCE(q->ring->producer, q->prod_tail);
+> >  }
+> >
+> > --
+> > 2.22.0
