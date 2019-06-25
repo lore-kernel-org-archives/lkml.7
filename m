@@ -2,91 +2,100 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E254C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD63C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF822208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33AF2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733156AbfFYTQc (ORCPT
+        id S1728442AbfFYTTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731155AbfFYTPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:15:47 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32C5A208CB;
-        Tue, 25 Jun 2019 19:15:46 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1hfquv-0002Ie-6e; Tue, 25 Jun 2019 15:15:45 -0400
-Message-Id: <20190625191545.096711209@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Tue, 25 Jun 2019 15:15:12 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [for-next][PATCH 02/12] tracepoint: Use struct_size() in kmalloc()
-References: <20190625191510.599310671@goodmis.org>
+        Tue, 25 Jun 2019 15:19:53 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58627 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfFYTTw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:19:52 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 18B5DC000B;
+        Tue, 25 Jun 2019 19:19:46 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 21:19:45 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Trent Piepho <tpiepho@impinj.com>
+Cc:     "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "userm57@yahoo.com" <userm57@yahoo.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
+ doesn't
+Message-ID: <20190625191945.GH5690@piout.net>
+References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
+ <20190624195705.GD5690@piout.net>
+ <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
+ <20190625092926.GE5690@piout.net>
+ <1561483011.2343.6.camel@impinj.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561483011.2343.6.camel@impinj.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+On 25/06/2019 17:16:52+0000, Trent Piepho wrote:
+> On Tue, 2019-06-25 at 11:29 +0200, Alexandre Belloni wrote:
+> > Userspace is certainly adjusting the timezone after the kernel did. Can
+> > you run the same commands without running your init? 
+> > 
+> > On stable, you have /etc/init.d/hwclock.sh that still runs and does the
+> > correct thing. My understanding is that systemd also handles the TZ
+> > properly after hctosys (see clock_is_localtime()).
+> > 
+> > Seriously, hctosys does a really bad job at setting the system time, it
+> > is guaranteed to be always wrong on most platforms. My plan is still to
+> > try to get distros to stop enabling it and do that properly in
+> > userspace. This is already ok when using sysV but systemd would need a
+> > few changes to stop relying on it when then is no hwclock initscript.
+> > Unfortunately, I didn't have time to work on that yet.
+> 
+> hctosys is very handy in that it sets the system time before any log
+> messages are generated.  Either in a main boot or in an initramfs. 
+> Having property time-stamped log messages is very important for
+> managing a large deployment.
+> 
+> If the system time is set by some script or systemd unit, then there
+> will always be all the things that need to run before that script or
+> unit can work.  E.g., udev creating rtc device nodes, mounting /sys and
+> /proc, systemd generator for local file system unis, the other parts of
+> systemd to do that, etc. All this won't be able to log with correct
+> system time.
+> 
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+I'd argue that this system time is not correct anyway and hence is not
+that useful. Especially since the boot time to anything reading the RTC
+will still be smaller than the maximum error hctosys can have (that is
+up to two seconds). This is even worse if the RTC sotres local time.
 
-struct tp_probes {
-	...
-        struct tracepoint_func probes[0];
-};
+Instead of using a systemd unit, we could make systemd read the RTC as
+soon as possible and set the system time correctly (at least, that is my
+plan). This would be especially useful when using NTP because as already
+reported, it may take a few hours to actually synchronize because
+hctosys didn't set the correct time.
 
-instance = kmalloc(sizeof(sizeof(struct tp_probes) +
-			sizeof(struct tracepoint_func) * count, GFP_KERNEL);
+I would agree that there are remaining use cases for hctosys, e.g. when
+wanting to boot a rootfs over a network filesystem and without an
+initramfs.
 
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = kmalloc(struct_size(instance, probes, count) GFP_KERNEL);
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/tracepoint.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 46f2ab1e08a9..fb9353ed901b 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -68,8 +68,8 @@ struct tp_probes {
- 
- static inline void *allocate_probes(int count)
- {
--	struct tp_probes *p  = kmalloc(count * sizeof(struct tracepoint_func)
--			+ sizeof(struct tp_probes), GFP_KERNEL);
-+	struct tp_probes *p  = kmalloc(struct_size(p, probes, count),
-+				       GFP_KERNEL);
- 	return p == NULL ? NULL : p->probes;
- }
- 
 -- 
-2.20.1
-
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
