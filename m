@@ -2,213 +2,195 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC79CC48BD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E9AC4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC60206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:50:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vjyYqkBS"
+	by mail.kernel.org (Postfix) with ESMTP id 78AFB206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730619AbfFYCus (ORCPT
+        id S1730636AbfFYCu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 22:50:48 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33800 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730466AbfFYCus (ORCPT
+        Mon, 24 Jun 2019 22:50:56 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:35130 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730466AbfFYCuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 22:50:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P2hYfl173896;
-        Tue, 25 Jun 2019 02:48:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=XFwVO5gZ5iPnoC3Sie2eTRsT7P5Yy78QuLt59bFa7gg=;
- b=vjyYqkBSmwZZzASPkdig48f/ZQ6M2xSaGZ5JoZ2KnXyx+ZPzBBz5jpr+YfS4p8kOBgMK
- cRZUhtWzrXPbHSruaYB3vGzigEwZITmgaEgbBqmNa7sOzJDbcVDlo5qZKeAe3CL1tUcm
- 5M4bHkPHUkGiFoanu+gHs/CjaLWqLOG4JpUPmZ4inceEdsFEstJIdDbAVtv9FBNSJbdG
- XRYOi/RAKl0S0E56k2XrWz/6dp2Ko8HCpldPTqJoZNebUc5JNy0xuVOU9qutqttRf7D2
- loE5bOWw7AyYgZxdlP1pxiS+pUxQ+tWhCw3AQHcOyZqpL4n4u2Ss51RRwW+D0fKttBai Bw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t9brt1g94-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 02:48:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5P2mhmx068696;
-        Tue, 25 Jun 2019 02:48:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t9p6twvmb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 02:48:43 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5P2mdxC004165;
-        Tue, 25 Jun 2019 02:48:39 GMT
-Received: from [10.182.69.106] (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 19:48:39 -0700
-Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet
- mail)
-To:     =?UTF-8?B?d2VuYmluemVuZyjmm77mlofmlowp?= <wenbinzeng@tencent.com>
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        Wenbin Zeng <wenbin.zeng@gmail.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "keith.busch@intel.com" <keith.busch@intel.com>,
-        "hare@suse.com" <hare@suse.com>, "osandov@fb.com" <osandov@fb.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
- <20190625015512.GC23777@ming.t460p>
- <fe4f40e7bbf74311a47c9f3b981f8c53@tencent.com>
- <20190625022706.GE23777@ming.t460p>
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <9bae2938-dcb6-de91-b16f-36ce8af8b7fb@oracle.com>
-Date:   Tue, 25 Jun 2019 10:51:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 24 Jun 2019 22:50:55 -0400
+Received: from unknown (HELO lgeamrelo02.lge.com) (156.147.1.126)
+        by 156.147.23.51 with ESMTP; 25 Jun 2019 11:50:53 +0900
+X-Original-SENDERIP: 156.147.1.126
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.126 with ESMTP; 25 Jun 2019 11:50:53 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Tue, 25 Jun 2019 11:50:15 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     paulmck@linux.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com
+Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
+Message-ID: <20190625025015.GB10912@X58A-UD3R>
+References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
+ <20190624164624.GA41314@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625022706.GE23777@ming.t460p>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906250021
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250020
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624164624.GA41314@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/25/19 10:27 AM, Ming Lei wrote:
-> On Tue, Jun 25, 2019 at 02:14:46AM +0000, wenbinzeng(曾文斌) wrote:
->> Hi Ming,
->>
->>> -----Original Message-----
->>> From: Ming Lei <ming.lei@redhat.com>
->>> Sent: Tuesday, June 25, 2019 9:55 AM
->>> To: Wenbin Zeng <wenbin.zeng@gmail.com>
->>> Cc: axboe@kernel.dk; keith.busch@intel.com; hare@suse.com; osandov@fb.com;
->>> sagi@grimberg.me; bvanassche@acm.org; linux-block@vger.kernel.org;
->>> linux-kernel@vger.kernel.org; wenbinzeng(曾文斌) <wenbinzeng@tencent.com>
->>> Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet mail)
->>>
->>> On Mon, Jun 24, 2019 at 11:24:07PM +0800, Wenbin Zeng wrote:
->>>> Currently hctx->cpumask is not updated when hot-plugging new cpus,
->>>> as there are many chances kblockd_mod_delayed_work_on() getting
->>>> called with WORK_CPU_UNBOUND, workqueue blk_mq_run_work_fn may run
->>>
->>> There are only two cases in which WORK_CPU_UNBOUND is applied:
->>>
->>> 1) single hw queue
->>>
->>> 2) multiple hw queue, and all CPUs in this hctx become offline
->>>
->>> For 1), all CPUs can be found in hctx->cpumask.
->>>
->>>> on the newly-plugged cpus, consequently __blk_mq_run_hw_queue()
->>>> reporting excessive "run queue from wrong CPU" messages because
->>>> cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) returns false.
->>>
->>> The message means CPU hotplug race is triggered.
->>>
->>> Yeah, there is big problem in blk_mq_hctx_notify_dead() which is called
->>> after one CPU is dead, but still run this hw queue to dispatch request,
->>> and all CPUs in this hctx might become offline.
->>>
->>> We have some discussion before on this issue:
->>>
->>> https://lore.kernel.org/linux-block/CACVXFVN729SgFQGUgmu1iN7P6Mv5+puE78STz8hj
->>> 9J5bS828Ng@mail.gmail.com/
->>>
->>
->> There is another scenario, you can reproduce it by hot-plugging cpus to kvm guests via qemu monitor (I believe virsh setvcpus --live can do the same thing), for example:
->> (qemu) cpu-add 1
->> (qemu) cpu-add 2
->> (qemu) cpu-add 3
->>
->> In such scenario, cpu 1, 2 and 3 are not visible at boot, hctx->cpumask doesn't get synced when these cpus are added.
-
-Here is how I play with it with the most recent qemu and linux.
-
-Boot VM with 1 out of 4 vcpu online.
-
-# qemu-system-x86_64 -hda disk.img \
--smp 1,maxcpus=4 \
--m 4096M -enable-kvm \
--device nvme,drive=lightnvme,serial=deadbeaf1 \
--drive file=nvme.img,if=none,id=lightnvme \
--vnc :0 \
--kernel /.../mainline-linux/arch/x86_64/boot/bzImage \
--append "root=/dev/sda1 init=/sbin/init text" \
--monitor stdio -net nic -net user,hostfwd=tcp::5022-:22
-
-
-As Ming mentioned, after boot:
-
-# cat /proc/cpuinfo  | grep processor
-processor	: 0
-
-# cat /sys/block/nvme0n1/mq/0/cpu_list
-0
-# cat /sys/block/nvme0n1/mq/1/cpu_list
-1
-# cat /sys/block/nvme0n1/mq/2/cpu_list
-2
-# cat /sys/block/nvme0n1/mq/3/cpu_list
-3
-
-# cat /proc/interrupts | grep nvme
- 24:         11   PCI-MSI 65536-edge      nvme0q0
- 25:         78   PCI-MSI 65537-edge      nvme0q1
- 26:          0   PCI-MSI 65538-edge      nvme0q2
- 27:          0   PCI-MSI 65539-edge      nvme0q3
- 28:          0   PCI-MSI 65540-edge      nvme0q4
-
-I hotplug with "device_add
-qemu64-x86_64-cpu,id=core1,socket-id=1,core-id=0,thread-id=0" in qemu monitor.
-
-Dongli Zhang
-
+On Mon, Jun 24, 2019 at 12:46:24PM -0400, Joel Fernandes wrote:
+> On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
+> > Hello rcu folks,
+> > 
+> > I thought it'd better to announce it if those spawnings fail because of
+> > !rcu_scheduler_fully_active.
+> > 
+> > Of course, with the current code, it never happens though.
+> > 
+> > Thoughts?
 > 
-> It is CPU cold-plug, we suppose to support it.
+> It seems in the right spirit, but with your patch a warning always fires.
+> rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
+> from hotplug paths.
+
+I'm sorry bothering you.
+
+I sent the patch to ask how you guys think about the direction coz I'm
+not sure if the current code w/o warning on it is intended or not.
+
+However from now on, I think I need to test it first even if it's RFC :)
+
+Thank you very much for the information.
+
+Thanks,
+Byungchul
+
+> Warning splat stack looks like:
 > 
-> The new added CPUs should be visible to hctx, since we spread queues
-> among all possible CPUs(), please see blk_mq_map_queues() and
-> irq_build_affinity_masks(), which is like static allocation on CPU
-> resources.
+> [    0.398767] Call Trace:                                                                                                        
+> [    0.398775]  rcu_init+0x6aa/0x724                                             
+> [    0.398779]  start_kernel+0x220/0x4a2                                    
+> [    0.398780]  ? copy_bootdata+0x12/0xac                                                                                                                                   
+> [    0.398782]  secondary_startup_64+0xa4/0xb0    
 > 
-> Otherwise, you might use an old kernel or there is bug somewhere.
 > 
->>
->>>>
->>>> This patch added a cpu-hotplug handler into blk-mq, updating
->>>> hctx->cpumask at cpu-hotplug.
->>>
->>> This way isn't correct, hctx->cpumask should be kept as sync with
->>> queue mapping.
->>
->> Please advise what should I do to deal with the above situation? Thanks a lot.
-> 
-> As I shared in last email, there is one approach discussed, which seems
-> doable.
-> 
-> Thanks,
-> Ming
-> 
+> > 
+> > Thanks,
+> > Byungchul
+> > 
+> > ---8<---
+> > From 58a33a85c70f82c406319b4752af95cf6ceb73a3 Mon Sep 17 00:00:00 2001
+> > From: Byungchul Park <byungchul.park@lge.com>
+> > Date: Mon, 24 Jun 2019 17:08:26 +0900
+> > Subject: [RFC] rcu: Warn that rcu ktheads cannot be spawned
+> > 
+> > In case that rcu ktheads cannot be spawned due to
+> > !rcu_scheduler_fully_active, it'd be better to anounce it.
+> > 
+> > While at it, because the return value of rcu_spawn_one_boost_kthread()
+> > is not used any longer, changed the return type from int to void.
+> > 
+> > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
+> > ---
+> >  kernel/rcu/tree_plugin.h | 31 +++++++++++++++++++------------
+> >  1 file changed, 19 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index 1102765..7d74193 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
+> >   * already exist.  We only create this kthread for preemptible RCU.
+> >   * Returns zero if all is well, a negated errno otherwise.
+> >   */
+> > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> >  {
+> >  	int rnp_index = rnp - rcu_get_root();
+> >  	unsigned long flags;
+> > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> >  	struct task_struct *t;
+> >  
+> >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+> > -		return 0;
+> > +		return;
+> >  
+> > -	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
+> > -		return 0;
+> > +	if (rcu_rnp_online_cpus(rnp) == 0)
+> > +		return;
+> >  
+> >  	rcu_state.boost = 1;
+> >  	if (rnp->boost_kthread_task != NULL)
+> > -		return 0;
+> > +		return;
+> >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
+> >  			   "rcub/%d", rnp_index);
+> >  	if (IS_ERR(t))
+> > -		return PTR_ERR(t);
+> > +		return;
+> >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+> >  	rnp->boost_kthread_task = t;
+> >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> >  	sp.sched_priority = kthread_prio;
+> >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+> >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
+> > -	return 0;
+> >  }
+> >  
+> >  static void rcu_cpu_kthread_setup(unsigned int cpu)
+> > @@ -1264,8 +1263,12 @@ static void __init rcu_spawn_boost_kthreads(void)
+> >  		per_cpu(rcu_data.rcu_cpu_has_work, cpu) = 0;
+> >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+> >  		return;
+> > +
+> > +	if (WARN_ON(!rcu_scheduler_fully_active))
+> > +		return;
+> > +
+> >  	rcu_for_each_leaf_node(rnp)
+> > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > +		rcu_spawn_one_boost_kthread(rnp);
+> >  }
+> >  
+> >  static void rcu_prepare_kthreads(int cpu)
+> > @@ -1273,9 +1276,11 @@ static void rcu_prepare_kthreads(int cpu)
+> >  	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
+> >  	struct rcu_node *rnp = rdp->mynode;
+> >  
+> > +	if (WARN_ON(!rcu_scheduler_fully_active))
+> > +		return;
+> > +
+> >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
+> > -	if (rcu_scheduler_fully_active)
+> > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > +	rcu_spawn_one_boost_kthread(rnp);
+> >  }
+> >  
+> >  #else /* #ifdef CONFIG_RCU_BOOST */
+> > @@ -2198,8 +2203,10 @@ static void rcu_spawn_one_nocb_kthread(int cpu)
+> >   */
+> >  static void rcu_spawn_cpu_nocb_kthread(int cpu)
+> >  {
+> > -	if (rcu_scheduler_fully_active)
+> > -		rcu_spawn_one_nocb_kthread(cpu);
+> > +	if (WARN_ON(!rcu_scheduler_fully_active))
+> > +		return;
+> > +
+> > +	rcu_spawn_one_nocb_kthread(cpu);
+> >  }
+> >  
+> >  /*
+> > -- 
+> > 1.9.1
+> > 
