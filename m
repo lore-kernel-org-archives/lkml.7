@@ -2,106 +2,227 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BA3C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493F1C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5674120652
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8A020652
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hppAvMj3"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CkNE3X5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfFYGPT (ORCPT
+        id S1729170AbfFYGPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:15:19 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:46681 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfFYGPT (ORCPT
+        Tue, 25 Jun 2019 02:15:34 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:49502 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfFYGPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:15:19 -0400
-Received: by mail-pg1-f173.google.com with SMTP id v9so8366453pgr.13;
-        Mon, 24 Jun 2019 23:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0xtd1/J4ViydtGXP9MMxtmN/QFbXkpk0xAkv4gjrpSw=;
-        b=hppAvMj3kv1StYKHt5d4uIPx4ZNyPOSORyxE0PVWuOx5jxxOvyodbgL4ih17F7KCYz
-         BEQprTJ+gWhcJ+9I0fgVpprZpXBAk+5tmYkEIdw1ULJk2F3DTdjX1rhNDzy9zltuU149
-         hMDCYG5FjxqXQypcZG793bOr4eIi2NvpKRO6N125zSyI4yi878qlId85N1E/SyGTUMBN
-         ry++0cnoqfSPLdVxv8jhjjfms5aMbUCapnnwzkw+LHXW43FQxD93ORCDH0KbvyGQltdU
-         8D5SaqEFFDB0a+9lhYoWizYp2NAA9jTc1/OKQv1liwAQvADs/rqpq4tNqGIgsTofgKoA
-         7IkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0xtd1/J4ViydtGXP9MMxtmN/QFbXkpk0xAkv4gjrpSw=;
-        b=J8SjA2EORZb9uvICQK3dMcPwdfHHn9AyiLMAPJVX/ElXC8qmXVCwiPLRapPab9ovTo
-         FKR90qv0AKnB/kzGcy69EeGQZz/Rda/5CE6nsassZWXs1x7XLzT5amijS/RZqy07pCw+
-         b/cn/PdmOewfPbVTmWAOxR0PM+psm5rL79tpAlfvwkulhvcBO5muw11CrjACtvHnTQXb
-         YV37SZ6OEQ7LXLm/UoP2RAiSHkf5seHQ4B4cfHPZbGdrpgxCFIStcKM6ALbI6Yx8Fo2V
-         PogVbBayA45vMiXRajr09s97nqkOxoG1U62vXeN1SALxPzVNHK+P8F8ClfHC7omCuejH
-         KxtA==
-X-Gm-Message-State: APjAAAXa4YlpcaRd1K0/w1SjboNhN+CK2fmiIV47QC0iz7LFo8xHVH88
-        5CJJYx2HaZJmL3v7vqhigzg=
-X-Google-Smtp-Source: APXvYqzd7ouVVY0Lo26vi94Hhx95/EHDQ4fKuRjCmCZ7QYgHh1MGEj0FPg7SnLBSZwCEPcV+k6cgDA==
-X-Received: by 2002:a63:f146:: with SMTP id o6mr36213081pgk.179.1561443318452;
-        Mon, 24 Jun 2019 23:15:18 -0700 (PDT)
-Received: from dhcp-12-139.nay.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x23sm18217562pfo.112.2019.06.24.23.15.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 23:15:17 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 14:15:07 +0800
-From:   Hangbin Liu <liuhangbin@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     sukumarg1973@gmail.com, karn@ka9q.net, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
+        Tue, 25 Jun 2019 02:15:34 -0400
+Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x5P6FPWt021421;
+        Tue, 25 Jun 2019 15:15:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x5P6FPWt021421
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561443325;
+        bh=niTmtVxWpZ2hyzHyFc7bG1KkBiNgtu3U3WVbxtL8umU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CkNE3X5pjbVxOxivrGRh6Bbb2pepJUSuvOsS8cdeF/9ww/ZoNbK1mv6u4CulgC2uv
+         jjCj9/Gmr0A1XTlomrFpJtrrkSTdnkxDXv3QJ5tNVwzEVss6NRaNxkwHJ5RMwKVuS+
+         DhXnRbNFBG2TRBr8TqN3DuwvV/8rajTWf3+7L6y7f4C3nybP1JuUA+dT9RpPJI5Sin
+         oWqwJLc8+vcqnBaRSjVW0frG1+m34U/UJ/aVsvFeBGAqXUlEx/XrVk3Vf+oP5pl1Ap
+         lBI6tRGd8YbQOugX3G5MVVgfbkdUthNSSyrmGSOwpiP1nvwJVOEZTjHo8KklbwQK1o
+         OjxAwpccESVaw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: Re: hard-coded limit on unresolved multicast route cache in
- ipv4/ipmr.c causes slow, unreliable creation of multicast routes on busy
- networks
-Message-ID: <20190625061507.GG18865@dhcp-12-139.nay.redhat.com>
-References: <CADiZnkSy=rFq5xLs6RcgJDihQ1Vwo2WBBY9Fi_5jOHr8XupukQ@mail.gmail.com>
- <20181204065100.GT24677@leo.usersys.redhat.com>
- <CADiZnkTm3UMdZ+ivPXFeTJS+_2ZaiQh7D8wWnsw0BNGfxa0C4w@mail.gmail.com>
- <20181218.215545.1657190540227341803.davem@davemloft.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20181218.215545.1657190540227341803.davem@davemloft.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: [PATCH] fixdep: check return code of printf() and putchar()
+Date:   Tue, 25 Jun 2019 15:15:05 +0900
+Message-Id: <20190625061505.30107-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 09:55:45PM -0800, David Miller wrote:
-> From: Sukumar Gopalakrishnan <sukumarg1973@gmail.com>
-> Date: Wed, 19 Dec 2018 10:57:02 +0530
-> 
-> > Hi David,
-> > 
-> >   There are two patch for this issue:
-> >    1) Your changes which removes cache_resolve_queue_len
-> >     2) Hangbin's changes which make cache_resolve_queue_len configurable.
-> > 
-> > Which one will be chosen for this issue ?
-> 
-> I do plan to look into this, sorry for taking so long.
-> 
-> Right now I am overwhelmed preparing for the next merge window and
-> synchronizing with other developers for that.
-> 
-> Please be patient.
+When there is not enough space on your storage device, the build will
+fail with 'No space left on device' error message.
 
-Hi David,
+The reason is obvious from the message, so you will free up some disk
+space, then you will resume the build.
 
-Any progress for this issue?
+However, sometimes you may still see a mysterious error message:
 
-Thanks
-Hangbin
+  unterminated call to function 'wildcard': missing ')'.
+
+If you run out of the disk space, fixdep may end up with generating
+incomplete .*.cmd files.
+
+For example, if the disk shortage occurs while fixdep is running
+print_dep(), the .*.cmd might be truncated like this:
+
+   $(wildcard include/config/
+
+When you run 'make' next time, this broken .*.cmd will be included,
+then GNU Make will terminate parsing since it is a wrong syntax.
+
+Once this happens, you need to run 'make clean' or delete the broken
+.*.cmd file manually.
+
+Even if you do not see any error message, the .*.cmd files after any
+error could be potentially incomplete, and unreliable. You may miss
+the re-compilation due to missing header dependency.
+
+If printf() cannot output the string for disk shortage or whatever
+reason, it returns a negative return code, but currently fixdep does
+not check it at all. Consequently, fixdep *successfully* generates a
+broken .*.cmd file. Make never notices that since fixdep exits with 0,
+which means success.
+
+Given the intended usage of fixdep, it must respect the return code of
+not only malloc(), but also printf() and putchar().
+
+This seems a long-standing issue since the introduction of fixdep.
+
+In old days, Kbuild tried to provide an extra safety by letting fixdep
+output to a temporary file and renaming it after everything is done:
+
+  scripts/basic/fixdep $(depfile) $@ '$(make-cmd)' > $(dot-target).tmp;\
+  rm -f $(depfile);                                                    \
+  mv -f $(dot-target).tmp $(dot-target).cmd)
+
+It did not avoid the current issue; fixdep created a truncated tmp file
+reporting success, so the broken tmp would be renamed to a .*.cmd file.
+
+By propagating the error code to the build system, this problem should
+be solved because:
+
+[1] Since commit 9c2af1c7377a ("kbuild: add .DELETE_ON_ERROR special
+    target"), Make will delete the target automatically on any failure
+    in the recipe.
+
+[2] Since commit 392885ee82d3 ("kbuild: let fixdep directly write to
+    .*.cmd files"), .*.cmd file is included only when the corresponding
+    target already exists.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ scripts/basic/fixdep.c | 47 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
+
+diff --git a/scripts/basic/fixdep.c b/scripts/basic/fixdep.c
+index facbd603adf6..fea1d58bda68 100644
+--- a/scripts/basic/fixdep.c
++++ b/scripts/basic/fixdep.c
+@@ -99,6 +99,7 @@
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include <string.h>
++#include <stdarg.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <ctype.h>
+@@ -109,6 +110,32 @@ static void usage(void)
+ 	exit(1);
+ }
+ 
++/*
++ * In the intended usage of this program, the stdout is redirected to .*.cmd
++ * The return code of printf() and putchar() must be checked to catch any error
++ * like "No space left on device".
++ */
++static void xprintf(const char *format, ...)
++{
++	va_list ap;
++	int ret;
++
++	va_start(ap, format);
++	ret = vprintf(format, ap);
++	if (ret < 0)
++		exit(1);
++	va_end(ap);
++}
++
++static void xputchar(int c)
++{
++	int ret;
++
++	ret = putchar(c);
++	if (ret == EOF)
++		exit(1);
++}
++
+ /*
+  * Print out a dependency path from a symbol name
+  */
+@@ -116,7 +143,7 @@ static void print_dep(const char *m, int slen, const char *dir)
+ {
+ 	int c, prev_c = '/', i;
+ 
+-	printf("    $(wildcard %s/", dir);
++	xprintf("    $(wildcard %s/", dir);
+ 	for (i = 0; i < slen; i++) {
+ 		c = m[i];
+ 		if (c == '_')
+@@ -124,10 +151,10 @@ static void print_dep(const char *m, int slen, const char *dir)
+ 		else
+ 			c = tolower(c);
+ 		if (c != '/' || prev_c != '/')
+-			putchar(c);
++			xputchar(c);
+ 		prev_c = c;
+ 	}
+-	printf(".h) \\\n");
++	xprintf(".h) \\\n");
+ }
+ 
+ struct item {
+@@ -324,13 +351,13 @@ static void parse_dep_file(char *m, const char *target)
+ 				 */
+ 				if (!saw_any_target) {
+ 					saw_any_target = 1;
+-					printf("source_%s := %s\n\n",
+-					       target, m);
+-					printf("deps_%s := \\\n", target);
++					xprintf("source_%s := %s\n\n",
++						target, m);
++					xprintf("deps_%s := \\\n", target);
+ 				}
+ 				is_first_dep = 0;
+ 			} else {
+-				printf("  %s \\\n", m);
++				xprintf("  %s \\\n", m);
+ 			}
+ 
+ 			buf = read_file(m);
+@@ -353,8 +380,8 @@ static void parse_dep_file(char *m, const char *target)
+ 		exit(1);
+ 	}
+ 
+-	printf("\n%s: $(deps_%s)\n\n", target, target);
+-	printf("$(deps_%s):\n", target);
++	xprintf("\n%s: $(deps_%s)\n\n", target, target);
++	xprintf("$(deps_%s):\n", target);
+ }
+ 
+ int main(int argc, char *argv[])
+@@ -369,7 +396,7 @@ int main(int argc, char *argv[])
+ 	target = argv[2];
+ 	cmdline = argv[3];
+ 
+-	printf("cmd_%s := %s\n\n", target, cmdline);
++	xprintf("cmd_%s := %s\n\n", target, cmdline);
+ 
+ 	buf = read_file(depfile);
+ 	parse_dep_file(buf, target);
+-- 
+2.17.1
+
