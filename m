@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFB9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E91C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B215A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B8F216E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hRMY0hQP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="unkd+FMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbfFYQrv (ORCPT
+        id S1731601AbfFYQrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:47:51 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52535 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731136AbfFYQrq (ORCPT
+        Tue, 25 Jun 2019 12:47:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44890 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730824AbfFYQro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:47:46 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s3so3550745wms.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:47:45 -0700 (PDT)
+        Tue, 25 Jun 2019 12:47:44 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r16so18640015wrl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e2iDgG+a1Cwxalhjo4sK1dl1x5ZGYIy8c2NDgb0cIKI=;
-        b=hRMY0hQPqZa1EOkLq/pcbXQACdZ2vJch4Nwcss07dQdC/POnex3oN18t0XpCs3k2jP
-         NvyO5+bb+SYAUpaa/6dukYsJS2HKigF9ncRCCtBSOguyAZLciEXdUxNLAOHBRmIDO+XY
-         1ZT2UPFc1MMyvFBH8cKmGYRfjmoc8NVw9ITwdFWuyuXBZzgwlQPOmu336h92jyz85L32
-         c2G1liFbrRMmUnrc8zuOdrTOGQcKpBhCwGfzFNalHwsyG+RpdzhcucUUltKduAZwFi1p
-         pj8rEVfuV3ePPORyN7CqUsceLTjVphHP5v/f12iQFjZVxMwr1ZeIcSgn2nFlPojvEU5y
-         7plw==
+        bh=bWqeg/uRBmP4v1S0mrfdgUlh6T/cak+6t6geY/+2zUc=;
+        b=unkd+FMrbJN9AzanjOJ4wpmc5HlH/ET5TudwrnAvOcWYz1FhJuNWwwXVCCo/y84G6i
+         nH2bHVyL1b8OXnBdWWvQ9MPcfVs/5S5DYUf7iCUuZS47RVYNIleEcEDKbEsYWLMeLJ6e
+         TLKLP7ZrGuZSCTyJbu20xIi0iuhnhI4FBK6EYE/Os57yaBo1IYfBAiv9pUjyFW/4j6Q2
+         rpsOjD52BAjQRBC4//y1jisx8bzNWSTn0Xf52FSCHwQHBaHwrjO82XvDAsHMtRvJpfDn
+         9iuwnV+CGdKw0aqvwaspbpSaq14/rrZ3eqD1COJr+X3VxcezUlVryu0Eo02Tqu9s5TrR
+         DbxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e2iDgG+a1Cwxalhjo4sK1dl1x5ZGYIy8c2NDgb0cIKI=;
-        b=N9y0qKbCP2TJAIKOWBzWXgM+DKClKhROIztNT9qW5xO0l5AJmgOGUqr3o/TtClxJRj
-         /3WUup5dRNq5FhauO6VtVo/aJ3FpdSaioZI2yWI84NEB+FdOobbQec4YeWbM0WuPB4rP
-         0+vE0Z5/wZHCWNLHU5bvWaHBua9TFsnDSgVRKqpW60SE3ip4XPi1JJ/miJSD+To4zhxf
-         5LXnLA4LqT1cHuGk0c2GhEMmfBX5vQBjt0lBW3R6y19ZSyIr8+Vifye5vO0b9xWVIbkY
-         qw1MLhDCUEL5zBspJjUw9moXk0IqRpNdNDMY3mny2nrCxQiolezopyCsi2mZcN2lbJ2k
-         HK2g==
-X-Gm-Message-State: APjAAAU3Jc6LcFjS4kXNidWVNshpVBdIwLOV8fLAcRj+XfW9zioXfBYJ
-        u62bdDPaxfwzJF0648tN4UeRdQ==
-X-Google-Smtp-Source: APXvYqzzKybU5L5CHAou+6YROvKHjyTDhRvTNHkGwif2kC9QtUTdJvvPwjxfryuq9YWgxxmIB0Rwqg==
-X-Received: by 2002:a1c:39d6:: with SMTP id g205mr19367816wma.85.1561481264441;
-        Tue, 25 Jun 2019 09:47:44 -0700 (PDT)
+        bh=bWqeg/uRBmP4v1S0mrfdgUlh6T/cak+6t6geY/+2zUc=;
+        b=IrKGjS6ZADvBYtvtrnQTtz2o8pEYuUU75XnRDFszcdrqnL5Sgs1FFvhNoTtMM0/q2u
+         QEGbioazG3Qsdd/I21FwTtVwUAm2Jy2sB6CkQFWoO4t6qvnPcKpsM03/+vNPNKnP15Jj
+         vk3gdxf96lpdnVz3pUzBBTeb0dXk65quOkcoykJ5d0ltgUTtlUgfYNOqv/M+7KuW95vg
+         6by+t+R7Y6ZjNlOQJX/I3o+3BRvBEQC0LykJ+FXmMmkkT7q7BaWdRJH6ha2m9sSSvZ+V
+         ZB/NI9XftKBVVN90J6ayyjR2H7Qf2JGyubUJp7WjcVeYJFwOCDwqbwr1jn9MxBznLmq+
+         HkCA==
+X-Gm-Message-State: APjAAAUV0XyGeMMLgTII34hhKAyZIXxtNMm9/OSrbXkfb/ApqJ6AR2xb
+        Le3jLJgFV5Umrcnf0cnjpF2rOg==
+X-Google-Smtp-Source: APXvYqy6K2OKJaRWYw2cM2myPOUo982DJCOgC+HO5QqOBSGkx5aQTFdQWGebuD8lsFMVewG0rHya+Q==
+X-Received: by 2002:adf:f948:: with SMTP id q8mr17100963wrr.196.1561481262770;
+        Tue, 25 Jun 2019 09:47:42 -0700 (PDT)
 Received: from localhost.localdomain (30.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.30])
-        by smtp.gmail.com with ESMTPSA id d18sm42594476wrb.90.2019.06.25.09.47.42
+        by smtp.gmail.com with ESMTPSA id d18sm42594476wrb.90.2019.06.25.09.47.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Jun 2019 09:47:43 -0700 (PDT)
+        Tue, 25 Jun 2019 09:47:42 -0700 (PDT)
 From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 To:     jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org,
         bjorn.andersson@linaro.org, david.brown@linaro.org,
@@ -69,9 +69,9 @@ Cc:     vkoul@kernel.org, niklas.cassel@linaro.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
-Subject: [PATCH v3 04/14] dt-bindings: mailbox: qcom: Add clock-name optional property
-Date:   Tue, 25 Jun 2019 18:47:23 +0200
-Message-Id: <20190625164733.11091-5-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v3 03/14] mbox: qcom: replace integer with valid macro
+Date:   Tue, 25 Jun 2019 18:47:22 +0200
+Message-Id: <20190625164733.11091-4-jorge.ramirez-ortiz@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
 References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org>
@@ -82,68 +82,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the APCS clock is registered (platform dependent), it retrieves
-its parent names from hardcoded values in the driver.
-
-The following commit allows the DT node to provide such clock names to
-the platform data based clock driver therefore avoiding having to
-explicitly embed those names in the clock driver source code.
+Use the correct macro when registering the platform device.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-index 1232fc9fc709..b69310322b09 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-@@ -18,10 +18,11 @@ platforms.
- 	Usage: required
- 	Value type: <prop-encoded-array>
- 	Definition: must specify the base address and size of the global block
-+
- - clocks:
--	Usage: required if #clocks-cells property is present
--	Value type: <phandle>
--	Definition: phandle to the input PLL, which feeds the APCS mux/divider
-+	Usage: required if #clock-names property is present
-+	Value type: <phandle array>
-+	Definition: phandles to the two parent clocks of the clock driver.
+diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+index a05dc3aabac7..c8088e9caf02 100644
+--- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
++++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+@@ -97,7 +97,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
  
- - #mbox-cells:
- 	Usage: required
-@@ -33,6 +34,12 @@ platforms.
- 	Value type: <u32>
- 	Definition: as described in clock.txt, must be 0
+ 	apcs->clk = platform_device_register_data(&pdev->dev,
+ 						  "qcom-apcs-msm8916-clk",
+-						  -1, NULL, 0);
++						  PLATFORM_DEVID_NONE, NULL, 0);
+ 	if (IS_ERR(apcs->clk))
+ 		dev_err(&pdev->dev, "failed to register APCS clk\n");
  
-+- clock-names:
-+	Usage: required if the platform data based clock driver needs to
-+	retrieve the parent clock names from device tree.
-+	This will requires two mandatory clocks to be defined.
-+	Value type: <string-array>
-+	Definition: must be "aux" and "pll"
- 
- = EXAMPLE
- The following example describes the APCS HMSS found in MSM8996 and part of the
-@@ -65,3 +72,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
- 		clocks = <&a53pll>;
- 		#clock-cells = <0>;
- 	};
-+
-+Below is another example of the APCS binding on QCS404 platforms:
-+
-+	apcs_glb: mailbox@b011000 {
-+		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
-+		reg = <0x0b011000 0x1000>;
-+		#mbox-cells = <1>;
-+		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-+		clock-names = "aux", "pll";
-+		#clock-cells = <0>;
-+	};
 -- 
 2.21.0
 
