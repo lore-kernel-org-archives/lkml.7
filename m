@@ -2,84 +2,82 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE52DC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF162C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F7A214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4AF214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbfFYMEF (ORCPT
+        id S1731579AbfFYMEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:04:05 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:51958 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726557AbfFYMEF (ORCPT
+        Tue, 25 Jun 2019 08:04:13 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:58629 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfFYMEN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:04:05 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09348381|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.121591-0.0103769-0.868032;FP=17029885308963081405|1|1|11|0|-1|-1|-1;HT=e01l07423;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.EpzBYh._1561464222;
-Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.EpzBYh._1561464222)
-          by smtp.aliyun-inc.com(10.147.44.129);
-          Tue, 25 Jun 2019 20:04:00 +0800
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        Peter Pan <peterpandong@micron.com>, Stefan Roese <sr@denx.de>,
-        Jeff Kletsky <git-commits@allycomm.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        liaoweixiong <liaoweixiong@allwinnertech.com>,
-        stable@vger.kernel.org
-Subject: [RESEND PATCH v2] mtd: spinand: read return badly if the last page has bitflips
-Date:   Tue, 25 Jun 2019 20:03:45 +0800
-Message-Id: <1561464225-10517-1-git-send-email-liaoweixiong@allwinnertech.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 25 Jun 2019 08:04:13 -0400
+X-Originating-IP: 90.88.16.156
+Received: from bootlin.com (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 107BA60011;
+        Tue, 25 Jun 2019 12:04:02 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 14:04:12 +0200
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
+        Alan Winkowski <walan@marvell.com>
+Subject: Re: [PATCH net v2] net: mvpp2: prs: Don't override the sign bit in
+ SRAM parser shift
+Message-ID: <20190625140412.7e8c84c4@bootlin.com>
+In-Reply-To: <20190620094245.10501-1-maxime.chevallier@bootlin.com>
+References: <20190620094245.10501-1-maxime.chevallier@bootlin.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of the last page containing bitflips (ret > 0),
-spinand_mtd_read() will return that number of bitflips for the last
-page. But to me it looks like it should instead return max_bitflips like
-it does when the last page read returns with 0.
+Hello David,
 
-Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Cc: stable@vger.kernel.org
-Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")
----
- drivers/mtd/nand/spi/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, 20 Jun 2019 11:42:45 +0200
+Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 556bfdb..6b9388d 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
- 		if (ret == -EBADMSG) {
- 			ecc_failed = true;
- 			mtd->ecc_stats.failed++;
--			ret = 0;
- 		} else {
- 			mtd->ecc_stats.corrected += ret;
- 			max_bitflips = max_t(unsigned int, max_bitflips, ret);
- 		}
- 
-+		ret = 0;
- 		ops->retlen += iter.req.datalen;
- 		ops->oobretlen += iter.req.ooblen;
- 	}
--- 
-1.9.1
+>The Header Parser allows identifying various fields in the packet
+>headers, used for various kind of filtering and classification
+>steps.
+>
+>This is a re-entrant process, where the offset in the packet header
+>depends on the previous lookup results. This offset is represented in
+>the SRAM results of the TCAM, as a shift to be operated.
+>
+>This shift can be negative in some cases, such as in IPv6 parsing.
+>
+>This commit prevents overriding the sign bit when setting the shift
+>value, which could cause instabilities when parsing IPv6 flows.
+>
+>Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
+>Suggested-by: Alan Winkowski <walan@marvell.com>
+>Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+>---
+>V2 : Fix a typo in the commit log, reported by Sergei.
+
+I see that this patch was set as "Accepted" on patchwork, but hasn't
+made it to -net, I was wondering if this patch slipped through the
+cracks :)
+
+https://patchwork.ozlabs.org/patch/1119311/
+
+Thanks,
+
+Maxime
 
