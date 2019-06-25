@@ -2,129 +2,193 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BB3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F0FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCDB2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C41205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p9Pxp1s1"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="i0tlux+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfFYUho (ORCPT
+        id S1727280AbfFYUhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:37:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34007 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfFYUhn (ORCPT
+        Tue, 25 Jun 2019 16:37:47 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46195 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbfFYUhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 16:37:43 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p10so26441pgn.1
+Received: by mail-pl1-f196.google.com with SMTP id e5so60102pls.13
         for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:37:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Iu3imckg8kYkPbb5Onx10ayhyMylqLFkWnoTnDGaH3U=;
-        b=p9Pxp1s1oEWH6cPEGEdbiCSJ04C0CovZqwqvJ6A8xriWIaE9qqKZgruFvFHudSOQTg
-         MGgHyZlGTRItVXoHcdDlhrAS3z+2eUUkoFX9ekgFTEQTVQ/VGawe21jRAqDrfDjIbfCN
-         yi8ukYXqL1xj7TBQPE/3XZVbCxQIfuP1fq0P7WRwbW/A6pN3O/h7NHS9nZR2O0nAiiJ8
-         qVn7Iik9ElwVRC8hR46oYC8wP+hoW+neCYc4OoYz0Aq4Pidy2Fridvwgj8tHDj87OC4W
-         YKI3tMOamQ2ohsL5T3ajkX0AComBxGIS1I7n1cGzx3DMhfSWHZCU5HZOgtdSEKsPUbE8
-         HLtg==
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=k9wVBI3MNSxJVQhODLuSRbOf+SmT1l1K5RRF5+DdhGM=;
+        b=i0tlux+8FNEu0ugkEvUUlD4zKy+jo4LmPTngoA6r4KZwHDBk4l5v9aHPUQEnX49/5g
+         z/5lU03hiGUesQ1zP/lPDO/M9fU515Y8oNEl0EKjwdC7dNyZmZQEQEJzGU548pSrAizw
+         AlBCGdOUNg8gVK9FeesIiFWJzJ6YbgT5nrsBvzAUmh99yf7q8hQlgwIm8HPdOmToZugA
+         nEmrM6blVwgyo7dN5eFPje1f1HwAtA+5XwodCP1ntkD5mvR/FwjSqB5AJn7YMTtfEeor
+         5bhYLcubsCaGOlgF0onarHD40ER7JyKcO4a/eslTTHQKCN3GB1Tra4WgBV7T6KYa0chE
+         ps9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Iu3imckg8kYkPbb5Onx10ayhyMylqLFkWnoTnDGaH3U=;
-        b=B6qPgu9Lg92dB+1xdR/7F+aqUoMPUH+cUyZtsAvxO6L+iK8QBCskna9qVFwv0o1qrM
-         C/aJDisQ/HMB3vS61JJXDz1nxRss/mDc9AL2+VzfTTEkKk7QhW8LzYaGuVZlxChXaCsx
-         UQQWWO8tfA6wJl1RKUnng+9RLvul5YDuIFhWcenpV7aW5NzQe+bkZfA3taP/WfrezpYS
-         bbXgmUWtwbSyrd7nbFdZ0ieBpQf066UAyV3DoK45mQPQp8wOQVhFdwHQeSg+2sJ/vI4w
-         8+PJS7pAAea0zfuv9Dr9/fGvj/w/EB0LzD/w77aIe4jyff16guTL/T4R+PcMuwym44G1
-         pExw==
-X-Gm-Message-State: APjAAAXhai7XmLgedy4XyM3q2WnAoH4g6CRhB9WQZCTKSGTG8dnbFxXg
-        she4FYnFpTmUmQJympkXawqFw5eIv0hzkoSGo4FlFg==
-X-Google-Smtp-Source: APXvYqxhRlAZ6GbcKjdAQCLvM436st6jv105wQOaLp/UVKlQ5iSic15Euot89ACHK5MhP4acxxpvk0lnUaPTBJ2UqUY=
-X-Received: by 2002:a63:78ca:: with SMTP id t193mr9600212pgc.10.1561495062324;
- Tue, 25 Jun 2019 13:37:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190624161913.GA32270@embeddedor> <20190624193123.GI3436@hirez.programming.kicks-ass.net>
- <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net> <201906251009.BCB7438@keescook>
- <20190625180525.GA119831@archlinux-epyc> <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
- <20190625202746.GA83499@archlinux-epyc>
-In-Reply-To: <20190625202746.GA83499@archlinux-epyc>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 25 Jun 2019 13:37:31 -0700
-Message-ID: <CAKwvOd=iFDYuG=tpinN0NP23A6-AGza2Gepeui7eQUo6q5c_jA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=k9wVBI3MNSxJVQhODLuSRbOf+SmT1l1K5RRF5+DdhGM=;
+        b=YhQWUdIha+7T/2IF/Ff81r41rYtnTEJM6fKBKXaO/NRc4D/uM2hx3+EnqSvyWzjNDT
+         cbXCitTOK0HNnQcle1IYFkiQ86Oye4MvOhy0YjGhj3d4zGDXmmA8NIvc2YG+n9LTJdQW
+         Nzmene0MiHefrJf+Etk9bg+X1ajlFIxDKitY2RmoYswkiSBWraEqP0FD5jNHAfGHBmRs
+         U49s30JInLkGpqjV4LMiHOuF3HEafY4LOYH3odmqGyoXHoZHE7h6kfgqylY2OPxyKgXc
+         K7hasvu1JUHbQpxLKF8HYFGqtwWNqSepOlFC1ycbmXUriLri9wrM5HBYa8q4NDtXyzXq
+         TEgw==
+X-Gm-Message-State: APjAAAUYcuc7JLw62vBU9ig11KNJQtZPG0pJTqY4l5oIopJE53Hoq7QI
+        CNkEiaQDVHC5d4ftJfUhyKImtQ==
+X-Google-Smtp-Source: APXvYqxrr/uL0yeWv0l0AFEkJ0fiuFxZszwvIRMBTgsPNJXwasc7ZXW/q9+Il/kiADkCo486i0NA9w==
+X-Received: by 2002:a17:902:f216:: with SMTP id gn22mr690564plb.118.1561495062448;
+        Tue, 25 Jun 2019 13:37:42 -0700 (PDT)
+Received: from cabot.adilger.ext (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id m4sm4145961pff.108.2019.06.25.13.37.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 13:37:41 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <E84C8EBC-8341-49E5-8EED-0980D158CD50@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH v4 0/7] vfs: make immutable files actually immutable
+Date:   Tue, 25 Jun 2019 14:37:37 -0600
+In-Reply-To: <20190625180326.GC2230847@magnolia>
+Cc:     Christoph Hellwig <hch@infradead.org>, matthew.garrett@nebula.com,
+        yuchao0@huawei.com, Theodore Ts'o <tytso@mit.edu>,
+        ard.biesheuvel@linaro.org, Josef Bacik <josef@toxicpanda.com>,
+        Chris Mason <clm@fb.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.com>, dsterba@suse.com,
+        Jaegeuk Kim <jaegeuk@kernel.org>, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+References: <156116141046.1664939.11424021489724835645.stgit@magnolia>
+ <20190625103631.GB30156@infradead.org> <20190625180326.GC2230847@magnolia>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 1:27 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
-> On Tue, Jun 25, 2019 at 09:53:09PM +0200, Thomas Gleixner wrote:
-> > On Tue, 25 Jun 2019, Nathan Chancellor wrote:
-> > > On Tue, Jun 25, 2019 at 10:12:42AM -0700, Kees Cook wrote:
-> > > > On Tue, Jun 25, 2019 at 09:18:46AM +0200, Peter Zijlstra wrote:
-> > > > > Can it build a kernel without patches yet? That is, why should I care
-> > > > > what LLVM does?
-> > > >
-> > > > Yes. LLVM trunk builds and boots x86 now. As for distro availability,
-> > > > AIUI, the asm-goto feature missed the 9.0 LLVM branch point, so it'll
-> > > > appear in the following release.
 
-Kees meant asm goto missed 8.0 LLVM branch.  9.0 which is unreleased
-will have it.
+--Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-> > Kernel boots. As I'm currently benchmarking VDSO performance, this was
-> > obviosly my first test. Compared to the same kernel built with gcc6.3 the
-> > performance of the VDSO drops slightly.
-> >
-> > It's below 1%. Though I need to run the same tests on 4 other uarchs to get
-> > the full picture. This stuff is randomly changing behaviour accross uarchs
-> > depending on how the c source is arranged. So nothing to worry about (yet).
+On Jun 25, 2019, at 12:03 PM, Darrick J. Wong <darrick.wong@oracle.com> =
+wrote:
+>=20
+> On Tue, Jun 25, 2019 at 03:36:31AM -0700, Christoph Hellwig wrote:
+>> On Fri, Jun 21, 2019 at 04:56:50PM -0700, Darrick J. Wong wrote:
+>>> Hi all,
+>>>=20
+>>> The chattr(1) manpage has this to say about the immutable bit that
+>>> system administrators can set on files:
+>>>=20
+>>> "A file with the 'i' attribute cannot be modified: it cannot be =
+deleted
+>>> or renamed, no link can be created to this file, most of the file's
+>>> metadata can not be modified, and the file can not be opened in =
+write
+>>> mode."
+>>>=20
+>>> Given the clause about how the file 'cannot be modified', it is
+>>> surprising that programs holding writable file descriptors can =
+continue
+>>> to write to and truncate files after the immutable flag has been =
+set,
+>>> but they cannot call other things such as utimes, fallocate, unlink,
+>>> link, setxattr, or reflink.
+>>=20
+>> I still think living code beats documentation.  And as far as I can
+>> tell the immutable bit never behaved as documented or implemented
+>> in this series on Linux, and it originated on Linux.
+>=20
+> The behavior has never been consistent -- since the beginning you can
+> keep write()ing to a fd after the file becomes immutable, but you =
+can't
+> ftruncate() it.  I would really like to make the behavior consistent.
+> Since the authors of nearly every new system call and ioctl since the
+> late 1990s have interpreted S_IMMUTABLE to mean "immutable takes =
+effect
+> everywhere immediately" I resolved the inconsistency in favor of that
+> interpretation.
+>=20
+> I asked Ted what he thought that that userspace having the ability to
+> continue writing to an immutable file, and he thought it was an
+> implementation bug that had been there for 25 years.  Even he thought
+> that immutable should take effect immediately everywhere.
+>=20
+>> If you want  hard cut off style immutable flag it should really be a
+>> new API, but I don't really see the point.  It isn't like the usual
+>> workload is to set the flag on a file actively in use.
+>=20
+> FWIW Ted also thought that since it's rare for admins to set +i on a
+> file actively in use we could just change it without forcing everyone
+> onto a new api.
 
-Thank you very much for testing and for these reports.  We've been
-working through:
-1. make it build
-2. make it boot
-3. make it run well
-4. add features
+On the flip side, it is possible to continue to write to an open fd
+after removing the write permission, and this is a problem we've hit
+in the real world with NFS export, so real applications do this.
 
-With some amount of cycles in the above.  Now that most of the build
-issues have been resolved, we're more able to focus our resources on 3
-and 4.  Please report unexpected regressions to our mailing list
-clang-built-linux@googlegroups.com and we'll track/follow up upstream
-on the LLVM side.
--- 
-Thanks,
-~Nick Desaulniers
+It may be the same case with immutable files, where an application sets
+the immutable flag immediately after creation, but continues to write
+until it closes the file, so that the file can't be modified by other
+processes, and there isn't a risk that the file is missing the immutable
+flag if the writing process dies before setting it at the end.
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl0ShhEACgkQcqXauRfM
+H+CbrRAAps35LK3poNlahSXPmgZ5tD+3nAlaeG8JU1XTggnEeHdAHY7wdK713thT
+OumdwU7nj1s+0ngxeUxPU/ZVWyuL2LjugpWEfw8lf0N/16hoTIUPBAe7kXce3jb+
+eg72QT36y1srscGQ/95rv/DPfelxzC7WiVYV7ZHIIF2Cq31B34cZ7GF0zpi6oZSH
+RKioHBOX1Qez1CksvAevhtSGf9e0dF1hNx7gyoVFnGb5V72P7WGGQqWSW4nSJvMe
+xhzkT0wLU28MioHsIcnqwnZJdvCb66Z1FGvAwsNItELe2tch4JzZjVR5sbq/g0+Q
+CpDZk350WiKaFzo9m1TO2Eiiog2vS1bqO+hZuwf7jPqcfIa6Tu9BdCx9U/bKp/rN
+sEtDj+p4qnjTCX2ggozPxye92wzhbF2o25jjoofBh9x9ShQ3GAc/gaTxcR9fpuWJ
+UmMwXwKMVXP/kvBaclrbz/zxaeo3ga7z3mFGgzxU6we9M5x1Lo+ppFxRpEPMIVkW
+LUEIQ4emE6yqzOWLWH6iPnxly9Jtzye3jsiq6s7RPPUGHn1/SCdhVZG130vKEpkC
+IcSmmJGlhPcI8wJ5/gwhAoxm9yLa+t0oH/Y6HUoNc722A3sCVRV5JWoHuK9MKBDK
+IPKKud+iKoNON0zr28k4iNyK1XAO+7yAqjfBAmdm0grbW/nItxg=
+=YBbV
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_D22B91A1-39DB-42F5-937D-A1034700DAE0--
