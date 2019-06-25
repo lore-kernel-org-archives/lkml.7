@@ -2,248 +2,506 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BB8C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A5CC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C25214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95422146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:34:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HX/UF+Sd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbfFYIds (ORCPT
+        id S1730592AbfFYIe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:33:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34540 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbfFYIdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:33:45 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9326A81DEB;
-        Tue, 25 Jun 2019 08:33:44 +0000 (UTC)
-Received: from [10.36.117.83] (ovpn-117-83.ams2.redhat.com [10.36.117.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F55C19723;
-        Tue, 25 Jun 2019 08:33:42 +0000 (UTC)
-Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
-From:   David Hildenbrand <david@redhat.com>
-To:     Oscar Salvador <osalvador@suse.de>, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, dan.j.williams@intel.com,
-        pasha.tatashin@soleen.com, Jonathan.Cameron@huawei.com,
-        anshuman.khandual@arm.com, vbabka@suse.cz, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190625075227.15193-1-osalvador@suse.de>
- <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <f986c09d-8554-855e-0b47-fcc6205bbb20@redhat.com>
-Date:   Tue, 25 Jun 2019 10:33:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 25 Jun 2019 04:34:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38141 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfFYIe0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:34:26 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8XbLP3531433
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 25 Jun 2019 01:33:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8XbLP3531433
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561451619;
+        bh=lzniPep40cX/gbv81Iha4mkB835iJDVuAcR5GCLZCYw=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=HX/UF+SdKm5vHDHdavXwWe0mxvz9N/aENPHYANFgTKM2g7xYMKYu4lb/rMNtkxxIq
+         IXCweus6LobPun3nsH40HNUXN4ospjw210lbY5aI1Nit9xPSDTtgk8OzQgcmh3drqh
+         KunDTCA7UnKG/Mrk53m8Fn42CnrYZHfGhNJstuqnqXvEioc/vH6kf9+vbPOYTnd6wY
+         I1UkUZUL7gn57QOteRemdXwQrvpy5a4mlYpdEqWjEoxs9LmIz/7m4IQv6RRFnb1VLw
+         3frvEE19gG6q7uhlXZYaQ3Vqx4kZdDwmajeE9ACb/Vj+2Ka2am571noU37FK+ZhvMW
+         VMO0li55qrzww==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8Xb2W3531430;
+        Tue, 25 Jun 2019 01:33:37 -0700
+Date:   Tue, 25 Jun 2019 01:33:37 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Patrick Bellasi <tipbot@zytor.com>
+Message-ID: <tip-a509a7cd79747074a2c018a45bbbc52d1f4aed44@git.kernel.org>
+Cc:     morten.rasmussen@arm.com, joelaf@google.com, tglx@linutronix.de,
+        vincent.guittot@linaro.org, pjt@google.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, quentin.perret@arm.com,
+        peterz@infradead.org, surenb@google.com,
+        rafael.j.wysocki@intel.com, smuckle@google.com,
+        dietmar.eggemann@arm.com, torvalds@linux-foundation.org,
+        juri.lelli@redhat.com, balsini@android.com,
+        viresh.kumar@linaro.org, patrick.bellasi@arm.com, tkjos@google.com,
+        hpa@zytor.com, tj@kernel.org
+Reply-To: quentin.perret@arm.com, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, pjt@google.com, rafael.j.wysocki@intel.com,
+          surenb@google.com, peterz@infradead.org, joelaf@google.com,
+          morten.rasmussen@arm.com, vincent.guittot@linaro.org,
+          tglx@linutronix.de, juri.lelli@redhat.com,
+          dietmar.eggemann@arm.com, smuckle@google.com,
+          torvalds@linux-foundation.org, viresh.kumar@linaro.org,
+          balsini@android.com, tj@kernel.org, patrick.bellasi@arm.com,
+          hpa@zytor.com, tkjos@google.com
+In-Reply-To: <20190621084217.8167-7-patrick.bellasi@arm.com>
+References: <20190621084217.8167-7-patrick.bellasi@arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/uclamp: Extend sched_setattr() to support
+ utilization clamping
+Git-Commit-ID: a509a7cd79747074a2c018a45bbbc52d1f4aed44
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 25 Jun 2019 08:33:45 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.06.19 10:25, David Hildenbrand wrote:
-> On 25.06.19 09:52, Oscar Salvador wrote:
->> Hi,
->>
->> It has been while since I sent previous version [1].
->>
->> In this version I added some feedback I got back then, like letting
->> the caller decide whether he wants allocating per memory block or
->> per memory range (patch#2), and having the chance to disable vmemmap when
->> users want to expose all hotpluggable memory to userspace (patch#5).
->>
->> [Testing]
->>
->> While I could test last version on powerpc, and Huawei's fellows helped me out
->> testing it on arm64, this time I could only test it on x86_64.
->> The codebase is quite the same, so I would not expect surprises.
->>
->>  - x86_64: small and large memblocks (128MB, 1G and 2G)
->>  - Kernel module that adds memory spanning multiple memblocks
->>    and remove that memory in a different granularity.
->>
->> So far, only acpi memory hotplug uses the new flag.
->> The other callers can be changed depending on their needs.
->>
->> Of course, more testing and feedback is appreciated.
->>
->> [Coverletter]
->>
->> This is another step to make memory hotplug more usable. The primary
->> goal of this patchset is to reduce memory overhead of the hot-added
->> memory (at least for SPARSEMEM_VMEMMAP memory model). The current way we use
->> to populate memmap (struct page array) has two main drawbacks:
-> 
-> Mental note: How will it be handled if a caller specifies "Allocate
-> memmap from hotadded memory", but we are running under SPARSEMEM where
-> we can't do this.
-> 
->>
->> a) it consumes an additional memory until the hotadded memory itself is
->>    onlined and
->> b) memmap might end up on a different numa node which is especially true
->>    for movable_node configuration.
->>
->> a) it is a problem especially for memory hotplug based memory "ballooning"
->>    solutions when the delay between physical memory hotplug and the
->>    onlining can lead to OOM and that led to introduction of hacks like auto
->>    onlining (see 31bc3858ea3e ("memory-hotplug: add automatic onlining
->>    policy for the newly added memory")).
->>
->> b) can have performance drawbacks.
->>
->> Another minor case is that I have seen hot-add operations failing on archs
->> because they were running out of order-x pages.
->> E.g On powerpc, in certain configurations, we use order-8 pages,
->> and given 64KB base pagesize, that is 16MB.
->> If we run out of those, we just fail the operation and we cannot add
->> more memory.
-> 
-> At least for SPARSEMEM, we fallback to vmalloc() to work around this
-> issue. I haven't looked into the populate_section_memmap() internals
-> yet. Can you point me at the code that performs this allocation?
-> 
->> We could fallback to base pages as x86_64 does, but we can do better.
->>
->> One way to mitigate all these issues is to simply allocate memmap array
->> (which is the largest memory footprint of the physical memory hotplug)
->> from the hot-added memory itself. SPARSEMEM_VMEMMAP memory model allows
->> us to map any pfn range so the memory doesn't need to be online to be
->> usable for the array. See patch 3 for more details.
->> This feature is only usable when CONFIG_SPARSEMEM_VMEMMAP is set.
->>
->> [Overall design]:
->>
->> Implementation wise we reuse vmem_altmap infrastructure to override
->> the default allocator used by vmemap_populate. Once the memmap is
->> allocated we need a way to mark altmap pfns used for the allocation.
->> If MHP_MEMMAP_{DEVICE,MEMBLOCK} flag was passed, we set up the layout of the
->> altmap structure at the beginning of __add_pages(), and then we call
->> mark_vmemmap_pages().
->>
->> The flags are either MHP_MEMMAP_DEVICE or MHP_MEMMAP_MEMBLOCK, and only differ
->> in the way they allocate vmemmap pages within the memory blocks.
->>
->> MHP_MEMMAP_MEMBLOCK:
->>         - With this flag, we will allocate vmemmap pages in each memory block.
->>           This means that if we hot-add a range that spans multiple memory blocks,
->>           we will use the beginning of each memory block for the vmemmap pages.
->>           This strategy is good for cases where the caller wants the flexiblity
->>           to hot-remove memory in a different granularity than when it was added.
->>
->> MHP_MEMMAP_DEVICE:
->>         - With this flag, we will store all vmemmap pages at the beginning of
->>           hot-added memory.
->>
->> So it is a tradeoff of flexiblity vs contigous memory.
->> More info on the above can be found in patch#2.
->>
->> Depending on which flag is passed (MHP_MEMMAP_DEVICE or MHP_MEMMAP_MEMBLOCK),
->> mark_vmemmap_pages() gets called at a different stage.
->> With MHP_MEMMAP_MEMBLOCK, we call it once we have populated the sections
->> fitting in a single memblock, while with MHP_MEMMAP_DEVICE we wait until all
->> sections have been populated.
->>
->> mark_vmemmap_pages() marks the pages as vmemmap and sets some metadata:
->>
->> The current layout of the Vmemmap pages are:
->>
->>         [Head->refcount] : Nr sections used by this altmap
->>         [Head->private]  : Nr of vmemmap pages
->>         [Tail->freelist] : Pointer to the head page
->>
->> This is done to easy the computation we need in some places.
->> E.g:
->>
->> Example 1)
->> We hot-add 1GB on x86_64 (memory block 128MB) using
->> MHP_MEMMAP_DEVICE:
->>
->> head->_refcount = 8 sections
->> head->private = 4096 vmemmap pages
->> tail's->freelist = head
->>
->> Example 2)
->> We hot-add 1GB on x86_64 using MHP_MEMMAP_MEMBLOCK:
->>
->> [at the beginning of each memblock]
->> head->_refcount = 1 section
->> head->private = 512 vmemmap pages
->> tail's->freelist = head
->>
->> We have the refcount because when using MHP_MEMMAP_DEVICE, we need to know
->> how much do we have to defer the call to vmemmap_free().
->> The thing is that the first pages of the hot-added range are used to create
->> the memmap mapping, so we cannot remove those first, otherwise we would blow up
->> when accessing the other pages.
-> 
-> So, assuming we add_memory(1GB, MHP_MEMMAP_DEVICE) and then
-> remove_memory(128MB) of the added memory, this will work?
+Commit-ID:  a509a7cd79747074a2c018a45bbbc52d1f4aed44
+Gitweb:     https://git.kernel.org/tip/a509a7cd79747074a2c018a45bbbc52d1f4aed44
+Author:     Patrick Bellasi <patrick.bellasi@arm.com>
+AuthorDate: Fri, 21 Jun 2019 09:42:07 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 24 Jun 2019 19:23:46 +0200
 
-Hmm, I guess this won't work - especially when removing the first 128MB
-first, where the memmap resides.
+sched/uclamp: Extend sched_setattr() to support utilization clamping
 
-Do we need MHP_MEMMAP_DEVICE at this point or could we start with
-MHP_MEMMAP_MEMBLOCK? That "smells" like being the easier case.
+The SCHED_DEADLINE scheduling class provides an advanced and formal
+model to define tasks requirements that can translate into proper
+decisions for both task placements and frequencies selections. Other
+classes have a more simplified model based on the POSIX concept of
+priorities.
 
--- 
+Such a simple priority based model however does not allow to exploit
+most advanced features of the Linux scheduler like, for example, driving
+frequencies selection via the schedutil cpufreq governor. However, also
+for non SCHED_DEADLINE tasks, it's still interesting to define tasks
+properties to support scheduler decisions.
 
-Thanks,
+Utilization clamping exposes to user-space a new set of per-task
+attributes the scheduler can use as hints about the expected/required
+utilization for a task. This allows to implement a "proactive" per-task
+frequency control policy, a more advanced policy than the current one
+based just on "passive" measured task utilization. For example, it's
+possible to boost interactive tasks (e.g. to get better performance) or
+cap background tasks (e.g. to be more energy/thermal efficient).
 
-David / dhildenb
+Introduce a new API to set utilization clamping values for a specified
+task by extending sched_setattr(), a syscall which already allows to
+define task specific properties for different scheduling classes. A new
+pair of attributes allows to specify a minimum and maximum utilization
+the scheduler can consider for a task.
+
+Do that by validating the required clamp values before and then applying
+the required changes using _the_ same pattern already in use for
+__setscheduler(). This ensures that the task is re-enqueued with the new
+clamp values.
+
+Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alessio Balsini <balsini@android.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
+Cc: Steve Muckle <smuckle@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://lkml.kernel.org/r/20190621084217.8167-7-patrick.bellasi@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/sched.h            |  9 ++++
+ include/uapi/linux/sched.h       | 12 +++++-
+ include/uapi/linux/sched/types.h | 66 +++++++++++++++++++++++++----
+ kernel/sched/core.c              | 91 ++++++++++++++++++++++++++++++++++++----
+ 4 files changed, 161 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 5485f411e8e1..1113dd4706ae 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -587,6 +587,7 @@ struct sched_dl_entity {
+  * @value:		clamp value "assigned" to a se
+  * @bucket_id:		bucket index corresponding to the "assigned" value
+  * @active:		the se is currently refcounted in a rq's bucket
++ * @user_defined:	the requested clamp value comes from user-space
+  *
+  * The bucket_id is the index of the clamp bucket matching the clamp value
+  * which is pre-computed and stored to avoid expensive integer divisions from
+@@ -596,11 +597,19 @@ struct sched_dl_entity {
+  * which can be different from the clamp value "requested" from user-space.
+  * This allows to know a task is refcounted in the rq's bucket corresponding
+  * to the "effective" bucket_id.
++ *
++ * The user_defined bit is set whenever a task has got a task-specific clamp
++ * value requested from userspace, i.e. the system defaults apply to this task
++ * just as a restriction. This allows to relax default clamps when a less
++ * restrictive task-specific value has been requested, thus allowing to
++ * implement a "nice" semantic. For example, a task running with a 20%
++ * default boost can still drop its own boosting to 0%.
+  */
+ struct uclamp_se {
+ 	unsigned int value		: bits_per(SCHED_CAPACITY_SCALE);
+ 	unsigned int bucket_id		: bits_per(UCLAMP_BUCKETS);
+ 	unsigned int active		: 1;
++	unsigned int user_defined	: 1;
+ };
+ #endif /* CONFIG_UCLAMP_TASK */
+ 
+diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+index 58b2368d3634..617bb59aa8ba 100644
+--- a/include/uapi/linux/sched.h
++++ b/include/uapi/linux/sched.h
+@@ -52,10 +52,20 @@
+ #define SCHED_FLAG_RECLAIM		0x02
+ #define SCHED_FLAG_DL_OVERRUN		0x04
+ #define SCHED_FLAG_KEEP_POLICY		0x08
++#define SCHED_FLAG_KEEP_PARAMS		0x10
++#define SCHED_FLAG_UTIL_CLAMP_MIN	0x20
++#define SCHED_FLAG_UTIL_CLAMP_MAX	0x40
++
++#define SCHED_FLAG_KEEP_ALL	(SCHED_FLAG_KEEP_POLICY | \
++				 SCHED_FLAG_KEEP_PARAMS)
++
++#define SCHED_FLAG_UTIL_CLAMP	(SCHED_FLAG_UTIL_CLAMP_MIN | \
++				 SCHED_FLAG_UTIL_CLAMP_MAX)
+ 
+ #define SCHED_FLAG_ALL	(SCHED_FLAG_RESET_ON_FORK	| \
+ 			 SCHED_FLAG_RECLAIM		| \
+ 			 SCHED_FLAG_DL_OVERRUN		| \
+-			 SCHED_FLAG_KEEP_POLICY)
++			 SCHED_FLAG_KEEP_ALL		| \
++			 SCHED_FLAG_UTIL_CLAMP)
+ 
+ #endif /* _UAPI_LINUX_SCHED_H */
+diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
+index 10fbb8031930..c852153ddb0d 100644
+--- a/include/uapi/linux/sched/types.h
++++ b/include/uapi/linux/sched/types.h
+@@ -9,6 +9,7 @@ struct sched_param {
+ };
+ 
+ #define SCHED_ATTR_SIZE_VER0	48	/* sizeof first published struct */
++#define SCHED_ATTR_SIZE_VER1	56	/* add: util_{min,max} */
+ 
+ /*
+  * Extended scheduling parameters data structure.
+@@ -21,8 +22,33 @@ struct sched_param {
+  * the tasks may be useful for a wide variety of application fields, e.g.,
+  * multimedia, streaming, automation and control, and many others.
+  *
+- * This variant (sched_attr) is meant at describing a so-called
+- * sporadic time-constrained task. In such model a task is specified by:
++ * This variant (sched_attr) allows to define additional attributes to
++ * improve the scheduler knowledge about task requirements.
++ *
++ * Scheduling Class Attributes
++ * ===========================
++ *
++ * A subset of sched_attr attributes specifies the
++ * scheduling policy and relative POSIX attributes:
++ *
++ *  @size		size of the structure, for fwd/bwd compat.
++ *
++ *  @sched_policy	task's scheduling policy
++ *  @sched_nice		task's nice value      (SCHED_NORMAL/BATCH)
++ *  @sched_priority	task's static priority (SCHED_FIFO/RR)
++ *
++ * Certain more advanced scheduling features can be controlled by a
++ * predefined set of flags via the attribute:
++ *
++ *  @sched_flags	for customizing the scheduler behaviour
++ *
++ * Sporadic Time-Constrained Task Attributes
++ * =========================================
++ *
++ * A subset of sched_attr attributes allows to describe a so-called
++ * sporadic time-constrained task.
++ *
++ * In such a model a task is specified by:
+  *  - the activation period or minimum instance inter-arrival time;
+  *  - the maximum (or average, depending on the actual scheduling
+  *    discipline) computation time of all instances, a.k.a. runtime;
+@@ -34,14 +60,8 @@ struct sched_param {
+  * than the runtime and must be completed by time instant t equal to
+  * the instance activation time + the deadline.
+  *
+- * This is reflected by the actual fields of the sched_attr structure:
++ * This is reflected by the following fields of the sched_attr structure:
+  *
+- *  @size		size of the structure, for fwd/bwd compat.
+- *
+- *  @sched_policy	task's scheduling policy
+- *  @sched_flags	for customizing the scheduler behaviour
+- *  @sched_nice		task's nice value      (SCHED_NORMAL/BATCH)
+- *  @sched_priority	task's static priority (SCHED_FIFO/RR)
+  *  @sched_deadline	representative of the task's deadline
+  *  @sched_runtime	representative of the task's runtime
+  *  @sched_period	representative of the task's period
+@@ -53,6 +73,29 @@ struct sched_param {
+  * As of now, the SCHED_DEADLINE policy (sched_dl scheduling class) is the
+  * only user of this new interface. More information about the algorithm
+  * available in the scheduling class file or in Documentation/.
++ *
++ * Task Utilization Attributes
++ * ===========================
++ *
++ * A subset of sched_attr attributes allows to specify the utilization
++ * expected for a task. These attributes allow to inform the scheduler about
++ * the utilization boundaries within which it should schedule the task. These
++ * boundaries are valuable hints to support scheduler decisions on both task
++ * placement and frequency selection.
++ *
++ *  @sched_util_min	represents the minimum utilization
++ *  @sched_util_max	represents the maximum utilization
++ *
++ * Utilization is a value in the range [0..SCHED_CAPACITY_SCALE]. It
++ * represents the percentage of CPU time used by a task when running at the
++ * maximum frequency on the highest capacity CPU of the system. For example, a
++ * 20% utilization task is a task running for 2ms every 10ms at maximum
++ * frequency.
++ *
++ * A task with a min utilization value bigger than 0 is more likely scheduled
++ * on a CPU with a capacity big enough to fit the specified value.
++ * A task with a max utilization value smaller than 1024 is more likely
++ * scheduled on a CPU with no more capacity than the specified value.
+  */
+ struct sched_attr {
+ 	__u32 size;
+@@ -70,6 +113,11 @@ struct sched_attr {
+ 	__u64 sched_runtime;
+ 	__u64 sched_deadline;
+ 	__u64 sched_period;
++
++	/* Utilization hints */
++	__u32 sched_util_min;
++	__u32 sched_util_max;
++
+ };
+ 
+ #endif /* _UAPI_LINUX_SCHED_TYPES_H */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 6d519f3f9789..e9a669266fa9 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -805,10 +805,12 @@ static inline unsigned int uclamp_none(int clamp_id)
+ 	return SCHED_CAPACITY_SCALE;
+ }
+ 
+-static inline void uclamp_se_set(struct uclamp_se *uc_se, unsigned int value)
++static inline void uclamp_se_set(struct uclamp_se *uc_se,
++				 unsigned int value, bool user_defined)
+ {
+ 	uc_se->value = value;
+ 	uc_se->bucket_id = uclamp_bucket_id(value);
++	uc_se->user_defined = user_defined;
+ }
+ 
+ static inline unsigned int
+@@ -1016,11 +1018,11 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+ 
+ 	if (old_min != sysctl_sched_uclamp_util_min) {
+ 		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
+-			      sysctl_sched_uclamp_util_min);
++			      sysctl_sched_uclamp_util_min, false);
+ 	}
+ 	if (old_max != sysctl_sched_uclamp_util_max) {
+ 		uclamp_se_set(&uclamp_default[UCLAMP_MAX],
+-			      sysctl_sched_uclamp_util_max);
++			      sysctl_sched_uclamp_util_max, false);
+ 	}
+ 
+ 	/*
+@@ -1038,6 +1040,42 @@ done:
+ 	return result;
+ }
+ 
++static int uclamp_validate(struct task_struct *p,
++			   const struct sched_attr *attr)
++{
++	unsigned int lower_bound = p->uclamp_req[UCLAMP_MIN].value;
++	unsigned int upper_bound = p->uclamp_req[UCLAMP_MAX].value;
++
++	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN)
++		lower_bound = attr->sched_util_min;
++	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX)
++		upper_bound = attr->sched_util_max;
++
++	if (lower_bound > upper_bound)
++		return -EINVAL;
++	if (upper_bound > SCHED_CAPACITY_SCALE)
++		return -EINVAL;
++
++	return 0;
++}
++
++static void __setscheduler_uclamp(struct task_struct *p,
++				  const struct sched_attr *attr)
++{
++	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
++		return;
++
++	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
++		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
++			      attr->sched_util_min, true);
++	}
++
++	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX) {
++		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
++			      attr->sched_util_max, true);
++	}
++}
++
+ static void uclamp_fork(struct task_struct *p)
+ {
+ 	unsigned int clamp_id;
+@@ -1059,11 +1097,11 @@ static void __init init_uclamp(void)
+ 
+ 	for_each_clamp_id(clamp_id) {
+ 		uclamp_se_set(&init_task.uclamp_req[clamp_id],
+-			      uclamp_none(clamp_id));
++			      uclamp_none(clamp_id), false);
+ 	}
+ 
+ 	/* System defaults allow max clamp values for both indexes */
+-	uclamp_se_set(&uc_max, uclamp_none(UCLAMP_MAX));
++	uclamp_se_set(&uc_max, uclamp_none(UCLAMP_MAX), false);
+ 	for_each_clamp_id(clamp_id)
+ 		uclamp_default[clamp_id] = uc_max;
+ }
+@@ -1071,6 +1109,13 @@ static void __init init_uclamp(void)
+ #else /* CONFIG_UCLAMP_TASK */
+ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
+ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
++static inline int uclamp_validate(struct task_struct *p,
++				  const struct sched_attr *attr)
++{
++	return -EOPNOTSUPP;
++}
++static void __setscheduler_uclamp(struct task_struct *p,
++				  const struct sched_attr *attr) { }
+ static inline void uclamp_fork(struct task_struct *p) { }
+ static inline void init_uclamp(void) { }
+ #endif /* CONFIG_UCLAMP_TASK */
+@@ -4412,6 +4457,13 @@ static void __setscheduler_params(struct task_struct *p,
+ static void __setscheduler(struct rq *rq, struct task_struct *p,
+ 			   const struct sched_attr *attr, bool keep_boost)
+ {
++	/*
++	 * If params can't change scheduling class changes aren't allowed
++	 * either.
++	 */
++	if (attr->sched_flags & SCHED_FLAG_KEEP_PARAMS)
++		return;
++
+ 	__setscheduler_params(p, attr);
+ 
+ 	/*
+@@ -4549,6 +4601,13 @@ recheck:
+ 			return retval;
+ 	}
+ 
++	/* Update task specific "requested" clamps */
++	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) {
++		retval = uclamp_validate(p, attr);
++		if (retval)
++			return retval;
++	}
++
+ 	/*
+ 	 * Make sure no PI-waiters arrive (or leave) while we are
+ 	 * changing the priority of the task:
+@@ -4578,6 +4637,8 @@ recheck:
+ 			goto change;
+ 		if (dl_policy(policy) && dl_param_changed(p, attr))
+ 			goto change;
++		if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)
++			goto change;
+ 
+ 		p->sched_reset_on_fork = reset_on_fork;
+ 		task_rq_unlock(rq, p, &rf);
+@@ -4658,7 +4719,9 @@ change:
+ 		put_prev_task(rq, p);
+ 
+ 	prev_class = p->sched_class;
++
+ 	__setscheduler(rq, p, attr, pi);
++	__setscheduler_uclamp(p, attr);
+ 
+ 	if (queued) {
+ 		/*
+@@ -4834,6 +4897,10 @@ static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *a
+ 	if (ret)
+ 		return -EFAULT;
+ 
++	if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
++	    size < SCHED_ATTR_SIZE_VER1)
++		return -EINVAL;
++
+ 	/*
+ 	 * XXX: Do we want to be lenient like existing syscalls; or do we want
+ 	 * to be strict and return an error on out-of-bounds values?
+@@ -4903,10 +4970,15 @@ SYSCALL_DEFINE3(sched_setattr, pid_t, pid, struct sched_attr __user *, uattr,
+ 	rcu_read_lock();
+ 	retval = -ESRCH;
+ 	p = find_process_by_pid(pid);
+-	if (p != NULL)
+-		retval = sched_setattr(p, &attr);
++	if (likely(p))
++		get_task_struct(p);
+ 	rcu_read_unlock();
+ 
++	if (likely(p)) {
++		retval = sched_setattr(p, &attr);
++		put_task_struct(p);
++	}
++
+ 	return retval;
+ }
+ 
+@@ -5057,6 +5129,11 @@ SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
+ 	else
+ 		attr.sched_nice = task_nice(p);
+ 
++#ifdef CONFIG_UCLAMP_TASK
++	attr.sched_util_min = p->uclamp_req[UCLAMP_MIN].value;
++	attr.sched_util_max = p->uclamp_req[UCLAMP_MAX].value;
++#endif
++
+ 	rcu_read_unlock();
+ 
+ 	retval = sched_read_attr(uattr, &attr, size);
