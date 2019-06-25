@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32923C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E152CC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75A620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34BA20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge7t9hsT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eo6gK3Dz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732076AbfFYKm7 (ORCPT
+        id S1732091AbfFYKnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:42:59 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42129 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726756AbfFYKm6 (ORCPT
+        Tue, 25 Jun 2019 06:43:05 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36319 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfFYKnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:42:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so9269876pff.9;
-        Tue, 25 Jun 2019 03:42:57 -0700 (PDT)
+        Tue, 25 Jun 2019 06:43:04 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k8so8648642plt.3;
+        Tue, 25 Jun 2019 03:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hUD+tMWxUyNEXoNHahn2osy5MI7+tyXyOvNepSOjh4w=;
-        b=ge7t9hsTcR3LGUDrqBXwqjw49qWv5Rgz8ax8DE3Lhk9C7pu/rAMcy30j3l700kzrj8
-         hpQYL56bSvcKS1EV653K41JdPatGWmuZswrHQatZ3e23vqdJ7+nUHn85TR9Fl4DBIcc+
-         9uru009+hAUId0uuoocpjlA+Q6q08QwkAZEPBxj+0ydwx509ZaPSl5lpR4tFaXNlGRpk
-         tEh2PxrTBleyWL6NjZ0Z3DJmBKlvlUkQZKwIkqrue2i/ZDng204h4ZQqa8T9NWadZr/W
-         XcK9bNgmpqas07XiNCB/bb7NBUXX1JHq1hfZ/OSnL18pi4TnVL/Z0MgSHVCIajsJSkA8
-         6Icw==
+        bh=RdQ4/TNxX8P3rj9r1+mVksjXamNrHwQHZzXzgzYLWPE=;
+        b=Eo6gK3DzX72K9zDQ32h70P7c2d4iG/y/kQJSwJNZWhGEZYADvrcT2ozOxgq49YPj6+
+         7PF+1ookbxqkIFIglAfgsxBrNMsjhH8MPW0P4rAx5nA8A010hexlos0iJdgeYHzITZy/
+         FrPL1fob7RYSHSynl192BrjxRwWBe/0p9YtqiKs+Qth0J24PhK7MtdXW/wRnoQKKl8b/
+         ulslzZ2ErYtYpraAtg8J7U+0EDLvF8WB8DlrY5BlSmxINiRgom3WkC/+1rPQkqHUPDx8
+         IuTt2VCygKNeBEPfn+BWit+AsxZ1hbu9bMYpPbZ3fwF/tL/B43bnQcwthG9btqgqSeJP
+         T6lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=hUD+tMWxUyNEXoNHahn2osy5MI7+tyXyOvNepSOjh4w=;
-        b=fR4wqAdfYS1SqIdjydll2p7oeQfDbTYQQmy8KlWp/+9ZVZ3gB0+7cu9o89Uh48ae1B
-         xr9OpOzeHavOnN7FqUL9Ln4raZooRECucpHqk7t6klXqfn1Eb8MWDLG2fqbixqPiem0K
-         DPjHa3NvHdflgcEpon9lPNy083Xx+BtUADm8WY+W/KRoFGP9Pa2CMHbduZT2umiu5fdB
-         Wm9zeDFxPlpVcXWNjfbo0xSKpXumWY4BVrDJ46PphFbxCfq53VsS+VcqPtZa62dDGcin
-         2jgN3xqoAx2tm4fqIhX1nlSntnl0ErwhEdEms+sjuC3Zc9EQjWcTfjpA3zLcmXlW8EJh
-         thLQ==
-X-Gm-Message-State: APjAAAWIeysYLa9V9iE3BXFBg3Zdtimn0OgLO9k5KdMNHA2OAtd5MSf8
-        QXEPeEdvVuiY+nQaWPNO2bg=
-X-Google-Smtp-Source: APXvYqzh7NNRNJB8tQmwbR5EkFdlyRXZlj6SBZqrFHYnlDl7bGB+kVQrfGiKCORsewrjPZYMxaDcwQ==
-X-Received: by 2002:a63:dc56:: with SMTP id f22mr38746435pgj.305.1561459377044;
-        Tue, 25 Jun 2019 03:42:57 -0700 (PDT)
+        bh=RdQ4/TNxX8P3rj9r1+mVksjXamNrHwQHZzXzgzYLWPE=;
+        b=JO/rPzEvkYcDyktEKOyLbfTn3lfVxvOsLNnQUSVTVJuiTMJViiHWwDKotZovKenvvL
+         kXt8CLjsJZ+NupjfI9+j6TC1BFJoTgeY+2VPYWvooSHphg3CHKwRxiZOwY6LKHwRb8G2
+         +h86bMIjPWjRBf2rKKeis4347cAC9gcB4hbeLm2RUdiAgZCdCFkBcaxDDaGK/0fRDvQW
+         y5y0StZtuMW0cRzdHuocUfJgWqJTREAMxwmZ60TnaZOD8IumE7HchBNm1JyW/Cm463mc
+         IH1we7xqUQcWkG36wQoA7z/rSGzVqV5hxl2/XHdWlb8BToMVKBvydmmU/lC+Os9sfaKf
+         QVvQ==
+X-Gm-Message-State: APjAAAW1FAI6DKo42iEIchhMGujvEcM9QgRF6ojsjdd4SoQ70Pcx1T9+
+        JGJmesLtn3VZOqamDDkpN9I=
+X-Google-Smtp-Source: APXvYqwdhu5Sh3pRbyMHd04wYl66p/1LqFdMgqLs2+DFAUhMMolq7t8YI/ozohyWTZDyxIGyYghiww==
+X-Received: by 2002:a17:902:e582:: with SMTP id cl2mr139302256plb.60.1561459383760;
+        Tue, 25 Jun 2019 03:43:03 -0700 (PDT)
 Received: from Pilot130.192.168.0.22 (211-20-114-70.HINET-IP.hinet.net. [211.20.114.70])
-        by smtp.googlemail.com with ESMTPSA id 14sm22026759pfj.36.2019.06.25.03.42.54
+        by smtp.googlemail.com with ESMTPSA id 14sm22026759pfj.36.2019.06.25.03.43.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Jun 2019 03:42:56 -0700 (PDT)
+        Tue, 25 Jun 2019 03:43:03 -0700 (PDT)
 From:   "sudheer.v" <open.sudheer@gmail.com>
 To:     gregkh@linuxfoundation.org, jslaby@suse.com, joel@jms.id.au,
         andrew@aj.id.au, benh@kernel.crashing.org, robh+dt@kernel.org,
@@ -65,9 +65,9 @@ To:     gregkh@linuxfoundation.org, jslaby@suse.com, joel@jms.id.au,
 Cc:     sudheer veliseti <sudheer.open@gmail.com>,
         linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
         devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org
-Subject: [patch v3 2/5] build configuration for AST2500 DMA UART driver
-Date:   Tue, 25 Jun 2019 16:14:33 +0530
-Message-Id: <1561459476-14268-3-git-send-email-open.sudheer@gmail.com>
+Subject: [patch v3 3/5] DT nodes for AST2500 DMA UART driver
+Date:   Tue, 25 Jun 2019 16:14:34 +0530
+Message-Id: <1561459476-14268-4-git-send-email-open.sudheer@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
 References: <1561459476-14268-1-git-send-email-open.sudheer@gmail.com>
@@ -78,84 +78,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: sudheer veliseti <sudheer.open@gmail.com>
 
-build config for DMA based UART driver in AST2500.
-Total Available  UARTs in AST2500 are 4
+DT node for DMA controller(ast_uart_sdma) doesn't bind to any DMA controller driver.
+This is because Software for DMA controller is not based on DMA framework,but is dedicated
+and serves only UARTs in AST2500. ast_uart_sdma node is searched by compatible string in the 
+driver software.basic use of this node is to provide register base address of DMA controller and DMA irq number(<50>).
+IRQ of DMA controller is of crucial importance, which does RX and TX of UART data. 
+
+uart nodes dma_uart1,2...etc binds to the platform driver.
+irq numbers <9>,<32>,<33>,<34> in dma_uart nodes install ISRs which are of not much interest in uart data TX/RX .
+
 
 Signed-off-by: sudheer veliseti <sudheer.open@gmail.com>
 ---
 
-Changes in v3:
+changes in v3:
 - change logs added
 
-drivers/tty/serial/8250/Kconfig  | 35 +++++++++++++++++++++++++++++++-
- drivers/tty/serial/8250/Makefile |  1 +
- 2 files changed, 35 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/aspeed-ast2500-evb.dts | 21 +++++++
+ arch/arm/boot/dts/aspeed-g5.dtsi         | 71 ++++++++++++++++++++++--
+ 2 files changed, 88 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index 15c2c5463835..c793466a1c47 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -45,7 +45,7 @@ config SERIAL_8250_DEPRECATED_OPTIONS
- 	  keep the 8250_core.* options around until they revert the changes
- 	  they already did.
+diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+index 5dbb33c10c4f..4da09fbe94df 100644
+--- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
++++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+@@ -64,6 +64,27 @@
+ 	status = "okay";
+ };
  
--	  If 8250 is built as a module, this adds 8250_core alias instead. 
-+	  If 8250 is built as a module, this adds 8250_core alias instead.
- 
- 	  If you did not notice yet and/or you have userspace from pre-3.7, it
- 	  is safe (and recommended) to say N here.
-@@ -189,6 +189,39 @@ config SERIAL_8250_RUNTIME_UARTS
- 	  with the module parameter "nr_uarts", or boot-time parameter
- 	  8250.nr_uarts
- 
-+config  AST_SERIAL_DMA_UART
-+        tristate "AST UART driver with DMA"
-+        select SERIAL_CORE
-+        help
-+          UART driver with DMA support for Aspeed BMC AST25XX.
-+          this driver supports UARTs in AST2500,AST2600. It uses
-+          DMA channel of DMA engines present in these chips.
-+          since this dma engine is used only by UARTs it is not
-+          added as a separate DMA driver instead added as a layer
-+          within UART driver.
++&ast_uart_sdma {
++	status = "okay";
++};
++
++&dma_uart1 {
++	status = "okay";
++};
++
++&dma_uart2 {
++	status = "okay";
++};
++
++&dma_uart3 {
++	status = "okay";
++};
++
++&dma_uart4 {
++	status = "okay";
++};
 +
 +
-+config AST_NR_DMA_UARTS
-+        int "Maximum number of uart dma serial ports"
-+        depends on AST_SERIAL_DMA_UART
-+        default "4"
-+        help
-+          Set this to the number of serial ports you want the driver
-+          to support.  This includes any ports discovered via ACPI or
-+          PCI enumeration and any ports that may be added at run-time
-+          via hot-plug, or any ISA multi-port serial cards.
-+
-+config AST_RUNTIME_DMA_UARTS
-+        int "Number of uart dma serial ports to register at runtime"
-+        depends on AST_SERIAL_DMA_UART
-+        range 0 AST_NR_DMA_UARTS
-+        default "4"
-+        help
-+          Set this to the maximum number of serial ports you want
-+          the kernel to register at boot time.  This can be overridden
-+          with the module parameter "nr_uarts", or boot-time parameter
-+          8250.nr_uarts
-+
- config SERIAL_8250_EXTENDED
- 	bool "Extended 8250/16550 serial driver options"
- 	depends on SERIAL_8250
-diff --git a/drivers/tty/serial/8250/Makefile b/drivers/tty/serial/8250/Makefile
-index 18751bc63a84..54d40e5c6e2a 100644
---- a/drivers/tty/serial/8250/Makefile
-+++ b/drivers/tty/serial/8250/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_SERIAL_8250_LPSS)		+= 8250_lpss.o
- obj-$(CONFIG_SERIAL_8250_MID)		+= 8250_mid.o
- obj-$(CONFIG_SERIAL_8250_MOXA)		+= 8250_moxa.o
- obj-$(CONFIG_SERIAL_8250_PXA)		+= 8250_pxa.o
-+obj-$(CONFIG_AST_SERIAL_DMA_UART)	+= 8250_ast2500_uart_dma.o
- obj-$(CONFIG_SERIAL_OF_PLATFORM)	+= 8250_of.o
+ &mac0 {
+ 	status = "okay";
  
- CFLAGS_8250_ingenic.o += -I$(srctree)/scripts/dtc/libfdt
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index 674746513031..fb7b3ed463de 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -23,10 +23,10 @@
+ 		i2c11 = &i2c11;
+ 		i2c12 = &i2c12;
+ 		i2c13 = &i2c13;
+-		serial0 = &uart1;
+-		serial1 = &uart2;
+-		serial2 = &uart3;
+-		serial3 = &uart4;
++		serial0 = &dma_uart1;
++		serial1 = &dma_uart2;
++		serial2 = &dma_uart3;
++		serial3 = &dma_uart4;
+ 		serial4 = &uart5;
+ 		serial5 = &vuart;
+ 		peci0 = &peci0;
+@@ -497,6 +497,69 @@
+ 				status = "disabled";
+ 			};
+ 
++			ast_uart_sdma: uart_sdma@1e79e000 {
++				compatible = "aspeed,ast-uart-sdma";
++				reg = <0x1e79e000 0x400>;
++				interrupts = <50>;
++				status = "disabled";
++			};
++
++			dma_uart1: dma_uart1@1e783000{
++				compatible = "aspeed,ast-sdma-uart";
++				reg = <0x1e783000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <9>;
++				clocks = <&syscon ASPEED_CLK_GATE_UART1CLK>;
++				dma-channel = <0>;
++				no-loopback-test;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_txd1_default
++							 &pinctrl_rxd1_default>;
++				status = "disabled";
++			};
++
++			dma_uart2: dma_uart2@1e78d000{
++				compatible = "aspeed,ast-sdma-uart";
++				reg = <0x1e78d000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <32>;
++				clocks = <&syscon ASPEED_CLK_GATE_UART2CLK>;
++				dma-channel = <1>;
++				no-loopback-test;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_txd2_default
++							 &pinctrl_rxd2_default>;
++				status = "disabled";
++			};
++
++			dma_uart3: dma_uart3@1e78e000{
++				compatible = "aspeed,ast-sdma-uart";
++				reg = <0x1e78e000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <33>;
++				clocks = <&syscon ASPEED_CLK_GATE_UART3CLK>;
++				dma-channel = <2>;
++				no-loopback-test;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_txd3_default
++							 &pinctrl_rxd3_default>;
++				status = "disabled";
++			};
++
++			dma_uart4: dma_uart4@1e78f000{
++				compatible = "aspeed,ast-sdma-uart";
++				reg = <0x1e78f000 0x1000>;
++				reg-shift = <2>;
++				interrupts = <34>;
++				clocks = <&syscon ASPEED_CLK_GATE_UART4CLK>;
++				dma-channel = <3>;
++				no-loopback-test;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_txd4_default
++							 &pinctrl_rxd4_default>;
++				status = "disabled";
++			};
++
+ 			i2c: bus@1e78a000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
 -- 
 2.17.1
 
