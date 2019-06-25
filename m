@@ -2,129 +2,81 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E54C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249B3C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1AF620652
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:57:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TJXtb1kF"
+	by mail.kernel.org (Postfix) with ESMTP id 02F8920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbfFYC5p (ORCPT
+        id S1730679AbfFYDDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 22:57:45 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7385 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729697AbfFYC5p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 22:57:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d118da80000>; Mon, 24 Jun 2019 19:57:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 24 Jun 2019 19:57:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 24 Jun 2019 19:57:44 -0700
-Received: from [10.24.70.239] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Jun
- 2019 02:57:32 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
-References: <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
-Date:   Tue, 25 Jun 2019 08:27:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 24 Jun 2019 23:03:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58510 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729502AbfFYDDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 23:03:50 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 177533082133;
+        Tue, 25 Jun 2019 03:03:49 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC3C119722;
+        Tue, 25 Jun 2019 03:03:47 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 22:03:45 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: NMI hardlock stacktrace deadlock [was Re: Linux 5.2-rc5]
+Message-ID: <20190625030345.dwbydi2w67mpp4zq@treble>
+References: <CAHk-=whEQPvLpDbx+WR4Q4jf2FxXjf_zTX3uLy_6ZzHtgTV4LA@mail.gmail.com>
+ <156094799629.21217.4574572565333265288@skylake-alporthouse-com>
+ <CAHk-=wjhJNKVfHgwd0QX_bq769sxfP4jvfy0dd-WtFMfdivMwg@mail.gmail.com>
+ <156097197830.664.13418742301997062555@skylake-alporthouse-com>
+ <CAHk-=wjoeZ9_aiu+642ur=iGhGjfBQhRPURxX9Py+-B6coctXw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190624062609.GV2962@vkoul-mobl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561431464; bh=xP3JA1D905ACqmkL7EENVTky9EKv/D4sESxy0rNMrm0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=TJXtb1kFMcDT0637MfairfavEY08XPVvepis7DEdDNmS++WdG2v8gLrIjtv5bbDmJ
-         ooAo2eFTBmbhsGYxGfMHPTWieoL1lNJim8DBHGEmSqnJoomi2k85UzLAXm/SiZAa31
-         Pj8tqbbDKp97v00DDWhUQI+UL6y8PPbwhsx8A4FdwCBS0NGl9mYNjtRoN+hqc0xLqu
-         hBCmnIlq/OwuLXlk20z3155HJw2rVeYaR1NP/fiZje6KPjY5zZRYFVmS7y+akoeIfx
-         JRGZXwI6n9SsRRIjfiDRLH2F50laHQy89kyAcDAImbDGfQp9u6iF/Zbb2WJE75MYKU
-         80+ROc/qQR/cQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjoeZ9_aiu+642ur=iGhGjfBQhRPURxX9Py+-B6coctXw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 25 Jun 2019 03:03:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 19, 2019 at 01:42:53PM -0700, Linus Torvalds wrote:
+> On Wed, Jun 19, 2019 at 12:19 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> >
+> > > Do you have the oops itself at all?
+> >
+> > An example at
+> > https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_6310/fi-kbl-x1275/dmesg0.log
+> > https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_6310/fi-kbl-x1275/boot0.log
+> >
+> > The bug causing the oops is clearly a driver problem. The rc5 fallout
+> > just seems to be because of some shrinker changes affecting some object
+> > reaping that were unfortunately still active. What perturbed the CI
+> > team was the machine failed to panic & reboot.
+> 
+> Hmm. It's hard to guess at the cause of that. The oopses themselves
+> don't look like they are happening in any particularly bad context, so
+> all the normal reboot-on-oops etc stuff _should_ work.
 
-On 6/24/2019 11:56 AM, Vinod Koul wrote:
-> On 20-06-19, 15:59, Sameer Pujar wrote:
->
->>>>> So can you explain me what is the difference here that the peripheral
->>>>> cannot configure and use burst size with passing fifo depth?
->>>> Say for example FIFO_THRESHOLD is programmed as 16 WORDS, BURST_SIZE as 8
->>>> WORDS.
->>>> ADMAIF does not push data to AHUB(operation [2]) till threshold of 16 WORDS
->>>> is
->>>> reached in ADMAIF FIFO. Hence 2 burst transfers are needed to reach the
->>>> threshold.
->>>> As mentioned earlier, threshold here is to just indicate when data transfer
->>>> can happen
->>>> to AHUB modules.
->>> So we have ADMA and AHUB and peripheral. You are talking to AHUB and that
->>> is _not_ peripheral and if I have guess right the fifo depth is for AHUB
->>> right?
->> Yes the communication is between ADMA and AHUB. ADMAIF is the interface
->> between
->> ADMA and AHUB. ADMA channel sending data to AHUB pairs with ADMAIF TX
->> channel.
->> Similary ADMA channel receiving data from AHUB pairs with ADMAIF RX channel.
->> FIFO DEPTH we are talking is about each ADMAIF TX/RX channel and it is
->> configurable.
->> DMA transfers happen to/from ADMAIF FIFOs and whenever data(per WORD) is
->> popped/pushed
->> out of ADMAIF to/from AHUB, asseration is made to ADMA. ADMA keeps counters
->> based on
->> these assertions. By knowing FIFO DEPTH and these counters, ADMA knows when
->> to wait or
->> when to transfer data.
-> Where does ADMAIF driver reside in kernel, who configures it for normal
-> dma txns..?
-Not yet, we are in the process of upstreaming ADMAIF driver.
-To describe briefly, audio subsystem is using ALSA SoC(ASoC) layer. 
-ADMAIF is
-registered as platform driver and exports DMA functionality. It 
-registers PCM
-devices for each Rx/Tx ADMAIF channel. During PCM playback/capture 
-operations,
-ALSA callbacks configure DMA channel using API dmaengine_slave_config().
-RFC patch proposed, is to help populate FIFO_SIZE value as well during above
-call, since ADMA requires it.
->
-> Also it wold have helped the long discussion if that part was made clear
-> rather than talking about peripheral all this time :(
-Thought it was clear, though should have avoided using 'peripheral' in the
-discussions. Sorry for the confusion.
+Looking at the dmesg, panic_on_oops doesn't seem to be enabled: it went
+through the rewind_stack_do_exit() path instead of the panic() path.  So
+the system is apparently not configured to reboot on oops.
+
+So I'd say the hang was presumably caused by a lock held by the oopsing
+code.  So it looks normal to me, other than the original oops.
+
+-- 
+Josh
