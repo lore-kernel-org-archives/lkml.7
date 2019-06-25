@@ -2,133 +2,139 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCBCC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDEFC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD0F20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEB12085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VSaRR2XF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfFYHb1 (ORCPT
+        id S1730133AbfFYHbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:31:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41793 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbfFYHb0 (ORCPT
+        Tue, 25 Jun 2019 03:31:33 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48533 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbfFYHbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:31:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m7so8337646pls.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:31:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=LSFnG1VLPAxdrZu/1aoqM762Ph1wbr10WuLO1iu5MTU=;
-        b=qm/y87ecbFyIf1eFZsBSY3h2R6PTNTUomvSbU3uWIfChY+uRq0PvIsQSxBXBsNwHct
-         0qxu5Vqc0VLlOUo3UWbBUHa146K1iTtIaHdJRJzPzv7zJqmd9YNwasVX33OnctM2W7PT
-         6ED2jEWi/OGGV98Efe3zFxd6GGkOCOm6aqQK17eRipLwROdWt0EK7vjGDw6z26h3/cAM
-         2FPfsDcrXaUTkecFh1Y5vseIWUQ+1RdmCo8ap6+xMHy2TgVlzHfFTCHBrpu6isg6J43y
-         TxmgSwoIiD0OLyjRbUWTSStYRfbnp/B0QE8CIKuYpZq8YOEm7xfuqwRACVpD6mz8aX5t
-         1ahA==
-X-Gm-Message-State: APjAAAVifnQo2PwU1b6nO7FM2dkt/hD3v8FIdHJvaxCZyIv5yVaJ/Q/R
-        2GyahRL0qu8AAS0QMi7Te04yJQ==
-X-Google-Smtp-Source: APXvYqxA3AiKfUdGgybrZGEd+QlSDx5f6SSD+C9TEX69lBm8COreE3lS5uJ/emXNgMIJT2bbhTf5JQ==
-X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr85183321plo.290.1561447885879;
-        Tue, 25 Jun 2019 00:31:25 -0700 (PDT)
-Received: from localhost (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id 12sm13241505pfi.60.2019.06.25.00.31.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 00:31:25 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 00:31:25 -0700 (PDT)
-X-Google-Original-Date: Tue, 25 Jun 2019 00:30:40 PDT (-0700)
-Subject:     Re: RISC-V nommu support v2
-In-Reply-To: <d4fd824d-03ff-e8ab-b19f-9e5ef5c22449@arm.com>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     vladimir.murzin@arm.com
-Message-ID: <mhng-6f11ed95-e3f3-41dc-93c5-1576928b373b@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 25 Jun 2019 03:31:32 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P7V4LS3509722
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 25 Jun 2019 00:31:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P7V4LS3509722
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561447864;
+        bh=qsRzFhXGzqGyiZcGkpMIJ06dTufLonxZWOOU0344IVE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=VSaRR2XFcCAowqHupC583ICXjmmSO6B6imnyFnFWIUxjwLeNSz9Ct3//v9LaT5CWg
+         UaMjiL56S+OLpZwx0gCTmA2wK+VHOdnKDWAwEdrV82tiH22nyHcr12mteAkP007TiS
+         1z5dOQbeNb21182nOjHUAZ1tuLBywYj3K0GWINguRFkOfvESYysEI5k/S6bX3fwTzm
+         cKVyr1sX0ds55cADl/Ipy/946w1Lh5L2b9nV6PqBBfXEtl0/nOTCxprq9opVATWfRY
+         BFxmZAQu9oP5CZYp+cocsownVbq4+qg6bczNXgmlaa2XTbWrDA8nganFqSirsjExGN
+         LAJjjWtkxj47w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P7V3mf3509719;
+        Tue, 25 Jun 2019 00:31:03 -0700
+Date:   Tue, 25 Jun 2019 00:31:03 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Reinette Chatre <tipbot@zytor.com>
+Message-ID: <tip-2ef085bd110c5723ca08a522608ac3468dc304bd@git.kernel.org>
+Cc:     hpa@zytor.com, bp@alien8.de, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, mingo@kernel.org,
+        reinette.chatre@intel.com
+Reply-To: reinette.chatre@intel.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de,
+          hpa@zytor.com
+In-Reply-To: <15ba03856f1d944468ee6f44e3fd7aa548293ede.1561408280.git.reinette.chatre@intel.com>
+References: <15ba03856f1d944468ee6f44e3fd7aa548293ede.1561408280.git.reinette.chatre@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cache] x86/resctrl: Cleanup cbm_ensure_valid()
+Git-Commit-ID: 2ef085bd110c5723ca08a522608ac3468dc304bd
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019 06:08:50 PDT (-0700), vladimir.murzin@arm.com wrote:
-> On 6/24/19 12:54 PM, Christoph Hellwig wrote:
->> On Mon, Jun 24, 2019 at 12:47:07PM +0100, Vladimir Murzin wrote:
->>> Since you are using binfmt_flat which is kind of 32-bit only I was expecting to see
->>> CONFIG_COMPAT (or something similar to that, like ILP32) enabled, yet I could not
->>> find it.
->>
->> There is no such thing in RISC-V.  I don't know of any 64-bit RISC-V
->> cpu that can actually run 32-bit RISC-V code, although in theory that
->> is possible.  There also is nothing like the x86 x32 or mips n32 mode
->> available either for now.
->>
->> But it turns out that with a few fixes to binfmt_flat it can run 64-bit
->> binaries just fine.  I sent that series out a while ago, and IIRC you
->> actually commented on it.
->>
->
-> True, yet my observation was that elf2flt utility assumes that address
-> space cannot exceed 32-bit (for header and absolute relocations). So,
-> from my limited point of view straightforward way to guarantee that would
-> be to build incoming elf in 32-bit mode (it is why I mentioned COMPAT/ILP32).
->
-> Also one of your patches expressed somewhat related idea
->
-> "binfmt_flat isn't the right binary format for huge executables to
-> start with"
->
-> Since you said there is no support for compat/ilp32, probably I'm missing some
-> toolchain magic?
->
-> Cheers
-> Vladimir
-To:          Christoph Hellwig <hch@lst.de>
-CC:          vladimir.murzin@arm.com
-CC:          Christoph Hellwig <hch@lst.de>
-CC:          Paul Walmsley <paul.walmsley@sifive.com>
-CC:          Damien Le Moal <Damien.LeMoal@wdc.com>
-CC:          linux-riscv@lists.infradead.org
-CC:          linux-mm@kvack.org
-CC:          linux-kernel@vger.kernel.org
-Subject:     Re: RISC-V nommu support v2
-In-Reply-To: <20190624131633.GB10746@lst.de>
+Commit-ID:  2ef085bd110c5723ca08a522608ac3468dc304bd
+Gitweb:     https://git.kernel.org/tip/2ef085bd110c5723ca08a522608ac3468dc304bd
+Author:     Reinette Chatre <reinette.chatre@intel.com>
+AuthorDate: Mon, 24 Jun 2019 13:34:27 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Tue, 25 Jun 2019 09:26:11 +0200
 
-On Mon, 24 Jun 2019 06:16:33 PDT (-0700), Christoph Hellwig wrote:
-> On Mon, Jun 24, 2019 at 02:08:50PM +0100, Vladimir Murzin wrote:
->> True, yet my observation was that elf2flt utility assumes that address
->> space cannot exceed 32-bit (for header and absolute relocations). So,
->> from my limited point of view straightforward way to guarantee that would
->> be to build incoming elf in 32-bit mode (it is why I mentioned COMPAT/ILP32).
->>
->> Also one of your patches expressed somewhat related idea
->>
->> "binfmt_flat isn't the right binary format for huge executables to
->> start with"
->>
->> Since you said there is no support for compat/ilp32, probably I'm missing some
->> toolchain magic?
->
-> There is no magic except for the tiny elf2flt patch, which for
-> now is just in the buildroot repo pointed to in the cover letter
-> (and which I plan to upstream once the kernel support has landed
-> in Linus' tree).  We only support 32-bit code and data address spaces,
-> but we otherwise use the normal RISC-V ABI, that is 64-bit longs and
-> pointers.
+x86/resctrl: Cleanup cbm_ensure_valid()
 
-The medlow code model on RISC-V essentially enforces this -- technically it
-enforces a 32-bit region centered around address 0, but it's not that hard to
-stay away from negative addresses.  That said, as long as elf2flt gives you an
-error it should be fine because all medlow is going to do is give you a
-different looking error message.
+A recent fix to the cbm_ensure_valid() function left some coding style
+issues that are now addressed:
+
+- Return a value instead of using a function parameter as input and
+  output
+- Use if (!val) instead of if (val == 0)
+- Follow reverse fir tree ordering of variable declarations
+
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: fenghua.yu@intel.com
+Cc: tony.luck@intel.com
+Cc: hpa@zytor.com
+Link: https://lkml.kernel.org/r/15ba03856f1d944468ee6f44e3fd7aa548293ede.1561408280.git.reinette.chatre@intel.com
+
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 2f4824793798..bf3034994754 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -2488,21 +2488,21 @@ out_destroy:
+  * modification to the CBM if the default does not satisfy the
+  * requirements.
+  */
+-static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
++static u32 cbm_ensure_valid(u32 _val, struct rdt_resource *r)
+ {
+-	unsigned long val = *_val;
+ 	unsigned int cbm_len = r->cache.cbm_len;
+ 	unsigned long first_bit, zero_bit;
++	unsigned long val = _val;
+ 
+-	if (val == 0)
+-		return;
++	if (!val)
++		return 0;
+ 
+ 	first_bit = find_first_bit(&val, cbm_len);
+ 	zero_bit = find_next_zero_bit(&val, cbm_len, first_bit);
+ 
+ 	/* Clear any remaining bits to ensure contiguous region */
+ 	bitmap_clear(&val, zero_bit, cbm_len - zero_bit);
+-	*_val = (u32)val;
++	return (u32)val;
+ }
+ 
+ /*
+@@ -2560,7 +2560,7 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
+ 	 * Force the initial CBM to be valid, user can
+ 	 * modify the CBM based on system availability.
+ 	 */
+-	cbm_ensure_valid(&d->new_ctrl, r);
++	d->new_ctrl = cbm_ensure_valid(d->new_ctrl, r);
+ 	/*
+ 	 * Assign the u32 CBM to an unsigned long to ensure that
+ 	 * bitmap_weight() does not access out-of-bound memory.
