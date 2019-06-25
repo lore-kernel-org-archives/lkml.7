@@ -2,378 +2,152 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AFCC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB5FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C658D20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F0920665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:04:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Mb2/+7dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfFYIEU (ORCPT
+        id S1728831AbfFYIEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:04:20 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:42069 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfFYIET (ORCPT
+        Tue, 25 Jun 2019 04:04:45 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:54035 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfFYIEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:04:19 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4DA1F240021;
-        Tue, 25 Jun 2019 08:04:10 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 10:05:26 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rockchip@lists.infradead.org,
-        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Ilia Mirkin <imirkin@alum.mit.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] drm/rockchip: Add optional support for CRTC gamma
- LUT
-Message-ID: <20190625080526.osfzjb32pt6f5pxu@uno.localdomain>
-References: <20190621211346.1324-1-ezequiel@collabora.com>
- <20190621211346.1324-3-ezequiel@collabora.com>
+        Tue, 25 Jun 2019 04:04:45 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,415,1557212400"; 
+   d="scan'208";a="40294926"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jun 2019 01:04:44 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 25 Jun 2019 01:04:53 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 25 Jun 2019 01:04:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LIgaGxYEwUjArXVTQaBVKIZkFKtWXSFr5uRwjEQTCsc=;
+ b=Mb2/+7dwkAknX6qvl/ryzlia+v2cs4D578FJWIvNwHxNKiGoOmpyvFr20rvqhTvZgidkvHXRAX60eVeLhbveCYfRk/tvJXC698PmMb/4MWNJWLg2IlLRlwyU+OpBL8t58gmK8AeR+DGI/36VL+L2s3IEwZh35AtrboR00bw/J2M=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1289.namprd11.prod.outlook.com (10.168.103.137) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 08:04:42 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::6476:ace0:bf3a:322]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::6476:ace0:bf3a:322%9]) with mapi id 15.20.2008.017; Tue, 25 Jun 2019
+ 08:04:42 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <wsa@the-dreams.de>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Eugen.Hristev@microchip.com>
+Subject: [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+Thread-Topic: [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+Thread-Index: AQHVKyykOdofqrxHG0KAvE+qLlVUtQ==
+Date:   Tue, 25 Jun 2019 08:04:41 +0000
+Message-ID: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: ro-RO, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR10CA0105.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:28::34) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 05e8f00e-dbfa-4578-5c88-08d6f943c6a6
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB1289;
+x-ms-traffictypediagnostic: DM5PR11MB1289:
+x-microsoft-antispam-prvs: <DM5PR11MB128904E58D3F1DA74FF7EEEFE8E30@DM5PR11MB1289.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(376002)(136003)(39860400002)(366004)(396003)(346002)(189003)(199004)(6512007)(14444005)(53936002)(86362001)(110136005)(6486002)(6436002)(2201001)(316002)(14454004)(2906002)(478600001)(72206003)(66556008)(5660300002)(64756008)(66946007)(66476007)(66446008)(256004)(71200400001)(71190400001)(36756003)(107886003)(305945005)(7736002)(6116002)(25786009)(73956011)(4326008)(3846002)(68736007)(386003)(52116002)(2501003)(99286004)(6506007)(486006)(476003)(2616005)(8676002)(66066001)(186003)(26005)(102836004)(50226002)(81166006)(8936002)(81156014)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1289;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: h9pL9MvsYVBUpdcP05WD8sjIDrsPmhq9MXZUJzK4wWzlfCjYTyP0Dm8vL0HAZFgxXyR/nEXs3Tiy3NJ9Kitb71T//nsrjXdGvg7aUGmaSs40oTXJCqPekHECLNaeARmU1bwIl7FU13NhshPnESAO440C/S2oVCxgFfm3rclmGMJ9Lp+ENw4Yhe8snnItOOVA4nt8ffYUZsnFHQTvHriXUgieWx01EbAamSCzs0cFO3SdC6X0jN4NgSLjen89MeX9dL9CDRLF/JE7IZwO0Z+EGiM2RtiEcI8jE0xvRZ6z0r1o1JRVOSuZ/cY6FtC6sWbAM5CNEMmzoooDTLiZnhxcRFqBCIft8CGchEJKfr1CP6JSMi9GH0SNBDzsGilaRoSS7avQ/UFPTo2tOwza21rm/hpfFTYWBrgpJdI0qyG5/X0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rltoquubbfop2tn7"
-Content-Disposition: inline
-In-Reply-To: <20190621211346.1324-3-ezequiel@collabora.com>
-User-Agent: NeoMutt/20180716
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05e8f00e-dbfa-4578-5c88-08d6f943c6a6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 08:04:42.0989
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eugen.hristev@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1289
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---rltoquubbfop2tn7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Ezequiel,
-
-On Fri, Jun 21, 2019 at 06:13:45PM -0300, Ezequiel Garcia wrote:
-> Add an optional CRTC gamma LUT support, and enable it on RK3288.
-> This is currently enabled via a separate address resource,
-> which needs to be specified in the devicetree.
->
-> The address resource is required because on some SoCs, such as
-> RK3288, the LUT address is after the MMU address, and the latter
-> is supported by a different driver. This prevents the DRM driver
-> from requesting an entire register space.
->
-> The current implementation works for RGB 10-bit tables, as that
-> is what seems to work on RK3288.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> Changes from v1:
-> * drop explicit linear LUT after finding a proper
->   way to disable gamma correction.
-> * avoid setting gamma is the CRTC is not active.
-> * s/int/unsigned int as suggested by Jacopo.
-> * only enable color management and set gamma size
->   if gamma LUT is supported, suggested by Doug.
-> * drop the reg-names usage, and instead just use indexed reg
->   specifiers, suggested by Doug.
->
-> Changes from RFC:
-> * Request (an optional) address resource for the LUT.
-> * Drop support for RK3399, which doesn't seem to work
->   out of the box and needs more research.
-> * Support pass-thru setting when GAMMA_LUT is NULL.
-> * Add a check for the gamma size, as suggested by Ilia.
-> * Move gamma setting to atomic_commit_tail, as pointed
->   out by Jacopo/Laurent, is the correct way.
-> ---
->  drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |   3 +
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 114 ++++++++++++++++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.h |   7 ++
->  drivers/gpu/drm/rockchip/rockchip_vop_reg.c |   2 +
->  4 files changed, 126 insertions(+)
->
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> index 1c69066b6894..bf9ad6240971 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-> @@ -16,6 +16,7 @@
->  #include "rockchip_drm_fb.h"
->  #include "rockchip_drm_gem.h"
->  #include "rockchip_drm_psr.h"
-> +#include "rockchip_drm_vop.h"
->
->  static int rockchip_drm_fb_dirty(struct drm_framebuffer *fb,
->  				 struct drm_file *file,
-> @@ -128,6 +129,8 @@ rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
->
->  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
->
-> +	rockchip_drm_vop_gamma_set(old_state);
-> +
->  	drm_atomic_helper_commit_modeset_enables(dev, old_state);
->
->  	drm_atomic_helper_commit_planes(dev, old_state,
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> index 12ed5265a90b..cfa70773a9bc 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> @@ -137,6 +137,7 @@ struct vop {
->
->  	uint32_t *regsbak;
->  	void __iomem *regs;
-> +	void __iomem *lut_regs;
->
->  	/* physical map length of vop register */
->  	uint32_t len;
-> @@ -1153,6 +1154,102 @@ static void vop_wait_for_irq_handler(struct vop *vop)
->  	synchronize_irq(vop->irq);
->  }
->
-> +static bool vop_dsp_lut_is_enable(struct vop *vop)
-> +{
-> +	return vop_read_reg(vop, 0, &vop->data->common->dsp_lut_en);
-> +}
-> +
-> +static void vop_crtc_write_gamma_lut(struct vop *vop, struct drm_crtc *crtc)
-> +{
-> +	struct drm_color_lut *lut = crtc->state->gamma_lut->data;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < crtc->gamma_size; i++) {
-> +		u32 word;
-> +
-> +		word = (drm_color_lut_extract(lut[i].red, 10) << 20) |
-> +		       (drm_color_lut_extract(lut[i].green, 10) << 10) |
-> +			drm_color_lut_extract(lut[i].blue, 10);
-> +		writel(word, vop->lut_regs + i * 4);
-> +	}
-> +}
-> +
-> +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
-> +			       struct drm_crtc_state *old_state)
-> +{
-> +	unsigned int idle;
-> +	int ret;
-> +
-> +	/*
-> +	 * In order to write the LUT to the internal RAM memory,
-> +	 * we need to first make sure the dsp_lut_en bit is cleared.
-> +	 */
-> +	spin_lock(&vop->reg_lock);
-> +	VOP_REG_SET(vop, common, dsp_lut_en, 0);
-> +	vop_cfg_done(vop);
-> +	spin_unlock(&vop->reg_lock);
-> +
-> +	/*
-> +	 * If the CRTC is not active, dsp_lut_en will not get cleared.
-
-Did you mean "dsp_lut_en will not get enabled" ?
-
-Beacuse I see dsp_lut_en being set to 0, and not activated if
-!crtc->state->active. Am I confused?
-
-Apart from that:
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-   j
-
-> +	 * Apparently we still need to do the above step to for
-> +	 * gamma correction to be disabled.
-> +	 */
-> +	if (!crtc->state->active)
-> +		return;
-> +
-> +	ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
-> +			   idle, !idle, 5, 30 * 1000);
-> +	if (ret) {
-> +		DRM_DEV_ERROR(vop->dev, "display LUT RAM enable timeout!\n");
-> +		return;
-> +	}
-> +
-> +	spin_lock(&vop->reg_lock);
-> +
-> +	if (crtc->state->gamma_lut &&
-> +	   (!old_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
-> +				      old_state->gamma_lut->base.id)))
-> +		vop_crtc_write_gamma_lut(vop, crtc);
-> +
-> +	VOP_REG_SET(vop, common, dsp_lut_en, 1);
-> +	vop_cfg_done(vop);
-> +	spin_unlock(&vop->reg_lock);
-> +}
-> +
-> +static int vop_crtc_atomic_check(struct drm_crtc *crtc,
-> +				   struct drm_crtc_state *crtc_state)
-> +{
-> +	struct vop *vop = to_vop(crtc);
-> +
-> +	if (vop->lut_regs && crtc_state->color_mgmt_changed &&
-> +	    crtc_state->gamma_lut) {
-> +		unsigned int len;
-> +
-> +		len = drm_color_lut_size(crtc_state->gamma_lut);
-> +		if (len != crtc->gamma_size) {
-> +			DRM_DEBUG_KMS("Invalid LUT size; got %d, expected %d\n",
-> +				      len, crtc->gamma_size);
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void rockchip_drm_vop_gamma_set(struct drm_atomic_state *state)
-> +{
-> +	struct drm_crtc_state *old_crtc_state;
-> +	struct drm_crtc *crtc;
-> +	unsigned int i;
-> +
-> +	for_each_old_crtc_in_state(state, crtc, old_crtc_state, i) {
-> +		struct vop *vop = to_vop(crtc);
-> +
-> +		if (vop->lut_regs && crtc->state->color_mgmt_changed)
-> +			vop_crtc_gamma_set(vop, crtc, old_crtc_state);
-> +	}
-> +}
-> +
->  static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
->  				  struct drm_crtc_state *old_crtc_state)
->  {
-> @@ -1205,6 +1302,7 @@ static void vop_crtc_atomic_flush(struct drm_crtc *crtc,
->
->  static const struct drm_crtc_helper_funcs vop_crtc_helper_funcs = {
->  	.mode_fixup = vop_crtc_mode_fixup,
-> +	.atomic_check = vop_crtc_atomic_check,
->  	.atomic_flush = vop_crtc_atomic_flush,
->  	.atomic_enable = vop_crtc_atomic_enable,
->  	.atomic_disable = vop_crtc_atomic_disable,
-> @@ -1323,6 +1421,7 @@ static const struct drm_crtc_funcs vop_crtc_funcs = {
->  	.disable_vblank = vop_crtc_disable_vblank,
->  	.set_crc_source = vop_crtc_set_crc_source,
->  	.verify_crc_source = vop_crtc_verify_crc_source,
-> +	.gamma_set = drm_atomic_helper_legacy_gamma_set,
->  };
->
->  static void vop_fb_unref_worker(struct drm_flip_work *work, void *val)
-> @@ -1480,6 +1579,10 @@ static int vop_create_crtc(struct vop *vop)
->  		goto err_cleanup_planes;
->
->  	drm_crtc_helper_add(crtc, &vop_crtc_helper_funcs);
-> +	if (vop->lut_regs) {
-> +		drm_mode_crtc_set_gamma_size(crtc, vop_data->lut_size);
-> +		drm_crtc_enable_color_mgmt(crtc, 0, false, vop_data->lut_size);
-> +	}
->
->  	/*
->  	 * Create drm_planes for overlay windows with possible_crtcs restricted
-> @@ -1776,6 +1879,17 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
->  	if (IS_ERR(vop->regs))
->  		return PTR_ERR(vop->regs);
->
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (res) {
-> +		if (!vop_data->lut_size) {
-> +			DRM_DEV_ERROR(dev, "no gamma LUT size defined\n");
-> +			return -EINVAL;
-> +		}
-> +		vop->lut_regs = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(vop->lut_regs))
-> +			return PTR_ERR(vop->lut_regs);
-> +	}
-> +
->  	vop->regsbak = devm_kzalloc(dev, vop->len, GFP_KERNEL);
->  	if (!vop->regsbak)
->  		return -ENOMEM;
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-> index 2149a889c29d..bd1bcd5a14e9 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.h
-> @@ -7,6 +7,8 @@
->  #ifndef _ROCKCHIP_DRM_VOP_H
->  #define _ROCKCHIP_DRM_VOP_H
->
-> +#include <drm/drm_atomic.h>
-> +
->  /*
->   * major: IP major version, used for IP structure
->   * minor: big feature change under same structure
-> @@ -67,6 +69,7 @@ struct vop_common {
->  	struct vop_reg dither_down_mode;
->  	struct vop_reg dither_down_en;
->  	struct vop_reg dither_up;
-> +	struct vop_reg dsp_lut_en;
->  	struct vop_reg gate_en;
->  	struct vop_reg mmu_en;
->  	struct vop_reg out_mode;
-> @@ -170,6 +173,7 @@ struct vop_data {
->  	const struct vop_win_yuv2yuv_data *win_yuv2yuv;
->  	const struct vop_win_data *win;
->  	unsigned int win_size;
-> +	unsigned int lut_size;
->
->  #define VOP_FEATURE_OUTPUT_RGB10	BIT(0)
->  #define VOP_FEATURE_INTERNAL_RGB	BIT(1)
-> @@ -373,4 +377,7 @@ static inline int scl_vop_cal_lb_mode(int width, bool is_yuv)
->  }
->
->  extern const struct component_ops vop_component_ops;
-> +
-> +void rockchip_drm_vop_gamma_set(struct drm_atomic_state *state);
-> +
->  #endif /* _ROCKCHIP_DRM_VOP_H */
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-> index 7b9c74750f6d..30d49eff3670 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-> @@ -593,6 +593,7 @@ static const struct vop_common rk3288_common = {
->  	.dither_down_en = VOP_REG(RK3288_DSP_CTRL1, 0x1, 2),
->  	.pre_dither_down = VOP_REG(RK3288_DSP_CTRL1, 0x1, 1),
->  	.dither_up = VOP_REG(RK3288_DSP_CTRL1, 0x1, 6),
-> +	.dsp_lut_en = VOP_REG(RK3288_DSP_CTRL1, 0x1, 0),
->  	.data_blank = VOP_REG(RK3288_DSP_CTRL0, 0x1, 19),
->  	.dsp_blank = VOP_REG(RK3288_DSP_CTRL0, 0x3, 18),
->  	.out_mode = VOP_REG(RK3288_DSP_CTRL0, 0xf, 0),
-> @@ -641,6 +642,7 @@ static const struct vop_data rk3288_vop = {
->  	.output = &rk3288_output,
->  	.win = rk3288_vop_win_data,
->  	.win_size = ARRAY_SIZE(rk3288_vop_win_data),
-> +	.lut_size = 1024,
->  };
->
->  static const int rk3368_vop_intrs[] = {
-> --
-> 2.20.1
->
-
---rltoquubbfop2tn7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0R1cUACgkQcjQGjxah
-VjxEsA//WWN38GEWFA1feOeQTUdnz0REX2tU9aaBlaSs4roaEUz8mnbHhQfYsnLI
-g7P5e5NHlHAXIiKNEP5RudE+ffw21x1fWfZLrdj6wJphjiFL1GnNnERpqvp3LpN3
-57u5h37fZL9kEBfXr0jGaSKS5j6UZsfvC2nai2fOeEtUZ4UrrAZTGcSvVXMFOuMI
-p+vYastQLxgNr2GWkFxtXBQZ1petIIBkAlJYi8nhdKBxNTVbTK2F434iThrvZqsM
-40DhFFulWBJqsADrLUpQvF5v2GdBNXIoaGb5qiWkJvii3a2L3xdbtpF6QIJMe/Tt
-HxmpG4fKwQ/ZQ8vUYTgmOJ+Pw+rE9KWMy+3lErcT4FDIQkxzTQWeO/dOp/g7N7I5
-NaORLP/CLCiq66ijmhFk64iV28CHcJbcP1mLTV1Zes0pr5aW9hf9OG1HjrBkRwuc
-xXydPt6dOCUYTrzF21o/8Lv5KgXY72/EnFMs2H5cxEJarFqHtsX1L7ZfHHVJ+tnN
-Cn/UuXmaF+m9/I7httvbHegMBRekW2pWq0Ei5C8oKDyAP2dcuEQDKsfEZzzvwZom
-wqJwC3R3fbaPYDnIXyLQgncjRrakoI643lFWSHoJqRw8I/CS/nGNqyZz9/vsYN83
-VJTe816NCO2Crgvw5SYygsUotCMMg6fWojiUPfLIMjJQHr4MCQQ=
-=QmDy
------END PGP SIGNATURE-----
-
---rltoquubbfop2tn7--
+RnJvbTogRXVnZW4gSHJpc3RldiA8ZXVnZW4uaHJpc3RldkBtaWNyb2NoaXAuY29tPg0KDQpUaGlz
+IHNlcmllcyBhZGRzIHRoZSBzdXBwb3J0IGZvciBpMmMgZmlsdGVyczogYW5hbG9nIGFuZCBkaWdp
+dGFsIGZpbHRlcg0KDQpkaWdpdGFsIGZpbHRlciBpcyBhdmFpbGFibGUgZm9yIHNhbWE1ZDQNCmFu
+IGFkdmFuY2VkIGRpZ2l0YWwgZmlsdGVyIHRoYXQgYWxsb3dzIHRocmVzaG9sZCBjb25maWd1cmF0
+aW9uIGlzIGF2YWlsYWJsZQ0KZm9yIHNhbWE1ZDIgYW5kIHNhbTl4NjANCmFuYWxvZyBmaWx0ZXJp
+bmcgaXMgYXZhaWxhYmxlIGZvciBzYW1hNWQyIGFuZCBzYW05eDYwDQoNClRoaXMgc2VyaWVzIGFs
+c28gYWRkcyBwbGF0Zm9ybSBkYXRhIGZvciBzYW05eDYwIHRvIHRoZSBkcml2ZXINCg0KSW4gdGhp
+cyBzZXJpZXMgdmVyc2lvbiwgdGhlIGVuYWJsZW1lbnQgb2YgdGhlIGZpbHRlcnMgaXMgdmlhIERl
+dmljZSB0cmVlLA0KYXMgcmVxdWVzdGVkIGJ5IEFsZXhhbmRyZSBCZWxsb25pLiBUaGUgUENCL2Jv
+YXJkIHNwZWNpZmljIG5vaXNlIGlzIGhhcmR3YXJlDQpkZXBlbmRlbnQuDQoNClRoZSBwbGF0Zm9y
+bSBkYXRhIHByb3BlcnRpZXMga2VlcCB0aGUgc2FtZSBwYXR0ZXJuIDogc2V0IGZvciBlYWNoIFNv
+Qw0KdHJ1ZS9mYWxzZSB2YWx1ZSBhcyBpdCBpcyBkb25lIGZvciBwcmV2aW91cyBwcm9wZXJ0aWVz
+Lg0KDQpDaGFuZ2VzIGluIHYyOg0KLSBhZGRlZCBkZXZpY2UgdHJlZSBiaW5kaW5ncyBhbmQgc3Vw
+cG9ydCBmb3IgZW5hYmxlLWFuYS1maWx0IGFuZA0KZW5hYmxlLWRpZy1maWx0DQotIGFkZGVkIHRo
+ZSBuZXcgcHJvcGVydGllcyB0byB0aGUgRFQgZm9yIHNhbWE1ZDRfeHBsYWluZWQvc2FtYTVkMl94
+cGxhaW5lZA0KDQpFdWdlbiBIcmlzdGV2ICg5KToNCiAgZHQtYmluZGluZ3M6IGkyYzogYXQ5MTog
+YWRkIG5ldyBjb21wYXRpYmxlDQogIGkyYzogYXQ5MTogYWRkIG5ldyBwbGF0Zm9ybSBzdXBwb3J0
+IGZvciBzYW05eDYwDQogIGR0LWJpbmRpbmdzOiBpMmM6IGF0OTE6IGFkZCBiaW5kaW5nIGZvciBl
+bmFibGUtZGlnLWZpbHRyDQogIGkyYzogYXQ5MTogYWRkIHN1cHBvcnQgZm9yIGRpZ2l0YWwgZmls
+dGVyaW5nDQogIGkyYzogYXQ5MTogYWRkIHN1cHBvcnQgZm9yIGFkdmFuY2VkIGRpZ2l0YWwgZmls
+dGVyaW5nDQogIGR0LWJpbmRpbmdzOiBpMmM6IGF0OTE6IGFkZCBiaW5kaW5nIGZvciBlbmFibGUt
+YW5hLWZpbHQNCiAgaTJjOiBhdDkxOiBhZGQgc3VwcG9ydCBmb3IgYW5hbG9nIGZpbHRlcmluZw0K
+ICBBUk06IGR0czogYXQ5MTogc2FtYTVkMl94cGxhaW5lZDogYWRkIGFuYWxvZ2ljIGFuZCBkaWdp
+dGFsIGZpbHRlciBmb3INCiAgICBpMmMNCiAgQVJNOiBkdHM6IGF0OTE6IHNhbWE1ZDRfeHBsYWlu
+ZWQ6IGFkZCBhbmFsb2dpYyBmaWx0ZXIgZm9yIGkyYw0KDQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQgfCAxMSArKysrKystDQogYXJjaC9hcm0vYm9v
+dC9kdHMvYXQ5MS1zYW1hNWQyX3hwbGFpbmVkLmR0cyAgICAgICAgfCAgNCArKysNCiBhcmNoL2Fy
+bS9ib290L2R0cy9hdDkxLXNhbWE1ZDRfeHBsYWluZWQuZHRzICAgICAgICB8ICAxICsNCiBkcml2
+ZXJzL2kyYy9idXNzZXMvaTJjLWF0OTEtY29yZS5jICAgICAgICAgICAgICAgICB8IDM4ICsrKysr
+KysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLWF0OTEtbWFzdGVyLmMg
+ICAgICAgICAgICAgICB8IDI0ICsrKysrKysrKysrKysrDQogZHJpdmVycy9pMmMvYnVzc2VzL2ky
+Yy1hdDkxLmggICAgICAgICAgICAgICAgICAgICAgfCAxMiArKysrKysrDQogNiBmaWxlcyBjaGFu
+Z2VkLCA4OSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCi0tIA0KMi43LjQNCg0K
