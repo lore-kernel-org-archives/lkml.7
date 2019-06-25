@@ -2,87 +2,148 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B267AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2FDC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DE3208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577C4208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CJs+uATB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J9xgagej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbfFYLIZ (ORCPT
+        id S1730452AbfFYLKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:08:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36297 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbfFYLIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:08:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Y3LG2Gnyz9s4V;
-        Tue, 25 Jun 2019 21:08:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561460902;
-        bh=W0ECW50hvw2G4vsI4j5cuqsDfInS3gxdEMOmRINPb+k=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CJs+uATBLA+P6kWt3XKcoNARZq1MpbH8VeYWexGMCZjD/rzkoBZowvh2MJzeghbmS
-         QnNHY6w7C2fZWI8YeilPwZ9dIQe61sq6U9asLcXWE+0KN3b4B+3GHfiMV1Q6Ma5T1P
-         J+5xSnU4l75x7+POadbmM1q7UVfKv4Xyeh1Vz9hGH7zZ9iBtcs9hdCIwQGRRBF7q0m
-         767Xc9p+0wT/HicdjOVM6vFgUbspcC2WGuLSmoGjMJOuEzuWClxb+1XtOuWAZXwi5u
-         c8G3li7WvZ8HXmvkVdZOkTPeWzXV/uxI066rOPP6SNq2O4NJiihYjL+gfvYi1YylhG
-         kYUx54xF4jJdw==
-Date:   Tue, 25 Jun 2019 21:08:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steve French <smfrench@gmail.com>,
-        CIFS <linux-cifs@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the cifs tree
-Message-ID: <20190625210821.6907304a@canb.auug.org.au>
+        Tue, 25 Jun 2019 07:10:22 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19234 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727746AbfFYLKV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:10:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d12011d0001>; Tue, 25 Jun 2019 04:10:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 25 Jun 2019 04:10:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 25 Jun 2019 04:10:19 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Jun
+ 2019 11:10:17 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
+ phylib logic
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+ <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
+ <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
+ <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
+ <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
+ <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
+ <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
+ <7f0f2ed0-f47c-4670-d169-25f0413c1fd3@nvidia.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9D7024@DE02WEMBXB.internal.synopsys.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <113f37a2-c37f-cdb5-5194-4361d949258a@nvidia.com>
+Date:   Tue, 25 Jun 2019 12:10:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/6n6sD438XUAGHphu/xXTfdl"; protocol="application/pgp-signature"
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B9D7024@DE02WEMBXB.internal.synopsys.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561461021; bh=ywXSgknL1Gy2ftDz0c9HRG7PbJQeUv91vnO+i6OhLZ4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=J9xgagejO3vqCTRQb9mVBdvVaM+6AcQW66kLwwnvuI2Q2QFjL5mB27Vl6Cz/BnpGA
+         8q1wiF5aqsIAzrthX2fNUiwCuBAJ/8+UhijqgZTWdXuM5pBF1SBa2ZLuMB6kVmKArz
+         HKJyyAYvRK/4ZUajLTTLuRy5/mnhvxA2520aSqW4NAcx60w0gmLKL7ymNIYmjgyac3
+         YmK+jNHAADo2ONnQiaH9YKKlMoxqcUfxknGI4sX1N7mhctJx3X6DK2ws3zWwEfExd3
+         54fxDhZUGekKioLX2NBMATjSTb+SyVJSYOjE1Po1om4APyvq6p5eXt8To1IXtAad4T
+         HLVyGrWnpl/Hg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/6n6sD438XUAGHphu/xXTfdl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 25/06/2019 08:37, Jose Abreu wrote:
+> From: Jon Hunter <jonathanh@nvidia.com>
+> 
+>> Any further feedback? I am still seeing this issue on today's -next.
+> 
+> Apologies but I was in FTO.
+> 
+> Is there any possibility you can just disable the ethX configuration in 
+> the rootfs mount and manually configure it after rootfs is done ?
+> 
+> I just want to make sure in which conditions this is happening (if in 
+> ifdown or ifup).
 
-Commit
+I have been looking at this a bit closer and I can see the problem. What
+happens is that ...
 
-  c1ed2864526e ("smb3: minor cleanup of compound_send_recv")
+1. stmmac_mac_link_up() is called and priv->eee_active is set to false
+2. stmmac_eee_init() is called but because priv->eee_active is false,
+   timer_setup() for eee_ctrl_timer is never called.
+3. stmmac_eee_init() returns true and so then priv->eee_enabled is set 
+   to true.
+4. When stmmac_tx_clean() is called because priv->eee_enabled is set to    
+   true, mod_timer() is called for the eee_ctrl_timer, but because 
+   timer_setup() was never called, we hit the BUG defined at
+   kernel/time/timer.c:952, because no function is defined for the 
+   timer.
 
-is missing a Signed-off-by from its committer.
+The following fixes it for me ...
 
---=20
-Cheers,
-Stephen Rothwell
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -399,10 +399,13 @@ bool stmmac_eee_init(struct stmmac_priv *priv)
+        mutex_lock(&priv->lock);
+ 
+        /* Check if it needs to be deactivated */
+-       if (!priv->eee_active && priv->eee_enabled) {
+-               netdev_dbg(priv->dev, "disable EEE\n");
+-               del_timer_sync(&priv->eee_ctrl_timer);
+-               stmmac_set_eee_timer(priv, priv->hw, 0, tx_lpi_timer);
++       if (!priv->eee_active) {
++               if (priv->eee_enabled) {
++                       netdev_dbg(priv->dev, "disable EEE\n");
++                       del_timer_sync(&priv->eee_ctrl_timer);
++                       stmmac_set_eee_timer(priv, priv->hw, 0, tx_lpi_timer);
++               }
++               mutex_unlock(&priv->lock);
+                return false;
+        }
 
---Sig_/6n6sD438XUAGHphu/xXTfdl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+It also looks like you have a potention deadlock in the current code
+because in the case of if (!priv->eee_active && priv->eee_enabled)
+you don't unlock the mutex. The above fixes this as well. I can send a
+formal patch if this looks correct. 
 
------BEGIN PGP SIGNATURE-----
+Cheers
+Jon
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0SAKUACgkQAVBC80lX
-0GwcJgf9G09rYD6cJKzZADFCcwLEuhz6EjCMK1KaXtRPlBJld1U75mvA61sMgZMF
-05aLZFMpOCn51R9yfxIGp5n5MXU5mdLbUHSry3PiiqiTJ44Xb6eYY6QZeSF81A0u
-nx2ZdSdEE7S9uKFKQ2rDdmtMFer8a58/sXmINt8uxSH0xPiGgnIwcguipd93nyKa
-9PxtlRij07sENMzIBl66ych387z4lTzHTgxnlcdnAm2gbUWKNngiVIAjNiJWUd7C
-hucESseduUKODQVW8Kcc7w8/ufjxyzTWBcsQJ8FDZXXDpBdk4FbYP9KjXiyNpuIQ
-lZmX6JCvwfjnIMLqbFQeQd/PRR2bZw==
-=9KXw
------END PGP SIGNATURE-----
-
---Sig_/6n6sD438XUAGHphu/xXTfdl--
+-- 
+nvpublic
