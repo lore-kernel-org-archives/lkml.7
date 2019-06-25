@@ -2,231 +2,99 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AC0C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE367C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247CE21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Zzy14xB8"
+	by mail.kernel.org (Postfix) with ESMTP id 806E5215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbfFYIng (ORCPT
+        id S1730777AbfFYIoe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:43:36 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49145 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfFYIng (ORCPT
+        Tue, 25 Jun 2019 04:44:34 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:54386 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726587AbfFYIod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:43:36 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8h6DF3533420
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:43:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8h6DF3533420
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561452187;
-        bh=EamL9E631aAVBfN1QquNpEsc5C/dG2lJbDaicsK+/GA=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Zzy14xB8Z5A3qlK3obJ16TnE43QDbtxP2hQ5ymSetUnyXg+xMCCg9jA9pLuY7j3Wz
-         qjUANNpyQ999PGedA1LxdSXsOmj1JDUh+fmDMSlTY/Vk9yFTvE1BMdq2fRVcmqBLCn
-         crAA9dsDxs0PelGy9NRWk2v/nIWL8/pigkSvPBn5vIB9nFJm59xA+w5eE4kqfzmPDE
-         MSVv6dCuqTNw/XvjjTy9kEXQ783yxgSy00SOw2NJe6DAQCJG7eoyF2CWx0ALM/cMn7
-         osY9zfRccUmzGPQGc/+nYADKfa9Xa+1pq3uXp7EXZ1grN7o+qH74GmGzEnYAH9hqUq
-         RXVKiBLmK5lRA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8h5863533417;
-        Tue, 25 Jun 2019 01:43:05 -0700
-Date:   Tue, 25 Jun 2019 01:43:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-637d97b53cdded02da55d0a25cda6fd6af3bd042@git.kernel.org>
-Cc:     peterz@infradead.org, luto@kernel.org, acme@redhat.com,
-        bp@alien8.de, acme@kernel.org, kan.liang@linux.intel.com,
-        mingo@kernel.org, hpa@zytor.com, vincent.weaver@maine.edu,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        eranian@google.com, gregkh@linuxfoundation.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        tglx@linutronix.de, namhyung@kernel.org, jolsa@kernel.org
-Reply-To: kan.liang@linux.intel.com, acme@kernel.org, bp@alien8.de,
-          acme@redhat.com, luto@kernel.org, peterz@infradead.org,
-          namhyung@kernel.org, jolsa@kernel.org,
-          alexander.shishkin@linux.intel.com, eranian@google.com,
-          gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
-          jolsa@redhat.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, vincent.weaver@maine.edu,
-          mingo@kernel.org, hpa@zytor.com
-In-Reply-To: <20190616140358.27799-9-jolsa@kernel.org>
-References: <20190616140358.27799-9-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86/rapl: Get quirk state from new probe
- framework
-Git-Commit-ID: 637d97b53cdded02da55d0a25cda6fd6af3bd042
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 04:44:33 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-64-2CgliomXP9qa0e1tUxO66g-1; Tue, 25 Jun 2019 09:44:30 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 25 Jun 2019 09:44:29 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 25 Jun 2019 09:44:29 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Dmitry Torokhov' <dmitry.torokhov@gmail.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Benoit Parrot <bparrot@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] Input: edt-ft5x06 - use get_unaligned_be16()
+Thread-Topic: [PATCH 1/2] Input: edt-ft5x06 - use get_unaligned_be16()
+Thread-Index: AQHVKY1hAj6tejpQ3kG1+0ev0Psa8KasERZw
+Date:   Tue, 25 Jun 2019 08:44:29 +0000
+Message-ID: <011d62995b20493f977ead43f4b494a2@AcuMS.aculab.com>
+References: <20190623063153.261546-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20190623063153.261546-1-dmitry.torokhov@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: 2CgliomXP9qa0e1tUxO66g-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  637d97b53cdded02da55d0a25cda6fd6af3bd042
-Gitweb:     https://git.kernel.org/tip/637d97b53cdded02da55d0a25cda6fd6af3bd042
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 16 Jun 2019 16:03:58 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 24 Jun 2019 19:28:36 +0200
+From: Dmitry Torokhov
+> Sent: 23 June 2019 07:32
+> 
+> Instead of doing conversion by hand, let's use the proper accessors.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/input/touchscreen/edt-ft5x06.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> index c639ebce914c..ec770226e119 100644
+> --- a/drivers/input/touchscreen/edt-ft5x06.c
+> +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/input/mt.h>
+>  #include <linux/input/touchscreen.h>
+> +#include <asm/unaligned.h>
+> 
+>  #define WORK_REGISTER_THRESHOLD		0x00
+>  #define WORK_REGISTER_REPORT_RATE	0x08
+> @@ -239,8 +240,8 @@ static irqreturn_t edt_ft5x06_ts_isr(int irq, void *dev_id)
+>  		if (tsdata->version == EDT_M06 && type == TOUCH_EVENT_DOWN)
+>  			continue;
+> 
+> -		x = ((buf[0] << 8) | buf[1]) & 0x0fff;
+> -		y = ((buf[2] << 8) | buf[3]) & 0x0fff;
+> +		x = get_unaligned_be16(buf) & 0x0fff;
+> +		y = get_unaligned_be16(buf + 2) & 0x0fff;
 
-perf/x86/rapl: Get quirk state from new probe framework
+You might as well delete the pointless masking with 0xff.
 
-Getting the apply_quirk bool from new rapl_model_match array.
+	David
 
-And because apply_quirk was the last remaining piece of data
-in rapl_cpu_match, replacing it with rapl_model_match as device
-table.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-The switch to new perf_msr_probe detection API is done.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan <kan.liang@linux.intel.com>
-Cc: Liang
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/20190616140358.27799-9-jolsa@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/intel/rapl.c | 82 ++------------------------------------------
- 1 file changed, 3 insertions(+), 79 deletions(-)
-
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 460196c02bae..64ab51ffdf06 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -671,75 +671,6 @@ static int __init init_rapl_pmus(void)
- #define X86_RAPL_MODEL_MATCH(model, init)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)&init }
- 
--struct intel_rapl_init_fun {
--	bool apply_quirk;
--};
--
--static const struct intel_rapl_init_fun snb_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct intel_rapl_init_fun hsx_rapl_init __initconst = {
--	.apply_quirk = true,
--};
--
--static const struct intel_rapl_init_fun hsw_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct intel_rapl_init_fun snbep_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct intel_rapl_init_fun knl_rapl_init __initconst = {
--	.apply_quirk = true,
--};
--
--static const struct intel_rapl_init_fun skl_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE,   snb_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE_X, snbep_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE,   snb_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE_X, snbep_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_CORE, hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_X,    hsx_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,  hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E, hsw_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_CORE,   hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E,   hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_X,	  hsx_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_XEON_D, hsx_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL, knl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM, knl_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE,  skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_DESKTOP, skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,	 hsx_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE,  skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_CANNONLAKE_MOBILE,  skl_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT, hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X, hsw_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS, hsw_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,  skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_DESKTOP, skl_rapl_init),
--	{},
--};
--
--MODULE_DEVICE_TABLE(x86cpu, rapl_cpu_match);
--
- static struct rapl_model model_snb = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
-@@ -813,12 +744,12 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	{},
- };
- 
-+MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
-+
- static int __init rapl_pmu_init(void)
- {
- 	const struct x86_cpu_id *id;
--	struct intel_rapl_init_fun *rapl_init;
- 	struct rapl_model *rm;
--	bool apply_quirk;
- 	int ret;
- 
- 	id = x86_match_cpu(rapl_model_match);
-@@ -829,14 +760,7 @@ static int __init rapl_pmu_init(void)
- 	rapl_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
- 					false, (void *) &rm->events);
- 
--	id = x86_match_cpu(rapl_cpu_match);
--	if (!id)
--		return -ENODEV;
--
--	rapl_init = (struct intel_rapl_init_fun *)id->driver_data;
--	apply_quirk = rapl_init->apply_quirk;
--
--	ret = rapl_check_hw_unit(apply_quirk);
-+	ret = rapl_check_hw_unit(rm->apply_quirk);
- 	if (ret)
- 		return ret;
- 
