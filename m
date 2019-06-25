@@ -2,125 +2,113 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927F6C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F13DC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C55208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:04:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="hZRADPiz"
+	by mail.kernel.org (Postfix) with ESMTP id 7EC1F214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbfFYME2 (ORCPT
+        id S1728746AbfFYMFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:04:28 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41965 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbfFYME1 (ORCPT
+        Tue, 25 Jun 2019 08:05:01 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:46404 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726949AbfFYMFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:04:27 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 136so12436000lfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dF0IbJavBkDmedpj3yJyJEczStf0zljEZ8y8GfrnLNo=;
-        b=hZRADPizKg59OjucPBI3M0TUhnj8/1G1RIWD4zZbMQjcz8KM4CL4S+r66k1z7jRWqY
-         I+Qsw9vnUgoKZVK8z74l0ZwEZ5FmjLRHeGGsz2YpjdwS6dSEYMH82ElW4689vbo/7B61
-         sanDevh+OlBX3C5KyD8iujyOd0GaUoLg7N5JQMUQnTZeeavqf5yX2ij6+bFa3rBhevya
-         rNWGq4ASu/C5OhvTm03GcPSKRhVjdzDfIo4aY4rYi+JYYofnvMvEUp7VUaszHQJhU2A9
-         O5VUYsLKjJKuzh4LzmqbVJpqGwIzi0iwVRrHIy4tX84EfC2KAcgbeCoMlE7BLOEHRuNZ
-         q/qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dF0IbJavBkDmedpj3yJyJEczStf0zljEZ8y8GfrnLNo=;
-        b=k0OMxRGh4EpO6nDdnruggWS6UTF5TbMb+LblyL63zD69xmL5++5pe7QhcArzZkFj7s
-         R3jJHtF8dUHrioI4KIhRVPiY4hWcUhk/QDNh310TLAO+fCzV0mV6zcsCYM7/uB1exsQX
-         hn3r8b6vikjZxXu0wkp+uAk/6gD4TUyv9M8gTNA3ENKL+ioNgbhSy5DSBj8Kg8W4Rk+N
-         AK7AMDgQc/f+h45aeDT0p31FEoV/wjGJ/MlLAEJ2DhvkLNHqa+Ju5yBLgOfBZZZb+WTJ
-         RUW0URUb9+0fnJU1fNN+14cwlDwZ2NcEWwqFiUjQQiIb2oli5zlxzDsuro6NOfPZD/Hc
-         1+9w==
-X-Gm-Message-State: APjAAAWsVixdpnULDPXWhjiu6SL3xMZ8prfe2oXo3jI0DddbSTrIyjy0
-        4FM+VSNgX04KSGePig6tx8+y6Q==
-X-Google-Smtp-Source: APXvYqwE0jVw8SSrbGCE55bdvMBAD//3OUaYwM0AqC52kAzrBq0+YhNc2p7IsfW9HIfpQvIyWtX8Fw==
-X-Received: by 2002:a05:6512:24a:: with SMTP id b10mr77179858lfo.37.1561464265290;
-        Tue, 25 Jun 2019 05:04:25 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id h4sm2245272ljj.31.2019.06.25.05.04.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Jun 2019 05:04:24 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 04:21:48 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     Wei Xu <xuwei5@hisilicon.com>
-Cc:     arm@kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        arnd@arndb.de, linuxarm@huawei.com,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        John Garry <john.garry@huawei.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        jinying@hisilicon.com, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-Message-ID: <20190625112148.ckj7sgdgvyeel7vy@localhost>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
+        Tue, 25 Jun 2019 08:05:00 -0400
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id CA6CD67A062;
+        Tue, 25 Jun 2019 14:04:58 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 25 Jun
+ 2019 14:04:58 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Tue, 25 Jun 2019 14:04:58 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     liaoweixiong <liaoweixiong@allwinnertech.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "Richard Weinberger" <richard@nod.at>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+Thread-Topic: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+Thread-Index: AQHVKvG5vIRdXk03g0+SrXGJtaID9aarjwGAgABB7wCAAFGaAIAAAnWA
+Date:   Tue, 25 Jun 2019 12:04:58 +0000
+Message-ID: <3c019394-04a1-ff85-867f-29928a996931@kontron.de>
+References: <1561424549-784-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <20190625030807.GA11074@kroah.com>
+ <97adf58f-4771-90f1-bdaf-5a9d00eef768@kontron.de>
+ <814a343e-e4c4-3ef2-29e2-d6c56f3d5bbb@allwinnertech.com>
+In-Reply-To: <814a343e-e4c4-3ef2-29e2-d6c56f3d5bbb@allwinnertech.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9EC415AB919DFC40958CBB43C7495004@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: CA6CD67A062.A1039
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, gch981213@gmail.com, gregkh@linuxfoundation.org,
+        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, stable@vger.kernel.org,
+        vigneshr@ti.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:23:21AM +0100, Wei Xu wrote:
-> Hi ARM-SoC team,
-> 
-> Please consider to pull the following changes.
-> Thanks!
-> 
-> Best Regards,
-> Wei
-> 
-> ---
-> 
-> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-> 
->   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
-> 
-> for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
-> 
->   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
-> 
-> ----------------------------------------------------------------
-> Hisilicon fixes for v5.2-rc
-> 
-> - fixed RCU usage in logical PIO
-> - Added a function to unregister a logical PIO range in logical PIO
->   to support the fixes in the hisi-lpc driver
-> - fixed and optimized hisi-lpc driver to avoid potential use-after-free
->   and driver unbind crash
-
-Merged to fixes, thanks.
-
-
--Olof
+T24gMjUuMDYuMTkgMTM6NTYsIGxpYW93ZWl4aW9uZyB3cm90ZToNCj4gT2gsIGkgYW0gc29ycnkg
+dGhhdCBpIGhhZCBtaXN1bmRlcnN0YW5kZWQgeW91ciBsZXR0ZXIuDQoNCk5vIHByb2JsZW0gOykN
+Cg0KPiBUaGFuayB5b3UgZm9yIHlvdXIgZG9jdW1lbnQgYW5kIGd1aWRhbmNlLg0KDQpZb3UncmUg
+d2VsY29tZSENCg0KPiBPbiAyMDE5LzYvMjUgUE0gMzowNCwgU2NocmVtcGYgRnJpZWRlciB3cm90
+ZToNCj4+IEhpIGxpYW93ZWl4aW9uZywNCj4+DQo+PiBPbiAyNS4wNi4xOSAwNTowOCwgR3JlZyBL
+SCB3cm90ZToNCj4+PiBPbiBUdWUsIEp1biAyNSwgMjAxOSBhdCAwOTowMjoyOUFNICswODAwLCBs
+aWFvd2VpeGlvbmcgd3JvdGU6DQo+Pj4+IEluIGNhc2Ugb2YgdGhlIGxhc3QgcGFnZSBjb250YWlu
+aW5nIGJpdGZsaXBzIChyZXQgPiAwKSwNCj4+Pj4gc3BpbmFuZF9tdGRfcmVhZCgpIHdpbGwgcmV0
+dXJuIHRoYXQgbnVtYmVyIG9mIGJpdGZsaXBzIGZvciB0aGUgbGFzdA0KPj4+PiBwYWdlLiBCdXQg
+dG8gbWUgaXQgbG9va3MgbGlrZSBpdCBzaG91bGQgaW5zdGVhZCByZXR1cm4gbWF4X2JpdGZsaXBz
+IGxpa2UNCj4+Pj4gaXQgZG9lcyB3aGVuIHRoZSBsYXN0IHBhZ2UgcmVhZCByZXR1cm5zIHdpdGgg
+MC4NCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogbGlhb3dlaXhpb25nIDxsaWFvd2VpeGlvbmdA
+YWxsd2lubmVydGVjaC5jb20+DQo+Pj4+IFJldmlld2VkLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJv
+cmlzLmJyZXppbGxvbkBjb2xsYWJvcmEuY29tPg0KPj4+PiBSZXZpZXdlZC1ieTogRnJpZWRlciBT
+Y2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KPj4+PiBGaXhlczogNzUyOWRm
+NDY1MjQ4ICgibXRkOiBuYW5kOiBBZGQgY29yZSBpbmZyYXN0cnVjdHVyZSB0byBzdXBwb3J0IFNQ
+SSBOQU5EcyIpDQo+Pj4+IC0tLQ0KPj4+PiAgICBkcml2ZXJzL210ZC9uYW5kL3NwaS9jb3JlLmMg
+fCAyICstDQo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlv
+bigtKQ0KPj4+DQo+Pj4gPGZvcm1sZXR0ZXI+DQo+Pj4NCj4+PiBUaGlzIGlzIG5vdCB0aGUgY29y
+cmVjdCB3YXkgdG8gc3VibWl0IHBhdGNoZXMgZm9yIGluY2x1c2lvbiBpbiB0aGUNCj4+PiBzdGFi
+bGUga2VybmVsIHRyZWUuICBQbGVhc2UgcmVhZDoNCj4+PiAgICAgICBodHRwczovL3d3dy5rZXJu
+ZWwub3JnL2RvYy9odG1sL2xhdGVzdC9wcm9jZXNzL3N0YWJsZS1rZXJuZWwtcnVsZXMuaHRtbA0K
+Pj4+IGZvciBob3cgdG8gZG8gdGhpcyBwcm9wZXJseS4NCj4+Pg0KPj4+IDwvZm9ybWxldHRlcj4N
+Cj4+DQo+PiBGWUksIHlvdSBzaG91bGQgbm90IHNlbmQgdGhlIHBhdGNoIHRvIHN0YWJsZUB2Z2Vy
+Lmtlcm5lbC5vcmcsIGJ1dA0KPj4gaW5zdGVhZCwgYXMgSSBzYWlkIGluIG15IG90aGVyIHJlcGx5
+LCBhZGQgdGhlIHRhZyAiQ2M6DQo+PiBzdGFibGVAdmdlci5rZXJuZWwub3JnIi4gU2VlICJPcHRp
+b24gMSIgaW4gdGhlIGRvY3VtZW50IEdyZWcgcmVmZXJyZWQgdG8uDQo+Pg0KPj4gVGhhbmtzLA0K
+Pj4gRnJpZWRlcg0KPj4NCj4g
