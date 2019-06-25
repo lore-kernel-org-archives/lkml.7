@@ -2,139 +2,179 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDEFC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C2C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEB12085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7EE2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VSaRR2XF"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ig1a/J/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbfFYHbd (ORCPT
+        id S1729544AbfFYHbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:31:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48533 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbfFYHbc (ORCPT
+        Tue, 25 Jun 2019 03:31:53 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:35562 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728342AbfFYHbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:31:32 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P7V4LS3509722
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 00:31:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P7V4LS3509722
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561447864;
-        bh=qsRzFhXGzqGyiZcGkpMIJ06dTufLonxZWOOU0344IVE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=VSaRR2XFcCAowqHupC583ICXjmmSO6B6imnyFnFWIUxjwLeNSz9Ct3//v9LaT5CWg
-         UaMjiL56S+OLpZwx0gCTmA2wK+VHOdnKDWAwEdrV82tiH22nyHcr12mteAkP007TiS
-         1z5dOQbeNb21182nOjHUAZ1tuLBywYj3K0GWINguRFkOfvESYysEI5k/S6bX3fwTzm
-         cKVyr1sX0ds55cADl/Ipy/946w1Lh5L2b9nV6PqBBfXEtl0/nOTCxprq9opVATWfRY
-         BFxmZAQu9oP5CZYp+cocsownVbq4+qg6bczNXgmlaa2XTbWrDA8nganFqSirsjExGN
-         LAJjjWtkxj47w==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P7V3mf3509719;
-        Tue, 25 Jun 2019 00:31:03 -0700
-Date:   Tue, 25 Jun 2019 00:31:03 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Reinette Chatre <tipbot@zytor.com>
-Message-ID: <tip-2ef085bd110c5723ca08a522608ac3468dc304bd@git.kernel.org>
-Cc:     hpa@zytor.com, bp@alien8.de, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        reinette.chatre@intel.com
-Reply-To: reinette.chatre@intel.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de,
-          hpa@zytor.com
-In-Reply-To: <15ba03856f1d944468ee6f44e3fd7aa548293ede.1561408280.git.reinette.chatre@intel.com>
-References: <15ba03856f1d944468ee6f44e3fd7aa548293ede.1561408280.git.reinette.chatre@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cache] x86/resctrl: Cleanup cbm_ensure_valid()
-Git-Commit-ID: 2ef085bd110c5723ca08a522608ac3468dc304bd
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 03:31:52 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190625073151euoutp01cc46bd4b181672c252c860a25a155cd6~rYJo7KdNF0433004330euoutp01e
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:31:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190625073151euoutp01cc46bd4b181672c252c860a25a155cd6~rYJo7KdNF0433004330euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561447911;
+        bh=5sQ/QgoEhcfzsA95yFN4M7LlrW1v1YWERTGiizKMusA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=ig1a/J/kiQ+Cl+AZzq0jsAtt9rOZ7Tp+0ehwE/Axpi9XwW99aFEjjBLTJ2/kFQKHY
+         DLv4Ft/8ZuY9zSCV18Slx6vFl7Y3eIq6UK9/oaMnXeE+AeZbNWkseudyQlB/AfZa/N
+         +Ehu5DLeCLy6IfNjIUxWMzNhrjyT8mj8SosOzU/g=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190625073150eucas1p1804a7b12c5740935757ccbaa71dee43e~rYJn4KCUr1172011720eucas1p1F;
+        Tue, 25 Jun 2019 07:31:50 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1A.FB.04325.5EDC11D5; Tue, 25
+        Jun 2019 08:31:49 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190625073149eucas1p102dafce3c10e357cba18b64de8058ef9~rYJnDIWly0556905569eucas1p12;
+        Tue, 25 Jun 2019 07:31:49 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190625073149eusmtrp1c21b2f6b29117d29964abef090d964a7~rYJm0oKWL0495604956eusmtrp1M;
+        Tue, 25 Jun 2019 07:31:49 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-15-5d11cde5c6c0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 98.B4.04146.4EDC11D5; Tue, 25
+        Jun 2019 08:31:48 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190625073148eusmtip2a4fa4a3d5df3009c558e893be5645d45~rYJl48Fxw0621806218eusmtip2O;
+        Tue, 25 Jun 2019 07:31:48 +0000 (GMT)
+Subject: Re: [PATCH v10 09/13] drivers: devfreq: events: add Exynos PPMU new
+ events
+To:     cwchoi00@gmail.com
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, keescook@chromium.org,
+        Tony Lindgren <tony@atomide.com>, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <2e1be1d3-b6ae-e40d-48cd-6b6adb26860d@partner.samsung.com>
+Date:   Tue, 25 Jun 2019 09:31:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAGTfZH35X0zE2LhGWJJp2xZNNk1ew7zNMoMqL+eZ5rcBFcPvew@mail.gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se1BMYRjGfXuuu2xOi/YdDDOLGZdRGQ3fDGOYCWcYl5oxYxCOnCm0K3sq
+        l/yxRJEtJre1STW5zbosaUOZsC2ldHNt0tLYdatIU5hcwnbW6L/f+7zP973v883HEhozPZzd
+        YEgQjQYhTkeryOL7PbWT39QERoU6vGH4qsVO4efd7yj89t4knOuqpfCFTg/CKQV2Gh+uylHg
+        hwf0+KCnjcB1dVcYXLO7ncGd5pcUflxyksZdGS6ELXVlCnzJ5WZwQ9Vc/GLXeRqXt6dRuPfZ
+        VRLffrIAv/gRgL9WvkaztfzXL1kk39G4l+GzTQ0kf9PqZvhC236av51zkeEzUj7RfGaRDfHX
+        qpP5rsJRS1UrVDPXi3EbkkRjyKy1qlh3ayaK/6HcVvDoO2lCP5l0pGSBC4N8z10qHalYDXce
+        gTunk5GLbgRnP5ciuehCUF92AP078r7F4XedQ3DS2kzKxUcEvU437XMN4ZZBk6Ogj4dyQXD9
+        mLfvKoIrpWF3x2kiHbEszQXDDdsWn0fNzYPO2qa+CSQ3DlpMTYSPh3HLoftmIZI9gfDghJf0
+        sZKLgAv5HsrHBKeFJm+uQubRkOLIJuRNXSy8fErLHA6ZHos/wRBorSjyP8BIqD5sJmWWwJSR
+        7/fsBM/BHL9nBpRXNFC+lQluAthLQmR5Dpy6803hk4ELgMaPgfIGAZBVfJyQZTXsS9XI7vFQ
+        ZK5XyBwE5y4eYw4hnbVfLmu/LNZ+Waz/5+Yh0oa0YqKkjxGlqQZxa7Ak6KVEQ0xw9GZ9Ifr7
+        R6t7K77cQGU/1zkRxyLdIHWei4vSUEKStF3vRMASuqHqM8JfSb1e2L5DNG5eY0yMEyUnGsGS
+        Oq06eUDLSg0XIySIm0QxXjT+6ypY5XATWnw86W34He0S5cbysOXFySVp0WXueYN7zHuDw5cI
+        zwfOjnO3La6Gcc6ey4siRrR5Ndq7C8eEP4gOaTUYR+alpmZ/ykr4EDtr66tBGysDY22WeLK0
+        +deeW2Pnd1fpGh2EZfqZ0G/tJV2RV/bYpl2rP2KO+m2MvBymsR8dsyo+crWYZteRUqwwZSJh
+        lIQ/mlQ/0p8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3cuO4qLs6n54ocuAz90Wx2v78xEPxQn6YoU4YVceryQc7oz
+        RYtgJalpahfpMjMNkWKrvGV5SSWdmne0MNlSTEeGWmFqVJq0uQK//Xie/w+eB/4UJnlIuFMJ
+        SRpOnaRIlJKOeO9q1/huS784cm9T8z5UfbeSQO8Xpwn0qWMnKjUOEMgwPwVQZnkliW71lAhQ
+        X54SFU7NYmhwsEqI+i/PCdH8tXECvW28T6KFfCNAdwdbBOipcUyIhnoOIPOlxyRqn8sm0OpI
+        NY5a34Ug8/JG9OPNJAhyY38s3cTZb6NXhGyxdghnG3RjQrZGf5VkW0ueCNn8zK8kW/BcD9ja
+        3gvsQs3m445hsgC1KlXDbY1X8Zr90nAGecoYOZJ5estljJdfpL+nj3RPYEAMl5iQxqn3BEbJ
+        4sdmCkDyskN6+fBvXAtWhLnAgYK0N/w8UWdlR0pCVwBo/jBD2Beb4M2Wl/9CznBlJJe0h2YB
+        vD06QtoWzvRJaKorX2MXq/DytgXYQhjdTkLdsyKB3bghgK8+rWK5gKJIWgbr9Sk2QUQfhPMD
+        JmBjnPaAE1oTZmNX+jQsbtTi9owYdt+zrLEDfQIaHk6tXYfRvvBB7UfMzm7QZCkV2HkLzKwr
+        xq4DiW6drlun6NYpunVKGcD1wIVL5ZVxSp6R8Qoln5oUJ4tWKWuAtR4vOn/V1oPh6tA2QFNA
+        6iQqM9KREkKRxmco2wCkMKmLqEJhHYliFBnnObXqjDo1kePbgI/1uRuYu2u0ylq2JM0Zxofx
+        Q3LGz8vPyxdJ3UQ59OsICR2n0HDnOC6ZU//3BJSDuxYE1q82RFQsjWcevdgsNxzuiqKrzdPs
+        qGXkjhP+KzHWBFLkfzo624zb3ILCartemMOg06OfppzkKnFlXn2+KGI2xOOYMPfIk130zuCr
+        viC9x3/R8UC2wb37VJbH2YamyaLvG3zv6UPrRIV92tBwZpzYHjyd98WY1X+oPFYc7GmQ4ny8
+        gtmBqXnFX1VUj/40AwAA
+X-CMS-MailID: 20190625073149eucas1p102dafce3c10e357cba18b64de8058ef9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190614095328eucas1p24009b3a07322fd12e49eabb7a08baf50
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190614095328eucas1p24009b3a07322fd12e49eabb7a08baf50
+References: <CGME20190614095328eucas1p24009b3a07322fd12e49eabb7a08baf50@eucas1p2.samsung.com>
+        <20190614095309.24100-1-l.luba@partner.samsung.com>
+        <20190614095309.24100-10-l.luba@partner.samsung.com>
+        <CAGTfZH35X0zE2LhGWJJp2xZNNk1ew7zNMoMqL+eZ5rcBFcPvew@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2ef085bd110c5723ca08a522608ac3468dc304bd
-Gitweb:     https://git.kernel.org/tip/2ef085bd110c5723ca08a522608ac3468dc304bd
-Author:     Reinette Chatre <reinette.chatre@intel.com>
-AuthorDate: Mon, 24 Jun 2019 13:34:27 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Tue, 25 Jun 2019 09:26:11 +0200
 
-x86/resctrl: Cleanup cbm_ensure_valid()
 
-A recent fix to the cbm_ensure_valid() function left some coding style
-issues that are now addressed:
+On 6/22/19 3:10 PM, Chanwoo Choi wrote:
+> Hi,
+> 
+> 2019년 6월 14일 (금) 오후 6:54, Lukasz Luba <l.luba@partner.samsung.com>님이 작성:
+>>
+>> Define new performance events supported by Exynos5422 SoC counters.
+>> The counters are built-in in Dynamic Memory Controller and provide
+>> information regarding memory utilization.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   drivers/devfreq/event/exynos-ppmu.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
+>> index c2ea94957501..ce658c262c27 100644
+>> --- a/drivers/devfreq/event/exynos-ppmu.c
+>> +++ b/drivers/devfreq/event/exynos-ppmu.c
+>> @@ -89,6 +89,12 @@ static struct __exynos_ppmu_events {
+>>          PPMU_EVENT(d1-cpu),
+>>          PPMU_EVENT(d1-general),
+>>          PPMU_EVENT(d1-rt),
+>> +
+>> +       /* For Exynos5422 SoC */
+>> +       PPMU_EVENT(dmc0_0),
+>> +       PPMU_EVENT(dmc0_1),
+>> +       PPMU_EVENT(dmc1_0),
+>> +       PPMU_EVENT(dmc1_1),
+>>   };
+>>
+>>   static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
+>> --
+>> 2.17.1
+>>
+> 
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> 
+Thank you Chanwoo.
 
-- Return a value instead of using a function parameter as input and
-  output
-- Use if (!val) instead of if (val == 0)
-- Follow reverse fir tree ordering of variable declarations
-
-Suggested-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: fenghua.yu@intel.com
-Cc: tony.luck@intel.com
-Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/15ba03856f1d944468ee6f44e3fd7aa548293ede.1561408280.git.reinette.chatre@intel.com
-
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 2f4824793798..bf3034994754 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2488,21 +2488,21 @@ out_destroy:
-  * modification to the CBM if the default does not satisfy the
-  * requirements.
-  */
--static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
-+static u32 cbm_ensure_valid(u32 _val, struct rdt_resource *r)
- {
--	unsigned long val = *_val;
- 	unsigned int cbm_len = r->cache.cbm_len;
- 	unsigned long first_bit, zero_bit;
-+	unsigned long val = _val;
- 
--	if (val == 0)
--		return;
-+	if (!val)
-+		return 0;
- 
- 	first_bit = find_first_bit(&val, cbm_len);
- 	zero_bit = find_next_zero_bit(&val, cbm_len, first_bit);
- 
- 	/* Clear any remaining bits to ensure contiguous region */
- 	bitmap_clear(&val, zero_bit, cbm_len - zero_bit);
--	*_val = (u32)val;
-+	return (u32)val;
- }
- 
- /*
-@@ -2560,7 +2560,7 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
- 	 * Force the initial CBM to be valid, user can
- 	 * modify the CBM based on system availability.
- 	 */
--	cbm_ensure_valid(&d->new_ctrl, r);
-+	d->new_ctrl = cbm_ensure_valid(d->new_ctrl, r);
- 	/*
- 	 * Assign the u32 CBM to an unsigned long to ensure that
- 	 * bitmap_weight() does not access out-of-bound memory.
+Regards,
+Lukasz
