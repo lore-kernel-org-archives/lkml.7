@@ -2,135 +2,154 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60383C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D5CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CFF205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D1220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561501954;
-	bh=2vgiJrS9XOyadE0tibDao2AJ3GuPX5u2vY1CXkOvBWM=;
-	h=Date:From:To:Subject:In-Reply-To:References:List-ID:From;
-	b=gvuunJq/H2onhl85MvrZh3BEaB9MVqstQMDTDLRpP1mJV1HgAom0OGdNHY5LpS5/k
-	 hvAiyoPwEiCzzJcESJzclSyOgR96PInKWslJYQ8xyftQIic/5vbSu+z6+K7aHLM2G6
-	 /aK+zOiLaPo1Q64Enja8H3ApDh7aCKEcQhIq+UCo=
+	s=default; t=1561501997;
+	bh=Pe6bUBbe9F++M5Nf4nUW39Q17s5s3cCQ5eoRyIM3Uzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lO+4M3kl4oRFnR35l0vBit2i+ht1gNVKlDxPz3q//SCaArQbhGqSoGeHiBH+V1dy3
+	 gmKJO+f6z/4LW8nP4SvcbuvtVRMyV1etzDh78aKSjaWFQwbZXYJRQPSS7qkX3EMx3x
+	 dAAkKZUdPLujti+L5H0Qcxxv77Gbtdt7DW38IAoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfFYWcc (ORCPT
+        id S1726460AbfFYWdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:32:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfFYWcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:32:32 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 923712053B;
-        Tue, 25 Jun 2019 22:32:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561501951;
-        bh=2vgiJrS9XOyadE0tibDao2AJ3GuPX5u2vY1CXkOvBWM=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=Vxse2In8RWeMO/e3m/uiryFM9Aks8h4hokezlEwlL3l5qQS2yA6VfaSFEsSat2VnE
-         tOimRC1pShkv5JsQrpjd2V0YV5mcLhQG0sK30ZxyuKBQSPzzLqciVrViFRkWMI1Q3O
-         36JWuKXqyLc1q9uxeBXpKeZCrCHJmvqkIufmWQT4=
-Date:   Tue, 25 Jun 2019 15:32:31 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
-Message-Id: <20190625153231.9b2d2fb8d8bf35c6acd5aafd@linux-foundation.org>
-In-Reply-To: <20190625152938.d1ebf43f0da5f5276c77cf4c@linux-foundation.org>
-References: <20190625100518.30753-1-vkoul@kernel.org>
-        <20190625152938.d1ebf43f0da5f5276c77cf4c@linux-foundation.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Jun 2019 18:33:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43390 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfFYWdQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:33:16 -0400
+Received: by mail-pg1-f196.google.com with SMTP id f25so133340pgv.10;
+        Tue, 25 Jun 2019 15:33:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TnzcHfb/rGR5D/vErJu8w17aFeeUcfwDXLuZxpFdgZc=;
+        b=rNVLR2LDpP8KAQuszWLfab1CJ9gXccbXmSDxzPyAeTL3JIPvljZWiiRYzz/i6H743/
+         TxnaB1vUVgTE+fcI5I4L5yXaetDkjWBc4fa7QZzjtDkX37hbEVE+Mv8wxt+1YPPhZ7iw
+         qrPQ/U5PNWOziks8EzD7jGwqK/S1DlixOuiEBasaPh9bRvvMAJJhFzjvJInkpFjuwqFQ
+         PzHITMs8V1MgjLPkwQsEfJVqojTjDLQfScJvbiXdErj/zv5BA3ECvLcNR7etZMU0zaLA
+         ebSl4H2FueURFNZnqnj5/CmerH8Mywg1MRbyEjDe43xPAS8vNYBx7LAuWX79drGCazPF
+         zdPQ==
+X-Gm-Message-State: APjAAAVNqmYSdo4AzoRGu7VqCyayqtHpfhhKjEQgWUQiX73Y78zNNfah
+        F+W+Hhe0i9GS11WR3P5MJAE=
+X-Google-Smtp-Source: APXvYqz8tePzVjq6qydlXc6fHsQtBqVBfz39DV20JLDT6sqkzfdOgtSxbEsBu2vrr4nNjRf5f7IpUg==
+X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr267009pjz.140.1561501994728;
+        Tue, 25 Jun 2019 15:33:14 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id p67sm23643298pfg.124.2019.06.25.15.33.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 15:33:13 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id CD044401EB; Tue, 25 Jun 2019 22:33:12 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 22:33:12 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, peterz@infradead.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu,
+        yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com,
+        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
+        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Message-ID: <20190625223312.GP19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617082613.109131-2-brendanhiggins@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 15:29:38 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+On Mon, Jun 17, 2019 at 01:25:56AM -0700, Brendan Higgins wrote:
+> +/**
+> + * module_test() - used to register a &struct kunit_module with KUnit.
+> + * @module: a statically allocated &struct kunit_module.
+> + *
+> + * Registers @module with the test framework. See &struct kunit_module for more
+> + * information.
+> + */
+> +#define module_test(module) \
+> +		static int module_kunit_init##module(void) \
+> +		{ \
+> +			return kunit_run_tests(&module); \
+> +		} \
+> +		late_initcall(module_kunit_init##module)
 
-> On Tue, 25 Jun 2019 15:35:18 +0530 Vinod Koul <vkoul@kernel.org> wrote:
-> 
-> > DIV_ROUND_UP_ULL adds the two arguments and then invokes
-> > DIV_ROUND_DOWN_ULL. But on a 32bit system the addition of two 32 bit
-> > values can overflow. DIV_ROUND_DOWN_ULL does it correctly and stashes
-> > the addition into a unsigned long long so cast the result to unsigned
-> > long long here to avoid the overflow condition.
-> >
-> > ...
-> >
-> > --- a/include/linux/kernel.h
-> > +++ b/include/linux/kernel.h
-> > @@ -93,7 +93,8 @@
-> >  #define DIV_ROUND_DOWN_ULL(ll, d) \
-> >  	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
-> >  
-> > -#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
-> > +#define DIV_ROUND_UP_ULL(ll, d) \
-> > +	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
-> >  
-> 
-> This clearly wasn't tested :(
-> 
-> fs/fs-writeback.c: In function wb_split_bdi_pages:
-> ./include/linux/kernel.h:97:65: error: expected ; before } token
->   ({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
->                                                                  ^
-> fs/fs-writeback.c:811:10: note: in expansion of macro DIV_ROUND_UP_ULL
->    return DIV_ROUND_UP_ULL((u64)nr_pages * this_bw, tot_bw);
-> 
-> 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: linux-kernelh-fix-overflow-for-div_round_up_ull-fix
-> 
-> DIV_ROUND_UP_ULL must be an rval
-> 
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->  include/linux/kernel.h |    6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> --- a/include/linux/kernel.h~linux-kernelh-fix-overflow-for-div_round_up_ull-fix
-> +++ a/include/linux/kernel.h
-> @@ -93,8 +93,10 @@
->  #define DIV_ROUND_DOWN_ULL(ll, d) \
->  	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
->  
-> -#define DIV_ROUND_UP_ULL(ll, d) \
-> -	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
-> +#define DIV_ROUND_UP_ULL(ll, d) ({ \
-> +	unsigned long long _tmp; \
-> +	_tmp = DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)); \
-> +	_tmp; })
+Becuase late_initcall() is used, if these modules are built-in, this
+would preclude the ability to test things prior to this part of the
+kernel under UML or whatever architecture runs the tests. So, this
+limits the scope of testing. Small detail but the scope whould be
+documented.
 
-Simpler:
+> +static void kunit_print_tap_version(void)
+> +{
+> +	if (!kunit_has_printed_tap_version) {
+> +		kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
 
---- a/include/linux/kernel.h~linux-kernelh-fix-overflow-for-div_round_up_ull-fix
-+++ a/include/linux/kernel.h
-@@ -94,7 +94,7 @@
- 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
- 
- #define DIV_ROUND_UP_ULL(ll, d) \
--	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
-+	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
- 
- #if BITS_PER_LONG == 32
- # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
-_
+What is this TAP thing? Why should we care what version it is on?
+Why are we printing this?
 
+> +		kunit_has_printed_tap_version = true;
+> +	}
+> +}
+> +
+> +static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+> +{
+> +	struct kunit_case *test_case;
+> +	size_t len = 0;
+> +
+> +	for (test_case = test_cases; test_case->run_case; test_case++)
+
+If we make the last test case NULL, we'd just check for test_case here,
+and save ourselves an extra few bytes per test module. Any reason why
+the last test case cannot be NULL?
+
+> +void kunit_init_test(struct kunit *test, const char *name)
+> +{
+> +	spin_lock_init(&test->lock);
+> +	test->name = name;
+> +	test->success = true;
+> +}
+> +
+> +/*
+> + * Performs all logic to run a test case.
+> + */
+> +static void kunit_run_case(struct kunit_module *module,
+> +			   struct kunit_case *test_case)
+> +{
+> +	struct kunit test;
+> +	int ret = 0;
+> +
+> +	kunit_init_test(&test, test_case->name);
+> +
+> +	if (module->init) {
+> +		ret = module->init(&test);
+
+I believe if we used struct kunit_module *kmodule it would be much
+clearer who's init this is.
+
+  Luis
