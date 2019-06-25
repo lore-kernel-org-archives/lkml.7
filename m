@@ -2,106 +2,131 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC0C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322F3C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9D42063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36EF2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:27:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="naD61bgr"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="GXRap7s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbfFYR0n (ORCPT
+        id S1731251AbfFYR1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:26:43 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46754 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfFYR0m (ORCPT
+        Tue, 25 Jun 2019 13:27:21 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43502 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfFYR1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:26:42 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so17058961ljg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:26:41 -0700 (PDT)
+        Tue, 25 Jun 2019 13:27:21 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j29so13209914lfk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6gq84utB8K04TkFkVIjVVbqj+RReCP6QFmHdu5HDrdE=;
-        b=naD61bgrphwvsuQeh7I3S2TOG7WlFTu05G05sniZdPLkEFxpVLI4QzWmwpfPA9CiN2
-         ATfzx5rBs7HjKcRc1YDoStMPiGwTbE/QZWGQPVuWefMqhX47HS5O9BFNQFOGzfMmdXPX
-         IVJXBGv0G6J/Vm5nvfJK/lyKs9vJ4Qmi6I9GU=
+        bh=EzzLn0GswMFcyMLNaQ7ggxi30GgEafznXlfGyBwbniM=;
+        b=GXRap7s5jEiN/yj8znTw5VoaIeXeTRZCA56SzbEgqrRSfr1R32FibRI3wBA7cG9NLs
+         q1G4QUquAYQe0O39WbBEa8WsKHH7bGeEZl6cjOxEc2L1ZIWrJOURVZ8TJu0dDJ//w7ck
+         bNCIgX2ypyFZT5lsTK/jWhcdiSTTu28EMnpJMrm6anadT+0OVbTZ7SBYAoSxCqtk71h+
+         8jOvlf4DiKJZCGH6tASAOzF9RxNndGi2c1qhz88dnEFInYMU9hP6or0aCD24oremwdGY
+         0PV/CrEP60RgzkVRW//JzKvIUs+kvFj/5hjqT/ST60egaNav6AKYXwUK0IaPvUBkfLFm
+         MKBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6gq84utB8K04TkFkVIjVVbqj+RReCP6QFmHdu5HDrdE=;
-        b=qTqFGVcClNgBurTPKnRdq17O7D81WHYiL0tHb6oauerrw7BDsJso6iV/+lf53f2jFC
-         lYwl7fsS/WfMBqOioElaApnwVS3v0Xm09GJZaT3oMlfGWYMm8hQkWYx0OlRiAlDtbAqF
-         F8tAtT1BQVWl51/r05g7sqvGEtMa2xKcjpe9bqW009lFuhUPRtbLxKO8IQFCX/DBYk3K
-         6JzOgwk1g6mXzhCO9PB8dmWp+G1kSHE65VnvizjlbsfsKONFqUL+TpKMkBoh4abKCXAd
-         KKIx7VGpoc1h/Ug2zQk+OBcGSi08sLSQork2T+3obm9vtr/1N8svDhmFICByKf7lWNVe
-         hE1g==
-X-Gm-Message-State: APjAAAWhQcZVX/rj9aJE2fTH3V/gzmccQMrsL7WWfRATg4pKWreVs0li
-        7EU4cMjk3G2bsuOVInmKW50iqYV/n9c=
-X-Google-Smtp-Source: APXvYqx6owkLDuWzHNsdFbI4dR7//+vrm9KeJ4KlrDvRWQyYelg1WwIznZ8SY0xsvu5wWk3SYOU2yg==
-X-Received: by 2002:a2e:9b10:: with SMTP id u16mr38601399lji.231.1561483600197;
-        Tue, 25 Jun 2019 10:26:40 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id c19sm2014827lfi.39.2019.06.25.10.26.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 10:26:38 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id q26so13256266lfc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:26:37 -0700 (PDT)
-X-Received: by 2002:a19:5515:: with SMTP id n21mr22825839lfe.26.1561483597150;
- Tue, 25 Jun 2019 10:26:37 -0700 (PDT)
+        bh=EzzLn0GswMFcyMLNaQ7ggxi30GgEafznXlfGyBwbniM=;
+        b=BpsVlslZGYdsTDuxoToq7p3uLt3PyGF/FyNVZGMGl0YH1leoNQiGhnUoKyJjCok1eF
+         Mbxh5m9uLvG3xMzFP8pY9xbPSXlecbWzid/o1wnEgRf+YsStHENG1Gy2hb/uqeN6FCEh
+         aMlpasEcEkDQyuk/LCBjsXicMF4EXfmcXPNysav+nM2x/hhE56TOYH+BYFOLj143F7CF
+         oXUOLvCDnkJgBYQhYjKlVCf1gMYHs1zc47cwoTm7WNMf0kggFYSVYGU/SlaogL92+Nhb
+         IUVNRUd5xyIJkZotWI3r259AH4BziH3kzlRUsxJJM272YYjEwjvHb/VeDOjFkWyaiJkP
+         1Plw==
+X-Gm-Message-State: APjAAAU1q0G59fRCcmrlnfyNILV2xFmV6ILuIhWMnVsoh9iqGySQO83T
+        Jc8HBBLuGdLano/HgGHtoBTCWYUO6bxneHwJFxDBwq/RUqE=
+X-Google-Smtp-Source: APXvYqy+QhX5osc0RLcDyxsQWP6kDZm1kRoyl/PY8XBTQo2HfuAmAJJdplI2GZmDxo7qZE1w8c0pIqXD800Dt7VAH+o=
+X-Received: by 2002:a19:f00a:: with SMTP id p10mr43511314lfc.68.1561483639083;
+ Tue, 25 Jun 2019 10:27:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190604205323.200361-2-briannorris@chromium.org> <20190625044525.846A8607DE@smtp.codeaurora.org>
-In-Reply-To: <20190625044525.846A8607DE@smtp.codeaurora.org>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 25 Jun 2019 10:26:25 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXP2xY_7BXk6L25FVFf1yyhnXOZygYwreGYGVY7aK0TVkg@mail.gmail.com>
-Message-ID: <CA+ASDXP2xY_7BXk6L25FVFf1yyhnXOZygYwreGYGVY7aK0TVkg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mwifiex: dispatch/rotate from reorder table atomically
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Ganapathi Bhat <gbhat@marvell.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>
+References: <1561420642-21186-1-git-send-email-alan.mikhak@sifive.com> <20190625070835.GC30123@lst.de>
+In-Reply-To: <20190625070835.GC30123@lst.de>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Tue, 25 Jun 2019 10:27:08 -0700
+Message-ID: <CABEDWGymQopo4nPZnnTGXNH5GajUsccCCtQS6cmmhVa+HbFc2w@mail.gmail.com>
+Subject: Re: [PATCH] nvme-pci: Avoid leak if pci_p2pmem_virt_to_bus() returns null
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        keith.busch@intel.com, axboe@fb.com, sagi@grimberg.me,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 9:45 PM Kalle Valo <kvalo@codeaurora.org> wrote:
-> New warning:
+On Tue, Jun 25, 2019 at 12:09 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> drivers/net/wireless/marvell/mwifiex/wmm.c: In function 'mwifiex_wmm_process_tx':
-> drivers/net/wireless/marvell/mwifiex/wmm.c:1438:4: warning: 'flags' may be used uninitialized in this function [-Wmaybe-uninitialized]
->     mwifiex_11n_aggregate_pkt(priv, ptr, ptr_index, flags);
->     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/marvell/mwifiex/wmm.c:1406:16: note: 'flags' was declared here
->   unsigned long flags;
->                 ^~~~~
+> On Mon, Jun 24, 2019 at 04:57:22PM -0700, Alan Mikhak wrote:
+> > Modify nvme_alloc_sq_cmds() to call pci_free_p2pmem()
+> > to free the memory it allocated using pci_alloc_p2pmem()
+> > in case pci_p2pmem_virt_to_bus() returns null.
+> >
+> > Make sure not to call pci_free_p2pmem() if pci_alloc_p2pmem()
+> > returned null which can happen if CONFIG_PCI_P2PDMA is not
+> > configured.
+>
+> Can you
+>
 
-Yikes! Not sure how I missed that, as I *thought* I had -Werror
-enabled. Maybe things got lost a bit in the shuffles from GCC to Clang
-for building our kernels internally.
+I mean this patch makes sure not to call pci_free_p2pmem() if nothing
+was allocated by pci_alloc_p2pmem().
 
-Anyway, "used" is a bit generous here, since these are just useless
-function arguments (never *actually* used now). I should remove these
-args entirely.
+> >
+> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > ---
+> >  drivers/nvme/host/pci.c | 14 +++++++++-----
+> >  1 file changed, 9 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> > index 524d6bd6d095..5dfa067f6506 100644
+> > --- a/drivers/nvme/host/pci.c
+> > +++ b/drivers/nvme/host/pci.c
+> > @@ -1456,11 +1456,15 @@ static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
+> >
+> >       if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
+> >               nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
+> > -             nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+> > -                                             nvmeq->sq_cmds);
+> > -             if (nvmeq->sq_dma_addr) {
+> > -                     set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
+> > -                     return 0;
+> > +             if (nvmeq->sq_cmds) {
+> > +                     nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+> > +                                                     nvmeq->sq_cmds);
+> > +                     if (nvmeq->sq_dma_addr) {
+> > +                             set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
+> > +                             return 0;
+> > +                     }
+> > +
+> > +                     pci_free_p2pmem(pdev, nvmeq->sq_cmds, SQ_SIZE(depth));
+>
+> pci_p2pmem_virt_to_bus should only fail when
+> pci_p2pmem_virt_to_bus failed.  That being said I think doing the
+> error check on pci_alloc_p2pmem instead of relying on
+> pci_p2pmem_virt_to_bus "passing through" the error seems odd, I'd
+> rather check the pci_alloc_p2pmem return value directly.
 
-> 2 patches set to Changes Requested.
+Thanks Christoph. I could see the existing code should not leak but only after
+inspecting pci_p2pmem_virt_to_bus() and gen_pool_virt_to_phys(). I wondered
+what if these functions changed and broke the relation but that seems unlikely.
+Checking the return value directly may require less from the reader,
+if that's a good
+outcome.
 
-Will send a v2.
-
-Thanks,
-Brian
+Alan
