@@ -2,71 +2,76 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C7CC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50414C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6AC20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2519F20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfFYHun (ORCPT
+        id S1729838AbfFYHuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:50:43 -0400
-Received: from verein.lst.de ([213.95.11.211]:60511 "EHLO newverein.lst.de"
+        Tue, 25 Jun 2019 03:50:51 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38838 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfFYHum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:50:42 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 3125C68B02; Tue, 25 Jun 2019 09:50:09 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 09:50:08 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/16] mm: rename CONFIG_HAVE_GENERIC_GUP to
- CONFIG_HAVE_FAST_GUP
-Message-ID: <20190625075008.GE30815@lst.de>
-References: <20190611144102.8848-1-hch@lst.de> <20190611144102.8848-11-hch@lst.de> <20190621142824.GP19891@ziepe.ca>
+        id S1726441AbfFYHuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:50:50 -0400
+Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hfgDq-0002jy-Qy; Tue, 25 Jun 2019 09:50:34 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: stmmac regression on ASUS TinkerBoard
+Date:   Tue, 25 Jun 2019 09:50:34 +0200
+Message-ID: <4489696.oEgVQY3s1y@diego>
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B9D7065@DE02WEMBXB.internal.synopsys.com>
+References: <8fa9ce79-6aa2-d44d-e24d-09cc1b2b70a3@katsuster.net> <78EB27739596EE489E55E81C33FEC33A0B9D7065@DE02WEMBXB.internal.synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621142824.GP19891@ziepe.ca>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:28:24AM -0300, Jason Gunthorpe wrote:
-> On Tue, Jun 11, 2019 at 04:40:56PM +0200, Christoph Hellwig wrote:
-> > We only support the generic GUP now, so rename the config option to
-> > be more clear, and always use the mm/Kconfig definition of the
-> > symbol and select it from the arch Kconfigs.
-> 
-> Looks OK to me
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> 
-> But could you also roll something like this in to the series? There is
-> no longer any reason for the special __weak stuff that I can see -
-> just follow the normal pattern for stubbing config controlled
-> functions through the header file.
+Hi,
 
-Something pretty similar is done later in this series.
+Am Dienstag, 25. Juni 2019, 09:46:12 CEST schrieb Jose Abreu:
+> From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> 
+> > I checked drivers/net/ethernet/stmicro/stmmac/stmmac_main.c and found
+> > stmmac_init_phy() is going to fail if ethernet device node does not
+> > have following property:
+> >    - phy-handle
+> >    - phy
+> >    - phy-device
+> > 
+> > This commit broke the device-trees such as TinkerBoard. The mdio
+> > subnode creating a mdio bus is changed to required or still optional?
+> 
+> Yeah, with PHYLINK the PHY binding is always required ...
+> 
+> How do you want to proceed ? I think DT bindings can never break between 
+> releases so I will probably need to cook a patch for stmmac.
+
+Correct ... old devicetrees on new kernels should not break.
+Especially as this affects a big number of boards potentially loosing
+network support and in the devicetree binding the phy property is also
+marked as optional.
+
+Heiko
+
+
