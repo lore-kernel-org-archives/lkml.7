@@ -2,123 +2,107 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9315C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08716C48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63F920883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AP7Npey8"
+	by mail.kernel.org (Postfix) with ESMTP id DFC1A208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732950AbfFYSYI (ORCPT
+        id S1732952AbfFYSZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 14:24:08 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35137 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfFYSYH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 14:24:07 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w20so20904438edd.2;
-        Tue, 25 Jun 2019 11:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Y1fHVNSsj21p520XEod8X+4E/GAo7E8+cJufOo/k1w=;
-        b=AP7Npey8pgp8xTDS8RBgnpNc3lwjKMOEdzWsdMvDJg6RKV+vZEQkrIPtyw9Jbkf8Ny
-         sINTNiPJg+5BYPSghjcRCEgWQVaWJQdD5k33So5JpXJFv9akoCT3IYJyy2QCD/kHO7VU
-         uvJlShEma5aYlNWAgaN48K4HZfZ1m9WduuswxeKGq/EHVqcp5Bb7NPGHu4Oajb6zPIkd
-         YpeQK5qX5IJIoQIwgk5tZyI6ZhGWTGzNSmWR9Fpm97VIem3HcNh+z7biTTCUN4A65lMz
-         FT7VTukS2CDyHtshqdh4aKYOkT8HW31LYgEhP+/ml5IWmsEgboI5p7Gh8lbBkxNN88BT
-         HIeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2Y1fHVNSsj21p520XEod8X+4E/GAo7E8+cJufOo/k1w=;
-        b=c/PAC/ANemJVfRj5BTZeEHBCoTJRNcr+qo2r2xB0XEKgUTmYJXLfPA8ks0GjmjBnJa
-         9SlPgajwgd1dBbW53H91t/AisMP2cC/mIkvxA7KzKtJ+8syejjAgcBH6Udu+WrQ0GQg+
-         4THcfKGE8gda/2h/04rUifS7xPEz5ObeJrjq35NWZPbsIQ8yVX7udAd4ZGkvYPdNfu0z
-         HVyH+lwXh2rOg+mCZ5qNyR37UTKSIT1j/2Z7rga2Ain6+j3ZYWEpLirz09oqMT+193ln
-         JjtzPBbmt6AUFeY4xjZ7vLimkUlALfdhWBIJ73pve0JltN4kYZ5LG2PICSt+quejjZlK
-         jURg==
-X-Gm-Message-State: APjAAAXBnCZuA5MXnxKW0i6eaLLdQtMex8p8z4qScGCpb+BS9OcnpzEs
-        MqKXH9vEzbzyRDoqKMm8be8=
-X-Google-Smtp-Source: APXvYqyfiVnKBTDReM3U3HnitEqUtLIeUK93VVuj7LIWGKCfAfQB10fvnTBYlQALqQYcYOWHCBiv6w==
-X-Received: by 2002:a50:b566:: with SMTP id z35mr140706976edd.129.1561487045655;
-        Tue, 25 Jun 2019 11:24:05 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id y3sm4811521edr.27.2019.06.25.11.24.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 11:24:05 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] xsk: Properly terminate assignment in xskq_produce_flush_desc
-Date:   Tue, 25 Jun 2019 11:23:52 -0700
-Message-Id: <20190625182352.13918-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 25 Jun 2019 14:25:53 -0400
+Received: from mga05.intel.com ([192.55.52.43]:25643 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727070AbfFYSZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 14:25:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 11:25:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
+   d="scan'208";a="172455613"
+Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2019 11:25:51 -0700
+Subject: Re: [PATCH v1 1/6] mm: Adjust shuffle code to allow for future
+ coalescing
+To:     Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+ <20190619223302.1231.51136.stgit@localhost.localdomain>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <dd694406-6384-d859-6ac6-ec6e6cffe4e8@intel.com>
+Date:   Tue, 25 Jun 2019 11:25:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190619223302.1231.51136.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
-
-In file included from net/xdp/xsk_queue.c:10:
-net/xdp/xsk_queue.h:292:2: warning: expression result unused
-[-Wunused-value]
-        WRITE_ONCE(q->ring->producer, q->prod_tail);
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
-        __u.__val;                                      \
-        ~~~ ^~~~~
-1 warning generated.
-
-The q->prod_tail assignment has a comma at the end, not a semi-colon.
-Fix that so clang no longer warns and everything works as expected.
-
-Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/544
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- net/xdp/xsk_queue.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
-index 88b9ae24658d..cba4a640d5e8 100644
---- a/net/xdp/xsk_queue.h
-+++ b/net/xdp/xsk_queue.h
-@@ -288,7 +288,7 @@ static inline void xskq_produce_flush_desc(struct xsk_queue *q)
- 	/* Order producer and data */
- 	smp_wmb(); /* B, matches C */
- 
--	q->prod_tail = q->prod_head,
-+	q->prod_tail = q->prod_head;
- 	WRITE_ONCE(q->ring->producer, q->prod_tail);
- }
- 
--- 
-2.22.0
+On 6/19/19 3:33 PM, Alexander Duyck wrote:
+> 
+> This patch is meant to move the head/tail adding logic out of the shuffle
+> code and into the __free_one_page function since ultimately that is where
+> it is really needed anyway. By doing this we should be able to reduce the
+> overhead and can consolidate all of the list addition bits in one spot.
 
