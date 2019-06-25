@@ -2,80 +2,106 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42412C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BA3C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2324B2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5674120652
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hppAvMj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfFYGOS (ORCPT
+        id S1729147AbfFYGPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:14:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40622 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfFYGOS (ORCPT
+        Tue, 25 Jun 2019 02:15:19 -0400
+Received: from mail-pg1-f173.google.com ([209.85.215.173]:46681 "EHLO
+        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfFYGPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:14:18 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hfei9-0005PW-9o; Tue, 25 Jun 2019 08:13:45 +0200
-Date:   Tue, 25 Jun 2019 08:13:44 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-cc:     Weiping Zhang <zhangweiping@didiglobal.com>, axboe@kernel.dk,
-        Tejun Heo <tj@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        bvanassche@acm.org, keith.busch@intel.com, minwoo.im.dev@gmail.com,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-nvme@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/5] genirq/affinity: allow driver's discontigous
- affinity set
-In-Reply-To: <20190625021411.GD23777@ming.t460p>
-Message-ID: <alpine.DEB.2.21.1906250811150.32342@nanos.tec.linutronix.de>
-References: <cover.1561385989.git.zhangweiping@didiglobal.com> <1ead341c6d603cf138aed62e31091f257cb19981.1561385989.git.zhangweiping@didiglobal.com> <alpine.DEB.2.21.1906241740320.32342@nanos.tec.linutronix.de> <20190625021411.GD23777@ming.t460p>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 25 Jun 2019 02:15:19 -0400
+Received: by mail-pg1-f173.google.com with SMTP id v9so8366453pgr.13;
+        Mon, 24 Jun 2019 23:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0xtd1/J4ViydtGXP9MMxtmN/QFbXkpk0xAkv4gjrpSw=;
+        b=hppAvMj3kv1StYKHt5d4uIPx4ZNyPOSORyxE0PVWuOx5jxxOvyodbgL4ih17F7KCYz
+         BEQprTJ+gWhcJ+9I0fgVpprZpXBAk+5tmYkEIdw1ULJk2F3DTdjX1rhNDzy9zltuU149
+         hMDCYG5FjxqXQypcZG793bOr4eIi2NvpKRO6N125zSyI4yi878qlId85N1E/SyGTUMBN
+         ry++0cnoqfSPLdVxv8jhjjfms5aMbUCapnnwzkw+LHXW43FQxD93ORCDH0KbvyGQltdU
+         8D5SaqEFFDB0a+9lhYoWizYp2NAA9jTc1/OKQv1liwAQvADs/rqpq4tNqGIgsTofgKoA
+         7IkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0xtd1/J4ViydtGXP9MMxtmN/QFbXkpk0xAkv4gjrpSw=;
+        b=J8SjA2EORZb9uvICQK3dMcPwdfHHn9AyiLMAPJVX/ElXC8qmXVCwiPLRapPab9ovTo
+         FKR90qv0AKnB/kzGcy69EeGQZz/Rda/5CE6nsassZWXs1x7XLzT5amijS/RZqy07pCw+
+         b/cn/PdmOewfPbVTmWAOxR0PM+psm5rL79tpAlfvwkulhvcBO5muw11CrjACtvHnTQXb
+         YV37SZ6OEQ7LXLm/UoP2RAiSHkf5seHQ4B4cfHPZbGdrpgxCFIStcKM6ALbI6Yx8Fo2V
+         PogVbBayA45vMiXRajr09s97nqkOxoG1U62vXeN1SALxPzVNHK+P8F8ClfHC7omCuejH
+         KxtA==
+X-Gm-Message-State: APjAAAXa4YlpcaRd1K0/w1SjboNhN+CK2fmiIV47QC0iz7LFo8xHVH88
+        5CJJYx2HaZJmL3v7vqhigzg=
+X-Google-Smtp-Source: APXvYqzd7ouVVY0Lo26vi94Hhx95/EHDQ4fKuRjCmCZ7QYgHh1MGEj0FPg7SnLBSZwCEPcV+k6cgDA==
+X-Received: by 2002:a63:f146:: with SMTP id o6mr36213081pgk.179.1561443318452;
+        Mon, 24 Jun 2019 23:15:18 -0700 (PDT)
+Received: from dhcp-12-139.nay.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id x23sm18217562pfo.112.2019.06.24.23.15.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 23:15:17 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 14:15:07 +0800
+From:   Hangbin Liu <liuhangbin@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     sukumarg1973@gmail.com, karn@ka9q.net, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: hard-coded limit on unresolved multicast route cache in
+ ipv4/ipmr.c causes slow, unreliable creation of multicast routes on busy
+ networks
+Message-ID: <20190625061507.GG18865@dhcp-12-139.nay.redhat.com>
+References: <CADiZnkSy=rFq5xLs6RcgJDihQ1Vwo2WBBY9Fi_5jOHr8XupukQ@mail.gmail.com>
+ <20181204065100.GT24677@leo.usersys.redhat.com>
+ <CADiZnkTm3UMdZ+ivPXFeTJS+_2ZaiQh7D8wWnsw0BNGfxa0C4w@mail.gmail.com>
+ <20181218.215545.1657190540227341803.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181218.215545.1657190540227341803.davem@davemloft.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MIng,
-
-On Tue, 25 Jun 2019, Ming Lei wrote:
-> On Mon, Jun 24, 2019 at 05:42:39PM +0200, Thomas Gleixner wrote:
-> > On Mon, 24 Jun 2019, Weiping Zhang wrote:
-> > 
-> > > The driver may implement multiple affinity set, and some of
-> > > are empty, for this case we just skip them.
-> > 
-> > Why? What's the point of creating empty sets? Just because is not a real
-> > good justification.
+On Tue, Dec 18, 2018 at 09:55:45PM -0800, David Miller wrote:
+> From: Sukumar Gopalakrishnan <sukumarg1973@gmail.com>
+> Date: Wed, 19 Dec 2018 10:57:02 +0530
 > 
-> Patch 5 will add 4 new sets for supporting NVMe's weighted round robin
-> arbitration. It can be a headache to manage so many irq sets(now the total
-> sets can become 6) dynamically since size of anyone in the new 4 sets can
-> be zero, so each particular set is assigned one static index for avoiding
-> the management trouble, then empty set will be seen by
-> irq_create_affinity_masks().
+> > Hi David,
+> > 
+> >   There are two patch for this issue:
+> >    1) Your changes which removes cache_resolve_queue_len
+> >     2) Hangbin's changes which make cache_resolve_queue_len configurable.
+> > 
+> > Which one will be chosen for this issue ?
 > 
-> So looks skipping the empty set makes sense because the API will become
-> easier to use than before.
+> I do plan to look into this, sorry for taking so long.
+> 
+> Right now I am overwhelmed preparing for the next merge window and
+> synchronizing with other developers for that.
+> 
+> Please be patient.
 
-That makes sense, but at least some of that information wants to be in the
-change log and not some uninformative description of what the patch does.
+Hi David,
 
-I was not Cc'ed on the rest of the patches so I had exactly zero context.
+Any progress for this issue?
 
-Thanks,
-
-	tglx
+Thanks
+Hangbin
