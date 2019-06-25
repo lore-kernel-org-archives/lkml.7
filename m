@@ -2,65 +2,108 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84F9C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBFDC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4665216E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jaBJvzPt"
+	by mail.kernel.org (Postfix) with ESMTP id 430C0216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbfFYJVG (ORCPT
+        id S1731374AbfFYJVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:21:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37432 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYJVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:21:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PFFctdNrSRlEmYFziRh2gXkH/51FMqRKiiZb1uQDWQg=; b=jaBJvzPtSagsatrt5/FzWEqXO
-        oFJKNfqW4dTyJ529zBaraXXR1L1kwJDR8IIG0DYUvPM00sOeJgW/wsxuBdeiVcWR674F2/J/295Xp
-        Txq5FHubIgINXo/oN0c2JrKujX9SJC48TCW53qfIMnzIvmMXoR8wIy8TpVdZL4iMUSMVE4OoAXsq4
-        FjXZ1voKAWG4c4VOa6cYeCn6cFRULUpBZmFsji3fAUlvk1gour4G5lj1V3RiDrMfNKnvwq19wKDo3
-        i9BY1PNYYHDwT1RYED0mu7444sDnfgU84unVorATYEi7nSo1vmOFz7pZFpgb7sZ1VQWUXs1AhTUY5
-        zh09iBTNw==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfhd7-0005iX-UF; Tue, 25 Jun 2019 09:20:47 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: get rid of dma_max_pfn
-Date:   Tue, 25 Jun 2019 11:20:40 +0200
-Message-Id: <20190625092042.19320-1-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
+        Tue, 25 Jun 2019 05:21:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:19105 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731347AbfFYJVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:21:10 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2CB8F2A3234098BC61A5;
+        Tue, 25 Jun 2019 17:21:05 +0800 (CST)
+Received: from huawei.com (10.175.101.78) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
+ 17:20:54 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <jeyu@kernel.org>,
+        <peterz@infradead.org>
+CC:     <yangyingliang@huawei.com>, <namit@vmware.com>,
+        <cj.chengjian@huawei.com>, <sfr@canb.auug.org.au>,
+        <linux-next@vger.kernel.org>
+Subject: [PATCH] modules: fix compile error if don't have strict module rwx
+Date:   Tue, 25 Jun 2019 17:40:28 +0800
+Message-ID: <1561455628-50795-1-git-send-email-yangyingliang@huawei.com>
+X-Mailer: git-send-email 1.8.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.78]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is not defined,
+we need stub for module_enable_nx() and module_enable_x().
 
-I though I got rid of all non-highmem, non-ISA block layer bounce
-buffering a while ago, but I missed the MMC case.  While I still plan to
-also kill off the highmem bouncing there I won't get to it this merge
-window, so for now I'd like to make some progress and move MMC to the
-DMA layer (swiotlb or arm dmabounce) bouncing for addressing limitations
-and kill off the dma_max_pfn helper.
+If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is defined, but
+CONFIG_STRICT_MODULE_RWX is disabled, we need stub for
+module_enable_nx.
 
-I'm fine with merging this through the mmc tree if it suits everyone.
+Move frob_text() outside of the CONFIG_STRICT_MODULE_RWX,
+because it is needed anyway.
+
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ kernel/module.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/module.c b/kernel/module.c
+index c3ae34c..cfff441 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1875,7 +1875,7 @@ static void mod_sysfs_teardown(struct module *mod)
+ 	mod_sysfs_fini(mod);
+ }
+ 
+-#ifdef CONFIG_STRICT_MODULE_RWX
++#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
+ /*
+  * LKM RO/NX protection: protect module's text/ro-data
+  * from modification and any data from execution.
+@@ -1898,6 +1898,7 @@ static void frob_text(const struct module_layout *layout,
+ 		   layout->text_size >> PAGE_SHIFT);
+ }
+ 
++#ifdef CONFIG_STRICT_MODULE_RWX
+ static void frob_rodata(const struct module_layout *layout,
+ 			int (*set_memory)(unsigned long start, int num_pages))
+ {
+@@ -2010,15 +2011,19 @@ void set_all_modules_text_ro(void)
+ 	}
+ 	mutex_unlock(&module_mutex);
+ }
+-#else
++#else /* !CONFIG_STRICT_MODULE_RWX */
+ static void module_enable_nx(const struct module *mod) { }
+-#endif
+-
++#endif /*  CONFIG_STRICT_MODULE_RWX */
+ static void module_enable_x(const struct module *mod)
+ {
+ 	frob_text(&mod->core_layout, set_memory_x);
+ 	frob_text(&mod->init_layout, set_memory_x);
+ }
++#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
++static void module_enable_nx(const struct module *mod) { }
++static void module_enable_x(const struct module *mod) { }
++#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
++
+ 
+ #ifdef CONFIG_LIVEPATCH
+ /*
+-- 
+1.8.3
+
