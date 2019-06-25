@@ -5,311 +5,216 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D6C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD31C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BEA20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AF1213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMd9lD9e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8d6P2Lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbfFYOgg (ORCPT
+        id S1731018AbfFYOgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:36:36 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33809 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbfFYOgf (ORCPT
+        Tue, 25 Jun 2019 10:36:46 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44931 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728710AbfFYOgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:36:35 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k11so18204394wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:36:33 -0700 (PDT)
+        Tue, 25 Jun 2019 10:36:46 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so3666655iob.11;
+        Tue, 25 Jun 2019 07:36:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=reply-to:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=nsiDQwwlUMya2NaloHB/g19Qxbl0uFlPZzS2rBPQg0o=;
-        b=FMd9lD9eHd2C7+rF9Z5/RFn3UymwzrNeQp5IKv6P1zaqVvzj68sYc4Voh5gAHtfxde
-         /6H1YkcdttQ1T5VaUryqBJXX4c34dBce43gHOuIQBWOcxegzsIR5iA3QGZ/stAJaiY/v
-         SfJmxDnEPHGeSCr3yRl0e82GKcey6ZCelZGchrFpA3/pwV2v9AZnX56QQpVtZXQNWnLI
-         vUKnzbpWnnfwOLD4DHLzY/cJqFP6PpTEZjkRrDVyhJAQgs1boNehX56VDVPiJdSrvuHx
-         WdbjlDPmYh0l0lWUFIeVYZ/rcw6b6p8zFV5SJXku4XyXGqgzJ16vqkcdkeoQb5xyuQgU
-         1xzw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=675OzOy+510rgklrUaR96A8aWWUmnotqZyJprpSFvDY=;
+        b=C8d6P2LjPsGOUIC0tsQoXICkz7v3AIjhqBGFbjqHH928L6FdjG1uNi8gPm9Z1CCbwV
+         Xzw4VD+dM9v7UVqP2QhYzm7D6YYREj4FneX1uUG8NUumMooHWJXNSCDQSvG64Xg6DbVg
+         sAY+9S8x4SkMiCeY0p4EgJqp1i8RthYYi+1ylaNW4MgmNsPEyY68KH8gFjpl6/vjD7nI
+         nurfPFrv12oiOHOL7PaG+VSnmAw+Bo79IO3jgbs4yA0Z9zTSHq+7paAUwF5MocNdOmNE
+         N1+TvLRKGzrvNYGzzoOrgFBrVv+EE8EhIsy1tpw7rqXz4CWW5OR+HVMhKuyIbnPRZDSX
+         fpUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=nsiDQwwlUMya2NaloHB/g19Qxbl0uFlPZzS2rBPQg0o=;
-        b=b3uAba2ohuCgF86VZpj5z5wDUKfz83uIRQyvaGBCWfsKjwFE6drXmh043mtqE2V4r8
-         bl6CcRnq6gFWDgkC9XZLtRCrxoLKXzKrqPG6gmC/VBL8v13jtgcNDOT3WKzwb6EEy3pp
-         dICC3CGyWpAOkvWBL4QaNdaMVYrcGXf61H6WFK7Sp9szAveGYmCostv/stYTlOh6VlOb
-         NaoUsv0AA3vKPan+YPHtLXWrGKh6Ahsupx3wdfK7bY4yRPX3g3VTS6v408yyNDgUPMTi
-         qs64dmIHzMucf5EZTY5USyKtlV6E8/Vj8dNfrRQcyP0bpceRInGS5xtA7ZsfyJMKBHiX
-         B1uQ==
-X-Gm-Message-State: APjAAAUbfYDgOTU2ZaFUa0jLo2FMBC+ba/RkOcQOOqBA4JpDIfjozmaV
-        yuLxUCyqQYWpxqlhlC+WNg9SCUSN
-X-Google-Smtp-Source: APXvYqzE/KqmSHY/7SiUS9iovra9CVFDhj9vICfRnFQA0hPN0anCAybqfL9mPZfG6BMjXepF3DTZMA==
-X-Received: by 2002:a5d:4a8d:: with SMTP id o13mr18069221wrq.350.1561473392182;
-        Tue, 25 Jun 2019 07:36:32 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id e11sm32885267wrc.9.2019.06.25.07.36.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 07:36:31 -0700 (PDT)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH 1/2] dma-buf: add reservation_context for deadlock
- handling
-To:     peterz@infradead.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190625135507.80548-1-christian.koenig@amd.com>
- <20190625141624.GU12905@phenom.ffwll.local>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <9d64929c-0343-e6b0-a4fe-3af541abbd6a@gmail.com>
-Date:   Tue, 25 Jun 2019 16:36:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=675OzOy+510rgklrUaR96A8aWWUmnotqZyJprpSFvDY=;
+        b=VkqViPQFBRY+jsCkNwsG1tzXs0sfzePVYIHHl3m6ZyCO3HYPNcr6DijKsEBV5OxZ5L
+         UFQfZ9gadJeS4TvbfPeAsKG010FV2LnTUysQhhad3WEP4gio3ZZMIpKiv2fY1aCZCzN8
+         fO+I37R/CBbopAff9JtlSwOK0ZRgUOCqvlY2uC9Wp0A8GiIfEdEXzWug7aRvuVLaegHV
+         LtFxkJu/j1oVQcSeSFYUc4IyqRF7hoxo6jNz2OWRrWWGx4Yrqfn4BhMYUkCwdawLdZN7
+         kGk8zfVdLv2UKDIb7dCPpxaDUthniBid44tf3BbBIdPh0JBqKFSjTN5TCeMnNuCXVqF+
+         rZYA==
+X-Gm-Message-State: APjAAAXNR13akbsO4V/a9l/56BknrxcSD/AmuKwQtlUp9nJyTeuWvgYi
+        LXuEQGPQOWyS70sQqHkr4UI4dn1yw74863ZTKdA=
+X-Google-Smtp-Source: APXvYqyIhHfq9+Y1O90Dc9QCg+QologakcjEJq20JB9jjKKHZ3UFv1CEoNGBNtNqH+gGzl2D3yh6phm+3DUz6D1TNAU=
+X-Received: by 2002:a6b:c90c:: with SMTP id z12mr1767390iof.11.1561473405499;
+ Tue, 25 Jun 2019 07:36:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190625141624.GU12905@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20190603083005.4304-1-peng.fan@nxp.com> <20190603083005.4304-3-peng.fan@nxp.com>
+ <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com> <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Tue, 25 Jun 2019 09:36:34 -0500
+Message-ID: <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        ", Sascha Hauer" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 25.06.19 um 16:16 schrieb Daniel Vetter:
-> On Tue, Jun 25, 2019 at 03:55:06PM +0200, Christian König wrote:
->> The ww_mutex framework allows for detecting deadlocks when multiple
->> threads try to acquire the same set of locks in different order.
->>
->> The problem is that handling those deadlocks was the burden of the user of
->> the ww_mutex implementation and at least some users didn't got that right
->> on the first try.
->>
->> So introduce a new reservation_context object which can be used to
->> simplify the deadlock handling. This is done by tracking all locked
->> reservation objects in the context as well as the last contended
->> reservation object.
->>
->> When a deadlock occurse we now unlock all previously locked object and
->> acquire the contended lock in the slow path. After this is done -EDEADLK
->> is still returned to signal that all other locks now need to be
->> re-acquired again.
->>
->> Signed-off-by: Christian König <christian.koenig@amd.com>
->> ---
->>   drivers/dma-buf/reservation.c | 82 +++++++++++++++++++++++++++++++++++
->>   include/linux/reservation.h   | 38 ++++++++++++++++
->>   2 files changed, 120 insertions(+)
->>
->> diff --git a/drivers/dma-buf/reservation.c b/drivers/dma-buf/reservation.c
->> index 4d32e2c67862..9e53e42b053a 100644
->> --- a/drivers/dma-buf/reservation.c
->> +++ b/drivers/dma-buf/reservation.c
->> @@ -55,6 +55,88 @@ EXPORT_SYMBOL(reservation_seqcount_class);
->>   const char reservation_seqcount_string[] = "reservation_seqcount";
->>   EXPORT_SYMBOL(reservation_seqcount_string);
->>   
->> +/**
->> + * reservation_context_init - initialize a reservation context
->> + * @ctx: the context to initialize
->> + *
->> + * Start using this reservation context to lock reservation objects for update.
-> Bunch of hyperlinks here for more consistent story would be really nice in
-> the kerneldoc.
+On Tue, Jun 25, 2019 at 2:30 AM Peng Fan <peng.fan@nxp.com> wrote:
 >
->> + */
->> +void reservation_context_init(struct reservation_context *ctx)
->> +{
->> +	ww_acquire_init(&ctx->ctx, &reservation_ww_class);
->> +	init_llist_head(&ctx->locked);
->> +	ctx->contended = NULL;
->> +}
->> +EXPORT_SYMBOL(reservation_context_init);
->> +
->> +/**
->> + * reservation_context_unlock_all - unlock all reservation objects
->> + * @ctx: the context which holds the reservation objects
->> + *
->> + * Unlocks all reservation objects locked with this context.
->> + */
->> +void reservation_context_unlock_all(struct reservation_context *ctx)
-> I'd just call this reservation_unlock_all or so. Feel free to ignore the
-> bikeshed.
+> Hi Jassi
 >
->> +{
->> +	struct reservation_object *obj, *next;
->> +
->> +	if (ctx->contended)
->> +		ww_mutex_unlock(&ctx->contended->lock);
->> +	ctx->contended = NULL;
->> +
->> +	llist_for_each_entry_safe(obj, next, ctx->locked.first, locked)
->> +		ww_mutex_unlock(&obj->lock);
->> +	init_llist_head(&ctx->locked);
->> +}
->> +EXPORT_SYMBOL(reservation_context_unlock_all);
->> +
->> +/**
->> + * reservation_context_lock - lock a reservation object with deadlock handling
->> + * @ctx: the context which should be used to lock the object
->> + * @obj: the object which needs to be locked
->> + * @interruptible: if we should wait interruptible or not
->> + *
->> + * Use @ctx to lock the reservation object. If a deadlock is detected we backoff
->> + * by releasing all locked objects and use the slow path to lock the reservation
->> + * object. After successfully locking in the slow path -EDEADLK is returned to
->> + * signal that all other locks must be re-taken as well.
->> + */
->> +int reservation_context_lock(struct reservation_context *ctx,
->> +			     struct reservation_object *obj,
->> +			     bool interruptible)
-> reservation_lock_ctx is what we generally used in drm_modeset_lock, I like
-> that bikeshed a bit better.
-
-Actually doesn't sound that good if you ask me.
-
-Is reservation_lock_ctx the name of the function or the name of the 
-structure?
-
-> Also to stay in style I think the explicit set of functions is much
-> better, i.e. reservation_lock_ctx, reservation_lock_interruptible_ctx and
-> reservation_trylock_ctx (later useful for lru applications where you still
-> want to drop the entire pile with resrvation_unlock_ctx).
-
-The problem is that I then will duplicate a lot of logic between 
-reservation_lock_ctx and reservation_lock_interruptible_ctx.
-
-> That's what all the other locking things do. ttm_bo_reserve has a long
-> list of parameters, and I can never remember which is which. I don't think
-> that's a great style.
-
-Yeah, I don't really like that either. It is one of the reasons why I 
-want to get rid of it.
-
-But duplicating implementations is not a good idea either. We could go 
-down the wait_event_* wait of doing thins and implement everything in 
-macros, but I don't really like that either.
-
-> Another option for interruptible vs. not is to store that in the
-> reservation_context and dtrt. Since generally interruptible or not is a
-> propery of the top-level handler - you need be able to pass EDEADLCK all
-> the way up anyway.
+> > Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+> >
+> > On Mon, Jun 3, 2019 at 3:28 AM <peng.fan@nxp.com> wrote:
+> > >
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > This mailbox driver implements a mailbox which signals transmitted
+> > > data via an ARM smc (secure monitor call) instruction. The mailbox
+> > > receiver is implemented in firmware and can synchronously return data
+> > > when it returns execution to the non-secure world again.
+> > > An asynchronous receive path is not implemented.
+> > > This allows the usage of a mailbox to trigger firmware actions on SoCs
+> > > which either don't have a separate management processor or on which
+> > > such a core is not available. A user of this mailbox could be the SCP
+> > > interface.
+> > >
+> > > Modified from Andre Przywara's v2 patch
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
+> > > .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=02%7C01%7
+> > Cpeng.fa
+> > >
+> > n%40nxp.com%7C1237677cb01044ad714508d6f59f648f%7C686ea1d3bc2b4
+> > c6fa92cd
+> > >
+> > 99c5c301635%7C0%7C0%7C636966462272457978&amp;sdata=Hzgeu43m5
+> > ZkeRMtL8Bx
+> > > gUm3%2B6FBObib1OPHPlSccE%2B0%3D&amp;reserved=0
+> > >
+> > > Cc: Andre Przywara <andre.przywara@arm.com>
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > V2:
+> > >  Add interrupts notification support.
+> > >
+> > >  drivers/mailbox/Kconfig                 |   7 ++
+> > >  drivers/mailbox/Makefile                |   2 +
+> > >  drivers/mailbox/arm-smc-mailbox.c       | 190
+> > ++++++++++++++++++++++++++++++++
+> > >  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
+> > >  4 files changed, 209 insertions(+)
+> > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
+> > > 100644 include/linux/mailbox/arm-smc-mailbox.h
+> > >
+> > > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
+> > > 595542bfae85..c3bd0f1ddcd8 100644
+> > > --- a/drivers/mailbox/Kconfig
+> > > +++ b/drivers/mailbox/Kconfig
+> > > @@ -15,6 +15,13 @@ config ARM_MHU
+> > >           The controller has 3 mailbox channels, the last of which can be
+> > >           used in Secure mode only.
+> > >
+> > > +config ARM_SMC_MBOX
+> > > +       tristate "Generic ARM smc mailbox"
+> > > +       depends on OF && HAVE_ARM_SMCCC
+> > > +       help
+> > > +         Generic mailbox driver which uses ARM smc calls to call into
+> > > +         firmware for triggering mailboxes.
+> > > +
+> > >  config IMX_MBOX
+> > >         tristate "i.MX Mailbox"
+> > >         depends on ARCH_MXC || COMPILE_TEST diff --git
+> > > a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
+> > > c22fad6f696b..93918a84c91b 100644
+> > > --- a/drivers/mailbox/Makefile
+> > > +++ b/drivers/mailbox/Makefile
+> > > @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)      += mailbox-test.o
+> > >
+> > >  obj-$(CONFIG_ARM_MHU)  += arm_mhu.o
+> > >
+> > > +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
+> > > +
+> > >  obj-$(CONFIG_IMX_MBOX) += imx-mailbox.o
+> > >
+> > >  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)    +=
+> > armada-37xx-rwtm-mailbox.o
+> > > diff --git a/drivers/mailbox/arm-smc-mailbox.c
+> > > b/drivers/mailbox/arm-smc-mailbox.c
+> > > new file mode 100644
+> > > index 000000000000..fef6e38d8b98
+> > > --- /dev/null
+> > > +++ b/drivers/mailbox/arm-smc-mailbox.c
+> > > @@ -0,0 +1,190 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2016,2017 ARM Ltd.
+> > > + * Copyright 2019 NXP
+> > > + */
+> > > +
+> > > +#include <linux/arm-smccc.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/mailbox_controller.h> #include
+> > > +<linux/mailbox/arm-smc-mailbox.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +#define ARM_SMC_MBOX_USE_HVC   BIT(0)
+> > > +#define ARM_SMC_MBOX_USB_IRQ   BIT(1)
+> > > +
+> > IRQ bit is unused (and unnecessary IMO)
+> >
+> > > +struct arm_smc_chan_data {
+> > > +       u32 function_id;
+> > > +       u32 flags;
+> > > +       int irq;
+> > > +};
+> > > +
+> > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
+> > > +       struct arm_smc_chan_data *chan_data = link->con_priv;
+> > > +       struct arm_smccc_mbox_cmd *cmd = data;
+> > > +       struct arm_smccc_res res;
+> > > +       u32 function_id;
+> > > +
+> > > +       if (chan_data->function_id != UINT_MAX)
+> > > +               function_id = chan_data->function_id;
+> > > +       else
+> > > +               function_id = cmd->a0;
+> > > +
+> > Not sure about chan_data->function_id.  Why restrict from DT?
+> > 'a0' is the function_id register, let the user pass func-id via the 'a0' like other
+> > values via 'a[1-7]'
 >
->> +{
->> +	int ret = 0;
->> +
->> +	if (unlikely(ctx->contended == obj))
->> +		ctx->contended = NULL;
-> Imo cleaner to handle that with EALREADY filtering from the ww_mutex_lock.
-
-How do you want to do this? EALREADY handling is different for different 
-users of this API.
-
-Christian.
-
+> Missed to reply this comment.
 >
->> +	else if (interruptible)
->> +		ret = ww_mutex_lock_interruptible(&obj->lock, &ctx->ctx);
->> +	else
->> +		ret = ww_mutex_lock(&obj->lock, &ctx->ctx);
->> +
->> +	if (likely(!ret)) {
->> +		/* don't use llist_add here, we have separate locking */
->> +		obj->locked.next = ctx->locked.first;
->> +		ctx->locked.first = &obj->locked;
->> +		return 0;
->> +	}
->> +	if (unlikely(ret != -EDEADLK))
->> +		return ret;
->> +
->> +	reservation_context_unlock_all(ctx);
->> +
->> +	if (interruptible) {
->> +		ret = ww_mutex_lock_slow_interruptible(&obj->lock, &ctx->ctx);
->> +		if (unlikely(ret))
->> +			return ret;
->> +	} else {
->> +		ww_mutex_lock_slow(&obj->lock, &ctx->ctx);
->> +	}
->> +
->> +	ctx->contended = obj;
->> +	return -EDEADLK;
->> +}
->> +EXPORT_SYMBOL(reservation_context_lock);
->> +
->>   /**
->>    * reservation_object_reserve_shared - Reserve space to add shared fences to
->>    * a reservation_object.
->> diff --git a/include/linux/reservation.h b/include/linux/reservation.h
->> index ee750765cc94..a8a52e5d3e80 100644
->> --- a/include/linux/reservation.h
->> +++ b/include/linux/reservation.h
->> @@ -44,11 +44,48 @@
->>   #include <linux/slab.h>
->>   #include <linux/seqlock.h>
->>   #include <linux/rcupdate.h>
->> +#include <linux/llist.h>
->>   
->>   extern struct ww_class reservation_ww_class;
->>   extern struct lock_class_key reservation_seqcount_class;
->>   extern const char reservation_seqcount_string[];
->>   
->> +/**
->> + * struct reservation_context - context to lock reservation objects
->> + * @ctx: ww_acquire_ctx used for deadlock detection
->> + * @locked: list of reservation objects locked in this context
->> + * @contended: contended reservation object
->> + */
->> +struct reservation_context {
->> +	struct ww_acquire_ctx ctx;
->> +	struct llist_head locked;
->> +	struct reservation_object *contended;
->> +};
->> +
->> +/**
->> + * reservation_context_done - wrapper for ww_acquire_done
->> + * @ctx: the reservation context which is done with locking
->> + */
->> +static inline void reservation_context_done(struct reservation_context *ctx)
->> +{
->> +	ww_acquire_done(&ctx->ctx);
->> +}
->> +
->> +/**
->> + * reservation_context_fini - wrapper for ww_acquire_fini
->> + * @ctx: the reservation context which is finished
->> + */
->> +static inline void reservation_context_fini(struct reservation_context *ctx)
->> +{
->> +	ww_acquire_fini(&ctx->ctx);
->> +}
->> +
->> +void reservation_context_init(struct reservation_context *ctx);
->> +void reservation_context_unlock_all(struct reservation_context *ctx);
->> +int reservation_context_lock(struct reservation_context *ctx,
->> +			     struct reservation_object *obj,
->> +			     bool interruptible);
-> Needs a __must_check.
+> The firmware driver might not have func-id, such as SCMI/SCPI.
+> So add an optional func-id to let smc mailbox driver could
+> use smc SiP func id.
 >
->> +
->>   /**
->>    * struct reservation_object_list - a list of shared fences
->>    * @rcu: for internal use
->> @@ -71,6 +108,7 @@ struct reservation_object_list {
->>    */
->>   struct reservation_object {
->>   	struct ww_mutex lock;
->> +	struct llist_node locked;
->>   	seqcount_t seq;
->>   
->>   	struct dma_fence __rcu *fence_excl;
-> Aside from the nits&bikesheds, I like.
-> -Daniel
->
->> -- 
->> 2.17.1
->>
-
+There is no end to conforming to protocols. Controller drivers should
+be written having no particular client in mind.
