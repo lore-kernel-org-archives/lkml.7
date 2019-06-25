@@ -2,70 +2,80 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B06FC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D52C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AC9213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F4D2146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbfFYLpk (ORCPT
+        id S1731180AbfFYLrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:45:40 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:42304 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbfFYLpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:45:40 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id E6C8E202C7;
-        Tue, 25 Jun 2019 13:45:38 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id D2A73202C1;
-        Tue, 25 Jun 2019 13:45:38 +0200 (CEST)
-Subject: Re: [PATCH 2/2] dma-mapping: remove dma_max_pfn
-To:     Christoph Hellwig <hch@lst.de>
-References: <20190625092042.19320-1-hch@lst.de>
- <20190625092042.19320-3-hch@lst.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <2cf24650-512e-688d-fe24-119d36ed92f5@free.fr>
-Date:   Tue, 25 Jun 2019 13:45:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190625092042.19320-3-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jun 25 13:45:38 2019 +0200 (CEST)
+        Tue, 25 Jun 2019 07:47:42 -0400
+Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:56312 "EHLO
+        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728527AbfFYLrl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:47:41 -0400
+X-Greylist: delayed 309 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jun 2019 07:47:40 EDT
+Received: from lab-pc01.sra.uni-hannover.de (lab.sra.uni-hannover.de [130.75.33.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id 267C51F3F6;
+        Tue, 25 Jun 2019 13:42:30 +0200 (CEST)
+From:   Florian Knauf <florian.knauf@stud.uni-hannover.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@i4.cs.fau.de, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Florian Knauf <florian.knauf@stud.uni-hannover.de>,
+        Christian Ewert <christian.ewert@stud.uni-hannover.de>
+Subject: [PATCH] drivers/block/loop: Remove deprecated function, range check for max_loop
+Date:   Tue, 25 Jun 2019 13:40:56 +0200
+Message-Id: <20190625114056.8706-1-florian.knauf@stud.uni-hannover.de>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Christoph,
+This patch removes the deprecated simple_strtol function from the option
+parsing logic in the loopback device driver. It also introduces a range
+check for the max_loop parameter to ensure that negative and out-of-range
+values (that cannot be represented by int max_loop) are ignored.
 
-There are some typos in the commit message that make it harder
-(for me) to parse.
+Signed-off-by: Florian Knauf <florian.knauf@stud.uni-hannover.de>
+Signed-off-by: Christian Ewert <christian.ewert@stud.uni-hannover.de>
+---
+ drivers/block/loop.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-On 25/06/2019 11:20, Christoph Hellwig wrote:
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 102d79575895..acdd028ed486 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -2289,7 +2289,17 @@ module_exit(loop_exit);
+ #ifndef MODULE
+ static int __init max_loop_setup(char *str)
+ {
+-	max_loop = simple_strtol(str, NULL, 0);
++	long max_loop_long = 0;
++
++	/*
++	 * Range check for max_loop: negative values and values not
++	 * representable by int are ignored.
++	 */
++	if (kstrtol(str, 0, &max_loop_long) == 0 &&
++			max_loop_long >= 0 &&
++			max_loop_long <= INT_MAX)
++		max_loop = (int) max_loop_long;
++
+ 	return 1;
+ }
+ 
+-- 
+2.17.1
 
-> These days the DMA mapping code must bounce buffer for any not supported
-
-Add comma after "These days" ?
-s/must bounce buffer/must bounce buffers/ ?
-s/not supported/unsupported/ ?
-
-> address, and if they driver needs to optimize for natively supported
-
-s/if they driver/if the driver/ ?
-
-> ranged it should use dma_get_required_mask.
-
-s/ranged it should/ranges, then it should/ ?
-
-Regards.
