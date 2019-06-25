@@ -2,237 +2,168 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9E3C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FC8C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856AA208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A21208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732379AbfFYPia (ORCPT
+        id S1732448AbfFYPjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:38:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:19112 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728823AbfFYPi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:38:29 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E4D1B2AF2A9A3DBB39C5;
-        Tue, 25 Jun 2019 23:38:13 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
- 23:38:08 +0800
-Date:   Tue, 25 Jun 2019 16:37:56 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <x86@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "kbuild test robot" <lkp@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        <peterz@infradead.org>, <ard.biesheuvel@linaro.org>,
-        <tglx@linutronix.de>, <linux-acpi@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 08/10] device-dax: Add a driver for "hmem" devices
-Message-ID: <20190625163756.00001a85@huawei.com>
-In-Reply-To: <156140041177.2951909.8582567579750505172.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <156140036490.2951909.1837804994781523185.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <156140041177.2951909.8582567579750505172.stgit@dwillia2-desk3.amr.corp.intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 25 Jun 2019 11:39:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:44256 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730803AbfFYPjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:39:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A2D62B;
+        Tue, 25 Jun 2019 08:39:24 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 971F53F718;
+        Tue, 25 Jun 2019 08:39:21 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 16:39:19 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Olof Johansson <olof@lixom.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: defconfig: update and enable CONFIG_RANDOMIZE_BASE
+Message-ID: <20190625153918.GA53763@arrakis.emea.arm.com>
+References: <20190620003244.261595-1-ndesaulniers@google.com>
+ <20190620074640.GA27228@brain-police>
+ <CAKv+Gu_KCFCVxw_zAfzUf8DjD4DmhvaJEoqBsX_SigOse_NwYw@mail.gmail.com>
+ <CAKwvOdmQ+WdD8nvLz_VB_5atDi56fv485Xsn+mHJZKnyj6L-JA@mail.gmail.com>
+ <20190624095749.wasjfrgcda7ygdr5@willie-the-truck>
+ <CAKv+Gu8G2GQGxmcAAy1XQ5gkN-2fJSWAKCQQm9T4skYdh5cT3Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8G2GQGxmcAAy1XQ5gkN-2fJSWAKCQQm9T4skYdh5cT3Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019 11:20:16 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Platform firmware like EFI/ACPI may publish "hmem" platform devices.
-> Such a device is a performance differentiated memory range likely
-> reserved for an application specific use case. The driver gives access
-> to 100% of the capacity via a device-dax mmap instance by default.
+On Mon, Jun 24, 2019 at 12:06:18PM +0200, Ard Biesheuvel wrote:
+> On Mon, 24 Jun 2019 at 11:57, Will Deacon <will@kernel.org> wrote:
+> > Thanks for having a look. It could be that we've fixed the issue Catalin was
+> > running into in the past -- he was going to see if the problem persists with
+> > mainline, since it was frequent enough that it was causing us to ignore the
+> > results from our testing infrastructure when RANDOMIZE_BASE=y.
 > 
-> However, if over-subscription and other kernel memory management is
-> desired the resulting dax device can be assigned to the core-mm via the
-> kmem driver.
-> 
-> This consumes "hmem" devices the producer of "hmem" devices is saved for
-> a follow-on patch so that it can reference the new CONFIG_DEV_DAX_HMEM
-> symbol to gate performing the enumeration work.
-> 
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-No need to have a remove function at all.  Otherwise this looks good to me.
+> I had no idea this was the case. I can look into it if we are still
+> seeing failures.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I've seen the panic below with 5.2-rc1, defconfig + RANDOMIZE_BASE=y in
+a guest on TX2. It takes a few tries to trigger just with kaslr,
+enabling lots of other DEBUG_* options makes the failures more
+deterministic. I can't really say it's kaslr's fault here, only that I
+used to consistently get it in this configuration. For some reason, I
+can no longer reproduce it on arm64 for-next/core (or maybe it just
+takes more tries and my script doesn't catch this).
 
-> ---
->  drivers/dax/Kconfig    |   27 +++++++++++++++++++----
->  drivers/dax/Makefile   |    2 ++
->  drivers/dax/hmem.c     |   57 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/ioport.h |    4 +++
->  4 files changed, 85 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/dax/hmem.c
-> 
-> diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-> index f33c73e4af41..1a59ef86f148 100644
-> --- a/drivers/dax/Kconfig
-> +++ b/drivers/dax/Kconfig
-> @@ -32,19 +32,36 @@ config DEV_DAX_PMEM
->  
->  	  Say M if unsure
->  
-> +config DEV_DAX_HMEM
-> +	tristate "HMEM DAX: direct access to 'specific purpose' memory"
-> +	depends on EFI_APPLICATION_RESERVED
-> +	default DEV_DAX
-> +	help
-> +	  EFI 2.8 platforms, and others, may advertise 'specific purpose'
-> +	  memory.  For example, a high bandwidth memory pool. The
-> +	  indication from platform firmware is meant to reserve the
-> +	  memory from typical usage by default.  This driver creates
-> +	  device-dax instances for these memory ranges, and that also
-> +	  enables the possibility to assign them to the DEV_DAX_KMEM
-> +	  driver to override the reservation and add them to kernel
-> +	  "System RAM" pool.
-> +
-> +	  Say M if unsure.
-> +
->  config DEV_DAX_KMEM
->  	tristate "KMEM DAX: volatile-use of persistent memory"
->  	default DEV_DAX
->  	depends on DEV_DAX
->  	depends on MEMORY_HOTPLUG # for add_memory() and friends
->  	help
-> -	  Support access to persistent memory as if it were RAM.  This
-> -	  allows easier use of persistent memory by unmodified
-> -	  applications.
-> +	  Support access to persistent, or other performance
-> +	  differentiated memory as if it were System RAM. This allows
-> +	  easier use of persistent memory by unmodified applications, or
-> +	  adds core kernel memory services to heterogeneous memory types
-> +	  (HMEM) marked "reserved" by platform firmware.
->  
->  	  To use this feature, a DAX device must be unbound from the
-> -	  device_dax driver (PMEM DAX) and bound to this kmem driver
-> -	  on each boot.
-> +	  device_dax driver and bound to this kmem driver on each boot.
->  
->  	  Say N if unsure.
->  
-> diff --git a/drivers/dax/Makefile b/drivers/dax/Makefile
-> index 81f7d54dadfb..80065b38b3c4 100644
-> --- a/drivers/dax/Makefile
-> +++ b/drivers/dax/Makefile
-> @@ -2,9 +2,11 @@
->  obj-$(CONFIG_DAX) += dax.o
->  obj-$(CONFIG_DEV_DAX) += device_dax.o
->  obj-$(CONFIG_DEV_DAX_KMEM) += kmem.o
-> +obj-$(CONFIG_DEV_DAX_HMEM) += dax_hmem.o
->  
->  dax-y := super.o
->  dax-y += bus.o
->  device_dax-y := device.o
-> +dax_hmem-y := hmem.o
->  
->  obj-y += pmem/
-> diff --git a/drivers/dax/hmem.c b/drivers/dax/hmem.c
-> new file mode 100644
-> index 000000000000..62f9e3c80e21
-> --- /dev/null
-> +++ b/drivers/dax/hmem.c
-> @@ -0,0 +1,57 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/platform_device.h>
-> +#include <linux/ioport.h>
-> +#include <linux/module.h>
-> +#include <linux/pfn_t.h>
-> +#include "bus.h"
-> +
-> +static int dax_hmem_probe(struct platform_device *pdev)
-> +{
-> +	struct dev_pagemap pgmap = { NULL };
-> +	struct device *dev = &pdev->dev;
-> +	struct dax_region *dax_region;
-> +	struct memregion_info *mri;
-> +	struct dev_dax *dev_dax;
-> +	struct resource *res;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -ENOMEM;
-> +
-> +	mri = dev->platform_data;
-> +	pgmap.dev = dev;
-> +	memcpy(&pgmap.res, res, sizeof(*res));
-> +
-> +	dax_region = alloc_dax_region(dev, pdev->id, res, mri->target_node,
-> +			PMD_SIZE, PFN_DEV|PFN_MAP);
-> +	if (!dax_region)
-> +		return -ENOMEM;
-> +
-> +	dev_dax = devm_create_dev_dax(dax_region, 0, &pgmap);
-> +	if (IS_ERR(dev_dax))
-> +		return PTR_ERR(dev_dax);
-> +
-> +	/* child dev_dax instances now own the lifetime of the dax_region */
-> +	dax_region_put(dax_region);
-> +	return 0;
-> +}
-> +
-> +static int dax_hmem_remove(struct platform_device *pdev)
-> +{
-> +	/* devm handles teardown */
-> +	return 0;
+The fault is in the ip_tables module, the __this_cpu_read in
+xt_write_recseq_begin() inlined in ipt_do_table(). The disassembled
+sequence in my build:
 
-Why have a remove at all?  driver/base/platform.c has
-the appropriate protections to allow you to not provide one.
-If you want the comment, just put it after .probe =
-below.
+0000000000000188 <ipt_do_table>:
+...
+     258:       d538d080        mrs     x0, tpidr_el1
+     25c:       aa1303f9        mov     x25, x19
+     260:       b8606b34        ldr     w20, [x25, x0]
 
-> +}
-> +
-> +static struct platform_driver dax_hmem_driver = {
-> +	.probe = dax_hmem_probe,
-> +	.remove = dax_hmem_remove,
-> +	.driver = {
-> +		.name = "hmem",
-> +	},
-> +};
-> +
-> +module_platform_driver(dax_hmem_driver);
-> +
-> +MODULE_ALIAS("platform:hmem*");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Intel Corporation");
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index 72ea690b35a4..0c529c8f8027 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -294,6 +294,10 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
->  }
->  
->  #ifdef CONFIG_MEMREGION
-> +struct memregion_info {
-> +	int target_node;
-> +};
-> +
->  extern struct ida memregion_ids;
->  static inline int memregion_alloc(gfp_t gfp)
->  {
-> 
+# modprobe iptable_filter
+[   45.618896] Unable to handle kernel paging request at virtual address ffffeda0ffbe1388
+[   45.620545] Mem abort info:
+[   45.621035]   ESR = 0x96000005
+[   45.621559]   Exception class = DABT (current EL), IL = 32 bits
+[   45.622527]   SET = 0, FnV = 0
+[   45.623032]   EA = 0, S1PTW = 0
+[   45.623684] Data abort info:
+[   45.624192]   ISV = 0, ISS = 0x00000005
+[   45.624849]   CM = 0, WnR = 0
+[   45.625361] swapper pgtable: 4k pages, 48-bit VAs, pgdp = 0000000026cb760e
+[   45.626537] [ffffeda0ffbe1388] pgd=00000000bfffa003, pud=0000000000000000
+[   45.627864] Internal error: Oops: 96000005 [#1] PREEMPT SMP
+[   45.628844] Modules linked in: iptable_filter cfg80211 rfkill 8021q garp crct10dif_ce stp mrp llc ip_tables x_tables ipv6
+[   45.630700] Process kworker/u8:5 (pid: 173, stack limit = 0x0000000047fc7e17)
+[   45.632056] CPU: 3 PID: 173 Comm: kworker/u8:5 Not tainted 5.2.0-rc1 #1
+[   45.633377] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
+[   45.634752] Workqueue: rpciod rpc_async_schedule
+[   45.635684] pstate: 80400005 (Nzcv daif +PAN -UAO)
+[   45.636674] pc : ipt_do_table+0xd8/0x4b8 [ip_tables]
+[   45.637686] lr : ipt_do_table+0xc4/0x4b8 [ip_tables]
+[   45.638685] sp : ffff000010aa35a0
+[   45.639358] x29: ffff000010aa35a0 x28: ffffeda1f7eb0ce8
+[   45.640424] x27: ffffeda1e69f1380 x26: ffff5d2c2314a288
+[   45.641493] x25: ffff5d2c0cfbf388 x24: ffffeda1fb5a9000
+[   45.642556] x23: ffff5d2c2314a220 x22: 0000000000000003
+[   45.643636] x21: ffffeda1f79c15d8 x20: ffffeda1e69f1780
+[   45.644727] x19: ffff5d2c0cfbf388 x18: 0000000000000000
+[   45.645814] x17: 0000000000000000 x16: ffff5d2d0bc16d78
+[   45.646908] x15: 0000000000000000 x14: 0900000017ea6502
+[   45.647994] x13: 014a023b4751727f x12: 0000000000002238
+[   45.649060] x11: ffff5d2d0e0de000 x10: 0000000000004000
+[   45.650117] x9 : 000000000000000e x8 : ffffeda1fb5a9000
+[   45.651178] x7 : ffffeda1f7eb0c00 x6 : 00000000000000e8
+[   45.652263] x5 : 0000000000000080 x4 : 00009074f2c22000
+[   45.653286] x3 : 0000000000000200 x2 : ffffeda1fc41c440
+[   45.654314] x1 : ffff5d2c2314a000 x0 : 00009074f2c22000
+[   45.655382] Call trace:
+[   45.655896]  ipt_do_table+0xd8/0x4b8 [ip_tables]
+[   45.656825]  iptable_filter_hook+0x1c/0x28 [iptable_filter]
+[   45.657938]  nf_hook_slow+0x44/0xe8
+[   45.658647]  __ip_local_out+0x150/0x250
+[   45.659421]  ip_local_out+0x20/0x80
+[   45.660142]  __ip_queue_xmit+0x1b0/0x540
+[   45.660937]  ip_queue_xmit+0x10/0x18
+[   45.661661]  __tcp_transmit_skb+0x50c/0xad8
+[   45.662494]  tcp_write_xmit+0x6cc/0x1010
+[   45.663294]  __tcp_push_pending_frames+0x38/0xc0
+[   45.664236]  tcp_push+0x150/0x170
+[   45.664912]  tcp_sendmsg_locked+0xaa0/0xc40
+[   45.665754]  tcp_sendmsg+0x34/0x58
+[   45.666442]  inet_sendmsg+0x48/0x210
+[   45.667175]  sock_sendmsg+0x18/0x30
+[   45.667889]  xs_sendpages+0xfc/0x2d8
+[   45.668610]  xs_tcp_send_request+0x9c/0x1b0
+[   45.669454]  xprt_transmit+0x100/0x5b8
+[   45.670210]  call_transmit+0x8c/0xa0
+[   45.670938]  __rpc_execute+0xbc/0x580
+[   45.671687]  rpc_async_schedule+0x28/0x48
+[   45.672493]  process_one_work+0x244/0x680
+[   45.673306]  worker_thread+0x40/0x3f0
+[   45.674053]  kthread+0x128/0x130
+[   45.674710]  ret_from_fork+0x10/0x18
+[   45.675436] Code: b0f4f3d3 910e2273 d538d080 aa1303f9 (b8606b34)
+[   45.676665] ---[ end trace 9d1f75fe6e41c0d7 ]---
+[   45.677590] Kernel panic - not syncing: Fatal exception in interrupt
+[   45.678851] SMP: stopping secondary CPUs
+[   45.679670] Kernel Offset: 0x5d2cfb600000 from 0xffff000010000000
+[   45.680882] PHYS_OFFSET: 0xffff925ec0000000
+[   45.681727] CPU features: 0x002,23800438
+[   45.682518] Memory Limit: none
+[   45.683143] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
-
+-- 
+Catalin
