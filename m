@@ -2,91 +2,179 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C10C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E70C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8DC2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:17:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="GQXVa9j2"
+	by mail.kernel.org (Postfix) with ESMTP id 634B62146E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbfFYORF (ORCPT
+        id S1729835AbfFYOUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:17:05 -0400
-Received: from mail.intenta.de ([178.249.25.132]:28391 "EHLO mail.intenta.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727070AbfFYORD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:17:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=0LXqnefS6ua7gqL9kD/KCf39EJ+ezxI8Okybp4/Vr+o=;
-        b=GQXVa9j2NkuaRh3mroxMOkZV8AXHK22v8Lj314GNO/ChsPvS33P9Pzv/VrBU21g7Fnbt1V7HewaCrDHncVS+RMe0NaDPdrQapJEbyKttQypFLMjvVIRZ7R1owYz3tl43s+Zg+Nar+Jj4/Ayf2mT5qCeq2UKePxsiVj+pVNZEJnaR/n3ZrnQfo1nZ6jFNHzN81yuwcyOnD4kKqH/YCZvItcMoQ3k/+Rpv2iLFyyX+hLwRvQazeho7fxZx2reN+/6eIox4h7ZdYaYgWISGZY2Vflx6oUG0djzC4ZS+hmqj9NGqpeVfs84F9/64ghcbTLexjualZ/WKTfu1b1gFnhrmUA==;
-X-CTCH-RefID: str=0001.0A0C020D.5D122B8D.0069,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Date:   Tue, 25 Jun 2019 16:11:25 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-CC:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [LINUX PATCH v17 1/2] mtd: rawnand: nand_micron: Do not over
- write driver's read_page()/write_page()
-Message-ID: <20190625141125.a4umdey6ejxjxap4@laureti-dev>
-References: <20190625044630.31717-1-naga.sureshkumar.relli@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190625044630.31717-1-naga.sureshkumar.relli@xilinx.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+        Tue, 25 Jun 2019 10:20:09 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:36574 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfFYOUI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:20:08 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hfmId-0005Mb-Le; Tue, 25 Jun 2019 16:19:55 +0200
+Message-ID: <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Arnd Bergmann <arnd@arndb.de>, Alex Elder <elder@linaro.org>
+Cc:     Dan Williams <dcbw@redhat.com>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+Date:   Tue, 25 Jun 2019 16:19:54 +0200
+In-Reply-To: <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com> (sfid-20190624_184119_378618_FFFDB00F)
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+         <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
+         <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
+         <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
+         <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
+         (sfid-20190624_184119_378618_FFFDB00F)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 06:46:29AM +0200, Naga Sureshkumar Relli wrote:
-> --- a/drivers/mtd/nand/raw/nand_micron.c
-> +++ b/drivers/mtd/nand/raw/nand_micron.c
-> @@ -500,8 +500,11 @@ static int micron_nand_init(struct nand_chip *chip)
->  		chip->ecc.size = 512;
->  		chip->ecc.strength = chip->base.eccreq.strength;
->  		chip->ecc.algo = NAND_ECC_BCH;
-> -		chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
-> -		chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
-> +		if (!chip->ecc.read_page)
-> +			chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
-> +
-> +		if (!chip->ecc.write_page)
-> +			chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+On Mon, 2019-06-24 at 18:40 +0200, Arnd Bergmann wrote:
+> On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
+> > On 6/18/19 2:03 PM, Johannes Berg wrote:
+> > 
+> > > Really there are two possible ways (and they intersect to some extent).
+> > > 
+> > > One is the whole multi-function device, where a single WWAN device is
+> > > composed of channels offered by actually different drivers, e.g. for a
+> > > typical USB device you might have something like cdc_ether and the
+> > > usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
+> > > similarly, e.g. by using the underlying USB device "struct device"
+> > > pointer to tie it together.
+> > 
+> > I *think* this model makes the most sense.  But at this point
+> > it would take very little to convince me otherwise...  (And then
+> > I saw Arnd's message advocating the other one, unfortunately...)
+> > 
+> > > The other is something like IPA or the Intel modem driver, where the
+> > > device is actually a single (e.g. PCIe) device and just has a single
+> > > driver, but that single driver offers different channels.
+> > 
+> > What I don't like about this is that it's more monolithic.  It
+> > seems better to have the low-level IPA or Intel modem driver (or
+> > any other driver that can support communication between the AP
+> > and WWAN device) present communication paths that other function-
+> > specific drivers can attach to and use.
+> 
+> I did not understand Johannes description as two competing models
+> for the same code, but rather two kinds of existing hardware that
+> a new driver system would have to deal with.
 
-When used with pl353_nand.c, this change prioritizes the
-pl353_nand_read_page_raw/pl353_nand_write_page_raw implementations over
-micron_nand_read_page_on_die_ecc/micron_nand_write_page_on_die_ecc. The
-pl353 implementations don't check the status register of the flash for
-NAND_ECC_STATUS_WRITE_RECOMMENDED nor do they update ecc_stats.failed in
-any way. Unless I am mistaken, this implies that bitflips cannot be
-detected at all anymore.
+Right.
 
-However, this is the change that makes a MT29F2G08ABAEAWP practically
-work with jffs2 on the Zynq platform.
+> I was trying to simplify it to just having the second model, by adding
+> a hack to support the first, but my view was rather unpopular so
+> far, so if everyone agrees on one way to do it, don't worry about me ;-)
 
-In this context, I countered a document from Micron[1] indicating that
-their on-die chips are incompatible with jffs2 as is, because the on-die
-oob layout is incompatible with jffs2. I suppose that using the raw
-variants puts jffs2 in full control of the oob area, but is this really
-the correct solution?
+:-)
 
-Helmut
+However, to also reply to Alex: I don't know exactly how IPA works, but
+for the Intel modem at least you can't fundamentally have two drivers
+for different parts of the functionality, since it's just a single piece
+of hardware and you need to allocate hardware resources from a common
+pool etc. So you cannot split the driver into "Intel modem control
+channel driver" and "Intel modem data channel driver". In fact, it's
+just a single "struct device" on the PCIe bus that you can bind to, and
+only one driver can bind at a time.
 
-[1] https://www.micron.com/~/media/Documents/Products/Technical%20Note/NAND%20Flash/tn2975_enable_on-die-ECC_NAND_JFFS2.pdf
+So, IOW, I'm not sure I see how you'd split that up. I guess you could
+if you actually do something like the "rmnet" model, and I suppose
+you're free to do that for IPA if you like, but I tend to think that's
+actually a burden, not a win since you just get more complex code that
+needs to interact with more pieces. A single driver for a single
+hardware that knows about the few types of channels seems simpler to me.
+
+> - to answer Johannes question, my understanding is that the interface
+>   between kernel and firmware/hardware for IPA has a single 'struct
+>   device' that is used for both the data and the control channels,
+>   rather than having a data channel and an independent control device,
+>   so this falls into the same category as the Intel one (please correct
+>   me on that)
+
+That sounds about the same then, right.
+
+Are the control channels to IPA are actually also tunnelled over the
+rmnet protocol? And even if they are, perhaps they have a different
+hardware queue or so? That'd be the case for Intel - different hardware
+queue, same (or at least similar) protocol spoken for the DMA hardware
+itself, but different contents of the messages obviously.
+
+> - The user space being proprietary is exactly what we need to avoid
+>   with the wwan subsystem. We need to be able to use the same
+>   method for setting up Intel, Qualcomm, Samsung, Unisoc or
+>   Hisilicon modems or anything else that hooks into the subsystem,
+>   and support that in network manager as well as the Android
+>   equivalent.
+>   If Qualcomm wants to provide their own proprietary user space
+>   solution, we can't stop them, but then that should also work on
+>   all the others unless they intentionally break it. ;-)
+
+:-)
+
+I tend to think there's always going to be some level of specific
+handling here, because e.g. the Intel modem can expose MBIM or AT
+command control channels, but not much else (that'd be useful for us
+anyway, since we don't know how to speak debug protocol etc.). Other
+modems will expose *only* AT commands, or *only* MBIM, and yet others
+may also offer QMI and then that might be preferable.
+
+> > > and simply require that the channel is attached to the wwan device with
+> > > the representation-specific call (wwan_attach_netdev, wwan_attach_tty,
+> > > ...).
+> > 
+> > Or maybe have the WWAN device present interfaces with attributes,
+> > and have drivers that are appropriate for each interface attach
+> > to only the ones they recognize they support.
+> 
+> I think you both mean the same thing here, a structure with callback
+> pointers that may or may not be filled by the driver depending on its
+> capabilities.
+
+:-)
+
+> What we should try to avoid though is a way to add driver private
+> interfaces that risk having multiple drivers create similar functionality
+> in incompatible ways.
+
+Right.
+
+johannes
+
