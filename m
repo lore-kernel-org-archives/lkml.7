@@ -2,235 +2,127 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85374C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F448C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E7B21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:15:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n/QOpxIi"
+	by mail.kernel.org (Postfix) with ESMTP id 7F8C9204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfFYIPh (ORCPT
+        id S1729685AbfFYIQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:15:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60248 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbfFYIPh (ORCPT
+        Tue, 25 Jun 2019 04:16:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38442 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728374AbfFYIQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:15:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=N0nrulQma1LfX8fB54whP6KDQEZntsNfuUzaFmgP2p4=; b=n/QOpxIiajeI7PJggDihP6tz8x
-        8l7JZ7ZHTbAOAB7NvV2z/hx4mje0qI79QT4uC3TOfDGAGIbmRkCVhjyTJnrjlF+kXyS8euiaGkwWd
-        eYPnTsaO4hOs7Iiw6hn9rVPmZJK8U33WsQw1JRrPbCVMX49Ts/AlQl65E0H1Z8VYeX0WN69HZM7CH
-        l+xd+By8quQEpjWhVUAMYMx4Gb6B0C33JCLh4FfHAqxErO1Opp54Ble8l/JxJI+ZA3EIOacRa2ju+
-        XsgxNpk5B9CU4JWNySoP419jYCvIZr3eZ3BLmMu3RT9TKEeMtaEDQjp9Rq+s7bE2xVWM6sy65mSOO
-        3rKalPWQ==;
-Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfgbn-00072q-AI; Tue, 25 Jun 2019 08:15:19 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] powerpc/powernv: remove the unused pnv_pci_set_p2p function
-Date:   Tue, 25 Jun 2019 10:15:09 +0200
-Message-Id: <20190625081512.16704-2-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625081512.16704-1-hch@lst.de>
-References: <20190625081512.16704-1-hch@lst.de>
+        Tue, 25 Jun 2019 04:16:58 -0400
+Received: from static-50-53-46-226.bvtn.or.frontiernet.net ([50.53.46.226] helo=[192.168.192.153])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <john.johansen@canonical.com>)
+        id 1hfgdJ-0006B9-HT; Tue, 25 Jun 2019 08:16:53 +0000
+Subject: Re: [PATCH V34 00/29] Lockdown as an LSM
+To:     James Morris <jmorris@namei.org>,
+        Matthew Garrett <matthewgarrett@google.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20190622000358.19895-1-matthewgarrett@google.com>
+ <alpine.LRH.2.21.1906250853290.7826@namei.org>
+From:   John Johansen <john.johansen@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Canonical
+Message-ID: <642487e9-f70c-c11b-bc61-ad366096e267@canonical.com>
+Date:   Tue, 25 Jun 2019 01:16:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <alpine.LRH.2.21.1906250853290.7826@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function has never been used anywhere in the kernel tree since it
-was added to the tree.  We also now have proper PCIe P2P APIs in the core
-kernel, and any new P2P support should be using those.
+On 6/24/19 4:01 PM, James Morris wrote:
+> On Fri, 21 Jun 2019, Matthew Garrett wrote:
+> 
+>> Minor updates over V33 - security_is_locked_down renamed to
+>> security_locked_down, return value of security_locked_down is returned
+>> in most cases, one unnecessary patch was dropped, couple of minor nits
+>> fixed.
+> 
+> Thanks for the respin.
+> 
+> We are still not resolved on granularity. Stephen has said he's not sure 
+> if a useful policy can be constructed with just confidentiality and 
+> integrity settings. I'd be interested to know JJ and Casey's thoughts on 
+> lockdown policy flexibility wrt their respective LSMs.
+> 
+> These are also "all or nothing" choices which may prevent deployment due 
+> to a user needing to allow (presumably controlled or mitigated) exceptions 
+> to the policy.
+> 
+> 
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/powerpc/include/asm/opal.h            |  7 --
- arch/powerpc/include/asm/pnv-pci.h         |  2 -
- arch/powerpc/platforms/powernv/opal-call.c |  1 -
- arch/powerpc/platforms/powernv/pci.c       | 74 ----------------------
- arch/powerpc/platforms/powernv/pci.h       |  5 --
- 5 files changed, 89 deletions(-)
+I haven't gotten a chance to play with this the way I want to so there is
+still a lot of questions regarding its interaction with apparmor and its
+policy, but from what I have seen so far it is looking good.
 
-diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-index 4cc37e708bc7..7b0bc104a89c 100644
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -280,13 +280,6 @@ int64_t opal_xive_allocate_irq(uint32_t chip_id);
- int64_t opal_xive_free_irq(uint32_t girq);
- int64_t opal_xive_sync(uint32_t type, uint32_t id);
- int64_t opal_xive_dump(uint32_t type, uint32_t id);
--int64_t opal_xive_get_queue_state(uint64_t vp, uint32_t prio,
--				  __be32 *out_qtoggle,
--				  __be32 *out_qindex);
--int64_t opal_xive_set_queue_state(uint64_t vp, uint32_t prio,
--				  uint32_t qtoggle,
--				  uint32_t qindex);
--int64_t opal_xive_get_vp_state(uint64_t vp, __be64 *out_w01);
- int64_t opal_pci_set_p2p(uint64_t phb_init, uint64_t phb_target,
- 			uint64_t desc, uint16_t pe_number);
- 
-diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
-index 630eb8b1b7ed..9fcb0bc462c6 100644
---- a/arch/powerpc/include/asm/pnv-pci.h
-+++ b/arch/powerpc/include/asm/pnv-pci.h
-@@ -26,8 +26,6 @@ extern int pnv_pci_get_presence_state(uint64_t id, uint8_t *state);
- extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
- extern int pnv_pci_set_power_state(uint64_t id, uint8_t state,
- 				   struct opal_msg *msg);
--extern int pnv_pci_set_p2p(struct pci_dev *initiator, struct pci_dev *target,
--			   u64 desc);
- 
- extern int pnv_pci_enable_tunnel(struct pci_dev *dev, uint64_t *asnind);
- extern int pnv_pci_disable_tunnel(struct pci_dev *dev);
-diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-index 36c8fa3647a2..29ca523c1c79 100644
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -273,7 +273,6 @@ OPAL_CALL(opal_npu_map_lpar,			OPAL_NPU_MAP_LPAR);
- OPAL_CALL(opal_imc_counters_init,		OPAL_IMC_COUNTERS_INIT);
- OPAL_CALL(opal_imc_counters_start,		OPAL_IMC_COUNTERS_START);
- OPAL_CALL(opal_imc_counters_stop,		OPAL_IMC_COUNTERS_STOP);
--OPAL_CALL(opal_pci_set_p2p,			OPAL_PCI_SET_P2P);
- OPAL_CALL(opal_get_powercap,			OPAL_GET_POWERCAP);
- OPAL_CALL(opal_set_powercap,			OPAL_SET_POWERCAP);
- OPAL_CALL(opal_get_power_shift_ratio,		OPAL_GET_POWER_SHIFT_RATIO);
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index ef9448a907c6..8d28f2932c3b 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -38,7 +38,6 @@
- #include "powernv.h"
- #include "pci.h"
- 
--static DEFINE_MUTEX(p2p_mutex);
- static DEFINE_MUTEX(tunnel_mutex);
- 
- int pnv_pci_get_slot_id(struct device_node *np, uint64_t *id)
-@@ -861,79 +860,6 @@ void pnv_pci_dma_bus_setup(struct pci_bus *bus)
- 	}
- }
- 
--int pnv_pci_set_p2p(struct pci_dev *initiator, struct pci_dev *target, u64 desc)
--{
--	struct pci_controller *hose;
--	struct pnv_phb *phb_init, *phb_target;
--	struct pnv_ioda_pe *pe_init;
--	int rc;
--
--	if (!opal_check_token(OPAL_PCI_SET_P2P))
--		return -ENXIO;
--
--	hose = pci_bus_to_host(initiator->bus);
--	phb_init = hose->private_data;
--
--	hose = pci_bus_to_host(target->bus);
--	phb_target = hose->private_data;
--
--	pe_init = pnv_ioda_get_pe(initiator);
--	if (!pe_init)
--		return -ENODEV;
--
--	/*
--	 * Configuring the initiator's PHB requires to adjust its
--	 * TVE#1 setting. Since the same device can be an initiator
--	 * several times for different target devices, we need to keep
--	 * a reference count to know when we can restore the default
--	 * bypass setting on its TVE#1 when disabling. Opal is not
--	 * tracking PE states, so we add a reference count on the PE
--	 * in linux.
--	 *
--	 * For the target, the configuration is per PHB, so we keep a
--	 * target reference count on the PHB.
--	 */
--	mutex_lock(&p2p_mutex);
--
--	if (desc & OPAL_PCI_P2P_ENABLE) {
--		/* always go to opal to validate the configuration */
--		rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id,
--				      desc, pe_init->pe_number);
--
--		if (rc != OPAL_SUCCESS) {
--			rc = -EIO;
--			goto out;
--		}
--
--		pe_init->p2p_initiator_count++;
--		phb_target->p2p_target_count++;
--	} else {
--		if (!pe_init->p2p_initiator_count ||
--			!phb_target->p2p_target_count) {
--			rc = -EINVAL;
--			goto out;
--		}
--
--		if (--pe_init->p2p_initiator_count == 0)
--			pnv_pci_ioda2_set_bypass(pe_init, true);
--
--		if (--phb_target->p2p_target_count == 0) {
--			rc = opal_pci_set_p2p(phb_init->opal_id,
--					      phb_target->opal_id, desc,
--					      pe_init->pe_number);
--			if (rc != OPAL_SUCCESS) {
--				rc = -EIO;
--				goto out;
--			}
--		}
--	}
--	rc = 0;
--out:
--	mutex_unlock(&p2p_mutex);
--	return rc;
--}
--EXPORT_SYMBOL_GPL(pnv_pci_set_p2p);
--
- struct device_node *pnv_pci_get_phb_node(struct pci_dev *dev)
- {
- 	struct pci_controller *hose = pci_bus_to_host(dev->bus);
-diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
-index be26ab3d99e0..4f11c077af62 100644
---- a/arch/powerpc/platforms/powernv/pci.h
-+++ b/arch/powerpc/platforms/powernv/pci.h
-@@ -79,9 +79,6 @@ struct pnv_ioda_pe {
- 	struct pnv_ioda_pe	*master;
- 	struct list_head	slaves;
- 
--	/* PCI peer-to-peer*/
--	int			p2p_initiator_count;
--
- 	/* Link in list of PE#s */
- 	struct list_head	list;
- };
-@@ -172,8 +169,6 @@ struct pnv_phb {
- 	/* PHB and hub diagnostics */
- 	unsigned int		diag_data_size;
- 	u8			*diag_data;
--
--	int p2p_target_count;
- };
- 
- extern struct pci_ops pnv_pci_ops;
--- 
-2.20.1
+I expect the all or nothing choices may limit its deployments (we really
+need to play with this more to say) but we already face similar issues.
+There are options we provide at a distro level that we can't turn on by
+default, but we do recommend to more security conscious users.
 
+If lockdown was in kernel we would certainly make it available for our
+users, we have even had a few people ask about it.
