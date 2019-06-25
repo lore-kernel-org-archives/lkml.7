@@ -2,123 +2,125 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D513C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F86C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C3520656
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:40:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UH7jR3TD"
+	by mail.kernel.org (Postfix) with ESMTP id 8258B213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbfFYOkI (ORCPT
+        id S1731524AbfFYOkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:40:08 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36922 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730689AbfFYOkG (ORCPT
+        Tue, 25 Jun 2019 10:40:24 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:34853 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730689AbfFYOkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:40:06 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 131so16533350ljf.4;
-        Tue, 25 Jun 2019 07:40:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=q0m3ZCcvvlamTMjrKbKQpPCjAq0COFaxIHyMR99gkW4=;
-        b=UH7jR3TDn/mUxso6TpcyTOtnuNk/kSdJZKteGrbYjSjp1oiEvdriH+931yXLyjy1P/
-         PfJU3kpY4MIkqm+n36A2osZQXizmmeYDQLbHsBA2b6LxpZGeBFe1sxmtrBonQwkYEE85
-         6a/iLuKv2fs9ncZFjrlli7ni4FOW2LPVk7T7dvI7HstK0w69OHQxGp1CdUd5nQOUOKq3
-         3vUX4SBh4JeldgoBofMvNlgBg588xFsMd/GlhH+0uT+2GGzvBxtdW4UPpCtBtI9QYtxB
-         JRlNrnTmzY7XiVUNSIR5qGOLmKV3z5h9JWNxH3kP8T4CmDLvFwSlbwECLY7tWy9MtcDA
-         kxog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=q0m3ZCcvvlamTMjrKbKQpPCjAq0COFaxIHyMR99gkW4=;
-        b=PT0aUZr5zhjItdUwJfmV5H85exu2eZqvQ5rhCQomE18rqYxl+eZ1DCo+e4APLZugkS
-         +tTjv17j+PBlVpGwH+bKb6Wcs9LSFH/DzhsiHcXFVAGCjFC4yFM7x9G0Ruu0BQdEsLwu
-         DGUKCisNZbVoJE1vuK3Y1ofyC6UZtbutU3ibQvgTzQ+CwV1RAz248SmQORRVyxhxCoVB
-         CxnaNbbKLEIMJpDN43BNjUg4nZDBamlOHapTQVhaTcw4xQcK4n762M2ZFcV46euuAj8n
-         y6qyno0R2mo1cYsrsL8qo2bgzLH8LlGYuGG1KC072y0j8eQAdoEeODylcpXdaWsdf5gZ
-         CWfg==
-X-Gm-Message-State: APjAAAWnuV/SgdeTuf521o3x0VbuNMk+SfWyMRYtWg2N0VRvZ5TStubd
-        KKsESVw7YFNGf9slv4JfQkzFWvC8
-X-Google-Smtp-Source: APXvYqwwGogsn+0F5BzrzfyS8cU7M9D0Jg0oyoWVeDuvdXH78LpECLVu/4t74BUaXxcL4PdcgQSqtg==
-X-Received: by 2002:a2e:9a87:: with SMTP id p7mr36337953lji.133.1561473604136;
-        Tue, 25 Jun 2019 07:40:04 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id 25sm2273267ljv.40.2019.06.25.07.40.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 07:40:03 -0700 (PDT)
-Subject: Re: [PATCH v3 2/5] regulator: core: Expose some of core functions
- needed by couplers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190623210835.26281-1-digetx@gmail.com>
- <20190623210835.26281-3-digetx@gmail.com>
- <20190625111946.GP5316@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a0626c9d-c68b-9043-8b2f-870f594938b8@gmail.com>
-Date:   Tue, 25 Jun 2019 17:40:01 +0300
+        Tue, 25 Jun 2019 10:40:23 -0400
+Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5PEe0Jv044514;
+        Tue, 25 Jun 2019 23:40:00 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav101.sakura.ne.jp);
+ Tue, 25 Jun 2019 23:40:00 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav101.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5PEe0HW044501
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Tue, 25 Jun 2019 23:40:00 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH net-next] net: stmmac: Fix the case when PHY handle is not
+ present
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+References: <351cce38d1c572d8b171044f2856c7fae9f89cbc.1561450696.git.joabreu@synopsys.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9D78A2@DE02WEMBXB.internal.synopsys.com>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <5859e2c5-112f-597c-3bd5-e30e96b86152@katsuster.net>
+Date:   Tue, 25 Jun 2019 23:40:00 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190625111946.GP5316@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B9D78A2@DE02WEMBXB.internal.synopsys.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.06.2019 14:19, Mark Brown пишет:
-> On Mon, Jun 24, 2019 at 12:08:32AM +0300, Dmitry Osipenko wrote:
->> Expose some of internal functions that are required for implementation of
->> customized regulator couplers.
+Hello Jose,
+
+This patch works fine with my Tinker Board. Thanks a lot!
+
+Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+
+
+BTW, from network guys point of view, is it better to add a phy node
+into device trees that have no phy node such as the Tinker Board?
+
+
+Best Regards,
+Katsuhiro Suzuki
+
+
+On 2019/06/25 22:11, Jose Abreu wrote:
+> ++ Katsuhiro
 > 
-> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> From: Jose Abreu <joabreu@synopsys.com>
 > 
->   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+>> Some DT bindings do not have the PHY handle. Let's fallback to manually
+>> discovery in case phylink_of_phy_connect() fails.
+>>
+>> Reported-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+>> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+>> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+>> Cc: Joao Pinto <jpinto@synopsys.com>
+>> Cc: David S. Miller <davem@davemloft.net>
+>> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+>> ---
+>> Hello Katsuhiro,
+>>
+>> Can you please test this patch ?
+>> ---
+>>   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> index a48751989fa6..f4593d2d9d20 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> @@ -950,9 +950,12 @@ static int stmmac_init_phy(struct net_device *dev)
+>>   
+>>   	node = priv->plat->phylink_node;
+>>   
+>> -	if (node) {
+>> +	if (node)
+>>   		ret = phylink_of_phy_connect(priv->phylink, node, 0);
+>> -	} else {
+>> +
+>> +	/* Some DT bindings do not set-up the PHY handle. Let's try to
+>> +	 * manually parse it */
+>> +	if (!node || ret) {
+>>   		int addr = priv->plat->phy_addr;
+>>   		struct phy_device *phydev;
+>>   
+>> -- 
+>> 2.7.4
 > 
-> are available in the Git repository at:
 > 
->   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-couple-api
 > 
-> for you to fetch changes up to d22b85a1b97d12a4940ef9d778f6122546736f78:
-> 
->   regulator: core: Expose some of core functions needed by couplers (2019-06-25 12:15:35 +0100)
-> 
-> ----------------------------------------------------------------
-> regulator: Coupling API
-> 
-> This series introduces a way of specifying a customized regulators coupler
-> which is necessary for cases like a non-trivial DVFS implementation.
-> 
-> ----------------------------------------------------------------
-> Dmitry Osipenko (2):
->       regulator: core: Introduce API for regulators coupling customization
->       regulator: core: Expose some of core functions needed by couplers
-> 
->  drivers/regulator/core.c          | 194 ++++++++++++++++++++++++++++----------
->  drivers/regulator/of_regulator.c  |  63 +++++++++----
->  include/linux/regulator/coupler.h |  97 +++++++++++++++++++
->  include/linux/regulator/driver.h  |   6 +-
->  include/linux/regulator/machine.h |   2 +-
->  5 files changed, 287 insertions(+), 75 deletions(-)
->  create mode 100644 include/linux/regulator/coupler.h
 > 
 
-Thank you very much! Very nice to see some more progress!
