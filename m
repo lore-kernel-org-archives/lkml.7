@@ -2,235 +2,255 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27E9C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ABAC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75270213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B25C213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYUsrxCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbfFYNyn (ORCPT
+        id S1727770AbfFYNzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:54:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15580 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726659AbfFYNym (ORCPT
+        Tue, 25 Jun 2019 09:55:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40131 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfFYNzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:54:42 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PDsCQu146881
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:54:41 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tbm3ptb1q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:54:39 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 25 Jun 2019 14:54:33 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 14:54:31 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5PDsUh341419078
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 13:54:30 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C410B2066;
-        Tue, 25 Jun 2019 13:54:30 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F4A8B2064;
-        Tue, 25 Jun 2019 13:54:30 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 13:54:30 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 19B1716C2A6E; Tue, 25 Jun 2019 06:54:30 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 06:54:30 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Reply-To: paulmck@linux.ibm.com
-References: <20190621122927.GV3402@hirez.programming.kicks-ass.net>
- <20190621133414.GF26519@linux.ibm.com>
- <20190621174104.GA7519@linux.ibm.com>
- <20190621175027.GA23260@linux.ibm.com>
- <20190621234602.GA16286@linux.ibm.com>
- <20190624231222.GA17497@lerouge>
- <20190624234422.GP26519@linux.ibm.com>
- <20190625004300.GB17497@lerouge>
- <20190625075139.GT3436@hirez.programming.kicks-ass.net>
- <20190625122514.GA23880@lenoir>
+        Tue, 25 Jun 2019 09:55:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so3059768wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 06:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fq/8wsmsvCxlpUInJ+iCbHsUO0noKhQjaU4ngOlYyq8=;
+        b=SYUsrxCa9Ax5QjrWiqfKxEmD/uaIx3CEN77nR3iwQrD8xlQvUKybYgYBajfGiQ7SA9
+         kTOLhipouE8pPRWjcnKTamBPpGHWnBQiH6cPvGHUbzZ3I/XVKER8OQf+UCcziJtNWyIF
+         xB4S/EnEfpzaH1WAfY83tsbrT6o4RVMhtJxky6aP1b0iWHTMkAvvQoGQ6FLGjdK9PHAZ
+         DDoQ5KtxRtBOhI26ZuGw4HUqHdRDoT+Ztphe+XLzlvHvomzRHRzWafORM5EINvcOQ06O
+         PQIxl5n1c2umszMPbFmgUYnfbqFEX4Lh9HZ034i96td6/DnHiStY/g4EfrWd6kCRGMYm
+         AryQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fq/8wsmsvCxlpUInJ+iCbHsUO0noKhQjaU4ngOlYyq8=;
+        b=Mf1vwvLzTZQA4gcIpIfO4rZOX/hMtRK4IsQQ+oNo/SiR28Eb5Xn9GyxebK0hDq2Y1j
+         shnQjXvnJuDoqXEQegPXrkbbLJvUTF7HAp3H36VwtvS2iIXEDSAzBxLC7LIzWVKmE0RW
+         thKbR7HaYcxnHWLGs7bqN4m2rDdci4Ly/l0qSQiLK3jrZv3mOznWcxwIKyw/q1naRVXX
+         YrOwG2KgABM0gCFiEmmU3fMalB6m1sKrUyXc1hs/kWYNkhDdJ7Co34sJDLpe+Z0fnXqq
+         VIl7a+62hJQIkDpbCSS/eyUcwXg+wJ+6mhNIqosN+LalxpCdhX3kYrHwcTN7r01IQl12
+         ed4w==
+X-Gm-Message-State: APjAAAW5Gz+whwBxkgqMWOTYVPlkt7VyzQokpVcDLIOQtYm/2n3deILm
+        rjPJWjDeSbjC3CGCjsBOJED7Lvb4
+X-Google-Smtp-Source: APXvYqyNstq4W1QhPq1QCzGR/Ck+rdGfukmhVDcL5yJuocUr5YWNivilxZI8Gt8LUNgOtvj+UE7+Rw==
+X-Received: by 2002:a1c:968c:: with SMTP id y134mr19551284wmd.75.1561470908553;
+        Tue, 25 Jun 2019 06:55:08 -0700 (PDT)
+Received: from abel.fritz.box ([2a02:908:1252:fb60:2df2:5da:22f9:1506])
+        by smtp.gmail.com with ESMTPSA id y44sm13814441wrd.13.2019.06.25.06.55.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 06:55:07 -0700 (PDT)
+From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
+        <ckoenig.leichtzumerken@gmail.com>
+X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+To:     daniel@ffwll.ch, peterz@infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dma-buf: add reservation_context for deadlock handling
+Date:   Tue, 25 Jun 2019 15:55:06 +0200
+Message-Id: <20190625135507.80548-1-christian.koenig@amd.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625122514.GA23880@lenoir>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062513-0072-0000-0000-00000440CEED
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011327; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01223080; UDB=6.00643623; IPR=6.01004253;
- MB=3.00027460; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-25 13:54:33
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062513-0073-0000-0000-00004CB0F3B9
-Message-Id: <20190625135430.GW26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250109
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:25:16PM +0200, Frederic Weisbecker wrote:
-> On Tue, Jun 25, 2019 at 09:51:39AM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 25, 2019 at 02:43:00AM +0200, Frederic Weisbecker wrote:
-> > > Yeah, unfortunately there is no atomic_add_not_zero_return().
-> > 
-> > There is atomic_fetch_add_unless().
-> 
-> Ah, that could work!
+The ww_mutex framework allows for detecting deadlocks when multiple
+threads try to acquire the same set of locks in different order.
 
-And it allows dispensing with the initialization.  How about like
-the following?
+The problem is that handling those deadlocks was the burden of the user of
+the ww_mutex implementation and at least some users didn't got that right
+on the first try.
 
-							Thanx, Paul
+So introduce a new reservation_context object which can be used to
+simplify the deadlock handling. This is done by tracking all locked
+reservation objects in the context as well as the last contended
+reservation object.
 
-------------------------------------------------------------------------
+When a deadlock occurse we now unlock all previously locked object and
+acquire the contended lock in the slow path. After this is done -EDEADLK
+is still returned to signal that all other locks now need to be
+re-acquired again.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf0a29a..d7be6d4b6a0a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3050,8 +3050,36 @@ void scheduler_tick(void)
+Signed-off-by: Christian König <christian.koenig@amd.com>
+---
+ drivers/dma-buf/reservation.c | 82 +++++++++++++++++++++++++++++++++++
+ include/linux/reservation.h   | 38 ++++++++++++++++
+ 2 files changed, 120 insertions(+)
+
+diff --git a/drivers/dma-buf/reservation.c b/drivers/dma-buf/reservation.c
+index 4d32e2c67862..9e53e42b053a 100644
+--- a/drivers/dma-buf/reservation.c
++++ b/drivers/dma-buf/reservation.c
+@@ -55,6 +55,88 @@ EXPORT_SYMBOL(reservation_seqcount_class);
+ const char reservation_seqcount_string[] = "reservation_seqcount";
+ EXPORT_SYMBOL(reservation_seqcount_string);
  
- struct tick_work {
- 	int			cpu;
-+	atomic_t		state;
- 	struct delayed_work	work;
- };
-+/* Values for ->state, see diagram below. */
-+#define TICK_SCHED_REMOTE_OFFLINE	0
-+#define TICK_SCHED_REMOTE_OFFLINING	1
-+#define TICK_SCHED_REMOTE_RUNNING	2
-+
-+/*
-+ * State diagram for ->state:
++/**
++ * reservation_context_init - initialize a reservation context
++ * @ctx: the context to initialize
 + *
-+ *
-+ *          TICK_SCHED_REMOTE_OFFLINE
-+ *                    |   ^
-+ *                    |   |
-+ *                    |   | sched_tick_remote()
-+ *                    |   |
-+ *                    |   |
-+ *                    +--TICK_SCHED_REMOTE_OFFLINING
-+ *                    |   ^
-+ *                    |   |
-+ * sched_tick_start() |   | sched_tick_stop()
-+ *                    |   |
-+ *                    V   |
-+ *          TICK_SCHED_REMOTE_RUNNING
-+ *
-+ *
-+ * Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
-+ * and sched_tick_start() are happy to leave the state in RUNNING.
++ * Start using this reservation context to lock reservation objects for update.
 + */
- 
- static struct tick_work __percpu *tick_work_cpu;
- 
-@@ -3064,6 +3092,7 @@ static void sched_tick_remote(struct work_struct *work)
- 	struct task_struct *curr;
- 	struct rq_flags rf;
- 	u64 delta;
-+	int os;
- 
- 	/*
- 	 * Handle the tick only if it appears the remote CPU is running in full
-@@ -3077,7 +3106,7 @@ static void sched_tick_remote(struct work_struct *work)
- 
- 	rq_lock_irq(rq, &rf);
- 	curr = rq->curr;
--	if (is_idle_task(curr))
-+	if (is_idle_task(curr) || cpu_is_offline(cpu))
- 		goto out_unlock;
- 
- 	update_rq_clock(rq);
-@@ -3097,13 +3126,18 @@ static void sched_tick_remote(struct work_struct *work)
- 	/*
- 	 * Run the remote tick once per second (1Hz). This arbitrary
- 	 * frequency is large enough to avoid overload but short enough
--	 * to keep scheduler internal stats reasonably up to date.
-+	 * to keep scheduler internal stats reasonably up to date.  But
-+	 * first update state to reflect hotplug activity if required.
- 	 */
--	queue_delayed_work(system_unbound_wq, dwork, HZ);
-+	os = atomic_fetch_add_unless(&twork->state, -1, TICK_SCHED_REMOTE_RUNNING);
-+	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_OFFLINE);
-+	if (os == TICK_SCHED_REMOTE_RUNNING)
-+		queue_delayed_work(system_unbound_wq, dwork, HZ);
- }
- 
- static void sched_tick_start(int cpu)
- {
-+	int os;
- 	struct tick_work *twork;
- 
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-@@ -3112,15 +3146,20 @@ static void sched_tick_start(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
- 
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	twork->cpu = cpu;
--	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
--	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-+	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
-+	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
-+	if (os == TICK_SCHED_REMOTE_OFFLINE) {
-+		twork->cpu = cpu;
-+		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-+		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
++void reservation_context_init(struct reservation_context *ctx)
++{
++	ww_acquire_init(&ctx->ctx, &reservation_ww_class);
++	init_llist_head(&ctx->locked);
++	ctx->contended = NULL;
++}
++EXPORT_SYMBOL(reservation_context_init);
++
++/**
++ * reservation_context_unlock_all - unlock all reservation objects
++ * @ctx: the context which holds the reservation objects
++ *
++ * Unlocks all reservation objects locked with this context.
++ */
++void reservation_context_unlock_all(struct reservation_context *ctx)
++{
++	struct reservation_object *obj, *next;
++
++	if (ctx->contended)
++		ww_mutex_unlock(&ctx->contended->lock);
++	ctx->contended = NULL;
++
++	llist_for_each_entry_safe(obj, next, ctx->locked.first, locked)
++		ww_mutex_unlock(&obj->lock);
++	init_llist_head(&ctx->locked);
++}
++EXPORT_SYMBOL(reservation_context_unlock_all);
++
++/**
++ * reservation_context_lock - lock a reservation object with deadlock handling
++ * @ctx: the context which should be used to lock the object
++ * @obj: the object which needs to be locked
++ * @interruptible: if we should wait interruptible or not
++ *
++ * Use @ctx to lock the reservation object. If a deadlock is detected we backoff
++ * by releasing all locked objects and use the slow path to lock the reservation
++ * object. After successfully locking in the slow path -EDEADLK is returned to
++ * signal that all other locks must be re-taken as well.
++ */
++int reservation_context_lock(struct reservation_context *ctx,
++			     struct reservation_object *obj,
++			     bool interruptible)
++{
++	int ret = 0;
++
++	if (unlikely(ctx->contended == obj))
++		ctx->contended = NULL;
++	else if (interruptible)
++		ret = ww_mutex_lock_interruptible(&obj->lock, &ctx->ctx);
++	else
++		ret = ww_mutex_lock(&obj->lock, &ctx->ctx);
++
++	if (likely(!ret)) {
++		/* don't use llist_add here, we have separate locking */
++		obj->locked.next = ctx->locked.first;
++		ctx->locked.first = &obj->locked;
++		return 0;
 +	}
- }
++	if (unlikely(ret != -EDEADLK))
++		return ret;
++
++	reservation_context_unlock_all(ctx);
++
++	if (interruptible) {
++		ret = ww_mutex_lock_slow_interruptible(&obj->lock, &ctx->ctx);
++		if (unlikely(ret))
++			return ret;
++	} else {
++		ww_mutex_lock_slow(&obj->lock, &ctx->ctx);
++	}
++
++	ctx->contended = obj;
++	return -EDEADLK;
++}
++EXPORT_SYMBOL(reservation_context_lock);
++
+ /**
+  * reservation_object_reserve_shared - Reserve space to add shared fences to
+  * a reservation_object.
+diff --git a/include/linux/reservation.h b/include/linux/reservation.h
+index ee750765cc94..a8a52e5d3e80 100644
+--- a/include/linux/reservation.h
++++ b/include/linux/reservation.h
+@@ -44,11 +44,48 @@
+ #include <linux/slab.h>
+ #include <linux/seqlock.h>
+ #include <linux/rcupdate.h>
++#include <linux/llist.h>
  
- #ifdef CONFIG_HOTPLUG_CPU
- static void sched_tick_stop(int cpu)
- {
- 	struct tick_work *twork;
-+	int os;
+ extern struct ww_class reservation_ww_class;
+ extern struct lock_class_key reservation_seqcount_class;
+ extern const char reservation_seqcount_string[];
  
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
- 		return;
-@@ -3128,7 +3167,10 @@ static void sched_tick_stop(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
++/**
++ * struct reservation_context - context to lock reservation objects
++ * @ctx: ww_acquire_ctx used for deadlock detection
++ * @locked: list of reservation objects locked in this context
++ * @contended: contended reservation object
++ */
++struct reservation_context {
++	struct ww_acquire_ctx ctx;
++	struct llist_head locked;
++	struct reservation_object *contended;
++};
++
++/**
++ * reservation_context_done - wrapper for ww_acquire_done
++ * @ctx: the reservation context which is done with locking
++ */
++static inline void reservation_context_done(struct reservation_context *ctx)
++{
++	ww_acquire_done(&ctx->ctx);
++}
++
++/**
++ * reservation_context_fini - wrapper for ww_acquire_fini
++ * @ctx: the reservation context which is finished
++ */
++static inline void reservation_context_fini(struct reservation_context *ctx)
++{
++	ww_acquire_fini(&ctx->ctx);
++}
++
++void reservation_context_init(struct reservation_context *ctx);
++void reservation_context_unlock_all(struct reservation_context *ctx);
++int reservation_context_lock(struct reservation_context *ctx,
++			     struct reservation_object *obj,
++			     bool interruptible);
++
+ /**
+  * struct reservation_object_list - a list of shared fences
+  * @rcu: for internal use
+@@ -71,6 +108,7 @@ struct reservation_object_list {
+  */
+ struct reservation_object {
+ 	struct ww_mutex lock;
++	struct llist_node locked;
+ 	seqcount_t seq;
  
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	cancel_delayed_work_sync(&twork->work);
-+	/* There cannot be competing actions, but don't rely on stop-machine. */
-+	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_OFFLINING);
-+	WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
-+	/* Don't cancel, as this would mess up the state machine. */
- }
- #endif /* CONFIG_HOTPLUG_CPU */
- 
-@@ -3136,7 +3178,6 @@ int __init sched_tick_offload_init(void)
- {
- 	tick_work_cpu = alloc_percpu(struct tick_work);
- 	BUG_ON(!tick_work_cpu);
--
- 	return 0;
- }
- 
+ 	struct dma_fence __rcu *fence_excl;
+-- 
+2.17.1
 
