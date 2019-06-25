@@ -2,211 +2,115 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F41C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BD1C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBE520644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6E920644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="BV2g2iIv"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="BuzjmLd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbfFYNN5 (ORCPT
+        id S1728464AbfFYNTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:13:57 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62954 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730434AbfFYNNx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:13:53 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PDCcsD017153;
-        Tue, 25 Jun 2019 09:13:52 -0400
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2050.outbound.protection.outlook.com [104.47.46.50])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2tbgangm7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jun 2019 09:13:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+        Tue, 25 Jun 2019 09:19:19 -0400
+Received: from mail-eopbgr20073.outbound.protection.outlook.com ([40.107.2.73]:10486
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727124AbfFYNTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:19:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R6iaauzrHsL25Tf2RZedOGer1bGKyxT4StqtgaUd2r8=;
- b=BV2g2iIv41TIhFs73NIQ2FGt+niSXWbu9i4OfcHOCIgNNt+sENXjq8dUbKVSjavDYWvQ9HWvI7IFl3TJNfGEvVDVkbXyEng/tOwgElFyhLeQtBezyRDbCDt7qS3z/3K1GA0yCnV+ZuNkRpPiIFXq/gIqXu/Y0i/ErjJRTW8UTlA=
-Received: from CY4PR03CA0019.namprd03.prod.outlook.com (2603:10b6:903:33::29)
- by BN3PR03MB2259.namprd03.prod.outlook.com (2a01:111:e400:7bba::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.16; Tue, 25 Jun
- 2019 13:13:49 +0000
-Received: from SN1NAM02FT015.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::204) by CY4PR03CA0019.outlook.office365.com
- (2603:10b6:903:33::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.13 via Frontend
- Transport; Tue, 25 Jun 2019 13:13:49 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT015.mail.protection.outlook.com (10.152.72.109) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Tue, 25 Jun 2019 13:13:48 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x5PDDl7P008734
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 25 Jun 2019 06:13:47 -0700
-Received: from saturn.ad.analog.com (10.48.65.145) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 25 Jun 2019 09:13:47 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: [PATCH 3/5] iio: imu: adis: Add support for SPI transfer cs_change_stall_delay_us
-Date:   Tue, 25 Jun 2019 16:13:26 +0300
-Message-ID: <20190625131328.11883-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625131328.11883-1-alexandru.ardelean@analog.com>
-References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
+ bh=bqW8mXs/egmq+6VjVchAJLm/CeTB6+pWTH+39SgH8HQ=;
+ b=BuzjmLd0aU0CCxuLz/9agYS3aYlH1KhDwO9ByH7OHzm/ZHb7lujyyi5EHSIdaCLXLsOPjZs/6isvmHoqe/0xspWWq7nAO2VAoo/P7xGO9kSl5yrrzQccov8qOzMmFgzN/ltmfNqFXOYVMgiR1bwj5N9QT6F9ZXgFyMIpt3kuBXQ=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5790.eurprd05.prod.outlook.com (20.178.122.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 13:19:15 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 13:19:15 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Colin King <colin.king@canonical.com>
+CC:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] RDMA/hns: fix potential integer overflow on left
+ shift
+Thread-Topic: [PATCH][next] RDMA/hns: fix potential integer overflow on left
+ shift
+Thread-Index: AQHVK1iWGDv1GJpJkk+255M1+vphrA==
+Date:   Tue, 25 Jun 2019 13:19:15 +0000
+Message-ID: <20190625131911.GA10878@mellanox.com>
+References: <20190624214608.11765-1-colin.king@canonical.com>
+In-Reply-To: <20190624214608.11765-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM3PR05CA0132.eurprd05.prod.outlook.com
+ (2603:10a6:207:2::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [66.187.232.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 82394f19-376c-4f25-318e-08d6f96fb861
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5790;
+x-ms-traffictypediagnostic: VI1PR05MB5790:
+x-microsoft-antispam-prvs: <VI1PR05MB57905DECE6891E4CB7B9CA23CFE30@VI1PR05MB5790.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(396003)(366004)(346002)(199004)(189003)(11346002)(2906002)(4326008)(446003)(26005)(102836004)(478600001)(3846002)(71200400001)(25786009)(6116002)(66946007)(8676002)(54906003)(71190400001)(8936002)(4744005)(186003)(305945005)(316002)(81156014)(81166006)(66476007)(66446008)(7736002)(64756008)(66556008)(1076003)(5660300002)(486006)(14444005)(229853002)(66066001)(86362001)(256004)(6486002)(476003)(73956011)(68736007)(6436002)(6512007)(53936002)(2616005)(6506007)(386003)(36756003)(14454004)(33656002)(76176011)(6916009)(99286004)(52116002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5790;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rqkTtUT+H4lLpwVvMvAcMsSgUauoZsssZN8fEwcgqQ+i3LxAcqmbVGS2NQtw0hg3GSpj37/ooauD7P8FxpPAgZo8kwZ9bK5TdLGtFHD3UpS9BUYLceEhH3Nt22DEBw8G3irrTXgysn8Gbs4Ozn+EW6ukglWnRaIyrwU4hyh410fe7utEKg+vvPbK91ahoWExF80f+5laBtenwD41Qgtba5xjU8tqqnU+ezXGHzE4ye7VAuWMFnxD5rLaR1CheA+TBLUNGx3EF6p4exM6FIX+qE2jCzqjUa2tEvuJ4b5A4oYkaSWy8UwLWwKKSaWUCWVjDfxHTQK3hIfbwicvl13RcnPAnUrT8em1EqoGHHQ69/dVAK/58Sg2hyJ+NrN5O6DEJNU5/clTur9LvdNHOqWuuFjmE8Z+SnA++olM/qLRjO0=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <62262B7684038143A1595B5CC61C0407@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(39860400002)(376002)(2980300002)(199004)(189003)(8936002)(8676002)(2906002)(47776003)(50226002)(246002)(1076003)(5660300002)(2870700001)(36756003)(11346002)(44832011)(54906003)(305945005)(126002)(7636002)(2616005)(446003)(316002)(426003)(476003)(486006)(478600001)(7696005)(51416003)(356004)(6666004)(70206006)(77096007)(26005)(110136005)(186003)(336012)(70586007)(48376002)(50466002)(4326008)(107886003)(450100002)(2201001)(86362001)(76176011)(106002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN3PR03MB2259;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 617c9b46-1cc3-46d4-e033-08d6f96ef5fb
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN3PR03MB2259;
-X-MS-TrafficTypeDiagnostic: BN3PR03MB2259:
-X-Microsoft-Antispam-PRVS: <BN3PR03MB225977396DA6775FD57061CDF9E30@BN3PR03MB2259.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0079056367
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: HvxIde128/y/ccbafRawvf3fBfgu1GwjWa3dyVvrB/o8cIplyCEU+/flwSmutkhAblwxPLxLKh0KXMS7oALLtZT3Au21e9hn6znxln6ZnvtvZxk7uOH3KyvfYruiUy1C8bGGMtIYvwHLkBRVczWyOGMkXefCV8RO7CS5BX1L/RoblQvMGOmSz7R6xDN2ULjAi+q1uKe3nI02122aZUHly3povuS7oy3XjOkR+XgwUWKu5QF4FwqFj4xWoODsPaQacZ3qxdjf8jBJ4X1XpSVdpSX/FIPT3/hsL7+odRyCCrI5QtkVWZxRd8Ad89GW4M64QVkY4O0vJxQ4DZW6+VN7Jf6M1Yd1+ZR1Z9ENvz5d68OANxtsBeC2o3cysrzJsjbDNuuybE1hFKY5/TdyN19N+KJ3yVmqcoxnrfnsbcbhQao=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2019 13:13:48.5155
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82394f19-376c-4f25-318e-08d6f96fb861
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 13:19:15.4774
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 617c9b46-1cc3-46d4-e033-08d6f96ef5fb
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR03MB2259
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250103
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5790
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ADIS16460 requires a higher delay before the next transfer. Since the
-SPI framework supports configuring the delay before the next transfer, this
-driver will become the first user of it.
+On Mon, Jun 24, 2019 at 10:46:08PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> There is a potential integer overflow when int i is left shifted
+> as this is evaluated using 32 bit arithmetic but is being used in
+> a context that expects an expression of type dma_addr_t.  Fix this
+> by casting integer i to dma_addr_t before shifting to avoid the
+> overflow.
+>=20
+> Addresses-Coverity: ("Unintentional integer overflow")
+> Fixes: 2ac0bc5e725e ("RDMA/hns: Add a group interfaces for optimizing buf=
+fers getting flow")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/hw/hns/hns_roce_alloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-The support for this functionality in ADIS16460 requires an addition to the
-ADIS lib to support the `cs_change_stall_delay_us` functionality in SPI.
+Applied to for-next, thanks
 
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/imu/adis.c       | 9 +++++++++
- include/linux/iio/imu/adis.h | 2 ++
- 2 files changed, 11 insertions(+)
-
-diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-index c771ae6803a9..90dac69910b3 100644
---- a/drivers/iio/imu/adis.c
-+++ b/drivers/iio/imu/adis.c
-@@ -40,28 +40,33 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 2,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 4,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 6,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 8,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		},
- 	};
- 
-@@ -134,12 +139,14 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->write_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 2,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->read_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.tx_buf = adis->tx + 4,
- 			.rx_buf = adis->rx,
-@@ -147,11 +154,13 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
- 			.len = 2,
- 			.cs_change = 1,
- 			.delay_usecs = adis->data->read_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		}, {
- 			.rx_buf = adis->rx + 2,
- 			.bits_per_word = 8,
- 			.len = 2,
- 			.delay_usecs = adis->data->read_delay,
-+			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
- 		},
- 	};
- 
-diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-index 469a493f7ae0..4aa248b6b3bd 100644
---- a/include/linux/iio/imu/adis.h
-+++ b/include/linux/iio/imu/adis.h
-@@ -27,6 +27,7 @@ struct adis_burst;
-  * struct adis_data - ADIS chip variant specific data
-  * @read_delay: SPI delay for read operations in us
-  * @write_delay: SPI delay for write operations in us
-+ * @cs_stall_delay: SPI stall delay between transfers in us
-  * @glob_cmd_reg: Register address of the GLOB_CMD register
-  * @msc_ctrl_reg: Register address of the MSC_CTRL register
-  * @diag_stat_reg: Register address of the DIAG_STAT register
-@@ -36,6 +37,7 @@ struct adis_burst;
- struct adis_data {
- 	unsigned int read_delay;
- 	unsigned int write_delay;
-+	unsigned int cs_stall_delay;
- 
- 	unsigned int glob_cmd_reg;
- 	unsigned int msc_ctrl_reg;
--- 
-2.20.1
-
+Jason
