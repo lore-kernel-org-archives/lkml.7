@@ -2,87 +2,247 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB7C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333FBC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F2520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF5520883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1AIJJNhr"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="biXWqaky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfFYJ3l (ORCPT
+        id S1728766AbfFYJbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:29:41 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:49280 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfFYJ3k (ORCPT
+        Tue, 25 Jun 2019 05:31:42 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45754 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbfFYJbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:29:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IOs08vRJYw1qJiIbOQmayB+PkMsOoQ5W5ST49dzietI=; b=1AIJJNhrxhQNgKmIE3GuEHKhE
-        D6DomYPYPrbk4HYTCd4AM/NN5Ttg+d5YcvPC6FqdT44nfSIllS1+cK4r9QbFT+Q1xkGhS+LaBbwje
-        1NPdhy4DQardJmPjA3mvz2rcqOaNxepTtTCC8mqXgaZEkeSM4PWwK2qjE4MZ2iB2RMiH2GUF7HT5h
-        LCTKGfrgY6w1ysjLjvUjDbLmgLnKPjcQ+ZLH1mjtPjUwl02Udp4FToA+c+bn4Id/xqDHik/UM/xKb
-        vHM7AEMRAWEtJ3+diRTU20ZmjRc48quvzYmBCjRdUD9KDgh1s3kK+yYtx0D58cHy5Ma6KTqkz8V3b
-        xghNvokuQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58976)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hfhlc-0005TP-Q2; Tue, 25 Jun 2019 10:29:32 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hfhla-00076N-Is; Tue, 25 Jun 2019 10:29:30 +0100
-Date:   Tue, 25 Jun 2019 10:29:30 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>
-Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH v5 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190625092930.ootk5nvbkqqvfbtd@shell.armlinux.org.uk>
-References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
- <1561378274-12357-1-git-send-email-pthombar@cadence.com>
- <20190624134233.suowuortj5dcbxdg@shell.armlinux.org.uk>
- <SN2PR07MB2480B53AFE512F46986A1CAFC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+        Tue, 25 Jun 2019 05:31:41 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so16994351wre.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 02:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Toj+LJIB4PKggH1iYkdWD6WYjNSZkZdJZmfKxIdgNOM=;
+        b=biXWqakyslc/OXZwQ+Upfk9PMvx5lMCOSMIB9fOiT62/BwStJIEMD8hhIZj64MC0iE
+         R+eAmt4ZBd4HuMpLGKvl8S1MyHBeUXhkemkQPn4vbEzZkbQg9NB89HDEsZfolFZoSwQM
+         kq7QCAlLW1Zsar5w4f6WMp6HbV2Lez1WCwh9/MdwukTSm4jTDcCJGDi0R3j0192Rrlu1
+         44Yqs6Prjl0MKH9QYjBdWb9s1g/bnJYImDb8HU8SqasCKChi/efEoWsGE/FLjEgGi3k2
+         WGBCIlsap9oBn2dTHFkdkLFb0ijKBsJHiyG3srWMby0xQf1hMq+CirMTZJhYCegyludE
+         NEFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Toj+LJIB4PKggH1iYkdWD6WYjNSZkZdJZmfKxIdgNOM=;
+        b=sBawxMEMK+9Jvah5y2EByT2dkMUtY+rLUeFvBL8YvlKMZJ5Cbdz7yGTXhWt5mW4fnw
+         Eg6DtZOA3z27QycgQErz8k1Ht/UzfY6TmNz35mSfrzbktL+YoDR23MwGbtQsnT5zN/N4
+         qOWMYXp47wliOyBo915HN2Cu9Zklt7AtGKIeiR7z5kl3Obw7m7L1yt6qjy0TnL5Z+5aS
+         RUZIHblj5Yp8g+Bj+3MstJ41w9e84AfF8ePNefR16yVE5WM/fb29vCVUqS6zbTGJ616u
+         c9qvdgjpMv+R8PpHKdsaiuxHh/xTxI0tGnCp2wdINYFxXx9ZJ8LkPG15TJ5uJqV3IU2r
+         yFJw==
+X-Gm-Message-State: APjAAAV/6xuAxUQskfJms7w8vam5fcUpBMi6l5sccaycSYAcsVsy5D/V
+        6AB4cC6tRj+AMqDZ5PyRwsNrTw==
+X-Google-Smtp-Source: APXvYqx3pLQItdPselIyeEnN0nT5U01EEfJwpGcin9np6Y2GdTYDM+GrxpQmsENZMBQMi4hmSOPOqw==
+X-Received: by 2002:a5d:4489:: with SMTP id j9mr70765943wrq.15.1561455098468;
+        Tue, 25 Jun 2019 02:31:38 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id f2sm19221175wrq.48.2019.06.25.02.31.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 02:31:37 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 11:31:37 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, raven@themaw.net, mszeredi@redhat.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/25] fsinfo: Add syscalls to other arches [ver #14]
+Message-ID: <20190625093136.rxljcdgruca37cuh@brauner.io>
+References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
+ <156138534520.25627.6299627770679918852.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SN2PR07MB2480B53AFE512F46986A1CAFC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <156138534520.25627.6299627770679918852.stgit@warthog.procyon.org.uk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 09:26:29AM +0000, Parshuram Raju Thombare wrote:
-> >In which case, gem_phylink_validate() must clear the support mask when
-> >SGMII mode is requested to indicate that the interface mode is not
-> >supported.
-> >The same goes for _all_ other PHY link modes that the hardware does not
-> >actually support, such as PHY_INTERFACE_MODE_10GKR...
-> If interface is not supported by hardware probe returns with error, so we don't 
-> net interface is not registered at all.
+On Mon, Jun 24, 2019 at 03:09:05PM +0100, David Howells wrote:
+> Add the fsinfo syscall to the other arches.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> 
+>  arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
+>  arch/arm/tools/syscall.tbl                  |    1 +
+>  arch/arm64/include/asm/unistd.h             |    2 +-
 
-That does not negate my comment above.
+I think you missed
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+arch/arm64/include/asm/unistd32.h
+
+?
+
+>  arch/ia64/kernel/syscalls/syscall.tbl       |    1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |    1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |    1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |    1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
+>  15 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+> index 9e7704e44f6d..624d01c3c8eb 100644
+> --- a/arch/alpha/kernel/syscalls/syscall.tbl
+> +++ b/arch/alpha/kernel/syscalls/syscall.tbl
+> @@ -473,3 +473,4 @@
+>  541	common	fsconfig			sys_fsconfig
+>  542	common	fsmount				sys_fsmount
+>  543	common	fspick				sys_fspick
+> +544	common	fsinfo				sys_fsinfo
+> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+> index aaf479a9e92d..ad608b49808c 100644
+> --- a/arch/arm/tools/syscall.tbl
+> +++ b/arch/arm/tools/syscall.tbl
+> @@ -447,3 +447,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+> index 70e6882853c0..e8f7d95a1481 100644
+> --- a/arch/arm64/include/asm/unistd.h
+> +++ b/arch/arm64/include/asm/unistd.h
+> @@ -44,7 +44,7 @@
+>  #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+>  #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+>  
+> -#define __NR_compat_syscalls		434
+> +#define __NR_compat_syscalls		435
+>  #endif
+>  
+>  #define __ARCH_WANT_SYS_CLONE
+> diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
+> index e01df3f2f80d..68314763ad16 100644
+> --- a/arch/ia64/kernel/syscalls/syscall.tbl
+> +++ b/arch/ia64/kernel/syscalls/syscall.tbl
+> @@ -354,3 +354,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+> index 7e3d0734b2f3..ee73a7534b1b 100644
+> --- a/arch/m68k/kernel/syscalls/syscall.tbl
+> +++ b/arch/m68k/kernel/syscalls/syscall.tbl
+> @@ -433,3 +433,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+> index 26339e417695..7bc067f4b713 100644
+> --- a/arch/microblaze/kernel/syscalls/syscall.tbl
+> +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+> @@ -439,3 +439,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> index 0e2dd68ade57..29b76bd67cc0 100644
+> --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> @@ -372,3 +372,4 @@
+>  431	n32	fsconfig			sys_fsconfig
+>  432	n32	fsmount				sys_fsmount
+>  433	n32	fspick				sys_fspick
+> +434	n32	fsinfo				sys_fsinfo
+> diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+> index 5eebfa0d155c..349fb30bb8b5 100644
+> --- a/arch/mips/kernel/syscalls/syscall_n64.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+> @@ -348,3 +348,4 @@
+>  431	n64	fsconfig			sys_fsconfig
+>  432	n64	fsmount				sys_fsmount
+>  433	n64	fspick				sys_fspick
+> +434	n64	fsinfo				sys_fsinfo
+> diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+> index 3cc1374e02d0..71057426b503 100644
+> --- a/arch/mips/kernel/syscalls/syscall_o32.tbl
+> +++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+> @@ -421,3 +421,4 @@
+>  431	o32	fsconfig			sys_fsconfig
+>  432	o32	fsmount				sys_fsmount
+>  433	o32	fspick				sys_fspick
+> +434	o32	fsinfo				sys_fsinfo
+> diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+> index c9e377d59232..32cff48a1ebd 100644
+> --- a/arch/parisc/kernel/syscalls/syscall.tbl
+> +++ b/arch/parisc/kernel/syscalls/syscall.tbl
+> @@ -430,3 +430,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+> index 103655d84b4b..e5755eb6fb84 100644
+> --- a/arch/powerpc/kernel/syscalls/syscall.tbl
+> +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+> @@ -515,3 +515,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+> index e822b2964a83..bcd54116e107 100644
+> --- a/arch/s390/kernel/syscalls/syscall.tbl
+> +++ b/arch/s390/kernel/syscalls/syscall.tbl
+> @@ -436,3 +436,4 @@
+>  431  common	fsconfig		sys_fsconfig			sys_fsconfig
+>  432  common	fsmount			sys_fsmount			sys_fsmount
+>  433  common	fspick			sys_fspick			sys_fspick
+> +434	common	fsinfo			sys_fsinfo			sys_fsinfo
+> diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+> index 016a727d4357..0320a5c63cbd 100644
+> --- a/arch/sh/kernel/syscalls/syscall.tbl
+> +++ b/arch/sh/kernel/syscalls/syscall.tbl
+> @@ -436,3 +436,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+> index e047480b1605..f81b1f9402bd 100644
+> --- a/arch/sparc/kernel/syscalls/syscall.tbl
+> +++ b/arch/sparc/kernel/syscalls/syscall.tbl
+> @@ -479,3 +479,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+> index 5fa0ee1c8e00..729795148850 100644
+> --- a/arch/xtensa/kernel/syscalls/syscall.tbl
+> +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+> @@ -404,3 +404,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +434	common	fsinfo				sys_fsinfo
+> 
