@@ -2,162 +2,161 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D40C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA782C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762C920883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90266214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:32:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lkRwaw1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbfFYJbu (ORCPT
+        id S1731582AbfFYJcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:31:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:36740 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbfFYJbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:31:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B040360;
-        Tue, 25 Jun 2019 02:31:49 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7C2C3F71E;
-        Tue, 25 Jun 2019 02:31:46 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 10:31:44 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Alessio Balsini <balsini@android.com>
-Subject: Re: [PATCH v10 12/16] sched/core: uclamp: Extend CPU's cgroup
- controller
-Message-ID: <20190625093144.g6forddrdql5lotv@e110439-lin>
-References: <20190621084217.8167-1-patrick.bellasi@arm.com>
- <20190621084217.8167-13-patrick.bellasi@arm.com>
- <20190622150332.GM657710@devbig004.ftw2.facebook.com>
- <20190624172906.3d3w6352ji4izjgo@e110439-lin>
- <20190624175215.GR657710@devbig004.ftw2.facebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624175215.GR657710@devbig004.ftw2.facebook.com>
-User-Agent: NeoMutt/20180716
+        Tue, 25 Jun 2019 05:32:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36259 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728509AbfFYJcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:32:06 -0400
+Received: by mail-pg1-f195.google.com with SMTP id f21so8682882pgi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 02:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=rpStZmf35igMxqzLeEFybCYnhueTgWtLq21mpmx87uQ=;
+        b=lkRwaw1IUMjbuUdyCAHnbKBURaBkrUi37P3tS5gdfFTLedE3E79iT3ke2SHKBg9PZm
+         uweWcx3f9W4ua0SkJy+FupZMmVyBSYFKPFi9TcCe0MkoPpHZbR5dmglZFXbAhYkSrmnb
+         BHcQbrIRPav9Z2p0iJVqRb4I77GZkvtwdUJa+IrkhY/+rI/YTiDQRIydfn+QT2sa4JZc
+         Dk9+PbIY9ZlIFXzHVy8A6FjkvRx+e3nPJdDfvuVSdtFy31mZ52P7vlfrcEy3LJP1+C/6
+         Qpmw3cWv3L4O+jzdx8M0fqy32+Glba3bvb7tPgX4rwZktSZTJVoY7oGY3jC81O9tQTJP
+         TJLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rpStZmf35igMxqzLeEFybCYnhueTgWtLq21mpmx87uQ=;
+        b=j+8PwCUr1XTCj7aulWjgKVWqLgd1jCqb7BcmwxiD2bvU3i1JzijmXPlqPqV4ynqvlR
+         oI9nldz7FD7T92TopVMRTNNkW56f/QCHXPiyGDgDNe/XY7UGjGt7SYUTCY9TbFO4JINW
+         cmsi9NQBqLed+89+/gBFwEZpboSJhmYV7P9qervzollUrGHsuTHra2394pAzjPv1K1Vo
+         ufCaX89WiG0Mnnz+Xxc7vgNZ4tOLXlv8teC8orKEoOvAbNrtjg9ncJwf8FcMj9urjHo8
+         /PLMAVYANdzS/vmgu9SaMR8reD/R025YOnvzAGQU3I3OnU9IdRYgRCrz32QzeD0UyNTK
+         oUFg==
+X-Gm-Message-State: APjAAAVD2MJd1NrA8ogLofsi17kccf1yP+TwMpxump8mZenhKC31qQJB
+        r2RsROCiaIQPTuoNl99UHkrQfg==
+X-Google-Smtp-Source: APXvYqzbAg5MBG2Xe6ojTiLwa+O3LoQWCgWKX7EW8u/iOuynr270+kNo1TQksKvvhwhqxIO76r/FpQ==
+X-Received: by 2002:a63:d218:: with SMTP id a24mr38650537pgg.419.1561455125207;
+        Tue, 25 Jun 2019 02:32:05 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id q19sm16634877pfc.62.2019.06.25.02.32.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 25 Jun 2019 02:32:04 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     robh+dt@kernel.org, paul.walmsley@sifive.com,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, palmer@sifive.com, aou@eecs.berkeley.edu,
+        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] riscv: dts: Re-organize the DT nodes
+Date:   Tue, 25 Jun 2019 15:01:31 +0530
+Message-Id: <1561455091-29488-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-Jun 10:52, Tejun Heo wrote:
+As per the convention for any SOC device with external connection,
+define only device DT node in SOC DTSi file with status = "disabled"
+and enable device in Board DTS file with status = "okay"
 
-> Hey, Patrick.
+Reported-by: Anup Patel <anup@brainfault.org>
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi          |  6 ++++++
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 13 +++++++++++++
+ 2 files changed, 19 insertions(+)
 
-Hi,
-
-> On Mon, Jun 24, 2019 at 06:29:06PM +0100, Patrick Bellasi wrote:
-> > > I kinda wonder whether the term bandwidth is a bit confusing because
-> > > it's also used for cpu.max/min.  Would just calling it frequency be
-> > > clearer?
-> > 
-> > Maybe I should find a better way to express the concept above.
-> > 
-> > I agree that bandwidth is already used by cpu.{max,min}, what I want
-> > to call out is that clamps allows to enrich that concept.
-> > 
-> > By hinting the scheduler on min/max required utilization we can better
-> > defined the amount of actual CPU cycles required/allowed.
-> > That's a bit more precise bandwidth control compared to just rely on
-> > temporal runnable/period limits.
-> 
-> I see.  I wonder whether it's overloading the same term too subtly
-> tho.  It's great to document how they interact but it *might* be
-> easier for readers if a different term is used even if the meaning is
-> essentially the same.  Anyways, it's a nitpick.  Please feel free to
-> ignore.
-
-Got it, will try come up with a better description in the v11 to avoid
-confusion and better explain the "improvements" without polluting too
-much the original concept.
-
-> > > > +	tg = css_tg(of_css(of));
-> > > > +	if (tg == &root_task_group) {
-> > > > +		ret = -EINVAL;
-> > > > +		goto out;
-> > > > +	}
-> > > 
-> > > I don't think you need the above check.
-> > 
-> > Don't we want to forbid attributes tuning from the root group?
-> 
-> Yeah, that's enforced by NOT_ON_ROOT flag, right?
-
-Oh right, since we don't show them we can't write them :)
-
-> > > So, uclamp.max limits the maximum freq% can get and uclamp.min limits
-> > > hte maximum freq% protection can get in the subtree.  Let's say
-> > > uclamp.max is 50% and uclamp.min is 100%.
-> > 
-> > That's not possible, in the current implementation we always enforce
-> > the limit (uclamp.max) to be _not smaller_ then the protection
-> > (uclamp.min).
-> > 
-> > Indeed, in principle, it does not make sense to ask for a minimum
-> > utilization (i.e. frequency boosting) which is higher then the
-> > maximum allowed utilization (i.e. frequency capping).
-> 
-> Yeah, I'm trying to explain actually it does.
-> 
-> > > It means that protection is not limited but the actual freq% is
-> > > limited upto 50%, which isn't necessarily invalid.
-> > > For a simple example, a user might be saying
-> > > that they want to get whatever protection they can get from its parent
-> > > but wanna limit eventual freq at 50% and it isn't too difficult to
-> > > imagine cases where the two knobs are configured separately especially
-> > > configuration is being managed hierarchically / automatically.
-> > 
-> > That's not my understanding, in v10 by default when we create a
-> > subgroup we assign it uclamp.min=0%, meaning that we don't boost
-> > frequencies.
-> > 
-> > It seems instead that you are asking to set uclamp.min=100% by
-> > default, so that the effective value will give us whatever the father
-> > allow. Is that correct?
-> 
-> No, the defaults are fine.  I'm trying to say that min/max
-> configurations don't need to be coupled like this and there are valid
-> use cases where the configured min is higher than max when
-> configurations are nested and managed automatically.
-> 
-> Limits always trump protection in effect of course but please don't
-> limit what can be configured.
-
-Got it, thanks!
-
-Will fix it in v11.
-
-> Thanks.
-> 
-> --
-> tejun
-
-Cheers,
-Patrick
-
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index 4e8fbde..cc73522 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -177,6 +177,7 @@
+ 			interrupt-parent = <&plic0>;
+ 			interrupts = <4>;
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
++			status = "disabled";
+ 		};
+ 		uart1: serial@10011000 {
+ 			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
+@@ -184,6 +185,7 @@
+ 			interrupt-parent = <&plic0>;
+ 			interrupts = <5>;
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
++			status = "disabled";
+ 		};
+ 		i2c0: i2c@10030000 {
+ 			compatible = "sifive,fu540-c000-i2c", "sifive,i2c0";
+@@ -195,6 +197,7 @@
+ 			reg-io-width = <1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			status = "disabled";
+ 		};
+ 		qspi0: spi@10040000 {
+ 			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
+@@ -205,6 +208,7 @@
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			status = "disabled";
+ 		};
+ 		qspi1: spi@10041000 {
+ 			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
+@@ -215,6 +219,7 @@
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			status = "disabled";
+ 		};
+ 		qspi2: spi@10050000 {
+ 			compatible = "sifive,fu540-c000-spi", "sifive,spi0";
+@@ -224,6 +229,7 @@
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			status = "disabled";
+ 		};
+ 	};
+ };
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 4da8870..0b55c53 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -42,7 +42,20 @@
+ 	};
+ };
+ 
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++};
++
+ &qspi0 {
++	status = "okay";
+ 	flash@0 {
+ 		compatible = "issi,is25wp256", "jedec,spi-nor";
+ 		reg = <0>;
 -- 
-#include <best/regards.h>
+1.9.1
 
-Patrick Bellasi
