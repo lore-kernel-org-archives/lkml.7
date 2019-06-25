@@ -2,107 +2,94 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D48C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00003C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1733C20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9F320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 04:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uId4Cc6J"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="jdc1fzKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfFYD7c (ORCPT
+        id S1727527AbfFYEDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 23:59:32 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44266 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfFYD7b (ORCPT
+        Tue, 25 Jun 2019 00:03:17 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36875 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfFYEDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 23:59:31 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r15so11525575lfm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 20:59:30 -0700 (PDT)
+        Tue, 25 Jun 2019 00:03:17 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d15so11509127qkl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:03:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ne8A2cDgNm1H+XBCR1KqEC3IC1t0ovKTdfCojlwi1ao=;
-        b=uId4Cc6JusYfOzWPJIQyRNt9AB/zfpsO9gUP1iUtpXZ89/cmzWc7lekj6i8nwz2M0A
-         bkV802nW55R0ILIr7vIXoFFlip7GHgYo6ZNlQjiViz5HWzJq4PxZog4vDFA1POQ0lj5U
-         rVtOEFngdrWHOcSm3y9vtMsnD9W9K8rDlzl/2uG40E8Jpm+vLiGMewqeLyEiqafgPcTg
-         PjrYoSZ2A1xFy78Ya5+GQqIX4OIY0CpYYasoE9JFGUFlP+chhHyNr3m3dX4/ZCtbhdMT
-         bgIGjDX56mZndI1QxLfoigpNapdl4i5vp8Mb4w0hyrViVcNIH+aUilzy1h7kXD8j10WC
-         xelg==
+        bh=FJ6vOhR8gsLZwxlKYHLPUZqtUgr4v4H6itA1sGGZ9Tk=;
+        b=jdc1fzKwSnLWCxjoK/F97iKoVCwjrKexFSC5W4HkRjgPKaJ9dZBAeQ3tmG+z5EKoDs
+         Yf7/WkSSy8D6GBT2FmwhplNm3hw3wyF8WXw04XghQDosOssxWf3eT5SnJlZZSUndDteR
+         KT32Ui2g3sSzbzw7/XjMv45VaJ4jCjG1vMdv4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ne8A2cDgNm1H+XBCR1KqEC3IC1t0ovKTdfCojlwi1ao=;
-        b=r1OAERXTGcsTQhFb1mKCrxBXZY3UzBNJ+bS41OQKUf9svh3O9JBvdDHFy04X+u3OR1
-         7cVW5QbxCOPid63keaegQGtsuKuAZPomiaFMH9IWebP1kVH4nj/8qenA4DJ6syPmiQ92
-         mgJskbudUjVKvRbzakHGbjj1pfibHW7e/yK5kHCuFWH9kMVSZ4GChJgqLLbhpvft7qh+
-         WbjPxlAxFbd+NizlZCSB/x1IZosLEuxffhNt+sXLyYsOUGyTct3M/M76bVwTPNaUQu6r
-         naBJ1eZC/P6ytWnTQEgQ0tUwoz47Peey08dcrQM3PX0ibjvRJwmFERxR2ZmV2BhsCj+y
-         4MiA==
-X-Gm-Message-State: APjAAAULLrw7JiCW1b0iO69PaUmI8dUeGsNBPu0BzJiyhzGlrP/Hp1+j
-        K+c1izRsN2jDd1XEPfhY972enj2doexDjxL2V94=
-X-Google-Smtp-Source: APXvYqz66C0jiYfrR4IdvROVdrfJ3yjlWkj559yXVop6JDKW+edQk+UMJIr3y6QOSGaTpOV6lwg0OsD6BCsKmnlg4AU=
-X-Received: by 2002:ac2:44c5:: with SMTP id d5mr28686575lfm.134.1561435169542;
- Mon, 24 Jun 2019 20:59:29 -0700 (PDT)
+        bh=FJ6vOhR8gsLZwxlKYHLPUZqtUgr4v4H6itA1sGGZ9Tk=;
+        b=bn/xwrf4IydIvOW9POWOddw1R2BjOCimZUzJvYEZvzmU4u+NwzCbRJ7wnYfK5+1UKO
+         nh9AANOTC2CO8OdxyrFww2A80ZPdGDFbCDPqDra0CNo9MYxWqGRnVL8h/HPGE4+EERFA
+         DIzTV2aRGhpHuI9ziGVNoqwWxloYH8FRHfqlbd+vKnznzkCs4pqd3+jPLuqugl5Q5sKI
+         T39DzH9/ecluSU1JWSgsgHoj87jXPAIjI/VIRikkpmyXnIjTMTF8RhWK7dipDHwjtNAp
+         X9r7fPp1hPW/PhOEsXYroCHDw5Wgt16bO/+l0lJyqJGbV2UY0pa7JkFR1rUbCVnMR8ER
+         Tj2w==
+X-Gm-Message-State: APjAAAUM9Zzq0IRzAjs/cP2kDFD8glvgE1L96uNIisj0y/lgwj7tkGY2
+        Co6G5Lq2N1KAIhO8miWz15BqHftbc6RTIhj3Kk4=
+X-Google-Smtp-Source: APXvYqxZ6TRjZOlnmmH4bytr5/Tsq+O8wjOxumYNuuPJB734x6CCDZZty41MDJXzu2ORfw+MdY3DpoywinR2CxHcGyg=
+X-Received: by 2002:a37:a1d6:: with SMTP id k205mr105761153qke.171.1561435395958;
+ Mon, 24 Jun 2019 21:03:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190618011124.GA67760@archlinux-epyc>
-In-Reply-To: <20190618011124.GA67760@archlinux-epyc>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 25 Jun 2019 13:59:17 +1000
-Message-ID: <CAPM=9txaQ43GwOzXSE3prTRLbMt+ip=s_ssmFzWsfsTYdLssaw@mail.gmail.com>
-Subject: Re: arm32 build failure after abe882a39a9c ("drm/amd/display: fix
- issue with eDP not detected on driver load")
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Anthony Koo <Anthony.Koo@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190621071342.17897-1-malat@debian.org> <20190621195555.20615-1-malat@debian.org>
+In-Reply-To: <20190621195555.20615-1-malat@debian.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 25 Jun 2019 04:03:04 +0000
+Message-ID: <CACPK8XdM7eub41ig2MBxX7BJpAsVbuL4HO9VM_5bR5BuXEX89A@mail.gmail.com>
+Subject: Re: [PATCH v2] lib/mpi: fix build with clang
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Fri, 21 Jun 2019 at 19:56, Mathieu Malaterre <malat@debian.org> wrote:
+>
+> Remove superfluous casts on output operands to avoid warnings on the
+> following macros:
+>
+> * add_ssaaaa(sh, sl, ah, al, bh, bl)
+> * sub_ddmmss(sh, sl, ah, al, bh, bl)
+> * umul_ppmm(ph, pl, m0, m1)
+>
+> Special care has been taken to keep the diff as minimal as possible from
+> the original header file `longlong.h` from gcc, only importing the
+> minimal change to make the compilation with clang pass.
 
-please resolve this ASAP, I cannot pull your tree without this fixed
-as it breaks my arm builds here.
 
-an 8 second delay there seems pointless and arbitary, an 8 sec delay
-there without a comment, seems like a lack of review.
+> Suggested-by: Joel Stanley <joel@jms.id.au>
+> Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+> v2: Instead of passing compat flag to clang to behave as gcc, remove the superfluous cast
 
-Dave.
+Thanks, I checked your patch against GCC's longlong.h and it looks good.
 
-On Tue, 18 Jun 2019 at 11:12, Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Hi all,
->
-> After commit abe882a39a9c ("drm/amd/display: fix issue with eDP not
-> detected on driver load") in -next, arm32 allyesconfig builds start
-> failing at link time:
->
-> arm-linux-gnueabi-ld: drivers/gpu/drm/amd/display/dc/core/dc_link.o: in
-> function `dc_link_detect':
-> dc_link.c:(.text+0x260c): undefined reference to `__bad_udelay'
->
-> arm32 only allows a udelay value of up to 2000, see
-> arch/arm/include/asm/delay.h for more info.
->
-> Please look into this when you have a chance!
-> Nathan
+Reviewed-by: Joel Stanley <joel@jms.id.au>
+
+Cheers,
+
+Joel
