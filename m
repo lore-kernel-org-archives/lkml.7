@@ -2,161 +2,102 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61E6C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF423C4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFDA620848
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7CDD205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PbgtNCDz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EssshDt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfFYANb (ORCPT
+        id S1729879AbfFYANh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:13:31 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:20606 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729589AbfFYANI (ORCPT
+        Mon, 24 Jun 2019 20:13:37 -0400
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:38247 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729753AbfFYANb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:13:08 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5P087Kh012880
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:13:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=Kr37aYRy2KacRNeWnEOl8WIgUYHSnWgZ3fV+borBCvY=;
- b=PbgtNCDzYwbcMDtTXSXCHRmWRfbMZn8ph3GVIZcgyrJ4iXSMnpMCUEuIprfzqQxTugLt
- CTJUOFz3gJfM5B+/JWlIoxw4Re2hAbQm75Gf3rhH0irVDpUbGb/Ka4rWYoQQ9EUtANFL
- +hnoUF91iNrCNMSBInBfRt1BvO0049fa7j0= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0001303.ppops.net with ESMTP id 2t9g0agkba-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:13:07 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Jun 2019 17:13:07 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id ED70962E093E; Mon, 24 Jun 2019 17:13:02 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
-        <akpm@linux-foundation.org>, <hdanton@sina.com>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v9 4/6] khugepaged: rename collapse_shmem() and khugepaged_scan_shmem()
-Date:   Mon, 24 Jun 2019 17:12:44 -0700
-Message-ID: <20190625001246.685563-5-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190625001246.685563-1-songliubraving@fb.com>
-References: <20190625001246.685563-1-songliubraving@fb.com>
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=630 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250000
-X-FB-Internal: deliver
+        Mon, 24 Jun 2019 20:13:31 -0400
+Received: by mail-ua1-f73.google.com with SMTP id j22so1361932uaq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:13:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Q0hyqVzuncQMFkIZhAOHJkIfbxm5sDRWMvyBXtcavoo=;
+        b=EssshDt/dlH+w3otVcXsWVrkwsJGAEYnRZomAA2SB8qG/Igf+gZ+Yj3LwaIyfQ+jTJ
+         yZyJOFE5cqme7ibfp2WTeYILLR/Eq3LafVKKg36FAfr0rZ0zjaRRfvHudE5wa7UimQYV
+         HkJr+bRcOM4asjgjGlsGVfVmMhz2WroL/8+MSe/pjIy+MSyRaLtdC1vLU7xt2FLgAbd8
+         f9oP8cnro7VlgAtgCGyFmly/+lk9rLMPYRrltq92XkAexvCpDl/XhrAku4YXDNJB9kcf
+         VyY2P6cHBv0xzRRb/oyueFu/ELftH6aNCIaibDzCjQkh/Fe1azRI7GgxFS6mU08mapE+
+         GHPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Q0hyqVzuncQMFkIZhAOHJkIfbxm5sDRWMvyBXtcavoo=;
+        b=RSTLYn1VBa5bBYIuRjAIm21h7dRk5BIV7Fs+fB4NU3FTbqX9ZrR8psVPxHw9Q5ES2k
+         2SwmFviFAMf3hCQi03rJrTbZrV0jFWkGXDV4TgMFAUqoDXdWlOuq6+PtRsIiSi2VuM3p
+         Ss1wbscq6bjDp/v5QZXtlpfwPF98Tx03zDf19DipZb6njTM4WnYpxa5C/st6a4Foubmi
+         rFWhhkqVN/ngtToU4XRURJdehMMvsC7bAKAIOZGdzjN5Orn4AKS0/Nk9oI5bs8UdFgDE
+         tggFdpFeeG3Eb2L4Hgl17lE/C/Qgalm971Genb94lxarUGX7J/V0NzeqBLpV/KiWMxVO
+         CW9Q==
+X-Gm-Message-State: APjAAAUxpWIYDU2+5ZIi/YVUnRLK/whXvxxW6sa7qXLQb+rf4HFMh4Eb
+        84QHee4vmyS3/Ip0sRep7Nj1npu2ff/sUya6
+X-Google-Smtp-Source: APXvYqymD+lJYYlyP2I7bp7SGi9HdcHDJCT5J5n7xkvzEZeLw9Txu07SMJTO5XtuZBxB44z+jN54bvP/ZD3J4c30
+X-Received: by 2002:a1f:ec85:: with SMTP id k127mr12749816vkh.92.1561421610156;
+ Mon, 24 Jun 2019 17:13:30 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 17:13:24 -0700
+Message-Id: <20190625001326.172280-1-allanzhang@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH] bpf: Allow bpf_skb_event_output for a few prog types
+From:   allanzhang <allanzhang@google.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     allanzhang <allanzhang@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Next patch will add khugepaged support of non-shmem files. This patch
-renames these two functions to reflect the new functionality:
+Software event output is only enabled by a few prog types right now (TC,
+LWT out, XDP, sockops). Many other skb based prog types need
+bpf_skb_event_output to produce software event.
 
-    collapse_shmem()        =>  collapse_file()
-    khugepaged_scan_shmem() =>  khugepaged_scan_file()
+Added socket_filter, cg_skb, sk_skb prog types to generate sw event.
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- mm/khugepaged.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+Test bpf code is generated from code snippet:
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 0f7419938008..158cad542627 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1287,7 +1287,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- }
- 
- /**
-- * collapse_shmem - collapse small tmpfs/shmem pages into huge one.
-+ * collapse_file - collapse small tmpfs/shmem pages into huge one.
-  *
-  * Basic scheme is simple, details are more complex:
-  *  - allocate and lock a new huge page;
-@@ -1304,10 +1304,11 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
-  *    + restore gaps in the page cache;
-  *    + unlock and free huge page;
-  */
--static void collapse_shmem(struct mm_struct *mm,
--		struct address_space *mapping, pgoff_t start,
-+static void collapse_file(struct mm_struct *mm,
-+		struct file *file, pgoff_t start,
- 		struct page **hpage, int node)
- {
-+	struct address_space *mapping = file->f_mapping;
- 	gfp_t gfp;
- 	struct page *new_page;
- 	struct mem_cgroup *memcg;
-@@ -1563,11 +1564,11 @@ static void collapse_shmem(struct mm_struct *mm,
- 	/* TODO: tracepoints */
- }
- 
--static void khugepaged_scan_shmem(struct mm_struct *mm,
--		struct address_space *mapping,
--		pgoff_t start, struct page **hpage)
-+static void khugepaged_scan_file(struct mm_struct *mm,
-+		struct file *file, pgoff_t start, struct page **hpage)
- {
- 	struct page *page = NULL;
-+	struct address_space *mapping = file->f_mapping;
- 	XA_STATE(xas, &mapping->i_pages, start);
- 	int present, swap;
- 	int node = NUMA_NO_NODE;
-@@ -1631,16 +1632,15 @@ static void khugepaged_scan_shmem(struct mm_struct *mm,
- 			result = SCAN_EXCEED_NONE_PTE;
- 		} else {
- 			node = khugepaged_find_target_node();
--			collapse_shmem(mm, mapping, start, hpage, node);
-+			collapse_file(mm, file, start, hpage, node);
- 		}
- 	}
- 
- 	/* TODO: tracepoints */
- }
- #else
--static void khugepaged_scan_shmem(struct mm_struct *mm,
--		struct address_space *mapping,
--		pgoff_t start, struct page **hpage)
-+static void khugepaged_scan_file(struct mm_struct *mm,
-+		struct file *file, pgoff_t start, struct page **hpage)
- {
- 	BUILD_BUG();
- }
-@@ -1722,8 +1722,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages,
- 				file = get_file(vma->vm_file);
- 				up_read(&mm->mmap_sem);
- 				ret = 1;
--				khugepaged_scan_shmem(mm, file->f_mapping,
--						pgoff, hpage);
-+				khugepaged_scan_file(mm, file, pgoff, hpage);
- 				fput(file);
- 			} else {
- 				ret = khugepaged_scan_pmd(mm, vma,
--- 
-2.17.1
+struct TMP {
+    uint64_t tmp;
+} tt;
+tt.tmp = 5;
+bpf_perf_event_output(skb, &connection_tracking_event_map, 0,
+                      &tt, sizeof(tt));
+return 1;
 
+the bpf assembly from llvm is:
+       0:       b7 02 00 00 05 00 00 00         r2 = 5
+       1:       7b 2a f8 ff 00 00 00 00         *(u64 *)(r10 - 8) = r2
+       2:       bf a4 00 00 00 00 00 00         r4 = r10
+       3:       07 04 00 00 f8 ff ff ff         r4 += -8
+       4:       18 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00    r2 = 0ll
+       6:       b7 03 00 00 00 00 00 00         r3 = 0
+       7:       b7 05 00 00 08 00 00 00         r5 = 8
+       8:       85 00 00 00 19 00 00 00         call 25
+       9:       b7 00 00 00 01 00 00 00         r0 = 1
+      10:       95 00 00 00 00 00 00 00         exit
+
+Patch 1 is enabling code.
+Patch 2 is fullly covered selftest code.
+
+Signed-off-by: allanzhang <allanzhang@google.com>
