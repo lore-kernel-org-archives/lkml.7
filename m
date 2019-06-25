@@ -2,152 +2,159 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD05C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3501C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90AF213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gmgD1+2a";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QTDbqujJ"
+	by mail.kernel.org (Postfix) with ESMTP id B4DED21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:15:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561472133;
+	bh=CSPPQvXxxLJHjaf7mkYaItL0XCi+kuQqJ8aFZvaSQm4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZVz81vFc3UHLzF7OdkNyyidkii9BTmv1xUkyEc5WEbv7cxzVxeGQoc7bI5wXSgRh5
+	 Y8/cFtt+VHvVQKphqf4pP2oe5GGrufQGFJ2yFw4fXNoz5XNBxcRV7LJFGyISHqZUBp
+	 tuq97CjYj56lbCcEtJgo5mYtqczY3Mupjtq94RbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbfFYOPC (ORCPT
+        id S1729959AbfFYOPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:15:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43524 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfFYOPB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:15:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id ACFFE60709; Tue, 25 Jun 2019 14:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561472100;
-        bh=l93+BVnlcMYbPv/B3MtkkvFbxlDUUawmAE3SnOFBacw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gmgD1+2aDCDUiWfEmSyUPM2v5JWRZ9MF0/0PVeT3NYZKrrJ0qir3b1NSo0RXU0djw
-         k1p5dJZ1m7xQOo7myXYz++CU9J7bIDxhQ+nw6eGgRdLqOTUQBquLAXzJuy8w3N0j5q
-         3/N3ij91Mao2vPjSzffkhpupgApoYKyV/nBMBjCE=
-Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 25 Jun 2019 10:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728252AbfFYOPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:15:32 -0400
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 002576028D;
-        Tue, 25 Jun 2019 14:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561472097;
-        bh=l93+BVnlcMYbPv/B3MtkkvFbxlDUUawmAE3SnOFBacw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QTDbqujJQ5m8SgLELvYglSZwnr1b8JeXi3vNE7DPxwuQG8B3RxVGjRpG5eRUDmY7c
-         rW8NZO8/cv9XYRHRYuk8ktmE/5dfZHXPt0vwV9uJDygk8f7X5n9LrUsYFv28zX4OFF
-         8Nxgx1gwa6ApF9TbAmFeDRrbtDPFxt30uILzgMAc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 002576028D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     linus.walleij@linaro.org, bjorn.andersson@linaro.org,
-        sboyd@kernel.org, timur@codeaurora.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH v3] pinctrl: qcom: Add irq_enable callback for msm gpio
-Date:   Tue, 25 Jun 2019 19:44:46 +0530
-Message-Id: <1561472086-23360-1-git-send-email-neeraju@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 971C021655;
+        Tue, 25 Jun 2019 14:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561472130;
+        bh=CSPPQvXxxLJHjaf7mkYaItL0XCi+kuQqJ8aFZvaSQm4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=V8WtBeSoOtEfNzciSHEA3eF3ej1jkECegr5DZ2OYjOzIPhWsp2Qh/VZPOSVHXnl1s
+         l4cBB1coaSY9tOZx5+pqs2pK4cFlxPurht3JDscmUVkCZchTb663MaJM8pc/6EROaj
+         vN1AoNoU+XADmmdcbUoLpBqIrw9UguN76bgTpxog=
+Received: by mail-qk1-f179.google.com with SMTP id l128so12698492qke.2;
+        Tue, 25 Jun 2019 07:15:30 -0700 (PDT)
+X-Gm-Message-State: APjAAAUoz84m8BghnQeugmYDYcfAq58XWwR2kwTQ+Ohc74JHOqsIPPtW
+        FRwyZMEwTNmX+nfMK5ynecfZYPIOfCiZM89OGA==
+X-Google-Smtp-Source: APXvYqxa6TVufszE/k5zs2VqtcN0LZDhjRXpJC1lxui07oIGK8cq4yrxwm2/cWvAG89bDUtj9YcBt3/wHOVAhSm8bTM=
+X-Received: by 2002:a37:a48e:: with SMTP id n136mr55002727qke.223.1561472129808;
+ Tue, 25 Jun 2019 07:15:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190624215649.8939-1-robh@kernel.org> <20190624215649.8939-7-robh@kernel.org>
+ <20190625075542.u5kzex4cbrcss5ga@flea>
+In-Reply-To: <20190625075542.u5kzex4cbrcss5ga@flea>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 25 Jun 2019 08:15:18 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+OgNgS7yVgZaVLEo6=OeS9R9ebgBpUbPxz609C7G9oOw@mail.gmail.com>
+Message-ID: <CAL_Jsq+OgNgS7yVgZaVLEo6=OeS9R9ebgBpUbPxz609C7G9oOw@mail.gmail.com>
+Subject: Re: [PATCH v2 06/15] dt-bindings: display: Convert dlc,dlc0700yzg-1
+ panel to DT schema
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Ramana <sramana@codeaurora.org>
+On Tue, Jun 25, 2019 at 1:55 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> Hi,
+>
+> On Mon, Jun 24, 2019 at 03:56:40PM -0600, Rob Herring wrote:
+> > Convert the dlc,dlc0700yzg-1 panel binding to DT schema.
+> >
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../display/panel/dlc,dlc0700yzg-1.txt        | 13 ---------
+> >  .../display/panel/dlc,dlc0700yzg-1.yaml       | 28 +++++++++++++++++++
+> >  2 files changed, 28 insertions(+), 13 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.txt b/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.txt
+> > deleted file mode 100644
+> > index bf06bb025b08..000000000000
+> > --- a/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.txt
+> > +++ /dev/null
+> > @@ -1,13 +0,0 @@
+> > -DLC Display Co. DLC0700YZG-1 7.0" WSVGA TFT LCD panel
+> > -
+> > -Required properties:
+> > -- compatible: should be "dlc,dlc0700yzg-1"
+> > -- power-supply: See simple-panel.txt
+> > -
+> > -Optional properties:
+> > -- reset-gpios: See panel-common.txt
+> > -- enable-gpios: See simple-panel.txt
+> > -- backlight: See simple-panel.txt
+> > -
+> > -This binding is compatible with the simple-panel binding, which is specified
+> > -in simple-panel.txt in this directory.
+> > diff --git a/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml b/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml
+> > new file mode 100644
+> > index 000000000000..1b0b63d46f3e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.yaml
+> > @@ -0,0 +1,28 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/dlc,dlc0700yzg-1.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: DLC Display Co. DLC0700YZG-1 7.0" WSVGA TFT LCD panel
+> > +
+> > +maintainers:
+> > +  - Philipp Zabel <p.zabel@pengutronix.de>
+> > +  - Thierry Reding <thierry.reding@gmail.com>
+> > +
+> > +allOf:
+> > +  - $ref: panel-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: dlc,dlc0700yzg-1
+> > +
+> > +  reset-gpios: true
+> > +  enable-gpios: true
+> > +  backlight: true
+>
+> Do we need to list them?
+>
+> Since we don't have additionalItems, it doesn't really change anything
+> since it will be validated by panel-common.
 
-Introduce the irq_enable callback which will be same as irq_unmask
-except that it will also clear the status bit before unmask.
+I've gone back and forth on it. I think we need to express what
+properties from the common properties apply for a particular panel.
+I've been requiring panel bindings to be explicit here rather than
+just say "uses the simple-panel binding." For example, if
+'power-supply' is not listed, does the panel have a single supply or
+multiple supplies that haven't haven't been considered?
 
-This will help in clearing any erroneous interrupts that would
-have got latched when the interrupt is not in use.
+> Either way, it should be consistent between your patches, and the
+> previous patches in this series didn't list all the properties in the
+> binding.
 
-There may be devices like UART which can use the same gpio line
-for data rx as well as a wakeup gpio when in suspend. The data that
-was flowing on the line may latch the interrupt and when we enable
-the interrupt before going to suspend, this would trigger the
-unexpected interrupt. This change helps clearing the interrupt
-so that these unexpected interrupts gets cleared.
+Indeed.
 
-Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
----
-
-Changes since v2:
-- Renamed function to msm_gpio_irq_clear_unmask()
-
- drivers/pinctrl/qcom/pinctrl-msm.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 6e319bc..0223755 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -729,7 +729,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- }
- 
--static void msm_gpio_irq_unmask(struct irq_data *d)
-+static void msm_gpio_irq_clear_unmask(struct irq_data *d, bool status_clear)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-@@ -741,6 +741,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
-+	if (status_clear) {
-+		/*
-+		 * clear the interrupt status bit before unmask to avoid
-+		 * any erroneous interrupts that would have got latched
-+		 * when the interrupt is not in use.
-+		 */
-+		val = msm_readl_intr_status(pctrl, g);
-+		val &= ~BIT(g->intr_status_bit);
-+		msm_writel_intr_status(val, pctrl, g);
-+	}
-+
- 	val = msm_readl_intr_cfg(pctrl, g);
- 	val |= BIT(g->intr_raw_status_bit);
- 	val |= BIT(g->intr_enable_bit);
-@@ -751,6 +762,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- }
- 
-+static void msm_gpio_irq_enable(struct irq_data *d)
-+{
-+
-+	msm_gpio_irq_clear_unmask(d, true);
-+}
-+
-+static void msm_gpio_irq_unmask(struct irq_data *d)
-+{
-+	msm_gpio_irq_clear_unmask(d, false);
-+}
-+
- static void msm_gpio_irq_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-@@ -978,6 +1000,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	chip->need_valid_mask = msm_gpio_needs_valid_mask(pctrl);
- 
- 	pctrl->irq_chip.name = "msmgpio";
-+	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
- 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
- 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
- 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
+Rob
