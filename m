@@ -2,179 +2,120 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C2C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFC9C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7EE2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A113120652
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ig1a/J/k"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="OpXv/aLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbfFYHbx (ORCPT
+        id S1728544AbfFYHcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:31:53 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:35562 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728342AbfFYHbw (ORCPT
+        Tue, 25 Jun 2019 03:32:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42913 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727853AbfFYHcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:31:52 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190625073151euoutp01cc46bd4b181672c252c860a25a155cd6~rYJo7KdNF0433004330euoutp01e
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:31:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190625073151euoutp01cc46bd4b181672c252c860a25a155cd6~rYJo7KdNF0433004330euoutp01e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561447911;
-        bh=5sQ/QgoEhcfzsA95yFN4M7LlrW1v1YWERTGiizKMusA=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ig1a/J/kiQ+Cl+AZzq0jsAtt9rOZ7Tp+0ehwE/Axpi9XwW99aFEjjBLTJ2/kFQKHY
-         DLv4Ft/8ZuY9zSCV18Slx6vFl7Y3eIq6UK9/oaMnXeE+AeZbNWkseudyQlB/AfZa/N
-         +Ehu5DLeCLy6IfNjIUxWMzNhrjyT8mj8SosOzU/g=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190625073150eucas1p1804a7b12c5740935757ccbaa71dee43e~rYJn4KCUr1172011720eucas1p1F;
-        Tue, 25 Jun 2019 07:31:50 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1A.FB.04325.5EDC11D5; Tue, 25
-        Jun 2019 08:31:49 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190625073149eucas1p102dafce3c10e357cba18b64de8058ef9~rYJnDIWly0556905569eucas1p12;
-        Tue, 25 Jun 2019 07:31:49 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190625073149eusmtrp1c21b2f6b29117d29964abef090d964a7~rYJm0oKWL0495604956eusmtrp1M;
-        Tue, 25 Jun 2019 07:31:49 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-15-5d11cde5c6c0
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 98.B4.04146.4EDC11D5; Tue, 25
-        Jun 2019 08:31:48 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190625073148eusmtip2a4fa4a3d5df3009c558e893be5645d45~rYJl48Fxw0621806218eusmtip2O;
-        Tue, 25 Jun 2019 07:31:48 +0000 (GMT)
-Subject: Re: [PATCH v10 09/13] drivers: devfreq: events: add Exynos PPMU new
- events
-To:     cwchoi00@gmail.com
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, keescook@chromium.org,
-        Tony Lindgren <tony@atomide.com>, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <2e1be1d3-b6ae-e40d-48cd-6b6adb26860d@partner.samsung.com>
-Date:   Tue, 25 Jun 2019 09:31:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Tue, 25 Jun 2019 03:32:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id u19so942676ior.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 00:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=itsUv/R5Z0LiFi8Ms96Myz65aYPzk0O9BRDX68lJ/Ic=;
+        b=OpXv/aLA5bTcHGv1g4Y9H7GVufdq5venFQIX302ZPIzC8Bd2kRTQCz5Fzpup0FWNa9
+         vPp24m4yGolOOfhuTnHxxKVwpY5DUSbq0dUpj1nFZ8GyFih2D3x7UjkcxFVnOgN8ajqO
+         KSYnKEIvp0RpNryHcejYITXZgV+Kfh+ZOVkgvyqeSB9kAmRnJoOG/6HX9tlaa9xDgThM
+         p3zvbr6nV4gYJh4215ls3Xxpd49pnoLKMs7R5PYhbpPvX/+t1VxiAPxJFXN1Yvp6t96x
+         yibuzpCL1jEbvyJQ4RIjsmGpDQEU3Q8ypajVY0IJVt000ae5l4bP6ydCqyNdE+CXxghH
+         EScQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=itsUv/R5Z0LiFi8Ms96Myz65aYPzk0O9BRDX68lJ/Ic=;
+        b=FzEtRhjy/4fzz2sMXEsWUC3ezUzkvnqBlSQUBeI/Lrw0LASsXtsJkYexKqeDteqV9v
+         KxPOqY2TX0uzyFUJ5CErey/HuaJ+fhW1h74pYPUYfvo5Zeg9o5jn10pueG2JZUdEuXTL
+         Gu6qyVZ4IoxFy4JO8Rt7CAmU3VXtqz8I539qPHPuNNVtbqi7NrokfE81u7EYwDEbaGqq
+         2L3SyIHdOKjj0tWHxl+q+cOrB9dXQEkGcGnRYwY55QaDosOKCtlshrhRLNDndKyMcLyt
+         O3Npzu90xutCIigWh0cU9YGc8hzS8Ki9/k4FeeGaeTn3R0cHOdji+M/PNxTvzZmj7GPm
+         yHCA==
+X-Gm-Message-State: APjAAAXm7aforc9xkMYijGir72kx3Ko9QeGzVKnqn5SnodwzARe9JaAS
+        lgecaINBR8kqwv0qoue/DEcFQYQtTka1GL/BC/gMRA==
+X-Google-Smtp-Source: APXvYqw8JyLTQ0KTYV1boVSPAqZGTbHNJM3dDQ3L1045VnDaOLHeGbUnD4HBz+4tfaEqfikX3yTLopsf/476n+8H9cU=
+X-Received: by 2002:a02:7715:: with SMTP id g21mr47384257jac.24.1561447958085;
+ Tue, 25 Jun 2019 00:32:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGTfZH35X0zE2LhGWJJp2xZNNk1ew7zNMoMqL+eZ5rcBFcPvew@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se1BMYRjGfXuuu2xOi/YdDDOLGZdRGQ3fDGOYCWcYl5oxYxCOnCm0K3sq
-        l/yxRJEtJre1STW5zbosaUOZsC2ldHNt0tLYdatIU5hcwnbW6L/f+7zP973v883HEhozPZzd
-        YEgQjQYhTkeryOL7PbWT39QERoU6vGH4qsVO4efd7yj89t4knOuqpfCFTg/CKQV2Gh+uylHg
-        hwf0+KCnjcB1dVcYXLO7ncGd5pcUflxyksZdGS6ELXVlCnzJ5WZwQ9Vc/GLXeRqXt6dRuPfZ
-        VRLffrIAv/gRgL9WvkaztfzXL1kk39G4l+GzTQ0kf9PqZvhC236av51zkeEzUj7RfGaRDfHX
-        qpP5rsJRS1UrVDPXi3EbkkRjyKy1qlh3ayaK/6HcVvDoO2lCP5l0pGSBC4N8z10qHalYDXce
-        gTunk5GLbgRnP5ciuehCUF92AP078r7F4XedQ3DS2kzKxUcEvU437XMN4ZZBk6Ogj4dyQXD9
-        mLfvKoIrpWF3x2kiHbEszQXDDdsWn0fNzYPO2qa+CSQ3DlpMTYSPh3HLoftmIZI9gfDghJf0
-        sZKLgAv5HsrHBKeFJm+uQubRkOLIJuRNXSy8fErLHA6ZHos/wRBorSjyP8BIqD5sJmWWwJSR
-        7/fsBM/BHL9nBpRXNFC+lQluAthLQmR5Dpy6803hk4ELgMaPgfIGAZBVfJyQZTXsS9XI7vFQ
-        ZK5XyBwE5y4eYw4hnbVfLmu/LNZ+Waz/5+Yh0oa0YqKkjxGlqQZxa7Ak6KVEQ0xw9GZ9Ifr7
-        R6t7K77cQGU/1zkRxyLdIHWei4vSUEKStF3vRMASuqHqM8JfSb1e2L5DNG5eY0yMEyUnGsGS
-        Oq06eUDLSg0XIySIm0QxXjT+6ypY5XATWnw86W34He0S5cbysOXFySVp0WXueYN7zHuDw5cI
-        zwfOjnO3La6Gcc6ey4siRrR5Ndq7C8eEP4gOaTUYR+alpmZ/ykr4EDtr66tBGysDY22WeLK0
-        +deeW2Pnd1fpGh2EZfqZ0G/tJV2RV/bYpl2rP2KO+m2MvBymsR8dsyo+crWYZteRUqwwZSJh
-        lIQ/mlQ/0p8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3cuO4qLs6n54ocuAz90Wx2v78xEPxQn6YoU4YVceryQc7oz
-        RYtgJalpahfpMjMNkWKrvGV5SSWdmne0MNlSTEeGWmFqVJq0uQK//Xie/w+eB/4UJnlIuFMJ
-        SRpOnaRIlJKOeO9q1/huS784cm9T8z5UfbeSQO8Xpwn0qWMnKjUOEMgwPwVQZnkliW71lAhQ
-        X54SFU7NYmhwsEqI+i/PCdH8tXECvW28T6KFfCNAdwdbBOipcUyIhnoOIPOlxyRqn8sm0OpI
-        NY5a34Ug8/JG9OPNJAhyY38s3cTZb6NXhGyxdghnG3RjQrZGf5VkW0ueCNn8zK8kW/BcD9ja
-        3gvsQs3m445hsgC1KlXDbY1X8Zr90nAGecoYOZJ5estljJdfpL+nj3RPYEAMl5iQxqn3BEbJ
-        4sdmCkDyskN6+fBvXAtWhLnAgYK0N/w8UWdlR0pCVwBo/jBD2Beb4M2Wl/9CznBlJJe0h2YB
-        vD06QtoWzvRJaKorX2MXq/DytgXYQhjdTkLdsyKB3bghgK8+rWK5gKJIWgbr9Sk2QUQfhPMD
-        JmBjnPaAE1oTZmNX+jQsbtTi9owYdt+zrLEDfQIaHk6tXYfRvvBB7UfMzm7QZCkV2HkLzKwr
-        xq4DiW6drlun6NYpunVKGcD1wIVL5ZVxSp6R8Qoln5oUJ4tWKWuAtR4vOn/V1oPh6tA2QFNA
-        6iQqM9KREkKRxmco2wCkMKmLqEJhHYliFBnnObXqjDo1kePbgI/1uRuYu2u0ylq2JM0Zxofx
-        Q3LGz8vPyxdJ3UQ59OsICR2n0HDnOC6ZU//3BJSDuxYE1q82RFQsjWcevdgsNxzuiqKrzdPs
-        qGXkjhP+KzHWBFLkfzo624zb3ILCartemMOg06OfppzkKnFlXn2+KGI2xOOYMPfIk130zuCr
-        viC9x3/R8UC2wb37VJbH2YamyaLvG3zv6UPrRIV92tBwZpzYHjyd98WY1X+oPFYc7GmQ4ny8
-        gtmBqXnFX1VUj/40AwAA
-X-CMS-MailID: 20190625073149eucas1p102dafce3c10e357cba18b64de8058ef9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190614095328eucas1p24009b3a07322fd12e49eabb7a08baf50
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190614095328eucas1p24009b3a07322fd12e49eabb7a08baf50
-References: <CGME20190614095328eucas1p24009b3a07322fd12e49eabb7a08baf50@eucas1p2.samsung.com>
-        <20190614095309.24100-1-l.luba@partner.samsung.com>
-        <20190614095309.24100-10-l.luba@partner.samsung.com>
-        <CAGTfZH35X0zE2LhGWJJp2xZNNk1ew7zNMoMqL+eZ5rcBFcPvew@mail.gmail.com>
+References: <20190221162627.3476-1-brgl@bgdev.pl> <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
+ <CAMpxmJX-wXQ-ff1RWkPmJBWSsP_v2MjZrA3fhj3HQX0_zM0eZA@mail.gmail.com>
+ <39ae399a-c606-c6de-f84d-35e39d0410c0@metux.net> <CAMRc=McepqowJNi6ay6x9KKoHOC8aCxP_ob12SgbsnJU_sKQng@mail.gmail.com>
+ <1dd52704-0e41-db31-33f4-c9f446a47344@metux.net> <CAMRc=Mfp85diy849r_8UHKS9eao26djrsMF0_iwE--d62mQ5jg@mail.gmail.com>
+ <20190625073016.GA18381@kroah.com>
+In-Reply-To: <20190625073016.GA18381@kroah.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 25 Jun 2019 09:32:27 +0200
+Message-ID: <CAMRc=McPjPtDFL2m=n5fWm-fHvVbDzMopb9r=RkzS+TshMJBAQ@mail.gmail.com>
+Subject: Re: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before devm_platform_ioremap_resource()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+wt., 25 cze 2019 o 09:30 Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> napisa=C5=82(a):
+>
+> On Tue, Jun 25, 2019 at 09:10:25AM +0200, Bartosz Golaszewski wrote:
+> > pon., 24 cze 2019 o 20:22 Enrico Weigelt, metux IT consult
+> > <lkml@metux.net> napisa=C5=82(a):
+> > >
+> > > On 24.06.19 12:46, Bartosz Golaszewski wrote:
+> > >
+> > > >> The patch seems pretty trivial and doesn't change any actual code,=
+ so
+> > > >> I don't see hard resons for rejecting it.
+> > > >>
+> > > >
+> > > > In its current form it makes the code even less readable. The #ifde=
+f
+> > > > should actually be one line lower and touch the comment instead of =
+the
+> > > > EXPORT_SYMBOL() related to a different function.
+> > >
+> > > Okay, that missing newline should be fixed (as well as the extra one
+> > > after the #ifdef). Besides that, I don't see any further problems.
+> > >
+> >
+> > Are we sure this even changes something? Does kernel documentation get
+> > generated according to current config options? I really think this
+> > patch just pollutes the history for now apparent reason.
+> >
+> > Greg, could you give your opinion on this?
+>
+> Why are you all arguing with a all-but-instinguishable-from-a-bot
+> persona about a patch that I will never apply?
+>
+> greg k-h
 
+Oh so it's another troll then? Good to know, ignoring from now on.
 
-On 6/22/19 3:10 PM, Chanwoo Choi wrote:
-> Hi,
-> 
-> 2019년 6월 14일 (금) 오후 6:54, Lukasz Luba <l.luba@partner.samsung.com>님이 작성:
->>
->> Define new performance events supported by Exynos5422 SoC counters.
->> The counters are built-in in Dynamic Memory Controller and provide
->> information regarding memory utilization.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   drivers/devfreq/event/exynos-ppmu.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/devfreq/event/exynos-ppmu.c b/drivers/devfreq/event/exynos-ppmu.c
->> index c2ea94957501..ce658c262c27 100644
->> --- a/drivers/devfreq/event/exynos-ppmu.c
->> +++ b/drivers/devfreq/event/exynos-ppmu.c
->> @@ -89,6 +89,12 @@ static struct __exynos_ppmu_events {
->>          PPMU_EVENT(d1-cpu),
->>          PPMU_EVENT(d1-general),
->>          PPMU_EVENT(d1-rt),
->> +
->> +       /* For Exynos5422 SoC */
->> +       PPMU_EVENT(dmc0_0),
->> +       PPMU_EVENT(dmc0_1),
->> +       PPMU_EVENT(dmc1_0),
->> +       PPMU_EVENT(dmc1_1),
->>   };
->>
->>   static int exynos_ppmu_find_ppmu_id(struct devfreq_event_dev *edev)
->> --
->> 2.17.1
->>
-> 
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> 
-Thank you Chanwoo.
-
-Regards,
-Lukasz
+Thanks,
+Bart
