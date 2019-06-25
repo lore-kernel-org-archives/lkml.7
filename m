@@ -2,123 +2,87 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D592DC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB7C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B943320883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F2520883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:29:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1AIJJNhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731535AbfFYJ33 (ORCPT
+        id S1731567AbfFYJ3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:29:29 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:37927 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfFYJ33 (ORCPT
+        Tue, 25 Jun 2019 05:29:41 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49280 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfFYJ3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:29:29 -0400
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9B34A240003;
-        Tue, 25 Jun 2019 09:29:26 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 11:29:26 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, userm57@yahoo.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-Message-ID: <20190625092926.GE5690@piout.net>
-References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
- <20190624195705.GD5690@piout.net>
- <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
+        Tue, 25 Jun 2019 05:29:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IOs08vRJYw1qJiIbOQmayB+PkMsOoQ5W5ST49dzietI=; b=1AIJJNhrxhQNgKmIE3GuEHKhE
+        D6DomYPYPrbk4HYTCd4AM/NN5Ttg+d5YcvPC6FqdT44nfSIllS1+cK4r9QbFT+Q1xkGhS+LaBbwje
+        1NPdhy4DQardJmPjA3mvz2rcqOaNxepTtTCC8mqXgaZEkeSM4PWwK2qjE4MZ2iB2RMiH2GUF7HT5h
+        LCTKGfrgY6w1ysjLjvUjDbLmgLnKPjcQ+ZLH1mjtPjUwl02Udp4FToA+c+bn4Id/xqDHik/UM/xKb
+        vHM7AEMRAWEtJ3+diRTU20ZmjRc48quvzYmBCjRdUD9KDgh1s3kK+yYtx0D58cHy5Ma6KTqkz8V3b
+        xghNvokuQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58976)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1hfhlc-0005TP-Q2; Tue, 25 Jun 2019 10:29:32 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1hfhla-00076N-Is; Tue, 25 Jun 2019 10:29:30 +0100
+Date:   Tue, 25 Jun 2019 10:29:30 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [PATCH v5 2/5] net: macb: add support for sgmii MAC-PHY interface
+Message-ID: <20190625092930.ootk5nvbkqqvfbtd@shell.armlinux.org.uk>
+References: <1561378210-11033-1-git-send-email-pthombar@cadence.com>
+ <1561378274-12357-1-git-send-email-pthombar@cadence.com>
+ <20190624134233.suowuortj5dcbxdg@shell.armlinux.org.uk>
+ <SN2PR07MB2480B53AFE512F46986A1CAFC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <SN2PR07MB2480B53AFE512F46986A1CAFC1E30@SN2PR07MB2480.namprd07.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2019 11:53:49+1000, Finn Thain wrote:
-> On Mon, 24 Jun 2019, Alexandre Belloni wrote:
-> 
-> > On 21/06/2019 11:51:26+1000, Finn Thain wrote:
-> > > Some machines store local time in the Real Time Clock. The hard-coded 
-> > > "UTC" string is wrong on those machines so just omit that string. 
-> > > Update the log parser so it doesn't require the string "UTC".
-> > > 
-> > 
-> > I don't agree, hctossys will always think the RTC is in UTC.
-> 
-> Well, I wasn't speculating about a theoretical problem. This is a bug that 
-> was reported to me by a user of Debian/powerpc system.
-> 
-> I was able to confirm that the bug also affects dual-boot Windows/Linux on 
-> x86 with CONFIG_RTC_HCTOSYS=y.
-> 
-> > If you store local time in the RTC, then you are probably not using 
-> > hctosys because it definitively doesn't know about the timezone and will 
-> > incorrectly set the system time. That information is usually kept in 
-> > /etc/adjtime.
-> > 
-> 
-> In the Debian/powerpc bug report, the timezone is obtained from the NVRAM:
-> 
-> [    0.000000] PowerMac motherboard: PowerBook Wallstreet
-> ...
-> [    0.000000] GMT Delta read from XPRAM: -360 minutes, DST: on
-> ...
-> [   37.605859] rtc-generic rtc-generic: rtc core: registered rtc-generic as rtc0
-> ...
-> [   40.346255] rtc-generic rtc-generic: setting system clock to 2019-06-19 15:17:35 UTC (1560957455)
-> ...
-> 
-> Though I don't know whether the sys_tz value is relevant here.
-> 
-> Anyway, here's the bug reproduced on x86 --
-> 
-> # dmesg | grep rtc_cmos
-> [    0.543878] rtc_cmos 00:02: RTC can wake from S4
-> [    0.544090] rtc_cmos 00:02: rtc core: registered rtc_cmos as rtc0
-> [    0.544090] rtc_cmos 00:02: alarms up to one month, y3k, 114 bytes nvram, hpet irqs
-> [    0.545807] rtc_cmos 00:02: setting system clock to 2019-06-25 11:24:14 UTC (1561461854)
-> # grep . /etc/adjtime /etc/timezone
-> /etc/adjtime:0.000120 1550184138 0.000000
-> /etc/adjtime:1550184138
-> /etc/adjtime:LOCAL
-> /etc/timezone:Australia/Melbourne
-> # hwclock --show
-> 2019-06-25 11:47:49.702660+10:00
-> # date --iso-8601=s
-> 2019-06-25T11:48:01+10:00
-> # 
-> 
-> Looks wrong to me. What am I missing?
-> 
+On Tue, Jun 25, 2019 at 09:26:29AM +0000, Parshuram Raju Thombare wrote:
+> >In which case, gem_phylink_validate() must clear the support mask when
+> >SGMII mode is requested to indicate that the interface mode is not
+> >supported.
+> >The same goes for _all_ other PHY link modes that the hardware does not
+> >actually support, such as PHY_INTERFACE_MODE_10GKR...
+> If interface is not supported by hardware probe returns with error, so we don't 
+> net interface is not registered at all.
 
-Userspace is certainly adjusting the timezone after the kernel did. Can
-you run the same commands without running your init? 
-
-On stable, you have /etc/init.d/hwclock.sh that still runs and does the
-correct thing. My understanding is that systemd also handles the TZ
-properly after hctosys (see clock_is_localtime()).
-
-Seriously, hctosys does a really bad job at setting the system time, it
-is guaranteed to be always wrong on most platforms. My plan is still to
-try to get distros to stop enabling it and do that properly in
-userspace. This is already ok when using sysV but systemd would need a
-few changes to stop relying on it when then is no hwclock initscript.
-Unfortunately, I didn't have time to work on that yet.
-
-
+That does not negate my comment above.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
