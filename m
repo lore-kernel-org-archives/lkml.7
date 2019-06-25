@@ -2,92 +2,127 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E19C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9B4C48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CCC213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D575213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 11:44:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dRpoMSro"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="P5BHz3Rm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfFYLm4 (ORCPT
+        id S1731285AbfFYLoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 07:42:56 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46837 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729164AbfFYLmx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 07:42:53 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z15so12347203lfh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 04:42:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KC6UqMNqqkqf945o5TbzjnUd7iFuYFfkkwWAw6cVa+A=;
-        b=dRpoMSrornZ5+U7nptq/uktaa04UFIo/QAPLaDjRnueu6KFQvvbSC6ea/xIkrZ1H+I
-         Je7LPWkHilJBcantQI2hVUlxVqRs1rx96wT1pMz6dMOJHhnnGQlCkxVOepvxEeCOShTL
-         Yk4beULHTY/vTur12Zdo9Cktt4Ag8Xlo1DSjye7uzhgOi6xbe0mMRHDoIUsYjhCT9JDP
-         B6XZNeVqaYT95yRVDq8vrsv4Oi62dfsZacGbbZRDRztCjG8Ep7/SB33ub9e+WQ0Ep7vt
-         6UyJgyu/fZjIQRTiLMN6bJdHGOJtcz9XOJutcYpEA+DsJl38eDuJcLtKImIBfeVyUsIX
-         89pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KC6UqMNqqkqf945o5TbzjnUd7iFuYFfkkwWAw6cVa+A=;
-        b=nAJACM43E+P2NSv4Nu3qMeEMIuxDofXF+b4BTHYn8GJTyYUJUCfBECGjqcks1Gutki
-         H6O8pHbghsU+iiM2+rfay3GNzM/pfNwcpAkzosFvY/jzC2t0hP5YKAPOnaqG5JVV/WrF
-         48uwOscbP2f3Mcy1fS3qdCMglP3ctOJheSDj7D7PtBFsz3n3q9g6RcMI7JzaJIwIcYs8
-         YbWkePthA7bhUuyIf3TWBTn6nHusvIHZO+dIMYV1Fy2W4p846g4ivKO+TC8AAEhJr+kR
-         xQlF+nkY3T3r1or7Ee/FMXaMnfDMdQhAHPKXlFH+Cw4MhA0r0sQ1otBKuXv3VWlTZm2F
-         tXHA==
-X-Gm-Message-State: APjAAAWNG7mirFkxNrx1Yu3T5+kKMTHN361205JRTcPD2rDurgH9pf0h
-        Qemyb8POPOKKO032PKDqCLFyNxWEwCA=
-X-Google-Smtp-Source: APXvYqxt2HqTpJfaSIXqLD+CeTVC95mRSNEVCNRSHi4rSCLqw8RN7sSne6onoOM39tgDEByte/9mFg==
-X-Received: by 2002:a19:3804:: with SMTP id f4mr6841525lfa.69.1561462970776;
-        Tue, 25 Jun 2019 04:42:50 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id r2sm1913675lfi.51.2019.06.25.04.42.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 04:42:50 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     netdev@vger.kernel.org, davem@davemloft.net
-Cc:     xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ast@kernel.org, hawk@kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [[PATCH net-next]] net: core: xdp: make __mem_id_disconnect to be static
-Date:   Tue, 25 Jun 2019 14:42:46 +0300
-Message-Id: <20190625114246.14726-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Jun 2019 07:44:34 -0400
+Received: from mail-eopbgr00079.outbound.protection.outlook.com ([40.107.0.79]:23750
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726419AbfFYLod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 07:44:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u5g/kXs53cyAU/0l6biTfPEBGQO4pWzyaBiiFsCrnwQ=;
+ b=P5BHz3RmliJy0oSxBWbLono/6B0JZ4yTq07dKrkzyH4DvRzC+vmRuo7ABmDLYuzmqYGIBgNnOwUlJ6V9IMczIyKB3vaZiwSEfc/D54nWznYH6/jgYg9Wg4YL7dyQk9TOqxPHWDqccjKJ3LGRtUW2TQPLsgoWWADBUC01t4IHTRI=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6429.eurprd05.prod.outlook.com (20.179.27.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Tue, 25 Jun 2019 11:44:29 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
+ 11:44:28 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Thread-Topic: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Thread-Index: AQHVIcyVeqgMzBs0VkumwilsEzSkhqak+JsAgAcTLYCAAEdIAA==
+Date:   Tue, 25 Jun 2019 11:44:28 +0000
+Message-ID: <20190625114422.GA3118@mellanox.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-19-hch@lst.de> <20190620192648.GI12083@dhcp22.suse.cz>
+ <20190625072915.GD30350@lst.de>
+In-Reply-To: <20190625072915.GD30350@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR16CA0020.namprd16.prod.outlook.com
+ (2603:10b6:208:134::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [209.213.91.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 33e4dfbc-5b01-4b89-e89c-08d6f9627a81
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6429;
+x-ms-traffictypediagnostic: VI1PR05MB6429:
+x-microsoft-antispam-prvs: <VI1PR05MB6429E15F0940959724D7B61CCFE30@VI1PR05MB6429.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0079056367
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(366004)(346002)(136003)(396003)(199004)(189003)(2906002)(52116002)(54906003)(8676002)(53936002)(5660300002)(11346002)(81166006)(81156014)(68736007)(66446008)(66946007)(71200400001)(478600001)(305945005)(66476007)(3846002)(6116002)(14454004)(36756003)(73956011)(1076003)(256004)(71190400001)(446003)(76176011)(486006)(316002)(7416002)(6512007)(66556008)(7736002)(64756008)(33656002)(86362001)(4326008)(6246003)(476003)(186003)(2616005)(8936002)(102836004)(26005)(6486002)(66066001)(386003)(6506007)(6436002)(229853002)(6916009)(25786009)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6429;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KvSArAdb6oF3ia/u73x5Rm05QnQCPBHemQrCRtpJGi8yD5h29saYmk9PT1xbrEAZJ9dPKmR+komLg+x3ZVv13yfbRnfb/cwtQ6ECdT6g5lhognBgTrUp3dW/dJMkl647bq2tpjh/ons35mu7BhmlmYoqCkfNz5XAdd7veZBiiWMwA54isp3xfz1ynXyrTmeoXcyWM4WksZzPetHcj3BtpHWkCYpxcBA3Hx3W8PMYKy1DAIveWea2oz4yjrnhztNCOPDAGng0NdfI7wuv0SBA1iZ4bf6l/58enmEryLl4O/byyEqMPxpoI0P3xJt9UMgOCwm0Qt8WR9FftnHAdcP92IdBa4mKsSsvO9UGTWsWapNf8KPFJK+ZiYGjddLsEtodSeB8kv9lcKcF4R+hXZfuNErpQPQNV62z/y1X1PA7qis=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <9099450B868E3548B355AC3B0AFD1F5E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33e4dfbc-5b01-4b89-e89c-08d6f9627a81
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 11:44:28.8132
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6429
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missed static for local __mem_id_disconnect().
+On Tue, Jun 25, 2019 at 09:29:15AM +0200, Christoph Hellwig wrote:
+> On Thu, Jun 20, 2019 at 09:26:48PM +0200, Michal Hocko wrote:
+> > On Thu 13-06-19 11:43:21, Christoph Hellwig wrote:
+> > > The code hasn't been used since it was added to the tree, and doesn't
+> > > appear to actually be usable.  Mark it as BROKEN until either a user
+> > > comes along or we finally give up on it.
+> >=20
+> > I would go even further and simply remove all the DEVICE_PUBLIC code.
+>=20
+> I looked into that as I now got the feedback twice.  It would
+> create a conflict with another tree cleaning things up around the
+> is_device_private defintion, but otherwise I'd be glad to just remove
+> it.
+>=20
+> Jason, as this goes through your tree, do you mind the additional
+> conflict?
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- net/core/xdp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Which tree and what does the resolution look like?
 
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index b29d7b513a18..829377cc83db 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -85,7 +85,7 @@ static void __xdp_mem_allocator_rcu_free(struct rcu_head *rcu)
- 	kfree(xa);
- }
- 
--bool __mem_id_disconnect(int id, bool force)
-+static bool __mem_id_disconnect(int id, bool force)
- {
- 	struct xdp_mem_allocator *xa;
- 	bool safe_to_remove = true;
--- 
-2.17.1
+Also, I don't want to be making the decision if we should keep/remove
+DEVICE_PUBLIC, so let's get an Ack from Andrew/etc?
 
+My main reluctance is that I know there is HW out there that can do
+coherent, and I want to believe they are coming with patches, just
+too slowly. But I'd also rather those people defend themselves :P
+
+Thanks,
+Jason
