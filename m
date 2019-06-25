@@ -2,88 +2,82 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F77C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD5AC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B5520659
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97972086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfFYH46 (ORCPT
+        id S1728963AbfFYH5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:56:58 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55117 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbfFYH46 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:56:58 -0400
-X-Originating-IP: 90.88.16.156
-Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 53E2020003;
-        Tue, 25 Jun 2019 07:56:55 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 09:56:54 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v2 08/15] dt-bindings: display: Convert
- raspberrypi,7inch-touchscreen panel to DT schema
-Message-ID: <20190625075654.igm2yveodkpzays4@flea>
-References: <20190624215649.8939-1-robh@kernel.org>
- <20190624215649.8939-9-robh@kernel.org>
+        Tue, 25 Jun 2019 03:57:24 -0400
+Received: from verein.lst.de ([213.95.11.211]:60598 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbfFYH5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:57:24 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 1831068B02; Tue, 25 Jun 2019 09:56:51 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 09:56:50 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/16] mm: consolidate the get_user_pages*
+ implementations
+Message-ID: <20190625075650.GF30815@lst.de>
+References: <20190611144102.8848-1-hch@lst.de> <20190611144102.8848-12-hch@lst.de> <20190621144131.GQ19891@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mq7niu5ik2hotkzq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190624215649.8939-9-robh@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190621144131.GQ19891@ziepe.ca>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 21, 2019 at 11:41:31AM -0300, Jason Gunthorpe wrote:
+> >  static bool gup_fast_permitted(unsigned long start, unsigned long end)
+> >  {
+> > -	return true;
+> > +	return IS_ENABLED(CONFIG_HAVE_FAST_GUP) ? true : false;
+> 
+> The ?: is needed with IS_ENABLED?
 
---mq7niu5ik2hotkzq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It shouldn't, I'll fix it up.
 
-On Mon, Jun 24, 2019 at 03:56:42PM -0600, Rob Herring wrote:
-> Convert the raspberrypi,7inch-touchscreen panel binding to DT schema.
->
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> I'd suggest to revise this block a tiny bit:
+> 
+> -#ifndef gup_fast_permitted
+> +#if !IS_ENABLED(CONFIG_HAVE_FAST_GUP) || !defined(gup_fast_permitted)
+>  /*
+>   * Check if it's allowed to use __get_user_pages_fast() for the range, or
+>   * we need to fall back to the slow version:
+>   */
+> -bool gup_fast_permitted(unsigned long start, int nr_pages)
+> +static bool gup_fast_permitted(unsigned long start, int nr_pages)
+>  {
+> 
+> Just in case some future arch code mismatches the header and kconfig..
 
-Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---mq7niu5ik2hotkzq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRHTxgAKCRDj7w1vZxhR
-xRiuAQC0hhwO4GcEwR2wlvS/0Zkgwy5BmuSOS80WbeehE6oCzQD+MNGVXo4UvKZm
-0uBgdxhxrT0uaxpYu1Qs16nyUld7IwI=
-=cKd6
------END PGP SIGNATURE-----
-
---mq7niu5ik2hotkzq--
+IS_ENABLED outside a function doesn't really make sense.  But I'll
+just life the IS_ENABLED(CONFIG_HAVE_FAST_GUP) checks into the two
+callers.
