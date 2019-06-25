@@ -2,105 +2,89 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6F3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661CDC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711EE214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6C7215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731431AbfFYKXc (ORCPT
+        id S1731570AbfFYKYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:23:32 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33032 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726301AbfFYKXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:23:31 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 8453260D02D8B346C6FA;
-        Tue, 25 Jun 2019 11:23:29 +0100 (IST)
-Received: from [127.0.0.1] (10.202.227.157) by LHREML712-CAH.china.huawei.com
- (10.201.108.35) with Microsoft SMTP Server id 14.3.408.0; Tue, 25 Jun 2019
- 11:23:22 +0100
-From:   Wei Xu <xuwei5@hisilicon.com>
-Subject: [GIT PULL] Hisilicon fixes for v5.2
-To:     <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>, <arnd@arndb.de>
-CC:     <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@huawei.com>,
-        John Garry <john.garry@huawei.com>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-Message-ID: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
-Date:   Tue, 25 Jun 2019 11:23:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.157]
-X-CFilter-Loop: Reflected
+        Tue, 25 Jun 2019 06:24:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56360 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726301AbfFYKYt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:24:49 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 7C869288DC0
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     kernel@collabora.com, m.szyprowski@samsung.com,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Inki Dae <inki.dae@samsung.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v2 0/2] Associate ddc adapters with connectors
+Date:   Tue, 25 Jun 2019 12:24:39 +0200
+Message-Id: <cover.1561458051.git.andrzej.p@collabora.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190625101655.n246vbwtupb4eoyz@shell.armlinux.org.uk>
+References: <20190625101655.n246vbwtupb4eoyz@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi ARM-SoC team,
+It is difficult for a user to know which of the i2c adapters is for which
+drm connector. This series addresses this problem.
 
-Please consider to pull the following changes.
-Thanks!
+The idea is to have a symbolic link in connector's sysfs directory, e.g.:
 
-Best Regards,
-Wei
+ls -l /sys/class/drm/card0-HDMI-A-1/ddc
+lrwxrwxrwx 1 root root 0 Jun 24 10:42 /sys/class/drm/card0-HDMI-A-1/ddc \
+	-> ../../../../soc/13880000.i2c/i2c-2
 
----
+The user then knows that their card0-HDMI-A-1 uses i2c-2 and can e.g. run
+ddcutil:
 
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+ddcutil -b 2 getvcp 0x10
+VCP code 0x10 (Brightness                    ): current value =    90, max value =   100
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+The first patch in the series adds struct i2c_adapter pointer to struct
+drm_connector. If the field is used by a particular driver, then an
+appropriate symbolic link is created by the generic code, which is also added
+by this patch.
 
-are available in the Git repository at:
+The second patch is an example of how to convert a driver to this new scheme.
 
-  git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
+v1..v2:
 
-for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
+- used fixed name "ddc" for the symbolic link in order to make it easy for
+userspace to find the i2c adapter
 
-  lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
+Andrzej Pietrasiewicz (2):
+  drm: Include ddc adapter pointer in struct drm_connector
+  drm/exynos: Provide ddc symlink in connector's sysfs
 
-----------------------------------------------------------------
-Hisilicon fixes for v5.2-rc
+ drivers/gpu/drm/drm_sysfs.c          |  7 +++++++
+ drivers/gpu/drm/exynos/exynos_hdmi.c | 11 +++++------
+ include/drm/drm_connector.h          | 11 +++++++++++
+ 3 files changed, 23 insertions(+), 6 deletions(-)
 
-- fixed RCU usage in logical PIO
-- Added a function to unregister a logical PIO range in logical PIO
-  to support the fixes in the hisi-lpc driver
-- fixed and optimized hisi-lpc driver to avoid potential use-after-free
-  and driver unbind crash
-
-----------------------------------------------------------------
-John Garry (6):
-      lib: logic_pio: Fix RCU usage
-      lib: logic_pio: Avoid possible overlap for unregistering regions
-      lib: logic_pio: Add logic_pio_unregister_range()
-      bus: hisi_lpc: Unregister logical PIO range to avoid potential use-after-free
-      bus: hisi_lpc: Add .remove method to avoid driver unbind crash
-      lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
-
- drivers/bus/hisi_lpc.c    | 43 ++++++++++++++++++++----
- include/linux/logic_pio.h |  1 +
- lib/logic_pio.c           | 86 +++++++++++++++++++++++++++++++++--------------
- 3 files changed, 99 insertions(+), 31 deletions(-)
+-- 
+2.17.1
 
