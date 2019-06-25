@@ -2,179 +2,131 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E70C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42550C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634B62146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1214C208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PiKb0pq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfFYOUJ (ORCPT
+        id S1729965AbfFYOUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:20:09 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:36574 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfFYOUI (ORCPT
+        Tue, 25 Jun 2019 10:20:36 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34210 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbfFYOUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:20:08 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hfmId-0005Mb-Le; Tue, 25 Jun 2019 16:19:55 +0200
-Message-ID: <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Arnd Bergmann <arnd@arndb.de>, Alex Elder <elder@linaro.org>
-Cc:     Dan Williams <dcbw@redhat.com>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-Date:   Tue, 25 Jun 2019 16:19:54 +0200
-In-Reply-To: <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com> (sfid-20190624_184119_378618_FFFDB00F)
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
-         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
-         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
-         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
-         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
-         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
-         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
-         <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
-         <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
-         <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
-         <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
-         (sfid-20190624_184119_378618_FFFDB00F)
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Jun 2019 10:20:36 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s49so27463570edb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 07:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G6JtZL8+U2ZkwL0/tzXXiHIEAOss9zM+ZL3Pgbc8Mpk=;
+        b=PiKb0pq4SASNR7D3rZRPPn6hYPGCPxODqKLMDAnrrKgPg9InzXFNxhgfcjJ0osnNob
+         vyTtVKNuYim6MRswZ9WjaRBlsW8RMJPiwWKoyq3uAyYbDouZ9ZJClJkEADyVHPrEnO5E
+         2dv49ZPpK3sQqXzRaWmoTu0NM4VYZANoTUsRE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=G6JtZL8+U2ZkwL0/tzXXiHIEAOss9zM+ZL3Pgbc8Mpk=;
+        b=sOtLslIlVcnKC5o/DCC+axGvFhBBh6nZwyIE3DG8KmHMqOB87RqQf0jhrcVaTZFWsx
+         1arOirM/GpSS/4quWEAo62LIlpQLV3gFmKLimXq5q+dRzMhK1glQKOcpx8fHY2GbSQEZ
+         P5SBRknKzBqpg3GeMbtRkNYsCssZU4f2IZzIuZ+T1FXDIE5e6SvbZVEhugToi5evLXwA
+         rKr3cezdy8MkGCDIPNNJJDFvEfRM1/Pwh52p5HmBjWC+MPr4XC7ckFb2bOuxecSbOLnb
+         D9jQh1dpXk0Ca7ujqc6Hun43eU3muADv9iFymnQG5XnI29E/xjtEPR45ETtHy6yQ407z
+         5F1A==
+X-Gm-Message-State: APjAAAVNY9451vlunRErhQco2V+ewg8LFZB1O+ipdtz3aa5XJVTe7sz8
+        geVUCsJNNRJ9RlssEaUzwfrfkw==
+X-Google-Smtp-Source: APXvYqzf+qJgnUeqQvG0q196yIL7BFlfF2ImhuXnDKq2Nc9RZ6ZHCnGm/JBXEdesWWdkz8OViVV3qw==
+X-Received: by 2002:a05:6402:78c:: with SMTP id d12mr111470360edy.160.1561472434802;
+        Tue, 25 Jun 2019 07:20:34 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id n15sm4863868edd.49.2019.06.25.07.20.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 07:20:33 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 16:20:31 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org,
+        kernel@collabora.com, Sean Paul <sean@poorly.run>,
+        linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+Subject: Re: [PATCH 0/2] Associate ddc adapters with connectors
+Message-ID: <20190625142031.GV12905@phenom.ffwll.local>
+Mail-Followup-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Inki Dae <inki.dae@samsung.com>, David Airlie <airlied@linux.ie>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org,
+        kernel@collabora.com, Sean Paul <sean@poorly.run>,
+        linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
+References: <cover.1561452052.git.andrzej.p@collabora.com>
+ <20190625100351.52ddptvb2gizaepi@shell.armlinux.org.uk>
+ <817ccfba-754c-6a28-8d75-63f70605fd43@collabora.com>
+ <20190625133639.GA16031@arch-x1c3>
+ <20190625140755.GT12905@phenom.ffwll.local>
+ <20190625141032.5jiy2oekb3olaejd@shell.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625141032.5jiy2oekb3olaejd@shell.armlinux.org.uk>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-24 at 18:40 +0200, Arnd Bergmann wrote:
-> On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
-> > On 6/18/19 2:03 PM, Johannes Berg wrote:
-> > 
-> > > Really there are two possible ways (and they intersect to some extent).
-> > > 
-> > > One is the whole multi-function device, where a single WWAN device is
-> > > composed of channels offered by actually different drivers, e.g. for a
-> > > typical USB device you might have something like cdc_ether and the
-> > > usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
-> > > similarly, e.g. by using the underlying USB device "struct device"
-> > > pointer to tie it together.
-> > 
-> > I *think* this model makes the most sense.  But at this point
-> > it would take very little to convince me otherwise...  (And then
-> > I saw Arnd's message advocating the other one, unfortunately...)
-> > 
-> > > The other is something like IPA or the Intel modem driver, where the
-> > > device is actually a single (e.g. PCIe) device and just has a single
-> > > driver, but that single driver offers different channels.
-> > 
-> > What I don't like about this is that it's more monolithic.  It
-> > seems better to have the low-level IPA or Intel modem driver (or
-> > any other driver that can support communication between the AP
-> > and WWAN device) present communication paths that other function-
-> > specific drivers can attach to and use.
+On Tue, Jun 25, 2019 at 03:10:32PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Jun 25, 2019 at 04:07:55PM +0200, Daniel Vetter wrote:
+> > Otherwise I like this. Biggest problem I'm seeing here is rolling this out
+> > everywhere, this is a lot of work. And without widespread adoptions it's
+> > not terribly useful for userspace.
 > 
-> I did not understand Johannes description as two competing models
-> for the same code, but rather two kinds of existing hardware that
-> a new driver system would have to deal with.
+> There will be cases where it's not possible, because the I2C bus is
+> hidden behind a chip that doesn't give you direct access to the DDC
+> bus.
 
-Right.
+Oh sure, plus lots of connectors where there's just not ddc bus at all.
+But if we only roll this out for a handful of drivers it's also not great,
+that's what I meant. Looking at
 
-> I was trying to simplify it to just having the second model, by adding
-> a hack to support the first, but my view was rather unpopular so
-> far, so if everyone agrees on one way to do it, don't worry about me ;-)
+$ git grep drm_do_get_edid
 
-:-)
-
-However, to also reply to Alex: I don't know exactly how IPA works, but
-for the Intel modem at least you can't fundamentally have two drivers
-for different parts of the functionality, since it's just a single piece
-of hardware and you need to allocate hardware resources from a common
-pool etc. So you cannot split the driver into "Intel modem control
-channel driver" and "Intel modem data channel driver". In fact, it's
-just a single "struct device" on the PCIe bus that you can bind to, and
-only one driver can bind at a time.
-
-So, IOW, I'm not sure I see how you'd split that up. I guess you could
-if you actually do something like the "rmnet" model, and I suppose
-you're free to do that for IPA if you like, but I tend to think that's
-actually a burden, not a win since you just get more complex code that
-needs to interact with more pieces. A single driver for a single
-hardware that knows about the few types of channels seems simpler to me.
-
-> - to answer Johannes question, my understanding is that the interface
->   between kernel and firmware/hardware for IPA has a single 'struct
->   device' that is used for both the data and the control channels,
->   rather than having a data channel and an independent control device,
->   so this falls into the same category as the Intel one (please correct
->   me on that)
-
-That sounds about the same then, right.
-
-Are the control channels to IPA are actually also tunnelled over the
-rmnet protocol? And even if they are, perhaps they have a different
-hardware queue or so? That'd be the case for Intel - different hardware
-queue, same (or at least similar) protocol spoken for the DMA hardware
-itself, but different contents of the messages obviously.
-
-> - The user space being proprietary is exactly what we need to avoid
->   with the wwan subsystem. We need to be able to use the same
->   method for setting up Intel, Qualcomm, Samsung, Unisoc or
->   Hisilicon modems or anything else that hooks into the subsystem,
->   and support that in network manager as well as the Android
->   equivalent.
->   If Qualcomm wants to provide their own proprietary user space
->   solution, we can't stop them, but then that should also work on
->   all the others unless they intentionally break it. ;-)
-
-:-)
-
-I tend to think there's always going to be some level of specific
-handling here, because e.g. the Intel modem can expose MBIM or AT
-command control channels, but not much else (that'd be useful for us
-anyway, since we don't know how to speak debug protocol etc.). Other
-modems will expose *only* AT commands, or *only* MBIM, and yet others
-may also offer QMI and then that might be preferable.
-
-> > > and simply require that the channel is attached to the wwan device with
-> > > the representation-specific call (wwan_attach_netdev, wwan_attach_tty,
-> > > ...).
-> > 
-> > Or maybe have the WWAN device present interfaces with attributes,
-> > and have drivers that are appropriate for each interface attach
-> > to only the ones they recognize they support.
-> 
-> I think you both mean the same thing here, a structure with callback
-> pointers that may or may not be filled by the driver depending on its
-> capabilities.
-
-:-)
-
-> What we should try to avoid though is a way to add driver private
-> interfaces that risk having multiple drivers create similar functionality
-> in incompatible ways.
-
-Right.
-
-johannes
-
+there's only very few drivers where the ddc bus is hidden. There's a lot
+more where it's not, and I think a big series to tackle those would serve
+extremely well to make a case for this sysfs link.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
