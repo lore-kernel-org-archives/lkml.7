@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10225C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB06C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA9520883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107BC21738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732809AbfFYSCm (ORCPT
+        id S1732820AbfFYSCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 14:02:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58814 "EHLO
+        Tue, 25 Jun 2019 14:02:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58790 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728886AbfFYSCj (ORCPT
+        with ESMTP id S1727385AbfFYSCj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 14:02:39 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: bbeckett)
-        with ESMTPSA id 8D2A6286276
+        with ESMTPSA id 2ECC328626E
 From:   Robert Beckett <bob.beckett@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -38,9 +38,9 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH v3 3/4] drm/vblank: estimate vblank while disabling vblank if interrupt disabled
-Date:   Tue, 25 Jun 2019 18:59:14 +0100
-Message-Id: <b96132cef4b63118df1026a99b3c345692e3de26.1561483965.git.bob.beckett@collabora.com>
+Subject: [PATCH v3 2/4] drm/imx: notify drm core before sending event during crtc disable
+Date:   Tue, 25 Jun 2019 18:59:13 +0100
+Message-Id: <066eb916ec920e0515367548e4af2ee28f9d0a43.1561483965.git.bob.beckett@collabora.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <cover.1561483965.git.bob.beckett@collabora.com>
 References: <cover.1561483965.git.bob.beckett@collabora.com>
@@ -49,51 +49,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If interrupts are disabled (e.g. via vblank_disable_fn) and we come to
-disable vblank, update the vblank count to best guess as to what it
-would be had the interrupts remained enabled, and update the timesamp to
-now.
+Notify drm core before sending pending events during crtc disable.
+This fixes the first event after disable having an old stale timestamp
+by having drm_crtc_vblank_off update the timestamp to now.
 
-This avoids a stale vblank event being sent while disabling crtcs during
-atomic modeset.
+This was seen while debugging weston log message:
+Warning: computed repaint delay is insane: -8212 msec
 
-Fixes: 68036b08b91bc ("drm/vblank: Do not update vblank count if interrupts
-are already disabled.")
+This occured due to:
+1. driver starts up
+2. fbcon comes along and restores fbdev, enabling vblank
+3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
+seq number and time set at current value
+(some time later)
+4. weston starts and does a modeset
+5. atomic commit disables crtc while it does the modeset
+6. ipu_crtc_atomic_disable sends vblank with old seq number and time
+
+Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
 
 Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
 ---
- drivers/gpu/drm/drm_vblank.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 7dabb2bdb733..db68b8cbf797 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -375,9 +375,23 @@ void drm_vblank_disable_and_save(struct drm_device *dev, unsigned int pipe)
- 	 * interrupts were enabled. This avoids calling the ->disable_vblank()
- 	 * operation in atomic context with the hardware potentially runtime
- 	 * suspended.
-+	 * If interrupts are disabled (e.g. via blank_disable_fn) then make
-+	 * best guess as to what it would be now and make sure we have an up
-+	 * to date timestamp.
- 	 */
--	if (!vblank->enabled)
-+	if (!vblank->enabled) {
-+		ktime_t now = ktime_get();
-+		u32 diff = 0;
-+		if (vblank->framedur_ns) {
-+			u64 diff_ns = ktime_to_ns(ktime_sub(now, vblank->time));
-+			diff = DIV_ROUND_CLOSEST_ULL(diff_ns,
-+						     vblank->framedur_ns);
-+		}
-+
-+		store_vblank(dev, pipe, diff, now, vblank->count);
-+
- 		goto out;
-+	}
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 9cc1d678674f..e04d6efff1b5 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -91,14 +91,14 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	ipu_dc_disable(ipu);
+ 	ipu_prg_disable(ipu);
  
- 	/*
- 	 * Update the count and timestamp to maintain the
++	drm_crtc_vblank_off(crtc);
++
+ 	spin_lock_irq(&crtc->dev->event_lock);
+ 	if (crtc->state->event) {
+ 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+ 		crtc->state->event = NULL;
+ 	}
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+-
+-	drm_crtc_vblank_off(crtc);
+ }
+ 
+ static void imx_drm_crtc_reset(struct drm_crtc *crtc)
 -- 
 2.18.0
 
