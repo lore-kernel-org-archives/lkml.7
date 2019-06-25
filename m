@@ -2,106 +2,112 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED42BC4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239CDC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD992077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08B72077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbfFYBq0 (ORCPT
+        id S1730188AbfFYBti convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:46:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25772 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730134AbfFYBqY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:46:24 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P1gQMe141317
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:46:23 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tb7x0mng2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 21:46:22 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 25 Jun 2019 02:46:20 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 02:46:16 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P1kFOe60752006
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 01:46:15 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B32D8A4062;
-        Tue, 25 Jun 2019 01:46:15 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F738A405B;
-        Tue, 25 Jun 2019 01:46:14 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.18])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 01:46:14 +0000 (GMT)
-Subject: Re: [PATCH V31 07/25] kexec_file: Restrict at runtime if the kernel
- is locked down
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Dave Young <dyoung@redhat.com>, James Morris <jmorris@namei.org>,
-        Jiri Bohac <jbohac@suse.cz>,
-        Linux API <linux-api@vger.kernel.org>,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 24 Jun 2019 21:46:03 -0400
-In-Reply-To: <CACdnJuvE-MbD42AJTrio=0RaN8SaWo-RHHt21z=3an1vtjTFhA@mail.gmail.com>
-References: <20190326182742.16950-1-matthewgarrett@google.com>
-         <20190326182742.16950-8-matthewgarrett@google.com>
-         <20190621064340.GB4528@localhost.localdomain>
-         <CACdnJut=J1YTpM4s6g5XWCEs+=X0Jvf8otfMg+w=_oqSZmf01Q@mail.gmail.com>
-         <20190624015206.GB2976@dhcp-128-65.nay.redhat.com>
-         <CACdnJusPtYLdg7ZPhBo=Y5EsBz6B+5M2zYscBrLcc89oNnPkdQ@mail.gmail.com>
-         <1561411657.4340.70.camel@linux.ibm.com>
-         <CACdnJuvE-MbD42AJTrio=0RaN8SaWo-RHHt21z=3an1vtjTFhA@mail.gmail.com>
+        Mon, 24 Jun 2019 21:49:38 -0400
+Received: from mga03.intel.com ([134.134.136.65]:38509 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729450AbfFYBti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 21:49:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Jun 2019 18:49:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,413,1557212400"; 
+   d="scan'208";a="172192735"
+Received: from lftan-mobl.gar.corp.intel.com (HELO ubuntu) ([10.226.248.93])
+  by orsmga002.jf.intel.com with SMTP; 24 Jun 2019 18:49:35 -0700
+Received: by ubuntu (sSMTP sendmail emulation); Tue, 25 Jun 2019 09:49:34 +0800
+Message-ID: <1561427374.3131.2.camel@intel.com>
+Subject: Re: [PATCH] nios2: remove pointless second entry for
+ CONFIG_TRACE_IRQFLAGS_SUPPORT
+From:   Ley Foon Tan <ley.foon.tan@intel.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ley Foon Tan <lftan@altera.com>,
+        nios2-dev@lists.rocketboards.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Jun 2019 09:49:34 +0800
+In-Reply-To: <CAK7LNATViOYXJVLuJ8VnCruyMAPbYOkTc_0ZuW+gqi5H9x9-cA@mail.gmail.com>
+References: <1557666733-19527-1-git-send-email-yamada.masahiro@socionext.com>
+         <CAK7LNATViOYXJVLuJ8VnCruyMAPbYOkTc_0ZuW+gqi5H9x9-cA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Content-Transfer-Encoding: 8BIT
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.1 
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062501-0020-0000-0000-0000034D0FB6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062501-0021-0000-0000-000021A07C50
-Message-Id: <1561427163.4340.98.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-24 at 17:02 -0700, Matthew Garrett wrote:
-> On Mon, Jun 24, 2019 at 2:27 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+On Sun, 2019-06-23 at 23:13 +0900, Masahiro Yamada wrote:
+> On Sun, May 12, 2019 at 10:16 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> > 
+> > 
+> > Strangely enough, NIOS2 defines TRACE_IRQFLAGS_SUPPORT twice
+> > with different values, which is pointless and confusing.
+> > 
+> > [1] arch/nios2/Kconfig
+> > 
+> >   config TRACE_IRQFLAGS_SUPPORT
+> >           def_bool n
+> > 
+> > [2] arch/nios2/Kconfig.debug
+> > 
+> >   config TRACE_IRQFLAGS_SUPPORT
+> >           def_bool y
+> > 
+> > [1] is included before [2]. In the Kconfig syntax, the first one
+> > is effective. So, TRACE_IRQFLAGS_SUPPORT is always 'n'.
+> > 
+> > The second define in arch/nios2/Kconfig.debug is dead code.
+> > 
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> Ping.
 > 
-> > I agree with Dave.  There should be a stub lockdown function to
-> > prevent enforcing lockdown when it isn't enabled.
 > 
-> Sorry, when what isn't enabled? If no LSMs are enforcing lockdown then
-> the check will return 0. The goal here is for distributions to be able
-> to ship a kernel that has CONFIG_KEXEC_SIG=y, CONFIG_KEXEC_SIG_FORCE=n
-> and at runtime be able to enforce a policy that requires signatures on
-> kexec payloads.
+Acked-by: Ley Foon Tan <ley.foon.tan@intel.com>
+Will integrate to next kernel version.
+Thanks.
 
-Never mind, the call can't be moved earlier.
+> > 
+> >  arch/nios2/Kconfig.debug | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/arch/nios2/Kconfig.debug b/arch/nios2/Kconfig.debug
+> > index f1da8a7..a8bc06e 100644
+> > --- a/arch/nios2/Kconfig.debug
+> > +++ b/arch/nios2/Kconfig.debug
+> > @@ -1,8 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> > 
+> > -config TRACE_IRQFLAGS_SUPPORT
+> > -       def_bool y
+> > -
+> >  config EARLY_PRINTK
+> >         bool "Activate early kernel debugging"
+> >         default y
+> > --
+> > 2.7.4
+> > 
+> 
+> --
+> Best Regards
+> Masahiro Yamada
+> 
+> ________________________________
 
+Regards
+Ley Foon
