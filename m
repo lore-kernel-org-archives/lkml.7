@@ -2,281 +2,195 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE47C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CF5C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E326C2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A70213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfFYNU7 (ORCPT
+        id S1728509AbfFYNVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:20:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:41862 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbfFYNU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:20:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2472D2B;
-        Tue, 25 Jun 2019 06:20:58 -0700 (PDT)
-Received: from [10.1.196.120] (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAD143F718;
-        Tue, 25 Jun 2019 06:20:56 -0700 (PDT)
-Subject: Re: [PATCH 3/7] perf: arm64: Use rseq to test userspace access to pmu
- counters
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, szabolcs.nagy@arm.com
-References: <20190611125315.18736-1-raphael.gault@arm.com>
- <20190611125315.18736-4-raphael.gault@arm.com>
- <20190611143346.GB28689@kernel.org>
- <20190611165755.GG29008@lakrids.cambridge.arm.com>
- <1620360283.42036.1560281622707.JavaMail.zimbra@efficios.com>
-From:   Raphael Gault <raphael.gault@arm.com>
-Message-ID: <7dbac943-890b-af16-d6a0-705b3cd609a1@arm.com>
-Date:   Tue, 25 Jun 2019 14:20:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 25 Jun 2019 09:21:19 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33725 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729281AbfFYNVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:21:19 -0400
+Received: by mail-ot1-f68.google.com with SMTP id i4so17443919otk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 06:21:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GgVn9o2XMV2ez9jDzY+0llaXiVjr0qoFXFfqDt3jX2U=;
+        b=Wb5+132tpX1Nyv9zh3XZKDYQoeIO36Q3F2IyRRRHbXphiYiVOMsywzzo2zNnsuxC7S
+         epBhuGSNonIiUnOJxDa0xotZ9RvJ01IXElFX12HvAztWv1mAYo9sE3i9hggS4dMZOEXN
+         EtFy5esDRfp9Wderp5CE/X9RVRfZ0NhqPjyUr5GglS7j+S3LrtoqpRwAktH6ad5ltwSu
+         APniWCDl6RI2m1DuOU/wKJjfhxkvNY+j1FFQDKzaB2YXHWirhNqvrzPxhs+y9BBpBjQz
+         hCe6hDE35+ZdOLyjzQRMG4Z0wWCFD7vHzDNN3/M/HTRzk6OqO8dwAkCI39qY0pGppxMo
+         rz0w==
+X-Gm-Message-State: APjAAAV8UgDvONN/YkKliYPQEVR5IM90PJt2Rw4Cubs6FGR+Lh+goK+V
+        eXUBY5uWwbYZ5UXeTuLAji2NJCvllFxOGvurNpU=
+X-Google-Smtp-Source: APXvYqxtTdkEuscypnU/zXHDBFVFEQQfPBzKSH4cOLu0kIQSsZem/FyWnB8vAkRTtysTKJpjYdQxucZzxLUC8tY+nHQ=
+X-Received: by 2002:a9d:4109:: with SMTP id o9mr5521556ote.353.1561468878433;
+ Tue, 25 Jun 2019 06:21:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1620360283.42036.1560281622707.JavaMail.zimbra@efficios.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1561459983.git.christophe.leroy@c-s.fr> <290a9673b0adac34f0008f2679efd5ab5a5c4478.1561459984.git.christophe.leroy@c-s.fr>
+In-Reply-To: <290a9673b0adac34f0008f2679efd5ab5a5c4478.1561459984.git.christophe.leroy@c-s.fr>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Tue, 25 Jun 2019 15:21:05 +0200
+Message-ID: <CA+7wUsxL0OHvOn51hbJyAhpi=OJye=axKfVyauhEVXLqFuFqHA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 11/13] powerpc/ptrace: create ppc_gethwdinfo()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu, Hi Szabolcs,
+On Tue, Jun 25, 2019 at 1:22 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+>
+> Create ippc_gethwdinfo() to handle PPC_PTRACE_GETHWDBGINFO and
 
-On 6/11/19 8:33 PM, Mathieu Desnoyers wrote:
-> ----- On Jun 11, 2019, at 6:57 PM, Mark Rutland mark.rutland@arm.com wrote:
-> 
->> Hi Arnaldo,
->>
->> On Tue, Jun 11, 2019 at 11:33:46AM -0300, Arnaldo Carvalho de Melo wrote:
->>> Em Tue, Jun 11, 2019 at 01:53:11PM +0100, Raphael Gault escreveu:
->>>> Add an extra test to check userspace access to pmu hardware counters.
->>>> This test doesn't rely on the seqlock as a synchronisation mechanism but
->>>> instead uses the restartable sequences to make sure that the thread is
->>>> not interrupted when reading the index of the counter and the associated
->>>> pmu register.
->>>>
->>>> In addition to reading the pmu counters, this test is run several time
->>>> in order to measure the ratio of failures:
->>>> I ran this test on the Juno development platform, which is big.LITTLE
->>>> with 4 Cortex A53 and 2 Cortex A57. The results vary quite a lot
->>>> (running it with 100 tests is not so long and I did it several times).
->>>> I ran it once with 10000 iterations:
->>>> `runs: 10000, abort: 62.53%, zero: 34.93%, success: 2.54%`
->>>>
->>>> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
->>>> ---
->>>>   tools/perf/arch/arm64/include/arch-tests.h    |   5 +-
->>>>   tools/perf/arch/arm64/include/rseq-arm64.h    | 220 ++++++++++++++++++
->>>
->>> So, I applied the first patch in this series, but could you please break
->>> this patch into at least two, one introducing the facility
->>> (include/rseq*) and the second adding the test?
->>>
->>> We try to enforce this kind of granularity as down the line we may want
->>> to revert one part while the other already has other uses and thus
->>> wouldn't allow a straight revert.
->>>
->>> Also, can this go to tools/arch/ instead? Is this really perf specific?
->>> Isn't there any arch/arm64/include files for the kernel that we could
->>> mirror and have it checked for drift in tools/perf/check-headers.sh?
->>
->> The rseq bits aren't strictly perf specific, and I think the existing
->> bits under tools/testing/selftests/rseq/ could be factored out to common
->> locations under tools/include/ and tools/arch/*/include/.
-> 
-> Hi Mark,
-> 
-> Thanks for CCing me!
-> 
-> Or into a stand-alone librseq project:
-> 
-> https://github.com/compudj/librseq (currently a development branch in
-> my own github)
-> 
-> I don't see why this user-space code should sit in the kernel tree.
-> It is not tooling-specific.
-> 
->>
->>  From a scan, those already duplicate barriers and other helpers which
->> already have definitions under tools/, which seems unfortunate. :/
->>
->> Comments below are for Raphael and Matthieu.
->>
->> [...]
->>
->>>> +static u64 noinline mmap_read_self(void *addr, int cpu)
->>>> +{
->>>> +	struct perf_event_mmap_page *pc = addr;
->>>> +	u32 idx = 0;
->>>> +	u64 count = 0;
->>>> +
->>>> +	asm volatile goto(
->>>> +                     RSEQ_ASM_DEFINE_TABLE(0, 1f, 2f, 3f)
->>>> +		     "nop\n"
->>>> +                     RSEQ_ASM_STORE_RSEQ_CS(1, 0b, rseq_cs)
->>>> +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
->>>> +                     RSEQ_ASM_OP_R_LOAD(pc_idx)
->>>> +                     RSEQ_ASM_OP_R_AND(0xFF)
->>>> +		     RSEQ_ASM_OP_R_STORE(idx)
->>>> +                     RSEQ_ASM_OP_R_SUB(0x1)
->>>> +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
->>>> +                     "msr pmselr_el0, " RSEQ_ASM_TMP_REG "\n"
->>>> +                     "isb\n"
->>>> +		     RSEQ_ASM_CMP_CPU_ID(cpu_id, current_cpu_id, 3f)
-> 
-> I really don't understand why the cpu_id needs to be compared 3 times
-> here (?!?)
-> 
-> Explicit comparison of the cpu_id within the rseq critical section
-> should be done _once_.
-> 
-> If the kernel happens to preempt and migrate the thread while in the
-> critical section, it's the kernel's job to move user-space execution
-> to the abort handler.
-> 
->>>> +                     "mrs " RSEQ_ASM_TMP_REG ", pmxevcntr_el0\n"
->>>> +                     RSEQ_ASM_OP_R_FINAL_STORE(cnt, 2)
->>>> +		     "nop\n"
->>>> +                     RSEQ_ASM_DEFINE_ABORT(3, abort)
->>>> +                     :/* No output operands */
->>>> +		     :  [cpu_id] "r" (cpu),
->>>> +			[current_cpu_id] "Qo" (__rseq_abi.cpu_id),
->>>> +			[rseq_cs] "m" (__rseq_abi.rseq_cs),
->>>> +			[cnt] "m" (count),
->>>> +			[pc_idx] "r" (&pc->index),
->>>> +			[idx] "m" (idx)
->>>> +                     :"memory"
->>>> +                     :abort
->>>> +                    );
->>
->> While baroque, this doesn't look as scary as I thought it would!
-> 
-> That's good to hear :)
-> 
->>
->> However, I'm very scared that this is modifying input operands without
->> clobbering them. IIUC this is beacause we're trying to use asm goto,
->> which doesn't permit output operands.
-> 
-> This is correct. What is wrong with modifying the target of "m" input
-> operands in an inline asm that has a "memory" clobber ?
-> 
-> gcc documentation at https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html
-> states:
-> 
-> "An asm goto statement cannot have outputs. This is due to an internal
-> restriction of the compiler: control transfer instructions cannot have
-> outputs. If the assembler code does modify anything, use the "memory"
-> clobber to force the optimizers to flush all register values to memory
-> and reload them if necessary after the asm statement."
-> 
-> If there is a problem with this approach, an alternative would be to
-> pass &__rseq_abi.rseq.cs as a "r" input operand, explicitly dereference
-> it in the assembly, and use the "memory" clobber to ensure the compiler
-> knows that there are read/write references to memory.
-> 
->> I'm very dubious to abusing asm goto in this way. Can we instead use a
->> regular asm volatile block, and place the abort handler _within_ the
->> asm? If performance is a concern, we can use .pushsection and
->> .popsection to move that far away...
-> 
-> Let's dig into what would be needed in order to move the abort into the
-> asm block.
-> 
-> One approach would be to make that asm block return a nonzero value in
-> an output register, and put zero in that register in the non-abort case,
-> and then have a conditional check in C on that register to check
-> whether it needs to branch to the abort. This adds overhead we want
-> to avoid.
-> 
-> Another alternative would be to perform the entire abort handler in
-> the same assembly block as the rseq critical section. However, this
-> prevents us from going back to C to handle the abort, which is unwanted.
-> For instance, in the use-case of perf counters on aarch64, a good
-> fallback on abort would be to call the perf system call to read the
-> value of the performance counter. However, requiring that the abort be
-> implemented within the rseq assembly block would require that we
-> re-implement system call invocation in user-space for this, which
-> is rather annoying.
-> 
->>
->>>> +
->>>> +	if (idx)
->>>> +		count += READ_ONCE(pc->offset);
->>
->> I'm rather scared that from GCC's PoV, idx was initialized to zero, and
->> not modified above (per the asm constraints). I realise that we've used
->> an "m" constraint and clobbered memory, but I could well imagine that
->> GCC can interpret that as needing to place a read-only copy in memory,
->> but still being permitted to use the original value in a register. That
->> would permit the above to be optimized away, since GCC knows no
->> registers were clobbered, and thus idx must still be zero.
-> 
-> I suspect this is based on a rather conservative interpretation of the
-> following statement from https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html:
-> 
-> "The "memory" clobber tells the compiler that the assembly code performs memory
-> reads or writes to items other than those listed in the input and output operands"
-> 
-> Based on the previous sentence, it's tempting to conclude that the "m" input
-> operands content is not clobbered by the "memory" clobber.
-> 
-> however, it is followed by this:
-> 
-> "Further, the compiler does not assume that any values read from memory before an
-> asm remain unchanged after that asm; it reloads them as needed. Using the "memory"
-> clobber effectively forms a read/write memory barrier for the compiler."
-> 
-> Based on this last sentence, my understanding is that a "memory" clobber would
-> also clobber the content of any "m" operand.
-> 
-> If use of "m" (var) input-operand-as-output + "memory" clobber ends up being an
-> issue, we can always fall-back to "r" (&var) input operand + "memory" clobber,
-> which seems less ambiguous from a documentation standpoint.
-> 
-> I'd really like to have an authoritative answer from gcc folks before we start
-> changing this in all rseq asm for all architectures.
-> 
+s/ippc_gethwdinfo/ppc_gethwdinfo/
 
-Hi Szabolcs, we would really appreciate to see what your opinion is on 
-this matter.
+> reduce ifdef mess
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  arch/powerpc/kernel/ptrace/ptrace-adv.c   | 15 +++++++++++++++
+>  arch/powerpc/kernel/ptrace/ptrace-decl.h  |  1 +
+>  arch/powerpc/kernel/ptrace/ptrace-noadv.c | 20 +++++++++++++++++++
+>  arch/powerpc/kernel/ptrace/ptrace.c       | 32 +------------------------------
+>  4 files changed, 37 insertions(+), 31 deletions(-)
+>
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-adv.c b/arch/powerpc/kernel/ptrace/ptrace-adv.c
+> index dcc765940344..f5f334484ebc 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace-adv.c
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-adv.c
+> @@ -83,6 +83,21 @@ void user_disable_single_step(struct task_struct *task)
+>         clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+>  }
+>
+> +void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
 
->>
->>>> +
->>>> +	return count;
->>
->> ... and for similar reasons, always return zero here.
->>
->>>> +abort:
->>>> +        pr_debug("Abort handler\n");
->>>> +        exit(-2);
->>>> +}
->>
->> Given the necessary complexity evident above, I'm also fearful that the
->> sort of folk that want userspace counter access aren't going to bother
->> with the above.
-> 
-> The abort handler should be implemented in C, simply invoking the perf
-> system call which lets the kernel perform the perf counter read.
+Would it be possible to rename it to `ppc_gethwdbginfo`, I find it
+easier to read.
 
-
-Thanks,
-
--- 
-Raphael Gault
+> +{
+> +       dbginfo->version = 1;
+> +       dbginfo->num_instruction_bps = CONFIG_PPC_ADV_DEBUG_IACS;
+> +       dbginfo->num_data_bps = CONFIG_PPC_ADV_DEBUG_DACS;
+> +       dbginfo->num_condition_regs = CONFIG_PPC_ADV_DEBUG_DVCS;
+> +       dbginfo->data_bp_alignment = 4;
+> +       dbginfo->sizeof_condition = 4;
+> +       dbginfo->features = PPC_DEBUG_FEATURE_INSN_BP_RANGE |
+> +                           PPC_DEBUG_FEATURE_INSN_BP_MASK;
+> +       if (IS_ENABLED(CONFIG_PPC_ADV_DEBUG_DAC_RANGE))
+> +               dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_RANGE |
+> +                                    PPC_DEBUG_FEATURE_DATA_BP_MASK;
+> +}
+> +
+>  int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+>                         unsigned long __user *datalp)
+>  {
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-decl.h b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+> index cd5b8256ba56..2404b987b23c 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace-decl.h
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-decl.h
+> @@ -141,6 +141,7 @@ int tm_cgpr32_set(struct task_struct *target, const struct user_regset *regset,
+>  extern const struct user_regset_view user_ppc_native_view;
+>
+>  /* ptrace-(no)adv */
+> +void ppc_gethwdinfo(struct ppc_debug_info *dbginfo);
+>  int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+>                         unsigned long __user *datalp);
+>  int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned long data);
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> index 985cca136f85..426fedd7ab6c 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> +++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
+> @@ -64,6 +64,26 @@ void user_disable_single_step(struct task_struct *task)
+>         clear_tsk_thread_flag(task, TIF_SINGLESTEP);
+>  }
+>
+> +void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
+> +{
+> +       dbginfo->version = 1;
+> +       dbginfo->num_instruction_bps = 0;
+> +       if (ppc_breakpoint_available())
+> +               dbginfo->num_data_bps = 1;
+> +       else
+> +               dbginfo->num_data_bps = 0;
+> +       dbginfo->num_condition_regs = 0;
+> +       dbginfo->data_bp_alignment = sizeof(long);
+> +       dbginfo->sizeof_condition = 0;
+> +       if (IS_ENABLED(CONFIG_HAVE_HW_BREAKPOINT)) {
+> +               dbginfo->features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
+> +               if (dawr_enabled())
+> +                       dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR;
+> +       } else {
+> +               dbginfo->features = 0;
+> +       }
+> +}
+> +
+>  int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
+>                         unsigned long __user *datalp)
+>  {
+> diff --git a/arch/powerpc/kernel/ptrace/ptrace.c b/arch/powerpc/kernel/ptrace/ptrace.c
+> index e789afae6f56..31e8c5a9171e 100644
+> --- a/arch/powerpc/kernel/ptrace/ptrace.c
+> +++ b/arch/powerpc/kernel/ptrace/ptrace.c
+> @@ -159,37 +159,7 @@ long arch_ptrace(struct task_struct *child, long request,
+>         case PPC_PTRACE_GETHWDBGINFO: {
+>                 struct ppc_debug_info dbginfo;
+>
+> -               dbginfo.version = 1;
+> -#ifdef CONFIG_PPC_ADV_DEBUG_REGS
+> -               dbginfo.num_instruction_bps = CONFIG_PPC_ADV_DEBUG_IACS;
+> -               dbginfo.num_data_bps = CONFIG_PPC_ADV_DEBUG_DACS;
+> -               dbginfo.num_condition_regs = CONFIG_PPC_ADV_DEBUG_DVCS;
+> -               dbginfo.data_bp_alignment = 4;
+> -               dbginfo.sizeof_condition = 4;
+> -               dbginfo.features = PPC_DEBUG_FEATURE_INSN_BP_RANGE |
+> -                                  PPC_DEBUG_FEATURE_INSN_BP_MASK;
+> -#ifdef CONFIG_PPC_ADV_DEBUG_DAC_RANGE
+> -               dbginfo.features |=
+> -                                  PPC_DEBUG_FEATURE_DATA_BP_RANGE |
+> -                                  PPC_DEBUG_FEATURE_DATA_BP_MASK;
+> -#endif
+> -#else /* !CONFIG_PPC_ADV_DEBUG_REGS */
+> -               dbginfo.num_instruction_bps = 0;
+> -               if (ppc_breakpoint_available())
+> -                       dbginfo.num_data_bps = 1;
+> -               else
+> -                       dbginfo.num_data_bps = 0;
+> -               dbginfo.num_condition_regs = 0;
+> -               dbginfo.data_bp_alignment = sizeof(long);
+> -               dbginfo.sizeof_condition = 0;
+> -#ifdef CONFIG_HAVE_HW_BREAKPOINT
+> -               dbginfo.features = PPC_DEBUG_FEATURE_DATA_BP_RANGE;
+> -               if (dawr_enabled())
+> -                       dbginfo.features |= PPC_DEBUG_FEATURE_DATA_BP_DAWR;
+> -#else
+> -               dbginfo.features = 0;
+> -#endif /* CONFIG_HAVE_HW_BREAKPOINT */
+> -#endif /* CONFIG_PPC_ADV_DEBUG_REGS */
+> +               ppc_gethwdinfo(&dbginfo);
+>
+>                 if (copy_to_user(datavp, &dbginfo,
+>                                  sizeof(struct ppc_debug_info)))
+> --
+> 2.13.3
+>
