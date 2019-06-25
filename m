@@ -2,108 +2,93 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBFDC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6146C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430C0216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B790214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbfFYJVO (ORCPT
+        id S1731431AbfFYJVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:21:14 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:19105 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731347AbfFYJVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:21:10 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2CB8F2A3234098BC61A5;
-        Tue, 25 Jun 2019 17:21:05 +0800 (CST)
-Received: from huawei.com (10.175.101.78) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 25 Jun 2019
- 17:20:54 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <jeyu@kernel.org>,
-        <peterz@infradead.org>
-CC:     <yangyingliang@huawei.com>, <namit@vmware.com>,
-        <cj.chengjian@huawei.com>, <sfr@canb.auug.org.au>,
-        <linux-next@vger.kernel.org>
-Subject: [PATCH] modules: fix compile error if don't have strict module rwx
-Date:   Tue, 25 Jun 2019 17:40:28 +0800
-Message-ID: <1561455628-50795-1-git-send-email-yangyingliang@huawei.com>
-X-Mailer: git-send-email 1.8.3
+        Tue, 25 Jun 2019 05:21:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44184 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731407AbfFYJVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:21:17 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 898793082E64;
+        Tue, 25 Jun 2019 09:21:17 +0000 (UTC)
+Received: from carbon (ovpn-200-34.brq.redhat.com [10.40.200.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CCDE10021B4;
+        Tue, 25 Jun 2019 09:21:07 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 11:21:04 +0200
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <jakub.kicinski@netronome.com>, <john.fastabend@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <xdp-newbies@vger.kernel.org>, <bpf@vger.kernel.org>,
+        brouer@redhat.com
+Subject: Re: [PATCH net-next] xdp: Make __mem_id_disconnect static
+Message-ID: <20190625112104.6654a048@carbon>
+In-Reply-To: <20190625023137.29272-1-yuehaibing@huawei.com>
+References: <20190625023137.29272-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.78]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 25 Jun 2019 09:21:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is not defined,
-we need stub for module_enable_nx() and module_enable_x().
+On Tue, 25 Jun 2019 10:31:37 +0800
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is defined, but
-CONFIG_STRICT_MODULE_RWX is disabled, we need stub for
-module_enable_nx.
+> Fix sparse warning:
+> 
+> net/core/xdp.c:88:6: warning:
+>  symbol '__mem_id_disconnect' was not declared. Should it be static?
 
-Move frob_text() outside of the CONFIG_STRICT_MODULE_RWX,
-because it is needed anyway.
+I didn't declare it static as I didn't want it to get inlined.  As
+during development I was using kprobes to inspect this function.  In
+the end I added a tracepoint in this function as kprobes was not enough
+to capture the state needed.
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- kernel/module.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+So, I guess we can declare it static.
 
-diff --git a/kernel/module.c b/kernel/module.c
-index c3ae34c..cfff441 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1875,7 +1875,7 @@ static void mod_sysfs_teardown(struct module *mod)
- 	mod_sysfs_fini(mod);
- }
- 
--#ifdef CONFIG_STRICT_MODULE_RWX
-+#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
- /*
-  * LKM RO/NX protection: protect module's text/ro-data
-  * from modification and any data from execution.
-@@ -1898,6 +1898,7 @@ static void frob_text(const struct module_layout *layout,
- 		   layout->text_size >> PAGE_SHIFT);
- }
- 
-+#ifdef CONFIG_STRICT_MODULE_RWX
- static void frob_rodata(const struct module_layout *layout,
- 			int (*set_memory)(unsigned long start, int num_pages))
- {
-@@ -2010,15 +2011,19 @@ void set_all_modules_text_ro(void)
- 	}
- 	mutex_unlock(&module_mutex);
- }
--#else
-+#else /* !CONFIG_STRICT_MODULE_RWX */
- static void module_enable_nx(const struct module *mod) { }
--#endif
--
-+#endif /*  CONFIG_STRICT_MODULE_RWX */
- static void module_enable_x(const struct module *mod)
- {
- 	frob_text(&mod->core_layout, set_memory_x);
- 	frob_text(&mod->init_layout, set_memory_x);
- }
-+#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
-+static void module_enable_nx(const struct module *mod) { }
-+static void module_enable_x(const struct module *mod) { }
-+#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
-+
- 
- #ifdef CONFIG_LIVEPATCH
- /*
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  net/core/xdp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index b29d7b5..829377c 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -85,7 +85,7 @@ static void __xdp_mem_allocator_rcu_free(struct rcu_head *rcu)
+>  	kfree(xa);
+>  }
+>  
+> -bool __mem_id_disconnect(int id, bool force)
+> +static bool __mem_id_disconnect(int id, bool force)
+>  {
+>  	struct xdp_mem_allocator *xa;
+>  	bool safe_to_remove = true;
+
+
 -- 
-1.8.3
-
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
