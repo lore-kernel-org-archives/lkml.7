@@ -2,97 +2,100 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C503BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520F5C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93BE205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E7AE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbfFYI3n (ORCPT
+        id S1730343AbfFYIao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:29:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44940 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbfFYI3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:29:42 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 636DD3082B6B;
-        Tue, 25 Jun 2019 08:29:42 +0000 (UTC)
-Received: from astarta.redhat.com (ovpn-116-223.ams2.redhat.com [10.36.116.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EEDF608C2;
-        Tue, 25 Jun 2019 08:29:41 +0000 (UTC)
-From:   Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Jiri Benc <jbenc@redhat.com>
-Subject: bpf: test_verifier: sanitation: alu with different scalars
-Date:   Tue, 25 Jun 2019 11:29:40 +0300
-Message-ID: <xunytvceoyob.fsf@redhat.com>
+        Tue, 25 Jun 2019 04:30:44 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:60737 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfFYIao (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:30:44 -0400
+X-Originating-IP: 90.88.16.156
+Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 202B640008;
+        Tue, 25 Jun 2019 08:30:36 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 10:30:36 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Stefan Popa <stefan.popa@analog.com>
+Cc:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        Michael.Hennerich@analog.com, gregkh@linuxfoundation.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: iio: frequency: Use dt-schema for
+ clock-names
+Message-ID: <20190625083036.jrr7kz7f6ks6nqps@flea>
+References: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 25 Jun 2019 08:29:42 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3yps4smao6vtc5y5"
+Content-Disposition: inline
+In-Reply-To: <1561389097-26075-1-git-send-email-stefan.popa@analog.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
 
-I'm wondering, how the sanitaion tests (#903 5.2-rc6 for example)
-are supposed to work on BE arches:
+--3yps4smao6vtc5y5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-{
-	"sanitation: alu with different scalars 1",
-	.insns = {
-	BPF_MOV64_IMM(BPF_REG_0, 1),
-	BPF_LD_MAP_FD(BPF_REG_ARG1, 0),
-	BPF_MOV64_REG(BPF_REG_ARG2, BPF_REG_FP),
-	BPF_ALU64_IMM(BPF_ADD, BPF_REG_ARG2, -16),
-	BPF_ST_MEM(BPF_DW, BPF_REG_FP, -16, 0),
-	BPF_EMIT_CALL(BPF_FUNC_map_lookup_elem),
-	BPF_JMP_IMM(BPF_JNE, BPF_REG_0, 0, 1),
-	BPF_EXIT_INSN(),
-	BPF_LDX_MEM(BPF_B, BPF_REG_1, BPF_REG_0, 0),
+Hi,
 
-reads one byte 0 on BE and 28 on LE (from ->index) since
+On Mon, Jun 24, 2019 at 06:11:37PM +0300, Stefan Popa wrote:
+> Dt-schema can be used for clock-names property.
+>
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> ---
+>  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> index d7adf074..8a2a8f6 100644
+> --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> @@ -27,9 +27,8 @@ properties:
+>      maxItems: 1
+>
+>    clock-names:
+> -    description:
+> -      Must be "clkin"
+> -    maxItems: 1
+> +    items:
+> +      - clkin
 
-	struct test_val {
-		unsigned int index;
-		int foo[MAX_ENTRIES];
-	};
+You can even just have const: clkin here
 
-        struct test_val value = {
-		.index = (6 + 1) * sizeof(int),
-		.foo[6] = 0xabcdef12,
-	};
+Maxime
 
-	BPF_JMP_IMM(BPF_JEQ, BPF_REG_1, 0, 3),
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-So different branches are taken depending of the endianness.
+--3yps4smao6vtc5y5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	BPF_MOV64_IMM(BPF_REG_2, 0),
-	BPF_MOV64_IMM(BPF_REG_3, 0x100000),
-	BPF_JMP_A(2),
-	BPF_MOV64_IMM(BPF_REG_2, 42),
-	BPF_MOV64_IMM(BPF_REG_3, 0x100001),
-	BPF_ALU64_REG(BPF_ADD, BPF_REG_2, BPF_REG_3),
-	BPF_MOV64_REG(BPF_REG_0, BPF_REG_2),
-	BPF_EXIT_INSN(),
-	},
-	.fixup_map_array_48b = { 1 },
-	.result = ACCEPT,
-	.retval = 0x100000,
-},
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRHbrAAKCRDj7w1vZxhR
+xQZuAQC9jlgQRUnCtCGNePxUg5qP7pF5UA7RwPOekZVZTRmsvwD/c9wseWa2S6Qf
+Iz+4hrxBAEEHVy3f/iOqUj5u6guy/AQ=
+=k49w
+-----END PGP SIGNATURE-----
 
-
--- 
-WBR,
-Yauheni Kaliuta
+--3yps4smao6vtc5y5--
