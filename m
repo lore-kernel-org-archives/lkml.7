@@ -2,144 +2,116 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5074C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E625C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8A42085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A002085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="DZuLEnT0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rRbkzdR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfFYM4M (ORCPT
+        id S1730109AbfFYM4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:56:12 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35225 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfFYM4L (ORCPT
+        Tue, 25 Jun 2019 08:56:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34794 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbfFYM4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:56:11 -0400
-Received: by mail-qk1-f195.google.com with SMTP id l128so12456889qke.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:56:11 -0700 (PDT)
+        Tue, 25 Jun 2019 08:56:36 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k11so17792343wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 05:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OurFPUo7gnihcYVub8SOQDvfLe3fR+6xdFiBUG/mGaU=;
-        b=DZuLEnT0c3Anyy8jegKUBD1pB5R05zrrm6Hg1/EXMvo2Azh30aWlDVwzQ+RXchLRx4
-         iC/YEH+9byL2b7UGpVIjBWH8xW/ZF3FPppaGwX4xwZn4cyZQAmeTD7xSQKyzUznHunVi
-         5u+9r26kvl7UvtOw7HersgYkGjYPuhz+17TPW4xuKu47wTkBHPGGXaxe+sIVSE+ccI1Y
-         Mca+ACVEJ5t1XQ2X7BDriCe3dTn7ZfiFxnlGjBD+nX/wcGAbV6ay2T28Sff6M3Zn3npM
-         2Df0OM/lpjKtZxhLZeisUM3a5HsKxUjS8ix42mJ2sSIsulPxOBiAlsdIFQUFVnkRwn1k
-         FRTg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=qkm/sR5hDVqHvpHouxyg9xpi0nH3BM7uRz/CI0HhLcc=;
+        b=rRbkzdR/iSJ0T7wrnOqEN3gyZIFvxf+yrv3oOHKAj8X/giJhNNapGy0bLZvuSxWqoy
+         CTDFhWWjDzlF4vY7BiTDM/avstUHEoCdYIV4ZN2mzkMDQTZM5uvqXY4puAjXMYJNqU/o
+         WxyR4s6RpgtJZ9MAbr29nu6JK+HchV0ZhC6PY4avIOL5GT/pihIkZojP1PRTizuBurbn
+         n/1Laf/xPS6pthwMmJiHMoVHMJjMEWmrt4IRdwoa+fVyGwVHCX1cGQ0l5PApUx8T13Ia
+         OCpIrfJaq1nk4kfqi3F8cxRFkw24Q2sM5QATrVHdSSbg/4Z86pZWSNBIbf0TvX0vER3S
+         8vrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OurFPUo7gnihcYVub8SOQDvfLe3fR+6xdFiBUG/mGaU=;
-        b=Rj00L3Re9s2B9B0shFHgOXRkE2dpEhKjphhJiKTuS0lzIORy7kceMuor5UJu3hVlia
-         k+JEZAKhuWIjmAUyzhjIWiaBVFH1PlwS3v2EtTy4lnofqBXHls183KcMqJb0OdasGOIB
-         FqJZX7dqw6r5IZmyZcQJ/Gy9phA0A0jVACs4fHXow3JvqVigBkkp54XW2xubloQEqbGm
-         mIKqYA4NMTLJm8d8pnPAQyVnU8MjulKLy9Sxh0mUdy95w+WY4q773Rd/Z0uiRc55mld4
-         BwbZQIl+DUqcDSA70zFCQkiykmJ8fWKyXuIQcyG/M2jC4yZKjOOKTAagWOjbCLyZQm8Y
-         MLQQ==
-X-Gm-Message-State: APjAAAUuijSJF4PLf/7b/qIY5Zei4B/3eqiDOyJjo28l96kTAsgmFNhV
-        WzVNpTNWhY18zbGNOM1929WEfA==
-X-Google-Smtp-Source: APXvYqwWcl7FHe5Q6JvWZnREmdhAYa+kjEanHdiJYtr/n0jOQquCki6IOPDpMJhUz8kj9KvU+BHsIA==
-X-Received: by 2002:a05:620a:15c9:: with SMTP id o9mr84310245qkm.195.1561467371037;
-        Tue, 25 Jun 2019 05:56:11 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id s130sm6740825qke.104.2019.06.25.05.56.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 05:56:10 -0700 (PDT)
-Message-ID: <1561467369.5154.67.camel@lca.pw>
-Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
- breaks clang build
-From:   Qian Cai <cai@lca.pw>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        natechancellor@gmail.com, ndesaulniers@google.com
-Date:   Tue, 25 Jun 2019 08:56:09 -0400
-In-Reply-To: <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
-References: <1561464964.5154.63.camel@lca.pw>
-         <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=qkm/sR5hDVqHvpHouxyg9xpi0nH3BM7uRz/CI0HhLcc=;
+        b=UHGRpF62Q8orUSaHfTtxoBWGYE2x3TNgVhnUyoWN2VLmMmDa/PXMW4Ji3WCHofo6eB
+         Z4IVSQXGTJpW5oW32blPleKKGZd3T4Yj5kfat4ojaZpsWX0D+aQuKHMZVV2TrMrKGKeZ
+         iyX1lybJWQ//8YiVrCY/J7pKXdsZmoqChCSkIJkZH1LHF/GMAFxo2FUmBoZnnRG5J0+F
+         i48tC3765DWN1kxfvHhBbsTkaywLVjJytiSE8Gg7/ulPy9eAbU7Fp78ZMOm1w438g1cq
+         bgIAMLZiPP6GEyNeinyi41kfMq991QzoAv5tdc0n0aJd690pxLzgzIWNSvl0igbc82Gd
+         c9Jg==
+X-Gm-Message-State: APjAAAUd5BfQsY28wtpZy1e+wquiXRNLc4i5Utsdaw28sqeoU8uz1H1w
+        A9YSAfw/ouIZ0aMlo7p0Gu1uyA==
+X-Google-Smtp-Source: APXvYqwKYsH2s/ZCuUhf0NqgerUa9YXoCsLcRdER1sXKnWMSunPYA+thz52eb+vjOxTEeRfQTQSw2Q==
+X-Received: by 2002:a5d:50cc:: with SMTP id f12mr36721980wrt.129.1561467393906;
+        Tue, 25 Jun 2019 05:56:33 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id o14sm11817057wrp.77.2019.06.25.05.56.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Jun 2019 05:56:33 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 13:56:31 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/7] mfd: ioc3: Add driver for SGI IOC3 chip
+Message-ID: <20190625125631.GH21119@dell>
+References: <20190613170636.6647-1-tbogendoerfer@suse.de>
+ <20190613170636.6647-6-tbogendoerfer@suse.de>
+ <20190625090451.GA9794@alpha.franken.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190625090451.GA9794@alpha.franken.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 13:47 +0100, Vincenzo Frascino wrote:
-> Hi Qian,
-> 
-> On 25/06/2019 13:16, Qian Cai wrote:
-> > The linux-next commit "arm64: vdso: Substitute gettimeofday() with C
-> > implementation" [1] breaks clang build.
+On Tue, 25 Jun 2019, Thomas Bogendoerfer wrote:
+
+> On Thu, Jun 13, 2019 at 07:06:31PM +0200, Thomas Bogendoerfer wrote:
+> > SGI IOC3 chip has integrated ethernet, keyboard and mouse interface.
+> > It also supports connecting a SuperIO chip for serial and parallel
+> > interfaces. IOC3 is used inside various SGI systemboards and add-on
+> > cards with different equipped external interfaces.
 > > 
-> > error: invalid value 'tiny' in '-mcode-model tiny'
-> > make[1]: *** [scripts/Makefile.build:279:
-> > arch/arm64/kernel/vdso/vgettimeofday.o] Error 1
-> > make[1]: *** Waiting for unfinished jobs....
-> > make: *** [arch/arm64/Makefile:180: vdso_prepare] Error 2
+> > Support for ethernet and serial interfaces were implemented inside
+> > the network driver. This patchset moves out the not network related
+> > parts to a new MFD driver, which takes care of card detection,
+> > setup of platform devices and interrupt distribution for the subdevices.
 > > 
-> > [1] https://patchwork.kernel.org/patch/11009663/
+> > Serial portion: Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > > 
+> > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> > ---
+> >  arch/mips/include/asm/sn/ioc3.h     |  345 +++----
+> >  arch/mips/sgi-ip27/ip27-timer.c     |   20 -
+> >  drivers/mfd/Kconfig                 |   13 +
+> >  drivers/mfd/Makefile                |    1 +
+> >  drivers/mfd/ioc3.c                  |  683 +++++++++++++
 > 
-> I am not sure what does exactly break from your report. Could you please
-> provide
-> more details?
+> Lee,
+> 
+> can you give me an indication, if the MFD changes are ok now
+> or if I need to improve it further.
 
-Here is the config to reproduce.
+I will do, when I get to them.
 
-https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+My review list currently runs into the 50s.
 
-# make CC=clang -j $(nr_cpus)
-
-I can get it working again by removing "-mcmodel=tiny" in
-arch/arm64/kernel/vdso/Makefile
-
-> 
-> On my env:
-> 
-> $ make mrproper && make defconfig && make CC=clang HOSTCC=clang -j$(nproc)
-> 
-> ...
-> 
-> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT is clang, the compat vDSO will
-> not
-> be built
-> 
-> ...
-> 
->   LDS     arch/arm64/kernel/vdso/vdso.lds
->   AS      arch/arm64/kernel/vdso/note.o
->   AS      arch/arm64/kernel/vdso/sigreturn.o
->   CC      arch/arm64/kernel/vdso/vgettimeofday.o
->   LD      arch/arm64/kernel/vdso/vdso.so.dbg
->   VDSOCHK arch/arm64/kernel/vdso/vdso.so.dbg
->   VDSOSYM include/generated/vdso-offsets.h
-> 
-> ...
-> 
->   LD      vmlinux.o
->   MODPOST vmlinux.o
->   MODINFO modules.builtin.modinfo
->   KSYM    .tmp_kallsyms1.o
->   KSYM    .tmp_kallsyms2.o
->   LD      vmlinux
->   SORTEX  vmlinux
->   SYSMAP  System.map
->   Building modules, stage 2.
->   OBJCOPY arch/arm64/boot/Image
->   MODPOST 483 modules
-> 
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
