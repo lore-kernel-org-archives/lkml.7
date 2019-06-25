@@ -2,123 +2,83 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7960C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F728C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DAC2146E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:16:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lfU+EkDA"
+	by mail.kernel.org (Postfix) with ESMTP id EC61F2133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfFYQQ5 (ORCPT
+        id S1727686AbfFYQSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:16:57 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:45420 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726696AbfFYQQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:16:56 -0400
-Received: by mail-vk1-f196.google.com with SMTP id e83so3569132vke.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:16:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bxHs3cMUSY/lcnTBaWC9lm65VMyS9xe/CNCPh9Pq+7Y=;
-        b=lfU+EkDAWcPLRsWFZdyEfPOrokoZXTJOFAaKyF3r6LE750Q13wN0o6eV2p2X6/qNh3
-         xlGQrTOAWphdM3tf5Q34V9WcKc5qb9CS3qnIXd4/GggBxU4ZWYv8/urgyGIE/WjwL9wu
-         JBhXvzUzCj7LzikrH2PdogJbPcFyLBQSVovo2yg69817e8gHinU5WNLuBem3pzfcgKhm
-         uwj1XNHUc/4wK7wKWvtPAIKoXhNIipBITpomNKuKYvub+6wZ7z9/OKSUdHzocg5uIVxn
-         gjVsMiEuEbdySUgXhOjJfMxL6lLkNNocT19B5soH7h9dL3yAl4V0IUneDji3O4ZE3idz
-         OLlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bxHs3cMUSY/lcnTBaWC9lm65VMyS9xe/CNCPh9Pq+7Y=;
-        b=jpjlm1yq2wXuTOrLqiOZLrW313QVhvn5WD9gsPb+YD1I8Xkuo2G6Le5rJP+iHjdM0D
-         7g6yydhnmbk+oEaGHw/TJgUHovXoo8YOmeLrjQqs5A8CFY7DxJGcWa/GEmVC95zq8MEg
-         d/U4qoAavEHyyxlA30HTOExo67rY87Rl2NLyRA/+2SjEbuQ1zXbKB9th1an2aQoNumr9
-         XHpgQCL+2/83PYCtSwjAYWlH9JOhDoIGmU+1cFRKvZvrg9iFA++78lhA+OTJTEzM0aza
-         CPulWcx6U8H1USp4bNN44TBn8OgKAPVWdUTwYASBJb3WQKa5scpej+9fs07FfL+U7d7A
-         3FUg==
-X-Gm-Message-State: APjAAAWHTbrsq5poAuy8vJZUJ8OxhcLCzTEBxyGYe6nke3gmx5OZ/SWt
-        lnNsd7wqUB8cKkJs9rbvF/cD3PSO1outXsQaYMUHXA==
-X-Google-Smtp-Source: APXvYqzpmnLCOXbPK1tWPjNlTXEyP5BOMbJ27cXAFZ8jzDcM35yx9cTomQz6y6wya6Cj0FLuD1+b0URocoD+vFFBtcY=
-X-Received: by 2002:a1f:b0b:: with SMTP id 11mr6742950vkl.64.1561479415224;
- Tue, 25 Jun 2019 09:16:55 -0700 (PDT)
+        Tue, 25 Jun 2019 12:18:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:44760 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726420AbfFYQSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 12:18:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 916D1360;
+        Tue, 25 Jun 2019 09:18:34 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F12313F718;
+        Tue, 25 Jun 2019 09:18:31 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
+        linux@armlinux.org.uk, ralf@linux-mips.org, paul.burton@mips.com,
+        daniel.lezcano@linaro.org, tglx@linutronix.de, salyzyn@android.com,
+        pcc@google.com, shuah@kernel.org, 0x7f454c46@gmail.com,
+        linux@rasmusvillemoes.dk, huw@codeweavers.com,
+        sthotton@marvell.com, andre.przywara@arm.com
+Subject: [PATCH 1/3] lib/vdso: Delay mask application in do_hres()
+Date:   Tue, 25 Jun 2019 17:18:02 +0100
+Message-Id: <20190625161804.38713-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190624133607.GI29497@fuggles.cambridge.arm.com>
+References: <20190624133607.GI29497@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-References: <1561058881-9814-1-git-send-email-cai@lca.pw> <201906201812.8B49A36@keescook>
- <201906201818.6C90BC875@keescook> <1561121745.5154.37.camel@lca.pw>
-In-Reply-To: <1561121745.5154.37.camel@lca.pw>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Tue, 25 Jun 2019 18:16:43 +0200
-Message-ID: <CAG_fn=WuEL0ZGdmy3fhY9gW-nBw_qG9_yb3Ut1+17By3h=d0Jg@mail.gmail.com>
-Subject: Re: [PATCH -next] slub: play init_on_free=1 well with SLAB_RED_ZONE
-To:     Qian Cai <cai@lca.pw>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 2:55 PM Qian Cai <cai@lca.pw> wrote:
->
-> On Thu, 2019-06-20 at 18:19 -0700, Kees Cook wrote:
-> > On Thu, Jun 20, 2019 at 06:14:33PM -0700, Kees Cook wrote:
-> > > On Thu, Jun 20, 2019 at 03:28:01PM -0400, Qian Cai wrote:
-> > > > diff --git a/mm/slub.c b/mm/slub.c
-> > > > index a384228ff6d3..787971d4fa36 100644
-> > > > --- a/mm/slub.c
-> > > > +++ b/mm/slub.c
-> > > > @@ -1437,7 +1437,7 @@ static inline bool slab_free_freelist_hook(st=
-ruct
-> > > > kmem_cache *s,
-> > > >           do {
-> > > >                   object =3D next;
-> > > >                   next =3D get_freepointer(s, object);
-> > > > -                 memset(object, 0, s->size);
-> > > > +                 memset(object, 0, s->object_size);
-> > >
-> > > I think this should be more dynamic -- we _do_ want to wipe all
-> > > of object_size in the case where it's just alignment and padding
-> > > adjustments. If redzones are enabled, let's remove that portion only.
-> >
-> > (Sorry, I meant: all of object's "size", not object_size.)
-> >
->
-> I suppose Alexander is going to revise the series anyway, so he can proba=
-bly
-> take care of the issue here in the new version as well. Something like th=
-is,
->
-> memset(object, 0, s->object_size);
-> memset(object, 0, s->size - s->inuse);
-Looks like we also need to account for the redzone size. I'm testing
-the fix right now.
+do_hres() in the vDSO generic library masks the hw counter value
+immediately after reading it.
 
+Postpone the mask application after checking if the syscall fallback is
+enabled, in order to be able to detect a possible fallback for the
+architectures that have masks smaller than ULLONG_MAX.
 
---
-Alexander Potapenko
-Software Engineer
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ lib/vdso/gettimeofday.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index ef28cc5d7bff..ee1221ba1d32 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -35,12 +35,12 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
+ 
+ 	do {
+ 		seq = vdso_read_begin(vd);
+-		cycles = __arch_get_hw_counter(vd->clock_mode) &
+-			vd->mask;
++		cycles = __arch_get_hw_counter(vd->clock_mode);
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+ 		if (unlikely((s64)cycles < 0))
+ 			return clock_gettime_fallback(clk, ts);
++		cycles &= vd->mask;
+ 		if (cycles > last)
+ 			ns += (cycles - last) * vd->mult;
+ 		ns >>= vd->shift;
+-- 
+2.22.0
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
