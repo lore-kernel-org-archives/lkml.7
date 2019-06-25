@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAEEC4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61E6C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1A02083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDA620848
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gP9uYvk9"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PbgtNCDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbfFYANZ (ORCPT
+        id S1729788AbfFYANb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:13:25 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34764 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729613AbfFYANM (ORCPT
+        Mon, 24 Jun 2019 20:13:31 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:20606 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729589AbfFYANI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:13:12 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P09dlY018475
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:13:10 -0700
+        Mon, 24 Jun 2019 20:13:08 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5P087Kh012880
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:13:08 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=3XZFERUpQR9pfQReUygYqP0Ugwxnn7ZlmK3Hj2ioXA8=;
- b=gP9uYvk9m8yAdtzGQs0XBLX8EnTnPpfzTgbRHqWiehHM03h4T22lEs/DkZ5H4o6gkQ7K
- KXlIyL0QYQ9hjbl6u4GESqmPMbO+19kdVAeiH2mWYhOqCTCGyyK8b9luL+QmCW/ac1m2
- 4Jbmts9ZD8cF41JQBoBYvFBTYtSUv33Go8o= 
+ content-type; s=facebook; bh=Kr37aYRy2KacRNeWnEOl8WIgUYHSnWgZ3fV+borBCvY=;
+ b=PbgtNCDzYwbcMDtTXSXCHRmWRfbMZn8ph3GVIZcgyrJ4iXSMnpMCUEuIprfzqQxTugLt
+ CTJUOFz3gJfM5B+/JWlIoxw4Re2hAbQm75Gf3rhH0irVDpUbGb/Ka4rWYoQQ9EUtANFL
+ +hnoUF91iNrCNMSBInBfRt1BvO0049fa7j0= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2tawbtarag-4
+        by m0001303.ppops.net with ESMTP id 2t9g0agkba-5
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:13:10 -0700
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:13:07 -0700
 Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 24 Jun 2019 17:13:08 -0700
+ 15.1.1713.5; Mon, 24 Jun 2019 17:13:07 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id C93A962E206E; Mon, 24 Jun 2019 17:13:07 -0700 (PDT)
+        id ED70962E093E; Mon, 24 Jun 2019 17:13:02 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -52,9 +52,9 @@ CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
         <akpm@linux-foundation.org>, <hdanton@sina.com>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v9 6/6] mm,thp: avoid writes to file with THP in pagecache
-Date:   Mon, 24 Jun 2019 17:12:46 -0700
-Message-ID: <20190625001246.685563-7-songliubraving@fb.com>
+Subject: [PATCH v9 4/6] khugepaged: rename collapse_shmem() and khugepaged_scan_shmem()
+Date:   Mon, 24 Jun 2019 17:12:44 -0700
+Message-ID: <20190625001246.685563-5-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190625001246.685563-1-songliubraving@fb.com>
 References: <20190625001246.685563-1-songliubraving@fb.com>
@@ -64,9 +64,9 @@ Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-24_16:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=804 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=630 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1906250000
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,166 +74,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In previous patch, an application could put part of its text section in
-THP via madvise(). These THPs will be protected from writes when the
-application is still running (TXTBSY). However, after the application
-exits, the file is available for writes.
+Next patch will add khugepaged support of non-shmem files. This patch
+renames these two functions to reflect the new functionality:
 
-This patch avoids writes to file THP by dropping page cache for the file
-when the file is open for write. A new counter nr_thps is added to struct
-address_space. In do_last(), if the file is open for write and nr_thps
-is non-zero, we drop page cache for the whole file.
+    collapse_shmem()        =>  collapse_file()
+    khugepaged_scan_shmem() =>  khugepaged_scan_file()
 
-Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- fs/inode.c         |  3 +++
- fs/namei.c         | 23 ++++++++++++++++++++++-
- include/linux/fs.h | 32 ++++++++++++++++++++++++++++++++
- mm/filemap.c       |  1 +
- mm/khugepaged.c    |  4 +++-
- 5 files changed, 61 insertions(+), 2 deletions(-)
+ mm/khugepaged.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index df6542ec3b88..518113a4e219 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -181,6 +181,9 @@ int inode_init_always(struct super_block *sb, struct inode *inode)
- 	mapping->flags = 0;
- 	mapping->wb_err = 0;
- 	atomic_set(&mapping->i_mmap_writable, 0);
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	atomic_set(&mapping->nr_thps, 0);
-+#endif
- 	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
- 	mapping->private_data = NULL;
- 	mapping->writeback_index = 0;
-diff --git a/fs/namei.c b/fs/namei.c
-index 20831c2fbb34..3d95e94029cc 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3249,6 +3249,23 @@ static int lookup_open(struct nameidata *nd, struct path *path,
- 	return error;
- }
- 
-+/*
-+ * The file is open for write, so it is not mmapped with VM_DENYWRITE. If
-+ * it still has THP in page cache, drop the whole file from pagecache
-+ * before processing writes. This helps us avoid handling write back of
-+ * THP for now.
-+ */
-+static inline void release_file_thp(struct file *file)
-+{
-+	if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS)) {
-+		struct inode *inode = file_inode(file);
-+
-+		if (inode_is_open_for_write(inode) &&
-+		    filemap_nr_thps(inode->i_mapping))
-+			truncate_pagecache(inode, 0);
-+	}
-+}
-+
- /*
-  * Handle the last step of open()
-  */
-@@ -3418,7 +3435,11 @@ static int do_last(struct nameidata *nd,
- 		goto out;
- opened:
- 	error = ima_file_check(file, op->acc_mode);
--	if (!error && will_truncate)
-+	if (error)
-+		goto out;
-+
-+	release_file_thp(file);
-+	if (will_truncate)
- 		error = handle_truncate(file);
- out:
- 	if (unlikely(error > 0)) {
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f7fdfe93e25d..082fc581c7fc 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -427,6 +427,7 @@ int pagecache_write_end(struct file *, struct address_space *mapping,
-  * @i_pages: Cached pages.
-  * @gfp_mask: Memory allocation flags to use for allocating pages.
-  * @i_mmap_writable: Number of VM_SHARED mappings.
-+ * @nr_thps: Number of THPs in the pagecache (non-shmem only).
-  * @i_mmap: Tree of private and shared mappings.
-  * @i_mmap_rwsem: Protects @i_mmap and @i_mmap_writable.
-  * @nrpages: Number of page entries, protected by the i_pages lock.
-@@ -444,6 +445,10 @@ struct address_space {
- 	struct xarray		i_pages;
- 	gfp_t			gfp_mask;
- 	atomic_t		i_mmap_writable;
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	/* number of thp, only for non-shmem files */
-+	atomic_t		nr_thps;
-+#endif
- 	struct rb_root_cached	i_mmap;
- 	struct rw_semaphore	i_mmap_rwsem;
- 	unsigned long		nrpages;
-@@ -2790,6 +2795,33 @@ static inline errseq_t filemap_sample_wb_err(struct address_space *mapping)
- 	return errseq_sample(&mapping->wb_err);
- }
- 
-+static inline int filemap_nr_thps(struct address_space *mapping)
-+{
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	return atomic_read(&mapping->nr_thps);
-+#else
-+	return 0;
-+#endif
-+}
-+
-+static inline void filemap_nr_thps_inc(struct address_space *mapping)
-+{
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	atomic_inc(&mapping->nr_thps);
-+#else
-+	WARN_ON_ONCE(1);
-+#endif
-+}
-+
-+static inline void filemap_nr_thps_dec(struct address_space *mapping)
-+{
-+#ifdef CONFIG_READ_ONLY_THP_FOR_FS
-+	atomic_dec(&mapping->nr_thps);
-+#else
-+	WARN_ON_ONCE(1);
-+#endif
-+}
-+
- extern int vfs_fsync_range(struct file *file, loff_t start, loff_t end,
- 			   int datasync);
- extern int vfs_fsync(struct file *file, int datasync);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index e79ceccdc6df..a8e86c136381 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -205,6 +205,7 @@ static void unaccount_page_cache_page(struct address_space *mapping,
- 			__dec_node_page_state(page, NR_SHMEM_THPS);
- 	} else if (PageTransHuge(page)) {
- 		__dec_node_page_state(page, NR_FILE_THPS);
-+		filemap_nr_thps_dec(mapping);
- 	}
- 
- 	/*
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index acbbbeaa083c..0bbc6be51197 100644
+index 0f7419938008..158cad542627 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -1503,8 +1503,10 @@ static void collapse_file(struct mm_struct *mm,
+@@ -1287,7 +1287,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ }
  
- 	if (is_shmem)
- 		__inc_node_page_state(new_page, NR_SHMEM_THPS);
--	else
-+	else {
- 		__inc_node_page_state(new_page, NR_FILE_THPS);
-+		filemap_nr_thps_inc(mapping);
-+	}
+ /**
+- * collapse_shmem - collapse small tmpfs/shmem pages into huge one.
++ * collapse_file - collapse small tmpfs/shmem pages into huge one.
+  *
+  * Basic scheme is simple, details are more complex:
+  *  - allocate and lock a new huge page;
+@@ -1304,10 +1304,11 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+  *    + restore gaps in the page cache;
+  *    + unlock and free huge page;
+  */
+-static void collapse_shmem(struct mm_struct *mm,
+-		struct address_space *mapping, pgoff_t start,
++static void collapse_file(struct mm_struct *mm,
++		struct file *file, pgoff_t start,
+ 		struct page **hpage, int node)
+ {
++	struct address_space *mapping = file->f_mapping;
+ 	gfp_t gfp;
+ 	struct page *new_page;
+ 	struct mem_cgroup *memcg;
+@@ -1563,11 +1564,11 @@ static void collapse_shmem(struct mm_struct *mm,
+ 	/* TODO: tracepoints */
+ }
  
- 	if (nr_none) {
- 		struct zone *zone = page_zone(new_page);
+-static void khugepaged_scan_shmem(struct mm_struct *mm,
+-		struct address_space *mapping,
+-		pgoff_t start, struct page **hpage)
++static void khugepaged_scan_file(struct mm_struct *mm,
++		struct file *file, pgoff_t start, struct page **hpage)
+ {
+ 	struct page *page = NULL;
++	struct address_space *mapping = file->f_mapping;
+ 	XA_STATE(xas, &mapping->i_pages, start);
+ 	int present, swap;
+ 	int node = NUMA_NO_NODE;
+@@ -1631,16 +1632,15 @@ static void khugepaged_scan_shmem(struct mm_struct *mm,
+ 			result = SCAN_EXCEED_NONE_PTE;
+ 		} else {
+ 			node = khugepaged_find_target_node();
+-			collapse_shmem(mm, mapping, start, hpage, node);
++			collapse_file(mm, file, start, hpage, node);
+ 		}
+ 	}
+ 
+ 	/* TODO: tracepoints */
+ }
+ #else
+-static void khugepaged_scan_shmem(struct mm_struct *mm,
+-		struct address_space *mapping,
+-		pgoff_t start, struct page **hpage)
++static void khugepaged_scan_file(struct mm_struct *mm,
++		struct file *file, pgoff_t start, struct page **hpage)
+ {
+ 	BUILD_BUG();
+ }
+@@ -1722,8 +1722,7 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages,
+ 				file = get_file(vma->vm_file);
+ 				up_read(&mm->mmap_sem);
+ 				ret = 1;
+-				khugepaged_scan_shmem(mm, file->f_mapping,
+-						pgoff, hpage);
++				khugepaged_scan_file(mm, file, pgoff, hpage);
+ 				fput(file);
+ 			} else {
+ 				ret = khugepaged_scan_pmd(mm, vma,
 -- 
 2.17.1
 
