@@ -2,98 +2,130 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB06C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B61C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107BC21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E9420883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 18:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JxNg8q13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbfFYSCt (ORCPT
+        id S1731279AbfFYSEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 14:02:49 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58790 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfFYSCj (ORCPT
+        Tue, 25 Jun 2019 14:04:07 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42166 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfFYSEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 14:02:39 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: bbeckett)
-        with ESMTPSA id 2ECC328626E
-From:   Robert Beckett <bob.beckett@collabora.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH v3 2/4] drm/imx: notify drm core before sending event during crtc disable
-Date:   Tue, 25 Jun 2019 18:59:13 +0100
-Message-Id: <066eb916ec920e0515367548e4af2ee28f9d0a43.1561483965.git.bob.beckett@collabora.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <cover.1561483965.git.bob.beckett@collabora.com>
-References: <cover.1561483965.git.bob.beckett@collabora.com>
+        Tue, 25 Jun 2019 14:04:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s184so13216524oie.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 11:04:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+ZhBSNWMG71/hoVLbHT+wkJMxkbtm8D8gJnUatkLjU=;
+        b=JxNg8q13dPoy4++bWTLKe91YyHwlNjFnbzSb9Om/uZZjmzDhnDweJK+SXVAHxvQJR0
+         312VGhMneNMNXAmSV6hMRZIzT4bIOEkHXQoVC3M4u9DoF+fAlTSvPDyjEiVH1eTZKAv6
+         dp2nCpruoX6QC/iIKdTTjv2kOKKIAnLDyxY0m5z6y8S0clG2ID2Kd3dCyQI6rh541kFT
+         eDdVfoEDrUI7YN4BuqjchbcpiBzhNte5u19MgaVZHdA1NCRepz4PjjVsuhg3X5n+bs85
+         X+HfBTjHRFVQoAtJFMiji2LpwQIjXK1seUAZDPl9j1P4iwnhlcEX3jRF05VVFomoae2Q
+         6U5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+ZhBSNWMG71/hoVLbHT+wkJMxkbtm8D8gJnUatkLjU=;
+        b=FJWLHRiEnncl7D+r/Y9U0neEiplvJDtrlrG2MbSqx3KYESwjAbZbDatdz6ehlCZBcF
+         5OISniMtQjvRCMS6aiJmtxFoZ68NKX0DDDezkgUE056ErxLxxWnV0LBFMvDezo5nwHIY
+         ca+mLv17OiLpJMbiEjyVQ1VDatuettynq7UTtFiiQxqQjn/Uh2k7hi6gFvmV7PWltrcT
+         bXn3F/yvLejdHMaqBd5PiKrnwqhR5HZ8Ur6DEJy2adddI1Pb0UvdZCYdtIgsJYbwXdZE
+         ytnggISC7L1LFAaV67urM7DNbZpcyvtzb8Fr/WGEwUr0kMVDBoOEd79qhGi8Sw5LV9kh
+         f4NA==
+X-Gm-Message-State: APjAAAXfaSCcbWJ3Twwk4vu1Vech36KriPFftiWzH4DXnbvsmkx3/Omo
+        mRWHHiHJFhJeb4mvtINKfwhfORFlisOlG76vsjn64A==
+X-Google-Smtp-Source: APXvYqz6T9TVXWGjVm88Qsyic/J7sZ8rY/3bbGIhMBzOCJnst1XOiiw6CA8iBdJBDNkwj6/NRoOe4+QnfOGQ8i6wx08=
+X-Received: by 2002:aca:d60c:: with SMTP id n12mr15532591oig.105.1561485845899;
+ Tue, 25 Jun 2019 11:04:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
+ <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+ <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
+In-Reply-To: <20190625150053.GJ11400@dhcp22.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 25 Jun 2019 11:03:53 -0700
+Message-ID: <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
+Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Notify drm core before sending pending events during crtc disable.
-This fixes the first event after disable having an old stale timestamp
-by having drm_crtc_vblank_off update the timestamp to now.
+On Tue, Jun 25, 2019 at 8:01 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
+> > On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
+> > > I asked for this simply because it was not exported historically. In
+> > > general I want to establish explicit export-type criteria so the
+> > > community can spend less time debating when to use EXPORT_SYMBOL_GPL
+> > > [1].
+> > >
+> > > The thought in this instance is that it is not historically exported
+> > > to modules and it is safer from a maintenance perspective to start
+> > > with GPL-only for new symbols in case we don't want to maintain that
+> > > interface long-term for out-of-tree modules.
+> > >
+> > > Yes, we always reserve the right to remove / change interfaces
+> > > regardless of the export type, but history has shown that external
+> > > pressure to keep an interface stable (contrary to
+> > > Documentation/process/stable-api-nonsense.rst) tends to be less for
+> > > GPL-only exports.
+> >
+> > Fully agreed.  In the end the decision is with the MM maintainers,
+> > though, although I'd prefer to keep it as in this series.
+>
+> I am sorry but I am not really convinced by the above reasoning wrt. to
+> the allocator API and it has been a subject of many changes over time. I
+> do not remember a single case where we would be bending the allocator
+> API because of external modules and I am pretty sure we will push back
+> heavily if that was the case in the future.
 
-This was seen while debugging weston log message:
-Warning: computed repaint delay is insane: -8212 msec
+This seems to say that you have no direct experience of dealing with
+changing symbols that that a prominent out-of-tree module needs? GPU
+drivers and the core-mm are on a path to increase their cooperation on
+memory management mechanisms over time, and symbol export changes for
+out-of-tree GPU drivers have been a significant source of friction in
+the past.
 
-This occured due to:
-1. driver starts up
-2. fbcon comes along and restores fbdev, enabling vblank
-3. vblank_disable_fn fires via timer disabling vblank, keeping vblank
-seq number and time set at current value
-(some time later)
-4. weston starts and does a modeset
-5. atomic commit disables crtc while it does the modeset
-6. ipu_crtc_atomic_disable sends vblank with old seq number and time
+> So in this particular case I would go with consistency and export the
+> same way we do with other functions. Also we do not want people to
+> reinvent this API and screw that like we have seen in other cases when
+> external modules try reimplement core functionality themselves.
 
-Fixes: a474478642d5 ("drm/imx: fix crtc vblank state regression")
+Consistency is a weak argument when the cost to the upstream community
+is negligible. If the same functionality was available via another /
+already exported interface *that* would be an argument to maintain the
+existing export policy. "Consistency" in and of itself is not a
+precedent we can use more widely in default export-type decisions.
 
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
----
- drivers/gpu/drm/imx/ipuv3-crtc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
-index 9cc1d678674f..e04d6efff1b5 100644
---- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-+++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-@@ -91,14 +91,14 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
- 	ipu_dc_disable(ipu);
- 	ipu_prg_disable(ipu);
- 
-+	drm_crtc_vblank_off(crtc);
-+
- 	spin_lock_irq(&crtc->dev->event_lock);
- 	if (crtc->state->event) {
- 		drm_crtc_send_vblank_event(crtc, crtc->state->event);
- 		crtc->state->event = NULL;
- 	}
- 	spin_unlock_irq(&crtc->dev->event_lock);
--
--	drm_crtc_vblank_off(crtc);
- }
- 
- static void imx_drm_crtc_reset(struct drm_crtc *crtc)
--- 
-2.18.0
-
+Effectively I'm arguing EXPORT_SYMBOL_GPL by default with a later
+decision to drop the _GPL. Similar to how we are careful to mark sysfs
+interfaces in Documentation/ABI/ that we are not fully committed to
+maintaining over time, or are otherwise so new that there is not yet a
+good read on whether they can be made permanent.
