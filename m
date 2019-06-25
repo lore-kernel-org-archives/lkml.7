@@ -2,126 +2,197 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76D3C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDEEC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97390205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02F92077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 02:05:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="0k0CcKHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbfFYB7e (ORCPT
+        id S1730324AbfFYCFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:59:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33656 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729601AbfFYB7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:59:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 071ACAB5F;
-        Tue, 25 Jun 2019 01:59:31 +0000 (UTC)
-Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for
- hardware raid5/6
-To:     Eric Wheeler <bcache@lists.ewheeler.net>
-Cc:     linux-block@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:BCACHE (BLOCK LAYER CACHE)" <linux-bcache@vger.kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
- <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
- <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>
- <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
-From:   Coly Li <colyli@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Labs
-Message-ID: <8a9131dc-9bf7-a24a-f7b8-35e0c019e905@suse.de>
-Date:   Tue, 25 Jun 2019 09:59:23 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
-Content-Type: text/plain; charset=iso-2022-jp
+        Mon, 24 Jun 2019 22:05:09 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35426 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729601AbfFYCFI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 22:05:08 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 488C6891A9;
+        Tue, 25 Jun 2019 14:05:05 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1561428305;
+        bh=+6URSfGtIdmUEn9Jok/S4j5d2CkYStHkZ1g8pNXng0E=;
+        h=From:To:CC:Subject:Date:References;
+        b=0k0CcKHQFnLwzTLuvJNcizX25qlsvfR4/h0JHu6wP2R8r0WiwGJF1d77CLG9OvbW8
+         +q8ppt+u/Pb9+Si21qLowc4HwYnxuTDEIBneMFHuTnU2dR4cLQ69NVEa4erK6Zoi+T
+         q5aMND/wS+kVACUSsJpIyboMj1IT0esbC6t+0HUeSI7Qkc7eHykIHs7kwLrZ+NtKmu
+         D0ynAAVrBnQcWWAI26AADyrWxOZVh9uD56z9cHYB2ooP0l5uHVS5gcazUAPlwg4Szi
+         mEXxdhwB/Azuw+KQvQ5fkGX3kEr0YSsYAw7Eg0ygcJugOmEfRlK0TE5kjArd3yAF1/
+         XCa45k36Q5pFA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d1181510001>; Tue, 25 Jun 2019 14:05:05 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 25 Jun 2019 14:05:05 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 25 Jun 2019 14:05:05 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+CC:     Jason Cooper <jason@lakedaemon.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Kirkwood PCI Express and bridges
+Thread-Topic: Kirkwood PCI Express and bridges
+Thread-Index: AQHVJ+ZHqWcIqP7kgUutSbOlaor9TQ==
+Date:   Tue, 25 Jun 2019 02:05:04 +0000
+Message-ID: <dc50b20e47d94f2294b3d8889d0468c4@svr-chch-ex1.atlnz.lc>
+References: <403548ec3a7543b08ca32e47a1465e70@svr-chch-ex1.atlnz.lc>
+ <20190621073318.3bcd940e@windsurf>
+ <936d1790c94f4b9c884bc79819b8b777@svr-chch-ex1.atlnz.lc>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.10]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/25 2:14 上午, Eric Wheeler wrote:
-> On Mon, 24 Jun 2019, Coly Li wrote:
-> 
->> On 2019/6/23 7:16 上午, Eric Wheeler wrote:
->>> From: Eric Wheeler <git@linux.ewheeler.net>
->>>
->>> While some drivers set queue_limits.io_opt (e.g., md raid5), there are
->>> currently no SCSI/RAID controller drivers that do.  Previously stripe_size
->>> and partial_stripes_expensive were read-only values and could not be
->>> tuned by users (eg, for hardware RAID5/6).
->>>
->>> This patch enables users to save the optimal IO size via sysfs through
->>> the backing device attributes stripe_size and partial_stripes_expensive
->>> into the bcache superblock.
->>>
->>> Superblock changes are backwards-compatable:
->>>
->>> *  partial_stripes_expensive: One bit was used in the superblock flags field
->>>
->>> *  stripe_size: There are eight 64-bit "pad" fields for future use in
->>>    the superblock which default to 0; from those, 32-bits are now used
->>>    to save the stripe_size and load at device registration time.
->>>
->>> Signed-off-by: Eric Wheeler <bcache@linux.ewheeler.net>
->>
->> Hi Eric,
->>
->> In general I am OK with this patch. Since Peter comments lots of SCSI
->> RAID devices reports a stripe width, could you please list the hardware
->> raid devices which don't list stripe size ? Then we can make decision
->> whether it is necessary to have such option enabled.
-> 
-> Perhaps they do not set stripe_width using io_opt? I did a grep to see if 
-> any of them did, but I didn't see them. How is stripe_width indicated by 
-> RAID controllers? 
-> 
-> If they do set io_opt, then at least my Areca 1883 does not set io_opt as 
-> of 4.19.x. I also have a LSI MegaRAID 3108 which does not report io_opt as 
-> of 4.1.x, but that is an older kernel so maybe support has been added 
-> since then.
-> 
-> Martin,
-> 
-> Where would stripe_width be configured in the SCSI drivers? Is it visible 
-> through sysfs or debugfs so I can check my hardware support without 
-> hacking debugging the kernel?
-> 
->>
->> Another point is, this patch changes struct cache_sb, it is no problem
->> to change on-disk format. I plan to update the super block version soon,
->> to store more configuration persistently into super block. stripe_size
->> can be added to cache_sb with other on-disk changes.
-> 
-
-Hi Eric,
-
-> Maybe bumping version makes sense, but even if you do not, this is safe to 
-> use on systems without bumping the version because the values are unused 
-> and default to 0.
-
-Yes, I understand you, it works as you suggested. I need to think how to
-organize all options in struct cache_sb, stripe_size will be arranged
-then. And I will ask help to you for reviewing the changes of on-disk
-format.
-
-Thanks.
-
-[snipped]
-
--- 
-
-Coly Li
+On 24/06/19 4:08 PM, Chris Packham wrote:=0A=
+> Hi Thomas,=0A=
+> =0A=
+> On 21/06/19 6:17 PM, Thomas Petazzoni wrote:=0A=
+>> Hello Chris,=0A=
+>>=0A=
+>> On Fri, 21 Jun 2019 04:03:27 +0000=0A=
+>> Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:=0A=
+>>=0A=
+>>> I'm in the process of updating the kernel version used on our products=
+=0A=
+>>> from 4.4 -> 5.1.=0A=
+>>>=0A=
+>>> We have one product that uses a Kirkwood CPU, IDT PCI bridge and Marvel=
+l=0A=
+>>> Switch ASIC. The Switch ASIC presents as multiple PCI devices.=0A=
+>>>=0A=
+>>> The hardware setup looks like this=0A=
+>>>                                         __________=0A=
+>>> [ Kirkwood ] --- [ IDT 5T5 ] ---+---  |          |=0A=
+>>>                                  +---  |  Switch  |=0A=
+>>>                                  +---  |          |=0A=
+>>>                                  +---  |__________|=0A=
+>>>=0A=
+>>> On the 4.4 based kernel things are fine=0A=
+>>>=0A=
+>>> [root@awplus flash]# lspci -t=0A=
+>>> -[0000:00]---01.0-[01-06]----00.0-[02-06]--+-02.0-[03]----00.0=0A=
+>>>                                               +-03.0-[04]----00.0=0A=
+>>>                                               +-04.0-[05]----00.0=0A=
+>>>                                               \-05.0-[06]----00.0=0A=
+>>>=0A=
+>>> But on the 5.1 based kernel things get a little weird=0A=
+>>>=0A=
+>>> [root@awplus flash]# lspci -t=0A=
+>>> -[0000:00]---01.0-[01-06]--+-00.0-[02-06]--=0A=
+>>>                               +-01.0=0A=
+>>>                               +-02.0-[02-06]--=0A=
+>>>                               +-03.0-[02-06]--=0A=
+>>>                               +-04.0-[02-06]--=0A=
+>>>                               +-05.0-[02-06]--=0A=
+>>>                               +-06.0-[02-06]--=0A=
+>>>                               +-07.0-[02-06]--=0A=
+>>>                               +-08.0-[02-06]--=0A=
+>>>                               +-09.0-[02-06]--=0A=
+>>>                               +-0a.0-[02-06]--=0A=
+>>>                               +-0b.0-[02-06]--=0A=
+>>>                               +-0c.0-[02-06]--=0A=
+>>>                               +-0d.0-[02-06]--=0A=
+>>>                               +-0e.0-[02-06]--=0A=
+>>>                               +-0f.0-[02-06]--=0A=
+>>>                               +-10.0-[02-06]--=0A=
+>>>                               +-11.0-[02-06]--=0A=
+>>>                               +-12.0-[02-06]--=0A=
+>>>                               +-13.0-[02-06]--=0A=
+>>>                               +-14.0-[02-06]--=0A=
+>>>                               +-15.0-[02-06]--=0A=
+>>>                               +-16.0-[02-06]--=0A=
+>>>                               +-17.0-[02-06]--=0A=
+>>>                               +-18.0-[02-06]--=0A=
+>>>                               +-19.0-[02-06]--=0A=
+>>>                               +-1a.0-[02-06]--=0A=
+>>>                               +-1b.0-[02-06]--=0A=
+>>>                               +-1c.0-[02-06]--=0A=
+>>>                               +-1d.0-[02-06]--=0A=
+>>>                               +-1e.0-[02-06]--=0A=
+>>>                               \-1f.0-[02-06]--+-02.0-[03]----00.0=0A=
+>>>                                               +-03.0-[04]----00.0=0A=
+>>>                                               +-04.0-[05]----00.0=0A=
+>>>                                               \-05.0-[06]----00.0=0A=
+>>>=0A=
+>>>=0A=
+>>> I'll start bisecting to see where things started going wrong. I just=0A=
+>>> wondered if this rings any bells for anyone.=0A=
+>>=0A=
+>> I am almost sure that the culprit is=0A=
+>> 1f08673eef1236f7d02d93fcf596bb8531ef0d12 ("PCI: mvebu: Convert to PCI=0A=
+>> emulated bridge config space").=0A=
+> =0A=
+> The problem seems to pre-date this commit. I've gone back as far as 4.18=
+=0A=
+> and the problem still exists (in fact there are more duplicate devices).=
+=0A=
+> I'll keep going back (unfortunately due to out platform being out of=0A=
+> tree it's not a simple bisect).=0A=
+> =0A=
+>> I still think it makes sense to share the bridge emulation code between=
+=0A=
+>> the mvebu and aardvark drivers, but this sharing has required making=0A=
+>> the code very different, with lots of subtle differences in behavior in=
+=0A=
+>> how registers are emulated.=0A=
+> =0A=
+> Agreed. Bugs love to hide in duplicated code.=0A=
+> =0A=
+> I will admit to being ignorant about the need for an emulated bridge. I=
+=0A=
+> know it has something to do with the type of transaction used for the=0A=
+> downstream devices. I also know that these systems won't work without an=
+=0A=
+> emulated bridge.=0A=
+> =0A=
+>> Unfortunately, I don't have access to one of these complicated PCI=0A=
+>> setup with a HW switch on the way, so I couldn't test this kind of=0A=
+>> setups.=0A=
+>>=0A=
+>> Do you mind helping with figuring out what the issues are ? That would=
+=0A=
+>> be really nice.=0A=
+> =0A=
+> No problem. As I said I'll keep going to find a point where behaviour=0A=
+> turns bad for me. I suspect we might find other problems along the way.=
+=0A=
+> =0A=
+=0A=
+Some progress. Our defconfig had CONFIG_CMDLINE=3D"pci=3Dpcie_scan_all" in =
+=0A=
+it. This dated back to before we were using a devicetree with our =0A=
+kirkwood platforms. At some point this started having an effect on the =0A=
+emulated bridge.=0A=
