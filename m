@@ -2,196 +2,176 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD1FC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E392C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788CE2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73341208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:16:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jQEW/T2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfFYUPz (ORCPT
+        id S1727613AbfFYUQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:15:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727043AbfFYUPy (ORCPT
+        Tue, 25 Jun 2019 16:16:12 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44077 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727043AbfFYUQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:15:54 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PKE4aX139763
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 16:15:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tbtfd81yt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 16:15:52 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 25 Jun 2019 21:15:50 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 21:15:38 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5PKFZPg49283318
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 20:15:36 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C91614C062;
-        Tue, 25 Jun 2019 20:15:35 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C4864C04E;
-        Tue, 25 Jun 2019 20:15:35 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.159.147])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 20:15:35 +0000 (GMT)
-Subject: Re: [PATCH v9 4/4] s390: ap: kvm: Enable PQAP/AQIC facility for the
- guest
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        pasic@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
- <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
- <69ca50bd-3f5c-98b1-3b39-04af75151baf@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- mQINBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABtDRDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKElCTSkgPGJvcm50cmFlZ2VyQGRlLmlibS5jb20+iQI4BBMBAgAiBQJO
- nDz4AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRARe7yAtaYcfOYVD/9sqc6ZdYKD
- bmDIvc2/1LL0g7OgiA8pHJlYN2WHvIhUoZUIqy8Sw2EFny/nlpPVWfG290JizNS2LZ0mCeGZ
- 80yt0EpQNR8tLVzLSSr0GgoY0lwsKhAnx3p3AOrA8WXsPL6prLAu3yJI5D0ym4MJ6KlYVIjU
- ppi4NLWz7ncA2nDwiIqk8PBGxsjdc/W767zOOv7117rwhaGHgrJ2tLxoGWj0uoH3ZVhITP1z
- gqHXYaehPEELDV36WrSKidTarfThCWW0T3y4bH/mjvqi4ji9emp1/pOWs5/fmd4HpKW+44tD
- Yt4rSJRSa8lsXnZaEPaeY3nkbWPcy3vX6qafIey5d8dc8Uyaan39WslnJFNEx8cCqJrC77kI
- vcnl65HaW3y48DezrMDH34t3FsNrSVv5fRQ0mbEed8hbn4jguFAjPt4az1xawSp0YvhzwATJ
- YmZWRMa3LPx/fAxoolq9cNa0UB3D3jmikWktm+Jnp6aPeQ2Db3C0cDyxcOQY/GASYHY3KNra
- z8iwS7vULyq1lVhOXg1EeSm+lXQ1Ciz3ub3AhzE4c0ASqRrIHloVHBmh4favY4DEFN19Xw1p
- 76vBu6QjlsJGjvROW3GRKpLGogQTLslbjCdIYyp3AJq2KkoKxqdeQYm0LZXjtAwtRDbDo71C
- FxS7i/qfvWJv8ie7bE9A6Wsjn7kCDQROnDz4ARAAmPI1e8xB0k23TsEg8O1sBCTXkV8HSEq7
- JlWz7SWyM8oFkJqYAB7E1GTXV5UZcr9iurCMKGSTrSu3ermLja4+k0w71pLxws859V+3z1jr
- nhB3dGzVZEUhCr3EuN0t8eHSLSMyrlPL5qJ11JelnuhToT6535cLOzeTlECc51bp5Xf6/XSx
- SMQaIU1nDM31R13o98oRPQnvSqOeljc25aflKnVkSfqWSrZmb4b0bcWUFFUKVPfQ5Z6JEcJg
- Hp7qPXHW7+tJTgmI1iM/BIkDwQ8qe3Wz8R6rfupde+T70NiId1M9w5rdo0JJsjKAPePKOSDo
- RX1kseJsTZH88wyJ30WuqEqH9zBxif0WtPQUTjz/YgFbmZ8OkB1i+lrBCVHPdcmvathknAxS
- bXL7j37VmYNyVoXez11zPYm+7LA2rvzP9WxR8bPhJvHLhKGk2kZESiNFzP/E4r4Wo24GT4eh
- YrDo7GBHN82V4O9JxWZtjpxBBl8bH9PvGWBmOXky7/bP6h96jFu9ZYzVgIkBP3UYW+Pb1a+b
- w4A83/5ImPwtBrN324bNUxPPqUWNW0ftiR5b81ms/rOcDC/k/VoN1B+IHkXrcBf742VOLID4
- YP+CB9GXrwuF5KyQ5zEPCAjlOqZoq1fX/xGSsumfM7d6/OR8lvUPmqHfAzW3s9n4lZOW5Jfx
- bbkAEQEAAYkCHwQYAQIACQUCTpw8+AIbDAAKCRARe7yAtaYcfPzbD/9WNGVf60oXezNzSVCL
- hfS36l/zy4iy9H9rUZFmmmlBufWOATjiGAXnn0rr/Jh6Zy9NHuvpe3tyNYZLjB9pHT6mRZX7
- Z1vDxeLgMjTv983TQ2hUSlhRSc6e6kGDJyG1WnGQaqymUllCmeC/p9q5m3IRxQrd0skfdN1V
- AMttRwvipmnMduy5SdNayY2YbhWLQ2wS3XHJ39a7D7SQz+gUQfXgE3pf3FlwbwZhRtVR3z5u
- aKjxqjybS3Ojimx4NkWjidwOaUVZTqEecBV+QCzi2oDr9+XtEs0m5YGI4v+Y/kHocNBP0myd
- pF3OoXvcWdTb5atk+OKcc8t4TviKy1WCNujC+yBSq3OM8gbmk6NwCwqhHQzXCibMlVF9hq5a
- FiJb8p4QKSVyLhM8EM3HtiFqFJSV7F+h+2W0kDyzBGyE0D8z3T+L3MOj3JJJkfCwbEbTpk4f
- n8zMboekuNruDw1OADRMPlhoWb+g6exBWx/YN4AY9LbE2KuaScONqph5/HvJDsUldcRN3a5V
- RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
- oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
- syiRa+UVlsKmx1hsEg==
-Date:   Tue, 25 Jun 2019 22:15:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <69ca50bd-3f5c-98b1-3b39-04af75151baf@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062520-0016-0000-0000-0000028C503F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062520-0017-0000-0000-000032E9C494
-Message-Id: <25a9ff69-47f0-fcba-e1fe-f0cc9914acba@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250151
+        Tue, 25 Jun 2019 16:16:12 -0400
+Received: by mail-qk1-f194.google.com with SMTP id p144so13684944qke.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:16:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=EHMefmzmm9Mbm1HdA6t6Th6pkkLYZ7z1lPsMohb4ueM=;
+        b=jQEW/T2ioqSIqEH27/wZQTyrqpiEYcNggCDHviY4u9btaR8yZoYlXSWPrKMFn7apE8
+         PBuyIreqmpc+Lf7NumD1HggoEi0F4hYdinjaGIhvBfDTYmQotHCEvoXkcceFfz8/7zBL
+         u2A9hF+PYo+U+dtqOFkj4I5dvF2XBnfu6RGHfyXFysDfJ1nObukECX6GkskYYU8B+Fqz
+         3Oq6PkIiN3SS2mapgeNeub+SvBZUFBRR7y7EnlDj3japM2CUxAl9ARftjB0jnv4iGmjW
+         2Au7woSG5+Zu9ax6vjJTmKSryKe8dwOYoQTBV5kumsqeg6//0DKTG3FDwt3iQaxGmEqR
+         w5VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EHMefmzmm9Mbm1HdA6t6Th6pkkLYZ7z1lPsMohb4ueM=;
+        b=tbjQsvUURUVBl96jurFGVMeiFNAb8CGLRUhrG4tcu8Ec82CVOnxGyrXAuAGytWyAUu
+         psEKjGpSl2SFTIhh+8DplEW12EYns1iKrSVNtgV0oCqUP74cZ/6enf045+Rn7zp+f1ZE
+         +lwSPBnCtQain/Hbu79ZcNVJfA0zQq91YXPf7vp/GajIhHYg50siw7CrDrNX23a7WFsx
+         us0BNtxYENNH3jD9CFBMVZgiXBY1yEGzVc46ELKOPur/4DwpsjK6tFf45KMSOIlCpYB7
+         BAGhc+MG0iZNyoWukqgFtuQF7lbQWtrfyq4CYLGKm2aTl+6tqDjleUmnNz6h/3JIcIFk
+         hK7Q==
+X-Gm-Message-State: APjAAAWcWbzNRtHXz5QwbNNLSEhPnKP2rDKfMurLozY/GJSDq7+MBU6I
+        f+5ul49t6Jd3NyEYGsA25vf6TA==
+X-Google-Smtp-Source: APXvYqx3MPsUMRt5L9qn0ZkLk78knyCrOQppj49qrRRC6+2rbLzmvuLW9r6dOWuSjAah5DvgrMzlrg==
+X-Received: by 2002:a37:ac0a:: with SMTP id e10mr558920qkm.168.1561493771373;
+        Tue, 25 Jun 2019 13:16:11 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id u1sm9600931qth.21.2019.06.25.13.16.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 13:16:10 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     arnd@arndb.de
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] asm-generic: fix a compilation warning
+Date:   Tue, 25 Jun 2019 16:15:53 -0400
+Message-Id: <1561493753-3860-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix this compilation warning on x86 by making flush_cache_vmap() inline.
 
+lib/ioremap.c: In function 'ioremap_page_range':
+lib/ioremap.c:214:16: warning: variable 'start' set but not used
+[-Wunused-but-set-variable]
+  unsigned long start;
+                ^~~~~
 
-On 25.06.19 22:13, Christian Borntraeger wrote:
-> 
-> 
-> On 21.05.19 17:34, Pierre Morel wrote:
->> AP Queue Interruption Control (AQIC) facility gives
->> the guest the possibility to control interruption for
->> the Cryptographic Adjunct Processor queues.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>  arch/s390/tools/gen_facilities.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
->> index 61ce5b5..aed14fc 100644
->> --- a/arch/s390/tools/gen_facilities.c
->> +++ b/arch/s390/tools/gen_facilities.c
->> @@ -114,6 +114,7 @@ static struct facility_def facility_defs[] = {
->>  		.bits = (int[]){
->>  			12, /* AP Query Configuration Information */
->>  			15, /* AP Facilities Test */
->> +			65, /* AP Queue Interruption Control */
->>  			156, /* etoken facility */
->>  			-1  /* END */
->>  		}
->>
-> 
-> I think we should only set stfle.65 if we have the aiv facility (Because we do not
-> have a GISA otherwise)
-> 
-> So something like this instead?
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 28ebd64..1501cd6 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2461,6 +2461,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->                 set_kvm_facility(kvm->arch.model.fac_list, 147);
->         }
->  
-> +       if (css_general_characteristics.aiv)
-> +               set_kvm_facility(kvm->arch.model.fac_mask, 65);
-> +       
->         kvm->arch.model.cpuid = kvm_s390_get_initial_cpuid();
->         kvm->arch.model.ibc = sclp.ibc & 0x0fff;
->  
-> 
+While at it, convert all other similar functions to inline for
+consistency.
 
-Maybe even just piggyback on gisa init (it will bail out early).
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/asm-generic/cacheflush.h | 74 ++++++++++++++++++++++++++++++++--------
+ 1 file changed, 60 insertions(+), 14 deletions(-)
 
-diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-index 9dde4d7..9182a04 100644
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -3100,6 +3100,7 @@ void kvm_s390_gisa_init(struct kvm *kvm)
-        gi->timer.function = gisa_vcpu_kicker;
-        memset(gi->origin, 0, sizeof(struct kvm_s390_gisa));
-        gi->origin->next_alert = (u32)(u64)gi->origin;
-+       set_kvm_facility(kvm->arch.model.fac_mask, 65);
-        VM_EVENT(kvm, 3, "gisa 0x%pK initialized", gi->origin);
- }
+diff --git a/include/asm-generic/cacheflush.h b/include/asm-generic/cacheflush.h
+index 0dd47a6db2cf..a950a22c4890 100644
+--- a/include/asm-generic/cacheflush.h
++++ b/include/asm-generic/cacheflush.h
+@@ -5,24 +5,70 @@
+ /* Keep includes the same across arches.  */
+ #include <linux/mm.h>
  
++#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
++
+ /*
+  * The cache doesn't need to be flushed when TLB entries change when
+  * the cache is mapped to physical memory, not virtual memory
+  */
+-#define flush_cache_all()			do { } while (0)
+-#define flush_cache_mm(mm)			do { } while (0)
+-#define flush_cache_dup_mm(mm)			do { } while (0)
+-#define flush_cache_range(vma, start, end)	do { } while (0)
+-#define flush_cache_page(vma, vmaddr, pfn)	do { } while (0)
+-#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 0
+-#define flush_dcache_page(page)			do { } while (0)
+-#define flush_dcache_mmap_lock(mapping)		do { } while (0)
+-#define flush_dcache_mmap_unlock(mapping)	do { } while (0)
+-#define flush_icache_range(start, end)		do { } while (0)
+-#define flush_icache_page(vma,pg)		do { } while (0)
+-#define flush_icache_user_range(vma,pg,adr,len)	do { } while (0)
+-#define flush_cache_vmap(start, end)		do { } while (0)
+-#define flush_cache_vunmap(start, end)		do { } while (0)
++static inline void flush_cache_all(void)
++{
++}
++
++static inline void flush_cache_mm(struct mm_struct *mm)
++{
++}
++
++static inline void flush_cache_dup_mm(struct mm_struct *mm)
++{
++}
++
++static inline void flush_cache_range(struct vm_area_struct *vma,
++				     unsigned long start,
++				     unsigned long end)
++{
++}
++
++static inline void flush_cache_page(struct vm_area_struct *vma,
++				    unsigned long vmaddr,
++				    unsigned long pfn)
++{
++}
++
++static inline void flush_dcache_page(struct page *page)
++{
++}
++
++static inline void flush_dcache_mmap_lock(struct address_space *mapping)
++{
++}
++
++static inline void flush_dcache_mmap_unlock(struct address_space *mapping)
++{
++}
++
++static inline void flush_icache_range(unsigned long start, unsigned long end)
++{
++}
++
++static inline void flush_icache_page(struct vm_area_struct *vma,
++				     struct page *page)
++{
++}
++
++static inline void flush_icache_user_range(struct vm_area_struct *vma,
++					   struct page *page,
++					   unsigned long addr, int len)
++{
++}
++
++static inline void flush_cache_vmap(unsigned long start, unsigned long end)
++{
++}
++
++static inline void flush_cache_vunmap(unsigned long start, unsigned long end)
++{
++}
+ 
+ #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
+ 	do { \
+-- 
+1.8.3.1
 
