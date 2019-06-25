@@ -2,94 +2,89 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7A7C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C166C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A1620883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0247020883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561434830;
-	bh=izxrWomxneckttGUFEaH7tTd6OFJu4xjCKQcorOurwk=;
+	s=default; t=1561434835;
+	bh=E4nE1EjWI33jbz4SGyWmu9sYfD082jUQXQQfrNoLQXU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QjgFxTsr5QUPHJj7yjkb1xdQTQ0llcEDuNMZK3AVosWKM/tvB39tdhR+Owzg+4zUJ
-	 Px91lXWy9H5j04sFbpTh+y27n3+3njL2ADOFmv8EdNIgwZApuQYhCEp9NoTresxERL
-	 /PYe86xJzYZNCjRVD9E7gOuKvYqkKjCNq8yQ28TQ=
+	b=zgEayYfOR1CHjPjPjH7CQXtqXwgvavDqSbmjcyQ4l7ZaMt9kgqhuamGTe3b5n49LY
+	 LD5QBuskOC9q1jRzCR58WUxJ6QP3rlExBRR+hAN+esfJWc2EXrBpv2gCBRCRhUl8RX
+	 ZvFTmqDjEYolEqriVfT4WWR9wSpiMI1h3I5Ex6pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfFYDxt (ORCPT
+        id S1727442AbfFYDxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 23:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35930 "EHLO mail.kernel.org"
+        Mon, 24 Jun 2019 23:53:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726833AbfFYDxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 23:53:46 -0400
+        id S1726833AbfFYDxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 23:53:51 -0400
 Received: from localhost (unknown [116.226.249.212])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 811A42085A;
-        Tue, 25 Jun 2019 03:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8450520665;
+        Tue, 25 Jun 2019 03:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561434826;
-        bh=izxrWomxneckttGUFEaH7tTd6OFJu4xjCKQcorOurwk=;
+        s=default; t=1561434830;
+        bh=E4nE1EjWI33jbz4SGyWmu9sYfD082jUQXQQfrNoLQXU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jDKPCPaqzD3KqfDKMqk+wRxjEq35QG9CbHe0uqTGOQ2z31FoXbJlzHIjFG2rP1LQf
-         pGId7QkXbNS/xCqcMbbaauN73mgxNaiIi7sgsDZhL2TxNUN415iOu0sYXULPfYSPIo
-         zas4DDbq3Ckq8o59MAouCV+6SMWw/hanyMLJt/Eo=
-Date:   Tue, 25 Jun 2019 11:08:52 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.1 000/121] 5.1.15-stable review
-Message-ID: <20190625030852.GC11074@kroah.com>
-References: <20190624092320.652599624@linuxfoundation.org>
- <CA+G9fYsxR5FtxPWNF5zs8uGWpAZCNRLAq+7azZCg_k0Mm_=fxA@mail.gmail.com>
+        b=qZ7XYeo+I3dPO32jVSB6vo+lkkvvs2U54y9HoEjCetrb+kFfpvNKInrA0qvFV3IPw
+         IOt7m52Bjp6jnuCYyATUxw1wgbaU9HAoFSXZHVEZj9cGM5NZa0d1grdnDe4CJ8ddBC
+         PFaIesiJ+pkH4VGEoyAaQYY1YbdOoOKJEJ6ubYLk=
+Date:   Tue, 25 Jun 2019 11:32:16 +0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     jslaby@suse.com, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] tty: ldisc: Fix misuse of proc_dointvec
+ "ldisc_autoload"
+Message-ID: <20190625033216.GA11902@kroah.com>
+References: <20190625030801.24538-1-devel@etsukata.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsxR5FtxPWNF5zs8uGWpAZCNRLAq+7azZCg_k0Mm_=fxA@mail.gmail.com>
+In-Reply-To: <20190625030801.24538-1-devel@etsukata.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 06:15:37AM +0530, Naresh Kamboju wrote:
-> On Mon, 24 Jun 2019 at 15:38, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.1.15 release.
-> > There are 121 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.15-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On Tue, Jun 25, 2019 at 12:08:00PM +0900, Eiichi Tsukata wrote:
+> /proc/sys/dev/tty/ldisc_autoload assumes given value to be 0 or 1. Use
+> proc_dointvec_minmax instead of proc_dointvec.
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Fixes: 7c0cca7c847e "(tty: ldisc: add sysctl to prevent autoloading of ldiscs)"
+> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+> ---
+>  drivers/tty/tty_ldisc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+> index e38f104db174..a8ea7a35c94e 100644
+> --- a/drivers/tty/tty_ldisc.c
+> +++ b/drivers/tty/tty_ldisc.c
+> @@ -863,7 +863,7 @@ static struct ctl_table tty_table[] = {
+>  		.data		= &tty_ldisc_autoload,
+>  		.maxlen		= sizeof(tty_ldisc_autoload),
+>  		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> +		.proc_handler	= proc_dointvec_minmax,
+>  		.extra1		= &zero,
+>  		.extra2		= &one,
 
-thanks for testing and letting me know.
+Ah, nice catch.  But this really isn't an issue as if you use a bigger
+value, things will not "break", right?
+
+thanks,
 
 greg k-h
