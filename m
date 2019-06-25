@@ -2,165 +2,275 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468D7C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7538AC48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B8D2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428BE2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="EqENzc8Z"
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="Nyb+zlMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfFYULk (ORCPT
+        id S1727403AbfFYUMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:11:40 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40431 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYULj (ORCPT
+        Tue, 25 Jun 2019 16:12:23 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34541 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbfFYUMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:11:39 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so28996111eds.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:11:38 -0700 (PDT)
+        Tue, 25 Jun 2019 16:12:22 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so56897plt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zkV6FjfcQsvo6WYlA8ceAW7NTugFBRZuAe5/8PprGgI=;
-        b=EqENzc8ZFmkojdUW4bYooe/jHYrBPUxIfH5lufyaa/ljp7fZjFaQVWzP2rlePy2DAk
-         tfSJFccP/J6XNDXKPMrYnu/DCrc9n9AXAa/9a0pfe5ig1PwrFxmcHQChxJ1LNWbAM/az
-         ssuZV1iUpkscfXe/eYKaPcbpNlh7TWiA16EY4=
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=frdlJFxp0g7/JgxVC9Knu0EZuFk8912u7Wo1FVzUmns=;
+        b=Nyb+zlMnDiYMzmLqnBAwdmngB+mYJdvquxfMDwCy5zvB7uhuZYJ965t0yuyadQ5fC5
+         WAwMBqEhRzvXZJlWTFHp1eGTYXntKDuyWJIXRygR4w4aLx90JBuzG1YT5TqDklyjyWDe
+         YbTaC2rHWCEpTr7osJsgtI2DVbvgnyErrAnRKB5vxim3CQ8qV6vzbBI0GRTZeExvFESj
+         D7UvI9PzC50CDNlYR5vwX+gjDokE4WkOCypTdCQ0xFT4R+EYDTLtEFhmQ12/3aRbVPiL
+         q55toOzREutJvOUWTydV4sxijBek67/XvKyV7usdzK/go45JI2h3Ted+6+e+4vyurgnt
+         a5Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=zkV6FjfcQsvo6WYlA8ceAW7NTugFBRZuAe5/8PprGgI=;
-        b=XCoAU6VF4ddBl34wn4VLNh+27VNtHGl8hWojHv6cdCjon+azJ2pQgPUo97L8+GQmCP
-         CzWtC1GPB6GQUhoAUrCufhYtlXoHhZsy5oyQdCFhSAAIhTv7p8Yj2stSq2kt3eCiyzSl
-         4zE7kZte3p8x8ez6VShtgTGyaSRnuetRO+F2lUVty/h/Iylsg7In2hqGYjHh8O6gnk2G
-         yR+zDiSQCil+Biko2JeXxPjqC5BnMdw4fQaV3Xw9A5w0FthxPVi6tEKvPhwmIcrzBPLd
-         QesTU/e1YsWjJW8BxntNNEjPins3+d/taf7J2YH51xiCU5+wOVJ/DYmLMVUrYs9AHpr9
-         rPDQ==
-X-Gm-Message-State: APjAAAXH++aswa8R7Wf78x2Goq37BbCUVtx6o4kD6QXhuuOXB6amp4sb
-        TdynCm8Ul2Z45xK2i4MGplH+HQ==
-X-Google-Smtp-Source: APXvYqwoVMnAgUuE3liJcixkOYd1NT201/L7ZxinP68zsYUut//RkA+BJy/SK3l/jTY4VRTqV7InDw==
-X-Received: by 2002:a50:b635:: with SMTP id b50mr327666ede.293.1561493497807;
-        Tue, 25 Jun 2019 13:11:37 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id k3sm1048485edi.14.2019.06.25.13.11.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=frdlJFxp0g7/JgxVC9Knu0EZuFk8912u7Wo1FVzUmns=;
+        b=mHOtScJCBLFJfYep1yb5IYsjNfcYakp2+Dtm+HJPZxIHJog25PAavIz5D7cICZe5zu
+         aPHXZ/IUwC0i1cpks7yrBXspkpxucuIKxVuZ/1K7fkDBtldR6qC7COl3mwChfy3XqFQO
+         d5+JmlpQRlU+bJb1uMhb/w4RNh/HQf0ixZfW4vei4VZV2jJNW2trD+wSgmVE/PPIyF+h
+         Pb6W8dbYbcKCUqF8vVjUGkVgYi8xo9MIIthSnKS2Kaoi6ITmbY8q4hFY4fFhzrl0Jp/a
+         bbSG3t3JQ/PAuE5fYeuZERr9fqYWFvXatVc8WVOu/vXoNlSkvrq/UaE6kfKPFj/wbeBX
+         +Www==
+X-Gm-Message-State: APjAAAXKy679LgDRFQj8UnSqV2H1oQLdCiPwwfOtbdDd3dL+xvrc63oE
+        rPQQ+uFomOPnpOhf6GJoTz1PhQ==
+X-Google-Smtp-Source: APXvYqz5A8wkwC4bDX9Grozu3DdnvL4TZkl+WU84TSLtrBEe3ie0duREqD7ndDM6yIZbjMI4EQ0Hpw==
+X-Received: by 2002:a17:902:8207:: with SMTP id x7mr544236pln.63.1561493541558;
+        Tue, 25 Jun 2019 13:12:21 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id j21sm16301529pfh.86.2019.06.25.13.12.20
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 13:11:36 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 22:11:34 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Robert Beckett <bob.beckett@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/4] drm/vblank: estimate vblank while disabling
- vblank if interrupt disabled
-Message-ID: <20190625201134.GF12905@phenom.ffwll.local>
-Mail-Followup-To: Robert Beckett <bob.beckett@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <cover.1561483965.git.bob.beckett@collabora.com>
- <b96132cef4b63118df1026a99b3c345692e3de26.1561483965.git.bob.beckett@collabora.com>
+        Tue, 25 Jun 2019 13:12:21 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 13:12:20 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Krzesimir Nowak <krzesimir@kinvolk.io>
+Cc:     netdev@vger.kernel.org, Alban Crequy <alban@kinvolk.io>,
+        Iago =?iso-8859-1?Q?L=F3pez?= Galeiras <iago@kinvolk.io>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [bpf-next v2 08/10] bpf: Implement bpf_prog_test_run for perf
+ event programs
+Message-ID: <20190625201220.GC10487@mini-arch>
+References: <20190625194215.14927-1-krzesimir@kinvolk.io>
+ <20190625194215.14927-9-krzesimir@kinvolk.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b96132cef4b63118df1026a99b3c345692e3de26.1561483965.git.bob.beckett@collabora.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190625194215.14927-9-krzesimir@kinvolk.io>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 06:59:14PM +0100, Robert Beckett wrote:
-> If interrupts are disabled (e.g. via vblank_disable_fn) and we come to
-> disable vblank, update the vblank count to best guess as to what it
-> would be had the interrupts remained enabled, and update the timesamp to
-> now.
+On 06/25, Krzesimir Nowak wrote:
+> As an input, test run for perf event program takes struct
+> bpf_perf_event_data as ctx_in and struct bpf_perf_event_value as
+> data_in. For an output, it basically ignores ctx_out and data_out.
 > 
-> This avoids a stale vblank event being sent while disabling crtcs during
-> atomic modeset.
+> The implementation sets an instance of struct bpf_perf_event_data_kern
+> in such a way that the BPF program reading data from context will
+> receive what we passed to the bpf prog test run in ctx_in. Also BPF
+> program can call bpf_perf_prog_read_value to receive what was passed
+> in data_in.
 > 
-> Fixes: 68036b08b91bc ("drm/vblank: Do not update vblank count if interrupts
-> are already disabled.")
-> 
-> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
 > ---
->  drivers/gpu/drm/drm_vblank.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+>  kernel/trace/bpf_trace.c                      | 107 ++++++++++++++++++
+>  .../bpf/verifier/perf_event_sample_period.c   |   8 ++
+>  2 files changed, 115 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> index 7dabb2bdb733..db68b8cbf797 100644
-> --- a/drivers/gpu/drm/drm_vblank.c
-> +++ b/drivers/gpu/drm/drm_vblank.c
-> @@ -375,9 +375,23 @@ void drm_vblank_disable_and_save(struct drm_device *dev, unsigned int pipe)
->  	 * interrupts were enabled. This avoids calling the ->disable_vblank()
->  	 * operation in atomic context with the hardware potentially runtime
->  	 * suspended.
-> +	 * If interrupts are disabled (e.g. via blank_disable_fn) then make
-> +	 * best guess as to what it would be now and make sure we have an up
-> +	 * to date timestamp.
->  	 */
-> -	if (!vblank->enabled)
-> +	if (!vblank->enabled) {
-> +		ktime_t now = ktime_get();
-
-Would be nice to fake this a bit more accurately and round the timestamp
-here to a multiple of the frame duration, i.e. ...
-> +		u32 diff = 0;
-> +		if (vblank->framedur_ns) {
-> +			u64 diff_ns = ktime_to_ns(ktime_sub(now, vblank->time));
-> +			diff = DIV_ROUND_CLOSEST_ULL(diff_ns,
-> +						     vblank->framedur_ns);
-> +		}
-
-		now = vblank->time + diff * vblank_framedur_ns;
-
-Picking the right macro for doing 64bit multiplies left to you :-)
-
-> +
-> +		store_vblank(dev, pipe, diff, now, vblank->count);
-> +
->  		goto out;
-> +	}
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index c102c240bb0b..2fa49ea8a475 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -16,6 +16,8 @@
 >  
->  	/*
->  	 * Update the count and timestamp to maintain the
+>  #include <asm/tlb.h>
+>  
+> +#include <trace/events/bpf_test_run.h>
+> +
+>  #include "trace_probe.h"
+>  #include "trace.h"
+>  
+> @@ -1160,7 +1162,112 @@ const struct bpf_verifier_ops perf_event_verifier_ops = {
+>  	.convert_ctx_access	= pe_prog_convert_ctx_access,
+>  };
+>  
+> +static int pe_prog_test_run(struct bpf_prog *prog,
+> +			    const union bpf_attr *kattr,
+> +			    union bpf_attr __user *uattr)
+> +{
+> +	void __user *ctx_in = u64_to_user_ptr(kattr->test.ctx_in);
+> +	void __user *data_in = u64_to_user_ptr(kattr->test.data_in);
+> +	u32 data_size_in = kattr->test.data_size_in;
+> +	u32 ctx_size_in = kattr->test.ctx_size_in;
+> +	u32 repeat = kattr->test.repeat;
+> +	u32 retval = 0, duration = 0;
+> +	int err = -EINVAL;
+> +	u64 time_start, time_spent = 0;
+> +	int i;
+> +	struct perf_sample_data sample_data = {0, };
+> +	struct perf_event event = {0, };
+> +	struct bpf_perf_event_data_kern real_ctx = {0, };
+> +	struct bpf_perf_event_data fake_ctx = {0, };
+> +	struct bpf_perf_event_value value = {0, };
+> +
+> +	if (ctx_size_in != sizeof(fake_ctx))
+> +		goto out;
+> +	if (data_size_in != sizeof(value))
+> +		goto out;
+> +
+> +	if (copy_from_user(&fake_ctx, ctx_in, ctx_size_in)) {
+> +		err = -EFAULT;
+> +		goto out;
+> +	}
+Move this to net/bpf/test_run.c? I have a bpf_ctx_init helper to deal
+with ctx input, might save you some code above wrt ctx size/etc.
 
-Somewhat unhappy that we're duplicating this logic with
-drm_update_vblank_count, but it's just 2 lines of math.
--Daniel
+> +	if (copy_from_user(&value, data_in, data_size_in)) {
+> +		err = -EFAULT;
+> +		goto out;
+> +	}
+> +
+> +	real_ctx.regs = &fake_ctx.regs;
+> +	real_ctx.data = &sample_data;
+> +	real_ctx.event = &event;
+> +	perf_sample_data_init(&sample_data, fake_ctx.addr,
+> +			      fake_ctx.sample_period);
+> +	event.cpu = smp_processor_id();
+> +	event.oncpu = -1;
+> +	event.state = PERF_EVENT_STATE_OFF;
+> +	local64_set(&event.count, value.counter);
+> +	event.total_time_enabled = value.enabled;
+> +	event.total_time_running = value.running;
+> +	/* make self as a leader - it is used only for checking the
+> +	 * state field
+> +	 */
+> +	event.group_leader = &event;
+> +
+> +	/* slightly changed copy pasta from bpf_test_run() in
+> +	 * net/bpf/test_run.c
+> +	 */
+> +	if (!repeat)
+> +		repeat = 1;
+> +
+> +	rcu_read_lock();
+> +	preempt_disable();
+> +	time_start = ktime_get_ns();
+> +	for (i = 0; i < repeat; i++) {
+Any reason for not using bpf_test_run?
 
+> +		retval = BPF_PROG_RUN(prog, &real_ctx);
+> +
+> +		if (signal_pending(current)) {
+> +			err = -EINTR;
+> +			preempt_enable();
+> +			rcu_read_unlock();
+> +			goto out;
+> +		}
+> +
+> +		if (need_resched()) {
+> +			time_spent += ktime_get_ns() - time_start;
+> +			preempt_enable();
+> +			rcu_read_unlock();
+> +
+> +			cond_resched();
+> +
+> +			rcu_read_lock();
+> +			preempt_disable();
+> +			time_start = ktime_get_ns();
+> +		}
+> +	}
+> +	time_spent += ktime_get_ns() - time_start;
+> +	preempt_enable();
+> +	rcu_read_unlock();
+> +
+> +	do_div(time_spent, repeat);
+> +	duration = time_spent > U32_MAX ? U32_MAX : (u32)time_spent;
+> +	/* end of slightly changed copy pasta from bpf_test_run() in
+> +	 * net/bpf/test_run.c
+> +	 */
+> +
+> +	if (copy_to_user(&uattr->test.retval, &retval, sizeof(retval))) {
+> +		err = -EFAULT;
+> +		goto out;
+> +	}
+> +	if (copy_to_user(&uattr->test.duration, &duration, sizeof(duration))) {
+> +		err = -EFAULT;
+> +		goto out;
+> +	}
+Can BPF program modify fake_ctx? Do we need/want to copy it back?
+
+> +	err = 0;
+> +out:
+> +	trace_bpf_test_finish(&err);
+> +	return err;
+> +}
+> +
+>  const struct bpf_prog_ops perf_event_prog_ops = {
+> +	.test_run	= pe_prog_test_run,
+>  };
+>  
+>  static DEFINE_MUTEX(bpf_event_mutex);
+> diff --git a/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c b/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c
+> index 471c1a5950d8..16e9e5824d14 100644
+> --- a/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c
+> +++ b/tools/testing/selftests/bpf/verifier/perf_event_sample_period.c
+This should probably go in another patch.
+
+> @@ -13,6 +13,8 @@
+>  	},
+>  	.result = ACCEPT,
+>  	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
+> +	.ctx_len = sizeof(struct bpf_perf_event_data),
+> +	.data_len = sizeof(struct bpf_perf_event_value),
+>  },
+>  {
+>  	"check bpf_perf_event_data->sample_period half load permitted",
+> @@ -29,6 +31,8 @@
+>  	},
+>  	.result = ACCEPT,
+>  	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
+> +	.ctx_len = sizeof(struct bpf_perf_event_data),
+> +	.data_len = sizeof(struct bpf_perf_event_value),
+>  },
+>  {
+>  	"check bpf_perf_event_data->sample_period word load permitted",
+> @@ -45,6 +49,8 @@
+>  	},
+>  	.result = ACCEPT,
+>  	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
+> +	.ctx_len = sizeof(struct bpf_perf_event_data),
+> +	.data_len = sizeof(struct bpf_perf_event_value),
+>  },
+>  {
+>  	"check bpf_perf_event_data->sample_period dword load permitted",
+> @@ -56,4 +62,6 @@
+>  	},
+>  	.result = ACCEPT,
+>  	.prog_type = BPF_PROG_TYPE_PERF_EVENT,
+> +	.ctx_len = sizeof(struct bpf_perf_event_data),
+> +	.data_len = sizeof(struct bpf_perf_event_value),
+>  },
 > -- 
-> 2.18.0
+> 2.20.1
 > 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
