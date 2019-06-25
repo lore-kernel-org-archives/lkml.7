@@ -2,81 +2,98 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C59C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F55C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD12820644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C64420659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hmrAD0Ms";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="G0u6Dtd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbfFYHrX (ORCPT
+        id S1729327AbfFYHr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:47:23 -0400
-Received: from verein.lst.de ([213.95.11.211]:60463 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfFYHrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:47:23 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 3C8A768B02; Tue, 25 Jun 2019 09:46:50 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 09:46:49 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/16] MIPS: use the generic get_user_pages_fast code
-Message-ID: <20190625074649.GD30815@lst.de>
-References: <20190611144102.8848-1-hch@lst.de> <20190611144102.8848-5-hch@lst.de> <20190621140542.GO19891@ziepe.ca>
+        Tue, 25 Jun 2019 03:47:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57906 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfFYHr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:47:57 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B97E7608CE; Tue, 25 Jun 2019 07:47:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561448876;
+        bh=MQrHqQH3XNeC/N18epLjG2PdBDcJlDo4vlk/jEXzCtU=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=hmrAD0Msu4BcG2LvKr3/e9ScEyFvzW5T8EHrUmU26Axzmk0rnXknVLc03brI3bxtM
+         KtA3ZWLMt+IrgzaoHAzWA6F1hpBSNrO6TD5PvHgKS6owROakKfQErrGoO3gdnMc8+d
+         j9xnSt6or6AoEovkaINzotTogTPEadqpk1XFIcsQ=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84959602F1;
+        Tue, 25 Jun 2019 07:47:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561448875;
+        bh=MQrHqQH3XNeC/N18epLjG2PdBDcJlDo4vlk/jEXzCtU=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=G0u6Dtd9q7IOUCzP6f/X7Rgc0Po0Ds1ktqEQH+BgDSKUPYsN8IgAdlUNeS5DFndAR
+         jmonP38OMu8aRswwAAB6mnh3mAv1DGwWfGRx5ns0AiuG+kVZRCQ+36N4C5WfiCyuwg
+         dhtfnZZECJfFjcmEpSghdS4nBJ8GtKX30CCo9FjY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84959602F1
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wireless <linux-wireless@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: Re: linux-next: build failure after merge of the tip tree
+References: <20190625160432.533aa140@canb.auug.org.au>
+        <8736jyfaje.fsf@codeaurora.org>
+        <20190625163608.1aa15ad3@canb.auug.org.au>
+        <alpine.DEB.2.21.1906250856050.32342@nanos.tec.linutronix.de>
+Date:   Tue, 25 Jun 2019 10:47:50 +0300
+In-Reply-To: <alpine.DEB.2.21.1906250856050.32342@nanos.tec.linutronix.de>
+        (Thomas Gleixner's message of "Tue, 25 Jun 2019 08:56:54 +0200
+        (CEST)")
+Message-ID: <87r27ids2h.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190621140542.GO19891@ziepe.ca>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 11:05:42AM -0300, Jason Gunthorpe wrote:
-> Today this check is only being done on the get_user_pages_fast() -
-> after this patch it is also done for __get_user_pages_fast().
-> 
-> Which means __get_user_pages_fast is now non-functional on a range of
-> MIPS CPUs, but that seems OK as far as I can tell, so:
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-> However, looks to me like this patch is also a bug fix for this:
+> On Tue, 25 Jun 2019, Stephen Rothwell wrote:
+>
+>> Hi Kalle,
+>> 
+>> On Tue, 25 Jun 2019 09:23:33 +0300 Kalle Valo <kvalo@codeaurora.org> wrote:
+>> >
+>> > Thanks for the report. Any suggestions how to handle this? Or do we let
+>> > Linus take care of this?
+>> 
+>> Just let Linus take care of it ... mention it in the pull request ... I
+>> guess DaveM needs to know, right?
+>
+> Ah. I didn't realize that this is a new commit in Kalle's tree. So yes
+> that's the right thing to do.
 
-Yes.
+Good, I'll do that then.
 
-> > -	pgdp = pgd_offset(mm, addr);
-> > -	do {
-> > -		pgd_t pgd = *pgdp;
-> > -
-> > -		next = pgd_addr_end(addr, end);
-> > -		if (pgd_none(pgd))
-> > -			goto slow;
-> > -		if (!gup_pud_range(pgd, addr, next, gup_flags & FOLL_WRITE,
-> > -				   pages, &nr))
-> 
-> This is different too, the core code has a p4d layer, but I see that
-> whole thing gets NOP'd by the compiler as mips uses pgtable-nop4d.h -
-> right?
-
-Exactly.
+-- 
+Kalle Valo
