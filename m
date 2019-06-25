@@ -2,128 +2,152 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0A4C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB760C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C97A20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9C020883
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbfFYRcf (ORCPT
+        id S1731984AbfFYRcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:32:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34810 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727652AbfFYRcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:32:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0E8FBAD8A;
-        Tue, 25 Jun 2019 17:32:32 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 2D2B6DA8F6; Tue, 25 Jun 2019 19:33:16 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 19:33:16 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     dsterba@suse.cz, Christoph Hellwig <hch@infradead.org>,
-        matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
-        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
-        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 2/4] vfs: create a generic checking function for
- FS_IOC_FSSETXATTR
-Message-ID: <20190625173316.GU8917@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>, matthew.garrett@nebula.com,
-        yuchao0@huawei.com, tytso@mit.edu, shaggy@kernel.org,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
-        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-References: <156116136742.1664814.17093419199766834123.stgit@magnolia>
- <156116138952.1664814.16552129914959122837.stgit@magnolia>
- <20190625105725.GB26085@infradead.org>
- <20190625170248.GS8917@twin.jikos.cz>
- <20190625171616.GB2230847@magnolia>
+        Tue, 25 Jun 2019 13:32:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41254 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727652AbfFYRcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:32:41 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5ED6822387A;
+        Tue, 25 Jun 2019 17:32:35 +0000 (UTC)
+Received: from rules.brq.redhat.com (unknown [10.43.2.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 58C975D9D3;
+        Tue, 25 Jun 2019 17:32:33 +0000 (UTC)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Loic Poulain <loic.poulain@intel.com>,
+        Ilya Faenson <ifaenson@broadcom.com>
+Subject: [PATCH] Bluetooth: hci_ldisc: check for missing tty operations
+Date:   Tue, 25 Jun 2019 19:32:15 +0200
+Message-Id: <20190625173215.25999-1-vdronov@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625171616.GB2230847@magnolia>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 25 Jun 2019 17:32:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:16:16AM -0700, Darrick J. Wong wrote:
-> On Tue, Jun 25, 2019 at 07:02:48PM +0200, David Sterba wrote:
-> > On Tue, Jun 25, 2019 at 03:57:25AM -0700, Christoph Hellwig wrote:
-> > > On Fri, Jun 21, 2019 at 04:56:29PM -0700, Darrick J. Wong wrote:
-> > > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > > 
-> > > > Create a generic checking function for the incoming FS_IOC_FSSETXATTR
-> > > > fsxattr values so that we can standardize some of the implementation
-> > > > behaviors.
-> > > > 
-> > > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > > Reviewed-by: Jan Kara <jack@suse.cz>
-> > > > ---
-> > > >  fs/btrfs/ioctl.c   |   21 +++++++++-------
-> > > >  fs/ext4/ioctl.c    |   27 ++++++++++++++------
-> > > >  fs/f2fs/file.c     |   26 ++++++++++++++-----
-> > > >  fs/inode.c         |   17 +++++++++++++
-> > > >  fs/xfs/xfs_ioctl.c |   70 ++++++++++++++++++++++++++++++----------------------
-> > > >  include/linux/fs.h |    3 ++
-> > > >  6 files changed, 111 insertions(+), 53 deletions(-)
-> > > > 
-> > > > 
-> > > > diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-> > > > index f408aa93b0cf..7ddda5b4b6a6 100644
-> > > > --- a/fs/btrfs/ioctl.c
-> > > > +++ b/fs/btrfs/ioctl.c
-> > > > @@ -366,6 +366,13 @@ static int check_xflags(unsigned int flags)
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +static void __btrfs_ioctl_fsgetxattr(struct btrfs_inode *binode,
-> > > > +				     struct fsxattr *fa)
-> > > > +{
-> > > > +	memset(fa, 0, sizeof(*fa));
-> > > > +	fa->fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags);
-> > > 
-> > > Is there really much of a point in this helper? Epeciall as
-> > > the zeroing could easily be done in the variable declaration
-> > > line using
-> > > 
-> > > 	struct fsxattr fa = { };
-> > 
-> > Agreed, not counting the initialization the wrapper is merely another
-> > name for btrfs_inode_flags_to_xflags. I also find it slightly confusing
-> > that __btrfs_ioctl_fsgetxattr name is too close to the ioctl callback
-> > implementation btrfs_ioctl_fsgetxattr but only does some initialization.
-> 
-> Ok; it's easily enough changed to:
-> 
-> 	struct fsxattr old_fa = {
-> 		.fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags),
-> 	};
+Certain ttys lack operations (eg: pty_unix98_ops) which still can be
+called by certain hci uart proto (eg: mrvl, ath). Currently this leads
+to execution at address 0x0. Fix this by adding checks for missing tty
+operations.
 
-Works for me, thanks.
+Link: https://syzkaller.appspot.com/bug?id=1b42faa2848963564a5b1b7f8c837ea7b55ffa50
+Reported-by: syzbot+79337b501d6aa974d0f6@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org # v2.6.39+
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+---
+ drivers/bluetooth/hci_ath.c   |  7 ++++-
+ drivers/bluetooth/hci_ldisc.c | 58 ++++++++++++++++++++---------------
+ 2 files changed, 39 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/bluetooth/hci_ath.c b/drivers/bluetooth/hci_ath.c
+index a55be205b91a..92d9bded5880 100644
+--- a/drivers/bluetooth/hci_ath.c
++++ b/drivers/bluetooth/hci_ath.c
+@@ -49,7 +49,12 @@ struct ath_vendor_cmd {
+ 
+ static int ath_wakeup_ar3k(struct tty_struct *tty)
+ {
+-	int status = tty->driver->ops->tiocmget(tty);
++	int status;
++
++	if (!(tty->driver->ops->tiocmget && tty->driver->ops->tiocmset))
++		return TIOCM_CTS;
++
++	status = tty->driver->ops->tiocmget(tty);
+ 
+ 	if (status & TIOCM_CTS)
+ 		return status;
+diff --git a/drivers/bluetooth/hci_ldisc.c b/drivers/bluetooth/hci_ldisc.c
+index c84f985f348d..29b4970f9bca 100644
+--- a/drivers/bluetooth/hci_ldisc.c
++++ b/drivers/bluetooth/hci_ldisc.c
+@@ -307,32 +307,40 @@ void hci_uart_set_flow_control(struct hci_uart *hu, bool enable)
+ 		BT_DBG("Disabling hardware flow control: %s",
+ 		       status ? "failed" : "success");
+ 
+-		/* Clear RTS to prevent the device from sending */
+-		/* Most UARTs need OUT2 to enable interrupts */
+-		status = tty->driver->ops->tiocmget(tty);
+-		BT_DBG("Current tiocm 0x%x", status);
+-
+-		set &= ~(TIOCM_OUT2 | TIOCM_RTS);
+-		clear = ~set;
+-		set &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
+-		       TIOCM_OUT2 | TIOCM_LOOP;
+-		clear &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
+-			 TIOCM_OUT2 | TIOCM_LOOP;
+-		status = tty->driver->ops->tiocmset(tty, set, clear);
+-		BT_DBG("Clearing RTS: %s", status ? "failed" : "success");
++		if (tty->driver->ops->tiocmget && tty->driver->ops->tiocmset) {
++			/* Clear RTS to prevent the device from sending */
++			/* Most UARTs need OUT2 to enable interrupts */
++			status = tty->driver->ops->tiocmget(tty);
++			BT_DBG("Current tiocm 0x%x", status);
++
++			set &= ~(TIOCM_OUT2 | TIOCM_RTS);
++			clear = ~set;
++			set &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
++			       TIOCM_OUT2 | TIOCM_LOOP;
++			clear &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
++			         TIOCM_OUT2 | TIOCM_LOOP;
++			status = tty->driver->ops->tiocmset(tty, set, clear);
++			BT_DBG("Clearing RTS: %s",
++			       status ? "failed" : "success");
++		} else
++			BT_DBG("Terminal RTS control is not present");
+ 	} else {
+-		/* Set RTS to allow the device to send again */
+-		status = tty->driver->ops->tiocmget(tty);
+-		BT_DBG("Current tiocm 0x%x", status);
+-
+-		set |= (TIOCM_OUT2 | TIOCM_RTS);
+-		clear = ~set;
+-		set &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
+-		       TIOCM_OUT2 | TIOCM_LOOP;
+-		clear &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
+-			 TIOCM_OUT2 | TIOCM_LOOP;
+-		status = tty->driver->ops->tiocmset(tty, set, clear);
+-		BT_DBG("Setting RTS: %s", status ? "failed" : "success");
++		if (tty->driver->ops->tiocmget && tty->driver->ops->tiocmset) {
++			/* Set RTS to allow the device to send again */
++			status = tty->driver->ops->tiocmget(tty);
++			BT_DBG("Current tiocm 0x%x", status);
++
++			set |= (TIOCM_OUT2 | TIOCM_RTS);
++			clear = ~set;
++			set &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
++			       TIOCM_OUT2 | TIOCM_LOOP;
++			clear &= TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
++			         TIOCM_OUT2 | TIOCM_LOOP;
++			status = tty->driver->ops->tiocmset(tty, set, clear);
++			BT_DBG("Setting RTS: %s",
++			       status ? "failed" : "success");
++		} else
++			BT_DBG("Terminal RTS control is not present");
+ 
+ 		/* Re-enable hardware flow control */
+ 		ktermios = tty->termios;
+-- 
+2.20.1
+
