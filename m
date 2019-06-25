@@ -2,166 +2,108 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8291EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE95FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AD620883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E4F2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:22:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jpjchimp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfFYWU0 (ORCPT
+        id S1726416AbfFYWWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:20:26 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:60207 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFYWU0 (ORCPT
+        Tue, 25 Jun 2019 18:22:19 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37779 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfFYWWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:20:26 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 31d07203676d00d2; Wed, 26 Jun 2019 00:20:23 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
-Date:   Wed, 26 Jun 2019 00:20:23 +0200
-Message-ID: <14605632.7Eqku7tdey@kreacher>
+        Tue, 25 Jun 2019 18:22:18 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y57so256625qtk.4;
+        Tue, 25 Jun 2019 15:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UIScmuqzmHtP5cs3qdtyOOMP1G/re5ti0q7i+OMbwpQ=;
+        b=Jpjchimp2JDOYaaFB0LuvnV5+WYA0YOWS+6RM926A16OcqOWJ1qTpjdt8mP8+3tUND
+         YWmXJ+XcDKv/ivg2fgFp039T0Lu18eMwEx2Pjj1oQ5RseN3ZbHlYSEYMrzP/VRTJ0NBO
+         jiqYYN5JwqCrTh6KIbc28MT7BjCIzJj3gdc9BbBdrtwMLKavPTYQT7xlPP4a0z0uu/w/
+         BHMldNz9CFIjGvCTTM49Z4ZBjtqQnvMlfMVPp33ia56peWs47hqDi0/+dRvP0DJKn57E
+         d85KfK1aIa8FuPiKFoj6ZEkly4g6ZewoDZi8OzRrmJy1bj96TpHcl3ICR/zDzkX0uT1R
+         Golg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UIScmuqzmHtP5cs3qdtyOOMP1G/re5ti0q7i+OMbwpQ=;
+        b=VMjAIY0JubILrQCgCNhLLycKu5J5dUkcxrOGM2EKK3XeZmmXG5vAa3/YHwOY63uJ4j
+         Sfb1Rn71r+EgVqK2nIAzPRuRDw9cNlsfxLKjVD7XgAR7xreBhK+F2QX+yDqxS6ySYm2N
+         FcJqhbnKBOHcswCFGwinzOj6XMR5unX8vF1bfPJ1SVO7sbk7x3kswU743T1V0aYxy+3B
+         pgcwjRS/AejFStdKyGSpI4HyG/8O+QwNR4pUMZg4g32HbHvLHEE/06P3s3Fd7n6TGkxM
+         ZCB7Ms7tryPG2h5Rzx9uE5NvE0Jgyk1a3JVL1+vqivkDjjLh/EWlKin0DWoj8qWx2Ywy
+         BWpw==
+X-Gm-Message-State: APjAAAWRZqThP05Ft8jUMaUBQhWanFqrBOz81zpLIxnJVXnkj5P0h5Sx
+        rv25jxM1nH3MaS0oMoA/sEer2pUEjS3eL4FJ++VeB91J
+X-Google-Smtp-Source: APXvYqzP0Yga5zA3Nr8BCDYvonMXshDXZa/5tCad07XahrQVxkAFLOh/iJuYlAkPMsQxiXOrIKH61OQYX8r/fV8pcpk=
+X-Received: by 2002:a0c:9807:: with SMTP id c7mr629522qvd.26.1561501337824;
+ Tue, 25 Jun 2019 15:22:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190625114246.14726-1-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190625114246.14726-1-ivan.khoronzhuk@linaro.org>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 25 Jun 2019 15:22:06 -0700
+Message-ID: <CAPhsuW4oB55TNJx9stfOq68d1O8quxuhonLv0466pdAo0cR=bg@mail.gmail.com>
+Subject: Re: [[PATCH net-next]] net: core: xdp: make __mem_id_disconnect to be static
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Networking <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        xdp-newbies@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>, hawk@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Jun 25, 2019 at 6:11 AM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> Add missed static for local __mem_id_disconnect().
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-There are platforms that do not call pm_set_suspend_via_firmware(),
-so pm_suspend_via_firmware() returns 'false' on them, but the power
-states of PCI devices (PCIe ports in particular) are changed as a
-result of powering down core platform components during system-wide
-suspend.  Thus the pm_suspend_via_firmware() checks in
-pci_pm_suspend_noirq() and pci_pm_resume_noirq() introduced by
-commit 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-
-idle") are not sufficient to determine that devices left in D0
-during suspend will remain in D0 during resume and so the bus-level
-power management can be skipped for them.
+https://patchwork.ozlabs.org/patch/1121730/
 
-For this reason, introduce a new global suspend flag,
-PM_SUSPEND_FLAG_NO_PLATFORM, set it for suspend-to-idle only
-and replace the pm_suspend_via_firmware() checks mentioned above
-with checks against this flag.
+I guess you are a little late. :)
 
-Fixes: 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-idle")
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/pci/pci-driver.c |    8 ++++----
- include/linux/suspend.h  |   26 ++++++++++++++++++++++++--
- kernel/power/suspend.c   |    3 +++
- 3 files changed, 31 insertions(+), 6 deletions(-)
+Please ack the other patch.
 
-Index: linux-pm/include/linux/suspend.h
-===================================================================
---- linux-pm.orig/include/linux/suspend.h
-+++ linux-pm/include/linux/suspend.h
-@@ -209,8 +209,9 @@ extern int suspend_valid_only_mem(suspen
- 
- extern unsigned int pm_suspend_global_flags;
- 
--#define PM_SUSPEND_FLAG_FW_SUSPEND	(1 << 0)
--#define PM_SUSPEND_FLAG_FW_RESUME	(1 << 1)
-+#define PM_SUSPEND_FLAG_FW_SUSPEND	BIT(0)
-+#define PM_SUSPEND_FLAG_FW_RESUME	BIT(1)
-+#define PM_SUSPEND_FLAG_NO_PLATFORM	BIT(2)
- 
- static inline void pm_suspend_clear_flags(void)
- {
-@@ -227,6 +228,11 @@ static inline void pm_set_resume_via_fir
- 	pm_suspend_global_flags |= PM_SUSPEND_FLAG_FW_RESUME;
- }
- 
-+static inline void pm_set_suspend_no_platform(void)
-+{
-+	pm_suspend_global_flags |= PM_SUSPEND_FLAG_NO_PLATFORM;
-+}
-+
- /**
-  * pm_suspend_via_firmware - Check if platform firmware will suspend the system.
-  *
-@@ -268,6 +274,22 @@ static inline bool pm_resume_via_firmwar
- 	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_FW_RESUME);
- }
- 
-+/**
-+ * pm_suspend_no_platform - Check if platform may change device power states.
-+ *
-+ * To be called during system-wide power management transitions to sleep states
-+ * or during the subsequent system-wide transitions back to the working state.
-+ *
-+ * Return 'true' if the power states of devices remain under full control of the
-+ * kernel throughout the system-wide suspend and resume cycle in progress (that
-+ * is, if a device is put into a certain power state during suspend, it can be
-+ * expected to remain in that state during resume).
-+ */
-+static inline bool pm_suspend_no_platform(void)
-+{
-+	return !!(pm_suspend_global_flags & PM_SUSPEND_FLAG_NO_PLATFORM);
-+}
-+
- /* Suspend-to-idle state machnine. */
- enum s2idle_states {
- 	S2IDLE_STATE_NONE,      /* Not suspended/suspending. */
-Index: linux-pm/kernel/power/suspend.c
-===================================================================
---- linux-pm.orig/kernel/power/suspend.c
-+++ linux-pm/kernel/power/suspend.c
-@@ -493,6 +493,9 @@ int suspend_devices_and_enter(suspend_st
- 
- 	pm_suspend_target_state = state;
- 
-+	if (state == PM_SUSPEND_TO_IDLE)
-+		pm_set_suspend_no_platform();
-+
- 	error = platform_suspend_begin(state);
- 	if (error)
- 		goto Close;
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -877,7 +877,7 @@ static int pci_pm_suspend_noirq(struct d
- 			pci_dev->bus->self->skip_bus_pm = true;
- 	}
- 
--	if (pci_dev->skip_bus_pm && !pm_suspend_via_firmware()) {
-+	if (pci_dev->skip_bus_pm && pm_suspend_no_platform()) {
- 		dev_dbg(dev, "PCI PM: Skipped\n");
- 		goto Fixup;
- 	}
-@@ -932,10 +932,10 @@ static int pci_pm_resume_noirq(struct de
- 	/*
- 	 * In the suspend-to-idle case, devices left in D0 during suspend will
- 	 * stay in D0, so it is not necessary to restore or update their
--	 * configuration here and attempting to put them into D0 again may
--	 * confuse some firmware, so avoid doing that.
-+	 * configuration here and attempting to put them into D0 again is
-+	 * pointless, so avoid doing that.
- 	 */
--	if (!pci_dev->skip_bus_pm || pm_suspend_via_firmware())
-+	if (!(pci_dev->skip_bus_pm && pm_suspend_no_platform()))
- 		pci_pm_default_resume_early(pci_dev);
- 
- 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
+Song
 
-
-
+> ---
+>  net/core/xdp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index b29d7b513a18..829377cc83db 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -85,7 +85,7 @@ static void __xdp_mem_allocator_rcu_free(struct rcu_head *rcu)
+>         kfree(xa);
+>  }
+>
+> -bool __mem_id_disconnect(int id, bool force)
+> +static bool __mem_id_disconnect(int id, bool force)
+>  {
+>         struct xdp_mem_allocator *xa;
+>         bool safe_to_remove = true;
+> --
+> 2.17.1
+>
