@@ -2,98 +2,196 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CF9C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580C0C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9A220883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E89208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a3SMLs+d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iFw/1dYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731643AbfFYRMq (ORCPT
+        id S1731600AbfFYRON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:12:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46271 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbfFYRMp (ORCPT
+        Tue, 25 Jun 2019 13:14:13 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37753 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbfFYROM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:12:45 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so9166014pls.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:12:45 -0700 (PDT)
+        Tue, 25 Jun 2019 13:14:12 -0400
+Received: by mail-io1-f66.google.com with SMTP id e5so1928591iok.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=evJZ611ieJocegJ3LQNW9Eg/UNskUaGIHgsK7ypKVgI=;
-        b=a3SMLs+dWET/7V/UepBDzEvuFcGfzDN4wp15+eaj/zWii+KNOggB6WL1bG8BG9Ikxv
-         bArAc5hMvi9DlkF9+F10Tj6n2UQrQ/wQkE7aKpZPZr3zidP+7DsZcmW/EUH0sCUlAN5x
-         0+vu/8lI2jV7wnCfiIEWnBsL25pL670ITGdOM=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rIEg9mImdLbOPWr5JcAO9mpGaP6d2/FlgncwQFfkJdw=;
+        b=iFw/1dYYVqRHgcAh1TpJFGK77tujLxqxZtyDQdAChfPK8J2o5Z35qj7HlPTvAoJDh0
+         0LUe8zRzcBUHlMIsII05VrtML3UOjVu/FQEjIrmezQ6XDdecyYt7zJPA5fpXIGdpt63p
+         DHUgZqIHhAHn5Y29772IQWcGUWCAZyj5Z2xwo8VQFeDUCFWyvp8tluEdpnBnrkD63QQv
+         TQwDL87DoNOU7cDCAPKgC+e7rxUyug338krujNQfqkEtiqWde1T1kd0ZNcLYKO+v1JaY
+         zr5Ga8ex+w/NpqHgnMXiK+QpBeUCEVe1JKHl6CYdS6u3bHTHx1BMwcVsbzZ5dFI0KiG1
+         qqsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=evJZ611ieJocegJ3LQNW9Eg/UNskUaGIHgsK7ypKVgI=;
-        b=lQVA9i8KSo/sUF8ydjd50YbV5EfBxa4iq/SpEswVY/WKcnl6LDOP34Vdxjzn4f2b8g
-         i3GVwmyK/RxcXXe0UlX6tSNWXMR9yeXJsu5qLCMU5l9whOh9M69OEFWxcOqUyoNXq+eN
-         Q6EbQ0uXIMnIK9V1bbxja1p8sKqhzyI9YhjMYbZ8jNhTNwG8MR/Hb3ZlcKfNVTc3zLjN
-         dgaB+XSYUqKqDWARRiEp36elVvhexuR6m1H3PhEXV63WkcJvQ7Pf3dWqApsx9SW9Ei8M
-         bGDl0EvJt3LVCgKw3kpD70GWrTgafhpFERiK0U8QOb3sEnsL6tYjmsITe0o7q5RddDDB
-         axdA==
-X-Gm-Message-State: APjAAAWpXJGZuhuiVWbaHnvelLchBJN+0ke7dGL9exnWpVt1mud+nezF
-        NxSgftQNe4/Up03V+/QpRZ646Q==
-X-Google-Smtp-Source: APXvYqwXQYcCcg4xky16h6RsWQUwWMNys8Mo6oo9mRuYdIHGyVw26Oun6x/a7fQXH5k8iQjfjEAP7g==
-X-Received: by 2002:a17:902:9041:: with SMTP id w1mr143570404plz.132.1561482764938;
-        Tue, 25 Jun 2019 10:12:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o14sm2846752pjp.29.2019.06.25.10.12.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Jun 2019 10:12:43 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 10:12:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rIEg9mImdLbOPWr5JcAO9mpGaP6d2/FlgncwQFfkJdw=;
+        b=XcQX5jUImrylgOH8xA/TaNfmsEVShnGBdT2Fzoxx0mi/l6k2cggfgrXbpkV36DRK2B
+         jz32CBJRxkKOqLPJVKQGgOpIMUL6UA5b3ETrLnmY66O/bQnAbYuuVFdnRa5kpZbBqvw2
+         1X+NW6A5u9Yxhbca03HJzKm5lpy8cU4C7EniJUm5wBXvF5pks8i5etGlxwayRO/Vc1I2
+         cONEKzkjc2xz1WsGfk4fuD6JNYKHXVvVVA4FwwBpm59ta2kkwPU52PYhDvsNMDT2DcI0
+         +tFuccYbTcZw8MGeu5NKvWbZP/tclo9VCIkBdyetU6xgeleNrpUFbCJwfnRZ+VpEn8zf
+         rC8Q==
+X-Gm-Message-State: APjAAAVY902yIDpVOrS30a6xooyvO+XbrPew9U92qdoJvkK4ykeQ6njo
+        /bC1g73dJPupCsyJMd28vXYXU+GZQAjqx4zMvx1jGQ==
+X-Google-Smtp-Source: APXvYqxatAKGOw2Hd80AGbHfI0zoxMZ2N12wP/Os4mMS4dOimgUUQdghFbrjzzb/zt7brOd5o3IjqgB2yyjTx1aDKS8=
+X-Received: by 2002:a05:6638:3d6:: with SMTP id r22mr457862jaq.71.1561482851619;
+ Tue, 25 Jun 2019 10:14:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617150024.11787-1-leo.yan@linaro.org> <CANLsYkyMW=WG+=yWTLSyMT3JXqd_2kvsrx9c-EwCoKEnRZvErA@mail.gmail.com>
+ <20190620005829.GH24549@leoy-ThinkPad-X240s> <20190624190009.GE4181@kernel.org>
+In-Reply-To: <20190624190009.GE4181@kernel.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 25 Jun 2019 11:14:00 -0600
+Message-ID: <CANLsYkyOOS_ow_bRpok+V73_EBRg2yechwF0VHLtDBWB4VBEBw@mail.gmail.com>
+Subject: Re: [PATCH] perf cs-etm: Improve completeness for kernel address space
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-Message-ID: <201906251009.BCB7438@keescook>
-References: <20190624161913.GA32270@embeddedor>
- <20190624193123.GI3436@hirez.programming.kicks-ass.net>
- <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net>
- <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625071846.GN3436@hirez.programming.kicks-ass.net>
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 09:18:46AM +0200, Peter Zijlstra wrote:
-> Can it build a kernel without patches yet? That is, why should I care
-> what LLVM does?
+On Mon, 24 Jun 2019 at 13:00, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Thu, Jun 20, 2019 at 08:58:29AM +0800, Leo Yan escreveu:
+> > Hi Mathieu,
+> >
+> > On Wed, Jun 19, 2019 at 11:49:44AM -0600, Mathieu Poirier wrote:
+> >
+> > [...]
+> >
+> > > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > > > index 51dd00f65709..4776c2c1fb6d 100644
+> > > > --- a/tools/perf/Makefile.config
+> > > > +++ b/tools/perf/Makefile.config
+> > > > @@ -418,6 +418,30 @@ ifdef CORESIGHT
+> > > >      endif
+> > > >      LDFLAGS += $(LIBOPENCSD_LDFLAGS)
+> > > >      EXTLIBS += $(OPENCSDLIBS)
+> > > > +    ifneq ($(wildcard $(srctree)/arch/arm64/kernel/vmlinux.lds),)
+> > > > +      # Extract info from lds:
+> > > > +      #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
+> > > > +      # ARM64_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000)
+> > > > +      ARM64_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
+> > > > +        $(srctree)/arch/arm64/kernel/vmlinux.lds | \
+> > > > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > > > +        awk -F' ' '{print "("$$6 "+"  $$7 "+" $$8")"}' 2>/dev/null)
+> > > > +    else
+> > > > +      ARM64_PRE_START_SIZE := 0
+> > > > +    endif
+> > > > +    CFLAGS += -DARM64_PRE_START_SIZE="$(ARM64_PRE_START_SIZE)"
+> > > > +    ifneq ($(wildcard $(srctree)/arch/arm/kernel/vmlinux.lds),)
+> > > > +      # Extract info from lds:
+> > > > +      #   . = ((0xC0000000)) + 0x00208000;
+> > > > +      # ARM_PRE_START_SIZE := 0x00208000
+> > > > +      ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
+> > > > +        $(srctree)/arch/arm/kernel/vmlinux.lds | \
+> > > > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > > > +        awk -F' ' '{print "("$$2")"}' 2>/dev/null)
+> > > > +    else
+> > > > +      ARM_PRE_START_SIZE := 0
+> > > > +    endif
+> > > > +    CFLAGS += -DARM_PRE_START_SIZE="$(ARM_PRE_START_SIZE)"
+> > > >      $(call detected,CONFIG_LIBOPENCSD)
+> > > >      ifdef CSTRACE_RAW
+> > > >        CFLAGS += -DCS_DEBUG_RAW
+> > > > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > > > index 0c7776b51045..ae831f836c70 100644
+> > > > --- a/tools/perf/util/cs-etm.c
+> > > > +++ b/tools/perf/util/cs-etm.c
+> > > > @@ -613,10 +613,34 @@ static void cs_etm__free(struct perf_session *session)
+> > > >  static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+> > > >  {
+> > > >         struct machine *machine;
+> > > > +       u64 fixup_kernel_start = 0;
+> > > > +       const char *arch;
+> > > >
+> > > >         machine = etmq->etm->machine;
+> > > > +       arch = perf_env__arch(machine->env);
+> > > >
+> > > > -       if (address >= etmq->etm->kernel_start) {
+> > > > +       /*
+> > > > +        * Since arm and arm64 specify some memory regions prior to
+> > > > +        * 'kernel_start', kernel addresses can be less than 'kernel_start'.
+> > > > +        *
+> > > > +        * For arm architecture, the 16MB virtual memory space prior to
+> > > > +        * 'kernel_start' is allocated to device modules, a PMD table if
+> > > > +        * CONFIG_HIGHMEM is enabled and a PGD table.
+> > > > +        *
+> > > > +        * For arm64 architecture, the root PGD table, device module memory
+> > > > +        * region and BPF jit region are prior to 'kernel_start'.
+> > > > +        *
+> > > > +        * To reflect the complete kernel address space, compensate these
+> > > > +        * pre-defined regions for kernel start address.
+> > > > +        */
+> > > > +       if (!strcmp(arch, "arm64"))
+> > > > +               fixup_kernel_start = etmq->etm->kernel_start -
+> > > > +                                    ARM64_PRE_START_SIZE;
+> > > > +       else if (!strcmp(arch, "arm"))
+> > > > +               fixup_kernel_start = etmq->etm->kernel_start -
+> > > > +                                    ARM_PRE_START_SIZE;
+> > >
+> > > I will test your work but from a quick look wouldn't it be better to
+> > > have a single define name here?  From looking at the modifications you
+> > > did to Makefile.config there doesn't seem to be a reason to have two.
+> >
+> > Thanks for suggestion.  I changed to use single define
+> > ARM_PRE_START_SIZE and sent patch v2 [1].
+> >
+> > If possible, please test patch v2.
+> >
+> > Thanks,
+> > Leo Yan
+>
+> So just for the record, I'm waiting for Mathieu on this one, i.e. for
+> him to test/ack v3.
 
-Yes. LLVM trunk builds and boots x86 now. As for distro availability,
-AIUI, the asm-goto feature missed the 9.0 LLVM branch point, so it'll
-appear in the following release.
+Right, please give me some time to test this.  As Leo indicated the
+procedure is time consuming.
 
--- 
-Kees Cook
+Thanks,
+Mathieu
+
+>
+> - Arnaldo
+>
+> > [1] https://lore.kernel.org/linux-arm-kernel/20190620005428.20883-1-leo.yan@linaro.org/T/#u
+> >
+> > > > +
+> > > > +       if (address >= fixup_kernel_start) {
+> > > >                 if (machine__is_host(machine))
+> > > >                         return PERF_RECORD_MISC_KERNEL;
+> > > >                 else
+> > > > --
+> > > > 2.17.1
+> > > >
+>
+> --
+>
+> - Arnaldo
