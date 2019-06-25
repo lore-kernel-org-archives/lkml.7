@@ -2,119 +2,87 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1062FC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14009C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E4C20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB3D20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731964AbfFYKkD (ORCPT
+        id S1732029AbfFYKlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:40:03 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33033 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726756AbfFYKkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:40:03 -0400
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 8EB9AF10B47BA8C488B9;
-        Tue, 25 Jun 2019 11:40:00 +0100 (IST)
-Received: from [127.0.0.1] (10.202.227.157) by lhreml701-cah.china.huawei.com
- (10.201.108.42) with Microsoft SMTP Server id 14.3.408.0; Tue, 25 Jun 2019
- 11:39:46 +0100
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-From:   Wei Xu <xuwei5@hisilicon.com>
-To:     <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>, <arnd@arndb.de>
-CC:     <linuxarm@huawei.com>, "xuwei (O)" <xuwei5@huawei.com>,
-        John Garry <john.garry@huawei.com>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
-Message-ID: <afaddac3-4f9c-c09d-09d1-9c3e71beaf7b@hisilicon.com>
-Date:   Tue, 25 Jun 2019 11:39:46 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 25 Jun 2019 06:41:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40774 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbfFYKlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:41:36 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 32D393D953;
+        Tue, 25 Jun 2019 10:41:36 +0000 (UTC)
+Received: from astarta.redhat.com (ovpn-116-223.ams2.redhat.com [10.36.116.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0492F600CD;
+        Tue, 25 Jun 2019 10:41:34 +0000 (UTC)
+From:   Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+To:     Jiong Wang <jiong.wang@netronome.com>
+Cc:     linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Jiri Benc <jbenc@redhat.com>, bpf@vger.kernel.org
+Subject: Re: ebpf: BPF_ALU32 | BPF_ARSH on BE arches
+References: <xunyo92mox9h.fsf@redhat.com> <87ef3i9dbc.fsf@netronome.com>
+Date:   Tue, 25 Jun 2019 13:41:34 +0300
+In-Reply-To: <87ef3i9dbc.fsf@netronome.com> (Jiong Wang's message of "Tue, 25
+        Jun 2019 11:20:07 +0100")
+Message-ID: <xuny7e9aoskh.fsf@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.157]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 25 Jun 2019 10:41:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi ARM-SoC team,
+Hi, Jiong!
 
-Sorry, I forgot to mention that one or two patches in this patch set
-are not pure fix.
-We are also OK to queue for v5.3.
-Thanks!
+>>>>> On Tue, 25 Jun 2019 11:20:07 +0100, Jiong Wang  wrote:
 
-Best Regards,
-Wei
+ > Yauheni Kaliuta writes:
 
-On 6/25/2019 11:23 AM, Wei Xu wrote:
-> Hi ARM-SoC team,
-> 
-> Please consider to pull the following changes.
-> Thanks!
-> 
-> Best Regards,
-> Wei
-> 
-> ---
-> 
-> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-> 
->   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
-> 
-> for you to fetch changes up to 07c811af1c00d7b4212eac86900b023b6405a954:
-> 
->   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration (2019-06-25 09:40:42 +0100)
-> 
-> ----------------------------------------------------------------
-> Hisilicon fixes for v5.2-rc
-> 
-> - fixed RCU usage in logical PIO
-> - Added a function to unregister a logical PIO range in logical PIO
->   to support the fixes in the hisi-lpc driver
-> - fixed and optimized hisi-lpc driver to avoid potential use-after-free
->   and driver unbind crash
-> 
-> ----------------------------------------------------------------
-> John Garry (6):
->       lib: logic_pio: Fix RCU usage
->       lib: logic_pio: Avoid possible overlap for unregistering regions
->       lib: logic_pio: Add logic_pio_unregister_range()
->       bus: hisi_lpc: Unregister logical PIO range to avoid potential use-after-free
->       bus: hisi_lpc: Add .remove method to avoid driver unbind crash
->       lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
-> 
->  drivers/bus/hisi_lpc.c    | 43 ++++++++++++++++++++----
->  include/linux/logic_pio.h |  1 +
->  lib/logic_pio.c           | 86 +++++++++++++++++++++++++++++++++--------------
->  3 files changed, 99 insertions(+), 31 deletions(-)
-> 
+ >> Hi!
+ >> 
+ >> Looks like the code:
+ >> 
+ >> ALU_ARSH_X:
+ >> DST = (u64) (u32) ((*(s32 *) &DST) >> SRC);
+ >> CONT;
+ >> ALU_ARSH_K:
+ >> DST = (u64) (u32) ((*(s32 *) &DST) >> IMM);
+ >> CONT;
+ >> 
+ >> works incorrectly on BE arches since it must operate on lower
+ >> parts of 64bit registers.
+ >> 
+ >> See failure of test_verifier test 'arsh32 on imm 2' (#23 on
+ >> 5.2-rc6).
 
+ > Ah, thanks for reporting this.
+
+ > Should not taken the address directly, does the following fix resolved the
+ > failure?
+
+ >         ALU_ARSH_X:
+ >                 DST = (u64) (u32) ((s32) DST) >> SRC);
+ >                 CONT;
+ >         ALU_ARSH_K:
+ >                 DST = (u64) (u32) ((s32) DST) >> IMM);
+ >                 CONT;
+
+Yes, thanks (just add the missing braces).
+
+-- 
+WBR,
+Yauheni Kaliuta
