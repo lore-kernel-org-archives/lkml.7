@@ -2,129 +2,190 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB49C48BD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7A7C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC5C2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:00:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561489248;
-	bh=MFYeyXNZ+jf2IZ478q4oZigyWIwSmLDFqkynrz4toCI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WFMQ7NosA672bwuGx+q/YbkRRzn1MMITivF2YAeSLFf8fL2TKQveSo0nhaBe86DSG
-	 oJNJ4sNnMwUMEXRhiL1HEGYruXR+JhAnfy+t9UUzrfJIB5wVHEKGmD9a4uuHyDxOon
-	 C+7otMXO+IwPXhVCp6TixIHNUdHzpQlTvAmtQ89I=
+	by mail.kernel.org (Postfix) with ESMTP id D6F4B2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfFYTAr (ORCPT
+        id S1731297AbfFYTDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:00:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50468 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727684AbfFYTAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:00:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6933EAD3A;
-        Tue, 25 Jun 2019 19:00:44 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 21:00:38 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-Message-ID: <20190625190038.GK11400@dhcp22.suse.cz>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz>
- <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de>
- <20190625150053.GJ11400@dhcp22.suse.cz>
- <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
+        Tue, 25 Jun 2019 15:03:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59828 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727684AbfFYTDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:03:45 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9551E85363;
+        Tue, 25 Jun 2019 19:03:44 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-13.gru2.redhat.com [10.97.112.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 126B26012D;
+        Tue, 25 Jun 2019 19:03:44 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id D665110517A;
+        Tue, 25 Jun 2019 16:00:21 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x5PJ0H0G003435;
+        Tue, 25 Jun 2019 16:00:17 -0300
+Date:   Tue, 25 Jun 2019 16:00:13 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by
+ posted interrupt
+Message-ID: <20190625190010.GA3377@amt.cnet>
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-3-git-send-email-wanpengli@tencent.com>
+ <20190618133541.GA3932@amt.cnet>
+ <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
+ <20190619210346.GA13033@amt.cnet>
+ <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
+ <20190621214205.GA4751@amt.cnet>
+ <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 25 Jun 2019 19:03:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25-06-19 11:03:53, Dan Williams wrote:
-> On Tue, Jun 25, 2019 at 8:01 AM Michal Hocko <mhocko@kernel.org> wrote:
+On Mon, Jun 24, 2019 at 04:53:53PM +0800, Wanpeng Li wrote:
+> On Sat, 22 Jun 2019 at 06:11, Marcelo Tosatti <mtosatti@redhat.com> wrote:
 > >
-> > On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
-> > > On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
-> > > > I asked for this simply because it was not exported historically. In
-> > > > general I want to establish explicit export-type criteria so the
-> > > > community can spend less time debating when to use EXPORT_SYMBOL_GPL
-> > > > [1].
+> > On Fri, Jun 21, 2019 at 09:42:39AM +0800, Wanpeng Li wrote:
+> > > On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.com> wrote:
 > > > >
-> > > > The thought in this instance is that it is not historically exported
-> > > > to modules and it is safer from a maintenance perspective to start
-> > > > with GPL-only for new symbols in case we don't want to maintain that
-> > > > interface long-term for out-of-tree modules.
+> > > > Hi Li,
 > > > >
-> > > > Yes, we always reserve the right to remove / change interfaces
-> > > > regardless of the export type, but history has shown that external
-> > > > pressure to keep an interface stable (contrary to
-> > > > Documentation/process/stable-api-nonsense.rst) tends to be less for
-> > > > GPL-only exports.
+> > > > On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
+> > > > > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> > > > > >
+> > > > > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
+> > > > > > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > >
+> > > > > > > Dedicated instances are currently disturbed by unnecessary jitter due
+> > > > > > > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+> > > > > > > There is no hardware virtual timer on Intel for guest like ARM. Both
+> > > > > > > programming timer in guest and the emulated timer fires incur vmexits.
+> > > > > > > This patch tries to avoid vmexit which is incurred by the emulated
+> > > > > > > timer fires in dedicated instance scenario.
+> > > > > > >
+> > > > > > > When nohz_full is enabled in dedicated instances scenario, the emulated
+> > > > > > > timers can be offload to the nearest busy housekeeping cpus since APICv
+> > > > > > > is really common in recent years. The guest timer interrupt is injected
+> > > > > > > by posted-interrupt which is delivered by housekeeping cpu once the emulated
+> > > > > > > timer fires.
+> > > > > > >
+> > > > > > > The host admin should fine tuned, e.g. dedicated instances scenario w/
+> > > > > > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
+> > > > > > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root
+> > > > > > > mode, ~3% redis performance benefit can be observed on Skylake server.
+> > > > > > >
+> > > > > > > w/o patch:
+> > > > > > >
+> > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
+> > > > > > >
+> > > > > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
+> > > > > > >
+> > > > > > > w/ patch:
+> > > > > > >
+> > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
+> > > > > > >
+> > > > > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
+> > > > > > >
+> > > > > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > > Cc: Radim Krčmář <rkrcmar@redhat.com>
+> > > > > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > ---
+> > > > > > >  arch/x86/kvm/lapic.c            | 33 ++++++++++++++++++++++++++-------
+> > > > > > >  arch/x86/kvm/lapic.h            |  1 +
+> > > > > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
+> > > > > > >  arch/x86/kvm/x86.c              |  5 +++++
+> > > > > > >  arch/x86/kvm/x86.h              |  2 ++
+> > > > > > >  include/linux/sched/isolation.h |  2 ++
+> > > > > > >  kernel/sched/isolation.c        |  6 ++++++
+> > > > > > >  7 files changed, 44 insertions(+), 8 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > > > > > index 87ecb56..9ceeee5 100644
+> > > > > > > --- a/arch/x86/kvm/lapic.c
+> > > > > > > +++ b/arch/x86/kvm/lapic.c
+> > > > > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
+> > > > > > >       return apic->vcpu->vcpu_id;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > > > > > > +{
+> > > > > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+> > > > > > > +             kvm_hlt_in_guest(vcpu->kvm);
+> > > > > > > +}
+> > > > > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+> > > > > >
+> > > > > > Paolo, can you explain the reasoning behind this?
+> > > > > >
+> > > > > > Should not be necessary...
 > > >
-> > > Fully agreed.  In the end the decision is with the MM maintainers,
-> > > though, although I'd prefer to keep it as in this series.
+> > > https://lkml.org/lkml/2019/6/5/436  "Here you need to check
+> > > kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to go
+> > > through kvm_apic_expired if the guest needs to be woken up from
+> > > kvm_vcpu_block."
 > >
-> > I am sorry but I am not really convinced by the above reasoning wrt. to
-> > the allocator API and it has been a subject of many changes over time. I
-> > do not remember a single case where we would be bending the allocator
-> > API because of external modules and I am pretty sure we will push back
-> > heavily if that was the case in the future.
+> > Ah, i think he means that a sleeping vcpu (in kvm_vcpu_block) must
+> > be woken up, if it receives a timer interrupt.
+> >
+> > But your patch will go through:
+> >
+> > kvm_apic_inject_pending_timer_irqs
+> > __apic_accept_irq ->
+> > vmx_deliver_posted_interrupt ->
+> > kvm_vcpu_trigger_posted_interrupt returns false
+> > (because vcpu->mode != IN_GUEST_MODE) ->
+> > kvm_vcpu_kick
+> >
+> > Which will wakeup the vcpu.
 > 
-> This seems to say that you have no direct experience of dealing with
-> changing symbols that that a prominent out-of-tree module needs? GPU
-> drivers and the core-mm are on a path to increase their cooperation on
-> memory management mechanisms over time, and symbol export changes for
-> out-of-tree GPU drivers have been a significant source of friction in
-> the past.
-
-I have an experience e.g. to rework semantic of some gfp flags and that is
-something that users usualy get wrong and never heard that an out of
-tree code would insist on an old semantic and pushing us to the corner.
-
-> > So in this particular case I would go with consistency and export the
-> > same way we do with other functions. Also we do not want people to
-> > reinvent this API and screw that like we have seen in other cases when
-> > external modules try reimplement core functionality themselves.
+> Hi Marcelo,
 > 
-> Consistency is a weak argument when the cost to the upstream community
-> is negligible. If the same functionality was available via another /
-> already exported interface *that* would be an argument to maintain the
-> existing export policy. "Consistency" in and of itself is not a
-> precedent we can use more widely in default export-type decisions.
+> >
+> > Apart from this oops, which triggers when running:
+> > taskset -c 1 ./cyclictest -D 3600 -p 99 -t 1 -h 30 -m -n  -i 50000 -b 40
 > 
-> Effectively I'm arguing EXPORT_SYMBOL_GPL by default with a later
-> decision to drop the _GPL. Similar to how we are careful to mark sysfs
-> interfaces in Documentation/ABI/ that we are not fully committed to
-> maintaining over time, or are otherwise so new that there is not yet a
-> good read on whether they can be made permanent.
+> I try both host and guest use latest kvm/queue  w/ CONFIG_PREEMPT
+> enabled, and expose mwait as your config, however, there is no oops.
+> Can you reproduce steadily or encounter casually? Can you reproduce
+> w/o the patchset?
 
-Documentation/process/stable-api-nonsense.rst
-Really. If you want to play with GPL vs. EXPORT_SYMBOL else this is up
-to you but I do not see any technical argument to make this particular
-interface to the page allocator any different from all others that are
-exported to modules.
--- 
-Michal Hocko
-SUSE Labs
+Hi Li,
+
+Steadily.
+
+Do you have this as well:
+
+Index: kvm/arch/x86/kvm/lapic.c
+===================================================================
+--- kvm.orig/arch/x86/kvm/lapic.c
++++ kvm/arch/x86/kvm/lapic.c
+@@ -129,8 +129,7 @@ static inline u32 kvm_x2apic_id(struct k
+
+ bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+ {
+-       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+-               kvm_hlt_in_guest(vcpu->kvm);
++       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu);
+ }
+ EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
