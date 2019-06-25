@@ -2,120 +2,152 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA6CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A33C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D4682133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561492345;
-	bh=7pm8JkCLHqEoLrJYY8z/2/wqC8f2TYEabiJDZrXwd5A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XaQSy7CnLsAxITIw81glO2+xE5mdGJQKghWVPhPrUWXwzsxflqkuxZE0cu2kIFGCe
-	 vtRFkwqZpZjbUrgnW2nmlmnoQ8vWdH+EbxE6/Zh+JiQRfddqLVw8WoUuZXPv1sz34D
-	 6nWrd1MG6R4dr7h7fucQfDMFATChBs9g6r/94wCQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3E27E2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:52:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="cg40kmVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfFYTwX (ORCPT
+        id S1728100AbfFYTwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:52:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbfFYTwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:52:17 -0400
-Received: from sasha-vm.mshome.net (unknown [167.220.24.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42313208E3;
-        Tue, 25 Jun 2019 19:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561492336;
-        bh=7pm8JkCLHqEoLrJYY8z/2/wqC8f2TYEabiJDZrXwd5A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V4Da/jRQR1Q49DYyxY7sfL/T0+yxQICBc2EP8tJqlozjDuNPv6QA4wiF/vGeluBFe
-         3PBHRWAgXLMwn7t4CnL5hBjReEDyvvoypvZ41GQsiBAQhxTV0uD3uR8Ckglm3LtsO3
-         rjyxOL/b/Qprljuk829q56aLQIrTBiIsET4TIMJ4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com, tee-dev@lists.linaro.org,
-        ilias.apalodimas@linaro.org, sumit.garg@linaro.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v6 2/2] fTPM: add documentation for ftpm driver
-Date:   Tue, 25 Jun 2019 15:52:09 -0400
-Message-Id: <20190625195209.13663-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625195209.13663-1-sashal@kernel.org>
-References: <20190625195209.13663-1-sashal@kernel.org>
+        Tue, 25 Jun 2019 15:52:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35936 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727662AbfFYTwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:52:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r6so97170oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 12:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w0iye/3d1d43WiqVq+yINWIQnPqAw8A16FUwAjTLITU=;
+        b=cg40kmVDe098Yeal1OpwCn3OtKBjzRnBRkGsDiRkJlBZmoYI19FP8EGzmZENBKS9gc
+         y85l2sQkHTXgqXraL4kaAGyPSS89BlMic0a5IYD4ijt8AaGI5dAMpm1LqTsvqtZ0PA18
+         /sFXK4G4VbfJsBTSuI7jnUNqry2IT3CR4rWFZDFAIwwgF0wpO56iBYn1OrWh8zMn5H5U
+         UiXxOJDTdDUZ1sp/qT4gDr5qxfq60VgObAV3QcEkH8aWy3k9rRcTQ+1xwDIMTbjb/rOl
+         vLBtj451wwdwT3Iv/y3LeY44bWSWgm5KwxP2Hkh4f45wvrSWUrzPcQdtg3gHbAGRQLJ3
+         R1iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w0iye/3d1d43WiqVq+yINWIQnPqAw8A16FUwAjTLITU=;
+        b=WVmNMGQRO8xcljcVjikSc6Q1ptBd/E5C4hPnnoPGgyklZihIX8c7mMhZQkfAlZPnnS
+         gNwUuEKfPkJVh1mTqWheDdTKaWQXLGaQC3y0spTl73fwayVUu6QX0hBCPq5zDg7i4KRG
+         AT/4EofbkFAHyvkIXOj5WwW0WuxwjM5ZorZUpZukHG6l9JCFcYGtJjZl2l8eYc6zJNAt
+         TukmA1adHULTM4jpM4xhGmicM5Zq957tXvFUiYRlDwkVxHvfDCCDF6E1+u/hR3bRM7VE
+         7eDihOmPwNKxxgE+ZR4036fI4hXxc8S2ft0tpoYgRtZLkD0ZQN4XmZeyK37XWQv0Kam+
+         Is4g==
+X-Gm-Message-State: APjAAAWVDgCzGmwf3js+Iyk+KSvP11arLAyK0xBz+vX4BF41Hh7NCM4I
+        h3XhF2b9jbGDCC3sRWXYgULMEd6CNXOBd5B634eD85v/
+X-Google-Smtp-Source: APXvYqx9tkQWIJH6qfCTM4r93Fn0JkGxBFjGh9k1TjumYyf0PnXcUjYDBWeUS/klLXmbZuWZeGlEsSD0mVmlPe4JDBw=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr50775oto.207.1561492348979;
+ Tue, 25 Jun 2019 12:52:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
+ <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+ <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
+ <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com> <20190625190038.GK11400@dhcp22.suse.cz>
+In-Reply-To: <20190625190038.GK11400@dhcp22.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 25 Jun 2019 12:52:18 -0700
+Message-ID: <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
+Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds basic documentation to describe the new fTPM driver.
+On Tue, Jun 25, 2019 at 12:01 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 25-06-19 11:03:53, Dan Williams wrote:
+> > On Tue, Jun 25, 2019 at 8:01 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
+> > > > On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
+> > > > > I asked for this simply because it was not exported historically. In
+> > > > > general I want to establish explicit export-type criteria so the
+> > > > > community can spend less time debating when to use EXPORT_SYMBOL_GPL
+> > > > > [1].
+> > > > >
+> > > > > The thought in this instance is that it is not historically exported
+> > > > > to modules and it is safer from a maintenance perspective to start
+> > > > > with GPL-only for new symbols in case we don't want to maintain that
+> > > > > interface long-term for out-of-tree modules.
+> > > > >
+> > > > > Yes, we always reserve the right to remove / change interfaces
+> > > > > regardless of the export type, but history has shown that external
+> > > > > pressure to keep an interface stable (contrary to
+> > > > > Documentation/process/stable-api-nonsense.rst) tends to be less for
+> > > > > GPL-only exports.
+> > > >
+> > > > Fully agreed.  In the end the decision is with the MM maintainers,
+> > > > though, although I'd prefer to keep it as in this series.
+> > >
+> > > I am sorry but I am not really convinced by the above reasoning wrt. to
+> > > the allocator API and it has been a subject of many changes over time. I
+> > > do not remember a single case where we would be bending the allocator
+> > > API because of external modules and I am pretty sure we will push back
+> > > heavily if that was the case in the future.
+> >
+> > This seems to say that you have no direct experience of dealing with
+> > changing symbols that that a prominent out-of-tree module needs? GPU
+> > drivers and the core-mm are on a path to increase their cooperation on
+> > memory management mechanisms over time, and symbol export changes for
+> > out-of-tree GPU drivers have been a significant source of friction in
+> > the past.
+>
+> I have an experience e.g. to rework semantic of some gfp flags and that is
+> something that users usualy get wrong and never heard that an out of
+> tree code would insist on an old semantic and pushing us to the corner.
+>
+> > > So in this particular case I would go with consistency and export the
+> > > same way we do with other functions. Also we do not want people to
+> > > reinvent this API and screw that like we have seen in other cases when
+> > > external modules try reimplement core functionality themselves.
+> >
+> > Consistency is a weak argument when the cost to the upstream community
+> > is negligible. If the same functionality was available via another /
+> > already exported interface *that* would be an argument to maintain the
+> > existing export policy. "Consistency" in and of itself is not a
+> > precedent we can use more widely in default export-type decisions.
+> >
+> > Effectively I'm arguing EXPORT_SYMBOL_GPL by default with a later
+> > decision to drop the _GPL. Similar to how we are careful to mark sysfs
+> > interfaces in Documentation/ABI/ that we are not fully committed to
+> > maintaining over time, or are otherwise so new that there is not yet a
+> > good read on whether they can be made permanent.
+>
+> Documentation/process/stable-api-nonsense.rst
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Documentation/security/tpm/index.rst        |  1 +
- Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
+That document has failed to preclude symbol export fights in the past
+and there is a reasonable argument to try not to retract functionality
+that had been previously exported regardless of that document.
 
-diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-index af77a7bbb070..15783668644f 100644
---- a/Documentation/security/tpm/index.rst
-+++ b/Documentation/security/tpm/index.rst
-@@ -4,4 +4,5 @@ Trusted Platform Module documentation
- 
- .. toctree::
- 
-+   tpm_ftpm_tee
-    tpm_vtpm_proxy
-diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
-new file mode 100644
-index 000000000000..29c2f8b5ed10
---- /dev/null
-+++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
-@@ -0,0 +1,31 @@
-+=============================================
-+Firmware TPM Driver
-+=============================================
-+
-+| Authors:
-+| Thirupathaiah Annapureddy <thiruan@microsoft.com>
-+| Sasha Levin <sashal@kernel.org>
-+
-+This document describes the firmware Trusted Platform Module (fTPM)
-+device driver.
-+
-+Introduction
-+============
-+
-+This driver is a shim for a firmware implemented in ARM's TrustZone
-+environment. The driver allows programs to interact with the TPM in the same
-+way the would interact with a hardware TPM.
-+
-+Design
-+======
-+
-+The driver acts as a thin layer that passes commands to and from a TPM
-+implemented in firmware. The driver itself doesn't contain much logic and is
-+used more like a dumb pipe between firmware and kernel/userspace.
-+
-+The firmware itself is based on the following paper:
-+https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
-+
-+When the driver is loaded it will expose ``/dev/tpmX`` character devices to
-+userspace which will enable userspace to communicate with the firmware tpm
-+through this device.
--- 
-2.20.1
+> Really. If you want to play with GPL vs. EXPORT_SYMBOL else this is up
+> to you but I do not see any technical argument to make this particular
+> interface to the page allocator any different from all others that are
+> exported to modules.
 
+I'm failing to find any practical substance to your argument, but in
+the end I agree with Chrishoph, it's up to MM maintainers.
