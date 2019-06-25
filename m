@@ -2,200 +2,65 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5832C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57751C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849DE214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:02:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UDobX6GW"
+	by mail.kernel.org (Postfix) with ESMTP id 2BB002085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfFYNCT (ORCPT
+        id S1730353AbfFYNDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:02:19 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:36726 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730164AbfFYNCS (ORCPT
+        Tue, 25 Jun 2019 09:03:20 -0400
+Received: from torres.zugschlus.de ([85.214.131.164]:47376 "EHLO
+        torres.zugschlus.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728449AbfFYNDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:02:18 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190625130215epoutp04a5805974c93c0c1257ca5c96d3893264~rcqHWvhOb0379903799epoutp04j
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:02:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190625130215epoutp04a5805974c93c0c1257ca5c96d3893264~rcqHWvhOb0379903799epoutp04j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561467735;
-        bh=1mfCW/D0RvA9qgVuTZWRRLeacuSFvpug25rw8ivnGkE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=UDobX6GWkv6jtBcI5pdVOi3ojv1Z/LhJh6JK7gU1PMBLKMlVKAJaZt5k+BMA3QDGP
-         xaa0VNa0sdi7+3s9FSHsudo/RexyOorTbh73BEX5QqoS0CBtUU0m7ceoGd0JIgxFhR
-         M0EuOqS/r8CcRITeBoug3CbB6oOLepkmzbTDrCEw=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20190625130214epcas5p1b5abed54d0f40c0dfa17e35ef4c14060~rcqHCuiRY0738707387epcas5p1o;
-        Tue, 25 Jun 2019 13:02:14 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DC.CE.04067.65B121D5; Tue, 25 Jun 2019 22:02:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190625130214epcas5p39bf94a9a6d46d83c9da55df0eb8e3df1~rcqGVA_o62450024500epcas5p3k;
-        Tue, 25 Jun 2019 13:02:14 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190625130214epsmtrp25225908f950faabb0dd1de864cbbce03~rcqGUPivn0790407904epsmtrp2u;
-        Tue, 25 Jun 2019 13:02:14 +0000 (GMT)
-X-AuditID: b6c32a4b-7a3ff70000000fe3-f5-5d121b56fc76
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        27.FF.03662.55B121D5; Tue, 25 Jun 2019 22:02:13 +0900 (KST)
-Received: from [107.108.73.28] (unknown [107.108.73.28]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190625130212epsmtip2ef4a176364b84106f7faf62e3d3ebc4a~rcqEgAkIx0459504595epsmtip2U;
-        Tue, 25 Jun 2019 13:02:12 +0000 (GMT)
-Subject: Re: [PATCH v3 1/3] scsi: ufs: Introduce vops for resetting device
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-From:   Alim Akhtar <alim.akhtar@samsung.com>
-Message-ID: <ad1c2a2a-91d6-25ce-9dfb-3b386b572ee2@samsung.com>
-Date:   Tue, 25 Jun 2019 18:11:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        Tue, 25 Jun 2019 09:03:19 -0400
+Received: from mh by torres.zugschlus.de with local (Exim 4.92)
+        (envelope-from <mh+netdev@zugschlus.de>)
+        id 1hfl6T-0004kv-Mp; Tue, 25 Jun 2019 15:03:17 +0200
+Date:   Tue, 25 Jun 2019 15:03:17 +0200
+From:   Marc Haber <mh+netdev@zugschlus.de>
+To:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: iwl_mvm_add_new_dqa_stream_wk BUG in lib/list_debug.c:56
+Message-ID: <20190625130317.GB31363@torres.zugschlus.de>
+References: <20190530081257.GA26133@torres.zugschlus.de>
+ <20190602134842.GC3249@torres.zugschlus.de>
 MIME-Version: 1.0
-In-Reply-To: <20190608050450.12056-2-bjorn.andersson@linaro.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUcRTH+83Mzo7iys/V8qWRsaWQkZYHDRQmXQzaBdGJlkNOarrrsuuR
-        USHaqR2aVLa5aoIaJkWbeIuyLR5YZtqqiEHYFmlkpqslhuQ4Rv73ee993/v+3uPHkEqrzIOJ
-        0yQJOg2foKIdqepX6303HvFURm5qaAxguz7NUuzIjJVmO5vHKLbI0iVjSwaqCTa3+Y2c7a0v
-        oNns/lqaLe1/R7DlbXMEe7l1imKvNFnkoU5cZWEl4kwVN2huqK+R5nJKWhD38/MgxVU1TyJu
-        0rSau9aSTRxkTjhuixYS4lIEnX9IlGPso8ZxpH2x4pzVWClPRyMuWciBARwE9l6bLAs5Mkrc
-        gODtx3eLwQSCiXwbIQXTCNpr7xH/WqzfyiiRlbgJwag9QBJ9R5CXcx+JBVccBlmXByix4IaH
-        57tvz8rFgMQ2BANzGQsqGm+ADw+qFsYqcAhYhnpokSnsDTXGaZnIy/Ex6K2qR5LGBToe2uan
-        MowDDgVLXbKYJrE7DNqKCIm9oOZ7ASl6AS6RQ8ZT++Kzd0Fn5UtSYlcYbauSS+wBk2NNtDgT
-        cDzcrA+U0hegtLCVkng7tLwvWLAl8Xp4Xu8vWTnDrVnxQmKnAq5fVUpqb8gcsy52ekJudrZM
-        Yg76Mp4g6VYdCKbKjSgHrTEsWcywZBvDkm0M/52LEVWBVgpavTpG0AdrAzVCqp+eV+uTNTF+
-        pxPVJrTw2XzDa5Gpa68ZYQapnBS/W3GkUsan6NPUZgQMqXJTlPLzKUU0n3Ze0CWe0iUnCHoz
-        8mQolbvirswaocQxfJIQLwhaQfevSjAOHulIWx1z3H5mzxxx/tKv/N2r9ge3W7wy73np/qzr
-        iP02PlrdLK9zcbsalHpoxnvLmi/OaXyUz/SOZUfnTmGfwsMnn5etvWOyJ9sL97Kk884Irc5p
-        z1Z7XpixLjFYLe/5cdL6bLi7QvM4/LU2Pt1mqT17MWmf8auvObXb4J4V3bmj2HxARelj+c2+
-        pE7P/wUN40LhaAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLIsWRmVeSWpSXmKPExsWy7bCSvG6otFCswcQWG4tzj3+zWLz8eZXN
-        4vT+dywW84+cY7VYdGMbk8XE/WfZLS7vmsNm0X19B5vF0usXmSyWH//HZNFy7CuLReveI+wO
-        PB5r5q1h9Ni0qpPN4861PWweExYdYPT4+PQWi8eW/Z8ZPT5vkvNoP9DNFMARxWWTkpqTWZZa
-        pG+XwJUxe88HxoKNYhVX565hb2B8KdjFyMkhIWAicfX1MpYuRi4OIYHdjBLTNy5lgkhIS1zf
-        OIEdwhaWWPnvOTtE0WtGiSXPtrKAJIQFvCS6Wm6AdYsIPGKUmHZjETOIwyzwBKhq2XuwKiGB
-        k4wSf19GgNhsAtoSd6dvAVvBK2AnceTOJTYQm0VAVWL73G+sILaoQIREX9tsNogaQYmTM58A
-        zeHg4BRwkDiysxQkzCxgJjFv80NmCFtc4taT+UwQtrzE9rdzmCcwCs1C0j0LScssJC2zkLQs
-        YGRZxSiZWlCcm55bbFhglJdarlecmFtcmpeul5yfu4kRHIlaWjsYT5yIP8QowMGoxMO74IhA
-        rBBrYllxZe4hRgkOZiUR3qWJQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNT
-        UwtSi2CyTBycUg2MmbOjNdZNUNW5GNMxYY94V+OygKliNnuPCTj98emdlG3256x83kHNyc9v
-        OWzdpu5xb3rCbq+7G2ucbih4T425wjfLcJHYlbVVyZvUtesmGDQG+c5ONVUWnLPsolra5w+z
-        diaz5diKT+f0fxpTw3laM13s3qWGDK+vuqe/Cm96U9Ry8tKSi0+UlFiKMxINtZiLihMBZOtz
-        EsACAAA=
-X-CMS-MailID: 20190625130214epcas5p39bf94a9a6d46d83c9da55df0eb8e3df1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20190608050458epcas1p30f03f6d448eb962a6af56a4c0b021ef0
-References: <20190608050450.12056-1-bjorn.andersson@linaro.org>
-        <CGME20190608050458epcas1p30f03f6d448eb962a6af56a4c0b021ef0@epcas1p3.samsung.com>
-        <20190608050450.12056-2-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190602134842.GC3249@torres.zugschlus.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
-Are you planning to address Bean's comment on patch#2 and want to 
-re-spin this series?
-I am ok with taking this patch as it is and take a Softreset patch as a 
-separate patch.
+On Sun, Jun 02, 2019 at 03:48:42PM +0200, Marc Haber wrote:
+> On Thu, May 30, 2019 at 10:12:57AM +0200, Marc Haber wrote:
+> > on my primary notebook, a Lenovo X260, with an Intel Wireless 8260
+> > (8086:24f3), running Debian unstable, I have started to see network
+> > hangs since upgrading to kernel 5.1. In this situation, I cannot
+> > restart Network-Manager (the call just hangs), I can log out of X, but
+> > the system does not cleanly shut down and I need to Magic SysRq myself
+> > out of the running system. This happens about once every two days.
+> 
+> The issue is also present in 5.1.5 and 5.1.6.
 
-On 6/8/19 10:34 AM, Bjorn Andersson wrote:
-> Some UFS memory devices needs their reset line toggled in order to get
-> them into a good state for initialization. Provide a new vops to allow
-> the platform driver to implement this operation.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-feel free to add
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-> 
-> Changes since v2:
-> - New patch, to allow moving implementation to platform driver
-> 
->   drivers/scsi/ufs/ufshcd.c | 6 ++++++
->   drivers/scsi/ufs/ufshcd.h | 8 ++++++++
->   2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 04d3686511c8..ee895a625456 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6191,6 +6191,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
->   	int retries = MAX_HOST_RESET_RETRIES;
->   
->   	do {
-> +		/* Reset the attached device */
-> +		ufshcd_vops_device_reset(hba);
-> +
->   		err = ufshcd_host_reset_and_restore(hba);
->   	} while (err && --retries);
->   
-> @@ -8322,6 +8325,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
->   		goto exit_gating;
->   	}
->   
-> +	/* Reset the attached device */
-> +	ufshcd_vops_device_reset(hba);
-> +
->   	/* Host controller enable */
->   	err = ufshcd_hba_enable(hba);
->   	if (err) {
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index 994d73d03207..cd8139052ed6 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -298,6 +298,7 @@ struct ufs_pwr_mode_info {
->    * @resume: called during host controller PM callback
->    * @dbg_register_dump: used to dump controller debug information
->    * @phy_initialization: used to initialize phys
-> + * @device_reset: called to issue a reset pulse on the UFS device
->    */
->   struct ufs_hba_variant_ops {
->   	const char *name;
-> @@ -326,6 +327,7 @@ struct ufs_hba_variant_ops {
->   	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
->   	void	(*dbg_register_dump)(struct ufs_hba *hba);
->   	int	(*phy_initialization)(struct ufs_hba *);
-> +	void	(*device_reset)(struct ufs_hba *);
->   };
->   
->   /* clock gating state  */
-> @@ -1045,6 +1047,12 @@ static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
->   		hba->vops->dbg_register_dump(hba);
->   }
->   
-> +static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
-> +{
-> +	if (hba->vops && hba->vops->device_reset)
-> +		hba->vops->device_reset(hba);
-> +}
-> +
->   extern struct ufs_pm_lvl_states ufs_pm_lvl_states[];
->   
->   /*
-> 
+Almost a month later, 5.1.15 still crashes about twice a day on my
+Notebook. The error message seems pretty clear to me, how can I go on
+from there and may be identify a line number outside of a library?
+
+Greetings
+Marc
+
+-- 
+-----------------------------------------------------------------------------
+Marc Haber         | "I don't trust Computers. They | Mailadresse im Header
+Leimen, Germany    |  lose things."    Winona Ryder | Fon: *49 6224 1600402
+Nordisch by Nature |  How to make an American Quilt | Fax: *49 6224 1600421
