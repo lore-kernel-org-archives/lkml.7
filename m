@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586EEC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DE5C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3152D208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB095208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="mi3aYH33"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hn0sJGMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbfFYQfd (ORCPT
+        id S1732127AbfFYQfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:35:33 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37618 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730203AbfFYQfA (ORCPT
+        Tue, 25 Jun 2019 12:35:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42652 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729448AbfFYQe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:35:00 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v14so18635423wrr.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:34:59 -0700 (PDT)
+        Tue, 25 Jun 2019 12:34:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so18601161wrl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 09:34:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=n5d3BfSnmnwO/hS4dFGhcrIk5LVowo1/qQQdF1Vy3jk=;
-        b=mi3aYH337XfZeD6KCGPODvIEDc6lpAsrLiBKenynyTgeBAflzEuAFOSSRaIv7QCcw0
-         cU5hYTlgn0flazzm/uE9V2gsr0kjBHT5y/98Qo74IaK5b50eEFHQWnCUmKzphCf694cO
-         LDW7BmNVzoFJZ5NIlzjd+HVONir3l9AyrAj5png44VBdtFHeh3uryIXOkGa1wJPvA5LN
-         WvCLOTnyGe8CkM/Fz5OUnv1HjtcHnzID+6CRcBFR3JznXuOHp5DQfeF10qw9RKY3r25S
-         CYTFos7dPmJNHROYanCTBvFs7gU6PLh/xVeNfeRVmRWdHzC44plIWFbBhF8yvimaw5KZ
-         jexw==
+        bh=9jHnEFpHn7uzznoO3/dgHPquJFVDhGL7Sa3AB/IK/o8=;
+        b=hn0sJGMrU38ycKfPEcke4oemjMf5nF19She6rrogMdb5v0F2pBQBNKFb+k/+2MJbvv
+         x0AL7iJN38li9VNodfle2pG9gu9d2FJ3tvO7WCdfFllzJdndvifHLTLjRDM4aDml+Kuj
+         ARXR5bllOgDLUQO3pl4c5PKCRuEuqrBRd/sgqgOD1M5Honf1Q9rxMnOT9Gtrbba1Pc6q
+         WCixZR6JX0xgDU+5eMlm3aDNlNwAqfajTgyiKEnyZ2eYijvvzNfmrix4ZFYvnBzoboQW
+         vWSvbCOsW9ZdQYXrDXj4UOEBCHTBJKcTLpDkXcvPZbiDAcrZsqeJshpkE3iV/v/oMDyN
+         QHOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=n5d3BfSnmnwO/hS4dFGhcrIk5LVowo1/qQQdF1Vy3jk=;
-        b=F+aKa6c6RrnumESyLwHVuPD47JxK41OJoEOW9wE/zsaciwybf0iVfKrpXv6EH+AUYA
-         eUkakeW2EHN5DUyXty9K5CgW+ySMpE8Icy36hyzAQf7kSSoDgd36YxXNfC2ag4Ah6b7w
-         H4hJUEFBD7BE2gZxU7Kp4xn8S4Yh/bi3SS6+ZGRoW9FWHRLiEBK3Wtaq2FownSlMakkB
-         9LNGxd29KpqFz/BnhOwWgQ5ikDLCG8CvGIkSORmqskXyvqRYtP1lXwVQKuuB89BzeAQ5
-         jfHsj3PeCCMJRxQjkKstmI/jk/uRtV/p3YVfGKuPNPjtJttN6oQBuxCnfkG3g/e1Sn3W
-         mWtg==
-X-Gm-Message-State: APjAAAXXX9rzEoDeXKIhKvDLO7M3TK5PSCwBxEGrdSQJuKPVNP+ZdIja
-        EbAOVj3+UHOAQEUEa5UEqmFhXg==
-X-Google-Smtp-Source: APXvYqxYtpw4EEVsdGnQVBBLUuXARVZGsIrOsocPZwN44dsA/Y8ZCTQWBqOBfRU7qmBFqnACXLnZHw==
-X-Received: by 2002:a5d:5189:: with SMTP id k9mr71415wrv.45.1561480499309;
-        Tue, 25 Jun 2019 09:34:59 -0700 (PDT)
+        bh=9jHnEFpHn7uzznoO3/dgHPquJFVDhGL7Sa3AB/IK/o8=;
+        b=fxu56WlzoCH+1h//ncqQRt2rO4W34iRRyn34xIKdhRN2pK8JiQA4WT5pHoL6HJarQW
+         POS/r183LGb/KBit45ojd42fN5gSOthmMlm5sJctxoxK59VDwuywCy0oD5TkNDQ9ygsZ
+         nrYCljuJsC/zYdOlP6jNeFZNd4RdRXBrGDbGVyELsukeKMoCDF22Y/t/aVGJwUPfIs3J
+         orlgrduG25cCJjdPzRirnBGgcQ5RQHhOGCQOcpjGkA4HXoTGpxI+LDkhX66+JQaEY1cl
+         awilOQnp5RwFUdf4x9LiEUJHMYtjO/P6J0dUh4BOVBeDqvnDwNMyIXh4d2GIN/ZQYJN0
+         TWiA==
+X-Gm-Message-State: APjAAAU9s7x5M3ioXY2Bh786bMr8q/4aI8CJtSjZEzd98mi5Co56/CNa
+        hpuQyiczq6lDNDXgp/n4h9A9yw==
+X-Google-Smtp-Source: APXvYqwy7zacb5a2dIAzBH+DNPJmE7Ud9HzGmZ8XgxvKZbiQHoYeDIvLxGo471H1Sy/xZiRyc+Eftg==
+X-Received: by 2002:a5d:4fc8:: with SMTP id h8mr26465755wrw.124.1561480495518;
+        Tue, 25 Jun 2019 09:34:55 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id g8sm2683795wme.20.2019.06.25.09.34.58
+        by smtp.gmail.com with ESMTPSA id g8sm2683795wme.20.2019.06.25.09.34.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 09:34:58 -0700 (PDT)
+        Tue, 25 Jun 2019 09:34:54 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
@@ -67,9 +67,9 @@ To:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 06/12] ARM: davinci: da850-evm: model the backlight GPIO as an actual device
-Date:   Tue, 25 Jun 2019 18:34:28 +0200
-Message-Id: <20190625163434.13620-7-brgl@bgdev.pl>
+Subject: [PATCH 03/12] backlight: gpio: pull the non-pdata device probing code into probe()
+Date:   Tue, 25 Jun 2019 18:34:25 +0200
+Message-Id: <20190625163434.13620-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190625163434.13620-1-brgl@bgdev.pl>
 References: <20190625163434.13620-1-brgl@bgdev.pl>
@@ -82,89 +82,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Instead of enabling the panel backlight in a callback defined in board
-file using deprecated legacy GPIO API calls, model the line as a GPIO
-backlight device.
+There's no good reason to have the generic probing code in a separate
+routine. This function is short and is inlined by the compiler anyway.
+Move it into probe under the pdata-specific part.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/board-da850-evm.c | 40 +++++++++++++++++--------
- 1 file changed, 28 insertions(+), 12 deletions(-)
+ drivers/video/backlight/gpio_backlight.c | 39 ++++++++----------------
+ 1 file changed, 13 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 31ae3be5741d..ffda623bb543 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -36,6 +36,7 @@
- #include <linux/platform_data/ti-aemif.h>
- #include <linux/platform_data/spi-davinci.h>
- #include <linux/platform_data/uio_pruss.h>
-+#include <linux/property.h>
- #include <linux/regulator/machine.h>
- #include <linux/regulator/tps6507x.h>
- #include <linux/regulator/fixed.h>
-@@ -803,34 +804,49 @@ static const short da850_evm_mmcsd0_pins[] __initconst = {
+diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
+index 8adbc8d75097..89e10bccfd3c 100644
+--- a/drivers/video/backlight/gpio_backlight.c
++++ b/drivers/video/backlight/gpio_backlight.c
+@@ -54,30 +54,6 @@ static const struct backlight_ops gpio_backlight_ops = {
+ 	.check_fb	= gpio_backlight_check_fb,
+ };
  
- static void da850_panel_power_ctrl(int val)
- {
--	/* lcd backlight */
--	gpio_set_value(DA850_LCD_BL_PIN, val);
+-static int gpio_backlight_probe_prop(struct platform_device *pdev,
+-				     struct gpio_backlight *gbl)
+-{
+-	struct device *dev = &pdev->dev;
+-	enum gpiod_flags flags;
+-	int ret;
 -
- 	/* lcd power */
- 	gpio_set_value(DA850_LCD_PWR_PIN, val);
- }
- 
-+static struct property_entry da850_lcd_backlight_props[] = {
-+	PROPERTY_ENTRY_BOOL("default-on"),
-+	{ }
-+};
-+
-+static struct gpiod_lookup_table da850_lcd_backlight_gpio_table = {
-+	.dev_id		= "gpio-backlight",
-+	.table = {
-+		GPIO_LOOKUP("davinci_gpio", DA850_LCD_BL_PIN, NULL, 0),
-+		{ }
-+	},
-+};
-+
-+static const struct platform_device_info da850_lcd_backlight_info = {
-+	.name		= "gpio-backlight",
-+	.id		= PLATFORM_DEVID_NONE,
-+	.properties	= da850_lcd_backlight_props,
-+};
-+
- static int da850_lcd_hw_init(void)
- {
-+	struct platform_device *backlight;
- 	int status;
- 
--	status = gpio_request(DA850_LCD_BL_PIN, "lcd bl");
--	if (status < 0)
--		return status;
-+	gpiod_add_lookup_table(&da850_lcd_backlight_gpio_table);
-+	backlight = platform_device_register_full(&da850_lcd_backlight_info);
-+	if (IS_ERR(backlight))
-+		return PTR_ERR(backlight);
- 
- 	status = gpio_request(DA850_LCD_PWR_PIN, "lcd pwr");
--	if (status < 0) {
--		gpio_free(DA850_LCD_BL_PIN);
-+	if (status < 0)
- 		return status;
+-	gbl->def_value = device_property_read_bool(dev, "default-on");
+-	flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+-
+-	gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
+-	if (IS_ERR(gbl->gpiod)) {
+-		ret = PTR_ERR(gbl->gpiod);
+-
+-		if (ret != -EPROBE_DEFER) {
+-			dev_err(dev,
+-				"Error: The gpios parameter is missing or invalid.\n");
+-		}
+-		return ret;
 -	}
+-
+-	return 0;
+-}
+-
+ static int gpio_backlight_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_backlight_platform_data *pdata =
+@@ -86,6 +62,7 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct backlight_device *bl;
+ 	struct gpio_backlight *gbl;
++	enum gpiod_flags flags;
+ 	int ret;
  
--	gpio_direction_output(DA850_LCD_BL_PIN, 0);
- 	gpio_direction_output(DA850_LCD_PWR_PIN, 0);
+ 	gbl = devm_kzalloc(dev, sizeof(*gbl), GFP_KERNEL);
+@@ -116,9 +93,19 @@ static int gpio_backlight_probe(struct platform_device *pdev)
+ 		if (!gbl->gpiod)
+ 			return -EINVAL;
+ 	} else {
+-		ret = gpio_backlight_probe_prop(pdev, gbl);
+-		if (ret)
++		gbl->def_value = device_property_read_bool(dev, "default-on");
++		flags = gbl->def_value ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
++
++		gbl->gpiod = devm_gpiod_get(dev, NULL, flags);
++		if (IS_ERR(gbl->gpiod)) {
++			ret = PTR_ERR(gbl->gpiod);
++
++			if (ret != -EPROBE_DEFER) {
++				dev_err(dev,
++					"Error: The gpios parameter is missing or invalid.\n");
++			}
+ 			return ret;
++		}
+ 	}
  
--	/* Switch off panel power and backlight */
-+	/* Switch off panel power */
- 	da850_panel_power_ctrl(0);
- 
--	/* Switch on panel power and backlight */
-+	/* Switch on panel power */
- 	da850_panel_power_ctrl(1);
- 
- 	return 0;
+ 	memset(&props, 0, sizeof(props));
 -- 
 2.21.0
 
