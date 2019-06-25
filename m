@@ -2,158 +2,100 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6887DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00978C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C70420644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF47E2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHyYtigR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfFYF1u (ORCPT
+        id S1728219AbfFYF3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 01:27:50 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:13500 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfFYF1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 01:27:50 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 75AFD5000F;
-        Tue, 25 Jun 2019 07:27:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id Hz6CaGAM_QKI; Tue, 25 Jun 2019 07:27:41 +0200 (CEST)
-Subject: Re: [PATCH 1/2 v9] serial: mctrl_gpio: Check if GPIO property exisits
- before requesting it
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20190620062420.11650-1-sr@denx.de>
- <CAMuHMdXMpS_pg9N0qSW=Li0QavAMRG79RJcS4s0w6NTCxv_zzg@mail.gmail.com>
- <24bfb52c-6f77-b7cd-7421-9e6e4b0aa7d3@denx.de>
- <CAMuHMdWeX6=SuSPVUB=WaYMsUbrmg5sraM=APeXsqr_Yv6u4AA@mail.gmail.com>
-From:   Stefan Roese <sr@denx.de>
-Message-ID: <d8ae626b-e574-be33-f698-3cb992653683@denx.de>
-Date:   Tue, 25 Jun 2019 07:27:33 +0200
+        Tue, 25 Jun 2019 01:29:40 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34307 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfFYF3j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 01:29:39 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n5so16015134otk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 22:29:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uC3lDlnZNnMr39J4BLCeS59JUfHFpDiBQC2yaNOX3EU=;
+        b=cHyYtigR030CGwbia9XjivfYSSK5TfUzhNj9QaSTAZWOfZAx+VemnXq8uLkD9ZwHz3
+         ehx19LZDM8LuciBMmOwwyD5r8S9rMIFrqIM20fO84hIiz3gPcRBECXVgzxvbEd3uoIYr
+         8ylR74TM/W5BWbtjPc6ETen765e6jGapIQJ+D5iIWHBZf/MRPmtUQfCQZcFIe3RX/DCm
+         rH4sdQsFDy5OqE08PJBFoO2d4UCGECSFamjoIQQ4ODzkjHsxH9/LeaKWO9i24sh6dv3h
+         Gwwy0fC4Xckq3Q2GA+x4/rEA6p6At/BMx3N6ZkK0X2wYoHFyQNKXEJ+qnSTUVWR2sYtX
+         NhhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uC3lDlnZNnMr39J4BLCeS59JUfHFpDiBQC2yaNOX3EU=;
+        b=qNIaH0nBVLcBTBIy4LwOZvmYMv7Thk8XKPIhbnU0do65xPbdb7+qtTDi3V5/sk02nA
+         M5GW7930k0DWW/nJ6e57LKqOHJY2843PVFdJQrVHFcoaaWny/G2JNwfsOeg/F5YrNgeu
+         1Ypda4Cw9dAQWY7bNFOwISBeLIklR9kw89aKu/ARAaZY2PALQdJmB+Gkv5GnCWKjucSn
+         HjmFYAH645eDjbtT3lUKQ3PTrj3an/dfQYac6ySEl50gwiKqLpR52NXWqKHPW2lOblRU
+         SWdbqMeujJAnHu+glvJqiwNsI8DZTDE4nnGJzWlHz/IAobhN/2BTQtyEpZLYR1/ETOus
+         rBYw==
+X-Gm-Message-State: APjAAAUYWOIupiXcbePsqAkktZMIqJM7NUef7enxPHXdoxkXhd9NIdf/
+        wnUwXwJHv26BQfzxJI159ufmVYtghCRpCJ+9Lyzodw==
+X-Google-Smtp-Source: APXvYqz419m7SEW5QL17XvTqouYkZ2rpD4Pkajzcte4sYOZIO8UFXa6HsFMvMUpRKqRbXcAwKCJuiMCqRpXYgJeJfdg=
+X-Received: by 2002:a9d:1909:: with SMTP id j9mr1536282ota.139.1561440578763;
+ Mon, 24 Jun 2019 22:29:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWeX6=SuSPVUB=WaYMsUbrmg5sraM=APeXsqr_Yv6u4AA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190622003449.33707-1-saravanak@google.com> <20190624094349.rtjb7nuv6g7zmsf2@vireshk-i7>
+ <CAGETcx_ggG8oDnAVaSfuHfip1ozjQpFiGs15cz8nLQnzjTiSTg@mail.gmail.com>
+ <20190625041054.2ceuvnuuebc6hsr5@vireshk-i7> <CAGETcx8MuXkQyD5qZBC948-hOu=kWd4hPk2Qiu-zWOcHBCc=FA@mail.gmail.com>
+ <20190625052227.3v74l6xtrkydzx6w@vireshk-i7>
+In-Reply-To: <20190625052227.3v74l6xtrkydzx6w@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 24 Jun 2019 22:29:02 -0700
+Message-ID: <CAGETcx_v05PfscMi2qiYwHRMLryyA_494+h+kmJ3mD+GOjjeLA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Add required-opps support to devfreq passive gov
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Mon, Jun 24, 2019 at 10:22 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 24-06-19, 22:00, Saravana Kannan wrote:
+> > All of the cases above are some real world scenarios I've come across.
+> > CPU and L2/L3 on ARM systems are a good example of (2) but the passive
+> > governor doesn't work with CPUs yet. But I plan to work on that later
+> > as that's not related to this patch series.
+>
+> So in case of CPUs, the cache will be the parent device and CPU be the
+> children ? And CPUs nodes will contain the required-opps property ?
 
-On 24.06.19 17:35, Geert Uytterhoeven wrote:
-> On Mon, Jun 24, 2019 at 5:29 PM Stefan Roese <sr@denx.de> wrote:
->> On 24.06.19 10:42, Geert Uytterhoeven wrote:
->>> On Thu, Jun 20, 2019 at 8:24 AM Stefan Roese <sr@denx.de> wrote:
->>>> This patch adds a check for the GPIOs property existence, before the
->>>> GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
->>>> support is added (2nd patch in this patch series) on x86 platforms using
->>>> ACPI.
->>>>
->>>> Here Mika's comments from 2016-08-09:
->>>>
->>>> "
->>>> I noticed that with v4.8-rc1 serial console of some of our Broxton
->>>> systems does not work properly anymore. I'm able to see output but input
->>>> does not work.
->>>>
->>>> I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
->>>> ("tty/serial/8250: use mctrl_gpio helpers").
->>>>
->>>> The reason why it fails is that in ACPI we do not have names for GPIOs
->>>> (except when _DSD is used) so we use the "idx" to index into _CRS GPIO
->>>> resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
->>>> calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
->>>> UART device in Broxton has following (simplified) ACPI description:
->>>>
->>>>       Device (URT4)
->>>>       {
->>>>           ...
->>>>           Name (_CRS, ResourceTemplate () {
->>>>               GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
->>>>                       "\\_SB.GPO0", 0x00, ResourceConsumer)
->>>>               {
->>>>                   0x003A
->>>>               }
->>>>               GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
->>>>                       "\\_SB.GPO0", 0x00, ResourceConsumer)
->>>>               {
->>>>                   0x003D
->>>>               }
->>>>           })
->>>>
->>>> In this case it finds the first GPIO (0x003A which happens to be RX pin
->>>> for that UART), turns it into GPIO which then breaks input for the UART
->>>> device. This also breaks systems with bluetooth connected to UART (those
->>>> typically have some GPIOs in their _CRS).
->>>>
->>>> Any ideas how to fix this?
->>>>
->>>> We cannot just drop the _CRS index lookup fallback because that would
->>>> break many existing machines out there so maybe we can limit this to
->>>> only DT enabled machines. Or alternatively probe if the property first
->>>> exists before trying to acquire the GPIOs (using
->>>> device_property_present()).
->>>> "
->>>>
->>>> This patch implements the fix suggested by Mika in his statement above.
->>>>
->>>> Signed-off-by: Stefan Roese <sr@denx.de>
-> 
->>>> --- a/drivers/tty/serial/serial_mctrl_gpio.c
->>>> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
-> 
->>>> @@ -116,6 +117,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
->>>>
->>>>           for (i = 0; i < UART_GPIO_MAX; i++) {
->>>>                   enum gpiod_flags flags;
->>>> +               char *gpio_str;
->>>> +               bool present;
->>>> +
->>>> +               /* Check if GPIO property exists and continue if not */
->>>> +               gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
->>>> +                                    mctrl_gpios_desc[i].name);
->>>
->>> This will silently break DTBs using "(cts|dsr|dcd|rng|rts|dtr)-gpio" instead
->>> of "(cts|dsr|dcd|rng|rts|dtr)-gpios".
->>
->> Should both options be supported ("cts-gpio" vs "cts-gpios")?
->> Documentation/devicetree/bindings/serial/serial.txt only mentions
->> the "-gpios" variant.
-> 
-> Well, the "-gpio" variant is deprecated, but still supported by
-> devm_gpiod_get_index_optional(), and there are active users in upstream
-> DTS files.
-> 
-> My main objection is (trying to) replicate the matching logic inside
-> gpiolib.c, causing subtle semantic differences. And keeping it consistent,
-> of course.
-> 
-> It would be nice if this could be fixed inside acpi_find_gpio(), so
-> users don't need to be updated.  There may be other subsystems where
-> the difference between DT and ACPI may cause issues, unbeknownst.
+No, the CPUs will be the "parent" and the cache will be the "child".
+CPU is a special case when it comes to the actual software (not DT) as
+we'll need the devfreq governor to look at all the CPUfreq policies to
+decide the cache frequency (max of all their requirements).
 
-Sure, I can fix this. I would prefer to do this in a follow-up patch
-though, if nobody objects.
+I think "master" and "slave" would have been a better term as the
+master device determines its frequency using whatever means and the
+"slave" device just "follows" the master device.
 
-Thanks,
-Stefan
+-Saravana
