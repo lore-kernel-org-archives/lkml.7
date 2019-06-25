@@ -2,131 +2,128 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A912C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C0BC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029542133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:40:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjpTBDGA"
+	by mail.kernel.org (Postfix) with ESMTP id 12A06213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfFYNkh (ORCPT
+        id S1730057AbfFYNkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:40:37 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40463 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfFYNkg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:40:36 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so3008329wmj.5;
-        Tue, 25 Jun 2019 06:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QJ3vVIahs8Gyu6o4xBxgNpPv/R2B40HTjKibjIh27os=;
-        b=MjpTBDGAkMtRwPjH+//H8EJ/MWqjs4M+v3aRalto2IlqB7ngwlJ390Tpkt+7GXhMpo
-         TexjJIuAuUS3pLozIuSJRPdQ+iF/b1ahALGQnip+SKd1x2uWUDge2NRJYsCBLonY8SXE
-         x+VMFqFWhvpKDmFPcRS2ssRQ5Q99M9gd1CFl2wuVps/f+2mHfeyo/rECxM1Mob3NY9X0
-         KxxL9i2KGsqMFXKEexUPO0CunMep33lfeEuGyvLrIklJ3t2WeNSmefKuXgtjqK6dpFcJ
-         HQLtfs9TjJ8Iy7/qFXCU7lJj7NBSnvx1+wv67M502MkIaB5Z0oufzFsC6AvaWBCOz0Fj
-         vdbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QJ3vVIahs8Gyu6o4xBxgNpPv/R2B40HTjKibjIh27os=;
-        b=G7h/IERhV8nwnAYYp8cXs9UcbOV9S7WFMAj160l2bresvCkrmG20miCbmo9fuoPLfb
-         JgEldCI/j3YqjlQYwf1qj1bjMdlq/8jNpBacqjMrlQdHJMA6YLCcpF86VLc0aNrTbSAH
-         oRj4wgTORIcTXibq9mGnc4jPkCEP2P5ffOVyXgV6uAHaQn5Ujeh87B6iLKPWMbeAQ0Jp
-         kvxARXYoQxoUXRj3GnFeyKMEbQ4Nhe0TVVVPwiuWTiDEeARK9e5u2risCdDLX3yNu6Nh
-         g7IglMIafi3EcUgO5rYWzvCB+BrzGIBfvu2Ty0NMkZKOGUSKdsQhsKALi3nbTzh3sKwl
-         sycQ==
-X-Gm-Message-State: APjAAAVpPxbMGmMNyIcg3AUuNyk0NA0HbqndAmCmb9f7U6AYf+zUGbWL
-        S0ThZ+do2pABEuO+IgxHcJ4=
-X-Google-Smtp-Source: APXvYqxlXKjVk17RP8Zhg4eoVhsbQZMM5EjUjUE+3lmuhZpEBA/oCKVvP3rJqt4BUFNb3QlRd38gkg==
-X-Received: by 2002:a1c:be05:: with SMTP id o5mr2665591wmf.52.1561470033332;
-        Tue, 25 Jun 2019 06:40:33 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id j18sm17333213wre.23.2019.06.25.06.40.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 06:40:32 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 15:40:31 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 03/18] gpio: tegra: use resume_noirq for tegra gpio
- resume
-Message-ID: <20190625134031.GA22491@ulmo>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-4-git-send-email-skomatineni@nvidia.com>
+        Tue, 25 Jun 2019 09:40:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:42212 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbfFYNkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:40:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C4A72B;
+        Tue, 25 Jun 2019 06:40:40 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87F233F718;
+        Tue, 25 Jun 2019 06:40:39 -0700 (PDT)
+Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
+ breaks clang build
+To:     Qian Cai <cai@lca.pw>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        natechancellor@gmail.com, ndesaulniers@google.com
+References: <1561464964.5154.63.camel@lca.pw>
+ <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
+ <1561467369.5154.67.camel@lca.pw>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <00a78980-6b9c-5d5b-ed01-b28bb34be022@arm.com>
+Date:   Tue, 25 Jun 2019 14:40:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
-Content-Disposition: inline
-In-Reply-To: <1561345379-2429-4-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1561467369.5154.67.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Qin,
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 25/06/2019 13:56, Qian Cai wrote:
+> On Tue, 2019-06-25 at 13:47 +0100, Vincenzo Frascino wrote:
+>> Hi Qian,
+>>
+>> On 25/06/2019 13:16, Qian Cai wrote:
+>>> The linux-next commit "arm64: vdso: Substitute gettimeofday() with C
+>>> implementation" [1] breaks clang build.
+>>>
+>>> error: invalid value 'tiny' in '-mcode-model tiny'
+>>> make[1]: *** [scripts/Makefile.build:279:
+>>> arch/arm64/kernel/vdso/vgettimeofday.o] Error 1
+>>> make[1]: *** Waiting for unfinished jobs....
+>>> make: *** [arch/arm64/Makefile:180: vdso_prepare] Error 2
+>>>
+>>> [1] https://patchwork.kernel.org/patch/11009663/
+>>>
+>>
+>> I am not sure what does exactly break from your report. Could you please
+>> provide
+>> more details?
+> 
+> Here is the config to reproduce.
+> 
+> https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+> 
+> # make CC=clang -j $(nr_cpus)
+> 
+> I can get it working again by removing "-mcmodel=tiny" in
+> arch/arm64/kernel/vdso/Makefile
+> 
 
-On Sun, Jun 23, 2019 at 08:02:44PM -0700, Sowjanya Komatineni wrote:
-> During SC7 resume, PARKED bit clear from the pinmux registers may
-> cause a glitch on the GPIO lines.
->=20
-> So, Tegra GPIOs restore should happen prior to restoring Tegra pinmux
-> to keep the GPIO lines in a known good state prior to clearing PARKED
-> bit.
->=20
-> This patch has fix for this by moving Tegra GPIOs restore to happen
-> very early than pinctrl resume.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/gpio/gpio-tegra.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+With your defconfig I can't still reproduce the problem. Which version of clang
+are you using?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+>>
+>> On my env:
+>>
+>> $ make mrproper && make defconfig && make CC=clang HOSTCC=clang -j$(nproc)
+>>
+>> ...
+>>
+>> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT is clang, the compat vDSO will
+>> not
+>> be built
+>>
+>> ...
+>>
+>>   LDS     arch/arm64/kernel/vdso/vdso.lds
+>>   AS      arch/arm64/kernel/vdso/note.o
+>>   AS      arch/arm64/kernel/vdso/sigreturn.o
+>>   CC      arch/arm64/kernel/vdso/vgettimeofday.o
+>>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
+>>   VDSOCHK arch/arm64/kernel/vdso/vdso.so.dbg
+>>   VDSOSYM include/generated/vdso-offsets.h
+>>
+>> ...
+>>
+>>   LD      vmlinux.o
+>>   MODPOST vmlinux.o
+>>   MODINFO modules.builtin.modinfo
+>>   KSYM    .tmp_kallsyms1.o
+>>   KSYM    .tmp_kallsyms2.o
+>>   LD      vmlinux
+>>   SORTEX  vmlinux
+>>   SYSMAP  System.map
+>>   Building modules, stage 2.
+>>   OBJCOPY arch/arm64/boot/Image
+>>   MODPOST 483 modules
+>>
 
---TB36FDmn/VVEgNH/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0SJEsACgkQ3SOs138+
-s6Gc4RAAuL9MGdkEhgzl61Ta2oBYD0aZWJ66SqDoCR4N4IOJUbUigecf27fp/Aq2
-hSdNG1GPkruQ9M2Dr/R7aQAVgYnZZRbxTTtGvylvkSa8nPDRWVESZSBGlKERb1oE
-tbBTktBKqYuZNv5tfxAoUnG7elNy/6LLbw942vtoblJdLPDGnuIiJw0wWhUj6bMM
-iaskxrSUg5K8ekrAqc5XTkZm92lxCGKHDYucMxyUF/nZCW8iczUGo+d2hzd3JFvj
-ruyTZuaYf6Pw2VhNJbsMpK+hqi3ou8RdVUjhc2DmUT/f5CTcjp0bO5UqjSH0U2LZ
-7v4aqh12UFukfwgb3UGq5Zj/qJoCXJKcIYeD4mZa/kKJUjgA0P6mCmrv+Qq6lEbB
-2+n2dMn1GmJdr9wTYATGeCIY794k2bWBOwYKiKx3AcOwBa4yp6rtLDbdPefKZsp7
-id8JXupBhHFiWbF4G7vLg9lmnPwTBHnJ1gD5oqBrtoryZMJyTD1XQNHMudiOyGL/
-ENdep/ewpV3jK7zVVpOomS8CDNa/0joXlyvGjHBtK341eCEyIxGD9nFytIPzqvFP
-+zdfiN5ioTRBBNpEaKcP5JRZiLMpUC00uT32vJlTKJb51V5q0MP1YxO8BGQ6EV8m
-dceqZShedBlFvgND7IuZ3JhX2Kgo6YtoGpdy0jzsSlDVi7xTU/Y=
-=Xgxt
------END PGP SIGNATURE-----
-
---TB36FDmn/VVEgNH/--
+-- 
+Regards,
+Vincenzo
