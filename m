@@ -2,111 +2,90 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D44C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC944C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D68208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D760208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:57:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H/OhkOf4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbfFYP4A (ORCPT
+        id S1731485AbfFYP5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:56:00 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36080 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYP4A (ORCPT
+        Tue, 25 Jun 2019 11:57:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55226 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731329AbfFYP5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:56:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k8so9085025plt.3;
-        Tue, 25 Jun 2019 08:55:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=X8PyZ6mm09HvpAjBsN2bzxK8nd8cfLA+VCOhqGU8yjE=;
-        b=I5N7UWptXauuBXj0zCCEqNUP6Ikcvnh0iUfEdHUe9jMdkFcxlT+nI2FFF/9d3LfmlE
-         5KD1XFPShCo6Nht+1WjDMfGYv+TrBU4jyEa2mQ2W0om0iL+AcQSpTZasjMKCcoV0VpGw
-         ixao1WARIi0zXaeqiKgan6dAvCL6Tb6PAbboSzerx6n5NJU5l384Zf8dJvORmE7q9hvE
-         Zz3P9gEkZWK5jpCReQx7JWMT2pEUTU1pCKJuby0CTm3zmPngK6LQTDKHlvxoSZnZku62
-         LGrZP60u7GgFaXAia9hICu3UEEMmgHUwjDk3ktpIZDN6kpW3wO4ONonAbcbi9MtlhMkM
-         uKig==
-X-Gm-Message-State: APjAAAVsLAKAArFUE7xVSOwdWZ1rqY0D9CMQqu56xEM356Dff/r6MYpD
-        lQHZ6fvquh8fhqfGFQauCBY=
-X-Google-Smtp-Source: APXvYqzqnMz19/tkZ2lWR1LALGAy9toe5Xj906/48mLtj3J82ryMK3ntCRQMy81JplrGUfNQYwrwTg==
-X-Received: by 2002:a17:902:8203:: with SMTP id x3mr72155467pln.304.1561478159207;
-        Tue, 25 Jun 2019 08:55:59 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id 5sm14545676pfh.109.2019.06.25.08.55.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 08:55:58 -0700 (PDT)
-Subject: Re: [PATCH 1/4] block: add zone open, close and finish support
-To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Dmitry Fomichev <Dmitry.Fomichev@wdc.com>,
-        Ajay Joshi <Ajay.Joshi@wdc.com>,
-        Aravind Ramesh <Aravind.Ramesh@wdc.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "snitzer@redhat.com" <snitzer@redhat.com>
-Cc:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        Matias Bjorling <Matias.Bjorling@wdc.com>
-References: <20190621130711.21986-1-mb@lightnvm.io>
- <20190621130711.21986-2-mb@lightnvm.io>
- <ee5764fb-473a-f118-eaac-95478d885f6f@acm.org>
- <BYAPR04MB5749CEFBB45EA34BD3345CD686E00@BYAPR04MB5749.namprd04.prod.outlook.com>
- <cce08df0-0b4d-833d-64ce-f9b81f7ad7ca@lightnvm.io>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <79ca395d-8019-9ec8-0c0b-194ca6d9eda0@acm.org>
-Date:   Tue, 25 Jun 2019 08:55:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 11:57:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=B9eoPw20HASOxL1FJnUSxIMcBCOFd6N9WoXGivJBC4M=; b=H/OhkOf4ah75DUgvQ5LCQw4Tde
+        o7NXkY7m71OlcJP6zPfJbJtrFXNM74QYKl3co4ljSRNsFefNAV5nogKWFgUiPHx97w8TKO+xtZXZU
+        +9HTUFARZkun3fcE/T1bxk18Xe8ZuRWkYAzFnOJd0PlEVuDzIpmJpVMBJKz1BDj4yXzVqBChzqrFq
+        BCzjhYcBv50Os3rhVd1ZvRF7wL+NZGuTFuYttR7QAH+bMUeEKSy1OaMHjXA9GH4wbonl/AnJS39Hr
+        yMbC1OpKbu6E6+doC9HCVvkdXdChaPwGijL+IqhDumxEC0iq2h6Sk3Mg96o4wlpq29/iaelBdB+X3
+        KC87KP+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfnpM-00030H-1P; Tue, 25 Jun 2019 15:57:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F50B209C957E; Tue, 25 Jun 2019 17:57:45 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 17:57:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     mingo@redhat.com, valentin.schneider@arm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched/core: silence a warning in sched_init()
+Message-ID: <20190625155745.GF3419@hirez.programming.kicks-ass.net>
+References: <1561466662-22314-1-git-send-email-cai@lca.pw>
+ <20190625135238.GA3419@hirez.programming.kicks-ass.net>
+ <1561471459.5154.70.camel@lca.pw>
+ <20190625142508.GE3419@hirez.programming.kicks-ass.net>
+ <1561475229.5154.74.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <cce08df0-0b4d-833d-64ce-f9b81f7ad7ca@lightnvm.io>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1561475229.5154.74.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/19 3:35 AM, Matias BjÃ¸rling wrote:
-> On 6/25/19 12:27 AM, Chaitanya Kulkarni wrote:
->> On 6/24/19 12:43 PM, Bart Van Assche wrote:
->>> static inline bool op_is_write(unsigned int op)
->>> {
->>> Â Â Â Â return (op & 1);
->>> }
->>>
->>
+On Tue, Jun 25, 2019 at 11:07:09AM -0400, Qian Cai wrote:
+> On Tue, 2019-06-25 at 16:25 +0200, Peter Zijlstra wrote:
+> > On Tue, Jun 25, 2019 at 10:04:19AM -0400, Qian Cai wrote:
+> > > On Tue, 2019-06-25 at 15:52 +0200, Peter Zijlstra wrote:
+> > > Yes, -Wmissing-prototype makes no sense, but "-Wunused-but-set-variable" is
+> > > pretty valid to catch certain developer errors. For example,
+> > > 
+> > > https://lists.linuxfoundation.org/pipermail/iommu/2019-May/035680.html
+> > > 
+> > > > 
+> > > > As to this one, ideally the compiler would not be stupid, and understand
+> > > > the below, but alas.
+> > > 
+> > > Pretty sure that won't work, as the compiler will complain something like,
+> > > 
+> > > ISO C90 forbids mixed declarations and code
+> > 
+> > No, it builds just fine, it's a new block and C allows new variables at
+> > every block start -- with the scope of that block.
 > 
-> The zone mgmt commands are neither write nor reads commands. I guess, 
-> one could characterize them as write commands, but they don't write any 
-> data, they update a state of a zone on a drive. One should keep it as 
-> is? and make sure the zone mgmt commands don't get categorized as either 
-> read/write.
+> I remember I tried that before but recalled the error code wrong. Here it is,
+> 
+> kernel/sched/core.c:5940:17: warning: unused variable 'ptr' [-Wunused-variable]
+>                 unsigned long ptr = (unsigned long)kzalloc(alloc_size,
+> GFP_NOWAIT);
 
-Since the open, close and finish operations support modifying zone data 
-I propose to characterize these as write commands. How about the 
-following additional changes:
-- Make bio_check_ro() refuse open/close/flush/reset zone operations for 
-read-only partitions (see also commit a32e236eb93e ("Partially revert 
-"block: fail op_is_write() requests to read-only partitions"") # v4.18).
-- In submit_bio(), change op_is_write(bio_op(bio)) ? "WRITE" : "READ" 
-into something that uses blk_op_str().
-- Add open/close/flush zone support be added in blk_partition_remap().
-
-Thanks,
-
-Bart.
+Yes, I know, I tried. And GCC is a moron because of it.
