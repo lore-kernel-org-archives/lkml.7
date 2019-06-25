@@ -2,138 +2,147 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2435C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39C7C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB13208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78D40208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="pY6wfuaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfFYMmZ (ORCPT
+        id S1731611AbfFYMnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:42:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48750 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726414AbfFYMmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:42:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 945B9AFF9;
-        Tue, 25 Jun 2019 12:42:22 +0000 (UTC)
-Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-10-hch@lst.de>
- <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
- <20190625101445.GK1462@lst.de>
-From:   Nikolay Borisov <nborisov@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <387a9e4b-6a15-5b08-6878-53ed5cfb9bb0@suse.com>
-Date:   Tue, 25 Jun 2019 15:42:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 25 Jun 2019 08:43:19 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:53860 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726414AbfFYMnT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:43:19 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PCdVAc014779;
+        Tue, 25 Jun 2019 07:42:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=qJNJ0G7W0vE6s3OqOcOl2XdM6LMSlfN3u2FHbWa6UpQ=;
+ b=pY6wfuaFA0Y6b8kBsHQZ1LZ+exgjvHhgzPHMeIjAZZXPjX8okcreo5O9WEre2RwJgr6D
+ 1pNKdWyyczPHxNdS8iY1t+My/3+xJNsqQtRLyGvsHwKoS7nSdEkvzyeXhRwG+gWGiB9X
+ a34N0U9SMZxePtSApUiRF/2Ffh4O7YyrJGJgNhIcc32w+Mo8bZ6AYJ4+SAzW4hFG/a21
+ KQ03nLQ9JfZCKrPpq6W4cIYdAn0c8+zOVv3D7Lp/knGcJ299ZYeMdzmp7+8WIgmjjwTZ
+ OSkX8KRUIJjdCfOBoQxa1SQmYOApjx2cimL081N3s8eDl85HzQtsWxRd64dgJv5mBqgd mA== 
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail3.cirrus.com ([87.246.76.56])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2t9grnvmb0-1;
+        Tue, 25 Jun 2019 07:42:46 -0500
+Received: from EDIEX01.ad.cirrus.com (ediex01.ad.cirrus.com [198.61.84.80])
+        by mail3.cirrus.com (Postfix) with ESMTP id B52846143C13;
+        Tue, 25 Jun 2019 07:43:33 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 25 Jun
+ 2019 13:42:45 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 25 Jun 2019 13:42:45 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 38F612A1;
+        Tue, 25 Jun 2019 13:42:45 +0100 (BST)
+Date:   Tue, 25 Jun 2019 13:42:45 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     <wsa@the-dreams.de>, <jarkko.nikula@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v6 4/7] i2c: core: Make i2c_acpi_get_irq available to the
+ rest of the I2C core
+Message-ID: <20190625124245.GC54126@ediswmail.ad.cirrus.com>
+References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
+ <20190621100815.12417-5-ckeepax@opensource.cirrus.com>
+ <20190625115011.GE2640@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625101445.GK1462@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190625115011.GE2640@lahna.fi.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906250100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 25.06.19 г. 13:14 ч., Christoph Hellwig wrote:
-> On Mon, Jun 24, 2019 at 07:06:22PM +0300, Nikolay Borisov wrote:
->>> +{
->>> +	struct list_head	tmp;
->>> +
->>> +	list_replace_init(&ioend->io_list, &tmp);
->>> +	xfs_destroy_ioend(ioend, error);
->>> +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
->>> +		xfs_destroy_ioend(ioend, error);
->>
->> nit: I'd prefer if the list_pop patch is right before this one since
->> this is the first user of it.
+On Tue, Jun 25, 2019 at 02:50:11PM +0300, Mika Westerberg wrote:
+> On Fri, Jun 21, 2019 at 11:08:12AM +0100, Charles Keepax wrote:
+> > In preparation for more refactoring make i2c_acpi_get_irq available
+> > outside i2c-core-acpi.c.
+> > 
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > ---
+> > 
+> > Changes since v5:
+> >  - Pass a struct device rather than acpi_device to i2c_acpi_get_irq,
+> >    note this is more awkward than I would have liked as I am very
+> >    unconvinced that adev->dev can actually be passed to
+> >    ACPI_COMPANION. If anyone can answer that for sure that would be
+> >    very helpful.
 > 
-> I try to keep generic infrastructure first instead of interveawing
-> it with subystem-specific patches.
+> I don't think you can do that.
 > 
->> Additionally, I don't think list_pop is
->> really a net-negative win 
+
+Yeah I think we are pretty sure that is not possible, although
+not what is done in the patch, was just responding to on an
+earlier comment.
+
+> I probably missed some previous discussion but what's wrong passing
+> struct i2c_client instead and use ACPI_COMPANION() for that?
 > 
-> What is a "net-negative win" ?
 
-What I meant was 'net-positive win', in terms of making the code more
-readable or optimised.
+Really this is all about the splitting out the original patch
+into two patches, one to export the function and one to move its
+use to probe time. There isn't really any nice way to do it as two
+patches and still pass the i2c_client struct. Hence we ended up
+on this system with struct device.
 
+I would be happy to squash the two patches, and go back to the
+i2c_client approach, if that was preferred and  as long as Andy
+doesn't mind.
+
+> > 
+> > Thanks,
+> > Charles
+> > 
+> >  drivers/i2c/i2c-core-acpi.c | 13 +++++++++++--
+> >  drivers/i2c/i2c-core.h      |  7 +++++++
+> >  2 files changed, 18 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> > index c91492eaacd93..37bf80b35365f 100644
+> > --- a/drivers/i2c/i2c-core-acpi.c
+> > +++ b/drivers/i2c/i2c-core-acpi.c
+> > @@ -145,8 +145,17 @@ static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
+> >  	return 1;
+> >  }
+> >  
+> > -static int i2c_acpi_get_irq(struct acpi_device *adev)
+> > +/**
+> > + * i2c_acpi_get_irq - get device IRQ number from ACPI
+> > + * @client: Pointer to the I2C client device
 > 
->> in comparison to list_for_each_entry_safe
->> here. In fact this "delete the list" would seems more idiomatic if
->> implemented via list_for_each_entry_safe
+> I think this should be @dev now.
 > 
-> I disagree.  The for_each loops require an additional next iterator,
-> and also don't clearly express what is going on, but require additional
-> spotting of the list_del.
 
-That is of course your opinion. At the very least we can agree to disagree.
+Yes it should, sorry will fix that.
 
-What I'm worried about, though, is now you've essentially introduced a
-new idiom to dispose of lists, which is used only in your code. If it
-doesn't become more widespread and gradually start replacing current
-list_for_each_entry_safe usage then you would have increased the public
-list interface to cater for one specific use case, just because it seems
-more natural to you. I guess only time will show whether it makes sense
-to have list_pop_entry
-
+Thanks,
+Charles
