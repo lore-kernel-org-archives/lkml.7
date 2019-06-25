@@ -2,42 +2,42 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_SUBJ_WIPE_DEBT,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C2DC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC377C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8715C213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733A0208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vy80CdrD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i0QKfMuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbfFYOwt (ORCPT
+        id S1731351AbfFYOww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:52:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37080 "EHLO
+        Tue, 25 Jun 2019 10:52:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37112 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730701AbfFYOws (ORCPT
+        with ESMTP id S1731204AbfFYOwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:52:48 -0400
+        Tue, 25 Jun 2019 10:52:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tbvYi4DRDcYImKB7lxdCEs1VYn+lamcV2Qw7WnQ+Aqk=; b=Vy80CdrD3uYvq0TU6ajF+Epkk
-        fO1g86TTddMUVUoN7XPeh2/8gn1IfNmXe2Yya4rpMOUFPUUTWM7XfKUmhhMKFmjNQLDFJh1HqLHpD
-        GjnD3w/SdLckXsfCqgvTuboivttqvWIRXVWc7uIFQWQKnp9tuODdPxaTTvnHZiA+wfSgdMWFUb3UQ
-        /+ypijw4Msm+3Dci6biMM2Yn7pYPwYQ4jCGXbteMcEquO22UDvnfeYHI7d5yWzIuD2fMrJFHbsyFd
-        Oemno7glKRGVUXoXWE8qpE18Vf4dJ8wTZVAgIp/KnsJp/xkRMBin4D4zYIT2DMpJth0jp4ZRC3aFY
-        CF/vszhUA==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=210wImTlIxpUt42EDHNL0YI2z24zCkSbDFPV23o+1sk=; b=i0QKfMuChLZJ1/FsEHsfXU4VDP
+        uRazPH7Bli/0d6GYIeNJTVQ1DUa0/6xiDyhwFoQIjXf+jKm0Q5ZHcOpQQkqYAvBxCAL4wm9TXWofQ
+        T1+K8aFBte+5xwOLL8iOwP3YMG9l9t6Y/UUXfUDQRuRdEJRoilhg2Zws2sSBcwnw57DqsSPm5fnJG
+        u8ogrX2p7o3eeIXGCoNvBeLcLNN5P8O1r+PIgR5qvhSSxFxFN0l4/tyq6atT/EZs4kUOvWNRnPjlZ
+        u+45UdxvS48GOOD3SHE3T+nmoNz+j4fJrt4DyYQ9QuMtN9Cbxff0oPDZvcnVIsbG7xHQ/5KrQ189L
+        U0tfVLAA==;
 Received: from 213-225-6-159.nat.highway.a1.net ([213.225.6.159] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfmoL-0006gd-K5; Tue, 25 Jun 2019 14:52:42 +0000
+        id 1hfmoO-0006iY-Ft; Tue, 25 Jun 2019 14:52:45 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
@@ -46,10 +46,12 @@ Cc:     Oliver O'Halloran <oohall@gmail.com>,
         Alexey Kardashevskiy <aik@ozlabs.ru>,
         Frederic Barrat <fbarrat@linux.ibm.com>,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: remove unused powernv code v3
-Date:   Tue, 25 Jun 2019 16:52:35 +0200
-Message-Id: <20190625145239.2759-1-hch@lst.de>
+Subject: [PATCH 1/4] powerpc/powernv: remove the unused pnv_pci_set_p2p function
+Date:   Tue, 25 Jun 2019 16:52:36 +0200
+Message-Id: <20190625145239.2759-2-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190625145239.2759-1-hch@lst.de>
+References: <20190625145239.2759-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -58,14 +60,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+This function has never been used anywhere in the kernel tree since it
+was added to the tree.  We also now have proper PCIe P2P APIs in the core
+kernel, and any new P2P support should be using those.
 
-the powerpc powernv port has a fairly large chunk of code that never
-had any upstream user.  We generally strive to not keep dead code
-around, and this was affirmed at least years Maintainer summit.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/powerpc/include/asm/opal.h            |  2 -
+ arch/powerpc/include/asm/pnv-pci.h         |  2 -
+ arch/powerpc/platforms/powernv/opal-call.c |  1 -
+ arch/powerpc/platforms/powernv/pci.c       | 74 ----------------------
+ arch/powerpc/platforms/powernv/pci.h       |  5 --
+ 5 files changed, 84 deletions(-)
 
-Changes since v2:
- - fix incorrect opal stub removals that crept in in a rebase
+diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+index 4cc37e708bc7..15c488ce4225 100644
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -287,8 +287,6 @@ int64_t opal_xive_set_queue_state(uint64_t vp, uint32_t prio,
+ 				  uint32_t qtoggle,
+ 				  uint32_t qindex);
+ int64_t opal_xive_get_vp_state(uint64_t vp, __be64 *out_w01);
+-int64_t opal_pci_set_p2p(uint64_t phb_init, uint64_t phb_target,
+-			uint64_t desc, uint16_t pe_number);
+ 
+ int64_t opal_imc_counters_init(uint32_t type, uint64_t address,
+ 							uint64_t cpu_pir);
+diff --git a/arch/powerpc/include/asm/pnv-pci.h b/arch/powerpc/include/asm/pnv-pci.h
+index 630eb8b1b7ed..9fcb0bc462c6 100644
+--- a/arch/powerpc/include/asm/pnv-pci.h
++++ b/arch/powerpc/include/asm/pnv-pci.h
+@@ -26,8 +26,6 @@ extern int pnv_pci_get_presence_state(uint64_t id, uint8_t *state);
+ extern int pnv_pci_get_power_state(uint64_t id, uint8_t *state);
+ extern int pnv_pci_set_power_state(uint64_t id, uint8_t state,
+ 				   struct opal_msg *msg);
+-extern int pnv_pci_set_p2p(struct pci_dev *initiator, struct pci_dev *target,
+-			   u64 desc);
+ 
+ extern int pnv_pci_enable_tunnel(struct pci_dev *dev, uint64_t *asnind);
+ extern int pnv_pci_disable_tunnel(struct pci_dev *dev);
+diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
+index 36c8fa3647a2..29ca523c1c79 100644
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -273,7 +273,6 @@ OPAL_CALL(opal_npu_map_lpar,			OPAL_NPU_MAP_LPAR);
+ OPAL_CALL(opal_imc_counters_init,		OPAL_IMC_COUNTERS_INIT);
+ OPAL_CALL(opal_imc_counters_start,		OPAL_IMC_COUNTERS_START);
+ OPAL_CALL(opal_imc_counters_stop,		OPAL_IMC_COUNTERS_STOP);
+-OPAL_CALL(opal_pci_set_p2p,			OPAL_PCI_SET_P2P);
+ OPAL_CALL(opal_get_powercap,			OPAL_GET_POWERCAP);
+ OPAL_CALL(opal_set_powercap,			OPAL_SET_POWERCAP);
+ OPAL_CALL(opal_get_power_shift_ratio,		OPAL_GET_POWER_SHIFT_RATIO);
+diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+index ef9448a907c6..8d28f2932c3b 100644
+--- a/arch/powerpc/platforms/powernv/pci.c
++++ b/arch/powerpc/platforms/powernv/pci.c
+@@ -38,7 +38,6 @@
+ #include "powernv.h"
+ #include "pci.h"
+ 
+-static DEFINE_MUTEX(p2p_mutex);
+ static DEFINE_MUTEX(tunnel_mutex);
+ 
+ int pnv_pci_get_slot_id(struct device_node *np, uint64_t *id)
+@@ -861,79 +860,6 @@ void pnv_pci_dma_bus_setup(struct pci_bus *bus)
+ 	}
+ }
+ 
+-int pnv_pci_set_p2p(struct pci_dev *initiator, struct pci_dev *target, u64 desc)
+-{
+-	struct pci_controller *hose;
+-	struct pnv_phb *phb_init, *phb_target;
+-	struct pnv_ioda_pe *pe_init;
+-	int rc;
+-
+-	if (!opal_check_token(OPAL_PCI_SET_P2P))
+-		return -ENXIO;
+-
+-	hose = pci_bus_to_host(initiator->bus);
+-	phb_init = hose->private_data;
+-
+-	hose = pci_bus_to_host(target->bus);
+-	phb_target = hose->private_data;
+-
+-	pe_init = pnv_ioda_get_pe(initiator);
+-	if (!pe_init)
+-		return -ENODEV;
+-
+-	/*
+-	 * Configuring the initiator's PHB requires to adjust its
+-	 * TVE#1 setting. Since the same device can be an initiator
+-	 * several times for different target devices, we need to keep
+-	 * a reference count to know when we can restore the default
+-	 * bypass setting on its TVE#1 when disabling. Opal is not
+-	 * tracking PE states, so we add a reference count on the PE
+-	 * in linux.
+-	 *
+-	 * For the target, the configuration is per PHB, so we keep a
+-	 * target reference count on the PHB.
+-	 */
+-	mutex_lock(&p2p_mutex);
+-
+-	if (desc & OPAL_PCI_P2P_ENABLE) {
+-		/* always go to opal to validate the configuration */
+-		rc = opal_pci_set_p2p(phb_init->opal_id, phb_target->opal_id,
+-				      desc, pe_init->pe_number);
+-
+-		if (rc != OPAL_SUCCESS) {
+-			rc = -EIO;
+-			goto out;
+-		}
+-
+-		pe_init->p2p_initiator_count++;
+-		phb_target->p2p_target_count++;
+-	} else {
+-		if (!pe_init->p2p_initiator_count ||
+-			!phb_target->p2p_target_count) {
+-			rc = -EINVAL;
+-			goto out;
+-		}
+-
+-		if (--pe_init->p2p_initiator_count == 0)
+-			pnv_pci_ioda2_set_bypass(pe_init, true);
+-
+-		if (--phb_target->p2p_target_count == 0) {
+-			rc = opal_pci_set_p2p(phb_init->opal_id,
+-					      phb_target->opal_id, desc,
+-					      pe_init->pe_number);
+-			if (rc != OPAL_SUCCESS) {
+-				rc = -EIO;
+-				goto out;
+-			}
+-		}
+-	}
+-	rc = 0;
+-out:
+-	mutex_unlock(&p2p_mutex);
+-	return rc;
+-}
+-EXPORT_SYMBOL_GPL(pnv_pci_set_p2p);
+-
+ struct device_node *pnv_pci_get_phb_node(struct pci_dev *dev)
+ {
+ 	struct pci_controller *hose = pci_bus_to_host(dev->bus);
+diff --git a/arch/powerpc/platforms/powernv/pci.h b/arch/powerpc/platforms/powernv/pci.h
+index be26ab3d99e0..4f11c077af62 100644
+--- a/arch/powerpc/platforms/powernv/pci.h
++++ b/arch/powerpc/platforms/powernv/pci.h
+@@ -79,9 +79,6 @@ struct pnv_ioda_pe {
+ 	struct pnv_ioda_pe	*master;
+ 	struct list_head	slaves;
+ 
+-	/* PCI peer-to-peer*/
+-	int			p2p_initiator_count;
+-
+ 	/* Link in list of PE#s */
+ 	struct list_head	list;
+ };
+@@ -172,8 +169,6 @@ struct pnv_phb {
+ 	/* PHB and hub diagnostics */
+ 	unsigned int		diag_data_size;
+ 	u8			*diag_data;
+-
+-	int p2p_target_count;
+ };
+ 
+ extern struct pci_ops pnv_pci_ops;
+-- 
+2.20.1
 
-Changes since v1:
- - reword some commit message
