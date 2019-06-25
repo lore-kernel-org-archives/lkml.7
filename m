@@ -2,409 +2,244 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57498C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291FEC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DF6208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:05:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jdva9Z4q"
+	by mail.kernel.org (Postfix) with ESMTP id EFE8E208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731990AbfFYPFI (ORCPT
+        id S1732017AbfFYPGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:05:08 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39383 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731509AbfFYPFI (ORCPT
+        Tue, 25 Jun 2019 11:06:16 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:44504 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730607AbfFYPGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:05:08 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so3322569wma.4;
-        Tue, 25 Jun 2019 08:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FpH+UM6aXLaq6l6BvTOtpCJcQETrARYlRqLy5mqFk0w=;
-        b=jdva9Z4q7eWLnc5r0xbr4kr7LNATl4gyMF7/X5ZbWEvnwUtUZOLj0dusuJ6WuJYAfL
-         H5kEc9mZagu2yV2ANVsIWchR4IgzaYcwXaAyXzT9i+wgPmScCXKO09T/S4a4+otYkVn4
-         2Wy+Udl1Mmp4dd27W+oikX3oKQDklCDhUVIGicZHf6OPCAtX461OYWnTZl76+dyTeB/2
-         rU/UbXBG2yRIGtQWGz0yyOtRVChXEsxuA+N+TCFxlFhyWem3xRUBa3/YC66Jgwvjc3XW
-         6ZOHcnV69x8eSIt6HlIPXPUjIJyAKHr7fHwNBd8gDuq42WaJgaBIxnkRRPOztcSRkpVH
-         5Atg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FpH+UM6aXLaq6l6BvTOtpCJcQETrARYlRqLy5mqFk0w=;
-        b=I1ksHPEAh1OMdlGi3L5LQzq4R/RWDjEwy11U+mMUfBX5YGgQfKD16KdMLgcUcqR6PA
-         mqzrkm6gR6giYtHnycazcbAtlQsGCynfCzQSxvKiBKC43ft0qNA0MAmOsa+DNCerH35G
-         IVpGBKKpimiuWsEhuWDB4P1jh9zJ7UzyNUIcYiGIizhUeRLrDaplnHyxOJZTth8glAN+
-         BFbkDlJGg0JBC48j1dGmhyacm/vsJvL2rnzZ1NzX+Vu/G2CRSFB7xJDsyf7YFeTeoSYj
-         eIXvI+lrvNZjQ0jzs27BWbSjwZPWDP1Y/qYv+M5T912KQR5YfmYjVBBvq5eGsyzW8oC/
-         s9vQ==
-X-Gm-Message-State: APjAAAVYfttabP0og/RnCygeLxFqTbM96suS2c4HcJhinRvN15zygKe0
-        DX+ktLLIBAFZOsK2PxbuZ/I=
-X-Google-Smtp-Source: APXvYqwI09M/ZkTF+OmLqhKtNPqYEK3k8Yn7vu8rdsEmceLD/G+qlGSucQyphSYCjbXXiVYgq4dHxA==
-X-Received: by 2002:a1c:ef0c:: with SMTP id n12mr19114755wmh.132.1561475099649;
-        Tue, 25 Jun 2019 08:04:59 -0700 (PDT)
-Received: from cat.mip.uni-hannover.de (ip43.172.mip.uni-hannover.de. [130.75.172.43])
-        by smtp.gmail.com with ESMTPSA id j18sm17640371wre.23.2019.06.25.08.04.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Jun 2019 08:04:59 -0700 (PDT)
-From:   Felix Winkler <fxmw.tnt@gmail.com>
-To:     sakari.ailus@linux.intel.com, mchehab@kernel.org
-Cc:     gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-kernel@i4.cs.fau.de, Felix Winkler <fxmw.tnt@gmail.com>,
-        Niklas Witzel <nik.witzel@horsepower-hannover.de>
-Subject: [PATCH] media: ipu3-imgu: Fixed some coding style issues in ipu3-css.c
-Date:   Tue, 25 Jun 2019 17:03:46 +0200
-Message-Id: <1561475026-21806-1-git-send-email-fxmw.tnt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 25 Jun 2019 11:06:16 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 446863F4F6;
+        Tue, 25 Jun 2019 17:06:08 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MJyxLx7KEe2Y; Tue, 25 Jun 2019 17:06:01 +0200 (CEST)
+Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
+        (Authenticated sender: mb547485)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id D86033F44A;
+        Tue, 25 Jun 2019 17:05:58 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 17:05:58 +0200
+From:   Fredrik Noring <noring@nocrew.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>, laurentiu.tudor@nxp.com,
+        stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, marex@denx.de, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+        JuergenUrban@gmx.de
+Subject: [PATCH 1/2] lib/genalloc.c: Add algorithm, align and zeroed family
+ of DMA allocators
+Message-ID: <20190625150558.GA2560@sx9>
+References: <20190611172654.GA2602@sx9>
+ <20190611190343.GA18459@roeck-us.net>
+ <20190613134033.GA2489@sx9>
+ <bdfd2178-9e3c-dc15-6aa1-ec1f1fbcb191@roeck-us.net>
+ <20190613153414.GA909@sx9>
+ <3f2164cd-7655-b7cc-ec57-d8751886728c@roeck-us.net>
+ <20190614142816.GA2574@sx9>
+ <20190624063515.GA3296@lst.de>
+ <20190624125916.GA2516@sx9>
+ <20190625060000.GA28986@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190625060000.GA28986@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improved readability by fixing some issues related to maximum line length.
+Provide the algorithm option to DMA allocators as well, along with
+convenience variants for zeroed and aligned memory. The following
+four functions are added:
 
-Signed-off-by: Felix Winkler <fxmw.tnt@gmail.com>
-Signed-off-by: Niklas Witzel <nik.witzel@horsepower-hannover.de>
+- gen_pool_dma_alloc_algo()
+- gen_pool_dma_alloc_align()
+- gen_pool_dma_zalloc_algo()
+- gen_pool_dma_zalloc_align()
+
+Signed-off-by: Fredrik Noring <noring@nocrew.org>
 ---
- drivers/staging/media/ipu3/ipu3-css.c | 274 +++++++++++++++-------------------
- 1 file changed, 121 insertions(+), 153 deletions(-)
+Hi Christoph,
 
-diff --git a/drivers/staging/media/ipu3/ipu3-css.c b/drivers/staging/media/ipu3/ipu3-css.c
-index 23cf5b2..a34105f 100644
---- a/drivers/staging/media/ipu3/ipu3-css.c
-+++ b/drivers/staging/media/ipu3/ipu3-css.c
-@@ -663,17 +663,16 @@ static void imgu_css_hw_cleanup(struct imgu_css *css)
- static void imgu_css_pipeline_cleanup(struct imgu_css *css, unsigned int pipe)
+This patch is based on my v5.0.21 branch, with Laurentiu Tudor's other
+local memory changes.
+
+Fredrik
+---
+ include/linux/genalloc.h |  10 +++-
+ lib/genalloc.c           | 100 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 105 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
+--- a/include/linux/genalloc.h
++++ b/include/linux/genalloc.h
+@@ -121,7 +121,15 @@ extern unsigned long gen_pool_alloc_algo(struct gen_pool *, size_t,
+ 		genpool_algo_t algo, void *data);
+ extern void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size,
+ 		dma_addr_t *dma);
+-void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma);
++extern void *gen_pool_dma_alloc_algo(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, genpool_algo_t algo, void *data);
++extern void *gen_pool_dma_alloc_align(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, int align);
++extern void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma);
++extern void *gen_pool_dma_zalloc_algo(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, genpool_algo_t algo, void *data);
++extern void *gen_pool_dma_zalloc_align(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, int align);
+ extern void gen_pool_free(struct gen_pool *, unsigned long, size_t);
+ extern void gen_pool_for_each_chunk(struct gen_pool *,
+ 	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -347,13 +347,35 @@ EXPORT_SYMBOL(gen_pool_alloc_algo);
+  * Return: virtual address of the allocated memory, or %NULL on failure
+  */
+ void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
++{
++	return gen_pool_dma_alloc_algo(pool, size, dma, pool->algo, pool->data);
++}
++EXPORT_SYMBOL(gen_pool_dma_alloc);
++
++/**
++ * gen_pool_dma_alloc_algo - allocate special memory from the pool for DMA
++ * usage with the given pool algorithm
++ * @pool: pool to allocate from
++ * @size: number of bytes to allocate from the pool
++ * @dma: DMA-view physical address return value. Use %NULL if unneeded.
++ * @algo: algorithm passed from caller
++ * @data: data passed to algorithm
++ *
++ * Allocate the requested number of bytes from the specified pool. Uses the
++ * given pool allocation function. Can not be used in NMI handler on
++ * architectures without NMI-safe cmpxchg implementation.
++ *
++ * Return: virtual address of the allocated memory, or %NULL on failure
++ */
++void *gen_pool_dma_alloc_algo(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, genpool_algo_t algo, void *data)
  {
- 	struct imgu_device *imgu = dev_get_drvdata(css->dev);
-+	struct imgu_css_pipe *css_pipe = &css->pipes[pipe];
- 	unsigned int i;
+ 	unsigned long vaddr;
  
--	imgu_css_pool_cleanup(imgu,
--			      &css->pipes[pipe].pool.parameter_set_info);
--	imgu_css_pool_cleanup(imgu, &css->pipes[pipe].pool.acc);
--	imgu_css_pool_cleanup(imgu, &css->pipes[pipe].pool.gdc);
--	imgu_css_pool_cleanup(imgu, &css->pipes[pipe].pool.obgrid);
-+	imgu_css_pool_cleanup(imgu, &css_pipe->pool.parameter_set_info);
-+	imgu_css_pool_cleanup(imgu, &css_pipe->pool.acc);
-+	imgu_css_pool_cleanup(imgu, &css_pipe->pool.gdc);
-+	imgu_css_pool_cleanup(imgu, &css_pipe->pool.obgrid);
+ 	if (!pool)
+ 		return NULL;
  
- 	for (i = 0; i < IMGU_ABI_NUM_MEMORIES; i++)
--		imgu_css_pool_cleanup(imgu,
--				      &css->pipes[pipe].pool.binary_params_p[i]);
-+		imgu_css_pool_cleanup(imgu, &css_pipe->pool.binary_params_p[i]);
+-	vaddr = gen_pool_alloc(pool, size);
++	vaddr = gen_pool_alloc_algo(pool, size, algo, data);
+ 	if (!vaddr)
+ 		return NULL;
+ 
+@@ -362,7 +384,31 @@ void *gen_pool_dma_alloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
+ 
+ 	return (void *)vaddr;
  }
+-EXPORT_SYMBOL(gen_pool_dma_alloc);
++EXPORT_SYMBOL(gen_pool_dma_alloc_algo);
++
++/**
++ * gen_pool_dma_alloc_align - allocate special memory from the pool for DMA
++ * usage with the given alignment
++ * @pool: pool to allocate from
++ * @size: number of bytes to allocate from the pool
++ * @dma: DMA-view physical address return value. Use %NULL if unneeded.
++ * @align: alignment in bytes for starting address
++ *
++ * Allocate the requested number bytes from the specified pool, with the given
++ * alignment restriction. Can not be used in NMI handler on architectures
++ * without NMI-safe cmpxchg implementation.
++ *
++ * Return: virtual address of the allocated memory, or %NULL on failure
++ */
++void *gen_pool_dma_alloc_align(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, int align)
++{
++	struct genpool_data_align data = { .align = align };
++
++	return gen_pool_dma_alloc_algo(pool, size, dma,
++			gen_pool_first_fit_align, &data);
++}
++EXPORT_SYMBOL(gen_pool_dma_alloc_align);
  
- /*
-@@ -699,6 +698,12 @@ static int imgu_css_pipeline_init(struct imgu_css *css, unsigned int pipe)
- 	unsigned int i, j;
+ /**
+  * gen_pool_dma_zalloc - allocate special zeroed memory from the pool for
+@@ -380,14 +426,60 @@ EXPORT_SYMBOL(gen_pool_dma_alloc);
+  */
+ void *gen_pool_dma_zalloc(struct gen_pool *pool, size_t size, dma_addr_t *dma)
+ {
+-	void *vaddr = gen_pool_dma_alloc(pool, size, dma);
++	return gen_pool_dma_zalloc_algo(pool, size, dma, pool->algo, pool->data);
++}
++EXPORT_SYMBOL(gen_pool_dma_zalloc);
++
++/**
++ * gen_pool_dma_zalloc_algo - allocate special zeroed memory from the pool for
++ * DMA usage with the given pool algorithm
++ * @pool: pool to allocate from
++ * @size: number of bytes to allocate from the pool
++ * @dma: DMA-view physical address return value. Use %NULL if unneeded.
++ * @algo: algorithm passed from caller
++ * @data: data passed to algorithm
++ *
++ * Allocate the requested number of zeroed bytes from the specified pool. Uses
++ * the given pool allocation function. Can not be used in NMI handler on
++ * architectures without NMI-safe cmpxchg implementation.
++ *
++ * Return: virtual address of the allocated zeroed memory, or %NULL on failure
++ */
++void *gen_pool_dma_zalloc_algo(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, genpool_algo_t algo, void *data)
++{
++	void *vaddr = gen_pool_dma_alloc_algo(pool, size, dma, algo, data);
  
- 	struct imgu_css_pipe *css_pipe = &css->pipes[pipe];
-+	struct imgu_css_queue *css_queue_in =
-+			&css_pipe->queue[IPU3_CSS_QUEUE_IN];
-+	struct imgu_css_queue *css_queue_out =
-+			&css_pipe->queue[IPU3_CSS_QUEUE_OUT];
-+	struct imgu_css_queue *css_queue_vf =
-+			&css_pipe->queue[IPU3_CSS_QUEUE_VF];
- 	const struct imgu_fw_info *bi =
- 			&css->fwp->binary_header[css_pipe->bindex];
- 	const unsigned int stripes = bi->info.isp.sp.iterator.num_stripes;
-@@ -711,6 +716,9 @@ static int imgu_css_pipeline_init(struct imgu_css *css, unsigned int pipe)
- 	struct imgu_abi_isp_stage *isp_stage;
- 	struct imgu_abi_sp_stage *sp_stage;
- 	struct imgu_abi_sp_group *sp_group;
-+	struct imgu_abi_frames_sp *frames_sp;
-+	struct imgu_abi_frame_sp *frame_sp;
-+	struct imgu_abi_frame_sp_info *frame_sp_info;
+ 	if (vaddr)
+ 		memset(vaddr, 0, size);
  
- 	const unsigned int bds_width_pad =
- 				ALIGN(css_pipe->rect[IPU3_CSS_RECT_BDS].width,
-@@ -732,61 +740,44 @@ static int imgu_css_pipeline_init(struct imgu_css *css, unsigned int pipe)
- 	if (!cfg_iter)
- 		goto bad_firmware;
+ 	return vaddr;
+ }
+-EXPORT_SYMBOL(gen_pool_dma_zalloc);
++EXPORT_SYMBOL(gen_pool_dma_zalloc_algo);
++
++/**
++ * gen_pool_dma_zalloc_align - allocate special zeroed memory from the pool for
++ * DMA usage with the given alignment
++ * @pool: pool to allocate from
++ * @size: number of bytes to allocate from the pool
++ * @dma: DMA-view physical address return value. Use %NULL if unneeded.
++ * @align: alignment in bytes for starting address
++ *
++ * Allocate the requested number of zeroed bytes from the specified pool,
++ * with the given alignment restriction. Can not be used in NMI handler on
++ * architectures without NMI-safe cmpxchg implementation.
++ *
++ * Return: virtual address of the allocated zeroed memory, or %NULL on failure
++ */
++void *gen_pool_dma_zalloc_align(struct gen_pool *pool, size_t size,
++		dma_addr_t *dma, int align)
++{
++	struct genpool_data_align data = { .align = align };
++
++	return gen_pool_dma_zalloc_algo(pool, size, dma,
++			gen_pool_first_fit_align, &data);
++}
++EXPORT_SYMBOL(gen_pool_dma_zalloc_align);
  
--	cfg_iter->input_info.res.width =
--				css_pipe->queue[IPU3_CSS_QUEUE_IN].fmt.mpix.width;
--	cfg_iter->input_info.res.height =
--				css_pipe->queue[IPU3_CSS_QUEUE_IN].fmt.mpix.height;
--	cfg_iter->input_info.padded_width =
--				css_pipe->queue[IPU3_CSS_QUEUE_IN].width_pad;
--	cfg_iter->input_info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_IN].css_fmt->frame_format;
--	cfg_iter->input_info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_IN].css_fmt->bit_depth;
--	cfg_iter->input_info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_IN].css_fmt->bayer_order;
--	cfg_iter->input_info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--
--	cfg_iter->internal_info.res.width = css_pipe->rect[IPU3_CSS_RECT_BDS].width;
--	cfg_iter->internal_info.res.height =
--					css_pipe->rect[IPU3_CSS_RECT_BDS].height;
--	cfg_iter->internal_info.padded_width = bds_width_pad;
--	cfg_iter->internal_info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->frame_format;
--	cfg_iter->internal_info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bit_depth;
--	cfg_iter->internal_info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bayer_order;
--	cfg_iter->internal_info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--
--	cfg_iter->output_info.res.width =
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].fmt.mpix.width;
--	cfg_iter->output_info.res.height =
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].fmt.mpix.height;
--	cfg_iter->output_info.padded_width =
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].width_pad;
--	cfg_iter->output_info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->frame_format;
--	cfg_iter->output_info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bit_depth;
--	cfg_iter->output_info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bayer_order;
--	cfg_iter->output_info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--
--	cfg_iter->vf_info.res.width =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].fmt.mpix.width;
--	cfg_iter->vf_info.res.height =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].fmt.mpix.height;
--	cfg_iter->vf_info.padded_width =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].width_pad;
--	cfg_iter->vf_info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].css_fmt->frame_format;
--	cfg_iter->vf_info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].css_fmt->bit_depth;
--	cfg_iter->vf_info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].css_fmt->bayer_order;
--	cfg_iter->vf_info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--
--	cfg_iter->dvs_envelope.width = css_pipe->rect[IPU3_CSS_RECT_ENVELOPE].width;
-+	frame_sp_info = &cfg_iter->input_info;
-+	frame_sp_info->res.width	= css_queue_in->fmt.mpix.width;
-+	frame_sp_info->res.height	= css_queue_in->fmt.mpix.height;
-+	frame_sp_info->padded_width	= css_queue_in->width_pad;
-+	frame_sp_info->format		= css_queue_in->css_fmt->frame_format;
-+	frame_sp_info->raw_bit_depth	= css_queue_in->css_fmt->bit_depth;
-+	frame_sp_info->raw_bayer_order	= css_queue_in->css_fmt->bayer_order;
-+	frame_sp_info->raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+
-+	frame_sp_info = &cfg_iter->internal_info;
-+	frame_sp_info->res.width = css_pipe->rect[IPU3_CSS_RECT_BDS].width;
-+	frame_sp_info->res.height = css_pipe->rect[IPU3_CSS_RECT_BDS].height;
-+	frame_sp_info->padded_width	= bds_width_pad;
-+	frame_sp_info->format		= css_queue_out->css_fmt->frame_format;
-+	frame_sp_info->raw_bit_depth	= css_queue_out->css_fmt->bit_depth;
-+	frame_sp_info->raw_bayer_order	= css_queue_out->css_fmt->bayer_order;
-+	frame_sp_info->raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+
-+	frame_sp_info = &cfg_iter->output_info;
-+	frame_sp_info->res.width	= css_queue_out->fmt.mpix.width;
-+	frame_sp_info->res.height	= css_queue_out->fmt.mpix.height;
-+	frame_sp_info->padded_width	= css_queue_out->width_pad;
-+	frame_sp_info->format		= css_queue_out->css_fmt->frame_format;
-+	frame_sp_info->raw_bit_depth	= css_queue_out->css_fmt->bit_depth;
-+	frame_sp_info->raw_bayer_order	= css_queue_out->css_fmt->bayer_order;
-+	frame_sp_info->raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+
-+	frame_sp_info = &cfg_iter->vf_info;
-+	frame_sp_info->res.width	= css_queue_vf->fmt.mpix.width;
-+	frame_sp_info->res.height	= css_queue_vf->fmt.mpix.height;
-+	frame_sp_info->padded_width	= css_queue_vf->width_pad;
-+	frame_sp_info->format		= css_queue_vf->css_fmt->frame_format;
-+	frame_sp_info->raw_bit_depth	= css_queue_vf->css_fmt->bit_depth;
-+	frame_sp_info->raw_bayer_order	= css_queue_vf->css_fmt->bayer_order;
-+	frame_sp_info->raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+
-+	cfg_iter->dvs_envelope.width =
-+				css_pipe->rect[IPU3_CSS_RECT_ENVELOPE].width;
- 	cfg_iter->dvs_envelope.height =
- 				css_pipe->rect[IPU3_CSS_RECT_ENVELOPE].height;
- 
-@@ -917,12 +908,13 @@ static int imgu_css_pipeline_init(struct imgu_css *css, unsigned int pipe)
- 	sp_stage = css_pipe->xmem_sp_stage_ptrs[pipe][stage].vaddr;
- 	memset(sp_stage, 0, sizeof(*sp_stage));
- 
--	sp_stage->frames.in.buf_attr = buffer_sp_init;
-+	frames_sp = &sp_stage->frames;
-+	frames_sp->in.buf_attr = buffer_sp_init;
- 	for (i = 0; i < IMGU_ABI_BINARY_MAX_OUTPUT_PORTS; i++)
--		sp_stage->frames.out[i].buf_attr = buffer_sp_init;
--	sp_stage->frames.out_vf.buf_attr = buffer_sp_init;
--	sp_stage->frames.s3a_buf = buffer_sp_init;
--	sp_stage->frames.dvs_buf = buffer_sp_init;
-+		frames_sp->out[i].buf_attr = buffer_sp_init;
-+	frames_sp->out_vf.buf_attr = buffer_sp_init;
-+	frames_sp->s3a_buf = buffer_sp_init;
-+	frames_sp->dvs_buf = buffer_sp_init;
- 
- 	sp_stage->stage_type = IMGU_ABI_STAGE_TYPE_ISP;
- 	sp_stage->num = stage;
-@@ -932,94 +924,70 @@ static int imgu_css_pipeline_init(struct imgu_css *css, unsigned int pipe)
- 
- 	sp_stage->enable.vf_output = css_pipe->vf_output_en;
- 
--	sp_stage->frames.effective_in_res.width =
-+	frames_sp->effective_in_res.width =
- 				css_pipe->rect[IPU3_CSS_RECT_EFFECTIVE].width;
--	sp_stage->frames.effective_in_res.height =
-+	frames_sp->effective_in_res.height =
- 				css_pipe->rect[IPU3_CSS_RECT_EFFECTIVE].height;
--	sp_stage->frames.in.info.res.width =
--				css_pipe->queue[IPU3_CSS_QUEUE_IN].fmt.mpix.width;
--	sp_stage->frames.in.info.res.height =
--				css_pipe->queue[IPU3_CSS_QUEUE_IN].fmt.mpix.height;
--	sp_stage->frames.in.info.padded_width =
--					css_pipe->queue[IPU3_CSS_QUEUE_IN].width_pad;
--	sp_stage->frames.in.info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_IN].css_fmt->frame_format;
--	sp_stage->frames.in.info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_IN].css_fmt->bit_depth;
--	sp_stage->frames.in.info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_IN].css_fmt->bayer_order;
--	sp_stage->frames.in.info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--	sp_stage->frames.in.buf_attr.buf_src.queue_id = IMGU_ABI_QUEUE_C_ID;
--	sp_stage->frames.in.buf_attr.buf_type =
--					IMGU_ABI_BUFFER_TYPE_INPUT_FRAME;
--
--	sp_stage->frames.out[0].info.res.width =
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].fmt.mpix.width;
--	sp_stage->frames.out[0].info.res.height =
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].fmt.mpix.height;
--	sp_stage->frames.out[0].info.padded_width =
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].width_pad;
--	sp_stage->frames.out[0].info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->frame_format;
--	sp_stage->frames.out[0].info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bit_depth;
--	sp_stage->frames.out[0].info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bayer_order;
--	sp_stage->frames.out[0].info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--	sp_stage->frames.out[0].planes.nv.uv.offset =
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].width_pad *
--				css_pipe->queue[IPU3_CSS_QUEUE_OUT].fmt.mpix.height;
--	sp_stage->frames.out[0].buf_attr.buf_src.queue_id = IMGU_ABI_QUEUE_D_ID;
--	sp_stage->frames.out[0].buf_attr.buf_type =
--					IMGU_ABI_BUFFER_TYPE_OUTPUT_FRAME;
--
--	sp_stage->frames.out[1].buf_attr.buf_src.queue_id =
--							IMGU_ABI_QUEUE_EVENT_ID;
--
--	sp_stage->frames.internal_frame_info.res.width =
--					css_pipe->rect[IPU3_CSS_RECT_BDS].width;
--	sp_stage->frames.internal_frame_info.res.height =
--					css_pipe->rect[IPU3_CSS_RECT_BDS].height;
--	sp_stage->frames.internal_frame_info.padded_width = bds_width_pad;
--
--	sp_stage->frames.internal_frame_info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->frame_format;
--	sp_stage->frames.internal_frame_info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bit_depth;
--	sp_stage->frames.internal_frame_info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_OUT].css_fmt->bayer_order;
--	sp_stage->frames.internal_frame_info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--
--	sp_stage->frames.out_vf.info.res.width =
--				css_pipe->queue[IPU3_CSS_QUEUE_VF].fmt.mpix.width;
--	sp_stage->frames.out_vf.info.res.height =
--				css_pipe->queue[IPU3_CSS_QUEUE_VF].fmt.mpix.height;
--	sp_stage->frames.out_vf.info.padded_width =
--					css_pipe->queue[IPU3_CSS_QUEUE_VF].width_pad;
--	sp_stage->frames.out_vf.info.format =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].css_fmt->frame_format;
--	sp_stage->frames.out_vf.info.raw_bit_depth =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].css_fmt->bit_depth;
--	sp_stage->frames.out_vf.info.raw_bayer_order =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].css_fmt->bayer_order;
--	sp_stage->frames.out_vf.info.raw_type = IMGU_ABI_RAW_TYPE_BAYER;
--	sp_stage->frames.out_vf.planes.yuv.u.offset =
--				css_pipe->queue[IPU3_CSS_QUEUE_VF].width_pad *
--				css_pipe->queue[IPU3_CSS_QUEUE_VF].fmt.mpix.height;
--	sp_stage->frames.out_vf.planes.yuv.v.offset =
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].width_pad *
--			css_pipe->queue[IPU3_CSS_QUEUE_VF].fmt.mpix.height * 5 / 4;
--	sp_stage->frames.out_vf.buf_attr.buf_src.queue_id = IMGU_ABI_QUEUE_E_ID;
--	sp_stage->frames.out_vf.buf_attr.buf_type =
--					IMGU_ABI_BUFFER_TYPE_VF_OUTPUT_FRAME;
--
--	sp_stage->frames.s3a_buf.buf_src.queue_id = IMGU_ABI_QUEUE_F_ID;
--	sp_stage->frames.s3a_buf.buf_type = IMGU_ABI_BUFFER_TYPE_3A_STATISTICS;
--
--	sp_stage->frames.dvs_buf.buf_src.queue_id = IMGU_ABI_QUEUE_G_ID;
--	sp_stage->frames.dvs_buf.buf_type = IMGU_ABI_BUFFER_TYPE_DIS_STATISTICS;
--
--	sp_stage->dvs_envelope.width = css_pipe->rect[IPU3_CSS_RECT_ENVELOPE].width;
-+
-+	frame_sp = &frames_sp->in;
-+	frame_sp->info.res.width	= css_queue_in->fmt.mpix.width;
-+	frame_sp->info.res.height	= css_queue_in->fmt.mpix.height;
-+	frame_sp->info.padded_width	= css_queue_in->width_pad;
-+	frame_sp->info.format		= css_queue_in->css_fmt->frame_format;
-+	frame_sp->info.raw_bit_depth	= css_queue_in->css_fmt->bit_depth;
-+	frame_sp->info.raw_bayer_order	= css_queue_in->css_fmt->bayer_order;
-+	frame_sp->info.raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+	frame_sp->buf_attr.buf_src.queue_id = IMGU_ABI_QUEUE_C_ID;
-+	frame_sp->buf_attr.buf_type	= IMGU_ABI_BUFFER_TYPE_INPUT_FRAME;
-+
-+	frame_sp = &frames_sp->out[0];
-+	frame_sp->info.res.width	= css_queue_out->fmt.mpix.width;
-+	frame_sp->info.res.height	= css_queue_out->fmt.mpix.height;
-+	frame_sp->info.padded_width	= css_queue_out->width_pad;
-+	frame_sp->info.format		= css_queue_out->css_fmt->frame_format;
-+	frame_sp->info.raw_bit_depth	= css_queue_out->css_fmt->bit_depth;
-+	frame_sp->info.raw_bayer_order	= css_queue_out->css_fmt->bayer_order;
-+	frame_sp->info.raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+	frame_sp->planes.nv.uv.offset	= css_queue_out->width_pad *
-+					  css_queue_out->fmt.mpix.height;
-+	frame_sp->buf_attr.buf_src.queue_id = IMGU_ABI_QUEUE_D_ID;
-+	frame_sp->buf_attr.buf_type	= IMGU_ABI_BUFFER_TYPE_OUTPUT_FRAME;
-+
-+	frame_sp = &frames_sp->out[1];
-+	frame_sp->buf_attr.buf_src.queue_id = IMGU_ABI_QUEUE_EVENT_ID;
-+
-+	frame_sp_info = &frames_sp->internal_frame_info;
-+	frame_sp_info->res.width = css_pipe->rect[IPU3_CSS_RECT_BDS].width;
-+	frame_sp_info->res.height = css_pipe->rect[IPU3_CSS_RECT_BDS].height;
-+	frame_sp_info->padded_width	= bds_width_pad;
-+	frame_sp_info->format		= css_queue_out->css_fmt->frame_format;
-+	frame_sp_info->raw_bit_depth	= css_queue_out->css_fmt->bit_depth;
-+	frame_sp_info->raw_bayer_order	= css_queue_out->css_fmt->bayer_order;
-+	frame_sp_info->raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+
-+	frame_sp = &frames_sp->out_vf;
-+	frame_sp->info.res.width	= css_queue_vf->fmt.mpix.width;
-+	frame_sp->info.res.height	= css_queue_vf->fmt.mpix.height;
-+	frame_sp->info.padded_width	= css_queue_vf->width_pad;
-+	frame_sp->info.format		= css_queue_vf->css_fmt->frame_format;
-+	frame_sp->info.raw_bit_depth	= css_queue_vf->css_fmt->bit_depth;
-+	frame_sp->info.raw_bayer_order	= css_queue_vf->css_fmt->bayer_order;
-+	frame_sp->info.raw_type		= IMGU_ABI_RAW_TYPE_BAYER;
-+	frame_sp->planes.yuv.u.offset	= css_queue_vf->width_pad *
-+					  css_queue_vf->fmt.mpix.height;
-+	frame_sp->planes.yuv.v.offset	= css_queue_vf->width_pad *
-+					  css_queue_vf->fmt.mpix.height * 5 / 4;
-+	frame_sp->buf_attr.buf_src.queue_id = IMGU_ABI_QUEUE_E_ID;
-+	frame_sp->buf_attr.buf_type	= IMGU_ABI_BUFFER_TYPE_VF_OUTPUT_FRAME;
-+
-+	frames_sp->s3a_buf.buf_src.queue_id = IMGU_ABI_QUEUE_F_ID;
-+	frames_sp->s3a_buf.buf_type	= IMGU_ABI_BUFFER_TYPE_3A_STATISTICS;
-+
-+	frames_sp->dvs_buf.buf_src.queue_id = IMGU_ABI_QUEUE_G_ID;
-+	frames_sp->dvs_buf.buf_type	= IMGU_ABI_BUFFER_TYPE_DIS_STATISTICS;
-+
-+	sp_stage->dvs_envelope.width =
-+				css_pipe->rect[IPU3_CSS_RECT_ENVELOPE].width;
- 	sp_stage->dvs_envelope.height =
- 				css_pipe->rect[IPU3_CSS_RECT_ENVELOPE].height;
- 
+ /**
+  * gen_pool_free - free allocated special memory back to the pool
 -- 
-2.7.4
+2.21.0
 
