@@ -2,110 +2,82 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B20C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CE5C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B55E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503E82133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 16:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561479664;
+	bh=kq0ajRiki1iEP/Fh8o1U8wAY2tObmS5WYdbp1gbsIDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JvSeuJ7yCZqA1br3V5Uucit4rbs7VfwK2xMZK0m1aGjzEwjfpsMYCGj04CTse3f/3
+	 J9oRO+8sRyjnEyJY+NuJh1z49/aH1uiPhC5iBlJc9FP4AKjjD7dNFeC5iA/AWHpV4n
+	 Esutx/bXUUgv/miV4ZN7lypl6a3VWD1FMOyRpakg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfFYQSm (ORCPT
+        id S1728233AbfFYQVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 12:18:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:44832 "EHLO foss.arm.com"
+        Tue, 25 Jun 2019 12:21:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfFYQSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 12:18:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D8ACED1;
-        Tue, 25 Jun 2019 09:18:40 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96EB73F718;
-        Tue, 25 Jun 2019 09:18:37 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de,
-        linux@armlinux.org.uk, ralf@linux-mips.org, paul.burton@mips.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de, salyzyn@android.com,
-        pcc@google.com, shuah@kernel.org, 0x7f454c46@gmail.com,
-        linux@rasmusvillemoes.dk, huw@codeweavers.com,
-        sthotton@marvell.com, andre.przywara@arm.com
-Subject: [PATCH 3/3] arm64: compat: Fix __arch_get_hw_counter() implementation
-Date:   Tue, 25 Jun 2019 17:18:04 +0100
-Message-Id: <20190625161804.38713-3-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190625161804.38713-1-vincenzo.frascino@arm.com>
-References: <20190624133607.GI29497@fuggles.cambridge.arm.com>
- <20190625161804.38713-1-vincenzo.frascino@arm.com>
+        id S1726420AbfFYQVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 12:21:02 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FCC42080C;
+        Tue, 25 Jun 2019 16:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561479661;
+        bh=kq0ajRiki1iEP/Fh8o1U8wAY2tObmS5WYdbp1gbsIDQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z91I0SzgIAuPl6foiMg7uxG1ChZfikxG+aGXGWYF18ipeY3F3fK8LtwHHSxnNK1pq
+         kempM5Q+Akauoz1y0WmUMqByouzKgIXEnRIKaG+SiO4yoU0X8Ei8m566uN4zCc7k2U
+         tilTobk11SlKK+1A6Eu9yMUGFZwWkWXgrm5E2MZY=
+Date:   Tue, 25 Jun 2019 18:20:59 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Message-ID: <20190625162058.GB23880@lenoir>
+References: <20190621175027.GA23260@linux.ibm.com>
+ <20190621234602.GA16286@linux.ibm.com>
+ <20190624231222.GA17497@lerouge>
+ <20190624234422.GP26519@linux.ibm.com>
+ <20190625004300.GB17497@lerouge>
+ <20190625075139.GT3436@hirez.programming.kicks-ass.net>
+ <20190625122514.GA23880@lenoir>
+ <20190625135430.GW26519@linux.ibm.com>
+ <20190625140538.GC3419@hirez.programming.kicks-ass.net>
+ <20190625141624.GX26519@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625141624.GX26519@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide the following fixes for the __arch_get_hw_counter()
-implementation on arm64:
-- Fallback on syscall when an unstable counter is detected.
-- Introduce isb()s before and after the counter read to avoid
-speculation of the counter value and of the seq lock
-respectively.
-The second isb() is a temporary solution that will be revisited
-in 5.3-rc1.
+On Tue, Jun 25, 2019 at 07:16:24AM -0700, Paul E. McKenney wrote:
+> On Tue, Jun 25, 2019 at 04:05:38PM +0200, Peter Zijlstra wrote:
+> > On Tue, Jun 25, 2019 at 06:54:30AM -0700, Paul E. McKenney wrote:
+> > > And it allows dispensing with the initialization.  How about like
+> > > the following?
+> > 
+> > Looks good to me!
+> 
+> Limited rcutorture testing looking good thus far.  Here is hoping!
+> 
+> Frederic, you OK with this approach?
 
-These fixes restore the semantics that __arch_counter_get_cntvct()
-had on arm64.
+Yep, all good!
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- .../include/asm/vdso/compat_gettimeofday.h     | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index 93dbd935b66d..f4812777f5c5 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -12,6 +12,8 @@
- 
- #include <asm/vdso/compat_barrier.h>
- 
-+#define __VDSO_USE_SYSCALL		ULLONG_MAX
-+
- #define VDSO_HAS_CLOCK_GETRES		1
- 
- static __always_inline
-@@ -74,8 +76,24 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
- {
- 	u64 res;
- 
-+	/*
-+	 * clock_mode == 0 implies that vDSO are enabled otherwise
-+	 * fallback on syscall.
-+	 */
-+	if (clock_mode)
-+		return __VDSO_USE_SYSCALL;
-+
-+	/*
-+	 * This isb() is required to prevent that the counter value
-+	 * is speculated.
-+	 */
- 	isb();
- 	asm volatile("mrrc p15, 1, %Q0, %R0, c14" : "=r" (res));
-+	/*
-+	 * This isb() is required to prevent that the seq lock is
-+	 * speculated.
-+	 */
-+	isb();
- 
- 	return res;
- }
--- 
-2.22.0
-
+Thanks!
