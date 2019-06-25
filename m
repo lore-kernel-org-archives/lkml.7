@@ -7,61 +7,60 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A5CC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED07C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A158D21655
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6193E215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:22:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="sF3N1JA6"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aDL8j3hV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbfFYIVt (ORCPT
+        id S1730093AbfFYIWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:21:49 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33575 "EHLO
+        Tue, 25 Jun 2019 04:22:20 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42505 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfFYIVs (ORCPT
+        with ESMTP id S1727338AbfFYIWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:21:48 -0400
+        Tue, 25 Jun 2019 04:22:19 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8JtMn3527010
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8KiIH3527167
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:19:55 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8JtMn3527010
+        Tue, 25 Jun 2019 01:20:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8KiIH3527167
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561450796;
-        bh=vnj76vv/pJNUD1nlr2Y4IkmpO8r8t16xgdTjn6otvew=;
+        s=2019061801; t=1561450845;
+        bh=HmWxbipk7wybSkq5o0iwtqlTHYXcd8O5ZYQUdvJbSZw=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=sF3N1JA65VimiPFKQF6WMHdhKnGFlMGJXT5TVMwTZ5BD6hJas9ePSCmOosFQ4Ds1A
-         JESQTkDABGQ35/5QE223jBQtFvfmCTLWVKnebTAIs/LJoOqZyq6weqxqpYDFTjw+51
-         j+O/cJO7K90VCtX0JaDEoPYaAgjid2916xqpR9T2apNTxudbfV1zom16hd0Hqg1rDT
-         TCYZAyObh/+KMkvuX2TNtEPHMc9rGNt6FSgLySaxOau4LuuobfgSyoEd/uNg0VrQCe
-         qPHz9c3RPGFK6kP+8/huGTPAOL3Vx7o/Je/G5NS0QvlU4UhNPVJVLgrTgsAtd+vcLt
-         OZwLIx8sBrgKw==
+        b=aDL8j3hV37i3fqC1pyjBMiiN1n+rhkDwOAohYlFFjkTAKxhl5syn6ipV3qZekJEqI
+         qQATfE0/WyrCmh+mLQuUrbRetNI4wvPqBCZPko1JZsEIDRVKUltx7H6JDiv/cBoKTk
+         0yVrjUdkRXWvK5erSRqP8gEGrHjP83/vX+KZsaOD2qXrRS2UN13eippxsRWMcIEAHY
+         EmJwQSwtASWKkYnQmhBq2FXoPomvPxN50fk4RcdWl+zBl4kRmjI8Tvyqegph92/wP2
+         wxptnI8MAXVKzOV6KrINRP1nJoSHeykrdxgyiOiOwM3P+yQYC0D1DlrAc9gVUXZQWT
+         xny9wFygtalpw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8Jtv73527007;
-        Tue, 25 Jun 2019 01:19:55 -0700
-Date:   Tue, 25 Jun 2019 01:19:55 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8Ki5m3527164;
+        Tue, 25 Jun 2019 01:20:44 -0700
+Date:   Tue, 25 Jun 2019 01:20:44 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-e321d02db87af7840da29ef833a2a71fc0eab198@git.kernel.org>
-Cc:     eranian@google.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, acme@redhat.com, jolsa@redhat.com,
-        kan.liang@linux.intel.com, tglx@linutronix.de, hpa@zytor.com,
-        vincent.weaver@maine.edu, alexander.shishkin@linux.intel.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org
-Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org,
-          alexander.shishkin@linux.intel.com, vincent.weaver@maine.edu,
-          peterz@infradead.org, mingo@kernel.org,
-          torvalds@linux-foundation.org, eranian@google.com,
-          kan.liang@linux.intel.com, acme@redhat.com, jolsa@redhat.com,
-          tglx@linutronix.de
-In-Reply-To: <1559081314-9714-1-git-send-email-kan.liang@linux.intel.com>
-References: <1559081314-9714-1-git-send-email-kan.liang@linux.intel.com>
+Message-ID: <tip-90d424915ab6550826d297fd62df8ee255345b95@git.kernel.org>
+Cc:     peterz@infradead.org, acme@redhat.com, jolsa@redhat.com,
+        kan.liang@linux.intel.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        tglx@linutronix.de, vincent.weaver@maine.edu,
+        alexander.shishkin@linux.intel.com, torvalds@linux-foundation.org,
+        hpa@zytor.com
+Reply-To: acme@redhat.com, jolsa@redhat.com, peterz@infradead.org,
+          tglx@linutronix.de, vincent.weaver@maine.edu, eranian@google.com,
+          hpa@zytor.com, torvalds@linux-foundation.org,
+          alexander.shishkin@linux.intel.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, kan.liang@linux.intel.com
+In-Reply-To: <1559081314-9714-2-git-send-email-kan.liang@linux.intel.com>
+References: <1559081314-9714-2-git-send-email-kan.liang@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf/x86: Disable extended registers for
- non-supported PMUs
-Git-Commit-ID: e321d02db87af7840da29ef833a2a71fc0eab198
+Subject: [tip:perf/urgent] perf/x86/regs: Check reserved bits
+Git-Commit-ID: 90d424915ab6550826d297fd62df8ee255345b95
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,54 +74,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e321d02db87af7840da29ef833a2a71fc0eab198
-Gitweb:     https://git.kernel.org/tip/e321d02db87af7840da29ef833a2a71fc0eab198
+Commit-ID:  90d424915ab6550826d297fd62df8ee255345b95
+Gitweb:     https://git.kernel.org/tip/90d424915ab6550826d297fd62df8ee255345b95
 Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Tue, 28 May 2019 15:08:30 -0700
+AuthorDate: Tue, 28 May 2019 15:08:31 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 24 Jun 2019 19:19:23 +0200
+CommitDate: Mon, 24 Jun 2019 19:19:24 +0200
 
-perf/x86: Disable extended registers for non-supported PMUs
+perf/x86/regs: Check reserved bits
 
-The perf fuzzer caused Skylake machine to crash:
+The perf fuzzer triggers a warning which map to:
 
-[ 9680.085831] Call Trace:
-[ 9680.088301]  <IRQ>
-[ 9680.090363]  perf_output_sample_regs+0x43/0xa0
-[ 9680.094928]  perf_output_sample+0x3aa/0x7a0
-[ 9680.099181]  perf_event_output_forward+0x53/0x80
-[ 9680.103917]  __perf_event_overflow+0x52/0xf0
-[ 9680.108266]  ? perf_trace_run_bpf_submit+0xc0/0xc0
-[ 9680.113108]  perf_swevent_hrtimer+0xe2/0x150
-[ 9680.117475]  ? check_preempt_wakeup+0x181/0x230
-[ 9680.122091]  ? check_preempt_curr+0x62/0x90
-[ 9680.126361]  ? ttwu_do_wakeup+0x19/0x140
-[ 9680.130355]  ? try_to_wake_up+0x54/0x460
-[ 9680.134366]  ? reweight_entity+0x15b/0x1a0
-[ 9680.138559]  ? __queue_work+0x103/0x3f0
-[ 9680.142472]  ? update_dl_rq_load_avg+0x1cd/0x270
-[ 9680.147194]  ? timerqueue_del+0x1e/0x40
-[ 9680.151092]  ? __remove_hrtimer+0x35/0x70
-[ 9680.155191]  __hrtimer_run_queues+0x100/0x280
-[ 9680.159658]  hrtimer_interrupt+0x100/0x220
-[ 9680.163835]  smp_apic_timer_interrupt+0x6a/0x140
-[ 9680.168555]  apic_timer_interrupt+0xf/0x20
-[ 9680.172756]  </IRQ>
+        if (WARN_ON_ONCE(idx >= ARRAY_SIZE(pt_regs_offset)))
+                return 0;
 
-The XMM registers can only be collected by PEBS hardware events on the
-platforms with PEBS baseline support, e.g. Icelake, not software/probe
-events.
+The bits between XMM registers and generic registers are reserved.
+But perf_reg_validate() doesn't check these bits.
 
-Add capabilities flag PERF_PMU_CAP_EXTENDED_REGS to indicate the PMU
-which support extended registers. For X86, the extended registers are
-XMM registers.
+Add PERF_REG_X86_RESERVED for reserved bits on X86.
+Check the reserved bits in perf_reg_validate().
 
-Add has_extended_regs() to check if extended registers are applied.
-
-The generic code define the mask of extended registers as 0 if arch
-headers haven't overridden it.
-
-Originally-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reported-by: Vince Weaver <vincent.weaver@maine.edu>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -134,113 +105,41 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Fixes: 878068ea270e ("perf/x86: Support outputting XMM registers")
-Link: https://lkml.kernel.org/r/1559081314-9714-1-git-send-email-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/1559081314-9714-2-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/intel/ds.c            |  1 +
- arch/x86/include/uapi/asm/perf_regs.h |  3 +++
- include/linux/perf_event.h            |  1 +
- include/linux/perf_regs.h             |  8 ++++++++
- kernel/events/core.c                  | 18 ++++++++++++++----
- 5 files changed, 27 insertions(+), 4 deletions(-)
+ arch/x86/kernel/perf_regs.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 7acc526b4ad2..6cb38ab02c8a 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2020,6 +2020,7 @@ void __init intel_ds_init(void)
- 					PERF_SAMPLE_TIME;
- 				x86_pmu.flags |= PMU_FL_PEBS_ALL;
- 				pebs_qual = "-baseline";
-+				x86_get_pmu()->capabilities |= PERF_PMU_CAP_EXTENDED_REGS;
- 			} else {
- 				/* Only basic record supported */
- 				x86_pmu.pebs_no_xmm_regs = 1;
-diff --git a/arch/x86/include/uapi/asm/perf_regs.h b/arch/x86/include/uapi/asm/perf_regs.h
-index ac67bbea10ca..7c9d2bb3833b 100644
---- a/arch/x86/include/uapi/asm/perf_regs.h
-+++ b/arch/x86/include/uapi/asm/perf_regs.h
-@@ -52,4 +52,7 @@ enum perf_event_x86_regs {
- 	/* These include both GPRs and XMMX registers */
- 	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
- };
-+
-+#define PERF_REG_EXTENDED_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
-+
- #endif /* _ASM_X86_PERF_REGS_H */
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 0ab99c7b652d..2bca72f3028b 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -241,6 +241,7 @@ struct perf_event;
- #define PERF_PMU_CAP_NO_INTERRUPT		0x01
- #define PERF_PMU_CAP_NO_NMI			0x02
- #define PERF_PMU_CAP_AUX_NO_SG			0x04
-+#define PERF_PMU_CAP_EXTENDED_REGS		0x08
- #define PERF_PMU_CAP_EXCLUSIVE			0x10
- #define PERF_PMU_CAP_ITRACE			0x20
- #define PERF_PMU_CAP_HETEROGENEOUS_CPUS		0x40
-diff --git a/include/linux/perf_regs.h b/include/linux/perf_regs.h
-index 476747456bca..2d12e97d5e7b 100644
---- a/include/linux/perf_regs.h
-+++ b/include/linux/perf_regs.h
-@@ -11,6 +11,11 @@ struct perf_regs {
- 
- #ifdef CONFIG_HAVE_PERF_REGS
- #include <asm/perf_regs.h>
-+
-+#ifndef PERF_REG_EXTENDED_MASK
-+#define PERF_REG_EXTENDED_MASK	0
-+#endif
-+
- u64 perf_reg_value(struct pt_regs *regs, int idx);
- int perf_reg_validate(u64 mask);
- u64 perf_reg_abi(struct task_struct *task);
-@@ -18,6 +23,9 @@ void perf_get_regs_user(struct perf_regs *regs_user,
- 			struct pt_regs *regs,
- 			struct pt_regs *regs_user_copy);
- #else
-+
-+#define PERF_REG_EXTENDED_MASK	0
-+
- static inline u64 perf_reg_value(struct pt_regs *regs, int idx)
- {
- 	return 0;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8d1c62df20a7..f85929ce13be 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10036,6 +10036,12 @@ void perf_pmu_unregister(struct pmu *pmu)
+diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
+index 07c30ee17425..bb7e1132290b 100644
+--- a/arch/x86/kernel/perf_regs.c
++++ b/arch/x86/kernel/perf_regs.c
+@@ -74,6 +74,9 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 	return regs_get_register(regs, pt_regs_offset[idx]);
  }
- EXPORT_SYMBOL_GPL(perf_pmu_unregister);
  
-+static inline bool has_extended_regs(struct perf_event *event)
-+{
-+	return (event->attr.sample_regs_user & PERF_REG_EXTENDED_MASK) ||
-+	       (event->attr.sample_regs_intr & PERF_REG_EXTENDED_MASK);
-+}
++#define PERF_REG_X86_RESERVED	(((1ULL << PERF_REG_X86_XMM0) - 1) & \
++				 ~((1ULL << PERF_REG_X86_MAX) - 1))
 +
- static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
+ #ifdef CONFIG_X86_32
+ #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_R8) | \
+ 		       (1ULL << PERF_REG_X86_R9) | \
+@@ -86,7 +89,7 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+ 
+ int perf_reg_validate(u64 mask)
  {
- 	struct perf_event_context *ctx = NULL;
-@@ -10067,12 +10073,16 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
- 		perf_event_ctx_unlock(event->group_leader, ctx);
+-	if (!mask || (mask & REG_NOSUPPORT))
++	if (!mask || (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED)))
+ 		return -EINVAL;
  
- 	if (!ret) {
-+		if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
-+		    has_extended_regs(event))
-+			ret = -EOPNOTSUPP;
-+
- 		if (pmu->capabilities & PERF_PMU_CAP_NO_EXCLUDE &&
--				event_has_any_exclude_flag(event)) {
--			if (event->destroy)
--				event->destroy(event);
-+		    event_has_any_exclude_flag(event))
- 			ret = -EINVAL;
--		}
-+
-+		if (ret && event->destroy)
-+			event->destroy(event);
- 	}
+ 	return 0;
+@@ -112,7 +115,7 @@ void perf_get_regs_user(struct perf_regs *regs_user,
  
- 	if (ret)
+ int perf_reg_validate(u64 mask)
+ {
+-	if (!mask || (mask & REG_NOSUPPORT))
++	if (!mask || (mask & (REG_NOSUPPORT | PERF_REG_X86_RESERVED)))
+ 		return -EINVAL;
+ 
+ 	return 0;
