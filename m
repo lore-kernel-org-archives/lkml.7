@@ -2,229 +2,180 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E64C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44529C48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36CD2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E8B2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="0XvBt1Fm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PIX/20a1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfFYUAf (ORCPT
+        id S1729365AbfFYUAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:00:35 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42532 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfFYUAe (ORCPT
+        Tue, 25 Jun 2019 16:00:48 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35979 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfFYUAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:00:34 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t28so17493100lje.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:00:32 -0700 (PDT)
+        Tue, 25 Jun 2019 16:00:48 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k21so28982983edq.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zCSCrKNhNFyn/M7NDXA6/GQVwFG9TAwMh2fCiMszEsw=;
-        b=0XvBt1FmYYhbOddB+TldxDZ9G2z64Ma9S9dzeXRx9kN20ce40ts5NlUZDnIRJ1vTuf
-         C1YDB3EsPRrICjWZ28zI5OS/bdowzsDZ6hqHaMcmZI2EP67O9YOKt8eHqMRNy6cgQEQi
-         ZYJUo4ZZyBX/Dxm3ddLB24GaU7Jy0p6sD5/AnLMR/k7nH/GMPDOeAMooD2JgexeYsLSg
-         QmB7oM2Z/rYY70RKG69JLQNFtgHgNrEHWinw4+u2ZtBJq8qaqOJtzWAZqlauErXXgC1F
-         bA4f64t2SWTqUTr7Uy6Lazd3tEkl2ycRR8uF7Fck5aOg4xGuM+BVy8IdDuHK+OtpEF30
-         UVlA==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XpssnUNoV7k9sQMHO8u9aDEFoNx7wYIClQf7/yQbUY0=;
+        b=PIX/20a13tlopYe5MjZtkxue6i24rmBvsP45Uiux0CQpbkmxtwGpmr/7eBjkm/2Axl
+         0aQ8usb3w2c2JOtuXgx4gF82Z1W19tko4V3qoPKi8HdA9PTi6VLZjiZp9BhBq89SYYD9
+         qVxpy44xV8uXY/jXVybR2J2JeSneJOQZ5zJ7E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zCSCrKNhNFyn/M7NDXA6/GQVwFG9TAwMh2fCiMszEsw=;
-        b=ItghdLo1r6UyEs44HuOkpiT+gy9EO/NsYHXP5RoKq7dz0YbGGoJjaMVr2GCXcuLWdM
-         Jt/UvcpFuI1ilmOL8874jvEfyoYR3GrSzHitCg42EWRb4fTSmpMSCJmJkJhrc4fQ86L9
-         czaSF3KI9xXoiASmN9v4vZziqZ0VA6YGvLRnNFsNbpND4ufQNk1eG3zbPPNTRmB9veRV
-         vq/8fnLAUqTNGIAr9tXqBOEh/vDkke31Izc4e0jUHoUZrHhjxPHupdW3dbH4R6XL7wbd
-         WY+irHg7AuHAF0g6x+Wq653Gv9GJrQj9seU+bNwxzD2KiakfgKfU/7BBZmDJuFh34PIX
-         OTPg==
-X-Gm-Message-State: APjAAAUCxlBIO5JzxbMsoPUKVF+5NXcErpxjobYWlkJ9CpVUKuth9Fpm
-        qYFAgfV8/m/2p6rc2prmGDtuwA==
-X-Google-Smtp-Source: APXvYqyZ2h29fiDFqLuoFeG/2A7hiunBkFu2FU2StBUIMI1OqlEYneEbE551ZrtL7yFZ0qsHbvkvsw==
-X-Received: by 2002:a2e:635d:: with SMTP id x90mr228438ljb.140.1561492832083;
-        Tue, 25 Jun 2019 13:00:32 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([213.87.155.24])
-        by smtp.gmail.com with ESMTPSA id j23sm2082075lfb.93.2019.06.25.13.00.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 13:00:31 -0700 (PDT)
-Subject: Re: [PATCH v8 3/5] mtd: Add support for HyperBus memory devices
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mtd@lists.infradead.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        devicetree@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tokunori Ikegami <ikegami.t@gmail.com>
-References: <20190625075746.10439-1-vigneshr@ti.com>
- <20190625075746.10439-4-vigneshr@ti.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <756e63a4-20cb-fd9e-6ec7-c2742a3d90e4@cogentembedded.com>
-Date:   Tue, 25 Jun 2019 23:00:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=XpssnUNoV7k9sQMHO8u9aDEFoNx7wYIClQf7/yQbUY0=;
+        b=BFnbsGpWrs3SXgRQEG5/z7OVmkYWKOQwK6/PTajYhQIvZq5sM4otYkELf2DsHFFnEc
+         CHMeqjsYUDrNpPoMjDqDCB/QkB38z+yCALOQEcQ67S6BUkpsltceaZMlYxbsZ1tl8Z8G
+         AGYcvormH1ypSD94/uR1iNBcSFOXOv4tx9Ll+hQ6AkfqSvpzar5SUHiii+HTXMsfUqiQ
+         cOfatkslvU1HOo0sU52HAnJeUmUKvDN5gZEZJgiF4JlW6lf1w8MQHFsBsYDwCFFn4AT4
+         a86zZh9k6cUtaGZOz9lDM47cQxQ08R5+wNflsc16xZFApkvH72TT/Z9Av4zAINEdAm/2
+         Lq6A==
+X-Gm-Message-State: APjAAAVzjAe7e2K7IQ/FNq9BFd6x7bdxxS2uIaBLVZxXhqu6W+zSJRs4
+        lkeJpyMBkcQH+wpH3ZMXcwxCb4uT0ic=
+X-Google-Smtp-Source: APXvYqyTG93tA0iWwTWOk0YKYXLBLmXwTvzv6iuPCZBZPgk9VTRMb9iAhySyAfex9vBXh+r0aKQJ/w==
+X-Received: by 2002:a17:906:facc:: with SMTP id lu12mr294752ejb.307.1561492845979;
+        Tue, 25 Jun 2019 13:00:45 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id ay16sm304756ejb.2.2019.06.25.13.00.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 13:00:45 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 22:00:42 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Robert Beckett <bob.beckett@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] drm/vblank: warn on sending stale event
+Message-ID: <20190625200042.GC12905@phenom.ffwll.local>
+Mail-Followup-To: Robert Beckett <bob.beckett@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1561483965.git.bob.beckett@collabora.com>
+ <a21034afa30246f31daa16e74a0772377a4791ef.1561483965.git.bob.beckett@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625075746.10439-4-vigneshr@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a21034afa30246f31daa16e74a0772377a4791ef.1561483965.git.bob.beckett@collabora.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Tue, Jun 25, 2019 at 06:59:12PM +0100, Robert Beckett wrote:
+> Warn when about to send stale vblank info and add advice to
+> documentation on how to avoid.
+> 
+> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+> ---
+>  drivers/gpu/drm/drm_vblank.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+> index 603ab105125d..7dabb2bdb733 100644
+> --- a/drivers/gpu/drm/drm_vblank.c
+> +++ b/drivers/gpu/drm/drm_vblank.c
+> @@ -918,6 +918,19 @@ EXPORT_SYMBOL(drm_crtc_arm_vblank_event);
+>   *
+>   * See drm_crtc_arm_vblank_event() for a helper which can be used in certain
+>   * situation, especially to send out events for atomic commit operations.
+> + *
+> + * Care should be taken to avoid stale timestamps. If:
+> + *   - your driver has vblank support (i.e. dev->num_crtcs > 0)
+> + *   - the vblank irq is off (i.e. no one called drm_crtc_vblank_get)
 
-On 06/25/2019 10:57 AM, Vignesh Raghavendra wrote:
+drm_crtc_vblank_get() so it becomes a neat hyperlink.
 
-> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
-> Bus interface between a host system master and one or more slave
-> interfaces. HyperBus is used to connect microprocessor, microcontroller,
-> or ASIC devices with random access NOR flash memory (called HyperFlash)
-> or self refresh DRAM (called HyperRAM).
-> 
-> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
-> signal and either Single-ended clock(3.0V parts) or Differential clock
-> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
-> At bus level, it follows a separate protocol described in HyperBus
-> specification[1].
-> 
-> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
-> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
-> its equivalent to x16 parallel NOR flash with respect to bits per clock
-> cycle. But HyperBus operates at >166MHz frequencies.
-> HyperRAM provides direct random read/write access to flash memory
-> array.
-> 
-> But, HyperBus memory controllers seem to abstract implementation details
-> and expose a simple MMIO interface to access connected flash.
-> 
-> Add support for registering HyperFlash devices with MTD framework. MTD
-> maps framework along with CFI chip support framework are used to support
-> communicating with flash.
-> 
-> Framework is modelled along the lines of spi-nor framework. HyperBus
-> memory controller (HBMC) drivers calls hyperbus_register_device() to
-> register a single HyperFlash device. HyperFlash core parses MMIO access
-> information from DT, sets up the map_info struct, probes CFI flash and
-> registers it with MTD framework.
-> 
-> Some HBMC masters need calibration/training sequence[3] to be carried
-> out, in order for DLL inside the controller to lock, by reading a known
-> string/pattern. This is done by repeatedly reading CFI Query
-> Identification String. Calibration needs to be done before trying to detect
-> flash as part of CFI flash probe.
-> 
-> HyperRAM is not supported at the moment.
-> 
-> HyperBus specification can be found at[1]
-> HyperFlash datasheet can be found at[2]
-> 
-> [1] https://www.cypress.com/file/213356/download
-> [2] https://www.cypress.com/file/213346/download
-> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->     Table 12-5741. HyperFlash Access Sequence
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[...]
-> diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-> index 806287e80e84..62d649a959e2 100644
-> --- a/drivers/mtd/Makefile
-> +++ b/drivers/mtd/Makefile
-> @@ -34,3 +34,4 @@ obj-y		+= chips/ lpddr/ maps/ devices/ nand/ tests/
+> + *   - from the vblank code's pov the pipe is still running (i.e. not
+> + *     in-between a drm_crtc_vblank_off()/on() pair)
+
+Not sure the above will lead to great markup, maybe spell out the
+drm_crtc_vblank_on() and maybe make it a bit clearer like "i.e. not after
+the call to drm_crtc_vblank_off() but before the next call to
+drm_crtc_vblank_on()" so it's clear which said of this pair we're talking
+about.
+
+> + * If all of these conditions hold then drm_crtc_send_vblank_event is
+
+style nit: the enumeration is one sentence (and and oxford comman missing
+but whatever), but you don't continue it here. Also, does the enumeration
+look pretty in the htmldocs output?
+
+> + * going to give you a garbage timestamp and and sequence number (the last
+> + * recorded before the irq was disabled). If you call drm_crtc_vblank_get/put
+> + * around it, or after vblank_off, then either of those will have rolled things
+> + * forward for you.
+
+Again pls fix the markup so all the function reference stick out and work.
+
+> + * So, drivers should call drm_crtc_vblank_off() before this function in their
+> + * crtc atomic_disable handlers.
+
+Imo this sentence here is needed but a bit confusing, and we have it
+documented already in the atomic_disable hook.
+
+Other option would be to list all the places where a driver might want to
+call this and how they could get it wrong, which imo doesn't make sense.
+
+With the nits addressed:
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+>   */
+>  void drm_crtc_send_vblank_event(struct drm_crtc *crtc,
+>  				struct drm_pending_vblank_event *e)
+> @@ -925,8 +938,12 @@ void drm_crtc_send_vblank_event(struct drm_crtc *crtc,
+>  	struct drm_device *dev = crtc->dev;
+>  	u64 seq;
+>  	unsigned int pipe = drm_crtc_index(crtc);
+> +	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+>  	ktime_t now;
 >  
->  obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor/
->  obj-$(CONFIG_MTD_UBI)		+= ubi/
-> +obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus/
-> diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
-> new file mode 100644
-> index 000000000000..98147e28caa0
-> --- /dev/null
-> +++ b/drivers/mtd/hyperbus/Kconfig
-> @@ -0,0 +1,11 @@
-> +menuconfig MTD_HYPERBUS
-> +	tristate "HyperBus support"
-> +	select MTD_CFI
-> +	select MTD_MAP_BANK_WIDTH_2
-> +	select MTD_CFI_AMDSTD
-> +	select MTD_COMPLEX_MAPPINGS
-> +	help
-> +	  This is the framework for the HyperBus which can be used by
-> +	  the HyperBus Controller driver to communicate with
-> +	  HyperFlash. See Cypress HyperBus specification for more
-> +	  details
-> diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
-> new file mode 100644
-> index 000000000000..ca61dedd730d
-> --- /dev/null
-> +++ b/drivers/mtd/hyperbus/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> +	WARN_ONCE(dev->num_crtcs > 0 && !vblank->enabled && !vblank->inmodeset,
+> +		  "sending stale vblank info\n");
 > +
-> +obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
-> diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
-> new file mode 100644
-> index 000000000000..63a9e64895bc
-> --- /dev/null
-> +++ b/drivers/mtd/hyperbus/hyperbus-core.c
-> @@ -0,0 +1,154 @@
-[...]
-> +int hyperbus_register_device(struct hyperbus_device *hbdev)
-> +{
-[...]
-> +	hbdev->mtd = do_map_probe("cfi_probe", map);
-> +	if (!hbdev->mtd) {
-> +		dev_err(dev, "probing of hyperbus device failed\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	hbdev->mtd->dev.parent = dev;
-> +	mtd_set_of_node(hbdev->mtd, np);
-> +
-> +	ret = mtd_device_register(hbdev->mtd, NULL, 0);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register mtd device\n");
-> +		map_destroy(hbdev->mtd);
-> +		return ret;
-> +	}
-> +	hbdev->registered = true;
+>  	if (dev->num_crtcs > 0) {
+>  		seq = drm_vblank_count_and_time(dev, pipe, &now);
+>  	} else {
+> -- 
+> 2.18.0
+> 
 
-   I doubt that you actually need this flag...
-
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(hyperbus_register_device);
-> +
-> +int hyperbus_unregister_device(struct hyperbus_device *hbdev)
-> +{
-> +	int ret = 0;
-> +
-> +	if (hbdev && hbdev->mtd && hbdev->registered) {
-
-    ... as you missed clearing that 'registered' flag. 
-
-> +		ret = mtd_device_unregister(hbdev->mtd);
-> +		map_destroy(hbdev->mtd);
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(hyperbus_unregister_device);
-[...]
-
-MBR, Sergei
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
