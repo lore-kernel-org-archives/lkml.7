@@ -2,268 +2,177 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A50C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAB2C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D03920659
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A2920659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="Zl6qnbqt"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="D8+O52UC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbfFYHuH (ORCPT
+        id S1729745AbfFYHuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:50:07 -0400
-Received: from mail-eopbgr140105.outbound.protection.outlook.com ([40.107.14.105]:31334
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729493AbfFYHuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:50:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KxFY9FFtPp2Oc06t8dNQ4Sc83o+ecTZNPFSLh8StZao=;
- b=Zl6qnbqtlGZInjf42AE5UyVNbPxgT7Cl6vdWW6kOpS+L9Ol5wOcxSpPINd/gyrNHnmBzGDZibOsK4H7RG0bcg3Z99go3kVmXpYH1tyNC9Mq+3q80jewixoI6RlfBkob0HXBBUG8uf4yeW9ng2stIbJD3sHIay0Tj0EELaIf58Qc=
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.16) by
- AM6PR05MB5352.eurprd05.prod.outlook.com (20.177.197.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Tue, 25 Jun 2019 07:49:56 +0000
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::2c23:fdba:9ce4:7397]) by AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::2c23:fdba:9ce4:7397%7]) with mapi id 15.20.2008.007; Tue, 25 Jun 2019
- 07:49:56 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH v2 6/6] ASoC: sgtl5000: Improve VAG power and mute control
-Thread-Topic: [PATCH v2 6/6] ASoC: sgtl5000: Improve VAG power and mute
- control
-Thread-Index: AQHVKyqUql0vzju0UkSHkCtX1cvVEg==
-Date:   Tue, 25 Jun 2019 07:49:55 +0000
-Message-ID: <20190625074937.2621-7-oleksandr.suvorov@toradex.com>
-References: <20190625074937.2621-1-oleksandr.suvorov@toradex.com>
-In-Reply-To: <20190625074937.2621-1-oleksandr.suvorov@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR06CA0080.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::21) To AM6PR05MB6535.eurprd05.prod.outlook.com
- (2603:10a6:20b:71::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [194.105.145.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db2b49b0-66a4-4cf3-3fe8-08d6f941b6ee
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR05MB5352;
-x-ms-traffictypediagnostic: AM6PR05MB5352:
-x-microsoft-antispam-prvs: <AM6PR05MB53522AAAD2C358DDCCC5F169F9E30@AM6PR05MB5352.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(136003)(39850400004)(376002)(199004)(189003)(26005)(5660300002)(1076003)(54906003)(71190400001)(1411001)(71200400001)(2906002)(36756003)(305945005)(86362001)(53936002)(6486002)(8676002)(478600001)(6512007)(25786009)(50226002)(14454004)(6436002)(6116002)(3846002)(7736002)(316002)(68736007)(44832011)(486006)(476003)(2616005)(66556008)(81166006)(4326008)(6916009)(256004)(66476007)(81156014)(64756008)(66446008)(8936002)(66946007)(73956011)(14444005)(386003)(102836004)(6506007)(52116002)(11346002)(446003)(76176011)(99286004)(186003)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB5352;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: fh69sYwzs+ldoR7MrDlolLqEk4Csuq88k98xfSJxGnriMEHZ61qv5Iv1VxheREF0OiuEnf1gurPSuFYe5wgEfWFPVY4UTLv0+NGVLzTkXEH9kVyGL6C0DYRQPzOgIEDLqYN6PfNBJjDl0pIpmYuhvR92mqmDA+8lNT/iDcDhL2aJ27gVMH342/KOXTBScR6L2IBu+Qjm2fVxNkDtiE8RPmDW07+6A3aUfWi6WE3nvaW0/BpG/C1v+D6PU2rP/Af2pbdJxM8/4790AEgFYGtPJcjceKZ+61R60CTBRLApw6ohdShNzovZxyTcM4VQUVm9zj/nKEV0hvd77Eld3zXDBQ44S/+grp5AV80TiyQ1WIDCLwnhyBW+Lv1nqliGGCJiQWxDiVxfG2XIx2gHq1ZnGKk7xZC8eO2uX0T6yHLfc9I=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 25 Jun 2019 03:50:18 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52577 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfFYHuS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:50:18 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P7nlGg3516722
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 25 Jun 2019 00:49:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P7nlGg3516722
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561448988;
+        bh=LWaaVbK9bQYGi9SMe6yD2Id3Gl9UBssPgCcMKzM+gUg=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=D8+O52UCEGKUsWKNEvzi5OyBE2GyaqqXxYKOZbvJ9ekMUp3PTMnpm1K33X3P2ppy6
+         3+c6nnNRmZrO0UHIpPfcJaxdLCEZV0T32rGctykCKkut0B2u6hPR1OXz72+GNk1yY9
+         jtiUd7cbsPQsUfGhUcqmqCEkk/alPvScTMJwZWgWKK0Adr2c1kzuMpR/ODx+9te3Tf
+         HNeVRVviNA/1u7XzyqdKDwMyhmiVkVUonPRz+xpbQvxnxnli2e56Tbdk0WKr0Ymj4a
+         uw0z6xNXrARIurHm0tWdwZqSGSmqcd0Gt3BEN5F9pNiiP8uACLJb9Xeqe1+E6S5pHF
+         FVtiA6CpG93FQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P7nl4H3516719;
+        Tue, 25 Jun 2019 00:49:47 -0700
+Date:   Tue, 25 Jun 2019 00:49:47 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Catalin Marinas <tipbot@zytor.com>
+Message-ID: <tip-b4b12aca00d509a233abd28990194628adcd71e6@git.kernel.org>
+Cc:     paul.burton@mips.com, will.deacon@arm.com, arnd@arndb.de,
+        salyzyn@android.com, linux@rasmusvillemoes.dk,
+        linux@armlinux.org.uk, tglx@linutronix.de,
+        vincenzo.frascino@arm.com, sthotton@marvell.com, hpa@zytor.com,
+        mingo@kernel.org, andre.przywara@arm.com, shuah@kernel.org,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        huw@codeweavers.com, daniel.lezcano@linaro.org,
+        0x7f454c46@gmail.com, ralf@linux-mips.org, pcc@google.com
+Reply-To: andre.przywara@arm.com, shuah@kernel.org,
+          catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+          huw@codeweavers.com, daniel.lezcano@linaro.org,
+          0x7f454c46@gmail.com, ralf@linux-mips.org, pcc@google.com,
+          paul.burton@mips.com, will.deacon@arm.com, arnd@arndb.de,
+          salyzyn@android.com, linux@rasmusvillemoes.dk,
+          linux@armlinux.org.uk, tglx@linutronix.de,
+          vincenzo.frascino@arm.com, sthotton@marvell.com, hpa@zytor.com,
+          mingo@kernel.org
+In-Reply-To: <20190624135812.GC29120@arrakis.emea.arm.com>
+References: <20190624135812.GC29120@arrakis.emea.arm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:timers/vdso] arm64: vdso: Remove unnecessary asm-offsets.c
+ definitions
+Git-Commit-ID: b4b12aca00d509a233abd28990194628adcd71e6
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db2b49b0-66a4-4cf3-3fe8-08d6f941b6ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 07:49:55.8760
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oleksandr.suvorov@toradex.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5352
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2hhbmdlIFZBRyBwb3dlciBvbi9vZmYgY29udHJvbCBhY2NvcmRpbmcgdG8gdGhlIGZvbGxvd2lu
-ZyBhbGdvcml0aG06DQotIHR1cm4gVkFHIHBvd2VyIE9OIG9uIHRoZSAxc3QgaW5jb21pbmcgZXZl
-bnQuDQotIGtlZXAgaXQgT04gaWYgdGhlcmUgaXMgYW55IGFjdGl2ZSBWQUcgY29uc3VtZXIgKEFE
-Qy9EQUMvSFAvTGluZS1JbikuDQotIHR1cm4gVkFHIHBvd2VyIE9GRiB3aGVuIHRoZXJlIGlzIHRo
-ZSBsYXRlc3QgY29uc3VtZXIncyBwcmUtZG93biBldmVudA0KICBjb21lLg0KLSBhbHdheXMgZGVs
-YXkgYWZ0ZXIgVkFHIHBvd2VyIE9GRiB0byBhdm9pZCBwb3AuDQotIGRlbGF5IGFmdGVyIFZBRyBw
-b3dlciBPTiBpZiB0aGUgaW5pdGlhdGl2ZSBjb25zdW1lciBpcyBMaW5lLUluLCB0aGlzDQogIHBy
-ZXZlbnRzIHBvcCBkdXJpbmcgbGluZS1pbiBtdXhpbmcuDQoNCkFsc28sIGFjY29yZGluZyB0byB0
-aGUgbWFudWFsLCB0byBhdm9pZCBhbnkgcG9wcy9jbGlja3MsDQp0aGUgb3V0cHV0cyBzaG91bGQg
-YmUgbXV0ZWQgZHVyaW5nIGlucHV0L291dHB1dA0Kcm91dGluZyBjaGFuZ2VzLg0KDQpTaWduZWQt
-b2ZmLWJ5OiBPbGVrc2FuZHIgU3V2b3JvdiA8b2xla3NhbmRyLnN1dm9yb3ZAdG9yYWRleC5jb20+
-DQotLS0NCg0KIHNvdW5kL3NvYy9jb2RlY3Mvc2d0bDUwMDAuYyB8IDIyNyArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTk1IGluc2VydGlvbnMo
-KyksIDMyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvc291bmQvc29jL2NvZGVjcy9zZ3Rs
-NTAwMC5jIGIvc291bmQvc29jL2NvZGVjcy9zZ3RsNTAwMC5jDQppbmRleCBlZTFlNGJmNjEzMjI3
-Li5hY2ZiZDVjZGY5MzZlIDEwMDY0NA0KLS0tIGEvc291bmQvc29jL2NvZGVjcy9zZ3RsNTAwMC5j
-DQorKysgYi9zb3VuZC9zb2MvY29kZWNzL3NndGw1MDAwLmMNCkBAIC0zMSw2ICszMSwxMyBAQA0K
-ICNkZWZpbmUgU0dUTDUwMDBfREFQX1JFR19PRkZTRVQJMHgwMTAwDQogI2RlZmluZSBTR1RMNTAw
-MF9NQVhfUkVHX09GRlNFVAkweDAxM0ENCiANCisvKiBEZWxheSBmb3IgdGhlIFZBRyByYW1wIHVw
-ICovDQorI2RlZmluZSBTR1RMNTAwMF9WQUdfUE9XRVJVUF9ERUxBWSA1MDAgLyogbXMgKi8NCisv
-KiBEZWxheSBmb3IgdGhlIFZBRyByYW1wIGRvd24gKi8NCisjZGVmaW5lIFNHVEw1MDAwX1ZBR19Q
-T1dFUkRPV05fREVMQVkgNTAwIC8qIG1zICovDQorDQorI2RlZmluZSBTR1RMNTAwMF9PVVRQVVRT
-X01VVEUgKFNHVEw1MDAwX0hQX01VVEUgfCBTR1RMNTAwMF9MSU5FX09VVF9NVVRFKQ0KKw0KIC8q
-IGRlZmF1bHQgdmFsdWUgb2Ygc2d0bDUwMDAgcmVnaXN0ZXJzICovDQogc3RhdGljIGNvbnN0IHN0
-cnVjdCByZWdfZGVmYXVsdCBzZ3RsNTAwMF9yZWdfZGVmYXVsdHNbXSA9IHsNCiAJeyBTR1RMNTAw
-MF9DSElQX0RJR19QT1dFUiwJCTB4MDAwMCB9LA0KQEAgLTEyMyw2ICsxMzAsMTggQEAgZW51bSAg
-ew0KIAlJMlNfU0NMS19TVFJFTkdUSF9ISUdILA0KIH07DQogDQorZW51bSB7DQorCUhQX1BPV0VS
-X0VWRU5ULA0KKwlEQUNfUE9XRVJfRVZFTlQsDQorCUFEQ19QT1dFUl9FVkVOVA0KK307DQorDQor
-c3RydWN0IHNndGw1MDAwX211dGVfc3RhdGUgew0KKwl1MTYgaHBfZXZlbnQ7DQorCXUxNiBkYWNf
-ZXZlbnQ7DQorCXUxNiBhZGNfZXZlbnQ7DQorfTsNCisNCiAvKiBzZ3RsNTAwMCBwcml2YXRlIHN0
-cnVjdHVyZSBpbiBjb2RlYyAqLw0KIHN0cnVjdCBzZ3RsNTAwMF9wcml2IHsNCiAJaW50IHN5c2Ns
-azsJLyogc3lzY2xrIHJhdGUgKi8NCkBAIC0xMzcsOCArMTU2LDEwOSBAQCBzdHJ1Y3Qgc2d0bDUw
-MDBfcHJpdiB7DQogCXU4IG1pY2JpYXNfdm9sdGFnZTsNCiAJdTggbHJjbGtfc3RyZW5ndGg7DQog
-CXU4IHNjbGtfc3RyZW5ndGg7DQorCXN0cnVjdCBzZ3RsNTAwMF9tdXRlX3N0YXRlIG11dGVfc3Rh
-dGU7DQogfTsNCiANCitzdGF0aWMgaW5saW5lIGludCBocF9zZWxfaW5wdXQoc3RydWN0IHNuZF9z
-b2NfY29tcG9uZW50ICpjb21wb25lbnQpDQorew0KKwlyZXR1cm4gKHNuZF9zb2NfY29tcG9uZW50
-X3JlYWQzMihjb21wb25lbnQsIFNHVEw1MDAwX0NISVBfQU5BX0NUUkwpICYNCisJCVNHVEw1MDAw
-X0hQX1NFTF9NQVNLKSA+PiBTR1RMNTAwMF9IUF9TRUxfU0hJRlQ7DQorfQ0KKw0KK3N0YXRpYyBp
-bmxpbmUgdTE2IG11dGVfb3V0cHV0KHN0cnVjdCBzbmRfc29jX2NvbXBvbmVudCAqY29tcG9uZW50
-LA0KKwkJCSAgICAgIHUxNiBtdXRlX21hc2spDQorew0KKwl1MTYgbXV0ZV9yZWcgPSBzbmRfc29j
-X2NvbXBvbmVudF9yZWFkMzIoY29tcG9uZW50LA0KKwkJCQkJICAgICAgU0dUTDUwMDBfQ0hJUF9B
-TkFfQ1RSTCk7DQorDQorCXNuZF9zb2NfY29tcG9uZW50X3VwZGF0ZV9iaXRzKGNvbXBvbmVudCwg
-U0dUTDUwMDBfQ0hJUF9BTkFfQ1RSTCwNCisJCQkgICAgbXV0ZV9tYXNrLCBtdXRlX21hc2spOw0K
-KwlyZXR1cm4gbXV0ZV9yZWc7DQorfQ0KKw0KK3N0YXRpYyBpbmxpbmUgdm9pZCByZXN0b3JlX291
-dHB1dChzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVudCwNCisJCQkJICB1MTYgbXV0
-ZV9tYXNrLCB1MTYgbXV0ZV9yZWcpDQorew0KKwlzbmRfc29jX2NvbXBvbmVudF91cGRhdGVfYml0
-cyhjb21wb25lbnQsIFNHVEw1MDAwX0NISVBfQU5BX0NUUkwsDQorCQltdXRlX21hc2ssIG11dGVf
-cmVnKTsNCit9DQorDQorc3RhdGljIHZvaWQgdmFnX3Bvd2VyX29uKHN0cnVjdCBzbmRfc29jX2Nv
-bXBvbmVudCAqY29tcG9uZW50LCB1MzIgc291cmNlKQ0KK3sNCisJaWYgKHNuZF9zb2NfY29tcG9u
-ZW50X3JlYWQzMihjb21wb25lbnQsIFNHVEw1MDAwX0NISVBfQU5BX1BPV0VSKSAmDQorCSAgICBT
-R1RMNTAwMF9WQUdfUE9XRVJVUCkNCisJCXJldHVybjsNCisNCisJc25kX3NvY19jb21wb25lbnRf
-dXBkYXRlX2JpdHMoY29tcG9uZW50LCBTR1RMNTAwMF9DSElQX0FOQV9QT1dFUiwNCisJCQkgICAg
-U0dUTDUwMDBfVkFHX1BPV0VSVVAsIFNHVEw1MDAwX1ZBR19QT1dFUlVQKTsNCisNCisJLyogV2hl
-biBWQUcgcG93ZXJpbmcgb24gdG8gZ2V0IGxvY2FsIGxvb3AgZnJvbSBMaW5lLUluLCB0aGUgc2xl
-ZXANCisJICogaXMgcmVxdWlyZWQgdG8gYXZvaWQgbG91ZCBwb3AuDQorCSAqLw0KKwlpZiAoaHBf
-c2VsX2lucHV0KGNvbXBvbmVudCkgPT0gU0dUTDUwMDBfSFBfU0VMX0xJTkVfSU4gJiYNCisJICAg
-IHNvdXJjZSA9PSBIUF9QT1dFUl9FVkVOVCkNCisJCW1zbGVlcChTR1RMNTAwMF9WQUdfUE9XRVJV
-UF9ERUxBWSk7DQorfQ0KKw0KK3N0YXRpYyBpbnQgdmFnX3Bvd2VyX2NvbnN1bWVycyhzdHJ1Y3Qg
-c25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVudCwNCisJCQkgICAgICAgdTE2IGFuYV9wd3JfcmVn
-LCB1MzIgc291cmNlKQ0KK3sNCisJaW50IGNvbnN1bWVycyA9IDA7DQorDQorCS8qIGNvdW50IGRh
-Yy9hZGMgY29uc3VtZXJzIHVuY29uZGl0aW9uYWwgKi8NCisJaWYgKGFuYV9wd3JfcmVnICYgU0dU
-TDUwMDBfREFDX1BPV0VSVVApDQorCQljb25zdW1lcnMrKzsNCisJaWYgKGFuYV9wd3JfcmVnICYg
-U0dUTDUwMDBfQURDX1BPV0VSVVApDQorCQljb25zdW1lcnMrKzsNCisNCisJLyoNCisJICogSWYg
-dGhlIGV2ZW50IGNvbWVzIGZyb20gSFAgYW5kIExpbmUtSW4gaXMgc2VsZWN0ZWQsDQorCSAqIGN1
-cnJlbnQgYWN0aW9uIGlzICdEQUMgdG8gYmUgcG93ZXJlZCBkb3duJy4NCisJICogQXMgSFBfUE9X
-RVJVUCBpcyBub3Qgc2V0IHdoZW4gSFAgbXV4ZWQgdG8gbGluZS1pbiwNCisJICogd2UgbmVlZCB0
-byBrZWVwIFZBRyBwb3dlciBPTi4NCisJICovDQorCWlmIChzb3VyY2UgPT0gSFBfUE9XRVJfRVZF
-TlQpIHsNCisJCWlmIChocF9zZWxfaW5wdXQoY29tcG9uZW50KSA9PSBTR1RMNTAwMF9IUF9TRUxf
-TElORV9JTikNCisJCQljb25zdW1lcnMrKzsNCisJfSBlbHNlIHsNCisJCWlmIChhbmFfcHdyX3Jl
-ZyAmIFNHVEw1MDAwX0hQX1BPV0VSVVApDQorCQkJY29uc3VtZXJzKys7DQorCX0NCisNCisJcmV0
-dXJuIGNvbnN1bWVyczsNCit9DQorDQorc3RhdGljIHZvaWQgdmFnX3Bvd2VyX29mZihzdHJ1Y3Qg
-c25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVudCwgdTMyIHNvdXJjZSkNCit7DQorCXUxNiBhbmFf
-cHdyID0gc25kX3NvY19jb21wb25lbnRfcmVhZDMyKGNvbXBvbmVudCwNCisJCQkJCSAgICAgU0dU
-TDUwMDBfQ0hJUF9BTkFfUE9XRVIpOw0KKw0KKwlpZiAoIShhbmFfcHdyICYgU0dUTDUwMDBfVkFH
-X1BPV0VSVVApKQ0KKwkJcmV0dXJuOw0KKw0KKwkvKg0KKwkgKiBUaGlzIGZ1bmN0aW9uIGNhbGxz
-IHdoZW4gYW55IG9mIFZBRyBwb3dlciBjb25zdW1lcnMgaXMgZGlzYXBwZWFyaW5nLg0KKwkgKiBU
-aHVzLCBpZiB0aGVyZSBpcyBtb3JlIHRoYW4gb25lIGNvbnN1bWVyIGF0IHRoZSBtb21lbnQsIGFz
-IG1pbmltdW0NCisJICogb25lIGNvbnN1bWVyIHdpbGwgZGVmaW5pdGVseSBzdGF5IGFmdGVyIHRo
-ZSBlbmQgb2YgdGhlIGN1cnJlbnQNCisJICogZXZlbnQuDQorCSAqIERvbid0IGNsZWFyIFZBR19Q
-T1dFUlVQIGlmIDIgb3IgbW9yZSBjb25zdW1lcnMgb2YgVkFHIHByZXNlbnQ6DQorCSAqIC0gTElO
-RV9JTiAoZm9yIEhQIGV2ZW50cykgLyBIUCAoZm9yIERBQy9BREMgZXZlbnRzKQ0KKwkgKiAtIERB
-Qw0KKwkgKiAtIEFEQw0KKwkgKiAodGhlIGN1cnJlbnQgY29uc3VtZXIgaXMgZGlzYXBwZWFyaW5n
-IHJpZ2h0IG5vdykNCisJICovDQorCWlmICh2YWdfcG93ZXJfY29uc3VtZXJzKGNvbXBvbmVudCwg
-YW5hX3B3ciwgc291cmNlKSA+PSAyKQ0KKwkJcmV0dXJuOw0KKw0KKwlzbmRfc29jX2NvbXBvbmVu
-dF91cGRhdGVfYml0cyhjb21wb25lbnQsIFNHVEw1MDAwX0NISVBfQU5BX1BPV0VSLA0KKwkJU0dU
-TDUwMDBfVkFHX1BPV0VSVVAsIDApOw0KKwkvKiBJbiBwb3dlciBkb3duIGNhc2UsIHdlIG5lZWQg
-d2FpdCA0MDAtMTAwMCBtcw0KKwkgKiB3aGVuIFZBRyBmdWxseSByYW1wZWQgZG93bi4NCisJICog
-QXMgbG9uZ2VyIHdlIHdhaXQsIGFzIHNtYWxsZXIgcG9wIHdlJ3ZlIGdvdC4NCisJICovDQorCW1z
-bGVlcChTR1RMNTAwMF9WQUdfUE9XRVJET1dOX0RFTEFZKTsNCit9DQorDQogLyoNCiAgKiBtaWNf
-YmlhcyBwb3dlciBvbi9vZmYgc2hhcmUgdGhlIHNhbWUgcmVnaXN0ZXIgYml0cyB3aXRoDQogICog
-b3V0cHV0IGltcGVkYW5jZSBvZiBtaWMgYmlhcywgd2hlbiBwb3dlciBvbiBtaWMgYmlhcywgd2UN
-CkBAIC0xNzAsNDAgKzI5MCw3OSBAQCBzdGF0aWMgaW50IG1pY19iaWFzX2V2ZW50KHN0cnVjdCBz
-bmRfc29jX2RhcG1fd2lkZ2V0ICp3LA0KIAlyZXR1cm4gMDsNCiB9DQogDQotLyoNCi0gKiBBcyBt
-YW51YWwgZGVzY3JpYmVkLCBBREMvREFDIG9ubHkgd29ya3Mgd2hlbiBWQUcgcG93ZXJ1cCwNCi0g
-KiBTbyBlbmFibGVkIFZBRyBiZWZvcmUgQURDL0RBQyB1cC4NCi0gKiBJbiBwb3dlciBkb3duIGNh
-c2UsIHdlIG5lZWQgd2FpdCA0MDBtcyB3aGVuIHZhZyBmdWxseSByYW1wZWQgZG93bi4NCi0gKi8N
-Ci1zdGF0aWMgaW50IHBvd2VyX3ZhZ19ldmVudChzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCAq
-dywNCi0Jc3RydWN0IHNuZF9rY29udHJvbCAqa2NvbnRyb2wsIGludCBldmVudCkNCitzdGF0aWMg
-dm9pZCB2YWdfYW5kX211dGVfY29udHJvbChzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBv
-bmVudCwNCisJCQkJIGludCBldmVudCwgaW50IGV2ZW50X3NvdXJjZSwNCisJCQkJIHUxNiBtdXRl
-X21hc2ssIHUxNiAqbXV0ZV9yZWcpDQogew0KLQlzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNv
-bXBvbmVudCA9IHNuZF9zb2NfZGFwbV90b19jb21wb25lbnQody0+ZGFwbSk7DQotCWNvbnN0IHUz
-MiBtYXNrID0gU0dUTDUwMDBfREFDX1BPV0VSVVAgfCBTR1RMNTAwMF9BRENfUE9XRVJVUDsNCi0N
-CiAJc3dpdGNoIChldmVudCkgew0KLQljYXNlIFNORF9TT0NfREFQTV9QT1NUX1BNVToNCi0JCXNu
-ZF9zb2NfY29tcG9uZW50X3VwZGF0ZV9iaXRzKGNvbXBvbmVudCwgU0dUTDUwMDBfQ0hJUF9BTkFf
-UE9XRVIsDQotCQkJU0dUTDUwMDBfVkFHX1BPV0VSVVAsIFNHVEw1MDAwX1ZBR19QT1dFUlVQKTsN
-Ci0JCW1zbGVlcCg0MDApOw0KKwljYXNlIFNORF9TT0NfREFQTV9QUkVfUE1VOg0KKwkJKm11dGVf
-cmVnID0gbXV0ZV9vdXRwdXQoY29tcG9uZW50LCBtdXRlX21hc2spOw0KKwkJYnJlYWs7DQorCWNh
-c2UgU05EX1NPQ19EQVBNX1BPU1RfUE1VOg0KKwkJdmFnX3Bvd2VyX29uKGNvbXBvbmVudCwgZXZl
-bnRfc291cmNlKTsNCisJCXJlc3RvcmVfb3V0cHV0KGNvbXBvbmVudCwgbXV0ZV9tYXNrLCAqbXV0
-ZV9yZWcpOw0KIAkJYnJlYWs7DQotDQogCWNhc2UgU05EX1NPQ19EQVBNX1BSRV9QTUQ6DQotCQkv
-Kg0KLQkJICogRG9uJ3QgY2xlYXIgVkFHX1BPV0VSVVAsIHdoZW4gYm90aCBEQUMgYW5kIEFEQyBh
-cmUNCi0JCSAqIG9wZXJhdGlvbmFsIHRvIHByZXZlbnQgaW5hZHZlcnRlbnRseSBzdGFydmluZyB0
-aGUNCi0JCSAqIG90aGVyIG9uZSBvZiB0aGVtLg0KLQkJICovDQotCQlpZiAoKHNuZF9zb2NfY29t
-cG9uZW50X3JlYWQzMihjb21wb25lbnQsIFNHVEw1MDAwX0NISVBfQU5BX1BPV0VSKSAmDQotCQkJ
-CW1hc2spICE9IG1hc2spIHsNCi0JCQlzbmRfc29jX2NvbXBvbmVudF91cGRhdGVfYml0cyhjb21w
-b25lbnQsIFNHVEw1MDAwX0NISVBfQU5BX1BPV0VSLA0KLQkJCQlTR1RMNTAwMF9WQUdfUE9XRVJV
-UCwgMCk7DQotCQkJbXNsZWVwKDQwMCk7DQotCQl9DQorCQkqbXV0ZV9yZWcgPSBtdXRlX291dHB1
-dChjb21wb25lbnQsIG11dGVfbWFzayk7DQorCQl2YWdfcG93ZXJfb2ZmKGNvbXBvbmVudCwgZXZl
-bnRfc291cmNlKTsNCisJCWJyZWFrOw0KKwljYXNlIFNORF9TT0NfREFQTV9QT1NUX1BNRDoNCisJ
-CXJlc3RvcmVfb3V0cHV0KGNvbXBvbmVudCwgbXV0ZV9tYXNrLCAqbXV0ZV9yZWcpOw0KIAkJYnJl
-YWs7DQogCWRlZmF1bHQ6DQogCQlicmVhazsNCiAJfQ0KK30NCisNCisvKg0KKyAqIE11dGUgSGVh
-ZHBob25lIHdoZW4gcG93ZXIgaXQgdXAvZG93bi4NCisgKiBDb250cm9sIFZBRyBwb3dlciBvbiBI
-UCBwb3dlciBwYXRoLg0KKyAqLw0KK3N0YXRpYyBpbnQgaGVhZHBob25lX3BnYV9ldmVudChzdHJ1
-Y3Qgc25kX3NvY19kYXBtX3dpZGdldCAqdywNCisJc3RydWN0IHNuZF9rY29udHJvbCAqa2NvbnRy
-b2wsIGludCBldmVudCkNCit7DQorCXN0cnVjdCBzbmRfc29jX2NvbXBvbmVudCAqY29tcG9uZW50
-ID0NCisJCXNuZF9zb2NfZGFwbV90b19jb21wb25lbnQody0+ZGFwbSk7DQorCXN0cnVjdCBzZ3Rs
-NTAwMF9wcml2ICpzZ3RsNTAwMCA9DQorCQlzbmRfc29jX2NvbXBvbmVudF9nZXRfZHJ2ZGF0YShj
-b21wb25lbnQpOw0KKw0KKwl2YWdfYW5kX211dGVfY29udHJvbChjb21wb25lbnQsIGV2ZW50LCBI
-UF9QT1dFUl9FVkVOVCwNCisJCQkgICAgIFNHVEw1MDAwX0hQX01VVEUsDQorCQkJICAgICAmc2d0
-bDUwMDAtPm11dGVfc3RhdGUuaHBfZXZlbnQpOw0KKw0KKwlyZXR1cm4gMDsNCit9DQorDQorLyog
-QXMgbWFudWFsIGRlc2NyaWJlcywgQURDL0RBQyBwb3dlcmluZyB1cC9kb3duIHJlcXVpcmVzDQor
-ICogdG8gbXV0ZSBvdXRwdXRzIHRvIGF2b2lkIHBvcHMuDQorICogQ29udHJvbCBWQUcgcG93ZXIg
-b24gQURDL0RBQyBwb3dlciBwYXRoLg0KKyAqLw0KK3N0YXRpYyBpbnQgYWRjX3VwZG93bl9kZXBv
-cChzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCAqdywNCisJc3RydWN0IHNuZF9rY29udHJvbCAq
-a2NvbnRyb2wsIGludCBldmVudCkNCit7DQorCXN0cnVjdCBzbmRfc29jX2NvbXBvbmVudCAqY29t
-cG9uZW50ID0NCisJCXNuZF9zb2NfZGFwbV90b19jb21wb25lbnQody0+ZGFwbSk7DQorCXN0cnVj
-dCBzZ3RsNTAwMF9wcml2ICpzZ3RsNTAwMCA9DQorCQlzbmRfc29jX2NvbXBvbmVudF9nZXRfZHJ2
-ZGF0YShjb21wb25lbnQpOw0KKw0KKwl2YWdfYW5kX211dGVfY29udHJvbChjb21wb25lbnQsIGV2
-ZW50LCBBRENfUE9XRVJfRVZFTlQsDQorCQkJICAgICBTR1RMNTAwMF9PVVRQVVRTX01VVEUsDQor
-CQkJICAgICAmc2d0bDUwMDAtPm11dGVfc3RhdGUuYWRjX2V2ZW50KTsNCisNCisJcmV0dXJuIDA7
-DQorfQ0KKw0KK3N0YXRpYyBpbnQgZGFjX3VwZG93bl9kZXBvcChzdHJ1Y3Qgc25kX3NvY19kYXBt
-X3dpZGdldCAqdywNCisJc3RydWN0IHNuZF9rY29udHJvbCAqa2NvbnRyb2wsIGludCBldmVudCkN
-Cit7DQorCXN0cnVjdCBzbmRfc29jX2NvbXBvbmVudCAqY29tcG9uZW50ID0NCisJCXNuZF9zb2Nf
-ZGFwbV90b19jb21wb25lbnQody0+ZGFwbSk7DQorCXN0cnVjdCBzZ3RsNTAwMF9wcml2ICpzZ3Rs
-NTAwMCA9DQorCQlzbmRfc29jX2NvbXBvbmVudF9nZXRfZHJ2ZGF0YShjb21wb25lbnQpOw0KKw0K
-Kwl2YWdfYW5kX211dGVfY29udHJvbChjb21wb25lbnQsIGV2ZW50LCBEQUNfUE9XRVJfRVZFTlQs
-DQorCQkJICAgICBTR1RMNTAwMF9PVVRQVVRTX01VVEUsDQorCQkJICAgICAmc2d0bDUwMDAtPm11
-dGVfc3RhdGUuZGFjX2V2ZW50KTsNCiANCiAJcmV0dXJuIDA7DQogfQ0KQEAgLTI4MCw3ICs0Mzks
-MTAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fd2lkZ2V0IHNndGw1MDAwX2Rh
-cG1fd2lkZ2V0c1tdID0gew0KIAkJCSAgICBtaWNfYmlhc19ldmVudCwNCiAJCQkgICAgU05EX1NP
-Q19EQVBNX1BPU1RfUE1VIHwgU05EX1NPQ19EQVBNX1BSRV9QTUQpLA0KIA0KLQlTTkRfU09DX0RB
-UE1fUEdBKCJIUCIsIFNHVEw1MDAwX0NISVBfQU5BX1BPV0VSLCA0LCAwLCBOVUxMLCAwKSwNCisJ
-U05EX1NPQ19EQVBNX1BHQV9FKCJIUCIsIFNHVEw1MDAwX0NISVBfQU5BX1BPV0VSLCA0LCAwLCBO
-VUxMLCAwLA0KKwkJCSAgIGhlYWRwaG9uZV9wZ2FfZXZlbnQsDQorCQkJICAgU05EX1NPQ19EQVBN
-X1BSRV9QT1NUX1BNVSB8DQorCQkJICAgU05EX1NPQ19EQVBNX1BSRV9QT1NUX1BNRCksDQogCVNO
-RF9TT0NfREFQTV9QR0EoIkxPIiwgU0dUTDUwMDBfQ0hJUF9BTkFfUE9XRVIsIDAsIDAsIE5VTEws
-IDApLA0KIA0KIAlTTkRfU09DX0RBUE1fTVVYKCJDYXB0dXJlIE11eCIsIFNORF9TT0NfTk9QTSwg
-MCwgMCwgJmFkY19tdXgpLA0KQEAgLTMwMSwxMSArNDYzLDEyIEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBzZ3RsNTAwMF9kYXBtX3dpZGdldHNbXSA9IHsNCiAJCQkJ
-MCwgU0dUTDUwMDBfQ0hJUF9ESUdfUE9XRVIsDQogCQkJCTEsIDApLA0KIA0KLQlTTkRfU09DX0RB
-UE1fQURDKCJBREMiLCAiQ2FwdHVyZSIsIFNHVEw1MDAwX0NISVBfQU5BX1BPV0VSLCAxLCAwKSwN
-Ci0JU05EX1NPQ19EQVBNX0RBQygiREFDIiwgIlBsYXliYWNrIiwgU0dUTDUwMDBfQ0hJUF9BTkFf
-UE9XRVIsIDMsIDApLA0KLQ0KLQlTTkRfU09DX0RBUE1fUFJFKCJWQUdfUE9XRVJfUFJFIiwgcG93
-ZXJfdmFnX2V2ZW50KSwNCi0JU05EX1NPQ19EQVBNX1BPU1QoIlZBR19QT1dFUl9QT1NUIiwgcG93
-ZXJfdmFnX2V2ZW50KSwNCisJU05EX1NPQ19EQVBNX0FEQ19FKCJBREMiLCAiQ2FwdHVyZSIsIFNH
-VEw1MDAwX0NISVBfQU5BX1BPV0VSLCAxLCAwLA0KKwkJCSAgIGFkY191cGRvd25fZGVwb3AsIFNO
-RF9TT0NfREFQTV9QUkVfUE9TVF9QTVUgfA0KKwkJCSAgIFNORF9TT0NfREFQTV9QUkVfUE9TVF9Q
-TUQpLA0KKwlTTkRfU09DX0RBUE1fREFDX0UoIkRBQyIsICJQbGF5YmFjayIsIFNHVEw1MDAwX0NI
-SVBfQU5BX1BPV0VSLCAzLCAwLA0KKwkJCSAgIGRhY191cGRvd25fZGVwb3AsIFNORF9TT0NfREFQ
-TV9QUkVfUE9TVF9QTVUgfA0KKwkJCSAgIFNORF9TT0NfREFQTV9QUkVfUE9TVF9QTUQpLA0KIH07
-DQogDQogLyogcm91dGVzIGZvciBzZ3RsNTAwMCAqLw0KLS0gDQoyLjIwLjENCg0K
+Commit-ID:  b4b12aca00d509a233abd28990194628adcd71e6
+Gitweb:     https://git.kernel.org/tip/b4b12aca00d509a233abd28990194628adcd71e6
+Author:     Catalin Marinas <catalin.marinas@arm.com>
+AuthorDate: Mon, 24 Jun 2019 14:58:12 +0100
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Tue, 25 Jun 2019 09:43:38 +0200
+
+arm64: vdso: Remove unnecessary asm-offsets.c definitions
+
+Since the VDSO code has moved to C from assembly, there is no need to
+define and maintain the corresponding asm offsets.
+
+Fixes: 28b1a824a4f4 ("arm64: vdso: Substitute gettimeofday() with C implementation")
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-arch@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Salyzyn <salyzyn@android.com>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Huw Davies <huw@codeweavers.com>
+Cc: Shijith Thotton <sthotton@marvell.com>
+Cc: Andre Przywara <andre.przywara@arm.com>
+Link: https://lkml.kernel.org/r/20190624135812.GC29120@arrakis.emea.arm.com
+---
+ arch/arm64/kernel/asm-offsets.c | 39 ---------------------------------------
+ 1 file changed, 39 deletions(-)
+
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index e6f7409a78a4..214685760e1c 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -14,7 +14,6 @@
+ #include <linux/kvm_host.h>
+ #include <linux/preempt.h>
+ #include <linux/suspend.h>
+-#include <vdso/datapage.h>
+ #include <asm/cpufeature.h>
+ #include <asm/fixmap.h>
+ #include <asm/thread_info.h>
+@@ -86,44 +85,6 @@ int main(void)
+   BLANK();
+   DEFINE(PREEMPT_DISABLE_OFFSET, PREEMPT_DISABLE_OFFSET);
+   BLANK();
+-  DEFINE(CLOCK_REALTIME,	CLOCK_REALTIME);
+-  DEFINE(CLOCK_MONOTONIC,	CLOCK_MONOTONIC);
+-  DEFINE(CLOCK_MONOTONIC_RAW,	CLOCK_MONOTONIC_RAW);
+-  DEFINE(CLOCK_REALTIME_RES,	offsetof(struct vdso_data, hrtimer_res));
+-  DEFINE(CLOCK_REALTIME_COARSE,	CLOCK_REALTIME_COARSE);
+-  DEFINE(CLOCK_MONOTONIC_COARSE,CLOCK_MONOTONIC_COARSE);
+-  DEFINE(CLOCK_COARSE_RES,	LOW_RES_NSEC);
+-  DEFINE(NSEC_PER_SEC,		NSEC_PER_SEC);
+-  BLANK();
+-  DEFINE(VDSO_SEQ,		offsetof(struct vdso_data, seq));
+-  DEFINE(VDSO_CLK_MODE,		offsetof(struct vdso_data, clock_mode));
+-  DEFINE(VDSO_CYCLE_LAST,	offsetof(struct vdso_data, cycle_last));
+-  DEFINE(VDSO_MASK,		offsetof(struct vdso_data, mask));
+-  DEFINE(VDSO_MULT,		offsetof(struct vdso_data, mult));
+-  DEFINE(VDSO_SHIFT,		offsetof(struct vdso_data, shift));
+-  DEFINE(VDSO_REALTIME_SEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME].sec));
+-  DEFINE(VDSO_REALTIME_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME].nsec));
+-  DEFINE(VDSO_MONO_SEC,		offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC].sec));
+-  DEFINE(VDSO_MONO_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC].nsec));
+-  DEFINE(VDSO_MONO_RAW_SEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_RAW].sec));
+-  DEFINE(VDSO_MONO_RAW_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_RAW].nsec));
+-  DEFINE(VDSO_BOOTTIME_SEC,	offsetof(struct vdso_data, basetime[CLOCK_BOOTTIME].sec));
+-  DEFINE(VDSO_BOOTTIME_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_BOOTTIME].nsec));
+-  DEFINE(VDSO_TAI_SEC,		offsetof(struct vdso_data, basetime[CLOCK_TAI].sec));
+-  DEFINE(VDSO_TAI_NSEC,		offsetof(struct vdso_data, basetime[CLOCK_TAI].nsec));
+-  DEFINE(VDSO_RT_COARSE_SEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME_COARSE].sec));
+-  DEFINE(VDSO_RT_COARSE_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_REALTIME_COARSE].nsec));
+-  DEFINE(VDSO_MONO_COARSE_SEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_COARSE].sec));
+-  DEFINE(VDSO_MONO_COARSE_NSEC,	offsetof(struct vdso_data, basetime[CLOCK_MONOTONIC_COARSE].nsec));
+-  DEFINE(VDSO_TZ_MINWEST,	offsetof(struct vdso_data, tz_minuteswest));
+-  DEFINE(VDSO_TZ_DSTTIME,	offsetof(struct vdso_data, tz_dsttime));
+-  BLANK();
+-  DEFINE(TVAL_TV_SEC,		offsetof(struct timeval, tv_sec));
+-  DEFINE(TSPEC_TV_SEC,		offsetof(struct timespec, tv_sec));
+-  BLANK();
+-  DEFINE(TZ_MINWEST,		offsetof(struct timezone, tz_minuteswest));
+-  DEFINE(TZ_DSTTIME,		offsetof(struct timezone, tz_dsttime));
+-  BLANK();
+   DEFINE(CPU_BOOT_STACK,	offsetof(struct secondary_data, stack));
+   DEFINE(CPU_BOOT_TASK,		offsetof(struct secondary_data, task));
+   BLANK();
