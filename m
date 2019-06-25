@@ -2,134 +2,77 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7048EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B55C48BD8
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4316F2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B760A2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561503831;
-	bh=/BC1yVIKF5M//zqrCuQCKjKhzlJDjnRAQKCEuA3Z9yE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xt5BKnKBwvVZRmAGT1pwIuVnmZNGLu/Bv/80Yt/igOWHzr3T4iGH0Eijg8Aydgwt4
-	 +E7r0ETF1xLkionY2BH6CoU0iPsvnGhJhKjvjK8p5wwIZKsmylRq+t4fBq3YoijYKa
-	 u+7b1Q6FXOz7TbeVZ45nJnnWmmP8Q13Of34e1O+I=
+	s=default; t=1561503891;
+	bh=/g5HbSN9aaM8rtS5Vxw7Oi3HXqq2y+sys910VJXMYIs=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=RWGWAdQ7TbajyeMEpih5PItmdlo6H8rON9ziu1I4D9p7hAN43p+pywcNo/OdRcaFp
+	 fuG3zT2u7inSsa4+y9HuhKRAPopEfZHWXCQ/3ztiuCzJNFyjXDceVZ4TdsZY/nBAwb
+	 V7jRilaynKkdsPsJy8zzZCRFfXYyzvItG4NMlnXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfFYXDu (ORCPT
+        id S1726422AbfFYXEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:03:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33866 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFYXDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:03:49 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so264298plt.1;
-        Tue, 25 Jun 2019 16:03:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K5ErWoFi/JRH3gFgmKoboUdo26AiFjxGcMAHhZYf05o=;
-        b=G3+PFVxz/Ueu9IpY307Sscrf8TByxdIljL5dy6ohg3ye5EyQUzKMZHr6KWd0KMGfs+
-         Qe5kmTvH6CwF8ocTmAQ1VhNDDqX10TOOMnLgTQPM/ArJlpmjHFBzZmiEcqg1wgDyvMp3
-         IG9JAcIcFkC6epjYXSy/3qtNdwbs5/1Xs+dJ3M7t/rzgO5qwk7my4jZAlQ9b2tA9WSeE
-         Gfy8ha+bUCQ89d0ha+suoYU3FmC1hAVwzMQR10F1Vpzk9K6LO2Ujx2q2pzV9a1ce9z6R
-         hy7oLNUMIAZcxo42/S/8TDGLTNkOn/CZ7SvUgfLW1j3HO+MUnuB5PP0NqSy3mwQltZOb
-         M7/A==
-X-Gm-Message-State: APjAAAWtfKGR6p+32lpYOjoZHqzhoLbhxJa2nEgbTHFN3wRYw9RH7N6H
-        ZAOmeYpK+y5YFa2zSRgr7gE=
-X-Google-Smtp-Source: APXvYqz0M1IYGUwmvhT0NQpAoWP4ae2xshnXaqUSrqM3bOHQ06wFfedsHIaIBAncXtAoSDKV5lQq7Q==
-X-Received: by 2002:a17:902:467:: with SMTP id 94mr1238634ple.131.1561503828687;
-        Tue, 25 Jun 2019 16:03:48 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 10sm9969046pfb.30.2019.06.25.16.03.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 16:03:47 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BAAA5401EB; Tue, 25 Jun 2019 23:03:46 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 23:03:46 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Subject: Re: [PATCH v5 06/18] kbuild: enable building KUnit
-Message-ID: <20190625230346.GR19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-7-brendanhiggins@google.com>
- <20190625221318.GO19023@42.do-not-panic.com>
- <CAFd5g448rYqr3PHg0cfoddr70nktkWXcRfJoZHmuPJjTW53YYg@mail.gmail.com>
+        Tue, 25 Jun 2019 19:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFYXEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 19:04:50 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78FED2084B;
+        Tue, 25 Jun 2019 23:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561503889;
+        bh=/g5HbSN9aaM8rtS5Vxw7Oi3HXqq2y+sys910VJXMYIs=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=Oe4iNaIAqWM7dHzwIe2027mjsOsNLY4VxAZsubn9VofLSQo5poGekJrJkW9PWHngq
+         f/Z0T6YXJXw3BpGf0YsW8VnABhtuNjy6UTBV/h/v76jK1KLrGsVTSyxI3l3kL/d8c9
+         lfSQSS9u1Euez/fS5fZ75Mrwpa+5mWQ9gItqSmwg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g448rYqr3PHg0cfoddr70nktkWXcRfJoZHmuPJjTW53YYg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190612182500.4097-2-nsaenzjulienne@suse.de>
+References: <20190612182500.4097-1-nsaenzjulienne@suse.de> <20190612182500.4097-2-nsaenzjulienne@suse.de>
+To:     Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, stefan.wahren@i2se.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 1/7] clk: bcm2835: remove pllb
+Cc:     mbrugger@suse.de, viresh.kumar@linaro.org, rjw@rjwysocki.net,
+        ptesarik@suse.com, linux-rpi-kernel@lists.infradead.org,
+        ssuloev@orpaltech.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com,
+        linux-pm@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 25 Jun 2019 16:04:48 -0700
+Message-Id: <20190625230449.78FED2084B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 03:41:29PM -0700, Brendan Higgins wrote:
-> On Tue, Jun 25, 2019 at 3:13 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> >
-> > On Mon, Jun 17, 2019 at 01:26:01AM -0700, Brendan Higgins wrote:
-> > > diff --git a/Kconfig b/Kconfig
-> > > index 48a80beab6853..10428501edb78 100644
-> > > --- a/Kconfig
-> > > +++ b/Kconfig
-> > > @@ -30,3 +30,5 @@ source "crypto/Kconfig"
-> > >  source "lib/Kconfig"
-> > >
-> > >  source "lib/Kconfig.debug"
-> > > +
-> > > +source "kunit/Kconfig"
-> >
-> > This patch would break compilation as kunit/Kconfig is not introduced. This
-> > would would also break bisectability on this commit. This change should
-> > either be folded in to the next patch, or just be a separate patch after
-> > the next one.
-> 
-> Maybe my brain isn't working right now, but I am pretty darn sure that
-> I introduce kunit/Kconfig in the very first patch of this series.
-> Quoting from the change summary from the first commit:
+Quoting Nicolas Saenz Julienne (2019-06-12 11:24:53)
+> Raspberry Pi's firmware controls this pll, we should use the firmware
+> interface to access it.
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Acked-by: Eric Anholt <eric@anholt.net>
+> ---
 
-Indeed, my mistake, thanks!
+Applied to clk-next
 
-  Luis
