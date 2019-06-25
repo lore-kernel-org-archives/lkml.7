@@ -2,137 +2,83 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1F0C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B44BC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA1B2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561474197;
-	bh=r1xr1wLY0gZjCxJg+bWVNG7qJxlacl5/UWddXzA/YMQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=06VotbzxWmR394//eVN6sMq1S4405s+Wv3zmMJ/qKVckZw9WlztLVLAgA6MA6Qv52
-	 7DizuhBrNu5U9kPKFsytyN7mgzWxnWewibUvnZLvJMA/l7sbBIolVa3LE5GnN1mlpq
-	 BwaomIgSXLodZ6a+Yu9/BSVUPOa0H0X9EWXvQLK0=
+	by mail.kernel.org (Postfix) with ESMTP id 12A982080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:51:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="H31eTT/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731695AbfFYOt4 (ORCPT
+        id S1731596AbfFYOvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:49:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35352 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 10:51:10 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58142 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731914AbfFYOtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:49:53 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A6B213F2;
-        Tue, 25 Jun 2019 14:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561474191;
-        bh=r1xr1wLY0gZjCxJg+bWVNG7qJxlacl5/UWddXzA/YMQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lKXthtnwH8H01S6+/io38rtxOwyAIHwjz/DC/87kyRuyoA/djwL9ZXb8EPeXjQrR5
-         yUEj+0V5B3cJH5/Pex8KGA+Qpi3Wu0EF3rBTTUkfn35s7aGLrX4bzGyXspgzHZFzv5
-         Wg8Kto19dCeTiMwG+xd0vssrxcB5IFPclonQFZhc=
-Message-ID: <611d56126960b1cc1a97e7ea81739a944edd110c.camel@kernel.org>
-Subject: Re: [PATCH v4 3/3] ceph: don't NULL terminate virtual xattrs
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        agruenba@redhat.com
-Date:   Tue, 25 Jun 2019 10:49:49 -0400
-In-Reply-To: <CAOi1vP_G9ybNs_QEn34cPvovAa=JB7G9F3FGy33QPH4yfST-iQ@mail.gmail.com>
-References: <20190624162726.17413-1-jlayton@kernel.org>
-         <20190624162726.17413-4-jlayton@kernel.org>
-         <CAOi1vP_G9ybNs_QEn34cPvovAa=JB7G9F3FGy33QPH4yfST-iQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
+        id S1730777AbfFYOvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:51:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ZgkOw5D3P/fjtwFB3Tcj7uXmbq5UBoyXYtEvi0Cd5KQ=; b=H31eTT/zqFXIrWiHqPMM5QkYYw
+        WYq1+nRYh3eLMpTzHQG7qEy5Ae75pW2TtG9fvMLqz9NRepPGejbzjVEun4doa8/2kLWioOy9Y1+of
+        K6kD32lrJfTt4gjLMqNUeOymXU2cJiC1NAO1NH6KvOvx3nayhOaziJTYa9M8Y6+BDXBc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hfmmn-000747-F7; Tue, 25 Jun 2019 16:51:05 +0200
+Date:   Tue, 25 Jun 2019 16:51:05 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH net-next] net: stmmac: Fix the case when PHY handle is
+ not present
+Message-ID: <20190625145105.GA4722@lunn.ch>
+References: <351cce38d1c572d8b171044f2856c7fae9f89cbc.1561450696.git.joabreu@synopsys.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9D78A2@DE02WEMBXB.internal.synopsys.com>
+ <5859e2c5-112f-597c-3bd5-e30e96b86152@katsuster.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5859e2c5-112f-597c-3bd5-e30e96b86152@katsuster.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 16:35 +0200, Ilya Dryomov wrote:
-> On Mon, Jun 24, 2019 at 6:27 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > The convention with xattrs is to not store the termination with string
-> > data, given that it returns the length. This is how setfattr/getfattr
-> > operate.
-> > 
-> > Most of ceph's virtual xattr routines use snprintf to plop the string
-> > directly into the destination buffer, but snprintf always NULL
-> > terminates the string. This means that if we send the kernel a buffer
-> > that is the exact length needed to hold the string, it'll end up
-> > truncated.
-> > 
-> > Add a ceph_fmt_xattr helper function to format the string into an
-> > on-stack buffer that is should always be large enough to hold the whole
-> > thing and then memcpy the result into the destination buffer. If it does
-> > turn out that the formatted string won't fit in the on-stack buffer,
-> > then return -E2BIG and do a WARN_ONCE().
-> > 
-> > Change over most of the virtual xattr routines to use the new helper. A
-> > couple of the xattrs are sourced from strings however, and it's
-> > difficult to know how long they'll be. Just have those memcpy the result
-> > in place after verifying the length.
-> > 
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/ceph/xattr.c | 84 ++++++++++++++++++++++++++++++++++---------------
-> >  1 file changed, 59 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-> > index 9b77dca0b786..37b458a9af3a 100644
-> > --- a/fs/ceph/xattr.c
-> > +++ b/fs/ceph/xattr.c
-> > @@ -109,22 +109,49 @@ static ssize_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
-> >         return ret;
-> >  }
-> > 
-> > +/*
-> > + * The convention with strings in xattrs is that they should not be NULL
-> > + * terminated, since we're returning the length with them. snprintf always
-> > + * NULL terminates however, so call it on a temporary buffer and then memcpy
-> > + * the result into place.
-> > + */
-> > +static int ceph_fmt_xattr(char *val, size_t size, const char *fmt, ...)
-> > +{
-> > +       int ret;
-> > +       va_list args;
-> > +       char buf[96]; /* NB: reevaluate size if new vxattrs are added */
-> > +
-> > +       va_start(args, fmt);
-> > +       ret = vsnprintf(buf, size ? sizeof(buf) : 0, fmt, args);
-> > +       va_end(args);
-> > +
-> > +       /* Sanity check */
-> > +       if (size && ret + 1 > sizeof(buf)) {
-> > +               WARN_ONCE(true, "Returned length too big (%d)", ret);
-> > +               return -E2BIG;
-> > +       }
-> > +
-> > +       if (ret <= size)
-> > +               memcpy(val, buf, ret);
-> > +       return ret;
-> > +}
+On Tue, Jun 25, 2019 at 11:40:00PM +0900, Katsuhiro Suzuki wrote:
+> Hello Jose,
 > 
-> Nit: perhaps check size at the top and bail early instead of checking
-> it at every step?
+> This patch works fine with my Tinker Board. Thanks a lot!
 > 
-> Thanks,
+> Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 > 
->                 Ilya
+> 
+> BTW, from network guys point of view, is it better to add a phy node
+> into device trees that have no phy node such as the Tinker Board?
 
-We don't know how much space we'll need until vsnprintf is called. Note
-that both of these checks involve "ret", and that isn't set until
-vsnprintf returns.
--- 
-Jeff Layton <jlayton@kernel.org>
+Hi Katsuhiro
 
+It makes it less ambiguous if there is a phy-handle. It is then very
+clear which PHY should be used. For a development board, which people
+can be tinkering around with, there is a chance they add a second PHY
+to the MDIO bus, or an Ethernet switch, etc. Without explicitly
+listing the PHY, it might get the wrong one. However this is generally
+a problem if phy_find_first() is used. I think in this case, something
+is setting priv->plat->phy_addr, so it is also clearly defined which
+PHY to use.
+
+	  Andrew
