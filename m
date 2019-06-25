@@ -2,121 +2,281 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259A1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8FEC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E902B2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B2C208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="np9051N/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qHYkRVMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFYUJk (ORCPT
+        id S1726915AbfFYULT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:09:40 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40261 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfFYUJk (ORCPT
+        Tue, 25 Jun 2019 16:11:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34539 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfFYULT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:09:40 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so9473698pgj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:09:40 -0700 (PDT)
+        Tue, 25 Jun 2019 16:11:19 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so19949094qtu.1;
+        Tue, 25 Jun 2019 13:11:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9HIbjW/UTQH9RcDsaHdx3MzCgSHJWkM4/9sLFdKj7fY=;
-        b=np9051N/pT9hzPSxZ5Rb2qNrgtPujyiRa3l3w69lKbPm7p/eAyYcVhrIzKGkV0WecY
-         LKYPS9C8lN2ZNZcgzJApatdXP02Bid9YIf2KsDQqEB9/YEMq/GRJPFAOLYEo1zq/o/ZS
-         UX7+WnoqcMCR9HwaIM1Zl76EkgZ4H4sn0vlYc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OreAjeo9rrM6a/pymdVC27g7/glSRs4XsmsvRn5Wlv0=;
+        b=qHYkRVMejJygBI04ejSMnFsWlYPZzSJcgnlC8GxG57WsIGxauRH7DexUSO0UkpFHh6
+         7bIqgWFPoFaafvVwoeKzX3Yh/BIbO4ClaNLPcA3MH9tkRcgHVQo5VpgR6/wPgXWRq5Pi
+         4dxgA37hbvZNz69o2J1ZdHplP3BWwpSc93KE8FDFBKbA+VD8/r0ZIgI3at4N1KzwpSUb
+         jp53WhB4b7UJWtJpu4adVaZ4C/2F9yLAkfYEH0NcLI4mR6Pel/io34CC4xKeJ4XAsxgO
+         Dm4uH+WxM2gfPtuTVRThD5xwe2V+lUeFtjTGOhLtFpfLYXhTsDlVlpYY8Zxcrlt4tPxe
+         ZblQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9HIbjW/UTQH9RcDsaHdx3MzCgSHJWkM4/9sLFdKj7fY=;
-        b=FUzph70AC8/npa6qy1goTBKwHfK0pe2moX1OVxFuuhM703lgeKuHTwdblpQdlVYJ6O
-         vNp8/ZUS0gnkz8ATtTlqTXlFpqgmtA1xx9ziyqb9ZQm9tUXayP3dt3QBJgsnV1GuQpVZ
-         Jox9qj551vW+7mdOf/egRFXK4kZdxOO8GfcWNPUyE6YrIXp4plO8d+ux4J25S++CmQ4E
-         Zgh5jYyj+1DjoS+SQucCrSfG5OxnEAj94prZqGCM/pLzYJZDCxLNFR/7x/LIg8uKPgOE
-         8ey1jWVnJFJmrwAx1aifwQrO1MQIeS06x0Mmv0esat2GXKpi99fxmzmh+Wxu4foLu0ko
-         KBBw==
-X-Gm-Message-State: APjAAAXfUbhRnCGvU2ZHIuMrnT3c2hxSrfxHrvpKmC1wHfuu6JZ3hu3S
-        2CGl2m3Mfl+cvVNUzy2auxP0RQ==
-X-Google-Smtp-Source: APXvYqz8ZG275gJ15NJOL5CcY2r65le+WZDZlhfBDgfAwtPWcjmOGT4M6p1P11L4X8B/TCWCNsM66g==
-X-Received: by 2002:a63:9e53:: with SMTP id r19mr32674817pgo.442.1561493379704;
-        Tue, 25 Jun 2019 13:09:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a18sm88751pjq.0.2019.06.25.13.09.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Jun 2019 13:09:38 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 13:09:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-Message-ID: <201906251309.BBB7D17@keescook>
-References: <20190624161913.GA32270@embeddedor>
- <20190624193123.GI3436@hirez.programming.kicks-ass.net>
- <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net>
- <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net>
- <201906251009.BCB7438@keescook>
- <20190625180525.GA119831@archlinux-epyc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OreAjeo9rrM6a/pymdVC27g7/glSRs4XsmsvRn5Wlv0=;
+        b=YPq5oWRaXDjW2w4wUuwtqJ/bzSn3lQrDmw70xH5LPK+Y9EiEgvmwTpLSAL73TKpPEr
+         iJ2zO9Ce3aqY+k9NegDlveqR8u2ef1c3bMYtZYiYmGFvuecL6DSA1d/mhDy7njIuy9KH
+         i1CkbMbbeLbm7Yb9EAQsf7oVfgKOGJTsnBwhqCla/G+LLOqGLwGn3++1z68bicBQImlC
+         yOZtMvxRHK6+8EHWr4o6dd6QnFmCyBrmQstOkmXmyrtYe2g17V6OSNsDMSRa6WbfbnwR
+         7j9l5mSWuxD0LYmxCcN/eeHlSC0QwXw3smHSqAqk8fhH8x5EFZtFw6jGHN+lXeASPiY8
+         QfgA==
+X-Gm-Message-State: APjAAAVhmCHSNbfOLVbfQGIEuKRE44wZ9qtcMJ/Ax8DunO2/lMHcvZg6
+        9QbOF0RYkk5Z9r/Ut5beyuqtWbFqH0l7rTNgS+4O9E5h
+X-Google-Smtp-Source: APXvYqzj4E8O6NOXZEf3TigjEJsxuMWSRrzGNtfWhGlGdks/5kYCVaWLEzkqyw1TG4JkjHceepT71RGVPFwXIR6Vca4=
+X-Received: by 2002:ac8:1af4:: with SMTP id h49mr181457qtk.183.1561493477818;
+ Tue, 25 Jun 2019 13:11:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625180525.GA119831@archlinux-epyc>
+References: <20190625172717.158613-1-allanzhang@google.com> <20190625172717.158613-3-allanzhang@google.com>
+In-Reply-To: <20190625172717.158613-3-allanzhang@google.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 25 Jun 2019 13:11:06 -0700
+Message-ID: <CAPhsuW6gcigZbB8FH4Yw=HYdTVnrjGEaFZ=xrcRakuVERBBWeg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/2] bpf: Add selftests for bpf_perf_event_output
+To:     allanzhang <allanzhang@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:05:25AM -0700, Nathan Chancellor wrote:
-> On Tue, Jun 25, 2019 at 10:12:42AM -0700, Kees Cook wrote:
-> > On Tue, Jun 25, 2019 at 09:18:46AM +0200, Peter Zijlstra wrote:
-> > > Can it build a kernel without patches yet? That is, why should I care
-> > > what LLVM does?
-> > 
-> > Yes. LLVM trunk builds and boots x86 now. As for distro availability,
-> > AIUI, the asm-goto feature missed the 9.0 LLVM branch point, so it'll
-> > appear in the following release.
-> > 
-> > -- 
-> > Kees Cook
-> 
-> I don't think that's right. LLVM 9 hasn't been branched yet so it should
-> make it in.
-> 
-> http://lists.llvm.org/pipermail/llvm-dev/2019-June/133155.html
-> 
-> If anyone wants to play around with it before then, we wrote a
-> self-contained script that will build an LLVM toolchain suitable for
-> kernel development:
-> 
-> https://github.com/ClangBuiltLinux/tc-build
+On Tue, Jun 25, 2019 at 12:45 PM allanzhang <allanzhang@google.com> wrote:
+>
+> Software event output is only enabled by a few prog types.
+> This test is to ensure that all supported types are enbled for
+> bpf_perf_event_output sucessfully.
 
-Ah! That's good news. :) I thought the branch happened just before
-asm-goto landed. Wheee!
+Please fix these typos highlighted by Daniel.
+enbled
+sucessfully
 
--- 
-Kees Cook
+>
+> v4:
+> * Reformating log message
+> v3:
+> * Reformating log message
+> v2:
+> * Reformating log message
+>
+> Signed-off-by: allanzhang <allanzhang@google.com>
+> ---
+>  tools/testing/selftests/bpf/test_verifier.c   | 33 ++++++-
+>  .../selftests/bpf/verifier/event_output.c     | 94 +++++++++++++++++++
+>  2 files changed, 126 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/bpf/verifier/event_output.c
+>
+> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+> index c5514daf8865..901a188e1eea 100644
+> --- a/tools/testing/selftests/bpf/test_verifier.c
+> +++ b/tools/testing/selftests/bpf/test_verifier.c
+> @@ -50,7 +50,7 @@
+>  #define MAX_INSNS      BPF_MAXINSNS
+>  #define MAX_TEST_INSNS 1000000
+>  #define MAX_FIXUPS     8
+> -#define MAX_NR_MAPS    18
+> +#define MAX_NR_MAPS    19
+>  #define MAX_TEST_RUNS  8
+>  #define POINTER_VALUE  0xcafe4all
+>  #define TEST_DATA_LEN  64
+> @@ -84,6 +84,7 @@ struct bpf_test {
+>         int fixup_map_array_wo[MAX_FIXUPS];
+>         int fixup_map_array_small[MAX_FIXUPS];
+>         int fixup_sk_storage_map[MAX_FIXUPS];
+> +       int fixup_map_event_output[MAX_FIXUPS];
+>         const char *errstr;
+>         const char *errstr_unpriv;
+>         uint32_t retval, retval_unpriv, insn_processed;
+> @@ -604,6 +605,28 @@ static int create_sk_storage_map(void)
+>         return fd;
+>  }
+>
+> +static int create_event_output_map(void)
+> +{
+> +       struct bpf_create_map_attr attr = {
+> +               .name = "test_map",
+> +               .map_type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
+> +               .key_size = 4,
+> +               .value_size = 4,
+> +               .max_entries = 1,
+> +       };
+> +       int fd, btf_fd;
+> +
+> +       btf_fd = load_btf();
+> +       if (btf_fd < 0)
+> +               return -1;
+> +       attr.btf_fd = btf_fd;
+> +       fd = bpf_create_map_xattr(&attr);
+> +       close(attr.btf_fd);
+> +       if (fd < 0)
+> +               printf("Failed to create event_output\n");
+> +       return fd;
+> +}
+> +
+>  static char bpf_vlog[UINT_MAX >> 8];
+>
+>  static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
+> @@ -627,6 +650,7 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
+>         int *fixup_map_array_wo = test->fixup_map_array_wo;
+>         int *fixup_map_array_small = test->fixup_map_array_small;
+>         int *fixup_sk_storage_map = test->fixup_sk_storage_map;
+> +       int *fixup_map_event_output = test->fixup_map_event_output;
+>
+>         if (test->fill_helper) {
+>                 test->fill_insns = calloc(MAX_TEST_INSNS, sizeof(struct bpf_insn));
+> @@ -788,6 +812,13 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
+>                         fixup_sk_storage_map++;
+>                 } while (*fixup_sk_storage_map);
+>         }
+> +       if (*fixup_map_event_output) {
+> +               map_fds[18] = create_event_output_map();
+> +               do {
+> +                       prog[*fixup_map_event_output].imm = map_fds[18];
+> +                       fixup_map_event_output++;
+> +               } while (*fixup_map_event_output);
+> +       }
+>  }
+>
+>  static int set_admin(bool admin)
+> diff --git a/tools/testing/selftests/bpf/verifier/event_output.c b/tools/testing/selftests/bpf/verifier/event_output.c
+> new file mode 100644
+> index 000000000000..b25eabcfaa56
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/verifier/event_output.c
+> @@ -0,0 +1,94 @@
+> +/* instructions used to output a skb based software event, produced
+> + * from code snippet:
+> +struct TMP {
+> +  uint64_t tmp;
+> +} tt;
+> +tt.tmp = 5;
+> +bpf_perf_event_output(skb, &connection_tracking_event_map, 0,
+> +                     &tt, sizeof(tt));
+> +return 1;
+> +
+> +the bpf assembly from llvm is:
+> +       0:       b7 02 00 00 05 00 00 00         r2 = 5
+> +       1:       7b 2a f8 ff 00 00 00 00         *(u64 *)(r10 - 8) = r2
+> +       2:       bf a4 00 00 00 00 00 00         r4 = r10
+> +       3:       07 04 00 00 f8 ff ff ff         r4 += -8
+> +       4:       18 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00    r2 = 0ll
+> +       6:       b7 03 00 00 00 00 00 00         r3 = 0
+> +       7:       b7 05 00 00 08 00 00 00         r5 = 8
+> +       8:       85 00 00 00 19 00 00 00         call 25
+> +       9:       b7 00 00 00 01 00 00 00         r0 = 1
+> +      10:       95 00 00 00 00 00 00 00         exit
+> +
+> +    The reason I put the code here instead of fill_helpers is that map fixup is
+> +    against the insns, instead of filled prog.
+> +*/
+
+Please prefix every line in the comment section with space_star_space: " * ".
+This makes it obvious that this is a comment.
+
+Thanks,
+Song
+
+> +
+> +#define __PERF_EVENT_INSNS__                                   \
+> +       BPF_MOV64_IMM(BPF_REG_2, 5),                            \
+> +       BPF_STX_MEM(BPF_DW, BPF_REG_10, BPF_REG_2, -8),         \
+> +       BPF_MOV64_REG(BPF_REG_4, BPF_REG_10),                   \
+> +       BPF_ALU64_IMM(BPF_ADD, BPF_REG_4, -8),                  \
+> +       BPF_LD_MAP_FD(BPF_REG_2, 0),                            \
+> +       BPF_MOV64_IMM(BPF_REG_3, 0),                            \
+> +       BPF_MOV64_IMM(BPF_REG_5, 8),                            \
+> +       BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,               \
+> +                    BPF_FUNC_perf_event_output),               \
+> +       BPF_MOV64_IMM(BPF_REG_0, 1),                            \
+> +       BPF_EXIT_INSN(),
+> +{
+> +       "perfevent for sockops",
+> +       .insns = { __PERF_EVENT_INSNS__ },
+> +       .prog_type = BPF_PROG_TYPE_SOCK_OPS,
+> +       .fixup_map_event_output = { 4 },
+> +       .result = ACCEPT,
+> +       .retval = 1,
+> +},
+> +{
+> +       "perfevent for tc",
+> +       .insns =  { __PERF_EVENT_INSNS__ },
+> +       .prog_type = BPF_PROG_TYPE_SCHED_CLS,
+> +       .fixup_map_event_output = { 4 },
+> +       .result = ACCEPT,
+> +       .retval = 1,
+> +},
+> +{
+> +       "perfevent for lwt out",
+> +       .insns =  { __PERF_EVENT_INSNS__ },
+> +       .prog_type = BPF_PROG_TYPE_LWT_OUT,
+> +       .fixup_map_event_output = { 4 },
+> +       .result = ACCEPT,
+> +       .retval = 1,
+> +},
+> +{
+> +       "perfevent for xdp",
+> +       .insns =  { __PERF_EVENT_INSNS__ },
+> +       .prog_type = BPF_PROG_TYPE_XDP,
+> +       .fixup_map_event_output = { 4 },
+> +       .result = ACCEPT,
+> +       .retval = 1,
+> +},
+> +{
+> +       "perfevent for socket filter",
+> +       .insns =  { __PERF_EVENT_INSNS__ },
+> +       .prog_type = BPF_PROG_TYPE_SOCKET_FILTER,
+> +       .fixup_map_event_output = { 4 },
+> +       .result = ACCEPT,
+> +       .retval = 1,
+> +},
+> +{
+> +       "perfevent for sk_skb",
+> +       .insns =  { __PERF_EVENT_INSNS__ },
+> +       .prog_type = BPF_PROG_TYPE_SK_SKB,
+> +       .fixup_map_event_output = { 4 },
+> +       .result = ACCEPT,
+> +       .retval = 1,
+> +},
+> +{
+> +       "perfevent for cgroup skb",
+> +       .insns =  { __PERF_EVENT_INSNS__ },
+> +       .prog_type = BPF_PROG_TYPE_CGROUP_SKB,
+> +       .fixup_map_event_output = { 4 },
+> +       .result = ACCEPT,
+> +       .retval = 1,
+> +},
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
