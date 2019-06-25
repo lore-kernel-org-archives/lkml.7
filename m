@@ -2,125 +2,168 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BB2C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990BAC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DDE208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796BC208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbfFYMho (ORCPT
+        id S1729236AbfFYMkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:37:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:40930 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726531AbfFYMhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:37:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC02B2B;
-        Tue, 25 Jun 2019 05:37:42 -0700 (PDT)
-Received: from [70.10.37.10] (unknown [10.37.10.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBE593F71E;
-        Tue, 25 Jun 2019 05:37:39 -0700 (PDT)
-Subject: Re: RISC-V nommu support v2
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <mhng-6f11ed95-e3f3-41dc-93c5-1576928b373b@palmer-si-x1e>
-From:   Vladimir Murzin <vladimir.murzin@arm.com>
-Message-ID: <4b2ce641-1412-0e71-82be-07e3f0a6328a@arm.com>
-Date:   Tue, 25 Jun 2019 13:37:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 25 Jun 2019 08:40:31 -0400
+Received: from www62.your-server.de ([213.133.104.62]:33672 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfFYMka (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 08:40:30 -0400
+Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hfkkF-0006gG-F0; Tue, 25 Jun 2019 14:40:19 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hfkkF-000KK9-8D; Tue, 25 Jun 2019 14:40:19 +0200
+Subject: Re: [PATCH v3 2/2] bpf: Add selftests for bpf_perf_event_output
+To:     allanzhang <allanzhang@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190624235720.167067-1-allanzhang@google.com>
+ <20190624235720.167067-3-allanzhang@google.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <260b127d-ee1b-3f62-5bc6-f9e7b339705f@iogearbox.net>
+Date:   Tue, 25 Jun 2019 14:40:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-In-Reply-To: <mhng-6f11ed95-e3f3-41dc-93c5-1576928b373b@palmer-si-x1e>
+In-Reply-To: <20190624235720.167067-3-allanzhang@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25491/Tue Jun 25 10:02:48 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/19 8:31 AM, Palmer Dabbelt wrote:
-> On Mon, 24 Jun 2019 06:08:50 PDT (-0700), vladimir.murzin@arm.com wrote:
->> On 6/24/19 12:54 PM, Christoph Hellwig wrote:
->>> On Mon, Jun 24, 2019 at 12:47:07PM +0100, Vladimir Murzin wrote:
->>>> Since you are using binfmt_flat which is kind of 32-bit only I was expecting to see
->>>> CONFIG_COMPAT (or something similar to that, like ILP32) enabled, yet I could not
->>>> find it.
->>>
->>> There is no such thing in RISC-V.  I don't know of any 64-bit RISC-V
->>> cpu that can actually run 32-bit RISC-V code, although in theory that
->>> is possible.  There also is nothing like the x86 x32 or mips n32 mode
->>> available either for now.
->>>
->>> But it turns out that with a few fixes to binfmt_flat it can run 64-bit
->>> binaries just fine.  I sent that series out a while ago, and IIRC you
->>> actually commented on it.
->>>
->>
->> True, yet my observation was that elf2flt utility assumes that address
->> space cannot exceed 32-bit (for header and absolute relocations). So,
->> from my limited point of view straightforward way to guarantee that would
->> be to build incoming elf in 32-bit mode (it is why I mentioned COMPAT/ILP32).
->>
->> Also one of your patches expressed somewhat related idea
->>
->> "binfmt_flat isn't the right binary format for huge executables to
->> start with"
->>
->> Since you said there is no support for compat/ilp32, probably I'm missing some
->> toolchain magic?
->>
->> Cheers
->> Vladimir
-> To:          Christoph Hellwig <hch@lst.de>
-> CC:          vladimir.murzin@arm.com
-> CC:          Christoph Hellwig <hch@lst.de>
-> CC:          Paul Walmsley <paul.walmsley@sifive.com>
-> CC:          Damien Le Moal <Damien.LeMoal@wdc.com>
-> CC:          linux-riscv@lists.infradead.org
-> CC:          linux-mm@kvack.org
-> CC:          linux-kernel@vger.kernel.org
-> Subject:     Re: RISC-V nommu support v2
-> In-Reply-To: <20190624131633.GB10746@lst.de>
-> 
-> On Mon, 24 Jun 2019 06:16:33 PDT (-0700), Christoph Hellwig wrote:
->> On Mon, Jun 24, 2019 at 02:08:50PM +0100, Vladimir Murzin wrote:
->>> True, yet my observation was that elf2flt utility assumes that address
->>> space cannot exceed 32-bit (for header and absolute relocations). So,
->>> from my limited point of view straightforward way to guarantee that would
->>> be to build incoming elf in 32-bit mode (it is why I mentioned COMPAT/ILP32).
->>>
->>> Also one of your patches expressed somewhat related idea
->>>
->>> "binfmt_flat isn't the right binary format for huge executables to
->>> start with"
->>>
->>> Since you said there is no support for compat/ilp32, probably I'm missing some
->>> toolchain magic?
->>
->> There is no magic except for the tiny elf2flt patch, which for
->> now is just in the buildroot repo pointed to in the cover letter
->> (and which I plan to upstream once the kernel support has landed
->> in Linus' tree).  We only support 32-bit code and data address spaces,
->> but we otherwise use the normal RISC-V ABI, that is 64-bit longs and
->> pointers.
-> 
-> The medlow code model on RISC-V essentially enforces this -- technically it
-> enforces a 32-bit region centered around address 0, but it's not that hard to
-> stay away from negative addresses.  That said, as long as elf2flt gives you an
-> error it should be fine because all medlow is going to do is give you a
-> different looking error message.
-> 
+On 06/25/2019 01:57 AM, allanzhang wrote:
+> Software event output is only enabled by a few prog types.
+> This test is to ensure that all supported types are enbled for
 
-Thanks for explanation!
+Nit, typo: enbled
 
-Vladimir
+> bpf_perf_event_output sucessfully.
+
+Nit, typo: sucessfully
+
+> Signed-off-by: allanzhang <allanzhang@google.com>
+
+For SOB, could you add proper formatted name before the email?
+
+> ---
+>  tools/testing/selftests/bpf/test_verifier.c   | 33 ++++++-
+>  .../selftests/bpf/verifier/event_output.c     | 94 +++++++++++++++++++
+>  2 files changed, 126 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/bpf/verifier/event_output.c
+> 
+> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
+> index c5514daf8865..901a188e1eea 100644
+> --- a/tools/testing/selftests/bpf/test_verifier.c
+> +++ b/tools/testing/selftests/bpf/test_verifier.c
+> @@ -50,7 +50,7 @@
+>  #define MAX_INSNS	BPF_MAXINSNS
+>  #define MAX_TEST_INSNS	1000000
+>  #define MAX_FIXUPS	8
+> -#define MAX_NR_MAPS	18
+> +#define MAX_NR_MAPS	19
+>  #define MAX_TEST_RUNS	8
+>  #define POINTER_VALUE	0xcafe4all
+>  #define TEST_DATA_LEN	64
+> @@ -84,6 +84,7 @@ struct bpf_test {
+>  	int fixup_map_array_wo[MAX_FIXUPS];
+>  	int fixup_map_array_small[MAX_FIXUPS];
+>  	int fixup_sk_storage_map[MAX_FIXUPS];
+> +	int fixup_map_event_output[MAX_FIXUPS];
+>  	const char *errstr;
+>  	const char *errstr_unpriv;
+>  	uint32_t retval, retval_unpriv, insn_processed;
+> @@ -604,6 +605,28 @@ static int create_sk_storage_map(void)
+>  	return fd;
+>  }
+>  
+> +static int create_event_output_map(void)
+> +{
+> +	struct bpf_create_map_attr attr = {
+> +		.name = "test_map",
+> +		.map_type = BPF_MAP_TYPE_PERF_EVENT_ARRAY,
+> +		.key_size = 4,
+> +		.value_size = 4,
+> +		.max_entries = 1,
+> +	};
+> +	int fd, btf_fd;
+> +
+> +	btf_fd = load_btf();
+> +	if (btf_fd < 0)
+> +		return -1;
+> +	attr.btf_fd = btf_fd;
+> +	fd = bpf_create_map_xattr(&attr);
+
+This does not look correct, BTF for spinlock does not belong to perf event array.
+
+> +	close(attr.btf_fd);
+> +	if (fd < 0)
+> +		printf("Failed to create event_output\n");
+> +	return fd;
+> +}
+> +
+>  static char bpf_vlog[UINT_MAX >> 8];
+>  
+>  static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
+> @@ -627,6 +650,7 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
+>  	int *fixup_map_array_wo = test->fixup_map_array_wo;
+>  	int *fixup_map_array_small = test->fixup_map_array_small;
+>  	int *fixup_sk_storage_map = test->fixup_sk_storage_map;
+> +	int *fixup_map_event_output = test->fixup_map_event_output;
+>  
+>  	if (test->fill_helper) {
+>  		test->fill_insns = calloc(MAX_TEST_INSNS, sizeof(struct bpf_insn));
+> @@ -788,6 +812,13 @@ static void do_test_fixup(struct bpf_test *test, enum bpf_prog_type prog_type,
+>  			fixup_sk_storage_map++;
+>  		} while (*fixup_sk_storage_map);
+>  	}
+> +	if (*fixup_map_event_output) {
+> +		map_fds[18] = create_event_output_map();
+> +		do {
+> +			prog[*fixup_map_event_output].imm = map_fds[18];
+> +			fixup_map_event_output++;
+> +		} while (*fixup_map_event_output);
+> +	}
+>  }
+>  
+>  static int set_admin(bool admin)
+> diff --git a/tools/testing/selftests/bpf/verifier/event_output.c b/tools/testing/selftests/bpf/verifier/event_output.c
+> new file mode 100644
+> index 000000000000..b25eabcfaa56
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/verifier/event_output.c
+> @@ -0,0 +1,94 @@
+> +/* instructions used to output a skb based software event, produced
+> + * from code snippet:
+> +struct TMP {
+> +  uint64_t tmp;
+> +} tt;
+> +tt.tmp = 5;
+> +bpf_perf_event_output(skb, &connection_tracking_event_map, 0,
+> +		      &tt, sizeof(tt));
+> +return 1;
+[...]
