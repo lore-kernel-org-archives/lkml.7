@@ -2,121 +2,137 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2216CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B478EC48BD7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B562063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951812063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbfFYTxw (ORCPT
+        id S1728569AbfFYTyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:53:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44348 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbfFYTxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:53:52 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hfrV9-0007Zz-1y; Tue, 25 Jun 2019 21:53:11 +0200
-Date:   Tue, 25 Jun 2019 21:53:09 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-In-Reply-To: <20190625180525.GA119831@archlinux-epyc>
-Message-ID: <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
-References: <20190624161913.GA32270@embeddedor> <20190624193123.GI3436@hirez.programming.kicks-ass.net> <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com> <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com> <20190625071846.GN3436@hirez.programming.kicks-ass.net> <201906251009.BCB7438@keescook> <20190625180525.GA119831@archlinux-epyc>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 25 Jun 2019 15:54:40 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:37308 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbfFYTyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 15:54:40 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hfrWI-0007CW-Rp; Tue, 25 Jun 2019 13:54:23 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+Date:   Tue, 25 Jun 2019 13:54:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190625170115.GA9746@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019, Nathan Chancellor wrote:
-> On Tue, Jun 25, 2019 at 10:12:42AM -0700, Kees Cook wrote:
-> > On Tue, Jun 25, 2019 at 09:18:46AM +0200, Peter Zijlstra wrote:
-> > > Can it build a kernel without patches yet? That is, why should I care
-> > > what LLVM does?
-> > 
-> > Yes. LLVM trunk builds and boots x86 now. As for distro availability,
-> > AIUI, the asm-goto feature missed the 9.0 LLVM branch point, so it'll
-> > appear in the following release.
-> > 
-> > -- 
-> > Kees Cook
+
+
+On 2019-06-25 11:01 a.m., Christoph Hellwig wrote:
+> On Tue, Jun 25, 2019 at 09:57:52AM -0600, Logan Gunthorpe wrote:
+>>> You assume all addressing is done by the PCI bus address.  If a device
+>>> is addressing its own BAR there is no reason to use the PCI bus address,
+>>> as it might have much more intelligent schemes (usually bar + offset).
+>>
+>> Yes, that will be a bit tricky regardless of what we do.
 > 
-> I don't think that's right. LLVM 9 hasn't been branched yet so it should
-> make it in.
+> At least right now it isn't at all.  I've implemented support for
+> a draft NVMe proposal for that, and it basically boils down to this
+> in the p2p path:
 > 
-> http://lists.llvm.org/pipermail/llvm-dev/2019-June/133155.html
+> 	addr = sg_phys(sg);
 > 
-> If anyone wants to play around with it before then, we wrote a
-> self-contained script that will build an LLVM toolchain suitable for
-> kernel development:
+> 	if (page->pgmap->dev == ctrl->dev && HAS_RELATIVE_ADDRESSING)
+> 		addr -= ctrl->cmb_start_addr;
 > 
-> https://github.com/ClangBuiltLinux/tc-build
+> 		// set magic flag in the SGL
+> 	} else {
+> 		addr -= pgmap->pci_p2pdma_bus_offset;
+> 	}
+> 
+> without the pagemap it would require a range compare instead, which
+> isn't all that hard either.
+> 
+>>>>> Also duplicating the whole block I/O stack, including hooks all over
+>>>>> the fast path is pretty much a no-go.
+>>>>
+>>>> There was very little duplicate code in the patch set. (Really just the
+>>>> mapping code). There are a few hooks, but in practice not that many if
+>>>> we ignore the WARN_ONs. We might be able to work to reduce this further.
+>>>> The main hooks are: when we skip bouncing, when we skip integrity prep,
+>>>> when we split, and when we map. And the patchset drops the PCI_P2PDMA
+>>>> hook when we map. So we're talking about maybe three or four extra ifs
+>>>> that would likely normally be fast due to the branch predictor.
+>>>
+>>> And all of those add code to the block layer fast path.
+>>
+>> If we can't add any ifs to the block layer, there's really nothing we
+>> can do.
+> 
+> That is not what I said.  Of course we can.  But we rather have a
+> really good reason.  And adding a parallel I/O path violating the
+> highlevel model is not one.
+> 
+>> So then we're committed to using struct page for P2P?
+> 
+> Only until we have a significantly better soltution.  And I think
+> using physical address in some form instead of pages is that,
+> adding a parallel path with dma_addr_t is not, it actually is worse
+> than the current code in many respects.
 
-Useful!
+Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
+that different. You still need roughly the same 'if' hooks for any
+backed memory that isn't in the linear mapping and you can't get a
+kernel mapping for directly.
 
-But can the script please check for a minimal clang version required to
-build that thing.
+It wouldn't be too hard to do a similar patch set that uses something
+like phys_addr_t instead and have a request and queue flag for support
+of non-mappable memory. But you'll end up with very similar 'if' hooks
+and we'd have to clean up all bio-using drivers that access the struct
+pages directly.
 
-The default clang-3.8 which is installed on Debian stretch explodes. The
-6.0 variant from backports works as advertised.
+Though, we'd also still have the problem of how to recognize when the
+address points to P2PDMA and needs to be translated to the bus offset.
+The map-first inversion was what helped here because the driver
+submitting the requests had all the information. Though it could be
+another request flag and indicating non-mappable memory could be a flag
+group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
 
-Kernel builds with the new shiny compiler. Jump labels seem to be enabled.
+If you think any of the above ideas sound workable I'd be happy to try
+to code up another prototype.
 
-It complains about a few type conversions:
-
- arch/x86/kvm/mmu.c:4596:39: warning: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Wconstant-conversion]
-                u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
-                   ~~                               ^~
-
-but it also makes objtool unhappy:
-
- arch/x86/events/intel/core.o: warning: objtool: intel_pmu_nhm_workaround()+0xb3: unreachable instruction
- kernel/fork.o: warning: objtool: free_thread_stack()+0x126: unreachable instruction
- mm/workingset.o: warning: objtool: count_shadow_nodes()+0x11f: unreachable instruction
- arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool: get_fixed_ranges()+0x9b: unreachable instruction
- arch/x86/kernel/platform-quirks.o: warning: objtool: x86_early_init_platform_quirks()+0x84: unreachable instruction
- drivers/iommu/irq_remapping.o: warning: objtool: irq_remap_enable_fault_handling()+0x1d: unreachable instruction
-
-Kernel boots. As I'm currently benchmarking VDSO performance, this was
-obviosly my first test. Compared to the same kernel built with gcc6.3 the
-performance of the VDSO drops slightly.
-
-It's below 1%. Though I need to run the same tests on 4 other uarchs to get
-the full picture. This stuff is randomly changing behaviour accross uarchs
-depending on how the c source is arranged. So nothing to worry about (yet).
-
-Thanks,
-
-	tglx
-
+Logan
