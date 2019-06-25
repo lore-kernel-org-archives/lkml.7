@@ -2,133 +2,136 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56077C4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D707FC4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 327A220652
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D1220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:42:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ilPzVsZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbfFYBhG (ORCPT
+        id S1730109AbfFYBm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:37:06 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:33946 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbfFYBhG (ORCPT
+        Mon, 24 Jun 2019 21:42:27 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:11769 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728213AbfFYBm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:37:06 -0400
-Received: by mail-io1-f70.google.com with SMTP id m1so24404558iop.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 18:37:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=TnVrQ4YvO4oISiWml6A505UMpY7/fxx8brPHktMRArU=;
-        b=WDmNMcUnVpHVA7rECYG/t6Mbgg9c9FjDdf6+1/W5zcZPzb6G/+QEQE8oqpY5AePXw1
-         HlNSf4EgwUJEDk8LdlBnIwVpzvNKIW32kbbDgeMjlYt9b6BbcePmtfazRTpZrR6T2cvW
-         7ZzvxZYThlBeE2KpwcK7PBTR6RvKKQqwf4F7CNXOWr0viKzHu9xIeZ9i2lF5rMQ8Mv6Y
-         c+gN5s5qKztxF0X8R6Fa8+CeBZm5fNBgQmcUwc4NG3V0FrG3USldRNrIWpKBcFpqQG9b
-         AHonYWG9xqm+OfCOpxovs+bAuggI7DnUQ565c5Bwp3BisPGBVnq365s5ZLrEgHwn7yJG
-         3R+g==
-X-Gm-Message-State: APjAAAV89wYZqvmhGdnaEZIKHhkr6h3tuaBxk+d5ypRkrw6QYTrMReOy
-        S28wXrH/8Z9tdTODPU97Ddc/AQ5yIoImjWPPIFexGfwrZS/k
-X-Google-Smtp-Source: APXvYqzqqGVQFb8EOPVD6tBKgkxVc7zKJp9LF6hrmn+7GV/S1Uzp1HcJUGAMahXLCinJ8tX02RANiG8TEcxYuvBraxBqqm138WEl
-MIME-Version: 1.0
-X-Received: by 2002:a6b:c886:: with SMTP id y128mr2446813iof.100.1561426625488;
- Mon, 24 Jun 2019 18:37:05 -0700 (PDT)
-Date:   Mon, 24 Jun 2019 18:37:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005aedf1058c1bf7e8@google.com>
-Subject: WARNING in mark_lock
-From:   syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Mon, 24 Jun 2019 21:42:26 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190625014223epoutp0293bb438e64ba8019744102ce32e78698~rTYgs-w100817508175epoutp02Y
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 01:42:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190625014223epoutp0293bb438e64ba8019744102ce32e78698~rTYgs-w100817508175epoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561426943;
+        bh=Q+wSE1D1mkFPZ3kbjNBSBDW6V8ZYgQZcbvAOHEb9UBw=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=ilPzVsZM5LcPCnpIXO9KGG1sIxvKCVsnZgcdv8IOz8Jt7t0NgV/ldqJMLrTEz1eGD
+         ezbR+FYhwGnG8VocWUy3W6vEWC4mZN/U0SxROI/gO2lm2AKsr/FBBc2Iq0z2GmuVUq
+         3D5RqORgFlML4QAQtft/rtu/zIgCBDpTyx3muQ+4=
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.156]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190625014219epcas1p18d32dff3ac18bf156107086369b628a0~rTYdK9I8B2220822208epcas1p1V;
+        Tue, 25 Jun 2019 01:42:19 +0000 (GMT)
+X-AuditID: b6c32a35-973ff7000000102b-44-5d117bf69493
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F9.F9.04139.6FB711D5; Tue, 25 Jun 2019 10:42:14 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: Re: [PATCH v4 13/16] PM / devfreq: tegra: Support Tegra30
+Reply-To: myungjoo.ham@samsung.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Chanwoo Choi <cw00.choi@samsung.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <7561edbc-c17c-101a-b339-fc7f9968a470@gmail.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190625014214epcms1p1b8f2d76cd8cfdf3fdf517be08a92ccdf@epcms1p1>
+Date:   Tue, 25 Jun 2019 10:42:14 +0900
+X-CMS-MailID: 20190625014214epcms1p1b8f2d76cd8cfdf3fdf517be08a92ccdf
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdlhTT/dbtWCswfQJkhbXvzxntVj98TGj
+        RcusRSwWl3fNYbP43HuE0aLzyyw2i5+75rE4sHvsnHWX3aO3+R2bR9+WVYwenzfJBbBEZdtk
+        pCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAF2gpFCWmFMK
+        FApILC5W0rezKcovLUlVyMgvLrFVSi1IySmwLNArTswtLs1L10vOz7UyNDAwMgUqTMjOuPd9
+        NmvBHbGKSVfOsjQwdoh1MXJwSAiYSLxYEdfFyMUhJLCDUeL/whlsIHFeAUGJvzuEuxg5OYQF
+        3CS2XfvNAmILCShJNNzcxwwR15foeLCNEcRmE9CV2LrhLliNiICaxPKjf1hBZjILnGaS2Lz2
+        JxtIQkKAV2JG+1MWCFtaYvvyrWDNnAK2Et2/vjFBxEUlbq5+yw5jvz82nxHCFpFovXeWGcIW
+        lHjwczcjzJwZU/5DzayWuDZ9MTvIYgmBFkaJ3tVToIr0Jc7MPQn1mK/EyTVlIGEWAVWJ6Q/X
+        Q810keg5NRnsBmYBbYllC18zg5QzC2hKrN+lD1GiKLHz91xGiBI+iXdfe1hh3tox7wnU+WoS
+        h3YvgTpfRuL09IVQ4z0kXpzYxwoJ52Zmie7X89gmMCrMQgT1LCSbZyFsXsDIvIpRLLWgODc9
+        tdiwwBA5cjcxghOjlukOxinnfA4xCnAwKvHw/jgmECvEmlhWXJl7iFGCg1lJhHdpIlCINyWx
+        siq1KD++qDQntfgQoykwACYyS4km5wOTdl5JvKGpkbGxsYWJoZmpoaGSOG88980YIYH0xJLU
+        7NTUgtQimD4mDk6pBsZplrqcW6N2N0w8fa8+9uztw8ur1LLmzN3GdqzkoymzlYERo3bCsmXP
+        /35/sDuUT7ls/98rd/9lBpxwurIxyGCa8YX3eio3/j9baJFXaj2z7cM+j9Ce1SlnJqRPWGCr
+        y5fw8s4WsRffVePVD/Avj5jG2/dq/9PpjlsOX/CfqHLyR2RnypcTbOWmSizFGYmGWsxFxYkA
+        Ew20XKIDAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f
+References: <7561edbc-c17c-101a-b339-fc7f9968a470@gmail.com>
+        <37db00bc-3a22-d1c2-7bdc-e27af42cd5c7@gmail.com>
+        <20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
+        <20190624073414epcms1p87b6dc13758b6bd401d275cfba583314a@epcms1p8>
+        <20190624111134epcms1p361aed3c72edd6eebc95408331c8d9739@epcms1p3>
+        <CGME20190624065919epcms1p1a366de5f455f5138c438d1da8151c12f@epcms1p1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    dc636f5d Add linux-next specific files for 20190620
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=162b68b1a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=99c104b0092a557b
-dashboard link: https://syzkaller.appspot.com/bug?extid=a861f52659ae2596492b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110b24f6a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167 hlock_class  
-kernel/locking/lockdep.c:167 [inline]
-WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167 hlock_class  
-kernel/locking/lockdep.c:156 [inline]
-WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167  
-mark_lock+0x22b/0x11e0 kernel/locking/lockdep.c:3594
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9968 Comm: syz-executor.2 Not tainted 5.2.0-rc5-next-20190620  
-#19
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:219
-  __warn.cold+0x20/0x4c kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
-RIP: 0010:hlock_class kernel/locking/lockdep.c:156 [inline]
-RIP: 0010:mark_lock+0x22b/0x11e0 kernel/locking/lockdep.c:3594
-Code: d0 7c 08 84 d2 0f 85 33 0f 00 00 44 8b 15 4d 14 4a 08 45 85 d2 75 b6  
-48 c7 c6 c0 a6 8b 87 48 c7 c7 00 a7 8b 87 e8 ad e6 eb ff <0f> 0b 31 db e9  
-a8 fe ff ff 48 c7 c7 80 71 86 8a e8 f0 95 53 00 e9
-RSP: 0018:ffff8880ae809ad0 EFLAGS: 00010082
-RAX: 0000000000000000 RBX: 0000000000000f1d RCX: 0000000000000000
-RDX: 0000000000010000 RSI: ffffffff815b37e6 RDI: ffffed1015d0134c
-RBP: ffff8880ae809b20 R08: ffff88808662e0c0 R09: fffffbfff11b3285
-R10: fffffbfff11b3284 R11: ffffffff88d99423 R12: 0000000000000000
-R13: ffff88808662e9c8 R14: 000000000000004f R15: 00000000000c4f1d
-  mark_usage kernel/locking/lockdep.c:3485 [inline]
-  __lock_acquire+0x1e1a/0x4680 kernel/locking/lockdep.c:3839
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4418
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-  try_to_wake_up+0x90/0x1430 kernel/sched/core.c:2000
-  wake_up_process+0x10/0x20 kernel/sched/core.c:2114
-  hrtimer_wakeup+0x48/0x60 kernel/time/hrtimer.c:1636
-  __run_hrtimer kernel/time/hrtimer.c:1388 [inline]
-  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1450
-  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1508
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
-  smp_apic_timer_interrupt+0x12a/0x5b0 arch/x86/kernel/apic/apic.c:1066
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
-  </IRQ>
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Sender : Dmitry Osipenko <digetx=40gmail.com>
+>24.06.2019 14:11, MyungJoo Ham =D0=BF=D0=B8=D1=88=D0=B5=D1=82:=0D=0A>>>=0D=
+=0A>>>=20---------=20Original=20Message=20---------=0D=0A>>>=20Sender=20:=
+=20Dmitry=20Osipenko=20<digetx=40gmail.com>=0D=0A>>>=0D=0A>>>=2024.06.2019=
+=2010:34,=20MyungJoo=20Ham=20=D0=BF=D0=B8=D1=88=D0=B5=D1=82:=0D=0A>>>>>=0D=
+=0A>>>>>=20A=20question:=0D=0A>>>>>=0D=0A>>>>>=20Does=20this=20driver=20sup=
+port=20Tegra20=20as=20well?=0D=0A>>>>>=20I'm=20asking=20this=20because=20AR=
+CH_TEGRA=20includes=20ARCH_TEGRA_2x_SOC=0D=0A>>>>>=20according=20to=20/driv=
+ers/soc/tegra/Kconfig.=0D=0A>>>>>=0D=0A>>>>=0D=0A>>>>=20For=20this=20matter=
+,=20how=20about=20updating=20your=2013/16=20patch=20as=20follows?=0D=0A>>>>=
+=0D=0A>>=20=5B=5D=0D=0A>>>=0D=0A>>>=20Good=20call=21=20I'll=20update=20this=
+=20patch=20following=20yours=20suggestion,=20thanks.=0D=0A>>=20=0D=0A>>=20O=
+r,=20you=20may=20approve=20the=20modified=20commits=20here:=0D=0A>>=20https=
+://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/log/?h=3Dfor-nex=
+t=0D=0A>=20=0D=0A>Looks=20almost=20good=20to=20me=21=0D=0A>=20=0D=0A>I=20ju=
+st=20recalled=20that=20there=20is=20also=20a=2064bit=20variant=20of=20Tegra=
+124,=20the=20Tegra132.=20Hence=0D=0A>the=20Tegra30+=20Kconfig=20entry=20sho=
+uld=20look=20like=20this=20(it's=20also=20worthy=20to=20break=20the=20lines=
+=0D=0A>for=20readability):=0D=0A>=20=0D=0A>diff=20--git=20a/drivers/devfreq=
+/Kconfig=20b/drivers/devfreq/Kconfig=0D=0A>index=20ccb1a68c4b51..bd2efbc277=
+25=20100644=0D=0A>---=20a/drivers/devfreq/Kconfig=0D=0A>+++=20b/drivers/dev=
+freq/Kconfig=0D=0A>=40=40=20-94,7=20+94,10=20=40=40=20config=20ARM_EXYNOS_B=
+US_DEVFREQ=0D=0A>=20=0D=0A>=20config=20ARM_TEGRA_DEVFREQ=0D=0A>=20=20=20=20=
+=20=20=20=20tristate=20=22NVIDIA=20Tegra30/114/124/210=20DEVFREQ=20Driver=
+=22=0D=0A>-=20=20=20=20=20=20=20depends=20on=20ARCH_TEGRA=20=7C=7C=20COMPIL=
+E_TEST=0D=0A>+=20=20=20=20=20=20=20depends=20on=20ARCH_TEGRA_3x_SOC=20=20=
+=7C=7C=20ARCH_TEGRA_114_SOC=20=7C=7C=20=5C=0D=0A>+=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20ARCH_TEGRA_132_SOC=20=7C=7C=20ARCH_TEGRA_124_=
+SOC=20=7C=7C=20=5C=0D=0A>+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20ARCH_TEGRA_210_SOC=20=7C=7C=20=5C=0D=0A>+=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20COMPILE_TEST=0D=0A>=20=20=20=20=20=20=20=20selec=
+t=20PM_OPP=0D=0A>=20=20=20=20=20=20=20=20help=0D=0A>=20=20=20=20=20=20=20=
+=20=20=20This=20adds=20the=20DEVFREQ=20driver=20for=20the=20Tegra=20family=
+=20of=20SoCs.=0D=0A>=20=0D=0A>Could=20you=20please=20adjust=20the=20patches=
+=20like=20I'm=20suggesting?=20I'll=20approve=20yours=20change=0D=0A>then=20=
+and=20won't=20re-spin=20the=20first=20batch=20of=20the=20patches.=0D=0A=0D=
+=0AI've=20adjusted=20as=20you=20suggested.=20It's=20pushed=20to=20the=20git=
+=20repo=20as=20well.=0D=0A=0D=0ACheers,=0D=0AMyungJoo.=0D=0A=0D=0A
