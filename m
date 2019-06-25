@@ -2,125 +2,134 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F875C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F032C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FA6214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E555F214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Syd3W+CI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Syd3W+CI"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="XuTR6bBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfFYK3U (ORCPT
+        id S1728232AbfFYK3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:29:20 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36912 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbfFYK3U (ORCPT
+        Tue, 25 Jun 2019 06:29:32 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35709 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbfFYK3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:29:20 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9143B6028D; Tue, 25 Jun 2019 10:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561458558;
-        bh=BCA2m2EDttizL1A7WMCfrSo2P/383TvoBmUFUGVg/ZU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Syd3W+CIctgNf4j9/Jyu09VjziFwHSAzzZ4OWTV/cNVSgN7q8/Ei6igMA3HeuCNrF
-         kBES8tsru1ZVUwAdTYT5gdSO3IwW7Jrgnt3VDCGjh5x4srhKmP99vdT0Eg8PDFK99N
-         xZAFpSlJ7sQe39Uy3pgj+ik11mcvWgSPnWdmQBI0=
-Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D9CB060255;
-        Tue, 25 Jun 2019 10:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561458558;
-        bh=BCA2m2EDttizL1A7WMCfrSo2P/383TvoBmUFUGVg/ZU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Syd3W+CIctgNf4j9/Jyu09VjziFwHSAzzZ4OWTV/cNVSgN7q8/Ei6igMA3HeuCNrF
-         kBES8tsru1ZVUwAdTYT5gdSO3IwW7Jrgnt3VDCGjh5x4srhKmP99vdT0Eg8PDFK99N
-         xZAFpSlJ7sQe39Uy3pgj+ik11mcvWgSPnWdmQBI0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D9CB060255
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: [PATCH v2] pinctrl: qcom: Add irq_enable callback for msm gpio
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Timur Tabi <timur@codeaurora.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>
-References: <1560764090-22740-1-git-send-email-neeraju@codeaurora.org>
- <CACRpkdZ4BoZzX7pVw4HYBzSMvhnyu_oVNoiiLk3ME05nnG1T3Q@mail.gmail.com>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <c9eb6bfc-a8d1-75df-159b-3f2304fdb8ea@codeaurora.org>
-Date:   Tue, 25 Jun 2019 15:59:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 25 Jun 2019 06:29:31 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so15728327ljh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 03:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BJvNPnbZj9zGBKXuVgxHHmB6XgCNQ719LVT/L+1Rnxk=;
+        b=XuTR6bBeaKUEPh5UseQhYYmWqWAjNUjpRgAX7AjxbeZvduUacWiwx++x4y492nNlyJ
+         EIQHpYkQUIM7XnxbkRk6C+yta1outhXZQMjawylDaxz7QXJfTykh9CiuLL5vgC/4Va2G
+         a7cUrKWfE8IG5ZULQFCEoWbVnO/1l8O45A6uLrA5eZ6v4IQZyuGS7FckdCqLtDPlipsu
+         ATOBHN8iT4W6Obl4voBrkbuXM+O2TR+2Fbf8P4qF69veEXHMpcTVbWNKQ0IZY3L4Cd2U
+         OjUZ7CkDc/ZF8AIeBz4xW1OSQrX6fy/1KD+YiSSiq1Ji+UsKERGqccwZVKT+lLqVgPzf
+         9m0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BJvNPnbZj9zGBKXuVgxHHmB6XgCNQ719LVT/L+1Rnxk=;
+        b=hfWKnwXSuCHY2FfH/8sW0x8xRbseihpavF8gQ/FRvd4wjXhq00AiAbI4GdlXKZZ9iZ
+         B8AQaZtuYpU5Zmp5MeHO2CwQfBwGca+Q5D7D8rotl9fXIIIXTS8COsLyXxYnKsNJ6wgT
+         v7YX2yhFzAGj+Y0oY4GSCBB3/5YfP21nwGRfJYRxAuEa2Rlm70uHwaLXB7uDX8mzMFKS
+         GlboWSQR7P+zW5A3baNj1kjJbcY02eynPRjrF/caX4WDGJSZXlT7fMJ+WNdGJDZAVdAr
+         NCBwimvULuRuilLVQGdR/TunxkYDg2dtPIRjytGyFJ1xP5DLq0oB0mANLMgswthJCH+E
+         kzBQ==
+X-Gm-Message-State: APjAAAX5eOsbqCExjeCvkSIgJmG/Tc4aYQEN4E+eqrgLo82wDXZ5m/IZ
+        3PTEAUb/Fh10lfRgEHZNV96Gmw==
+X-Google-Smtp-Source: APXvYqzZrJaehMzYIKdHcvNvYc3CnjfleAEBrYTTtIQcy5nKdqK/0MyQ6sURR/CIPhIrmkkSaB30rA==
+X-Received: by 2002:a2e:2993:: with SMTP id p19mr55277216ljp.202.1561458568940;
+        Tue, 25 Jun 2019 03:29:28 -0700 (PDT)
+Received: from [192.168.1.100] ([213.87.147.32])
+        by smtp.gmail.com with ESMTPSA id j7sm2539448lji.27.2019.06.25.03.29.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 03:29:28 -0700 (PDT)
+Subject: Re: [PATCH net-next] net: stmmac: Fix the case when PHY handle is not
+ present
+To:     Jose Abreu <Jose.Abreu@synopsys.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+References: <351cce38d1c572d8b171044f2856c7fae9f89cbc.1561450696.git.joabreu@synopsys.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <895a67c1-3b83-d7be-b64e-61cff86d057d@cogentembedded.com>
+Date:   Tue, 25 Jun 2019 13:29:20 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZ4BoZzX7pVw4HYBzSMvhnyu_oVNoiiLk3ME05nnG1T3Q@mail.gmail.com>
+In-Reply-To: <351cce38d1c572d8b171044f2856c7fae9f89cbc.1561450696.git.joabreu@synopsys.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello!
 
-On 6/25/19 2:28 PM, Linus Walleij wrote:
-> On Mon, Jun 17, 2019 at 11:35 AM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
->
->> From: Srinivas Ramana <sramana@codeaurora.org>
->>
->> Introduce the irq_enable callback which will be same as irq_unmask
->> except that it will also clear the status bit before unmask.
->>
->> This will help in clearing any erroneous interrupts that would
->> have got latched when the interrupt is not in use.
->>
->> There may be devices like UART which can use the same gpio line
->> for data rx as well as a wakeup gpio when in suspend. The data that
->> was flowing on the line may latch the interrupt and when we enable
->> the interrupt before going to suspend, this would trigger the
->> unexpected interrupt. This change helps clearing the interrupt
->> so that these unexpected interrupts gets cleared.
->>
->> Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
->> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> Overall this looks good to me, waiting for Bjorn's review.
->
->> Changes since v1:
->> - Extracted common code into __msm_gpio_irq_unmask().
-> Please don't name functions __like __that.
->
->> -static void msm_gpio_irq_unmask(struct irq_data *d)
->> +static void __msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
-> Instead of __unclear __underscore __semantic use something
-> really descriptive like
->
-> static void msm_gpio_irq_clear_irq()
->
-> That is what it does, right?
+On 25.06.2019 11:19, Jose Abreu wrote:
 
-Is below ok? as it clears (if status_clear set) and then unmasks irq
+> Some DT bindings do not have the PHY handle. Let's fallback to manually
+> discovery in case phylink_of_phy_connect() fails.
+> 
+> Reported-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> ---
+> Hello Katsuhiro,
+> 
+> Can you please test this patch ?
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> index a48751989fa6..f4593d2d9d20 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -950,9 +950,12 @@ static int stmmac_init_phy(struct net_device *dev)
+>   
+>   	node = priv->plat->phylink_node;
+>   
+> -	if (node) {
+> +	if (node)
+>   		ret = phylink_of_phy_connect(priv->phylink, node, 0);
+> -	} else {
+> +
+> +	/* Some DT bindings do not set-up the PHY handle. Let's try to
+> +	 * manually parse it */
 
-static void msm_gpio_irq_clear_unmask()
+    The multi-line comments inb the networking code should be formatted like 
+below:
 
->
-> Other than that it looks fine.
->
-> Yours,
-> Linus Walleij
+	/*
+	 * bla
+	 * bla
+	 */
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+> +	if (!node || ret) {
+>   		int addr = priv->plat->phy_addr;
+>   		struct phy_device *phydev;
+>   
 
+MBR, Sergei
