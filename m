@@ -2,112 +2,110 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE35C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE90EC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FCD21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:01:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EERSTOpW"
+	by mail.kernel.org (Postfix) with ESMTP id B3A64208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 12:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561464137;
+	bh=WJOVGAz1c0OOcyDbIfhtLcfA6Ul6Hv2n0Y1uLzpkXU4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0ZQ03tIFxQXBywryJ2L4CcvrvYYA7CUeq2KI3384Tt+A6uGsndQFPcvVON2nG1Sn4
+	 2XAoXq9ft2Ibr2PYmv9TFxwvbX38K2q169E7UvooN6XZ9T067M0OzO+ogYuMBAU+vw
+	 9RLPcKohy+B48atOlPnIAND3sgH/xqjum0nu9UuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbfFYMBX (ORCPT
+        id S1728710AbfFYMCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 08:01:23 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55484 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbfFYMBW (ORCPT
+        Tue, 25 Jun 2019 08:02:16 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55434 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbfFYMCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 08:01:22 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PBwcBb132878;
-        Tue, 25 Jun 2019 11:59:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=hUQwZ/Yt5oMGyNid41BWKaqAulxyvbzq7M/4Y2XpoHI=;
- b=EERSTOpWa9xrrpTInBtn/ArkzEul+heFi0ub7jRdysEG8UOI/I6M9bJm33G27ESaiILC
- ZiUjGnF8CFiOspcraJI2Pw5SkCmPGMvlUeAW0DTjjKclDs481WCH6F0GfY0esT0wPONi
- MBs4+5wGmMVEaJ1BLLNoWpULlPTAiiauzt/zaIHyioiPyB7obEQYeUbcdqi4Hp65xP62
- wuMQnzksSnyyNH4ttH8zr7amPiVI+5rUpmTr/F6nZ/FU7P3KglRTjiWkYGuccEV5KtXt
- AcgBySGTzwRrIHnHzKlilLyk6KHJyzZ4IilvMQLyZ6RoISHiyEQjvLCDP9r3aeXuXamG Mw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2t9c9pkv5p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 11:59:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5PBwiOM130304;
-        Tue, 25 Jun 2019 11:59:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t9p6u5143-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 11:59:58 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5PBxsgP012043;
-        Tue, 25 Jun 2019 11:59:54 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 04:59:54 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org,
-        srinivas.eeda@oracle.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Ingo Molnar <mingo@redhat.com>, jailhouse-dev@googlegroups.com
-Subject: [PATCH v2 2/7] x86/jailhouse: Mark jailhouse_x2apic_available as __init
-Date:   Mon, 24 Jun 2019 20:02:54 +0800
-Message-Id: <1561377779-28036-3-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906250097
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9298 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906250097
+        Tue, 25 Jun 2019 08:02:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=b2J4Pt7t4hYVG7ofjpjNHmNyJ482a3sq6kwtJg/kj00=; b=pp7H62C8OUex2EpyNRapqgEJN
+        bRL9VIiNb8IuO2noOl3YFsOczGlTpPE6vgs/UFEa7EOsdHSJrCaI4fCe9PGZHysZk8x6ojEX7kwgW
+        EI0f0Rsa5NvJIrUya5hdhCGDzvZmIYdRvIAkHQf3Dpd22St9v2JsrQGL5bKflSXAAHG5M=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hfk8s-0005Dt-KL; Tue, 25 Jun 2019 12:01:42 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id A18BC440046; Tue, 25 Jun 2019 13:01:41 +0100 (BST)
+Date:   Tue, 25 Jun 2019 13:01:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 03/11] ASoC: compress: Fix memory leak from
+ snd_soc_new_compress
+Message-ID: <20190625120141.GQ5316@sirena.org.uk>
+References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
+ <20190617113644.25621-4-amadeuszx.slawinski@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FpiZi7hT3UZZkRL4"
+Content-Disposition: inline
+In-Reply-To: <20190617113644.25621-4-amadeuszx.slawinski@linux.intel.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.. as they are only called at early bootup stage.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: jailhouse-dev@googlegroups.com
----
- arch/x86/kernel/jailhouse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--FpiZi7hT3UZZkRL4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-index 1b2ee55..d96d563 100644
---- a/arch/x86/kernel/jailhouse.c
-+++ b/arch/x86/kernel/jailhouse.c
-@@ -203,7 +203,7 @@ bool jailhouse_paravirt(void)
- 	return jailhouse_cpuid_base() != 0;
- }
- 
--static bool jailhouse_x2apic_available(void)
-+static bool __init jailhouse_x2apic_available(void)
- {
- 	/*
- 	 * The x2APIC is only available if the root cell enabled it. Jailhouse
--- 
-1.8.3.1
+On Mon, Jun 17, 2019 at 01:36:36PM +0200, Amadeusz S=C5=82awi=C5=84ski wrot=
+e:
+> Change kzalloc to devm_kzalloc, so compr gets automatically freed when
+> it's no longer needed.
+>=20
+> Signed-off-by: Amadeusz S=C5=82awi=C5=84ski <amadeuszx.slawinski@linux.in=
+tel.com>
+> ---
+>  sound/soc/soc-compress.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
 
+This will mean it'll get freed at some point if the driver for the
+device it's allocated against gets removed but it will still get
+allocated every time the card gets instntiated (eg, due to deferred
+probe or due to some other driver getting probed and removed).
+
+--FpiZi7hT3UZZkRL4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0SDSQACgkQJNaLcl1U
+h9CaAwf8DVsk20XPT9zYetddOVSYB+aF3yUzSct7IemG29IlKRZZc/cPOycQkP92
+weS9wGPzizmWuHiwwDCOsP9SooYKsYyYIRXJOldfrt4/tjnfuNNsjpF21/moUeoj
+rDjJ2RZVz5qwKTkRuNxclDfo0i44/SKK+Mr5hcNGYV1G7hYngza5x45WwsY3N20F
+56cNs8ct+Yd25TbrskUE+reGVIoSGrNei8tDunr9BOegLB/FAUdbFYZ61doHesf4
+O+X+iNhE+/GbGAzxMUm5jZ6yDR2VEz63Kx4jtJ+auG1d5bOReWXxc/8ezeucdGMd
+G4ZL2CALbTKAHgvtZu29cZaZ81T4Ew==
+=m/VR
+-----END PGP SIGNATURE-----
+
+--FpiZi7hT3UZZkRL4--
