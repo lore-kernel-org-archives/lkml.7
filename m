@@ -2,96 +2,150 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA02EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AB6C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B212208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561484357;
-	bh=uN+wDDacNJwqx+v/3/n9nLahoHqzeiFAwdlzYipdI4Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZBLBr//u+YbNu839HemVlWHiwz6doz375qOxHfJwCyWl08qHD7B0ag04nEm3H3IpK
-	 O1bsjEfMJ+4oz5JEugx0leRf8sOswKdgPhHOHoAq1HCA7C6gH7qfpykLr6Ye1NSPgu
-	 jMpg5J44Om77aSoJqyGM+kmR2j7UcGf9gjiaYcuY=
+	by mail.kernel.org (Postfix) with ESMTP id 96B592084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 17:40:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B2tUetSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732218AbfFYRjQ (ORCPT
+        id S1732306AbfFYRk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 13:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfFYRjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 13:39:16 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5318208CA;
-        Tue, 25 Jun 2019 17:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561484354;
-        bh=uN+wDDacNJwqx+v/3/n9nLahoHqzeiFAwdlzYipdI4Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DZClxw/ihopBvtSbOR8Z1H0A4Pac9E37GVJDGLb5uGZFu+kZDSY5rK6XQLgx77MGu
-         PZWac+VgZuLeOQlZkw5MTWkK76V3Cvn5l724U3UUKKRahQ4StmpEdHw7+tMuFEZ35w
-         f0pAHmJoix4gJmL4t9ALd8FeAQUbyBDdcKOUDJ8U=
-Received: by mail-qt1-f173.google.com with SMTP id p15so19354822qtl.3;
-        Tue, 25 Jun 2019 10:39:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAVO5ney6DEo3qabSQJNJcu36eDXk52uhyQKMPG96eD5MtkSrRbV
-        j/61dSEllkxBdWFljIcko+TjbjjxLYbO6gtv0g==
-X-Google-Smtp-Source: APXvYqyklRzybJRVDTEpfp0SeahUkH+awTTyyTlDMslpGY15qipWFkQLHnSeins0DWa3Bf2iY4HJCCw2GsgIen75KcU=
-X-Received: by 2002:a0c:b627:: with SMTP id f39mr65154134qve.72.1561484354003;
- Tue, 25 Jun 2019 10:39:14 -0700 (PDT)
+        Tue, 25 Jun 2019 13:40:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46776 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbfFYRk5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 13:40:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v9so9279871pgr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 10:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ux77FZ9CHBjOrnDI3EGePYwTHmJ+z3DID4gfNoVBXXI=;
+        b=B2tUetSMchtGW/+SGYLyVgEoxEsQnGMalqfzkjRhSWLa2CAkg9rIOWI2GrJouCvBmJ
+         8SSoFbzPRXkulByCc5u2YTkbxzk3N/RPcIhBo+OM3Jz9vXdGLPi+TvGlOLoAMx10+WlV
+         P/0Y1ECcoF74A7rb/2nxql5xDRiDJ7zW4eJ5k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ux77FZ9CHBjOrnDI3EGePYwTHmJ+z3DID4gfNoVBXXI=;
+        b=KJepflNa4AUSobWWZbDVvFetkdedWB0umkRs3leoBbNBZ3z9lpgZ3ralJqqfVs6S7s
+         4w3/CUEJFUQbcmO2FYjeB67CSQ+vHJgErz1SidDmnxS6QH+PfvzGEvUtjIdZ5JkMTG3N
+         cBZuDhY3dFW7j/68Olp1zunzpIXrC097BYof/cyBJXFrG2zeGpZR/OHgWpPA+ZXkGvOX
+         g5MnnwgooVC+FgqeFCFf+BJ9LtmslOC3TTM79FjBaPM1hbECn8olrl4INvDykwzda9/C
+         fBgsZ42cSyMscvbS9aaCZJy+owAXyUh0weU7rVKjVaEfqM3bBU5kUUVC6QJy/EqwO3x5
+         vX1Q==
+X-Gm-Message-State: APjAAAVws/gvacSNylbTZRD13Jlx4tDISY7VgEItJc3BUGMl7jOL28Qs
+        Oui5PLvA1V5h65cZj51Od36waQ==
+X-Google-Smtp-Source: APXvYqzNDPcrCGfOG+yL1j11DnH5kFJPaIn1I4HvlZNFyLHQ4xt+OBlk/zX50Hgr1Nyc9Lq0MQAuSw==
+X-Received: by 2002:a63:d60c:: with SMTP id q12mr39461181pgg.176.1561484456705;
+        Tue, 25 Jun 2019 10:40:56 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id 85sm20872129pfv.130.2019.06.25.10.40.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 10:40:55 -0700 (PDT)
+From:   Brian Norris <briannorris@chromium.org>
+To:     Ganapathi Bhat <gbhat@marvell.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v2 0/2] mwifiex: spinlock usage improvements
+Date:   Tue, 25 Jun 2019 10:40:43 -0700
+Message-Id: <20190625174045.125223-1-briannorris@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-References: <20190623043801.14040-1-icenowy@aosc.io> <20190623043801.14040-6-icenowy@aosc.io>
- <CACRpkdbbxgeGPh1oKfyKKOMhpXiz4sQWjZv23FbYaafCz6NyCQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbbxgeGPh1oKfyKKOMhpXiz4sQWjZv23FbYaafCz6NyCQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 25 Jun 2019 11:39:01 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+w-+cRwfAMu=kZPK=e85ujq8hu9Lh=jjf+Qy=R7C-AQA@mail.gmail.com>
-Message-ID: <CAL_Jsq+w-+cRwfAMu=kZPK=e85ujq8hu9Lh=jjf+Qy=R7C-AQA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/9] dt-bindings: vendor-prefixes: add SoChip
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 7:55 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Sun, Jun 23, 2019 at 6:39 AM Icenowy Zheng <icenowy@aosc.io> wrote:
->
-> > Shenzhen SoChip Technology Co., Ltd. is a hardware vendor that produces
-> > EVBs with Allwinner chips. There's also a SoC named S3 that is developed
-> > by Allwinner (based on Allwinner V3/V3s) but branded SoChip.
-> >
-> > Add the vendor prefix for SoChip.
-> >
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> > No changes in v3.
-> >
-> > Changes in v2:
-> > - Add the review tag by Rob.
->
-> Should I apply this to the pinctrl tree? Rob?
+This series follows up on some notes from this thread:
 
-I'd like to take these 2 because we have lots of vendor prefix changes
-(adding a bunch of undocumented ones) this cycle.
+  http://lkml.kernel.org/linux-wireless/20181130175957.167031-1-briannorris@chromium.org
+  Subject: [4.20 PATCH] Revert "mwifiex: restructure rx_reorder_tbl_lock usage"
 
-Rob
+where Ganapathi suggested I send out my work.
+
+In particular, patch 1 is a step toward helping apply Ganapathi's
+original "mwifiex: restructure rx_reorder_tbl_lock usage" solution
+without regression, by logically separating the two operations (and
+therefore, the locking patterns) involved in that deadlock. It doesn't
+re-apply that change, nor does it 100% unblock such a solution, but at
+least it's a step in the right direction, as I understand it.
+
+Patch 2 is a change I noticed should be possible along the way. There
+are a number of reasons we probably shouldn't be disabling hardirqs when
+it's not necessary, but one funny side effect: bugs noticed in the above
+"revert" patch would no longer happen. This is because
+mwifiex_recv_packet() bases softirq decisions on in_interrupt() (see
+description in include/linux/preempt.h), so it will automatically skip
+softirq processing if we have BH disabled, but not if we only have hard
+IRQs disabled. In other words, if we have such an incorrect nesting bug
+in the future (this time with BH disabled), we will now skip softirq
+processing and therefore sidestep this sort of bug. [1]
+
+[Related note: softirq masking is weird:
+https://lwn.net/Articles/779738/]
+
+It's also possible we can improve system responsiveness and
+debuggability by keeping (hard) IRQs enabled more often, although I
+didn't measure any particular effect here, and most of these contexts
+should be rather quick.
+
+I've done a variety of performance and stress tests for this series, on
+both 8897/SDIO and 8997/PCIe, and I haven't seen any decrease in
+performance or stability. Or, any change in performance appears to be
+within the range of "noise".
+
+Regards,
+Brian
+
+[1] Side note: the usage of 'in_interrupt()' in mwifiex_recv_packet() is
+probably not really a good idea. But it does have a helpful side effect
+for this particular sort of bug.
+
+Changelog:
+
+v2:
+ * fix warnings about using uninitialized "flags" variables
+
+
+Brian Norris (2):
+  mwifiex: dispatch/rotate from reorder table atomically
+  mwifiex: don't disable hardirqs; just softirqs
+
+ drivers/net/wireless/marvell/mwifiex/11n.c    |  53 +++-----
+ drivers/net/wireless/marvell/mwifiex/11n.h    |   5 +-
+ .../net/wireless/marvell/mwifiex/11n_aggr.c   |  26 ++--
+ .../net/wireless/marvell/mwifiex/11n_aggr.h   |   2 +-
+ .../wireless/marvell/mwifiex/11n_rxreorder.c  | 125 ++++++++----------
+ .../net/wireless/marvell/mwifiex/cfg80211.c   |  35 +++--
+ drivers/net/wireless/marvell/mwifiex/cmdevt.c |  76 +++++------
+ drivers/net/wireless/marvell/mwifiex/init.c   |  32 ++---
+ drivers/net/wireless/marvell/mwifiex/main.c   |  29 ++--
+ drivers/net/wireless/marvell/mwifiex/scan.c   |  58 ++++----
+ .../wireless/marvell/mwifiex/sta_cmdresp.c    |   5 +-
+ .../net/wireless/marvell/mwifiex/sta_event.c  |  10 +-
+ drivers/net/wireless/marvell/mwifiex/tdls.c   |  68 ++++------
+ drivers/net/wireless/marvell/mwifiex/txrx.c   |   5 +-
+ .../net/wireless/marvell/mwifiex/uap_txrx.c   |  10 +-
+ drivers/net/wireless/marvell/mwifiex/usb.c    |  10 +-
+ drivers/net/wireless/marvell/mwifiex/util.c   |  15 +--
+ drivers/net/wireless/marvell/mwifiex/wmm.c    | 109 ++++++---------
+ 18 files changed, 278 insertions(+), 395 deletions(-)
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
