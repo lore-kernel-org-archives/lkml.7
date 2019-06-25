@@ -2,98 +2,105 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE8C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E351C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E521208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FCD208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="CUMIS28l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732466AbfFYPnu (ORCPT
+        id S1732473AbfFYPru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:43:50 -0400
-Received: from mga03.intel.com ([134.134.136.65]:7838 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfFYPnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:43:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 08:43:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
-   d="scan'208";a="152334540"
-Received: from pkoeberl-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.33.126])
-  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2019 08:43:42 -0700
-Date:   Tue, 25 Jun 2019 18:43:41 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, sean.j.christopherson@intel.com
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v20 22/28] x86/traps: Attempt to fixup exceptions in vDSO
- before signaling
-Message-ID: <20190625154341.GA7046@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190417103938.7762-23-jarkko.sakkinen@linux.intel.com>
+        Tue, 25 Jun 2019 11:47:50 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:39792 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726443AbfFYPrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:47:49 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5PFhjts017774;
+        Tue, 25 Jun 2019 10:47:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=AU9lgQXgneIvc7cWJxJm5cU7a8ZdhB5OZwaVtO2oiAI=;
+ b=CUMIS28lY4HANj3FDmm1kEsCaXAGwGN7TeQvK+poUo1H5F1V68d3fSytyN2rCk+fQdQA
+ zMWKyVDGwjOnXDwNBw4MUbWZyE76V9bKrtj3EYcIs/NHDWpuqilQnI4sA7wGm6Lk2yjY
+ PLLmMJX8taJMqygmI0oSQZwMJ/rlchQwqg6Cp02QBcKAIMrp3dna7hevQHAq6/JhN8aM
+ jpOblrIiqWwtFuKmcjoCvKYgcymDXbsV574y6+69wsRfC0r3lppXC/L4SdcdXPyp6Yi+
+ jZOoiaWUQZ+qszZ+ZrMXI8Jlgs/Ym2rCvPAG+9ffvle5SphIkR6vj/BEwcdRXYgsBhmq AQ== 
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail3.cirrus.com ([87.246.76.56])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2t9grnvx2u-1;
+        Tue, 25 Jun 2019 10:47:18 -0500
+Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
+        by mail3.cirrus.com (Postfix) with ESMTP id 01F7C6121AFE;
+        Tue, 25 Jun 2019 10:48:06 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 25 Jun
+ 2019 16:47:17 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 25 Jun 2019 16:47:17 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 7685244;
+        Tue, 25 Jun 2019 16:47:17 +0100 (BST)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: [PATCH] irqchip: madera: Fixup SPDX headers
+Date:   Tue, 25 Jun 2019 16:47:17 +0100
+Message-ID: <20190625154717.28640-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417103938.7762-23-jarkko.sakkinen@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=710 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906250119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 01:39:32PM +0300, Jarkko Sakkinen wrote:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> vDSO functions can now leverage an exception fixup mechanism similar to
-> kernel exception fixup.  For vDSO exception fixup, the initial user is
-> Intel's Software Guard Extensions (SGX), which will wrap the low-level
-> transitions to/from the enclave, i.e. EENTER and ERESUME instructions,
-> in a vDSO function and leverage fixup to intercept exceptions that would
-> otherwise generate a signal.  This allows the vDSO wrapper to return the
-> fault information directly to its caller, obviating the need for SGX
-> applications and libraries to juggle signal handlers.
-> 
-> Attempt to fixup vDSO exceptions immediately prior to populating and
-> sending signal information.  Except for the delivery mechanism, an
-> exception in a vDSO function should be treated like any other exception
-> in userspace, e.g. any fault that is successfully handled by the kernel
-> should not be directly visible to userspace.
-> 
-> Although it's debatable whether or not all exceptions are of interest to
-> enclaves, defer to the vDSO fixup to decide whether to do fixup or
-> generate a signal.  Future users of vDSO fixup, if there ever are any,
-> will undoubtedly have different requirements than SGX enclaves, e.g. the
-> fixup vs. signal logic can be made function specific if/when necessary.
-> 
-> Suggested-by: Andy Lutomirski <luto@amacapital.net>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+GPL-2.0-only is the preferred way of expressing v2 of the GPL, update
+the code to use this.
 
-I went through the vDSO changes just to revisit couple of details that I
-had forgotten. Sean, if you don't mind I'd squash this and prepending
-patch.
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/irqchip/irq-madera.c       | 2 +-
+ include/linux/irqchip/irq-madera.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Is there any obvious reason why #PF fixup is in its own patch and the
-rest are collected to the same patch? I would not find it confusing if
-there was one patch per exception but really don't get this division.
+diff --git a/drivers/irqchip/irq-madera.c b/drivers/irqchip/irq-madera.c
+index 8b81271c823c6..6b0457876941d 100644
+--- a/drivers/irqchip/irq-madera.c
++++ b/drivers/irqchip/irq-madera.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Interrupt support for Cirrus Logic Madera codecs
+  *
+diff --git a/include/linux/irqchip/irq-madera.h b/include/linux/irqchip/irq-madera.h
+index 1160fa3769ae6..3a46cadd38654 100644
+--- a/include/linux/irqchip/irq-madera.h
++++ b/include/linux/irqchip/irq-madera.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: GPL-2.0-only */
+ /*
+  * Interrupt support for Cirrus Logic Madera codecs
+  *
+-- 
+2.11.0
 
-/Jarkko
