@@ -2,257 +2,97 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA425C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11505C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81A1215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DDE215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I9Vr2dk5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tnNPtYBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbfFYKE0 (ORCPT
+        id S1731866AbfFYKEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:04:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32788 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfFYKE0 (ORCPT
+        Tue, 25 Jun 2019 06:04:54 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56120 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfFYKEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:04:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i4so16876258otk.0;
-        Tue, 25 Jun 2019 03:04:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r7iw8LBQxbFbstW7h748xeikkIjwfdpfAOak7Wc/2tw=;
-        b=I9Vr2dk5UrP3odGn8jpvnMY6uNFcd8PGCwngA8OKtWebh363a8Fvp+ApsTvYgNZvlj
-         9f5fhdDGItb7DfELBceaYLEpjrfmjR16L+G5LD2XSdOu2GvdSAtAEtZlr7oQ6UWxh1i8
-         KYbGQeadShCvq+NAItHPzsXkQEl43Qj6ilSsQNV6cA89QDYeWxnA0ODZjMvXvPRqGEKk
-         vBoPKkAQJkSesN0+hJ3V7eBOaUAHvQ6bFIdxlmUOjCYSs/L8HtQOuLrl945YpyTruWfX
-         oooN6E6OVfC0wUAGe/FDGw4K7xPBUkeXwOgKEj2vqzaWZVahhmtlXRLYGv6Cr3jhBDwr
-         7mBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r7iw8LBQxbFbstW7h748xeikkIjwfdpfAOak7Wc/2tw=;
-        b=iMOtR6bfn23nx/Zq0WGF1rnkmodD72xYL46wmQdAwlMYYwTI8TGjGuy0gm1qoLqXCd
-         nYZfI39wFNoK3nKpgbNmesOuKAAwJSA6OZkMMMUdO/ljCnxjXGpk4m3POQI7ThiqWKJQ
-         lQRGcRr1Qa3doJ1v2zpLwgJY/QeulkxNQhQnVjbQryzN4VAHKygvE60XTXY+hM77DuHh
-         ojUgoIG5SzLX7nDuWyhNl8moYKSgsm8PdpbpwkgN2HxHrRtZjWPD/UB+WtYXJWNgFh9T
-         dafMDsM6VzRIOgeQe6DEWSUg/tZ0JTc9Uj54x6x6+UQgkXLdimb6k+yTMhHUg80GHw84
-         YQ3A==
-X-Gm-Message-State: APjAAAUPSqLI26qwQqwtC6WcrKYrKa4fKsLhTK7xh942ZRmdFSTV573j
-        XFxK1R196awL4skBcY6JgorzSHZOqwJ4NsIpUFI=
-X-Google-Smtp-Source: APXvYqxFTZtYsPbTyUdfIfqVxEPQuRr5TF3Vc4BqfdD39Li5rv8RSUrnCx2q2lF4EJ01PeaNqOHibIoWWLWX5S2n2kw=
-X-Received: by 2002:a9d:4b15:: with SMTP id q21mr31158527otf.3.1561457065038;
- Tue, 25 Jun 2019 03:04:25 -0700 (PDT)
+        Tue, 25 Jun 2019 06:04:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5PA4nub062386;
+        Tue, 25 Jun 2019 05:04:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561457089;
+        bh=P/SKDRzg6dvG83d820OF33YKZOlXQ/dcokiyRm5jtFc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tnNPtYBvq0/Yfx2zSsRQaGvcpfIolg/EwKSFKH62pwS3DTWQrENKYwZThgO4UKpwB
+         7nZMth6gzj/dQZsxl4dGNtlIJIfXnee87fJptL0wZGptuNDWWgb/QY9nhiRwbApnk2
+         P7O6MfDgHUY6eOl2Fo7xUNEvE0KsnGK8cbjoIhFg=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5PA4nro037894
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Jun 2019 05:04:49 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 25
+ Jun 2019 05:04:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 25 Jun 2019 05:04:49 -0500
+Received: from [10.250.132.197] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5PA4g3K005525;
+        Tue, 25 Jun 2019 05:04:43 -0500
+Subject: Re: [PATCH V2] net: ethernet: ti: cpsw: Fix suspend/resume break
+To:     David Miller <davem@davemloft.net>
+CC:     <ivan.khoronzhuk@linaro.org>, <andrew@lunn.ch>,
+        <ilias.apalodimas@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <t-kristo@ti.com>, <grygorii.strashko@ti.com>, <nsekhar@ti.com>
+References: <20190624051619.20146-1-j-keerthy@ti.com>
+ <20190624.072333.2300932810459542260.davem@davemloft.net>
+From:   keerthy <j-keerthy@ti.com>
+Message-ID: <e8e07695-d3dc-6a67-aede-a84d6cd3dbcc@ti.com>
+Date:   Tue, 25 Jun 2019 15:34:41 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190507095248.17915-1-enric.balletbo@collabora.com> <20190523195438.GA110498@google.com>
-In-Reply-To: <20190523195438.GA110498@google.com>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Tue, 25 Jun 2019 12:04:13 +0200
-Message-ID: <CAFqH_52mdHKGN6gA3HuRJrcBvG1GpE+LzAyLgJD_xeZAiHruFw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] power: supply: add input power and voltage limit properties
-To:     Benson Leung <bleung@google.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sameer Nanda <snanda@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Adam.Thomson.Opensource@diasemi.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Pavel Machek <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190624.072333.2300932810459542260.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian, Pavel,
 
-Missatge de Benson Leung <bleung@google.com> del dia dj., 23 de maig
-2019 a les 21:55:
->
-> Hi Enric,
->
-> On Tue, May 07, 2019 at 11:52:47AM +0200, Enric Balletbo i Serra wrote:
-> > For thermal management strategy you might be interested on limit the
-> > input power for a power supply. We already have current limit but
-> > basically what we probably want is to limit power. So, introduce the
-> > input_power_limit property.
-> >
-> > Although the common use case is limit the input power, in some
-> > specific cases it is the voltage that is problematic (i.e some regulators
-> > have different efficiencies at higher voltage resulting in more heat).
-> > So introduce also the input_voltage_limit property.
-> >
-> > This happens in one Chromebook and is used on the Pixel C's thermal
-> > management strategy to effectively limit the input power to 5V 3A when
-> > the screen is on. When the screen is on, the display, the CPU, and the GPU
-> > all contribute more heat to the system than while the screen is off, and
-> > we made a tradeoff to throttle the charger in order to give more of the
-> > thermal budget to those other components.
-> >
-> > So there's nothing fundamentally broken about the hardware that would
-> > cause the Pixel C to malfunction if we were charging at 9V or 12V instead
-> > of 5V when the screen is on, i.e. if userspace doesn't change this.
-> >
-> > What would happen is that you wouldn't meet Google's skin temperature
-> > targets on the system if the charger was allowed to run at 9V or 12V with
-> > the screen on.
-> >
-> > For folks hacking on Pixel Cs (which is now outside of Google's official
-> > support window for Android) and customizing their own kernel and userspace
-> > this would be acceptable, but we wanted to expose this feature in the
-> > power supply properties because the feature does exist in the Emedded
-> > Controller firmware of the Pixel C and all of Google's Chromebooks with
-> > USB-C made since 2015 in case someone running an up to date kernel wanted
-> > to limit the charging power for thermal or other reasons.
-> >
-> > This patch exposes a new property, similar to input current limit, to
-> > re-configure the maximum voltage from the external supply at runtime
-> > based on system-level knowledge or user input.
-> >
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Reviewed-by: Guenter Roeck <groeck@chromium.org>
-> > Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
->
-> Reviewed-by: Benson Leung <bleung@chromium.org>
->
 
-We're close to the merge window so I'm wondering if there are more
-concerns on this patchset?
+On 6/24/2019 7:53 PM, David Miller wrote:
+> From: Keerthy <j-keerthy@ti.com>
+> Date: Mon, 24 Jun 2019 10:46:19 +0530
+> 
+>> Commit bfe59032bd6127ee190edb30be9381a01765b958 ("net: ethernet:
+>> ti: cpsw: use cpsw as drv data")changes
+>> the driver data to struct cpsw_common *cpsw. This is done
+>> only in probe/remove but the suspend/resume functions are
+>> still left with struct net_device *ndev. Hence fix both
+>> suspend & resume also to fetch the updated driver data.
+>>
+>> Fixes: bfe59032bd6127ee1 ("net: ethernet: ti: cpsw: use cpsw as drv data")
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> 
+> Applied but please make it clear that changes are targetting net-next in the
+> future by saying "[PATCH net-next v2] ...." in your Subject line.
 
-Thanks,
-~ Enric
+Sure will do that. Thanks.
 
-> > ---
-> >
-> > Changes in v4:
-> > - Add also input_power_limit.
-> >
-> > Changes in v3:
-> > - Improve commit log and documentation with Benson comments.
-> >
-> > Changes in v2:
-> > - Document the new property in ABI/testing/sysfs-class-power.
-> > - Add the Reviewed-by Guenter Roeck tag.
-> >
-> >  Documentation/ABI/testing/sysfs-class-power | 32 +++++++++++++++++++++
-> >  Documentation/power/power_supply_class.txt  |  4 +++
-> >  drivers/power/supply/power_supply_sysfs.c   |  2 ++
-> >  include/linux/power_supply.h                |  2 ++
-> >  4 files changed, 40 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> > index 5e23e22dce1b..962a27a1daf8 100644
-> > --- a/Documentation/ABI/testing/sysfs-class-power
-> > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > @@ -331,10 +331,42 @@ Description:
-> >               supply. Normally this is configured based on the type of
-> >               connection made (e.g. A configured SDP should output a maximum
-> >               of 500mA so the input current limit is set to the same value).
-> > +             Use preferably input_power_limit, and for problems that can be
-> > +             solved using power limit use input_current_limit.
-> >
-> >               Access: Read, Write
-> >               Valid values: Represented in microamps
-> >
-> > +What:                /sys/class/power_supply/<supply_name>/input_voltage_limit
-> > +Date:                May 2019
-> > +Contact:     linux-pm@vger.kernel.org
-> > +Description:
-> > +             This entry configures the incoming VBUS voltage limit currently
-> > +             set in the supply. Normally this is configured based on
-> > +             system-level knowledge or user input (e.g. This is part of the
-> > +             Pixel C's thermal management strategy to effectively limit the
-> > +             input power to 5V when the screen is on to meet Google's skin
-> > +             temperature targets). Note that this feature should not be
-> > +             used for safety critical things.
-> > +             Use preferably input_power_limit, and for problems that can be
-> > +             solved using power limit use input_voltage_limit.
-> > +
-> > +             Access: Read, Write
-> > +             Valid values: Represented in microvolts
-> > +
-> > +What:                /sys/class/power_supply/<supply_name>/input_power_limit
-> > +Date:                May 2019
-> > +Contact:     linux-pm@vger.kernel.org
-> > +Description:
-> > +             This entry configures the incoming power limit currently set
-> > +             in the supply. Normally this is configured based on
-> > +             system-level knowledge or user input. Use preferably this
-> > +             feature to limit the incoming power and use current/voltage
-> > +             limit only for problems that can be solved using power limit.
-> > +
-> > +             Access: Read, Write
-> > +             Valid values: Represented in microwatts
-> > +
-> >  What:                /sys/class/power_supply/<supply_name>/online,
-> >  Date:                May 2007
-> >  Contact:     linux-pm@vger.kernel.org
-> > diff --git a/Documentation/power/power_supply_class.txt b/Documentation/power/power_supply_class.txt
-> > index 300d37896e51..1e3c705111db 100644
-> > --- a/Documentation/power/power_supply_class.txt
-> > +++ b/Documentation/power/power_supply_class.txt
-> > @@ -137,6 +137,10 @@ power supply object.
-> >
-> >  INPUT_CURRENT_LIMIT - input current limit programmed by charger. Indicates
-> >  the current drawn from a charging source.
-> > +INPUT_VOLTAGE_LIMIT - input voltage limit programmed by charger. Indicates
-> > +the voltage limit from a charging source.
-> > +INPUT_POWER_LIMIT - input power limit programmed by charger. Indicates
-> > +the power limit from a charging source.
-> >
-> >  CHARGE_CONTROL_LIMIT - current charge control limit setting
-> >  CHARGE_CONTROL_LIMIT_MAX - maximum charge control limit setting
-> > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> > index 5358a80d854f..860db617d241 100644
-> > --- a/drivers/power/supply/power_supply_sysfs.c
-> > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > @@ -275,6 +275,8 @@ static struct device_attribute power_supply_attrs[] = {
-> >       POWER_SUPPLY_ATTR(charge_control_limit),
-> >       POWER_SUPPLY_ATTR(charge_control_limit_max),
-> >       POWER_SUPPLY_ATTR(input_current_limit),
-> > +     POWER_SUPPLY_ATTR(input_voltage_limit),
-> > +     POWER_SUPPLY_ATTR(input_power_limit),
-> >       POWER_SUPPLY_ATTR(energy_full_design),
-> >       POWER_SUPPLY_ATTR(energy_empty_design),
-> >       POWER_SUPPLY_ATTR(energy_full),
-> > diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> > index 2f9c201a54d1..ba135a5d8996 100644
-> > --- a/include/linux/power_supply.h
-> > +++ b/include/linux/power_supply.h
-> > @@ -122,6 +122,8 @@ enum power_supply_property {
-> >       POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
-> >       POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
-> >       POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-> > +     POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
-> > +     POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
-> >       POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
-> >       POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
-> >       POWER_SUPPLY_PROP_ENERGY_FULL,
-> > --
-> > 2.20.1
-> >
->
-> --
-> Benson Leung
-> Staff Software Engineer
-> Chrome OS Kernel
-> Google Inc.
-> bleung@google.com
-> Chromium OS Project
-> bleung@chromium.org
+> 
+> Thank you.
+> 
