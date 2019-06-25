@@ -2,165 +2,133 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73866C4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56077C4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37AB2212F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:29:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="GddzZNJi"
+	by mail.kernel.org (Postfix) with ESMTP id 327A220652
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbfFYB3W (ORCPT
+        id S1730064AbfFYBhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:29:22 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33200 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727728AbfFYB3W (ORCPT
+        Mon, 24 Jun 2019 21:37:06 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:33946 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbfFYBhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:29:22 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m4so7443168pgk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 18:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=474r08//8FJD1v658qJyBzGmPp2fJuSEfEyv/CnfdVs=;
-        b=GddzZNJiE8VR1oUVTCDcUwothRMS8GdIrqGZA1bhLUbXycYK2xN9RIbjH8YCOTSAYQ
-         saRT2rQ4LDwQP145yX1vzp/HYY9g4e50B/iLZqmaC3A7bISPwArS/6QvJyJS7LUpYeT1
-         vXFwA9PHyCR0WDOHQhQ6Q+ofajSRgvi8iHZgmIlewqRpomawiGBELrlJMSeTWx0hCBNB
-         dJfyq/cijVNTn8eWCORJ87dqZ0Sqb/CjNMZQm7KoGKr5ljD8Y1qhrWNG4Z/rxcuwBIcL
-         KLZ4vCDWxVAH+emsRNAP0c/AY+OfIs27AvQ21bZkm4Z3y/gL+c96Ji5FGgqzINK3ikw1
-         REnQ==
+        Mon, 24 Jun 2019 21:37:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id m1so24404558iop.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 18:37:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=474r08//8FJD1v658qJyBzGmPp2fJuSEfEyv/CnfdVs=;
-        b=a0UERLERZMO2NqdxnbQeEaUV1gvQjr5jEGZSHX7fho2bHPAdGKUSnSuOualYMI+5Uq
-         DqIAWg2hhwPpVfQuRxVBeazeeln9TPyGeDh/Wot/llg4obVL+JoV0o2p5YqeNUBDvFmM
-         6d5LBQsxQQwle50wLouJrmljaCmI5lXqwns1sBKlkFqyx5egKnSLmQSLE8Aw5Dgc5+sN
-         +Gk83mHY9wSZ83k22wTyyEmAlH+xZqUEr/ejslWwC6K5qNU/KFD79WQH6dLPz2ZClkLa
-         f+Ehh47V9iKoSQz/rD6p4UqRbypXmEoR+rIydRSigHoG+RXSVNIXeX/aikwHyfJqVeAO
-         +7xA==
-X-Gm-Message-State: APjAAAUBiEB8MLtKxqLodw4p6l4prbf8eW6aEYLsmgcKn8w9qc+nLa3G
-        5t0ZWxABgdV2Ql/62301qxSeMA==
-X-Google-Smtp-Source: APXvYqwt2ciSE2R7MdI/FGbilpaBKdXho6qyh0pcZyLNooQc3vNygFVrD9E4thCiKI1f6zIHNGEmpQ==
-X-Received: by 2002:a63:d415:: with SMTP id a21mr34816748pgh.229.1561426161626;
-        Mon, 24 Jun 2019 18:29:21 -0700 (PDT)
-Received: from localhost.localdomain (p2517222-ipngn21701marunouchi.tokyo.ocn.ne.jp. [118.7.246.222])
-        by smtp.gmail.com with ESMTPSA id e188sm2959716pfh.99.2019.06.24.18.29.19
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 18:29:20 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     rostedt@goodmis.org, mingo@redhat.com, linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH] tracing/snapshot: resize spare buffer if size changed
-Date:   Tue, 25 Jun 2019 10:29:10 +0900
-Message-Id: <20190625012910.13109-1-devel@etsukata.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=TnVrQ4YvO4oISiWml6A505UMpY7/fxx8brPHktMRArU=;
+        b=WDmNMcUnVpHVA7rECYG/t6Mbgg9c9FjDdf6+1/W5zcZPzb6G/+QEQE8oqpY5AePXw1
+         HlNSf4EgwUJEDk8LdlBnIwVpzvNKIW32kbbDgeMjlYt9b6BbcePmtfazRTpZrR6T2cvW
+         7ZzvxZYThlBeE2KpwcK7PBTR6RvKKQqwf4F7CNXOWr0viKzHu9xIeZ9i2lF5rMQ8Mv6Y
+         c+gN5s5qKztxF0X8R6Fa8+CeBZm5fNBgQmcUwc4NG3V0FrG3USldRNrIWpKBcFpqQG9b
+         AHonYWG9xqm+OfCOpxovs+bAuggI7DnUQ565c5Bwp3BisPGBVnq365s5ZLrEgHwn7yJG
+         3R+g==
+X-Gm-Message-State: APjAAAV89wYZqvmhGdnaEZIKHhkr6h3tuaBxk+d5ypRkrw6QYTrMReOy
+        S28wXrH/8Z9tdTODPU97Ddc/AQ5yIoImjWPPIFexGfwrZS/k
+X-Google-Smtp-Source: APXvYqzqqGVQFb8EOPVD6tBKgkxVc7zKJp9LF6hrmn+7GV/S1Uzp1HcJUGAMahXLCinJ8tX02RANiG8TEcxYuvBraxBqqm138WEl
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:c886:: with SMTP id y128mr2446813iof.100.1561426625488;
+ Mon, 24 Jun 2019 18:37:05 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 18:37:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005aedf1058c1bf7e8@google.com>
+Subject: WARNING in mark_lock
+From:   syzbot <syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current snapshot implementation swaps two ring_buffers even though their
-sizes are different from each other, that can cause an inconsistency
-between the contents of buffer_size_kb file and the current buffer size.
+Hello,
 
-For example:
+syzbot found the following crash on:
 
-  # cat buffer_size_kb
-  7 (expanded: 1408)
-  # echo 1 > events/enable
-  # grep bytes per_cpu/cpu0/stats
-  bytes: 1441020
-  # echo 1 > snapshot             // current:1408, spare:1408
-  # echo 123 > buffer_size_kb     // current:123,  spare:1408
-  # echo 1 > snapshot             // current:1408, spare:123
-  # grep bytes per_cpu/cpu0/stats
-  bytes: 1443700
-  # cat buffer_size_kb
-  123                             // != current:1408
+HEAD commit:    dc636f5d Add linux-next specific files for 20190620
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=162b68b1a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=99c104b0092a557b
+dashboard link: https://syzkaller.appspot.com/bug?extid=a861f52659ae2596492b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110b24f6a00000
 
-And also, a similar per-cpu case hits the following WARNING:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a861f52659ae2596492b@syzkaller.appspotmail.com
 
-Reproducer:
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167 hlock_class  
+kernel/locking/lockdep.c:167 [inline]
+WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167 hlock_class  
+kernel/locking/lockdep.c:156 [inline]
+WARNING: CPU: 0 PID: 9968 at kernel/locking/lockdep.c:167  
+mark_lock+0x22b/0x11e0 kernel/locking/lockdep.c:3594
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9968 Comm: syz-executor.2 Not tainted 5.2.0-rc5-next-20190620  
+#19
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2dc/0x755 kernel/panic.c:219
+  __warn.cold+0x20/0x4c kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
+RIP: 0010:hlock_class kernel/locking/lockdep.c:156 [inline]
+RIP: 0010:mark_lock+0x22b/0x11e0 kernel/locking/lockdep.c:3594
+Code: d0 7c 08 84 d2 0f 85 33 0f 00 00 44 8b 15 4d 14 4a 08 45 85 d2 75 b6  
+48 c7 c6 c0 a6 8b 87 48 c7 c7 00 a7 8b 87 e8 ad e6 eb ff <0f> 0b 31 db e9  
+a8 fe ff ff 48 c7 c7 80 71 86 8a e8 f0 95 53 00 e9
+RSP: 0018:ffff8880ae809ad0 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 0000000000000f1d RCX: 0000000000000000
+RDX: 0000000000010000 RSI: ffffffff815b37e6 RDI: ffffed1015d0134c
+RBP: ffff8880ae809b20 R08: ffff88808662e0c0 R09: fffffbfff11b3285
+R10: fffffbfff11b3284 R11: ffffffff88d99423 R12: 0000000000000000
+R13: ffff88808662e9c8 R14: 000000000000004f R15: 00000000000c4f1d
+  mark_usage kernel/locking/lockdep.c:3485 [inline]
+  __lock_acquire+0x1e1a/0x4680 kernel/locking/lockdep.c:3839
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4418
+  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+  try_to_wake_up+0x90/0x1430 kernel/sched/core.c:2000
+  wake_up_process+0x10/0x20 kernel/sched/core.c:2114
+  hrtimer_wakeup+0x48/0x60 kernel/time/hrtimer.c:1636
+  __run_hrtimer kernel/time/hrtimer.c:1388 [inline]
+  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1450
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1508
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
+  smp_apic_timer_interrupt+0x12a/0x5b0 arch/x86/kernel/apic/apic.c:1066
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+  </IRQ>
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-  # echo 1 > per_cpu/cpu0/snapshot
-  # echo 123 > buffer_size_kb
-  # echo 1 > per_cpu/cpu0/snapshot
 
-WARNING:
-
-  WARNING: CPU: 0 PID: 1946 at kernel/trace/trace.c:1607 update_max_tr_single.part.0+0x2b8/0x380
-  Modules linked in:
-  CPU: 0 PID: 1946 Comm: bash Not tainted 5.2.0-rc6 #20
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-  RIP: 0010:update_max_tr_single.part.0+0x2b8/0x380
-  Code: ff e8 dc da f9 ff 0f 0b e9 88 fe ff ff e8 d0 da f9 ff 44 89 ee bf f5 ff ff ff e8 33 dc f9 ff 41 83 fd f5 74 96 e8 b8 da f9 ff <0f> 0b eb 8d e8 af da f9 ff 0f 0b e9 bf fd ff ff e8 a3 da f9 ff 48
-  RSP: 0018:ffff888063e4fca0 EFLAGS: 00010093
-  RAX: ffff888066214380 RBX: ffffffff99850fe0 RCX: ffffffff964298a8
-  RDX: 0000000000000000 RSI: 00000000fffffff5 RDI: 0000000000000005
-  RBP: 1ffff1100c7c9f96 R08: ffff888066214380 R09: ffffed100c7c9f9b
-  R10: ffffed100c7c9f9a R11: 0000000000000003 R12: 0000000000000000
-  R13: 00000000ffffffea R14: ffff888066214380 R15: ffffffff99851060
-  FS:  00007f9f8173c700(0000) GS:ffff88806d000000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000714dc0 CR3: 0000000066fa6000 CR4: 00000000000006f0
-  Call Trace:
-   ? trace_array_printk_buf+0x140/0x140
-   ? __mutex_lock_slowpath+0x10/0x10
-   tracing_snapshot_write+0x4c8/0x7f0
-   ? trace_printk_init_buffers+0x60/0x60
-   ? selinux_file_permission+0x3b/0x540
-   ? tracer_preempt_off+0x38/0x506
-   ? trace_printk_init_buffers+0x60/0x60
-   __vfs_write+0x81/0x100
-   vfs_write+0x1e1/0x560
-   ksys_write+0x126/0x250
-   ? __ia32_sys_read+0xb0/0xb0
-   ? do_syscall_64+0x1f/0x390
-   do_syscall_64+0xc1/0x390
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-This patch adds resize_buffer_duplicate_size() to check if there is a
-difference between current/spare buffer sizes and resize a spare buffer
-if necessary.
-
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
 ---
- kernel/trace/trace.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 83e08b78dbee..3edd4c1b96be 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6719,11 +6719,13 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 			break;
- 		}
- #endif
--		if (!tr->allocated_snapshot) {
-+		if (tr->allocated_snapshot)
-+			ret = resize_buffer_duplicate_size(&tr->max_buffer,
-+					&tr->trace_buffer, iter->cpu_file);
-+		else
- 			ret = tracing_alloc_snapshot_instance(tr);
--			if (ret < 0)
--				break;
--		}
-+		if (ret < 0)
-+			break;
- 		local_irq_disable();
- 		/* Now, we're going to swap */
- 		if (iter->cpu_file == RING_BUFFER_ALL_CPUS)
--- 
-2.21.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
