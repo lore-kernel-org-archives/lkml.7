@@ -2,116 +2,302 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A62C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B70AC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A61213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB0C213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:29:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oGU8yRQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfFYN2Q (ORCPT
+        id S1729885AbfFYN3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:28:16 -0400
-Received: from mga03.intel.com ([134.134.136.65]:65246 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfFYN2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:28:16 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 06:28:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
-   d="scan'208";a="155509935"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga008.jf.intel.com with ESMTP; 25 Jun 2019 06:28:13 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hflUa-0002rB-Do; Tue, 25 Jun 2019 16:28:12 +0300
-Date:   Tue, 25 Jun 2019 16:28:12 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        alexander.shishkin@linux.intel.com, akpm@linux-foundation.org,
-        ndesaulniers@google.com
-Subject: Re: [PATCH][V4] lib: fix __sysfs_match_string() helper when n != -1
-Message-ID: <20190625132812.GB9224@smile.fi.intel.com>
-References: <20190508111913.7276-1-alexandru.ardelean@analog.com>
- <20190625130104.29904-1-alexandru.ardelean@analog.com>
+        Tue, 25 Jun 2019 09:29:25 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36663 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfFYN3Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:29:24 -0400
+Received: by mail-qt1-f193.google.com with SMTP id p15so18360202qtl.3;
+        Tue, 25 Jun 2019 06:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nWFMf/cU7wdR9gf9WE59dnCpir05aR/M01SN38YnK3Q=;
+        b=oGU8yRQnts7GyfKohkWDo/O6PfoTsWzsqE7MoT1qfLF/FrT1z63WIIBZFOggrNlX4C
+         hGwWeOsHvZVbQzFoIhfV6KUfz1mE4DRD1PJBkCLcFlnoG1gKBrH4+i0R45uabonILk8F
+         56/DWSNsHwdioNanrMwH0UiVfWluyDnUskTC4qOJOIfOSRIb1MeZubS0orBEsX/Iu4o5
+         SvlOxQg6ExXyGYpquOpg7HiwF3mIEyky5q/IL6QRjtl8UkKCFvwdl8Eb87NT6curriWo
+         tnz7eP3rLkEBgcsBsLU6OEIJ28RTZKb3T0g5oOMoy8FDiftU5ZebBaSzszYJB40y97qJ
+         hIoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nWFMf/cU7wdR9gf9WE59dnCpir05aR/M01SN38YnK3Q=;
+        b=ng4vqidaYGa1XPdYoTkS3My+YBSyEbuxoj98br0quAX69pr3S/YKJWfMpqsTJFhdm3
+         w4hN/vW2TNq9Vqne0eNOcWYciIVnYs/+R0uTxCV6vMCHnzMff8Hh5Mc/ut72MTfJ1WOc
+         A/QYwk7fIXxWHDZuFtwCF7JftTMkKKEC/wiEQ/cFTaxn/Dts9eRwHiLbXd0zQgNiNLag
+         SmBvIo9TJ0fMzq4bDozb4lHqYiQSAV/iT1l3TcOTSvia5HN5vfBMk/+0a1fMFf69rI7w
+         Khdj3/obkMz/n5Uk6iYjRso79Lm4vyfIvyTp3VO6eQr2iZXLHAGwMTvU/6pS94yQxaS3
+         6QSg==
+X-Gm-Message-State: APjAAAVDozSp8RTeV7wzs8lO+wCEkqFtgxpA+scHIuTnbfnHBqEnhodw
+        s1TIxwF5svDba0S6MF+UhCvX9yOhyVOVHpUICoY=
+X-Google-Smtp-Source: APXvYqygAPv8biJjdnqXOpWmV7SZnXe6nuXdJ3TT4yCbdNc1Kq94YZVsurTcb6zFiuUHC5D92Pu/22Lc75nxpOedP1g=
+X-Received: by 2002:a0c:9916:: with SMTP id h22mr61708900qvd.95.1561469363322;
+ Tue, 25 Jun 2019 06:29:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625130104.29904-1-alexandru.ardelean@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190624162726.17413-1-jlayton@kernel.org> <20190624162726.17413-4-jlayton@kernel.org>
+In-Reply-To: <20190624162726.17413-4-jlayton@kernel.org>
+From:   "Yan, Zheng" <ukernel@gmail.com>
+Date:   Tue, 25 Jun 2019 21:29:12 +0800
+Message-ID: <CAAM7YAnAhuLK8byaaNGvrC0dO=9enp-E=OP+_dD6O+EucXoiXQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] ceph: don't NULL terminate virtual xattrs
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>, Zheng Yan <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, agruenba@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 04:01:04PM +0300, Alexandru Ardelean wrote:
-> The documentation the `__sysfs_match_string()` helper mentions that `n`
-> (the size of the given array) should be:
->  * @n: number of strings in the array or -1 for NULL terminated arrays
-> 
-> The behavior of the function is different, in the sense that it exits on
-> the first NULL element in the array.
-> 
-> This patch changes the behavior, to exit the loop when a NULL element is
-> found, and the size of the array is provided as -1.
-> 
-> All current users of __sysfs_match_string() & sysfs_match_string() provide
-> contiguous arrays of strings, so this behavior change doesn't influence
-> anything (at this point in time).
-> 
-> This behavior change allows for an array of strings to have NULL elements
-> within the array, which will be ignored. This is particularly useful when
-> creating mapping of strings and integers (as bitfields or other HW
-> description).
-
-Since it does nothing for current users and comes without an example,
-it's hard to justify the need.
-
-The code itself looks good to me.
-
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+On Tue, Jun 25, 2019 at 4:18 AM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> The convention with xattrs is to not store the termination with string
+> data, given that it returns the length. This is how setfattr/getfattr
+> operate.
+>
+> Most of ceph's virtual xattr routines use snprintf to plop the string
+> directly into the destination buffer, but snprintf always NULL
+> terminates the string. This means that if we send the kernel a buffer
+> that is the exact length needed to hold the string, it'll end up
+> truncated.
+>
+> Add a ceph_fmt_xattr helper function to format the string into an
+> on-stack buffer that is should always be large enough to hold the whole
+> thing and then memcpy the result into the destination buffer. If it does
+> turn out that the formatted string won't fit in the on-stack buffer,
+> then return -E2BIG and do a WARN_ONCE().
+>
+> Change over most of the virtual xattr routines to use the new helper. A
+> couple of the xattrs are sourced from strings however, and it's
+> difficult to know how long they'll be. Just have those memcpy the result
+> in place after verifying the length.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
-> 
-> Changelog v3 -> v4:
-> * split this patch away from series; there are some unsolved discussions
->   that will probably need resolving per sub-system
-> 
->  lib/string.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/string.c b/lib/string.c
-> index 3ab861c1a857..5bea3f98478a 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -674,8 +674,11 @@ int __sysfs_match_string(const char * const *array, size_t n, const char *str)
->  
->  	for (index = 0; index < n; index++) {
->  		item = array[index];
-> -		if (!item)
-> +		if (!item) {
-> +			if (n != (size_t)-1)
-> +				continue;
->  			break;
-> +		}
->  		if (sysfs_streq(item, str))
->  			return index;
->  	}
-> -- 
-> 2.20.1
-> 
+>  fs/ceph/xattr.c | 84 ++++++++++++++++++++++++++++++++++---------------
+>  1 file changed, 59 insertions(+), 25 deletions(-)
+>
+> diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+> index 9b77dca0b786..37b458a9af3a 100644
+> --- a/fs/ceph/xattr.c
+> +++ b/fs/ceph/xattr.c
+> @@ -109,22 +109,49 @@ static ssize_t ceph_vxattrcb_layout(struct ceph_inode_info *ci, char *val,
+>         return ret;
+>  }
+>
+> +/*
+> + * The convention with strings in xattrs is that they should not be NULL
+> + * terminated, since we're returning the length with them. snprintf always
+> + * NULL terminates however, so call it on a temporary buffer and then memcpy
+> + * the result into place.
+> + */
+> +static int ceph_fmt_xattr(char *val, size_t size, const char *fmt, ...)
+> +{
+> +       int ret;
+> +       va_list args;
+> +       char buf[96]; /* NB: reevaluate size if new vxattrs are added */
+> +
+> +       va_start(args, fmt);
+> +       ret = vsnprintf(buf, size ? sizeof(buf) : 0, fmt, args);
+> +       va_end(args);
+> +
+> +       /* Sanity check */
+> +       if (size && ret + 1 > sizeof(buf)) {
+> +               WARN_ONCE(true, "Returned length too big (%d)", ret);
+> +               return -E2BIG;
+> +       }
+> +
+> +       if (ret <= size)
+> +               memcpy(val, buf, ret);
+> +       return ret;
+> +}
+> +
+>  static ssize_t ceph_vxattrcb_layout_stripe_unit(struct ceph_inode_info *ci,
+>                                                 char *val, size_t size)
+>  {
+> -       return snprintf(val, size, "%u", ci->i_layout.stripe_unit);
+> +       return ceph_fmt_xattr(val, size, "%u", ci->i_layout.stripe_unit);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_layout_stripe_count(struct ceph_inode_info *ci,
+>                                                  char *val, size_t size)
+>  {
+> -       return snprintf(val, size, "%u", ci->i_layout.stripe_count);
+> +       return ceph_fmt_xattr(val, size, "%u", ci->i_layout.stripe_count);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_layout_object_size(struct ceph_inode_info *ci,
+>                                                 char *val, size_t size)
+>  {
+> -       return snprintf(val, size, "%u", ci->i_layout.object_size);
+> +       return ceph_fmt_xattr(val, size, "%u", ci->i_layout.object_size);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
+> @@ -138,10 +165,13 @@ static ssize_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
+>
+>         down_read(&osdc->lock);
+>         pool_name = ceph_pg_pool_name_by_id(osdc->osdmap, pool);
+> -       if (pool_name)
+> -               ret = snprintf(val, size, "%s", pool_name);
+> -       else
+> -               ret = snprintf(val, size, "%lld", pool);
+> +       if (pool_name) {
+> +               ret = strlen(pool_name);
+> +               if (ret <= size)
+> +                       memcpy(val, pool_name, ret);
+> +       } else {
+> +               ret = ceph_fmt_xattr(val, size, "%lld", pool);
+> +       }
+>         up_read(&osdc->lock);
+>         return ret;
+>  }
+> @@ -149,10 +179,13 @@ static ssize_t ceph_vxattrcb_layout_pool(struct ceph_inode_info *ci,
+>  static ssize_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
+>                                                    char *val, size_t size)
+>  {
+> -       int ret = 0;
+> +       ssize_t ret = 0;
+>         struct ceph_string *ns = ceph_try_get_string(ci->i_layout.pool_ns);
+> +
+>         if (ns) {
+> -               ret = snprintf(val, size, "%.*s", ns->len, ns->str);
+> +               ret = ns->len;
+> +               if (ret <= size)
+> +                       memcpy(val, ns->str, ret);
+>                 ceph_put_string(ns);
+>         }
+>         return ret;
+> @@ -163,50 +196,51 @@ static ssize_t ceph_vxattrcb_layout_pool_namespace(struct ceph_inode_info *ci,
+>  static ssize_t ceph_vxattrcb_dir_entries(struct ceph_inode_info *ci, char *val,
+>                                          size_t size)
+>  {
+> -       return snprintf(val, size, "%lld", ci->i_files + ci->i_subdirs);
+> +       return ceph_fmt_xattr(val, size, "%lld", ci->i_files + ci->i_subdirs);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_dir_files(struct ceph_inode_info *ci, char *val,
+>                                        size_t size)
+>  {
+> -       return snprintf(val, size, "%lld", ci->i_files);
+> +       return ceph_fmt_xattr(val, size, "%lld", ci->i_files);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_dir_subdirs(struct ceph_inode_info *ci, char *val,
+>                                          size_t size)
+>  {
+> -       return snprintf(val, size, "%lld", ci->i_subdirs);
+> +       return ceph_fmt_xattr(val, size, "%lld", ci->i_subdirs);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_dir_rentries(struct ceph_inode_info *ci, char *val,
+>                                           size_t size)
+>  {
+> -       return snprintf(val, size, "%lld", ci->i_rfiles + ci->i_rsubdirs);
+> +       return ceph_fmt_xattr(val, size, "%lld",
+> +                               ci->i_rfiles + ci->i_rsubdirs);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_dir_rfiles(struct ceph_inode_info *ci, char *val,
+>                                         size_t size)
+>  {
+> -       return snprintf(val, size, "%lld", ci->i_rfiles);
+> +       return ceph_fmt_xattr(val, size, "%lld", ci->i_rfiles);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_dir_rsubdirs(struct ceph_inode_info *ci, char *val,
+>                                           size_t size)
+>  {
+> -       return snprintf(val, size, "%lld", ci->i_rsubdirs);
+> +       return ceph_fmt_xattr(val, size, "%lld", ci->i_rsubdirs);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
+>                                         size_t size)
+>  {
+> -       return snprintf(val, size, "%lld", ci->i_rbytes);
+> +       return ceph_fmt_xattr(val, size, "%lld", ci->i_rbytes);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_dir_rctime(struct ceph_inode_info *ci, char *val,
+>                                         size_t size)
+>  {
+> -       return snprintf(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
+> -                       ci->i_rctime.tv_nsec);
+> +       return ceph_fmt_xattr(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
+> +                               ci->i_rctime.tv_nsec);
+>  }
+>
+>  /* dir pin */
+> @@ -218,7 +252,7 @@ static bool ceph_vxattrcb_dir_pin_exists(struct ceph_inode_info *ci)
+>  static ssize_t ceph_vxattrcb_dir_pin(struct ceph_inode_info *ci, char *val,
+>                                      size_t size)
+>  {
+> -       return snprintf(val, size, "%d", (int)ci->i_dir_pin);
+> +       return ceph_fmt_xattr(val, size, "%d", (int)ci->i_dir_pin);
+>  }
+>
+>  /* quotas */
+> @@ -238,20 +272,20 @@ static bool ceph_vxattrcb_quota_exists(struct ceph_inode_info *ci)
+>  static ssize_t ceph_vxattrcb_quota(struct ceph_inode_info *ci, char *val,
+>                                    size_t size)
+>  {
+> -       return snprintf(val, size, "max_bytes=%llu max_files=%llu",
+> -                       ci->i_max_bytes, ci->i_max_files);
+> +       return ceph_fmt_xattr(val, size, "max_bytes=%llu max_files=%llu",
+> +                               ci->i_max_bytes, ci->i_max_files);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_quota_max_bytes(struct ceph_inode_info *ci,
+>                                              char *val, size_t size)
+>  {
+> -       return snprintf(val, size, "%llu", ci->i_max_bytes);
+> +       return ceph_fmt_xattr(val, size, "%llu", ci->i_max_bytes);
+>  }
+>
+>  static ssize_t ceph_vxattrcb_quota_max_files(struct ceph_inode_info *ci,
+>                                              char *val, size_t size)
+>  {
+> -       return snprintf(val, size, "%llu", ci->i_max_files);
+> +       return ceph_fmt_xattr(val, size, "%llu", ci->i_max_files);
+>  }
+>
+>  /* snapshots */
+> @@ -263,8 +297,8 @@ static bool ceph_vxattrcb_snap_btime_exists(struct ceph_inode_info *ci)
+>  static ssize_t ceph_vxattrcb_snap_btime(struct ceph_inode_info *ci, char *val,
+>                                         size_t size)
+>  {
+> -       return snprintf(val, size, "%lld.%09ld", ci->i_snap_btime.tv_sec,
+> -                       ci->i_snap_btime.tv_nsec);
+> +       return ceph_fmt_xattr(val, size, "%lld.%09ld", ci->i_snap_btime.tv_sec,
+> +                               ci->i_snap_btime.tv_nsec);
+>  }
+>
+>  #define CEPH_XATTR_NAME(_type, _name)  XATTR_CEPH_PREFIX #_type "." #_name
+> --
+> 2.21.0
+>
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+series reviewed-by.
