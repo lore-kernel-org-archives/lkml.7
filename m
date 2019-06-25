@@ -2,140 +2,86 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095FAC4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B11C4646C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD601208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2BE20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 01:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfFYBx6 (ORCPT
+        id S1730251AbfFYBz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 21:53:58 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:59876 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729450AbfFYBx6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 21:53:58 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 7913729AF7;
-        Mon, 24 Jun 2019 21:53:52 -0400 (EDT)
-Date:   Tue, 25 Jun 2019 11:53:49 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-cc:     Alessandro Zummo <a.zummo@towertech.it>, userm57@yahoo.com,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-In-Reply-To: <20190624195705.GD5690@piout.net>
-Message-ID: <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
-References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au> <20190624195705.GD5690@piout.net>
+        Mon, 24 Jun 2019 21:55:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51124 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729450AbfFYBz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 21:55:26 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 037DE308626C;
+        Tue, 25 Jun 2019 01:55:26 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BF2CE5C277;
+        Tue, 25 Jun 2019 01:55:17 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 09:55:13 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Wenbin Zeng <wenbin.zeng@gmail.com>
+Cc:     axboe@kernel.dk, keith.busch@intel.com, hare@suse.com,
+        osandov@fb.com, sagi@grimberg.me, bvanassche@acm.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wenbin Zeng <wenbinzeng@tencent.com>
+Subject: Re: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug
+Message-ID: <20190625015512.GC23777@ming.t460p>
+References: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 25 Jun 2019 01:55:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019, Alexandre Belloni wrote:
+On Mon, Jun 24, 2019 at 11:24:07PM +0800, Wenbin Zeng wrote:
+> Currently hctx->cpumask is not updated when hot-plugging new cpus,
+> as there are many chances kblockd_mod_delayed_work_on() getting
+> called with WORK_CPU_UNBOUND, workqueue blk_mq_run_work_fn may run
 
-> On 21/06/2019 11:51:26+1000, Finn Thain wrote:
-> > Some machines store local time in the Real Time Clock. The hard-coded 
-> > "UTC" string is wrong on those machines so just omit that string. 
-> > Update the log parser so it doesn't require the string "UTC".
-> > 
+There are only two cases in which WORK_CPU_UNBOUND is applied:
+
+1) single hw queue
+
+2) multiple hw queue, and all CPUs in this hctx become offline
+
+For 1), all CPUs can be found in hctx->cpumask.
+
+> on the newly-plugged cpus, consequently __blk_mq_run_hw_queue()
+> reporting excessive "run queue from wrong CPU" messages because
+> cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) returns false.
+
+The message means CPU hotplug race is triggered.
+
+Yeah, there is big problem in blk_mq_hctx_notify_dead() which is called
+after one CPU is dead, but still run this hw queue to dispatch request,
+and all CPUs in this hctx might become offline.
+
+We have some discussion before on this issue:
+
+https://lore.kernel.org/linux-block/CACVXFVN729SgFQGUgmu1iN7P6Mv5+puE78STz8hj9J5bS828Ng@mail.gmail.com/
+
 > 
-> I don't agree, hctossys will always think the RTC is in UTC.
+> This patch added a cpu-hotplug handler into blk-mq, updating
+> hctx->cpumask at cpu-hotplug.
 
-Well, I wasn't speculating about a theoretical problem. This is a bug that 
-was reported to me by a user of Debian/powerpc system.
+This way isn't correct, hctx->cpumask should be kept as sync with
+queue mapping.
 
-I was able to confirm that the bug also affects dual-boot Windows/Linux on 
-x86 with CONFIG_RTC_HCTOSYS=y.
-
-> If you store local time in the RTC, then you are probably not using 
-> hctosys because it definitively doesn't know about the timezone and will 
-> incorrectly set the system time. That information is usually kept in 
-> /etc/adjtime.
-> 
-
-In the Debian/powerpc bug report, the timezone is obtained from the NVRAM:
-
-[    0.000000] PowerMac motherboard: PowerBook Wallstreet
-...
-[    0.000000] GMT Delta read from XPRAM: -360 minutes, DST: on
-...
-[   37.605859] rtc-generic rtc-generic: rtc core: registered rtc-generic as rtc0
-...
-[   40.346255] rtc-generic rtc-generic: setting system clock to 2019-06-19 15:17:35 UTC (1560957455)
-...
-
-Though I don't know whether the sys_tz value is relevant here.
-
-Anyway, here's the bug reproduced on x86 --
-
-# dmesg | grep rtc_cmos
-[    0.543878] rtc_cmos 00:02: RTC can wake from S4
-[    0.544090] rtc_cmos 00:02: rtc core: registered rtc_cmos as rtc0
-[    0.544090] rtc_cmos 00:02: alarms up to one month, y3k, 114 bytes nvram, hpet irqs
-[    0.545807] rtc_cmos 00:02: setting system clock to 2019-06-25 11:24:14 UTC (1561461854)
-# grep . /etc/adjtime /etc/timezone
-/etc/adjtime:0.000120 1550184138 0.000000
-/etc/adjtime:1550184138
-/etc/adjtime:LOCAL
-/etc/timezone:Australia/Melbourne
-# hwclock --show
-2019-06-25 11:47:49.702660+10:00
-# date --iso-8601=s
-2019-06-25T11:48:01+10:00
-# 
-
-Looks wrong to me. What am I missing?
-
--- 
-
-> > Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> > ---
-> >  drivers/rtc/hctosys.c             | 2 +-
-> >  tools/power/pm-graph/bootgraph.py | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/hctosys.c b/drivers/rtc/hctosys.c
-> > index ff2092a0d38c..2270eca23203 100644
-> > --- a/drivers/rtc/hctosys.c
-> > +++ b/drivers/rtc/hctosys.c
-> > @@ -58,7 +58,7 @@ static int __init rtc_hctosys(void)
-> >  
-> >  	err = do_settimeofday64(&tv64);
-> >  
-> > -	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
-> > +	dev_info(rtc->dev.parent, "setting system clock to %ptR (%lld)\n",
-> >  		 &tm, (long long)tv64.tv_sec);
-> >  
-> >  err_read:
-> > diff --git a/tools/power/pm-graph/bootgraph.py b/tools/power/pm-graph/bootgraph.py
-> > index 6dae57041537..5a045d1cb879 100755
-> > --- a/tools/power/pm-graph/bootgraph.py
-> > +++ b/tools/power/pm-graph/bootgraph.py
-> > @@ -333,7 +333,7 @@ def parseKernelLog():
-> >  			if(not sysvals.stamp['kernel']):
-> >  				sysvals.stamp['kernel'] = sysvals.kernelVersion(msg)
-> >  			continue
-> > -		m = re.match('.* setting system clock to (?P<t>.*) UTC.*', msg)
-> > +		m = re.match('.* setting system clock to (?P<t>.*) (?:UTC )?\(.*', msg)
-> >  		if(m):
-> >  			bt = datetime.strptime(m.group('t'), '%Y-%m-%d %H:%M:%S')
-> >  			bt = bt - timedelta(seconds=int(ktime))
-> > -- 
-> > 2.21.0
-> > 
-> 
-> -- 
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
-
+Thanks,
+Ming
