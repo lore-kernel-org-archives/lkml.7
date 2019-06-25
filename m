@@ -2,100 +2,157 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD63C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919ADC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33AF2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A4FC208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfFYTTx (ORCPT
+        id S1729511AbfFYTUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:19:53 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58627 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfFYTTw (ORCPT
+        Tue, 25 Jun 2019 15:20:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56949 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbfFYTUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 15:19:52 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 18B5DC000B;
-        Tue, 25 Jun 2019 19:19:46 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 21:19:45 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Trent Piepho <tpiepho@impinj.com>
-Cc:     "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "userm57@yahoo.com" <userm57@yahoo.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rtc: Don't state that the RTC holds UTC in case it
- doesn't
-Message-ID: <20190625191945.GH5690@piout.net>
-References: <3e1e24a326b8b623b1a8b66a905ac6494ef74a07.1561081886.git.fthain@telegraphics.com.au>
- <20190624195705.GD5690@piout.net>
- <alpine.LNX.2.21.1906251043050.8@nippy.intranet>
- <20190625092926.GE5690@piout.net>
- <1561483011.2343.6.camel@impinj.com>
+        Tue, 25 Jun 2019 15:20:03 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hfqyv-0001Al-5M; Tue, 25 Jun 2019 21:19:53 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hfqys-0004bj-3v; Tue, 25 Jun 2019 21:19:50 +0200
+Date:   Tue, 25 Jun 2019 21:19:50 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+Message-ID: <20190625191950.2rvvputus4uavyjn@pengutronix.de>
+References: <20190522163428.7078-1-paul@crapouillou.net>
+ <20190625074220.ckj7e7gwbszwknaa@pengutronix.de>
+ <20190625095821.GD1516@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1561483011.2343.6.camel@impinj.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190625095821.GD1516@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2019 17:16:52+0000, Trent Piepho wrote:
-> On Tue, 2019-06-25 at 11:29 +0200, Alexandre Belloni wrote:
-> > Userspace is certainly adjusting the timezone after the kernel did. Can
-> > you run the same commands without running your init? 
+On Tue, Jun 25, 2019 at 11:58:21AM +0200, Thierry Reding wrote:
+> On Tue, Jun 25, 2019 at 09:42:20AM +0200, Uwe Kleine-König wrote:
+> > On Wed, May 22, 2019 at 06:34:28PM +0200, Paul Cercueil wrote:
+> > > When the driver probes, the PWM pin is automatically configured to its
+> > > default state, which should be the "pwm" function. However, at this
+> > > point we don't know the actual level of the pin, which may be active or
+> > > inactive. As a result, if the driver probes without enabling the
+> > > backlight, the PWM pin might be active, and the backlight would be
+> > > lit way before being officially enabled.
 > > 
-> > On stable, you have /etc/init.d/hwclock.sh that still runs and does the
-> > correct thing. My understanding is that systemd also handles the TZ
-> > properly after hctosys (see clock_is_localtime()).
+> > I'm not sure I understand the problem completely here. Let me try to
+> > summarize the problem you solve here:
 > > 
-> > Seriously, hctosys does a really bad job at setting the system time, it
-> > is guaranteed to be always wrong on most platforms. My plan is still to
-> > try to get distros to stop enabling it and do that properly in
-> > userspace. This is already ok when using sysV but systemd would need a
-> > few changes to stop relying on it when then is no hwclock initscript.
-> > Unfortunately, I didn't have time to work on that yet.
+> > The backlight device's default pinctrl contains the PWM function of the
+> > PWM pin. As the PWM is (or at least might be) in an undefined state the
+> > default pinctrl should only be switched to when it's clear if the
+> > backlight should be on or off.
+> > 
+> > So you use the "init"-pinctrl to keep the PWM pin in some (undriven?)
+> > state and by switching to "sleep" you prevent "default" getting active.
+> > 
+> > Did I get this right? If not, please correct me.
+> > 
+> > What is the PWM pin configured to in "init" in your case? Is the pinctrl
+> > just empty? Or is it a gpio-mode (together with a gpio-hog)?
+> > 
+> > My thoughts to this is are:
+> > 
+> >  a) This is a general problem that applies (I think) to most if not all
+> >     PWM consumers. If the PWM drives a motor, or makes your mobile
+> >     vibrate, or drives an LED, or a clk, the PWM shouldn't start
+> >     to do something before its consumer is ready.
 > 
-> hctosys is very handy in that it sets the system time before any log
-> messages are generated.  Either in a main boot or in an initramfs. 
-> Having property time-stamped log messages is very important for
-> managing a large deployment.
+> Yes, it shouldn't start before it is explicitly told to do so by the
+> consumer. One exception is if the PWM was already set up by firmware
+> to run. So I think in general terms we always want the PWM to remain
+> in the current state upon probe.
+
+In the end this means that also pinmuxing should not be touched when the
+PWM device probes.
+
+> The atomic PWM API was designed with that in mind. The original use-
+> case was to allow seamlessly taking over from a PWM regulator. In order
+> to do so, the driver needs to be able to read back the hardware state
+> and *not* initialize the PWM to some default state.
 > 
-> If the system time is set by some script or systemd unit, then there
-> will always be all the things that need to run before that script or
-> unit can work.  E.g., udev creating rtc device nodes, mounting /sys and
-> /proc, systemd generator for local file system unis, the other parts of
-> systemd to do that, etc. All this won't be able to log with correct
-> system time.
+> I think that same approach can be extended to backlights. The driver's
+> probe needs to determine what the current state of the backlight is and
+> preferable not touch it. And that basically propagates all the way to
+> the display driver, which ultimately needs to determine whether or not
+> the display configuration (including the backlight) is enabled.
+
+Are you ambitious enough to handle cases like: PWM is running (maybe
+because it cannot be disabled), but the pin is muxed to an "unconnected"
+configuration such that the pin doesn't oscillate? In this case you'd
+need an inspection function for pinmuxing.
+
+> >  b) Thierry made it quite clear[1] that the PWM pin should be configured
+> >     in a pinctrl of the pwm device, not the backlight (or more general:
+> >     the consumer) device.
+> > 
+> > While I don't entirely agree with b) I think that even a) alone
+> > justifies to think a bit more about the problem and preferably come up
+> > with a solution that helps other consumers, too. Ideally if the
+> > bootloader sets up the PWM to do something sensible, probing the
+> > lowlevel PWM driver and the consumer driver should not interfere with
+> > the bootloader's intention until the situation reaches a controlled
+> > state. (I.e. if the backlight was left on by the bootloader to show a
+> > nice logo, it should not flicker until a userspace program takes over
+> > the display device.)
 > 
+> Yes, exactly that.
+> 
+> > A PWM is special in contrast to other devices as its intended behaviour
+> > is only fixed once a consumer is present. Without a consumer it is
+> > unknown if the PWM is inverted or not. And so the common approach that
+> > pinctrl is setup by the device core only doesn't work without drawbacks
+> > for PWMs.
+> 
+> Actually I don't think PWMs are special in this regard. A GPIO, for
+> example, can also be active-low or active-high, and without a consumer
+> there's not enough context to determine which one it should be.
 
-I'd argue that this system time is not correct anyway and hence is not
-that useful. Especially since the boot time to anything reading the RTC
-will still be smaller than the maximum error hctosys can have (that is
-up to two seconds). This is even worse if the RTC sotres local time.
+Right, PWMs are more similar to GPIOs than to (say) backlight devices.
+With your request to configure the pinmux for a PWM pin with the PWM
+device instead of its consumer you're making some things more difficult.
+For GPIOs it's quite common that they are muxed from their consumer
+because there the same problems are present.
 
-Instead of using a systemd unit, we could make systemd read the RTC as
-soon as possible and set the system time correctly (at least, that is my
-plan). This would be especially useful when using NTP because as already
-reported, it may take a few hours to actually synchronize because
-hctosys didn't set the correct time.
-
-I would agree that there are remaining use cases for hctosys, e.g. when
-wanting to boot a rootfs over a network filesystem and without an
-initramfs.
+Best regards
+Uwe
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
