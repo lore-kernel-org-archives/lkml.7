@@ -2,104 +2,130 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B240C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D130EC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612C1208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F590208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYnVPF7z"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fVY3ICfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbfFYPGe (ORCPT
+        id S1732113AbfFYPHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:06:34 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45462 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730607AbfFYPGd (ORCPT
+        Tue, 25 Jun 2019 11:07:12 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38734 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732067AbfFYPHM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:06:33 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s22so12838001qkj.12;
-        Tue, 25 Jun 2019 08:06:32 -0700 (PDT)
+        Tue, 25 Jun 2019 11:07:12 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n11so7517968qtl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 08:07:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bELmNNrnslYbuDFKjG/eQ34XIMdof74I0tg6yMjaKmA=;
-        b=aYnVPF7zd1KE6zNs306l3HZM/2M5rLu9+bVjs4QvJiF2jbGzsH1JuOsZQqSrAfSNX+
-         VUpY+0MvQFofyB8uhggGXMl5YQBuHFaBZeqqya2qhf7bbfe+OtccC3SuKJUDiSJDUT1E
-         /zQalvONctY/tAqo6dX24Q5xSvR2iyVQ5nkCOfDdoSHOeq6J3NERy4CeiNwZH7Knn76H
-         7jlMOBk/cP2BrsfrIWm6ajCFLoygSzCMc162Vg5JTUIUwwOBv0N5VOCQFCQHbA55jqC3
-         4U6Rji/vRptvBs55J8COtor4tENBxhApB/NGsknY9ppLIkcKokKRRAEZLFTLKbt1whmE
-         Un7g==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MlFm0RSUDJWR/dpFwmu8HNr471hEX79YQx8dujmGuTY=;
+        b=fVY3ICfXakhtVfbzcDEtsi9F/GE7Aeb5Q8NxEHcRpOfvNIEa7ZHeVpZ1LXNQKE8eSd
+         vqN6KiG0165nartNEfdqe4JzSg8yaALuv9CoTSD7fYD2bxerXjngGFOKyuPepYPQETyX
+         ybUXyr6JOCICPvL18Wn+PCsbXig0qOG8x4CIs7tRnaFgJf4jdwC8OshLFaoPEzTrK8JD
+         uDy1T1gQia3lfsOzVCtVCiU54zrpuW6jKvcX9mLoDT8AaO0Xr5N4uO9EtMHuqr4yjyYm
+         pez17k3OKDsbC43eZDrg9ZfAWdOS/RHVzI951MCp/oiH7S/trI++NRhvG1fQqdMxicd3
+         DN3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bELmNNrnslYbuDFKjG/eQ34XIMdof74I0tg6yMjaKmA=;
-        b=NK0wRnpgyrNq+YCy6IHMYgJVLu3bbGYzc4uNA3Lyc6rUbSUoF0juWRBUtpxSNM+x/k
-         Q271QtIXvjQPXJ0M4XOGzf+z2xdy6Rskx3oBP4WVbS1eILw9g7t0YeVj8kRSim2/7fY0
-         V+kskgtH7mjsVJPwzqOVl7CBYpzgthwEq5bWo+/c6o//DtYawgEbKJwB83mxLGN9FlMZ
-         iVcfEIQUUg2v9ks1Y6qrDto8csBDNJo2S4EXptAsjEn3/xkf828OkrqiTqmhq4C1e8if
-         LfaneUe8ixNlPJwCc79TvVqXW2su9xGHK075+yG3f9dahsoUwFqltPOUgcN23njB/KVV
-         0iwg==
-X-Gm-Message-State: APjAAAVZVM2QbFVE3SqXJgMUKEKkAZyhs22uJULPP4iPEtVbXT162O+X
-        gH35hxx2GzFVt4FxXeuxg9saWEN7Rjz7AC5hLGU=
-X-Google-Smtp-Source: APXvYqyx0QseH6SXwVmzmo+9GWLxHuefdKjKG8yiwmM0xM37iwxfQ7PzIdCh9+Lkkc3hvdOoPafVm/r8iodbKy+oXl0=
-X-Received: by 2002:a37:ea0c:: with SMTP id t12mr56728789qkj.117.1561475192105;
- Tue, 25 Jun 2019 08:06:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190516142342.28019-1-smuchun@gmail.com> <20190524190443.GB29565@kroah.com>
- <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
- <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
- <20190618152859.GB1912@kroah.com> <CAPSr9jFMKb1bQAbCFLqP2+fb60kcbyJ+cDspkL5FH28CNKFz3A@mail.gmail.com>
- <20190618161340.GA13983@kroah.com> <e3e064d85790a56b661ef9641e02c571540c6f44.camel@kernel.crashing.org>
-In-Reply-To: <e3e064d85790a56b661ef9641e02c571540c6f44.camel@kernel.crashing.org>
-From:   Muchun Song <smuchun@gmail.com>
-Date:   Tue, 25 Jun 2019 23:06:22 +0800
-Message-ID: <CAPSr9jExG2C6U0D2TN-PUxgi9waD5QkSR-icxNPP1w9nJx3GUQ@mail.gmail.com>
-Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
- glue directory
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Prateek Sood <prsood@codeaurora.org>,
-        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        zhaowuyun@wingtech.com
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MlFm0RSUDJWR/dpFwmu8HNr471hEX79YQx8dujmGuTY=;
+        b=rc16uU1DyaqaVJpgO9V5/uty0Ye411YvzkoKIkNs/cjskg0hm5MV4xRYIT9yj8Q/g5
+         hOR0jF0aFw604lzD068+/n6yEEn8zx32BvyeGP9GL/RyHcSgsV7cb+ROBtBNvWTTyR6U
+         G7ukIeStn8YMu6VxsRGVJhcze/k6S/YclGpHRea1i8Rpjk+N4TYDwz4ZY1TqetjzQNMp
+         gdUOvwavuzaRkg2RB7TBoM1gWCYVDVBCOiX/rDUY7Ilt4GWQWttRU/3FnY5AbCTC3R0b
+         25fS8X9os7HJj9osXGS11GZBu9GijXGuXUffrfB4Ke1UD9I1bK29GId6GtYOQrt6t+1a
+         otiA==
+X-Gm-Message-State: APjAAAVfWiTE7+azp7F0eUvj7mBaA36g+KvRT+mbp8KBxk4TvVwS+Scl
+        NJ6nZyfM8m5fA7wFJ9R4grVHhQ==
+X-Google-Smtp-Source: APXvYqx5qq+RXjT0mopAm4rY8YxlQmok9dJ/vgId4MGAW9BSZbFsk13S7wC2nyjHTouIC5AdCKBLnQ==
+X-Received: by 2002:ac8:2d17:: with SMTP id n23mr72728077qta.132.1561475231316;
+        Tue, 25 Jun 2019 08:07:11 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id d17sm6781843qtp.84.2019.06.25.08.07.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 08:07:10 -0700 (PDT)
+Message-ID: <1561475229.5154.74.camel@lca.pw>
+Subject: Re: [PATCH v2] sched/core: silence a warning in sched_init()
+From:   Qian Cai <cai@lca.pw>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, valentin.schneider@arm.com,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 25 Jun 2019 11:07:09 -0400
+In-Reply-To: <20190625142508.GE3419@hirez.programming.kicks-ass.net>
+References: <1561466662-22314-1-git-send-email-cai@lca.pw>
+         <20190625135238.GA3419@hirez.programming.kicks-ass.net>
+         <1561471459.5154.70.camel@lca.pw>
+         <20190625142508.GE3419@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Benjamin Herrenschmidt <benh@kernel.crashing.org> =E4=BA=8E2019=E5=B9=B46=
-=E6=9C=8819=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=885:51=E5=86=99=E9=
-=81=93=EF=BC=9A
->
-> On Tue, 2019-06-18 at 18:13 +0200, Greg KH wrote:
-> >
-> > Again, I am totally confused and do not see a patch in an email that
-> > I
-> > can apply...
-> >
-> > Someone needs to get people to agree here...
->
-> I think he was hoping you would chose which solution you prefered here
+On Tue, 2019-06-25 at 16:25 +0200, Peter Zijlstra wrote:
+> On Tue, Jun 25, 2019 at 10:04:19AM -0400, Qian Cai wrote:
+> > On Tue, 2019-06-25 at 15:52 +0200, Peter Zijlstra wrote:
+> > Yes, -Wmissing-prototype makes no sense, but "-Wunused-but-set-variable" is
+> > pretty valid to catch certain developer errors. For example,
+> > 
+> > https://lists.linuxfoundation.org/pipermail/iommu/2019-May/035680.html
+> > 
+> > > 
+> > > As to this one, ideally the compiler would not be stupid, and understand
+> > > the below, but alas.
+> > 
+> > Pretty sure that won't work, as the compiler will complain something like,
+> > 
+> > ISO C90 forbids mixed declarations and code
+> 
+> No, it builds just fine, it's a new block and C allows new variables at
+> every block start -- with the scope of that block.
 
-Yeah, right, I am hoping you would chose which solution you prefered here.
-Thanks.
+I remember I tried that before but recalled the error code wrong. Here it is,
 
-> :-) His original or the one I suggested instead. I don't think there's
-> anybody else with understanding of sysfs guts around to form an
-> opinion.
->
+kernel/sched/core.c:5940:17: warning: unused variable 'ptr' [-Wunused-variable]
+                unsigned long ptr = (unsigned long)kzalloc(alloc_size,
+GFP_NOWAIT);
 
-Yours,
-Muchun
+> 
+> And for our config, alloc_size is an unconditional 0, so it should DCE
+> the whole block and with that our variable. But clearly the passes are
+> the other way around :/
+> 
+> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > > index fa43ce3962e7..cb652e165570 100644
+> > > --- a/kernel/sched/core.c
+> > > +++ b/kernel/sched/core.c
+> > > @@ -6369,7 +6369,7 @@ DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
+> > >  
+> > >  void __init sched_init(void)
+> > >  {
+> > > -	unsigned long alloc_size = 0, ptr;
+> > > +	unsigned long alloc_size = 0;
+> > >  	int i;
+> > >  
+> > >  	wait_bit_init();
+> > > @@ -6381,7 +6381,7 @@ void __init sched_init(void)
+> > >  	alloc_size += 2 * nr_cpu_ids * sizeof(void **);
+> > >  #endif
+> > >  	if (alloc_size) {
+> > > -		ptr = (unsigned long)kzalloc(alloc_size, GFP_NOWAIT);
+> > > +		unsigned long ptr = (unsigned long)kzalloc(alloc_size,
+> > > GFP_NOWAIT);
+> > >  
+> > >  #ifdef CONFIG_FAIR_GROUP_SCHED
+> > >  		root_task_group.se = (struct sched_entity **)ptr;
