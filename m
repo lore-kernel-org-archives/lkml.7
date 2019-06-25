@@ -2,346 +2,133 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A679C4646C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86F4C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17EDD20820
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4A7206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 03:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfFYDUa (ORCPT
+        id S1726605AbfFYD2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 23:20:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15416 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728011AbfFYDTg (ORCPT
+        Mon, 24 Jun 2019 23:28:39 -0400
+Received: from mail2.tencent.com ([163.177.67.195]:37401 "EHLO
+        mail2.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfFYD2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 23:19:36 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5P36lC9110969
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 23:19:34 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tbaagakk7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 23:19:33 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 25 Jun 2019 04:19:30 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Jun 2019 04:19:22 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5P3JLgJ49283266
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Jun 2019 03:19:21 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A2BEA404D;
-        Tue, 25 Jun 2019 03:19:21 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7725CA4040;
-        Tue, 25 Jun 2019 03:19:20 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Jun 2019 03:19:20 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4705BA02A1;
-        Tue, 25 Jun 2019 13:19:19 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v4 3/7] lib/hexdump.c: Optionally suppress lines of repeated bytes
-Date:   Tue, 25 Jun 2019 13:17:22 +1000
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190625031726.12173-1-alastair@au1.ibm.com>
-References: <20190625031726.12173-1-alastair@au1.ibm.com>
+        Mon, 24 Jun 2019 23:28:38 -0400
+Received: from EXHUB-SZMAIL04.tencent.com (unknown [10.14.6.35])
+        by mail2.tencent.com (Postfix) with ESMTP id CD15E8E75D;
+        Tue, 25 Jun 2019 11:28:36 +0800 (CST)
+Received: from EX-SZ006.tencent.com (10.28.6.30) by EXHUB-SZMAIL04.tencent.com
+ (10.14.6.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 25 Jun 2019
+ 11:28:36 +0800
+Received: from EX-SZ005.tencent.com (10.28.6.29) by EX-SZ006.tencent.com
+ (10.28.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 25 Jun
+ 2019 11:28:36 +0800
+Received: from EX-SZ005.tencent.com ([fe80::80ab:5a24:b62e:8246]) by
+ EX-SZ005.tencent.com ([fe80::80ab:5a24:b62e:8246%4]) with mapi id
+ 15.01.1713.004; Tue, 25 Jun 2019 11:28:36 +0800
+From:   =?utf-8?B?d2VuYmluemVuZyjmm77mlofmlowp?= <wenbinzeng@tencent.com>
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     Wenbin Zeng <wenbin.zeng@gmail.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "keith.busch@intel.com" <keith.busch@intel.com>,
+        "hare@suse.com" <hare@suse.com>, "osandov@fb.com" <osandov@fb.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet
+ mail)
+Thread-Topic: [PATCH] blk-mq: update hctx->cpumask at cpu-hotplug(Internet
+ mail)
+Thread-Index: AQHVKqDurKLV/sXBPUypS6FtYdqWkaarFq+AgACG9yD//4HzgIAAlnDw
+Date:   Tue, 25 Jun 2019 03:28:36 +0000
+Message-ID: <22a3941e6ddf468689918c1d15c035a8@tencent.com>
+References: <1561389847-30853-1-git-send-email-wenbinzeng@tencent.com>
+ <20190625015512.GC23777@ming.t460p>
+ <fe4f40e7bbf74311a47c9f3b981f8c53@tencent.com>
+ <20190625022706.GE23777@ming.t460p>
+In-Reply-To: <20190625022706.GE23777@ming.t460p>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.14.87.251]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062503-0016-0000-0000-0000028C0D9A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062503-0017-0000-0000-000032E97D2F
-Message-Id: <20190625031726.12173-4-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-25_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906250024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
-
-Some buffers may only be partially filled with useful data, while the rest
-is padded (typically with 0x00 or 0xff).
-
-This patch introduces a flag to allow the supression of lines of repeated
-bytes, which are replaced with '** Skipped %u bytes of value 0x%x **'
-
-An inline wrapper function is provided for backwards compatibility with
-existing code, which maintains the original behaviour.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- include/linux/printk.h | 26 +++++++++---
- lib/hexdump.c          | 91 ++++++++++++++++++++++++++++++++++++------
- 2 files changed, 100 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index cefd374c47b1..c0416d0eb9e2 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -7,6 +7,7 @@
- #include <linux/kern_levels.h>
- #include <linux/linkage.h>
- #include <linux/cache.h>
-+#include <linux/bits.h>
- 
- extern const char linux_banner[];
- extern const char linux_proc_banner[];
-@@ -481,13 +482,18 @@ enum {
- 	DUMP_PREFIX_ADDRESS,
- 	DUMP_PREFIX_OFFSET
- };
-+
- extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
- 			      int groupsize, char *linebuf, size_t linebuflen,
- 			      bool ascii);
-+
-+#define HEXDUMP_ASCII			BIT(0)
-+#define HEXDUMP_SUPPRESS_REPEATED	BIT(1)
-+
- #ifdef CONFIG_PRINTK
--extern void print_hex_dump(const char *level, const char *prefix_str,
-+extern void print_hex_dump_ext(const char *level, const char *prefix_str,
- 			   int prefix_type, int rowsize, int groupsize,
--			   const void *buf, size_t len, bool ascii);
-+			   const void *buf, size_t len, u32 flags);
- #if defined(CONFIG_DYNAMIC_DEBUG)
- #define print_hex_dump_bytes(prefix_str, prefix_type, buf, len)	\
- 	dynamic_hex_dump(prefix_str, prefix_type, 16, 1, buf, len, true)
-@@ -496,18 +502,28 @@ extern void print_hex_dump_bytes(const char *prefix_str, int prefix_type,
- 				 const void *buf, size_t len);
- #endif /* defined(CONFIG_DYNAMIC_DEBUG) */
- #else
--static inline void print_hex_dump(const char *level, const char *prefix_str,
-+static inline void print_hex_dump_ext(const char *level, const char *prefix_str,
- 				  int prefix_type, int rowsize, int groupsize,
--				  const void *buf, size_t len, bool ascii)
-+				  const void *buf, size_t len, u32 flags)
- {
- }
- static inline void print_hex_dump_bytes(const char *prefix_str, int prefix_type,
- 					const void *buf, size_t len)
- {
- }
--
- #endif
- 
-+static __always_inline void print_hex_dump(const char *level,
-+					   const char *prefix_str,
-+					   int prefix_type, int rowsize,
-+					   int groupsize, const void *buf,
-+					   size_t len, bool ascii)
-+{
-+	print_hex_dump_ext(level, prefix_str, prefix_type, rowsize, groupsize,
-+			buf, len, ascii ? HEXDUMP_ASCII : 0);
-+}
-+
-+
- #if defined(CONFIG_DYNAMIC_DEBUG)
- #define print_hex_dump_debug(prefix_str, prefix_type, rowsize,	\
- 			     groupsize, buf, len, ascii)	\
-diff --git a/lib/hexdump.c b/lib/hexdump.c
-index 870c8cbff1e1..61dc625c32f5 100644
---- a/lib/hexdump.c
-+++ b/lib/hexdump.c
-@@ -212,8 +212,44 @@ int hex_dump_to_buffer(const void *buf, size_t len, int rowsize, int groupsize,
- EXPORT_SYMBOL(hex_dump_to_buffer);
- 
- #ifdef CONFIG_PRINTK
-+
-+/**
-+ * buf_is_all - Check if a buffer contains only a single byte value
-+ * @buf: pointer to the buffer
-+ * @len: the size of the buffer in bytes
-+ * @val: outputs the value if if the bytes are identical
-+ */
-+static bool buf_is_all(const u8 *buf, size_t len, u8 *val_out)
-+{
-+	size_t i;
-+	u8 val;
-+
-+	if (len <= 1)
-+		return false;
-+
-+	val = buf[0];
-+
-+	for (i = 1; i < len; i++) {
-+		if (buf[i] != val)
-+			return false;
-+	}
-+
-+	*val_out = val;
-+	return true;
-+}
-+
-+static void announce_skipped(const char *level, const char *prefix_str,
-+				   u8 val, size_t count)
-+{
-+	if (count == 0)
-+		return;
-+
-+	printk("%s%s ** Skipped %lu bytes of value 0x%x **\n",
-+	       level, prefix_str, count, val);
-+}
-+
- /**
-- * print_hex_dump - print a text hex dump to syslog for a binary blob of data
-+ * print_hex_dump_ext - dump a binary blob of data to syslog in hexadecimal
-  * @level: kernel log level (e.g. KERN_DEBUG)
-  * @prefix_str: string to prefix each line with;
-  *  caller supplies trailing spaces for alignment if desired
-@@ -224,6 +260,10 @@ EXPORT_SYMBOL(hex_dump_to_buffer);
-  * @buf: data blob to dump
-  * @len: number of bytes in the @buf
-  * @ascii: include ASCII after the hex output
-+ * @flags: A bitwise OR of the following flags:
-+ *	HEXDUMP_ASCII:			include ASCII after the hex output
-+ *	HEXDUMP_SUPPRESS_REPEATED:	suppress repeated lines of identical
-+ *					bytes
-  *
-  * Given a buffer of u8 data, print_hex_dump() prints a hex + ASCII dump
-  * to the kernel log at the specified kernel log level, with an optional
-@@ -234,22 +274,25 @@ EXPORT_SYMBOL(hex_dump_to_buffer);
-  * (optionally) ASCII output.
-  *
-  * E.g.:
-- *   print_hex_dump(KERN_DEBUG, "raw data: ", DUMP_PREFIX_ADDRESS,
-- *		    16, 1, frame->data, frame->len, true);
-+ *   print_hex_dump_ext(KERN_DEBUG, "raw data: ", DUMP_PREFIX_ADDRESS,
-+ *		    16, 1, frame->data, frame->len, HEXDUMP_ASCII);
-  *
-  * Example output using %DUMP_PREFIX_OFFSET and 1-byte mode:
-  * 0009ab42: 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f  @ABCDEFGHIJKLMNO
-  * Example output using %DUMP_PREFIX_ADDRESS and 4-byte mode:
-  * ffffffff88089af0: 73727170 77767574 7b7a7978 7f7e7d7c  pqrstuvwxyz{|}~.
-  */
--void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
--		    int rowsize, int groupsize,
--		    const void *buf, size_t len, bool ascii)
-+void print_hex_dump_ext(const char *level, const char *prefix_str,
-+			int prefix_type, int rowsize, int groupsize,
-+			const void *buf, size_t len, u32 flags)
- {
- 	const u8 *ptr = buf;
--	int i, linelen, remaining = len;
-+	int i, remaining = len;
- 	unsigned char *linebuf;
- 	unsigned int linebuf_len;
-+	u8 skipped_val = 0;
-+	size_t skipped = 0;
-+
- 
- 	if (rowsize % groupsize)
- 		rowsize -= rowsize % groupsize;
-@@ -267,11 +310,35 @@ void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
- 	}
- 
- 	for (i = 0; i < len; i += rowsize) {
--		linelen = min(remaining, rowsize);
-+		int linelen = min(remaining, rowsize);
- 		remaining -= rowsize;
- 
-+		if (flags & HEXDUMP_SUPPRESS_REPEATED) {
-+			u8 new_val;
-+
-+			if (buf_is_all(ptr + i, linelen, &new_val)) {
-+				if (new_val == skipped_val) {
-+					skipped += linelen;
-+					continue;
-+				} else {
-+					announce_skipped(level, prefix_str,
-+							 skipped_val, skipped);
-+					skipped_val = new_val;
-+					skipped = linelen;
-+					continue;
-+				}
-+			}
-+		}
-+
-+		if (skipped) {
-+			announce_skipped(level, prefix_str, skipped_val,
-+					 skipped);
-+			skipped = 0;
-+		}
-+
- 		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
--				   linebuf, linebuf_len, ascii);
-+				   linebuf, linebuf_len,
-+				   flags & HEXDUMP_ASCII);
- 
- 		switch (prefix_type) {
- 		case DUMP_PREFIX_ADDRESS:
-@@ -289,7 +356,7 @@ void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
- 
- 	kfree(linebuf);
- }
--EXPORT_SYMBOL(print_hex_dump);
-+EXPORT_SYMBOL(print_hex_dump_ext);
- 
- #if !defined(CONFIG_DYNAMIC_DEBUG)
- /**
-@@ -307,8 +374,8 @@ EXPORT_SYMBOL(print_hex_dump);
- void print_hex_dump_bytes(const char *prefix_str, int prefix_type,
- 			  const void *buf, size_t len)
- {
--	print_hex_dump(KERN_DEBUG, prefix_str, prefix_type, 16, 1,
--		       buf, len, true);
-+	print_hex_dump_ext(KERN_DEBUG, prefix_str, prefix_type, 16, 1,
-+		       buf, len, HEXDUMP_ASCII);
- }
- EXPORT_SYMBOL(print_hex_dump_bytes);
- #endif /* !defined(CONFIG_DYNAMIC_DEBUG) */
--- 
-2.21.0
-
+SGkgTWluZywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaW5nIExl
+aSA8bWluZy5sZWlAcmVkaGF0LmNvbT4NCj4gU2VudDogVHVlc2RheSwgSnVuZSAyNSwgMjAxOSAx
+MDoyNyBBTQ0KPiBUbzogd2VuYmluemVuZyjmm77mlofmlowpIDx3ZW5iaW56ZW5nQHRlbmNlbnQu
+Y29tPg0KPiBDYzogV2VuYmluIFplbmcgPHdlbmJpbi56ZW5nQGdtYWlsLmNvbT47IGF4Ym9lQGtl
+cm5lbC5kazsga2VpdGguYnVzY2hAaW50ZWwuY29tOw0KPiBoYXJlQHN1c2UuY29tOyBvc2FuZG92
+QGZiLmNvbTsgc2FnaUBncmltYmVyZy5tZTsgYnZhbmFzc2NoZUBhY20ub3JnOw0KPiBsaW51eC1i
+bG9ja0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSF0gYmxrLW1xOiB1cGRhdGUgaGN0eC0+Y3B1bWFzayBhdCBjcHUtaG90
+cGx1ZyhJbnRlcm5ldCBtYWlsKQ0KPiANCj4gT24gVHVlLCBKdW4gMjUsIDIwMTkgYXQgMDI6MTQ6
+NDZBTSArMDAwMCwgd2VuYmluemVuZyjmm77mlofmlowpIHdyb3RlOg0KPiA+IEhpIE1pbmcsDQo+
+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBNaW5nIExl
+aSA8bWluZy5sZWlAcmVkaGF0LmNvbT4NCj4gPiA+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMjUsIDIw
+MTkgOTo1NSBBTQ0KPiA+ID4gVG86IFdlbmJpbiBaZW5nIDx3ZW5iaW4uemVuZ0BnbWFpbC5jb20+
+DQo+ID4gPiBDYzogYXhib2VAa2VybmVsLmRrOyBrZWl0aC5idXNjaEBpbnRlbC5jb207IGhhcmVA
+c3VzZS5jb207DQo+ID4gPiBvc2FuZG92QGZiLmNvbTsgc2FnaUBncmltYmVyZy5tZTsgYnZhbmFz
+c2NoZUBhY20ub3JnOw0KPiA+ID4gbGludXgtYmxvY2tAdmdlci5rZXJuZWwub3JnOyBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gd2VuYmluemVuZyjmm77mlofmlowpIDx3ZW5i
+aW56ZW5nQHRlbmNlbnQuY29tPg0KPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gYmxrLW1xOiB1
+cGRhdGUgaGN0eC0+Y3B1bWFzayBhdA0KPiA+ID4gY3B1LWhvdHBsdWcoSW50ZXJuZXQgbWFpbCkN
+Cj4gPiA+DQo+ID4gPiBPbiBNb24sIEp1biAyNCwgMjAxOSBhdCAxMToyNDowN1BNICswODAwLCBX
+ZW5iaW4gWmVuZyB3cm90ZToNCj4gPiA+ID4gQ3VycmVudGx5IGhjdHgtPmNwdW1hc2sgaXMgbm90
+IHVwZGF0ZWQgd2hlbiBob3QtcGx1Z2dpbmcgbmV3IGNwdXMsDQo+ID4gPiA+IGFzIHRoZXJlIGFy
+ZSBtYW55IGNoYW5jZXMga2Jsb2NrZF9tb2RfZGVsYXllZF93b3JrX29uKCkgZ2V0dGluZw0KPiA+
+ID4gPiBjYWxsZWQgd2l0aCBXT1JLX0NQVV9VTkJPVU5ELCB3b3JrcXVldWUgYmxrX21xX3J1bl93
+b3JrX2ZuIG1heSBydW4NCj4gPiA+DQo+ID4gPiBUaGVyZSBhcmUgb25seSB0d28gY2FzZXMgaW4g
+d2hpY2ggV09SS19DUFVfVU5CT1VORCBpcyBhcHBsaWVkOg0KPiA+ID4NCj4gPiA+IDEpIHNpbmds
+ZSBodyBxdWV1ZQ0KPiA+ID4NCj4gPiA+IDIpIG11bHRpcGxlIGh3IHF1ZXVlLCBhbmQgYWxsIENQ
+VXMgaW4gdGhpcyBoY3R4IGJlY29tZSBvZmZsaW5lDQo+ID4gPg0KPiA+ID4gRm9yIDEpLCBhbGwg
+Q1BVcyBjYW4gYmUgZm91bmQgaW4gaGN0eC0+Y3B1bWFzay4NCj4gPiA+DQo+ID4gPiA+IG9uIHRo
+ZSBuZXdseS1wbHVnZ2VkIGNwdXMsIGNvbnNlcXVlbnRseSBfX2Jsa19tcV9ydW5faHdfcXVldWUo
+KQ0KPiA+ID4gPiByZXBvcnRpbmcgZXhjZXNzaXZlICJydW4gcXVldWUgZnJvbSB3cm9uZyBDUFUi
+IG1lc3NhZ2VzIGJlY2F1c2UNCj4gPiA+ID4gY3B1bWFza190ZXN0X2NwdShyYXdfc21wX3Byb2Nl
+c3Nvcl9pZCgpLCBoY3R4LT5jcHVtYXNrKSByZXR1cm5zIGZhbHNlLg0KPiA+ID4NCj4gPiA+IFRo
+ZSBtZXNzYWdlIG1lYW5zIENQVSBob3RwbHVnIHJhY2UgaXMgdHJpZ2dlcmVkLg0KPiA+ID4NCj4g
+PiA+IFllYWgsIHRoZXJlIGlzIGJpZyBwcm9ibGVtIGluIGJsa19tcV9oY3R4X25vdGlmeV9kZWFk
+KCkgd2hpY2ggaXMNCj4gPiA+IGNhbGxlZCBhZnRlciBvbmUgQ1BVIGlzIGRlYWQsIGJ1dCBzdGls
+bCBydW4gdGhpcyBodyBxdWV1ZSB0bw0KPiA+ID4gZGlzcGF0Y2ggcmVxdWVzdCwgYW5kIGFsbCBD
+UFVzIGluIHRoaXMgaGN0eCBtaWdodCBiZWNvbWUgb2ZmbGluZS4NCj4gPiA+DQo+ID4gPiBXZSBo
+YXZlIHNvbWUgZGlzY3Vzc2lvbiBiZWZvcmUgb24gdGhpcyBpc3N1ZToNCj4gPiA+DQo+ID4gPiBo
+dHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1ibG9jay9DQUNWWEZWTjcyOVNnRlFHVWdtdTFp
+TjdQNk12NStwdQ0KPiA+ID4gRTc4U1R6OGhqDQo+ID4gPiA5SjViUzgyOE5nQG1haWwuZ21haWwu
+Y29tLw0KPiA+ID4NCj4gPg0KPiA+IFRoZXJlIGlzIGFub3RoZXIgc2NlbmFyaW8sIHlvdSBjYW4g
+cmVwcm9kdWNlIGl0IGJ5IGhvdC1wbHVnZ2luZyBjcHVzIHRvIGt2bSBndWVzdHMNCj4gdmlhIHFl
+bXUgbW9uaXRvciAoSSBiZWxpZXZlIHZpcnNoIHNldHZjcHVzIC0tbGl2ZSBjYW4gZG8gdGhlIHNh
+bWUgdGhpbmcpLCBmb3IgZXhhbXBsZToNCj4gPiAocWVtdSkgY3B1LWFkZCAxDQo+ID4gKHFlbXUp
+IGNwdS1hZGQgMg0KPiA+IChxZW11KSBjcHUtYWRkIDMNCj4gPg0KPiA+IEluIHN1Y2ggc2NlbmFy
+aW8sIGNwdSAxLCAyIGFuZCAzIGFyZSBub3QgdmlzaWJsZSBhdCBib290LCBoY3R4LT5jcHVtYXNr
+IGRvZXNuJ3QNCj4gZ2V0IHN5bmNlZCB3aGVuIHRoZXNlIGNwdXMgYXJlIGFkZGVkLg0KPiANCj4g
+SXQgaXMgQ1BVIGNvbGQtcGx1Zywgd2Ugc3VwcG9zZSB0byBzdXBwb3J0IGl0Lg0KPiANCj4gVGhl
+IG5ldyBhZGRlZCBDUFVzIHNob3VsZCBiZSB2aXNpYmxlIHRvIGhjdHgsIHNpbmNlIHdlIHNwcmVh
+ZCBxdWV1ZXMgYW1vbmcgYWxsDQo+IHBvc3NpYmxlIENQVXMoKSwgcGxlYXNlIHNlZSBibGtfbXFf
+bWFwX3F1ZXVlcygpIGFuZCBpcnFfYnVpbGRfYWZmaW5pdHlfbWFza3MoKSwNCj4gd2hpY2ggaXMg
+bGlrZSBzdGF0aWMgYWxsb2NhdGlvbiBvbiBDUFUgcmVzb3VyY2VzLg0KPiANCj4gT3RoZXJ3aXNl
+LCB5b3UgbWlnaHQgdXNlIGFuIG9sZCBrZXJuZWwgb3IgdGhlcmUgaXMgYnVnIHNvbWV3aGVyZS4N
+Cg0KSXQgdHVybnMgb3V0IHRoYXQgSSB3YXMgdXNpbmcgb2xkIGtlcm5lbCwgdmVyc2lvbiA0LjE0
+LCBJIHRlc3RlZCB0aGUgbGF0ZXN0IHZlcnNpb24sIGl0IHdvcmtzIHdlbGwgYXMgeW91IHNhaWQu
+IFRoYW5rIHlvdSB2ZXJ5IG11Y2guDQoNCj4gDQo+ID4NCj4gPiA+ID4NCj4gPiA+ID4gVGhpcyBw
+YXRjaCBhZGRlZCBhIGNwdS1ob3RwbHVnIGhhbmRsZXIgaW50byBibGstbXEsIHVwZGF0aW5nDQo+
+ID4gPiA+IGhjdHgtPmNwdW1hc2sgYXQgY3B1LWhvdHBsdWcuDQo+ID4gPg0KPiA+ID4gVGhpcyB3
+YXkgaXNuJ3QgY29ycmVjdCwgaGN0eC0+Y3B1bWFzayBzaG91bGQgYmUga2VwdCBhcyBzeW5jIHdp
+dGgNCj4gPiA+IHF1ZXVlIG1hcHBpbmcuDQo+ID4NCj4gPiBQbGVhc2UgYWR2aXNlIHdoYXQgc2hv
+dWxkIEkgZG8gdG8gZGVhbCB3aXRoIHRoZSBhYm92ZSBzaXR1YXRpb24/IFRoYW5rcyBhIGxvdC4N
+Cj4gDQo+IEFzIEkgc2hhcmVkIGluIGxhc3QgZW1haWwsIHRoZXJlIGlzIG9uZSBhcHByb2FjaCBk
+aXNjdXNzZWQsIHdoaWNoIHNlZW1zIGRvYWJsZS4NCj4gDQo+IFRoYW5rcywNCj4gTWluZw0KDQo=
