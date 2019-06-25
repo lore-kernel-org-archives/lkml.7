@@ -2,199 +2,139 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F63C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F52C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A90F208CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C46AA208CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 20:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jfp/nLSG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eVeBnR+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfFYU1v (ORCPT
+        id S1728020AbfFYU14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 16:27:51 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37850 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfFYU1v (ORCPT
+        Tue, 25 Jun 2019 16:27:56 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:35732 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbfFYU14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 16:27:51 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w13so29090078eds.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 13:27:50 -0700 (PDT)
+        Tue, 25 Jun 2019 16:27:56 -0400
+Received: by mail-lj1-f175.google.com with SMTP id x25so17609174ljh.2;
+        Tue, 25 Jun 2019 13:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KHfPZQLU9yl1gHuggr9n1N7pshmjwg+NN34rxMj0w4s=;
-        b=Jfp/nLSGWZHHP04a0GL9kuH5TUJdr3nC5h+Ljhc6th6zySciaDZAmam8IinFFf57Uo
-         OQ8hu+DrOkncMiAdjkSKTLD4JxVCJNydcHOp7QANaz3Ph5i/frjYn/WKkFXL77HrHih+
-         rONtmWQ0W3P5U95COaaLEc1a3bow5QuvP8Cbs9ZABG24tN0OID3r+Vl/SuHXbIY+pDR+
-         93RbA4EgKNBapnZCkZVhGlBT6LpLIQLXVSdiYOV1i1lp5he0S0zBxBEAw8dq8TgW6jwz
-         vFKTutiOQZaLc4bhnoDrZ+qya+mdtrMh0a6OK4beQbdXkg6UfBbln+AaFm9m3MK5188F
-         aUag==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oRmYeVOh7NfY6hKbB5eNWP52w4vJxcXS9GCkFHd3G74=;
+        b=eVeBnR+XAL2j5u3GGVsg3yWUIGA7z+jVikp+Bs7gMu1/yELD3OcstPMxguwV1tVjUI
+         ECS6brRWHFnW+o/AKFNIFVvrAf9herve2aaUwPXanEsGEp5Wf7BuWmT2PiFJzlSZo/3F
+         BI3NL9Akq09pK9GVK7uOugYJZ1fN57wvBf8A/850IhI+ZeE2z5NFL4Qc54Y/RB51ZdEb
+         WM9M0qiOriFpM+Gvxa0QatwFUkcY7Ho04nHAN7rEfmyoerS6pw3eto6ZF1e9apHwzFJo
+         ZXLjm/MkGvvaKkyOfEqfNnFqDx2VqLgQJcB4d1LUqsjVzb3aifJFB+//RgI1Ks0ioQWj
+         Ffsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KHfPZQLU9yl1gHuggr9n1N7pshmjwg+NN34rxMj0w4s=;
-        b=TG2e0RUAMs6HV8pHf4mV6Envas0Fbgfj5mSCw5NaxruiDybLMdR8L4KHr25Ub/kvSH
-         z28oHO0Mz3M1uYlS5Yv70BO/w7t4OA0oQTDh+vIFAgc7KxbZAErttv/xLTAoHSYjhKeA
-         BQ2a6ch+ZZq2cPInC2LqgdPCUs+RprEuKkarxZwADlH+b6HGZi4G4xcb71GaGxAhNaJk
-         16EBOKq0IDgleySvMTdkYUb+Y8VIhK25KosLdRycJWz1RpHdcTobJsKcoycqfK3y01vt
-         24ap3BxYBF+++wSVuVJ0iooT4sxah2vfLT/ZDUML7exAwRZWugO891EisXmSDKBQaI+q
-         pPcg==
-X-Gm-Message-State: APjAAAUkNUCXMTqAIBrnwXVdC6WtAHJbcVtmWUyk80RUpfFcjGfRoCMj
-        1+A563RupmDIu4o5ENri7jQ=
-X-Google-Smtp-Source: APXvYqzC/bII30ufh+3eslpwLKFtwLVQgpfBB2Zd+HFjIVa7o0viBLQJwIWC6Dhw7rqBRQ2y7dh3RQ==
-X-Received: by 2002:a50:b635:: with SMTP id b50mr401477ede.293.1561494469286;
-        Tue, 25 Jun 2019 13:27:49 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id p15sm2608880ejb.6.2019.06.25.13.27.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 13:27:48 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 13:27:46 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-Message-ID: <20190625202746.GA83499@archlinux-epyc>
-References: <20190624161913.GA32270@embeddedor>
- <20190624193123.GI3436@hirez.programming.kicks-ass.net>
- <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net>
- <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net>
- <201906251009.BCB7438@keescook>
- <20190625180525.GA119831@archlinux-epyc>
- <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oRmYeVOh7NfY6hKbB5eNWP52w4vJxcXS9GCkFHd3G74=;
+        b=H8vb8O3GtUY5nkbTcnsv4OvIafOZ4wZMS0Vuts4K9Yz9aKH/556/MR85ygAqWf2iQP
+         q10EHI4yBWB8II+5Q0gFZhNHXerJ3S5ZZ7pGzqfJW/09YDbndKg7BLkUQSLS1/zEdQug
+         kCTUas928QWk5gzyZBlXMe4ijLo8vKJwq5IjSPz8Vi9oZ0ntnimcVkAFYmw0hO0T5IXp
+         Vr4dQkA3Y/48F6qbKBQAx/ofO39lTZ2jFx/Q+5NFMKSx0ZHJYbUmLJqsRqNqKAhkDNG9
+         e0c9P7DMa0pjldaaS2LhZ+ywuvA6V1lp4wUb5ArKWz9f3TEmEZkICGD2pN8V6mvomKMM
+         N8gg==
+X-Gm-Message-State: APjAAAUPKHtedOF2FuhMff/BpkIYspp8RGg3s8J76HeWpREhtYLph0cY
+        Xo92TuQfqbr/8HuIsPbmQGV9VeVYD5yussrJXUo=
+X-Google-Smtp-Source: APXvYqyPbC29JdNWnZqiP3xde3zVIFnuhIOwlmPXNm+MesPHdP6UZWYfygK3ni7PqzwYZ8irnFTkkjFxUp3S1X4VZxo=
+X-Received: by 2002:a2e:9dca:: with SMTP id x10mr273099ljj.17.1561494472994;
+ Tue, 25 Jun 2019 13:27:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CA+G9fYsMcdHmKY66CNhsrizO-gErkOQCkTcBSyOHLpOs+8g5=g@mail.gmail.com>
+ <CAEf4BzbTD8G_zKkj-S3MOeG5Hq3_2zz3bGoXhQtpt0beG8nWJA@mail.gmail.com>
+ <20190621161752.d7d7n4m5q67uivys@xps.therub.org> <CAEf4BzaSoKA5H5rN=w+OAtUz4bD30-VOjjjY+Qv9tTAnhMweiA@mail.gmail.com>
+ <20190624195336.nubi7n2np5vfjutr@xps.therub.org> <CAADnVQKZycXgSw6C0qa7g0y=W3xRhM_4Rqcj7ZzL=rGh_n4mgA@mail.gmail.com>
+ <20190625153159.5utnn36dgku5545n@xps.therub.org>
+In-Reply-To: <20190625153159.5utnn36dgku5545n@xps.therub.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 25 Jun 2019 13:27:41 -0700
+Message-ID: <CAADnVQLoSc=PsKj=KdCsqMLfHO-sP_Bijgy63zROos6Cy=k+dw@mail.gmail.com>
+Subject: Re: selftests: bpf: test_libbpf.sh failed at file test_l4lb.o
+To:     Dan Rue <dan.rue@linaro.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Xdp <xdp-newbies@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>, Martin Lau <kafai@fb.com>,
+        Yonghong Song <yhs@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Tue, Jun 25, 2019 at 8:32 AM Dan Rue <dan.rue@linaro.org> wrote:
+>
+> On Mon, Jun 24, 2019 at 12:58:15PM -0700, Alexei Starovoitov wrote:
+> > On Mon, Jun 24, 2019 at 12:53 PM Dan Rue <dan.rue@linaro.org> wrote:
+> > >
+> > > I would say if it's not possible to check at runtime, and it requires
+> > > clang 9.0, that this test should not be enabled by default.
+> >
+> > The latest clang is the requirement.
+> > If environment has old clang or no clang at all these tests will be failing.
+>
+> Hi Alexei!
+>
+> I'm not certain if I'm interpreting you as you intended, but it sounds
+> like you're telling me that if the test build environment does not use
+> 'latest clang' (i guess latest as of today?), that these tests will
+> fail, and that is how it is going to be. If I have that wrong, please
+> correct me and disregard the rest of my message.
+>
+> Please understand where we are coming from. We (and many others) run
+> thousands of tests from a lot of test frameworks, and so our environment
+> often has mutually exclusive requirements when it comes to things like
+> toolchain selection.
+>
+> We believe, strongly, that a test should not emit a "fail" for a missing
+> requirement. Fail is a serious thing, and should be reserved for an
+> actual issue that needs to be investigated, reported, and fixed.
+>
+> This is how we treat test failures - we investigate, report, and fix
+> them when possible. When they're not real failures, we waste our time
+> (and yours, in this case).
+>
+> By adding the tests to TEST_GEN_PROGS, you're adding them to the general
+> test set that those of us running test farms try to run continuously
+> across a wide range of hardware environments and kernel branches.
 
-On Tue, Jun 25, 2019 at 09:53:09PM +0200, Thomas Gleixner wrote:
-> On Tue, 25 Jun 2019, Nathan Chancellor wrote:
-> > On Tue, Jun 25, 2019 at 10:12:42AM -0700, Kees Cook wrote:
-> > > On Tue, Jun 25, 2019 at 09:18:46AM +0200, Peter Zijlstra wrote:
-> > > > Can it build a kernel without patches yet? That is, why should I care
-> > > > what LLVM does?
-> > > 
-> > > Yes. LLVM trunk builds and boots x86 now. As for distro availability,
-> > > AIUI, the asm-goto feature missed the 9.0 LLVM branch point, so it'll
-> > > appear in the following release.
-> > > 
-> > > -- 
-> > > Kees Cook
-> > 
-> > I don't think that's right. LLVM 9 hasn't been branched yet so it should
-> > make it in.
-> > 
-> > http://lists.llvm.org/pipermail/llvm-dev/2019-June/133155.html
-> > 
-> > If anyone wants to play around with it before then, we wrote a
-> > self-contained script that will build an LLVM toolchain suitable for
-> > kernel development:
-> > 
-> > https://github.com/ClangBuiltLinux/tc-build
-> 
-> Useful!
-> 
-> But can the script please check for a minimal clang version required to
-> build that thing.
-> 
-> The default clang-3.8 which is installed on Debian stretch explodes. The
-> 6.0 variant from backports works as advertised.
-> 
+you run the latest selftests/bpf on the latest kernel, right?
+If not than selftests/bpf is not for your setup.
 
-Hmmm interesting, I test a lot of different distros using Docker
-containers to make sure the script works universally and that includes
-Debian stretch, which is the stress tester because all of the packages
-are older. I install the following packages then run the following
-command and it works fine for me (just tested):
-
-$ apt update && apt install -y --no-install-recommends ca-certificates \
-ccache clang cmake curl file gcc g++ git make ninja-build python3 \
-texinfo zlib1g-dev
-$ ./build-llvm.py
-
-If you could give me a build log, I'd be happy to look into it and see
-what I can do.
-
-> Kernel builds with the new shiny compiler. Jump labels seem to be enabled.
-> 
-> It complains about a few type conversions:
-> 
->  arch/x86/kvm/mmu.c:4596:39: warning: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Wconstant-conversion]
->                 u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
->                    ~~                               ^~
-> 
-
-Yes, there was a patch sent to try and fix this but it was rejected by
-the maintainers:
-
-https://github.com/ClangBuiltLinux/linux/issues/95
-
-https://lore.kernel.org/lkml/20180619192504.180479-1-mka@chromium.org/
-
-> but it also makes objtool unhappy:
-> 
->  arch/x86/events/intel/core.o: warning: objtool: intel_pmu_nhm_workaround()+0xb3: unreachable instruction
->  kernel/fork.o: warning: objtool: free_thread_stack()+0x126: unreachable instruction
->  mm/workingset.o: warning: objtool: count_shadow_nodes()+0x11f: unreachable instruction
->  arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool: get_fixed_ranges()+0x9b: unreachable instruction
->  arch/x86/kernel/platform-quirks.o: warning: objtool: x86_early_init_platform_quirks()+0x84: unreachable instruction
->  drivers/iommu/irq_remapping.o: warning: objtool: irq_remap_enable_fault_handling()+0x1d: unreachable instruction
-> 
-
-Unfortunately, we have quite a few of those outstanding, it's probably
-time to start really taking a look at them:
-
-https://github.com/ClangBuiltLinux/linux/labels/objtool
-
-> Kernel boots. As I'm currently benchmarking VDSO performance, this was
-> obviosly my first test. Compared to the same kernel built with gcc6.3 the
-> performance of the VDSO drops slightly.
-> 
-> It's below 1%. Though I need to run the same tests on 4 other uarchs to get
-> the full picture. This stuff is randomly changing behaviour accross uarchs
-> depending on how the c source is arranged. So nothing to worry about (yet).
-> 
-
-Thanks for trying it out and letting us know. Please keep us in the loop
-if you happen to find anything amiss.
-
-Cheers,
-Nathan
-
-> Thanks,
-> 
-> 	tglx
-> 
+In the past people argued that selftests/bpf should check
+features of the kernel and skip when features are not found.
+My answer to that was always the same: such changes to selftests
+for older kernels need to live out of tree.
+selftests/bpf are one to one to the latest kernel.
+Often kernel commit X will break selftests and they're fixed
+in the commit X+1.
+clang, pahole, bpftool, iproute2 provide those features for the kernel.
+In other words new kernel features rely on new clang and
+other tools and selftests are testing those latest kernel features.
+Without new clang many new features cannot be tested exhaustively.
+datasec and btf are just few examples.
+Hence if your test farm cannot install the latest clang, pahole, etc then
+I recommend not to run selftest/bpf.
