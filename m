@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A26C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0BFC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC4320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CDD2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 06:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfFYGdd (ORCPT
+        id S1729411AbfFYGee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 02:33:33 -0400
-Received: from verein.lst.de ([213.95.11.211]:59906 "EHLO newverein.lst.de"
+        Tue, 25 Jun 2019 02:34:34 -0400
+Received: from verein.lst.de ([213.95.11.211]:59917 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbfFYGdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 02:33:33 -0400
+        id S1726321AbfFYGee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 02:34:34 -0400
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 0D43868B05; Tue, 25 Jun 2019 08:33:02 +0200 (CEST)
-Date:   Tue, 25 Jun 2019 08:33:01 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] switch m68k to use the generic remapping DMA allocator
-Message-ID: <20190625063301.GB29561@lst.de>
-References: <20190614102126.8402-1-hch@lst.de> <CAMuHMdUbuTc+MWqDFw=RnYxtiNQPQkzJ91KDuAQbhMq533tBCQ@mail.gmail.com>
+        id 2A77268B02; Tue, 25 Jun 2019 08:34:03 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 08:34:02 +0200
+From:   "hch@lst.de" <hch@lst.de>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     "hch@lst.de" <hch@lst.de>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH 7/7] arc: use the generic remapping allocator for
+ coherent DMA allocations
+Message-ID: <20190625063402.GC29561@lst.de>
+References: <20190614144431.21760-1-hch@lst.de> <20190614144431.21760-8-hch@lst.de> <78ac563f2815a9a14bfab6076d0ef948497f5b9f.camel@synopsys.com> <20190615083554.GC23406@lst.de> <20190624131417.GA10593@lst.de> <d9ed8f6a82801b94d1d7792eb74effdbce09ce51.camel@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUbuTc+MWqDFw=RnYxtiNQPQkzJ91KDuAQbhMq533tBCQ@mail.gmail.com>
+In-Reply-To: <d9ed8f6a82801b94d1d7792eb74effdbce09ce51.camel@synopsys.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 09:16:30AM +0200, Geert Uytterhoeven wrote:
-> Doing
+On Mon, Jun 24, 2019 at 07:13:17PM +0000, Eugeniy Paltsev wrote:
+> Hi Christoph,
 > 
-> -       select DMA_DIRECT_REMAP if MMU && !COLDFIRE
-> +       select DMA_DIRECT_REMAP if MMU && !COLDFIRE && !SUN3
+> Yep I've reviewed and tested it for both cases:
+> - coherent/noncoherent dma
+> - allocation from atomic_pool/regular allocation
 > 
-> in arch/m68k/Kconfig fixes the build.
-> 
-> Alternatively, you could use:
-> 
-> -       select DMA_DIRECT_REMAP if MMU && !COLDFIRE
-> +       select DMA_DIRECT_REMAP if HAS_DMA && MMU && !COLDFIRE
+> everything works fine for ARC.
 
-The latter might be a little cleaner.
+Thanks.  I've applied the whole series to the dma-mapping for-next
+branch.
