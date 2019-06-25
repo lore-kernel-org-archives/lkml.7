@@ -2,99 +2,74 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E36C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68255C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A389B21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k570TjvB"
+	by mail.kernel.org (Postfix) with ESMTP id 4952821670
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 09:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbfFYJBq (ORCPT
+        id S1731259AbfFYJCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 05:01:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44376 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731222AbfFYJBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:01:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LHgyWTRPcVpDvWhZbPOCqS5v8RHTbXiDcQRTEjmDFOI=; b=k570TjvB7grF3smBg6Uzpa48y7
-        9OPkhnknPz1bXd+ZsYgiKlbgae3M06EE0nbP5/TcOdE14pHFeV65si1vZf/Ex7CkFpPYvwH/X0pZS
-        AlRIsc46RmaWu/JBW43hIFp3VuuMun9kp6fl8b8dB/WeyRfqlAj2XWBr/ae9BkuDO03qOaxDRc3Ec
-        Sg8x8LoR9ESu1W2aJtOTqZY5Xme8CCNxzBa+uE3ERPEMOdOKa21yrtujuCSxole5xrv9TrlhLNq2L
-        XEp5sLfNhWOS18q4Bq/iNBp76j4/+BkMd1mTswu+2RSxm9jbeqnzddOv1u/MmAd5jF5v1pqaREzQr
-        GCt10lbQ==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfhKg-0004CW-JD; Tue, 25 Jun 2019 09:01:42 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k@lists.linux-m68k.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] m68k: implement arch_dma_prep_coherent
-Date:   Tue, 25 Jun 2019 11:01:35 +0200
-Message-Id: <20190625090135.18872-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190625090135.18872-1-hch@lst.de>
-References: <20190625090135.18872-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Tue, 25 Jun 2019 05:02:14 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:40064 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726543AbfFYJCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 05:02:14 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A5A731A0787;
+        Tue, 25 Jun 2019 11:02:12 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 99AA01A0180;
+        Tue, 25 Jun 2019 11:02:12 +0200 (CEST)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 18A8C205E5;
+        Tue, 25 Jun 2019 11:02:12 +0200 (CEST)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH] clk: imx8mq: Mark AHB clock as critical
+Date:   Tue, 25 Jun 2019 12:01:56 +0300
+Message-Id: <1561453316-11481-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we remap memory as non-cached to be used as a DMA coherent buffer
-we should writeback all cache and invalidate the cache lines so that
-we make sure we have a clean slate.  Implement this using the
-cache_push() helper.
+Keep the AHB clock always on since there is no driver to control it and
+all the other clocks that use it as parent rely on it being always enabled.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- arch/m68k/Kconfig      | 1 +
- arch/m68k/kernel/dma.c | 5 +++++
- 2 files changed, 6 insertions(+)
+ drivers/clk/imx/clk-imx8mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index 3a52bf46e043..00f5c98a5e05 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -4,6 +4,7 @@ config M68K
- 	default y
- 	select ARCH_32BIT_OFF_T
- 	select ARCH_HAS_DMA_MMAP_PGPROT if MMU && !COLDFIRE
-+	select ARCH_HAS_DMA_PREP_COHERENT
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE if HAS_DMA
- 	select ARCH_MIGHT_HAVE_PC_PARPORT if ISA
- 	select ARCH_NO_COHERENT_DMA_MMAP if !MMU
-diff --git a/arch/m68k/kernel/dma.c b/arch/m68k/kernel/dma.c
-index 9c6a350a16d8..e720e6eed838 100644
---- a/arch/m68k/kernel/dma.c
-+++ b/arch/m68k/kernel/dma.c
-@@ -18,6 +18,11 @@
- #include <asm/pgalloc.h>
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index 5fbc2a7..b48268b 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -398,7 +398,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_CLK_NOC_APB] = imx8m_clk_composite_critical("noc_apb", imx8mq_noc_apb_sels, base + 0x8d80);
  
- #if defined(CONFIG_MMU) && !defined(CONFIG_COLDFIRE)
-+void arch_dma_prep_coherent(struct page *page, size_t size)
-+{
-+	cache_push(page_to_phys(page), size);
-+}
-+
- pgprot_t arch_dma_mmap_pgprot(struct device *dev, pgprot_t prot,
- 		unsigned long attrs)
- {
+ 	/* AHB */
+-	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite("ahb", imx8mq_ahb_sels, base + 0x9000);
++	clks[IMX8MQ_CLK_AHB] = imx8m_clk_composite_critical("ahb", imx8mq_ahb_sels, base + 0x9000);
+ 	clks[IMX8MQ_CLK_AUDIO_AHB] = imx8m_clk_composite("audio_ahb", imx8mq_audio_ahb_sels, base + 0x9100);
+ 
+ 	/* IPG */
 -- 
-2.20.1
+2.7.4
 
