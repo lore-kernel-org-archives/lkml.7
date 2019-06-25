@@ -2,91 +2,119 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F00C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47097C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4A8208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ly5b2GEF"
+	by mail.kernel.org (Postfix) with ESMTP id 1E32D213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 14:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfFYOKp (ORCPT
+        id S1729407AbfFYOK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 10:10:45 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:53596 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfFYOKp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 10:10:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5Xb6HOTG+zlag07avcaujeaLqr4XUzU2qm2bd4UiBIg=; b=ly5b2GEF7t8Xid2fwh5tWxjGk
-        1OQja7i/iAxqb5Jch4kWE8/ZkrF+DAJTn+Ggt4YEXMH/7CCxwQpHda7CxEd66NnhWlxzjb0GlOBjH
-        DUiFvXDZ42Afh1aFUZ08a7mE4pj1q+LubbfcRpx5Y8yhGAyBUu7jcfm3BkOhWaFHBnjUjgHmlNSQ2
-        hfwpr9Hkqswc4UswMJfggxQcwLgzkaXYDAdb+enl1jqT/YDeZB1n4e/G0D6k/XIYDhzrXAvmUXWwQ
-        +PjW+sQcMipB2X7tQhitGUFkpttqA9qORJ+qbDyLT4isccDyzr9k9nn/t2M4NMRHba4BPmkrckj//
-        bGzf7VnUg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59992)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hfm9e-00070m-UI; Tue, 25 Jun 2019 15:10:39 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hfm9Y-0007I8-NO; Tue, 25 Jun 2019 15:10:32 +0100
-Date:   Tue, 25 Jun 2019 15:10:32 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Emil Velikov <emil.velikov@collabora.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org,
-        kernel@collabora.com, Sean Paul <sean@poorly.run>,
-        linux-kernel@vger.kernel.org, m.szyprowski@samsung.com
-Subject: Re: [PATCH 0/2] Associate ddc adapters with connectors
-Message-ID: <20190625141032.5jiy2oekb3olaejd@shell.armlinux.org.uk>
-References: <cover.1561452052.git.andrzej.p@collabora.com>
- <20190625100351.52ddptvb2gizaepi@shell.armlinux.org.uk>
- <817ccfba-754c-6a28-8d75-63f70605fd43@collabora.com>
- <20190625133639.GA16031@arch-x1c3>
- <20190625140755.GT12905@phenom.ffwll.local>
+        Tue, 25 Jun 2019 10:10:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:27718 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726532AbfFYOKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 10:10:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 07:10:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,416,1557212400"; 
+   d="scan'208";a="163996105"
+Received: from qhoang-mobl.amr.corp.intel.com (HELO [10.254.106.127]) ([10.254.106.127])
+  by orsmga003.jf.intel.com with ESMTP; 25 Jun 2019 07:10:53 -0700
+Subject: Re: [PATCH v1 0/6] mm / virtio: Provide support for paravirtual waste
+ page treatment
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>, nitesh@redhat.com,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+ <ff133df4-6291-bece-3d8d-dc3f12f398cf@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <8fea71ba-2464-ead8-3802-2241805283cc@intel.com>
+Date:   Tue, 25 Jun 2019 07:10:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625140755.GT12905@phenom.ffwll.local>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <ff133df4-6291-bece-3d8d-dc3f12f398cf@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 04:07:55PM +0200, Daniel Vetter wrote:
-> Otherwise I like this. Biggest problem I'm seeing here is rolling this out
-> everywhere, this is a lot of work. And without widespread adoptions it's
-> not terribly useful for userspace.
+On 6/25/19 12:42 AM, David Hildenbrand wrote:
+> On 20.06.19 00:32, Alexander Duyck wrote:
+> I still *detest* the terminology, sorry. Can't you come up with a
+> simpler terminology that makes more sense in the context of operating
+> systems and pages we want to hint to the hypervisor? (that is the only
+> use case you are using it for so far)
 
-There will be cases where it's not possible, because the I2C bus is
-hidden behind a chip that doesn't give you direct access to the DDC
-bus.
+It's a wee bit too cute for my taste as well.  I could probably live
+with it in the data structures, but having it show up out in places like
+Kconfig and filenames goes too far.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+For instance, someone seeing memory_aeration.c will have no concept
+what's in the file.  Could we call it something like memory_paravirt.c?
+ Or even mm/paravirt.c.
+
+Could you talk for a minute about why the straightforward naming like
+"hinted/unhinted" wasn't used?  Is there something else we could ever
+use this infrastructure for that is not related to paravirtualized free
+page hinting?
