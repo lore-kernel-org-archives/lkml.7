@@ -2,122 +2,103 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03667C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19677C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8D420883
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561501781;
-	bh=4f5tQVywJYQDYm/lMrtR9RxZzq5Np5Y4eizi6nTQSwU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aVwpZ73VN8Oz9p2Dss2o1m3aj9d1axLDOYDXkkNvEA5wqYm6e0HzziBjTs0rBHe02
-	 a8mSxEglcpXcYGKVN1OSdZYFBoC9ymrqLFO0V5Klfw4D0Cf5or+q1Et+YIQ7WBuikH
-	 HlqcMOsWkg3SNeAyz77/AcOW84kjGFGJPUVAD8vg=
+	by mail.kernel.org (Postfix) with ESMTP id EA74F2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 22:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfFYW3k (ORCPT
+        id S1726524AbfFYW3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 18:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbfFYW3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 18:29:40 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 531B12085A;
-        Tue, 25 Jun 2019 22:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561501779;
-        bh=4f5tQVywJYQDYm/lMrtR9RxZzq5Np5Y4eizi6nTQSwU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NuqvtJUXh1M40PcGn+qmUGX/nC4nBpZemtL+fDkoWlC6fQ5h4G2QRxmax57IEdxxG
-         yZVljn4v6HML6ZdkFu3R7lPHk3Fk5c3sv/t8+6Ssq0lgcrCssuPvjRN/6PlMmiVtwY
-         8k0+rc17j03O5JRDDiODGKYNTX7Vrb5i6XqWuEgg=
-Date:   Tue, 25 Jun 2019 15:29:38 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        Tue, 25 Jun 2019 18:29:54 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:40222 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFYW3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 18:29:54 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hftwb-0001ZR-4N; Tue, 25 Jun 2019 22:29:41 +0000
+Date:   Tue, 25 Jun 2019 23:29:41 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Greg Ungerer <gerg@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
-Message-Id: <20190625152938.d1ebf43f0da5f5276c77cf4c@linux-foundation.org>
-In-Reply-To: <20190625100518.30753-1-vkoul@kernel.org>
-References: <20190625100518.30753-1-vkoul@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 08/17] binfmt_flat: consolidate two version of
+ flat_v2_reloc_t
+Message-ID: <20190625222941.GA1343@ZenIV.linux.org.uk>
+References: <20190613070903.17214-1-hch@lst.de>
+ <20190613070903.17214-9-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613070903.17214-9-hch@lst.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 15:35:18 +0530 Vinod Koul <vkoul@kernel.org> wrote:
+On Thu, Jun 13, 2019 at 09:08:54AM +0200, Christoph Hellwig wrote:
+> Two branches of the ifdef maze actually have the same content, so merge
+> them.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/flat.h | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/flat.h b/include/linux/flat.h
+> index 2b7cda6e9c1b..19c586b74b99 100644
+> --- a/include/linux/flat.h
+> +++ b/include/linux/flat.h
+> @@ -69,15 +69,13 @@ struct flat_hdr {
+>  typedef union {
+>  	unsigned long	value;
+>  	struct {
+> -# if defined(mc68000) && !defined(CONFIG_COLDFIRE)
+> +#if defined(__LITTLE_ENDIAN_BITFIELD) || \
+> +    (defined(mc68000) && !defined(CONFIG_COLDFIRE))
+>  		signed long offset : 30;
+>  		unsigned long type : 2;
+>  # elif defined(__BIG_ENDIAN_BITFIELD)
+>  		unsigned long type : 2;
+>  		signed long offset : 30;
+> -# elif defined(__LITTLE_ENDIAN_BITFIELD)
+> -		signed long offset : 30;
+> -		unsigned long type : 2;
+>  # else
+>  #   	error "Unknown bitfield order for flat files."
+>  # endif
+> -- 
+> 2.20.1
+> 
 
-> DIV_ROUND_UP_ULL adds the two arguments and then invokes
-> DIV_ROUND_DOWN_ULL. But on a 32bit system the addition of two 32 bit
-> values can overflow. DIV_ROUND_DOWN_ULL does it correctly and stashes
-> the addition into a unsigned long long so cast the result to unsigned
-> long long here to avoid the overflow condition.
->
-> ...
->
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -93,7 +93,8 @@
->  #define DIV_ROUND_DOWN_ULL(ll, d) \
->  	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
->  
-> -#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
-> +#define DIV_ROUND_UP_ULL(ll, d) \
-> +	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
->  
+FWIW, I wonder if keeping that type is worth bothering.
+Something like
+old_reloc(__be32 reloc)
+{
+	u32 v = be32_to_cpu(reloc);
+	int offset, type;
 
-This clearly wasn't tested :(
+#if (defined(mc68000) && !defined(CONFIG_COLDFIRE))
+	/* old m68k uses unusual format - type is in lower bits of octet 3 */
+	type = v % 4;
+	offset = (int)v / 4;
+#else
+	/* everything else (including coldfire) has it in upper bits of octet 0 */
+	type = v >> 30;
+	offset = (int)(v << 2) >> 2; /* or (v & 0x1fffffff) - (v & 0x20000000) * 4 */
+#endif
+	...
 
-fs/fs-writeback.c: In function wb_split_bdi_pages:
-./include/linux/kernel.h:97:65: error: expected ; before } token
-  ({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
-                                                                 ^
-fs/fs-writeback.c:811:10: note: in expansion of macro DIV_ROUND_UP_ULL
-   return DIV_ROUND_UP_ULL((u64)nr_pages * this_bw, tot_bw);
-
-
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: linux-kernelh-fix-overflow-for-div_round_up_ull-fix
-
-DIV_ROUND_UP_ULL must be an rval
-
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- include/linux/kernel.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
---- a/include/linux/kernel.h~linux-kernelh-fix-overflow-for-div_round_up_ull-fix
-+++ a/include/linux/kernel.h
-@@ -93,8 +93,10 @@
- #define DIV_ROUND_DOWN_ULL(ll, d) \
- 	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
- 
--#define DIV_ROUND_UP_ULL(ll, d) \
--	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
-+#define DIV_ROUND_UP_ULL(ll, d) ({ \
-+	unsigned long long _tmp; \
-+	_tmp = DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)); \
-+	_tmp; })
- 
- #if BITS_PER_LONG == 32
- # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
-_
-
+and to hell with bitfields, aliasing unions, etc.  Unless I'm misreading
+the whole thing, that is...  Greg?
