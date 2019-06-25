@@ -2,85 +2,71 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23348C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE1DC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB2620644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD1520644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 10:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfFYKOd (ORCPT
+        id S1731221AbfFYKPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 06:14:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:56232 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbfFYKOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 06:14:32 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 5E67D266AD9
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: Re: [PATCH 0/2] Associate ddc adapters with connectors
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-samsung-soc@vger.kernel.org,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Inki Dae <inki.dae@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org,
-        Daniel Vetter <daniel@ffwll.ch>, kernel@collabora.com,
-        Sean Paul <sean@poorly.run>,
-        linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
-References: <cover.1561452052.git.andrzej.p@collabora.com>
- <20190625100351.52ddptvb2gizaepi@shell.armlinux.org.uk>
-Message-ID: <817ccfba-754c-6a28-8d75-63f70605fd43@collabora.com>
-Date:   Tue, 25 Jun 2019 12:14:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 06:15:21 -0400
+Received: from verein.lst.de ([213.95.11.211]:33465 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727738AbfFYKPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 06:15:20 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 7E6E968C7B; Tue, 25 Jun 2019 12:14:46 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 12:14:45 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/12] xfs: refactor the ioend merging code
+Message-ID: <20190625101445.GK1462@lst.de>
+References: <20190624055253.31183-1-hch@lst.de> <20190624055253.31183-10-hch@lst.de> <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625100351.52ddptvb2gizaepi@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e42c54c4-4c64-8185-8ac3-cca38ad8e8a4@suse.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
-
-W dniu 25.06.2019 o 12:03, Russell King - ARM Linux admin pisze:
-> On Tue, Jun 25, 2019 at 11:46:34AM +0200, Andrzej Pietrasiewicz wrote:
->> It is difficult for a user to know which of the i2c adapters is for which
->> drm connector. This series addresses this problem.
->>
->> The idea is to have a symbolic link in connector's sysfs directory, e.g.:
->>
->> ls -l /sys/class/drm/card0-HDMI-A-1/i2c-2
->> lrwxrwxrwx 1 root root 0 Jun 24 10:42 /sys/class/drm/card0-HDMI-A-1/i2c-2 \
->> 	-> ../../../../soc/13880000.i2c/i2c-2
+On Mon, Jun 24, 2019 at 07:06:22PM +0300, Nikolay Borisov wrote:
+> > +{
+> > +	struct list_head	tmp;
+> > +
+> > +	list_replace_init(&ioend->io_list, &tmp);
+> > +	xfs_destroy_ioend(ioend, error);
+> > +	while ((ioend = list_pop(&tmp, struct xfs_ioend, io_list)))
+> > +		xfs_destroy_ioend(ioend, error);
 > 
-> Don't you want the symlink name to be "i2c" or something fixed, rather
-> than the name of the i2c adapter?  Otherwise, you seem to be encumbering
-> userspace with searching the directory to try and find the symlink.
-> 
+> nit: I'd prefer if the list_pop patch is right before this one since
+> this is the first user of it.
 
-Thank you for your comment. So you imagine something on the lines of:
+I try to keep generic infrastructure first instead of interveawing
+it with subystem-specific patches.
 
-lrwxrwxrwx 1 root root 0 Jun 24 10:42 /sys/class/drm/card0-HDMI-A-1/ddc \
-  	-> ../../../../soc/13880000.i2c/i2c-2
+> Additionally, I don't think list_pop is
+> really a net-negative win 
 
-?
+What is a "net-negative win" ?
 
-This makes sense to me, I will send a v2.
+> in comparison to list_for_each_entry_safe
+> here. In fact this "delete the list" would seems more idiomatic if
+> implemented via list_for_each_entry_safe
 
-Andrzej
+I disagree.  The for_each loops require an additional next iterator,
+and also don't clearly express what is going on, but require additional
+spotting of the list_del.
