@@ -2,64 +2,66 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9E2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4098FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D2F2086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D9520645
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 23:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rvlsoXuO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TfOi+l6F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfFYXdW (ORCPT
+        id S1726434AbfFYXdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 19:33:22 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47978 "EHLO
+        Tue, 25 Jun 2019 19:33:25 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47990 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbfFYXdU (ORCPT
+        with ESMTP id S1726396AbfFYXdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 19:33:20 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXIFQ068416;
-        Tue, 25 Jun 2019 18:33:18 -0500
+        Tue, 25 Jun 2019 19:33:23 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXLBn068434;
+        Tue, 25 Jun 2019 18:33:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561505598;
-        bh=t1N1fNUydejlrc13enmcaQ+yARdfCqgRqgTvctqS1/8=;
-        h=From:To:CC:Subject:Date;
-        b=rvlsoXuOILjneNcZZ11ZIZT5H03RwFLg/CcKuDVoroJrto0jBBohvtM53CDdAqDff
-         iW0geCvuaxqxawz7GzYJlXD+qwuH4wQCkEE2bLdxeuvjR5z65Owy8Mow0V18hFSoAZ
-         U5FZ1i/j/N89+qgNu6QRKzCGmgXMIwSCAzrZRRok=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5PNXIoF074196
+        s=ti-com-17Q1; t=1561505601;
+        bh=AVzFWkxY/+TevUuXjAygsKiDupRzaJUJJKQUGkuCQpQ=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=TfOi+l6FOdAqxdrtstrC37sGrndaNQ0vbz1jcwQEUx8j0d/mbDeg/Re7r9mW8jHKC
+         Dy6U5vKYPeCIMOmelSvMMCdI2Rt2o5GBd+K/pTPVz2zj9Dw+/5cxHk248C5sJwika2
+         fX/PoSLTSbttXSLyIiohmtl4BTXWnraSidbv1GMU=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5PNXLNZ010781
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Jun 2019 18:33:18 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 25 Jun 2019 18:33:21 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 25
- Jun 2019 18:33:17 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 18:33:21 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 25 Jun 2019 18:33:17 -0500
+ Frontend Transport; Tue, 25 Jun 2019 18:33:21 -0500
 Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXHX2089251;
-        Tue, 25 Jun 2019 18:33:17 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5PNXL2i125252;
+        Tue, 25 Jun 2019 18:33:21 -0500
 Received: from localhost (irmo.dhcp.ti.com [128.247.58.153])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x5PNXHm12151;
-        Tue, 25 Jun 2019 18:33:17 -0500 (CDT)
+        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x5PNXLm12241;
+        Tue, 25 Jun 2019 18:33:21 -0500 (CDT)
 From:   Suman Anna <s-anna@ti.com>
 To:     Tony Lindgren <tony@atomide.com>
 CC:     Tero Kristo <t-kristo@ti.com>, Roger Quadros <rogerq@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Suman Anna <s-anna@ti.com>
-Subject: [PATCH 0/5] Minor ti-sysc cleanups
-Date:   Tue, 25 Jun 2019 18:33:10 -0500
-Message-ID: <20190625233315.22301-1-s-anna@ti.com>
+Subject: [PATCH 3/5] bus: ti-sysc: Switch to SPDX license identifier
+Date:   Tue, 25 Jun 2019 18:33:13 -0500
+Message-ID: <20190625233315.22301-4-s-anna@ti.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190625233315.22301-1-s-anna@ti.com>
+References: <20190625233315.22301-1-s-anna@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -69,34 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+Use the appropriate SPDX license identifier in the TI sysc
+interconnect target driver source files and drop the previous
+boilerplate license text. Also, add the the SPDX license
+identifier in the associated ti-sysc header files.
 
-The following series includes minor cleanup patches against the ti-sysc
-code. Patches are based on top of all your 5.3 staged branches. Feel free
-to pick them up for either 5.3 (if it is not too late) or 5.4 merge window. 
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ drivers/bus/ti-sysc.c                 | 10 +---------
+ include/linux/platform_data/ti-sysc.h |  2 ++
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-The first 4 patches are non-coding changes, and the last patch is a minor
-fixup cleaning up the code flow on failure error paths in sysc_probe()
-function. I have boot tested on the limited boards that I have - AM335x
-BeagleBone Black, AM437x IDK, AM57xx GP EVM, OMAP4 PandaBoard and OMAP5
-uEVM.
-
-regards
-Suman
-
-Suman Anna (5):
-  MAINTAINERS: Add ti-sysc files under the OMAP2+ entry
-  dt-bindings: ti-sysc: Add SPDX license identifier
-  bus: ti-sysc: Switch to SPDX license identifier
-  bus: ti-sysc: Add missing kerneldoc comments
-  bus: ti-sysc: Simplify cleanup upon failures in sysc_probe()
-
- MAINTAINERS                           |  2 ++
- drivers/bus/ti-sysc.c                 | 31 +++++++++++++--------------
- include/dt-bindings/bus/ti-sysc.h     |  1 +
- include/linux/platform_data/ti-sysc.h |  7 ++++--
- 4 files changed, 23 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index e6deabd8305d..3030c9eadfb1 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1,14 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * ti-sysc.c - Texas Instruments sysc interconnect target driver
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ 
+ #include <linux/io.h>
+diff --git a/include/linux/platform_data/ti-sysc.h b/include/linux/platform_data/ti-sysc.h
+index 0c587d4fc718..7d009dc08a54 100644
+--- a/include/linux/platform_data/ti-sysc.h
++++ b/include/linux/platform_data/ti-sysc.h
+@@ -1,3 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
+ #ifndef __TI_SYSC_DATA_H__
+ #define __TI_SYSC_DATA_H__
+ 
 -- 
 2.21.0
 
