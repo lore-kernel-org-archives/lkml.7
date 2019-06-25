@@ -3,39 +3,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB00C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EBFC48BD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C652147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B282147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 19:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfFYTPx (ORCPT
+        id S1733074AbfFYTP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 15:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34596 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 15:15:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733041AbfFYTPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733006AbfFYTPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 15:15:48 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC82621726;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F00A2133F;
         Tue, 25 Jun 2019 19:15:47 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hfquw-0002Nc-Qs; Tue, 25 Jun 2019 15:15:46 -0400
-Message-Id: <20190625191546.716820444@goodmis.org>
+        id 1hfquw-0002N8-Lf; Tue, 25 Jun 2019 15:15:46 -0400
+Message-Id: <20190625191546.560116560@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Tue, 25 Jun 2019 15:15:22 -0400
+Date:   Tue, 25 Jun 2019 15:15:21 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-next][PATCH 12/12] tracing/kprobe: Check registered state using kprobe
+Subject: [for-next][PATCH 11/12] tracing/probe: Add trace_event_call accesses APIs
 References: <20190625191510.599310671@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -46,122 +46,272 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Change registered check only by trace_kprobe and remove
-TP_FLAG_REGISTERED from trace_probe, since this feature
-is only used for trace_kprobe.
+Add trace_event_call access APIs for trace_probe.
+Instead of accessing trace_probe.call directly, use those
+accesses by trace_probe_event_call() method. This hides
+the relationship of trace_event_call and trace_probe from
+trace_kprobe and trace_uprobe.
 
-Link: http://lkml.kernel.org/r/155931588704.28323.4952266828256245833.stgit@devnote2
+Link: http://lkml.kernel.org/r/155931587711.28323.8335129014686133120.stgit@devnote2
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_kprobe.c | 23 +++++++++++++++--------
- kernel/trace/trace_probe.h  |  6 ------
- 2 files changed, 15 insertions(+), 14 deletions(-)
+ kernel/trace/trace_kprobe.c | 23 ++++++++++++-----------
+ kernel/trace/trace_probe.c  | 24 ++++++++++++++----------
+ kernel/trace/trace_probe.h  |  6 ++++++
+ kernel/trace/trace_uprobe.c | 15 ++++++++-------
+ 4 files changed, 40 insertions(+), 28 deletions(-)
 
 diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 62362ad1ad98..9d483ad9bb6c 100644
+index 3cf8cee4f276..62362ad1ad98 100644
 --- a/kernel/trace/trace_kprobe.c
 +++ b/kernel/trace/trace_kprobe.c
-@@ -157,6 +157,12 @@ static nokprobe_inline unsigned long trace_kprobe_nhit(struct trace_kprobe *tk)
- 	return nhit;
+@@ -985,7 +985,7 @@ __kprobe_trace_func(struct trace_kprobe *tk, struct pt_regs *regs,
+ 	struct ring_buffer *buffer;
+ 	int size, dsize, pc;
+ 	unsigned long irq_flags;
+-	struct trace_event_call *call = &tk->tp.call;
++	struct trace_event_call *call = trace_probe_event_call(&tk->tp);
+ 
+ 	WARN_ON(call != trace_file->event_call);
+ 
+@@ -1033,7 +1033,7 @@ __kretprobe_trace_func(struct trace_kprobe *tk, struct kretprobe_instance *ri,
+ 	struct ring_buffer *buffer;
+ 	int size, pc, dsize;
+ 	unsigned long irq_flags;
+-	struct trace_event_call *call = &tk->tp.call;
++	struct trace_event_call *call = trace_probe_event_call(&tk->tp);
+ 
+ 	WARN_ON(call != trace_file->event_call);
+ 
+@@ -1163,7 +1163,7 @@ static int kretprobe_event_define_fields(struct trace_event_call *event_call)
+ static int
+ kprobe_perf_func(struct trace_kprobe *tk, struct pt_regs *regs)
+ {
+-	struct trace_event_call *call = &tk->tp.call;
++	struct trace_event_call *call = trace_probe_event_call(&tk->tp);
+ 	struct kprobe_trace_entry_head *entry;
+ 	struct hlist_head *head;
+ 	int size, __size, dsize;
+@@ -1213,7 +1213,7 @@ static void
+ kretprobe_perf_func(struct trace_kprobe *tk, struct kretprobe_instance *ri,
+ 		    struct pt_regs *regs)
+ {
+-	struct trace_event_call *call = &tk->tp.call;
++	struct trace_event_call *call = trace_probe_event_call(&tk->tp);
+ 	struct kretprobe_trace_entry_head *entry;
+ 	struct hlist_head *head;
+ 	int size, __size, dsize;
+@@ -1348,9 +1348,10 @@ static struct trace_event_functions kprobe_funcs = {
+ 	.trace		= print_kprobe_event
+ };
+ 
+-static inline void init_trace_event_call(struct trace_kprobe *tk,
+-					 struct trace_event_call *call)
++static inline void init_trace_event_call(struct trace_kprobe *tk)
+ {
++	struct trace_event_call *call = trace_probe_event_call(&tk->tp);
++
+ 	if (trace_kprobe_is_return(tk)) {
+ 		call->event.funcs = &kretprobe_funcs;
+ 		call->class->define_fields = kretprobe_event_define_fields;
+@@ -1366,7 +1367,7 @@ static inline void init_trace_event_call(struct trace_kprobe *tk,
+ 
+ static int register_kprobe_event(struct trace_kprobe *tk)
+ {
+-	init_trace_event_call(tk, &tk->tp.call);
++	init_trace_event_call(tk);
+ 
+ 	return trace_probe_register_event_call(&tk->tp);
+ }
+@@ -1403,7 +1404,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+ 		return ERR_CAST(tk);
+ 	}
+ 
+-	init_trace_event_call(tk, &tk->tp.call);
++	init_trace_event_call(tk);
+ 
+ 	if (traceprobe_set_print_fmt(&tk->tp, trace_kprobe_is_return(tk)) < 0) {
+ 		ret = -ENOMEM;
+@@ -1414,7 +1415,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+ 	if (ret < 0)
+ 		goto error;
+ 
+-	return &tk->tp.call;
++	return trace_probe_event_call(&tk->tp);
+ error:
+ 	free_trace_kprobe(tk);
+ 	return ERR_PTR(ret);
+@@ -1447,7 +1448,7 @@ static __init void enable_boot_kprobe_events(void)
+ 	mutex_lock(&event_mutex);
+ 	for_each_trace_kprobe(tk, pos) {
+ 		list_for_each_entry(file, &tr->events, list)
+-			if (file->event_call == &tk->tp.call)
++			if (file->event_call == trace_probe_event_call(&tk->tp))
+ 				trace_event_enable_disable(file, 1, 0);
+ 	}
+ 	mutex_unlock(&event_mutex);
+@@ -1523,7 +1524,7 @@ find_trace_probe_file(struct trace_kprobe *tk, struct trace_array *tr)
+ 	struct trace_event_file *file;
+ 
+ 	list_for_each_entry(file, &tr->events, list)
+-		if (file->event_call == &tk->tp.call)
++		if (file->event_call == trace_probe_event_call(&tk->tp))
+ 			return file;
+ 
+ 	return NULL;
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 323a11ad1dad..dbef0d135075 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -844,6 +844,7 @@ static int __set_print_fmt(struct trace_probe *tp, char *buf, int len,
+ 
+ int traceprobe_set_print_fmt(struct trace_probe *tp, bool is_return)
+ {
++	struct trace_event_call *call = trace_probe_event_call(tp);
+ 	int len;
+ 	char *print_fmt;
+ 
+@@ -855,7 +856,7 @@ int traceprobe_set_print_fmt(struct trace_probe *tp, bool is_return)
+ 
+ 	/* Second: actually write the @print_fmt */
+ 	__set_print_fmt(tp, print_fmt, len + 1, is_return);
+-	tp->call.print_fmt = print_fmt;
++	call->print_fmt = print_fmt;
+ 
+ 	return 0;
+ }
+@@ -888,31 +889,34 @@ int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 
+ void trace_probe_cleanup(struct trace_probe *tp)
+ {
++	struct trace_event_call *call = trace_probe_event_call(tp);
+ 	int i;
+ 
+ 	for (i = 0; i < tp->nr_args; i++)
+ 		traceprobe_free_probe_arg(&tp->args[i]);
+ 
+-	kfree(tp->call.class->system);
+-	kfree(tp->call.name);
+-	kfree(tp->call.print_fmt);
++	kfree(call->class->system);
++	kfree(call->name);
++	kfree(call->print_fmt);
  }
  
-+static nokprobe_inline bool trace_kprobe_is_registered(struct trace_kprobe *tk)
-+{
-+	return !(list_empty(&tk->rp.kp.list) &&
-+		 hlist_unhashed(&tk->rp.kp.hlist));
-+}
+ int trace_probe_init(struct trace_probe *tp, const char *event,
+ 		     const char *group)
+ {
++	struct trace_event_call *call = trace_probe_event_call(tp);
 +
- /* Return 0 if it fails to find the symbol address */
- static nokprobe_inline
- unsigned long trace_kprobe_address(struct trace_kprobe *tk)
-@@ -244,6 +250,8 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
- 		tk->rp.kp.pre_handler = kprobe_dispatcher;
- 
- 	tk->rp.maxactive = maxactive;
-+	INIT_HLIST_NODE(&tk->rp.kp.hlist);
-+	INIT_LIST_HEAD(&tk->rp.kp.list);
- 
- 	ret = trace_probe_init(&tk->tp, event, group);
- 	if (ret < 0)
-@@ -273,7 +281,7 @@ static inline int __enable_trace_kprobe(struct trace_kprobe *tk)
- {
- 	int ret = 0;
- 
--	if (trace_probe_is_registered(&tk->tp) && !trace_kprobe_has_gone(tk)) {
-+	if (trace_kprobe_is_registered(tk) && !trace_kprobe_has_gone(tk)) {
- 		if (trace_kprobe_is_return(tk))
- 			ret = enable_kretprobe(&tk->rp);
- 		else
-@@ -333,7 +341,7 @@ disable_trace_kprobe(struct trace_kprobe *tk, struct trace_event_file *file)
- 	} else
- 		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
- 
--	if (!trace_probe_is_enabled(tp) && trace_probe_is_registered(tp)) {
-+	if (!trace_probe_is_enabled(tp) && trace_kprobe_is_registered(tk)) {
- 		if (trace_kprobe_is_return(tk))
- 			disable_kretprobe(&tk->rp);
- 		else
-@@ -381,7 +389,7 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
- {
- 	int i, ret;
- 
--	if (trace_probe_is_registered(&tk->tp))
-+	if (trace_kprobe_is_registered(tk))
+ 	if (!event || !group)
  		return -EINVAL;
  
- 	if (within_notrace_func(tk)) {
-@@ -407,21 +415,20 @@ static int __register_trace_kprobe(struct trace_kprobe *tk)
- 	else
- 		ret = register_kprobe(&tk->rp.kp);
+-	tp->call.class = &tp->class;
+-	tp->call.name = kstrdup(event, GFP_KERNEL);
+-	if (!tp->call.name)
++	call->class = &tp->class;
++	call->name = kstrdup(event, GFP_KERNEL);
++	if (!call->name)
+ 		return -ENOMEM;
  
--	if (ret == 0)
--		trace_probe_set_flag(&tk->tp, TP_FLAG_REGISTERED);
- 	return ret;
- }
- 
- /* Internal unregister function - just handle k*probes and flags */
- static void __unregister_trace_kprobe(struct trace_kprobe *tk)
- {
--	if (trace_probe_is_registered(&tk->tp)) {
-+	if (trace_kprobe_is_registered(tk)) {
- 		if (trace_kprobe_is_return(tk))
- 			unregister_kretprobe(&tk->rp);
- 		else
- 			unregister_kprobe(&tk->rp.kp);
--		trace_probe_clear_flag(&tk->tp, TP_FLAG_REGISTERED);
--		/* Cleanup kprobe for reuse */
-+		/* Cleanup kprobe for reuse and mark it unregistered */
-+		INIT_HLIST_NODE(&tk->rp.kp.hlist);
-+		INIT_LIST_HEAD(&tk->rp.kp.list);
- 		if (tk->rp.kp.symbol_name)
- 			tk->rp.kp.addr = NULL;
+ 	tp->class.system = kstrdup(group, GFP_KERNEL);
+ 	if (!tp->class.system) {
+-		kfree(tp->call.name);
+-		tp->call.name = NULL;
++		kfree(call->name);
++		call->name = NULL;
+ 		return -ENOMEM;
  	}
+ 	INIT_LIST_HEAD(&tp->files);
+@@ -923,7 +927,7 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+ 
+ int trace_probe_register_event_call(struct trace_probe *tp)
+ {
+-	struct trace_event_call *call = &tp->call;
++	struct trace_event_call *call = trace_probe_event_call(tp);
+ 	int ret;
+ 
+ 	ret = register_trace_event(&call->event);
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 6c33d4aa36c3..d1714820efe1 100644
+index 67424cb5d5d6..6c33d4aa36c3 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -55,7 +55,6 @@
- /* Flags for trace_probe */
- #define TP_FLAG_TRACE		1
- #define TP_FLAG_PROFILE		2
--#define TP_FLAG_REGISTERED	4
- 
- /* data_loc: data location, compatible with u32 */
- #define make_data_loc(len, offs)	\
-@@ -261,11 +260,6 @@ static inline bool trace_probe_is_enabled(struct trace_probe *tp)
- 	return trace_probe_test_flag(tp, TP_FLAG_TRACE | TP_FLAG_PROFILE);
+@@ -276,6 +276,12 @@ static inline const char *trace_probe_group_name(struct trace_probe *tp)
+ 	return tp->call.class->system;
  }
  
--static inline bool trace_probe_is_registered(struct trace_probe *tp)
--{
--	return trace_probe_test_flag(tp, TP_FLAG_REGISTERED);
--}
--
- static inline const char *trace_probe_name(struct trace_probe *tp)
++static inline struct trace_event_call *
++	trace_probe_event_call(struct trace_probe *tp)
++{
++	return &tp->call;
++}
++
+ static inline int trace_probe_unregister_event_call(struct trace_probe *tp)
  {
- 	return trace_event_name(&tp->call);
+ 	/* tp->event is unregistered in trace_remove_event_call() */
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 09fdba3ee9d9..7fb9353b47d9 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -821,7 +821,7 @@ static void __uprobe_trace_func(struct trace_uprobe *tu,
+ 	struct ring_buffer *buffer;
+ 	void *data;
+ 	int size, esize;
+-	struct trace_event_call *call = &tu->tp.call;
++	struct trace_event_call *call = trace_probe_event_call(&tu->tp);
+ 
+ 	WARN_ON(call != trace_file->event_call);
+ 
+@@ -1113,7 +1113,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+ 			       unsigned long func, struct pt_regs *regs,
+ 			       struct uprobe_cpu_buffer *ucb, int dsize)
+ {
+-	struct trace_event_call *call = &tu->tp.call;
++	struct trace_event_call *call = trace_probe_event_call(&tu->tp);
+ 	struct uprobe_trace_entry_head *entry;
+ 	struct hlist_head *head;
+ 	void *data;
+@@ -1316,9 +1316,10 @@ static struct trace_event_functions uprobe_funcs = {
+ 	.trace		= print_uprobe_event
+ };
+ 
+-static inline void init_trace_event_call(struct trace_uprobe *tu,
+-					 struct trace_event_call *call)
++static inline void init_trace_event_call(struct trace_uprobe *tu)
+ {
++	struct trace_event_call *call = trace_probe_event_call(&tu->tp);
++
+ 	call->event.funcs = &uprobe_funcs;
+ 	call->class->define_fields = uprobe_event_define_fields;
+ 
+@@ -1329,7 +1330,7 @@ static inline void init_trace_event_call(struct trace_uprobe *tu,
+ 
+ static int register_uprobe_event(struct trace_uprobe *tu)
+ {
+-	init_trace_event_call(tu, &tu->tp.call);
++	init_trace_event_call(tu);
+ 
+ 	return trace_probe_register_event_call(&tu->tp);
+ }
+@@ -1376,14 +1377,14 @@ create_local_trace_uprobe(char *name, unsigned long offs,
+ 	tu->path = path;
+ 	tu->ref_ctr_offset = ref_ctr_offset;
+ 	tu->filename = kstrdup(name, GFP_KERNEL);
+-	init_trace_event_call(tu, &tu->tp.call);
++	init_trace_event_call(tu);
+ 
+ 	if (traceprobe_set_print_fmt(&tu->tp, is_ret_probe(tu)) < 0) {
+ 		ret = -ENOMEM;
+ 		goto error;
+ 	}
+ 
+-	return &tu->tp.call;
++	return trace_probe_event_call(&tu->tp);
+ error:
+ 	free_trace_uprobe(tu);
+ 	return ERR_PTR(ret);
 -- 
 2.20.1
 
