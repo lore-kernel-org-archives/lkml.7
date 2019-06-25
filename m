@@ -2,97 +2,115 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2485C48BD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274C8C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 713BC208E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561474857;
-	bh=NS7Z6qjdyIhvJdu4ABGngGy2FlwYuKNFBpRUeTymwpA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ecOesZdjrKm+LlxOmMa7WvZ1N7F6qKPgEN2aBFji5gfwjLHOjmgHMFQAQSLCDCjl6
-	 8v0BlnYyFSQkB/ZLKke6lOuUUtKrI7Dehz2ijqG8WMOy+W20SVQpcoBdhi5+pnFNOL
-	 5qltPaYGdFccdtb9+3CrWVLQQxOi80dFZQOHJGw4=
+	by mail.kernel.org (Postfix) with ESMTP id E8137208E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 15:01:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="diW+vWQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732023AbfFYPA4 (ORCPT
+        id S1732033AbfFYPBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 11:00:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59058 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731153AbfFYPA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 11:00:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7BBA5AF4C;
-        Tue, 25 Jun 2019 15:00:54 +0000 (UTC)
-Date:   Tue, 25 Jun 2019 17:00:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-Message-ID: <20190625150053.GJ11400@dhcp22.suse.cz>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz>
- <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de>
+        Tue, 25 Jun 2019 11:01:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43222 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730827AbfFYPBl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 11:01:41 -0400
+Received: by mail-io1-f66.google.com with SMTP id k20so1371995ios.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 08:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0yr5BGG5Soxpasmq18l/eZqmRu+7BCvMsxIS8QQvWds=;
+        b=diW+vWQ1cK8J8mbuShje1qzBD5LFfkxUEduZIToixNkQRkqTqpie/l61eMQPXHYH8O
+         83tsgOqMuHQTprd4S6JdERPZE+TlxqaeV+MxFjieF4rmW7BqkBkEBIRyr9y5Olsh0sTb
+         kIbFYqnnzV8WHY/LxxBOrCMY++yq5mUHnh9ZG+/Ek62tmmnp2bHS2rtGjtrV8ABgPH6W
+         TquBKMaN6GcosVz98HHhNV+0NvruRiFUsmKjmdE785L08+iNoeeI3/Wq7JKFOFmgVmrU
+         D5UXmgUdyiU4hGGM09aMFeL0jxTwN8DElgDAw/0DXsTVEGpmjT9rHg7Q4p0qlVJDliFD
+         Nr7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0yr5BGG5Soxpasmq18l/eZqmRu+7BCvMsxIS8QQvWds=;
+        b=tDT+ZOB8bgJ8jPe3FxW3xbLqGEowCR6+h6CoW69//vcsaykBWRNPUH8pW1nb1VPaqg
+         +5HrKTNbdC5ZgqcMI9v2KeYtm6tcmgfBITysP/rMJjCB5itdqlB9XClAK9rrvnJ8EgFF
+         03movrRmSZtXBNji89Xo3fedScTfoPnmTVqA4JHbOWwru7H46fu1KTs/qmTmsULY4yb3
+         9K/y8QWSkk+3q2i3RMrC7C2/KlXz8EYs2gQ16WHUfI9UF4bKKvNfuLsOrrejzC7XtEro
+         EK2+469RgjzxiBnOKCZ4KpbYMHGTs0pJrzeVTuMN4CPPvd2fpvNOKm7ottCoqKE2m/wY
+         MCAg==
+X-Gm-Message-State: APjAAAXl8FzOw0aHxRsMNYq/UB5iqJaZHGXedwlO9LO/IwtdEPxEC9pu
+        xexP1uFzG2FivuiqT6kYpypAIrq9QeMUUFfHdg2Uag==
+X-Google-Smtp-Source: APXvYqzEVNC69Mi27uf6m7Bi3ZeIToOuD/jem/DgkFporAtOaz6bRyAKyT9CIE+AjyVnl2gTizP/1dBjhuxNC4RZ9+o=
+X-Received: by 2002:a5d:9d83:: with SMTP id 3mr13470506ion.65.1561474900420;
+ Tue, 25 Jun 2019 08:01:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625072317.GC30350@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190618094731.3677294-1-arnd@arndb.de> <201906201034.9E44D8A2A8@keescook>
+ <CAK8P3a2uFcaGMSHRdg4NECHJwgAyhtMuYDv3U=z2UdBSL5U0Lw@mail.gmail.com>
+ <CAKv+Gu-A_OWUQ_neUAprmQOotPA=LoUGQHvFkZ2tqQAg=us1jA@mail.gmail.com>
+ <CAK8P3a2d3H-pdiLX_8aA4LNLOVTSyPW_jvwZQkv0Ey3SJS87Bg@mail.gmail.com>
+ <CAKv+Gu9p017iPva85dPMdnKW_MSOUcthqcy7KDhGEYCN7=C_SA@mail.gmail.com> <201906221324.C08C1EF@keescook>
+In-Reply-To: <201906221324.C08C1EF@keescook>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 25 Jun 2019 17:01:29 +0200
+Message-ID: <CAKv+Gu90nGDYFwdi69centW+yyS16u1QDVNT7C7VcRaCkCaRyA@mail.gmail.com>
+Subject: Re: [PATCH] structleak: disable BYREF_ALL in combination with KASAN_STACK
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25-06-19 09:23:17, Christoph Hellwig wrote:
-> On Mon, Jun 24, 2019 at 11:24:48AM -0700, Dan Williams wrote:
-> > I asked for this simply because it was not exported historically. In
-> > general I want to establish explicit export-type criteria so the
-> > community can spend less time debating when to use EXPORT_SYMBOL_GPL
-> > [1].
-> > 
-> > The thought in this instance is that it is not historically exported
-> > to modules and it is safer from a maintenance perspective to start
-> > with GPL-only for new symbols in case we don't want to maintain that
-> > interface long-term for out-of-tree modules.
-> > 
-> > Yes, we always reserve the right to remove / change interfaces
-> > regardless of the export type, but history has shown that external
-> > pressure to keep an interface stable (contrary to
-> > Documentation/process/stable-api-nonsense.rst) tends to be less for
-> > GPL-only exports.
-> 
-> Fully agreed.  In the end the decision is with the MM maintainers,
-> though, although I'd prefer to keep it as in this series.
+On Sat, 22 Jun 2019 at 22:26, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Jun 21, 2019 at 03:50:02PM +0200, Ard Biesheuvel wrote:
+> > On Fri, 21 Jun 2019 at 15:44, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > One pattern I have seen here is temporary variables from macros or
+> > > inline functions whose lifetime now extends over the entire function
+> > > rather than just the basic block in which they are defined, see e.g.
+> > > lpfc_debug_dump_qe() being inlined multiple times into
+> > > lpfc_debug_dump_all_queues(). Each instance of the local
+> > > "char line_buf[LPFC_LBUF_SZ];" seems to add on to the previous
+> > > one now, where the behavior without the structleak plugin is that
+> > > they don't.
+>
+> Ewww.
+>
+> > Right, that seems to be due to the fact that this code
+> >
+> > /* split the first bb where we can put the forced initializers */
+> > gcc_assert(single_succ_p(ENTRY_BLOCK_PTR_FOR_FN(cfun)));
+> > bb = single_succ(ENTRY_BLOCK_PTR_FOR_FN(cfun));
+> > if (!single_pred_p(bb)) {
+> >     split_edge(single_succ_edge(ENTRY_BLOCK_PTR_FOR_FN(cfun)));
+> >     gcc_assert(single_succ_p(ENTRY_BLOCK_PTR_FOR_FN(cfun)));
+> > }
+> >
+> > puts all the initializers at the beginning of the function rather than
+> > inside the scope of the definition.
+>
+> Do you see a sane way to improve this? I hadn't noticed that this
+> actually moved it up to the start of the function. :(
+>
 
-I am sorry but I am not really convinced by the above reasoning wrt. to
-the allocator API and it has been a subject of many changes over time. I
-do not remember a single case where we would be bending the allocator
-API because of external modules and I am pretty sure we will push back
-heavily if that was the case in the future.
-
-So in this particular case I would go with consistency and export the
-same way we do with other functions. Also we do not want people to
-reinvent this API and screw that like we have seen in other cases when
-external modules try reimplement core functionality themselves.
-
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Not from the top of my head, and I won't be able to spend any time on
+this in the near future, unfortunately.
