@@ -2,124 +2,117 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E0FC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54595C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64DDF2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cgpPmvVk"
+	by mail.kernel.org (Postfix) with ESMTP id 34A4620659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 05:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbfFYFfi (ORCPT
+        id S1728342AbfFYFhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 01:35:38 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41117 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbfFYFfi (ORCPT
+        Tue, 25 Jun 2019 01:37:14 -0400
+Received: from smtprelay0098.hostedemail.com ([216.40.44.98]:37100 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727064AbfFYFhN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 01:35:38 -0400
-Received: by mail-io1-f68.google.com with SMTP id w25so135002ioc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 22:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nbrV1LsrICHBg5I0Sd+oJcDypLhzrXpy+1fRP2fNOhI=;
-        b=cgpPmvVk3uM/MaCFV1GvYmZEjPReeMzO4Ellr8cKhj41skI86jvU2a03AIOaxu590z
-         GFiGS6xU1QKhvboUa2PJkux8kmuP8/fSxKoLp5uAzNDosTieUTTCECJ/bGoSLmvuIAqy
-         LYxEqYArgIy9Vm6LX4VtSrrWzgnPvJPgLDfg+j5vXWahgAesHeyK/4LqaeCGY4S7EEeT
-         wKTWPhqm9AjG8gDzOI49i+wOcPxYiZUq0eWXsKgjH+yHe7zfB2FWqc5wHbTPxOZ7fnTp
-         XDM9PVb7hznsTqS58KpkbML2Uo8oI2T63XvDYeOsZkehCfco9m3kKZ2fIis6fRklv8c5
-         20RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nbrV1LsrICHBg5I0Sd+oJcDypLhzrXpy+1fRP2fNOhI=;
-        b=dOX0cFgQPbBbrkYgMw56DkZSLy7li69RzZGN23h+hto/UIjdzylOnCsvUXmf4SjFku
-         KhGUUWoJHRpdVGt1NbZX7G6OamhzDKdS14iOZrhpVWPcreKIo6x+XiCWrdLMFQ4tcpon
-         hnwWB5oILw81LwgKYRUmgYFyuq3kRirAH5IfUTjxZ23JlenfTheuZ1AZcIP2E8a/Slmb
-         x4itlsXHKIvDjnAO/RENLXpJJKQ968AJki8uv3Q1iQxdTzgOC23Gr8s9Vh2++UVa5OJX
-         A6FBWlo+xHZ0syGa1wLjEM1JjLlcXOr2UA4ZGT8WdkZpwlF3zPop2Tp1mUtq1lwwCIN3
-         UCpw==
-X-Gm-Message-State: APjAAAVIAxS1RxV4GPrcLyp18Vq9bqUkCRn9nqZ6mcxV80z+z5C4Rii1
-        PNFIEzyNddR/u0YqlzwL8ojH7wr4+0LRxtSpGDEDAw==
-X-Google-Smtp-Source: APXvYqzNqMAyCpk/ZwuO3aIhT4X0bydlQ/vc7MFU0fmy14dTRE34R2zRrbrp6la05wGNP7I3lJzitxysiBb+SujwIFg=
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr42931241iop.58.1561440937129;
- Mon, 24 Jun 2019 22:35:37 -0700 (PDT)
+        Tue, 25 Jun 2019 01:37:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id B7673180A814F;
+        Tue, 25 Jun 2019 05:37:10 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toy89_3b5152c3463e
+X-Filterd-Recvd-Size: 3596
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 25 Jun 2019 05:37:05 +0000 (UTC)
+Message-ID: <c364c36338d385eba60c523828ad8995c792ae4d.camel@perches.com>
+Subject: Re: [PATCH v4 5/7] lib/hexdump.c: Allow multiple groups to be
+ separated by lines '|'
+From:   Joe Perches <joe@perches.com>
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Date:   Mon, 24 Jun 2019 22:37:03 -0700
+In-Reply-To: <20190625031726.12173-6-alastair@au1.ibm.com>
+References: <20190625031726.12173-1-alastair@au1.ibm.com>
+         <20190625031726.12173-6-alastair@au1.ibm.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-References: <20190612094503.120f699a@lwn.net> <CACT4Y+avfTeZTmhti=7nEadthZZpTnOCTdEuG2S7PovmAMkhZQ@mail.gmail.com>
- <20190614082542.3f8674eb@lwn.net>
-In-Reply-To: <20190614082542.3f8674eb@lwn.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 25 Jun 2019 07:35:24 +0200
-Message-ID: <CACT4Y+ZrErX2DgG4GPXpuWVSqm4bHnFOvDWyHaX-AGhNT3CRXw@mail.gmail.com>
-Subject: Re: [PATCH v3] Add a document on rebasing and merging
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Rientjes <rientjes@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 4:25 PM Jonathan Corbet <corbet@lwn.net> wrote:
->
-> On Fri, 14 Jun 2019 11:59:03 +0200
-> Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> > I will appreciate if you elaborate a bit on this "scale of the
-> > project". I wondered about reasons for having the current hierarchy of
-> > trees and complex merging for a while, but wasn't able to find any
-> > rationale. What exactly scale do you mean? I know a number of projects
-> > that are comparable to Linux kernel, with the largest being 2 orders
-> > of magnitude larger than kernel both in terms of code size and rate of
-> > change, that use single tree and linear history.
->
-> I'm not sure what projects you're talking about, so it's hard to compare.
->
-> During the 5.2 merge window, Linus did 209 pulls, bringing in just over
-> 12,000 changesets, from on the order of 1600 developers.  Even if, at the
-> beginning of the window, each of those pulls was set up to be a
-> fast-forward, they would no longer be positioned that way once the first
-> pull was done.
->
-> Are you really saying that subsystem maintainers should be continuously
-> rebasing their trees to avoid merges at the top level?  Do you see how
-> much work that would take, how badly it would obscure the development
-> history, and how many bugs it would introduce?  Or perhaps I misunderstood
-> what you're arguing for?
+On Tue, 2019-06-25 at 13:17 +1000, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> With the wider display format, it can become hard to identify how many
+> bytes into the line you are looking at.
+> 
+> The patch adds new flags to hex_dump_to_buffer() and print_hex_dump() to
+> print vertical lines to separate every N groups of bytes.
+> 
+> eg.
+> buf:00000000: 454d414e 43415053|4e495f45 00584544  NAMESPAC|E_INDEX.
+> buf:00000010: 00000000 00000002|00000000 00000000  ........|........
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  include/linux/printk.h |  3 +++
+>  lib/hexdump.c          | 59 ++++++++++++++++++++++++++++++++++++------
+>  2 files changed, 54 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+[]
+> @@ -485,6 +485,9 @@ enum {
+>  
+>  #define HEXDUMP_ASCII			BIT(0)
+>  #define HEXDUMP_SUPPRESS_REPEATED	BIT(1)
+> +#define HEXDUMP_2_GRP_LINES		BIT(2)
+> +#define HEXDUMP_4_GRP_LINES		BIT(3)
+> +#define HEXDUMP_8_GRP_LINES		BIT(4)
+
+These aren't really bits as only one value should be set
+as 8 overrides 4 and 4 overrides 2.
+
+I would also expect this to be a value of 2 in your above
+example, rather than 8.  It's described as groups not bytes.
+
+The example is showing a what would normally be a space ' '
+separator as a vertical bar '|' every 2nd grouping.
 
 
-I mean projects like Chromium which seems to be comparable to kernel
-in code size/rate of change. LLVM, Android are several times smaller,
-but on the other hand has hundreds times less trees (1).  And in
-particular large monorepos in companies like Google, Facebook,
-Microsoft. E.g. the Google codebase sees the v5.2 number of changesets
-in few hours. Although, it's not apples-to-apples with the kernel but
-shows that scale per-se is not a requirement for multiple
-trees/non-linear history.
-So for the kernel it must a combination of scale + something else (in
-the process, ownership model, ...). I am trying to understand what is
-that something else, how inherent it is and what would degrade if
-kernel switches to single tree/linear history. It would obviously
-require some adjustments to other parts of the process as well, e.g.
-you asked what maintainers do with their trees but if there is a
-single tree, they don't have a tree at all. In most other scalable
-processes that I am aware of, as much work as possible is pushed down
-to individual contributors and they do any required rebasing. The
-closest analog of maintainers only do review and approval. The idea is
-to remove bottlenecks and distribute process as much as possible to
-increase scalability. I heard about "maintainer scalability" in the
-context of the kernel process multiple times.
