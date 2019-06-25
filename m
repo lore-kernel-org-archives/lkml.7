@@ -2,116 +2,131 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2DFC48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9E2C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84518215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:24:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gJWM3Dnm"
+	by mail.kernel.org (Postfix) with ESMTP id DDB06215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfFYIY2 (ORCPT
+        id S1730169AbfFYIZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:24:28 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49379 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfFYIY1 (ORCPT
+        Tue, 25 Jun 2019 04:25:17 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:45845 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfFYIZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:24:27 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8OGvc3529573
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:24:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8OGvc3529573
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561451057;
-        bh=7Hd2w97hwTtHuSlyNX6Z8LZNLBlxfFfzTOr2rVUFCZw=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=gJWM3DnmpjREuN7P5Vap/PI5L80fXmvFVU6+I0iOvjmwAbHg2cx7p/lumulpCK0Hg
-         6avMAnuA9L+2jGddSqQflmsBfd36i9ReOti58ddD6+4tcIZcaAKRypLIjvhwPNWmD9
-         ZmWXK2Wop09xbogQcq2TyrGzGHPo2PUqJ/fu0RyMoq0SIIucwhqhvdTF+xMIlppdlm
-         x4xPrTZdIZoZdA6coSh4QpcwQ1uOnSJBt9la9iCTmBwJanMHVq1MQIrYW3CNEPCoBO
-         AzOgn9D+kcMrS7b0uH5ZRB1Gf+pVBme7iKtVVaI+m8071NNjR7E5O2U704FEI6chZD
-         IxR4hoe8Iu1iA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8OGSR3529570;
-        Tue, 25 Jun 2019 01:24:16 -0700
-Date:   Tue, 25 Jun 2019 01:24:16 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Pavel Begunkov <tipbot@zytor.com>
-Message-ID: <tip-016190a4b5824df2d5bb97951a04dd3629973671@git.kernel.org>
-Cc:     torvalds@linux-foundation.org, peterz@infradead.org,
-        tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, asml.silence@gmail.com
-Reply-To: mingo@kernel.org, asml.silence@gmail.com,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          tglx@linutronix.de, hpa@zytor.com, torvalds@linux-foundation.org
-In-Reply-To: <43ffea6ee2152b90dedf962eac851609e4197218.1560256112.git.asml.silence@gmail.com>
-References: <43ffea6ee2152b90dedf962eac851609e4197218.1560256112.git.asml.silence@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/wait: Deduplicate code with do-while
-Git-Commit-ID: 016190a4b5824df2d5bb97951a04dd3629973671
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 04:25:16 -0400
+X-Originating-IP: 90.88.16.156
+Received: from localhost (aaubervilliers-681-1-41-156.w90-88.abo.wanadoo.fr [90.88.16.156])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 84BD740008;
+        Tue, 25 Jun 2019 08:25:07 +0000 (UTC)
+Date:   Tue, 25 Jun 2019 10:25:07 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+        edubezval@gmail.com, wens@csie.org, robh+dt@kernel.org,
+        mchehab+samsung@kernel.org, rui.zhang@intel.com,
+        paulmck@linux.ibm.com, davem@davemloft.net,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 08/11] thermal: sun8i: support ahb clocks
+Message-ID: <20190625082507.mgycs6rzlxpvgqgu@flea>
+References: <20190623164206.7467-1-tiny.windzz@gmail.com>
+ <20190623164206.7467-9-tiny.windzz@gmail.com>
+ <20190624182333.di7avywtdvzwukms@flea>
+ <20190625003416.pxve36mrxmotg2bq@core.my.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ry5qotdx34xj2snb"
 Content-Disposition: inline
+In-Reply-To: <20190625003416.pxve36mrxmotg2bq@core.my.home>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  016190a4b5824df2d5bb97951a04dd3629973671
-Gitweb:     https://git.kernel.org/tip/016190a4b5824df2d5bb97951a04dd3629973671
-Author:     Pavel Begunkov <asml.silence@gmail.com>
-AuthorDate: Tue, 11 Jun 2019 15:29:07 +0300
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 24 Jun 2019 19:23:40 +0200
 
-sched/wait: Deduplicate code with do-while
+--ry5qotdx34xj2snb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Statements in the loop's body and before it are identical.
-Use do-while to not repeat it.
+On Tue, Jun 25, 2019 at 02:34:16AM +0200, Ond=C5=99ej Jirman wrote:
+> On Mon, Jun 24, 2019 at 08:23:33PM +0200, Maxime Ripard wrote:
+> > On Sun, Jun 23, 2019 at 12:42:03PM -0400, Yangtao Li wrote:
+> > > H3 has extra clock, so introduce something in ths_thermal_chip/ths_de=
+vice
+> > > and adds the process of the clock.
+> > >
+> > > This is pre-work for supprt it.
+> > >
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > ---
+> > >  drivers/thermal/sun8i_thermal.c | 17 ++++++++++++++++-
+> > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_=
+thermal.c
+> > > index ed1c19bb27cf..04f53ffb6a14 100644
+> > > --- a/drivers/thermal/sun8i_thermal.c
+> > > +++ b/drivers/thermal/sun8i_thermal.c
+> > > @@ -54,6 +54,7 @@ struct tsensor {
+> > >  };
+> > >
+> > >  struct ths_thermal_chip {
+> > > +	bool            has_ahb_clk;
+> > >  	int		sensor_num;
+> > >  	int		offset;
+> > >  	int		scale;
+> > > @@ -69,6 +70,7 @@ struct ths_device {
+> > >  	struct regmap				*regmap;
+> > >  	struct reset_control			*reset;
+> > >  	struct clk				*bus_clk;
+> > > +	struct clk                              *ahb_clk;
+> >
+> > Hmm, thinking a bit about this, the name of those two clocks doesn't
+> > make sense. AHB is the bus being used to access that device, so the
+> > bus clock is the AHB clock.
+> >
+> > What is that clock being used for?
+>
+> To control the A/D and sample averaging logic, I suppose. It's controlled=
+ by the
+> THS_CLK_REG (THS Clock Register) in H3 user manual.
+>
+> bus_clk controls THS_GATING in BUS_CLK_GATING_REG2 (THS module is connect=
+ed to
+> APB bus).
+>
+> I'd call it ths_clk and bus_clk.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/43ffea6ee2152b90dedf962eac851609e4197218.1560256112.git.asml.silence@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/wait.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Thanks. We've tried to make clock names a bit more generic and
+consistent, so let's use mod instead.
 
-diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
-index fa0f9adfb752..c1e566a114ca 100644
---- a/kernel/sched/wait.c
-+++ b/kernel/sched/wait.c
-@@ -118,16 +118,12 @@ static void __wake_up_common_lock(struct wait_queue_head *wq_head, unsigned int
- 	bookmark.func = NULL;
- 	INIT_LIST_HEAD(&bookmark.entry);
- 
--	spin_lock_irqsave(&wq_head->lock, flags);
--	nr_exclusive = __wake_up_common(wq_head, mode, nr_exclusive, wake_flags, key, &bookmark);
--	spin_unlock_irqrestore(&wq_head->lock, flags);
--
--	while (bookmark.flags & WQ_FLAG_BOOKMARK) {
-+	do {
- 		spin_lock_irqsave(&wq_head->lock, flags);
- 		nr_exclusive = __wake_up_common(wq_head, mode, nr_exclusive,
- 						wake_flags, key, &bookmark);
- 		spin_unlock_irqrestore(&wq_head->lock, flags);
--	}
-+	} while (bookmark.flags & WQ_FLAG_BOOKMARK);
- }
- 
- /**
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--ry5qotdx34xj2snb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRHaYwAKCRDj7w1vZxhR
+xQrlAP9wwKwsQ2PbVvHGyuOJSFjRJZ9ASA22w83xIaKJDErjhgEAsmUAcw4APZyi
+BhQMziRi3MAIeW70nBIvZFtQhI4YBwI=
+=YZIB
+-----END PGP SIGNATURE-----
+
+--ry5qotdx34xj2snb--
