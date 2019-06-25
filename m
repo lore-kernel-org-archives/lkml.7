@@ -2,81 +2,102 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BAEC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A778C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0867B20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561470950;
-	bh=PC7gSfqUEtkeTD3iRdN69HyrVN7sD1+21zTnnFyaSG4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=CiuTV3FjQ7u4cOMw0nH8s+E+djKVuDanxPedaHL4ftV6nh1uNNdKbhUoGCztMFEtV
-	 dR0MyulbQfPOnK5V2L2HrMshTtN2dU1ecSu6PvJhAoXaEbALE/FABm+rYUC2qXXZ4H
-	 DbEf3DQV2pf/DjLV5WgTEQbVcc7MBdZidMYU0lYM=
+	by mail.kernel.org (Postfix) with ESMTP id 547E9213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rD0m+cdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbfFYNzs (ORCPT
+        id S1728032AbfFYN53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:55:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfFYNzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:55:48 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7670920644;
-        Tue, 25 Jun 2019 13:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561470948;
-        bh=PC7gSfqUEtkeTD3iRdN69HyrVN7sD1+21zTnnFyaSG4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=D9UQYmGO3fHeSGPf9KHZ1bwYIpoHKFvWXJJN7KFb/VOtyGE9bmgHRw7sLKsaYkIoR
-         pfxcAX8pIdR6v3xqjU1rBw0oxlMSUnjGxGHU/YLgsdHrFLA2w582VV9eP5h3fA8vpo
-         hrJceze069zpi1ydHXofQNje1GQTl/6+7RV2/4yM=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     sboyd@kernel.org
-Cc:     dinguyen@kernel.org, mturquette@baylibre.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] clk: socfpga: stratix10: fix divider entry for the emac clocks
-Date:   Tue, 25 Jun 2019 08:55:35 -0500
-Message-Id: <20190625135535.14179-1-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.20.0
+        Tue, 25 Jun 2019 09:57:29 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41837 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfFYN53 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 09:57:29 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 136so12712390lfa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 06:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uTW1RTzufVVCLIfnh+7h6hW+A8p2OrQGWdWYeH+4NGc=;
+        b=rD0m+cdPPd//2jtOKnRrGA+yNzIqtS2OrqhFqNvI9BwnBTByDXePb2d3VmLU2Jsp2b
+         Oydu3kFeAuwXsLOTos5YOl2x5uYhXgslRKqRtNLsVCKqeXMHqkFg2ymZljatvVr6VYlA
+         O0tiN6MFwgHkc8Q/ZYT/7xhM6QsmCfMQ8+TvCfARZfEtL92HD+7UYauRjumeafw5xCsk
+         BZExa7hD1Zs1iEwk2uLNjmROHkuq7YMAp1FA+V8VgxqVdo+xk38mlwJEz72Xnk7ppxBr
+         +0cinfadSpALzcrTBdhVj0HVufS77V7TugkgzF4l2XAZenupQ1QYRRNAyk/hiuknm6eP
+         3NNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uTW1RTzufVVCLIfnh+7h6hW+A8p2OrQGWdWYeH+4NGc=;
+        b=Ck6dLDv/R+Il7flM2ERltSoWxGI1cnEjsULu1VVbilp85eL+ZLn99QfdmGiWErZQJy
+         HWO+2ChRmzUD4Ee+ieirSFXC0XmUidNEJmyUbujInYSqPHNCmFEe75MhqBR0G3GjzPH0
+         zVUdsBNrxBEJIamf4Z43HKN8ary3B26cu614lssz1Z5CWpntqMj6mBtaWCfiETpBcEdk
+         OOl/2/nlgtgGCPWMegntBUexBk5CY42EPM7nFl2ZVwnr/+sRwu2TNoWPbReEFRIuutZQ
+         Vow0Vr4s1ft1wOPD97/ti3pno0NqsrVvDh2XJZU9pkznMEJ7GzUTwJ4YuwmZSmrmjA6Q
+         hqmw==
+X-Gm-Message-State: APjAAAVvPK0z+NbGsWtkuam2bg3bPzUHghwTW3ynBcf8oNfzvGhxLx7h
+        uEpCAe8C354nkNG7c3FZKoZ+1/eDeYaEhdoKxCsw7g==
+X-Google-Smtp-Source: APXvYqwtMnHq1yBBhWHpEFgSyvvNlRPOWrNyzfQxiPn5jAkCYYNbYam/5KODrrng0KafhfQTzullbXmVYSc52G3PQ3I=
+X-Received: by 2002:a19:7616:: with SMTP id c22mr25238102lff.115.1561471047372;
+ Tue, 25 Jun 2019 06:57:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190623043801.14040-1-icenowy@aosc.io> <20190623043801.14040-2-icenowy@aosc.io>
+ <20190624124019.o6acnnkjikekshl5@flea>
+In-Reply-To: <20190624124019.o6acnnkjikekshl5@flea>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jun 2019 15:57:15 +0200
+Message-ID: <CACRpkdaQSg4qWWF1XurWA8wnW+ezGtTympVT9DvkF87VKEQVzw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] pinctrl: sunxi: v3s: introduce support for V3
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fixed dividers for the emac clocks should be 2 not 4.
+On Mon, Jun 24, 2019 at 2:40 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> On Sun, Jun 23, 2019 at 12:37:53PM +0800, Icenowy Zheng wrote:
+> > Introduce the GPIO pins that is only available on V3 (not on V3s) to the
+> > V3s pinctrl driver.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > ---
+> > Changes in v3:
+> > - Fixed code alignment.
+> > - Fixed LVDS function number.
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
- drivers/clk/socfpga/clk-s10.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > -               SUNXI_FUNCTION(0x2, "uart2"),         /* TX */
+> > -               SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),  /* PB_EINT0 */
+> > +               SUNXI_FUNCTION(0x2, "uart2"),                 /* TX */
+> > +               SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),          /* PB_EINT0 */
+>
+> I'm not sure why all that churn is needed.
+>
+> Looks good otherwise.
 
-diff --git a/drivers/clk/socfpga/clk-s10.c b/drivers/clk/socfpga/clk-s10.c
-index 8281dfbf38c2..5bed36e12951 100644
---- a/drivers/clk/socfpga/clk-s10.c
-+++ b/drivers/clk/socfpga/clk-s10.c
-@@ -103,9 +103,9 @@ static const struct stratix10_perip_cnt_clock s10_main_perip_cnt_clks[] = {
- 	{ STRATIX10_NOC_CLK, "noc_clk", NULL, noc_mux, ARRAY_SIZE(noc_mux),
- 	  0, 0, 0, 0x3C, 1},
- 	{ STRATIX10_EMAC_A_FREE_CLK, "emaca_free_clk", NULL, emaca_free_mux, ARRAY_SIZE(emaca_free_mux),
--	  0, 0, 4, 0xB0, 0},
-+	  0, 0, 2, 0xB0, 0},
- 	{ STRATIX10_EMAC_B_FREE_CLK, "emacb_free_clk", NULL, emacb_free_mux, ARRAY_SIZE(emacb_free_mux),
--	  0, 0, 4, 0xB0, 1},
-+	  0, 0, 2, 0xB0, 1},
- 	{ STRATIX10_EMAC_PTP_FREE_CLK, "emac_ptp_free_clk", NULL, emac_ptp_free_mux,
- 	  ARRAY_SIZE(emac_ptp_free_mux), 0, 0, 4, 0xB0, 2},
- 	{ STRATIX10_GPIO_DB_FREE_CLK, "gpio_db_free_clk", NULL, gpio_db_free_mux,
--- 
-2.20.0
+Should I apply the patch or wait for a new version without the
+whitespace fixes?
 
+Yours,
+Linus Walleij
