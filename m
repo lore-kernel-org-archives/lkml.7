@@ -2,129 +2,176 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10BAC4646B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9705C4646B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B6F2077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561423389;
-	bh=qj5i57JAwdvtRUu3tXXvC5SbPBVOp5TOwUDHMMZ2hgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pMoJXmWZHAxnbMiu9+vnvrdohLN6pVj4/cSmG8nrrHix9Fh2w1K6wsl+Xk+a3i0UC
-	 RqkbH4fjTr9fEEJaYn0X3GOFq7LbLzSQmqzL7zX2F35AHES6jQwn7w6PTN+aui7nqV
-	 m6UFK9ba1GVvMeIViyltl6uzlM6H4YArN8B/boHk=
+	by mail.kernel.org (Postfix) with ESMTP id 84232206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 00:43:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gn85bRpx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbfFYAnE (ORCPT
+        id S1729521AbfFYAnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Jun 2019 20:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbfFYAnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Jun 2019 20:43:04 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34C77206DD;
-        Tue, 25 Jun 2019 00:43:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561423383;
-        bh=qj5i57JAwdvtRUu3tXXvC5SbPBVOp5TOwUDHMMZ2hgQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GBhO+1b2f0WHMAKT8TKAOnoLPzkuOWXDgbmqu/5oZ2NjG9uNhkAQ8+OLk9gKbAX2c
-         ezXbqAO4gHbmNr+/RXMUUisfTF1Pjol8VQTITbQS4WlZk4ijDUM2VLa4kOS60535rN
-         Il/B3vBn2eHltFAL/rQk7D/3nfueHVsSWNHwFi6U=
-Date:   Tue, 25 Jun 2019 02:43:00 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Message-ID: <20190625004300.GB17497@lerouge>
-References: <20190620221336.GZ26519@linux.ibm.com>
- <20190621105503.GI3436@hirez.programming.kicks-ass.net>
- <20190621121630.GE26519@linux.ibm.com>
- <20190621122927.GV3402@hirez.programming.kicks-ass.net>
- <20190621133414.GF26519@linux.ibm.com>
- <20190621174104.GA7519@linux.ibm.com>
- <20190621175027.GA23260@linux.ibm.com>
- <20190621234602.GA16286@linux.ibm.com>
- <20190624231222.GA17497@lerouge>
- <20190624234422.GP26519@linux.ibm.com>
+        Mon, 24 Jun 2019 20:43:10 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35072 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729029AbfFYAnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Jun 2019 20:43:10 -0400
+Received: by mail-qk1-f193.google.com with SMTP id l128so11260390qke.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Jun 2019 17:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e2ogumH57Dk+mOO0y5/CmcdAve3k/tPr0Lofkj3W1yQ=;
+        b=gn85bRpxX7rX0vPi2OF9kz6nsjSpDytW5uaW02EslXpNifmNJJW+bfXA/vNHvtnfyd
+         LEbGvEe0UTmhomOdUgl3WLDYKeBbP9GS8Ul3o4lm0omA18ix5UVvi5y53tJ9mWlSYZ+O
+         2tGmkRpE9D4p4h3dyylbbuMMhbJXozsVkMUW4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e2ogumH57Dk+mOO0y5/CmcdAve3k/tPr0Lofkj3W1yQ=;
+        b=uG7IdAhy8Axs9X/jVY2pPijNDmZA/bjN64ulRTRxJr23ipIJn5aRJjaZpoD1lICic7
+         L/cGP03q4sqPXl/lTmkb6hpJgrTwZ094sbjlGnjiaTVwccCEV8XaA7MfcEruwVaymQGi
+         7DcBP549lD02WGyIxKpnqZSJOpj0rEEaYNGdvPJLnGy+hqrRkmhu5xYnmh9ACiE9MV7N
+         Twkk7TiQ1zUHtIrUNyLpEQ9wTa55CV/a4pGjysba01b3g4A31E5+9MxgJ++IHnCCsXbb
+         B6Ot1dLRHYk78XfTWJCRFeTTNnk7GwDaAekogGmbI1iUlQZsXzhU8XkTQCnnRYKeGSr5
+         M/jA==
+X-Gm-Message-State: APjAAAWVeqPHJgY/J97ySWiKY4Wq+rlrwdxygYsaiRcwjCt5CV6J1Rrm
+        Pmp8AtTGV9K3ZffNIWR/tTRmE7lKLClllbo7ot6WyQ==
+X-Google-Smtp-Source: APXvYqwwA4s9JiBdyoHXEJ7/imxeIhWDD7nr1Z+Ib6NtNVV+u9MWlCR9lGtMIebURg5vdee28cPPsppvaqexL5f8k3E=
+X-Received: by 2002:a37:9c88:: with SMTP id f130mr19471044qke.457.1561423388940;
+ Mon, 24 Jun 2019 17:43:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624234422.GP26519@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190624080001.67222-1-jitao.shi@mediatek.com> <20190624080001.67222-3-jitao.shi@mediatek.com>
+In-Reply-To: <20190624080001.67222-3-jitao.shi@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 25 Jun 2019 08:42:57 +0800
+Message-ID: <CANMq1KDixwQN13o84Jp6E6tyfTQSZjiZSMzaNFZ02LEVPx0Z8g@mail.gmail.com>
+Subject: Re: [v2 2/2] drm/panel: support for auo, kd101n80-45na wuxga dsi
+ video mode panel
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
+        dri-devel@lists.freedesktop.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        cawa cheng <cawa.cheng@mediatek.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sean Paul <seanpaul@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 04:44:22PM -0700, Paul E. McKenney wrote:
-> On Tue, Jun 25, 2019 at 01:12:23AM +0200, Frederic Weisbecker wrote:
-> > On Fri, Jun 21, 2019 at 04:46:02PM -0700, Paul E. McKenney wrote:
-> > > @@ -3097,13 +3126,21 @@ static void sched_tick_remote(struct work_struct *work)
-> > >  	/*
-> > >  	 * Run the remote tick once per second (1Hz). This arbitrary
-> > >  	 * frequency is large enough to avoid overload but short enough
-> > > -	 * to keep scheduler internal stats reasonably up to date.
-> > > +	 * to keep scheduler internal stats reasonably up to date.  But
-> > > +	 * first update state to reflect hotplug activity if required.
-> > >  	 */
-> > > +	os = atomic_read(&twork->state);
-> > > +	if (os) {
-> > > +		WARN_ON_ONCE(os != TICK_SCHED_REMOTE_OFFLINING);
-> > > +		if (atomic_inc_not_zero(&twork->state))
-> > > +			return;
-> > 
-> > Using inc makes me a bit nervous here. If we do so, we should somewhow
-> > make sure that we never exceed a value higher than TICK_SCHED_REMOTE_OFFLINE
-> > by accident.
-> > 
-> > atomic_xchg() is probably a bit costlier but also safer as it allows
-> > us to check both the old and the new value. That path shouldn't be critically fast
-> > after all.
-> 
-> It would need to be cmpxchg() to avoid messing with the state if
-> the state were somehow TICK_SCHED_REMOTE_RUNNING, right?
+On Mon, Jun 24, 2019 at 4:00 PM Jitao Shi <jitao.shi@mediatek.com> wrote:
+>
+> Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
+> The most codes can be reuse.
+> So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
+> Add the different parts in driver data.
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> index 6e06c8506623..d1ee43cfcbe2 100644
+> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+> @@ -372,6 +372,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
+>         {},
+>  };
+>
+> +static const struct panel_init_cmd auo_init_cmd[] = {
+> +       _INIT_DELAY_CMD(24),
+> +       _INIT_DCS_CMD(0x11),
+> +       _INIT_DELAY_CMD(120),
+> +       _INIT_DCS_CMD(0x29),
+> +       _INIT_DELAY_CMD(120),
+> +       {},
+> +};
+> +
+>  static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
+>  {
+>         return container_of(panel, struct boe_panel, base);
+> @@ -572,6 +581,34 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
+>         .init_cmds = boe_init_cmd,
+>  };
+>
+> +static const struct drm_display_mode auo_default_mode = {
+> +       .clock = 157000,
+> +       .hdisplay = 1200,
+> +       .hsync_start = 1200 + 80,
+> +       .hsync_end = 1200 + 80 + 24,
+> +       .htotal = 1200 + 80 + 24 + 36,
+> +       .vdisplay = 1920,
+> +       .vsync_start = 1920 + 16,
+> +       .vsync_end = 1920 + 16 + 4,
+> +       .vtotal = 1920 + 16 + 4 + 16,
+> +       .vrefresh = 60,
+> +       .type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+> +};
+> +
+> +static const struct panel_desc auo_kd101n80_45na_desc = {
+> +       .modes = &auo_default_mode,
+> +       .bpc = 8,
+> +       .size = {
+> +               .width = 216,
+> +               .height = 135,
 
-Ah indeed! Nevermind, let's keep things as they are then.
+Same issue as the BOE panel:
+This is wrong, as this is a portrait panel, should be: width=135, height=216.
 
-> > > +	}
-> > >  	queue_delayed_work(system_unbound_wq, dwork, HZ);
-> > >  }
-> > >  
-> > >  static void sched_tick_start(int cpu)
-> > >  {
-> > > +	int os;
-> > >  	struct tick_work *twork;
-> > >  
-> > >  	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-> > > @@ -3112,15 +3149,20 @@ static void sched_tick_start(int cpu)
-> > >  	WARN_ON_ONCE(!tick_work_cpu);
-> > >  
-> > >  	twork = per_cpu_ptr(tick_work_cpu, cpu);
-> > > -	twork->cpu = cpu;
-> > > -	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-> > > -	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-> > > +	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
-> > > +	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
-> > 
-> > See if we use atomic_inc(), we would need to also WARN(os > TICK_SCHED_REMOTE_OFFLINE).
-> 
-> How about if I put that WARN() between the atomic_inc_not_zero() and
-> the return, presumably also adding braces?
-
-Yeah, unfortunately there is no atomic_add_not_zero_return().
-I guess we can live with a check using atomic_read(). In the best
-case it returns the fresh increment, otherwise it should be REMOTE_RUNNING.
-
-In any case the (os > TICK_SCHED_REMOTE_OFFLINE) check applies.
-
-Thanks.
+> +       },
+> +       .lanes = 4,
+> +       .format = MIPI_DSI_FMT_RGB888,
+> +       .mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
+> +                     MIPI_DSI_MODE_LPM,
+> +       .init_cmds = auo_init_cmd,
+> +};
+> +
+>  static int boe_panel_get_modes(struct drm_panel *panel)
+>  {
+>         struct boe_panel *boe = to_boe_panel(panel);
+> @@ -695,6 +732,9 @@ static const struct of_device_id boe_of_match[] = {
+>         { .compatible = "boe,tv101wum-nl6",
+>           .data = &boe_tv101wum_nl6_desc
+>         },
+> +       { .compatible = "auo,kd101n80-45na",
+> +         .data = &auo_kd101n80_45na_desc
+> +       },
+>         { /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, boe_of_match);
+> --
+> 2.21.0
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
