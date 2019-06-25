@@ -2,353 +2,103 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C4BC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D144C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBD1215EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D34215EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 08:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IA2lCaMM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wxQwoaSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730620AbfFYIj4 (ORCPT
+        id S1730707AbfFYIkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 04:39:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55593 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfFYIj4 (ORCPT
+        Tue, 25 Jun 2019 04:40:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34984 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730571AbfFYIkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:39:56 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5P8dPlJ3532617
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 25 Jun 2019 01:39:25 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5P8dPlJ3532617
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561451966;
-        bh=KEJmp2SmPMXgGDwKGewRjbFMUy0C0Z5pDNgrAETXn8A=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=IA2lCaMMRBlGBQPBX+9KEsfKXhbOT98JBi+Rqdny100fCq8J0t6zbvF3OuPlPe3ui
-         7DWkoCIdzMCLeLMSoOL2UEosy1YNl6zVaOoeFUT9U1Bh9AaAHkSYJZ3hs4hoIhbVCV
-         U0DGiStPO50JEpo2OyEVFqHul1gUN5KOiB+SP3cIoRnvWKbNDOe/Dsm1VmWR2ATU+z
-         ICahYD+4+4PWdT+6Tu0xOkTmHWLixBiCTMm8aYsEe5UxR61GjBELr0y3Fik1Q5URmY
-         WxxZO8v++sNeuCc7MMzYIeiwvNiMv11EO3MwsLp/gai6fnd82Kl8gaoNEISlttdspM
-         zjBwxUPr2QGjw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5P8dN7L3532614;
-        Tue, 25 Jun 2019 01:39:23 -0700
-Date:   Tue, 25 Jun 2019 01:39:23 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jiri Olsa <tipbot@zytor.com>
-Message-ID: <tip-8f2a28c5859ba33519d90b66bf7f820e36640c98@git.kernel.org>
-Cc:     kan.liang@linux.intel.com, namhyung@kernel.org, eranian@google.com,
-        acme@kernel.org, peterz@infradead.org, jolsa@redhat.com,
-        bp@alien8.de, hpa@zytor.com, luto@kernel.org,
-        torvalds@linux-foundation.org, vincent.weaver@maine.edu,
-        acme@redhat.com, mingo@kernel.org,
-        alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de
-Reply-To: namhyung@kernel.org, eranian@google.com,
-          kan.liang@linux.intel.com, bp@alien8.de, acme@kernel.org,
-          peterz@infradead.org, jolsa@redhat.com, acme@redhat.com,
-          vincent.weaver@maine.edu, luto@kernel.org, hpa@zytor.com,
-          torvalds@linux-foundation.org, tglx@linutronix.de,
-          gregkh@linuxfoundation.org, mingo@kernel.org, jolsa@kernel.org,
-          linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com
-In-Reply-To: <20190616140358.27799-4-jolsa@kernel.org>
-References: <20190616140358.27799-4-jolsa@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86/cstate: Use new probe function
-Git-Commit-ID: 8f2a28c5859ba33519d90b66bf7f820e36640c98
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 25 Jun 2019 04:40:14 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x25so15401804ljh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 01:40:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ejxOd2mS2m5aGppcIAyiv0cZFZaSK9s/NYtz62kszvs=;
+        b=wxQwoaSkbLLPQJPL+BoL1Icf1FXMBP7ECaYVSMRazAL/TZoV5FN//Ms7trRiw+SuQd
+         581CzTIQTx/N9fE/sUXLZ7PfZgODwh0P87yWl+eKphHagimtQhjRUDz0I9oMrRT3Rdlx
+         WrZho37U3od1bUGfg1nka8v2ot5UPnsBTSgHDliSu3xpGEfq6UlYG4A4Zj9hwI10Ql0K
+         0hcqQDO+Gs8C1fHcg+250AaE3Dt+ta0TLprAYJt2lTuyAOO7Ca9iNKoZLmOHRMm4T8on
+         wR07J71PBuWBLFz8YcY3eSEEwtH/PX+v6KA7LIsYG8EonQf7uo3yNxz4rPvnIQ2c8+Eq
+         H2Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ejxOd2mS2m5aGppcIAyiv0cZFZaSK9s/NYtz62kszvs=;
+        b=gNk3arSZDbTnDb5S6neRald6VpvTxcKhkaCiHPCOrQtQO9SHyTNa/tfLvr21eyDK17
+         TTI5c97C/SCQ1GI8T0wkshQ0a3is1hFIu7cVxlb2TtzUsur+5VCdByNjk129HP+XwDh8
+         sLRzPi9U1woySpcrIGKpALJaPbabmTcFYakLVX0jr83cLHqKJWShfVw6hGNzlN4WatJ4
+         unBhRtTz1ui/iagyvtZKiCydqP9gaT4g7uhMNbsZg7SB6NdXssOq/c66Altwdrfz4fHz
+         d4ui2skDPMLgYLJrCgdhxRBDni4n/aXrY5EUNNYFizGFjtjkcSLl/XrHrBBiWSOQWTtI
+         YzXQ==
+X-Gm-Message-State: APjAAAVc6zeAWzZ0xdwYdfV5bPSTOn/8KsRj/oYbzKQKGOEB4xHSDeQ1
+        M+N6ZepaE+iI8YU48AITS/BpueMd6riY9Ujt8aFp9A==
+X-Google-Smtp-Source: APXvYqyB4Z1lLvFvTlYxXutc/tB2HRL2IRjyx5/sUSP/WDd11DGWzAgBW9dlPUP+BvKIc2buVVM1H0owHVNURRDGGzY=
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr60880342ljg.62.1561452011834;
+ Tue, 25 Jun 2019 01:40:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190611122535.23583-1-Anson.Huang@nxp.com>
+In-Reply-To: <20190611122535.23583-1-Anson.Huang@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Jun 2019 10:40:00 +0200
+Message-ID: <CACRpkdYsunrq7CY4HhosxH-MVxBGLqLPGnraqx1=_gZ8DxYZLQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MN
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Olof Johansson <olof@lixom.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  8f2a28c5859ba33519d90b66bf7f820e36640c98
-Gitweb:     https://git.kernel.org/tip/8f2a28c5859ba33519d90b66bf7f820e36640c98
-Author:     Jiri Olsa <jolsa@kernel.org>
-AuthorDate: Sun, 16 Jun 2019 16:03:53 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 24 Jun 2019 19:28:33 +0200
+On Tue, Jun 11, 2019 at 2:24 PM <Anson.Huang@nxp.com> wrote:
 
-perf/x86/cstate: Use new probe function
+> From: Anson Huang <Anson.Huang@nxp.com>
+>
+> Add binding doc for i.MX8MN pinctrl driver.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Using perf_msr_probe function to probe for cstate events.
+Patch applied.
 
-The functionality is the same, with one exception, that
-perf_msr_probe checks for rdmsr to return value != 0 for
-given MSR register.
-
-Using the new attribute groups and adding the events via
-pmu::attr_update.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan <kan.liang@linux.intel.com>
-Cc: Liang
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/20190616140358.27799-4-jolsa@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/intel/cstate.c | 152 +++++++++++++++++++++++------------------
- 1 file changed, 87 insertions(+), 65 deletions(-)
-
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index e1caa0b49d63..688592b34564 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -96,6 +96,7 @@
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include "../perf_event.h"
-+#include "../probe.h"
- 
- MODULE_LICENSE("GPL");
- 
-@@ -144,25 +145,42 @@ enum perf_cstate_core_events {
- 	PERF_CSTATE_CORE_EVENT_MAX,
- };
- 
--PMU_EVENT_ATTR_STRING(c1-residency, evattr_cstate_core_c1, "event=0x00");
--PMU_EVENT_ATTR_STRING(c3-residency, evattr_cstate_core_c3, "event=0x01");
--PMU_EVENT_ATTR_STRING(c6-residency, evattr_cstate_core_c6, "event=0x02");
--PMU_EVENT_ATTR_STRING(c7-residency, evattr_cstate_core_c7, "event=0x03");
-+PMU_EVENT_ATTR_STRING(c1-residency, attr_cstate_core_c1, "event=0x00");
-+PMU_EVENT_ATTR_STRING(c3-residency, attr_cstate_core_c3, "event=0x01");
-+PMU_EVENT_ATTR_STRING(c6-residency, attr_cstate_core_c6, "event=0x02");
-+PMU_EVENT_ATTR_STRING(c7-residency, attr_cstate_core_c7, "event=0x03");
- 
--static struct perf_cstate_msr core_msr[] = {
--	[PERF_CSTATE_CORE_C1_RES] = { MSR_CORE_C1_RES,		&evattr_cstate_core_c1 },
--	[PERF_CSTATE_CORE_C3_RES] = { MSR_CORE_C3_RESIDENCY,	&evattr_cstate_core_c3 },
--	[PERF_CSTATE_CORE_C6_RES] = { MSR_CORE_C6_RESIDENCY,	&evattr_cstate_core_c6 },
--	[PERF_CSTATE_CORE_C7_RES] = { MSR_CORE_C7_RESIDENCY,	&evattr_cstate_core_c7 },
-+static unsigned long core_msr_mask;
-+
-+PMU_EVENT_GROUP(events, cstate_core_c1);
-+PMU_EVENT_GROUP(events, cstate_core_c3);
-+PMU_EVENT_GROUP(events, cstate_core_c6);
-+PMU_EVENT_GROUP(events, cstate_core_c7);
-+
-+static bool test_msr(int idx, void *data)
-+{
-+	return test_bit(idx, (unsigned long *) data);
-+}
-+
-+static struct perf_msr core_msr[] = {
-+	[PERF_CSTATE_CORE_C1_RES] = { MSR_CORE_C1_RES,		&group_cstate_core_c1,	test_msr },
-+	[PERF_CSTATE_CORE_C3_RES] = { MSR_CORE_C3_RESIDENCY,	&group_cstate_core_c3,	test_msr },
-+	[PERF_CSTATE_CORE_C6_RES] = { MSR_CORE_C6_RESIDENCY,	&group_cstate_core_c6,	test_msr },
-+	[PERF_CSTATE_CORE_C7_RES] = { MSR_CORE_C7_RESIDENCY,	&group_cstate_core_c7,	test_msr },
- };
- 
--static struct attribute *core_events_attrs[PERF_CSTATE_CORE_EVENT_MAX + 1] = {
-+static struct attribute *attrs_empty[] = {
- 	NULL,
- };
- 
-+/*
-+ * There are no default events, but we need to create
-+ * "events" group (with empty attrs) before updating
-+ * it with detected events.
-+ */
- static struct attribute_group core_events_attr_group = {
- 	.name = "events",
--	.attrs = core_events_attrs,
-+	.attrs = attrs_empty,
- };
- 
- DEFINE_CSTATE_FORMAT_ATTR(core_event, event, "config:0-63");
-@@ -211,31 +229,37 @@ enum perf_cstate_pkg_events {
- 	PERF_CSTATE_PKG_EVENT_MAX,
- };
- 
--PMU_EVENT_ATTR_STRING(c2-residency, evattr_cstate_pkg_c2, "event=0x00");
--PMU_EVENT_ATTR_STRING(c3-residency, evattr_cstate_pkg_c3, "event=0x01");
--PMU_EVENT_ATTR_STRING(c6-residency, evattr_cstate_pkg_c6, "event=0x02");
--PMU_EVENT_ATTR_STRING(c7-residency, evattr_cstate_pkg_c7, "event=0x03");
--PMU_EVENT_ATTR_STRING(c8-residency, evattr_cstate_pkg_c8, "event=0x04");
--PMU_EVENT_ATTR_STRING(c9-residency, evattr_cstate_pkg_c9, "event=0x05");
--PMU_EVENT_ATTR_STRING(c10-residency, evattr_cstate_pkg_c10, "event=0x06");
--
--static struct perf_cstate_msr pkg_msr[] = {
--	[PERF_CSTATE_PKG_C2_RES] = { MSR_PKG_C2_RESIDENCY,	&evattr_cstate_pkg_c2 },
--	[PERF_CSTATE_PKG_C3_RES] = { MSR_PKG_C3_RESIDENCY,	&evattr_cstate_pkg_c3 },
--	[PERF_CSTATE_PKG_C6_RES] = { MSR_PKG_C6_RESIDENCY,	&evattr_cstate_pkg_c6 },
--	[PERF_CSTATE_PKG_C7_RES] = { MSR_PKG_C7_RESIDENCY,	&evattr_cstate_pkg_c7 },
--	[PERF_CSTATE_PKG_C8_RES] = { MSR_PKG_C8_RESIDENCY,	&evattr_cstate_pkg_c8 },
--	[PERF_CSTATE_PKG_C9_RES] = { MSR_PKG_C9_RESIDENCY,	&evattr_cstate_pkg_c9 },
--	[PERF_CSTATE_PKG_C10_RES] = { MSR_PKG_C10_RESIDENCY,	&evattr_cstate_pkg_c10 },
--};
--
--static struct attribute *pkg_events_attrs[PERF_CSTATE_PKG_EVENT_MAX + 1] = {
--	NULL,
-+PMU_EVENT_ATTR_STRING(c2-residency,  attr_cstate_pkg_c2,  "event=0x00");
-+PMU_EVENT_ATTR_STRING(c3-residency,  attr_cstate_pkg_c3,  "event=0x01");
-+PMU_EVENT_ATTR_STRING(c6-residency,  attr_cstate_pkg_c6,  "event=0x02");
-+PMU_EVENT_ATTR_STRING(c7-residency,  attr_cstate_pkg_c7,  "event=0x03");
-+PMU_EVENT_ATTR_STRING(c8-residency,  attr_cstate_pkg_c8,  "event=0x04");
-+PMU_EVENT_ATTR_STRING(c9-residency,  attr_cstate_pkg_c9,  "event=0x05");
-+PMU_EVENT_ATTR_STRING(c10-residency, attr_cstate_pkg_c10, "event=0x06");
-+
-+static unsigned long pkg_msr_mask;
-+
-+PMU_EVENT_GROUP(events, cstate_pkg_c2);
-+PMU_EVENT_GROUP(events, cstate_pkg_c3);
-+PMU_EVENT_GROUP(events, cstate_pkg_c6);
-+PMU_EVENT_GROUP(events, cstate_pkg_c7);
-+PMU_EVENT_GROUP(events, cstate_pkg_c8);
-+PMU_EVENT_GROUP(events, cstate_pkg_c9);
-+PMU_EVENT_GROUP(events, cstate_pkg_c10);
-+
-+static struct perf_msr pkg_msr[] = {
-+	[PERF_CSTATE_PKG_C2_RES]  = { MSR_PKG_C2_RESIDENCY,	&group_cstate_pkg_c2,	test_msr },
-+	[PERF_CSTATE_PKG_C3_RES]  = { MSR_PKG_C3_RESIDENCY,	&group_cstate_pkg_c3,	test_msr },
-+	[PERF_CSTATE_PKG_C6_RES]  = { MSR_PKG_C6_RESIDENCY,	&group_cstate_pkg_c6,	test_msr },
-+	[PERF_CSTATE_PKG_C7_RES]  = { MSR_PKG_C7_RESIDENCY,	&group_cstate_pkg_c7,	test_msr },
-+	[PERF_CSTATE_PKG_C8_RES]  = { MSR_PKG_C8_RESIDENCY,	&group_cstate_pkg_c8,	test_msr },
-+	[PERF_CSTATE_PKG_C9_RES]  = { MSR_PKG_C9_RESIDENCY,	&group_cstate_pkg_c9,	test_msr },
-+	[PERF_CSTATE_PKG_C10_RES] = { MSR_PKG_C10_RESIDENCY,	&group_cstate_pkg_c10,	test_msr },
- };
- 
- static struct attribute_group pkg_events_attr_group = {
- 	.name = "events",
--	.attrs = pkg_events_attrs,
-+	.attrs = attrs_empty,
- };
- 
- DEFINE_CSTATE_FORMAT_ATTR(pkg_event, event, "config:0-63");
-@@ -289,7 +313,8 @@ static int cstate_pmu_event_init(struct perf_event *event)
- 	if (event->pmu == &cstate_core_pmu) {
- 		if (cfg >= PERF_CSTATE_CORE_EVENT_MAX)
- 			return -EINVAL;
--		if (!core_msr[cfg].attr)
-+		cfg = array_index_nospec((unsigned long)cfg, PERF_CSTATE_CORE_EVENT_MAX);
-+		if (!(core_msr_mask & (1 << cfg)))
- 			return -EINVAL;
- 		event->hw.event_base = core_msr[cfg].msr;
- 		cpu = cpumask_any_and(&cstate_core_cpu_mask,
-@@ -298,7 +323,7 @@ static int cstate_pmu_event_init(struct perf_event *event)
- 		if (cfg >= PERF_CSTATE_PKG_EVENT_MAX)
- 			return -EINVAL;
- 		cfg = array_index_nospec((unsigned long)cfg, PERF_CSTATE_PKG_EVENT_MAX);
--		if (!pkg_msr[cfg].attr)
-+		if (!(pkg_msr_mask & (1 << cfg)))
- 			return -EINVAL;
- 		event->hw.event_base = pkg_msr[cfg].msr;
- 		cpu = cpumask_any_and(&cstate_pkg_cpu_mask,
-@@ -421,8 +446,28 @@ static int cstate_cpu_init(unsigned int cpu)
- 	return 0;
- }
- 
-+const struct attribute_group *core_attr_update[] = {
-+	&group_cstate_core_c1,
-+	&group_cstate_core_c3,
-+	&group_cstate_core_c6,
-+	&group_cstate_core_c7,
-+	NULL,
-+};
-+
-+const struct attribute_group *pkg_attr_update[] = {
-+	&group_cstate_pkg_c2,
-+	&group_cstate_pkg_c3,
-+	&group_cstate_pkg_c6,
-+	&group_cstate_pkg_c7,
-+	&group_cstate_pkg_c8,
-+	&group_cstate_pkg_c9,
-+	&group_cstate_pkg_c10,
-+	NULL,
-+};
-+
- static struct pmu cstate_core_pmu = {
- 	.attr_groups	= core_attr_groups,
-+	.attr_update	= core_attr_update,
- 	.name		= "cstate_core",
- 	.task_ctx_nr	= perf_invalid_context,
- 	.event_init	= cstate_pmu_event_init,
-@@ -437,6 +482,7 @@ static struct pmu cstate_core_pmu = {
- 
- static struct pmu cstate_pkg_pmu = {
- 	.attr_groups	= pkg_attr_groups,
-+	.attr_update	= pkg_attr_update,
- 	.name		= "cstate_pkg",
- 	.task_ctx_nr	= perf_invalid_context,
- 	.event_init	= cstate_pmu_event_init,
-@@ -585,31 +631,6 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
- 
--/*
-- * Probe the cstate events and insert the available one into sysfs attrs
-- * Return false if there are no available events.
-- */
--static bool __init cstate_probe_msr(const unsigned long evmsk, int max,
--                                   struct perf_cstate_msr *msr,
--                                   struct attribute **attrs)
--{
--	bool found = false;
--	unsigned int bit;
--	u64 val;
--
--	for (bit = 0; bit < max; bit++) {
--		if (test_bit(bit, &evmsk) && !rdmsrl_safe(msr[bit].msr, &val)) {
--			*attrs++ = &msr[bit].attr->attr.attr;
--			found = true;
--		} else {
--			msr[bit].attr = NULL;
--		}
--	}
--	*attrs = NULL;
--
--	return found;
--}
--
- static int __init cstate_probe(const struct cstate_model *cm)
- {
- 	/* SLM has different MSR for PKG C6 */
-@@ -621,13 +642,14 @@ static int __init cstate_probe(const struct cstate_model *cm)
- 		pkg_msr[PERF_CSTATE_CORE_C6_RES].msr = MSR_KNL_CORE_C6_RESIDENCY;
- 
- 
--	has_cstate_core = cstate_probe_msr(cm->core_events,
--					   PERF_CSTATE_CORE_EVENT_MAX,
--					   core_msr, core_events_attrs);
-+	core_msr_mask = perf_msr_probe(core_msr, PERF_CSTATE_CORE_EVENT_MAX,
-+				       true, (void *) &cm->core_events);
-+
-+	pkg_msr_mask = perf_msr_probe(pkg_msr, PERF_CSTATE_PKG_EVENT_MAX,
-+				      true, (void *) &cm->pkg_events);
- 
--	has_cstate_pkg = cstate_probe_msr(cm->pkg_events,
--					  PERF_CSTATE_PKG_EVENT_MAX,
--					  pkg_msr, pkg_events_attrs);
-+	has_cstate_core = !!core_msr_mask;
-+	has_cstate_pkg  = !!pkg_msr_mask;
- 
- 	return (has_cstate_core || has_cstate_pkg) ? 0 : -ENODEV;
- }
+Yours,
+Linus Walleij
