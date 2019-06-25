@@ -2,89 +2,140 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BA1C48BD4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E82C48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A5320659
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:46:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fMlug4uk"
+	by mail.kernel.org (Postfix) with ESMTP id BF53C20659
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfFYHqU (ORCPT
+        id S1729269AbfFYHqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:46:20 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:45096 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726321AbfFYHqU (ORCPT
+        Tue, 25 Jun 2019 03:46:39 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:53196 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfFYHqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:46:20 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 284B0C0104;
-        Tue, 25 Jun 2019 07:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561448779; bh=pJFkI3fWSyI3YXwgN4D5zBXc+tVZ7/KLL0HehF7gVxc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=fMlug4ukuwi4ANUCTXA4WnCNEE7u2mi346Awn2P4hghOoknLGTN913DmcEhqNCd8A
-         wRqVfrjiy4vqQZT5tEQbu6W0tWKfhOH6A+NhU7td1RurqQKep9Y0VDz6M1WMGj4A6w
-         UEZiokOlfHgLhAjNV7m7cP5ELhUmRVHD36vrsyCBy8b6RXxOG1iS/EbPLLCJfxG1O0
-         yu5uHJx8jzrwa7sVF622+INOiDxU/wKbipdHEIhgMX11d80evELAP4NWxSI3sAt0jJ
-         3317bTj/VFqBZ2SJwFFNtgsL4xO4L42KF9xX74dnPKC6yg3mqBf1NsqKXJFYei8noO
-         9+j8uVeIdeRSQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 02F9DA0067;
-        Tue, 25 Jun 2019 07:46:15 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 25 Jun 2019 00:46:14 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
- 25 Jun 2019 09:46:12 +0200
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Andrew Lunn <andrew@lunn.ch>, Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: RE: stmmac regression on ASUS TinkerBoard
-Thread-Topic: stmmac regression on ASUS TinkerBoard
-Thread-Index: AQHVKc4Y+jzSG3DFNE6d1bJbedPjHqar/2Mg
-Date:   Tue, 25 Jun 2019 07:46:12 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B9D7065@DE02WEMBXB.internal.synopsys.com>
-References: <8fa9ce79-6aa2-d44d-e24d-09cc1b2b70a3@katsuster.net>
-In-Reply-To: <8fa9ce79-6aa2-d44d-e24d-09cc1b2b70a3@katsuster.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.16]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 25 Jun 2019 03:46:39 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hfg9y-0003JI-ES; Tue, 25 Jun 2019 09:46:34 +0200
+Message-ID: <2570f4087d6e3356df34635a0380ec8ce06c9159.camel@sipsolutions.net>
+Subject: Re: nl80211 wlcore regression in next
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Eyal Reizer <eyalreizer@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Date:   Tue, 25 Jun 2019 09:46:33 +0200
+In-Reply-To: <20190625073837.GG5447@atomide.com> (sfid-20190625_093856_832195_5A1A0447)
+References: <20190625073837.GG5447@atomide.com>
+         (sfid-20190625_093856_832195_5A1A0447)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS2F0c3VoaXJvIFN1enVraSA8a2F0c3VoaXJvQGthdHN1c3Rlci5uZXQ+DQoNCj4gSSBj
-aGVja2VkIGRyaXZlcnMvbmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL3N0bW1hY19tYWluLmMg
-YW5kIGZvdW5kDQo+IHN0bW1hY19pbml0X3BoeSgpIGlzIGdvaW5nIHRvIGZhaWwgaWYgZXRoZXJu
-ZXQgZGV2aWNlIG5vZGUgZG9lcyBub3QNCj4gaGF2ZSBmb2xsb3dpbmcgcHJvcGVydHk6DQo+ICAg
-IC0gcGh5LWhhbmRsZQ0KPiAgICAtIHBoeQ0KPiAgICAtIHBoeS1kZXZpY2UNCj4gDQo+IFRoaXMg
-Y29tbWl0IGJyb2tlIHRoZSBkZXZpY2UtdHJlZXMgc3VjaCBhcyBUaW5rZXJCb2FyZC4gVGhlIG1k
-aW8NCj4gc3Vibm9kZSBjcmVhdGluZyBhIG1kaW8gYnVzIGlzIGNoYW5nZWQgdG8gcmVxdWlyZWQg
-b3Igc3RpbGwgb3B0aW9uYWw/DQoNClllYWgsIHdpdGggUEhZTElOSyB0aGUgUEhZIGJpbmRpbmcg
-aXMgYWx3YXlzIHJlcXVpcmVkIC4uLg0KDQpIb3cgZG8geW91IHdhbnQgdG8gcHJvY2VlZCA/IEkg
-dGhpbmsgRFQgYmluZGluZ3MgY2FuIG5ldmVyIGJyZWFrIGJldHdlZW4gDQpyZWxlYXNlcyBzbyBJ
-IHdpbGwgcHJvYmFibHkgbmVlZCB0byBjb29rIGEgcGF0Y2ggZm9yIHN0bW1hYy4NCg0KVGhhbmtz
-LA0KSm9zZSBNaWd1ZWwgQWJyZXUNCg==
+On Tue, 2019-06-25 at 00:38 -0700, Tony Lindgren wrote:
+> Hi,
+> 
+> Looks like at least drivers/net/wireless/ti wlcore driver has stopped
+> working in Linux next with commit 901bb9891855 ("nl80211: require and
+> validate vendor command policy"). Reverting the commit above makes it
+> work again.
+> 
+> It fails with the warning below, any ideas what goes wrong?
+
+Oops. For some reason, I neglected to check the vendor command usage
+beyond hwsim.
+
+The patch below should work?
+
+johannes
+
+diff --git a/drivers/net/wireless/ath/wil6210/cfg80211.c b/drivers/net/wireless/ath/wil6210/cfg80211.c
+index 804955d24b30..37ac95940c22 100644
+--- a/drivers/net/wireless/ath/wil6210/cfg80211.c
++++ b/drivers/net/wireless/ath/wil6210/cfg80211.c
+@@ -177,6 +177,7 @@ static const struct wiphy_vendor_command wil_nl80211_vendor_commands[] = {
+ 		.info.subcmd = QCA_NL80211_VENDOR_SUBCMD_DMG_RF_GET_SECTOR_CFG,
+ 		.flags = WIPHY_VENDOR_CMD_NEED_WDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_RUNNING,
++		.policy = wil_rf_sector_policy,
+ 		.doit = wil_rf_sector_get_cfg
+ 	},
+ 	{
+@@ -184,6 +185,7 @@ static const struct wiphy_vendor_command wil_nl80211_vendor_commands[] = {
+ 		.info.subcmd = QCA_NL80211_VENDOR_SUBCMD_DMG_RF_SET_SECTOR_CFG,
+ 		.flags = WIPHY_VENDOR_CMD_NEED_WDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_RUNNING,
++		.policy = wil_rf_sector_policy,
+ 		.doit = wil_rf_sector_set_cfg
+ 	},
+ 	{
+@@ -192,6 +194,7 @@ static const struct wiphy_vendor_command wil_nl80211_vendor_commands[] = {
+ 			QCA_NL80211_VENDOR_SUBCMD_DMG_RF_GET_SELECTED_SECTOR,
+ 		.flags = WIPHY_VENDOR_CMD_NEED_WDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_RUNNING,
++		.policy = wil_rf_sector_policy,
+ 		.doit = wil_rf_sector_get_selected
+ 	},
+ 	{
+@@ -200,6 +203,7 @@ static const struct wiphy_vendor_command wil_nl80211_vendor_commands[] = {
+ 			QCA_NL80211_VENDOR_SUBCMD_DMG_RF_SET_SELECTED_SECTOR,
+ 		.flags = WIPHY_VENDOR_CMD_NEED_WDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_RUNNING,
++		.policy = wil_rf_sector_policy,
+ 		.doit = wil_rf_sector_set_selected
+ 	},
+ };
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+index d493021f6031..30ebadc5e5bb 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/vendor.c
+@@ -123,6 +123,7 @@ const struct wiphy_vendor_command brcmf_vendor_cmds[] = {
+ 		},
+ 		.flags = WIPHY_VENDOR_CMD_NEED_WDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_NETDEV,
++		.policy = VENDOR_CMD_RAW_DATA,
+ 		.doit = brcmf_cfg80211_vndr_cmds_dcmd_handler
+ 	},
+ };
+diff --git a/drivers/net/wireless/ti/wlcore/vendor_cmd.c b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
+index 75756fb8e7b0..cd82d3580e87 100644
+--- a/drivers/net/wireless/ti/wlcore/vendor_cmd.c
++++ b/drivers/net/wireless/ti/wlcore/vendor_cmd.c
+@@ -166,6 +166,7 @@ static const struct wiphy_vendor_command wlcore_vendor_commands[] = {
+ 		.flags = WIPHY_VENDOR_CMD_NEED_NETDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_RUNNING,
+ 		.doit = wlcore_vendor_cmd_smart_config_start,
++		.policy = wlcore_vendor_attr_policy,
+ 	},
+ 	{
+ 		.info = {
+@@ -175,6 +176,7 @@ static const struct wiphy_vendor_command wlcore_vendor_commands[] = {
+ 		.flags = WIPHY_VENDOR_CMD_NEED_NETDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_RUNNING,
+ 		.doit = wlcore_vendor_cmd_smart_config_stop,
++		.policy = wlcore_vendor_attr_policy,
+ 	},
+ 	{
+ 		.info = {
+@@ -184,6 +186,7 @@ static const struct wiphy_vendor_command wlcore_vendor_commands[] = {
+ 		.flags = WIPHY_VENDOR_CMD_NEED_NETDEV |
+ 			 WIPHY_VENDOR_CMD_NEED_RUNNING,
+ 		.doit = wlcore_vendor_cmd_smart_config_set_group_key,
++		.policy = wlcore_vendor_attr_policy,
+ 	},
+ };
+ 
+
