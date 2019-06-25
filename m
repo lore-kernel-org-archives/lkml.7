@@ -2,120 +2,317 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1933C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FDFC48BD4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73B92086D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2AE2086D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 07:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561449145;
-	bh=nyNszpfiaOPivEGutVbzOgMkeimehfcQz+veqfeZZXM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Myiovg/6djwOuzoY4Szo9VFGJQ/dBK2q+sT+F+aFua/r2uS8MsLDNgyPxDrDCPWpV
-	 /rWD/FtKz37AfXG36iVVXs3VIuZq/dAEPLh1tE3hdGCJX/aBWo8i+4GHVhQXGXH+hI
-	 wgGkusFhffBidhBc7XqMZj60ebuNFX97tnH02uuk=
+	s=default; t=1561449149;
+	bh=P/ocJrXSJAaOJc1XBFTiIKSwrBYVDU55lTVp5CGtUfQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qHEjOf8TYlpBKDXFoY19vCAKH2+jRt83GsOVzb1mpyMpjzQgICMgB2GOQl1bdpXjr
+	 TRvf9Js/CXSjvo8vZRMRGKBN6VUU/Dx3SSEVXfIbyuvsDOXA3grHURibEyUMedT078
+	 P4JelK4IWgtz2T2nCp3jm4NDOz3eXTgiDqWVaLUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfFYHwY (ORCPT
+        id S1729918AbfFYHw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 03:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38988 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 03:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbfFYHwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 03:52:23 -0400
+        id S1726419AbfFYHw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 03:52:26 -0400
 Received: from localhost (f4.8f.5177.ip4.static.sl-reverse.com [119.81.143.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FBBB20665;
-        Tue, 25 Jun 2019 07:52:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CCE20863;
+        Tue, 25 Jun 2019 07:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561449142;
-        bh=nyNszpfiaOPivEGutVbzOgMkeimehfcQz+veqfeZZXM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c9oPEbSzQ71W7SK0QFmDGaV4vKsZ5g1p5Rrlx4ckF6BKBk+fJboJ12Oix62mFkuB/
-         kO+XQvmLKZ/OwST/4/K8CO3i4EwWfan/EiYiAz35jHfsy+FPkstK+q4PgpwlgVS4fb
-         O7JvbaDaBRxhKRfU4nrucorZ4sn4kdVUi8Oo/Za4=
-Date:   Tue, 25 Jun 2019 15:50:29 +0800
+        s=default; t=1561449145;
+        bh=P/ocJrXSJAaOJc1XBFTiIKSwrBYVDU55lTVp5CGtUfQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jb3Z7knfH7pqkKrAFaaW769x49QvjQ+1Pn23JzmdcFYu4egJQ87DRULRAtPcm545M
+         anV2d4ff81Rts4T0OcSWvUgpXk77nWtwXCEX0qX7RzqVZYbQ+72LXM8OQlVNxTOXX+
+         R4zVg+lat/ztND6I/cXyEM/CTFslbsmXF+R3112g=
+Date:   Tue, 25 Jun 2019 15:51:14 +0800
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ignat Korchagin <ignat@cloudflare.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Subject: Re: Linux 4.19 and GCC 9
-Message-ID: <20190625075029.GC19452@kroah.com>
-References: <20190517085126.GA3249@kroah.com>
- <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
- <20190517152200.GI8945@kernel.org>
- <CABWYdi2Xsp4AUhV1GwphTd4-nN2zCZMmg5y7WheNc67KrdVBfw@mail.gmail.com>
- <4FE2D490-F379-4CAE-9784-9BF81B7FE258@kernel.org>
- <CABWYdi2XXPYuavF0p=JOEY999M4z3_rk-8xsi3N=do=d7k09ig@mail.gmail.com>
- <20190610151407.GS21245@kernel.org>
- <20190610152542.GA4132@kroah.com>
- <20190610191417.GW21245@kernel.org>
- <CALrw=nFcp-+C7ceTFj=R=aG0Z5OpRRVXFoUxUoh=CjcfW79-+g@mail.gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.14.130
+Message-ID: <20190625075114.GA22192@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
 Content-Disposition: inline
-In-Reply-To: <CALrw=nFcp-+C7ceTFj=R=aG0Z5OpRRVXFoUxUoh=CjcfW79-+g@mail.gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 11:42:34AM +0100, Ignat Korchagin wrote:
-> Hi Greg,
-> 
-> > > For us it seems applying the following 4 mainline patches makes 4.19.x
-> > > branch perf compile with GCC-9:
-> > >
-> > > 4d0f16d059ddb91424480d88473f7392f24aebdc: perf ui helpline: Use
-> > > strlcpy() as a shorter form of strncpy() + explicit set nul
-> > > b6313899f4ed2e76b8375cf8069556f5b94fbff0: perf help: Remove needless
-> > > use of strncpy()
-> > > 5192bde7d98c99f2cd80225649e3c2e7493722f7: perf header: Fix unchecked
-> > > usage of strncpy()
-> > > 97acec7df172cd1e450f81f5e293c0aa145a2797: perf data: Fix 'strncat may
-> > > truncate' build failure with recent gcc
-> > >
-> > > I also checked that 4.19.49 compiles fine with GCC 9, although with a
-> > > lot of warnings, mostly from objtool, like "warning: objtool:
-> > > sock_register()+0xd: sibling call from callable instruction with
-> > > modified stack frame". But it's a start.
-> > >
-> > > Can we apply the above-mentioned patches, please?
-> 
-> > I'll look into these after the next round of kernels are released.  I
-> 
-> Did you by any chance forget to queue these patches? :) (the build is
-> still broken for GCC 9.1)
 
-I am on the road and getting to backports for this stuff is on the
-bottom of my list until next week at the earliest, sorry.
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > guess I'll go find a distro that has gcc9 on it to actually test
-> > things...
-> 
-> BTW, Arch already has GCC 9.1 package, so no need to compile your own
-> anymore for testing:
-> https://www.archlinux.org/packages/core/x86_64/gcc/
+I'm announcing the release of the 4.14.130 kernel.
 
-Yes, my laptop just updated, so I'm building here.  Some gcc9 patches
-did just get backported, but not for perf.
+All users of the 4.14 kernel series must upgrade.
+
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
 thanks,
 
 greg k-h
+
+------------
+
+ Makefile                                         |    4 +-
+ arch/arc/boot/dts/hsdk.dts                       |    4 ++
+ arch/arc/include/asm/cmpxchg.h                   |   14 ++++++--
+ arch/arc/mm/tlb.c                                |   13 ++++---
+ arch/arm/boot/dts/am57xx-idk-common.dtsi         |    1=20
+ arch/arm/mach-imx/cpuidle-imx6sx.c               |    3 +
+ arch/mips/kernel/uprobes.c                       |    3 -
+ arch/parisc/math-emu/cnv_float.h                 |    8 ++--
+ arch/powerpc/include/asm/ppc-opcode.h            |    1=20
+ arch/powerpc/net/bpf_jit.h                       |    2 -
+ arch/powerpc/net/bpf_jit_comp64.c                |    8 ++--
+ arch/sparc/kernel/mdesc.c                        |    2 +
+ arch/sparc/kernel/perf_event.c                   |    4 ++
+ arch/xtensa/kernel/setup.c                       |    3 +
+ drivers/gpu/drm/arm/hdlcd_crtc.c                 |   14 ++++----
+ drivers/hwmon/hwmon.c                            |    2 -
+ drivers/hwmon/pmbus/pmbus_core.c                 |   34 ++++++++++++++++++=
+--
+ drivers/infiniband/hw/hfi1/chip.c                |    1=20
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c        |    3 +
+ drivers/infiniband/hw/hfi1/verbs.c               |    2 -
+ drivers/infiniband/hw/hfi1/verbs_txreq.c         |    2 -
+ drivers/infiniband/hw/hfi1/verbs_txreq.h         |    3 +
+ drivers/infiniband/hw/qib/qib_verbs.c            |    2 -
+ drivers/infiniband/sw/rdmavt/mr.c                |    2 +
+ drivers/infiniband/sw/rdmavt/qp.c                |    3 +
+ drivers/input/misc/uinput.c                      |   22 ++++++++++++-
+ drivers/input/mouse/synaptics.c                  |    2 +
+ drivers/mmc/core/sdio.c                          |   13 +++++++
+ drivers/mmc/core/sdio_irq.c                      |    4 ++
+ drivers/net/can/flexcan.c                        |    2 -
+ drivers/net/dsa/mv88e6xxx/chip.c                 |    2 -
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c |    4 ++
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c      |   15 ++++-----
+ drivers/net/ipvlan/ipvlan_main.c                 |    2 -
+ drivers/net/phy/bcm-phy-lib.c                    |    4 +-
+ drivers/nvme/host/core.c                         |    3 +
+ drivers/parport/share.c                          |    2 +
+ drivers/s390/net/qeth_l2_main.c                  |    2 -
+ drivers/scsi/smartpqi/smartpqi_init.c            |    6 ++-
+ drivers/scsi/ufs/ufshcd-pltfrm.c                 |   11 ++----
+ drivers/scsi/ufs/ufshcd.c                        |    3 +
+ drivers/usb/chipidea/udc.c                       |   20 ++++++++++++
+ fs/btrfs/reada.c                                 |    5 +++
+ fs/cifs/smb2maperror.c                           |    2 -
+ include/net/bluetooth/hci_core.h                 |    3 +
+ kernel/trace/trace.c                             |    6 ---
+ kernel/trace/trace.h                             |   18 ++++++++++
+ kernel/trace/trace_kdb.c                         |    6 ---
+ net/bluetooth/hci_conn.c                         |   10 +++++-
+ net/bluetooth/l2cap_core.c                       |   33 ++++++++++++++++---
+ net/can/af_can.c                                 |    1=20
+ net/mac80211/ieee80211_i.h                       |    3 +
+ net/mac80211/mlme.c                              |   12 ++++++-
+ net/mac80211/rx.c                                |    2 +
+ net/mac80211/tdls.c                              |   23 +++++++++++++
+ net/mac80211/wpa.c                               |    7 +++-
+ net/wireless/core.c                              |    2 -
+ scripts/checkstack.pl                            |    2 -
+ security/apparmor/policy_unpack.c                |    2 -
+ tools/objtool/check.c                            |   38 ++++++++++++++++++=
++----
+ tools/objtool/check.h                            |    4 +-
+ tools/objtool/elf.c                              |    1=20
+ tools/objtool/elf.h                              |    3 +
+ 63 files changed, 336 insertions(+), 102 deletions(-)
+
+Alexander Mikhaylenko (1):
+      Input: synaptics - enable SMBus on ThinkPad E480 and E580
+
+Alexandra Winter (1):
+      s390/qeth: fix VLAN attribute in bridge_hostnotify udev event
+
+Allan Xavier (1):
+      objtool: Support per-function rodata sections
+
+Andrey Smirnov (1):
+      Input: uinput - add compat ioctl number translation for UI_*_FF_UPLOAD
+
+Avri Altman (1):
+      scsi: ufs: Check that space was properly alloced in copy_query_respon=
+se
+
+Dan Carpenter (1):
+      scsi: smartpqi: unlock on error in pqi_submit_raid_request_synchronou=
+s()
+
+Eduardo Valentin (1):
+      hwmon: (core) add thermal sensors only if dev->of_node is present
+
+Eric Biggers (1):
+      cfg80211: fix memory leak of wiphy device name
+
+Fabio Estevam (1):
+      ARM: imx: cpuidle-imx6sx: Restrict the SW2ISO increase to i.MX6SX
+
+Faiz Abbas (1):
+      ARM: dts: am57xx-idk: Remove support for voltage switching for SD card
+
+Florian Fainelli (1):
+      net: phy: broadcom: Use strlcpy() for ethtool::get_strings
+
+Gen Zhang (1):
+      mdesc: fix a missing-check bug in get_vdev_port_node_info()
+
+George G. Davis (1):
+      scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
+
+Greg Kroah-Hartman (1):
+      Linux 4.14.130
+
+Guenter Roeck (1):
+      xtensa: Fix section mismatch between memblock_reserve and mem_reserve
+
+Helge Deller (1):
+      parisc: Fix compiler warnings in float emulation code
+
+Jaesoo Lee (1):
+      nvme: Fix u32 overflow in the number of namespace list calculation
+
+Jann Horn (1):
+      apparmor: enforce nullbyte at end of tag string
+
+Joakim Zhang (1):
+      can: flexcan: fix timeout when set small bitrate
+
+Johannes Berg (1):
+      mac80211: drop robust management frames from unknown TA
+
+Jose Abreu (2):
+      ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC no=
+de
+      ARC: [plat-hsdk]: Add missing FIFO size entry in GMAC node
+
+Jouni Malinen (1):
+      mac80211: Do not use stack memory with scatterlist for GMAC
+
+Kamenee Arumugam (1):
+      IB/hfi1: Validate page aligned for a given virtual address
+
+Linus Torvalds (1):
+      gcc-9: silence 'address-of-packed-member' warning
+
+Marcel Holtmann (2):
+      Bluetooth: Align minimum encryption key size for LE and BR/EDR connec=
+tions
+      Bluetooth: Fix regression with minimum encryption key size alignment
+
+Miaohe Lin (1):
+      net: ipvlan: Fix ipvlan device tso disabled while NETIF_F_IP_CSUM is =
+set
+
+Miguel Ojeda (1):
+      tracing: Silence GCC 9 array bounds warning
+
+Mike Marciniszyn (4):
+      IB/hfi1: Silence txreq allocation warnings
+      IB/rdmavt: Fix alloc_qpn() WARN_ON()
+      IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
+      IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
+
+Naohiro Aota (1):
+      btrfs: start readahead also in seed devices
+
+Naveen N. Rao (1):
+      powerpc/bpf: use unsigned division instruction for 64-bit operations
+
+Nikita Yushchenko (1):
+      net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
+
+Peter Chen (1):
+      usb: chipidea: udc: workaround for endpoint conflict issue
+
+Robert Hancock (1):
+      hwmon: (pmbus/core) Treat parameters as paged if on multiple pages
+
+Robin Murphy (2):
+      drm/arm/hdlcd: Actually validate CRTC modes
+      drm/arm/hdlcd: Allow a bit of clock tolerance
+
+Sean Wang (2):
+      net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
+      net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFF=
+SET is enabled
+
+Stanley Chu (1):
+      scsi: ufs: Avoid runtime suspend possibly being blocked forever
+
+Steve French (1):
+      SMB3: retry on STATUS_INSUFFICIENT_RESOURCES instead of failing write
+
+Ulf Hansson (1):
+      mmc: core: Prevent processing SDIO IRQs when the card is suspended
+
+Vineet Gupta (1):
+      ARC: fix build warnings
+
+Willem de Bruijn (1):
+      can: purge socket error queue on sock destruct
+
+Yonglong Liu (1):
+      net: hns: Fix loopback test failed at copper ports
+
+Young Xiao (1):
+      sparc: perf: fix updated event period in response to PERF_EVENT_IOC_P=
+ERIOD
+
+Yu Wang (1):
+      mac80211: handle deauthentication/disassociation from TDLS peer
+
+YueHaibing (2):
+      parport: Fix mem leak in parport_register_dev_model
+      MIPS: uprobes: remove set but not used variable 'epc'
+
+
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl0R0nIACgkQONu9yGCS
+aT6mxA//VaWyL4gjK2+FupcVG6dWGgHPcKTD/Ka274Eo2AEvJJromIREWClgBi6+
+EZqoqb0eR37e3hGOvqgzJpXkLYxvqmuTVmvpO0MZjk1pJFFGihEaFhQOx5zZ2nmt
+NVaEYey98GD34FT3MpnQsyeOGdWSzCmUjPRnUpTwlb/diKp9vZpK4ScnFRAK2Mc4
+jN4W+cKrL46EwdsIe+JsgmSdDYiSuFVjiGXQv8LQ725dGIhkyib6BNdyyFsYqI1b
+y+jCDZQ/rlMofehIkytCi+Zt13qZz9MzsFwU+V0XkypBL4YO/kdd8SYDZPpz5vsK
+V/ER2Gwf5vcftCAJCWGW3Cg+98sqI2RA5CVP5lsu9/xtvFXae1jl2v2JQZfOFl7S
+zZNEA1ii9tOBywSvKz2ZakVwPkWXR156UdviN165DLpw7MT2SSFQXgQ3tQq1lODp
+FrBotFIibPyyM/innO/IzuqIaE2PLs0ofnYG6DoZD5T4t75VfeLCHmnMfVF91euq
+I7JNtpng0mJUMF09UCtTyR3A+ouiNIp/0jak7RhjzU85nMDi118F2GO9IxefrP91
+h5my7hcOkYcu11yH3AfxnvUyXWrJYyhUKF7WnzD0GHeLGAWZ6ZkY+ThXf4Cn6/Wx
+94+ps+AWJC7LghaMJ1+KxMBIrA94wiMq/IRG5Hnkur84pPa/b1s=
+=lgon
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
