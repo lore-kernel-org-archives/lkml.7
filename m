@@ -2,195 +2,127 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE04C48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C8C48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480E321655
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1992E20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 13:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="agXIyohE"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="CKkjHwmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730689AbfFYNFU (ORCPT
+        id S1730273AbfFYNLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 09:05:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50209 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727338AbfFYNFU (ORCPT
+        Tue, 25 Jun 2019 09:11:23 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:56450 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726702AbfFYNLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 09:05:20 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c66so2770088wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 06:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4nNfIWXsbuWkXABqorH5/YWxe2eUXvASoBcY3Q4IT0Q=;
-        b=agXIyohEeL5aSmsFK9/eZQnM28H5O3wLADo6asi/edUROUp+gkzSdzX6RNudO0KgEM
-         4sZzwU1LtPNYA6EmdBk5UNG9IRRbPPcBnBX0qay3q0RF0gJompYL15QmlEDh+ZeMr4EK
-         Wzs9ayvC4DuMYPOfw970JsaBe815uHC8oaD+Vz3n0wL5rH94JbgliM6GWDVBjwXuTrBi
-         mvS8T0i+SaLgmcMqowaF0jIrJKRnJ7nO3sLMK7MR0dSwIVTENAjbCh9InX82Wr58pBF5
-         mdLCNR1qN0vwZa35CT1VI4xPeb3N+AJZRPydZj0/eSul9EjkhAGXZ81ejFbCdhk6h+WI
-         LHFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4nNfIWXsbuWkXABqorH5/YWxe2eUXvASoBcY3Q4IT0Q=;
-        b=m1NfW3LBbn/FlhmiaYXCpNUHNL/ple/ttjduXwzhl711A2ATvUW80EL6f3Pqg9PY8M
-         VefTaOZvLmop5tk8GuVu1M9vGXYQviDj+brhktW45/tx80kPaIadR0TX5Ld6N795GQLA
-         xctYaWFo7edGtHzGdptaDzjTp1UzKGj8j2QnCl4cmqge4s4RVTlNDJjZThukAuW5Nvr9
-         v1u2FI3XLWRWqHncxzSddIOG3tGb2aaFUgM0HJ2QlvignL/iWhqHY3sGiPBpKjBWJqHv
-         4w9rVdGHyvbGHNNQyypbqWW0FiQyfMEDfEpF8OvNpaX7CUnWzuRx+pdRYdK48AV5daNe
-         Qj8A==
-X-Gm-Message-State: APjAAAWKKQuJuwnpN25VqoP/XJREj8yo9wa9CuNBFOuTb4gF3BjJd5md
-        ey6HmiY5UzfkbEg/hQJdwFqWmg==
-X-Google-Smtp-Source: APXvYqxCiqTFDYEkNUUTS0hbWVxoN5bHMwTOYhwVDRdm+Z7NoLq0W9pFMznZLhmGIeMli9qpwdAsfA==
-X-Received: by 2002:a1c:f116:: with SMTP id p22mr19442330wmh.70.1561467917292;
-        Tue, 25 Jun 2019 06:05:17 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id h1sm13430752wrt.20.2019.06.25.06.05.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Jun 2019 06:05:16 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 14:05:15 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>
-Subject: Re: [PATCH v2] platform/chrome: Expose resume result via debugfs
-Message-ID: <20190625130515.GJ21119@dell>
-References: <20190617215234.260982-1-evgreen@chromium.org>
+        Tue, 25 Jun 2019 09:11:23 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A3497C0BDF;
+        Tue, 25 Jun 2019 13:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561468282; bh=pVOI7vtpkaOEo69Q/qZzk7oLFXaKmC7L4sMOnj6pYa8=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=CKkjHwmPT3HKFCIiQWDzBwir8qzzY1cPH8KDT90y1wI5BBNrQB4NXjJ1MPAtC8Oeg
+         q+mZaKxqadKqX7eBu+SSmvFeGKLFZj9jFP9DlI/Lgz2/KiLxk9dQEvNX+MG9BG9QjF
+         8MIi98Db6S0lO3U70W1ur5E8TKl6M2lKVPuEcYL96ebDIkQwwoWS87C2AsVZWjvfTY
+         6hzSSucJ54+tPHWCUg+iEbu6iavhRC1noUPoMzwfUXm/N4XH+/krYfMiJZIQdcbJUL
+         viArzcf35U1VFoG7rKCNoEpTSLMav5BcuxNAc0EicNyGR3DlqP551r2Ac9zxBIL2SC
+         92wsvtaqppgJw==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 1B768A0068;
+        Tue, 25 Jun 2019 13:11:22 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 25 Jun 2019 06:11:21 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
+ 25 Jun 2019 15:11:18 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: RE: [PATCH net-next] net: stmmac: Fix the case when PHY handle is
+ not present
+Thread-Topic: [PATCH net-next] net: stmmac: Fix the case when PHY handle is
+ not present
+Thread-Index: AQHVKy6wyQrkI1N/ykesAgacT59cX6asWGJA
+Date:   Tue, 25 Jun 2019 13:11:17 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B9D78A2@DE02WEMBXB.internal.synopsys.com>
+References: <351cce38d1c572d8b171044f2856c7fae9f89cbc.1561450696.git.joabreu@synopsys.com>
+In-Reply-To: <351cce38d1c572d8b171044f2856c7fae9f89cbc.1561450696.git.joabreu@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.16]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190617215234.260982-1-evgreen@chromium.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Evan Green wrote:
+++ Katsuhiro
 
-> For ECs that support it, the EC returns the number of slp_s0
-> transitions and whether or not there was a timeout in the resume
-> response. Expose the last resume result to usermode via debugfs so
-> that usermode can detect and report S0ix timeouts.
-> 
-> Signed-off-by: Evan Green <evgreen@chromium.org>
+From: Jose Abreu <joabreu@synopsys.com>
 
-This still needs a platform/chrome Ack.
-
+> Some DT bindings do not have the PHY handle. Let's fallback to manually
+> discovery in case phylink_of_phy_connect() fails.
+>=20
+> Reported-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib l=
+ogic")
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
 > ---
-> 
-> Changes in v2:
->  - Moved from sysfs to debugfs (Enric)
->  - Added documentation (Enric)
-> 
-> 
+> Hello Katsuhiro,
+>=20
+> Can you please test this patch ?
 > ---
->  Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
->  drivers/mfd/cros_ec.c                     |  6 +++++-
->  drivers/platform/chrome/cros_ec_debugfs.c |  7 +++++++
->  include/linux/mfd/cros_ec.h               |  1 +
->  4 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
-> index 573a82d23c89..008b31422079 100644
-> --- a/Documentation/ABI/testing/debugfs-cros-ec
-> +++ b/Documentation/ABI/testing/debugfs-cros-ec
-> @@ -32,3 +32,25 @@ Description:
->  		is used for synchronizing the AP host time with the EC
->  		log. An error is returned if the command is not supported
->  		by the EC or there is a communication problem.
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/=
+net/ethernet/stmicro/stmmac/stmmac_main.c
+> index a48751989fa6..f4593d2d9d20 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> @@ -950,9 +950,12 @@ static int stmmac_init_phy(struct net_device *dev)
+> =20
+>  	node =3D priv->plat->phylink_node;
+> =20
+> -	if (node) {
+> +	if (node)
+>  		ret =3D phylink_of_phy_connect(priv->phylink, node, 0);
+> -	} else {
 > +
-> +What:		/sys/kernel/debug/cros_ec/last_resume_result
-> +Date:		June 2019
-> +KernelVersion:	5.3
-> +Description:
-> +		Some ECs have a feature where they will track transitions to
-> +		the (Intel) processor's SLP_S0 line, in order to detect cases
-> +		where a system failed to go into S0ix. When the system resumes,
-> +		an EC with this feature will return a summary of SLP_S0
-> +		transitions that occurred. The last_resume_result file returns
-> +		the most recent response from the AP's resume message to the EC.
-> +
-> +		The bottom 31 bits contain a count of the number of SLP_S0
-> +		transitions that occurred since the suspend message was
-> +		received. Bit 31 is set if the EC attempted to wake the
-> +		system due to a timeout when watching for SLP_S0 transitions.
-> +		Callers can use this to detect a wake from the EC due to
-> +		S0ix timeouts. The result will be zero if no suspend
-> +		transitions have been attempted, or the EC does not support
-> +		this feature.
-> +
-> +		Output will be in the format: "0x%08x\n".
-> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-> index 5d5c41ac3845..2a9ac5213893 100644
-> --- a/drivers/mfd/cros_ec.c
-> +++ b/drivers/mfd/cros_ec.c
-> @@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
->  
->  	/* For now, report failure to transition to S0ix with a warning. */
->  	if (ret >= 0 && ec_dev->host_sleep_v1 &&
-> -	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
-> +	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
-> +		ec_dev->last_resume_result =
-> +			buf.u.resp1.resume_response.sleep_transitions;
-> +
->  		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
->  			  EC_HOST_RESUME_SLEEP_TIMEOUT,
->  			  "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
->  			  buf.u.resp1.resume_response.sleep_transitions &
->  			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
-> +	}
->  
->  	return ret;
->  }
-> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-> index cd3fb9c22a44..663bebf699bf 100644
-> --- a/drivers/platform/chrome/cros_ec_debugfs.c
-> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
-> @@ -447,6 +447,13 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
->  	debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
->  			    &cros_ec_uptime_fops);
->  
-> +	if (!strcmp(ec->class_dev.kobj.name, CROS_EC_DEV_NAME)) {
-> +		debugfs_create_x32("last_resume_result",
-> +				   0444,
-> +				   debug_info->dir,
-> +				   &ec->ec_dev->last_resume_result);
-> +	}
-> +
->  	ec->debug_info = debug_info;
->  
->  	dev_set_drvdata(&pd->dev, ec);
-> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-> index 5ddca44be06d..45aba26db964 100644
-> --- a/include/linux/mfd/cros_ec.h
-> +++ b/include/linux/mfd/cros_ec.h
-> @@ -155,6 +155,7 @@ struct cros_ec_device {
->  	struct ec_response_get_next_event_v1 event_data;
->  	int event_size;
->  	u32 host_event_wake_mask;
-> +	u32 last_resume_result;
->  };
->  
->  /**
+> +	/* Some DT bindings do not set-up the PHY handle. Let's try to
+> +	 * manually parse it */
+> +	if (!node || ret) {
+>  		int addr =3D priv->plat->phy_addr;
+>  		struct phy_device *phydev;
+> =20
+> --=20
+> 2.7.4
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
