@@ -2,152 +2,115 @@ Return-Path: <SRS0=/s9R=UY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BECCC48BD5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AEBC48BD5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59F372084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:40:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KNV+IWEt";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HVzO5XMG"
+	by mail.kernel.org (Postfix) with ESMTP id 2D34C2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Jun 2019 21:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfFYVkO (ORCPT
+        id S1726485AbfFYVkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 17:40:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47696 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfFYVkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 17:40:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7EC11607DE; Tue, 25 Jun 2019 21:40:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561498813;
-        bh=bLNbB/wHffe8tnD85S1I4XRP7Q8LNOpQNbcN6gnQHik=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KNV+IWEtx26RrBF2mjrL8FZ5sEEC0fUDdkQg+qcuU7zB5TUU5fD/DIjDROLdf2+Ul
-         8W+5VAYv+3N0wmwIpQnjlYziBuGG/2ORJMYQAZbosQNu7i3FLl8fj+HX/VhldQ+stV
-         AoQCOWtZtmLMZsouABavCFmztfLHd5fKUoac18Jg=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id C40BD6025A;
-        Tue, 25 Jun 2019 21:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561498812;
-        bh=bLNbB/wHffe8tnD85S1I4XRP7Q8LNOpQNbcN6gnQHik=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HVzO5XMGrkRQ9N+4jkM5KWi2oBHxPEqbkeGaXyjuaK+P06Fj5uZcSTpB91Jo8liS2
-         yyLiarSH2HrghFlaAgAigZVBtxpNOLvVao936C4NfPatY69IIKunaeCDRrbia1wyk0
-         tjO1H84806DCkaMVBdSRrMFLRpoIgO5RoI5jORKE=
+        Tue, 25 Jun 2019 17:40:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:17285 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfFYVkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 17:40:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 14:40:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,417,1557212400"; 
+   d="scan'208";a="172504772"
+Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2019 14:40:48 -0700
+Subject: Re: [PATCH 6/9] KVM: x86: Provide paravirtualized flush_tlb_multi()
+To:     Nadav Amit <namit@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+References: <20190613064813.8102-1-namit@vmware.com>
+ <20190613064813.8102-7-namit@vmware.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+Message-ID: <cb28f2b4-92f0-f075-648e-dddfdbdd2e3c@intel.com>
+Date:   Tue, 25 Jun 2019 14:40:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Jun 2019 14:40:12 -0700
-From:   Jeykumar Sankaran <jsanka@codeaurora.org>
-To:     dhar@codeaurora.org
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, chandanu@codeaurora.org,
-        nganji@codeaurora.org, jshekhar@codeaurora.org
-Subject: Re: drm/msm/dpu: Correct dpu encoder spinlock initialization
-In-Reply-To: <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
-References: <1561357632-15361-1-git-send-email-dhar@codeaurora.org>
- <efade579f7ba59585b88ecb367422e5c@codeaurora.org>
- <d61d7805b4ac0ec45309bf5b65841262@codeaurora.org>
-Message-ID: <627144af54459a203f1583d2ad9b390c@codeaurora.org>
-X-Sender: jsanka@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+In-Reply-To: <20190613064813.8102-7-namit@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-24 22:44, dhar@codeaurora.org wrote:
-> On 2019-06-25 03:56, Jeykumar Sankaran wrote:
->> On 2019-06-23 23:27, Shubhashree Dhar wrote:
->>> dpu encoder spinlock should be initialized during dpu encoder
->>> init instead of dpu encoder setup which is part of commit.
->>> There are chances that vblank control uses the uninitialized
->>> spinlock if not initialized during encoder init.
->> Not much can be done if someone is performing a vblank operation
->> before encoder_setup is done.
->> Can you point to the path where this lock is acquired before
->> the encoder_setup?
->> 
->> Thanks
->> Jeykumar S.
->>> 
+On 6/12/19 11:48 PM, Nadav Amit wrote:
+> Support the new interface of flush_tlb_multi, which also flushes the
+> local CPU's TLB, instead of flush_tlb_others that does not. This
+> interface is more performant since it parallelize remote and local TLB
+> flushes.
 > 
-> When running some dp usecase, we are hitting this callstack.
-> 
-> Process kworker/u16:8 (pid: 215, stack limit = 0x00000000df9dd930)
-> Call trace:
->  spin_dump+0x84/0x8c
->  spin_dump+0x0/0x8c
->  do_raw_spin_lock+0x80/0xb0
->  _raw_spin_lock_irqsave+0x34/0x44
->  dpu_encoder_toggle_vblank_for_crtc+0x8c/0xe8
->  dpu_crtc_vblank+0x168/0x1a0
->  dpu_kms_enable_vblank+0[   11.648998]  vblank_ctrl_worker+0x3c/0x60
->  process_one_work+0x16c/0x2d8
->  worker_thread+0x1d8/0x2b0
->  kthread+0x124/0x134
-> 
-> Looks like vblank is getting enabled earlier causing this issue and we
-> are using the spinlock without initializing it.
-> 
-> Thanks,
-> Shubhashree
-> 
-DP calls into set_encoder_mode during hotplug before even notifying the
-u/s. Can you trace out the original caller of this stack?
+> The actual implementation of flush_tlb_multi() is almost identical to
+> that of flush_tlb_others().
 
-Even though the patch is harmless, I am not entirely convinced to move 
-this
-initialization. Any call which acquires the lock before encoder_setup
-will be a no-op since there will not be any physical encoder to work 
-with.
+This confused me a bit.  I thought we didn't support paravirtualized
+flush_tlb_multi() from reading earlier in the series.
 
-Thanks and Regards,
-Jeykumar S.
-
->>> Change-Id: I5a18b95fa47397c834a266b22abf33a517b03a4e
->>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
->>> ---
->>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 3 +--
->>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>> 
->>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>> index 5f085b5..22938c7 100644
->>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->>> @@ -2195,8 +2195,6 @@ int dpu_encoder_setup(struct drm_device *dev, 
->>> struct
->>> drm_encoder *enc,
->>>  	if (ret)
->>>  		goto fail;
->>> 
->>> -	spin_lock_init(&dpu_enc->enc_spinlock);
->>> -
->>>  	atomic_set(&dpu_enc->frame_done_timeout, 0);
->>>  	timer_setup(&dpu_enc->frame_done_timer,
->>>  			dpu_encoder_frame_done_timeout, 0);
->>> @@ -2250,6 +2248,7 @@ struct drm_encoder *dpu_encoder_init(struct
->>> drm_device *dev,
->>> 
->>>  	drm_encoder_helper_add(&dpu_enc->base, &dpu_encoder_helper_funcs);
->>> 
->>> +	spin_lock_init(&dpu_enc->enc_spinlock);
->>>  	dpu_enc->enabled = false;
->>> 
->>>  	return &dpu_enc->base;
-
--- 
-Jeykumar S
+But, it seems like that might be Xen-only and doesn't apply to KVM and
+paravirtualized KVM has no problem supporting flush_tlb_multi().  Is
+that right?  It might be good to include some of that background in the
+changelog to set the context.
