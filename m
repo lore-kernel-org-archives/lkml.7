@@ -2,118 +2,106 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34CAC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7D7C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42EC208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABA620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfFZVgW (ORCPT
+        id S1726422AbfFZVhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:36:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:33988 "EHLO mga05.intel.com"
+        Wed, 26 Jun 2019 17:37:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:41418 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbfFZVgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:36:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 14:36:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
-   d="scan'208";a="360890792"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Jun 2019 14:36:21 -0700
-Date:   Wed, 26 Jun 2019 14:36:21 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 23/25] mm: sort out the DEVICE_PRIVATE Kconfig mess
-Message-ID: <20190626213620.GA8399@iweiny-DESK2.sc.intel.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-24-hch@lst.de>
+        id S1726223AbfFZVhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:37:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F6E12B;
+        Wed, 26 Jun 2019 14:37:30 -0700 (PDT)
+Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.30.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 33EF13F246;
+        Wed, 26 Jun 2019 14:37:30 -0700 (PDT)
+From:   Jeremy Linton <jeremy.linton@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net,
+        lenb@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com,
+        sudeep.holla@arm.com, Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH v5 0/4] arm64: SPE ACPI enablement
+Date:   Wed, 26 Jun 2019 16:37:14 -0500
+Message-Id: <20190626213718.39423-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626122724.13313-24-hch@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:27:22PM +0200, Christoph Hellwig wrote:
-> The ZONE_DEVICE support doesn't depend on anything HMM related, just on
-> various bits of arch support as indicated by the architecture.  Also
-> don't select the option from nouveau as it isn't present in many setups,
-> and depend on it instead.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+This patch series enables the Arm Statistical Profiling
+Extension (SPE) on ACPI platforms.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+This is possible because ACPI 6.3 uses a previously
+reserved field in the MADT to store the SPE interrupt
+number, similarly to how the normal PMU is described.
+If a consistent valid interrupt exists across all the
+cores in the system, a platform device is registered.
+That then triggers the SPE module, which runs as normal.
 
-> ---
->  drivers/gpu/drm/nouveau/Kconfig | 2 +-
->  mm/Kconfig                      | 5 ++---
->  2 files changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-> index dba2613f7180..6303d203ab1d 100644
-> --- a/drivers/gpu/drm/nouveau/Kconfig
-> +++ b/drivers/gpu/drm/nouveau/Kconfig
-> @@ -85,10 +85,10 @@ config DRM_NOUVEAU_BACKLIGHT
->  config DRM_NOUVEAU_SVM
->  	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
->  	depends on ARCH_HAS_HMM
-> +	depends on DEVICE_PRIVATE
->  	depends on DRM_NOUVEAU
->  	depends on STAGING
->  	select HMM_MIRROR
-> -	select DEVICE_PRIVATE
->  	default n
->  	help
->  	  Say Y here if you want to enable experimental support for
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 6f35b85b3052..eecf037a54b3 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -677,13 +677,13 @@ config ARCH_HAS_HMM_MIRROR
->  
->  config ARCH_HAS_HMM
->  	bool
-> -	default y
->  	depends on (X86_64 || PPC64)
->  	depends on ZONE_DEVICE
->  	depends on MMU && 64BIT
->  	depends on MEMORY_HOTPLUG
->  	depends on MEMORY_HOTREMOVE
->  	depends on SPARSEMEM_VMEMMAP
-> +	default y
->  
->  config MIGRATE_VMA_HELPER
->  	bool
-> @@ -709,8 +709,7 @@ config HMM_MIRROR
->  
->  config DEVICE_PRIVATE
->  	bool "Unaddressable device memory (GPU memory, ...)"
-> -	depends on ARCH_HAS_HMM
-> -	select HMM
-> +	depends on ZONE_DEVICE
->  	select DEV_PAGEMAP_OPS
->  
->  	help
-> -- 
-> 2.20.1
-> 
+We also add the ability to parse the PPTT for IDENTICAL
+cores. We then use this to sanity check the single SPE
+device we create. This creates a bit of a problem with
+respect to the specification though. The specification
+says that its legal for multiple tree's to exist in the
+PPTT. We handle this fine, but what happens in the
+case of multiple tree's is that the lack of a common
+node with IDENTICAL set forces us to assume that there
+are multiple non-IDENTICAL cores in the machine.
+
+v4->v5: Remove error returns from arm_spe_acpi_register_device()
+	Add some review/test tags
+
+v3->v4: Rebase to 5.2.
+	Minor formatting, patch rearrangement.
+	Add missing `inline` in static header definition.
+	Drop ARM_SPE_ACPI and just use ARM_SPE_PMU.
+
+v2->v3: Previously a function pointer was being used
+	  to handle the more complex node checking
+	  required by the IDENTICAL flag. This version
+	  simply checks for the IDENTICAL flag and calls
+	  flag_identical() to preform the revision
+	  and next node checks. (I think after reading
+	  Raphael's comments for the Nth time, this is
+	  actually what he was suggesting, which I
+	  initially miss interpreted).
+	Modify subject of first patch so that its clear
+	  a that its a capitalization change rather,
+	  than a logical C 'case' change.
+
+v1->v2: Wrap the code which creates the SPE device in
+	    a new CONFIG_ARM_SPE_ACPI ifdef.
+	Move arm,spe-v1 device name into common header file
+	Some comment/case sensitivity/function name changes.
+
+Jeremy Linton (4):
+  ACPI/PPTT: Modify node flag detection to find last IDENTICAL
+  ACPI/PPTT: Add function to return ACPI 6.3 Identical tokens
+  arm_pmu: acpi: spe: Add initial MADT/SPE probing
+  perf: arm_spe: Enable ACPI/Platform automatic module loading
+
+ arch/arm64/include/asm/acpi.h |  3 ++
+ drivers/acpi/pptt.c           | 61 ++++++++++++++++++++++++++---
+ drivers/perf/arm_pmu_acpi.c   | 72 +++++++++++++++++++++++++++++++++++
+ drivers/perf/arm_spe_pmu.c    | 12 +++++-
+ include/linux/acpi.h          |  5 +++
+ include/linux/perf/arm_pmu.h  |  2 +
+ 6 files changed, 147 insertions(+), 8 deletions(-)
+
+-- 
+2.21.0
+
