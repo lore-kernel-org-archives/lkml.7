@@ -2,123 +2,177 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C0CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D5EC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46DC216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A66C2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfFZUzV (ORCPT
+        id S1726500AbfFZUzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:55:21 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:49686 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbfFZUzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:55:25 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39260 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfFZUzU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 16:55:20 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hgEwg-0002X1-D5; Wed, 26 Jun 2019 14:55:11 -0600
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
- <20190626202107.GA5850@ziepe.ca>
- <CAPcyv4hCNoMeFyOE588=kuNUXaPS-rzaXnF2cN2TFejso1SGRw@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a17acf94-e19f-e478-27ac-93f6d2a34af4@deltatee.com>
-Date:   Wed, 26 Jun 2019 14:55:08 -0600
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A44972639EE
+Subject: Re: [PATCH v2] platform/chrome: Expose resume result via debugfs
+To:     Lee Jones <lee.jones@linaro.org>, Evan Green <evgreen@chromium.org>
+Cc:     Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+References: <20190617215234.260982-1-evgreen@chromium.org>
+ <20190625130515.GJ21119@dell>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <e9e6e090-7c9b-ff5c-7389-702f9deb6712@collabora.com>
+Date:   Wed, 26 Jun 2019 22:55:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4hCNoMeFyOE588=kuNUXaPS-rzaXnF2cN2TFejso1SGRw@mail.gmail.com>
+In-Reply-To: <20190625130515.GJ21119@dell>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Evan,
 
+Two few comments and I think I'm fine with it.
 
-On 2019-06-26 2:39 p.m., Dan Williams wrote:
-> On Wed, Jun 26, 2019 at 1:21 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->>
->> On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
->>>> we have a hole behind len where we could store flag.  Preferably
->>>> optionally based on a P2P or other magic memory types config
->>>> option so that 32-bit systems with 32-bit phys_addr_t actually
->>>> benefit from the smaller and better packing structure.
->>>
->>> That seems sensible. The one thing that's unclear though is how to get
->>> the PCI Bus address when appropriate. Can we pass that in instead of the
->>> phys_addr with an appropriate flag? Or will we need to pass the actual
->>> physical address and then, at the map step, the driver has to some how
->>> lookup the PCI device to figure out the bus offset?
->>
->> I agree with CH, if we go down this path it is a layering violation
->> for the thing injecting bio's into the block stack to know what struct
->> device they egress&dma map on just to be able to do the dma_map up
->> front.
->>
->> So we must be able to go from this new phys_addr_t&flags to some BAR
->> information during dma_map.
->>
->> For instance we could use a small hash table of the upper phys addr
->> bits, or an interval tree, to do the lookup.
+On 25/6/19 15:05, Lee Jones wrote:
+> On Mon, 17 Jun 2019, Evan Green wrote:
 > 
-> Hmm, that sounds like dev_pagemap without the pages.
+>> For ECs that support it, the EC returns the number of slp_s0
+>> transitions and whether or not there was a timeout in the resume
+>> response. Expose the last resume result to usermode via debugfs so
+>> that usermode can detect and report S0ix timeouts.
+>>
+>> Signed-off-by: Evan Green <evgreen@chromium.org>
+> 
+> This still needs a platform/chrome Ack.
+> 
+>> ---
+>>
+>> Changes in v2:
+>>  - Moved from sysfs to debugfs (Enric)
+>>  - Added documentation (Enric)
+>>
+>>
+>> ---
+>>  Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
+>>  drivers/mfd/cros_ec.c                     |  6 +++++-
+>>  drivers/platform/chrome/cros_ec_debugfs.c |  7 +++++++
+>>  include/linux/mfd/cros_ec.h               |  1 +
+>>  4 files changed, 35 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+>> index 573a82d23c89..008b31422079 100644
+>> --- a/Documentation/ABI/testing/debugfs-cros-ec
+>> +++ b/Documentation/ABI/testing/debugfs-cros-ec
+>> @@ -32,3 +32,25 @@ Description:
+>>  		is used for synchronizing the AP host time with the EC
+>>  		log. An error is returned if the command is not supported
+>>  		by the EC or there is a communication problem.
+>> +
+>> +What:		/sys/kernel/debug/cros_ec/last_resume_result
 
-Yup, that's why I'd like to avoid it, but IMO it would still be an
-improvement to use a interval tree over struct pages because without
-struct page we just have a range and a length and it's relatively easy
-to check that the whole range belongs to a specific pci_dev. To be
-correct with the struct page approach we really have to loop through all
-pages to ensure they all belong to the same pci_dev which is a big pain.
+Thinking about it, as other the other interfaces, I'd do
 
-> There's already no requirement that dev_pagemap point to real /
-> present pages (DEVICE_PRIVATE) seems a straightforward extension to
-> use it for helping coordinate phys_addr_t in 'struct bio'. Then
-> Logan's future plans to let userspace coordinate p2p operations could
-> build on PTE_DEVMAP.
+s/cros_ec/<cros-ec-device>/
 
-Well I think the biggest difficulty with struct page for user space is
-dealing with cases when the struct pages of different types get mixed
-together (or even struct pages that are all P2P pages but from different
-PCI devices). We'd have to go through each page and ensure that each
-type gets it's own bio_vec with appropriate flags.
+I know that for now only cros_ec supports that, but we don't know what will
+happen in the future, specially now that the number of cros devices is incrementing.
 
-Though really, the whole mixed IO from userspace poses a bunch of
-problems. I'd prefer to just be able to say that a single IO can be all
-or nothing P2P memory from a single device.
+>> +Date:		June 2019
+>> +KernelVersion:	5.3
+>> +Description:
+>> +		Some ECs have a feature where they will track transitions to
+>> +		the (Intel) processor's SLP_S0 line, in order to detect cases
+>> +		where a system failed to go into S0ix. When the system resumes,
+>> +		an EC with this feature will return a summary of SLP_S0
+>> +		transitions that occurred. The last_resume_result file returns
+>> +		the most recent response from the AP's resume message to the EC.
+>> +
+>> +		The bottom 31 bits contain a count of the number of SLP_S0
+>> +		transitions that occurred since the suspend message was
+>> +		received. Bit 31 is set if the EC attempted to wake the
+>> +		system due to a timeout when watching for SLP_S0 transitions.
+>> +		Callers can use this to detect a wake from the EC due to
+>> +		S0ix timeouts. The result will be zero if no suspend
+>> +		transitions have been attempted, or the EC does not support
+>> +		this feature.
+>> +
+>> +		Output will be in the format: "0x%08x\n".
+>> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+>> index 5d5c41ac3845..2a9ac5213893 100644
+>> --- a/drivers/mfd/cros_ec.c
+>> +++ b/drivers/mfd/cros_ec.c
+>> @@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+>>  
+>>  	/* For now, report failure to transition to S0ix with a warning. */
+>>  	if (ret >= 0 && ec_dev->host_sleep_v1 &&
+>> -	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
+>> +	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
+>> +		ec_dev->last_resume_result =
+>> +			buf.u.resp1.resume_response.sleep_transitions;
+>> +
+>>  		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+>>  			  EC_HOST_RESUME_SLEEP_TIMEOUT,
+>>  			  "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
+>>  			  buf.u.resp1.resume_response.sleep_transitions &
+>>  			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
+>> +	}
+>>  
+>>  	return ret;
+>>  }
+>> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+>> index cd3fb9c22a44..663bebf699bf 100644
+>> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+>> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+>> @@ -447,6 +447,13 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+>>  	debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+>>  			    &cros_ec_uptime_fops);
+>>  
+>> +	if (!strcmp(ec->class_dev.kobj.name, CROS_EC_DEV_NAME)) {
 
-Logan
+For debugfs I don't care having the file exposed even is not supported, anyway
+there are some CROS_EC_DEV_NAME that won't support it, so just make this simple
+and create the file always.
 
+>> +		debugfs_create_x32("last_resume_result",
+>> +				   0444,
+>> +				   debug_info->dir,
+>> +				   &ec->ec_dev->last_resume_result);
+>> +	}
+>> +
+>>  	ec->debug_info = debug_info;
+>>  
+>>  	dev_set_drvdata(&pd->dev, ec);
+>> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+>> index 5ddca44be06d..45aba26db964 100644
+>> --- a/include/linux/mfd/cros_ec.h
+>> +++ b/include/linux/mfd/cros_ec.h
+>> @@ -155,6 +155,7 @@ struct cros_ec_device {
+>>  	struct ec_response_get_next_event_v1 event_data;
+>>  	int event_size;
+>>  	u32 host_event_wake_mask;
+>> +	u32 last_resume_result;
+>>  };
+>>  
+>>  /**
+> 
+
+Thanks,
+~ Enric
