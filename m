@@ -2,184 +2,124 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2766EC48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFF5C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16D920883
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8216120883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ku0oBhc7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7uUPnY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfFZBfu (ORCPT
+        id S1726783AbfFZBft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:35:50 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35867 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfFZBfK (ORCPT
+        Tue, 25 Jun 2019 21:35:49 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46949 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfFZBfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:35:10 -0400
-Received: by mail-lf1-f68.google.com with SMTP id q26so373559lfc.3;
-        Tue, 25 Jun 2019 18:35:08 -0700 (PDT)
+        Tue, 25 Jun 2019 21:35:46 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h21so610257qtn.13;
+        Tue, 25 Jun 2019 18:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Lr9hct+Hu7BhNIICiHqz94dDspYUGMjB7un5AqOfkn8=;
-        b=Ku0oBhc7ox12UpHV0e4vGJO6Na9rBkoowUz034Hz6tMy4JdaY0pPKq+h+FmwNkItCv
-         iD1ydpu/izyo1Giwh4q+fBwR54oexPlg/d+V6TJnl1Z7ikQ8CBiDHlK8EorcWecJOHK5
-         rLbKqMdVUsuTxYPueC3BoY0TBoFj0YxmNUMIvPbqf8ZGlt6wcdEGk1MSyZWuw/S0CZXg
-         NDzcACOMG706RCQB14/uSSu4Qqlu26PHMag115IMHdmN0Z1r534qhVFeS6/6+CnGWlMv
-         JkorFEig9VeTO0GFMNSixAiNY0R9I6fttai83g7fpWxXI1BKQZaWyE8yDMTubkGoppSU
-         UdxA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0jOVApdbcnmQ0gZ+s+iXjEnjmT2qng2C8MAWEXFhcLM=;
+        b=D7uUPnY0JIqehepH86/rg5CV9NOaQrvG3BqpmFHjf6mMuP2rRQze8DKufn7mYx2ZAd
+         wge+/l/A5dnUhkrbqswIWIKk9CZYofTFZyaj/lqvV85J1lLDAYfqxABlTKKNsvoByXUB
+         O4YRz6320HaOIaW6pBhHr+1/5OXnwdhKNBZjaDckxbWoOyHvkDEm6LULYvGrUAZ4qFKf
+         KatbGZKx/hCWWIwWTqi+krbMaf35cgwm5GRGkiCNhb1RhGFTChgut31GbwPL2HEkCwhY
+         Q0GIhvzU2TSSLq4QtYhBFb+CLcL3jcSBsjJNVEXLXhR4onWZ05glVZig+X5uSc7RYV4E
+         WTlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Lr9hct+Hu7BhNIICiHqz94dDspYUGMjB7un5AqOfkn8=;
-        b=b2sVZOfuWbfsAZzAPwgZoJ4xwdKabKpPUR/K5/nM+uF2lju4Y2AxzWmO6tYWqjjO4W
-         8Zl7vZ2NVMUjOatw5x+aoU1T4lwnnDnu2/P5hR/drdEK+qgMfKW047w2vIPL2WL/pVlh
-         OmDJrQgpuPYstySn1fTB1EaheMEiK59CxM/J/GOrCZAbYr3el2bjqMKQc9fcsH/zXdBA
-         KVxg8c4UG6bgeuvbsWQvfDW1P6vS0rM0Ua1wttHlnNKhOKi6TuxcwaO6JJ7aX/x6YmE3
-         1rXc6Ph3NkzPKUYkmeE8Az3yKwY1mQIip9YG6aUZpNejONRjoomkr2BkWHQXnPY1eyXm
-         /2yQ==
-X-Gm-Message-State: APjAAAXIKmmT0hFHWq2qz768pQ4ATQ9+hYh03ylAISYPKC3BI33oOXKv
-        Nc/XOnjQSh3xn8Wp0qePhJc=
-X-Google-Smtp-Source: APXvYqy0n6S1Lj8myiKSxHCEcfEqaPsT++bQniuhf8JpepIqsAk12irADspqX4dTWQ9iShQkKwveSA==
-X-Received: by 2002:ac2:4c29:: with SMTP id u9mr933290lfq.100.1561512907742;
-        Tue, 25 Jun 2019 18:35:07 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id 199sm2549581ljf.44.2019.06.25.18.35.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 18:35:07 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/17] PM / devfreq: tegra30: Add debug messages
-Date:   Wed, 26 Jun 2019 04:32:45 +0300
-Message-Id: <20190626013252.30470-12-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190626013252.30470-1-digetx@gmail.com>
-References: <20190626013252.30470-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0jOVApdbcnmQ0gZ+s+iXjEnjmT2qng2C8MAWEXFhcLM=;
+        b=q8oUS2tg2vGqTtNw4cbJTkUykSSIMj/hzvFwtWyFCyObS46OOTqUUTh5OuupK8QoZ/
+         jOi17I1LZLnss+L+fVTAtcVXE+la0PdecpkzKl8eyZgrI8TQtEVGKapRVDG+7jIDAz42
+         MUhOvY+fdMev8oIxcDvu5YtyBSM1/FIvMW8gyu93AE4P0oxZ11yjD+WsUkKMOkIAaPX+
+         gm6IGGiocnlzXbQOh6CLscpxM0wEWja/qejgH3qdzV3PL7YGVtzQcD4/xDCpj8ni9ucE
+         qQrAlRttZ/nFeRz4/TdmMsGYjHW4YqJxqIMPO/HPqH64yFawHnC9ZkvMKbcNacXoV6fx
+         oV0Q==
+X-Gm-Message-State: APjAAAUYloPckoW6EG/XO1U7cTAaOfiFHo/UXl22uI8gi0BY8e+hwp5B
+        Wg2UQxhfe8IlBbSYCrBAZPC4JjnK66YITu+V/Yk=
+X-Google-Smtp-Source: APXvYqzqQn3I+yuRy5UB66EDdkdlfdfXf+20eBNYN25S+bi1B5Ul4jyWQQqbEzJdDwwbejiFylmwtSgBMbjvcAd6eKs=
+X-Received: by 2002:aed:38c2:: with SMTP id k60mr1262888qte.83.1561512945624;
+ Tue, 25 Jun 2019 18:35:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190626003852.163986-1-allanzhang@google.com>
+In-Reply-To: <20190626003852.163986-1-allanzhang@google.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 25 Jun 2019 18:35:34 -0700
+Message-ID: <CAPhsuW7-gyJ0_8_YVhgEF-fYGmjuT=1m1+NkTa_7cwQdKdKLeg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v6 0/2] bpf: Allow bpf_skb_event_output for more
+ prog types
+To:     allanzhang <allanzhang@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add debug messages to know about what's happening in hardware and how
-driver reacts.
+On Tue, Jun 25, 2019 at 5:39 PM allanzhang <allanzhang@google.com> wrote:
+>
+> Software event output is only enabled by a few prog types right now (TC,
+> LWT out, XDP, sockops). Many other skb based prog types need
+> bpf_skb_event_output to produce software event.
+>
+> More prog types are enabled to access bpf_skb_event_output in this
+> patch.
+>
+> v2 changes:
+> Reformating log message.
+>
+> v3 changes:
+> Reformating log message.
+>
+> v4 changes:
+> Reformating log message.
+>
+> v5 changes:
+> Fix typos, reformat comments in event_output.c, move revision history to
+> cover letter.
+>
+> v6 changes:
+> fix Signed-off-by, fix fixup map creation.
+>
+> allanzhang (2):
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra30-devfreq.c | 35 +++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+I guess you manually fixed the name in the other two patches, but forgot
+this one. You can fix it in your .gitconfig file. Make sure to get the proper
+capital letters.
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 1e704289c129..8ef7ed8d7e10 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -41,6 +41,7 @@
- #define ACTMON_DEV_AVG_UPPER_WMARK				0x10
- #define ACTMON_DEV_AVG_LOWER_WMARK				0x14
- #define ACTMON_DEV_COUNT_WEIGHT					0x18
-+#define ACTMON_DEV_COUNT					0x1c
- #define ACTMON_DEV_AVG_COUNT					0x20
- #define ACTMON_DEV_INTR_STATUS					0x24
- 
-@@ -276,6 +277,9 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
- 					 unsigned long *lower,
- 					 unsigned long *upper)
- {
-+	struct device *ddev = tegra->devfreq->dev.parent;
-+	u32 offset = dev->config->offset;
-+
- 	/*
- 	 * Memory frequencies are guaranteed to have 1MHz granularity
- 	 * and thus we need this rounding down to get a proper watermarks
-@@ -288,6 +292,9 @@ static void tegra_actmon_get_lower_upper(struct tegra_devfreq *tegra,
- 	*lower = tegra_actmon_lower_freq(tegra, target_freq);
- 	*upper = tegra_actmon_upper_freq(tegra, target_freq);
- 
-+	dev_dbg(ddev, "%03x: target_freq %lu lower freq %lu upper freq %lu\n",
-+		offset, target_freq, *lower, *upper);
-+
- 	*lower /= KHZ;
- 	*upper /= KHZ;
- 
-@@ -367,11 +374,31 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
- 	device_writel(dev, lower + delta, ACTMON_DEV_LOWER_WMARK);
- }
- 
-+static void actmon_device_debug(struct tegra_devfreq *tegra,
-+				struct tegra_devfreq_device *dev,
-+				const char *prefix)
-+{
-+	dev_dbg(tegra->devfreq->dev.parent,
-+		"%03x: %s: 0x%08x 0x%08x a %u %u %u c %u %u %u b %lu cpu %u\n",
-+		dev->config->offset, prefix,
-+		device_readl(dev, ACTMON_DEV_INTR_STATUS),
-+		device_readl(dev, ACTMON_DEV_CTRL),
-+		device_readl(dev, ACTMON_DEV_AVG_COUNT),
-+		device_readl(dev, ACTMON_DEV_AVG_LOWER_WMARK),
-+		device_readl(dev, ACTMON_DEV_AVG_UPPER_WMARK),
-+		device_readl(dev, ACTMON_DEV_COUNT),
-+		device_readl(dev, ACTMON_DEV_LOWER_WMARK),
-+		device_readl(dev, ACTMON_DEV_UPPER_WMARK),
-+		dev->boost_freq, cpufreq_get(0));
-+}
-+
- static void actmon_isr_device(struct tegra_devfreq *tegra,
- 			      struct tegra_devfreq_device *dev)
- {
- 	u32 intr_status, dev_ctrl, avg_intr_mask;
- 
-+	actmon_device_debug(tegra, dev, "isr+");
-+
- 	dev->avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
- 	intr_status = device_readl(dev, ACTMON_DEV_INTR_STATUS);
- 	dev_ctrl = device_readl(dev, ACTMON_DEV_CTRL);
-@@ -421,6 +448,8 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
- 
- 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
- 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
-+
-+	actmon_device_debug(tegra, dev, "isr-");
- }
- 
- static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
-@@ -710,6 +739,7 @@ static struct devfreq_dev_profile tegra_devfreq_profile = {
- static int tegra_governor_get_target(struct devfreq *devfreq,
- 				     unsigned long *freq)
- {
-+	struct device *ddev = devfreq->dev.parent;
- 	struct devfreq_dev_status *stat;
- 	struct tegra_devfreq *tegra;
- 	struct tegra_devfreq_device *dev;
-@@ -732,6 +762,11 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
- 		dev_target_freq = actmon_update_target(tegra, dev);
- 
- 		target_freq = max(target_freq, dev_target_freq);
-+
-+		dev_dbg(ddev, "%03x: upd: dev_target_freq %lu\n",
-+			dev->config->offset, dev_target_freq);
-+
-+		actmon_device_debug(tegra, dev, "upd");
- 	}
- 
- 	*freq = target_freq * KHZ;
--- 
-2.22.0
+Also, please run ./scripts/checkpatch.pl on your patch files. This will help
+you find a lot of issues.
 
+Thanks,
+Song
+
+>   bpf: Allow bpf_skb_event_output for a few prog types
+>   bpf: Add selftests for bpf_perf_event_output
+>
+>  net/core/filter.c                             |  6 ++
+>  tools/testing/selftests/bpf/test_verifier.c   | 12 ++-
+>  .../selftests/bpf/verifier/event_output.c     | 94 +++++++++++++++++++
+>  3 files changed, 111 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/bpf/verifier/event_output.c
+>
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
