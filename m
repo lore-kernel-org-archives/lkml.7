@@ -2,71 +2,85 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C946C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35579C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A3D216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561574106;
-	bh=1Fa3GzD7Zx/S78fqFWID8nEnvt0Oqq0Uj2Y76wE8Eck=;
-	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
-	b=Wcsy17mV7NgsNS/XSfHzqou72c0txsX4dm7yQXi7GssyZP7e8Khf3ByTYe/3YHNhh
-	 3KRnbhwYsMCU6N+AeAuQz+JWm5U94fmPmBS2siLQGB7gn9SHj3qU9xZTbnTo8jTSwR
-	 vIaWLYs90/fEv8PWv1TIUmInFK5SHHTYV8E+mp64=
+	by mail.kernel.org (Postfix) with ESMTP id 09E48216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JE9favaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfFZSfE (ORCPT
+        id S1726688AbfFZSfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:35:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfFZSfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:35:01 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F3A7216FD;
-        Wed, 26 Jun 2019 18:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561574100;
-        bh=1Fa3GzD7Zx/S78fqFWID8nEnvt0Oqq0Uj2Y76wE8Eck=;
-        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
-        b=MPdbaLTT76g//kxRlojWUk7EQjgN29cR2W5ZlPPvKjbuXtAgdjwxiNijs1Cabxr+M
-         cmin0O9i9bpFq4oRY32rgqt52wg7usPpzW0xxaXPGiWMZDCNCMx1IMLf5UAo9qUXjp
-         TUxh3kbmGKjOhtn+ZJKmn2t6waE99w7PJaAsoVhk=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 26 Jun 2019 14:35:20 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:47084 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfFZSfS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:35:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=04YOcDLjot3ihaIK+O8DqmUkZ1/ZeU9r17gmohos7MI=; b=JE9favaLmIW7xwmMIJXeyJ+wxh
+        tit/6UQDt1ktt1DQKuSCV53K0rWRIhVovN8QuxRAI/HItb1tDl9Zrb/F9pJBKV5n1O0oyYM3jGXb/
+        DG64MCratex7p/P8h69Fo5+YUzvIeBo28M8TMsy9f0fGDjNw/VLNz4BCmMw2OUQGhsunbazxxvw7a
+        Ueggf1oUYsxLLMyDM4bn+TB0JekVqknnw/NoxT4pQITGWL2Mfs3y2DY/9blejIrClJv1t5cP1nXVj
+        0yoUwseIxWtOE4FJKFfeVLp7NkMPvyOgUP1/C+Q41HbAk3juTRcmyIill8MnuqOKn4zeUCXhXiZUV
+        y+PYeIwg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgClH-000123-9D; Wed, 26 Jun 2019 18:35:15 +0000
+Subject: Re: linux-next: Tree for Jun 26 (security/integrity/ima/)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+References: <20190626231617.1e858da3@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ee503bc1-a588-81f5-47e0-1762f590662f@infradead.org>
+Date:   Wed, 26 Jun 2019 11:35:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1558433454-27971-5-git-send-email-claudiu.beznea@microchip.com>
-References: <1558433454-27971-1-git-send-email-claudiu.beznea@microchip.com> <1558433454-27971-5-git-send-email-claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v4 4/4] clk: at91: sckc: add support for SAM9X60
-To:     Claudiu.Beznea@microchip.com, Ludovic.Desroches@microchip.com,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Claudiu.Beznea@microchip.com
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 26 Jun 2019 11:34:59 -0700
-Message-Id: <20190626183500.6F3A7216FD@mail.kernel.org>
+In-Reply-To: <20190626231617.1e858da3@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Claudiu.Beznea@microchip.com (2019-05-21 03:11:33)
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
->=20
-> Add support for SAM9X60's slow clock.
->=20
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
+On 6/26/19 6:16 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> The sparc64 builds are broken in this tree, sorry.
+> 
+> Changes since 20190625:
+> 
 
-Applied to clk-next
+on x86_64:
 
+11 warnings like this one (in a randconfig build):
+
+  CC      security/integrity/ima/ima_fs.o
+In file included from ../security/integrity/ima/ima.h:25:0,
+                 from ../security/integrity/ima/ima_fs.c:26:
+../security/integrity/ima/../integrity.h:170:18: warning: ‘struct key_acl’ declared inside parameter list [enabled by default]
+           struct key_acl *acl)
+                  ^
+../security/integrity/ima/../integrity.h:170:18: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
+
+
+
+-- 
+~Randy
