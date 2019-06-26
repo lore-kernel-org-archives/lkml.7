@@ -2,138 +2,105 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6795DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD884C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4880E214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC12214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561557677;
+	bh=TMiDr3b3Y4PElBZFWsF2IAY1Jk5UNAseahASLoNQFyM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aK6je22ceaAJMIdyH2CAnwbNfR4fXZOKfUn/LQ1a5eJuRw9Nv1TjPh8kDIBQLfeur
+	 rYSGJ1ZKSZgyOhFRMIoQkojTCX/dfk4BTYQYHgU+u3PRfWhkk1dXQ6eIiNWsSD8uIN
+	 sn1QjXvLkroCbqwvZEnxeesHh7UUwKf8+Ldcj7sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfFZN7I (ORCPT
+        id S1727489AbfFZOBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:59:08 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39362 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZN7H (ORCPT
+        Wed, 26 Jun 2019 10:01:16 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36785 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfFZOBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:59:07 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i125so1695128qkd.6;
-        Wed, 26 Jun 2019 06:59:07 -0700 (PDT)
+        Wed, 26 Jun 2019 10:01:15 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so2460737qtl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BA3uP6UgDm/mAQcku8N1cgzRBe1OWyg/4vbkTvXQlT4=;
+        b=e80B9uUbcZlc8oBXlplXQG2t4wv0bfJCY1Hvdz04UajojzPpaJDUqIIMajjUA5vVfb
+         XlwF1nm+OgZlHEZqB17i/GgqZQuaA6VOWarowyHZhfCBXXVyBY4E8/defTsbo2hEg4Ru
+         2XGusBWEpKW7/IbWNCiZ+nCF6heDq6cNDZXHUmL5lMG2mZOSMJuw1d1RNRg3x1Ram7g2
+         5uslc6xC44K5bWhkM2MDDActklBT8KG1ywLJ0DtP8d42zc7SJ4pU80XoZp6u4tJb5QLv
+         VP056gdTbzoB6b+zNetlM3XaMEec0hWJavzBpOZwfmG3ctlt1uREzm7UazQS0yd+drOe
+         myYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pXxa75AgHN+kU67J58uXazk7bwNbQuP7iiHjqwf4SQ4=;
-        b=gWVaiNG0AiSBIu6RNEZ0S4AHFqEJe2bvqxr04kC5HxBjVUnql1ZJyobnXjQMbPOFd8
-         WYg9lwyQPObS8rNb0s2h6h/m1TducNij9eOejFBq/n0/3QLqw5JvF6pn38PHBw1aRc3W
-         xOJParZGaq5mFy8SggNuC+9HGtLMKPVWBrr+j+sHc3X89MD8Z0y6xm6lCPKQ3pe7Qc0/
-         RLvycB36FIJ+kzCNVWi1UfNeLosSNxBlRqnsAmratmfst533DatZ0Y47k7Af8nOBNzXX
-         WirHVGfoG1m6N0/J7gaQqRIVbpD8+Li+TMiPw+fjS3g7KUfr0akSzzLqWMACpGP505eo
-         PpFA==
-X-Gm-Message-State: APjAAAWnb8iQ/mmxvFyaFGUGjBRL4eKeqPJBaLAH1qYjSgPSHYGW8PGv
-        xVK5yw7wxCjTYEbWNfjXi4fTbDPOjCE0g5+Z0U8=
-X-Google-Smtp-Source: APXvYqzCvw9vZuTjsXYQyBmuA+cZgPu3mswH6EYEmNOv8664CbCqBtT59doitfBhiAj6kcOMBfEiw3S5FFDSDbmyUmo=
-X-Received: by 2002:a37:76c5:: with SMTP id r188mr3978511qkc.394.1561557546341;
- Wed, 26 Jun 2019 06:59:06 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BA3uP6UgDm/mAQcku8N1cgzRBe1OWyg/4vbkTvXQlT4=;
+        b=uJIxHpz6M51GAO0M31Bxr4lT55dO/a3pr8fIcuavLRQrQh0aH+GEg5ZAisjJuDvHHP
+         CLJ/dBSGha22hZokH1DJTfMrcOzKJ/PrUAJYARXr2RZHMtscGmBzLy3ZC9UNcUlI9Jw0
+         O/gS4ZCl2fWKTyMcFaOckcwyVWwTheabR11QJ/mL6Joek2P28xvm76La4TvUBLSBnEd8
+         o8klVl5yDZCMJJDY5fODKhfMKWgnowUhB0K3KExHc5kZqa4XXgtTDbxMrufbYNVoMMPg
+         ff6ExYv7FH4qOrUBiNRaoS80CAMPyDsXgumkpzTD7en0X/lb5ba8Qy00XRbEbRyKAK+o
+         P+Rg==
+X-Gm-Message-State: APjAAAXgRULVDQickZ0F+TIqljkGmtNJADJi2DMI4ObOpXDmvPSxWArg
+        7TsmexHzL7dTmavUfcEaRx8=
+X-Google-Smtp-Source: APXvYqwuKnJRXPujB0mz5pe3tc6XJASAmIlm8quC0oPvyghXhKHMSZkfgT72MrFTvZxLwAW+Ki1y2A==
+X-Received: by 2002:a0c:bd91:: with SMTP id n17mr3642103qvg.128.1561557674542;
+        Wed, 26 Jun 2019 07:01:14 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::953f])
+        by smtp.gmail.com with ESMTPSA id p13sm7994630qkj.4.2019.06.26.07.01.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 07:01:13 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 07:01:12 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 0/6] workqueue: convert to raw_spinlock_t
+Message-ID: <20190626140112.GU657710@devbig004.ftw2.facebook.com>
+References: <20190613145027.27753-1-bigeasy@linutronix.de>
+ <20190626071719.psyftqdop4ny3zxd@linutronix.de>
+ <20190626134957.GT657710@devbig004.ftw2.facebook.com>
+ <alpine.DEB.2.21.1906261551190.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org> <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <d533b708-c97a-710d-1138-3ae79107f209@linaro.org> <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
- <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org> <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
- <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net> <edea19ef-f225-bdcd-f394-77e326d1d3ad@linaro.org>
-In-Reply-To: <edea19ef-f225-bdcd-f394-77e326d1d3ad@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 26 Jun 2019 15:58:48 +0200
-Message-ID: <CAK8P3a3wHe_6ay8P+F9Vo=k19P5fifs6RWozxFF5nGYYjO_=Xw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Alex Elder <elder@linaro.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dcbw@redhat.com>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906261551190.32342@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 3:39 PM Alex Elder <elder@linaro.org> wrote:
-> On 6/25/19 9:19 AM, Johannes Berg wrote:
-> > On Mon, 2019-06-24 at 18:40 +0200, Arnd Bergmann wrote:
->
-> > So, IOW, I'm not sure I see how you'd split that up. I guess you could
-> > if you actually do something like the "rmnet" model, and I suppose
-> > you're free to do that for IPA if you like, but I tend to think that's
-> > actually a burden, not a win since you just get more complex code that
-> > needs to interact with more pieces. A single driver for a single
-> > hardware that knows about the few types of channels seems simpler to me.
-> >
-> >> - to answer Johannes question, my understanding is that the interface
-> >>   between kernel and firmware/hardware for IPA has a single 'struct
-> >>   device' that is used for both the data and the control channels,
-> >>   rather than having a data channel and an independent control device,
-> >>   so this falls into the same category as the Intel one (please correct
-> >>   me on that)
->
-> I don't think that's quite right, but it might be partially
-> right.  There is a single device representing IPA, but the
-> picture is a little more complicated.
->
-> The IPA hardware is actually something that sits *between* the
-> AP and the modem.  It implements one form of communication
-> pathway (IP data), but there are others (including QMI, which
-> presents a network-like interface but it's actually implemented
-> via clever use of shared memory and interrupts).
+Hello,
 
-Can you clarify how QMI fits in here? Do you mean one has to
-talk to both IPA and QMI to use the modem, or are these two
-alternative implementations for the same basic purpose?
+On Wed, Jun 26, 2019 at 03:53:43PM +0200, Thomas Gleixner wrote:
+> > I don't now what to make of the series.  AFAICS, there's no benefit to
+> > mainline.  What am I missing?
+> 
+> there is no downside either, right?
 
-> > That sounds about the same then, right.
-> >
-> > Are the control channels to IPA are actually also tunnelled over the
-> > rmnet protocol? And even if they are, perhaps they have a different
-> > hardware queue or so? That'd be the case for Intel - different hardware
-> > queue, same (or at least similar) protocol spoken for the DMA hardware
-> > itself, but different contents of the messages obviously.
->
-> I want to be careful talking about "control" but for IPA it comes
-> from user space.  For the purpose of getting initial code upstream,
-> all of that control functionality (which was IOCTL based) has been
-> removed, and a fixed configuration is assumed.
+Sure, but that usually isn't enough for merging patches, right?
 
-My previous understanding was that from the hardware perspective
-there is only one control interface, which is for IPA. Part of this
-is abstracted to user space with ioctl commands to the IPA driver,
-and then one must set up rmnet to match these by configuring
-an rmnet device over netlink messages from user space, but
-rmnet does not have a control protocol with the hardware.
+> It helps with the ongoing RT integration into the mainline kernel and we
+> would appreciate if we can get the non controversial bits an pieces sorted.
 
-The exception here is the flow control, which is handled using
-in-band XON/OFF messages from the modem to rmnet (and
-corresponding Acks the other way) that IPA just passes through.
+I see.  I understand the intention and it was a lot clearer when the
+changes were beneficial to mainline kernel too and I'm not sure this
+is a decision we wanna make per-subsystem.  Maybe I'm just out of
+loop.  Are we generally doing this?
 
-If we also need to talk to QMI, that would be something completely
-different though.
+Thanks.
 
-       Arnd
+-- 
+tejun
