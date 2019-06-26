@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69967C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAEBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B9B2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA862063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N//4HeEC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qt1wzdpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfFZM2O (ORCPT
+        id S1727685AbfFZM2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:28:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42938 "EHLO
+        Wed, 26 Jun 2019 08:28:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43014 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727609AbfFZM2M (ORCPT
+        with ESMTP id S1727660AbfFZM2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:28:12 -0400
+        Wed, 26 Jun 2019 08:28:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MSqhsOhHHQhh/vRiKblwUI14+k+RDGeRz1Fjt2V0teQ=; b=N//4HeECq3UJOCKX62rkn37gSh
-        ROohrNo4+XO2CypRboXwHfZL+x2pNZEqi/UIkkXTH/PQ3nlapb8sMzHVKe1fHcLMMZzb6wYHCmzyH
-        DDjydit/uxRXm8YaKxHe3ZtRKYidhunf9j4brsDVxF63wuI/6JXONJeVNPHGm5xq7ao/0hJ+pWvNA
-        B389MJkFLJVTCKHUMYaoZaXc109b5oFZFWiSVj2wstJp2EODd1ShO4JNs5qDLmHPnz9nTOowKwXpG
-        kdLfgq9FfnwVfh6DxraUsJMGYBfzTxKILw6eBtZgS+WwfEUfRQeXrnJ0FkZJWo4zlmzPKAZv7ufMy
-        ndCZw/WA==;
+        bh=wJ4xmBbrpfmUG188a6jPO21+BmohIhmVPW5AXcG365o=; b=qt1wzdpeXOioJoeLjcBGzBBVU/
+        Sr6D01p4bOPlfFv7A/XbcaGQsl1IH01GeMcCCke5SJh7+fpyw5+rIKzgn9byxwe1kgVAu1j/h7ROQ
+        4lvA5eeeukgmWSeBeKgEDuEBjjwRhGPDC9AIWQm+7dOYdaQhTinbVKVEskkE0Io3IDHriXiis+aB9
+        8mEJ/G0aXx04YeP8uuuRQuTeOrRGeFyVQ4Rx8U+Noyv62xRv450IEmFtFO+E+MvzvI1V277cC6Z8i
+        R9Dvb48L9i++e+EKM3J8sWleQK00iEHpItPQXvfVhC/OdM0WIglOrdTN/KRiePoYY842rwdj3ZwLW
+        WRt9i5hw==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg71y-0001Vr-Ul; Wed, 26 Jun 2019 12:28:07 +0000
+        id 1hg726-0001ZQ-Su; Wed, 26 Jun 2019 12:28:15 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -46,9 +46,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/25] memremap: provide an optional internal refcount in struct dev_pagemap
-Date:   Wed, 26 Jun 2019 14:27:14 +0200
-Message-Id: <20190626122724.13313-16-hch@lst.de>
+Subject: [PATCH 18/25] nouveau: use alloc_page_vma directly
+Date:   Wed, 26 Jun 2019 14:27:17 +0200
+Message-Id: <20190626122724.13313-19-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626122724.13313-1-hch@lst.de>
 References: <20190626122724.13313-1-hch@lst.de>
@@ -60,238 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide an internal refcounting logic if no ->ref field is provided
-in the pagemap passed into devm_memremap_pages so that callers don't
-have to reinvent it poorly.
+hmm_vma_alloc_locked_page is scheduled to go away, use the proper
+mm function directly.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 ---
- include/linux/memremap.h          |  4 ++
- kernel/memremap.c                 | 64 ++++++++++++++++++++++++-------
- tools/testing/nvdimm/test/iomap.c | 58 ++++++++++++++++++++++------
- 3 files changed, 101 insertions(+), 25 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index e25685b878e9..f8a5b2a19945 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -95,6 +95,8 @@ struct dev_pagemap_ops {
-  * @altmap: pre-allocated/reserved memory for vmemmap allocations
-  * @res: physical address range covered by @ref
-  * @ref: reference count that pins the devm_memremap_pages() mapping
-+ * @internal_ref: internal reference if @ref is not provided by the caller
-+ * @done: completion for @internal_ref
-  * @dev: host device of the mapping for debug
-  * @data: private data pointer for page_free()
-  * @type: memory type: see MEMORY_* in memory_hotplug.h
-@@ -105,6 +107,8 @@ struct dev_pagemap {
- 	struct vmem_altmap altmap;
- 	struct resource res;
- 	struct percpu_ref *ref;
-+	struct percpu_ref internal_ref;
-+	struct completion done;
- 	struct device *dev;
- 	enum memory_type type;
- 	unsigned int flags;
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index eee490e7d7e1..bea6f887adad 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -29,7 +29,7 @@ static void devmap_managed_enable_put(void *data)
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index 40c47d6a7d78..a50f6fd2fe24 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -148,11 +148,12 @@ nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
+ 		if (!spage || !(src_pfns[i] & MIGRATE_PFN_MIGRATE))
+ 			continue;
  
- static int devmap_managed_enable_get(struct device *dev, struct dev_pagemap *pgmap)
- {
--	if (!pgmap->ops->page_free) {
-+	if (!pgmap->ops || !pgmap->ops->page_free) {
- 		WARN(1, "Missing page_free method\n");
- 		return -EINVAL;
- 	}
-@@ -75,6 +75,24 @@ static unsigned long pfn_next(unsigned long pfn)
- #define for_each_device_pfn(pfn, map) \
- 	for (pfn = pfn_first(map); pfn < pfn_end(map); pfn = pfn_next(pfn))
+-		dpage = hmm_vma_alloc_locked_page(vma, addr);
++		dpage = alloc_page_vma(GFP_HIGHUSER, vma, addr);
+ 		if (!dpage) {
+ 			dst_pfns[i] = MIGRATE_PFN_ERROR;
+ 			continue;
+ 		}
++		lock_page(dpage);
  
-+static void dev_pagemap_kill(struct dev_pagemap *pgmap)
-+{
-+	if (pgmap->ops && pgmap->ops->kill)
-+		pgmap->ops->kill(pgmap);
-+	else
-+		percpu_ref_kill(pgmap->ref);
-+}
-+
-+static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
-+{
-+	if (pgmap->ops && pgmap->ops->cleanup) {
-+		pgmap->ops->cleanup(pgmap);
-+	} else {
-+		wait_for_completion(&pgmap->done);
-+		percpu_ref_exit(pgmap->ref);
-+	}
-+}
-+
- static void devm_memremap_pages_release(void *data)
- {
- 	struct dev_pagemap *pgmap = data;
-@@ -84,10 +102,10 @@ static void devm_memremap_pages_release(void *data)
- 	unsigned long pfn;
- 	int nid;
- 
--	pgmap->ops->kill(pgmap);
-+	dev_pagemap_kill(pgmap);
- 	for_each_device_pfn(pfn, pgmap)
- 		put_page(pfn_to_page(pfn));
--	pgmap->ops->cleanup(pgmap);
-+	dev_pagemap_cleanup(pgmap);
- 
- 	/* pages are dead and unused, undo the arch mapping */
- 	align_start = res->start & ~(SECTION_SIZE - 1);
-@@ -114,20 +132,29 @@ static void devm_memremap_pages_release(void *data)
- 		      "%s: failed to free all reserved pages\n", __func__);
- }
- 
-+static void dev_pagemap_percpu_release(struct percpu_ref *ref)
-+{
-+	struct dev_pagemap *pgmap =
-+		container_of(ref, struct dev_pagemap, internal_ref);
-+
-+	complete(&pgmap->done);
-+}
-+
- /**
-  * devm_memremap_pages - remap and provide memmap backing for the given resource
-  * @dev: hosting device for @res
-  * @pgmap: pointer to a struct dev_pagemap
-  *
-  * Notes:
-- * 1/ At a minimum the res, ref and type and ops members of @pgmap must be
-- *    initialized by the caller before passing it to this function
-+ * 1/ At a minimum the res and type members of @pgmap must be initialized
-+ *    by the caller before passing it to this function
-  *
-  * 2/ The altmap field may optionally be initialized, in which case
-  *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
-  *
-- * 3/ pgmap->ref must be 'live' on entry and will be killed and reaped
-- *    at devm_memremap_pages_release() time, or if this routine fails.
-+ * 3/ The ref field may optionally be provided, in which pgmap->ref must be
-+ *    'live' on entry and will be killed and reaped at
-+ *    devm_memremap_pages_release() time, or if this routine fails.
-  *
-  * 4/ res is expected to be a host memory range that could feasibly be
-  *    treated as a "System RAM" range, i.e. not a device mmio range, but
-@@ -175,10 +202,21 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 		break;
- 	}
- 
--	if (!pgmap->ref || !pgmap->ops || !pgmap->ops->kill ||
--	    !pgmap->ops->cleanup) {
--		WARN(1, "Missing reference count teardown definition\n");
--		return ERR_PTR(-EINVAL);
-+	if (!pgmap->ref) {
-+		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
-+			return ERR_PTR(-EINVAL);
-+
-+		init_completion(&pgmap->done);
-+		error = percpu_ref_init(&pgmap->internal_ref,
-+				dev_pagemap_percpu_release, 0, GFP_KERNEL);
-+		if (error)
-+			return ERR_PTR(error);
-+		pgmap->ref = &pgmap->internal_ref;
-+	} else {
-+		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
-+			WARN(1, "Missing reference count teardown definition\n");
-+			return ERR_PTR(-EINVAL);
-+		}
- 	}
- 
- 	if (need_devmap_managed) {
-@@ -296,8 +334,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
-  err_pfn_remap:
- 	pgmap_array_delete(res);
-  err_array:
--	pgmap->ops->kill(pgmap);
--	pgmap->ops->cleanup(pgmap);
-+	dev_pagemap_kill(pgmap);
-+	dev_pagemap_cleanup(pgmap);
- 	return ERR_PTR(error);
- }
- EXPORT_SYMBOL_GPL(devm_memremap_pages);
-diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/iomap.c
-index 82f901569e06..cd040b5abffe 100644
---- a/tools/testing/nvdimm/test/iomap.c
-+++ b/tools/testing/nvdimm/test/iomap.c
-@@ -100,26 +100,60 @@ static void nfit_test_kill(void *_pgmap)
- {
- 	struct dev_pagemap *pgmap = _pgmap;
- 
--	WARN_ON(!pgmap || !pgmap->ref || !pgmap->ops || !pgmap->ops->kill ||
--		!pgmap->ops->cleanup);
--	pgmap->ops->kill(pgmap);
--	pgmap->ops->cleanup(pgmap);
-+	WARN_ON(!pgmap || !pgmap->ref);
-+
-+	if (pgmap->ops && pgmap->ops->kill)
-+		pgmap->ops->kill(pgmap);
-+	else
-+		percpu_ref_kill(pgmap->ref);
-+
-+	if (pgmap->ops && pgmap->ops->cleanup) {
-+		pgmap->ops->cleanup(pgmap);
-+	} else {
-+		wait_for_completion(&pgmap->done);
-+		percpu_ref_exit(pgmap->ref);
-+	}
-+}
-+
-+static void dev_pagemap_percpu_release(struct percpu_ref *ref)
-+{
-+	struct dev_pagemap *pgmap =
-+		container_of(ref, struct dev_pagemap, internal_ref);
-+
-+	complete(&pgmap->done);
- }
- 
- void *__wrap_devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- {
-+	int error;
- 	resource_size_t offset = pgmap->res.start;
- 	struct nfit_test_resource *nfit_res = get_nfit_res(offset);
- 
--	if (nfit_res) {
--		int rc;
--
--		rc = devm_add_action_or_reset(dev, nfit_test_kill, pgmap);
--		if (rc)
--			return ERR_PTR(rc);
--		return nfit_res->buf + offset - nfit_res->res.start;
-+	if (!nfit_res)
-+		return devm_memremap_pages(dev, pgmap);
-+
-+	pgmap->dev = dev;
-+	if (!pgmap->ref) {
-+		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
-+			return ERR_PTR(-EINVAL);
-+
-+		init_completion(&pgmap->done);
-+		error = percpu_ref_init(&pgmap->internal_ref,
-+				dev_pagemap_percpu_release, 0, GFP_KERNEL);
-+		if (error)
-+			return ERR_PTR(error);
-+		pgmap->ref = &pgmap->internal_ref;
-+	} else {
-+		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
-+			WARN(1, "Missing reference count teardown definition\n");
-+			return ERR_PTR(-EINVAL);
-+		}
- 	}
--	return devm_memremap_pages(dev, pgmap);
-+
-+	error = devm_add_action_or_reset(dev, nfit_test_kill, pgmap);
-+	if (error)
-+		return ERR_PTR(error);
-+	return nfit_res->buf + offset - nfit_res->res.start;
- }
- EXPORT_SYMBOL_GPL(__wrap_devm_memremap_pages);
- 
+ 		dst_pfns[i] = migrate_pfn(page_to_pfn(dpage)) |
+ 			      MIGRATE_PFN_LOCKED;
 -- 
 2.20.1
 
