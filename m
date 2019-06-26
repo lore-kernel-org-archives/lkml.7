@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCB2C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EA3C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8961A208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7853120659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520674;
-	bh=ys04XKG9OTFvNHighIbLcmt8u6p1aa7GDYZCh208OpQ=;
+	s=default; t=1561520682;
+	bh=2/iTBu5sRGIBOMTrb48ns+ANtLKNzem3E2bKHZlJJ00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMKdfs+jUuVXY+WHuXJXb04BfMwMq+XWbPFOo3WTbYqEgBncb7bEe7ojHhCOksXLb
-	 KamUa+xHnPhAaKRSeyNBNdLjrO+nvkMPl6TdLThWh4MD2kdViAvZeoA481CvdsvbZ+
-	 anSgX8f46ZNUpzXZH8WyYnMNROhWmUV7wLdY4SWs=
+	b=hDAevPi9ojBbW1WaSBr4MScukp3ljE/USildg1Rbgrys3jhefxnZfFuvmkO9dMmjF
+	 U6uYN9mGYAUuHK6hD3YeQxCF9WCAz/5K8gvVnFH6Drb6B143ehClLe8s7f2O2wnDkl
+	 9q3xiOvfKdoWDmC/EVS7jcihbZ2eYaHf7EMQqmkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfFZDod (ORCPT
+        id S1727637AbfFZDol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55838 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727563AbfFZDoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:44:30 -0400
+        id S1727599AbfFZDof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:44:35 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38DED205ED;
-        Wed, 26 Jun 2019 03:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F2320659;
+        Wed, 26 Jun 2019 03:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520669;
-        bh=ys04XKG9OTFvNHighIbLcmt8u6p1aa7GDYZCh208OpQ=;
+        s=default; t=1561520674;
+        bh=2/iTBu5sRGIBOMTrb48ns+ANtLKNzem3E2bKHZlJJ00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pNrnbYoCWqJhhqIlFj0Vk5mfLVoNJoH9FpjH5fZC/cejkq/FkZ8z7j7UzJWXLcJ7c
-         5sTtn0NUozYezhfklkiulZQUNVIZKt1CK7qa0eHKlw+K3ZGR5kbwGWKniiihrJvBXL
-         kw7CdMVX5hcpRu+4BKJBeYnA4kQ+Hq/qCyymkVns=
+        b=qxvnelDDOHzsEBckwf9Srf1RUINBylAk5epiLZx6Dv+bhR6tLJdhWtk/4HAMROgew
+         khI/v+gak2VnhKtAVCGXFO3S5jgQOtl24PyTErpSQ9OgUX7quTLu1akYrO9rvf6WHj
+         5hLy62cqIPImy+OqkF/EuBDLDlREvZ3zH9UNHqZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 20/34] SoC: rt274: Fix internal jack assignment in set_jack callback
-Date:   Tue, 25 Jun 2019 23:43:21 -0400
-Message-Id: <20190626034335.23767-20-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 23/34] drm: panel-orientation-quirks: Add quirk for GPD MicroPC
+Date:   Tue, 25 Jun 2019 23:43:24 -0400
+Message-Id: <20190626034335.23767-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,53 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 04268bf2757a125616b6c2140e6250f43b7b737a ]
+[ Upstream commit 652b8b086538c8a10de5aa5cbdaef79333b46358 ]
 
-When we call snd_soc_component_set_jack(component, NULL, NULL) we should
-set rt274->jack to passed jack, so when interrupt is triggered it calls
-snd_soc_jack_report(rt274->jack, ...) with proper value.
+GPD has done it again, make a nice device (good), use way too generic
+DMI strings (bad) and use a portrait screen rotated 90 degrees (ugly).
 
-This fixes problem in machine where in register, we call
-snd_soc_register(component, &headset, NULL), which just calls
-rt274_mic_detect via callback.
-Now when machine driver is removed "headset" will be gone, so we
-need to tell codec driver that it's gone with:
-snd_soc_register(component, NULL, NULL), but we also need to be able
-to handle NULL jack argument here gracefully.
-If we don't set it to NULL, next time the rt274_irq runs it will call
-snd_soc_jack_report with first argument being invalid pointer and there
-will be Oops.
+Because of the too generic DMI strings this entry is also doing bios-date
+matching, so the gpd_micropc data struct may very well need to be updated
+with some extra bios-dates in the future.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190524125759.14131-2-hdegoede@redhat.com
+(cherry picked from commit f2f2bb60d998abde10de7e483ef9e17639892450)
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt274.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
-index 18a931c25ca5..f09f2d87ac60 100644
---- a/sound/soc/codecs/rt274.c
-+++ b/sound/soc/codecs/rt274.c
-@@ -398,6 +398,8 @@ static int rt274_mic_detect(struct snd_soc_component *component,
- {
- 	struct rt274_priv *rt274 = snd_soc_component_get_drvdata(component);
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index 088363675940..b44bed554211 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -42,6 +42,14 @@ static const struct drm_dmi_panel_orientation_data asus_t100ha = {
+ 	.orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP,
+ };
  
-+	rt274->jack = jack;
++static const struct drm_dmi_panel_orientation_data gpd_micropc = {
++	.width = 720,
++	.height = 1280,
++	.bios_dates = (const char * const []){ "04/26/2019",
++		NULL },
++	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
++};
 +
- 	if (jack == NULL) {
- 		/* Disable jack detection */
- 		regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
-@@ -405,7 +407,6 @@ static int rt274_mic_detect(struct snd_soc_component *component,
- 
- 		return 0;
- 	}
--	rt274->jack = jack;
- 
- 	regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
- 				RT274_IRQ_EN, RT274_IRQ_EN);
+ static const struct drm_dmi_panel_orientation_data gpd_pocket = {
+ 	.width = 1200,
+ 	.height = 1920,
+@@ -93,6 +101,14 @@ static const struct dmi_system_id orientation_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100HAN"),
+ 		},
+ 		.driver_data = (void *)&asus_t100ha,
++	}, {	/* GPD MicroPC (generic strings, also match on bios date) */
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
++		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
++		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Default string"),
++		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Default string"),
++		},
++		.driver_data = (void *)&gpd_micropc,
+ 	}, {	/*
+ 		 * GPD Pocket, note that the the DMI data is less generic then
+ 		 * it seems, devices with a board-vendor of "AMI Corporation"
 -- 
 2.20.1
 
