@@ -2,113 +2,213 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A8CC48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040EAC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896A820645
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qVcqxgkY"
+	by mail.kernel.org (Postfix) with ESMTP id CBBE820645
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfFZCvA (ORCPT
+        id S1726599AbfFZCwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:51:00 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60304 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFZCvA (ORCPT
+        Tue, 25 Jun 2019 22:52:03 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:58716 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfFZCwD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:51:00 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2mgg6039188;
-        Wed, 26 Jun 2019 02:50:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=AE6RYTrK+I5OPTA10wmaU4DvOP5vouFz+RVrW+se/Os=;
- b=qVcqxgkYGttKeLcU9M9zujInXCZy2LMCU7udnux5OWq5s9HdiDj1ak97oDRLynjGO3XO
- yNX4N7NHWJuYOk0dy4bPTEnOcuaY3eaHP/lbwHb07sRrsTapopiQUGVAU2i5binx5hOr
- TG9TDwmvSPz7lurX1N+P8sPrmCmeiMTSihSdq8tsL+f3uA6PdWg9behmEAFf4KXYRRPZ
- Knc0vRcHykFisuHMMQWDIvztT7AVNxt+/S9FqvM+47p3kYf+xaYqtKVIp1BuUjCY4GFw
- D5sbMIKPWxv85lEL+fvMXA05ReK90Ttnq4fjLWCDWPZgQ/362eINESPXIAsnCDfv9w+5 1A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2t9c9pqkr0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 02:50:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2omOB054233;
-        Wed, 26 Jun 2019 02:50:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t9p6uh82r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 02:50:53 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5Q2ooFK031644;
-        Wed, 26 Jun 2019 02:50:50 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 19:50:50 -0700
-To:     Eric Wheeler <bcache@lists.ewheeler.net>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list\:BCACHE \(BLOCK LAYER CACHE\)" 
-        <linux-bcache@vger.kernel.org>
-Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent for hardware raid5/6
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>
-        <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>
-        <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>
-        <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
-        <yq17e9ao9c3.fsf@oracle.com>
-        <alpine.LRH.2.11.1906260005570.1114@mx.ewheeler.net>
-Date:   Tue, 25 Jun 2019 22:50:47 -0400
-In-Reply-To: <alpine.LRH.2.11.1906260005570.1114@mx.ewheeler.net> (Eric
-        Wheeler's message of "Wed, 26 Jun 2019 00:23:09 +0000 (UTC)")
-Message-ID: <yq1ef3hm54o.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 25 Jun 2019 22:52:03 -0400
+Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
+        by 156.147.23.51 with ESMTP; 26 Jun 2019 11:51:59 +0900
+X-Original-SENDERIP: 156.147.1.125
+X-Original-MAILFROM: byungchul.park@lge.com
+Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
+        by 156.147.1.125 with ESMTP; 26 Jun 2019 11:51:59 +0900
+X-Original-SENDERIP: 10.177.222.33
+X-Original-MAILFROM: byungchul.park@lge.com
+Date:   Wed, 26 Jun 2019 11:51:20 +0900
+From:   Byungchul Park <byungchul.park@lge.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@lge.com
+Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
+Message-ID: <20190626025120.GA3452@X58A-UD3R>
+References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
+ <20190624164624.GA41314@google.com>
+ <20190624172551.GI26519@linux.ibm.com>
+ <20190625024100.GA10912@X58A-UD3R>
+ <20190625133115.GV26519@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=886
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906260031
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=939 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906260031
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625133115.GV26519@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 25, 2019 at 06:31:15AM -0700, Paul E. McKenney wrote:
+> On Tue, Jun 25, 2019 at 11:41:00AM +0900, Byungchul Park wrote:
+> > On Mon, Jun 24, 2019 at 10:25:51AM -0700, Paul E. McKenney wrote:
+> > > On Mon, Jun 24, 2019 at 12:46:24PM -0400, Joel Fernandes wrote:
+> > > > On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
+> > > > > Hello rcu folks,
+> > > > > 
+> > > > > I thought it'd better to announce it if those spawnings fail because of
+> > > > > !rcu_scheduler_fully_active.
+> > > > > 
+> > > > > Of course, with the current code, it never happens though.
+> > > > > 
+> > > > > Thoughts?
+> > > > 
+> > > > It seems in the right spirit, but with your patch a warning always fires.
+> > > > rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
+> > > > from hotplug paths.
+> > > > 
+> > > > Warning splat stack looks like:
+> > > > 
+> > > > [    0.398767] Call Trace:
+> > > > [    0.398775]  rcu_init+0x6aa/0x724
+> > > > [    0.398779]  start_kernel+0x220/0x4a2
+> > > > [    0.398780]  ? copy_bootdata+0x12/0xac
+> > > > [    0.398782]  secondary_startup_64+0xa4/0xb0
+> > > 
+> > > Thank you both, and I will remove this from my testing queue.
+> > > 
+> > > As Joel says, this is called at various points in the boot sequence, not
+> > > all of which are far enough along to support spawning kthreads.
+> > > 
+> > > The real question here is "What types of bugs are we trying to defend
+> > > against?"  But keeping in mind existing diagnostics.  For example, are
+> > > there any kthreads for which a persistent failure to spawn would not
+> > > emit any error message.  My belief is that any such persistent failure
+> > > would result in either an in-kernel diagnostic or an rcutorture failure,
+> > > but I might well be missing something.
+> > > 
+> > > Thoughts?  Or, more to the point, tests demonstrating silence in face
+> > > of such a persistent failure?
+> > 
+> > You are right. There wouldn't be a persistent failure because the path
+> > turning cpus on always tries to spawn them, *even* in case that the
+> > booting sequence is wrong. The current code anyway goes right though.
+> > 
+> > I thought a hole can be there if the code changes so that those kthreads
+> > cannot be spawned until the cpu being up, which is the case I was
+> > interested in. Again, it's gonna never happen with the current code
+> > because it spawns them after setting rcu_scheduler_fully_active to 1 in
+> > rcu_spawn_gp_kthead().
+> > 
+> > And I wrongly thought you placed the rcu_scheduler_fully_active check on
+> > spawning just in case. But it seems to be not the case.
+> > 
+> > So I'd better stop working on the warning patch. :) Instead, please
+> > check the following trivial fix.
+> > 
+> > Thanks,
+> > Byungchul
+> > 
+> > ---8<---
+> > >From 1293d19bb7abf7553d656c81182118eff54e7dc9 Mon Sep 17 00:00:00 2001
+> > From: Byungchul Park <byungchul.park@lge.com>
+> > Date: Mon, 24 Jun 2019 16:22:11 +0900
+> > Subject: [PATCH] rcu: Make rcu_spawn_one_boost_kthread() return void
+> > 
+> > The return value of rcu_spawn_one_boost_kthread() is not used any
+> > longer. Change the return type from int to void.
+> > 
+> > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
+> 
+> Looks pretty good, just one comment below.  Plus could you please tell
+> me what you are developing this against?
 
-Eric,
+Only for removing out-dated code. Not for funcational change.
 
-> * LSI 2108 (Supermicro)
-> * LSI 3108 (Dell)
-> * Areca 1882
-> * Areca 1883
-> * Fibrechannel 8gbe connected to a Storwize 3700
+And simple answer below...
 
-I have a 3108 that provides the BL VPD. Surprised the 1883 doesn't.
+> 
+> 							Thanx, Paul
+> 
+> > ---
+> >  kernel/rcu/tree_plugin.h | 15 +++++++--------
+> >  1 file changed, 7 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index 1102765..4e11aa4 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
+> >   * already exist.  We only create this kthread for preemptible RCU.
+> >   * Returns zero if all is well, a negated errno otherwise.
+> >   */
+> > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> >  {
+> >  	int rnp_index = rnp - rcu_get_root();
+> >  	unsigned long flags;
+> > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
+> >  	struct task_struct *t;
+> >  
+> >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+> > -		return 0;
+> > +		return;
+> >  
+> >  	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
+> > -		return 0;
+> > +		return;
+> >  
+> >  	rcu_state.boost = 1;
+> >  	if (rnp->boost_kthread_task != NULL)
+> > -		return 0;
+> > +		return;
+> >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
+> >  			   "rcub/%d", rnp_index);
+> >  	if (IS_ERR(t))
+> 
+> This would be a change in behavior, but it might be good to have a
+> WARN_ON_ONCE() above.  Assuming that it doesn't splat on every boot.  ;-)
 
-As a rule of thumb, you need 12 Gbps SAS or 16 Gbps FC devices for the
-VPD page to be present. The protocol feature is not tied to the
-transport signaling speed in any way. But general support for the BL VPD
-page roughly coincided with vendors introducing 12 Gbps SAS and 16 Gbps
-FC products to the market.
+Yes. Normally it shouldn't. Right? I will resend this after testing with
+my machine. :)
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+Byungchul
+
+> 
+> > -		return PTR_ERR(t);
+> > +		return;
+> >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+> >  	rnp->boost_kthread_task = t;
+> >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> >  	sp.sched_priority = kthread_prio;
+> >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
+> >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
+> > -	return 0;
+> >  }
+> >  
+> >  static void rcu_cpu_kthread_setup(unsigned int cpu)
+> > @@ -1265,7 +1264,7 @@ static void __init rcu_spawn_boost_kthreads(void)
+> >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
+> >  		return;
+> >  	rcu_for_each_leaf_node(rnp)
+> > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > +		rcu_spawn_one_boost_kthread(rnp);
+> >  }
+> >  
+> >  static void rcu_prepare_kthreads(int cpu)
+> > @@ -1275,7 +1274,7 @@ static void rcu_prepare_kthreads(int cpu)
+> >  
+> >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
+> >  	if (rcu_scheduler_fully_active)
+> > -		(void)rcu_spawn_one_boost_kthread(rnp);
+> > +		rcu_spawn_one_boost_kthread(rnp);
+> >  }
+> >  
+> >  #else /* #ifdef CONFIG_RCU_BOOST */
+> > -- 
+> > 1.9.1
+> > 
