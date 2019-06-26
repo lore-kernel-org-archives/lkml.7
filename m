@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C589AC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F120C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBA320B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1127720659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520952;
-	bh=DEHaS1WCbAKmb18G1DPPFqkRW3gzvPcfQg+Ij2jEycM=;
+	s=default; t=1561520960;
+	bh=RRF2SmZ25ndOjvk6QjLmzorhtZQ3m2Fth1qQ1Ic4NXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FMxTCt1wFV6qP0KCaLFXBp7ITzdEp1RGOaf0+P85cZ2C1ITc409RXELIa3TsHgAhX
-	 LHTy46xH8NewQZpG/azgj9eEhhHSSSD2JSkGII5TD3eQ+jWX1MOSt4B/4PxsHWMF8t
-	 K3KmFlEurk19gIHdA8A4EVlbffeL/syqqwof9qsg=
+	b=JllUhn0m0oAfq7gH6Jrn2fGzR6w8J6DqoPlOJXrjlA7955e37PaBCKKRJm5XIdGnt
+	 DMkyQs88kTWTBb7hBYeu2HQ1L/F4FGvLTHi0dLkWQmP7Nh8BNhlN3fwPicRu9mMeTR
+	 wFSIYKt4Eex0WBXyf0UkC4Gozb8PqpJDfx8yI5Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbfFZDtK (ORCPT
+        id S1727747AbfFZDtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55262 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:49:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726956AbfFZDn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:56 -0400
+        id S1727441AbfFZDnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:53 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 061B320659;
-        Wed, 26 Jun 2019 03:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D9520883;
+        Wed, 26 Jun 2019 03:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520636;
-        bh=DEHaS1WCbAKmb18G1DPPFqkRW3gzvPcfQg+Ij2jEycM=;
+        s=default; t=1561520633;
+        bh=RRF2SmZ25ndOjvk6QjLmzorhtZQ3m2Fth1qQ1Ic4NXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rd1P65itfTjVpWSNiZYdYnfPRXcIxFjcwoN6WRrdY7D0x1baHA9JqJsDn9orkGYRH
-         0hDt7xHqArZ0JZm6aY79DwyanyH9O6M8YKpwv73y2oFqZPrceuIXh09t4evhlmu23z
-         KKwP6V5I8CfM7NTp+Te138hCJ8imq6xQiZDhadJA=
+        b=D/RfcKL0mv8xcZoYL9jeqJs3SVxnODBvpNT3A0U3sNflbPxnxA9eS282iIeWH7z8E
+         LTSqgjD4ucvfovbTnJa6TsV0itJzOhhgIzVEfzDF/uO7OOoLmmHjZXpdDSemEZMhvi
+         yna4OzO5PHpEinO5l8mC6PnAmMmd/JHtT7lxVsi0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 10/34] drm/mediatek: call drm_atomic_helper_shutdown() when unbinding driver
-Date:   Tue, 25 Jun 2019 23:43:11 -0400
-Message-Id: <20190626034335.23767-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/34] drm/mediatek: fix unbind functions
+Date:   Tue, 25 Jun 2019 23:43:09 -0400
+Message-Id: <20190626034335.23767-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -61,30 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit cf49b24ffa62766f8f04cd1c4cf17b75d29b240a ]
+[ Upstream commit 8fd7a37b191f93737f6280a9b5de65f98acc12c9 ]
 
-shutdown all CRTC when unbinding drm driver.
+detatch panel in mtk_dsi_destroy_conn_enc(), since .bind will try to
+attach it again.
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index bbe57ad9acf1..3df8a9dbccfe 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -310,6 +310,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- static void mtk_drm_kms_deinit(struct drm_device *drm)
- {
- 	drm_kms_helper_poll_fini(drm);
-+	drm_atomic_helper_shutdown(drm);
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 66df1b177959..84bb66866631 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -841,6 +841,8 @@ static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi)
+ 	/* Skip connector cleanup if creation was delegated to the bridge */
+ 	if (dsi->conn.dev)
+ 		drm_connector_cleanup(&dsi->conn);
++	if (dsi->panel)
++		drm_panel_detach(dsi->panel);
+ }
  
- 	component_unbind_all(drm->dev, drm);
- 	drm_mode_config_cleanup(drm);
+ static void mtk_dsi_ddp_start(struct mtk_ddp_comp *comp)
 -- 
 2.20.1
 
