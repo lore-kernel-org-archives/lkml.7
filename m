@@ -2,166 +2,109 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B64C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846B1C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A633E216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EcEEEMWg"
+	by mail.kernel.org (Postfix) with ESMTP id 61ED721726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfFZRvn (ORCPT
+        id S1726799AbfFZRvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:51:43 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44468 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfFZRvm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:51:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QHd3BJ070052;
-        Wed, 26 Jun 2019 17:50:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=pJtn37VVzLHGgxTNqg1ZlS6RKLrOq382izwrBCZb3DI=;
- b=EcEEEMWgDEbMDuMxTOR2oYeCSXUOQKHZ4+B/a0CiekDLmP8Z1U885QaSBhgXo+/oVJZ3
- SGbnV6cXs+U0YG4HT3njZ/iUUzFIuHHOFK70cZEOdOGApbgKUYX3eCJLdfQ3dKwGSNIl
- owHPVd1m79tjE2KLbk7nGdMWhkLr/F3ZBkkDI9hHrhy/y/e6IptZoUUgS8HTk7grA8Ud
- Bf4hJAICEUZKsbR/1JYmjjWhp4n+uI1QfmV/GKfsvqZ6rJZc12bBVgqeF5v8xkJ16pFz
- 7wdP2Bakv0UvCbjPcmfUTGeqmf+Xk2K6+wWohnQ4b4rai+Y/+koOAVyMxoOJaa/ojH8K NA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t9cyqks50-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 17:50:48 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QHolV1005117;
-        Wed, 26 Jun 2019 17:50:47 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2t9p6uwkss-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 17:50:47 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QHofTs013200;
-        Wed, 26 Jun 2019 17:50:42 GMT
-Received: from [10.65.138.107] (/10.65.138.107)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 10:50:41 -0700
-Subject: Re: [PATCH v18 10/15] drm/radeon: untag user pointers in
- radeon_gem_userptr_ioctl
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1561386715.git.andreyknvl@google.com>
- <61d800c35a4f391218fbca6f05ec458557d8d097.1561386715.git.andreyknvl@google.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <28554e21-04b8-2461-e576-5abe0b53cd59@oracle.com>
-Date:   Wed, 26 Jun 2019 11:50:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <61d800c35a4f391218fbca6f05ec458557d8d097.1561386715.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906260208
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906260208
+        Wed, 26 Jun 2019 13:51:53 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49814 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfFZRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:51:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:51:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
+   d="scan'208";a="337288597"
+Received: from rchatre-s.jf.intel.com ([10.54.70.76])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 10:51:08 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: [PATCH 06/10] x86/resctrl: Introduce utility to return pseudo-locked cache portion
+Date:   Wed, 26 Jun 2019 10:48:45 -0700
+Message-Id: <f64478fab77211c05df848658ad523ce942ce3b1.1561569068.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
+References: <cover.1561569068.git.reinette.chatre@intel.com>
+In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
+References: <cover.1561569068.git.reinette.chatre@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 8:32 AM, Andrey Konovalov wrote:
-> This patch is a part of a series that extends kernel ABI to allow to pa=
-ss
-> tagged user pointers (with the top byte set to something else other tha=
-n
-> 0x00) as syscall arguments.
->=20
-> In radeon_gem_userptr_ioctl() an MMU notifier is set up with a (tagged)=
+To prevent eviction of pseudo-locked memory it is required that no
+other resource group uses any portion of a cache that is in use by
+a cache pseudo-locked region.
 
-> userspace pointer. The untagged address should be used so that MMU
-> notifiers for the untagged address get correctly matched up with the ri=
-ght
-> BO. This funcation also calls radeon_ttm_tt_pin_userptr(), which uses
-> provided user pointers for vma lookups, which can only by done with
-> untagged pointers.
->=20
-> This patch untags user pointers in radeon_gem_userptr_ioctl().
->=20
-> Suggested-by: Felix Kuehling <Felix.Kuehling@amd.com>
-> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
+Introduce a utility that will return a Capacity BitMask (CBM) indicating
+all portions of a provided cache instance being used for cache
+pseudo-locking. This CBM can be used in overlap checking as well as
+cache usage reporting.
 
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+ arch/x86/kernel/cpu/resctrl/internal.h    |  1 +
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-
->  drivers/gpu/drm/radeon/radeon_gem.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/radeon/radeon_gem.c b/drivers/gpu/drm/rade=
-on/radeon_gem.c
-> index 44617dec8183..90eb78fb5eb2 100644
-> --- a/drivers/gpu/drm/radeon/radeon_gem.c
-> +++ b/drivers/gpu/drm/radeon/radeon_gem.c
-> @@ -291,6 +291,8 @@ int radeon_gem_userptr_ioctl(struct drm_device *dev=
-, void *data,
->  	uint32_t handle;
->  	int r;
-> =20
-> +	args->addr =3D untagged_addr(args->addr);
-> +
->  	if (offset_in_page(args->addr | args->size))
->  		return -EINVAL;
-> =20
->=20
-
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 65f558a2e806..f17633cf4776 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -568,6 +568,7 @@ int rdtgroup_tasks_assigned(struct rdtgroup *r);
+ int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
+ int rdtgroup_locksetup_exit(struct rdtgroup *rdtgrp);
+ bool rdtgroup_cbm_overlaps_pseudo_locked(struct rdt_domain *d, unsigned long cbm);
++u32 rdtgroup_pseudo_locked_bits(struct rdt_resource *r, struct rdt_domain *d);
+ bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_domain *d);
+ int rdt_pseudo_lock_init(void);
+ void rdt_pseudo_lock_release(void);
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 3ad0c5b59d34..9a4dbdb72d3e 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -1630,3 +1630,26 @@ void rdt_pseudo_lock_release(void)
+ 	unregister_chrdev(pseudo_lock_major, "pseudo_lock");
+ 	pseudo_lock_major = 0;
+ }
++
++/**
++ * rdt_pseudo_locked_bits - Portions of cache instance used for pseudo-locking
++ * @r:		RDT resource to which cache instance belongs
++ * @d:		Cache instance
++ *
++ * Return: bits in CBM of @d that are used for cache pseudo-locking
++ */
++u32 rdtgroup_pseudo_locked_bits(struct rdt_resource *r, struct rdt_domain *d)
++{
++	struct rdtgroup *rdtgrp;
++	u32 pseudo_locked = 0;
++
++	list_for_each_entry(rdtgrp, &rdt_all_groups, rdtgroup_list) {
++		if (!rdtgrp->plr)
++			continue;
++		if (rdtgrp->plr->r && rdtgrp->plr->r->rid == r->rid &&
++		    rdtgrp->plr->d_id == d->id)
++			pseudo_locked |= rdtgrp->plr->cbm;
++	}
++
++	return pseudo_locked;
++}
+-- 
+2.17.2
 
