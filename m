@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED65C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C94DC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EAF214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AFB20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520597;
-	bh=uNU5+LCbl+Sctf4PzfdDZalh2Mm1BcPdFuY7lUuapUg=;
+	s=default; t=1561520603;
+	bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N8F98X6SAFoVqPT0JCwwiYg7xf6C7QKjcZOVwpPK7vg3J4pZH8/F5ro+L49/EIS7J
-	 TWsmYR/0mDA/eZ6ZkOPmfGcBmVsuQbp2EEcrDQUobgfKrtSrATyC+bA7//QgEx2uzl
-	 mJM8g3dc40CptexczVnMw8W2BOdNpp3g5BcTLRmI=
+	b=vIcqDytsIZejDgCTa2Flig+W4a/hC1guvZ8gsnGHKEbU7lSdCJ3JnXyGDOa2cCdMf
+	 ShOafRqJ4lMhfa9yrEPmTWhqMv3M00RrAv0CB+SjOXRLSmSBBObs19oiT8838N0exF
+	 qyENkVvEHNp2nIpd2mTWyM2Tk4TFPticcYzhZCiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfFZDnQ (ORCPT
+        id S1727312AbfFZDnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54286 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfFZDnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:09 -0400
+        id S1727268AbfFZDnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:12 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F01216F4;
-        Wed, 26 Jun 2019 03:43:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B73E20883;
+        Wed, 26 Jun 2019 03:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520588;
-        bh=uNU5+LCbl+Sctf4PzfdDZalh2Mm1BcPdFuY7lUuapUg=;
+        s=default; t=1561520591;
+        bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RVoAubHT605nX+YTDWGRHjalWysGVhIJ2nONjp7BZAGzU4Mym5ol9I2SlHQfZZvoW
-         l2nrwHU9SzeUCJ3AfwxPqUHHeOr+vrpLKtTWLmNtgyknBBta9uI5hOLPnRvGh/dEuR
-         z9zCRY1OMsmg9Y5p8fNXTv9dHdVFf9hlkf+5h89o=
+        b=p/s0ISrpG/npDrHlgob0d9wpyxB2TYpKyqC1p5/abdJ9ELcFzkcqZfHCOfHeAjNsa
+         5h+Oc+anlVfG97izM3YtCkR9fKBAP4cPTLRwcN4nYoW1eLUBtrTZOpPZI3m5A8ruuN
+         3I78PmhaTUVNOgjeCMQOXoPEGZu6spB0ncoZAzxc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Levin <levinale@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 39/51] ASoC: Intel: sst: fix kmalloc call with wrong flags
-Date:   Tue, 25 Jun 2019 23:40:55 -0400
-Message-Id: <20190626034117.23247-39-sashal@kernel.org>
+Cc:     Mathew King <mathewk@chromium.org>,
+        Jett Rink <jettrink@chromium.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 41/51] platform/x86: intel-vbtn: Report switch events when event wakes device
+Date:   Tue, 25 Jun 2019 23:40:57 -0400
+Message-Id: <20190626034117.23247-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -59,91 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Levin <levinale@chromium.org>
+From: Mathew King <mathewk@chromium.org>
 
-[ Upstream commit 3da428ff2aa5a5191ba2f1630eea75f03242f3f2 ]
+[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
 
-When calling kmalloc with GFP_KERNEL in case CONFIG_SLOB is unset,
-kmem_cache_alloc_trace is called.
+When a switch event, such as tablet mode/laptop mode or docked/undocked,
+wakes a device make sure that the value of the swich is reported.
+Without when a device is put in tablet mode from laptop mode when it is
+suspended or vice versa the device will wake up but mode will be
+incorrect.
 
-In case CONFIG_TRACING is set, kmem_cache_alloc_trace will ball
-slab_alloc, which will call slab_pre_alloc_hook which might_sleep_if.
+Tested by suspending a device in laptop mode and putting it in tablet
+mode, the device resumes and is in tablet mode. When suspending the
+device in tablet mode and putting it in laptop mode the device resumes
+and is in laptop mode.
 
-The context in which it is called in this case, the
-intel_sst_interrupt_mrfld, calling a sleeping kmalloc generates a BUG():
-
-Fixes: 972b0d456e64 ("ASoC: Intel: remove GFP_ATOMIC, use GFP_KERNEL")
-
-[   20.250671] BUG: sleeping function called from invalid context at mm/slab.h:422
-[   20.250683] in_atomic(): 1, irqs_disabled(): 1, pid: 1791, name: Chrome_IOThread
-[   20.250690] CPU: 0 PID: 1791 Comm: Chrome_IOThread Tainted: G        W         4.19.43 #61
-[   20.250693] Hardware name: GOOGLE Kefka, BIOS Google_Kefka.7287.337.0 03/02/2017
-[   20.250697] Call Trace:
-[   20.250704]  <IRQ>
-[   20.250716]  dump_stack+0x7e/0xc3
-[   20.250725]  ___might_sleep+0x12a/0x140
-[   20.250731]  kmem_cache_alloc_trace+0x53/0x1c5
-[   20.250736]  ? update_cfs_rq_load_avg+0x17e/0x1aa
-[   20.250740]  ? cpu_load_update+0x6c/0xc2
-[   20.250746]  sst_create_ipc_msg+0x2d/0x88
-[   20.250752]  intel_sst_interrupt_mrfld+0x12a/0x22c
-[   20.250758]  __handle_irq_event_percpu+0x133/0x228
-[   20.250764]  handle_irq_event_percpu+0x35/0x7a
-[   20.250768]  handle_irq_event+0x36/0x55
-[   20.250773]  handle_fasteoi_irq+0xab/0x16c
-[   20.250779]  handle_irq+0xd9/0x11e
-[   20.250785]  do_IRQ+0x54/0xe0
-[   20.250791]  common_interrupt+0xf/0xf
-[   20.250795]  </IRQ>
-[   20.250800] RIP: 0010:__lru_cache_add+0x4e/0xad
-[   20.250806] Code: 00 01 48 c7 c7 b8 df 01 00 65 48 03 3c 25 28 f1 00 00 48 8b 48 08 48 89 ca 48 ff ca f6 c1 01 48 0f 44 d0 f0 ff 42 34 0f b6 0f <89> ca fe c2 88 17 48 89 44 cf 08 80 fa 0f 74 0e 48 8b 08 66 85 c9
-[   20.250809] RSP: 0000:ffffa568810bfd98 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffd6
-[   20.250814] RAX: ffffd3b904eb1940 RBX: ffffd3b904eb1940 RCX: 0000000000000004
-[   20.250817] RDX: ffffd3b904eb1940 RSI: ffffa10ee5c47450 RDI: ffffa10efba1dfb8
-[   20.250821] RBP: ffffa568810bfda8 R08: ffffa10ef9c741c1 R09: dead000000000100
-[   20.250824] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa10ee8d52a40
-[   20.250827] R13: ffffa10ee8d52000 R14: ffffa10ee5c47450 R15: 800000013ac65067
-[   20.250835]  lru_cache_add_active_or_unevictable+0x4e/0xb8
-[   20.250841]  handle_mm_fault+0xd98/0x10c4
-[   20.250848]  __do_page_fault+0x235/0x42d
-[   20.250853]  ? page_fault+0x8/0x30
-[   20.250858]  do_page_fault+0x3d/0x17a
-[   20.250862]  ? page_fault+0x8/0x30
-[   20.250866]  page_fault+0x1e/0x30
-[   20.250872] RIP: 0033:0x7962fdea9304
-[   20.250875] Code: 0f 11 4c 17 f0 c3 48 3b 15 f1 26 31 00 0f 83 e2 00 00 00 48 39 f7 72 0f 74 12 4c 8d 0c 16 4c 39 cf 0f 82 63 01 00 00 48 89 d1 <f3> a4 c3 80 fa 08 73 12 80 fa 04 73 1e 80 fa 01 77 26 72 05 0f b6
-[   20.250879] RSP: 002b:00007962f4db5468 EFLAGS: 00010206
-[   20.250883] RAX: 00003c8cc9d47008 RBX: 0000000000000000 RCX: 0000000000001b48
-[   20.250886] RDX: 0000000000002b40 RSI: 00003c8cc9551000 RDI: 00003c8cc9d48000
-[   20.250890] RBP: 00007962f4db5820 R08: 0000000000000000 R09: 00003c8cc9552b48
-[   20.250893] R10: 0000562dd1064d30 R11: 00003c8cc825b908 R12: 00003c8cc966d3c0
-[   20.250896] R13: 00003c8cc9e280c0 R14: 0000000000000000 R15: 0000000000000000
-
-Signed-off-by: Alex Levin <levinale@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Mathew King <mathewk@chromium.org>
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst/sst_pvt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/atom/sst/sst_pvt.c b/sound/soc/intel/atom/sst/sst_pvt.c
-index 00a37a09dc9b..dba0ca07ebf9 100644
---- a/sound/soc/intel/atom/sst/sst_pvt.c
-+++ b/sound/soc/intel/atom/sst/sst_pvt.c
-@@ -166,11 +166,11 @@ int sst_create_ipc_msg(struct ipc_post **arg, bool large)
- {
- 	struct ipc_post *msg;
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 06cd7e818ed5..a0d0cecff55f 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct platform_device *device = context;
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
+-	const struct key_entry *ke_rel;
++	const struct key_entry *ke, *ke_rel;
+ 	bool autorelease;
  
--	msg = kzalloc(sizeof(*msg), GFP_KERNEL);
-+	msg = kzalloc(sizeof(*msg), GFP_ATOMIC);
- 	if (!msg)
- 		return -ENOMEM;
- 	if (large) {
--		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_KERNEL);
-+		msg->mailbox_data = kzalloc(SST_MAILBOX_SIZE, GFP_ATOMIC);
- 		if (!msg->mailbox_data) {
- 			kfree(msg);
- 			return -ENOMEM;
+ 	if (priv->wakeup_mode) {
+-		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
++		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
++		if (ke) {
+ 			pm_wakeup_hard_event(&device->dev);
++
++			/*
++			 * Switch events like tablet mode will wake the device
++			 * and report the new switch position to the input
++			 * subsystem.
++			 */
++			if (ke->type == KE_SW)
++				sparse_keymap_report_event(priv->input_dev,
++							   event,
++							   val,
++							   0);
+ 			return;
+ 		}
+ 		goto out_unknown;
 -- 
 2.20.1
 
