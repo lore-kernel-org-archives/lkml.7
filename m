@@ -2,203 +2,342 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F78EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07349C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248A02177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCB821738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:46:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ICoHuZUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfFZQoe (ORCPT
+        id S1726553AbfFZQqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:44:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42468 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbfFZQoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:44:34 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1282C309175F;
-        Wed, 26 Jun 2019 16:44:34 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-3.gru2.redhat.com [10.97.112.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0B2A45D717;
-        Wed, 26 Jun 2019 16:44:31 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id A14F510517A;
-        Wed, 26 Jun 2019 13:44:12 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x5QGi8LV002573;
-        Wed, 26 Jun 2019 13:44:08 -0300
-Date:   Wed, 26 Jun 2019 13:44:08 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by
- posted interrupt
-Message-ID: <20190626164401.GA2211@amt.cnet>
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
- <1560770687-23227-3-git-send-email-wanpengli@tencent.com>
- <20190618133541.GA3932@amt.cnet>
- <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
- <20190619210346.GA13033@amt.cnet>
- <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
- <20190621214205.GA4751@amt.cnet>
- <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
- <20190625190010.GA3377@amt.cnet>
- <CANRm+CzmraRUNQfTWNZ3Bu5dJhjvL1eE9+=c2i_vwtYYT9ao2w@mail.gmail.com>
+        Wed, 26 Jun 2019 12:46:38 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8493 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZQqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:46:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d13a16d0001>; Wed, 26 Jun 2019 09:46:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Jun 2019 09:46:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Jun 2019 09:46:34 -0700
+Received: from [10.2.169.244] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
+ 2019 16:46:31 +0000
+Subject: Re: [PATCH V4 12/18] clk: tegra210: support for Tegra210 clocks
+ suspend and resume
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
+        <linus.walleij@linaro.org>, <stefan@agner.ch>,
+        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+ <1561345379-2429-13-git-send-email-skomatineni@nvidia.com>
+ <20190626101616.GE6362@ulmo>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <2dad8c70-2501-5cc0-9b8a-9c1a437ebc05@nvidia.com>
+Date:   Wed, 26 Jun 2019 09:46:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANRm+CzmraRUNQfTWNZ3Bu5dJhjvL1eE9+=c2i_vwtYYT9ao2w@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 26 Jun 2019 16:44:34 +0000 (UTC)
+In-Reply-To: <20190626101616.GE6362@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561567597; bh=f/btVB27Am+mVQsxQjKjkhfm1RXwG9pGuiNvyRx23jo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ICoHuZUWkTAXTSDtyT4AGtdPQyfi3+bu0lN93jP0fk0AihzFg70+w8iX18IQ579p0
+         aL6WIU6qoLxe2e5BV8beNtZnZLMt2h9XoZi2f/0wq2n9/Naw6XLnxQqKr6YCxp4mr3
+         sjw55r3p98+4/HdZD7xYr8Qm7/WMBoi3eheESH6ma/sztmVNCU3ZWfl6d39Ww5ndHU
+         zp5v0zFfNFDAWwHf399R6gvtzAq9f+JMYT+rqh0Szyc3L1GlHiZk7wB+L3N1aRRoTg
+         9z+Dg96VFU8ECs3UMhKkoahcYVdGmvqGZq+3hCBZiV1Bm9pkeP404euMlKd1BxruIc
+         QyQ36HubLaeFQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 07:02:13PM +0800, Wanpeng Li wrote:
-> On Wed, 26 Jun 2019 at 03:03, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> >
-> > On Mon, Jun 24, 2019 at 04:53:53PM +0800, Wanpeng Li wrote:
-> > > On Sat, 22 Jun 2019 at 06:11, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > >
-> > > > On Fri, Jun 21, 2019 at 09:42:39AM +0800, Wanpeng Li wrote:
-> > > > > On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > > > >
-> > > > > > Hi Li,
-> > > > > >
-> > > > > > On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
-> > > > > > > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
-> > > > > > > > > From: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > > > >
-> > > > > > > > > Dedicated instances are currently disturbed by unnecessary jitter due
-> > > > > > > > > to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> > > > > > > > > There is no hardware virtual timer on Intel for guest like ARM. Both
-> > > > > > > > > programming timer in guest and the emulated timer fires incur vmexits.
-> > > > > > > > > This patch tries to avoid vmexit which is incurred by the emulated
-> > > > > > > > > timer fires in dedicated instance scenario.
-> > > > > > > > >
-> > > > > > > > > When nohz_full is enabled in dedicated instances scenario, the emulated
-> > > > > > > > > timers can be offload to the nearest busy housekeeping cpus since APICv
-> > > > > > > > > is really common in recent years. The guest timer interrupt is injected
-> > > > > > > > > by posted-interrupt which is delivered by housekeeping cpu once the emulated
-> > > > > > > > > timer fires.
-> > > > > > > > >
-> > > > > > > > > The host admin should fine tuned, e.g. dedicated instances scenario w/
-> > > > > > > > > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
-> > > > > > > > > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root
-> > > > > > > > > mode, ~3% redis performance benefit can be observed on Skylake server.
-> > > > > > > > >
-> > > > > > > > > w/o patch:
-> > > > > > > > >
-> > > > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
-> > > > > > > > >
-> > > > > > > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
-> > > > > > > > >
-> > > > > > > > > w/ patch:
-> > > > > > > > >
-> > > > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
-> > > > > > > > >
-> > > > > > > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
-> > > > > > > > >
-> > > > > > > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > > > > > > > Cc: Radim Krčmář <rkrcmar@redhat.com>
-> > > > > > > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> > > > > > > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > > > > > > > ---
-> > > > > > > > >  arch/x86/kvm/lapic.c            | 33 ++++++++++++++++++++++++++-------
-> > > > > > > > >  arch/x86/kvm/lapic.h            |  1 +
-> > > > > > > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
-> > > > > > > > >  arch/x86/kvm/x86.c              |  5 +++++
-> > > > > > > > >  arch/x86/kvm/x86.h              |  2 ++
-> > > > > > > > >  include/linux/sched/isolation.h |  2 ++
-> > > > > > > > >  kernel/sched/isolation.c        |  6 ++++++
-> > > > > > > > >  7 files changed, 44 insertions(+), 8 deletions(-)
-> > > > > > > > >
-> > > > > > > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > > > > > > > > index 87ecb56..9ceeee5 100644
-> > > > > > > > > --- a/arch/x86/kvm/lapic.c
-> > > > > > > > > +++ b/arch/x86/kvm/lapic.c
-> > > > > > > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
-> > > > > > > > >       return apic->vcpu->vcpu_id;
-> > > > > > > > >  }
-> > > > > > > > >
-> > > > > > > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
-> > > > > > > > > +{
-> > > > > > > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
-> > > > > > > > > +             kvm_hlt_in_guest(vcpu->kvm);
-> > > > > > > > > +}
-> > > > > > > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
-> > > > > > > >
-> > > > > > > > Paolo, can you explain the reasoning behind this?
-> > > > > > > >
-> > > > > > > > Should not be necessary...
-> > > > >
-> > > > > https://lkml.org/lkml/2019/6/5/436  "Here you need to check
-> > > > > kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to go
-> > > > > through kvm_apic_expired if the guest needs to be woken up from
-> > > > > kvm_vcpu_block."
-> > > >
-> > > > Ah, i think he means that a sleeping vcpu (in kvm_vcpu_block) must
-> > > > be woken up, if it receives a timer interrupt.
-> > > >
-> > > > But your patch will go through:
-> > > >
-> > > > kvm_apic_inject_pending_timer_irqs
-> > > > __apic_accept_irq ->
-> > > > vmx_deliver_posted_interrupt ->
-> > > > kvm_vcpu_trigger_posted_interrupt returns false
-> > > > (because vcpu->mode != IN_GUEST_MODE) ->
-> > > > kvm_vcpu_kick
-> > > >
-> > > > Which will wakeup the vcpu.
-> > >
-> > > Hi Marcelo,
-> > >
-> > > >
-> > > > Apart from this oops, which triggers when running:
-> > > > taskset -c 1 ./cyclictest -D 3600 -p 99 -t 1 -h 30 -m -n  -i 50000 -b 40
-> > >
-> > > I try both host and guest use latest kvm/queue  w/ CONFIG_PREEMPT
-> > > enabled, and expose mwait as your config, however, there is no oops.
-> > > Can you reproduce steadily or encounter casually? Can you reproduce
-> > > w/o the patchset?
-> >
-> > Hi Li,
-> 
-> Hi Marcelo,
-> 
-> >
-> > Steadily.
-> >
-> > Do you have this as well:
-> 
-> w/ or w/o below diff, testing on both SKX and HSW servers on hand, I
-> didn't see any oops. Could you observe the oops disappear when w/o
-> below diff? If the answer is yes, then the oops will not block to
-> merge the patchset since Paolo prefers to add the kvm_hlt_in_guest()
-> condition to guarantee be woken up from kvm_vcpu_block(). 
 
-He agreed that its not necessary. Removing the HLT in guest widens 
-the scope of the patch greatly.
-
-> For the
-> exitless injection if the guest is running(DPDK style workloads that
-> busy-spin on network card) scenarios, we can find a solution later.
-
-What is the use-case for HLT in guest again?
-
-I'll find the source for the oops (or confirm can't reproduce with 
-kvm/queue RSN).
-
+On 6/26/19 3:16 AM, Thierry Reding wrote:
+> On Sun, Jun 23, 2019 at 08:02:53PM -0700, Sowjanya Komatineni wrote:
+>> This patch adds system suspend and resume support for Tegra210
+>> clocks.
+>>
+>> All the CAR controller settings are lost on suspend when core power
+>> goes off.
+>>
+>> This patch has implementation for saving and restoring all the PLLs
+>> and clocks context during system suspend and resume to have the
+>> clocks back to same state for normal operation.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/clk/tegra/clk-tegra210.c | 115 ++++++++++++++++++++++++++++++++++++++-
+>>   drivers/clk/tegra/clk.c          |  14 +++++
+>>   drivers/clk/tegra/clk.h          |   1 +
+>>   3 files changed, 127 insertions(+), 3 deletions(-)
+> Can you give a brief overview of how you've been testing this? Is this
+> just about confirming that "things work fine" after resume? Could we be
+> more methodical and perhaps check the state of the clock tree before
+> suspend (perhaps by inspecting debugfs) and comparing it to the state
+> after resume?
+>
+> One minor nit below...
+Yes, I tested by checking clock tree for counts and rate through debugfs 
+clk_rate nodes as well for all clocks before suspend and on resume.
+>> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+>> index c414cd72d045..4fb3509fe9f6 100644
+>> --- a/drivers/clk/tegra/clk-tegra210.c
+>> +++ b/drivers/clk/tegra/clk-tegra210.c
+>> @@ -9,10 +9,12 @@
+>>   #include <linux/clkdev.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/export.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/clk/tegra.h>
+>> +#include <linux/syscore_ops.h>
+>>   #include <dt-bindings/clock/tegra210-car.h>
+>>   #include <dt-bindings/reset/tegra210-car.h>
+>>   #include <linux/iopoll.h>
+>> @@ -20,6 +22,7 @@
+>>   #include <soc/tegra/pmc.h>
+>>   
+>>   #include "clk.h"
+>> +#include "clk-dfll.h"
+>>   #include "clk-id.h"
+>>   
+>>   /*
+>> @@ -225,6 +228,7 @@
+>>   
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
+>>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
+>> +#define CPU_SOFTRST_CTRL 0x380
+>>   
+>>   #define LVL2_CLK_GATE_OVRA 0xf8
+>>   #define LVL2_CLK_GATE_OVRC 0x3a0
+>> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
+>>   	struct tegra_clk_pll_freq_table *fentry;
+>>   	struct tegra_clk_pll pllu;
+>>   	u32 reg;
+>> +	int ret;
+>>   
+>>   	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
+>>   		if (fentry->input_rate == pll_ref_freq)
+>> @@ -2847,10 +2852,10 @@ static int tegra210_enable_pllu(void)
+>>   	fence_udelay(1, clk_base);
+>>   	reg |= PLL_ENABLE;
+>>   	writel(reg, clk_base + PLLU_BASE);
+>> +	fence_udelay(1, clk_base);
+>>   
+>> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
+>> -					  reg & PLL_BASE_LOCK, 2, 1000);
+>> -	if (!(reg & PLL_BASE_LOCK)) {
+>> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
+>> +	if (ret) {
+>>   		pr_err("Timed out waiting for PLL_U to lock\n");
+>>   		return -ETIMEDOUT;
+>>   	}
+>> @@ -3282,6 +3287,103 @@ static void tegra210_disable_cpu_clock(u32 cpu)
+>>   }
+>>   
+>>   #ifdef CONFIG_PM_SLEEP
+>> +static u32 cpu_softrst_ctx[3];
+>> +static struct platform_device *dfll_pdev;
+>> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
+>> +#define car_writel(_val, _base, _off) \
+>> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
+>> +
+>> +static int tegra210_clk_suspend(void)
+>> +{
+>> +	int i;
+> This can be unsigned int.
+>
+>> +	struct device_node *node;
+>> +
+>> +	tegra_cclkg_burst_policy_save_context();
+>> +
+>> +	if (!dfll_pdev) {
+>> +		node = of_find_compatible_node(NULL, NULL,
+>> +					       "nvidia,tegra210-dfll");
+>> +		if (node)
+>> +			dfll_pdev = of_find_device_by_node(node);
+>> +
+>> +		of_node_put(node);
+>> +		if (!dfll_pdev)
+>> +			pr_err("dfll node not found. no suspend for dfll\n");
+>> +	}
+>> +
+>> +	if (dfll_pdev)
+>> +		tegra_dfll_suspend(dfll_pdev);
+>> +
+>> +	/* Enable PLLP_OUT_CPU after dfll suspend */
+>> +	tegra_clk_set_pllp_out_cpu(true);
+>> +
+>> +	tegra_sclk_cclklp_burst_policy_save_context();
+>> +
+>> +	clk_save_context();
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tegra210_clk_resume(void)
+>> +{
+>> +	int i;
+> And here too.
+>
+> With that:
+>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+>
+>> +	struct clk_hw *parent;
+>> +	struct clk *clk;
+>> +
+>> +	/*
+>> +	 * clk_restore_context restores clocks as per the clock tree.
+>> +	 *
+>> +	 * dfllCPU_out is first in the clock tree to get restored and it
+>> +	 * involves programming DFLL controller along with restoring CPUG
+>> +	 * clock burst policy.
+>> +	 *
+>> +	 * DFLL programming needs dfll_ref and dfll_soc peripheral clocks
+>> +	 * to be restores which are part ofthe peripheral clocks.
+>> +	 * So, peripheral clocks restore should happen prior to dfll clock
+>> +	 * restore.
+>> +	 */
+>> +
+>> +	tegra_clk_osc_resume(clk_base);
+>> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
+>> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
+>> +
+>> +	/* restore all plls and peripheral clocks */
+>> +	tegra210_init_pllu();
+>> +	clk_restore_context();
+>> +
+>> +	fence_udelay(5, clk_base);
+>> +
+>> +	/* resume SCLK and CPULP clocks */
+>> +	tegra_sclk_cpulp_burst_policy_restore_context();
+>> +
+>> +	/*
+>> +	 * restore CPUG clocks:
+>> +	 * - enable DFLL in open loop mode
+>> +	 * - switch CPUG to DFLL clock source
+>> +	 * - close DFLL loop
+>> +	 * - sync PLLX state
+>> +	 */
+>> +	if (dfll_pdev)
+>> +		tegra_dfll_resume(dfll_pdev, false);
+>> +
+>> +	tegra_cclkg_burst_policy_restore_context();
+>> +	fence_udelay(2, clk_base);
+>> +
+>> +	if (dfll_pdev)
+>> +		tegra_dfll_resume(dfll_pdev, true);
+>> +
+>> +	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
+>> +	clk = clks[TEGRA210_CLK_PLL_X];
+>> +	if (parent != __clk_get_hw(clk))
+>> +		tegra_clk_sync_state_pll(__clk_get_hw(clk));
+>> +
+>> +	/* Disable PLL_OUT_CPU after DFLL resume */
+>> +	tegra_clk_set_pllp_out_cpu(false);
+>> +}
+>> +
+>>   static void tegra210_cpu_clock_suspend(void)
+>>   {
+>>   	/* switch coresite to clk_m, save off original source */
+>> @@ -3297,6 +3399,11 @@ static void tegra210_cpu_clock_resume(void)
+>>   }
+>>   #endif
+>>   
+>> +static struct syscore_ops tegra_clk_syscore_ops = {
+>> +	.suspend = tegra210_clk_suspend,
+>> +	.resume = tegra210_clk_resume,
+>> +};
+>> +
+>>   static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
+>>   	.wait_for_reset	= tegra210_wait_cpu_in_reset,
+>>   	.disable_clock	= tegra210_disable_cpu_clock,
+>> @@ -3582,5 +3689,7 @@ static void __init tegra210_clock_init(struct device_node *np)
+>>   	tegra210_mbist_clk_init();
+>>   
+>>   	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
+>> +
+>> +	register_syscore_ops(&tegra_clk_syscore_ops);
+>>   }
+>>   CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
+>> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+>> index 9e863362d2bf..96cc9937ea37 100644
+>> --- a/drivers/clk/tegra/clk.c
+>> +++ b/drivers/clk/tegra/clk.c
+>> @@ -23,6 +23,7 @@
+>>   #define CLK_OUT_ENB_W			0x364
+>>   #define CLK_OUT_ENB_X			0x280
+>>   #define CLK_OUT_ENB_Y			0x298
+>> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
+>>   #define CLK_OUT_ENB_SET_L		0x320
+>>   #define CLK_OUT_ENB_CLR_L		0x324
+>>   #define CLK_OUT_ENB_SET_H		0x328
+>> @@ -205,6 +206,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
+>>   	}
+>>   }
+>>   
+>> +void tegra_clk_set_pllp_out_cpu(bool enable)
+>> +{
+>> +	u32 val;
+>> +
+>> +	val = readl_relaxed(clk_base + CLK_OUT_ENB_Y);
+>> +	if (enable)
+>> +		val |= CLK_ENB_PLLP_OUT_CPU;
+>> +	else
+>> +		val &= ~CLK_ENB_PLLP_OUT_CPU;
+>> +
+>> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
+>> +}
+>> +
+>>   void tegra_cclkg_burst_policy_save_context(void)
+>>   {
+>>   	unsigned int i;
+>> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+>> index 7b99496fefb9..b994dfaa9602 100644
+>> --- a/drivers/clk/tegra/clk.h
+>> +++ b/drivers/clk/tegra/clk.h
+>> @@ -862,6 +862,7 @@ void tegra_cclkg_burst_policy_restore_context(void);
+>>   void tegra_sclk_cclklp_burst_policy_save_context(void);
+>>   void tegra_sclk_cpulp_burst_policy_restore_context(void);
+>>   void tegra_clk_osc_resume(void __iomem *clk_base);
+>> +void tegra_clk_set_pllp_out_cpu(bool enable);
+>>   
+>>   /* Combined read fence with delay */
+>>   #define fence_udelay(delay, reg)	\
+>> -- 
+>> 2.7.4
+>>
