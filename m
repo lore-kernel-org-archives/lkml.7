@@ -2,103 +2,81 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30579C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5805C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019B52168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:52:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WzE9/2DB"
+	by mail.kernel.org (Postfix) with ESMTP id 7A31E2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbfFZXwZ (ORCPT
+        id S1726654AbfFZXzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 19:52:25 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40694 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfFZXwZ (ORCPT
+        Wed, 26 Jun 2019 19:55:02 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:44911 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbfFZXzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 19:52:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so5279389eds.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 16:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pyfPe8PH921mLZVXHodAopSDyO6itVZA0CZKdRsYCfE=;
-        b=WzE9/2DBB6KUn71JEl6S2kI3BnjRUdY94bl+EEZvwVtFYNEunhX+oZBuRf+P3HJNWH
-         8RDn6I/QrvMXSgNnmAbpROAtsJ+HwQ7QRZjWGNYZCDnC8vqRniqryr4QwSxFJz1zaxVz
-         FtuFK1R+yIcfBJVF0B6V8H1RjIG0irvomjobE=
+        Wed, 26 Jun 2019 19:55:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id i133so439353ioa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 16:55:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pyfPe8PH921mLZVXHodAopSDyO6itVZA0CZKdRsYCfE=;
-        b=UYp3t7SACZtyvnAbsy1G38pIox/Oi8Ykhwlk9SPPmUv2WbqWQOEEix9PxEp2wg7Ps0
-         zDPt/klZ+klt2liA3Ry0F4VQwTTcYmqV8q4vp97scJ6GOu2fGoSZ9zPV65I1IHhHdVuu
-         L70wXwU+a0vNp0YwGZEBn/SuiBZT1eWJXCTmBtP56ukyOJeMEFIrkfNr+uDtkUbmDUwc
-         anqti8r8qsT/ECUjw+KfdNgmOzEYJvFOKvroyEBQkr2nZHK2eugbmRlUI6kW/qHmFC4y
-         3R/Bmsqn3c3voiXZhZw0sH40ABG9uh5vzCEpzPIbL1mXiLKspRTHHT9fAyu+VF5hC1rD
-         HalA==
-X-Gm-Message-State: APjAAAXVGziXOzG8cFXIFvpvVBFFbKeJT5sgNFqtG2O5sYSvXJG/wwnB
-        hi2Wf7WuQIAvXW2O5oiVDLc6kPUg4uiFHEjp
-X-Google-Smtp-Source: APXvYqxt/yaYCJYdbrwsqUZ0NoyEDwh5e4jbKFskE6cwPlUCwQEil1BanQAhZngznElo1riWGimV3g==
-X-Received: by 2002:a17:906:6051:: with SMTP id p17mr403042ejj.142.1561593143014;
-        Wed, 26 Jun 2019 16:52:23 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-112-26.cgn.fibianet.dk. [5.186.112.26])
-        by smtp.gmail.com with ESMTPSA id j25sm129543edq.68.2019.06.26.16.52.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 16:52:22 -0700 (PDT)
-Subject: Re: [PATCH v6 7/8] dynamic_debug: add asm-generic implementation for
- DYNAMIC_DEBUG_RELATIVE_POINTERS
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
- <20190617222034.10799-8-linux@rasmusvillemoes.dk>
- <CAKwvOdn5fhCTqtciKBwAj3vYQMhi06annzxcdC1GjKxri=dHnw@mail.gmail.com>
- <12bd1adc-2258-ad5d-f6c9-079fdf0821b8@rasmusvillemoes.dk>
- <CAKwvOdkqy8=V17qEM_SMDEAh=UX5Y2-nj9EUkC169nEiXc_JzA@mail.gmail.com>
- <70aa7b96-e19d-5f8b-1ff6-af15715623e5@rasmusvillemoes.dk>
- <CAKwvOdkWo5yG7LrtGL_ht-XHFgNqx_t6rP+hHhcPyb+Ud1N+HA@mail.gmail.com>
- <CAKwvOdnFt18ffO0BV-AZ9+mYuOBMroPObxrakXdV1v4iL3CS3Q@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <4e9d2103-2186-308b-c560-830c57ee3a6d@rasmusvillemoes.dk>
-Date:   Thu, 27 Jun 2019 01:52:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=c5MKxKpL1LGme09OnNwDQjsqqlS3JWAbrh2sxWujAk8=;
+        b=ViYPzYvMH2k8QQmawbU90rQRJ2sIyhtstVsaEW6S1OOU1T/gslHQdqFe+o7Yj7nuzG
+         2lxqJ/NdAbnUc3qhY0q1KXK0KQflQIbxndTAQ33ML9ezcsTRYnh7oz1FFREfpcOiFm0c
+         iO2pLDpmN2xZ5zldJoGNjfRCohpWWt5Anu0t0Rf2wn4AN7TN7XNJLt8hPm+wcWIUQbEA
+         pUQc1NeDJg998jPzcci2Vc0t4hlN6cUNKQkwyZybCO+3vVRsmV4nOQwaMzeW7/Fxpp65
+         tstFEMIKfeKtuld2R37RlGsbY+8ZNbQlW7OhDsPiFkXcq1azGnwpgU8srmzsAb2FuS6E
+         dwKA==
+X-Gm-Message-State: APjAAAXYZxxILh1jYCmiybdQK91KpCN/V+phbXIDx5d36zNp+rOiSuwm
+        iDOxzTKZhBXVC93piCy1kg7vm5wlvpLWv4cm/P+lPxGy3d4T
+X-Google-Smtp-Source: APXvYqw0rSeais3gd71d3pKztVwreFghQwPf0ciLriAei8/ydZP7gcjOnDii1dtoOGd1VNJ94dAGeH2zX3nwhBEDVLqHtbiTYrsV
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdnFt18ffO0BV-AZ9+mYuOBMroPObxrakXdV1v4iL3CS3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5d:885a:: with SMTP id t26mr1029660ios.218.1561593301141;
+ Wed, 26 Jun 2019 16:55:01 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 16:55:01 -0700
+In-Reply-To: <000000000000f4f847058c387616@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ff8f15058c42c5fa@google.com>
+Subject: Re: KASAN: use-after-free Read in corrupted (3)
+From:   syzbot <syzbot+8a821b383523654227bf@syzkaller.appspotmail.com>
+To:     aarcange@redhat.com, akpm@linux-foundation.org, ast@kernel.org,
+        christian@brauner.io, daniel@iogearbox.net, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, john.fastabend@gmail.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
+        namit@vmware.com, netdev@vger.kernel.org, peterz@infradead.org,
+        riel@surriel.com, syzkaller-bugs@googlegroups.com, wad@chromium.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/06/2019 01.16, Nick Desaulniers wrote:
-> On Tue, Jun 25, 2019 at 3:18 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> 
-> The prints should show up in dmesg right, assuming you do something to
-> trigger them?  Can you provide more details for a test case that's
-> easy to trip? What's an easy case to reproduce from a limited
-> buildroot env (basic shell/toybox)?
-> 
+syzbot has bisected this bug to:
 
-Hm, I seemed to remember that those kobject events triggered all the
-time. Oh well, try this one:
+commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+Author: John Fastabend <john.fastabend@gmail.com>
+Date:   Sat Jun 30 13:17:47 2018 +0000
 
-echo 'file ping.c +p' > control
-ping localhost
-dmesg | grep ping
+     bpf: sockhash fix omitted bucket lock in sock_close
 
-Rasmus
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11bb4e3da00000
+start commit:   045df37e Merge branch 'cxgb4-Reference-count-MPS-TCAM-entr..
+git tree:       net-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13bb4e3da00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15bb4e3da00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dd16b8dc9d0d210c
+dashboard link: https://syzkaller.appspot.com/bug?extid=8a821b383523654227bf
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1389f5b5a00000
+
+Reported-by: syzbot+8a821b383523654227bf@syzkaller.appspotmail.com
+Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
