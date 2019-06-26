@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBA5C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5A0C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B79217D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFF3205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a71rNY30"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xiqkyqpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfFZOrv (ORCPT
+        id S1728393AbfFZOry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:47:51 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44164 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728329AbfFZOrn (ORCPT
+        Wed, 26 Jun 2019 10:47:54 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55363 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbfFZOrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:47:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r16so3040680wrl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:47:42 -0700 (PDT)
+        Wed, 26 Jun 2019 10:47:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a15so2401249wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yqfHGm0TnB/EluOWXQT4ZbDAqP2xMCI6PrNJ2MlYeVk=;
-        b=a71rNY30tMc88OSz/m3t84f2lUVWT7mZhl/MxOCDBStOMFmcmyp+0EeBl0cq5GewFx
-         VUaTobcEMFxs9V5fU+/dfPBCEVA3H39ox6+4QXJDvLk2FzCwVdIe/oKS7NXNgU70uEcB
-         JbJNTzlwSOxEQlywVhrYG4TZaipPcxo0eTTIsoSXbepbQkzyYCc62cVLAJSZXgRmT7qj
-         lGn7oceuBdOThW6CENUrTrjdjj576c4AQv2Puhoqm1u2vM2lDtTo1F8QdoMQ68ovHssX
-         KNaXaXJ2WH6YTa+jMkqI/RdqOV+m/HHrJbuCtSGPfAWFXvN+Qpk3UgZNQ5qGLlCjHuh1
-         8zBw==
+        bh=DAchjLoGp53ThJdxxXYtoXfJ80Q4DYb4SAa6+caQEjY=;
+        b=xiqkyqpUMCyhR970FBfcZF49AhwK/SFedKuJ5FRBVxNPZjGphDLf8ZqY5lwbop6ozN
+         oY3nkTgayC/91n0TSa61b4ZfKWmnist6N8thv5t4eXM1AEpYGTyiyCdsizlz4O9VBAS+
+         Hj+B1iw81OiFPzqLulhTnWzCm3f/PCMn+18KJzjQ3Y635qkmdvYgUEgG76MGg5Y7n4hS
+         T0XeUfLyfUCYeVnDa9QlbkB8aoQVnDUmm+p36MizQpshTQBEQqDBozwd1wJMErJlIIba
+         ozkF63/2/PzsdhCQQw0UGUPLWt51AWcYhblfhm90HgYMIcB5bv+AhXd+OMCfcE5I5UW0
+         hJlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yqfHGm0TnB/EluOWXQT4ZbDAqP2xMCI6PrNJ2MlYeVk=;
-        b=pwDCe/Lec0seyC5MDX7Ihtq10R0feJ8eZjMgzr93ianNx/7ydMHhlJKlHKSJi6Qxwc
-         flOFJNwZgT0mvQ4ymco0S1Iy86T47n4batf505uipv2l8SmAg3tpG62DTCA6cIMn1/fw
-         cZSUgtJpCiQvVpaB+OdgqUKrjboKavpysbEXzKjcC6EZF2F8+FLbGoxS0Hla1yVsvIYm
-         k2TuzpPikRuuf+nHqTqckwSQImrTBJVBOTS9Urdw18M4qJ1ZuHYgn4tn9Yjs0Ijxq+TC
-         H8ZyTpXNhgtz7vFYRjPWqSB8lT2K56CNRGKu5uDUs9Rm4e7g276EYOhaIrUV/EKno+Rl
-         O5oQ==
-X-Gm-Message-State: APjAAAX30mTqjYOddz9O0tigiOA8U8gzVQznDh0fYVT40y2AdI/to+0y
-        k0yVHBnS/47CITi+C5JJjEqFQg==
-X-Google-Smtp-Source: APXvYqwiZIlhM0IIhYBQ3uOr0VubIIIk4zq48f0S/j2B8N8PPz8mVyq7XGXacPm5ZFILJYSrbtW2pw==
-X-Received: by 2002:a5d:53d2:: with SMTP id a18mr4156921wrw.98.1561560461122;
-        Wed, 26 Jun 2019 07:47:41 -0700 (PDT)
+        bh=DAchjLoGp53ThJdxxXYtoXfJ80Q4DYb4SAa6+caQEjY=;
+        b=peKbrLP1w/VeUrrzzCqHvvNSWNwN2tV5P//GjirRGy0VRXgYyaYd/gseX3X++3UYX4
+         +oeerAbC9xZQdAS+6s8KD75wascUkGPGBBFn4jO55Glmw/5YxxlZLrPM50/zmpIlFpI0
+         aduZl399sTYD0zl7qUOLyaozfnLLCQdUj8ydCGV+2Ct7gf0Y2NVTt7pZriI0zZQ9n0Nk
+         YcCPOr67PdrpQ+VoJXEE3Hygf+2Sl1re+Fl8UjzkuCXUqQB2I7zGQr34X9E8lNFgGSaR
+         j7y8ucQDrpRBvvSQHQJHqeI5rSz6SZ3tuwXZHOmbqcFsVMqBw4Hyfzj3l7bRIjo27ZHh
+         +RHA==
+X-Gm-Message-State: APjAAAU0sMW6MZlzuzg/JldqI9IwXdsuX84/u61pNRz3NhTTPYeZ18BR
+        Kud97MOEszWHbno/Ho9exSPx+A==
+X-Google-Smtp-Source: APXvYqz6sc/3QmZZznQnarPJoaco5wIiNAyu1Ktb9fX4GSZIy5IQZ+V+MKhTTcgjM221UKbgx9UA1A==
+X-Received: by 2002:a05:600c:2388:: with SMTP id m8mr2884140wma.23.1561560464072;
+        Wed, 26 Jun 2019 07:47:44 -0700 (PDT)
 Received: from mai.imgcgcw.net (26.92.130.77.rev.sfr.net. [77.130.92.26])
-        by smtp.gmail.com with ESMTPSA id h84sm2718557wmf.43.2019.06.26.07.47.39
+        by smtp.gmail.com with ESMTPSA id h84sm2718557wmf.43.2019.06.26.07.47.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 07:47:40 -0700 (PDT)
+        Wed, 26 Jun 2019 07:47:43 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
@@ -62,9 +62,9 @@ Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
         Thierry Reding <treding@nvidia.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT)
-Subject: [PATCH 17/25] clocksource/drivers/tegra: Remove duplicated use of per_cpu_ptr
-Date:   Wed, 26 Jun 2019 16:46:43 +0200
-Message-Id: <20190626144651.16742-17-daniel.lezcano@linaro.org>
+Subject: [PATCH 19/25] clocksource/drivers/tegra: Drop unneeded typecasting in one place
+Date:   Wed, 26 Jun 2019 16:46:45 +0200
+Message-Id: <20190626144651.16742-19-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190626144651.16742-1-daniel.lezcano@linaro.org>
 References: <adba7d03-e9bd-9542-60bc-0f2d4874a40e@linaro.org>
@@ -76,86 +76,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dmitry Osipenko <digetx@gmail.com>
 
-It was left unnoticed by accident, which means that the code could be
-cleaned up a tad more.
+There is no need to cast void because kernel allows to do that without
+a warning message from a compiler.
 
 Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/timer-tegra.c | 42 ++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 17 deletions(-)
+ drivers/clocksource/timer-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-index 880ba67ca7ee..f172a57cc5fe 100644
+index 41257f89a216..f7a09d88dacb 100644
 --- a/drivers/clocksource/timer-tegra.c
 +++ b/drivers/clocksource/timer-tegra.c
-@@ -218,6 +218,19 @@ static inline unsigned int tegra_irq_idx_for_cpu(int cpu, bool tegra20)
- 	return TIMER10_IRQ_IDX + cpu;
- }
+@@ -83,7 +83,7 @@ static int tegra_timer_set_periodic(struct clock_event_device *evt)
  
-+static inline unsigned long tegra_rate_for_timer(struct timer_of *to,
-+						 bool tegra20)
-+{
-+	/*
-+	 * TIMER1-9 are fixed to 1MHz, TIMER10-13 are running off the
-+	 * parent clock.
-+	 */
-+	if (tegra20)
-+		return 1000000;
-+
-+	return timer_of_rate(to);
-+}
-+
- static int __init tegra_init_timer(struct device_node *np, bool tegra20,
- 				   int rating)
+ static irqreturn_t tegra_timer_isr(int irq, void *dev_id)
  {
-@@ -270,32 +283,27 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
+-	struct clock_event_device *evt = (struct clock_event_device *)dev_id;
++	struct clock_event_device *evt = dev_id;
+ 	void __iomem *reg_base = timer_of_base(to_timer_of(evt));
  
- 	for_each_possible_cpu(cpu) {
- 		struct timer_of *cpu_to = per_cpu_ptr(&tegra_to, cpu);
-+		unsigned long flags = IRQF_TIMER | IRQF_NOBALANCING;
-+		unsigned long rate = tegra_rate_for_timer(to, tegra20);
- 		unsigned int base = tegra_base_for_cpu(cpu, tegra20);
- 		unsigned int idx = tegra_irq_idx_for_cpu(cpu, tegra20);
-+		unsigned int irq = irq_of_parse_and_map(np, idx);
- 
--		/*
--		 * TIMER1-9 are fixed to 1MHz, TIMER10-13 are running off the
--		 * parent clock.
--		 */
--		if (tegra20)
--			cpu_to->of_clk.rate = 1000000;
--		else
--			cpu_to->of_clk.rate = timer_of_rate(to);
--
--		cpu_to = per_cpu_ptr(&tegra_to, cpu);
--		cpu_to->of_base.base = timer_reg_base + base;
--		cpu_to->clkevt.rating = rating;
--		cpu_to->clkevt.cpumask = cpumask_of(cpu);
--		cpu_to->clkevt.irq = irq_of_parse_and_map(np, idx);
--		if (!cpu_to->clkevt.irq) {
-+		if (!irq) {
- 			pr_err("failed to map irq for cpu%d\n", cpu);
- 			ret = -EINVAL;
- 			goto out_irq;
- 		}
- 
-+		cpu_to->clkevt.irq = irq;
-+		cpu_to->clkevt.rating = rating;
-+		cpu_to->clkevt.cpumask = cpumask_of(cpu);
-+		cpu_to->of_base.base = timer_reg_base + base;
-+		cpu_to->of_clk.rate = rate;
-+
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
--		ret = request_irq(cpu_to->clkevt.irq, tegra_timer_isr,
--				  IRQF_TIMER | IRQF_NOBALANCING,
-+
-+		ret = request_irq(cpu_to->clkevt.irq, tegra_timer_isr, flags,
- 				  cpu_to->clkevt.name, &cpu_to->clkevt);
- 		if (ret) {
- 			pr_err("failed to set up irq for cpu%d: %d\n",
+ 	writel_relaxed(TIMER_PCR_INTR_CLR, reg_base + TIMER_PCR);
 -- 
 2.17.1
 
