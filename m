@@ -2,125 +2,115 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8280C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCCBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A868C208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C53C208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfFZUkF (ORCPT
+        id S1726447AbfFZUpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:40:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39216 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZUkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:40:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5D4512603FD
-Subject: Re: [PATCH v3 0/2] Support accelerometers for veyron_minnie
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        dianders@chromium.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190624225312.131745-1-gwendal@chromium.org>
- <5326bfb8-611f-765b-1c9c-c95032102c71@collabora.com>
- <20190626202103.07e27e5e@archlinux>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <882cf47c-c126-3e10-ba3a-23c926a68ce1@collabora.com>
-Date:   Wed, 26 Jun 2019 22:40:00 +0200
+        Wed, 26 Jun 2019 16:45:54 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:49582 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfFZUpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:45:53 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgEnT-0002Rd-NS; Wed, 26 Jun 2019 14:45:40 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+Date:   Wed, 26 Jun 2019 14:45:38 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190626202103.07e27e5e@archlinux>
+In-Reply-To: <20190626202107.GA5850@ziepe.ca>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
 
-On 26/6/19 21:21, Jonathan Cameron wrote:
-> On Tue, 25 Jun 2019 19:09:50 +0200
-> Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
-> 
->> Hi,
+
+On 2019-06-26 2:21 p.m., Jason Gunthorpe wrote:
+> On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
+>>> we have a hole behind len where we could store flag.  Preferably
+>>> optionally based on a P2P or other magic memory types config
+>>> option so that 32-bit systems with 32-bit phys_addr_t actually
+>>> benefit from the smaller and better packing structure.
 >>
->> On 25/6/19 0:53, Gwendal Grignou wrote:
->>> veyron_minnie - ASUS Chromebook Flip C100PA - embedded controller
->>> controls two accelerometers, one in the lid, one in the base.
->>> However, the EC firmware does not follow the new interface that
->>> cros_ec_accel driver use.
->>> Extend the legacy driver used on glimmer - Lenovo ThinkPad 11e
->>> Chromebook - to veyron_minnie.
->>> veyron_minnie being ARM based, issue command over the I2C bus to the EC
->>> instead of relying on the shared registers over LPC.
->>>
->>> Gwendal Grignou (2):
->>>   iio: cros_ec: Add sign vector in core for backward compatibility
->>>   iio: cros_ec: Extend legacy support to ARM device
->>>
->>> Changes in v3:
->>> - Fix commit message, add reviewed-by for first patch.
->>>
->>> Changes in v2:
->>> - Readd empty line to reduce amount of change in patch.
->>> - Remove Keywords used by ChromeOS commit queue.
->>>
->>>  drivers/iio/accel/Kconfig                     |   4 +-
->>>  drivers/iio/accel/cros_ec_accel_legacy.c      | 350 ++++--------------
->>>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   4 +
->>>  .../linux/iio/common/cros_ec_sensors_core.h   |   1 +
->>>  4 files changed, 84 insertions(+), 275 deletions(-)
->>>   
->>
->> Just a side note that I think that this patch depends on [1] to have the legacy
->> sensors working on veyron minnie.
->>
->> For the full series:
->>
->> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Ah. I was assuming you mean a runtime dependency.  Whereas applying this
-> on it's own is giving me a build problem:
+>> That seems sensible. The one thing that's unclear though is how to get
+>> the PCI Bus address when appropriate. Can we pass that in instead of the
+>> phys_addr with an appropriate flag? Or will we need to pass the actual
+>> physical address and then, at the map step, the driver has to some how
+>> lookup the PCI device to figure out the bus offset?
 > 
->  drivers/iio/accel/cros_ec_accel_legacy.c: In function ‘cros_ec_accel_legacy_read_cmd’:
-> drivers/iio/accel/cros_ec_accel_legacy.c:50:16: error: ‘struct <anonymous>’ has no member named ‘max_sensor_count’
+> I agree with CH, if we go down this path it is a layering violation
+> for the thing injecting bio's into the block stack to know what struct
+> device they egress&dma map on just to be able to do the dma_map up
+> front.
 
-Right, this also build depends on the immutable branch (ib-mfd-cros-v5.3).
+Not sure I agree with this statement. The p2pdma code already *must*
+know and access the pci_dev of the dma device ahead of when it submits
+the IO to know if it's valid to allocate and use P2P memory at all. This
+is why the submitting driver has a lot of the information needed to map
+this memory that the mapping driver does not.
 
+> So we must be able to go from this new phys_addr_t&flags to some BAR
+> information during dma_map.
 
->    50 |  st->param.dump.max_sensor_count = CROS_EC_SENSOR_LEGACY_NUM;
->       |                ^
-> make[3]: *** [scripts/Makefile.build:285: drivers/iio/accel/cros_ec_accel_legacy.o] Error 1
-> make[2]: *** [scripts/Makefile.build:489: drivers/iio/accel] Error 2
-> make[1]: *** [scripts/Makefile.build:489: drivers/iio] Error 2
-> 
-> Which I'll assume is related to that other set.
-> 
-> I'm happy for these to go another route to sit on top of that series.
-> If not I'll pick them up for the next cycle via IIO.
-> 
-> Should they go another route,
-> 
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for both of them.
+> For instance we could use a small hash table of the upper phys addr
+> bits, or an interval tree, to do the lookup.
 
-I'd be happy to pick this patch and add to the chrome-platform tree, ideally
-once we manage to get [1] ready for land.
+Yes, if we're going to take a hard stance on this. But using an interval
+tree (or similar) is a lot more work for the CPU to figure out these
+mappings that may not be strictly necessary if we could just pass better
+information down from the submitting driver to the mapping driver.
 
-Thanks,
-~ Enric
+> The bar info would give the exporting struct device and any other info
+> we need to make the iommu mapping.
 
-> 
->>
->>
->> [1] https://lkml.org/lkml/2019/6/18/268
-> 
+Well, the IOMMU mapping is the normal thing the mapping driver will
+always do. We'd really just need the submitting driver to, when
+appropriate, inform the mapping driver that this is a pci bus address
+and not to call dma_map_xxx(). Then, for special mappings for the CMB
+like Christoph is talking about, it's simply a matter of doing a range
+compare on the PCI Bus address and converting the bus address to a BAR
+and offset.
+
+Logan
