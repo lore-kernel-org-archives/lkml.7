@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBD0C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DE3C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B6B214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14440208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520879;
-	bh=O6+SfdkQ0SBntJ5nMeOR/dTXIy72GaBUg5wLLE7JaSw=;
+	s=default; t=1561520887;
+	bh=e6VPy2IePKX0wLD9QIegW2tEtkkOHE5CSxSZjzWV+zs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rfgSYCNRK5SqlisEMh9kmxDz/roxYBncYoW+wL6SiOVUUBJrgiaU91cCxhhnLE5J5
-	 +OX9/jfsBV7siT3gOsRMZ4gvdC3Op7/MlgxY0gLfPUU7FIN6ZmCHumhnei2Vf0GLBR
-	 CaBgOq1X0SWfrZH0bgRRu0ErWio9CVy36+e2v5UU=
+	b=i4cJ2LBnEveoQCx5B+ZxKrM4WTxpnC9YnVgaeHZ7/tjkz+hFUl/rhO9bi7AMYXQ5n
+	 AJFSQvszuhVQGibTJ4b1ERNbVU4qlE9EfimgYtkZpfq05yHCLxl5pKHtUkzmYtcMAs
+	 8SPo+KTSQyKH93DBW7C1zylbxhn0dSI50ZZQ67A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbfFZDr6 (ORCPT
+        id S1727479AbfFZDsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57074 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726862AbfFZDpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:45:25 -0400
+        id S1727733AbfFZDpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:45:17 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9726205ED;
-        Wed, 26 Jun 2019 03:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97CAA21738;
+        Wed, 26 Jun 2019 03:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520725;
-        bh=O6+SfdkQ0SBntJ5nMeOR/dTXIy72GaBUg5wLLE7JaSw=;
+        s=default; t=1561520716;
+        bh=e6VPy2IePKX0wLD9QIegW2tEtkkOHE5CSxSZjzWV+zs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YW8CdQo6Dt5IldxeCGlgHTwk+W64NPyvN0yWyH2u6TeBmhHzkKBdsOZzEOMnImQ+6
-         Q08HuDuZImOJ4/F9KbOogGtrKwhzpuDKKGmeT3cIOd3ZKMOh1Vkgrb7BVSjleQeGIA
-         nM5mRYKiINk2UaSRGpYBOtyOuEso5SMMsgzRhIHo=
+        b=jGJ84m0HoIgD/KTo5xHib1E9QNCL64QQx6MFlEDCLmbtCTHjBRXPfF+A0k3pSnUIJ
+         E+t8j+YGcce4S1gAw4IRvmmTEgz9iz7iuHPfxxghja80H5NbSLUcA8n4YEzfLw4tne
+         HMOAhxbz6KNdqJVYD2crMxpEEKEuHGMdFg4x+mrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 08/21] drm/mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
-Date:   Tue, 25 Jun 2019 23:44:53 -0400
-Message-Id: <20190626034506.24125-8-sashal@kernel.org>
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 04/21] ASoC: core: lock client_mutex while removing link components
+Date:   Tue, 25 Jun 2019 23:44:49 -0400
+Message-Id: <20190626034506.24125-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034506.24125-1-sashal@kernel.org>
 References: <20190626034506.24125-1-sashal@kernel.org>
@@ -59,69 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit 2458d9d6d94be982b917e93c61a89b4426f32e31 ]
+[ Upstream commit 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb ]
 
-mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which
-needs ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is
-called, ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called
-after last irq, it will timeout with this message: "vblank wait timed out
-on crtc 0". This happens sometimes when turning off the screen.
+Removing link components results in topology unloading. So,
+acquire the client_mutex before removing components in
+soc_remove_link_components. This will prevent the lockdep warning
+seen when dai links are removed during topology removal.
 
-In drm_atomic_helper.c#disable_outputs(),
-the calling sequence when turning off the screen is:
-
-1. mtk_dsi_encoder_disable()
-     --> mtk_output_dsi_disable()
-       --> mtk_dsi_stop();  /* sometimes make vblank timeout in
-                               atomic_disable */
-       --> mtk_dsi_poweroff();
-2. mtk_drm_crtc_atomic_disable()
-     --> drm_crtc_wait_one_vblank();
-     ...
-       --> mtk_dsi_ddp_stop()
-         --> mtk_dsi_poweroff();
-
-mtk_dsi_poweroff() has reference count design, change to make
-mtk_dsi_stop() called in mtk_dsi_poweroff() when refcount is 0.
-
-Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 413313f19c36..c1b8caad65e6 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -631,6 +631,15 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
- 	if (--dsi->refcount != 0)
- 		return;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 42c2a3065b77..eb23c237b622 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1258,12 +1258,14 @@ static void soc_remove_link_components(struct snd_soc_card *card,
+ 	struct snd_soc_component *component;
+ 	struct snd_soc_rtdcom_list *rtdcom;
  
-+	/*
-+	 * mtk_dsi_stop() and mtk_dsi_start() is asymmetric, since
-+	 * mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(),
-+	 * which needs irq for vblank, and mtk_dsi_stop() will disable irq.
-+	 * mtk_dsi_start() needs to be called in mtk_output_dsi_enable(),
-+	 * after dsi is fully set.
-+	 */
-+	mtk_dsi_stop(dsi);
-+
- 	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
- 		if (dsi->panel) {
- 			if (drm_panel_unprepare(dsi->panel)) {
-@@ -697,7 +706,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
- 		}
++	mutex_lock(&client_mutex);
+ 	for_each_rtdcom(rtd, rtdcom) {
+ 		component = rtdcom->component;
+ 
+ 		if (component->driver->remove_order == order)
+ 			soc_remove_component(component);
  	}
++	mutex_unlock(&client_mutex);
+ }
  
--	mtk_dsi_stop(dsi);
- 	mtk_dsi_poweroff(dsi);
- 
- 	dsi->enabled = false;
+ static void soc_remove_dai_links(struct snd_soc_card *card)
 -- 
 2.20.1
 
