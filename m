@@ -2,46 +2,44 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8901C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37929C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C81320663
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C1E20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:03:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="cP985+BI"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="m6V0jnW2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfFZPDa (ORCPT
+        id S1728184AbfFZPDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:03:30 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:49138 "EHLO
+        Wed, 26 Jun 2019 11:03:33 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:12054 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbfFZPD3 (ORCPT
+        by vger.kernel.org with ESMTP id S1726157AbfFZPDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:03:29 -0400
+        Wed, 26 Jun 2019 11:03:31 -0400
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QExT9f031832;
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QEx8JR031474;
         Wed, 26 Jun 2019 10:03:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=WDeL3zXQ72/70Vg444pCa9RqPYZq07/4JCE0/ZUZX9g=;
- b=cP985+BIBKyotSpP9zE3bgfrVqJu0MtOITPjdIT5CzzS6m/f615rr4DZlO3cxJCYM+Qh
- 7O+Sow9pBQAf4tAIaD3fxAljz5cPrRM0ztSyEuhT2nZpCc5X8QnxFkT1tnJloydCZp0D
- cdYtL/E+X8M3dEjY5kR/uEd2PwXHSJmWvLo4bIGpVq5v9i+31y1yUcHPEVbJvqpJCTCv
- 6udyM8habxs9pmZZapS4RbOUrT01uRgQkM1IKxecY9l3aMlDIETKVv3jRvKIYAnRp3TN
- NWH7GFJw/6V71ZjNJw/RNHTQcfFvlc1hNGcPlVFT/SveuNEg9JA05I5gs5vog/rdX8YL tw== 
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=t95MC3q32p9rAPkXg0ISKU0GoUuWK1qfv3qhH/m8tXU=;
+ b=m6V0jnW2XbCeWbBkiaAFgfMtZhaJcoLVFqVqfbyFLEeiy/pf23SwVNz8jmyVJst9vH1M
+ J9GAwoXulCJTV3m1e4lxe2LleSWEpRFxjsnI4rWukBfI9n8TtXLaXJs7PabXP4Io+kPW
+ 98B/+twHRZC2mG1XJQZle9RpZJjGz1oiKBJyVWiGFSwQqgkIR1k+fNO9H/78ZdmBmQlF
+ +CqK1eYIU/R7ofyW4DvE1Bqo1xFWy1l0VHUagOdMJp5tQTjwMJWf/dCld11J8USJVDkG
+ mJojEGhpW/SNJOmo0/vYniJph1hJanFO65g4DohWTxPwYhQrz/SvcVuS4WKmcbjNUYCr eQ== 
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from mail3.cirrus.com ([87.246.76.56])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2tc7gt8b76-1;
+        by mx0b-001ae601.pphosted.com with ESMTP id 2tc7gt8b77-1;
         Wed, 26 Jun 2019 10:03:03 -0500
 Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
-        by mail3.cirrus.com (Postfix) with ESMTP id D88B66159F9B;
+        by mail3.cirrus.com (Postfix) with ESMTP id D51676159F99;
         Wed, 26 Jun 2019 10:03:50 -0500 (CDT)
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
@@ -51,7 +49,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
  Transport; Wed, 26 Jun 2019 16:03:02 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 268F345;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 112CA44;
         Wed, 26 Jun 2019 16:03:02 +0100 (BST)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
@@ -60,17 +58,15 @@ CC:     <jarkko.nikula@linux.intel.com>,
         <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH v7 2/6] i2c: acpi: Use available IRQ helper functions
-Date:   Wed, 26 Jun 2019 16:02:58 +0100
-Message-ID: <20190626150302.22703-3-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v7 0/6] I2C IRQ Probe Improvements
+Date:   Wed, 26 Jun 2019 16:02:56 +0100
+Message-ID: <20190626150302.22703-1-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190626150302.22703-1-ckeepax@opensource.cirrus.com>
-References: <20190626150302.22703-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=970 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=950 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906260177
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,73 +74,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the available IRQ helper functions, most of the functions have
-additional helpful side affects like configuring the trigger type of the
-IRQ.
+This series attempts to align as much IRQ handling into the
+probe path as possible. Note that I don't have a great setup
+for testing these patches so they are mostly just build tested
+and need careful review and testing before any of them are
+merged.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
-
-No change since v6.
+The series brings the ACPI path inline with the way the device
+tree path handles the IRQ entirely at probe time. However,
+it still leaves any IRQ specified through the board_info as
+being handled at device time. In that case we need to cache
+something from the board_info until probe time, which leaves
+any alternative solution with something basically the same as
+the current handling although perhaps caching more stuff.
 
 Thanks,
 Charles
 
- drivers/i2c/i2c-core-acpi.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+See previous discussions:
+ - https://lkml.org/lkml/2019/2/15/989
+ - https://www.spinics.net/lists/linux-i2c/msg39541.html
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index f1d648962b223..3951e352317ff 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -133,13 +133,24 @@ static int i2c_acpi_do_lookup(struct acpi_device *adev,
- 	return 0;
- }
- 
-+static int i2c_acpi_add_resource(struct acpi_resource *ares, void *data)
-+{
-+	int *irq = data;
-+	struct resource r;
-+
-+	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
-+		*irq = i2c_dev_irq_from_resources(&r, 1);
-+
-+	/* No need to add resource to the list, free list if this changes */
-+	return 1;
-+}
-+
- static int i2c_acpi_get_info(struct acpi_device *adev,
- 			     struct i2c_board_info *info,
- 			     struct i2c_adapter *adapter,
- 			     acpi_handle *adapter_handle)
- {
- 	struct list_head resource_list;
--	struct resource_entry *entry;
- 	struct i2c_acpi_lookup lookup;
- 	int ret;
- 
-@@ -172,19 +183,11 @@ static int i2c_acpi_get_info(struct acpi_device *adev,
- 
- 	/* Then fill IRQ number if any */
- 	INIT_LIST_HEAD(&resource_list);
--	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-+	ret = acpi_dev_get_resources(adev, &resource_list,
-+				     i2c_acpi_add_resource, &info->irq);
- 	if (ret < 0)
- 		return -EINVAL;
- 
--	resource_list_for_each_entry(entry, &resource_list) {
--		if (resource_type(entry->res) == IORESOURCE_IRQ) {
--			info->irq = entry->res->start;
--			break;
--		}
--	}
--
--	acpi_dev_free_resource_list(&resource_list);
--
- 	acpi_set_modalias(adev, dev_name(&adev->dev), info->type,
- 			  sizeof(info->type));
- 
+Charles Keepax (6):
+  i2c: core: Allow whole core to use i2c_dev_irq_from_resources
+  i2c: acpi: Use available IRQ helper functions
+  i2c: acpi: Factor out getting the IRQ from ACPI
+  i2c: core: Move ACPI IRQ handling to probe time
+  i2c: core: Move ACPI gpio IRQ handling into i2c_acpi_get_irq
+  i2c: core: Tidy up handling of init_irq
+
+ drivers/i2c/i2c-core-acpi.c | 59 ++++++++++++++++++++++++++++++++-------------
+ drivers/i2c/i2c-core-base.c | 11 +++++----
+ drivers/i2c/i2c-core.h      |  9 +++++++
+ 3 files changed, 57 insertions(+), 22 deletions(-)
+
 -- 
 2.11.0
 
