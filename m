@@ -2,157 +2,127 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8043C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D564C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8F3216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15482216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqEUFEYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfFZSfb (ORCPT
+        id S1726720AbfFZSfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:35:31 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:35694 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfFZSf2 (ORCPT
+        Wed, 26 Jun 2019 14:35:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52781 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfFZSfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:35:28 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id BAC2A9E7F55;
-        Wed, 26 Jun 2019 19:35:25 +0100 (BST)
-Date:   Wed, 26 Jun 2019 19:35:24 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH 3/5] iio: imu: adis: Add support for SPI transfer
- cs_change_stall_delay_us
-Message-ID: <20190626193524.2bf08a14@archlinux>
-In-Reply-To: <20190625131328.11883-3-alexandru.ardelean@analog.com>
-References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
-        <20190625131328.11883-3-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Jun 2019 14:35:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s3so3136055wms.2;
+        Wed, 26 Jun 2019 11:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=JwwlhRes3eA1e/9Q/hAaa2AfY6tnj486mE1SbBlz0rU=;
+        b=fqEUFEYw9qv3t6ezbWG5URRezYfRHUtrM1lTZFignM+UEuk6nmumDvMNaEbwV8B6/U
+         a88d3u1uY3AW5HO8EX/hZ+2slvvCnfRIbnPSlcsmlmXRwSqLJKSSMw521Rcf/frdz8Ju
+         VCQlnrE3gKEwXtlFjm7d+FqSMzecYPrY0CbuPatlexyVySbprIjAZgJO1Fxmoh2IkP1c
+         76xAzTct5LXCtynhA/ro/Ue7Z5yg6qHLXPvOZe9FE32Juvcfc4YZcHpcbSYEugFCIW1D
+         5tP0QtmDMGKaIhWSfXuIlEQeHyjZrKrYIQpPDv5i2zTX5oqbc39/LKvxigMd6OIKPshr
+         DOTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=JwwlhRes3eA1e/9Q/hAaa2AfY6tnj486mE1SbBlz0rU=;
+        b=c08xaPzioTFxBcF6z13ICi6o9jLVJJkb20wGyKGRLYIVmd/ecj2ihSXHWINExA2b3O
+         UUC9nM8kKID734k+zAy+JQqDj4H9BTCPqeM89gcZgEJJUkJaiWfUCBrcW1wRLGnYOOk0
+         +rHJvd/M1XfapZAD+fP9msHhIkQhDnFm3IGkNNdaz36xgmChmmqreaILzwLY+eiSMSV6
+         oEx9q3IPjczuUKb6rgIjYsXiHK7ErVQgfLvJeW+Tt8PmLodXkrtW8lno3nGjDWGIzaJA
+         euIc4TMQJjWCcbxDPH3kAdvYDXxc2Iij4izubBTCYwUJnLG3fxAgv5j3k7COWcDulMBS
+         E6og==
+X-Gm-Message-State: APjAAAVNAtroP/WmGJgpDypPsrRdvJpyzKk0Om/M7dzyL5CGziX3fuC5
+        xMqU/hlBAHHI24sSTWMjX7QzLu7W
+X-Google-Smtp-Source: APXvYqyq7eim+ZRBTCdydue2wqc7N3iBFvdNRciIZbxjR7OLY0XqW731SSbiJw0uh41ze5RKeO5kEg==
+X-Received: by 2002:a7b:c8d4:: with SMTP id f20mr287046wml.90.1561574143412;
+        Wed, 26 Jun 2019 11:35:43 -0700 (PDT)
+Received: from [172.30.90.108] (sjewanfw1-nat.mentorg.com. [139.181.7.34])
+        by smtp.gmail.com with ESMTPSA id c1sm36562604wrh.1.2019.06.26.11.35.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 11:35:42 -0700 (PDT)
+Subject: Re: media: staging/imx: Improve pipeline searching (bug report)
+To:     Colin Ian King <colin.king@canonical.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <9b6d7f0e-f191-e5d5-e20b-9244800678fe@canonical.com>
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+Message-ID: <fa12f7f7-c2c8-6777-0359-8bdd8290f517@gmail.com>
+Date:   Wed, 26 Jun 2019 11:35:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <9b6d7f0e-f191-e5d5-e20b-9244800678fe@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 16:13:26 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+Thanks for catching,
 
-> The ADIS16460 requires a higher delay before the next transfer. Since the
-> SPI framework supports configuring the delay before the next transfer, this
-> driver will become the first user of it.
-> 
-> The support for this functionality in ADIS16460 requires an addition to the
-> ADIS lib to support the `cs_change_stall_delay_us` functionality in SPI.
-> 
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject to previous patch naming etc, this is fine and I'll pick it up once
-that's sorted.
+On 6/26/19 11:27 AM, Colin Ian King wrote:
+> Hi,
+>
+> Static analysis with Coverity on Linux next has found a potential issue
+> with the following commit:
+>
+> commit 3ef46bc97ca2c918b7657a08220c7340a9bb07a2
+> Author: Steve Longerbeam <slongerbeam@gmail.com>
+> Date:   Fri May 10 17:50:11 2019 -0400
+>
+>      media: staging/imx: Improve pipeline searching
+>
+>
+> The issue is in drivers/staging/media/imx/imx-media-utils.c in function
+> find_pipeline_entity:
+>
+>          struct media_pad *pad = NULL;
+>
+> pad is assigned a NULL
+>
+>          struct video_device *vfd;
+>          struct v4l2_subdev *sd;
+>
+>          if (grp_id && is_media_entity_v4l2_subdev(start)) {
+>                  sd = media_entity_to_v4l2_subdev(start);
+>                  if (sd->grp_id & grp_id)
+>                          return &sd->entity;
+>          } else if (buftype && is_media_entity_v4l2_video_device(start)) {
+>                  vfd = media_entity_to_video_device(pad->entity);
+>
+> ..and above the null pad is being dereferenced causing a kernel oops.
 
-Thanks,
+yes, this is a typo and should be:
 
-Jonathan
+vfd = media_entity_to_video_device(start);
 
-> ---
->  drivers/iio/imu/adis.c       | 9 +++++++++
->  include/linux/iio/imu/adis.h | 2 ++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index c771ae6803a9..90dac69910b3 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -40,28 +40,33 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 4,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 6,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 8,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		},
->  	};
->  
-> @@ -134,12 +139,14 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->write_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.tx_buf = adis->tx + 4,
->  			.rx_buf = adis->rx,
-> @@ -147,11 +154,13 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.len = 2,
->  			.cs_change = 1,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		}, {
->  			.rx_buf = adis->rx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.delay_usecs = adis->data->read_delay,
-> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
->  		},
->  	};
->  
-> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> index 469a493f7ae0..4aa248b6b3bd 100644
-> --- a/include/linux/iio/imu/adis.h
-> +++ b/include/linux/iio/imu/adis.h
-> @@ -27,6 +27,7 @@ struct adis_burst;
->   * struct adis_data - ADIS chip variant specific data
->   * @read_delay: SPI delay for read operations in us
->   * @write_delay: SPI delay for write operations in us
-> + * @cs_stall_delay: SPI stall delay between transfers in us
->   * @glob_cmd_reg: Register address of the GLOB_CMD register
->   * @msc_ctrl_reg: Register address of the MSC_CTRL register
->   * @diag_stat_reg: Register address of the DIAG_STAT register
-> @@ -36,6 +37,7 @@ struct adis_burst;
->  struct adis_data {
->  	unsigned int read_delay;
->  	unsigned int write_delay;
-> +	unsigned int cs_stall_delay;
->  
->  	unsigned int glob_cmd_reg;
->  	unsigned int msc_ctrl_reg;
+
+Sending a patch...
+
+Steve
 
