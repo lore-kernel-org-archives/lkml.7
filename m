@@ -2,140 +2,103 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96796C48BDB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1A9C48BDC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9DD21670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:28:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gU068bo8"
+	by mail.kernel.org (Postfix) with ESMTP id CF5682133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbfFZO2F (ORCPT
+        id S1728073AbfFZO2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:28:05 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:46437 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFZO2E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:28:04 -0400
-Received: by mail-vs1-f73.google.com with SMTP id 129so525165vsx.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=/Bjb3ErsQTLw+YrlSLkjBcr6K+fvu3f9fORDBwR/vbU=;
-        b=gU068bo8xI9L4oRs1xcqv6j6N8grLH+AVjMocfTmuM4/QLKQLZ9QIslBwFDqGkRaKR
-         Nalu2EhT83YJzP8X3y3VqF99al81l3vbeMWMq6Vv8cV0pT2GHKQG6TiZyPyxGWJJH0+w
-         uiXHRZi806sGyKzldGWmP+mv8uuH2IL46hSwD0xgwvmeXYFr1mZmXJNtmnOpcpCZ2TU9
-         LlX+Hvk2kLpmjnlVLNn+CmX1fXrBN8qP38IAz7RxpAbrzukzszYTb5z7N1xNWI48iTPq
-         KFLfb5HFylzoR1RIOZsvqdTxQbst5LNBijEISkOESca8sUNG/W0wbcjbhJs6XTeJjxqH
-         +W8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=/Bjb3ErsQTLw+YrlSLkjBcr6K+fvu3f9fORDBwR/vbU=;
-        b=qe2lhwP1ljVfaKRe4M4ddXt7X73JZNtRG63P8BiON5qw2o3hATrbuJjao/uaz+Jxxg
-         qIE+mv2V8REq1SEQUNZX5hX7CrgWKtU94sprwQJY1JX3Gdo4Uai1k0hUcA4TtSexMvsz
-         CV1NVUNAPSaXH4OFwiTcWMt1ZvRpdqe+J6k0OcUuyY/MCwbWjQrOJo1g8N82jJMrcEE3
-         sreBVHtfbErst2HVlhOdNfwnZLGzSaP1uUIfi+wg6nbXJuaFrzGXoy0j9t93b+X+thbw
-         JUQw3XpjjYQYED9nhGXj7+KVLRnHkxDUkTSppnIFXdQ8Zs+QJH3nHPts11U/5/E2poAP
-         tQRw==
-X-Gm-Message-State: APjAAAWKsZTqSpYy4mFJG+2dhTMe7MuZM8c4A0YHH9ld9PEgQ+7pm7RQ
-        vECZuQCnnph6hL4e22E9m8jfR0c+Ow==
-X-Google-Smtp-Source: APXvYqyFzpguQlvg2yrB3GTEFA5hP/raLtejdwArbzB/ifkPk8m/SyboHpSof39lpBUIHCeFgRv34I646g==
-X-Received: by 2002:ac5:c2d2:: with SMTP id i18mr1273686vkk.36.1561559282687;
- Wed, 26 Jun 2019 07:28:02 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 16:20:12 +0200
-In-Reply-To: <20190626142014.141844-1-elver@google.com>
-Message-Id: <20190626142014.141844-4-elver@google.com>
-Mime-Version: 1.0
-References: <20190626142014.141844-1-elver@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v3 3/5] lib/test_kasan: Add test for double-kzfree detection
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 26 Jun 2019 10:28:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42070 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728022AbfFZO2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 10:28:01 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E71FE81DE3;
+        Wed, 26 Jun 2019 14:28:00 +0000 (UTC)
+Received: from gimli.home (ovpn-117-35.phx2.redhat.com [10.3.117.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CB0860852;
+        Wed, 26 Jun 2019 14:27:58 +0000 (UTC)
+Subject: [PATCH] mdev: Send uevents around parent device registration
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kwankhede@nvidia.com, alex.williamson@redhat.com, cohuck@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 26 Jun 2019 08:27:58 -0600
+Message-ID: <156155924767.11505.11457229921502145577.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 26 Jun 2019 14:28:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a simple test that checks if double-kzfree is being detected
-correctly.
+This allows udev to trigger rules when a parent device is registered
+or unregistered from mdev.
 
-Signed-off-by: Marco Elver <elver@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: kasan-dev@googlegroups.com
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- lib/test_kasan.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/vfio/mdev/mdev_core.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index e3c593c38eff..dda5da9f5bd4 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -619,6 +619,22 @@ static noinline void __init kasan_strings(void)
- 	strnlen(ptr, 1);
- }
- 
-+static noinline void __init kmalloc_double_kzfree(void)
-+{
-+	char *ptr;
-+	size_t size = 16;
-+
-+	pr_info("double-free (kzfree)\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	kzfree(ptr);
-+	kzfree(ptr);
-+}
-+
- static int __init kmalloc_tests_init(void)
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index ae23151442cb..ecec2a3b13cb 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
  {
- 	/*
-@@ -660,6 +676,7 @@ static int __init kmalloc_tests_init(void)
- 	kasan_memchr();
- 	kasan_memcmp();
- 	kasan_strings();
-+	kmalloc_double_kzfree();
+ 	int ret;
+ 	struct mdev_parent *parent;
++	char *env_string = "MDEV_STATE=registered";
++	char *envp[] = { env_string, NULL };
  
- 	kasan_restore_multi_shot(multishot);
+ 	/* check for mandatory ops */
+ 	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+@@ -196,7 +198,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+ 	list_add(&parent->next, &parent_list);
+ 	mutex_unlock(&parent_list_lock);
  
--- 
-2.22.0.410.gd8fdbe21b5-goog
+-	dev_info(dev, "MDEV: Registered\n");
++	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
++
+ 	return 0;
+ 
+ add_dev_err:
+@@ -220,6 +223,8 @@ EXPORT_SYMBOL(mdev_register_device);
+ void mdev_unregister_device(struct device *dev)
+ {
+ 	struct mdev_parent *parent;
++	char *env_string = "MDEV_STATE=unregistered";
++	char *envp[] = { env_string, NULL };
+ 
+ 	mutex_lock(&parent_list_lock);
+ 	parent = __find_parent_device(dev);
+@@ -228,7 +233,6 @@ void mdev_unregister_device(struct device *dev)
+ 		mutex_unlock(&parent_list_lock);
+ 		return;
+ 	}
+-	dev_info(dev, "MDEV: Unregistering\n");
+ 
+ 	list_del(&parent->next);
+ 	mutex_unlock(&parent_list_lock);
+@@ -243,6 +247,8 @@ void mdev_unregister_device(struct device *dev)
+ 	up_write(&parent->unreg_sem);
+ 
+ 	mdev_put_parent(parent);
++
++	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+ }
+ EXPORT_SYMBOL(mdev_unregister_device);
+ 
 
