@@ -2,124 +2,106 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA57C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87331C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43AF216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1742085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OBEQAdaa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uw/peMiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfFZUVN (ORCPT
+        id S1726408AbfFZUXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:21:13 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34778 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfFZUVM (ORCPT
+        Wed, 26 Jun 2019 16:23:16 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33245 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZUXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:21:12 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w9so5440637wmd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:21:11 -0700 (PDT)
+        Wed, 26 Jun 2019 16:23:15 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x15so15994pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:23:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=OEhwVsMA3XIUpQpge8sgosocEMtryj/JM+GB3rxyxT0=;
-        b=OBEQAdaamQq8DPC1D4CThjy6eV1PBaNXcwZ+5jy2E8475I+WlimCxcgC3HJrBb4Iz4
-         0dVkwRaL7lX/ctEdlDzagRE1VjUA7WgtIyx9GWUJ9NC106rOa7MKYzwoHJ2RscAOG+kh
-         liv+OYx3WzQdJn1mrZtCIdVHhASpUGnRNKNhiZ7r/v5geqVaTiphTa45C/tD01oSWo5h
-         QTrSESIxcee5CT0pENaIxan0g84iO6+Gu//kRQzqTrgZKveJizs6i+Yea/t5c+iH4IKc
-         klNTP6r9pOee8VKujHJlPdpJFTYHtk11YSZvgxxI84b3uC0Vv/4Zf/sKzq4cF6jKoHjF
-         Kqog==
+        bh=1sFRYli76Oa9Fpzatk5dKJj5bbhDS+hpfpOSa39CM/g=;
+        b=Uw/peMiDEBTcscGvhEOaR8eZH/EpoXIst/MpQF5Zjbawytad/jS6Me0x1z4eMD1peF
+         YElaFb9RYpjZgzleYOqgYfk+JTk5Tbp1vt9MH44Za+PVUbm0iaU2m5b32J4zlUgNP9Ox
+         7I6JSYwfeuMn/P3zxEdbtNrf4AmWOZtib6mhwd9qGPaGQ8Qc1ZAAbFGm083lO5yReKO9
+         KxH0blycJFDAveYnxoGY83lr4Ej1qBwpFGSxA+aCzPzjMJE0k7EfLuXcfpDNCg9MKtkn
+         s5JoMo83/Thv4RE4c14l6FGnDG6JLk6lpq3HbSog9Qm44y4Omi6WalBMDu1C3icmw+v2
+         GMTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OEhwVsMA3XIUpQpge8sgosocEMtryj/JM+GB3rxyxT0=;
-        b=jOTPERK085LdC2EiqnSUvdHjJMsWRi5aJFBhELEHSOsNwi71JUvGiA4Q0c2BlK5EAW
-         I9ZU7AJ6KXjcM80ExMXzLffXqRfp4+oNQU9Ir0hFOmRmBEzI/v9phFNiUT6ZfTniAmQx
-         /RXDMEDzuMqBrMeco+ub5wmLf6Jsw47d8eY5ugmCaDil4hjNWENfdfwVFYFEGQpsocdU
-         5LFebbKRn4Sxb7mo5VSjy/CYuFJ2SpOZ888b+kNVBXbDA5BS/ZyRgh04DYNYrGYvcX75
-         igLae7k44LxwPyQYSr2rXueth/TskV11XrHbVeEwsRzrOHgHA0TxxUnyOjZKTqJLLb60
-         +KqQ==
-X-Gm-Message-State: APjAAAU4/W6hNrOawzO4mBqpXosjAPTRDTEz4zZAXcZmqovA5pAHFFBc
-        sPU/6rZJw+w2uhBNqh+2gv62dQ==
-X-Google-Smtp-Source: APXvYqxSlsbE0PgFuCvLKbN06OJ5ff+z7EepoAOuIIAuuzNl3RxOn4db108Jy3bqKOnIlDRyHb96EQ==
-X-Received: by 2002:a1c:cfc3:: with SMTP id f186mr446698wmg.134.1561580471033;
-        Wed, 26 Jun 2019 13:21:11 -0700 (PDT)
-Received: from ziepe.ca ([148.87.23.38])
-        by smtp.gmail.com with ESMTPSA id r5sm38908409wrg.10.2019.06.26.13.21.10
+        bh=1sFRYli76Oa9Fpzatk5dKJj5bbhDS+hpfpOSa39CM/g=;
+        b=VgDcSRJP0ldPVF879BIUgTeRN79IIGiwlJaNqCPCLyvbx1MC09mtTcXlRBtFIK56AN
+         BxAvyYfRdLfEezZMcP0HPJRjTpQJcvvV9oAFbFWdmtw9R0xsUG7+GgKNq/rhj0+qZn4Q
+         JFFmNhXX+deDQrBIjLmlyRl2MOEzDVoDhdtU+KV+pszVUxy9tJV1ql2xySR/UM7eNyki
+         +o5jcbCFVExCKr9J6LMEq1pWytRJritMayOBIAjDuMJGyqyuXJHqW7bup6HcHXXu38Rv
+         HjHuAvhxc3T0tbHufCFFGQ7i0tUyyzZw3Vq+QHjZjIwdjYO6fchxtcFqQ/YbijhRZm0f
+         XD5w==
+X-Gm-Message-State: APjAAAVk5lVeYJ8Fst/nL4fXy5CtjY0cjEixaRCrDGh3mptkkYhJ8H4/
+        KQsgyBmVvHXEcUthC0I9B6Q=
+X-Google-Smtp-Source: APXvYqwrOkJyA1bmUCcxC73Xdrb6sRHtJ3fe2VIjQ16DdeXFTHSVgSP92v7hi1aV0eBBAVVN5kNmYw==
+X-Received: by 2002:a17:90a:3401:: with SMTP id o1mr1143077pjb.7.1561580594906;
+        Wed, 26 Jun 2019 13:23:14 -0700 (PDT)
+Received: from localhost ([123.213.206.190])
+        by smtp.gmail.com with ESMTPSA id 1sm99647pfe.102.2019.06.26.13.23.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Jun 2019 13:21:10 -0700 (PDT)
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hgEPk-0001YU-12; Wed, 26 Jun 2019 17:21:08 -0300
-Date:   Wed, 26 Jun 2019 17:21:08 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190626202107.GA5850@ziepe.ca>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+        Wed, 26 Jun 2019 13:23:14 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 05:23:11 +0900
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        keith.busch@intel.com, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH -next] nvme-pci: Make nvme_dev_pm_ops static
+Message-ID: <20190626202311.GB4934@minwooim-desktop>
+References: <20190626020902.38240-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190626020902.38240-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
-> > we have a hole behind len where we could store flag.  Preferably
-> > optionally based on a P2P or other magic memory types config
-> > option so that 32-bit systems with 32-bit phys_addr_t actually
-> > benefit from the smaller and better packing structure.
+On 19-06-26 10:09:02, YueHaibing wrote:
+> Fix sparse warning:
 > 
-> That seems sensible. The one thing that's unclear though is how to get
-> the PCI Bus address when appropriate. Can we pass that in instead of the
-> phys_addr with an appropriate flag? Or will we need to pass the actual
-> physical address and then, at the map step, the driver has to some how
-> lookup the PCI device to figure out the bus offset?
+> drivers/nvme/host/pci.c:2926:25: warning:
+>  symbol 'nvme_dev_pm_ops' was not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/nvme/host/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 1893520..f500133 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -2923,7 +2923,7 @@ static int nvme_simple_resume(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -const struct dev_pm_ops nvme_dev_pm_ops = {
+> +static const struct dev_pm_ops nvme_dev_pm_ops = {
+>  	.suspend	= nvme_suspend,
+>  	.resume		= nvme_resume,
+>  	.freeze		= nvme_simple_suspend,
 
-I agree with CH, if we go down this path it is a layering violation
-for the thing injecting bio's into the block stack to know what struct
-device they egress&dma map on just to be able to do the dma_map up
-front.
+IMHO, it should be in static.
 
-So we must be able to go from this new phys_addr_t&flags to some BAR
-information during dma_map.
-
-For instance we could use a small hash table of the upper phys addr
-bits, or an interval tree, to do the lookup.
-
-The bar info would give the exporting struct device and any other info
-we need to make the iommu mapping.
-
-This phys_addr_t seems like a good approach to me as it avoids the
-struct page overheads and will lets us provide copy from/to bio
-primitives that could work on BAR memory. I think we can surely use
-this approach in RDMA as well.
-
-Jason
+Reviewed-by: Minwoo Im <minwoo.im.dev@gmail.com>
