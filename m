@@ -2,234 +2,681 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E035AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7A7C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCF9205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541B72086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o8SrkhJl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mpA7e48X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfFZJ4W (ORCPT
+        id S1726925AbfFZJ6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:56:22 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57700 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZJ4W (ORCPT
+        Wed, 26 Jun 2019 05:58:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46519 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfFZJ6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:56:22 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190626095621euoutp023321bbccea6ec2c07f7d043754d3daca~rtxFc9Yhr0686106861euoutp02Z
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 09:56:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190626095621euoutp023321bbccea6ec2c07f7d043754d3daca~rtxFc9Yhr0686106861euoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561542981;
-        bh=Hk7za34B6PtC3S7miNX/a+oGyxVJXmwKHDbecortBKc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=o8SrkhJl7F3EciyZZ8tAVTRp/vCSsciUyEUwNJkp0PIAWUdSZbmvtubfdWbA4cxQf
-         dk3iqkM/quo23adh7MC8wN7iH02ejeP3rdwYUFbjXz3ejC7I/7HbyS/0faf8Oow6XZ
-         YDKmE2SYxte1goj2aAqVCCY3WhxYQa/U1BhUwSzw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190626095620eucas1p14bfef993fc308e8e3cf36688cbac4b15~rtxE1lwZU0280502805eucas1p1l;
-        Wed, 26 Jun 2019 09:56:20 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id AE.AE.04325.441431D5; Wed, 26
-        Jun 2019 10:56:20 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190626095619eucas1p2d17e9b495f3bdebf27b06c3fcec52ad8~rtxEHWQyy0312703127eucas1p2y;
-        Wed, 26 Jun 2019 09:56:19 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190626095619eusmtrp2c277c1fcef3823b35811e8632b7e7722~rtxD4-cjB0511105111eusmtrp2j;
-        Wed, 26 Jun 2019 09:56:19 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-47-5d13414449d4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7D.90.04140.341431D5; Wed, 26
-        Jun 2019 10:56:19 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190626095618eusmtip26d78c3c13eebcac38721956ffff22091~rtxDJsg3V2662626626eusmtip26;
-        Wed, 26 Jun 2019 09:56:18 +0000 (GMT)
-Subject: Re: [PATCH v2 1/2] drm/bridge/synopsys: dw-hdmi: Handle audio for
- more clock rates
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <a94d9554-fc93-a2d0-9a30-9604db8c123e@samsung.com>
-Date:   Wed, 26 Jun 2019 11:56:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.0
+        Wed, 26 Jun 2019 05:58:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so1506475ljg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PBNpa0fe2lxiY3oi4Yz97EGdJS/d5sgIDQQHO7FmfTA=;
+        b=mpA7e48X0kGmTm3SqWODh2AldqmI9ON5GZZDMgX88qKXh7+Zh6JmvYSO52wYCEMRk8
+         A2QSiiA+GeS+mND14bUi+upQs5qbkjKdZccB7AOiQ6tgFbqDf+6mdVGOD2VJuXY7gYeN
+         /zz6InGlg2xdTIpcd7xrMjq3mllZLXrHUdiyttPKu53akQ+iozXgFMeTzjMIOtRUD4mO
+         BdqO7FRCjjh+6elVPjSfn41Zj4+A9CFfCuGOpELQwy7e+5uhzrNu8jAzP0vl5wzCsron
+         /PSzq2KW4X3MhH9z6BO/v5u5rjqu+IOaXrba8KigQgO4+Z1L1qJK/AdA2XMJXTEWEolF
+         MJLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=PBNpa0fe2lxiY3oi4Yz97EGdJS/d5sgIDQQHO7FmfTA=;
+        b=GY+k7ZI4kkRunczWyTVnNffAtRxp277sSRgwWgcERiZEATaXCjp9Ipql3m4/718YoI
+         IAjem8wINdYq8MI96Zs45qMR9iDvQa4IWhlI4NCuDxkEW5XSFgISwNkRiiRWeqSbuad6
+         m7KwbzfF8OfVVxlICFQRRUEVZeB/bLovNZ1QfEp4XTGawHfFGK4Cg/WXP5ykdF3cnbsm
+         ewLtbTnquPiSnPbLINa3WGi//ZUnYt1Ca+MPNPuptjPE04IKRiITQiLB+KndLTs2O+I1
+         pXHNfQw6s6atrNrnCQ841ch1mQixaNqf+RVIHOQABJHSC2MK3H1MfcnV03wUJghTFNil
+         zrWA==
+X-Gm-Message-State: APjAAAVI8MXAvxWhkVR3Z5rvBlo8UlVNqL3epf+5dUwn0YbK8640e56f
+        A3iqoT69nMvXwGbwR+f+7LTAtw==
+X-Google-Smtp-Source: APXvYqzNFxfVX9de86L2UgFlGfdLdsNudfKlSAPxlO8JRkFe2MYug9gl6HUyXx7EFq3ektf6gSJ+0w==
+X-Received: by 2002:a2e:5c88:: with SMTP id q130mr2398685ljb.176.1561543125048;
+        Wed, 26 Jun 2019 02:58:45 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id z83sm2732080ljb.73.2019.06.26.02.58.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 02:58:44 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 12:58:42 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH v4 net-next 06/11] net: ethernet: ti: introduce cpsw
+ switchdev based driver part 1 - dual-emac
+Message-ID: <20190626095839.GE6485@khorivan>
+Mail-Followup-To: Grygorii Strashko <grygorii.strashko@ti.com>,
+        netdev@vger.kernel.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org
+References: <20190621181314.20778-1-grygorii.strashko@ti.com>
+ <20190621181314.20778-7-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=WJBkYfRznh6aAyvgKgHb8-AG0hMORdKA0BXCL89wG_7w@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa1BMYRjHvXvOnk47bU6bpkdF2dGHomIY85LJrQ9njBkMH4w0LM5Uo032
-        SBJakm6KiLTRGrNpU7mUShlkM11Qo6tc29xTTaM2ppmydves0bf/8zz/3/s8/5mXJmTJlAcd
-        FXOQU8UoouWUhKxunGgLCF3jGr4oV0/hrLYWEc6qvivC5uocAmub31C49cYTCneNj1DY/HFQ
-        jIc+PiVw9+8BArcMdZM4PUfngDvrrlB41GgmsHHgMcKG7DCsn6hC+P2dVrTahR3pTXFgC8sS
-        2QJ1O8k+/HWNZAvS8sVs87kOEVvzyyhm+zKbRGylLonVXeqm2PqsCyRb01NIsGMVczdJt0tW
-        7uWiow5xqqCQXZLI5gujROwHn8OfBjMoNeqcnYEcaWCWQvpkHZmBJLSM0SO4W9wpEgoTgu8d
-        RWKhGLMUb1PRP2TwWY8dKUZQOfbD7hpGUHq1xMHqcmXCobXZRFj1LMYPvqoHCKuJYErF0Pjl
-        PWkdUJbBVOVryqqlTAhc71fbYJLxhexLGhvsxmwDU20FEjwu0JL/2cY6MpvhTO2UzUMw3lAz
-        fMWu3eHNZ60tBDDlNPQ/yLPfHQoF9WZC0K7wo+meg6C9wFxrBaw6Cfr0pwgBTkNQdafWDgRD
-        Q1O7JSdt2eAHt+uChPYaeNFbZmsD4wy9wy7CDc5wvjqPENpSSDstE9zzoK+1yv6gOxS9HKfO
-        IblmWjLNtDSaaWk0//deQ+RN5M7F8coIjl8Sw8UH8golHxcTEbhnv7ICWb7m8z9N4/fRo8nd
-        BsTQSO4kVXvLwmVixSE+QWlAQBPyWdIiBRMuk+5VJBzhVPt3quKiOd6APGlS7i5NnGEMkzER
-        ioPcPo6L5VT/piLa0UONQuO6jw7sfCd56zfiv2KVW9rS9am5bVt1Gwe3zK9Zuzu2XMtzntqL
-        Z0+MpBSfNxybSc+/ZTS11C/fciAh7/LxMH1iw0+fdcG9Ev9lmU83vCg+kaNmk+4tV2oLS+gF
-        u2YHJAelxneEdKkXxl8cdVrmvNoUcnLON02JV8MrXz6VT+/bESon+UjFYn9CxSv+AmQsCT6W
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGKsWRmVeSWpSXmKPExsVy+t/xe7rOjsKxBpfnC1r0njvJZNG7bSOT
-        xf9tE5kt5p+4xWZxdtlBNosrX9+zWfx/9JrV4s2jI8wWV7+/ZLY4+eYqi0XnxCXsFpd3zWGz
-        +PTgP7PFg5f7GS0O9UVbrPi5ldHi7oazjA6CHu9vtLJ7zFtT7TG74SKLx95vC1g8ZnfMZPU4
-        MeESk8f2bw9YPe53H2fy2Lyk3mPJtKtsHgd6J7N4bL82j9nj8ya5AN4oPZui/NKSVIWM/OIS
-        W6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYwTkz8xF9xTqHj8uoutgfGy
-        ZBcjJ4eEgInE61PXWLoYuTiEBJYySnSdW8oOkRCX2D3/LTOELSzx51oXG0TRa0aJlXuPsYAk
-        hAViJc6e+AJWJCKgKfGs4SUzSBGzwFpWicW9pxghOrqZJLYtncoEUsUGVPV38002EJtXwE5i
-        0cMGsHUsAqoSfdNmgU0SFYiQmL2rgQWiRlDi5MwnYDanQKBEz86/YDXMAuoSf+ZdgrLlJba/
-        nQNli0vcejKfaQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsY
-        gWli27GfW3Ywdr0LPsQowMGoxMPbIC8UK8SaWFZcmXuIUYKDWUmEd2miQKwQb0piZVVqUX58
-        UWlOavEhRlOg5yYyS4km5wNTWF5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQi
-        mD4mDk4pYDTJdyVkpiQkme9fqbTggoPX7OnKSes2XYuUnP/p+i7ZDcneqS8XXzIuPbDmQO7P
-        2eXncxZkW9lPEzPdLzb5UE2084Fsj5UvgnIsVVlnR38oWsH2k1u0jzuy6V/h/8zuXq1HPw+J
-        R3s7/dU7dmSu3O4/v3d8YZflfx/2XdvwvlmJD3N1bmLQeSWW4oxEQy3mouJEAAnGQcIpAwAA
-X-CMS-MailID: 20190626095619eucas1p2d17e9b495f3bdebf27b06c3fcec52ad8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190619211151epcas3p4dbb163c034afa4063869c761b93e24b1
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190619211151epcas3p4dbb163c034afa4063869c761b93e24b1
-References: <CGME20190619211151epcas3p4dbb163c034afa4063869c761b93e24b1@epcas3p4.samsung.com>
-        <20190619210718.134951-1-dianders@chromium.org>
-        <bec87373-48cc-0c55-9662-a74a7d2a47a0@samsung.com>
-        <CAD=FV=WJBkYfRznh6aAyvgKgHb8-AG0hMORdKA0BXCL89wG_7w@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190621181314.20778-7-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.06.2019 18:26, Doug Anderson wrote:
-> Hi,
+Hi Grygorii
+
+Too much code, but I've tried pass thru.
+Probably expectation the devlink to be reviewed, but several
+common replies that should be reflected in non RFC v.
+
+On Fri, Jun 21, 2019 at 09:13:09PM +0300, Grygorii Strashko wrote:
+>From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 >
+>Part 1:
+> Introduce basic CPSW dual_mac driver (cpsw_new.c) which is operating in
+>dual-emac mode by default, thus working as 2 individual network interfaces.
+>Main differences from legacy CPSW driver are:
 >
-> On Tue, Jun 25, 2019 at 9:07 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
->> On 19.06.2019 23:07, Douglas Anderson wrote:
->>> Let's add some better support for HDMI audio to dw_hdmi.
->>> Specifically:
->>>
->>> 1. For 44.1 kHz audio the old code made the assumption that an N of
->>> 6272 was right most of the time.  That wasn't true and the new table
->>> should pick a more ideal value.
->>
->> Why? I ask because it is against recommendation from HDMI specs.
-> The place where it does matter (and why I originally did this work) is
-> when you don't have auto-CTS.  In such a case you really need "N" and
-> "CTS" to make the math work and both be integral.  This makes sure
-> that you don't slowly accumulate offsets.  I'm hoping that this point
-> should be non-controversial so I won't argue it more.
+> - optimized promiscuous mode: The P0_UNI_FLOOD (both ports) is enabled in
+>addition to ALLMULTI (current port) instead of ALE_BYPASS. So, Ports in
+>promiscuous mode will keep possibility of mcast and vlan filtering, which
+>is provides significant benefits when ports are joined to the same bridge,
+>but without enabling "switch" mode, or to different bridges.
+> - learning disabled on ports as it make not too much sense for
+>   segregated ports - no forwarding in HW.
+> - enabled basic support for devlink.
 >
-> I am an admitted non-expert, but I have a feeling that with Auto-CTS
-> either the old number or the new numbers would produce pretty much the
-> same experience.
-
-
-Because Auto-CTS mechanism will alternate between two or more CTS values
-every frame, thus it will compensate non-rational clock relationship.
-
-
->   AKA: anyone using auto-CTS won't notice any change
-> at all.  I guess the question is: with Auto-CTS should you pick the
-> "ideal" 6272 or a value that allows CTS to be the closest to integral
-> as possible.  By reading between the lines of the spec, I decided that
-> it was slightly more important to allow for an integral CTS.  If
-> achieving an integral CTS wasn't a goal then the spec wouldn't even
-> have listed special cases for any of the clock rates.  We would just
-> be using the ideal N and Auto-CTS and be done with it.  The whole
-> point of the tables they list is to make CTS integral.
-
-
-Specification recommends many contradictory things without explicit
-prioritization, at least I have not found it.
-
-So we should relay on our intuition.
-
-I guess that with auto-cts N we should follow recommendation - I guess
-most sinks have been better tested with recommended values.
-
-So what with non-auto-cts case:
-
-1. How many devices do not have auto-cts? how many alternative TMDS
-clocks we have? Maybe it is theoretical problem.
-
-2. Alternating CTS in software is possible, but quite
-complicated/annoying, but at least it will follow recommendation :)
-
-
-Regards
-
-Andrzej
-
-
+>	devlink dev show
+>		platform/48484000.ethernet_switch
 >
+>	devlink dev param show
+>	 platform/48484000.ethernet_switch:
+>	name ale_bypass type driver-specific
+>	 values:
+>		cmode runtime value false
 >
->>> 2. The new table has values from the HDMI spec for 297 MHz and 594
->>> MHz.
->>>
->>> 3. There is now code to try to come up with a more idea N/CTS for
->>> clock rates that aren't in the table.  This code is a bit slow because
->>> it iterates over every possible value of N and picks the best one, but
->>> it should make a good fallback.
->>>
->>> NOTES:
->>> - The oddest part of this patch comes about because computing the
->>>   ideal N/CTS means knowing the _exact_ clock rate, not a rounded
->>>   version of it.  The drm framework makes this harder by rounding
->>>   rates to kHz, but even if it didn't there might be cases where the
->>>   ideal rate could only be calculated if we knew the real
->>>   (non-integral) rate.  This means that in cases where we know (or
->>>   believe) that the true rate is something other than the rate we are
->>>   told by drm.
->>> - This patch makes much less of a difference after the patch
->>>   ("drm/bridge: dw-hdmi: Use automatic CTS generation mode when using
->>>   non-AHB audio"), at least if you're using I2S audio.  The main goal
->>>   of picking a good N is to make it possible to get a nice integral
->>>   CTS value, but if CTS is automatic then that's much less critical.
->>
->> As I said above HDMI recommendations are different from those from your
->> patch. Please elaborate why?
->>
->> Btw I've seen your old patches introducing recommended N/CTS calculation
->> helpers in HDMI framework, unfortunately abandoned due to lack of interest.
->>
->> Maybe resurrecting them would be a good idea, with assumption there will
->> be users :)
-> I have old patches introducing this into the HDMI framework?  I don't
-> remember them / can't find them.  Can you provide a pointer?
+> - "ale_bypass" devlink driver parameter allows to enable
+>ALE_CONTROL(4).BYPASS mode for debug purposes.
+> - updated DT bindings.
 >
-> -Doug
->
+>Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+>Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>---
+> drivers/net/ethernet/ti/Kconfig     |   19 +-
+> drivers/net/ethernet/ti/Makefile    |    2 +
+> drivers/net/ethernet/ti/cpsw_new.c  | 1555 +++++++++++++++++++++++++++
+> drivers/net/ethernet/ti/cpsw_priv.c |    8 +-
+> drivers/net/ethernet/ti/cpsw_priv.h |   12 +-
+> 5 files changed, 1591 insertions(+), 5 deletions(-)
+> create mode 100644 drivers/net/ethernet/ti/cpsw_new.c
 >
 
+[...]
+
+>+
+>+static void cpsw_rx_handler(void *token, int len, int status)
+>+{
+>+	struct sk_buff *skb = token;
+>+	struct cpsw_common *cpsw;
+>+	struct net_device *ndev;
+>+	struct sk_buff *new_skb;
+>+	struct cpsw_priv *priv;
+>+	struct cpdma_chan *ch;
+>+	int ret = 0, port;
+>+
+>+	ndev = skb->dev;
+>+	cpsw = ndev_to_cpsw(ndev);
+>+
+>+	port = CPDMA_RX_SOURCE_PORT(status);
+>+	if (port) {
+>+		ndev = cpsw->slaves[--port].ndev;
+>+		skb->dev = ndev;
+>+	}
+>+
+>+	if (unlikely(status < 0) || unlikely(!netif_running(ndev))) {
+>+		/* In dual emac mode check for all interfaces */
+>+		if (cpsw->usage_count && status >= 0) {
+>+			/* The packet received is for the interface which
+>+			 * is already down and the other interface is up
+>+			 * and running, instead of freeing which results
+>+			 * in reducing of the number of rx descriptor in
+>+			 * DMA engine, requeue skb back to cpdma.
+>+			 */
+>+			new_skb = skb;
+>+			goto requeue;
+>+		}
+>+
+>+		/* the interface is going down, skbs are purged */
+>+		dev_kfree_skb_any(skb);
+>+		return;
+>+	}
+>+
+>+	priv = netdev_priv(ndev);
+>+
+>+	new_skb = netdev_alloc_skb_ip_align(ndev, cpsw->rx_packet_max);
+>+	if (new_skb) {
+>+		skb_copy_queue_mapping(new_skb, skb);
+>+		skb_put(skb, len);
+>+		if (status & CPDMA_RX_VLAN_ENCAP)
+>+			cpsw_rx_vlan_encap(skb);
+>+		if (priv->rx_ts_enabled)
+>+			cpts_rx_timestamp(cpsw->cpts, skb);
+>+		skb->protocol = eth_type_trans(skb, ndev);
+>+		netif_receive_skb(skb);
+>+		ndev->stats.rx_bytes += len;
+>+		ndev->stats.rx_packets++;
+>+		/* CPDMA stores skb in internal CPPI RAM (SRAM) which belongs
+>+		 * to DEV MMIO space. Kmemleak does not scan IO memory and so
+>+		 * reports memory leaks.
+>+		 * see commit 254a49d5139a ('drivers: net: cpsw: fix kmemleak
+>+		 * false-positive reports for sk buffers') for details.
+>+		 */
+>+		kmemleak_not_leak(new_skb);
+>+	} else {
+>+		ndev->stats.rx_dropped++;
+>+		new_skb = skb;
+>+	}
+>+
+>+requeue:
+
+----
+>+	if (netif_dormant(ndev)) {
+>+		dev_kfree_skb_any(new_skb);
+>+		return;
+>+	}
+---
+
+drop above, no need any more
+
+>+
+>+	ch = cpsw->rxv[skb_get_queue_mapping(new_skb)].ch;
+>+	ret = cpdma_chan_submit(ch, new_skb, new_skb->data,
+>+				skb_tailroom(new_skb), 0);
+>+	if (WARN_ON(ret < 0))
+>+		dev_kfree_skb_any(new_skb);
+
+Here were a little changes last time, looks like:
+
+	ret = cpdma_chan_submit(ch, new_skb, new_skb->data,
+				skb_tailroom(new_skb), 0);
+	if (ret < 0) {
+		WARN_ON(ret == -ENOMEM);
+		dev_kfree_skb_any(new_skb);
+	}
+
+>+}
+>+
+
+[...]
+
+>+
+>+static void cpsw_init_host_port(struct cpsw_priv *priv)
+>+{
+>+	struct cpsw_common *cpsw = priv->cpsw;
+>+	u32 control_reg;
+>+
+>+	/* soft reset the controller and initialize ale */
+>+	soft_reset("cpsw", &cpsw->regs->soft_reset);
+>+	cpsw_ale_start(cpsw->ale);
+>+
+>+	/* switch to vlan unaware mode */
+>+	cpsw_ale_control_set(cpsw->ale, HOST_PORT_NUM, ALE_VLAN_AWARE,
+>+			     CPSW_ALE_VLAN_AWARE);
+>+	control_reg = readl(&cpsw->regs->control);
+>+	control_reg |= CPSW_VLAN_AWARE | CPSW_RX_VLAN_ENCAP;
+>+	writel(control_reg, &cpsw->regs->control);
+>+
+>+	/* setup host port priority mapping */
+>+	writel_relaxed(CPDMA_TX_PRIORITY_MAP,
+>+		       &cpsw->host_port_regs->cpdma_tx_pri_map);
+>+	writel_relaxed(0, &cpsw->host_port_regs->cpdma_rx_chan_map);
+
+----
+>+
+>+	/* disable priority elevation */
+>+	writel_relaxed(0, &cpsw->regs->ptype);
+>+
+>+	/* enable statistics collection only on all ports */
+>+	writel_relaxed(0x7, &cpsw->regs->stat_port_en);
+>+
+>+	/* Enable internal fifo flow control */
+>+	writel(0x7, &cpsw->regs->flow_control);
+---
+
+Would be nice to do the same in old driver.
+I mean moving it from ndo_open
+Also were thoughts about this.
+
+>+
+>+	cpsw_init_host_port_dual_mac(priv);
+>+
+>+	cpsw_ale_control_set(cpsw->ale, HOST_PORT_NUM,
+>+			     ALE_PORT_STATE, ALE_PORT_STATE_FORWARD);
+>+}
+>+
+
+[...]
+
+>+
+>+static int cpsw_ndo_open(struct net_device *ndev)
+>+{
+>+	struct cpsw_priv *priv = netdev_priv(ndev);
+>+	struct cpsw_common *cpsw = priv->cpsw;
+>+	int ret;
+>+
+>+	cpsw_info(priv, ifdown, "starting ndev\n");
+>+	ret = pm_runtime_get_sync(cpsw->dev);
+>+	if (ret < 0) {
+>+		pm_runtime_put_noidle(cpsw->dev);
+>+		return ret;
+>+	}
+>+
+>+	netif_carrier_off(ndev);
+>+
+>+	/* Notify the stack of the actual queue counts. */
+>+	ret = netif_set_real_num_tx_queues(ndev, cpsw->tx_ch_num);
+>+	if (ret) {
+>+		dev_err(priv->dev, "cannot set real number of tx queues\n");
+>+		goto err_cleanup;
+>+	}
+>+
+>+	ret = netif_set_real_num_rx_queues(ndev, cpsw->rx_ch_num);
+>+	if (ret) {
+>+		dev_err(priv->dev, "cannot set real number of rx queues\n");
+>+		goto err_cleanup;
+>+	}
+>+
+>+	/* Initialize host and slave ports */
+>+	if (!cpsw->usage_count)
+>+		cpsw_init_host_port(priv);
+>+	cpsw_slave_open(&cpsw->slaves[priv->emac_port - 1], priv);
+>+
+>+	/* initialize shared resources for every ndev */
+>+	if (!cpsw->usage_count) {
+>+		ret = cpsw_fill_rx_channels(priv);
+>+		if (ret < 0)
+>+			goto err_cleanup;
+>+
+>+		if (cpts_register(cpsw->cpts))
+>+			dev_err(priv->dev, "error registering cpts device\n");
+>+
+>+		napi_enable(&cpsw->napi_rx);
+>+		napi_enable(&cpsw->napi_tx);
+>+
+>+		if (cpsw->tx_irq_disabled) {
+>+			cpsw->tx_irq_disabled = false;
+>+			enable_irq(cpsw->irqs_table[1]);
+>+		}
+>+
+>+		if (cpsw->rx_irq_disabled) {
+>+			cpsw->rx_irq_disabled = false;
+>+			enable_irq(cpsw->irqs_table[0]);
+>+		}
+>+	}
+>+
+>+	cpsw_restore(priv);
+>+
+>+	/* Enable Interrupt pacing if configured */
+>+	if (cpsw->coal_intvl != 0) {
+>+		struct ethtool_coalesce coal;
+>+
+>+		coal.rx_coalesce_usecs = cpsw->coal_intvl;
+>+		cpsw_set_coalesce(ndev, &coal);
+>+	}
+>+
+>+	cpdma_ctlr_start(cpsw->dma);
+>+	cpsw_intr_enable(cpsw);
+>+	cpsw->usage_count++;
+>+
+>+	return 0;
+>+
+>+err_cleanup:
+>+	cpdma_ctlr_stop(cpsw->dma);
+Here were a little changes also:
+Now looks like:
+	if (!cpsw->usage_count) {
+		cpdma_ctlr_stop(cpsw->dma)
+	}
+
+
+>+	cpsw_slave_stop(&cpsw->slaves[priv->emac_port - 1], priv);
+>+	pm_runtime_put_sync(cpsw->dev);
+>+	netif_carrier_off(priv->ndev);
+>+	return ret;
+>+}
+>+
+
+[...]
+
+>+
+>+static netdev_tx_t cpsw_ndo_start_xmit(struct sk_buff *skb,
+>+				       struct net_device *ndev)
+>+{
+>+	struct cpsw_priv *priv = netdev_priv(ndev);
+>+	struct cpsw_common *cpsw = priv->cpsw;
+>+	struct cpts *cpts = cpsw->cpts;
+>+	struct netdev_queue *txq;
+>+	struct cpdma_chan *txch;
+>+	int ret, q_idx;
+>+
+>+	if (skb_padto(skb, CPSW_MIN_PACKET_SIZE)) {
+>+		cpsw_err(priv, tx_err, "packet pad failed\n");
+>+		ndev->stats.tx_dropped++;
+>+		return NET_XMIT_DROP;
+>+	}
+>+
+>+	if (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP &&
+>+	    priv->tx_ts_enabled && cpts_can_timestamp(cpts, skb))
+>+		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+>+
+>+	q_idx = skb_get_queue_mapping(skb);
+>+	if (q_idx >= cpsw->tx_ch_num)
+>+		q_idx = q_idx % cpsw->tx_ch_num;
+>+
+>+	txch = cpsw->txv[q_idx].ch;
+>+	txq = netdev_get_tx_queue(ndev, q_idx);
+>+	skb_tx_timestamp(skb);
+>+	ret = cpdma_chan_submit(txch, skb, skb->data, skb->len,
+>+				priv->emac_port);
+------------
+
+>+	if (unlikely(ret != 0)) {
+>+		cpsw_err(priv, tx_err, "desc submit failed\n");
+>+		goto fail;
+>+	}
+>+
+>+	/* If there is no more tx desc left free then we need to
+>+	 * tell the kernel to stop sending us tx frames.
+>+	 */
+>+	if (unlikely(!cpdma_check_free_tx_desc(txch))) {
+>+		netif_tx_stop_queue(txq);
+>+
+>+		/* Barrier, so that stop_queue visible to other cpus */
+>+		smp_mb__after_atomic();
+>+
+>+		if (cpdma_check_free_tx_desc(txch))
+>+			netif_tx_wake_queue(txq);
+>+	}
+>+
+>+	return NETDEV_TX_OK;
+>+fail:
+>+	ndev->stats.tx_dropped++;
+>+	netif_tx_stop_queue(txq);
+>+
+>+	/* Barrier, so that stop_queue visible to other cpus */
+>+	smp_mb__after_atomic();
+>+
+>+	if (cpdma_check_free_tx_desc(txch))
+>+		netif_tx_wake_queue(txq);
+>+
+>+	return NETDEV_TX_BUSY;
+>+}
+-------------
+
+I have a proposition, here were no reason lastly, but now maybe
+it can be optimized a little. Smth like, replace above on:
+
+	if (unlikely(ret != 0)) {
+		cpsw_err(priv, tx_err, "desc submit failed\n");
+		ndev->stats.tx_dropped++;
+		ret = NETDEV_TX_BUSY;
+		goto fail
+	}
+
+	ret = NETDEV_TX_OK;
+
+	/* If there is no more tx desc left free then we need to
+	 * tell the kernel to stop sending us tx frames.
+	 */
+	if (unlikely(cpdma_check_free_tx_desc(txch)))
+		return ret;
+
+fail:
+	netif_tx_stop_queue(txq);
+
+	/* Barrier, so that stop_queue visible to other cpus */
+	smp_mb__after_atomic();
+
+	if (cpdma_check_free_tx_desc(txch))
+		netif_tx_wake_queue(txq);
+
+	return ret;
+
+Result: minus 6 lines and less dupes.
+
+>+
+>+
+
+[...]
+
+>+static int cpsw_probe(struct platform_device *pdev)
+>+{
+>+	const struct soc_device_attribute *soc;
+>+	struct device *dev = &pdev->dev;
+>+	struct resource *ss_res;
+>+	struct cpsw_common *cpsw;
+>+	struct gpio_descs *mode;
+>+	void __iomem *ss_regs;
+>+	int ret = 0, ch;
+>+	struct clk *clk;
+>+	int irq;
+>+
+>+	cpsw = devm_kzalloc(dev, sizeof(struct cpsw_common), GFP_KERNEL);
+>+	if (!cpsw)
+>+		return -ENOMEM;
+>+
+>+	cpsw_slave_index = cpsw_slave_index_priv;
+>+
+>+	cpsw->dev = dev;
+>+
+>+	cpsw->slaves = devm_kcalloc(dev,
+>+				    CPSW_SLAVE_PORTS_NUM,
+>+				    sizeof(struct cpsw_slave),
+>+				    GFP_KERNEL);
+>+	if (!cpsw->slaves)
+>+		return -ENOMEM;
+>+
+>+	mode = devm_gpiod_get_array_optional(dev, "mode", GPIOD_OUT_LOW);
+>+	if (IS_ERR(mode)) {
+>+		ret = PTR_ERR(mode);
+>+		dev_err(dev, "gpio request failed, ret %d\n", ret);
+>+		return ret;
+>+	}
+>+
+>+	clk = devm_clk_get(dev, "fck");
+>+	if (IS_ERR(clk)) {
+>+		ret = PTR_ERR(clk);
+>+		dev_err(dev, "fck is not found %d\n", ret);
+>+		return ret;
+>+	}
+>+	cpsw->bus_freq_mhz = clk_get_rate(clk) / 1000000;
+>+
+>+	ss_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>+	ss_regs = devm_ioremap_resource(dev, ss_res);
+>+	if (IS_ERR(ss_regs)) {
+>+		ret = PTR_ERR(ss_regs);
+>+		return ret;
+>+	}
+>+	cpsw->regs = ss_regs;
+>+
+>+	irq = platform_get_irq_byname(pdev, "rx");
+>+	if (irq < 0)
+>+		return irq;
+>+	cpsw->irqs_table[0] = irq;
+>+
+>+	irq = platform_get_irq_byname(pdev, "tx");
+>+	if (irq < 0)
+>+		return irq;
+>+	cpsw->irqs_table[1] = irq;
+>+
+>+	platform_set_drvdata(pdev, cpsw);
+set cpsw, but below ndev
+
+>+	/* This may be required here for child devices. */
+>+	pm_runtime_enable(dev);
+>+
+>+	/* Need to enable clocks with runtime PM api to access module
+>+	 * registers
+>+	 */
+>+	ret = pm_runtime_get_sync(dev);
+>+	if (ret < 0) {
+>+		pm_runtime_put_noidle(dev);
+>+		pm_runtime_disable(dev);
+>+		return ret;
+>+	}
+>+
+>+	ret = cpsw_probe_dt(cpsw);
+>+	if (ret)
+>+		goto clean_dt_ret;
+>+
+>+	soc = soc_device_match(cpsw_soc_devices);
+>+	if (soc)
+>+		cpsw->quirk_irq = 1;
+>+
+>+	cpsw->rx_packet_max = rx_packet_max;
+>+	cpsw->descs_pool_size = descs_pool_size;
+>+
+>+	ret = cpsw_init_common(cpsw, ss_regs, ale_ageout,
+>+			       (u32 __force)ss_res->start + CPSW2_BD_OFFSET,
+>+			       descs_pool_size);
+>+	if (ret)
+>+		goto clean_dt_ret;
+>+
+>+	cpsw->wr_regs = cpsw->version == CPSW_VERSION_1 ?
+>+			ss_regs + CPSW1_WR_OFFSET :
+>+			ss_regs + CPSW2_WR_OFFSET;
+>+
+>+	ch = cpsw->quirk_irq ? 0 : 7;
+>+	cpsw->txv[0].ch = cpdma_chan_create(cpsw->dma, ch, cpsw_tx_handler, 0);
+>+	if (IS_ERR(cpsw->txv[0].ch)) {
+>+		dev_err(dev, "error initializing tx dma channel\n");
+>+		ret = PTR_ERR(cpsw->txv[0].ch);
+>+		goto clean_cpts;
+>+	}
+>+
+>+	cpsw->rxv[0].ch = cpdma_chan_create(cpsw->dma, 0, cpsw_rx_handler, 1);
+>+	if (IS_ERR(cpsw->rxv[0].ch)) {
+>+		dev_err(dev, "error initializing rx dma channel\n");
+>+		ret = PTR_ERR(cpsw->rxv[0].ch);
+>+		goto clean_cpts;
+>+	}
+>+	cpsw_split_res(cpsw);
+>+
+>+	/* setup netdevs */
+>+	ret = cpsw_create_ports(cpsw);
+>+	if (ret)
+>+		goto clean_unregister_netdev;
+>+
+>+	/* Grab RX and TX IRQs. Note that we also have RX_THRESHOLD and
+>+	 * MISC IRQs which are always kept disabled with this driver so
+>+	 * we will not request them.
+>+	 *
+>+	 * If anyone wants to implement support for those, make sure to
+>+	 * first request and append them to irqs_table array.
+>+	 */
+>+
+>+	ret = devm_request_irq(dev, cpsw->irqs_table[0], cpsw_rx_interrupt,
+>+			       0, dev_name(dev), cpsw);
+>+	if (ret < 0) {
+>+		dev_err(dev, "error attaching irq (%d)\n", ret);
+>+		goto clean_unregister_netdev;
+>+	}
+>+
+>+	ret = devm_request_irq(dev, cpsw->irqs_table[1], cpsw_tx_interrupt,
+>+			       0, dev_name(dev), cpsw);
+>+	if (ret < 0) {
+>+		dev_err(dev, "error attaching irq (%d)\n", ret);
+>+		goto clean_unregister_netdev;
+>+	}
+>+
+>+	ret = cpsw_register_devlink(cpsw);
+>+	if (ret)
+>+		goto clean_unregister_netdev;
+>+
+>+	dev_notice(dev, "initialized (regs %pa, pool size %d) hw_ver:%08X %d.%d (%d)\n",
+>+		   &ss_res->start, descs_pool_size,
+>+		   cpsw->version, CPSW_MAJOR_VERSION(cpsw->version),
+>+		   CPSW_MINOR_VERSION(cpsw->version),
+>+		   CPSW_RTL_VERSION(cpsw->version));
+>+
+>+	pm_runtime_put(dev);
+>+
+>+	return 0;
+>+
+>+clean_unregister_netdev:
+>+	cpsw_unregister_ports(cpsw);
+>+clean_cpts:
+>+	cpts_release(cpsw->cpts);
+>+	cpdma_ctlr_destroy(cpsw->dma);
+>+clean_dt_ret:
+>+	cpsw_remove_dt(cpsw);
+>+	pm_runtime_put_sync(dev);
+>+	pm_runtime_disable(dev);
+>+	return ret;
+>+}
+>+
+>+static int cpsw_remove(struct platform_device *pdev)
+>+{
+>+	struct net_device *ndev = platform_get_drvdata(pdev);
+now it's cpsw, as in probe?
+
+>+	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+>+	int ret;
+>+
+>+	ret = pm_runtime_get_sync(&pdev->dev);
+>+	if (ret < 0) {
+>+		pm_runtime_put_noidle(&pdev->dev);
+>+		return ret;
+>+	}
+>+
+>+	cpsw_unregister_devlink(cpsw);
+>+	cpsw_unregister_ports(cpsw);
+>+
+>+	cpts_release(cpsw->cpts);
+>+	cpdma_ctlr_destroy(cpsw->dma);
+>+	cpsw_remove_dt(cpsw);
+>+	pm_runtime_put_sync(&pdev->dev);
+>+	pm_runtime_disable(&pdev->dev);
+>+	return 0;
+>+}
+>+
+
+[...]
+
+-- 
+Regards,
+Ivan Khoronzhuk
