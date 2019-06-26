@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E728C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55604C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F4A4205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2624B205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521009;
-	bh=hUo1DawkrbOiYGwf0Eu8Nmn4EYbfNyvNmAkdzzf0q1E=;
+	s=default; t=1561521018;
+	bh=d2mos+JEfbQZ2N1S1mqLaKmvyRthD8wQuPYK08TlLjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lqR4EmjM6rybzbRpFO21mpg0A2gRC41jxopXkMmanZqpI+u3lCObbG0bOk4cdqKhM
-	 ZNQiZyV0fjknyq+usMsmpPHq6VSVYtYPwaYJhxakOwZeUMTwzpSwabY4AK7E9BFRUD
-	 U6Muyrhd30pJVX8aoTQTJ/u4ZaUOIX9b5DCc3kgI=
+	b=0kVZXoNzyfjqWjmkHD5uRvwmRIz6pG8a8gJTciiycXNnQGgVBhy9I+twLG68zNY49
+	 dV6HjJir+0Gl11nHywglrmhvmRni/+O9XY5SdC4Ui4R0GDbcXC4JrXglnwPZeDWIcZ
+	 QCqhykwoy7m0s0O8HoNEQO2DR+9iVweRzUCAxN84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfFZDuH (ORCPT
+        id S1727203AbfFZDm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:50:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54394 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbfFZDnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:14 -0400
+        id S1727168AbfFZDmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:42:51 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D7B6208CB;
-        Wed, 26 Jun 2019 03:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A0B1208CB;
+        Wed, 26 Jun 2019 03:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520593;
-        bh=hUo1DawkrbOiYGwf0Eu8Nmn4EYbfNyvNmAkdzzf0q1E=;
+        s=default; t=1561520570;
+        bh=d2mos+JEfbQZ2N1S1mqLaKmvyRthD8wQuPYK08TlLjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xthoMv12TCMXKkxxcJj+0P8Yq3IS0N/7QwxJXBMfLSnn6kWC+p4/HQ9UBp4Ia09zv
-         rx4VZRkV6p6kA5FbnjqyFNrh2lK9IpbTmmChdPlzlM6ApuA/HRhiZTrUlQeULsW9IW
-         t3vqBCtIc4FPHGj9aaFUyMJosF5n20WL5dX4wLM0=
+        b=NxNqB5i0MeO+XvgRgzwxQyn2jipAvo/0an2DKWotdf8G1jEQsxo9oZDg0mtZu8P4v
+         8r5UQRmqotMOfk9ARfmAjToMJoLOFTbHF9SGOCQh3s5pKCyH5gBC4DarIdjgxPiFw9
+         bD1y+eBAR1NG+pDOWIApJEhjkdDXGjxVCGgqD9YA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Pasternak <vadimp@mellanox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 42/51] platform/x86: mlx-platform: Fix parent device in i2c-mux-reg device registration
-Date:   Tue, 25 Jun 2019 23:40:58 -0400
-Message-Id: <20190626034117.23247-42-sashal@kernel.org>
+Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 33/51] SoC: rt274: Fix internal jack assignment in set_jack callback
+Date:   Tue, 25 Jun 2019 23:40:49 -0400
+Message-Id: <20190626034117.23247-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,158 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 
-[ Upstream commit 160da20b254dd4bfc5828f12c208fa831ad4be6c ]
+[ Upstream commit 04268bf2757a125616b6c2140e6250f43b7b737a ]
 
-Fix the issue found while running kernel with the option
-CONFIG_DEBUG_TEST_DRIVER_REMOVE.
-Driver 'mlx-platform' registers 'i2c_mlxcpld' device and then registers
-few underlying 'i2c-mux-reg' devices:
-	priv->pdev_i2c = platform_device_register_simple("i2c_mlxcpld", nr,
-							 NULL, 0);
-	...
-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
-		priv->pdev_mux[i] = platform_device_register_resndata(
-						&mlxplat_dev->dev,
-						"i2c-mux-reg", i, NULL,
-						0, &mlxplat_mux_data[i],
-						sizeof(mlxplat_mux_data[i]));
+When we call snd_soc_component_set_jack(component, NULL, NULL) we should
+set rt274->jack to passed jack, so when interrupt is triggered it calls
+snd_soc_jack_report(rt274->jack, ...) with proper value.
 
-But actual parent of "i2c-mux-reg" device is priv->pdev_i2c->dev and
-not mlxplat_dev->dev.
-Patch fixes parent device parameter in a call to
-platform_device_register_resndata() for "i2c-mux-reg".
+This fixes problem in machine where in register, we call
+snd_soc_register(component, &headset, NULL), which just calls
+rt274_mic_detect via callback.
+Now when machine driver is removed "headset" will be gone, so we
+need to tell codec driver that it's gone with:
+snd_soc_register(component, NULL, NULL), but we also need to be able
+to handle NULL jack argument here gracefully.
+If we don't set it to NULL, next time the rt274_irq runs it will call
+snd_soc_jack_report with first argument being invalid pointer and there
+will be Oops.
 
-It solves the race during initialization flow while 'i2c_mlxcpld.1' is
-removing after probe, while 'i2c-mux-reg.0' is still in probing flow:
-'i2c_mlxcpld.1'	flow:	probe -> remove -> probe.
-'i2c-mux-reg.0'	flow:		  probe -> ...
-
-[   12:621096] Registering platform device 'i2c_mlxcpld.1'. Parent at platform
-[   12:621117] device: 'i2c_mlxcpld.1': device_add
-[   12:621155] bus: 'platform': add device i2c_mlxcpld.1
-[   12:621384] Registering platform device 'i2c-mux-reg.0'. Parent at mlxplat
-[   12:621395] device: 'i2c-mux-reg.0': device_add
-[   12:621425] bus: 'platform': add device i2c-mux-reg.0
-[   12:621806] Registering platform device 'i2c-mux-reg.1'. Parent at mlxplat
-[   12:621828] device: 'i2c-mux-reg.1': device_add
-[   12:621892] bus: 'platform': add device i2c-mux-reg.1
-[   12:621906] bus: 'platform': add driver i2c_mlxcpld
-[   12:621996] bus: 'platform': driver_probe_device: matched device i2c_mlxcpld.1 with driver i2c_mlxcpld
-[   12:622003] bus: 'platform': really_probe: probing driver i2c_mlxcpld with device i2c_mlxcpld.1
-[   12:622100] i2c_mlxcpld i2c_mlxcpld.1: no default pinctrl state
-[   12:622293] device: 'i2c-1': device_add
-[   12:627280] bus: 'i2c': add device i2c-1
-[   12:627692] device: 'i2c-1': device_add
-[   12.629639] bus: 'platform': add driver i2c-mux-reg
-[   12.629718] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.0 with driver i2c-mux-reg
-[   12.629723] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.0
-[   12.629818] i2c-mux-reg i2c-mux-reg.0: no default pinctrl state
-[   12.629981] platform i2c-mux-reg.0: Driver i2c-mux-reg requests probe deferral
-[   12.629986] platform i2c-mux-reg.0: Added to deferred list
-[   12.629992] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.1 with driver i2c-mux-reg
-[   12.629997] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.1
-[   12.630091] i2c-mux-reg i2c-mux-reg.1: no default pinctrl state
-[   12.630247] platform i2c-mux-reg.1: Driver i2c-mux-reg requests probe deferral
-[   12.630252] platform i2c-mux-reg.1: Added to deferred list
-[   12.640892] devices_kset: Moving i2c-mux-reg.0 to end of list
-[   12.640900] platform i2c-mux-reg.0: Retrying from deferred list
-[   12.640911] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.0 with driver i2c-mux-reg
-[   12.640919] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.0
-[   12.640999] i2c-mux-reg i2c-mux-reg.0: no default pinctrl state
-[   12.641177] platform i2c-mux-reg.0: Driver i2c-mux-reg requests probe deferral
-[   12.641187] platform i2c-mux-reg.0: Added to deferred list
-[   12.641198] devices_kset: Moving i2c-mux-reg.1 to end of list
-[   12.641219] platform i2c-mux-reg.1: Retrying from deferred list
-[   12.641237] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.1 with driver i2c-mux-reg
-[   12.641247] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.1
-[   12.641331] i2c-mux-reg i2c-mux-reg.1: no default pinctrl state
-[   12.641465] platform i2c-mux-reg.1: Driver i2c-mux-reg requests probe deferral
-[   12.641469] platform i2c-mux-reg.1: Added to deferred list
-[   12.646427] device: 'i2c-1': device_add
-[   12.646647] bus: 'i2c': add device i2c-1
-[   12.647104] device: 'i2c-1': device_add
-[   12.669231] devices_kset: Moving i2c-mux-reg.0 to end of list
-[   12.669240] platform i2c-mux-reg.0: Retrying from deferred list
-[   12.669258] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.0 with driver i2c-mux-reg
-[   12.669263] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.0
-[   12.669343] i2c-mux-reg i2c-mux-reg.0: no default pinctrl state
-[   12.669585] device: 'i2c-2': device_add
-[   12.669795] bus: 'i2c': add device i2c-2
-[   12.670201] device: 'i2c-2': device_add
-[   12.671427] i2c i2c-1: Added multiplexed i2c bus 2
-[   12.671514] device: 'i2c-3': device_add
-[   12.671724] bus: 'i2c': add device i2c-3
-[   12.672136] device: 'i2c-3': device_add
-[   12.673378] i2c i2c-1: Added multiplexed i2c bus 3
-[   12.673472] device: 'i2c-4': device_add
-[   12.673676] bus: 'i2c': add device i2c-4
-[   12.674060] device: 'i2c-4': device_add
-[   12.675861] i2c i2c-1: Added multiplexed i2c bus 4
-[   12.675941] device: 'i2c-5': device_add
-[   12.676150] bus: 'i2c': add device i2c-5
-[   12.676550] device: 'i2c-5': device_add
-[   12.678103] i2c i2c-1: Added multiplexed i2c bus 5
-[   12.678193] device: 'i2c-6': device_add
-[   12.678395] bus: 'i2c': add device i2c-6
-[   12.678774] device: 'i2c-6': device_add
-[   12.679969] i2c i2c-1: Added multiplexed i2c bus 6
-[   12.680065] device: 'i2c-7': device_add
-[   12.680275] bus: 'i2c': add device i2c-7
-[   12.680913] device: 'i2c-7': device_add
-[   12.682506] i2c i2c-1: Added multiplexed i2c bus 7
-[   12.682600] device: 'i2c-8': device_add
-[   12.682808] bus: 'i2c': add device i2c-8
-[   12.683189] device: 'i2c-8': device_add
-[   12.683907] device: 'i2c-1': device_unregister
-[   12.683945] device: 'i2c-1': device_unregister
-[   12.684387] device: 'i2c-1': device_create_release
-[   12.684536] bus: 'i2c': remove device i2c-1
-[   12.686019] i2c i2c-8: Failed to create compatibility class link
-[   12.686086] ------------[ cut here ]------------
-[   12.686087] can't create symlink to mux device
-[   12.686224] Workqueue: events deferred_probe_work_func
-[   12.686135] WARNING: CPU: 7 PID: 436 at drivers/i2c/i2c-mux.c:416 i2c_mux_add_adapter+0x729/0x7d0 [i2c_mux]
-[   12.686232] RIP: 0010:i2c_mux_add_adapter+0x729/0x7d0 [i2c_mux]
-[   0x190/0x190 [i2c_mux]
-[   12.686300]  ? i2c_mux_alloc+0xac/0x110 [i2c_mux]
-[   12.686306]  ? i2c_mux_reg_set+0x200/0x200 [i2c_mux_reg]
-[   12.686313]  i2c_mux_reg_probe+0x22c/0x731 [i2c_mux_reg]
-[   12.686322]  ? i2c_mux_reg_deselect+0x60/0x60 [i2c_mux_reg]
-[   12.686346]  platform_drv_probe+0xa8/0x110
-[   12.686351]  really_probe+0x185/0x720
-[   12.686358]  driver_probe_device+0xdf/0x1f0
-...
-[   12.686522] i2c i2c-1: Added multiplexed i2c bus 8
-[   12.686621] device: 'i2c-9': device_add
-[   12.686626] kobject_add_internal failed for i2c-9 (error: -2 parent: i2c-1)
-[   12.694729] i2c-core: adapter 'i2c-1-mux (chan_id 8)': can't register device (-2)
-[   12.705726] i2c i2c-1: failed to add mux-adapter 8 as bus 9 (error=-2)
-[   12.714494] device: 'i2c-8': device_unregister
-[   12.714537] device: 'i2c-8': device_unregister
-
-Fixes: 6613d18e9038 ("platform/x86: mlx-platform: Move module from arch/x86")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/mlx-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/rt274.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 48fa7573e29b..0e5f073e51bc 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -1828,7 +1828,7 @@ static int __init mlxplat_init(void)
+diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
+index adf59039a3b6..cdd312db3e78 100644
+--- a/sound/soc/codecs/rt274.c
++++ b/sound/soc/codecs/rt274.c
+@@ -405,6 +405,8 @@ static int rt274_mic_detect(struct snd_soc_component *component,
+ {
+ 	struct rt274_priv *rt274 = snd_soc_component_get_drvdata(component);
  
- 	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
- 		priv->pdev_mux[i] = platform_device_register_resndata(
--						&mlxplat_dev->dev,
-+						&priv->pdev_i2c->dev,
- 						"i2c-mux-reg", i, NULL,
- 						0, &mlxplat_mux_data[i],
- 						sizeof(mlxplat_mux_data[i]));
++	rt274->jack = jack;
++
+ 	if (jack == NULL) {
+ 		/* Disable jack detection */
+ 		regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
+@@ -412,7 +414,6 @@ static int rt274_mic_detect(struct snd_soc_component *component,
+ 
+ 		return 0;
+ 	}
+-	rt274->jack = jack;
+ 
+ 	regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
+ 				RT274_IRQ_EN, RT274_IRQ_EN);
 -- 
 2.20.1
 
