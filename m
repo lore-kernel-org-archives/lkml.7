@@ -2,107 +2,214 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C37BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B233C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3903216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CkNwh7Im"
+	by mail.kernel.org (Postfix) with ESMTP id 11DDF216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561579250;
+	bh=noTqyNIwJyLDx8XJ2EstO7aBoUGnOC8TvIrd50fKSls=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dg7K3F6l6YuqszWoqw4yF1siu7iJ+YCpSmx4iX+Z6c1/+1SM+kWRrPQMlRQvUQ50m
+	 QXPnecVhUv/Z5ozJm95b1zZ3B+qEcIIv8EMxqlaQvjj0DX3Rj8MRbjKpuT2JNHgDOy
+	 pzsXnjTcbjAYJb95VdwiAcA2yRMxYDnarn0VuqH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfFZUAe (ORCPT
+        id S1726591AbfFZUAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:00:34 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37108 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZUAe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:00:34 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 25so554831pgy.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cbc5Dh7+LimPALKjevNG5TAL9t57bWZBL2kItsK/MGQ=;
-        b=CkNwh7ImC7XRLo+IkDMSV65GVm9m0viwqgH4AavERqe8iu6suGXWtvaUEOEbUOT3Wr
-         Od3Vtk8Cjoz/hAPqd1KEq/YT4O8aCxDN8/lTdkHwqmka+YIsPr26ZS9J0caSV3HfN6fB
-         9W6mrgrc400ohIbFHSKvo0cHaaF4OOfE1xRm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cbc5Dh7+LimPALKjevNG5TAL9t57bWZBL2kItsK/MGQ=;
-        b=eXJ4yCUTbbQ1mb/EXBMX6uGJBSexJzPEp7DRX94f6RdqTW3sDkf5AjyRYUHfARVs/8
-         BA84PChrfQcIQRESamarWVZrQ22yNEdfX5KafGegp3beUnXQ6AULQqCTJigyOMfFAF4X
-         XfMtRZ/BraOH3ZrrF6hnrRLYvQuGNMqqy+Z4QMtk2ixsNzJZL89YOP29fEKViCgnMaXp
-         pW5DVewzIuhv7vtg2Sf/2eDcYENfbmOTZXwLlrMIJbGD5+rpLONxgAmCcAKM+jNvpsw4
-         j6p8PLig3p53BtzuSmkexOldN/ecV/UvTd2RliC9dbREjeRN6P5lonjU5Oyngbi17dAY
-         Zu4g==
-X-Gm-Message-State: APjAAAVAjIYkmoQjz07SUF1xRH2QIMS5yDr2WZzKaX4rxhCs5KOeQ+sx
-        jTMtN8F/LYRfyJCUtjV8qgjVQw==
-X-Google-Smtp-Source: APXvYqwB3pTyrU5OpVfKMXgRlwrNkGcKuGijwGZQPEfQcgd8uyGotsUUkSTgOyEqSDdxAqwt78e5IA==
-X-Received: by 2002:a63:c006:: with SMTP id h6mr4516271pgg.285.1561579233579;
-        Wed, 26 Jun 2019 13:00:33 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id e20sm59204pfi.35.2019.06.26.13.00.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 13:00:33 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     groeck@chromium.org, drinkcat@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] block, bfq: Init saved_wr_start_at_switch_to_srt in unlikely case
-Date:   Wed, 26 Jun 2019 12:59:19 -0700
-Message-Id: <20190626195919.107425-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Wed, 26 Jun 2019 16:00:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfFZUAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:00:48 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14BD208E3;
+        Wed, 26 Jun 2019 20:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561579247;
+        bh=noTqyNIwJyLDx8XJ2EstO7aBoUGnOC8TvIrd50fKSls=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xcTa4fUI1752dJ1ZEfNu+4cOMWwsYWr24+5OYtJ4Prr5hg92/EhydxJf/zmMVHQWp
+         ZrfR/+00DMolQiujaTnttLbiOsYaQwQlm6fAVFdGDPuwis+1+IdUEWhYVb9OHqZpZy
+         qPCzYfl7c4I7LWPTcGrZMSJY9uIPY1h65ieNfKOw=
+Date:   Wed, 26 Jun 2019 21:00:42 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 3/4] IIO: Ingenic JZ47xx: Set clock divider on probe
+Message-ID: <20190626210042.386ae6e2@archlinux>
+In-Reply-To: <20190623184732.5492-3-contact@artur-rojek.eu>
+References: <20190623184732.5492-1-contact@artur-rojek.eu>
+        <20190623184732.5492-3-contact@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some debug code suggested by Paolo was tripping when I did reboot
-stress tests.  Specifically in bfq_bfqq_resume_state()
-"bic->saved_wr_start_at_switch_to_srt" was later than the current
-value of "jiffies".  A bit of debugging showed that
-"bic->saved_wr_start_at_switch_to_srt" was actually 0 and a bit more
-debugging showed that was because we had run through the "unlikely"
-case in the bfq_bfqq_save_state() function.
+On Sun, 23 Jun 2019 20:47:31 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Let's init "saved_wr_start_at_switch_to_srt" in the unlikely case to
-something sane.
+> From: Maarten ter Huurne <maarten@treewalker.org>
+> 
+> The SADC component can run at up to 8 MHz on JZ4725B, but is fed
+> a 12 MHz input clock (EXT). Divide it by two to get 6 MHz, then
+> set up another divider to match, to produce a 10us clock.
+> 
+> If the clock dividers are left on their power-on defaults (a divider
+> of 1), the SADC mostly works, but will occasionally produce erroneous
+> readings. This led to button presses being detected out of nowhere on
+> the RS90 every few minutes. With this change, no ghost button presses
+> were logged in almost a day worth of testing.
+> 
+> The ADCLK register for configuring clock dividers doesn't exist on
+> JZ4740, so avoid writing it there.
+> 
+> A function has been introduced rather than a flag because there is a lot
+> of variation between the ADCLK registers on JZ47xx SoCs, both in
+> the internal layout of the register and in the frequency range
+> supported by the SADC. So this solution should make it easier
+> to add support for other JZ47xx SoCs later.
+> 
+> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+This sounds like it perhaps should be marked as a fix and have appropriate
+fixes tag?  Otherwise, looks fine to me.
 
-NOTE: this fixes no known real-world errors.
+Jonathan
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Paolo Valente <paolo.valente@linaro.org>
----
-Paolo said to add his Reviewed-by in https://crrev.com/c/1678756.
-
- block/bfq-iosched.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 72840ebf953e..008c93d6b8d7 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -2678,6 +2678,7 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
- 		 * to enjoy weight raising if split soon.
- 		 */
- 		bic->saved_wr_coeff = bfqq->bfqd->bfq_wr_coeff;
-+		bic->saved_wr_start_at_switch_to_srt = bfq_smallest_from_now();
- 		bic->saved_wr_cur_max_time = bfq_wr_duration(bfqq->bfqd);
- 		bic->saved_last_wr_start_finish = jiffies;
- 	} else {
--- 
-2.22.0.410.gd8fdbe21b5-goog
+> ---
+>  drivers/iio/adc/ingenic-adc.c | 54 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+> index 92b1d5037ac9..e234970b7150 100644
+> --- a/drivers/iio/adc/ingenic-adc.c
+> +++ b/drivers/iio/adc/ingenic-adc.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/platform_device.h>
+> @@ -22,8 +23,11 @@
+>  #define JZ_ADC_REG_ADTCH		0x18
+>  #define JZ_ADC_REG_ADBDAT		0x1c
+>  #define JZ_ADC_REG_ADSDAT		0x20
+> +#define JZ_ADC_REG_ADCLK		0x28
+>  
+>  #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
+> +#define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
+> +#define JZ_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+>  
+>  #define JZ_ADC_AUX_VREF				3300
+>  #define JZ_ADC_AUX_VREF_BITS			12
+> @@ -34,6 +38,8 @@
+>  #define JZ4740_ADC_BATTERY_HIGH_VREF		(7500 * 0.986)
+>  #define JZ4740_ADC_BATTERY_HIGH_VREF_BITS	12
+>  
+> +struct ingenic_adc;
+> +
+>  struct ingenic_adc_soc_data {
+>  	unsigned int battery_high_vref;
+>  	unsigned int battery_high_vref_bits;
+> @@ -41,6 +47,7 @@ struct ingenic_adc_soc_data {
+>  	size_t battery_raw_avail_size;
+>  	const int *battery_scale_avail;
+>  	size_t battery_scale_avail_size;
+> +	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
+>  };
+>  
+>  struct ingenic_adc {
+> @@ -151,6 +158,42 @@ static const int jz4740_adc_battery_scale_avail[] = {
+>  	JZ_ADC_BATTERY_LOW_VREF, JZ_ADC_BATTERY_LOW_VREF_BITS,
+>  };
+>  
+> +static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
+> +{
+> +	struct clk *parent_clk;
+> +	unsigned long parent_rate, rate;
+> +	unsigned int div_main, div_10us;
+> +
+> +	parent_clk = clk_get_parent(adc->clk);
+> +	if (!parent_clk) {
+> +		dev_err(dev, "ADC clock has no parent\n");
+> +		return -ENODEV;
+> +	}
+> +	parent_rate = clk_get_rate(parent_clk);
+> +
+> +	/*
+> +	 * The JZ4725B ADC works at 500 kHz to 8 MHz.
+> +	 * We pick the highest rate possible.
+> +	 * In practice we typically get 6 MHz, half of the 12 MHz EXT clock.
+> +	 */
+> +	div_main = DIV_ROUND_UP(parent_rate, 8000000);
+> +	div_main = clamp(div_main, 1u, 64u);
+> +	rate = parent_rate / div_main;
+> +	if (rate < 500000 || rate > 8000000) {
+> +		dev_err(dev, "No valid divider for ADC main clock\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* We also need a divider that produces a 10us clock. */
+> +	div_10us = DIV_ROUND_UP(rate, 100000);
+> +
+> +	writel(((div_10us - 1) << JZ_ADC_REG_ADCLK_CLKDIV10US_LSB) |
+> +	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
+> +	       adc->base + JZ_ADC_REG_ADCLK);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
+>  	.battery_high_vref = JZ4725B_ADC_BATTERY_HIGH_VREF,
+>  	.battery_high_vref_bits = JZ4725B_ADC_BATTERY_HIGH_VREF_BITS,
+> @@ -158,6 +201,7 @@ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
+>  	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
+>  	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
+>  	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
+> +	.init_clk_div = jz4725b_adc_init_clk_div,
+>  };
+>  
+>  static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
+> @@ -167,6 +211,7 @@ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
+>  	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
+>  	.battery_scale_avail = jz4740_adc_battery_scale_avail,
+>  	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
+> +	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
+>  };
+>  
+>  static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
+> @@ -317,6 +362,15 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	/* Set clock dividers. */
+> +	if (soc_data->init_clk_div) {
+> +		ret = soc_data->init_clk_div(dev, adc);
+> +		if (ret) {
+> +			clk_disable_unprepare(adc->clk);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	/* Put hardware in a known passive state. */
+>  	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
+>  	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
 
