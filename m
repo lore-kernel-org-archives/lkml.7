@@ -2,81 +2,86 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_DIGITS,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5805C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376C4C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A31E2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E3420815
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iMfhsWXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfFZXzC (ORCPT
+        id S1726687AbfFZXz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 19:55:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:44911 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbfFZXzB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 19:55:01 -0400
-Received: by mail-io1-f72.google.com with SMTP id i133so439353ioa.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 16:55:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=c5MKxKpL1LGme09OnNwDQjsqqlS3JWAbrh2sxWujAk8=;
-        b=ViYPzYvMH2k8QQmawbU90rQRJ2sIyhtstVsaEW6S1OOU1T/gslHQdqFe+o7Yj7nuzG
-         2lxqJ/NdAbnUc3qhY0q1KXK0KQflQIbxndTAQ33ML9ezcsTRYnh7oz1FFREfpcOiFm0c
-         iO2pLDpmN2xZ5zldJoGNjfRCohpWWt5Anu0t0Rf2wn4AN7TN7XNJLt8hPm+wcWIUQbEA
-         pUQc1NeDJg998jPzcci2Vc0t4hlN6cUNKQkwyZybCO+3vVRsmV4nOQwaMzeW7/Fxpp65
-         tstFEMIKfeKtuld2R37RlGsbY+8ZNbQlW7OhDsPiFkXcq1azGnwpgU8srmzsAb2FuS6E
-         dwKA==
-X-Gm-Message-State: APjAAAXYZxxILh1jYCmiybdQK91KpCN/V+phbXIDx5d36zNp+rOiSuwm
-        iDOxzTKZhBXVC93piCy1kg7vm5wlvpLWv4cm/P+lPxGy3d4T
-X-Google-Smtp-Source: APXvYqw0rSeais3gd71d3pKztVwreFghQwPf0ciLriAei8/ydZP7gcjOnDii1dtoOGd1VNJ94dAGeH2zX3nwhBEDVLqHtbiTYrsV
+        Wed, 26 Jun 2019 19:55:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:57105 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726410AbfFZXzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 19:55:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Z0Jq2Tk4z9s3Z;
+        Thu, 27 Jun 2019 09:55:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561593323;
+        bh=SYlgLJfuAa7iCBO1w4Ah7GvEiBB0bTAAJV5lwV4dbv4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iMfhsWXysePT6XoI2D922UTPbWSH+1GSOnpk4kv920g/lWzI9uOK+C8g9cuZapyfH
+         U9jGFeaBJdSodyFqRZuP7VqttjzoKaixgXO9DyLdue6CWHjHi2FivEAE/1Hc5jZ/YV
+         gyHQEhFmjqZIm5HoraZWDmPcNgQiCytNuAUD1Olmud2nrUGKNTSFli1M6Cb8Aa2krc
+         RpV8DpZlHVu8NTirYtj8iyjZ3XSNIfFwzYbw6ggzNxLHneYVt+sv/acGyC8Ho1sE20
+         ANE33BxEPLZPZxu6FIPeWJIpiY2QW7gWusvzTrzHPi7O/ikNXrrAw+wVBSUx9ukJMb
+         AlBU00M13VGpQ==
+Date:   Thu, 27 Jun 2019 09:55:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the f2fs tree
+Message-ID: <20190627095522.457b7511@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:885a:: with SMTP id t26mr1029660ios.218.1561593301141;
- Wed, 26 Jun 2019 16:55:01 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 16:55:01 -0700
-In-Reply-To: <000000000000f4f847058c387616@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ff8f15058c42c5fa@google.com>
-Subject: Re: KASAN: use-after-free Read in corrupted (3)
-From:   syzbot <syzbot+8a821b383523654227bf@syzkaller.appspotmail.com>
-To:     aarcange@redhat.com, akpm@linux-foundation.org, ast@kernel.org,
-        christian@brauner.io, daniel@iogearbox.net, ebiederm@xmission.com,
-        elena.reshetova@intel.com, guro@fb.com, john.fastabend@gmail.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        luto@amacapital.net, mhocko@suse.com, mingo@kernel.org,
-        namit@vmware.com, netdev@vger.kernel.org, peterz@infradead.org,
-        riel@surriel.com, syzkaller-bugs@googlegroups.com, wad@chromium.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ESojSdprCuyKUx=dFCIuK+U"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+--Sig_/ESojSdprCuyKUx=dFCIuK+U
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
-Author: John Fastabend <john.fastabend@gmail.com>
-Date:   Sat Jun 30 13:17:47 2018 +0000
+Hi Jaegeuk,
 
-     bpf: sockhash fix omitted bucket lock in sock_close
+Commit
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11bb4e3da00000
-start commit:   045df37e Merge branch 'cxgb4-Reference-count-MPS-TCAM-entr..
-git tree:       net-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13bb4e3da00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15bb4e3da00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dd16b8dc9d0d210c
-dashboard link: https://syzkaller.appspot.com/bug?extid=8a821b383523654227bf
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1389f5b5a00000
+  dfc06c892ea3 ("f2fs: fix is_idle() check for discard type")
 
-Reported-by: syzbot+8a821b383523654227bf@syzkaller.appspotmail.com
-Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
+is missing a Signed-off-by from its committer.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ESojSdprCuyKUx=dFCIuK+U
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0UBeoACgkQAVBC80lX
+0GyXuggAoeXxyHUiHWIK+hrIrTVxrnFMdGnPthdi8667/8VSXhl83HXB8h7FvGYA
+WChtKHn4RMntdcps6mMoK63HJqmJ5oIM7gekkMsDBDJ6X8yPu0n6g0c00+bmqZto
+A7A1G0WGfc5hB8D1vBMGbwFM8r44qo9qCuLP3M8UfFBgW95yKLBk8tJe4h+D0tuF
+rSTW/w1jgFKcVTopPi1uVe9O64Cosv/ScWzyBOJ9kU3v3Oqlu1pT50hywv+PBhR+
+QkQCWPPiixHt1s0dAZ/J1Zttpjl0fOWoqQR9OeDgkhoOq3+Ht1GbO7HuE39wD08H
+JHv1uHjxGc0r/cp8FjWFC4Tnenh3Ag==
+=Qobp
+-----END PGP SIGNATURE-----
+
+--Sig_/ESojSdprCuyKUx=dFCIuK+U--
