@@ -2,100 +2,140 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2209FC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0CAC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2128208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F0B208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SS3FHZ6u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICD2T4nc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfFZUBj (ORCPT
+        id S1726503AbfFZUDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:01:39 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47976 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZUBh (ORCPT
+        Wed, 26 Jun 2019 16:03:11 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41856 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfFZUDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:01:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rhSqThBTCa1k8P1tTRPVXVwrdSMZo/v6odhBP0gdvBk=; b=SS3FHZ6u9lz4R2EUrAQpCQI5li
-        HrRK43VRWLnnnykP67sWXJbu2X9zYvTA56MH/pJ7XJZ0n54mGXyPkpMNhFhs1iSrlIEosjXe450zW
-        BsxLWbz42F0NEACZK6XswOljjcsspH3IbBvEKY5jD+Db4WcVNpe3joe61/YdVmZTU4g9jgz+th7AG
-        sRiTg5NK3utvyfH8op3t/sGuPbJ5DIYXhWl4rC8SUTwnXeSvJ6y0K7Hdcq5Wb775sSt0OHgk0RFw5
-        OTe5YBzlvOGEnLWzsJW7Vg+4raEhAt7aky5WdGO2rf0g0u53igmF6wg/Owyl6F7WiaHo3BcVPmhNZ
-        Eyf3qaeg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgE6h-0001Xf-QR; Wed, 26 Jun 2019 20:01:28 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 11FF9209CEDA8; Wed, 26 Jun 2019 22:01:26 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 22:01:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Raslan, KarimAllah" <karahmed@amazon.de>
-Cc:     "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kernellwp@gmail.com" <kernellwp@gmail.com>,
-        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
-Subject: Re: cputime takes cstate into consideration
-Message-ID: <20190626200126.GQ3419@hirez.programming.kicks-ass.net>
-References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
- <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
- <20190626145413.GE6753@char.us.oracle.com>
- <20190626161608.GM3419@hirez.programming.kicks-ass.net>
- <20190626183016.GA16439@char.us.oracle.com>
- <alpine.DEB.2.21.1906262038040.32342@nanos.tec.linutronix.de>
- <1561575336.25880.7.camel@amazon.de>
- <20190626192100.GP3419@hirez.programming.kicks-ass.net>
- <1561577254.25880.15.camel@amazon.de>
+        Wed, 26 Jun 2019 16:03:11 -0400
+Received: by mail-ed1-f66.google.com with SMTP id p15so4814980eds.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:03:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WJCEZwADJ64FudWRSvgjkrSHzdH+lNhY9Ai4SAjHt20=;
+        b=ICD2T4ncTt+dn5KNQbyik0soYgrcmS149QLGqIOX44WHeH/X6yXUQcNbDXYo0SN7sj
+         rbyiHnpqXOTseGcOtUMdC3+CDKGMFJZz2A5dAiArfbyREXQbYnRvd6h1iyGPgrSEhbia
+         DEti/zsOXfDH2A8nJs+Js0oVFh/Pv1xjFLUYOx2BOH438KAhMnp6DLQHD8/H7u0s+xOH
+         odb58LDyOjJoFLXydjw//wKLJXnBbq6UJWRgGgW8Ad/00y84frNHPdVkm9aaeGUYuLGQ
+         ewyDqr2E0uVvOpAf4y1zrUKnSfGQp/1yd2RCjeiqKdAoLBHOJ/w7NqnWPperPADoIZb3
+         sivA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WJCEZwADJ64FudWRSvgjkrSHzdH+lNhY9Ai4SAjHt20=;
+        b=TpY5jPPL1LEpuOmPzlzCIRJs5wqRPv9osKXSw0WfiP0WXFJIsDLA1zpupQkzv/zg1R
+         +ev2qdZkQ58u9OSE0wHiRBPgZI7/qVmzH1OunAo94u/53Isf2ubkWZwLQ3hgrW2OtnGC
+         NWLcyTeEAEG5j3QShCtQtAf7BF+n/nIPBMW45tIKllSRArOJ7Af0h2BjHvwWkM3XSNFd
+         aAUOOy/Q0PJgUBKsG2E3wG46fDNmC05E7NHPXtjuknrNREjZsM6+4Lz/l4bpIgH8pSO2
+         cKHqPnXV4jROWDOuu4x1yYHKF7zGn1dSkejTtay9WtS8pPJXgKGGD+sDzf1XuYCUVfsA
+         A7Og==
+X-Gm-Message-State: APjAAAX2uRWp/xSA36XSfUOxuj2lz5NJrMf1cP7v2a5tCu3Jkrd3YHfk
+        do3Xn1h7fYy7pjPyTknUZmk=
+X-Google-Smtp-Source: APXvYqzh68Zi23Nhu/s1LMEfkz6cZUEgu/jXNTyljgTNTy7iZGouTKkNoVjXDeRH/q4GDJhYT8ds2Q==
+X-Received: by 2002:a17:906:6550:: with SMTP id u16mr5886143ejn.7.1561579389182;
+        Wed, 26 Jun 2019 13:03:09 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id x4sm6140660eda.22.2019.06.26.13.03.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 13:03:08 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 13:03:06 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shawn Landden <shawn@git.icu>,
+        clang-built-linux@googlegroups.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+Message-ID: <20190626200306.GA72437@archlinux-epyc>
+References: <20190625071846.GN3436@hirez.programming.kicks-ass.net>
+ <201906251009.BCB7438@keescook>
+ <20190625180525.GA119831@archlinux-epyc>
+ <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
+ <20190625202746.GA83499@archlinux-epyc>
+ <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
+ <20190626051035.GA114229@archlinux-epyc>
+ <alpine.DEB.2.21.1906261711540.32342@nanos.tec.linutronix.de>
+ <20190626190028.GA14249@archlinux-epyc>
+ <alpine.DEB.2.21.1906262140570.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561577254.25880.15.camel@amazon.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1906262140570.32342@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 07:27:35PM +0000, Raslan, KarimAllah wrote:
-> On Wed, 2019-06-26 at 21:21 +0200, Peter Zijlstra wrote:
-> > On Wed, Jun 26, 2019 at 06:55:36PM +0000, Raslan, KarimAllah wrote:
-> > 
+On Wed, Jun 26, 2019 at 09:46:02PM +0200, Thomas Gleixner wrote:
+> On Wed, 26 Jun 2019, Nathan Chancellor wrote:
+> > On Wed, Jun 26, 2019 at 05:18:37PM +0200, Thomas Gleixner wrote:
+> > > tarball with log and the preprocessed source and run scripts:
 > > > 
-> > > If the host is completely in no_full_hz mode and the pCPU is dedicated to a 
-> > > single vCPU/task (and the guest is 100% CPU bound and never exits), you would 
-> > > still be ticking in the host once every second for housekeeping, right? Would 
-> > > not updating the mwait-time once a second be enough here?
+> > >     https://tglx.de/~tglx/tc-crash.tar.bz2
+> > > 
+> > > The machine runs up to date debian stretch which has backports enabled and
+> > > I just used the install command from the github project page you linked
+> > > to. Getting started section.
+> > > 
+> > Great, thank you! It explodes during lowering, which is a backend issue
+> > so that's fun :/
 > > 
-> > People are trying very hard to get rid of that remnant tick. Lets not
-> > add dependencies to it.
+> > My guess is that this is a problem with -march=native on that version of
+> > LLVM (since a newer one works). Could you try this patch that makes that
+> > opt-in and see if that fixes it?
 > > 
-> > IMO this is a really stupid issue, 100% time is correct if the guest
-> > does idle in pinned vcpu mode.
+> > https://github.com/nathanchance/tc-build/commit/9f1ae41cd4246f9e4d011542f094aa0df2c069b4
 > 
-> One use case for proper accounting (obviously for a slightly relaxed definition 
-> or *proper*) is *external* monitoring of CPU utilization for scaling group
-> (i.e. more VMs will be launched when you reach a certain CPU utilization).
-> These external monitoring tools needs to account CPU utilization properly.
+> clang --version
+> clang version 3.8.1-24 (tags/RELEASE_381/final)
+> Target: x86_64-pc-linux-gnu
+> Thread model: posix
+> InstalledDir: /usr/bin
+> 
+> ./build-llvm.py
+> ...
+> LLVM build duration: 0:03:14
+> 
+> Tested-by: Thomas Gleixner <tglx@linutronix.de>
 
-That's utter nonsense; what's the point of exposing mwait to guests if
-you're not doing vcpu pinning. For overloaded guests mwait makes no
-sense what so ever.
+Fantastic, thank you!
+
+https://github.com/ClangBuiltLinux/tc-build/pull/19
+
+Should be merged soon hopefully.
+
+Cheers,
+Nathan
