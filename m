@@ -2,99 +2,119 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99284C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14632C48BD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680062133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD303208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561510606;
-	bh=abXAdpfboVZdQSoog5ldf1FPShcMnkPsqNEx5/DnyCo=;
+	s=default; t=1561510610;
+	bh=IEdgHhVzO/KXfl1rhl0JQGR+FXQJwlwYb+hfIotRyw8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I1kMbCeiUxvwGId+dTsMoZnG14qaPhymqx6zX0u2o+iM5OqizNoAVTJl4xNhONTYg
-	 aOrsW7PV7KfyOvjsvPt+NNN/bN64yXGWiQBUY32wQMcx9p3Y649BWpbWPSbqp3RZZo
-	 AVUNA8r1ieo6HMMu1GMtHUmcjKi4FmwAEw7KJA/4=
+	b=zr2JFsz+GX/0U1CCebWUhfwmPpzj2rNT20m0ob3/2wJ22c19uxHjZgWRyVkhFh0lJ
+	 f9c4I7sP07pRoib3Y/Qic4HG/A5iKeCluC9n0Q3o/6uh9fCP+Mh5KggEMeTeylKTKt
+	 /uQmhQNCVsfc/fK5iWIkzMrzrwAxAKIgziPnliDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfFZA4n (ORCPT
+        id S1726489AbfFZA4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 20:56:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 20:56:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfFZA4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 20:56:42 -0400
+        id S1726443AbfFZA4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 20:56:48 -0400
 Received: from localhost (unknown [172.104.248.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ABE72085A;
-        Wed, 26 Jun 2019 00:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63D47208E3;
+        Wed, 26 Jun 2019 00:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561510601;
-        bh=abXAdpfboVZdQSoog5ldf1FPShcMnkPsqNEx5/DnyCo=;
+        s=default; t=1561510607;
+        bh=IEdgHhVzO/KXfl1rhl0JQGR+FXQJwlwYb+hfIotRyw8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OB4KBcaQM89i63n0Gb2hSuILySIPM2YSgq8ZxYt49ot4+fLd9JpEOQIalLoFooiVa
-         7QUzKC1I3qhJy3qkBvBX9ntPKIILa0FniwApxmaeVozNMpmltU/mey7ZbADb2Et6bj
-         Ms2hnQ6aRK4eUPN6B48TwhSUPvzs93bawrgrcDso=
-Date:   Wed, 26 Jun 2019 08:51:16 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.1 000/121] 5.1.15-stable review
-Message-ID: <20190626005116.GC21530@kroah.com>
-References: <20190624092320.652599624@linuxfoundation.org>
- <163f4750-24c9-104c-95aa-16f51656ef63@nvidia.com>
+        b=OhyEESFkeURnMcVE7e+cjQoAuBwJalH3DtvaFQF6w5ZQwd6ohSqVQL+Z90iZ4CYoh
+         bHHhX0ZUlxZo+KJ/YPDB1kvkZZU5HwHvBn/yDQRuUnPpzUITcW3M7S3+zD8Gc3GwgG
+         IN6nZktvwZEW7/nALQ9AovCkj94cO3cOZ7Qi/EKs=
+Date:   Wed, 26 Jun 2019 08:55:05 +0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Muchun Song <smuchun@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Prateek Sood <prsood@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        zhaowuyun@wingtech.com
+Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
+ glue directory
+Message-ID: <20190626005505.GD21530@kroah.com>
+References: <20190516142342.28019-1-smuchun@gmail.com>
+ <20190524190443.GB29565@kroah.com>
+ <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
+ <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
+ <20190618152859.GB1912@kroah.com>
+ <CAPSr9jFMKb1bQAbCFLqP2+fb60kcbyJ+cDspkL5FH28CNKFz3A@mail.gmail.com>
+ <20190618161340.GA13983@kroah.com>
+ <e3e064d85790a56b661ef9641e02c571540c6f44.camel@kernel.crashing.org>
+ <CAPSr9jExG2C6U0D2TN-PUxgi9waD5QkSR-icxNPP1w9nJx3GUQ@mail.gmail.com>
+ <ef566c4c2881c70d673e8a76c47084c2a024cd5e.camel@kernel.crashing.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <163f4750-24c9-104c-95aa-16f51656ef63@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef566c4c2881c70d673e8a76c47084c2a024cd5e.camel@kernel.crashing.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:01:11AM +0100, Jon Hunter wrote:
-> 
-> On 24/06/2019 10:55, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.15 release.
-> > There are 121 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Wed, Jun 26, 2019 at 08:56:00AM +1000, Benjamin Herrenschmidt wrote:
+> On Tue, 2019-06-25 at 23:06 +0800, Muchun Song wrote:
+> > Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年6月19日周三
+> > 上午5:51写道：
+> > > 
+> > > On Tue, 2019-06-18 at 18:13 +0200, Greg KH wrote:
+> > > > 
+> > > > Again, I am totally confused and do not see a patch in an email
+> > > > that
+> > > > I
+> > > > can apply...
+> > > > 
+> > > > Someone needs to get people to agree here...
+> > > 
+> > > I think he was hoping you would chose which solution you prefered
+> > > here
 > > 
-> > Responses should be made by Wed 26 Jun 2019 09:22:03 AM UTC.
-> > Anything received after that time might be too late.
+> > Yeah, right, I am hoping you would chose which solution you prefered
+> > here.
+> > Thanks.
 > > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.15-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> > > :-) His original or the one I suggested instead. I don't think
+> > > there's
+> > > anybody else with understanding of sysfs guts around to form an
+> > > opinion.
+> > > 
 > 
-> All tests passing for Tegra ...
+> Muchun, I don't think Greg still has the previous emails. He deals with
+> too much to keep track of old stuff.
 > 
-> Test results for stable-v5.1:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     32 tests:	32 pass, 0 fail
-> 
-> Linux version:	5.1.15-rc1-gd74a88068af9
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+> Can you send both patches tagged as [OPT1] and [OPT2] along with a
+> comment in one go so Greg can see both and decide ?
 
-Thanks for testing all of these and letting me know.
+That would be wonderful, thank you as I can't really find the "latest"
+versions of both options.
+
+> I think looking at the refcount is fragile, I might be wrong, but I
+> think it mostly paper over the root of the problem which is the fact
+> that the lock isn't taken accross both operations, thus exposing the
+> race. But I'm happy if Greg prefers your approach as long as it's
+> fixed.
+
+I'll look at them and try to figure this out next week, thanks.
 
 greg k-h
