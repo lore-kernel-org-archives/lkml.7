@@ -2,102 +2,85 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4F2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19436C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58FD214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D944F214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfFZWnK (ORCPT
+        id S1726516AbfFZWrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:43:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50671 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfFZWnK (ORCPT
+        Wed, 26 Jun 2019 18:47:39 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:33891 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726354AbfFZWrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:43:10 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgGd5-0000mK-Nx; Thu, 27 Jun 2019 00:43:04 +0200
-Date:   Thu, 27 Jun 2019 00:43:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Xu <peterx@redhat.com>
-cc:     linux-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>
-Subject: Re: [PATCH] timer: document TIMER_PINNED
-In-Reply-To: <20190618004356.10357-1-peterx@redhat.com>
-Message-ID: <alpine.DEB.2.21.1906270034520.32342@nanos.tec.linutronix.de>
-References: <20190618004356.10357-1-peterx@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 26 Jun 2019 18:47:39 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5QMl9xf027338
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Jun 2019 18:47:10 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 9C2EC42002E; Wed, 26 Jun 2019 18:47:09 -0400 (EDT)
+Date:   Wed, 26 Jun 2019 18:47:09 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        adilger.kernel@dilger.ca, davem@davemloft.net, eladr@mellanox.com,
+        idosch@mellanox.com, jiri@mellanox.com, john.stultz@linaro.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Subject: Re: INFO: rcu detected stall in ext4_write_checks
+Message-ID: <20190626224709.GH3116@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>,
+        adilger.kernel@dilger.ca, davem@davemloft.net, eladr@mellanox.com,
+        idosch@mellanox.com, jiri@mellanox.com, john.stultz@linaro.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+References: <000000000000d3f34b058c3d5a4f@google.com>
+ <20190626184251.GE3116@mit.edu>
+ <20190626210351.GF3116@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626210351.GF3116@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
+More details about what is going on.  First, it requires root, because
+one of that is required is using sched_setattr (which is enough to
+shoot yourself in the foot):
 
-On Tue, 18 Jun 2019, Peter Xu wrote:
-> -/*
-> - * A deferrable timer will work normally when the system is busy, but
-> - * will not cause a CPU to come out of idle just to service it; instead,
-> - * the timer will be serviced when the CPU eventually wakes up with a
-> - * subsequent non-deferrable timer.
-> +/**
-> + * @TIMER_DEFERRABLE: A deferrable timer will work normally when the
-> + * system is busy, but will not cause a CPU to come out of idle just
-> + * to service it; instead, the timer will be serviced when the CPU
-> + * eventually wakes up with a subsequent non-deferrable timer.
->   *
-> - * An irqsafe timer is executed with IRQ disabled and it's safe to wait for
-> - * the completion of the running instance from IRQ handlers, for example,
-> - * by calling del_timer_sync().
-> + * @TIMER_IRQSAFE: An irqsafe timer is executed with IRQ disabled and
-> + * it's safe to wait for the completion of the running instance from
-> + * IRQ handlers, for example, by calling del_timer_sync().
->   *
->   * Note: The irq disabled callback execution is a special case for
->   * workqueue locking issues. It's not meant for executing random crap
->   * with interrupts disabled. Abuse is monitored!
-> + *
-> + * @TIMER_PINNED: A pinned timer will not be affected by timer
-> + * migration so it will always be run on a static cpu that was
-> + * specified.
+sched_setattr(0, {size=0, sched_policy=0x6 /* SCHED_??? */, sched_flags=0, sched_nice=0, sched_priority=0, sched_runtime=2251799813724439, sched_deadline=4611686018427453437, sched_period=0}, 0) = 0
 
-That's a bit misleading.
+This is setting the scheduler policy to be SCHED_DEADLINE, with a
+runtime parameter of 2251799.813724439 seconds (or 26 days) and a
+deadline of 4611686018.427453437 seconds (or 146 *years*).  This means
+a particular kernel thread can run for up to 26 **days** before it is
+scheduled away, and if a kernel reads gets woken up or sent a signal,
+no worries, it will wake up roughly seven times the interval that Rip
+Van Winkle spent snoozing in a cave in the Catskill Mountains (in
+Washington Irving's short story).
 
-The timer pinned flag prevents the MOHZ timer placement heuristics to take
-effect. That means that the timer is enqueued on the CPU on which the
-enqueue function is invoked. 
+We then kick off a half-dozen threads all running:
 
-> + * Note: neither timer_setup() nor mod_timer() will
-> + * guarantee correct pinning of timers.  One should always use
-> + * add_timer_on() when arm the timer to guarantee that the timer will
-> + * be pinned to the target CPU correctly.
+   sendfile(fd, fd, &pos, 0x8080fffffffe);
 
-I'd rather say:
+(and since count is a ridiculously large number, this gets cut down to):
 
-    That means that pinned timers are not guaranteed to stay on the
-    initialy selected CPU. They move to the CPU on which the enqueue
-    function is invoked via mod_timer() or add_timer().
+   sendfile(fd, fd, &pos, 2147479552);
 
-    If the timer should be placed on a particular CPU then add_timer_on()
-    has to be used.
+Is it any wonder that we are seeing RCU stalls?   :-)
 
-Or something like that. Too tired to think about it right now, but you get
-the idea.
-
-Thanks,
-
-	tglx
+      	  	      	     	    - Ted
