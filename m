@@ -2,42 +2,42 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0301C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D160C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5D020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA3C20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AoPkQ1Ya"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e05g33We"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfFZM3Q (ORCPT
+        id S1727827AbfFZM3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:29:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42744 "EHLO
+        Wed, 26 Jun 2019 08:29:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42618 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbfFZM1w (ORCPT
+        with ESMTP id S1726329AbfFZM1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:27:52 -0400
+        Wed, 26 Jun 2019 08:27:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jJLN4PQyh+NiJMk0GjPmnktfOIwnazdB1WyLd+EwQBI=; b=AoPkQ1Ya+GVeIiAkwNrcOY3WXy
-        sAhllTHY9EgHAAks54i/wuled6yq4/SYKn1NbwYo04wuJLkW52WmxaNmHyzJwOIaCd1GOvXiEtOFh
-        ThHQsj3EyWPwSyeHernbRDYWFXPuc50UnHzB/Ux1T9z32tWTuakN3Zxrkm+83YlNJ6VlyDhXoVpV0
-        swGfUgPd+voS9n+3QCOoIUtQgxulHB6VDtuaVG04iQieR5ANlKAx/Sb/w9GgYjty+E8OOcprpShvj
-        UdtX/dRdsOG235kDLoTkXHXo33rFg+7/1zOnF3ap3zxhTo4sRT+LAOqrSL+ve8dTmWYfKoZdPNkJ2
-        oG9lwaoA==;
+        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YGx69ktqFfd50Mnd66pLKlz3uikDiZWUcfJ3jfUuvQk=; b=e05g33Wex+0CQQ9qi04aK+PPD
+        72YJJQlOybfiI5HDpvAwNw3qyS9BQ2WnPDw3YMr+fSZN7R9d4Tn5T/Kg6qLvyaoDaHQZ0vlVbYbhx
+        sH7r9sk7n9uAVs7ytRQPMUWtpIBu34n75RQsdX09ZN7vTlq63SjgxFL3+W2CGRZnbY4b1uq2QoXC9
+        wfCap12FyOEmQpV3o8HSsJ+3sDUypgYRRenguNdBNIJhO4plDWVryg6VP0j/VmweKz3YUcCgDWjkR
+        wJkxMMcljSkpHVx1W9E80XqfefYKjbk4v/9jvt3SU/bAHja9Xecuu8HugJFvBvJ02cUDAF0fQb/UW
+        LymOmxY1g==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg71g-0001O4-Pe; Wed, 26 Jun 2019 12:27:49 +0000
+        id 1hg71L-0001Kf-Nf; Wed, 26 Jun 2019 12:27:28 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -46,13 +46,12 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/25] memremap: validate the pagemap type passed to devm_memremap_pages
-Date:   Wed, 26 Jun 2019 14:27:07 +0200
-Message-Id: <20190626122724.13313-9-hch@lst.de>
+Subject: dev_pagemap related cleanups v3
+Date:   Wed, 26 Jun 2019 14:26:59 +0200
+Message-Id: <20190626122724.13313-1-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626122724.13313-1-hch@lst.de>
-References: <20190626122724.13313-1-hch@lst.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,89 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most pgmap types are only supported when certain config options are
-enabled.  Check for a type that is valid for the current configuration
-before setting up the pagemap.  For this the usage of the 0 type for
-device dax gets replaced with an explicit MEMORY_DEVICE_DEVDAX type.
+Hi Dan, Jérôme and Jason,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/dax/device.c     |  1 +
- include/linux/memremap.h |  8 ++++++++
- kernel/memremap.c        | 22 ++++++++++++++++++++++
- 3 files changed, 31 insertions(+)
+below is a series that cleans up the dev_pagemap interface so that
+it is more easily usable, which removes the need to wrap it in hmm
+and thus allowing to kill a lot of code
 
-diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index 8465d12fecba..79014baa782d 100644
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -468,6 +468,7 @@ int dev_dax_probe(struct device *dev)
- 	dev_dax->pgmap.ref = &dev_dax->ref;
- 	dev_dax->pgmap.kill = dev_dax_percpu_kill;
- 	dev_dax->pgmap.cleanup = dev_dax_percpu_exit;
-+	dev_dax->pgmap.type = MEMORY_DEVICE_DEVDAX;
- 	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
- 	if (IS_ERR(addr))
- 		return PTR_ERR(addr);
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index 995c62c5a48b..0c86f2c5ac9c 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -45,13 +45,21 @@ struct vmem_altmap {
-  * wakeup is used to coordinate physical address space management (ex:
-  * fs truncate/hole punch) vs pinned pages (ex: device dma).
-  *
-+ * MEMORY_DEVICE_DEVDAX:
-+ * Host memory that has similar access semantics as System RAM i.e. DMA
-+ * coherent and supports page pinning. In contrast to
-+ * MEMORY_DEVICE_FS_DAX, this memory is access via a device-dax
-+ * character device.
-+ *
-  * MEMORY_DEVICE_PCI_P2PDMA:
-  * Device memory residing in a PCI BAR intended for use with Peer-to-Peer
-  * transactions.
-  */
- enum memory_type {
-+	/* 0 is reserved to catch uninitialized type fields */
- 	MEMORY_DEVICE_PRIVATE = 1,
- 	MEMORY_DEVICE_FS_DAX,
-+	MEMORY_DEVICE_DEVDAX,
- 	MEMORY_DEVICE_PCI_P2PDMA,
- };
- 
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index 6e1970719dc2..abda62d1e5a3 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -157,6 +157,28 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 	pgprot_t pgprot = PAGE_KERNEL;
- 	int error, nid, is_ram;
- 
-+	switch (pgmap->type) {
-+	case MEMORY_DEVICE_PRIVATE:
-+		if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
-+			WARN(1, "Device private memory not supported\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+		break;
-+	case MEMORY_DEVICE_FS_DAX:
-+		if (!IS_ENABLED(CONFIG_ZONE_DEVICE) ||
-+		    IS_ENABLED(CONFIG_FS_DAX_LIMITED)) {
-+			WARN(1, "File system DAX not supported\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+		break;
-+	case MEMORY_DEVICE_DEVDAX:
-+	case MEMORY_DEVICE_PCI_P2PDMA:
-+		break;
-+	default:
-+		WARN(1, "Invalid pgmap type %d\n", pgmap->type);
-+		break;
-+	}
-+
- 	if (!pgmap->ref || !pgmap->kill || !pgmap->cleanup) {
- 		WARN(1, "Missing reference count teardown definition\n");
- 		return ERR_PTR(-EINVAL);
--- 
-2.20.1
+Note: this series is on top of Linux 5.2-rc5 and has some minor
+conflicts with the hmm tree that are easy to resolve.
 
+Diffstat summary:
+
+ 32 files changed, 361 insertions(+), 1012 deletions(-)
+
+Git tree:
+
+    git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.3
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-devmem-cleanup.3
+
+
+Changes since v2:
+ - fix nvdimm kunit build
+ - add a new memory type for device dax
+ - fix a few issues in intermediate patches that didn't show up in the end
+   result
+ - incorporate feedback from Michal Hocko, including killing of
+   the DEVICE_PUBLIC memory type entirely
+
+Changes since v1:
+ - rebase
+ - also switch p2pdma to the internal refcount
+ - add type checking for pgmap->type
+ - rename the migrate method to migrate_to_ram
+ - cleanup the altmap_valid flag
+ - various tidbits from the reviews
