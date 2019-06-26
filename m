@@ -2,95 +2,111 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEA8C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0116C48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E972147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8086C20883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfFZCyV (ORCPT
+        id S1726668AbfFZCy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:54:21 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:14032 "EHLO
+        Tue, 25 Jun 2019 22:54:26 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:34440 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726357AbfFZCyV (ORCPT
+        with ESMTP id S1726594AbfFZCyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:54:21 -0400
-X-UUID: 2125a70a8691468e9fdfe5d8dcd3e683-20190626
-X-UUID: 2125a70a8691468e9fdfe5d8dcd3e683-20190626
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Tue, 25 Jun 2019 22:54:25 -0400
+X-UUID: c314c310790c4050a28b21a154fa5df4-20190626
+X-UUID: c314c310790c4050a28b21a154fa5df4-20190626
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 950348979; Wed, 26 Jun 2019 10:54:10 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 26 Jun
- 2019 10:54:09 +0800
+        with ESMTP id 1409259465; Wed, 26 Jun 2019 10:54:18 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 26 Jun
+ 2019 10:54:15 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 26 Jun 2019 10:54:06 +0800
+ 15.0.1395.4 via Frontend Transport; Wed, 26 Jun 2019 10:54:12 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
         Ian Campbell <ijc+devicetree@hellion.org.uk>,
         <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>
+        "Matthias Brugger" <matthias.bgg@gmail.com>
 CC:     Jitao Shi <jitao.shi@mediatek.com>,
         Thierry Reding <treding@nvidia.com>,
         Ajay Kumar <ajaykumar.rs@samsung.com>,
         Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
         Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
+        "Vincent Palatin" <vpalatin@chromium.org>,
         Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
         Russell King <rmk+kernel@arm.linux.org.uk>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dri-devel@lists.freedesktop.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
+        "Sascha Hauer" <kernel@pengutronix.de>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v3 1/4] dt-bindngs: display: panel: Add BOE tv101wum-n16 panel bindings
-Date:   Wed, 26 Jun 2019 10:53:57 +0800
-Message-ID: <20190626025400.109567-2-jitao.shi@mediatek.com>
+        <ck.hu@mediatek.com>, <stonea168@163.com>,
+        "Sam Ravnborg" <sam@ravnborg.org>
+Subject: [v3 3/4] dt-bindings: display: panel: add auo kd101n80-45na panel bindings
+Date:   Wed, 26 Jun 2019 10:53:59 +0800
+Message-ID: <20190626025400.109567-4-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190626025400.109567-1-jitao.shi@mediatek.com>
 References: <20190626025400.109567-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24712.003
+X-TM-AS-Result: No-3.890900-8.000000-10
+X-TMASE-MatchedRID: icpV8lao858ib7FbSDtRQ+w8wbnnSw8bPz+fM/byAtnfUZT83lbkEEZU
+        qiaZ+o8nezYFSWzv4Aj++vFBYLLFFSJrrIAyia6MRORIkLq4xDQ5iooXtStiHoRYHyK7IaoJi9w
+        qKeXPJfWPlkcXn2IeyAaIRpZxOPntHRgRCLcbWrgvPGk0keCcJR+qR83NNEVKVptCZRwLvQFKj9
+        RzqMBfu9CoiCTf1ntP2SPEr0GBThVv+U6cgdvK9b+Kd/geEyt7fS0Ip2eEHnz3IzXlXlpamPoLR
+        4+zsDTtwwUcWQpWasHCjEEV8dP9kwdSqpzbvhxJNghLbJiHVS4z9ebHGXBhcootcdXNgXAjPnQ8
+        b0xvxlP6LRYnQF1QeO7uNWa0VYc/XdZYiiD7nm41URakDnXQmkktfpZ7dIYnT2FJac+dZhxC1db
+        lKiPrE8C+ksT6a9fy
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--3.890900-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24712.003
+X-TM-SNTS-SMTP: 513CA5F3815985883FFD06FB1B91990A3B9575F2853E73C9022D53324A99EC532000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for boe tv101wum-n16 panel.
+Add documentation for auo kd101n80-45na panel.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
+ .../display/panel/auo,kd101n80-45na.txt       | 34 +++++++++++++++++++
  1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt b/Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
 new file mode 100644
-index 000000000000..bd44af636390
+index 000000000000..994c2a13f942
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
++++ b/Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
 @@ -0,0 +1,34 @@
-+Boe Corporation 10.1" WUXGA TFT LCD panel
++AUO Corporation 10.1" WUXGA TFT LCD panel
 +
 +Required properties:
-+- compatible: should be "boe,tv101wum-nl6"
++- compatible: should be "auo,kd101n80-45na"
 +- reg: the virtual channel number of a DSI peripheral
 +- enable-gpios: a GPIO spec for the enable pin
 +- pp1800-supply: core voltage supply
@@ -106,7 +122,7 @@ index 000000000000..bd44af636390
 +&dsi {
 +	...
 +	panel@0 {
-+		compatible = "boe,tv101wum-nl6";
++		compatible = "auo,kd101n80-45na";
 +		reg = <0>;
 +		enable-gpios = <&pio 45 0>;
 +		avdd-supply = <&ppvarn_lcd>;
