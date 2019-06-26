@@ -2,81 +2,99 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD27C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A776C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E47E2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161662086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561541927;
+	bh=b8yf4lmGvBB1dVa7/Twirj8FFTig4jUndq8vRGsYggw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RIxYj1dE2fSo2qzeXAxtlH8B2uKTzyMDw2Z+Zp4YUQUTcJb1guqmX9Ir4TRYLHde2
+	 ss07lHV10zu827gpBslelB7DHyegYK1LoI2VYYIxB6I5Hmz3+z7yCmUhYvRKVQd5RO
+	 +EfZ/0qOLa6bckjmTl+z5Du784heoyxNiWWSi5eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfFZJim (ORCPT
+        id S1726796AbfFZJip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:38:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48178 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbfFZJil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:38:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 55AA1AEFD;
+        Wed, 26 Jun 2019 05:38:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbfFZJin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 05:38:43 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3BBA2082F;
         Wed, 26 Jun 2019 09:38:40 +0000 (UTC)
-Subject: Re: [PATCH v2 3/7] x86: Add nopv parameter to disable PV extensions
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, bp@alien8.de, hpa@zytor.com,
-        boris.ostrovsky@oracle.com, sstabellini@kernel.org,
-        peterz@infradead.org, srinivas.eeda@oracle.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        xen-devel@lists.xenproject.org
-References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
- <1561377779-28036-4-git-send-email-zhenzhong.duan@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <23b5bdee-f6b8-609b-2a52-d0b8c10a8ff8@suse.com>
-Date:   Wed, 26 Jun 2019 11:38:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561541922;
+        bh=b8yf4lmGvBB1dVa7/Twirj8FFTig4jUndq8vRGsYggw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CRlfvTtUSHB3ZCrHSBQ6nDjSFcABaixH8GhxBcZLYGVdIL3XgDxMWG0dn5lCMUqPN
+         PXaoFJGnXAUmqCQ+tah3l4bWSK23B/DUTRlQn+s/+BPioJO3OI3lyzzpBFQ1vfrE45
+         uIQcmJeUG7nEqXFBb7wbq3bD1cUiuAkZxpwj+Akg=
+Date:   Wed, 26 Jun 2019 10:38:37 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
+ breaks clang build
+Message-ID: <20190626093836.y2lofo54rhxw3xsm@willie-the-truck>
+References: <1561464964.5154.63.camel@lca.pw>
+ <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
+ <1561467369.5154.67.camel@lca.pw>
+ <00a78980-6b9c-5d5b-ed01-b28bb34be022@arm.com>
+ <1561470705.5154.68.camel@lca.pw>
+ <5113362e-1256-6712-6ce8-9599b1806cf1@arm.com>
+ <1561472887.5154.72.camel@lca.pw>
+ <668bbe72-b32b-8cee-ccad-d1f6110c6728@arm.com>
+ <CAKwvOdmCFjunXRbninTdqoDGPNJ6b7npgXLAPYGqFZas5ofNjw@mail.gmail.com>
+ <193c179e-16ca-4b4e-2584-75e8f6c1819f@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1561377779-28036-4-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <193c179e-16ca-4b4e-2584-75e8f6c1819f@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.06.19 14:02, Zhenzhong Duan wrote:
-> In virtualization environment, PV extensions (drivers, interrupts,
-> timers, etc) are enabled in the majority of use cases which is the
-> best option.
+On Tue, Jun 25, 2019 at 06:00:27PM +0100, Vincenzo Frascino wrote:
+> On 25/06/2019 17:26, Nick Desaulniers wrote:
+> > On Tue, Jun 25, 2019 at 7:54 AM Vincenzo Frascino
+> > <vincenzo.frascino@arm.com> wrote:
+> >>> but clang 7.0 is still use in many distros by default, so maybe this commit can
+> >>> be fixed by adding a conditional check to use "small" if clang version < 8.0.
+> >>>
+> >>
+> >> Could you please verify that the patch below works for you?
+> > 
+> > Should it be checking against CONFIG_CLANG_VERSION, or better yet be
+> > using cc-option macro?
+> > 
 > 
-> However, in some cases (kexec not fully working, benchmarking)
-> we want to disable PV extensions. As such introduce the
-> 'nopv' parameter that will do it.
+> This is what I did in my proposed patch, but I was surprised that clang-7
+> generates relocations that clang-8 does not.
 > 
-> There are guest types which just won't work without PV extensions,
-> like Xen PV, Xen PVH and jailhouse. add a "ignore_nopv" member to
-> struct hypervisor_x86 set to true for those guest types and call
-> the detect functions only if nopv is false or ignore_nopv is true.
-> 
-> There is already 'xen_nopv' parameter for XEN platform but not for
-> others. 'xen_nopv' can then be removed with this change.
-> 
-> Suggested-by: Juergen Gross <jgross@suse.com>
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Jan Kiszka <jan.kiszka@siemens.com>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: xen-devel@lists.xenproject.org
+>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
+>   VDSOCHK arch/arm64/kernel/vdso/vdso.so.dbg
+> 00000000000009d0 R_AARCH64_JUMP_SLOT  _mcount
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Hmm. It would be nice to understand where the reference to _mcount is coming
+from, since that sounds like ftrace is getting involved where it shouldn't
+be.
 
-
-Juergen
+Will
