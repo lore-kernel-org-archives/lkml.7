@@ -2,60 +2,115 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9B7C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E335C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C128216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417FF208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fsE7LC3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfFZT7j (ORCPT
+        id S1726524AbfFZT7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:59:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39468 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZT7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:59:39 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CD6CDC05678B;
-        Wed, 26 Jun 2019 19:59:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A1827600CC;
-        Wed, 26 Jun 2019 19:59:33 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <1d868a7a-0a15-e2b1-d73b-13d9229855ad@infradead.org>
-References: <1d868a7a-0a15-e2b1-d73b-13d9229855ad@infradead.org> <20190626231617.1e858da3@canb.auug.org.au>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     dhowells@redhat.com, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Jun 26 (task_struct: cached_requested_key)
+        Wed, 26 Jun 2019 15:59:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35091 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZT7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:59:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w24so2014908plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 12:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oJrm4UyKgvoevmBE4eZPkQ/+kkY70KZGEQ0Q2cnjCFc=;
+        b=fsE7LC3omCGhexX9SxhYLu3osDjmI5IO1mcikyIyBAs6zALQQUP8jP37oWiKt5Z0UL
+         9QFM5YXuvbppFfsfhQIrW7neyfgexnYYBO0IzrrU3APhRiyqKvLrFxLflkCmPoj0EApW
+         yIMuMW8aARU2MWuFHH2/6QwZOvcCaxhWQlJgc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oJrm4UyKgvoevmBE4eZPkQ/+kkY70KZGEQ0Q2cnjCFc=;
+        b=jNP3QnM2KF8j3xPnAZEbINK4HXS1tL8kxudeZmTWsRu6LtQU2pTPsy6fvIUJ3yXT7S
+         OnlyutRfxcp8YjiIEDo5p9ls8pH0d4GTbt95VGilQyyG30sTlLrhLzHpdEwoHNbE8fDe
+         Vqhh8csGni6t1f9vr7UlNrCmONWW3Rte8umXs1UT9fQ9ER9UFKKgQuP0aB+8hQJowIBv
+         U17xpKUnU216SryZa5q7UpMrY8jOS7rZfJtHoO8IWASWdOczqYTEHEEj5St+AtgRuvYn
+         S9U6t3bSXmztCHZBU9hr52jfLH7ics/IggnrHvzgeXbw7k10crJFxttRQNZw+aDirFCH
+         CY7A==
+X-Gm-Message-State: APjAAAVXl9yKmTmT6Yv5Y4glNw/xn2IqnL5vowl4TY7Gkb+F5Xw+HwyV
+        nrBSBNlDQtMdT5Vx5md/burcaw==
+X-Google-Smtp-Source: APXvYqzFMKnWTXmF+17dsuclaAZ/vYLU8FRyvzEYjwf+Z7iMzF+jmOZhMCafJuUIe4LUhngbX9tXtg==
+X-Received: by 2002:a17:902:788e:: with SMTP id q14mr7551852pll.234.1561579190689;
+        Wed, 26 Jun 2019 12:59:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 22sm37148pfu.179.2019.06.26.12.59.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 12:59:49 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 12:59:48 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Emese Revfy <re.emese@gmail.com>
+Subject: Re: [PATCH] docs: move gcc_plugins.txt to core-api and rename to .rst
+Message-ID: <201906261259.34343CC@keescook>
+References: <4937ff4f93282ed57c9859de4300b4d835880ebb.1561556794.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <13369.1561579172.1@warthog.procyon.org.uk>
-Date:   Wed, 26 Jun 2019 20:59:32 +0100
-Message-ID: <13370.1561579172@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 26 Jun 2019 19:59:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4937ff4f93282ed57c9859de4300b4d835880ebb.1561556794.git.mchehab+samsung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy Dunlap <rdunlap@infradead.org> wrote:
+On Wed, Jun 26, 2019 at 10:47:46AM -0300, Mauro Carvalho Chehab wrote:
+> 
+> 
+> The gcc_plugins.txt file is already a ReST file. Move it
+> to the core-api book while renaming it.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-> Multiple build errors like this when CONFIG_KEYS is not set/enabled:
-> (this was seen on one i386 build)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Ah - I forgot to make CONFIG_KEYS_REQUEST_CACHE depend on CONFIG_KEYS.
+-Kees
 
-David
+> ---
+>  Documentation/{gcc-plugins.txt => core-api/gcc-plugins.rst} | 0
+>  Documentation/core-api/index.rst                            | 2 +-
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+>  rename Documentation/{gcc-plugins.txt => core-api/gcc-plugins.rst} (100%)
+> 
+> diff --git a/Documentation/gcc-plugins.txt b/Documentation/core-api/gcc-plugins.rst
+> similarity index 100%
+> rename from Documentation/gcc-plugins.txt
+> rename to Documentation/core-api/gcc-plugins.rst
+> diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+> index 2466a4c51031..d1e5b95bf86d 100644
+> --- a/Documentation/core-api/index.rst
+> +++ b/Documentation/core-api/index.rst
+> @@ -35,7 +35,7 @@ Core utilities
+>     boot-time-mm
+>     memory-hotplug
+>     protection-keys
+> -
+> +   gcc-plugins
+>  
+>  Interfaces for kernel debugging
+>  ===============================
+> -- 
+> 2.21.0
+> 
+> 
+
+-- 
+Kees Cook
