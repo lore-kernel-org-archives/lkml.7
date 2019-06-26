@@ -2,133 +2,95 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02A0C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775C9C48BD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F7B20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMmm1Vgh"
+	by mail.kernel.org (Postfix) with ESMTP id 5C5BB2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfFZKps (ORCPT
+        id S1727207AbfFZKqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:45:48 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45890 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfFZKps (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:45:48 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so2122140wre.12;
-        Wed, 26 Jun 2019 03:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QxtLAShEbD51lRsaOr630GQ/4Jpu40qq0Z+oYEM5QLg=;
-        b=fMmm1VghHWVoTVYcTg8cG8fk+pKeHAdWXUHyFEdpKEAQlKcHL0Ywi2ZFX/Mxi5P/Ci
-         JhCZOICqwHP5lJvF2UAgy0DxJlBlmSG3GsKI82A+4/78IuBboS3M2rIq4WPohdZ7JymJ
-         GksphPANUGNyjdas6yQf2QLzVuS5SC7SiTT+PngLi3sp7QOuUoSut6zJ9ZOkEO63gLSN
-         /g+nevJDVqKPpVtpPDBvIk7x4hap7a5YOi42TzeP+koPjFf5WoF/I80T8XqVXhFdGrfN
-         nRpnWmlgyEe6AimGRax+1YNxiLj5ooXhhjWz4658w0di6aI0ZvRVBw9MwxxnclfWbocF
-         elhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QxtLAShEbD51lRsaOr630GQ/4Jpu40qq0Z+oYEM5QLg=;
-        b=E+EL/O+t8o7FXLt45pkqWvAql5PG2lLDTfzobv+iz8hxrMboJ0Cw9oQccK6S8RPmsv
-         rVlJHQZEba1aNxndpmGUeUN/hB7m/vwa9wCumOMX7ZMVcgNOsZlV5a62qlRsi3JQjrFO
-         ybNluhoDu5x0LCcTLXZv0vtjgLpnVj5rg+P+G2P6FJqMOqeDZNVbwEH1QlQisrW/CiUt
-         LNrZ/LzZ1CCrFv+1hohVA23P1WQ5s+XRUR7Uic6PpcrzPlwQkMMId/85cPYS+EwnLtF0
-         7+QXL9T3gkCWxMRXKtoM+1J3PCVyIzR/iXsZAnNzYVhJf7UIOXlD9x+rnUl1EThRBh2q
-         6+gQ==
-X-Gm-Message-State: APjAAAXLDvqt7mZaB2Cf7bBeJAqJA0Jp7P6NpTWdbvL1vdbWecAIW3Ml
-        BeI8wKP2efNFRTRc/LzlcM0=
-X-Google-Smtp-Source: APXvYqzxvqAmve1oLrsN7iKAcXfGdn2YvmW8IeoDqjcL6qsR1HKP/T3bln0ccAkT/rMIL7rsREfqkQ==
-X-Received: by 2002:adf:de8e:: with SMTP id w14mr3346670wrl.130.1561545945743;
-        Wed, 26 Jun 2019 03:45:45 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id o126sm2049711wmo.1.2019.06.26.03.45.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:45:45 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 12:45:44 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: stmmac: Fix crash observed if PHY does not
- support EEE
-Message-ID: <20190626104544.GI6362@ulmo>
-References: <20190626102322.18821-1-jonathanh@nvidia.com>
- <20190626102322.18821-2-jonathanh@nvidia.com>
+        Wed, 26 Jun 2019 06:46:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33994 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726387AbfFZKqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 06:46:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CE25DAD78;
+        Wed, 26 Jun 2019 10:46:35 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 12:46:33 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 07/10] vsprintf: Consolidate handling of unknown
+ pointer specifiers
+Message-ID: <20190626104633.arpobvevpxnkrt5k@pathway.suse.cz>
+References: <20190417115350.20479-1-pmladek@suse.com>
+ <20190417115350.20479-8-pmladek@suse.com>
+ <CAMuHMdVX+2tRjCabqVNR9HcnWE+EU0bR55KAW9bbD=GBEoE-=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sl5MdczEF/OU2Miu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626102322.18821-2-jonathanh@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAMuHMdVX+2tRjCabqVNR9HcnWE+EU0bR55KAW9bbD=GBEoE-=w@mail.gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 2019-06-25 12:59:57, Geert Uytterhoeven wrote:
+> Hi Petr,
+> 
+> On Wed, Apr 17, 2019 at 1:56 PM Petr Mladek <pmladek@suse.com> wrote:
+> > There are few printk formats that make sense only with two or more
+> > specifiers. Also some specifiers make sense only when a kernel feature
+> > is enabled.
+> >
+> > The handling of unknown specifiers is inconsistent and not helpful.
+> > Using WARN() looks like an overkill for this type of error. pr_warn()
+> > is not good either. It would by handled via printk_safe buffer and
+> > it might be hard to match it with the problematic string.
+> >
+> > A reasonable compromise seems to be writing the unknown format specifier
+> > into the original string with a question mark, for example (%pC?).
+> > It should be self-explaining enough. Note that it is in brackets
+> > to follow the (null) style.
+> >
+> > Note that it introduces a warning about that test_hashed() function
+> > is unused. It is going to be used again by a later patch.
+> >
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> 
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -1706,7 +1712,7 @@ char *clock(char *buf, char *end, struct clk *clk, struct printf_spec spec,
+> >  #ifdef CONFIG_COMMON_CLK
+> >                 return string(buf, end, __clk_get_name(clk), spec);
+> >  #else
+> > -               return ptr_to_id(buf, end, clk, spec);
+> > +               return string_nocheck(buf, end, "(%pC?)", spec);
+> 
+> What's the reason behind this change? This is not an error case,
+> but for printing the clock pointer as a distinguishable ID when using
+> the legacy clock framework, which does not store names with clocks.
 
---sl5MdczEF/OU2Miu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You are right. We should put back ptr_to_id() there.
 
-On Wed, Jun 26, 2019 at 11:23:22AM +0100, Jon Hunter wrote:
-> If the PHY does not support EEE mode, then a crash is observed when the
-> ethernet interface is enabled. The crash occurs, because if the PHY does
-> not support EEE, then although the EEE timer is never configured, it is
-> still marked as enabled and so the stmmac ethernet driver is still
-> trying to update the timer by calling mod_timer(). This triggers a BUG()
-> in the mod_timer() because we are trying to update a timer when there is
-> no callback function set because timer_setup() was never called for this
-> timer.
->=20
-> The problem is caused because we return true from the function
-> stmmac_eee_init(), marking the EEE timer as enabled, even when we have
-> not configured the EEE timer. Fix this by ensuring that we return false
-> if the PHY does not support EEE and hence, 'eee_active' is not set.
->=20
-> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib l=
-ogic")
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+Would you like to send a patch?
 
-Thanks for hunting this down!
-
-Tested-by: Thierry Reding <treding@nvidia.com>
-
---sl5MdczEF/OU2Miu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TTNgACgkQ3SOs138+
-s6HZQBAAqWrK8d1EPvTwnqLtgKJ5oN+frh+R6yXy+OT9WPSZ3GbCBHmwIf7EXKgP
-q4SHLahpmzfSayIS1hoN2hpKOz2T2irwKkE+NcElJqw1e/8sfEQmQjS+CD0TX4m7
-CSM8nmu60kh7DWfvERzJZHdBO9lgNY8ib8zCcp/fNeVJRCySW+Pu0c8jjiRDhDbA
-DJwKwvWiYNmZS2ycgsKyUNDprThYf7v7SznwWtEETGjCuRIkEFyLAFvEZGi6NEFh
-dGUA30V3dyIMfw3QyR2Ixmna61NxWIDpeUHjw0O8GjL4dNv8GPnP+ViKIedxsEdq
-3NQTHprz21iu2P8KgLkH6E7vKOzvoncmHaR/L+QXqwnTTLCFyt0XlaQvjPwGw7jV
-etePMuaq+8DyRr5oo48V7T4ErBzTWXhWXttOSdy6J8BqNAYhtjjJgYcjmghnxUev
-evjssMoZc05oJjenN/l/UvFuvEQofKpWPv3ls68sHjKgOQgp4RL+D194FX/cX+0s
-R0rdH9x2Wji7PPEscCIIOVcdRxlNi8JOwDPjrJCmjmlmbWM5uh70khn7Psp5n6Cf
-qn4nSdPBfMFT5oD59vxND6MYrvzGpMsmzuiGuhXAEu6a5Xe1xi1DaB4/yTJkxSnh
-xofb5RhdAb7fEGbF5LmiO5WRVZk1y2svLc6HUeTIhxASonYM24M=
-=Z0mB
------END PGP SIGNATURE-----
-
---sl5MdczEF/OU2Miu--
+Best Regards,
+Petr
