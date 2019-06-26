@@ -2,79 +2,151 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87DAC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4A7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A218521738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:57:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561557468;
-	bh=ntI9i+OSrz2ckTtFpFkEfIodazwbeytTqIMBGkxp/eo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o0rsp3NFgFs0lw4B4A7MbfwTtkeCJ4YVLf//LFOv6dk/l0CMRw9mGPmM7rxp8DSOX
-	 eQUGK6I8FVvzTQGwBwWJ4lNiD9RgfEDuTYxHXwjeQ9iJCYC2nVnHW4oSovdCxqodsn
-	 2zxqpZo6iWsr1RJs0d2dIJYywR6rIkYGMkLAfsXQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4FAAB214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P9Eghto3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfFZN5r (ORCPT
+        id S1727789AbfFZN64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:57:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49268 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbfFZN5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:57:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B933AAF05;
-        Wed, 26 Jun 2019 13:57:45 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 15:57:44 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Barret Rhoden <brho@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ingo Molnar <mingo@elte.hu>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA
- boot
-Message-ID: <20190626135744.GX17798@dhcp22.suse.cz>
-References: <20190512054829.11899-1-cai@lca.pw>
- <20190513124112.GH24036@dhcp22.suse.cz>
- <1561123078.5154.41.camel@lca.pw>
- <20190621135507.GE3429@dhcp22.suse.cz>
- <CAFgQCTvSJjzFGGyt_VOvyB46yy6452wach7UmmuY5ZJZ3YZzcg@mail.gmail.com>
+        Wed, 26 Jun 2019 09:58:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36537 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbfFZN6z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:58:55 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190626135852euoutp02d06be7d3dcc886d86317b1cafa842ece~rxE10vpP41152011520euoutp02q
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:58:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190626135852euoutp02d06be7d3dcc886d86317b1cafa842ece~rxE10vpP41152011520euoutp02q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561557532;
+        bh=BT3zIcGmvUV+ueH1TilZMhs4g/vfOTc1I+ZwJJdTOdI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=P9Eghto3c5GHdQbSZgR9ytQs7pme55qEmeJAKtmXwNgYcF2wQqa0Wt+ZeDDifpIn/
+         PMnj2zWFzkM9zgas7G07f/EN/6CyF3fW8ZSoqpQe6pm5hJ1ZXjZsKF1po7AKXw5zZ8
+         Inj9Ti1Iv8Lvo/O2mxF1eybn0wNYhMWDGt4YbUsA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190626135851eucas1p16099d70110d216a9de1c227f02331451~rxE04uHpe0568305683eucas1p1S;
+        Wed, 26 Jun 2019 13:58:51 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id E9.95.04298.B1A731D5; Wed, 26
+        Jun 2019 14:58:51 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190626135850eucas1p11ee7d7e5e2ae50e8245e2f6366d365eb~rxEz7Lnl-0630806308eucas1p1K;
+        Wed, 26 Jun 2019 13:58:50 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190626135850eusmtrp145647492546fa5341906e8062e54e818~rxEzs0GTO0282502825eusmtrp1U;
+        Wed, 26 Jun 2019 13:58:50 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-cf-5d137a1bb4a6
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 2A.11.04140.A1A731D5; Wed, 26
+        Jun 2019 14:58:50 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190626135849eusmtip228f6bdc30e55bd68f74a4eccc4642b46~rxEzAIVz31436614366eusmtip2c;
+        Wed, 26 Jun 2019 13:58:49 +0000 (GMT)
+Subject: Re: [PATCH v4 4/5] Documentation: devicetree: add PPMU events
+ description
+To:     cwchoi00@gmail.com
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
+        krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, kgene@kernel.org,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <7498059d-95f7-e154-cf49-bcbc8ee6fdb9@partner.samsung.com>
+Date:   Wed, 26 Jun 2019 15:58:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTvSJjzFGGyt_VOvyB46yy6452wach7UmmuY5ZJZ3YZzcg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAGTfZH2kTNWtx=Jp1UJaLN50Qxbq+Q9ThV4vhQ240QbOy1TRMQ@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUhUURjFu/OWeUpj1xnTLw2NifbStj8utlBSMlS0WFAUam/yoaKONi8r
+        LVDbTNHMCq1pUaN1chknLbUMHS0T0bGC9sUaKTI1cSyyRXLmGfnf77vfOfeeA5ejlK8Zby5a
+        t0vQ6/hYNetK33owaJ3jk6wKnXsl35uUny5jyLOBTwz5eH8WKWhsY0iO7QtFrFaTnLQe6JYT
+        s+0pQ57UnGOJPbsRkdPWezJS0vhGTi4/eyQjr9KuseRwbaOcNHSnM+T7ww9ombum+EIx0lQb
+        3sg1ZmMGq7l5KUVzrMKINHaz73p2q+viCCE2eregD1i63TWq50+dLGGA3Ztbb5KnojtMJnLh
+        AC+EoUOHqEzkyinxNQT9v0tZx0KJBxDcaF8lsR2BqXLuP0PH3c+MZLiK4E7HIC0NPQj6Svtk
+        DpUKb4Ihs8XJHtgTbud1IoeIws0UtPZahgeOY7E/VBl3OjQKHAynKrNpB9N4Chiyjji94/EW
+        GKg2I0njDs1nOp0aF7wBrCU2Z1IKe8HLzgKZxH5wsPKssw7gNA7qGq6zUuwVUGgvG2EVdDVV
+        yCWeCC0ns2iJRUjNLkIS7wdbzvkRzSJoaHrEODJTeAaU1QQ4EPByaL44TkI3eN7jLiVwgxO3
+        8inpWAFHjyilO6ZDRVa7TGJPuFqcJz+O1IZRvQyjuhhGdTH8f7YQ0UbkJSSKcZGCOE8n7PEX
+        +TgxURfpvyM+zoyG/1zLUFN/Ffr2WGtBmEPqsYpUP2WokuF3i0lxFgQcpfZQXOZxqFIRwScl
+        C/r4cH1irCBakA9Hq70U+8Z0bFPiSH6XECMICYL+31bGuXinosDt8zMrMtJKs2bnvzVqTJ1r
+        UP66fb6DVU+ntq7cr4oJ1MVmBM7qnRT0YvI227gfubJLN4vLN4fgr7kxpv4qe1iKtvadqpv8
+        pMu/1acH9/yZkHmuYP3q81AUNmYa3xX/vrXLeLessDvCnhK+MehXSV/C2gXaqUtCErTJ2rbk
+        tjAcrqbFKH7eTEov8n8BL6Fkn28DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEIsWRmVeSWpSXmKPExsVy+t/xe7pSVcKxBg9eSFpsnLGe1eL6l+es
+        Fs+OalvMP3KO1aL/8Wtmi/PnN7BbnG16w26x6fE1VovLu+awWXzuPcJoMeP8PiaLtUfuslss
+        vX6RyeJ24wo2i9a9R9gtDr9pZ7X4duIRo4Ogx5p5axg9ds66y+6xaVUnm8fmJfUefVtWMXp8
+        3iQXwBalZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5eg
+        l/H27wGmgi9sFRMPbmBvYNzN2sXIySEhYCLxYM9LMFtIYCmjxK93ARBxMYlJ+7azQ9jCEn+u
+        dbF1MXIB1bxmlLi6fzcbSEJYIETi36ZDTCC2CFDD9mlPGEGKmAVOMktc2nKdEaJjApPE3T2v
+        gBwODjYBPYkdqwpBGngF3CSmbO1lAbFZBFQlZvW0gQ0SFYiQmL2rgQWiRlDi5MwnYDanQKDE
+        +bWPwRYzC5hJzNv8kBnCFpe49WQ+E4QtL9G8dTbzBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJL
+        i3PTc4uN9IoTc4tL89L1kvNzNzEC43vbsZ9bdjB2vQs+xCjAwajEw9sgLxQrxJpYVlyZe4hR
+        goNZSYR3aaJArBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA1NPXkm8oamhuYWlobmxubGZ
+        hZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxk1nDFxeB1o/narb89rXXuR9yaboM88Zskw4
+        rK4su7yzgntiO/sKs6dL9q5V/PHt1MXU2vuerlmXxec6LDtv9/t1Z5LqXd3UaQkXN7CfEFay
+        ncTu5a5/3bjxdPH8r6m/cs4yTvGZ1S+9f+mhCAFfSd4i09SLhy+9YAyIb3mfUuj46QKLys/l
+        HUosxRmJhlrMRcWJAKM4h7sFAwAA
+X-CMS-MailID: 20190626135850eucas1p11ee7d7e5e2ae50e8245e2f6366d365eb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5
+References: <CGME20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5@eucas1p2.samsung.com>
+        <20190605091236.24263-1-l.luba@partner.samsung.com>
+        <20190605091236.24263-5-l.luba@partner.samsung.com>
+        <CAGTfZH2kTNWtx=Jp1UJaLN50Qxbq+Q9ThV4vhQ240QbOy1TRMQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 24-06-19 16:42:20, Pingfan Liu wrote:
-> Hi Michal,
+Hi Chanwoo,
+
+On 6/26/19 10:23 AM, Chanwoo Choi wrote:
+> Hi Lukasz,
 > 
-> What about dropping the change of the online definition of your patch,
-> just do the following?
+> 2019년 6월 5일 (수) 18:14, Lukasz Luba <l.luba@partner.samsung.com 
+> <mailto:l.luba@partner.samsung.com>>님이 작성:
+> 
+>     Extend the documenation by events description with new 'event-data-type'
+>     field. Add example how the event might be defined in DT.
+> 
+>     Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com
+>     <mailto:l.luba@partner.samsung.com>>
+>     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com
+>     <mailto:cw00.choi@samsung.com>>
+>     ---
+>       .../bindings/devfreq/event/exynos-ppmu.txt    | 26 +++++++++++++++++--
+>       1 file changed, 24 insertions(+), 2 deletions(-)
+> 
+> 
+> 
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com 
 
-I am sorry but I am unlikely to find some more time to look into this. I
-am willing to help reviewing but I will not find enough time to focus on
-this to fix up the patch. Are you willing to work on this and finish the
-patch? It is a very tricky area with side effects really hard to see in
-advance but going with a robust fix is definitely worth the effort.
+Thank you for the ACKs for this a 2/5 patch.
+Do you think the v4 could be merged now?
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Regards,
+Lukasz
