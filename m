@@ -2,194 +2,189 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93040C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E30C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5CD2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54D92082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:42:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="jNmhJUVj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J81cM/y5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfFZKm1 (ORCPT
+        id S1727165AbfFZKm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:42:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44114 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfFZKm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:42:27 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 92D51300BEA8;
-        Wed, 26 Jun 2019 10:42:26 +0000 (UTC)
-Received: from carbon (ovpn-200-45.brq.redhat.com [10.40.200.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 96B6B1001B13;
-        Wed, 26 Jun 2019 10:42:17 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 12:42:16 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     davem@davemloft.net, grygorii.strashko@ti.com, hawk@kernel.org,
-        saeedm@mellanox.com, leon@kernel.org, ast@kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, ilias.apalodimas@linaro.org,
-        netdev@vger.kernel.org, daniel@iogearbox.net,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        brouer@redhat.com
-Subject: Re: [PATCH v4 net-next 1/4] net: core: page_pool: add user cnt
- preventing pool deletion
-Message-ID: <20190626124216.494eee86@carbon>
-In-Reply-To: <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
-References: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
-        <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
+        Wed, 26 Jun 2019 06:42:58 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:35821 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726550AbfFZKm5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 06:42:57 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 16F444F1;
+        Wed, 26 Jun 2019 06:42:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 26 Jun 2019 06:42:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        DJMU2zwHUW3gzuEp2RRHl9iyNK7pBQ4EI0maafWdFjs=; b=jNmhJUVjbAaAI9V2
+        KT5pFZgw+Chy7LckN54smOumJg6L7cHrL5/wZYVPMtSyrJwe5+XKC5rM8siBveeO
+        MCFhoXD227UmN+ILZ4vI/NtXx6/AV4Cpbdl8cWR3VzCd87wY7jpFhIt7N07S7mxU
+        sVL3Fxj+C3ZIRrdG0sqZY+s6ka9qaBfoI05REJa462rSJvpaN0MwF5JbrBmg8BoO
+        JbSacm8i76TXl377m0F509cJ1zXH9jYIswhLxT+mjH4Bw+MNWBdcDRityZNZQE9p
+        XcsGfG2dSGd32+z6TcwoY07wikP7wuQv72vf/j7hCeiyJlYHkPHheVL0KqXmf+7N
+        BTUstA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=DJMU2zwHUW3gzuEp2RRHl9iyNK7pBQ4EI0maafWdF
+        js=; b=J81cM/y5Qv8TJSHwgP6T98jMzz7CtJgo4bNqHzzbNiyJA2zAlHby2bYem
+        rI5P3K9oWnwB+LO7bN/o4N+YWMR0r/jZ6ad+Bd5drPJNIIdpS6rg8M6QzC7/i8Hq
+        NT4onCJEHO8lrmngSNBQ8dXTIqfLw1cFezOpkeCm8qdb8dD9H21Cpi3Ht9Z9Ymja
+        SVqdN/g8eoe9EjhS83L0le+PeJXwzUC8fYkmwgAySg/FPZHy8yDN9B6wro5RuXvf
+        +CnRYa0fxHwFKSP0nDQ4ycWyOMizXIscCRRXNxEZBcpXbOvP4pQPEdt1Pze35vaZ
+        fOlrQnkObtYEcsds8mBpNTS+Meb9g==
+X-ME-Sender: <xms:L0wTXQH-j6uhxRYmaBrSG_p9iQAdzKwZ8mU8QNLn9VHbMdYkvX-r4g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeigdeffecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
+    dujeefrdehfeenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgif
+    rdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:L0wTXYVt-fEVWhHPi3giRRym842XKjVeSxhlHwnuYb-qMDkIV2yaVw>
+    <xmx:L0wTXSa325skPZn6UzAmn1dgOEW9ATMgoiHVR2kotGaDYccoRyNErg>
+    <xmx:L0wTXec0k7O9wVNRQuXdqpRq9w6CNvcJGYK0Dr8YUb_pNQqBwLpIrg>
+    <xmx:L0wTXbYWYqm8cpMlKggb4hcKErfy8-4svtiyFXsGH4_R4bYJHBjdAA>
+Received: from pluto.themaw.net (unknown [118.208.173.53])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B2B7B8005A;
+        Wed, 26 Jun 2019 06:42:54 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by pluto.themaw.net (Postfix) with ESMTP id 2F0081C014F;
+        Wed, 26 Jun 2019 18:42:51 +0800 (AWST)
+Message-ID: <cf0361c2d1fc09ad0097f0da1e981b97ad39ab07.camel@themaw.net>
+Subject: Re: [PATCH 00/25] VFS: Introduce filesystem information query
+ syscall [ver #14]
+From:   Ian Kent <raven@themaw.net>
+To:     Christian Brauner <christian@brauner.io>,
+        David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, mszeredi@redhat.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 26 Jun 2019 18:42:51 +0800
+In-Reply-To: <20190626100525.irdehd24jowz5f75@brauner.io>
+References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
+         <20190626100525.irdehd24jowz5f75@brauner.io>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 26 Jun 2019 10:42:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 20:59:45 +0300
-Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org> wrote:
-
-> Add user counter allowing to delete pool only when no users.
-> It doesn't prevent pool from flush, only prevents freeing the
-> pool instance. Helps when no need to delete the pool and now
-> it's user responsibility to free it by calling page_pool_free()
-> while destroying procedure. It also makes to use page_pool_free()
-> explicitly, not fully hidden in xdp unreg, which looks more
-> correct after page pool "create" routine.
-
-No, this is wrong.
-
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 8 +++++---
->  include/net/page_pool.h                           | 7 +++++++
->  net/core/page_pool.c                              | 7 +++++++
->  net/core/xdp.c                                    | 3 +++
->  4 files changed, 22 insertions(+), 3 deletions(-)
+On Wed, 2019-06-26 at 12:05 +0200, Christian Brauner wrote:
+> On Mon, Jun 24, 2019 at 03:08:45PM +0100, David Howells wrote:
+> > Hi Al,
+> > 
+> > Here are a set of patches that adds a syscall, fsinfo(), that allows
+> > attributes of a filesystem/superblock to be queried.  Attribute values are
+> > of four basic types:
+> > 
+> >  (1) Version dependent-length structure (size defined by type).
+> > 
+> >  (2) Variable-length string (up to PAGE_SIZE).
+> > 
+> >  (3) Array of fixed-length structures (up to INT_MAX size).
+> > 
+> >  (4) Opaque blob (up to INT_MAX size).
+> > 
+> > Attributes can have multiple values in up to two dimensions and all the
+> > values of a particular attribute must have the same type.
+> > 
+> > Note that the attribute values *are* allowed to vary between dentries
+> > within a single superblock, depending on the specific dentry that you're
+> > looking at.
+> > 
+> > I've tried to make the interface as light as possible, so integer/enum
+> > attribute selector rather than string and the core does all the allocation
+> > and extensibility support work rather than leaving that to the filesystems.
+> > That means that for the first two attribute types, sb->s_op->fsinfo() may
+> > assume that the provided buffer is always present and always big enough.
+> > 
+> > Further, this removes the possibility of the filesystem gaining access to
+> > the
+> > userspace buffer.
+> > 
+> > 
+> > fsinfo() allows a variety of information to be retrieved about a filesystem
+> > and the mount topology:
+> > 
+> >  (1) General superblock attributes:
+> > 
+> >       - The amount of space/free space in a filesystem (as statfs()).
+> >       - Filesystem identifiers (UUID, volume label, device numbers, ...)
+> >       - The limits on a filesystem's capabilities
+> >       - Information on supported statx fields and attributes and IOC flags.
+> >       - A variety single-bit flags indicating supported capabilities.
+> >       - Timestamp resolution and range.
+> >       - Sources (as per mount(2), but fsconfig() allows multiple sources).
+> >       - In-filesystem filename format information.
+> >       - Filesystem parameters ("mount -o xxx"-type things).
+> >       - LSM parameters (again "mount -o xxx"-type things).
+> > 
+> >  (2) Filesystem-specific superblock attributes:
+> > 
+> >       - Server names and addresses.
+> >       - Cell name.
+> > 
+> >  (3) Filesystem configuration metadata attributes:
+> > 
+> >       - Filesystem parameter type descriptions.
+> >       - Name -> parameter mappings.
+> >       - Simple enumeration name -> value mappings.
+> > 
+> >  (4) Mount topology:
+> > 
+> >       - General information about a mount object.
+> >       - Mount device name(s).
+> >       - Children of a mount object and their relative paths.
+> > 
+> >  (5) Information about what the fsinfo() syscall itself supports, including
+> >      the number of attibutes supported and the number of capability bits
+> >      supported.
 > 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> index 5e40db8f92e6..cb028de64a1d 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -545,10 +545,8 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
->  	}
->  	err = xdp_rxq_info_reg_mem_model(&rq->xdp_rxq,
->  					 MEM_TYPE_PAGE_POOL, rq->page_pool);
-> -	if (err) {
-> -		page_pool_free(rq->page_pool);
-> +	if (err)
->  		goto err_free;
-> -	}
->  
->  	for (i = 0; i < wq_sz; i++) {
->  		if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ) {
-> @@ -613,6 +611,8 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
->  	if (rq->xdp_prog)
->  		bpf_prog_put(rq->xdp_prog);
->  	xdp_rxq_info_unreg(&rq->xdp_rxq);
-> +	if (rq->page_pool)
-> +		page_pool_free(rq->page_pool);
->  	mlx5_wq_destroy(&rq->wq_ctrl);
->  
->  	return err;
-> @@ -643,6 +643,8 @@ static void mlx5e_free_rq(struct mlx5e_rq *rq)
->  	}
->  
->  	xdp_rxq_info_unreg(&rq->xdp_rxq);
-> +	if (rq->page_pool)
-> +		page_pool_free(rq->page_pool);
+> Phew, this patchset is a lot. It's good of course but can we please cut
+> some of the more advanced features such as querying by mount id,
+> submounts etc. pp. for now?
 
-No, this is wrong.  The hole point with the merged page_pool fixes
-patchset was that page_pool_free() needs to be delayed until no-more
-in-flight packets exist.
+Did you mean the "vfs: Allow fsinfo() to look up a mount object by ID"
+patch?
 
+We would need to be very careful what was dropped.
 
->  	mlx5_wq_destroy(&rq->wq_ctrl);
->  }
->  
-> diff --git a/include/net/page_pool.h b/include/net/page_pool.h
-> index f07c518ef8a5..1ec838e9927e 100644
-> --- a/include/net/page_pool.h
-> +++ b/include/net/page_pool.h
-> @@ -101,6 +101,7 @@ struct page_pool {
->  	struct ptr_ring ring;
->  
->  	atomic_t pages_state_release_cnt;
-> +	atomic_t user_cnt;
->  };
->  
->  struct page *page_pool_alloc_pages(struct page_pool *pool, gfp_t gfp);
-> @@ -183,6 +184,12 @@ static inline dma_addr_t page_pool_get_dma_addr(struct page *page)
->  	return page->dma_addr;
->  }
->  
-> +/* used to prevent pool from deallocation */
-> +static inline void page_pool_get(struct page_pool *pool)
-> +{
-> +	atomic_inc(&pool->user_cnt);
-> +}
-> +
->  static inline bool is_page_pool_compiled_in(void)
->  {
->  #ifdef CONFIG_PAGE_POOL
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index b366f59885c1..169b0e3c870e 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -48,6 +48,7 @@ static int page_pool_init(struct page_pool *pool,
->  		return -ENOMEM;
->  
->  	atomic_set(&pool->pages_state_release_cnt, 0);
-> +	atomic_set(&pool->user_cnt, 0);
->  
->  	if (pool->p.flags & PP_FLAG_DMA_MAP)
->  		get_device(pool->p.dev);
-> @@ -70,6 +71,8 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
->  		kfree(pool);
->  		return ERR_PTR(err);
->  	}
-> +
-> +	page_pool_get(pool);
->  	return pool;
->  }
->  EXPORT_SYMBOL(page_pool_create);
-> @@ -356,6 +359,10 @@ static void __warn_in_flight(struct page_pool *pool)
->  
->  void __page_pool_free(struct page_pool *pool)
->  {
-> +	/* free only if no users */
-> +	if (!atomic_dec_and_test(&pool->user_cnt))
-> +		return;
-> +
->  	WARN(pool->alloc.count, "API usage violation");
->  	WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
->  
-> diff --git a/net/core/xdp.c b/net/core/xdp.c
-> index 829377cc83db..04bdcd784d2e 100644
-> --- a/net/core/xdp.c
-> +++ b/net/core/xdp.c
-> @@ -372,6 +372,9 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
->  
->  	mutex_unlock(&mem_id_lock);
->  
-> +	if (type == MEM_TYPE_PAGE_POOL)
-> +		page_pool_get(xdp_alloc->page_pool);
-> +
->  	trace_mem_connect(xdp_alloc, xdp_rxq);
->  	return 0;
->  err:
+For example, I've found that the patch above is pretty much essential
+for fsinfo() to be useful from user space.
 
+> I feel this would help with review and since your interface is
+> extensible it's really not a big deal if we defer fancy features to
+> later cycles after people had more time to review and the interface has
+> seen some exposure.
+> 
+> The mount api changes over the last months have honestly been so huge
+> that any chance to make the changes smaller and easier to digest we
+> should take. (I'm really not complaining. Good that the work is done and
+> it's entirely ok that it's a lot of code.)
+> 
+> It would also be great if after you have dropped some stuff from this
+> patchset and gotten an Ack we could stuff it into linux-next for some
+> time because it hasn't been so far...
+> 
+> Christian
 
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
