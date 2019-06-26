@@ -2,115 +2,367 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70ADC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E820C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B638C214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561557836;
-	bh=0EZ735cO6WH/zngCSpQYINiI6lsHShiMasjlVmMZiqE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t93qmdWkgN+Jae3tquJcQcp0B0f3KYAzNXDcqWYiAD/nejRVqoO8CjpDzYBO8kQp8
-	 61jzBoCz42j+T+higipssAZufhODSFUs8yEQxeOQZYZJ7i0iDYFo+CzB7OEslwvz5V
-	 92rnQQFGOdcD9bJGLSxBaQj+SAkt846yX3q6hW6A=
+	by mail.kernel.org (Postfix) with ESMTP id 1C5F7214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfFZODz (ORCPT
+        id S1727729AbfFZOGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:03:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfFZODz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:03:55 -0400
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E61CD21743;
-        Wed, 26 Jun 2019 14:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561557834;
-        bh=0EZ735cO6WH/zngCSpQYINiI6lsHShiMasjlVmMZiqE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W2dvXsfmTlJ5ZxCUixGz+eN0toacav4i4Qqfl01vqSuO7PYoLOQNveiYV9Dh01J26
-         S0VHWWdYGs0BlZrl/M23HVxxxbttUpAX9x/0kSPspy2JGz2ruC8N77pHWRPgmWJiVI
-         Sh8qaOc+cB/bvQKpxEMfcsAIUPx7qjseSy5zm7tQ=
-Received: by mail-lf1-f49.google.com with SMTP id a25so1676489lfg.2;
-        Wed, 26 Jun 2019 07:03:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAV//I9En6iyfRGG4aKmwaefBAgSzV6dcH2MmdK8n7uUDCIEMXYI
-        2kdRBzPAYFGjkyjbiqt3AdS7iAhSFXj4T4mcaLk=
-X-Google-Smtp-Source: APXvYqyvRHLVun8VIxnYqIMpihADmlhhPWXQ+dcfiSv6kMVGtgzFKGF77U1LP5lSdXe0G6tHdeMBQn2d+loljViWvfA=
-X-Received: by 2002:ac2:5601:: with SMTP id v1mr2820771lfd.106.1561557832087;
- Wed, 26 Jun 2019 07:03:52 -0700 (PDT)
+        Wed, 26 Jun 2019 10:06:25 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:52191 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727258AbfFZOGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 10:06:25 -0400
+Received: from classic.redhat.com (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
+        (Authenticated sender: hadess@hadess.net)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 46C33100011;
+        Wed, 26 Jun 2019 14:06:19 +0000 (UTC)
+From:   Bastien Nocera <hadess@hadess.net>
+To:     linux-input@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Bastien Nocera <bnocera@redhat.com>
+Subject: [PATCH v3] HID: sb0540: add support for Creative SB0540 IR receivers
+Date:   Wed, 26 Jun 2019 16:06:18 +0200
+Message-Id: <20190626140618.8944-1-hadess@hadess.net>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <CGME20190605091304eucas1p21e0717cafa17a14de569f1773cc7abe5@eucas1p2.samsung.com>
- <20190605091236.24263-1-l.luba@partner.samsung.com> <20190605091236.24263-5-l.luba@partner.samsung.com>
- <CAGTfZH2kTNWtx=Jp1UJaLN50Qxbq+Q9ThV4vhQ240QbOy1TRMQ@mail.gmail.com> <7498059d-95f7-e154-cf49-bcbc8ee6fdb9@partner.samsung.com>
-In-Reply-To: <7498059d-95f7-e154-cf49-bcbc8ee6fdb9@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 26 Jun 2019 16:03:41 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPc6304D=HNQnrvhBH6qKxhkf=VQ2Gg6Q2FMP2hYOTYSDQ@mail.gmail.com>
-Message-ID: <CAJKOXPc6304D=HNQnrvhBH6qKxhkf=VQ2Gg6Q2FMP2hYOTYSDQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] Documentation: devicetree: add PPMU events description
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     cwchoi00@gmail.com, devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org,
-        willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 at 15:58, Lukasz Luba <l.luba@partner.samsung.com> wrot=
-e:
->
-> Hi Chanwoo,
->
-> On 6/26/19 10:23 AM, Chanwoo Choi wrote:
-> > Hi Lukasz,
-> >
-> > 2019=EB=85=84 6=EC=9B=94 5=EC=9D=BC (=EC=88=98) 18:14, Lukasz Luba <l.l=
-uba@partner.samsung.com
-> > <mailto:l.luba@partner.samsung.com>>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
-> >
-> >     Extend the documenation by events description with new 'event-data-=
-type'
-> >     field. Add example how the event might be defined in DT.
-> >
-> >     Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com
-> >     <mailto:l.luba@partner.samsung.com>>
-> >     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com
-> >     <mailto:cw00.choi@samsung.com>>
-> >     ---
-> >       .../bindings/devfreq/event/exynos-ppmu.txt    | 26 ++++++++++++++=
-+++--
-> >       1 file changed, 24 insertions(+), 2 deletions(-)
-> >
-> >
-> >
-> > Acked-by: Chanwoo Choi <cw00.choi@samsung.com
->
-> Thank you for the ACKs for this a 2/5 patch.
-> Do you think the v4 could be merged now?
+From: Bastien Nocera <bnocera@redhat.com>
 
-I think you have all necessary acks. I can take the DTS patch (5/5)
-although probably for next merge window as I just sent one.
+Add a new hid driver for the Creative SB0540 IR receiver. This receiver
+is usually coupled with an RM-1500 or an RM-1800 remote control.
 
-Best regards,
-Krzysztof
+The scrollwheels on the RM-1800 remote are not bound, as they are
+labelled for specific audio controls that don't usually exist on most
+systems. They can be remapped using standard Linux keyboard
+remapping tools.
+
+Signed-off-by: Bastien Nocera <bnocera@redhat.com>
+---
+ drivers/hid/Kconfig               |   9 ++
+ drivers/hid/Makefile              |   1 +
+ drivers/hid/hid-creative-sb0540.c | 254 ++++++++++++++++++++++++++++++
+ drivers/hid/hid-ids.h             |   1 +
+ 4 files changed, 265 insertions(+)
+ create mode 100644 drivers/hid/hid-creative-sb0540.c
+
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 3872e03d9a59..f16c4bd822e4 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -273,6 +273,15 @@ config HID_CP2112
+ 	and gpiochip to expose these functions of the CP2112. The
+ 	customizable USB descriptor fields are exposed as sysfs attributes.
+ 
++config HID_CREATIVE_SB0540
++	tristate "Creative SB0540 infrared receiver"
++	depends on USB_HID
++	---help---
++	Support for Creative infrared SB0540-compatible remote controls, such
++	as the RM-1500 and RM-1800 remotes.
++
++	Say Y here if you want support for Creative SB0540 infrared receiver.
++
+ config HID_CYPRESS
+ 	tristate "Cypress mouse and barcode readers"
+ 	depends on HID
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index cc5d827c9164..1ad662fe37b6 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -27,6 +27,7 @@ obj-$(CONFIG_HID_ALPS)		+= hid-alps.o
+ obj-$(CONFIG_HID_ACRUX)		+= hid-axff.o
+ obj-$(CONFIG_HID_APPLE)		+= hid-apple.o
+ obj-$(CONFIG_HID_APPLEIR)	+= hid-appleir.o
++obj-$(CONFIG_HID_CREATIVE_SB0540)	+= hid-creative-sb0540.c
+ obj-$(CONFIG_HID_ASUS)		+= hid-asus.o
+ obj-$(CONFIG_HID_AUREAL)	+= hid-aureal.o
+ obj-$(CONFIG_HID_BELKIN)	+= hid-belkin.o
+diff --git a/drivers/hid/hid-creative-sb0540.c b/drivers/hid/hid-creative-sb0540.c
+new file mode 100644
+index 000000000000..a94542cbdd33
+--- /dev/null
++++ b/drivers/hid/hid-creative-sb0540.c
+@@ -0,0 +1,254 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * HID driver for the Creative SB0540 receiver
++ *
++ * Copyright (C) 2019 Red Hat Inc. All Rights Reserved
++ *
++ */
++
++#include <linux/device.h>
++#include <linux/hid.h>
++#include <linux/module.h>
++#include "hid-ids.h"
++
++MODULE_AUTHOR("Bastien Nocera <hadess@hadess.net>");
++MODULE_DESCRIPTION("HID Creative SB0540 receiver");
++MODULE_LICENSE("GPL");
++
++static const unsigned short creative_sb0540_key_table[] = {
++	KEY_POWER,
++	KEY_RESERVED,		/* text: 24bit */
++	KEY_RESERVED,		/* 24bit wheel up */
++	KEY_RESERVED,		/* 24bit wheel down */
++	KEY_RESERVED,		/* text: CMSS */
++	KEY_RESERVED,		/* CMSS wheel Up */
++	KEY_RESERVED,		/* CMSS wheel Down */
++	KEY_RESERVED,		/* text: EAX */
++	KEY_RESERVED,		/* EAX wheel up */
++	KEY_RESERVED,		/* EAX wheel down */
++	KEY_RESERVED,		/* text: 3D Midi */
++	KEY_RESERVED,		/* 3D Midi wheel up */
++	KEY_RESERVED,		/* 3D Midi wheel down */
++	KEY_MUTE,
++	KEY_VOLUMEUP,
++	KEY_VOLUMEDOWN,
++	KEY_UP,
++	KEY_LEFT,
++	KEY_RIGHT,
++	KEY_REWIND,
++	KEY_OK,
++	KEY_FASTFORWARD,
++	KEY_DOWN,
++	KEY_AGAIN,		/* text: Return, symbol: Jump to */
++	KEY_PLAY,		/* text: Start */
++	KEY_ESC,		/* text: Cancel */
++	KEY_RECORD,
++	KEY_OPTION,
++	KEY_MENU,		/* text: Display */
++	KEY_PREVIOUS,
++	KEY_PLAYPAUSE,
++	KEY_NEXT,
++	KEY_SLOW,
++	KEY_STOP,
++	KEY_NUMERIC_1,
++	KEY_NUMERIC_2,
++	KEY_NUMERIC_3,
++	KEY_NUMERIC_4,
++	KEY_NUMERIC_5,
++	KEY_NUMERIC_6,
++	KEY_NUMERIC_7,
++	KEY_NUMERIC_8,
++	KEY_NUMERIC_9,
++	KEY_NUMERIC_0
++};
++
++/* Codes and keys from lirc's
++ * remotes/creative/lircd.conf.alsa_usb
++ * order and size must match creative_sb0540_key_table[] above */
++static const unsigned short creative_sb0540_codes[] = {
++	0x619E,
++	0x916E,
++	0x926D,
++	0x936C,
++	0x718E,
++	0x946B,
++	0x956A,
++	0x8C73,
++	0x9669,
++	0x9768,
++	0x9867,
++	0x9966,
++	0x9A65,
++	0x6E91,
++	0x629D,
++	0x639C,
++	0x7B84,
++	0x6B94,
++	0x728D,
++	0x8778,
++	0x817E,
++	0x758A,
++	0x8D72,
++	0x8E71,
++	0x8877,
++	0x7C83,
++	0x738C,
++	0x827D,
++	0x7689,
++	0x7F80,
++	0x7986,
++	0x7A85,
++	0x7D82,
++	0x857A,
++	0x8B74,
++	0x8F70,
++	0x906F,
++	0x8A75,
++	0x847B,
++	0x7887,
++	0x8976,
++	0x837C,
++	0x7788,
++	0x807F
++};
++
++struct creative_sb0540 {
++	struct input_dev *input_dev;
++	struct hid_device *hid;
++	unsigned short keymap[ARRAY_SIZE(creative_sb0540_key_table)];
++};
++
++static inline u64 reverse(u64 data, int bits)
++{
++	int i;
++	u64 c;
++
++	c = 0;
++	for (i = 0; i < bits; i++) {
++		c |= (u64) (((data & (((u64) 1) << i)) ? 1 : 0)) << (bits - 1 - i);
++	}
++	return (c);
++}
++
++static int get_key(struct creative_sb0540 *creative_sb0540, u64 keycode)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(creative_sb0540_codes); i++) {
++		if (creative_sb0540_codes[i] == keycode)
++			return creative_sb0540->keymap[i];
++	}
++
++	return 0;
++
++}
++
++static int creative_sb0540_raw_event(struct hid_device *hid, struct hid_report *report,
++	 u8 *data, int len)
++{
++	struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
++	u64 code, main_code;
++	int key;
++
++	if (len != 6)
++		goto out;
++
++	/* From daemons/hw_hiddev.c sb0540_rec() in lirc */
++	code = reverse(data[5], 8);
++	main_code = (code << 8) + ((~code) & 0xff);
++
++	/* Flip to get values in the same format as
++	 * remotes/creative/lircd.conf.alsa_usb in lirc */
++	main_code = ((main_code & 0xff) << 8) + ((main_code & 0xff00) >> 8);
++
++	key = get_key(creative_sb0540, main_code);
++	if (key == 0 || key == KEY_RESERVED) {
++		hid_err(hid, "Could not get a key for main_code %llX\n", main_code);
++		goto out;
++	}
++
++	input_report_key(creative_sb0540->input_dev, key, 1);
++	input_report_key(creative_sb0540->input_dev, key, 0);
++	input_sync(creative_sb0540->input_dev);
++
++out:
++	/* let hidraw and hiddev handle the report */
++	return 0;
++}
++
++static int creative_sb0540_input_configured(struct hid_device *hid,
++		struct hid_input *hidinput)
++{
++	struct input_dev *input_dev = hidinput->input;
++	struct creative_sb0540 *creative_sb0540 = hid_get_drvdata(hid);
++	int i;
++
++	creative_sb0540->input_dev = input_dev;
++
++	input_dev->keycode = creative_sb0540->keymap;
++	input_dev->keycodesize = sizeof(unsigned short);
++	input_dev->keycodemax = ARRAY_SIZE(creative_sb0540->keymap);
++
++	input_dev->evbit[0] = BIT(EV_KEY) | BIT(EV_REP);
++
++	memcpy(creative_sb0540->keymap, creative_sb0540_key_table, sizeof(creative_sb0540->keymap));
++	for (i = 0; i < ARRAY_SIZE(creative_sb0540_key_table); i++)
++		set_bit(creative_sb0540->keymap[i], input_dev->keybit);
++	clear_bit(KEY_RESERVED, input_dev->keybit);
++
++	return 0;
++}
++
++static int creative_sb0540_input_mapping(struct hid_device *hid,
++		struct hid_input *hi, struct hid_field *field,
++		struct hid_usage *usage, unsigned long **bit, int *max)
++{
++	return -1;
++}
++
++static int creative_sb0540_probe(struct hid_device *hid, const struct hid_device_id *id)
++{
++	int ret;
++	struct creative_sb0540 *creative_sb0540;
++
++	creative_sb0540 = devm_kzalloc(&hid->dev, sizeof(struct creative_sb0540), GFP_KERNEL);
++	if (!creative_sb0540)
++		return -ENOMEM;
++
++	creative_sb0540->hid = hid;
++
++	/* force input as some remotes bypass the input registration */
++	hid->quirks |= HID_QUIRK_HIDINPUT_FORCE;
++
++	hid_set_drvdata(hid, creative_sb0540);
++
++	ret = hid_parse(hid);
++	if (ret) {
++		hid_err(hid, "parse failed\n");
++		return ret;
++	}
++
++	ret = hid_hw_start(hid, HID_CONNECT_DEFAULT);
++	if (ret) {
++		hid_err(hid, "hw start failed\n");
++		return ret;
++	}
++
++	return ret;
++}
++
++static const struct hid_device_id creative_sb0540_devices[] = {
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CREATIVELABS, USB_DEVICE_ID_CREATIVE_SB0540) },
++	{ }
++};
++MODULE_DEVICE_TABLE(hid, creative_sb0540_devices);
++
++static struct hid_driver creative_sb0540_driver = {
++	.name = "creative-sb0540",
++	.id_table = creative_sb0540_devices,
++	.raw_event = creative_sb0540_raw_event,
++	.input_configured = creative_sb0540_input_configured,
++	.probe = creative_sb0540_probe,
++	.input_mapping = creative_sb0540_input_mapping,
++};
++module_hid_driver(creative_sb0540_driver);
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 826324997686..206b7065da86 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -312,6 +312,7 @@
+ #define USB_VENDOR_ID_CREATIVELABS	0x041e
+ #define USB_DEVICE_ID_CREATIVE_SB_OMNI_SURROUND_51	0x322c
+ #define USB_DEVICE_ID_PRODIKEYS_PCMIDI	0x2801
++#define USB_DEVICE_ID_CREATIVE_SB0540	0x3100
+ 
+ #define USB_VENDOR_ID_CVTOUCH		0x1ff7
+ #define USB_DEVICE_ID_CVTOUCH_SCREEN	0x0013
+-- 
+2.21.0
+
