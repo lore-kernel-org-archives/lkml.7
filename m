@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B469C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1875AC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC55205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E212F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521057;
-	bh=42DavxmMtdOChN4Oo9N6dOlybAxZJaVMXYFtZzoSW/w=;
+	s=default; t=1561521065;
+	bh=uuppBSg3eza1xx49952zPvGnZggmxSRSfmH5l1GAxdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pNl0QGSerZCwoZOX+aRnRpTuegubRwdXZKr9HONVkS13IU2h6rFk0Ts8GefPw/Td1
-	 jOQIMVdhWcUkAhRwRyNHuEoOeNStT1kCW/92z1uvXKZ+oNoTYg1feNq/oW1Ldb12mW
-	 seGY5OUCExhk5P57tCEJOxZnBue90LXJzvk58JzU=
+	b=gNztec+NM66PhCC1Vq5n3l45u5LuISrCGyQG+AeG2M/BHb+pyNY9ew3QDpIFVD/4q
+	 2nlVbeKL9hDd0E8oQpg6PwmQvEUOktJnCGiUV8T+vx4sPs6FUGiUWj1XWkbqv5cJv7
+	 Tk2d4R7l67dpMnGmEd5/wqe+0FVLtgZBXR8TmQB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfFZDu4 (ORCPT
+        id S1726799AbfFZDlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:41:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726849AbfFZDlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:41:40 -0400
+        id S1726695AbfFZDle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:41:34 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC977214DA;
-        Wed, 26 Jun 2019 03:41:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D629E214DA;
+        Wed, 26 Jun 2019 03:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520499;
-        bh=42DavxmMtdOChN4Oo9N6dOlybAxZJaVMXYFtZzoSW/w=;
+        s=default; t=1561520493;
+        bh=uuppBSg3eza1xx49952zPvGnZggmxSRSfmH5l1GAxdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hnSsdWGT9jNveGAooIb4wdW5urd1OFoSu9ZwnEGyVNiyF8u+Sb291lOqI8C6qsNZl
-         DW6VL17spALLCOiU4p34FMNvQyR/yYmdukvz0+H9fArof1jFd9zcEvyDJOI1xlY6vp
-         7AVuFRwMaoyHRSRAdpPj9buX9hPa9OIEcaPxWQaE=
+        b=RV2jKSFpNYVBRtT0BSvu7FCT6vwExbXKzKMBuk/PBL8Tk2PqzjRtom5tLtuzfjXCD
+         VqFE2WnT5N1Cy2K4ss4SfUO9Rno+vPa6+CUfRNBfgb/enqcUfvI81cVzbG2JAp7pnj
+         WiiXS6qZUiB/w1Z5j4OSxgBr1y1IPosqYkDtd0L0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.1 10/51] iommu/vt-d: Set the right field for Page Walk Snoop
-Date:   Tue, 25 Jun 2019 23:40:26 -0400
-Message-Id: <20190626034117.23247-10-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 06/51] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+Date:   Tue, 25 Jun 2019 23:40:22 -0400
+Message-Id: <20190626034117.23247-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -61,35 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 66d78ad316b0e1ca5ae19663468554e2c0e31c26 ]
+[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
 
-Set the page walk snoop to the right bit, otherwise the domain
-id field will be overlapped.
+If spi_register_master fails in spi_bitbang_start
+because device_add failure, We should return the
+error code other than 0, otherwise calling
+spi_bitbang_stop may trigger NULL pointer dereference
+like this:
 
-Reported-by: Dave Jiang <dave.jiang@intel.com>
-Fixes: 6f7db75e1c469 ("iommu/vt-d: Add second level page table interface")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
+Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
+
+CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ dump_stack+0xa9/0x10e
+ ? __list_del_entry_valid+0x45/0xd0
+ ? __list_del_entry_valid+0x45/0xd0
+ __kasan_report+0x171/0x18d
+ ? __list_del_entry_valid+0x45/0xd0
+ kasan_report+0xe/0x20
+ __list_del_entry_valid+0x45/0xd0
+ spi_unregister_controller+0x99/0x1b0
+ spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
+ ? 0xffffffffc1128000
+ ? klist_next+0x131/0x1e0
+ ? driver_detach+0x40/0x40 [parport]
+ port_check+0x3b/0x50 [parport]
+ bus_for_each_dev+0x115/0x180
+ ? subsys_dev_iter_exit+0x20/0x20
+ __parport_register_driver+0x1f0/0x210 [parport]
+ ? 0xffffffffc1150000
+ do_one_initcall+0xb9/0x3b5
+ ? perf_trace_initcall_level+0x270/0x270
+ ? kasan_unpoison_shadow+0x30/0x40
+ ? kasan_unpoison_shadow+0x30/0x40
+ do_init_module+0xe0/0x330
+ load_module+0x38eb/0x4270
+ ? module_frob_arch_sections+0x20/0x20
+ ? kernel_read_file+0x188/0x3f0
+ ? find_held_lock+0x6d/0xd0
+ ? fput_many+0x1a/0xe0
+ ? __do_sys_finit_module+0x162/0x190
+ __do_sys_finit_module+0x162/0x190
+ ? __ia32_sys_init_module+0x40/0x40
+ ? __mutex_unlock_slowpath+0xb4/0x3f0
+ ? wait_for_completion+0x240/0x240
+ ? vfs_write+0x160/0x2a0
+ ? lockdep_hardirqs_off+0xb5/0x100
+ ? mark_held_locks+0x1a/0x90
+ ? do_syscall_64+0x14/0x2a0
+ do_syscall_64+0x72/0x2a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-pasid.c | 2 +-
+ drivers/spi/spi-bitbang.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-index 03b12d2ee213..fdf05c45d516 100644
---- a/drivers/iommu/intel-pasid.c
-+++ b/drivers/iommu/intel-pasid.c
-@@ -387,7 +387,7 @@ static inline void pasid_set_present(struct pasid_entry *pe)
-  */
- static inline void pasid_set_page_snoop(struct pasid_entry *pe, bool value)
- {
--	pasid_set_bits(&pe->val[1], 1 << 23, value);
-+	pasid_set_bits(&pe->val[1], 1 << 23, value << 23);
- }
+diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
+index dd9a8c54a693..be95be4fe985 100644
+--- a/drivers/spi/spi-bitbang.c
++++ b/drivers/spi/spi-bitbang.c
+@@ -403,7 +403,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
+ 	if (ret)
+ 		spi_master_put(master);
  
- /*
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(spi_bitbang_start);
+ 
 -- 
 2.20.1
 
