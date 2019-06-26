@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0287C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AC1C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10DA216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71ED620659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520518;
-	bh=sNCNajBnIICgdxOIF1Sqb95OcKzLhp3mLHklpLODoFs=;
+	s=default; t=1561520523;
+	bh=0T6x30Mb7rcEkAoYggXrp5pmG6ocNITkX5Dryxz2IyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xhjU2Ii+3dLRH5VaoXJ9mjhDKdDAFMJlPcMeZn2npS45/yzlipjjcFp62JhyRvKsC
-	 cMUoH/fg6QjJyyEmiixnFSFWvN5Iu16fFjD5x1I5ecw4HRHY1vRELZgqNI555UUbXi
-	 m6Lv8GRTA4b0cI56bAPybswdR2BPhvVu5tKF2eOc=
+	b=JEDiDNXLVppEA9yTiSaJeeVIyzQ6Kz0vFC8rvVSjoXzdQztLSniHqZ6QhbmLN3CBc
+	 HpEohTIdY8jFYMcteWYDTWI8E/YN500hhklQFuEu/K4WpFO6vNnd0CD5/GQkcwQWDk
+	 Ajw935LMWKzTplreeCrQIkjx6UtBXPI6dd3NIfoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfFZDl5 (ORCPT
+        id S1726980AbfFZDmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52506 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbfFZDlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:41:55 -0400
+        id S1726574AbfFZDl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:41:59 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2204216F4;
-        Wed, 26 Jun 2019 03:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC3CE216FD;
+        Wed, 26 Jun 2019 03:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520514;
-        bh=sNCNajBnIICgdxOIF1Sqb95OcKzLhp3mLHklpLODoFs=;
+        s=default; t=1561520518;
+        bh=0T6x30Mb7rcEkAoYggXrp5pmG6ocNITkX5Dryxz2IyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=veTNGYHPRGns0PGa7d7v9CAxAHlqpestkIAdaDZynNDo06K+AXRdRvExL1giGi4AX
-         90bxd8XOMK3rD5Q/N/UR8GV7K8YJdFajWgMGDYSnLN48qEQNFBzqaMhaYn77tN9sjd
-         l+goSg2wqikPZdEWPl5OuuVuGFaFwyRPtO+njVwY=
+        b=hqNgzF21gYwkcQbLGssTPjF8mTYdjfMEDekWUj6X0lX1P+l+9+j8YQ7NNxMzyecQ4
+         GZCo0pmEyYJ6XIdV1np2+skbzSJJLnoh5sAZtZZ1OjkOZ1U1psTHoXktnXMeTQmSUS
+         XZWpHGfGFE31Da2GQ3K5weaKbwHOW1GfO34gbWfQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 15/51] drm/mediatek: fix unbind functions
-Date:   Tue, 25 Jun 2019 23:40:31 -0400
-Message-Id: <20190626034117.23247-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 17/51] drm/mediatek: call drm_atomic_helper_shutdown() when unbinding driver
+Date:   Tue, 25 Jun 2019 23:40:33 -0400
+Message-Id: <20190626034117.23247-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -61,32 +61,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 8fd7a37b191f93737f6280a9b5de65f98acc12c9 ]
+[ Upstream commit cf49b24ffa62766f8f04cd1c4cf17b75d29b240a ]
 
-detatch panel in mtk_dsi_destroy_conn_enc(), since .bind will try to
-attach it again.
+shutdown all CRTC when unbinding drm driver.
 
-Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
+Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index b00eb2d2e086..1ae3be99e0ff 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -844,6 +844,8 @@ static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi)
- 	/* Skip connector cleanup if creation was delegated to the bridge */
- 	if (dsi->conn.dev)
- 		drm_connector_cleanup(&dsi->conn);
-+	if (dsi->panel)
-+		drm_panel_detach(dsi->panel);
- }
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index e7362bdafa82..8718d123ccaa 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -311,6 +311,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
+ static void mtk_drm_kms_deinit(struct drm_device *drm)
+ {
+ 	drm_kms_helper_poll_fini(drm);
++	drm_atomic_helper_shutdown(drm);
  
- static void mtk_dsi_ddp_start(struct mtk_ddp_comp *comp)
+ 	component_unbind_all(drm->dev, drm);
+ 	drm_mode_config_cleanup(drm);
 -- 
 2.20.1
 
