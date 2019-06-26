@@ -2,129 +2,122 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5FAC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAF8C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D9A21670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F35208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P0cWMohr"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="EawTB6Jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfFZOIW (ORCPT
+        id S1727898AbfFZOIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:08:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41987 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFZOIW (ORCPT
+        Wed, 26 Jun 2019 10:08:25 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42976 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZOIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:08:22 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5QE79ek4135902
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 26 Jun 2019 07:07:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5QE79ek4135902
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561558030;
-        bh=nrf4YhrjU86Fm8glLH2+q0CeNX8zUFQc6avfpF5+lC0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=P0cWMohrhKOZQOuEz3it1JZkqVsMSRoHdmZF6SS6CAaEaYTEgTV12MK/+Wl9r+xmZ
-         jmjv96oZHYGxFkNYNnDttIRmKNd4guIkmzrInedU9zpUiGhPqMIsg4lkatJER1MzJ/
-         uQoyj5W9fH83Bh3rRyRs+twG/9RjtUlf08UrIJ5XZMQ1H9CSlPB8rSoVoDL5U5DeXz
-         3xf0J8/jVvp1QIP6HoHPGNxR/PPtt9mWZIiNXuytU8trPt5KsHGfDcOiImLG1z3NVO
-         4EZmilcOYDbp5Zm3pHASmS3TCAj9QGzvrWq2nl95B8oYdZYjuKa9CSPNC5Ku916NOc
-         cdp5BAxk54OUQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5QE78sN4135892;
-        Wed, 26 Jun 2019 07:07:08 -0700
-Date:   Wed, 26 Jun 2019 07:07:08 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Tiezhu Yang <tipbot@zytor.com>
-Message-ID: <tip-53b7607382b0b99d6ae1ef5b1b0fa042b00ac7f4@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, dyoung@redhat.com,
-        kernelpatch@126.com, vgoyal@redhat.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com
-Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, vgoyal@redhat.com,
-          tglx@linutronix.de, kernelpatch@126.com, dyoung@redhat.com,
-          mingo@kernel.org
-In-Reply-To: <117ef0c6.3d30.16b87c9cfbf.Coremail.kernelpatch@126.com>
-References: <117ef0c6.3d30.16b87c9cfbf.Coremail.kernelpatch@126.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cleanups] x86/kexec: Make variable static and config
- dependent
-Git-Commit-ID: 53b7607382b0b99d6ae1ef5b1b0fa042b00ac7f4
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 26 Jun 2019 10:08:24 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z25so3536124edq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/IMBEx+SesAyWKiRBS4ur84ss5t4d1HSOLzWXAbsmDo=;
+        b=EawTB6Jwu+DKx4pzn9adu+6cJt4EH0u1f5QSZUeW1OmfPV/lfpzNV36M7LjX6kpZjV
+         Bjocv+ZmplfZTlNA2ap9OFKs+gZwN668831Jdx0d3eOEL77abY7lijO65YLVgnJrMzXT
+         hunM7oXPnQ0HVim4E1Gr2UPo/XgFUga1bwf0VVuAl+qMdBR+c0O4Ot4iFCTApInS0qqw
+         XA031QSAR4deUS/mWQaiYYV9cgMfrlAzk19OnwULGdCrZUUO7YexioofquBHbz6LJww0
+         wHA9/snmQQfNgYNDvZi0PFhvtG7BQG6UbIfy8368pRqI5+0+yL9oRGpG67quButJkR1+
+         Z3Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/IMBEx+SesAyWKiRBS4ur84ss5t4d1HSOLzWXAbsmDo=;
+        b=Hdu/R+QamsTMn4NejgPlFjZPQu2Apsb6GZEhqpE4th7ilYj/rlhgwI5JzZvGQ9cBrH
+         vcDIBrsqHlv//N8sognFNB3JxFxI2rXL4bDzAeKDo4Oelu1wAtcP50+yY4dA+NyQS3Wf
+         eVycH6dtXL5d8qrsDHlVG/ofWaIUpQh9dB7BfNTlVonuY3LUH1ezIq4LaArMMPIN9yXC
+         cQZJ5ZXu506Mi0ujva/O548yjU4khh/Oxgks8Ba8pIfaHSRUNTEWoRXGBnJsDiYW2Bu/
+         Ve6yBqGCzcklVVa8cvtXYxqOywLj/TS65d6mnXToL4v7nz/V03d56B5atv2QnxXKHUcs
+         Aqag==
+X-Gm-Message-State: APjAAAWI8zb0eLt83GmgWs5SykJN9ftIxtvEA37I3Ali7PObtep3izGq
+        umbI654wl78VTetIVy9LPx2kJ90du8qBuw==
+X-Google-Smtp-Source: APXvYqwjD1F73ZI9PSXLV2HxyEHsMbx3W2ReyjMc+3ficOUis3LVXPrQUJzxFXw8mlwJhKUmWPc05A==
+X-Received: by 2002:a50:e718:: with SMTP id a24mr5430259edn.91.1561558102230;
+        Wed, 26 Jun 2019 07:08:22 -0700 (PDT)
+Received: from localhost.localdomain (cable-89-16-153-196.cust.telecolumbus.net. [89.16.153.196])
+        by smtp.gmail.com with ESMTPSA id p18sm2983531ejr.61.2019.06.26.07.08.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 07:08:21 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, ldv@altlinux.org
+Subject: [GIT PULL] fixes for v5.2-rc7
+Date:   Wed, 26 Jun 2019 16:07:33 +0200
+Message-Id: <20190626140733.21538-1-christian@brauner.io>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  53b7607382b0b99d6ae1ef5b1b0fa042b00ac7f4
-Gitweb:     https://git.kernel.org/tip/53b7607382b0b99d6ae1ef5b1b0fa042b00ac7f4
-Author:     Tiezhu Yang <kernelpatch@126.com>
-AuthorDate: Mon, 24 Jun 2019 12:41:18 +0800
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 26 Jun 2019 16:02:45 +0200
+Hi Linus,
 
-x86/kexec: Make variable static and config dependent
+This pull request removes the validation of the pidfd return argument if
+CLONE_PIDFD is specified:
 
-The following sparse warning is emitted:
+The following changes since commit 4b972a01a7da614b4796475f933094751a295a2f:
 
-  arch/x86/kernel/crash.c:59:15:
-  warning: symbol 'crash_zero_bytes' was not declared. Should it be static?
+  Linux 5.2-rc6 (2019-06-22 16:01:36 -0700)
 
-The variable is only used in this compilation unit, but it is also only
-used when CONFIG_KEXEC_FILE is enabled. Just making it static would result
-in a 'defined but not used' warning for CONFIG_KEXEC_FILE=n.
+are available in the Git repository at:
 
-Make it static and move it into the existing CONFIG_KEXEC_FILE section.
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-20190626
 
-[ tglx: Massaged changelog and moved it into the existing ifdef ]
+for you to fetch changes up to bee19cd8f241ab3cd1bf79e03884e5371f9ef514:
 
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Tiezhu Yang <kernelpatch@126.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: bp@alien8.de
-Cc: hpa@zytor.com
-Cc: kexec@lists.infradead.org
-Cc: vgoyal@redhat.com
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Link: https://lkml.kernel.org/r/117ef0c6.3d30.16b87c9cfbf.Coremail.kernelpatch@126.com
----
- arch/x86/kernel/crash.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+  samples: make pidfd-metadata fail gracefully on older kernels (2019-06-24 15:55:50 +0200)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 576b2e1bfc12..27157d66f807 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -56,7 +56,6 @@ struct crash_memmap_data {
-  */
- crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss = NULL;
- EXPORT_SYMBOL_GPL(crash_vmclear_loaded_vmcss);
--unsigned long crash_zero_bytes;
- 
- static inline void cpu_crash_vmclear_loaded_vmcss(void)
- {
-@@ -181,6 +180,9 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- }
- 
- #ifdef CONFIG_KEXEC_FILE
-+
-+static unsigned long crash_zero_bytes;
-+
- static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- {
- 	unsigned int *nr_ranges = arg;
+Userspace tools and libraries such as strace or glibc need a cheap and
+reliable way to tell whether CLONE_PIDFD is supported.
+The easiest way is to pass an invalid fd value in the return argument,
+perform the syscall and verify the value in the return argument has been
+changed to a valid fd.
+
+However, if CLONE_PIDFD is specified we currently check if pidfd == 0 and
+return EINVAL if not.
+
+The check for pidfd == 0 was originally added to enable us to abuse the
+return argument for passing additional flags along with CLONE_PIDFD in the
+future.
+
+However, extending legacy clone this way would be a terrible idea and with
+clone3 on the horizon and the ability to reuse CLONE_DETACHED with
+CLONE_PIDFD there's no real need for this clutch. So remove the pidfd == 0
+check and help userspace out.
+
+Please consider pulling these changes from the signed for-linus-20190626 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+for-linus-20190626
+
+----------------------------------------------------------------
+Dmitry V. Levin (2):
+      fork: don't check parent_tidptr with CLONE_PIDFD
+      samples: make pidfd-metadata fail gracefully on older kernels
+
+ kernel/fork.c                  | 12 ------------
+ samples/pidfd/pidfd-metadata.c |  8 ++++++--
+ 2 files changed, 6 insertions(+), 14 deletions(-)
