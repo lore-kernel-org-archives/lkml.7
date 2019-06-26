@@ -2,213 +2,114 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040EAC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F612C48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBE820645
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266BA20883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfFZCwD (ORCPT
+        id S1726565AbfFZCyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:52:03 -0400
-Received: from lgeamrelo11.lge.com ([156.147.23.51]:58716 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfFZCwD (ORCPT
+        Tue, 25 Jun 2019 22:54:17 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:55170 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726339AbfFZCyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:52:03 -0400
-Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
-        by 156.147.23.51 with ESMTP; 26 Jun 2019 11:51:59 +0900
-X-Original-SENDERIP: 156.147.1.125
-X-Original-MAILFROM: byungchul.park@lge.com
-Received: from unknown (HELO X58A-UD3R) (10.177.222.33)
-        by 156.147.1.125 with ESMTP; 26 Jun 2019 11:51:59 +0900
-X-Original-SENDERIP: 10.177.222.33
-X-Original-MAILFROM: byungchul.park@lge.com
-Date:   Wed, 26 Jun 2019 11:51:20 +0900
-From:   Byungchul Park <byungchul.park@lge.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@lge.com
-Subject: Re: [RFC] rcu: Warn that rcu ktheads cannot be spawned
-Message-ID: <20190626025120.GA3452@X58A-UD3R>
-References: <1561364852-5113-1-git-send-email-byungchul.park@lge.com>
- <20190624164624.GA41314@google.com>
- <20190624172551.GI26519@linux.ibm.com>
- <20190625024100.GA10912@X58A-UD3R>
- <20190625133115.GV26519@linux.ibm.com>
+        Tue, 25 Jun 2019 22:54:16 -0400
+X-UUID: 91b24f43722d466ebd4250b00f9cf19f-20190626
+X-UUID: 91b24f43722d466ebd4250b00f9cf19f-20190626
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1962422911; Wed, 26 Jun 2019 10:54:08 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 26 Jun
+ 2019 10:54:05 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Wed, 26 Jun 2019 10:54:02 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Vincent Palatin" <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Sascha Hauer" <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [v3 0/4] Add drivers for auo,kd101n80-45na and boe,tv101wum-nl6 panels
+Date:   Wed, 26 Jun 2019 10:53:56 +0800
+Message-ID: <20190626025400.109567-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625133115.GV26519@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24712.003
+X-TM-AS-Result: No-4.859500-8.000000-10
+X-TMASE-MatchedRID: JnF/j4RbQ0Fu7xCoxCPC8hIRh9wkXSlFSWg+u4ir2NNTbQ95zRbWVhxC
+        hMoIsTT1MqqNAwlLCF39K011C4bEh/I1YbpS1+av5venhychcY1MkOX0UoduuWq646qiEnRzcDY
+        BtqUkx7xsyJ8A0M3MsXATsg8MODVIHxPMjOKY7A8LbigRnpKlKZx+7GyJjhAUUFn54I1MIrlC6E
+        qbEQibuD9Tqrncq1QsXNx4nPRgrzTasMMyBIaxyKGPwUaNZCakygr2f8iu4/h3q397Kle3JbVW6
+        8qWjN+ZP3dLjnWr1vEPbJpLSCH/cqQVCHnxhZ/op8zfhMu4/LNfCOKFKuVYGg==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.859500-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24712.003
+X-TM-SNTS-SMTP: 4C1F9099359D9BA0D664A342062213656D6B4A1AA8DA41A10CE1E24C40B910DF2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 06:31:15AM -0700, Paul E. McKenney wrote:
-> On Tue, Jun 25, 2019 at 11:41:00AM +0900, Byungchul Park wrote:
-> > On Mon, Jun 24, 2019 at 10:25:51AM -0700, Paul E. McKenney wrote:
-> > > On Mon, Jun 24, 2019 at 12:46:24PM -0400, Joel Fernandes wrote:
-> > > > On Mon, Jun 24, 2019 at 05:27:32PM +0900, Byungchul Park wrote:
-> > > > > Hello rcu folks,
-> > > > > 
-> > > > > I thought it'd better to announce it if those spawnings fail because of
-> > > > > !rcu_scheduler_fully_active.
-> > > > > 
-> > > > > Of course, with the current code, it never happens though.
-> > > > > 
-> > > > > Thoughts?
-> > > > 
-> > > > It seems in the right spirit, but with your patch a warning always fires.
-> > > > rcu_prepare_cpu() is called multiple times, once from rcu_init() and then
-> > > > from hotplug paths.
-> > > > 
-> > > > Warning splat stack looks like:
-> > > > 
-> > > > [    0.398767] Call Trace:
-> > > > [    0.398775]  rcu_init+0x6aa/0x724
-> > > > [    0.398779]  start_kernel+0x220/0x4a2
-> > > > [    0.398780]  ? copy_bootdata+0x12/0xac
-> > > > [    0.398782]  secondary_startup_64+0xa4/0xb0
-> > > 
-> > > Thank you both, and I will remove this from my testing queue.
-> > > 
-> > > As Joel says, this is called at various points in the boot sequence, not
-> > > all of which are far enough along to support spawning kthreads.
-> > > 
-> > > The real question here is "What types of bugs are we trying to defend
-> > > against?"  But keeping in mind existing diagnostics.  For example, are
-> > > there any kthreads for which a persistent failure to spawn would not
-> > > emit any error message.  My belief is that any such persistent failure
-> > > would result in either an in-kernel diagnostic or an rcutorture failure,
-> > > but I might well be missing something.
-> > > 
-> > > Thoughts?  Or, more to the point, tests demonstrating silence in face
-> > > of such a persistent failure?
-> > 
-> > You are right. There wouldn't be a persistent failure because the path
-> > turning cpus on always tries to spawn them, *even* in case that the
-> > booting sequence is wrong. The current code anyway goes right though.
-> > 
-> > I thought a hole can be there if the code changes so that those kthreads
-> > cannot be spawned until the cpu being up, which is the case I was
-> > interested in. Again, it's gonna never happen with the current code
-> > because it spawns them after setting rcu_scheduler_fully_active to 1 in
-> > rcu_spawn_gp_kthead().
-> > 
-> > And I wrongly thought you placed the rcu_scheduler_fully_active check on
-> > spawning just in case. But it seems to be not the case.
-> > 
-> > So I'd better stop working on the warning patch. :) Instead, please
-> > check the following trivial fix.
-> > 
-> > Thanks,
-> > Byungchul
-> > 
-> > ---8<---
-> > >From 1293d19bb7abf7553d656c81182118eff54e7dc9 Mon Sep 17 00:00:00 2001
-> > From: Byungchul Park <byungchul.park@lge.com>
-> > Date: Mon, 24 Jun 2019 16:22:11 +0900
-> > Subject: [PATCH] rcu: Make rcu_spawn_one_boost_kthread() return void
-> > 
-> > The return value of rcu_spawn_one_boost_kthread() is not used any
-> > longer. Change the return type from int to void.
-> > 
-> > Signed-off-by: Byungchul Park <byungchul.park@lge.com>
-> 
-> Looks pretty good, just one comment below.  Plus could you please tell
-> me what you are developing this against?
+Changes since v2:
+ - correct the panel size
+ - remove blank line in Kconfig
+ - move auo,kd101n80-45na panel driver in this series.
 
-Only for removing out-dated code. Not for funcational change.
+Changes since v1:
 
-And simple answer below...
+ - update typo nl6 -> n16.
+ - update new panel config and makefile are added in alphabetically order.
+ - add the panel mode and panel info in driver data.
+ - merge auo,kd101n80-45a and boe,tv101wum-nl6 in one driver
 
-> 
-> 							Thanx, Paul
-> 
-> > ---
-> >  kernel/rcu/tree_plugin.h | 15 +++++++--------
-> >  1 file changed, 7 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index 1102765..4e11aa4 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -1131,7 +1131,7 @@ static void rcu_preempt_boost_start_gp(struct rcu_node *rnp)
-> >   * already exist.  We only create this kthread for preemptible RCU.
-> >   * Returns zero if all is well, a negated errno otherwise.
-> >   */
-> > -static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> > +static void rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> >  {
-> >  	int rnp_index = rnp - rcu_get_root();
-> >  	unsigned long flags;
-> > @@ -1139,25 +1139,24 @@ static int rcu_spawn_one_boost_kthread(struct rcu_node *rnp)
-> >  	struct task_struct *t;
-> >  
-> >  	if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
-> > -		return 0;
-> > +		return;
-> >  
-> >  	if (!rcu_scheduler_fully_active || rcu_rnp_online_cpus(rnp) == 0)
-> > -		return 0;
-> > +		return;
-> >  
-> >  	rcu_state.boost = 1;
-> >  	if (rnp->boost_kthread_task != NULL)
-> > -		return 0;
-> > +		return;
-> >  	t = kthread_create(rcu_boost_kthread, (void *)rnp,
-> >  			   "rcub/%d", rnp_index);
-> >  	if (IS_ERR(t))
-> 
-> This would be a change in behavior, but it might be good to have a
-> WARN_ON_ONCE() above.  Assuming that it doesn't splat on every boot.  ;-)
+Jitao Shi (4):
+  dt-bindngs: display: panel: Add BOE tv101wum-n16 panel bindings
+  drm/panel: support for BOE tv101wum-nl6 wuxga dsi video mode panel
+  dt-bindings: display: panel: add auo kd101n80-45na panel bindings
+  drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
 
-Yes. Normally it shouldn't. Right? I will resend this after testing with
-my machine. :)
+ .../display/panel/auo,kd101n80-45na.txt       |  34 +
+ .../display/panel/boe,tv101wum-nl6.txt        |  34 +
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 753 ++++++++++++++++++
+ 5 files changed, 831 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
 
-Thanks,
-Byungchul
+-- 
+2.21.0
 
-> 
-> > -		return PTR_ERR(t);
-> > +		return;
-> >  	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-> >  	rnp->boost_kthread_task = t;
-> >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >  	sp.sched_priority = kthread_prio;
-> >  	sched_setscheduler_nocheck(t, SCHED_FIFO, &sp);
-> >  	wake_up_process(t); /* get to TASK_INTERRUPTIBLE quickly. */
-> > -	return 0;
-> >  }
-> >  
-> >  static void rcu_cpu_kthread_setup(unsigned int cpu)
-> > @@ -1265,7 +1264,7 @@ static void __init rcu_spawn_boost_kthreads(void)
-> >  	if (WARN_ONCE(smpboot_register_percpu_thread(&rcu_cpu_thread_spec), "%s: Could not start rcub kthread, OOM is now expected behavior\n", __func__))
-> >  		return;
-> >  	rcu_for_each_leaf_node(rnp)
-> > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > +		rcu_spawn_one_boost_kthread(rnp);
-> >  }
-> >  
-> >  static void rcu_prepare_kthreads(int cpu)
-> > @@ -1275,7 +1274,7 @@ static void rcu_prepare_kthreads(int cpu)
-> >  
-> >  	/* Fire up the incoming CPU's kthread and leaf rcu_node kthread. */
-> >  	if (rcu_scheduler_fully_active)
-> > -		(void)rcu_spawn_one_boost_kthread(rnp);
-> > +		rcu_spawn_one_boost_kthread(rnp);
-> >  }
-> >  
-> >  #else /* #ifdef CONFIG_RCU_BOOST */
-> > -- 
-> > 1.9.1
-> > 
