@@ -2,163 +2,100 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC06C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A9CC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34C9208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:00:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CWpQiyUr"
+	by mail.kernel.org (Postfix) with ESMTP id 97FAF208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfFZGAm (ORCPT
+        id S1726656AbfFZGAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:00:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54470 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZGAl (ORCPT
+        Wed, 26 Jun 2019 02:00:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29574 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726416AbfFZGAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:00:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5Q60FSI085347;
-        Wed, 26 Jun 2019 01:00:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561528815;
-        bh=HVUML4z+0uJ3/8NRfZVvuXjLtrK+2oCxRsdfu2L1a6M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=CWpQiyUrkMBOHsPtmLblyp5/OJuonzQnj2fMi494DDmBzu19N58HhjR094H07ThD0
-         WdazApgdj2HdhNHDu4mXZzg96r3Ug3SL2h0YHliiTN3RNNJscmrCoMJKdwSAxS5FhM
-         hDa8XZg88rrN8st2CNYwc5hLgprqNF7+g0fH9I+k=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5Q60Fhj077983
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Jun 2019 01:00:15 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 26
- Jun 2019 01:00:14 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 26 Jun 2019 01:00:14 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5Q60B6h031555;
-        Wed, 26 Jun 2019 01:00:12 -0500
-Subject: Re: [PATCH v7 3/5] mtd: Add support for HyperBus memory devices
-To:     <masonccyang@mxic.com.tw>
-CC:     Boris Brezillon <bbrezillon@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <20190620172250.9102-1-vigneshr@ti.com>
- <20190620172250.9102-4-vigneshr@ti.com>
- <OF97D41CEB.1200A9E4-ON48258425.0006AA42-48258425.000700E5@mxic.com.tw>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <1131067e-a86d-f794-f6ae-be0a2b3e5832@ti.com>
-Date:   Wed, 26 Jun 2019 11:30:56 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 02:00:47 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5Q5ueJ8109401
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:00:47 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tc0mvcfjt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:00:46 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Wed, 26 Jun 2019 07:00:44 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Jun 2019 07:00:41 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5Q60e0U42991826
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 06:00:40 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CCCA64204C;
+        Wed, 26 Jun 2019 06:00:40 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0141E42047;
+        Wed, 26 Jun 2019 06:00:39 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 26 Jun 2019 06:00:38 +0000 (GMT)
+Date:   Wed, 26 Jun 2019 11:30:38 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        matthew.wilcox@oracle.com, kirill.shutemov@linux.intel.com,
+        peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org,
+        kernel-team@fb.com, william.kucharski@oracle.com
+Subject: Re: [PATCH v7 4/4] uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20190625235325.2096441-1-songliubraving@fb.com>
+ <20190625235325.2096441-5-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <OF97D41CEB.1200A9E4-ON48258425.0006AA42-48258425.000700E5@mxic.com.tw>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20190625235325.2096441-5-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19062606-4275-0000-0000-000003464FCD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062606-4276-0000-0000-000038565359
+Message-Id: <20190626060038.GB9158@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=790 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906260072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Song Liu <songliubraving@fb.com> [2019-06-25 16:53:25]:
 
-
-On 26/06/19 6:46 AM, masonccyang@mxic.com.tw wrote:
-> Hi Vignesh,
+> This patches uses newly added FOLL_SPLIT_PMD in uprobe. This enables easy
+> regroup of huge pmd after the uprobe is disabled (in next patch).
 > 
->>
->> Subject
->>
->> [PATCH v7 3/5] mtd: Add support for HyperBus memory devices
->>
->> Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
->> Bus interface between a host system master and one or more slave
->> interfaces. HyperBus is used to connect microprocessor, microcontroller,
->> or ASIC devices with random access NOR flash memory (called HyperFlash)
->> or self refresh DRAM (called HyperRAM).
->>
->> Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
->> signal and either Single-ended clock(3.0V parts) or Differential clock
->> (1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
->> At bus level, it follows a separate protocol described in HyperBus
->> specification[1].
->>
->> HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
->> to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
->> its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
->> HyperBus operates at >166MHz frequencies.
->> HyperRAM provides direct random read/write access to flash memory
->> array.
->>
->> But, HyperBus memory controllers seem to abstract implementation details
->> and expose a simple MMIO interface to access connected flash.
->>
->> Add support for registering HyperFlash devices with MTD framework. MTD
->> maps framework along with CFI chip support framework are used to support
->> communicating with flash.
->>
->> Framework is modelled along the lines of spi-nor framework. HyperBus
->> memory controller (HBMC) drivers calls hyperbus_register_device() to
->> register a single HyperFlash device. HyperFlash core parses MMIO access
->> information from DT, sets up the map_info struct, probes CFI flash and
->> registers it with MTD framework.
->>
->> Some HBMC masters need calibration/training sequence[3] to be carried
->> out, in order for DLL inside the controller to lock, by reading a known
->> string/pattern. This is done by repeatedly reading CFI Query
->> Identification String. Calibration needs to be done before trying to 
-> detect
->> flash as part of CFI flash probe.
->>
->> HyperRAM is not supported at the moment.
->>
->> HyperBus specification can be found at[1]
->> HyperFlash datasheet can be found at[2]
->>
->> [1] https://www.cypress.com/file/213356/download
->> [2] https://www.cypress.com/file/213346/download
->> [3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
->>     Table 12-5741. HyperFlash Access Sequence
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> 
-> Cypress has announced the inclusion of Cypress’ high-bandwidth 
-> HyperBus™ 8-bit serial memory interface into the new eXpanded SPI (xSPI) 
-> electrical interface standard from the JEDEC Solid State Technology 
-> Association 
-> 
-> for detail, please goes to
-> https://www.cypress.com/news/cypress-hyperbus-memory-interface-instant-applications-incorporated-jedec-xspi-electrical 
-> 
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> ---
+>  kernel/events/uprobes.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-Thanks for the link!
-Announcement seems to be from March 2018 since then Cypress has
-published detailed HyperBus protocol in public domain . Comparing JEDEC
-xSPI specification and HyperBus protocol that Cypress has published,
-they seem to be following 8D-8D-8D Profile 2.0 with Extended Command
-Modifier of JEDEC xSPI spec.
-Did you see anything missing/different?
+Looks good to me.
 
-I need to study xSPI spec in more detail, but seems like as long as we
-support HyperBus Protocol spec from Cypress we should be safe.
-
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 -- 
-Regards
-Vignesh
+Thanks and Regards
+Srikar Dronamraju
+
