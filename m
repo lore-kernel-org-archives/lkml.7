@@ -2,124 +2,182 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518CAC48BD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB4BC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC81205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520914;
-	bh=ZqvzL5QRBqlyvstiXKL/63rBGS2MmAum0563vuhRjJo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=momb8f6j805UXMOFk7VkI0f1hJOtIO0bkMJE+WVzDtlUOxwA5fgc1+7N9+ZqBb7LI
-	 9sTvit+7aT7s0X2uvkhQXSAT7WwBl8GWcGiwaXdmxRkYjA00H/GhXEwHkk0H5n23tQ
-	 lw9nlVZ+RUSIFQ1mGYd1wRGa/0BfQDo/UwFTPRtE=
+	by mail.kernel.org (Postfix) with ESMTP id A72E2205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gANyKfda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbfFZDoi (ORCPT
+        id S1727676AbfFZDsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 25 Jun 2019 23:48:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42952 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbfFZDoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 23:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbfFZDod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:44:33 -0400
-Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F49205ED;
-        Wed, 26 Jun 2019 03:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520672;
-        bh=ZqvzL5QRBqlyvstiXKL/63rBGS2MmAum0563vuhRjJo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZEMw154++EfymUlqaCyxRA8C7FeCitjZLn4LYAF5qj5ywKmj4/JVv3NH/4Fw/EdPW
-         NFlvzMvb4VZM+PEfLGu8yTH+iN5Chwkgr4+jlaQfKa8WqUnCJxWmKZEfLGcygSE2EK
-         NJXurjoNN8v3l7heXgeTv8pTpwawsEaCjXOsWomk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jurgen Kramer <gtmkramer@xs4all.nl>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 22/34] drm: panel-orientation-quirks: Add quirk for GPD pocket2
-Date:   Tue, 25 Jun 2019 23:43:23 -0400
-Message-Id: <20190626034335.23767-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
-References: <20190626034335.23767-1-sashal@kernel.org>
+Received: by mail-pg1-f193.google.com with SMTP id k13so483578pgq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 20:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LqmJogVNFsB+g8IvvX5zj4pKPaA/7R5yFx4LbjFnmV4=;
+        b=gANyKfdaTg5/MdqZmJB3zBjd0+SwlPrzaWPrUzkCwurzqStTwtxA6W7Ezglr0+ZcKG
+         9eCN8IhNomZ3gmueFdxUDDnI92q7+xmSDkoV8Q+y2aKdt9v6JzX7ECWnNoAzZwjIEJY6
+         uBgvejbkfXI6KyYweG9b+Xfav4RrlV8zWcSlcnvPRF8Pj94IOxhxpdKvhSYlLG0ifAx2
+         ApzCOOyJU/iDqBIQahCwrH4FOpDF8+Bxa974TiDSoMeB0kn8UwDxZBcAZGjHFyrS9AqF
+         6Ys8h1EtVT1tPJQIdhBKcTSORSoJ0pehqkmmrT90oehqg4SmFXClQL3EOSpLpGQt4pY4
+         Vg2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LqmJogVNFsB+g8IvvX5zj4pKPaA/7R5yFx4LbjFnmV4=;
+        b=ohuupSq1lW4AUdF3zRrWTzpmEMp6ImnjunMHZkFUEwUNfsYDBCyID6DQ1/+UfpG98j
+         ECu1XLcOwIuCwPVbr+lKD/G9+Bsc+/hDhmLTznwuKidqfsWTxZq0q2p1AEFjl8MnGZPG
+         9uFnpoCaMR+zXlHHt0rqI1uUvuAj0fghdhlVFwlHTfrnbocgctd3WdXweZIV60ySvEp9
+         +OV/KOBkxt8UpE3L0SUu13Sz+fwcgOiy9uG3a60yS6k95ZER8P7XFuCAwkyibJ4ZU2al
+         5oP+C41ul5RlYObjPaCN52TnA6BGi5t9nMoY2HMGUc57iI+50WmrtvGWbE5T7EahVxdm
+         i0XQ==
+X-Gm-Message-State: APjAAAUwVF+xcYlZ+u97jVSetSA1/0NM/gqmOGp5wVjX/YDDK4YOFWVQ
+        KZU72Typ/JP4grBb9wnuT92x+A==
+X-Google-Smtp-Source: APXvYqzB5kIs4zKVnHKkkES7b22zMAzjv6fDHE/nuMQDUGcdoG8vh5I/UyKxYvGsy8yxONWhs9EsNg==
+X-Received: by 2002:a63:8a41:: with SMTP id y62mr607190pgd.38.1561520677526;
+        Tue, 25 Jun 2019 20:44:37 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v9sm20038199pgj.69.2019.06.25.20.44.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 20:44:36 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 20:45:29 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] scsi: ufs: Introduce vops for resetting device
+Message-ID: <20190626034529.GE24205@tuxbook-pro>
+References: <20190608050450.12056-1-bjorn.andersson@linaro.org>
+ <CGME20190608050458epcas1p30f03f6d448eb962a6af56a4c0b021ef0@epcas1p3.samsung.com>
+ <20190608050450.12056-2-bjorn.andersson@linaro.org>
+ <ad1c2a2a-91d6-25ce-9dfb-3b386b572ee2@samsung.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad1c2a2a-91d6-25ce-9dfb-3b386b572ee2@samsung.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Tue 25 Jun 05:41 PDT 2019, Alim Akhtar wrote:
 
-[ Upstream commit 15abc7110a77555d3bf72aaef46d1557db0a4ac5 ]
+> Hi Bjorn,
+> Are you planning to address Bean's comment on patch#2 and want to 
+> re-spin this series?
+> I am ok with taking this patch as it is and take a Softreset patch as a 
+> separate patch.
+> 
 
-GPD has done it again, make a nice device (good), use way too generic
-DMI strings (bad) and use a portrait screen rotated 90 degrees (ugly).
+I still intend to attempt to implement a softreset "fallback", per
+Bean's suggestion - just haven't found the time yet. But I would be
+happy to see these patches merged in the meantime, as they do resolve
+the issue of failing to being up the UFS link on a significant number of
+Qualcomm devices.
 
-Because of the too generic DMI strings this entry is also doing bios-date
-matching, so the gpd_pocket2 data struct may very well need to be updated
-with some extra bios-dates in the future.
 
-Changes in v2:
--Add one more known BIOS date to the list of BIOS dates
+I think it's best if you take patch 1 and 2 through your tree and we
+take the dts patch through the Qualcomm/arm-soc tree.
 
-Cc: Jurgen Kramer <gtmkramer@xs4all.nl>
-Reported-by: Jurgen Kramer <gtmkramer@xs4all.nl>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190524125759.14131-1-hdegoede@redhat.com
-(cherry picked from commit 6dab9102dd7b144e5723915438e0d6c473018cd0)
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Thanks,
+Bjorn
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index ee4a5e1221f1..088363675940 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -50,6 +50,14 @@ static const struct drm_dmi_panel_orientation_data gpd_pocket = {
- 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
- };
- 
-+static const struct drm_dmi_panel_orientation_data gpd_pocket2 = {
-+	.width = 1200,
-+	.height = 1920,
-+	.bios_dates = (const char * const []){ "06/28/2018", "08/28/2018",
-+		"12/07/2018", NULL },
-+	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
-+};
-+
- static const struct drm_dmi_panel_orientation_data gpd_win = {
- 	.width = 720,
- 	.height = 1280,
-@@ -98,6 +106,14 @@ static const struct dmi_system_id orientation_data[] = {
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
- 		},
- 		.driver_data = (void *)&gpd_pocket,
-+	}, {	/* GPD Pocket 2 (generic strings, also match on bios date) */
-+		.matches = {
-+		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
-+		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
-+		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Default string"),
-+		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Default string"),
-+		},
-+		.driver_data = (void *)&gpd_pocket2,
- 	}, {	/* GPD Win (same note on DMI match as GPD Pocket) */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
--- 
-2.20.1
-
+> On 6/8/19 10:34 AM, Bjorn Andersson wrote:
+> > Some UFS memory devices needs their reset line toggled in order to get
+> > them into a good state for initialization. Provide a new vops to allow
+> > the platform driver to implement this operation.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> feel free to add
+> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > 
+> > Changes since v2:
+> > - New patch, to allow moving implementation to platform driver
+> > 
+> >   drivers/scsi/ufs/ufshcd.c | 6 ++++++
+> >   drivers/scsi/ufs/ufshcd.h | 8 ++++++++
+> >   2 files changed, 14 insertions(+)
+> > 
+> > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> > index 04d3686511c8..ee895a625456 100644
+> > --- a/drivers/scsi/ufs/ufshcd.c
+> > +++ b/drivers/scsi/ufs/ufshcd.c
+> > @@ -6191,6 +6191,9 @@ static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+> >   	int retries = MAX_HOST_RESET_RETRIES;
+> >   
+> >   	do {
+> > +		/* Reset the attached device */
+> > +		ufshcd_vops_device_reset(hba);
+> > +
+> >   		err = ufshcd_host_reset_and_restore(hba);
+> >   	} while (err && --retries);
+> >   
+> > @@ -8322,6 +8325,9 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+> >   		goto exit_gating;
+> >   	}
+> >   
+> > +	/* Reset the attached device */
+> > +	ufshcd_vops_device_reset(hba);
+> > +
+> >   	/* Host controller enable */
+> >   	err = ufshcd_hba_enable(hba);
+> >   	if (err) {
+> > diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> > index 994d73d03207..cd8139052ed6 100644
+> > --- a/drivers/scsi/ufs/ufshcd.h
+> > +++ b/drivers/scsi/ufs/ufshcd.h
+> > @@ -298,6 +298,7 @@ struct ufs_pwr_mode_info {
+> >    * @resume: called during host controller PM callback
+> >    * @dbg_register_dump: used to dump controller debug information
+> >    * @phy_initialization: used to initialize phys
+> > + * @device_reset: called to issue a reset pulse on the UFS device
+> >    */
+> >   struct ufs_hba_variant_ops {
+> >   	const char *name;
+> > @@ -326,6 +327,7 @@ struct ufs_hba_variant_ops {
+> >   	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+> >   	void	(*dbg_register_dump)(struct ufs_hba *hba);
+> >   	int	(*phy_initialization)(struct ufs_hba *);
+> > +	void	(*device_reset)(struct ufs_hba *);
+> >   };
+> >   
+> >   /* clock gating state  */
+> > @@ -1045,6 +1047,12 @@ static inline void ufshcd_vops_dbg_register_dump(struct ufs_hba *hba)
+> >   		hba->vops->dbg_register_dump(hba);
+> >   }
+> >   
+> > +static inline void ufshcd_vops_device_reset(struct ufs_hba *hba)
+> > +{
+> > +	if (hba->vops && hba->vops->device_reset)
+> > +		hba->vops->device_reset(hba);
+> > +}
+> > +
+> >   extern struct ufs_pm_lvl_states ufs_pm_lvl_states[];
+> >   
+> >   /*
+> > 
