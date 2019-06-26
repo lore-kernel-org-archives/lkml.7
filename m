@@ -2,53 +2,53 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E32BC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74A5C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B4420659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B228521738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520844;
-	bh=HYdAbmhEThN365al8l0g9ektYP5jbJ8Nth9fQjo/xjY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jNZhZjVmU5CY/+PQif6jO7nNT7jiMOcsBWPW7/fL+vjnvMaVnc14TDC2Z+hiuYCzC
-	 Ao44xsQSprYojKSKWfwhKB9bYjh/HH8QsXibgGeu6OUlnYgXOKD54cXXoLitBDVrGT
-	 v4go4lL2I8J6wRm9jMIE2tQwdOGk53+atiXYgVAg=
+	s=default; t=1561520846;
+	bh=WUxwv0hCAjnJNC67UAAC9BslRiFPe2IR8oBhsMLTBXI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qoKfF2xQU2poOR0TrpxN9c3WOi2E7yR8fs6UB9VY4MsILXUbIFURr3GTHBq4nfpeN
+	 dBUzWdYv4PpnQdTsMIyETw5UxcKAvQMyuIaeMjCeBLV5X2AkLJhse6KF8i61baSuyV
+	 QgmwdQ7gW35LBs+GKRB/67aWUSEamAkth2ioOB9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfFZDqK (ORCPT
+        id S1727899AbfFZDqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:46:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbfFZDqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:46:05 -0400
-Received: from sasha-vm.mshome.net (mobile-107-77-172-82.mobile.att.net [107.77.172.82])
+        id S1727877AbfFZDqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:46:02 -0400
+Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBCF520B7C;
-        Wed, 26 Jun 2019 03:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45A5F216E3;
+        Wed, 26 Jun 2019 03:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520765;
-        bh=HYdAbmhEThN365al8l0g9ektYP5jbJ8Nth9fQjo/xjY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tw1S8LN0SgLpHD9u3vM74c59O9asySfDwmMKPeU4yxGw06ZquEbZXRsx01dU7NgZx
-         TOX9zQCFh6RcWs7Co+pXvkOth3G7+yacFeWOM7gpm2PjbTZCNdD7GhRUN5wTMtG2UA
-         Z0tUpgDV9l4f3r4rAYgmb3SRrUo5PWpLWcDXkUhg=
+        s=default; t=1561520761;
+        bh=WUxwv0hCAjnJNC67UAAC9BslRiFPe2IR8oBhsMLTBXI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bbDELLz1eyKocPNq3RxV/VCHegMxgcpAZpaJSMffCMNwWt+begD5/u/MlZsUyegiY
+         hv+yfryCVOrfzyEDMAgSTjUiic3QWkPR6D4geJu+lgzTfNrm/KO0cgmasRy+GADA8U
+         0/2sjcCRlyh47RHJTsh4cnmmY9Xw2C1DikTCUNYc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Flax <flatmax@flatmax.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Wei Li <liwei391@huawei.com>, Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 01/11] ASoC : cs4265 : readable register too low
-Date:   Tue, 25 Jun 2019 23:45:51 -0400
-Message-Id: <20190626034602.24367-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 21/21] ftrace: Fix NULL pointer dereference in free_ftrace_func_mapper()
+Date:   Tue, 25 Jun 2019 23:45:06 -0400
+Message-Id: <20190626034506.24125-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190626034506.24125-1-sashal@kernel.org>
+References: <20190626034506.24125-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,43 +58,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Flax <flatmax@flatmax.org>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit f3df05c805983427319eddc2411a2105ee1757cf ]
+[ Upstream commit 04e03d9a616c19a47178eaca835358610e63a1dd ]
 
-The cs4265_readable_register function stopped short of the maximum
-register.
+The mapper may be NULL when called from register_ftrace_function_probe()
+with probe->data == NULL.
 
-An example bug is taken from :
-https://github.com/Audio-Injector/Ultra/issues/25
+This issue can be reproduced as follow (it may be covered by compiler
+optimization sometime):
 
-Where alsactl store fails with :
-Cannot read control '2,0,0,C Data Buffer,0': Input/output error
+/ # cat /sys/kernel/debug/tracing/set_ftrace_filter
+#### all functions enabled ####
+/ # echo foo_bar:dump > /sys/kernel/debug/tracing/set_ftrace_filter
+[  206.949100] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  206.952402] Mem abort info:
+[  206.952819]   ESR = 0x96000006
+[  206.955326]   Exception class = DABT (current EL), IL = 32 bits
+[  206.955844]   SET = 0, FnV = 0
+[  206.956272]   EA = 0, S1PTW = 0
+[  206.956652] Data abort info:
+[  206.957320]   ISV = 0, ISS = 0x00000006
+[  206.959271]   CM = 0, WnR = 0
+[  206.959938] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000419f3a000
+[  206.960483] [0000000000000000] pgd=0000000411a87003, pud=0000000411a83003, pmd=0000000000000000
+[  206.964953] Internal error: Oops: 96000006 [#1] SMP
+[  206.971122] Dumping ftrace buffer:
+[  206.973677]    (ftrace buffer empty)
+[  206.975258] Modules linked in:
+[  206.976631] Process sh (pid: 281, stack limit = 0x(____ptrval____))
+[  206.978449] CPU: 10 PID: 281 Comm: sh Not tainted 5.2.0-rc1+ #17
+[  206.978955] Hardware name: linux,dummy-virt (DT)
+[  206.979883] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  206.980499] pc : free_ftrace_func_mapper+0x2c/0x118
+[  206.980874] lr : ftrace_count_free+0x68/0x80
+[  206.982539] sp : ffff0000182f3ab0
+[  206.983102] x29: ffff0000182f3ab0 x28: ffff8003d0ec1700
+[  206.983632] x27: ffff000013054b40 x26: 0000000000000001
+[  206.984000] x25: ffff00001385f000 x24: 0000000000000000
+[  206.984394] x23: ffff000013453000 x22: ffff000013054000
+[  206.984775] x21: 0000000000000000 x20: ffff00001385fe28
+[  206.986575] x19: ffff000013872c30 x18: 0000000000000000
+[  206.987111] x17: 0000000000000000 x16: 0000000000000000
+[  206.987491] x15: ffffffffffffffb0 x14: 0000000000000000
+[  206.987850] x13: 000000000017430e x12: 0000000000000580
+[  206.988251] x11: 0000000000000000 x10: cccccccccccccccc
+[  206.988740] x9 : 0000000000000000 x8 : ffff000013917550
+[  206.990198] x7 : ffff000012fac2e8 x6 : ffff000012fac000
+[  206.991008] x5 : ffff0000103da588 x4 : 0000000000000001
+[  206.991395] x3 : 0000000000000001 x2 : ffff000013872a28
+[  206.991771] x1 : 0000000000000000 x0 : 0000000000000000
+[  206.992557] Call trace:
+[  206.993101]  free_ftrace_func_mapper+0x2c/0x118
+[  206.994827]  ftrace_count_free+0x68/0x80
+[  206.995238]  release_probe+0xfc/0x1d0
+[  206.995555]  register_ftrace_function_probe+0x4a8/0x868
+[  206.995923]  ftrace_trace_probe_callback.isra.4+0xb8/0x180
+[  206.996330]  ftrace_dump_callback+0x50/0x70
+[  206.996663]  ftrace_regex_write.isra.29+0x290/0x3a8
+[  206.997157]  ftrace_filter_write+0x44/0x60
+[  206.998971]  __vfs_write+0x64/0xf0
+[  206.999285]  vfs_write+0x14c/0x2f0
+[  206.999591]  ksys_write+0xbc/0x1b0
+[  206.999888]  __arm64_sys_write+0x3c/0x58
+[  207.000246]  el0_svc_common.constprop.0+0x408/0x5f0
+[  207.000607]  el0_svc_handler+0x144/0x1c8
+[  207.000916]  el0_svc+0x8/0xc
+[  207.003699] Code: aa0003f8 a9025bf5 aa0103f5 f946ea80 (f9400303)
+[  207.008388] ---[ end trace 7b6d11b5f542bdf1 ]---
+[  207.010126] Kernel panic - not syncing: Fatal exception
+[  207.011322] SMP: stopping secondary CPUs
+[  207.013956] Dumping ftrace buffer:
+[  207.014595]    (ftrace buffer empty)
+[  207.015632] Kernel Offset: disabled
+[  207.017187] CPU features: 0x002,20006008
+[  207.017985] Memory Limit: none
+[  207.019825] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
-This patch fixes the bug by setting the cs4265 to have readable
-registers up to the maximum hardware register CS4265_MAX_REGISTER.
+Link: http://lkml.kernel.org/r/20190606031754.10798-1-liwei391@huawei.com
 
-Signed-off-by: Matt Flax <flatmax@flatmax.org>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/cs4265.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/cs4265.c b/sound/soc/codecs/cs4265.c
-index 6e8eb1f5a041..bed64723e5d9 100644
---- a/sound/soc/codecs/cs4265.c
-+++ b/sound/soc/codecs/cs4265.c
-@@ -60,7 +60,7 @@ static const struct reg_default cs4265_reg_defaults[] = {
- static bool cs4265_readable_register(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
--	case CS4265_CHIP_ID ... CS4265_SPDIF_CTL2:
-+	case CS4265_CHIP_ID ... CS4265_MAX_REGISTER:
- 		return true;
- 	default:
- 		return false;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 4e4b88047fcc..ff3c8ca907c4 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -4286,10 +4286,13 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
+ 	struct ftrace_func_entry *entry;
+ 	struct ftrace_func_map *map;
+ 	struct hlist_head *hhd;
+-	int size = 1 << mapper->hash.size_bits;
+-	int i;
++	int size, i;
++
++	if (!mapper)
++		return;
+ 
+ 	if (free_func && mapper->hash.count) {
++		size = 1 << mapper->hash.size_bits;
+ 		for (i = 0; i < size; i++) {
+ 			hhd = &mapper->hash.buckets[i];
+ 			hlist_for_each_entry(entry, hhd, hlist) {
 -- 
 2.20.1
 
