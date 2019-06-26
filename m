@@ -2,112 +2,125 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEA5C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8280C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A516D208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:39:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="kVT6f/J1"
+	by mail.kernel.org (Postfix) with ESMTP id A868C208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfFZUjP (ORCPT
+        id S1726429AbfFZUkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:39:15 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41747 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZUjO (ORCPT
+        Wed, 26 Jun 2019 16:40:05 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39216 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZUkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:39:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id g7so150109oia.8
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VYeWRlp6n/vQnTa+fYFmAoEUxn0NMI33stOLW194NWI=;
-        b=kVT6f/J18N4jOGjKVrrG9wNomn8jDVg05k4WFQXf36XrjtMQpEmVpWPIuNysiAbKsx
-         n+Z718Sxszq/I1fyvWJXsD01Zp8W0/LbsKFY24ybfeyRgsqfCUshdCH7ZoW7/ONLXJdN
-         lD9TT3SmGvQUVxDWCD1qHC1hTkzE10LJ57KQWSYjPlWxqr+J4LzT7uhc9aNdJ7JwhKKB
-         kTLAPG10/ZPxQsIMrTIvi7pepmWglKVqEy7PBkHxAU5DIyV7aNyjbNLUdQltXRmZLL9f
-         8H0FR7ztfQUo0clbwtw2o44u24imsaxpG3L9ecnsJ6w6WyNKf8/pW5Eab6KslfuserKb
-         EmDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VYeWRlp6n/vQnTa+fYFmAoEUxn0NMI33stOLW194NWI=;
-        b=ITd1vPtit7PPdP8BqNojAJoYTHaZOAeWTx8mZJOKpQUc8lTjp06rQChAakNXdXFs6J
-         N1JDmhY6eRPjJgrA/mOPcg4lvhRtW5j9OjRuIwrCvGzZO3/HvZH77pZb9klzojqR6XvL
-         LCehP+b35hWyvwe0OYzxUciyjKRscuP35OhBzAi1zd0GaooeeE+SYXi+kjH+4naBzmzJ
-         iYVy9I1A3AO8jJbESf5kWLewYEFZiARUzuZpt+G4WRpxoy3Wou4b3uS4YeJkxeInHF98
-         vj7xKFCzJXXklFXcdCna7R6lwQQjsBXd5iVC8Juzj4FmWXWF6Kb2QgVVgfH/32hgXbqG
-         E0pQ==
-X-Gm-Message-State: APjAAAU27yq/oZk3Qw8mU5PBzEX41y144URyJXubsoLAFPXcpMKhSG7J
-        4ROKmAnobmPfgMuyPyHHYhvZOzQvdYxzjVQRUtY6BA==
-X-Google-Smtp-Source: APXvYqzOW0zZUogI9bpo993SYdjNzW7+XY8OQvRzfJZPA3+Cc3WWKwMsRZL6wtJbO/WerGOW6fDqo9Ufat9fvVAWYZw=
-X-Received: by 2002:aca:d80a:: with SMTP id p10mr179462oig.105.1561581553855;
- Wed, 26 Jun 2019 13:39:13 -0700 (PDT)
+        Wed, 26 Jun 2019 16:40:05 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 5D4512603FD
+Subject: Re: [PATCH v3 0/2] Support accelerometers for veyron_minnie
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        dianders@chromium.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190624225312.131745-1-gwendal@chromium.org>
+ <5326bfb8-611f-765b-1c9c-c95032102c71@collabora.com>
+ <20190626202103.07e27e5e@archlinux>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <882cf47c-c126-3e10-ba3a-23c926a68ce1@collabora.com>
+Date:   Wed, 26 Jun 2019 22:40:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190620161240.22738-1-logang@deltatee.com> <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca>
-In-Reply-To: <20190626202107.GA5850@ziepe.ca>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 26 Jun 2019 13:39:01 -0700
-Message-ID: <CAPcyv4hCNoMeFyOE588=kuNUXaPS-rzaXnF2cN2TFejso1SGRw@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190626202103.07e27e5e@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 1:21 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
-> > > we have a hole behind len where we could store flag.  Preferably
-> > > optionally based on a P2P or other magic memory types config
-> > > option so that 32-bit systems with 32-bit phys_addr_t actually
-> > > benefit from the smaller and better packing structure.
-> >
-> > That seems sensible. The one thing that's unclear though is how to get
-> > the PCI Bus address when appropriate. Can we pass that in instead of the
-> > phys_addr with an appropriate flag? Or will we need to pass the actual
-> > physical address and then, at the map step, the driver has to some how
-> > lookup the PCI device to figure out the bus offset?
->
-> I agree with CH, if we go down this path it is a layering violation
-> for the thing injecting bio's into the block stack to know what struct
-> device they egress&dma map on just to be able to do the dma_map up
-> front.
->
-> So we must be able to go from this new phys_addr_t&flags to some BAR
-> information during dma_map.
->
-> For instance we could use a small hash table of the upper phys addr
-> bits, or an interval tree, to do the lookup.
+Hi Jonathan,
 
-Hmm, that sounds like dev_pagemap without the pages.
+On 26/6/19 21:21, Jonathan Cameron wrote:
+> On Tue, 25 Jun 2019 19:09:50 +0200
+> Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+> 
+>> Hi,
+>>
+>> On 25/6/19 0:53, Gwendal Grignou wrote:
+>>> veyron_minnie - ASUS Chromebook Flip C100PA - embedded controller
+>>> controls two accelerometers, one in the lid, one in the base.
+>>> However, the EC firmware does not follow the new interface that
+>>> cros_ec_accel driver use.
+>>> Extend the legacy driver used on glimmer - Lenovo ThinkPad 11e
+>>> Chromebook - to veyron_minnie.
+>>> veyron_minnie being ARM based, issue command over the I2C bus to the EC
+>>> instead of relying on the shared registers over LPC.
+>>>
+>>> Gwendal Grignou (2):
+>>>   iio: cros_ec: Add sign vector in core for backward compatibility
+>>>   iio: cros_ec: Extend legacy support to ARM device
+>>>
+>>> Changes in v3:
+>>> - Fix commit message, add reviewed-by for first patch.
+>>>
+>>> Changes in v2:
+>>> - Readd empty line to reduce amount of change in patch.
+>>> - Remove Keywords used by ChromeOS commit queue.
+>>>
+>>>  drivers/iio/accel/Kconfig                     |   4 +-
+>>>  drivers/iio/accel/cros_ec_accel_legacy.c      | 350 ++++--------------
+>>>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   4 +
+>>>  .../linux/iio/common/cros_ec_sensors_core.h   |   1 +
+>>>  4 files changed, 84 insertions(+), 275 deletions(-)
+>>>   
+>>
+>> Just a side note that I think that this patch depends on [1] to have the legacy
+>> sensors working on veyron minnie.
+>>
+>> For the full series:
+>>
+>> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Ah. I was assuming you mean a runtime dependency.  Whereas applying this
+> on it's own is giving me a build problem:
+> 
+>  drivers/iio/accel/cros_ec_accel_legacy.c: In function ‘cros_ec_accel_legacy_read_cmd’:
+> drivers/iio/accel/cros_ec_accel_legacy.c:50:16: error: ‘struct <anonymous>’ has no member named ‘max_sensor_count’
 
-There's already no requirement that dev_pagemap point to real /
-present pages (DEVICE_PRIVATE) seems a straightforward extension to
-use it for helping coordinate phys_addr_t in 'struct bio'. Then
-Logan's future plans to let userspace coordinate p2p operations could
-build on PTE_DEVMAP.
+Right, this also build depends on the immutable branch (ib-mfd-cros-v5.3).
+
+
+>    50 |  st->param.dump.max_sensor_count = CROS_EC_SENSOR_LEGACY_NUM;
+>       |                ^
+> make[3]: *** [scripts/Makefile.build:285: drivers/iio/accel/cros_ec_accel_legacy.o] Error 1
+> make[2]: *** [scripts/Makefile.build:489: drivers/iio/accel] Error 2
+> make[1]: *** [scripts/Makefile.build:489: drivers/iio] Error 2
+> 
+> Which I'll assume is related to that other set.
+> 
+> I'm happy for these to go another route to sit on top of that series.
+> If not I'll pick them up for the next cycle via IIO.
+> 
+> Should they go another route,
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for both of them.
+
+I'd be happy to pick this patch and add to the chrome-platform tree, ideally
+once we manage to get [1] ready for land.
+
+Thanks,
+~ Enric
+
+> 
+>>
+>>
+>> [1] https://lkml.org/lkml/2019/6/18/268
+> 
