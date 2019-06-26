@@ -2,190 +2,174 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77A2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AADBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD86821738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hD/qi+Fg"
+	by mail.kernel.org (Postfix) with ESMTP id 6C17C214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfFZWdt (ORCPT
+        id S1726472AbfFZWi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:33:49 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39223 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfFZWdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:33:49 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j2so163570pfe.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 15:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=98AIeuf64pS4NOIpGvl5Gpir53W1mq1U+DjL1WP4pkE=;
-        b=hD/qi+FgQTzTbKOKOdeQVPptB16EeAt0ImXWrRv4NmT6ssAA9mc1zXlzuYkW/e0hrh
-         G+rCJYx5W/nZzHFdwlhO9S+aacDUruHI9BDERDGt/TxuGQGpNjG0+vAg7hER9C1DXz93
-         Z7UVlQkN03qSg0GRxV3b7O+UjMulH8Hw7jeiEBiWNeVPGZx+xPrQkbKUkrH1VfqNGRc4
-         UNdR5wTVAEbw573qOjw++ntekOiN5RAL70KNgdBknr52uT732o9FRcyZ2prSvtcN+L8+
-         FX7g5b86BC/T80hpz9G02U6ljs/RiDjBAV2rDX3uhO0kfn5z1IE45YBPZhzyVYzMtG/Z
-         imJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=98AIeuf64pS4NOIpGvl5Gpir53W1mq1U+DjL1WP4pkE=;
-        b=htiNPIOgy/oP3iVwI6aW5wLGL5UqKxIL+DXWvLcA6KbQHjtF1Lg4wYwnW3I1UbuMV/
-         LPV0aKpoAGWJTYXBIp0qoUaF4dcNmnm55mqvg4+P6BSCV9OfVbTuxI1Q7lf6HR6ot8oP
-         LYMVHZj9+ExuQdQN5gcoIUnL5jkWRrcUy1bP5k1rUy4HxvyY3skiPMXiTK8zz2hMbRk5
-         Mp3GeMOTlLlPswck0dEUP9tmJ4dtlfaQpCGrZLUkfaEDNnyFAbsEuA3WiCxyl6/BE3o3
-         ub+9iNqDzhDPYfdynJe5gNSAcEVKAR/+0+B0/80wIxDXV0Ox/wiHN2zZHO7jx22QQSpr
-         lE6g==
-X-Gm-Message-State: APjAAAUohdQp7PlFbz70MmW2vzNpgLeRAKz6VKloZjVfqGIR/yEQdNfG
-        NROPnRw8zudfd9ekm0hRQQ5ULJD0zW9OJv880Eiltg==
-X-Google-Smtp-Source: APXvYqzR++RNAV4JIZfSHIpOdZPw2IfN9cCZIjNxjRT+xt6oBwPTjeyxQXO3eZL+OI0iSegMFcjKzxoSLDNCs737nuE=
-X-Received: by 2002:a17:90a:2488:: with SMTP id i8mr1679268pje.123.1561588427372;
- Wed, 26 Jun 2019 15:33:47 -0700 (PDT)
+        Wed, 26 Jun 2019 18:38:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10648 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfFZWi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:38:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 15:38:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
+   d="scan'208";a="313574950"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.251.133.109])
+  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2019 15:38:54 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     dvhart@infradead.org, andy@infradead.org,
+        andriy.shevchenko@intel.com, corbet@lwn.net
+Cc:     rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org,
+        prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 00/10] Intel(R) Speed Select Technology
+Date:   Wed, 26 Jun 2019 15:38:41 -0700
+Message-Id: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-References: <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net> <201906251009.BCB7438@keescook>
- <20190625180525.GA119831@archlinux-epyc> <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
- <20190625202746.GA83499@archlinux-epyc> <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
- <20190626163057.GN3419@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190626163057.GN3419@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 26 Jun 2019 15:33:36 -0700
-Message-ID: <CAKwvOdnvKLs1oF0-G8iq2T4wqcVkBGRKiZjPbb+K0gDRh3Liww@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Craig Topper <craig.topper@intel.com>,
-        Chandler Carruth <chandlerc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 9:31 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Jun 25, 2019 at 11:47:06PM +0200, Thomas Gleixner wrote:
-> > > On Tue, Jun 25, 2019 at 09:53:09PM +0200, Thomas Gleixner wrote:
->
-> > > > but it also makes objtool unhappy:
->
-> > > >  arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool: get_fixed_ranges()+0x9b: unreachable instruction
->
-> > I just checked two of them in the disassembly. In both cases it's jump
-> > label related. Here is one:
-> >
-> >       asm volatile("1: rdmsr\n"
-> >  410:   b9 59 02 00 00          mov    $0x259,%ecx
-> >  415:   0f 32                   rdmsr
-> >  417:   49 89 c6                mov    %rax,%r14
-> >  41a:   48 89 d3                mov    %rdx,%rbx
-> >       return EAX_EDX_VAL(val, low, high);
-> >  41d:   48 c1 e3 20             shl    $0x20,%rbx
-> >  421:   48 09 c3                or     %rax,%rbx
-> >  424:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> >  429:   eb 0f                   jmp    43a <get_fixed_ranges+0xaa>
-> >       do_trace_read_msr(msr, val, 0);
-> >  42b:   bf 59 02 00 00          mov    $0x259,%edi   <------- "unreachable"
+Intel® Speed Select Technology (Intel® SST) — A powerful new collection of
+features giving more granular control over CPU performance for optimized total
+cost of ownership and performance. With Intel® SST, one server can be configured 
+for power and performance for variety of diverse workload requirements. In the 
+Linux submission code. we are using ISST to specify Intel® SST to avoid confusion 
+with existing use of SST for "Smart Sound Technology".
 
-I assume if 0x42b is unreachable, that's bad as $0x259 is never stored
-in %edi before the call to get_fixed_ranges+0xaa...
+Refer to these links for overview of the technology released with some Intel® Xeon®
+Scalable processor (5218N, 6230N, and 6252N):
+https://www.intel.com/content/www/us/en/architecture-and-technology/speed-select-technology-article.html
+https://builders.intel.com/docs/networkbuilders/intel-speed-select-technology-base-frequency-enhancing-performance.pdf
 
-> >  430:   48 89 de                mov    %rbx,%rsi
-> >  433:   31 d2                   xor    %edx,%edx
-> >  435:   e8 00 00 00 00          callq  43a <get_fixed_ranges+0xaa>
-> >  43a:   44 89 35 00 00 00 00    mov    %r14d,0x0(%rip)        # 441 <get_fixed_ranges+0xb1>
->
-> Thomas provided the actual .o file, and from that we find that the
-> .rela__jump_table entries look like:
->
-> 000000000010  000100000002 R_X86_64_PC32     0000000000000000 .text + 3e9
-> 000000000014  000100000002 R_X86_64_PC32     0000000000000000 .text + 3f0
-> 000000000018  006100000018 R_X86_64_PC64     0000000000000000 __tracepoint_read_msr + 8
+The next generation of Intel® Xeon® processors are adding more features to the
+Intel® Speed Select Technology and allow dynamic configuration of these features
+from OS-software level instead from BIOS. This submission is adding new features
+and dynamic configuration capabilities .
 
-I assume these relocations come from arch_static_branch() (and thus
-appear in triples?)
 
- 21 static __always_inline bool arch_static_branch(struct static_key
-*key, bool branch)
- 22 {
- 23   asm_volatile_goto("1:"
- 24     ".byte " __stringify(STATIC_KEY_INIT_NOP) "\n\t"
- 25     ".pushsection __jump_table,  \"aw\" \n\t"
- 26     _ASM_ALIGN "\n\t"
- 27     ".long 1b - ., %l[l_yes] - . \n\t" // 1, 2
- 28     _ASM_PTR "%c0 + %c1 - .\n\t" // 3
- 29     ".popsection \n\t"
- 30     : :  "i" (key), "i" (branch) : : l_yes);
+Intel SST Features:
 
-> 000000000020  000100000002 R_X86_64_PC32     0000000000000000 .text + 424
-> 000000000024  000100000002 R_X86_64_PC32     0000000000000000 .text + 3f0
-> 000000000028  006100000018 R_X86_64_PC64     0000000000000000 __tracepoint_read_msr + 8
->
-> From this we find that the jump target that goes with the NOP at +424 is
-> +3f0, not +42b as one would expect.
->
-> And as Josh noted, it is also 'weird' that this +3f0 is the very same as
-> the target for the previous entry.
+Intel® SST—Performance Profile (PP or perf-profile):
+This feature allows one server to be configured for different workload requirements
+instead of deploying different servers based on the workload requirement reducing total
+cost of ownership. With a single server deployed, the same server can be reconfigured
+dynamically to one of the supported profiles to suit the specific workload requirements.
+This feature introduces a mechanism that allows multiple optimized performance profiles 
+per system via static and/or dynamic adjustment of TDP level and other performance
+parameters.
 
-(Ok, I think I did talk to Josh about this, and I think he did mention
-something about the jump targets, but I didn't really understand the
-issue well at the time).
+Intel® SST—Core power (CP or core-power):
+An Interface that allows user to define per core priority. This defines a mechanism
+to distribute power among cores when there is a power constrained scenario. This defines
+a class of service configuration. Each CPU core can be tied to a class of service and hence
+an associated priority.
 
->
-> When we compare the code at both sites, we find:
->
-> 3f0:       bf 58 02 00 00          mov    $0x258,%edi
-> 3f5:       48 89 de                mov    %rbx,%rsi
-> 3f8:       31 d2                   xor    %edx,%edx
-> 3fa:       e8 00 00 00 00          callq  3ff <get_fixed_ranges+0x6f>
->                 3fb: R_X86_64_PC32      do_trace_read_msr-0x4
->
-> vs
->
-> 42b:       bf 59 02 00 00          mov    $0x259,%edi
-> 430:       48 89 de                mov    %rbx,%rsi
-> 433:       31 d2                   xor    %edx,%edx
-> 435:       e8 00 00 00 00          callq  43a <get_fixed_ranges+0xaa>
->                 436: R_X86_64_PC32      do_trace_read_msr-0x4
->
-> Which is not in fact the same code.
->
-> So for some reason the .rela__jump_table are buggy on this clang build.
+Intel® SST—Base Frequency (BF or base-freq):
+The Intel® SST-BF feature lets user control and direct base frequency. If some critical
+workload threads demand constant high guaranteed performance, then this feature can be
+used to execute the thread at higher base frequency on specific set of CPUs.
 
-So that sounds like a correctness bug then. (I'd been doing testing
-with the STATIC_KEYS_SELFTEST, which I guess doesn't expose this).
-I'm kind of surprised we can boot and pass STATIC_KEYS_SELFTEST.  Any
-way you can help us pare down a test case?
+Intel® SST—Turbo frequency (TF or turbo-freq):
+Enables the ability to set different all core turbo ratio limits to cores based on the priority.
+Using this features some cores can be configured to get higher turbo frequency by designating
+them as high priority at the cost of lower or no turbo frequency on the low priority cores.
+
+Implementation
+
+The Intel® SST features are implemented in the firmware executing in the the power
+management unit (we are calling PUNIT here for short). The mechanism to control these
+features are specific to firmware implementation for Intel® Xeon® CPUs and are not architectural
+features. The interface mechanism and semantics of the messages can change in future Xeon 
+CPUs. Hence there is minimal kernel implementation by offering direct communication
+to PUNIT via set of IOCTLs. The actual messages which can be sent to PUNIT are specified
+in the following document link:
+
+https://github.com/intel/CommsPowerManagement/blob/master/intel_sst_os_interface/mailbox.md
+
+The idea here is that user space software like cloud orchestration software based on their workload
+requirement configure the system. There is a full featured "Intel Speed Select" utility
+submitted to kernel power tools, which can be used to validate and exercise the features.
+
+Types of PUNIT interfaces
+There are two types of interfaces. One using Mail box communications, which is facilitated
+by a PCI device or in some Xeon® CPUs using MSRs; and other using an MMIO interface, which is
+used primarily for core prioritization. For hiding details a single character device is created
+to handle IOCTLs. The following block diagram shows the implementation overview.
+
+
+User		User Space tool(intel-speed-select)/Cloud Orchestration software
+					   IOCTLs	
+---------------------------------------character device------------------------------
+kernel				Common driver handling IOCTLs
+			Mail Box drivers(PCI & MSR)	PCI MMIO driver 
+--------------------------------------------------------------------------
+Hardware				    PUNIT
+
+
+
+Srinivas Pandruvada (10):
+  platform/x86: ISST: Update ioctl-number.txt for Intel Speed Select
+    interface
+  platform/x86: ISST: Add common API to register and handle ioctls
+  platform/x86: ISST: Store per CPU information
+  platform/x86: ISST: Add IOCTL to Translate Linux logical CPU to PUNIT
+    CPU number
+  platform/x86: ISST: Add Intel Speed Select mmio interface
+  platform/x86: ISST: Add Intel Speed Select mailbox interface via PCI
+  platform/x86: ISST: Add Intel Speed Select mailbox interface via MSRs
+  platform/x86: ISST: Add Intel Speed Select PUNIT MSR interface
+  platform/x86: ISST: Restore state on resume
+  tools/power/x86: A tool to validate Intel Speed Select commands
+
+ Documentation/ioctl/ioctl-number.txt          |    1 +
+ drivers/platform/x86/Kconfig                  |    2 +
+ drivers/platform/x86/Makefile                 |    1 +
+ .../x86/intel_speed_select_if/Kconfig         |   17 +
+ .../x86/intel_speed_select_if/Makefile        |   10 +
+ .../intel_speed_select_if/isst_if_common.c    |  672 +++++++
+ .../intel_speed_select_if/isst_if_common.h    |   69 +
+ .../intel_speed_select_if/isst_if_mbox_msr.c  |  216 +++
+ .../intel_speed_select_if/isst_if_mbox_pci.c  |  214 +++
+ .../x86/intel_speed_select_if/isst_if_mmio.c  |  180 ++
+ include/uapi/linux/isst_if.h                  |  172 ++
+ tools/power/x86/intel_speed_select/Makefile   |   31 +
+ tools/power/x86/intel_speed_select/isst.h     |  231 +++
+ .../x86/intel_speed_select/isst_config.c      | 1607 +++++++++++++++++
+ .../power/x86/intel_speed_select/isst_core.c  |  721 ++++++++
+ .../x86/intel_speed_select/isst_display.c     |  479 +++++
+ 16 files changed, 4623 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/Kconfig
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/Makefile
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+ create mode 100644 drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+ create mode 100644 include/uapi/linux/isst_if.h
+ create mode 100644 tools/power/x86/intel_speed_select/Makefile
+ create mode 100644 tools/power/x86/intel_speed_select/isst.h
+ create mode 100644 tools/power/x86/intel_speed_select/isst_config.c
+ create mode 100644 tools/power/x86/intel_speed_select/isst_core.c
+ create mode 100644 tools/power/x86/intel_speed_select/isst_display.c
+
 -- 
-Thanks,
-~Nick Desaulniers
+2.17.2
+
