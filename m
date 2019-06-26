@@ -2,131 +2,134 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C16C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B932C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E830F216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4FFE216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R6geli0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfFZSb3 (ORCPT
+        id S1726502AbfFZSbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:31:29 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48362 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZSb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:31:29 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hgChR-0000jK-UL; Wed, 26 Jun 2019 12:31:19 -0600
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
-Date:   Wed, 26 Jun 2019 12:31:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 14:31:38 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36874 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZSbi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:31:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QIUCIg023435;
+        Wed, 26 Jun 2019 18:30:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=PWK8zgZUc1duSqq0sBFI2rltZ5c+K251lGC1vdXqBck=;
+ b=R6geli0BVLzmP6AdHRxxu6FMDyEju3vwc4GI5j4640rFHmJ+7YPqLc7I8XMq1tQKtxoL
+ 4DoK68aOg4jhzMHS0mvD37WuHmWIDVkXUu19lenYA2FL74gaf9Ns295jxQXBahbHrYgP
+ osiHytC/xL9mldAUYpbf6D6R5upLiR7zDeue5Zg82ef2eIh7E8dPVOhUih2+gKHE/+qs
+ M+hIDr99Mpx0YdpT5VQX54nY+oRSAj6ROcKRRkZ4U224irYYZ1D6KzCqHViDi2D0U30x
+ qPlFdsHZF/60z7a0M0zmeuCPg3xqHXqxQESTQ9jSu71ZdyqsO4sJ19WJxJ3M/17QQSpo ww== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2t9c9pv1mf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 18:30:56 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QISuJ0094373;
+        Wed, 26 Jun 2019 18:28:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2t9p6ux4ns-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 18:28:56 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QISqnp000865;
+        Wed, 26 Jun 2019 18:28:53 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Jun 2019 11:28:52 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id 142646A0150; Wed, 26 Jun 2019 14:30:16 -0400 (EDT)
+Date:   Wed, 26 Jun 2019 14:30:16 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Wanpeng Li <kernellwp@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        KarimAllah <karahmed@amazon.de>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Subject: Re: cputime takes cstate into consideration
+Message-ID: <20190626183016.GA16439@char.us.oracle.com>
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
+ <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
+ <20190626145413.GE6753@char.us.oracle.com>
+ <20190626161608.GM3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190626065708.GB24531@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626161608.GM3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906260213
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906260214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-06-26 12:57 a.m., Christoph Hellwig wrote:
-> On Tue, Jun 25, 2019 at 01:54:21PM -0600, Logan Gunthorpe wrote:
->> Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
->> that different. You still need roughly the same 'if' hooks for any
->> backed memory that isn't in the linear mapping and you can't get a
->> kernel mapping for directly.
->>
->> It wouldn't be too hard to do a similar patch set that uses something
->> like phys_addr_t instead and have a request and queue flag for support
->> of non-mappable memory. But you'll end up with very similar 'if' hooks
->> and we'd have to clean up all bio-using drivers that access the struct
->> pages directly.
+On Wed, Jun 26, 2019 at 06:16:08PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 26, 2019 at 10:54:13AM -0400, Konrad Rzeszutek Wilk wrote:
+> > On Wed, Jun 26, 2019 at 12:33:30PM +0200, Thomas Gleixner wrote:
+> > > On Wed, 26 Jun 2019, Wanpeng Li wrote:
+> > > > After exposing mwait/monitor into kvm guest, the guest can make
+> > > > physical cpu enter deeper cstate through mwait instruction, however,
+> > > > the top command on host still observe 100% cpu utilization since qemu
+> > > > process is running even though guest who has the power management
+> > > > capability executes mwait. Actually we can observe the physical cpu
+> > > > has already enter deeper cstate by powertop on host. Could we take
+> > > > cstate into consideration when accounting cputime etc?
+> > > 
+> > > If MWAIT can be used inside the guest then the host cannot distinguish
+> > > between execution and stuck in mwait.
+> > > 
+> > > It'd need to poll the power monitoring MSRs on every occasion where the
+> > > accounting happens.
+> > > 
+> > > This completely falls apart when you have zero exit guest. (think
+> > > NOHZ_FULL). Then you'd have to bring the guest out with an IPI to access
+> > > the per CPU MSRs.
+> > > 
+> > > I assume a lot of people will be happy about all that :)
+> > 
+> > There were some ideas that Ankur (CC-ed) mentioned to me of using the perf
+> > counters (in the host) to sample the guest and construct a better
+> > accounting idea of what the guest does. That way the dashboard
+> > from the host would not show 100% CPU utilization.
 > 
-> We'll need to clean that mess up anyway, and I've been chugging
-> along doing some of that.  A lot still assume no highmem, so we need
-> to convert them over to something that kmaps anyway.  If we get
-> the abstraction right that will actually help converting over to
-> a better reprsentation.
-> 
->> Though, we'd also still have the problem of how to recognize when the
->> address points to P2PDMA and needs to be translated to the bus offset.
->> The map-first inversion was what helped here because the driver
->> submitting the requests had all the information. Though it could be
->> another request flag and indicating non-mappable memory could be a flag
->> group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
-> 
-> The assumes the request all has the same memory, which is a simplifing
-> assuption.  My idea was that if had our new bio_vec like this:
-> 
-> struct bio_vec {
-> 	phys_addr_t		paddr; // 64-bit on 64-bit systems
-> 	unsigned long		len;
-> };
-> 
-> we have a hole behind len where we could store flag.  Preferably
-> optionally based on a P2P or other magic memory types config
-> option so that 32-bit systems with 32-bit phys_addr_t actually
-> benefit from the smaller and better packing structure.
+> But then you generate extra noise and vmexits on those cpus, just to get
+> this accounting sorted, which sounds like a bad trade.
 
-That seems sensible. The one thing that's unclear though is how to get
-the PCI Bus address when appropriate. Can we pass that in instead of the
-phys_addr with an appropriate flag? Or will we need to pass the actual
-physical address and then, at the map step, the driver has to some how
-lookup the PCI device to figure out the bus offset?
+Considering that the CPUs aren't doing anything and if you do say the 
+IPIs "only" 100/second - that would be so small but give you a big benefit
+in properly accounting the guests.
 
->> If you think any of the above ideas sound workable I'd be happy to try
->> to code up another prototype.
-> 
-> Іt sounds workable.  To some of the first steps are cleanups independent
-> of how the bio_vec is eventually going to look like.  That is making
-> the DMA-API internals work on the phys_addr_t, which also unifies the
-> map_resource implementation with map_page.  I plan to do that relatively
-> soon.  The next is sorting out access to bios data by virtual address.
-> All these need nice kmapping helper that avoid too much open coding.
-> I was going to look into that next, mostly to kill the block layer
-> bounce buffering code.  Similar things will also be needed at the
-> scatterlist level I think.  After that we need to more audits of
-> how bv_page is still used.  something like a bv_phys() helper that
-> does "page_to_phys(bv->bv_page) + bv->bv_offset" might come in handy
-> for example.
+But perhaps there are other ways too to "snoop" if a guest is sitting on
+an MWAIT?
 
-Ok, I should be able to help with that. When I have a chance I'll try to
-look at the bv_phys() helper.
-
-Logan
