@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BECC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8433DC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40868205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A30F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520902;
-	bh=r/+x84xmVgP3tUuGIYUhEEQM1OkCLYphoCekfLtFOWg=;
+	s=default; t=1561520907;
+	bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D564SyEHShgXRuCZ+BxrxRH/77Lrp45dTlcb5w9FvfCjsiete8NOR56Zqd5yo/BSK
-	 q5GC5sL0iauJtOtRChNKh2LfaRinoVw9fizE7ZTjesM/nTsQU2Xq8bX+Gh6LoP36V8
-	 5cttUkO5DdmQ4DErf/daO9UiLvKPYarcD+p+eCuo=
+	b=dAL3PFHx7VsMcxkv982xFJIkutoaSSzzBXQUESuFhJ98yxmkL8CqKBeKorPVrPfz3
+	 mvATbv2E7yJ0rdYcNDkl2mjsvqqAQzUV56j5wCjwBPZBih8FpvLD2VsZPNT936L5Qv
+	 6FH6DjIk580RiJ5IpJ7uFQ/VfsSbbvQR77zeyF1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfFZDsV (ORCPT
+        id S1726708AbfFZDor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56450 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:44:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbfFZDpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:45:03 -0400
+        id S1727623AbfFZDoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:44:39 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2382168B;
-        Wed, 26 Jun 2019 03:45:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 089F1205ED;
+        Wed, 26 Jun 2019 03:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520702;
-        bh=r/+x84xmVgP3tUuGIYUhEEQM1OkCLYphoCekfLtFOWg=;
+        s=default; t=1561520678;
+        bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxqVPm5nwnr+yptrk3z/OUWGCAqLVsGD2SQMozkRo45ceR644Lv94xTRGtMzPDRS9
-         zsemezFcRiNfRFpigERJKGXBMDkkSWoDQq9zYRAZIHXVPrhaRUQCTSJD17fIIh5lsV
-         RW9snedXU8BkBO8U3h5q+vUUUqx64sswGJO9TQT0=
+        b=CdK0zGucv9h/vLRsh4SpOBXuQ+0dtGfacyA9LwGoRaYaWfnSBqYyqhFHNVbEQ+Dmh
+         zQqNpYKHlF/CKmRzTFtjkw9DVDf5YfBU9i/O4BHHuJKIlvF6X/5SSnCUTMNd1PncCB
+         YiYYq9J1gAm8JQlidrwv/AZ1FtHbklmO74wCuZKg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 32/34] tracing: avoid build warning with HAVE_NOP_MCOUNT
-Date:   Tue, 25 Jun 2019 23:43:33 -0400
-Message-Id: <20190626034335.23767-32-sashal@kernel.org>
+Cc:     Mathew King <mathewk@chromium.org>,
+        Jett Rink <jettrink@chromium.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 25/34] platform/x86: intel-vbtn: Report switch events when event wakes device
+Date:   Tue, 25 Jun 2019 23:43:26 -0400
+Message-Id: <20190626034335.23767-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,49 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Mathew King <mathewk@chromium.org>
 
-[ Upstream commit cbdaeaf050b730ea02e9ab4ff844ce54d85dbe1d ]
+[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
 
-Selecting HAVE_NOP_MCOUNT enables -mnop-mcount (if gcc supports it)
-and sets CC_USING_NOP_MCOUNT. Reuse __is_defined (which is suitable for
-testing CC_USING_* defines) to avoid conditional compilation and fix
-the following gcc 9 warning on s390:
+When a switch event, such as tablet mode/laptop mode or docked/undocked,
+wakes a device make sure that the value of the swich is reported.
+Without when a device is put in tablet mode from laptop mode when it is
+suspended or vice versa the device will wake up but mode will be
+incorrect.
 
-kernel/trace/ftrace.c:2514:1: warning: ‘ftrace_code_disable’ defined
-but not used [-Wunused-function]
+Tested by suspending a device in laptop mode and putting it in tablet
+mode, the device resumes and is in tablet mode. When suspending the
+device in tablet mode and putting it in laptop mode the device resumes
+and is in laptop mode.
 
-Link: http://lkml.kernel.org/r/patch.git-1a82d13f33ac.your-ad-here.call-01559732716-ext-6629@work.hours
-
-Fixes: 2f4df0017baed ("tracing: Add -mcount-nop option support")
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Mathew King <mathewk@chromium.org>
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1688782f3dfb..90348b343460 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2952,14 +2952,13 @@ static int ftrace_update_code(struct module *mod, struct ftrace_page *new_pgs)
- 			p = &pg->records[i];
- 			p->flags = rec_flags;
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 06cd7e818ed5..a0d0cecff55f 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct platform_device *device = context;
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
+-	const struct key_entry *ke_rel;
++	const struct key_entry *ke, *ke_rel;
+ 	bool autorelease;
  
--#ifndef CC_USING_NOP_MCOUNT
- 			/*
- 			 * Do the initial record conversion from mcount jump
- 			 * to the NOP instructions.
- 			 */
--			if (!ftrace_code_disable(mod, p))
-+			if (!__is_defined(CC_USING_NOP_MCOUNT) &&
-+			    !ftrace_code_disable(mod, p))
- 				break;
--#endif
- 
- 			update_cnt++;
+ 	if (priv->wakeup_mode) {
+-		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
++		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
++		if (ke) {
+ 			pm_wakeup_hard_event(&device->dev);
++
++			/*
++			 * Switch events like tablet mode will wake the device
++			 * and report the new switch position to the input
++			 * subsystem.
++			 */
++			if (ke->type == KE_SW)
++				sparse_keymap_report_event(priv->input_dev,
++							   event,
++							   val,
++							   0);
+ 			return;
  		}
+ 		goto out_unknown;
 -- 
 2.20.1
 
