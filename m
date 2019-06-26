@@ -2,122 +2,87 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1BFC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0BAC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DA420B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675092133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IkHW2/q5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="E1zOSkc5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfFZIDJ (ORCPT
+        id S1726508AbfFZIGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:03:09 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34957 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZIDI (ORCPT
+        Wed, 26 Jun 2019 04:06:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39804 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFZIGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:03:08 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d126so931164pfd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 01:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nwcdyZlVJNYhzqAX8drYdwwlincSCC0RlYdtVUa7uAU=;
-        b=IkHW2/q5zYf/AiFOwOUn62sZGCukGK93pV5qaXaFIqAD6rVurvvvVguZ0CQNqSK004
-         PUW6XYRD1tpIvu/H8uK2xdNaMWkc3s+ZreXHoEsItZgP1H729MJ8nowT1aehVpl1AnJq
-         rAPmVbRpyeOR+0aKXV1iywesPypOO3F4fwUcKnHNHDKkSlnXU9KrB33bQAymKu7tZx6G
-         yt/Ix8apmwB+zPUY0f7g7GrCvvhKCA2B8FFf68JI9BW8d/snEU6oOmLqSE4EOwMnXWLP
-         uFddQ1SWm8yfpnKxzglfseoQZZbmazxOSGTrgVrxfJIOk1+YhP4zhoDMctTsB330F1Sn
-         /4dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nwcdyZlVJNYhzqAX8drYdwwlincSCC0RlYdtVUa7uAU=;
-        b=ZNIxTc9nsDJz3fjZomNhH/uSevfdUZbiWGyL8qlTaqlnncqYlACB2Vm4uPyr1fXy2r
-         NbGeRPYGBUG3iCIL8+uFn/w2Rakg+hIdt/qalABX8VsKR/WC/vym5mGMG6JamOY3c4CM
-         uyrjjGkpA+Hn3ironVAd/fVLipanGycoSvCMVGgwsWTIUeND8EFVX0sMC/y4DYO6D+R0
-         Qq542PMdDyegzr2gqgj60hoJpI+hKD/UhVvjRP7hbLUWu4GKhpkHLHQqaQKZ1jEf3nhc
-         r4+xP6Yp2vi63XSqfycXWzcb2s8iKXNfj14PNG2B5r2NhyHsPM5UG5aQmA60woxg78av
-         DoEg==
-X-Gm-Message-State: APjAAAWCR+dRVSxwbRq+DDQEOr7kRJqn9VWvYJeZ4+miGeF0iGNI700n
-        l9ovgR2jpTL5qM8Q5pIbU8Qzky1T8aETcUGMoXBX0A==
-X-Google-Smtp-Source: APXvYqzSvFzyXqC4mv+sYfABQnmt0YNMhvFTkgdzLZZeovItyFY3wThgA7+iWx0YSEf5WS6vtdXjsfVxGyJkZN8WaD8=
-X-Received: by 2002:a17:90a:9382:: with SMTP id q2mr3140021pjo.131.1561536186861;
- Wed, 26 Jun 2019 01:03:06 -0700 (PDT)
+        Wed, 26 Jun 2019 04:06:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2iTCh3reZAKC9g3ThceRYOjvo3XKUmMa8eZRZ5HXM04=; b=E1zOSkc5DpzkVGlg1+h0BYiT7
+        MNUlnpycbkPotCUTu5dSGzW4FgEUo8aPSqy6NjX9R28UbuUkRW++EVwrMUppWTRUo6bx032JuCIvl
+        6GG2Or/2bthcoBUUQWL6hv0WoBVBOjbcE4cS9IOFde2PX2dmMQ9ylZWIODLlhfjH0/OUAb1DVcweV
+        Piqix0RSHvf63fI1RNxYLqN1YRTzhnVyfhC8C8H845eOwowGW/lZeMaseS9I8h29Tf6j/kdFxKM1W
+        2Hz/QVfPQhmNddVgEg8hwI8rI37Rvzlre5/b80Y+lJXLKv4KmYKIM/C6cJ8vC1H0m3gI/J2D1/rKF
+        8usiMwt6Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hg2wR-0001T7-Ck; Wed, 26 Jun 2019 08:06:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DF3B8200B848F; Wed, 26 Jun 2019 10:06:05 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 10:06:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shawn Landden <shawn@git.icu>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+Message-ID: <20190626080605.GH3419@hirez.programming.kicks-ass.net>
+References: <20190624161913.GA32270@embeddedor>
+ <20190624193123.GI3436@hirez.programming.kicks-ass.net>
+ <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
+ <20190624203737.GL3436@hirez.programming.kicks-ass.net>
+ <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
+ <20190625071846.GN3436@hirez.programming.kicks-ass.net>
+ <201906251009.BCB7438@keescook>
 MIME-Version: 1.0
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-14-brendanhiggins@google.com> <20190626000150.GT19023@42.do-not-panic.com>
-In-Reply-To: <20190626000150.GT19023@42.do-not-panic.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 26 Jun 2019 01:02:55 -0700
-Message-ID: <CAFd5g44kkepB2hZcpYL-NB5ZHYE5tP7W-0yducGCX7Khd9gd9w@mail.gmail.com>
-Subject: Re: [PATCH v5 13/18] kunit: tool: add Python wrappers for running
- KUnit tests
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201906251009.BCB7438@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 5:01 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
->
-> On Mon, Jun 17, 2019 at 01:26:08AM -0700, Brendan Higgins wrote:
-> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
-> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-crash.log
-> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-failure.log
-> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-no_tests_run.log
-> >  create mode 100644 tools/testing/kunit/test_data/test_output_isolated_correctly.log
-> >  create mode 100644 tools/testing/kunit/test_data/test_read_from_file.kconfig
->
-> Why are these being added upstream? The commit log does not explain
-> this.
+On Tue, Jun 25, 2019 at 10:12:42AM -0700, Kees Cook wrote:
+> On Tue, Jun 25, 2019 at 09:18:46AM +0200, Peter Zijlstra wrote:
+> > Can it build a kernel without patches yet? That is, why should I care
+> > what LLVM does?
+> 
+> Yes. LLVM trunk builds and boots x86 now. As for distro availability,
 
-Oh sorry, those are for testing purposes. I thought that was clear
-from being in the test_data directory. I will reference it in the
-commit log in the next revision.
+If it's not release and not in distros, then no. So then get that same
+trunk to support the __fallthrough crap so it all lands in the same
+release and we done ;-)
