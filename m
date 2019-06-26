@@ -2,125 +2,149 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29442C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE42EC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7BA2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3CF2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfFZGL4 (ORCPT
+        id S1726678AbfFZGOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:11:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16164 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726756AbfFZGLv (ORCPT
+        Wed, 26 Jun 2019 02:14:20 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50885 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfFZGOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:11:51 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5Q68WNH087460
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:11:50 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tc01fdpdq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:11:49 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 26 Jun 2019 07:11:46 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Jun 2019 07:11:42 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5Q6BfoY41025540
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 06:11:41 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EB9CA4054;
-        Wed, 26 Jun 2019 06:11:41 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A885A405C;
-        Wed, 26 Jun 2019 06:11:41 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Jun 2019 06:11:41 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 18A61A01B9;
-        Wed, 26 Jun 2019 16:11:40 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v2 3/3] mm: Don't manually decrement num_poisoned_pages
-Date:   Wed, 26 Jun 2019 16:11:23 +1000
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190626061124.16013-1-alastair@au1.ibm.com>
-References: <20190626061124.16013-1-alastair@au1.ibm.com>
+        Wed, 26 Jun 2019 02:14:20 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hg1C5-0005zD-Ll; Wed, 26 Jun 2019 08:14:09 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hg1C1-0003D1-Jo; Wed, 26 Jun 2019 08:14:05 +0200
+Date:   Wed, 26 Jun 2019 08:14:05 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        mcoquelin.stm32@gmail.com, thloh@altera.com, festevam@gmail.com,
+        linus.walleij@linaro.org, khilman@kernel.org,
+        patches@opensource.cirrus.com, bgolaszewski@baylibre.com,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de, ssantosh@kernel.org,
+        linux-tegra@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        alexandre.torgue@st.com
+Subject: Re: [PATCH 01/30] include: linux: platform_device: more helpers for
+ declaring platform drivers
+Message-ID: <20190626061405.qsqq5na4oactuo6f@pengutronix.de>
+References: <1560796871-18560-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062606-0020-0000-0000-0000034D7215
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062606-0021-0000-0000-000021A0E536
-Message-Id: <20190626061124.16013-4-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=767 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906260074
+In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+Hello,
 
-Use the function written to do it instead.
+On Mon, Jun 17, 2019 at 08:40:42PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+> 
+> Add more helper macros for trivial driver init cases, similar to the
+> already existing module_platform_driver()+friends - now for those which
+> are initialized at other stages. Lots of drivers couldn't use the existing
+> macros, as they need to be called at different init stages, eg. subsys,
+> postcore, arch.
+> 
+> This helps to further reduce driver init boilerplate.
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
+> ---
+>  include/linux/platform_device.h | 51 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index beb25f2..5f3a967 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -259,6 +259,57 @@ static inline void platform_set_drvdata(struct platform_device *pdev,
+>  } \
+>  module_exit(__platform_driver##_exit);
+>  
+> +/* postcore_platform_driver() - Helper macro for drivers that don't do
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces postcore_initcall() and module_exit()
+> + */
+> +#define postcore_platform_driver(__platform_driver) \
+> +static int __init __platform_driver##_init(void) \
+> +{ \
+> +	return platform_driver_register(&(__platform_driver)); \
+> +} \
+> +postcore_initcall(__platform_driver##_init); \
+> +static void __exit __platform_driver##_exit(void) \
+> +{ \
+> +	platform_driver_unregister(&(__platform_driver)); \
+> +} \
+> +module_exit(__platform_driver##_exit);
+> +
+> +/* subsys_platform_driver() - Helper macro for drivers that don't do
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces subsys_initcall() and module_exit()
+> + */
+> +#define subsys_platform_driver(__platform_driver) \
+> +static int __init __platform_driver##_init(void) \
+> +{ \
+> +	return platform_driver_register(&(__platform_driver)); \
+> +} \
+> +subsys_initcall(__platform_driver##_init); \
+> +static void __exit __platform_driver##_exit(void) \
+> +{ \
+> +	platform_driver_unregister(&(__platform_driver)); \
+> +} \
+> +module_exit(__platform_driver##_exit);
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- mm/sparse.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Would it make sense to do something like:
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 1ec32aef5590..d9b3625bfdf0 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -11,6 +11,8 @@
- #include <linux/export.h>
- #include <linux/spinlock.h>
- #include <linux/vmalloc.h>
-+#include <linux/swap.h>
-+#include <linux/swapops.h>
- 
- #include "internal.h"
- #include <asm/dma.h>
-@@ -772,7 +774,7 @@ static void clear_hwpoisoned_pages(struct page *memmap,
- 
- 	for (i = start; i < start + count; i++) {
- 		if (PageHWPoison(&memmap[i])) {
--			atomic_long_sub(1, &num_poisoned_pages);
-+			num_poisoned_pages_dec();
- 			ClearPageHWPoison(&memmap[i]);
- 		}
- 	}
+	#define __module_platform_driver(__platform_driver, __initlvl) \
+	static int __init __platform_driver##_init(void) \
+	{ \
+		return platform_driver_register(&(__platform_driver)); \
+	} \
+	__initlvl ## _initcall(__platform_driver##_init); \
+	static void __exit __platform_driver##_exit(void) \
+	{ \
+		platform_driver_unregister(&(__platform_driver)); \
+	} \
+	module_exit(__platform_driver##_exit);
+
+	#define postcore_platform_driver(__platform_driver) __module_platform_driver(__platform_driver, postcore)
+	#define subsys_platform_driver(__platform_driver) __module_platform_driver(__platform_driver, subsys)
+	...
+
+Which would be more compact and makes the difference between these
+macros a bit more obvious.
+
+Best regards
+Uwe
+
 -- 
-2.21.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
