@@ -2,306 +2,173 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC9FC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC73EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278C6214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98717214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BDIZmNOa"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Sj7THSRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfFZNS4 (ORCPT
+        id S1727690AbfFZNTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:18:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43537 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfFZNS4 (ORCPT
+        Wed, 26 Jun 2019 09:19:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33045 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbfFZNTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:18:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so2688084wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:18:54 -0700 (PDT)
+        Wed, 26 Jun 2019 09:19:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id i11so3369600edq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=brauner.io; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=oABEezfN1nTsjGlHAHlBaTiMmQz4aDhMSWiIeYwjCbc=;
-        b=BDIZmNOapw0wdnKowhcOVanLGYEGq8PTEJMCMEAi5Gmar5Q38mp+SuSWavLqPxHywy
-         8DjOMgEcMNmJvYylzQIUqfY4ha2dJx7Ev26rvPoEUOaiZNdQvNOnjo3tPjcYd4E7gDQ1
-         EB4e4f9LPZmMjeUtItGOQkI3h91OQPmAGV9v11aozKdHUDLTlDI1lkMS1W/9SXm1zbGa
-         NU7pNwWbw9oJ356oHDNn5sofavNR7JNLfjx67l4zDyhIBvE1Q3IJ+ybOwMl3OXASi9s8
-         9fBT+RBMD2WUvIG7gK6kpKE5AM/Fk56Bu3K0qZ/SrFStlDCHxNVvg2TTEZHxsqc6aKyR
-         Fr1A==
+         :content-disposition:in-reply-to:user-agent;
+        bh=uWimTsy2viMAlcQt3nQShnKVZxeJZ1kUgkedqDnILjw=;
+        b=Sj7THSRqxrGnJqHJgt70gePvcrUdNhMDVP4KQK3sLtAWlkDbLD7V8T9bb4kmt4xTci
+         5PvH4dqLAFqiC4+Xx7zt+/f3tpF9b7dmVsfp2jf2jo8lNZup2ypx6+xxpRgIJcdih07v
+         RKLBg5Qk0ZRum0TpILqE5eBXUBVuXICqFK47AmfGsM/JndpN8LKU+QeMRN7K5iiRrsy0
+         4SctX2giUONNVdh6XIVGBJhX82P+rCIyHNfwsEdjvH+HOLT9lp198DekskRybC7SS37M
+         lHLlVdFUxEDyBU1z6Q2e14vgyUQIBEujx5ilY+l0ofzUREgYrVBvNRJfWgMUYdxMaEJD
+         N/vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oABEezfN1nTsjGlHAHlBaTiMmQz4aDhMSWiIeYwjCbc=;
-        b=hTL8aF9DjHQ0EC0NUsGk3wPy3WQvndHRbtvZ57wQqHiGBSdJ4bgiIUGGKB60pv2Zj3
-         qR7/otPyFU4rjxXYZcMhgrnsi9t8GALZOTQ0Fo+btM/NenvazgTNYfKbJS0L7mYybCdh
-         l9QMMuZjkY9u6imySuyO7Cy2Vpnh4r0QJTFLXbG2CzPRDvR7EHTqW14v59K2i6PX8lRK
-         VozxDUfCVdlNvPf8fab1tITLRJVYSYskx3eTeorIM3SiLfBiPpJb/4YpFUUlSdgk8GYB
-         mZ7oEaOqmG9RAMzaUGOX6DTnUajfbg3gPz0PBADbAOT6HDG0oDuPnVh+j3iU4bq2O2Pk
-         evMQ==
-X-Gm-Message-State: APjAAAWIYGOVpcL0p5mb43UHSMay8EICZVQ1hmWn5+LfDgNSMaeEsrJ6
-        RFKED/MgdPoZHqt7MKgv7roXlw==
-X-Google-Smtp-Source: APXvYqxeT+oP2oju/Ny+91153pq74b2segQ2icEC+8amXSZq3egEC6TwFkM8vrRk+uofNHXcuWkhBQ==
-X-Received: by 2002:a5d:61cd:: with SMTP id q13mr3741341wrv.114.1561555133168;
-        Wed, 26 Jun 2019 06:18:53 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id z5sm15058643wrh.16.2019.06.26.06.18.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Jun 2019 06:18:52 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 14:18:50 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH v12 04/13] mfd: Add Ingenic TCU driver
-Message-ID: <20190626131850.GW21119@dell>
-References: <20190521145141.9813-1-paul@crapouillou.net>
- <20190521145141.9813-5-paul@crapouillou.net>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uWimTsy2viMAlcQt3nQShnKVZxeJZ1kUgkedqDnILjw=;
+        b=pT304AHDk0637SauSfq3nwMmbnig5WstKJ8GHt0/HVzRaU4QD8I393VLHf/oVPUWKM
+         1MUSKVshDxf886KpJNIKZrnN3WwR0klsEoXX7/wGUtYfZFkwq82LBl5+fdTVOEuDC/5M
+         7Uk0PnRO0fSc60emGggHgjBgCpsdaJ3RNm1m1h8z93GjBnWVYIDW45CjH/Beclkwg0x/
+         bziky3UnWZMToNmqTP2yTw+yfO03aAnqCwQEtRbT8oLFzUHGCZwZxxEnsZcX1UvIKGYH
+         lbbN7YPhbIg80rXUs7j/CD3deW4x+Sma5PUtAVuYVfdhgshD2EnQN/4UfmV//cK9ca3n
+         yazg==
+X-Gm-Message-State: APjAAAX0qVpYJ5LnxmJyGtPdFnHDQxt2Iht+EmLANwl1Spv8TO0NyGty
+        0X0vkE+u/7GS02M5DybeEVxOjA==
+X-Google-Smtp-Source: APXvYqyErzt0sjZ4m8QcefX7GiGvtMUQMfnb1axdznmSoz1mvR7CxWpJkmiTH88DBuuioxVm5QTy8A==
+X-Received: by 2002:a17:906:4e57:: with SMTP id g23mr4033712ejw.52.1561555146108;
+        Wed, 26 Jun 2019 06:19:06 -0700 (PDT)
+Received: from brauner.io (cable-89-16-153-196.cust.telecolumbus.net. [89.16.153.196])
+        by smtp.gmail.com with ESMTPSA id n15sm5744325edd.49.2019.06.26.06.19.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 06:19:05 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 15:19:03 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, raven@themaw.net, mszeredi@redhat.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/25] VFS: Introduce filesystem information query
+ syscall [ver #14]
+Message-ID: <20190626131902.6xat2ab65arc62td@brauner.io>
+References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
+ <20190626100525.irdehd24jowz5f75@brauner.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190521145141.9813-5-paul@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190626100525.irdehd24jowz5f75@brauner.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 21 May 2019, Paul Cercueil wrote:
-
-> This driver will provide a regmap that can be retrieved very early in
-> the boot process through the API function ingenic_tcu_get_regmap().
+On Wed, Jun 26, 2019 at 12:05:25PM +0200, Christian Brauner wrote:
+> On Mon, Jun 24, 2019 at 03:08:45PM +0100, David Howells wrote:
+> > 
+> > Hi Al,
+> > 
+> > Here are a set of patches that adds a syscall, fsinfo(), that allows
+> > attributes of a filesystem/superblock to be queried.  Attribute values are
+> > of four basic types:
+> > 
+> >  (1) Version dependent-length structure (size defined by type).
+> > 
+> >  (2) Variable-length string (up to PAGE_SIZE).
+> > 
+> >  (3) Array of fixed-length structures (up to INT_MAX size).
+> > 
+> >  (4) Opaque blob (up to INT_MAX size).
+> > 
+> > Attributes can have multiple values in up to two dimensions and all the
+> > values of a particular attribute must have the same type.
+> > 
+> > Note that the attribute values *are* allowed to vary between dentries
+> > within a single superblock, depending on the specific dentry that you're
+> > looking at.
+> > 
+> > I've tried to make the interface as light as possible, so integer/enum
+> > attribute selector rather than string and the core does all the allocation
+> > and extensibility support work rather than leaving that to the filesystems.
+> > That means that for the first two attribute types, sb->s_op->fsinfo() may
+> > assume that the provided buffer is always present and always big enough.
+> > 
+> > Further, this removes the possibility of the filesystem gaining access to the
+> > userspace buffer.
+> > 
+> > 
+> > fsinfo() allows a variety of information to be retrieved about a filesystem
+> > and the mount topology:
+> > 
+> >  (1) General superblock attributes:
+> > 
+> >       - The amount of space/free space in a filesystem (as statfs()).
+> >       - Filesystem identifiers (UUID, volume label, device numbers, ...)
+> >       - The limits on a filesystem's capabilities
+> >       - Information on supported statx fields and attributes and IOC flags.
+> >       - A variety single-bit flags indicating supported capabilities.
+> >       - Timestamp resolution and range.
+> >       - Sources (as per mount(2), but fsconfig() allows multiple sources).
+> >       - In-filesystem filename format information.
+> >       - Filesystem parameters ("mount -o xxx"-type things).
+> >       - LSM parameters (again "mount -o xxx"-type things).
+> > 
+> >  (2) Filesystem-specific superblock attributes:
+> > 
+> >       - Server names and addresses.
+> >       - Cell name.
+> > 
+> >  (3) Filesystem configuration metadata attributes:
+> > 
+> >       - Filesystem parameter type descriptions.
+> >       - Name -> parameter mappings.
+> >       - Simple enumeration name -> value mappings.
+> > 
+> >  (4) Mount topology:
+> > 
+> >       - General information about a mount object.
+> >       - Mount device name(s).
+> >       - Children of a mount object and their relative paths.
+> > 
+> >  (5) Information about what the fsinfo() syscall itself supports, including
+> >      the number of attibutes supported and the number of capability bits
+> >      supported.
 > 
-> Additionally, it will call devm_of_platform_populate() so that all the
-> children devices will be probed.
+> Phew, this patchset is a lot. It's good of course but can we please cut
+> some of the more advanced features such as querying by mount id,
+> submounts etc. pp. for now?
+> I feel this would help with review and since your interface is
+> extensible it's really not a big deal if we defer fancy features to
+> later cycles after people had more time to review and the interface has
+> seen some exposure.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
+> The mount api changes over the last months have honestly been so huge
+> that any chance to make the changes smaller and easier to digest we
+> should take. (I'm really not complaining. Good that the work is done and
+> it's entirely ok that it's a lot of code.)
 > 
-> Notes:
->     v12: New patch
-> 
->  drivers/mfd/Kconfig             |   8 +++
->  drivers/mfd/Makefile            |   1 +
->  drivers/mfd/ingenic-tcu.c       | 113 ++++++++++++++++++++++++++++++++
->  include/linux/mfd/ingenic-tcu.h |   8 +++
->  4 files changed, 130 insertions(+)
->  create mode 100644 drivers/mfd/ingenic-tcu.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 294d9567cc71..a13544474e05 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -494,6 +494,14 @@ config HTC_I2CPLD
->  	  This device provides input and output GPIOs through an I2C
->  	  interface to one or more sub-chips.
->  
-> +config INGENIC_TCU
-> +	bool "Ingenic Timer/Counter Unit (TCU) support"
-> +	depends on MIPS || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	help
-> +	  Say yes here to support the Timer/Counter Unit (TCU) IP present
-> +	  in the JZ47xx SoCs from Ingenic.
-> +
->  config MFD_INTEL_QUARK_I2C_GPIO
->  	tristate "Intel Quark MFD I2C GPIO"
->  	depends on PCI
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 52b1a90ff515..fb89e131ae98 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -180,6 +180,7 @@ obj-$(CONFIG_AB8500_CORE)	+= ab8500-core.o ab8500-sysctrl.o
->  obj-$(CONFIG_MFD_TIMBERDALE)    += timberdale.o
->  obj-$(CONFIG_PMIC_ADP5520)	+= adp5520.o
->  obj-$(CONFIG_MFD_KEMPLD)	+= kempld-core.o
-> +obj-$(CONFIG_INGENIC_TCU)	+= ingenic-tcu.o
->  obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+= intel_quark_i2c_gpio.o
->  obj-$(CONFIG_LPC_SCH)		+= lpc_sch.o
->  obj-$(CONFIG_LPC_ICH)		+= lpc_ich.o
-> diff --git a/drivers/mfd/ingenic-tcu.c b/drivers/mfd/ingenic-tcu.c
-> new file mode 100644
-> index 000000000000..6c1d5e4310c1
-> --- /dev/null
-> +++ b/drivers/mfd/ingenic-tcu.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * JZ47xx SoCs TCU MFD driver
+> It would also be great if after you have dropped some stuff from this
+> patchset and gotten an Ack we could stuff it into linux-next for some
+> time because it hasn't been so far...
 
-Nit: Another line here please.
+And I also very much recommend to remove any potential cross-dependency
+between the fsinfo() and the notification patchset.
+Ideally, I'd like to see fsinfo() to be completely independent to not
+block it on something way more controversial.
+Furthermore, I can't possibly keep the context of another huge patchset
+not yet merged in the back of my mind while reviewing this patchset. :)
 
-> + * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-> + */
-> +
-> +#include <linux/mfd/ingenic-tcu.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +struct ingenic_soc_info {
-> +	unsigned int num_channels;
-> +};
-> +
-> +static struct regmap *tcu_regmap __initdata;
-> +
-> +static const struct regmap_config ingenic_tcu_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = TCU_REG_OST_CNTHBUF,
-> +};
-> +
-> +static const struct ingenic_soc_info jz4740_soc_info = {
-> +	.num_channels = 8,
-> +};
-> +
-> +static const struct ingenic_soc_info jz4725b_soc_info = {
-> +	.num_channels = 6,
-> +};
-> +
-> +static const struct of_device_id ingenic_tcu_of_match[] = {
-> +	{ .compatible = "ingenic,jz4740-tcu", .data = &jz4740_soc_info, },
-> +	{ .compatible = "ingenic,jz4725b-tcu", .data = &jz4725b_soc_info, },
-> +	{ .compatible = "ingenic,jz4770-tcu", .data = &jz4740_soc_info, },
-> +	{ }
-> +};
-> +
-> +static struct regmap * __init ingenic_tcu_create_regmap(struct device_node *np)
-> +{
-> +	struct resource res;
-> +	void __iomem *base;
-> +	struct regmap *map;
-> +
-> +	if (!of_match_node(ingenic_tcu_of_match, np))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	base = of_io_request_and_map(np, 0, "TCU");
-> +	if (IS_ERR(base))
-> +		return ERR_PTR(PTR_ERR(base));
-> +
-> +	map = regmap_init_mmio(NULL, base, &ingenic_tcu_regmap_config);
-> +	if (IS_ERR(map))
-> +		goto err_iounmap;
-> +
-> +	return map;
-> +
-> +err_iounmap:
-> +	iounmap(base);
-> +	of_address_to_resource(np, 0, &res);
-> +	release_mem_region(res.start, resource_size(&res));
-> +
-> +	return map;
-> +}
-
-Why does this need to be set-up earlier than probe()?
-
-> +static int __init ingenic_tcu_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *map = ingenic_tcu_get_regmap(pdev->dev.of_node);
-> +
-> +	platform_set_drvdata(pdev, map);
-> +
-> +	regmap_attach_dev(&pdev->dev, map, &ingenic_tcu_regmap_config);
-> +
-> +	return devm_of_platform_populate(&pdev->dev);
-> +}
-> +
-> +static struct platform_driver ingenic_tcu_driver = {
-> +	.driver = {
-> +		.name = "ingenic-tcu",
-> +		.of_match_table = ingenic_tcu_of_match,
-> +	},
-> +};
-> +
-> +static int __init ingenic_tcu_platform_init(void)
-> +{
-> +	return platform_driver_probe(&ingenic_tcu_driver,
-> +				     ingenic_tcu_probe);
-
-What?  Why?
-
-> +}
-> +subsys_initcall(ingenic_tcu_platform_init);
-> +
-> +struct regmap * __init ingenic_tcu_get_regmap(struct device_node *np)
-> +{
-> +	if (!tcu_regmap)
-> +		tcu_regmap = ingenic_tcu_create_regmap(np);
-> +
-> +	return tcu_regmap;
-> +}
-
-This makes me pretty uncomfortable.
-
-What calls it?
-
-> +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int channel)
-> +{
-> +	const struct ingenic_soc_info *soc = device_get_match_data(dev->parent);
-> +
-> +	/* Enable all TCU channels for PWM use by default except channels 0/1 */
-> +	u32 pwm_channels_mask = GENMASK(soc->num_channels - 1, 2);
-> +
-> +	device_property_read_u32(dev->parent, "ingenic,pwm-channels-mask",
-> +				 &pwm_channels_mask);
-> +
-> +	return !!(pwm_channels_mask & BIT(channel));
-> +}
-> +EXPORT_SYMBOL_GPL(ingenic_tcu_pwm_can_use_chn);
-> diff --git a/include/linux/mfd/ingenic-tcu.h b/include/linux/mfd/ingenic-tcu.h
-> index 2083fa20821d..21df23916cd2 100644
-> --- a/include/linux/mfd/ingenic-tcu.h
-> +++ b/include/linux/mfd/ingenic-tcu.h
-> @@ -6,6 +6,11 @@
->  #define __LINUX_MFD_INGENIC_TCU_H_
->  
->  #include <linux/bitops.h>
-> +#include <linux/init.h>
-> +
-> +struct device;
-> +struct device_node;
-> +struct regmap;
->  
->  #define TCU_REG_WDT_TDR		0x00
->  #define TCU_REG_WDT_TCER	0x04
-> @@ -53,4 +58,7 @@
->  #define TCU_REG_TCNTc(c)	(TCU_REG_TCNT0 + ((c) * TCU_CHANNEL_STRIDE))
->  #define TCU_REG_TCSRc(c)	(TCU_REG_TCSR0 + ((c) * TCU_CHANNEL_STRIDE))
->  
-> +struct regmap * __init ingenic_tcu_get_regmap(struct device_node *np);
-> +bool ingenic_tcu_pwm_can_use_chn(struct device *dev, unsigned int channel);
-> +
->  #endif /* __LINUX_MFD_INGENIC_TCU_H_ */
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Christian
