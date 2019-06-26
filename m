@@ -2,189 +2,285 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DC7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A4BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE402133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E09620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ewcLwayR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xL6clskg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfFZMrs (ORCPT
+        id S1727385AbfFZMwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:47:48 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:38440 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727221AbfFZMrr (ORCPT
+        Wed, 26 Jun 2019 08:52:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33605 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfFZMwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:47:47 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190626124744epoutp04ffc202a89cd5062000c0c3a2768d0602~rwGvFaJxj1998419984epoutp04H
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 12:47:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190626124744epoutp04ffc202a89cd5062000c0c3a2768d0602~rwGvFaJxj1998419984epoutp04H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561553264;
-        bh=zH5ztn3xX70umuBcDQcF3am8p4S1Z0cIrMZJqK3E2CY=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=ewcLwayRZ4pRxQPNz2yVY9OIrGq6UqOhW4CY/8xSZOt5TXeLKBjfF0zVmkf4ARe5y
-         /5/IqygTb0WTtbW1W3CW4QwdWA9WoeVm4RVvGFjVfxxpVz1//cMk0b+zO9MoX5xRKl
-         eP1edKnpi3TYYqa7dyNX5fIGHxUHCY3ICwgk+Evo=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20190626124744epcas5p467d19851ca8e3cde56123960ec2aac30~rwGucKiQG2481324813epcas5p4g;
-        Wed, 26 Jun 2019 12:47:44 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7E.C2.04067.079631D5; Wed, 26 Jun 2019 21:47:44 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190626124743epcas5p105f8e82af483f0cd360b6c3d3944d545~rwGt9ylmb2730427304epcas5p1y;
-        Wed, 26 Jun 2019 12:47:43 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190626124743epsmtrp18e50bf82a358dde82e8a3fa29c6cd25b~rwGt9BOcl3178031780epsmtrp1K;
-        Wed, 26 Jun 2019 12:47:43 +0000 (GMT)
-X-AuditID: b6c32a4b-7a3ff70000000fe3-bf-5d136970370a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        23.52.03662.F69631D5; Wed, 26 Jun 2019 21:47:43 +0900 (KST)
-Received: from JOSHIK01 (unknown [107.111.93.135]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190626124742epsmtip2335a164549cc240db896799ca1f82e62~rwGsgATdi1669716697epsmtip2L;
-        Wed, 26 Jun 2019 12:47:42 +0000 (GMT)
-From:   "kanchan" <joshi.k@samsung.com>
-To:     "'Christoph Hellwig'" <hch@infradead.org>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-nvme@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-ext4@vger.kernel.org>, <prakash.v@samsung.com>,
-        <anshul@samsung.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'Jan Kara'" <jack@suse.cz>
-In-Reply-To: <20190522102530.GK17019@quack2.suse.cz>
-Subject: RE: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
- for Ext4 journal
-Date:   Wed, 26 Jun 2019 18:17:29 +0530
-Message-ID: <00f301d52c1d$58f1e820$0ad5b860$@samsung.com>
+        Wed, 26 Jun 2019 08:52:17 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so4590879wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 05:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=97XC3JrNltERoKp78ltTZCo7yY8E04N6diR+9e3qm5w=;
+        b=xL6clskgL+7wAvMzUxDLYqjsznkQlKFP8SlacSEkPcwJ1oJoX9L2uQtZGV4gSMIATH
+         hc2GZbHrY4r2IJRwhuQT3WMoMxg/UHTzm8JU3X+MHdtk94wBWcw10D00hpdFsLNfKgiq
+         4Qne6l9Zkqu3/RqUjyn71NnG8LKfFf8/jMIf+FKQjD17sFkU/JbxVelKZCIBewNxej3J
+         Hp55AQeIhZtFb5rWLca5HAYTaPUZ+OiDk6MMvbaDHf1W81qjuNQXThgymcdQL7ISrJTZ
+         VfmAXuNbCiLWnR06FZAC7UMFT2tmak1AvxJ8hLgltyOsvy+tZY6/164MX0kTFco+/AgP
+         2pww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=97XC3JrNltERoKp78ltTZCo7yY8E04N6diR+9e3qm5w=;
+        b=DJVdAvDPIv2gY43LUgIk1Jw9p6Vwuqu3mmgsjJeLyIMm1QYtcB8ZWoZZCwiWrgIS4S
+         LQKqblUjHs8WLm2GTfJmUpdteBKtiurZ6vbGIcjlvz3oxD8QUB7eUl8ErGKu/AZ3Pj7W
+         Gtc2nt70JaPR+eyP62xlB5VvRjqSkUaUBE7u/Uel1jt6Bc6hXUkt+P+5TnGKQgglRj4B
+         5ey6yLDPexBDiTmQ36vkNvMz+rY1L+J6KttiXvlUoCd9sYFmHLbBnM1Az8SBVoger7fq
+         /tgFF5IALnQsFSCWC8V21S5QrOTQWYpHiNktTQ13GKzLvv9Q8sMitKNT/WYUNAOvBg/3
+         yvfw==
+X-Gm-Message-State: APjAAAWyBfokA5vRazeDZifRtqw+d3qlEotSA4NkiDmsHVOVpB5dDmN9
+        z+WnqNT3QuUe3pdKabN/DCNpPg==
+X-Google-Smtp-Source: APXvYqzvFQa7PDBk+gmeInRwTGUKFvktKTGYr3JUdfnyUpcb0PEKwQjYF0CfhE3ozU7I4EFDxXp0xw==
+X-Received: by 2002:a7b:cc86:: with SMTP id p6mr2466384wma.123.1561553533241;
+        Wed, 26 Jun 2019 05:52:13 -0700 (PDT)
+Received: from [192.168.0.41] (26.92.130.77.rev.sfr.net. [77.130.92.26])
+        by smtp.googlemail.com with ESMTPSA id x17sm16401528wrq.64.2019.06.26.05.52.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 05:52:12 -0700 (PDT)
+Subject: Re: [PATCH V3 2/3] thermal/drivers/cpu_cooling: Unregister with the
+ policy
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "open list:CPU FREQUENCY DRIVERS - ARM BIG LITTLE" 
+        <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:TI BANDGAP AND THERMAL DRIVER" 
+        <linux-omap@vger.kernel.org>
+References: <20190625113244.18146-1-daniel.lezcano@linaro.org>
+ <20190625113244.18146-2-daniel.lezcano@linaro.org>
+ <20190626025831.jmyzyypxr6ezpbtu@vireshk-i7>
+ <da1d2603-e30a-d877-54c3-1fad218f9d57@linaro.org>
+ <20190626063716.cechnzsb75q5lclr@vireshk-i7>
+ <CAJZ5v0jFXmJ3ikEPQUp-cLv3+ZSnp1kP8CxdkZVofV1BS3+UwQ@mail.gmail.com>
+ <8a9b7bd0-9b21-1ce1-6176-cffff4b8d739@linaro.org>
+ <CAJZ5v0h7=BqnQqvULnQr3MuQsS2qwSn7RCZbMo-V+cUi+kbvSg@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <81eed47f-9439-abd3-8b73-56ccf5137be3@linaro.org>
+Date:   Wed, 26 Jun 2019 14:52:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Content-Language: en-us
-Thread-Index: AQJoSeMIlXjPMuci1lQDnd0IsY+e8wLu+qiYAUGsmF8ChgSNDQJyI1AuAi3VLdkCT/pK/wHswGQGpQM4GVA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe89lO65Wpyns0SBzGaThpbI6gmhRHwYGRR/6YFkd86jD29jx
-        khk0GsylWCZe2ipTs7QZJWqZ17xmYhbesLyVNclFhimINbq4HSW//Z7n//yfy8tL4bIW0o1S
-        JSRxmgQ2TiGSEM86vLx81CrncP/BfJKxFeaRTG9OKcbcKtRhTPPoLsZYNC5impp7CGaw4baI
-        uftgWsyUd//BmKG8UvygRFlT4a2sKbus/DE9Siiv1ZqR8nVxp1i5UL31uChMEhTJxalSOI1f
-        8DlJjPnOJ5G6T36h5IMO0yKzcyZyooAOAGOWQZyJKEpGNyJ4GpWJJMs4j8BisOFCsIjgXadO
-        tGowF2gJQWhGUFlajwnBFwQL462kvUpE74DJpWyHw4X2gb6SGWQvwulKDO7pbWK74LTcaibj
-        qoOd6TOgnchxMLFsHihoczSS0oFQ8jZLJPBm6DFaCDvjtDvUzd7GhZW2QeN8Fynk5WDt6hQL
-        gyPgysy0Y1WgM8RQMVaCCYYj0KR7IRbYGb52166wG1iv61eYh1/jXbhgNiAY0RoJQQiB/qbf
-        mP3FcNoLnjT4CYM3QrbN4kgDLQWDXiZUe8Bk7jQpsBymbpatsBKmZmtQDvIwrTnNtOY005pz
-        TP+HFSPCjFw5NR8fzfH71HsTuFRfno3nkxOifc8nxlcjx6/yDn2Oqt8cbUc0hRQbpFp3WbiM
-        ZFP4tPh2BBSucJHeZ+lwmTSSTbvIaRLPapLjOL4dbaEIhVyaSw6fltHRbBIXy3FqTrOqYpST
-        mxYV6B/ttIQW9dz4fCzvxES2u+7x+/1jU70/P7aNBUJoR4MVWvMtiVW2/nWewS5hWR1Rwy0P
-        g/7GFnuvPxkygjqZucNWW1Gdv+LUWH1Ss2rPBBxwdUtdavKdl0ZlfRsOebU4N8Ee2u6evkQF
-        eJkHWsszI6pmwzblfk/niJeXPEeHFAQfw+72xjU8+w/RrzTPUQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsWy7bCSvG5+pnCsQdMWDYvf06ewWpyesIjJ
-        Yvb0ZiaLvbe0LWbOu8NmsWfvSRaLy7vmsFnMX/aU3WL58X9MFlemLGJ24PLYvELLY/OSeo+P
-        T2+xePRtWcXocWbBEXaPz5vkAtiiuGxSUnMyy1KL9O0SuDJWzX3EVnBWvGLh/WamBsZVwl2M
-        nBwSAiYSq6Y1sHQxcnEICexmlJjzsosRIiEu0XztBzuELSyx8t9zdoiip4wS1zq3MoEk2ARU
-        Je796GUDsUUEdCXOLnzBCFLELLCZSWLLtrfMEB3tzBI/f64EG8UJtO9FeyeYLSwQI7F+8kKw
-        bhagSZemHWQFsXkFLCUWnu9mg7AFJU7OfAJ0HwfQVD2Jto1g1zELyEtsfzuHGeI6BYndn46y
-        QsTFJV4ePcIOcVCSRNOLpywTGIVnIZk0C2HSLCSTZiHpXsDIsopRMrWgODc9t9iwwCgvtVyv
-        ODG3uDQvXS85P3cTIzjitLR2MJ44EX+IUYCDUYmHt0FeKFaINbGsuDL3EKMEB7OSCO/SRIFY
-        Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzy+ccihQTSE0tSs1NTC1KLYLJMHJxSDYxqJnvkNHnU
-        6yMWy7x+6RpmNdmudr3w6ZpbkQwrNB47fgo6/ltflJX/CdeqpRu+vI7+M2PRsv4ihm0NvwVn
-        svE8Cepz7+xUyGmVWXl+3/ZpVxqn/PswLXtr2rJDV06azqjkmWHw18Y4NX3vm4SP0ftevX9y
-        R+WF9XSlDmnX46eK5BzE1+4ufH9HiaU4I9FQi7moOBEAkovLmLQCAAA=
-X-CMS-MailID: 20190626124743epcas5p105f8e82af483f0cd360b6c3d3944d545
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61
-References: <CGME20190425112347epcas2p1f7be48b8f0d2203252b8c9dd510c1b61@epcas2p1.samsung.com>
-        <1556191202-3245-1-git-send-email-joshi.k@samsung.com>
-        <20190510170249.GA26907@infradead.org>
-        <00fb01d50c71$dd358e50$97a0aaf0$@samsung.com>
-        <20190520142719.GA15705@infradead.org>
-        <20190521082528.GA17709@quack2.suse.cz>
-        <20190521082846.GA11024@infradead.org>
-        <20190522102530.GK17019@quack2.suse.cz>
+In-Reply-To: <CAJZ5v0h7=BqnQqvULnQr3MuQsS2qwSn7RCZbMo-V+cUi+kbvSg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph, 
-May I know if you have thoughts about what Jan mentioned below? 
-
-I reflected upon the whole series again, and here is my understanding of
-your concern (I hope to address that, once I get it right).
-Current patch-set targeted adding two things -
-1. Extend write-hint infra for in-kernel callers 
-2. Send write-hint for FS-journal
-
-In the process of doing 1, write-hint gets more closely connected to stream
-(as hint-to-stream conversion moves to block-layer). 
-And perhaps this is something that you've objection on. 
-Whether write-hint converts into flash-stream or into something-else is
-deliberately left to device-driver and that's why block layer does not have
-a hint-to-stream conversion in the first place.
-Is this the correct understanding of why things are the way they are?
-
-On 2, sending write-hint for FS journal is actually important, as there is
-clear data on both performance and endurance benefits.
-RWH_WRITE_LIFE_JOURNAL or REQ_JOURNAL (that Martin Petersen suggested) kind
-of thing will help in identifying Journal I/O which can be useful for other
-purposes (than streams) as well.
-I saw this LSFMM coverage https://lwn.net/Articles/788721/ , and felt that
-this could be useful for turbo-write in UFS.   
-
-BR,
-Kanchan
-
------Original Message-----
-From: Jan Kara [mailto:jack@suse.cz] 
-Sent: Wednesday, May 22, 2019 3:56 PM
-To: 'Christoph Hellwig' <hch@infradead.org>
-Cc: Jan Kara <jack@suse.cz>; kanchan <joshi.k@samsung.com>;
-linux-kernel@vger.kernel.org; linux-block@vger.kernel.org;
-linux-nvme@lists.infradead.org; linux-fsdevel@vger.kernel.org;
-linux-ext4@vger.kernel.org; prakash.v@samsung.com; anshul@samsung.com;
-Martin K. Petersen <martin.petersen@oracle.com>
-Subject: Re: [PATCH v5 0/7] Extend write-hint framework, and add write-hint
-for Ext4 journal
-
-On Tue 21-05-19 01:28:46, 'Christoph Hellwig' wrote:
-> On Tue, May 21, 2019 at 10:25:28AM +0200, Jan Kara wrote:
-> > performance benefits for some drives. After all you can just think 
-> > about it like RWH_WRITE_LIFE_JOURNAL type of hint available for the
-kernel...
+On 26/06/2019 13:28, Rafael J. Wysocki wrote:
+> On Wed, Jun 26, 2019 at 12:19 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 26/06/2019 11:06, Rafael J. Wysocki wrote:
+>>> On Wed, Jun 26, 2019 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>>>
+>>>> On 26-06-19, 08:02, Daniel Lezcano wrote:
+>>>>> On 26/06/2019 04:58, Viresh Kumar wrote:
+>>>>>> On 25-06-19, 13:32, Daniel Lezcano wrote:
+>>>>>>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+>>>>>>> index aee024e42618..f07454249fbc 100644
+>>>>>>> --- a/drivers/cpufreq/cpufreq.c
+>>>>>>> +++ b/drivers/cpufreq/cpufreq.c
+>>>>>>> @@ -1379,8 +1379,8 @@ static int cpufreq_online(unsigned int cpu)
+>>>>>>>            cpufreq_driver->ready(policy);
+>>>>>>>
+>>>>>>>    if (cpufreq_thermal_control_enabled(cpufreq_driver))
+>>>>>>> -          policy->cdev = of_cpufreq_cooling_register(policy);
+>>>>>>> -
+>>>>>>> +          of_cpufreq_cooling_register(policy);
+>>>>>>> +
+>>>>>>
+>>>>>> We don't need any error checking here anymore ?
+>>>>>
+>>>>> There was no error checking initially. This comment and the others below
+>>>>> are for an additional patch IMO, not a change in this one.
+>>>>
+>>>> right, but ...
+>>>>
+>>>>>>> -void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
+>>>>>>> +void cpufreq_cooling_unregister(struct cpufreq_policy *policy)
+>>>>>>>  {
+>>>>>>>    struct cpufreq_cooling_device *cpufreq_cdev;
+>>>>>>>    bool last;
+>>>>>>>
+>>>>>>> -  if (!cdev)
+>>>>>>> -          return;
+>>>>
+>>>> we used to return without any errors from here. Now we will have
+>>>> problems if regsitering fails for some reason.
+>>>
+>>> Specifically, the last cpufreq_cdev in the list will be unregistered
+>>> AFAICS, and without removing it from the list for that matter, which
+>>> isn't what the caller wants.
+>>
+>> Indeed,
+>>
+>> What about the resulting code above:
+>>
+>> void __cpufreq_cooling_unregister(struct cpufreq_cooling_device
+>> *cpufreq_cdev, int last)
+>> {
+>>         /* Unregister the notifier for the last cpufreq cooling device */
+>>         if (last)
+>>                 cpufreq_unregister_notifier(&thermal_cpufreq_notifier_block,
+>>                                             CPUFREQ_POLICY_NOTIFIER);
+>>
 > 
-> Except that it actuallys adds a parallel insfrastructure.  A 
-> RWH_WRITE_LIFE_JOURNAL would be much more palatable, but someone needs 
-> to explain how that is:
-> 
->  a) different from RWH_WRITE_LIFE_SHORT
+> Doesn't the notifier need to be unregistered under cooling_list_lock ?
 
-The problem I have with this is: What does "short" mean? What if userspace's
-notion of short differs from the kernel notion? Also the journal block
-lifetime is somewhat hard to predict. It depends on the size of the journal
-and metadata load on the filesystem so there's big variance.
-So all we really know is that all journal blocks are the same.
+I don't think so because the element is no longer in the list and we
+don't touch the list anymore. Do you see another possible race?
 
->  b) would not apply to a log/journal maintained in userspace that works
->     exactly the same
+>>         thermal_cooling_device_unregister(cpufreq_cdev->cdev);
+>>         ida_simple_remove(&cpufreq_ida, cpufreq_cdev->id);
+>>         kfree(cpufreq_cdev->idle_time);
+>>         kfree(cpufreq_cdev);
+>> }
+>>
+>> /**
+>>
+>>  * cpufreq_cooling_unregister - function to remove cpufreq cooling
+>> device.
+>>  * @cdev: thermal cooling device pointer.
+>>
+>>  *
+>>
+>>  * This interface function unregisters the "thermal-cpufreq-%x" cooling
+>> device.
+>>  */
+>> void cpufreq_cooling_unregister(struct cpufreq_policy *policy)
+>> {
+>>         struct cpufreq_cooling_device *cpufreq_cdev;
+>>         bool last;
+>>
+>>         mutex_lock(&cooling_list_lock);
+>>         list_for_each_entry(cpufreq_cdev, &cpufreq_cdev_list, node) {
+>>                 if (cpufreq_cdev->policy == policy) {
+>>                         list_del(&cpufreq_cdev->node);
+>>                         last = list_empty(&cpufreq_cdev_list);
+>>                         break;
+>>                 }
+>>         }
+>>         mutex_unlock(&cooling_list_lock);
+>>
+>>         if (cpufreq_cdev->policy == policy)
+>>                 __cpufreq_cooling_unregister(cpufreq_cdev, last);
+>> }
+>> EXPORT_SYMBOL_GPL(cpufreq_cooling_unregister);
+>>
+>>
+>>
+>>
+>> --
+>>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>>
+>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>> <http://twitter.com/#!/linaroorg> Twitter |
+>> <http://www.linaro.org/linaro-blog/> Blog
+>>
 
-Lifetime of userspace journal/log may be significantly different from the
-lifetime of the filesystem journal. So using the same hint for them does not
-look like a great idea?
 
-								Honza
---
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
