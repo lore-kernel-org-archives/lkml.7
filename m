@@ -2,120 +2,109 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C193CC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC12C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B082080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3E820B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAPUke4T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVYfovMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfFZEup (ORCPT
+        id S1726487AbfFZE6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 00:50:45 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35030 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfFZEuo (ORCPT
+        Wed, 26 Jun 2019 00:58:42 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37642 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfFZE6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 00:50:44 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so706104plp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 21:50:44 -0700 (PDT)
+        Wed, 26 Jun 2019 00:58:41 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d15so611526qkl.4;
+        Tue, 25 Jun 2019 21:58:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=bCahL/6yT/1jlLN2Hc0XJcKCEaxb5WvlkSRDA5kX+/4=;
-        b=OAPUke4T9v54nrhFW2tatHLdacZ0Uye7TVxCs+d7p+yo74JfnJv9dtk+tlbYWJxoXE
-         TjriPya4ewKp/90t8H+vC4hS6avqmK9LCPVfAg/lZEogepY0axvgqy0k5l6jZ9FWDGuC
-         9/qde8ajZJB3y8H/SzjpkxT+4tRvsSZ1SAmCKQc2emkm0L3YIQtFBNlPCUPuHZavuXy4
-         /mlOj6yqBVJw3MbFG1FX4GdJEfzJFumnHen4ALRyzGpcbVHBklInkGhdm7Ch2y9wkm1R
-         GvU+k8q2L6HE2i3zp519K/B3hXizOYLU9SN/GPbVR5PB2YNCxh0tSZxM+ASSPFvjZfTz
-         xCXA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0OrHEeR3+U66RidUb/bN4V2v2em1a70fnkFr2OCfmNs=;
+        b=PVYfovMcGFWBSBvBMrhWxHdwe4Qig4AEKR14zM8ubMyFtBnooL0+MBcrL/ecX6VzCZ
+         +izYDrgexioUanxGicv3D7w4KPpqkHrFRGxC3DtRjLY2XtiDSK4VrahioH4Ke4iSbdwU
+         kBB/dB1rQ8QTsEWHv40uTjlh7i7TB8hWD3kFYAyru4ALz2oRu5yCq63DaDt8G5cW5PYm
+         PtLGkUkWjZCoNILFabBO91curwKYqOwhCRbMaC2A1klhTkzsLsnAHitmFW+RxsIY9GKT
+         A0unOL46q/MkWNflLLWoQOWreQ4oHPJb8qW0roLUhpyUhEC3IyvPLVLO4OgFd8e7dSx2
+         OE/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bCahL/6yT/1jlLN2Hc0XJcKCEaxb5WvlkSRDA5kX+/4=;
-        b=YjAxmu8ayiO0MZ7p79xiT8DR+/ODs1f3t4NKQVW8m90TXlV3N2mVnW76P2vMX5sCZu
-         H2bavU2dgJ5CFQO1eZXAY0eFw8UMwnzoV0hVrZwxrzWLUmVC6lmAC3oQV6bYg7HWBhWz
-         uQduB8xtXoQmPEAu0G43hPnYIOJLEJpXP01rUiPqAv2rxU+y5lASpCE4nhHFLqUgd5Ra
-         vc19D35fJ7SkRcnQHb235Vel8vHUszQMJCigetHi60v+bp5B2j0VBeiZoYXg7CE8DerP
-         PzMkptYiz54YQf3xPydmBfF++BwkCWuhBkPTccucY/s26ksYwVKHHN7SvJYJCC5H+rwc
-         VGag==
-X-Gm-Message-State: APjAAAXHN4Fhq1dqzNNf5MTuh7ehWeLengf44RySJZ5sNVV6SEzSIhLa
-        dVtBCTvFTCu244yvyJP+588=
-X-Google-Smtp-Source: APXvYqxokN1WtrPa3LegU6W2/R7CM9tiA4NWuHH4O0iUiSukFvA88OneYzZba9NytSu8AonNzOPmtQ==
-X-Received: by 2002:a17:902:1e6:: with SMTP id b93mr2855318plb.295.1561524644301;
-        Tue, 25 Jun 2019 21:50:44 -0700 (PDT)
-Received: from tom-pc.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id j14sm17601902pfn.120.2019.06.25.21.50.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 25 Jun 2019 21:50:43 -0700 (PDT)
-From:   Dianzhang Chen <dianzhangchen0@gmail.com>
-To:     tglx@linutronix.de
-Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dianzhang Chen <dianzhangchen0@gmail.com>
-Subject: [PATCH v3] x86/tls: Fix possible spectre-v1 in do_get_thread_area()
-Date:   Wed, 26 Jun 2019 12:50:30 +0800
-Message-Id: <1561524630-3642-1-git-send-email-dianzhangchen0@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0OrHEeR3+U66RidUb/bN4V2v2em1a70fnkFr2OCfmNs=;
+        b=oHu78ZC/UGCVtMlcnv2+lLfYRugSgY8Dto3E3KX4tV5Qge8SOKIAP66PK36IKzwkT6
+         /M6i7awW+xi75REBexcRUWF85O8YYkbZngvNm4ozYNjq+p+VD0W1RP/nMnYFDocLmu5M
+         Ve20K3hm0nkk4aPTVIshuu78kzE/3izidl8zK7hVxSh/s+t0Y7TmbC4bCg6lDOV/DYWE
+         LY9SNHPZSi8mzEQDN+Ue0ZyCxBNVj9gMuaycYImnv5aXL1SEDaLRsNEmPuZLq83a9iSO
+         p91TF0dbmLlQPqH0czxfDhwJvPUuGmWYHKGyANXWLALWA5eUOwYSORpMnlzyivicOQPv
+         R5kg==
+X-Gm-Message-State: APjAAAVJwVKgU5P2Ddw77QYVHKCFqlz3s21ctlY119J/2jjO/IwshLKd
+        ZHkmILL/3KBZY++cc0Jd3rc4d5KjhibN6oo2FaU=
+X-Google-Smtp-Source: APXvYqzvzmObldpjM7RwS5EfOCH2J79NYLejhmjGi4PMxV3Vbedmc+upuOn7531If66fNyjv30+OnMag3/PnrqHFzbU=
+X-Received: by 2002:a37:a095:: with SMTP id j143mr2172011qke.449.1561525120240;
+ Tue, 25 Jun 2019 21:58:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190625202700.28030-1-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190625202700.28030-1-ivan.khoronzhuk@linaro.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 25 Jun 2019 21:58:27 -0700
+Message-ID: <CAEf4BzaUNfJOj1B9Zo9Bgr+W9aykH+CyzQiJXTXz1gsnc+-K4A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] libbpf: fix max() type mismatch for 32bit
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The index to access the threads tls array is controlled by userspace
-via syscall: sys_ptrace(), hence leading to a potential exploitation
-of the Spectre variant 1 vulnerability.
-The idx can be controlled from:
-        ptrace -> arch_ptrace -> do_get_thread_area.
+On Tue, Jun 25, 2019 at 1:28 PM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> It fixes build error for 32bit caused by type mismatch
+> size_t/unsigned long.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
 
-Fix this by sanitizing idx before using it to index p->thread.tls_array.
+Sorry, forgot to mention, this should probably have
 
-Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
----
- arch/x86/kernel/tls.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Fixes: bf82927125dd ("libbpf: refactor map initialization")
 
-diff --git a/arch/x86/kernel/tls.c b/arch/x86/kernel/tls.c
-index a5b802a..71d3fef 100644
---- a/arch/x86/kernel/tls.c
-+++ b/arch/x86/kernel/tls.c
-@@ -5,6 +5,7 @@
- #include <linux/user.h>
- #include <linux/regset.h>
- #include <linux/syscalls.h>
-+#include <linux/nospec.h>
- 
- #include <linux/uaccess.h>
- #include <asm/desc.h>
-@@ -220,6 +221,7 @@ int do_get_thread_area(struct task_struct *p, int idx,
- 		       struct user_desc __user *u_info)
- {
- 	struct user_desc info;
-+	int index;
- 
- 	if (idx == -1 && get_user(idx, &u_info->entry_number))
- 		return -EFAULT;
-@@ -227,8 +229,11 @@ int do_get_thread_area(struct task_struct *p, int idx,
- 	if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
- 		return -EINVAL;
- 
--	fill_user_desc(&info, idx,
--		       &p->thread.tls_array[idx - GDT_ENTRY_TLS_MIN]);
-+	index = idx - GDT_ENTRY_TLS_MIN;
-+	index = array_index_nospec(index,
-+			GDT_ENTRY_TLS_MAX - GDT_ENTRY_TLS_MIN + 1);
-+
-+	fill_user_desc(&info, idx, &p->thread.tls_array[index]);
- 
- 	if (copy_to_user(u_info, &info, sizeof(info)))
- 		return -EFAULT;
--- 
-2.7.4
+With that:
 
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>  tools/lib/bpf/libbpf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 68f45a96769f..5186b7710430 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -778,7 +778,7 @@ static struct bpf_map *bpf_object__add_map(struct bpf_object *obj)
+>         if (obj->nr_maps < obj->maps_cap)
+>                 return &obj->maps[obj->nr_maps++];
+>
+> -       new_cap = max(4ul, obj->maps_cap * 3 / 2);
+> +       new_cap = max((size_t)4, obj->maps_cap * 3 / 2);
+>         new_maps = realloc(obj->maps, new_cap * sizeof(*obj->maps));
+>         if (!new_maps) {
+>                 pr_warning("alloc maps for object failed\n");
+> --
+> 2.17.1
+>
