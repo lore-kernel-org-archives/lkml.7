@@ -2,118 +2,143 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFA9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22B4C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDDD2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E38216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dOdIhYXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfFZOsR (ORCPT
+        id S1728495AbfFZOsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:48:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52400 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfFZOrv (ORCPT
+        Wed, 26 Jun 2019 10:48:24 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45116 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728376AbfFZOsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:47:51 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hg9D8-0007AG-Ck; Wed, 26 Jun 2019 14:47:46 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next][V2] media: vivid: fix potential integer overflow on left shift
-Date:   Wed, 26 Jun 2019 15:47:46 +0100
-Message-Id: <20190626144746.27607-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 26 Jun 2019 10:48:20 -0400
+Received: by mail-io1-f68.google.com with SMTP id e3so5551782ioc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DgyZrV/0GXyIl5zMpVdez37+pt0NN6PZa+e8Yh9Hijw=;
+        b=dOdIhYXTF+no3YlbD2CeiKg6dat5l5CZOYD1xXFNvcNIBlAs26LBlatTYEcR2hhgI7
+         H9zsMLsH3VQ22LOEebISJz7Gu5FaNqEkZLSey44RurxttEJ7oggMzJFFrJxCMhUlqrk1
+         Z9EaitNaYGsRLgbaGEakPUC+tbKPTUuNIqIRc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DgyZrV/0GXyIl5zMpVdez37+pt0NN6PZa+e8Yh9Hijw=;
+        b=udBGIdplMEeamVlnShebmWgwfAVFvnZAerNbNG1QtX/uqtNf628BXHttYRP0ojLpyu
+         KoX8R/MZlV+Z/kx2jGlwEbD5Wkhh+OMZwB1QdEkp7sobEyE/ZCagqmcc2SH6Du8sKneo
+         H4woqtIVdpagzHKzbkdtQCvzRtxIfOuUuXNXOGH1vTCOO+D1IoBqyZR/fpRQclBduQmG
+         JyL9akTdtbq/+U5zEh/nLpOay3fLps8fU67En9hnk7yi2JpE9Scds6Avw01t4bVqlFWw
+         EHC798UpJLN2rimHJks3grtBeNSLFQmBOAd0tbp3JqKtY2wFqZl52QVHi+EYSoiEdRTJ
+         R91A==
+X-Gm-Message-State: APjAAAUevUotAinwowucdv4qNV0YNLINBsfyraJo8mzSGGD6o9F4cl27
+        LzMQvOp67zRn/OcCxY7gPNzNRe/KNJ8=
+X-Google-Smtp-Source: APXvYqzPYPe/3VQOu4/ziMa9y5ZTOaWsOhw2n/NqWDo8qlRsecYsVJNshQ4/yOUZL0+TD/gHSZo+8w==
+X-Received: by 2002:a6b:4e08:: with SMTP id c8mr5132563iob.217.1561560500075;
+        Wed, 26 Jun 2019 07:48:20 -0700 (PDT)
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com. [209.85.166.45])
+        by smtp.gmail.com with ESMTPSA id u187sm34588394iod.37.2019.06.26.07.48.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 07:48:19 -0700 (PDT)
+Received: by mail-io1-f45.google.com with SMTP id h6so3964785ioh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:48:19 -0700 (PDT)
+X-Received: by 2002:a02:aa1d:: with SMTP id r29mr5324399jam.127.1561560097502;
+ Wed, 26 Jun 2019 07:41:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20190401171724.215780-1-dianders@chromium.org> <20190626130007.GE23428@ravnborg.org>
+In-Reply-To: <20190626130007.GE23428@ravnborg.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 26 Jun 2019 07:41:25 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U4UU8q+CS76uuuGUP=EVnE6+BTUf8U=j7uwfczNgkrZw@mail.gmail.com>
+Message-ID: <CAD=FV=U4UU8q+CS76uuuGUP=EVnE6+BTUf8U=j7uwfczNgkrZw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        =?UTF-8?Q?Enric_Balletb=C3=B2?= <enric.balletbo@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi,
 
-There is a potential integer overflow when int 2 is left shifted
-as this is evaluated using 32 bit arithmetic but is being used in
-a context that expects an expression of type s64.  Fix this by
-shifting 2ULL to avoid a 32 bit overflow.
+On Wed, Jun 26, 2019 at 6:00 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Douglas.
+>
+> On Mon, Apr 01, 2019 at 10:17:17AM -0700, Douglas Anderson wrote:
+> > I'm reviving Sean Paul's old patchset to get mode support in device
+> > tree.  The cover letter for his v3 is at:
+> > https://lists.freedesktop.org/archives/dri-devel/2018-February/165162.html
+> >
+> > No code is different between v4 and v5, just commit messages and text
+> > in the bindings.
+> >
+> > I've pulled together the patches that didn't land in v3, addressed
+> > outstanding feedback, and reposted.  Atop them I've added patches for
+> > rk3288-veyron-chromebook (used for jaq, jerry, mighty, speedy) and
+> > rk3288-veryon-minnie.
+> >
+> > Please let me know how they look.
+> >
+> > In general I have added people to the whole series who I think would
+> > like the whole series and then let get_maintainer pick extra people it
+> > thinks are relevant to each individual patch.  If I see you respond to
+> > any of the patches in the series, though, I'll add you to the whole
+> > series Cc list next time.
+> >
+> > Changes in v5:
+> > - Removed bit about OS may ignore (Rob/Ezequiel)
+> > - Added Heiko's Tested-by
+> > - It's not just jerry, it's most rk3288 Chromebooks (Heiko)
+>
+> What are the plans to move forward with this?
+> Or did you drop the whole idea again?
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Fixes: 8a99e9faa131 ("media: vivid: add HDMI (dis)connect RX emulation")
-Fixes: 79a792dafac6 ("media: vivid: add HDMI (dis)connect TX emulation")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
-V2: use intermediate variables for the shifted expression to make code
-    a bit more readable.
----
- drivers/media/platform/vivid/vivid-ctrls.c | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+At the moment I'm blocked on Thierry responding, either taking the
+patch or telling me what I need to do to fix it.  I saw Sean Paul ping
+Thierry on IRC on June 3rd and as far as I could tell there was no
+response.
 
-diff --git a/drivers/media/platform/vivid/vivid-ctrls.c b/drivers/media/platform/vivid/vivid-ctrls.c
-index 3e916c8befb7..df1598e81c7a 100644
---- a/drivers/media/platform/vivid/vivid-ctrls.c
-+++ b/drivers/media/platform/vivid/vivid-ctrls.c
-@@ -1613,6 +1613,8 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
- 	}
- 
- 	if (dev->num_hdmi_inputs) {
-+		s64 hdmi_input = (2ULL << (dev->num_hdmi_inputs - 1)) - 1;
-+
- 		dev->ctrl_dv_timings_signal_mode = v4l2_ctrl_new_custom(hdl_vid_cap,
- 					&vivid_ctrl_dv_timings_signal_mode, NULL);
- 
-@@ -1633,12 +1635,13 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
- 			V4L2_CID_DV_RX_RGB_RANGE, V4L2_DV_RGB_RANGE_FULL,
- 			0, V4L2_DV_RGB_RANGE_AUTO);
- 		dev->ctrl_rx_power_present = v4l2_ctrl_new_std(hdl_vid_cap,
--			NULL, V4L2_CID_DV_RX_POWER_PRESENT, 0,
--			(2 << (dev->num_hdmi_inputs - 1)) - 1, 0,
--			(2 << (dev->num_hdmi_inputs - 1)) - 1);
-+			NULL, V4L2_CID_DV_RX_POWER_PRESENT, 0, hdmi_input,
-+			0, hdmi_input);
- 
- 	}
- 	if (dev->num_hdmi_outputs) {
-+		s64 hdmi_output = (2ULL << (dev->num_hdmi_outputs - 1)) - 1;
-+
- 		/*
- 		 * We aren't doing anything with this at the moment, but
- 		 * HDMI outputs typically have this controls.
-@@ -1652,17 +1655,14 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
- 		dev->ctrl_display_present = v4l2_ctrl_new_custom(hdl_vid_out,
- 			&vivid_ctrl_display_present, NULL);
- 		dev->ctrl_tx_hotplug = v4l2_ctrl_new_std(hdl_vid_out,
--			NULL, V4L2_CID_DV_TX_HOTPLUG, 0,
--			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
--			(2 << (dev->num_hdmi_outputs - 1)) - 1);
-+			NULL, V4L2_CID_DV_TX_HOTPLUG, 0, hdmi_output,
-+			0, hdmi_output);
- 		dev->ctrl_tx_rxsense = v4l2_ctrl_new_std(hdl_vid_out,
--			NULL, V4L2_CID_DV_TX_RXSENSE, 0,
--			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
--			(2 << (dev->num_hdmi_outputs - 1)) - 1);
-+			NULL, V4L2_CID_DV_TX_RXSENSE, 0, hdmi_output,
-+			0, hdmi_output);
- 		dev->ctrl_tx_edid_present = v4l2_ctrl_new_std(hdl_vid_out,
--			NULL, V4L2_CID_DV_TX_EDID_PRESENT, 0,
--			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
--			(2 << (dev->num_hdmi_outputs - 1)) - 1);
-+			NULL, V4L2_CID_DV_TX_EDID_PRESENT, 0, hdmi_output,
-+			0, hdmi_output);
- 	}
- 	if ((dev->has_vid_cap && dev->has_vid_out) ||
- 	    (dev->has_vbi_cap && dev->has_vbi_out))
--- 
-2.20.1
+https://people.freedesktop.org/~cbrill/dri-log/?channel=dri-devel&highlight_names=&date=2019-06-03&show_html=true
 
+...and as you can see Heiko pinged this thread on June 14th.
+
+Thierry: can you help give us some direction?  Are you uninterested in
+reviewing them and would prefer that I find someone to land them in
+drm-misc directly?
+
+
+-Doug
