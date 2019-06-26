@@ -6,196 +6,92 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8801C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A900C48BD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78979204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7C52085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HWPsJsqf"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ndWUXuJa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfFZNkP (ORCPT
+        id S1727693AbfFZNm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:40:15 -0400
-Received: from mail-io1-f46.google.com ([209.85.166.46]:36435 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfFZNkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:40:14 -0400
-Received: by mail-io1-f46.google.com with SMTP id h6so3420076ioh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zDJSWg5ZqCsJ5yHhPmNw6IFc7LwjzWq3duTJsoKkrKM=;
-        b=HWPsJsqfLG0lhlY5cTRO5i5rf2tPrlezgfS7G1vF7LxmSrDtBQdmVYrAtOGRqfLWl8
-         S79IvdIlvjOCcP3hoyDP4u0z0EMI86Ym56gezgYA705FegRzCrJ1JPUQ0gzx56zETgGM
-         VnNvjp8PV0wqlW4N+OERnQ2sLv9lHlq9prCpGvofFJWw3Jli5lTiFb9S8dNw26TKFoWh
-         JdxSNAc3ShF1yHw14WmEVVnKXUQSE3aRfCIJAgnEQUmd6MM6ewyJzpick7VJpleM/XYu
-         RIWAAvVBIaaE1IPkfyQXMa52aSk91qmYrzt7BdUhYu036D9TA81RUtzNPrn7R3uoM6fh
-         qm6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zDJSWg5ZqCsJ5yHhPmNw6IFc7LwjzWq3duTJsoKkrKM=;
-        b=DgJr8ej8VwK2sSwp39p2O8LK8DFTuVvOqR6lmPbCfJobVWl5nphN8YDkz50MXbaxo8
-         M0aSyZ5aTcAoSv39Gk/52CqE3uOgsYrB0SbcPQPmbwsN+s7h47HcfOrORC1c8ZqQDHHo
-         Fpjr8pCR0YexlSmJgWr7juWicz+z6PbIibAgCaQEy4st8LBGUcV/o9Xq01bVjmcmkM/r
-         elHgE0U0QnD48Vvfmq407dKqSvP6Hc76/pYH4OdXwHQ8CcdgRUB93ViY2BSHBjViHkIU
-         Zy4QZiewf79j+FWNEbq07xMYuUWRdV55DH7fA9oH7H5HZOVRoiu2N9U6xOOJX/prJvMG
-         Yalg==
-X-Gm-Message-State: APjAAAXUMBM+YYXaIctYOB4k7XHck11dYD3U8LEqQtRteSlPdcbkSxnI
-        H59avlD1TLnswXl+0y6PEVKZuA==
-X-Google-Smtp-Source: APXvYqyAGoIdJtF+Kp7+t7ui+rJKvjc5uZZhl3pY0W2IovmJ/5T+Oj0Z/PL/QiTfYvTtoBWtOpTWaQ==
-X-Received: by 2002:a02:b10b:: with SMTP id r11mr4770745jah.140.1561556413496;
-        Wed, 26 Jun 2019 06:40:13 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id h19sm22846256iol.65.2019.06.26.06.40.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 06:40:13 -0700 (PDT)
-Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
-To:     Johannes Berg <johannes@sipsolutions.net>, davem@davemloft.net,
-        arnd@arndb.de, bjorn.andersson@linaro.org,
-        ilias.apalodimas@linaro.org, Dan Williams <dcbw@redhat.com>
-Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
-        cpratapa@codeaurora.org, syadagir@codeaurora.org,
-        subashab@codeaurora.org, abhishek.esse@gmail.com,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-References: <20190531035348.7194-1-elder@linaro.org>
- <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
- <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org>
- <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <25bb0936-686c-101b-c5a4-474ed37536aa@linaro.org>
-Date:   Wed, 26 Jun 2019 08:40:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 09:42:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:50815 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726462AbfFZNm7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:42:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Ykk80tZrz9s3Z;
+        Wed, 26 Jun 2019 23:42:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561556576;
+        bh=WdWMbczdBClsn1CpVDEcIgMMCcotjBk6HNGVtmqrSsI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ndWUXuJah2xCKMlgROMIRhyxu2HzcfKZW4Ojh1XlkAm2+bA80eV+goiQiMvqddtF5
+         7Pgjn5ZJLbf+SabCMMsVS/JvjC0S3K2LnaFrm7u5thjR/VXqziQb4z9euoj/05UO/b
+         Aq7dnw+g6Kt+16LqxWjZ0xHpJQvc6a45OnfPozJ5T3neVdfgKUL0NYuHbQSFVK4Nli
+         iUiXelmi12M8Yk3reouflT8NUjiN5+Ky4EFz0WSK2DGZs3KnpGMo+c64dqJrxyoohU
+         M+Z7zfQ8q74yYVp8vev/LG6ByvujO3ZDRWky3/nHDEgkdBv2Fcfk3KSfJiWbyQon+b
+         uRHVIdNkwo85g==
+Date:   Wed, 26 Jun 2019 23:42:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
+Message-ID: <20190626234251.67acfe79@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Vg_=Hw1pb4_qzWk1n/toyOx"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/19 9:34 AM, Johannes Berg wrote:
-> On Mon, 2019-06-24 at 12:06 -0500, Alex Elder wrote:
-> 
->>> OK I want to try to organize a little more concisely some of the
->>> discussion on this, because there is a very large amount of volume
->>> to date and I think we need to try to narrow the focus back down
->>> again.
-> 
-> Sounds good to me!
+--Sig_/Vg_=Hw1pb4_qzWk1n/toyOx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-. . .
+Hi all,
 
->>> - A WWAN unit shall implement a *WWAN control function*, used to
->>>   manage the use of other WWAN functions, as well as the WWAN unit
->>>   itself.
-> 
-> I think here we need to be more careful. I don't know how you want to
-> call it, but we actually have multiple levels of control here.
+In commit
 
-I completely agree with you.  From what I understand there exists
-a control channel (or even more than one?) that serves a very
-specific purpose in modem management.  The main reason I mention
-the WWAN control function is that someone (maybe you) indicated
-that a control channel automatically gets created.
+  e3303268f9cf ("ASoC: soc-core: don't use soc_find_component() at snd_soc_=
+find_dai()")
 
-But I agree, we need to be careful to avoid confusion here.
+Fixes tag
 
-> You have
->  * hardware control, to control how you actually use the (multiple or
->    not) physical communication channel(s) to the WWAN unit
->  * this is partially exposed to userspace via the WWAN netlink family or
->    something like that, so userspace can create new netdevs to tx/rx
->    with the "data function" and to the network; note that it could be
->    one or multiple
->  * WWAN control, which is typically userspace communicating with the
->    WWAN control function in the WWAN unit, but this can take different
->    forms (as I mentioned earlier, e.g. AT commands, MBIM, QMI)
-> 
->>> - The AP communicates with a WWAN function using a WWAN protocol.
-> 
-> Right, that's just device specific (IPA vs. Intel vs. ...)
-> 
->>> - A WWAN physical channel can be *multiplexed*, in which case it
->>>   carries the data for one or more *WWAN logical channels*.
-> 
-> This ... depends a bit on how you exactly define a physical channel
-> here. Is that, to you, the PCIe/USB link? In that case, yes, obviously
-> you have only one physical channel for each WWAN unit.
+  Fixes: commit b9f2e25c599bb ("ASoC: soc-core: use soc_find_component() at=
+ snd_soc_find_dai()")
 
-I think that was what I was trying to capture.  There exists
-one or more "physical" communication paths between the AP
-and WWAN unit/modem.  And while one path *could* carry just
-one type of traffic, it could also carry multiple logical
-channels of traffic by multiplexing.
+has these problem(s):
 
-> However, I'd probably see this slightly differently, because e.g. the
-> Intel modem has multiple DMA engines, and so you actually have multiple
-> DMA rings to talk to the WWAN unit, and I'd have called each DMA ring a
-> physical channel. And then, you just have a 1:1 from physical to logical
-> channel since it doesn't actually carry a multiplexing protocol.
+  - leading word 'commit' unexpected
 
-Understood.
+--=20
+Cheers,
+Stephen Rothwell
 
-. . .
+--Sig_/Vg_=Hw1pb4_qzWk1n/toyOx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> I only disagree slightly on the control planes (there are multiple, and
-> multiple options for the "Control function" one), and on the whole
-> notion of physical link/logical link/multiplexing which is device
-> specific.
-> 
->>> And if I understand it right, the purpose of the generic framework
->>> being discussed is to define a common mechanism for managing (i.e.,
->>> discovering, creating, destroying, querying, configuring, enabling,
->>> disabling, etc.) WWAN units and the functions they implement, along
->>> with the communication and logical channels used to communicate with
->>> them.
-> 
-> Well, some subset of that matrix, the framework won't actually destroy
-> WWAN units I hope ;-)
+-----BEGIN PGP SIGNATURE-----
 
-Hardware self-destruct would be an optional behavior.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0TdlsACgkQAVBC80lX
+0Gyduwf+PNrVL23wQxF6ABFSZsELxiz14FGmenDxR8uY0lD+gs1a4hQZJocR6vhd
+Ce9Bv04cbc6ezXSSX/66lMAuY27N1TiaHIxVGJ3B0l+7j2v2YIYQ/5EBHfiq6dc2
+6oNVfQBhkIxJqtTe6MWtpLZmBXl2Hu58lBiOpdXh8lYArpsG2AgMdXuCJ9e1IOlS
+U1PL/M0ULo13ofedLhFB+myi2Zt+Nb7Xy68ajlv5ibzpwFXjht42nNjDKVJE1NQG
+GuY8VNJ5UdaD+ND9LKvT+FqxfXw3iHfeDeItwvYvJWsUSLg8Ejudy/hKkSf2himS
+OwopZQM5BcC98Ztuv1Bt7uClOZ4gAg==
+=usu0
+-----END PGP SIGNATURE-----
 
-> But yes. I'd probably captured it in layers, and say that we have a
-> 
-> WWAN framework layer
->  - discover, query, configure WWAN units
->  - enable, disable channels to the functions inside the WWAN units
-> 
-> WWAN device driver
->  - implement (partial) API offered by WWAN framework layer to allow
->    these things
->    (sometimes may not allow creating more control or data channels for
->    example, and fixed function channels are precreated, but then can
->    still discover data about the device and configure the channels
->  - implement the device-specific protocols etc. necessary to achieve
->    this
-> 
-> Userspace
->  - uses control function channel (e.g. TTY) to talk directly to the WWAN
->    unit's control function
->  - uses WWAN framework APIs to create/configure/... (other) function
->    channels
->    (it may be necessary to create a control channel even, before being
->    able to use it, since different options (AT/MBIM/QMI) may be there
->  - configures netdevs (data function channels) after their creation
-
-I don't think I have any argument with this.  I'm going to try to
-put together something that goes beyond what I wrote in this message,
-to try to capture what I think we agree on in a sort of loose design
-document.
-
-Thanks Johannes.
-
-					-Alex
+--Sig_/Vg_=Hw1pb4_qzWk1n/toyOx--
