@@ -2,87 +2,93 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F48CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44018C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBF4216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561578267;
-	bh=rBu+OldLiSngbm8/ysQRYN+O50QJLZUCg6OA0kQV0p4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yK2RPyhXZHKfyqlaspUSuS5ofESKuwtq2JRWL8ofXrohXyn8k5VUYtdsOdr3fdIhg
-	 NnD30Eg2r2OoTXKpkYUXs9VA64RDiqRg2rBSiqG0/k7B6kasxlRdQMNkt9AoWrAabR
-	 YabDvMu83znsA+Qx5kajd9f9ZepwyHbY8HLaXvkw=
+	by mail.kernel.org (Postfix) with ESMTP id 1A193216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfFZTo0 (ORCPT
+        id S1726401AbfFZTqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:44:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFZToZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:44:25 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFAE92085A;
-        Wed, 26 Jun 2019 19:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561578264;
-        bh=rBu+OldLiSngbm8/ysQRYN+O50QJLZUCg6OA0kQV0p4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BDyuIxJXWJ4a6rkOTPOPomy/c5pCTAc5ySuDGJTdDox7Nns92WdfOFbVru3h/7EZj
-         MbhDDklmqDmsrnrRZ6keYfLc3WL/T1GzOSHYHTK1irpSQ00WcleP5AuBN+BeNJhKJf
-         sSKXLiVjKwQvU3FhRItfZvijoT/nVxGg8cLQxI24=
-Date:   Wed, 26 Jun 2019 20:44:19 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Stefan Popa <stefan.popa@analog.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: iio: frequency: Add ADF4372 PLL
- documentation
-Message-ID: <20190626204419.5b0f56f8@archlinux>
-In-Reply-To: <CAL_JsqKW5qKYOXD8N=uCdoUxuw9iT+Lw-NhJuUuUPWj0dzdv-Q@mail.gmail.com>
-References: <1561389162-26291-1-git-send-email-stefan.popa@analog.com>
-        <CAL_JsqKW5qKYOXD8N=uCdoUxuw9iT+Lw-NhJuUuUPWj0dzdv-Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Jun 2019 15:46:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50238 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZTqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:46:24 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgDro-00054F-Ep; Wed, 26 Jun 2019 21:46:04 +0200
+Date:   Wed, 26 Jun 2019 21:46:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shawn Landden <shawn@git.icu>,
+        clang-built-linux@googlegroups.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+In-Reply-To: <20190626190028.GA14249@archlinux-epyc>
+Message-ID: <alpine.DEB.2.21.1906262140570.32342@nanos.tec.linutronix.de>
+References: <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com> <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com> <20190625071846.GN3436@hirez.programming.kicks-ass.net> <201906251009.BCB7438@keescook> <20190625180525.GA119831@archlinux-epyc>
+ <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de> <20190625202746.GA83499@archlinux-epyc> <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de> <20190626051035.GA114229@archlinux-epyc> <alpine.DEB.2.21.1906261711540.32342@nanos.tec.linutronix.de>
+ <20190626190028.GA14249@archlinux-epyc>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 08:45:58 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
-
-> On Mon, Jun 24, 2019 at 9:40 AM Stefan Popa <stefan.popa@analog.com> wrote:
-> >
-> > Document support for ADF4372 SPI Wideband Synthesizer.
-> >
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> > ---
-> >  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)  
+On Wed, 26 Jun 2019, Nathan Chancellor wrote:
+> On Wed, Jun 26, 2019 at 05:18:37PM +0200, Thomas Gleixner wrote:
+> > tarball with log and the preprocessed source and run scripts:
+> > 
+> >     https://tglx.de/~tglx/tc-crash.tar.bz2
+> > 
+> > The machine runs up to date debian stretch which has backports enabled and
+> > I just used the install command from the github project page you linked
+> > to. Getting started section.
+> > 
+> Great, thank you! It explodes during lowering, which is a backend issue
+> so that's fun :/
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing.
+> My guess is that this is a problem with -march=native on that version of
+> LLVM (since a newer one works). Could you try this patch that makes that
+> opt-in and see if that fixes it?
+> 
+> https://github.com/nathanchance/tc-build/commit/9f1ae41cd4246f9e4d011542f094aa0df2c069b4
 
-Thanks,
+clang --version
+clang version 3.8.1-24 (tags/RELEASE_381/final)
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
 
-Jonathan
+./build-llvm.py
+...
+LLVM build duration: 0:03:14
 
-
+Tested-by: Thomas Gleixner <tglx@linutronix.de>
