@@ -2,101 +2,91 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3838C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14CFC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E4F2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82502147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Y8eo5W1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfFZMlG (ORCPT
+        id S1727643AbfFZMlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:41:06 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:35366 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbfFZMlF (ORCPT
+        Wed, 26 Jun 2019 08:41:18 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:17764 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727618AbfFZMlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:41:05 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 875BA20042;
-        Wed, 26 Jun 2019 14:41:02 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 14:41:00 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: Re: [PATCH v6 0/2] Add DSI panel driver for Raydium RM67191
-Message-ID: <20190626124100.GA7337@ravnborg.org>
-References: <1561550907-9733-1-git-send-email-robert.chiras@nxp.com>
-MIME-Version: 1.0
+        Wed, 26 Jun 2019 08:41:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1561552871;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=E23wCGPFOoYgw+3FSRZ9zJVg+DR9nmCJTrte3qyokfc=;
+        b=Y8eo5W1ExqUMNngchdOKaTtOYjsKtOryH06WybysFl4JiyGpSGlYBgZcizgdF16xeC
+        db2UMaKSjYPEL5kTC3aJmS7bhfb0JGobNMaDj+8zbNiJ7GwoNdNTnHBDymg72irGLNSM
+        UIz5k2yJuWp51yuZCz/SzamaT+mtOMD2bdosIffnI3Vs6aveBodvBgDIv5kIpt3giLmQ
+        I4DFrd07m4X6SbDr4LOSJOOz7Q+9Wk6kyRiT+WbzbeHSkKVT+KJkFesd4pcZ5/VTHIq1
+        gERVn3aXMRuxVJ2fFW4S12AvKJMbOmjlSrUvK2ymxddGoUObOodc5cHmRpzplsiablj4
+        GhGg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSUXA0Pfg=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.24 DYNA|AUTH)
+        with ESMTPSA id V09459v5QCepbN8
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 26 Jun 2019 14:40:51 +0200 (CEST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561550907-9733-1-git-send-email-robert.chiras@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=scLJrMPQxwMJoNrha8MA:9 a=CjuIK1q_8ugA:10
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v3 0/5] drm/panel-simple: Add panel parameters for ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190626073350.GA15288@ravnborg.org>
+Date:   Wed, 26 Jun 2019 14:40:50 +0200
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, marek.belisko@gmail.com,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        tomi.valkeinen@ti.com, Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CF1D9929-58D2-4E75-932A-870D11BBFBDE@goldelico.com>
+References: <cover.1559905870.git.hns@goldelico.com> <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com> <20190625204356.GF18595@ravnborg.org> <20190626073350.GA15288@ravnborg.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 03:08:25PM +0300, Robert Chiras wrote:
-> This patch-set contains the DRM panel driver and dt-bindings documentation
-> for the DSI driven panel: Raydium RM67191.
-> 
-> v6:
-> - Collected Reviewed-by from Fabio
-> - Removed unused variables (sam)
-> 
-> v5:
-> - Removed unnecessary debug messages (fabio)
-> - Handled error case for gpio pin (fabio)
-> 
-> v4:
-> - Changed default_timing structure type from 'struct display_timing' to
->   'struct drm_display_mode' (fabio)
-> - Replaced devm_gpiod_get with devm_gpiod_get_optional (fabio)
-> - Added power regulators (fabio)
-> - Removed pm_ops (fabio)
-> 
-> v3:
-> - Added myself to MAINTAINERS for this driver (sam)
-> - Removed display-timings property (fabio)
-> - Fixed dt description (sam)
-> - Re-arranged calls inside get_modes function (sam)
-> - Changed ifdefs with _maybe_unused for suspend/resume functions (sam)
-> - Collected Reviewed-by from Sam
-> 
-> v2:
-> - Fixed 'reset-gpio' to 'reset-gpios' property naming (fabio)
-> - Changed the state of the reset gpio to active low and fixed how it is
->   handled in driver (fabio)
-> - Fixed copyright statement (daniel)
-> - Reordered includes (sam)
-> - Added defines for panel specific color formats (fabio)
-> - Removed unnecessary tests in enable and unprepare (sam)
-> - Removed the unnecessary backlight write in enable (sam)
-> *** SUBJECT HERE ***
-> 
-> *** BLURB HERE ***
-> 
-> Robert Chiras (2):
->   dt-bindings: display: panel: Add support for Raydium RM67191 panel
->   drm/panel: Add support for Raydium RM67191 panel driver
+Hi Sam,
 
-Thanks, patches are applied to drm-misc-next and pushed out.
+> Am 26.06.2019 um 09:33 schrieb Sam Ravnborg <sam@ravnborg.org>:
+>=20
+> Hi Nikolaus.
+>=20
+>>>=20
+>>> any progress towards merging this somewhere? It did not yet arrive =
+in linux-next.
+>>>=20
+>>> BTW: should also be applied to 5.2
+>> The drm bits are reviewed. The DT bits needs OK from DT people.
+>> When we have OK from DT people we can apply them all to =
+drm-misc-next.
+>=20
+> I got OK on irc from Rob to process these.
+> All patches are now applied to drm-misc-next.
 
-	Sam
+Thanks for taking care of this!
+
+>=20
+> 	Sam
+
+BR,
+Nikolaus
+
