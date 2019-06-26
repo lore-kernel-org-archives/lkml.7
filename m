@@ -2,124 +2,117 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE3CC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71552C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47189208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3487C2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gGTTMbeA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDG9THSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfFZEdh (ORCPT
+        id S1726612AbfFZEkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 00:33:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:59323 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbfFZEdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 00:33:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45YVXF5TgTz9s4V;
-        Wed, 26 Jun 2019 14:33:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561523613;
-        bh=GnKZEBSZpJW2XWCODba6I/alezaYiCwHX7DTAsgReQ4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=gGTTMbeA9SOHI94p5sI2zKkhh8ykhyOFENgn3IXPJ2ZVLRpYDSEeY1N05g0fosvxm
-         BSOY1Tyh3FrCmTporKikJBh25YHPaNuWOM+sVQSaZJJtJ6ZO6s1F5kQQdg3OFNowMi
-         TA3PSwU3z4D7K0b7QpYJ4b0i2CjHNafwlRdioflXlw+5i9iQ2oLcNOBSIAs6hyNF7U
-         oEn/QuIN1nTF7KkjMrrA1yj+Ikd/IeBjROsxSdMdqONqVZTPzOYUQ4Jmhyjt3J4j0e
-         5zfD6+HJOipU3ymGw12yb0O8xl0LiUExxrmnHzWzGZrAlElhZJViYjf7p6Vay7NWa/
-         ET1cpYe1RE8xg==
-Date:   Wed, 26 Jun 2019 14:33:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the keys tree with the integrity tree
-Message-ID: <20190626143333.7ee527ca@canb.auug.org.au>
+        Wed, 26 Jun 2019 00:40:14 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34778 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbfFZEkN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 00:40:13 -0400
+Received: by mail-ot1-f67.google.com with SMTP id n5so1228820otk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 21:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M1Tx6hW48tWiA/Izb/w3vicI3ly2WQB2siq+u/tEzxo=;
+        b=gDG9THSojY0XQqfQlzWkYg3ux8Ratr6ecHKdE4kag2yxNI2HzUDTaPuex8a79ZTUHg
+         KbA9skWcdhdIjp/WPLtaOARIGP18dHP8xYNj+LeaeAw0+hdgfj+hrIon7LR5t8zBmIv2
+         dyLVCZZbYt5v3UbtDcMAAMa4spIXnnZ6n5CSpAb2/NnqQnyhXknkGsr1/6M34mPoS7t5
+         XCRf1Vw/27pVy6ipVYnGRGeF4ww+dFdvvodRXMQdg3yQ2SwzvLC46/SLUyGs/o9UI1BA
+         rpl4qyMaxB7YCc7eyeqjD7+z5l+pa/27DAXWoFMC0Ft8SfF2VyLTLW4wYawaMl/+LX9O
+         wLzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M1Tx6hW48tWiA/Izb/w3vicI3ly2WQB2siq+u/tEzxo=;
+        b=ACF8rutsY+mJQOcVo4X/l3K9v0dOkV08eXXJ6nHJVM9L00itc50ga1MxPJQ75pqVhp
+         +7eIEPiMmmQ/peAgT+R4xeRjBsAaOLIUBywdHeOrvK/Uc4IN+rh/4dP/ddJuZ3o6Unzl
+         QYjpbPWTSoU0uiy6gYe73zUD9RdBXJZayy2Zsfh5ceKtinqpk2I6+A8PfiA8eJZ90t+z
+         M/rWif+NmMf/1xVmBfOwCmmTPoMUZnYUmBrPpiML/z5Y2YhUz4uYtxNjqWezl7Yf/r3C
+         AiUu+CnViMEQtqtNEGlNbcgzHI56XH65mzmo/bLGDdJWrt7sNCQ8tlsvTdcqsChO4LEy
+         TQLw==
+X-Gm-Message-State: APjAAAVVQ1T3JAXPLNlZC9voPdTzzyLVAnyCRQPfbgBRttTIWsoQxsud
+        72Uf0crF2E/ARJGGmLnacioGe4bTfgVK6E/hiTqhyf6/9Wg=
+X-Google-Smtp-Source: APXvYqzAeMq8PT8el6Qv/4swP/UqCGHHNkDDdTwN72DbcsXy9JARTKrLF0dJV5+LzMd+dweoCQwIMd+RwVqd93dqSuM=
+X-Received: by 2002:a9d:67d6:: with SMTP id c22mr1704290otn.327.1561524013040;
+ Tue, 25 Jun 2019 21:40:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/AzL_04kP1980wy1=bN/TNtr"; protocol="application/pgp-signature"
+References: <1561479779-6660-1-git-send-email-dianzhangchen0@gmail.com> <alpine.DEB.2.21.1906251835370.32342@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906251835370.32342@nanos.tec.linutronix.de>
+From:   Dianzhang Chen <dianzhangchen0@gmail.com>
+Date:   Wed, 26 Jun 2019 12:40:01 +0800
+Message-ID: <CAFbcbMBFS5h6asOpAma_Zq3T1TS31Pno1s9BkWDnYg0zk2ps0g@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/tls: Fix possible spectre-v1 in do_get_thread_area()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AzL_04kP1980wy1=bN/TNtr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 26, 2019 at 12:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Wed, 26 Jun 2019, Dianzhang Chen wrote:
+>
+> > The index to access the threads tls array is controlled by userspace
+> > via syscall: sys_ptrace(), hence leading to a potential exploitation
+> > of the Spectre variant 1 vulnerability.
+> > The idx can be controlled from:
+> >         ptrace -> arch_ptrace -> do_get_thread_area.
+> >
+> > Fix this by sanitizing idx before using it to index p->thread.tls_array.
+>
+> Just that I can't find a place which sanitizes the value....
+>
+> > +#include <linux/nospec.h>
+>
+> and nothing which uses anything from this header file.
+>
+> >  #include <linux/uaccess.h>
+> >  #include <asm/desc.h>
+> > @@ -220,6 +221,7 @@ int do_get_thread_area(struct task_struct *p, int idx,
+> >                      struct user_desc __user *u_info)
+> >  {
+> >       struct user_desc info;
+> > +     int index;
+> >
+> >       if (idx == -1 && get_user(idx, &u_info->entry_number))
+> >               return -EFAULT;
+> > @@ -227,8 +229,9 @@ int do_get_thread_area(struct task_struct *p, int idx,
+> >       if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
+> >               return -EINVAL;
+> >
+> > -     fill_user_desc(&info, idx,
+> > -                    &p->thread.tls_array[idx - GDT_ENTRY_TLS_MIN]);
+> > +     index = idx - GDT_ENTRY_TLS_MIN;
+> > +
+> > +     fill_user_desc(&info, idx, &p->thread.tls_array[index]);
+>
+> So this is just a cosmetic change and the compiler will create probably
+> exactly the same binary.
+>
+> Thanks,
+>
+>         tglx
+>
 
-Hi all,
-
-Today's linux-next merge of the keys tree got a conflict in:
-
-  security/integrity/digsig.c
-
-between commit:
-
-  8c655784e2cf ("integrity: Fix __integrity_init_keyring() section mismatch=
-")
-
-from the integrity tree and commit:
-
-  79512db59dc8 ("keys: Replace uid/gid/perm permissions checking with an AC=
-L")
-
-from the keys tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc security/integrity/digsig.c
-index 868ade3e8970,e432900c00b9..000000000000
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@@ -69,9 -70,8 +70,9 @@@ int integrity_digsig_verify(const unsig
-  	return -EOPNOTSUPP;
-  }
- =20
- -static int __integrity_init_keyring(const unsigned int id, struct key_acl=
- *acl,
- -				    struct key_restriction *restriction)
- +static int __init __integrity_init_keyring(const unsigned int id,
-- 					   key_perm_t perm,
-++					   struct key_acl *acl,
- +					   struct key_restriction *restriction)
-  {
-  	const struct cred *cred =3D current_cred();
-  	int err =3D 0;
-
---Sig_/AzL_04kP1980wy1=bN/TNtr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0S9Z0ACgkQAVBC80lX
-0GxLyQf7BkYLYN+hcxGgNyEap6vda6zNXLzt17WnCAgbaSTJ2GE6/Z2DbUZ1Z9/F
-ggLO0oP/e/PY2KLpYnqzMplFK7ZwL3+oe5gHfaUSbF1rAAIxNBpUXq+59UgDvMOP
-F1mL4REEuNTn9IMH+glG9veKkxVFkQTpIK+IfXz/EcgrkXgadgacw7k+PUVVVjg2
-CPKec0kFccjv88nlQdEUZENWai4rPCjSrrw9+ypKvnT56+OLHQcTPgDL40uxdBlN
-W5aMrOIHBnJ8hIC1AiUwEpOmwzr4gRE85YKCyseCcT4T4977SfosiVnP/klUNzqB
-M3nNmr2gSOMIvbLqDOgvo6WBfRxH4w==
-=9B8o
------END PGP SIGNATURE-----
-
---Sig_/AzL_04kP1980wy1=bN/TNtr--
+sorry for being careless, my bad.
+And thanks for suggestion, i'll fix that in next version.
