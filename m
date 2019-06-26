@@ -2,89 +2,113 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDE7C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED4AC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC212147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8846C216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="NjgJOZQI"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="MBhySszZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfFZN0n (ORCPT
+        id S1727693AbfFZN04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:26:43 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44434 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfFZN0m (ORCPT
+        Wed, 26 Jun 2019 09:26:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41284 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfFZN0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:26:42 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so1558832lfm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:26:41 -0700 (PDT)
+        Wed, 26 Jun 2019 09:26:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y72so1226319pgd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0KQNsn2fCmYitiDv9gkNd7pWrAY8HVNXqrIMAFIYMEU=;
-        b=NjgJOZQI/OY7TPBgoHm3D6Ry2QJNB0nWXc0QO3Y/AkulA6b6x+4s07J6po52HkDEYI
-         9J/z9rxXHc8JWuQbQsoWS1T9uOphoAQrhpC0dfhmfm0UgaGuTeiOaJaD3mPn+hEaAvPi
-         1gT+zh2HDcwd2D880J4ulsETR5gWrqkvu5b5ufYiWntVh9jp8BN2fTnpAQZJW5cJBnDR
-         zxujoB0IlUBTZgJ1Zg4DctC6+uuN1b4IxwlDSrI1Roeq3t2hdUendNPOgFMnQynDC9Nm
-         4rTSCrqxrqWiCQV7Zse2njjzpojDiJ7nxY5eRW+cmjAv/5nnnPheoK1E2NENiZtEt68s
-         l7kg==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3KkjIEWuvBf7zc0GINznLy2IcxBym+z5vEk9sZ3vG7M=;
+        b=MBhySszZUbVd8/OYyYuorpH67jBzTVvfKEb3Yw7Vk91sRSJr91KYR5gVMCnad6IxAe
+         2T5c7TjfeskPmXYDTJXiKuFSDmg/RsH8Nb0YdmjPNFLUqN6fQsqMtGyN3ekzzULUSkVh
+         9hsfbLFcPiSR989uNqZHtW8C5ZD8sxhQ0UQZ1n7WQCE05VqvP7oT6YoFvpBLT6CPtiS6
+         5QHAnQDwxeiqy73h3tNIKipFC7SIRRYar5ACYqQk4ZIYHRAeNf+EhbpCTjxCw0rJ+lGt
+         buFi1/SNjrz2R0lkmeobmNJ8cqyPHMxrT8BxhX4p1GZaTMBkPuiJHZV1ilDVFn0kbCPm
+         oeuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0KQNsn2fCmYitiDv9gkNd7pWrAY8HVNXqrIMAFIYMEU=;
-        b=jAgEuiyAE2/pmQekovSDRaxQJ85qBkFvp/Y/+Y2zhWrR6gL39a/aoLsoEISUhvVZjY
-         14yAmsaf3eEVa/2W5H6DnfL70Bhg8d8QsaEM/2muuCkmwotslbdMfIXjwD2ryvFDCM3h
-         Wggf1O5/HJ7D8MYh/0+ktOfEvlcjV8BxIpx5tBClUKgI6+We5uHcnFB8LLvW/AGq3piS
-         41DjTqSrDzfpvKWHW8gUYCsQJx7A4B5pKCCYe6w6on59Ub//p0RQ4euIE858ebdwDtfd
-         mdRdA0CJns3r97HJCGfEnMOY9BaGzL/QlAxTWl2MyVeGWjl06OINAz++2XY6d8CnImI1
-         FcFQ==
-X-Gm-Message-State: APjAAAVI/dQ4u+3JUsWBvOm3SDIVaddACcVCXAcqvVpP3nwdHGIAnsKT
-        RuoLQjTfcCsVP3kKrewNlXMxTQWGqPgMEBN6ri0LNg==
-X-Google-Smtp-Source: APXvYqybuKo1OFuGMvZFtMATVhgvwQ0TaQVnkAkxGJ6JbLBBP+WfwR/5MF8aidBvBHtvBRNzwMnOhbAikP47ncpNnJ4=
-X-Received: by 2002:ac2:495e:: with SMTP id o30mr2678993lfi.140.1561555600322;
- Wed, 26 Jun 2019 06:26:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3KkjIEWuvBf7zc0GINznLy2IcxBym+z5vEk9sZ3vG7M=;
+        b=BpdmzBcjSKQHQnZBqivM7kCspOObvpeDtPz/p0dq94kvVwyYVYRdicDpFTfT6fhnt7
+         RPQCin6MB27zNbYLAoohP4Fs+pPk6PsOSsVkuDQRKGdl1pW29ESM8gZshbcdsYAHqwRc
+         eB5skuiaUGAQJOe1dTUkYSSLzV5evX8AlO+bb9Cgdj4aY5Udj9ILrSZvQ2HSBq/JyuJ2
+         +kVl/XEZcnwj4Az+JPMzNEK1LTQ37QeX6SjrSehq4j5DzUY+pa1pmRp/em/KKsVWjXgc
+         AIQN7tDBWgw2883UB5f1OoA0A6UX+YgkVWzhcliUMk36EZqoTuCmmC0gWLTaYdNuQMCi
+         ODOA==
+X-Gm-Message-State: APjAAAU7lEm6ulOPVhJn4QPqMsGcSYClYIAVl7qME6+/BFxzHJU+Wapq
+        RpmHEYTI1JRQtEj6jIWo6//uJw==
+X-Google-Smtp-Source: APXvYqwPGu55AjfaZd1TTCWoTMolJzPxRrzyUyXSP/xhSDDq2xbvtu1VChXYl7dFT/JANgcf4Rx5bg==
+X-Received: by 2002:a65:45c1:: with SMTP id m1mr3137351pgr.260.1561555615012;
+        Wed, 26 Jun 2019 06:26:55 -0700 (PDT)
+Received: from localhost.localdomain (36-239-239-167.dynamic-ip.hinet.net. [36.239.239.167])
+        by smtp.gmail.com with ESMTPSA id a21sm28649147pfi.27.2019.06.26.06.26.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 06:26:54 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>, Milo Kim <milo.kim@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [RFT][PATCH 1/2] regulator: lm363x: Fix off-by-one n_voltages for lm3632 ldo_vpos/ldo_vneg
+Date:   Wed, 26 Jun 2019 21:26:31 +0800
+Message-Id: <20190626132632.32629-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190626132427.12615-1-colin.king@canonical.com>
-In-Reply-To: <20190626132427.12615-1-colin.king@canonical.com>
-From:   Daniel Stone <daniel@fooishbar.org>
-Date:   Wed, 26 Jun 2019 14:25:34 +0100
-Message-ID: <CAPj87rM9y5Zen5A5KkiCqqUF5m+vAwwtLj-iJrcwFfzMev+Mrw@mail.gmail.com>
-Subject: Re: [PATCH][next[ drm/amd/display: fix a couple of spelling mistakes
-To:     Colin King <colin.king@canonical.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Nikola Cornij <nikola.cornij@amd.com>,
-        Wenjing Liu <Wenjing.Liu@amd.com>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+According to the datasheet https://www.ti.com/lit/ds/symlink/lm3632a.pdf
+Table 20. VPOS Bias Register Field Descriptions VPOS[5:0]
+Sets the Positive Display Bias (LDO) Voltage (50 mV per step)
+000000: 4 V
+000001: 4.05 V
+000010: 4.1 V
+....................
+011101: 5.45 V
+011110: 5.5 V (Default)
+011111: 5.55 V
+....................
+100111: 5.95 V
+101000: 6 V
+Note: Codes 101001 to 111111 map to 6 V
 
-On Wed, 26 Jun 2019 at 14:24, Colin King <colin.king@canonical.com> wrote:
-> There are a couple of spelling mistakes in dm_error messages and
-> a comment. Fix these.
+The LM3632_LDO_VSEL_MAX should be 0b101000 (0x28), so the maximum voltage
+can match the datasheet.
 
-Whilst there, you might fix the '[next[' typo in the commit message.
+Fixes: 3a8d1a73a037 ("regulator: add LM363X driver")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/lm363x-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cheers,
-Daniel
+diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/lm363x-regulator.c
+index 5647e2f97ff8..e4a27d63bf90 100644
+--- a/drivers/regulator/lm363x-regulator.c
++++ b/drivers/regulator/lm363x-regulator.c
+@@ -30,7 +30,7 @@
+ 
+ /* LM3632 */
+ #define LM3632_BOOST_VSEL_MAX		0x26
+-#define LM3632_LDO_VSEL_MAX		0x29
++#define LM3632_LDO_VSEL_MAX		0x28
+ #define LM3632_VBOOST_MIN		4500000
+ #define LM3632_VLDO_MIN			4000000
+ 
+-- 
+2.20.1
+
