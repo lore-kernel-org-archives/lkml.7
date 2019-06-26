@@ -2,90 +2,84 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8C7C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CFBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A59208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561548397;
-	bh=OIl1wVPMn+sQwxu8nb6ZglvHM4z1+uE/DqfXgi9tTwI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hDJfswklwUELGaST8cSMLj4QIkZaasCeuWE+BqjNYdKlyXpkZwiQpnLHpAn+EeEoP
-	 zC0pws9Un+1I+2FfTo6NYJfluTWyBS+ymJ2jJS3jKN3C2bTg8yaDY01ICfcpchpiMD
-	 2448juIZ3fT0GhoURya9TEuwteH8piLQhR23zPJo=
+	by mail.kernel.org (Postfix) with ESMTP id 937F5208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfFZL0g (ORCPT
+        id S1727278AbfFZL0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:26:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbfFZL0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:26:36 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97F252080C;
-        Wed, 26 Jun 2019 11:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561548395;
-        bh=OIl1wVPMn+sQwxu8nb6ZglvHM4z1+uE/DqfXgi9tTwI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hJV4SBaphFgNG2QfDbq/9pJOLk3HSBUUxmQOSwNDe9hTT3kTpQFZhoTPRC1a96q4O
-         3Rrl98CrLpiAUCTdpUWMetKppyqeGgKt0pxGJr0rzs1Ty/T+Q4841E1D4lQNyj9vHe
-         GiELPGHfoZ+PT1jHWaasvVffYK1g3bKXIOIN/dUY=
-From:   Jeff Layton <jlayton@kernel.org>
-To:     zyan@redhat.com, idryomov@gmail.com, sage@redhat.com
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: take over for Zheng as CephFS kernel client maintainer
-Date:   Wed, 26 Jun 2019 07:26:33 -0400
-Message-Id: <20190626112633.12267-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 26 Jun 2019 07:26:41 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40482 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFZL0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 07:26:40 -0400
+Received: by mail-yw1-f67.google.com with SMTP id b143so979421ywb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 04:26:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=KHFytg747JkFq6clGmR7aJK1huz8uziX9oTGDlDLd/M=;
+        b=MPyeY/DUaW+dBXHBnOfOv9XDF31f6k7zIDwXfJLx33UW1WPx+5lv2Py9QAZYRQYOsZ
+         CpMWsvMF1zVVORp6vu7Zhh6olw3rT5NTfME4PO8jCKKDKP8RiP86qqMGGZUNLvQ9wbc1
+         SFH5YfrwZ73ma0S+h2onzVej/3wPXekHeF/dy9NTKN0eLUwAJkvYUzLSR3HnwNfeHfpy
+         iWqmK2JzLpgksFuf3LqBPm6WVVWuq0M+8N/4tNKG0T5JTyUo4+FLnsBz6WwRACB9AqgF
+         fKkz0kqRAZ0NZljomXx09EAt2Vu4IqHSysiM9WjHRt9zyxUiI6wFS0zph9tPF6WzO9b8
+         Qdrw==
+X-Gm-Message-State: APjAAAW1a/llISA/GjmjUmjOT8BzgIaPlZcdLM5z3/zZMGIq/sfE9dBZ
+        GvsA4a4iTcTW0dhFUE1u4z3bshaorho=
+X-Google-Smtp-Source: APXvYqxhNEP2EQRhWOcNJVBd0njCM2XIvztZ9nrzePl5N9fpyvC7scQXuQ0tidm25VUsOi+aqwO1+g==
+X-Received: by 2002:a81:3bd4:: with SMTP id i203mr2410395ywa.116.1561548399345;
+        Wed, 26 Jun 2019 04:26:39 -0700 (PDT)
+Received: from tleilax.poochiereds.net (cpe-2606-A000-1100-37D-0-0-0-C58.dyn6.twc.com. [2606:a000:1100:37d::c58])
+        by smtp.gmail.com with ESMTPSA id 200sm4468605ywq.102.2019.06.26.04.26.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 04:26:38 -0700 (PDT)
+Message-ID: <b6056c07d6bfaeee50924d8845504f88e4477c50.camel@redhat.com>
+Subject: Re: New CephFS kernel client maintainer
+From:   Jeff Layton <jlayton@redhat.com>
+To:     "Yan, Zheng" <zyan@redhat.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Jun 2019 07:26:36 -0400
+In-Reply-To: <23249968-661b-2d50-9261-8bcd114d7984@redhat.com>
+References: <23249968-661b-2d50-9261-8bcd114d7984@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.3 (3.32.3-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zheng wants to be able to spend more time working on the MDS, so I've
-volunteered to take over for him as the CephFS kernel client maintainer.
+On Thu, 2019-05-30 at 22:07 +0800, Yan, Zheng wrote:
+> Hello everyone.
+> 
+> I'd like to introduce new CephFS kernel client maintainer Jeff Layton 
+> <jlayton@redhat.com>. Jeff is a long time Linux kernel developer 
+> specializing in network file systems. He has worked on CephFS for three 
+> years. He also has made significant contributions to the kernel's NFS 
+> client and server, the CIFS client and the kernel's VFS layer.
+> 
+> I will continue to work on CephFS, but spend more time on improving 
+> CephFS metadata server.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sorry for taking so long to respond and thanks for the intro. You leave
+some big shoes to fill!
 
-Zheng, I'm assuming for now that you don't want to stay on as
-co-maintainer. Let me know if that's incorrect and I'll resend.
+I've finally gotten around to sending a patch for the MAINTAINERS file.
+I'm assuming (for now) that you don't want to stay on as co-maintainer.
+Let me know if that's incorrect and I'll fix up the patch.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d0ed735994a5..8836f9eb2ff0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3715,7 +3715,7 @@ F:	arch/powerpc/platforms/cell/
- 
- CEPH COMMON CODE (LIBCEPH)
- M:	Ilya Dryomov <idryomov@gmail.com>
--M:	"Yan, Zheng" <zyan@redhat.com>
-+M:	Jeff Layton <jlayton@kernel.org>
- M:	Sage Weil <sage@redhat.com>
- L:	ceph-devel@vger.kernel.org
- W:	http://ceph.com/
-@@ -3727,7 +3727,7 @@ F:	include/linux/ceph/
- F:	include/linux/crush/
- 
- CEPH DISTRIBUTED FILE SYSTEM CLIENT (CEPH)
--M:	"Yan, Zheng" <zyan@redhat.com>
-+M:	Jeff Layton <jlayton@kernel.org>
- M:	Sage Weil <sage@redhat.com>
- M:	Ilya Dryomov <idryomov@gmail.com>
- L:	ceph-devel@vger.kernel.org
+Cheers,
 -- 
-2.21.0
+Jeff Layton <jlayton@redhat.com>
 
