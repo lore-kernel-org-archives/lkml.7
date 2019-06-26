@@ -2,87 +2,104 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C50C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADA6C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AA82080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FC820659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfFZRbg (ORCPT
+        id S1726464AbfFZRdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:31:36 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:54289 "EHLO
+        Wed, 26 Jun 2019 13:33:02 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:41971 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfFZRbf (ORCPT
+        with ESMTP id S1726042AbfFZRdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:31:35 -0400
+        Wed, 26 Jun 2019 13:33:01 -0400
 Received: from [192.168.1.110] ([77.4.50.183]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MfZ9C-1iD3bn302q-00fxyE; Wed, 26 Jun 2019 19:31:31 +0200
-Subject: Re: [PATCH 1/2] siox: add helper macro to simplify driver
- registration
-To:     Linus Walleij <linus.walleij@linaro.org>,
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M6UVr-1hdirL1gd7-006uGv; Wed, 26 Jun 2019 19:27:06 +0200
+Subject: Re: [PATCH 01/30] include: linux: platform_device: more helpers for
+ declaring platform drivers
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        t.scherer@eckelmann.de
-References: <1561354834-22617-1-git-send-email-info@metux.net>
- <1561354834-22617-2-git-send-email-info@metux.net>
- <CACRpkdbZ68O41dx7uCccUF_jvmC3_YVvWEEo9igknMC95QEXhQ@mail.gmail.com>
+Cc:     linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        mcoquelin.stm32@gmail.com, thloh@altera.com, festevam@gmail.com,
+        linus.walleij@linaro.org, khilman@kernel.org,
+        patches@opensource.cirrus.com, bgolaszewski@baylibre.com,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de, ssantosh@kernel.org,
+        linux-tegra@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        alexandre.torgue@st.com
+References: <1560796871-18560-1-git-send-email-info@metux.net>
+ <20190626061405.qsqq5na4oactuo6f@pengutronix.de>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
 Organization: metux IT consult
-Message-ID: <c59bfd61-e6f2-2434-0085-f75e85b5deb0@metux.net>
-Date:   Wed, 26 Jun 2019 19:31:30 +0200
+Message-ID: <30f541a7-ef9d-d687-ab76-22a4544258f8@metux.net>
+Date:   Wed, 26 Jun 2019 19:27:02 +0200
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbZ68O41dx7uCccUF_jvmC3_YVvWEEo9igknMC95QEXhQ@mail.gmail.com>
+In-Reply-To: <20190626061405.qsqq5na4oactuo6f@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:D+qaod/gY3lxTsAGn7wxZA/4ZJMGxEPhRPb4cAtIK9dTVoHeULo
- 9r5GA/tOo/N5TfjrQf2yuz5/PiWTnPYq+0ZlAHgw2kUCAtYDWtBbeYIck6ysZVjEl61lsXV
- 57OGScr6eAQ3n8QoJVvXRKG4HxY4RXzjCJDXD2ulmJ/aOiDcQhsKfogVzDUF8wjODvQiGO+
- BVxg8bICsSaYNwMyQWalQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Y/6NBZ6zpTI=:5kr/Jaw8pAeb09qLSQetrr
- Pt/y8jIU0DL4yEcXIZuhFyUIWdyq9jWqj/PHjjzcUfYQVUSNWi/zDAR9Kg8d6vr/bwlPeWMfW
- EEdNILCZPU6tA+IeD7O6nXkWWFMZ9c8PasoAK4rrtFSepHBjsYrazp39LlFOqNsidwiBqdc+V
- sBMYPonBh8HmZhcbgFhvqiX8PrY+uk1MTNYPH+g5m/JJopVOjOirxBeYk0GnnxcdIFzLkX9JU
- EINKP4nTBldzEDbnYwhYjPT1RXcNZvGStVXicIE/0Dd/PGIrA2dAN8Qf+Q5riL+pAOIBIhw92
- lHU5+/qAhvTifS2Vk/FTb4wCvdIgbfJ0bIsYiVmMfQAJTzpxz49Cr14R58M6YB6YG8iP6kx2F
- D08DWETEXk9YagkWyH3XXTS67m2Fqf3YtzOLxok18Fg5qEVNoz0M6oKMn5zh/Or3u2RElBMY/
- fBalxpNx8lHepaMaIZ3jhvlPZmPqMXXaQ84FD+B8LZpufXGnj1BXnndu6OZx7tF9Zyv97aagD
- uLeS2WMfy9KVqQJiLRhSzQeEaPwfL9zRWRiBrurxItjof4ejHUbuuFKeDG7IgoxyOxiaWHKOj
- r5mEigYO0FJLE1MOV0f+zWncB/54L35qvn0SQn3SVr1ma9scBQdFkSpfqG72sjIn4zGqg672W
- ORDthyTXTcqTcXH4BTvc/1iXi92DOba5OPjZMOb7kVeQnowFYbTCjUvpNFPTRWVwy1ahsNAy6
- tOVoFVRoOKMhXXgRQAAC9B8b4lawoy2AviP4/c/vwFj5W5Sg+hXdFlbXQJQ=
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:4cVH4PkCtQv/LUwiS6UCMsXOnJKPoFgtu8YIQh2qre1SlC0rID3
+ iH0aKQ/MKkZJ2yEuVJpv7mEkC1UjMv1ovjIFymwEqaJMY5AQyXvkOzmTCMq13end5r0f9xS
+ yMx11gxpvqiWbWj5JDclzAGEDJ/U+TuS0GJfpPcHqTpNdKo6+6kBrvObB6Qy47Oj5TZ6PPN
+ S2g10gMfdY9wpMg6E4Uzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:p7DzD82Py24=:LTBxbNA+enqTVtVo1asr5u
+ fojJY6VPTEzYaSJmnoo2Q08KvoDIOijxX27ZhdAkutA8pG3r2+igrKbf0Fr1hVHFN+0+Zm563
+ xU3yBgs2kIQumCzDZakchFcCbHnWcLq1dDjHduz9l5x8WbJ/QjWvztmVLtLec6s3T/7wn9f4b
+ hB94PAd14mx2OzyVmlsrfgS6p7iw5JWUcjH465pyFgPXWaa9f8VjH6xW5ux2bE6+rIMbpk5Ty
+ junIYo1id38mTc1V85zeagLxg1x2WbqCQ08z0saH2UrLQj0TODg2fH+jgg1nULwKYD1b7QksU
+ 5zYpMwlRIfQk33Hio6mvEahIFHMzJ4ehYRrJnkkp5az6d1WwBProOdeVWTK2qVW4zI/UFgwV6
+ NAeOZfNFAsRJkPSNeywmV1Ms6jLg5J6SLBAW/b8VSQxanNDKjFtGLiUsQPGGrygYRASQ/lYRp
+ +u8tbOCLBQKNl9ZVrApeSLLH0ksCfzNH+cZ8GNJCnSQitkHKMCw3t+mOxAGy0aif6rXMPdz9Q
+ m6ftp/V4ktJEzSCtvq1zGgc6rxZALGDd1jSCx8umIEuSe4utCYnm2NJIpJ58Mh496OnAihtyD
+ CHxFOC3zGdx+8PQVDH4pHkwEXG6nvHZfDaSNdRY6hV/UUbFvjekhcfWq+1Ms87SGmTwRNl2hy
+ ec01eIhUZI7jd9eRtU9P3gL6qFG8ol+BFr7lrNRSyVSKVmlZmvsK8AlDOczVKKRXRAsYW9qoc
+ AjvunGTjxWWoot/j7F503lFwZ0SKs+7YtXKRyB+QgYf4oTlYrIKhATZrRkE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.06.19 11:26, Linus Walleij wrote:
-> On Mon, Jun 24, 2019 at 7:40 AM Enrico Weigelt, metux IT consult
-> <info@metux.net> wrote:
-> 
->> From: Enrico Weigelt <info@metux.net>
->>
->> Add more helper macros for trivial driver init cases, similar to the
->> already existing module_platform_driver() or module_i2c_driver().
->>
->> This helps to reduce driver init boilerplate.
->>
->> Signed-off-by: Enrico Weigelt <info@metux.net>
-> 
-> Patch applied with Uwe's ACK.
+On 26.06.19 08:14, Uwe Kleine-König wrote:
+Hi,
 
-thanks to both of you :)
+> Would it make sense to do something like:
+>
+> 	#define __module_platform_driver(__platform_driver, __initlvl) \
+> 	static int __init __platform_driver##_init(void) \
+> 	{ \
+> 		return platform_driver_register(&(__platform_driver)); \
+> 	} \
+> 	__initlvl ## _initcall(__platform_driver##_init); \
+> 	static void __exit __platform_driver##_exit(void) \
+> 	{ \
+> 		platform_driver_unregister(&(__platform_driver)); \
+> 	} \
+> 	module_exit(__platform_driver##_exit);
+>
+> 	#define postcore_platform_driver(__platform_driver)
+__module_platform_driver(__platform_driver, postcore)
+> 	#define subsys_platform_driver(__platform_driver)
+__module_platform_driver(__platform_driver, subsys)
+> 	...
+>
+> Which would be more compact and makes the difference between these
+> macros a bit more obvious.
+yeah, could do that, but not sure whether it's really good for
+readability when we have so many nested macros :p
+
+OTOH, I didn't want to touch the existing macros for now, just trim down
+the actual init boilerplate, postponing further compactions for later.
 
 --mtx
 
