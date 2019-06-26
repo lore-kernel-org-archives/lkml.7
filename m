@@ -2,77 +2,41 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874B3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B00EC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C591216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="r5VP+hiP"
+	by mail.kernel.org (Postfix) with ESMTP id 1AB35216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfFZSef (ORCPT
+        id S1726561AbfFZSel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:34:35 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34056 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfFZSee (ORCPT
+        Wed, 26 Jun 2019 14:34:41 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:35684 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfFZSel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:34:34 -0400
-Received: by mail-qk1-f195.google.com with SMTP id t8so2546657qkt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 11:34:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=bUsYiNyoZNoL9lby/1FtByidZxf9m7iN70pAJQ8cHC0=;
-        b=r5VP+hiPFDl1KT2oQBakfOd9mxdQI719XRPTQTYuuG50ZfGHKYHwHjMUsKt7nA5WaF
-         Ml3W+oex9LoGShtNebp+J8L3h3magpWY/DRmg1RCloe8suDVfKtVUzyNNZlNq473kJHC
-         28/KogVtHOP+FFbELPKWmrtSdx7SmbT6FKEtEsaqXVGH167iyJ73yvx8Wy9Hl585WwpP
-         DvFfZtVg8v/Wqd9rGYl1mN55dTe/HeWcIcawx0FeA3GTlmyNBEjPYjMkZfyuznbFHM/O
-         e59KtZnF3mQHBm9Ytx+AZb8EzpmC3YGuRJhGqQYl3uobg4plf1R6FzAO0DuczDGM1B2b
-         fR2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=bUsYiNyoZNoL9lby/1FtByidZxf9m7iN70pAJQ8cHC0=;
-        b=eLwC/o6QMzr3DZYE3VtKIdqqDQ1HVXMSvAX20XjjFzVQD+vNXSJU1PwCZ/YLePt7GZ
-         rM6Hp2w18I9OI6jVPL6cyKC15oQCnUMNZDVGe87dihphtOpOvjMkxRRUrzYXzHsSSR+K
-         WxxdVl2rnNh82bOu5YB45JPvjEic8aTQP1y3Av8xdVD/kdSqUjAAvu/ypqcqwUm2ow4/
-         nLid0TVEtcLn0B9nVtTdh9m6cKklmPdt2zeT1/P00bsFpABxCbMQyLrMkKb15JtIloec
-         7ghvJyL81ElIah/jhe3OtDAXoFzCuvnsOjmXUYpH7F/XPtN53hKNomVUYpkXT0mRJh02
-         fszA==
-X-Gm-Message-State: APjAAAWKFBhdyZDwe9U6W63qLv9jN+E8nVF/BuekDPSdGZJjvJx7CEYy
-        w7sJQH6jbYa6+00m83PF4jjdZQ==
-X-Google-Smtp-Source: APXvYqwIjRK9ufTFUbOfPl6WKlxXXjYaqCKV8dx/pdoLrLKTUftM+rSEze3dcL/V4SGGMeFv9RhVsQ==
-X-Received: by 2002:a05:620a:1497:: with SMTP id w23mr5125682qkj.49.1561574072737;
-        Wed, 26 Jun 2019 11:34:32 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id d17sm8220627qtp.84.2019.06.26.11.34.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 11:34:32 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 11:34:27 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf v4 2/2] xdp: fix hang while unregistering device
- bound to xdp socket
-Message-ID: <20190626113427.761cc845@cakuba.netronome.com>
-In-Reply-To: <20190626181515.1640-3-i.maximets@samsung.com>
-References: <20190626181515.1640-1-i.maximets@samsung.com>
-        <CGME20190626181528eucas1p190f20427a1d2a64f2efa6cedcfac0826@eucas1p1.samsung.com>
-        <20190626181515.1640-3-i.maximets@samsung.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 26 Jun 2019 14:34:41 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 78A019E73B6;
+        Wed, 26 Jun 2019 19:34:39 +0100 (BST)
+Date:   Wed, 26 Jun 2019 19:34:38 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/5] drivers: spi: core: Add optional stall delay
+ between cs_change transfers
+Message-ID: <20190626193438.7248d0a9@archlinux>
+In-Reply-To: <20190625131328.11883-2-alexandru.ardelean@analog.com>
+References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
+        <20190625131328.11883-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -81,47 +45,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 21:15:15 +0300, Ilya Maximets wrote:
-> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-> index 267b82a4cbcf..56729e74cbea 100644
-> --- a/net/xdp/xdp_umem.c
-> +++ b/net/xdp/xdp_umem.c
-> @@ -140,34 +140,38 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
->  	return err;
->  }
->  
-> -static void xdp_umem_clear_dev(struct xdp_umem *umem)
-> +void xdp_umem_clear_dev(struct xdp_umem *umem)
->  {
-> +	bool lock = rtnl_is_locked();
+On Tue, 25 Jun 2019 16:13:25 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-How do you know it's not just locked by someone else?  You need to pass
-the locked state in if this is called from different paths, some of
-which already hold rtnl.
+> Some devices like the ADIS16460 IMU require a stall period between
+> transfers, i.e. between when the CS is de-asserted and re-asserted. The
+> default value of 10us is not enough. This change makes the delay
+> configurable for when the next CS change goes active.
+> 
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Preferably factor the code which needs the lock out into a separate
-function like this:
+General principle seems fine to me, though naming may need some work.
 
-void __function()
-{
-	do();
-	the();
-	things();
-	under();
-	the();
-	lock();
-}
+cs_low_time or something more specific than stall perhaps?
 
-void function()
-{
-	rtnl_lock();
-	__function();
-	rtnl_unlock();
-}
++CC Mark.
 
->  	struct netdev_bpf bpf;
->  	int err;
->  
-> +	if (!lock)
-> +		rtnl_lock();
+> ---
+>  drivers/spi/spi.c       | 3 ++-
+>  include/linux/spi/spi.h | 3 +++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 5e75944ad5d1..739de0118ee1 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -1163,7 +1163,8 @@ static int spi_transfer_one_message(struct spi_controller *ctlr,
+>  				keep_cs = true;
+>  			} else {
+>  				spi_set_cs(msg->spi, false);
+> -				udelay(10);
+> +				udelay(xfer->cs_change_stall_delay_us ?
+> +				       xfer->cs_change_stall_delay_us : 10);
+>  				spi_set_cs(msg->spi, true);
+>  			}
+>  		}
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 053abd22ad31..d23add3b4790 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -734,6 +734,8 @@ extern void spi_res_release(struct spi_controller *ctlr,
+>   *      transfer. If 0 the default (from @spi_device) is used.
+>   * @bits_per_word: select a bits_per_word other than the device default
+>   *      for this transfer. If 0 the default (from @spi_device) is used.
+> + * @cs_change_stall_delay_us: microseconds to delay between cs_change
+> + * 	transfers.
+>   * @cs_change: affects chipselect after this transfer completes
+>   * @delay_usecs: microseconds to delay after this transfer before
+>   *	(optionally) changing the chipselect status, then starting
+> @@ -823,6 +825,7 @@ struct spi_transfer {
+>  #define	SPI_NBITS_QUAD		0x04 /* 4bits transfer */
+>  	u8		bits_per_word;
+>  	u8		word_delay_usecs;
+> +	u8		cs_change_stall_delay_us;
+>  	u16		delay_usecs;
+>  	u32		speed_hz;
+>  	u16		word_delay;
 
