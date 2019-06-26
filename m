@@ -2,172 +2,103 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BB6C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E03C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B140208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561572023;
-	bh=2PbofuwurM+ISBZum6zAmb0DbBhn5nmO6RtvICX+oNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1pF5jJ6jzBkwvubGWC63ryx1bywjPCv+Cyr0GSZx8RbhqKR8Jt0jz5omWw74nUX+R
-	 bRnNH6/fK2PRKT2EKprkAqxMNWfiiI4KA8eY4Rnwi115uULoIMDTzxW2UGHq9Wkvp9
-	 /wUslLidGeJbgbRl+qY/nN0HHbPb9ILAxGLWyN40=
+	by mail.kernel.org (Postfix) with ESMTP id DEF862177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGr5ZXAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfFZSAW (ORCPT
+        id S1726604AbfFZSA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:00:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfFZSAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:00:21 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F091421743;
-        Wed, 26 Jun 2019 18:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561572020;
-        bh=2PbofuwurM+ISBZum6zAmb0DbBhn5nmO6RtvICX+oNk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VNMCqAjmSm9l09A4yBzOXHlXjlBaOnorMK7lzF3w2kmIHYW3h8tdm4clg87l5WOCJ
-         1T7oVm4JjXy56Xqx0xrwMCEQiOk1QjWupMdgAkM2oPV4tkK48k4Xbh5AilQT9fsAii
-         M9MfdEALYkf/x2XzNUCr9dDJdYgoMOWaJ5iFRSso=
-Date:   Wed, 26 Jun 2019 19:00:13 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joelaf@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Watson <davejwatson@fb.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>
-Subject: Re: [RFC PATCH 1/1] Revert "rseq/selftests: arm: use udf instruction
- for RSEQ_SIG"
-Message-ID: <20190626180012.q6deohrtzwpbhqky@willie-the-truck>
-References: <20190617152304.23371-1-mathieu.desnoyers@efficios.com>
- <20190624172429.GA11133@fuggles.cambridge.arm.com>
- <1620037196.377.1561400426591.JavaMail.zimbra@efficios.com>
- <20190625091507.GA13263@fuggles.cambridge.arm.com>
- <795143697.722.1561471732756.JavaMail.zimbra@efficios.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <795143697.722.1561471732756.JavaMail.zimbra@efficios.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Wed, 26 Jun 2019 14:00:26 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40656 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFZSAZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:00:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so1561263pgj.7;
+        Wed, 26 Jun 2019 11:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FTgn6r6fcSmHF8w98dfXXuAN9IuTef3VgDyLMVSYVPY=;
+        b=VGr5ZXAJt+EIRsczuWIzhQbJHSaDJO4BnpDAA2L+zSr9WZQ67LAlB5Q7t8XI1Fe2CS
+         O7lTk/jAw4mS/C69rYPzGuWh4IjkbRyjA5rcG0WAfbOgQRW/vLQLw8KBW8g3YHnjXYv0
+         pQPmTeQyE4gRy8vXmpJ4JUWY0BRmmey+G61TPTyDU8qJSEUVuVQp08i3JOg7QTRPhMv9
+         vqWbe2Q2A+TqXNrzKaUc8mPdBC8a1xE3/4n5zXNHNfMR1W3OhMUozMED4V29h2Eos7vU
+         zI4/3w2G8mwYhx5MTg2bBL+wdBCXnbIbvhwnnW4Mz3cdPFEmW2FDep2Ee9TsjE+q5BAd
+         JUZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FTgn6r6fcSmHF8w98dfXXuAN9IuTef3VgDyLMVSYVPY=;
+        b=n2V2ihHbiPl6rDNTO9qFlECR3mlFtgGIPT30ezfzTyUlQx3ECW7EfPj36bpgUu3PSt
+         CbZC7TOhWusY80U2xb8MwxMLq6uKhxAefHfw7w7nrGUJqrdV1faAqWfcubJsxyQYgGnG
+         QdQktPPAnr3PsYF5BMseRUiDFnuhneSJ0cXImUYJi8cd8euFJuyAaNkkmWNgl1gc7ejg
+         kyppZmm26Zgdvzt8FOC3vTrsEqWb7Va4NgKtitUpM/Kn6oSPanPK+GpuzjuF1y0ivMp4
+         d7GsvesnFh7CIIWka1m9a2GUC0ntCLle520bYR0qHASkQDadP2DCSlQPEk1Rp6SUuo18
+         0wkw==
+X-Gm-Message-State: APjAAAW04l70q/yXAh4tjF6fEtPh79LBlHHVfBuZ+ki/7UHqF+nel+KN
+        QCqpR/ncpu56FjWFENpTH+c=
+X-Google-Smtp-Source: APXvYqxblxs8elOmJc/hGTQslan92I5J9OvEgxlBKcw95tBWYgQr9RXJHq6hIrs4/GYP2+H0OBX3IQ==
+X-Received: by 2002:a17:90a:9503:: with SMTP id t3mr370826pjo.47.1561572024205;
+        Wed, 26 Jun 2019 11:00:24 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id v4sm20106391pff.45.2019.06.26.11.00.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 11:00:23 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] drm: msm: Fix add_gpu_components
+Date:   Wed, 26 Jun 2019 11:00:15 -0700
+Message-Id: <20190626180015.45242-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:08:52AM -0400, Mathieu Desnoyers wrote:
-> ----- On Jun 25, 2019, at 5:15 AM, Will Deacon will.deacon@arm.com wrote:
-> > On Mon, Jun 24, 2019 at 02:20:26PM -0400, Mathieu Desnoyers wrote:
-> >> ----- On Jun 24, 2019, at 1:24 PM, Will Deacon will.deacon@arm.com wrote:
-> >> > On Mon, Jun 17, 2019 at 05:23:04PM +0200, Mathieu Desnoyers wrote:
-> >> >> -#define RSEQ_SIG_CODE	0xe7f5def3
-> >> >> -
-> >> >> -#ifndef __ASSEMBLER__
-> >> >> -
-> >> >> -#define RSEQ_SIG_DATA							\
-> >> >> -	({								\
-> >> >> -		int sig;						\
-> >> >> -		asm volatile ("b 2f\n\t"				\
-> >> >> -			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
-> >> >> -			      "2:\n\t"					\
-> >> >> -			      "ldr %[sig], 1b\n\t"			\
-> >> >> -			      : [sig] "=r" (sig));			\
-> >> >> -		sig;							\
-> >> >> -	})
-> >> >> -
-> >> >> -#define RSEQ_SIG	RSEQ_SIG_DATA
-> >> >> -
-> >> >> -#endif
-> >> >> +#define RSEQ_SIG	0x53053053
-> >> > 
-> >> > I don't get why you're reverting back to this old signature value, when the
-> >> > one we came up with will work well when interpreted as an instruction in the
-> >> > *vast* majority of scenarios that people care about (A32/T32 little-endian).
-> >> > I think you might be under-estimating just how dead things like BE32 really
-> >> > are.
-> >> 
-> >> My issue is that the current .instr approach is broken for programs or functions
-> >> built in Thumb mode, and I received no feedback on the solutions I proposed for
-> >> those issues, which led me to propose a patch reverting to a simple .word.
-> > 
-> > I understand why you're moving from .inst to .word, but I don't understand
-> > why that necessitates a change in the value. Why not .word 0xe7f5def3 ? You
-> > could also flip the bytes around in case of big-endian, which would keep the
-> > instruction coding clean for BE8.
-> 
-> As long as we state and document that this should not be expected to generate
-> valid instructions on big endian prior to ARMv6, I'm OK with that approach, e.g.:
-> 
-> /*
->  * - ARM little endian
->  *
->  * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
->  * value 0x5de3. This traps if user-space reaches this instruction by mistake,
->  * and the uncommon operand ensures the kernel does not move the instruction
->  * pointer to attacker-controlled code on rseq abort.
->  *
->  * The instruction pattern in the A32 instruction set is:
->  *
->  * e7f5def3    udf    #24035    ; 0x5de3
->  *
->  * This translates to the following instruction pattern in the T16 instruction
->  * set:
->  *
->  * little endian:
->  * def3        udf    #243      ; 0xf3
->  * e7f5        b.n    <7f5>
->  *
->  * - ARMv6+ big endian:
+add_gpu_components() adds found GPU nodes from the DT to the match list,
+regardless of the status of the nodes.  This is a problem, because if the
+nodes are disabled, they should not be on the match list because they will
+not be matched.  This prevents display from initing if a GPU node is
+defined, but it's status is disabled.
 
-Maybe mention "(BE8)" here...
+Fix this by checking the node's status before adding it to the match list.
 
->  *
->  * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
->  * code and big-endian data. The data value of the signature needs to have its
->  * byte order reversed to generate the trap instruction:
->  *
->  * Data: 0xf3def5e7
->  *
->  * Translates to this A32 instruction pattern:
->  *
->  * e7f5def3    udf    #24035    ; 0x5de3
->  *
->  * Translates to this T16 instruction pattern:
->  *
->  * def3        udf    #243      ; 0xf3
->  * e7f5        b.n    <7f5>
->  *
->  * - Prior to ARMv6 big endian:
+Fixes: dc3ea265b856 ("drm/msm: Drop the gpu binding")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/gpu/drm/msm/msm_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-... and "(BE32)" here.
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index ab64ab470de7..4aeb84f1d874 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1279,7 +1279,8 @@ static int add_gpu_components(struct device *dev,
+ 	if (!np)
+ 		return 0;
+ 
+-	drm_of_component_match_add(dev, matchptr, compare_of, np);
++	if (of_device_is_available(np))
++		drm_of_component_match_add(dev, matchptr, compare_of, np);
+ 
+ 	of_node_put(np);
+ 
+-- 
+2.17.1
 
-With that, this looks fine to me.
-
-Will
