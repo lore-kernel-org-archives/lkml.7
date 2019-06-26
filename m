@@ -2,149 +2,130 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE42EC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF1FC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3CF2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5312085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfFZGOU (ORCPT
+        id S1726750AbfFZGOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:14:20 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50885 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfFZGOU (ORCPT
+        Wed, 26 Jun 2019 02:14:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38956 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfFZGOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:14:20 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hg1C5-0005zD-Ll; Wed, 26 Jun 2019 08:14:09 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hg1C1-0003D1-Jo; Wed, 26 Jun 2019 08:14:05 +0200
-Date:   Wed, 26 Jun 2019 08:14:05 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        mcoquelin.stm32@gmail.com, thloh@altera.com, festevam@gmail.com,
-        linus.walleij@linaro.org, khilman@kernel.org,
-        patches@opensource.cirrus.com, bgolaszewski@baylibre.com,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de, ssantosh@kernel.org,
-        linux-tegra@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        alexandre.torgue@st.com
-Subject: Re: [PATCH 01/30] include: linux: platform_device: more helpers for
- declaring platform drivers
-Message-ID: <20190626061405.qsqq5na4oactuo6f@pengutronix.de>
-References: <1560796871-18560-1-git-send-email-info@metux.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Wed, 26 Jun 2019 02:14:24 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hg1CI-00011d-Rq
+        for linux-kernel@vger.kernel.org; Wed, 26 Jun 2019 06:14:23 +0000
+Received: by mail-pg1-f200.google.com with SMTP id b10so933867pgb.22
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 23:14:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Qzj1f9ft1l/we0rK2p1RXiD5bfavnmcjFfDBQn4lzKU=;
+        b=jKP/13a+wYiU+rxgESgg9BGOO4FpR7py3PyFGtlC0r4/rurzBaNC3b/VJK9X7Hp4RC
+         HxlNvsIRF3JcnIp8DjYxsXHqPSnWqR8xYYyftQ/7At09prUhf8RKGbTxcBL0FmKLNWQh
+         62egzGXA66KHPXxO57rMBqvqW6+0lZqVIOQ+a5na9dL77TvglLN29zMQjf62yJCFdxCb
+         cga+uNJxtufvff0+eRPL2t2hDYcrmRKfEte5xqq9VJGcICtIhL5t3qA45UtuYY5dnIXy
+         e6eBDrV4rdPvX3m9H7PlSW2lzR4XudknT9oE5UkksYcmzN+2DsvwCBVLsdwKDxUM6F+S
+         teEQ==
+X-Gm-Message-State: APjAAAUGx2TwJMzX+sh7Q0XketD7xGvl0Bu6q9LNMKNyXxpjD27uDHHW
+        +wbxup4mATK2M8onlmjYx1bhZyeUYVTTY0gBpuH3O1NhEk7D9xeOjMGAiakfv6rYEmsPLcb8VAc
+        Lcl1WDrJXikuMaRGYJAiuiWHn2T2jNsmA0+i+MRTb3A==
+X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr3295704plp.160.1561529661632;
+        Tue, 25 Jun 2019 23:14:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyHZrac8B6jpvkaO/VXWxU4A1aWKuSGiff3KI+tndM4pw00sha7p/0/aJVgC1+kv6pHFSnOGw==
+X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr3295682plp.160.1561529661445;
+        Tue, 25 Jun 2019 23:14:21 -0700 (PDT)
+Received: from [10.101.46.178] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id f64sm15747880pfa.115.2019.06.25.23.14.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 23:14:21 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: RX CRC errors on I219-V (6) 8086:15be
+From:   Kai Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <C4036C54-EEEB-47F3-9200-4DD1B22B4280@canonical.com>
+Date:   Wed, 26 Jun 2019 14:14:16 +0800
+Cc:     jeffrey.t.kirsher@intel.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        intel-wired-lan@lists.osuosl.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Message-Id: <3975473C-B117-4DC6-809A-6623A5A478BF@canonical.com>
+References: <C4036C54-EEEB-47F3-9200-4DD1B22B4280@canonical.com>
+To:     "Neftin, Sasha" <sasha.neftin@intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Sasha
 
-On Mon, Jun 17, 2019 at 08:40:42PM +0200, Enrico Weigelt, metux IT consult wrote:
-> From: Enrico Weigelt <info@metux.net>
-> 
-> Add more helper macros for trivial driver init cases, similar to the
-> already existing module_platform_driver()+friends - now for those which
-> are initialized at other stages. Lots of drivers couldn't use the existing
-> macros, as they need to be called at different init stages, eg. subsys,
-> postcore, arch.
-> 
-> This helps to further reduce driver init boilerplate.
-> 
-> Signed-off-by: Enrico Weigelt <info@metux.net>
-> ---
->  include/linux/platform_device.h | 51 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-> index beb25f2..5f3a967 100644
-> --- a/include/linux/platform_device.h
-> +++ b/include/linux/platform_device.h
-> @@ -259,6 +259,57 @@ static inline void platform_set_drvdata(struct platform_device *pdev,
->  } \
->  module_exit(__platform_driver##_exit);
->  
-> +/* postcore_platform_driver() - Helper macro for drivers that don't do
-> + * anything special in module init/exit.  This eliminates a lot of
-> + * boilerplate.  Each module may only use this macro once, and
-> + * calling it replaces postcore_initcall() and module_exit()
-> + */
-> +#define postcore_platform_driver(__platform_driver) \
-> +static int __init __platform_driver##_init(void) \
-> +{ \
-> +	return platform_driver_register(&(__platform_driver)); \
-> +} \
-> +postcore_initcall(__platform_driver##_init); \
-> +static void __exit __platform_driver##_exit(void) \
-> +{ \
-> +	platform_driver_unregister(&(__platform_driver)); \
-> +} \
-> +module_exit(__platform_driver##_exit);
-> +
-> +/* subsys_platform_driver() - Helper macro for drivers that don't do
-> + * anything special in module init/exit.  This eliminates a lot of
-> + * boilerplate.  Each module may only use this macro once, and
-> + * calling it replaces subsys_initcall() and module_exit()
-> + */
-> +#define subsys_platform_driver(__platform_driver) \
-> +static int __init __platform_driver##_init(void) \
-> +{ \
-> +	return platform_driver_register(&(__platform_driver)); \
-> +} \
-> +subsys_initcall(__platform_driver##_init); \
-> +static void __exit __platform_driver##_exit(void) \
-> +{ \
-> +	platform_driver_unregister(&(__platform_driver)); \
-> +} \
-> +module_exit(__platform_driver##_exit);
+at 5:09 PM, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 
-Would it make sense to do something like:
+> Hi Jeffrey,
+>
+> We’ve encountered another issue, which causes multiple CRC errors and  
+> renders ethernet completely useless, here’s the network stats:
 
-	#define __module_platform_driver(__platform_driver, __initlvl) \
-	static int __init __platform_driver##_init(void) \
-	{ \
-		return platform_driver_register(&(__platform_driver)); \
-	} \
-	__initlvl ## _initcall(__platform_driver##_init); \
-	static void __exit __platform_driver##_exit(void) \
-	{ \
-		platform_driver_unregister(&(__platform_driver)); \
-	} \
-	module_exit(__platform_driver##_exit);
+I also tried ignore_ltr for this issue, seems like it alleviates the  
+symptom a bit for a while, then the network still becomes useless after  
+some usage.
 
-	#define postcore_platform_driver(__platform_driver) __module_platform_driver(__platform_driver, postcore)
-	#define subsys_platform_driver(__platform_driver) __module_platform_driver(__platform_driver, subsys)
-	...
+And yes, it’s also a Whiskey Lake platform. What’s the next step to debug  
+this problem?
 
-Which would be more compact and makes the difference between these
-macros a bit more obvious.
+Kai-Heng
 
-Best regards
-Uwe
+>
+> /sys/class/net/eno1/statistics$ grep . *
+> collisions:0
+> multicast:95
+> rx_bytes:1499851
+> rx_compressed:0
+> rx_crc_errors:1165
+> rx_dropped:0
+> rx_errors:2330
+> rx_fifo_errors:0
+> rx_frame_errors:0
+> rx_length_errors:0
+> rx_missed_errors:0
+> rx_nohandler:0
+> rx_over_errors:0
+> rx_packets:4789
+> tx_aborted_errors:0
+> tx_bytes:864312
+> tx_carrier_errors:0
+> tx_compressed:0
+> tx_dropped:0
+> tx_errors:0
+> tx_fifo_errors:0
+> tx_heartbeat_errors:0
+> tx_packets:7370
+> tx_window_errors:0
+>
+> Same behavior can be observed on both mainline kernel and on your  
+> dev-queue branch.
+> OTOH, the same issue can’t be observed on out-of-tree e1000e.
+>
+> Is there any plan to close the gap between upstream and out-of-tree  
+> version?
+>
+> Kai-Heng
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
