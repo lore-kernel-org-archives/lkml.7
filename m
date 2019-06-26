@@ -2,160 +2,194 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57077C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334C3C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248D42086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:22:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="z39lVS78"
+	by mail.kernel.org (Postfix) with ESMTP id 0F05720663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfFZIWf (ORCPT
+        id S1726722AbfFZIWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:22:35 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54626 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFZIWe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:22:34 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g135so1103699wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 01:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+1vXdrly/KKiPqvFxYM7XB433XMEyXUZAd1m9h/Udp0=;
-        b=z39lVS78Qd8LsObNTDJptYvZFlnljYD1/l9S+K88DbOWu+RAaVyti1qPZXmOS5JlEN
-         zvBt9xhrfQcCo5TkUbYdU6LzGPUVUMLzA7IEkmpTibZVuTzrx7/bvqj7Kn6qApO2QHBZ
-         FwwpFO0alongPRREarxn4HXCZLCWwq1w61zkw/JiqFC79fgWcAOQZIA+2BwuEl5grCpd
-         JVf9RVZzWZigZJMN/xOd/XUgd1IZO4OCmFPStSToFbLa2rwDU7F4OfSfEUSPCA7X/ky9
-         S/yLYTk7wjhJq6KrC7+xO/l2fSpM/ZflP0Z55+uvnVIykoCK+eiHPNcBk0+ZaYXgjVaa
-         tCzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+1vXdrly/KKiPqvFxYM7XB433XMEyXUZAd1m9h/Udp0=;
-        b=McquveRGuU6XlPcqXeM5fCY10lqYdbofS4Jkx4f3NnriysaITOqpmdJupoI5Kv1uBK
-         6X3lM2VVBJ25jvJqSUInDLnU3Rrd3gqti6bZ353/wfdJ8UqXcDHQTAUcrWgB6sSHYl+W
-         8Ojo6WpR+03Ry5IWVUTDwHWrFPJFRrGaTZcrXdqfase3d0XozAYehqpYwyq8J8vQnnot
-         gjL5Kqge1jCzRUJmX7wosFUoPB5B2YoSIhn08wlL5gmGD5HjHtCGjcdAPPl2t8Iipq6L
-         iAMhda8tZW1JXq1d1FdPhom7uGolFtAx3V7dmrVs64nSjMOI5qjdRkjv0JiHmdzwqMhD
-         rBLw==
-X-Gm-Message-State: APjAAAW5RzKpituql1c3nrn6IRo2rt+bAl8DuGBAJEC5gfIwOBxpAqze
-        7JvZFhhPflqER66x02yoMYeejw==
-X-Google-Smtp-Source: APXvYqwAfu7tVUTxwap7hfLOj6FWPZA+a9/PN312n5G/314+TAkWHAFN38HC0Xj6e+8HLxE6+VdIcA==
-X-Received: by 2002:a1c:6154:: with SMTP id v81mr1754258wmb.92.1561537351305;
-        Wed, 26 Jun 2019 01:22:31 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t63sm1162851wmt.6.2019.06.26.01.22.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 01:22:30 -0700 (PDT)
-Subject: Re: [RFC/RFT 02/14] clk: core: introduce clk_hw_set_parent()
-To:     Stephen Boyd <sboyd@kernel.org>, jbrunet@baylibre.com,
-        khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com
-References: <20190620150013.13462-1-narmstrong@baylibre.com>
- <20190620150013.13462-3-narmstrong@baylibre.com>
- <20190625203227.9696920665@mail.kernel.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <64441b77-1d99-44ec-d4b1-c18f1c75d523@baylibre.com>
-Date:   Wed, 26 Jun 2019 10:22:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 26 Jun 2019 04:22:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58772 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725876AbfFZIWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:22:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C0B52AD12;
+        Wed, 26 Jun 2019 08:22:46 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 10:22:45 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Steven Rostedt <rostedt@goodmis.org>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jessica Yu <jeyu@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de
+Subject: Re: [PATCH 1/3] module: Fix livepatch/ftrace module text permissions
+ race
+In-Reply-To: <20190614170408.1b1162dc@gandalf.local.home>
+Message-ID: <alpine.LSU.2.21.1906260908170.22069@pobox.suse.cz>
+References: <cover.1560474114.git.jpoimboe@redhat.com> <ab43d56ab909469ac5d2520c5d944ad6d4abd476.1560474114.git.jpoimboe@redhat.com> <20190614170408.1b1162dc@gandalf.local.home>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190625203227.9696920665@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2019 22:32, Stephen Boyd wrote:
-> Quoting Neil Armstrong (2019-06-20 08:00:01)
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index aa51756fd4d6..3e98f7dec626 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -2490,6 +2490,11 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
->>         return ret;
->>  }
->>  
->> +int clk_hw_set_parent(struct clk_hw *hw, struct clk_hw *parent)
->> +{
->> +       return clk_core_set_parent_nolock(hw->core, parent->core);
->> +}
+On Fri, 14 Jun 2019, Steven Rostedt wrote:
+
+> On Thu, 13 Jun 2019 20:07:22 -0500
+> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 > 
-> Will this be used from a module? Maybe it needs an EXPORT_SYMBOL_GPL().
-
-Probably since it's in clk-provider.h
-
-Will add.
-
+> > It's possible for livepatch and ftrace to be toggling a module's text
+> > permissions at the same time, resulting in the following panic:
+> > 
 > 
->> +
->>  /**
->>   * clk_set_parent - switch the parent of a mux clk
->>   * @clk: the mux clk whose input we are switching
+> [..]
+> 
+> > The above panic occurs when loading two modules at the same time with
+> > ftrace enabled, where at least one of the modules is a livepatch module:
+> > 
+> > CPU0					CPU1
+> > klp_enable_patch()
+> >   klp_init_object_loaded()
+> >     module_disable_ro()
+> >     					ftrace_module_enable()
+> > 					  ftrace_arch_code_modify_post_process()
+> > 				    	    set_all_modules_text_ro()
+> >       klp_write_object_relocations()
+> >         apply_relocate_add()
+> > 	  *patches read-only code* - BOOM
+> > 
+> > A similar race exists when toggling ftrace while loading a livepatch
+> > module.
+> > 
+> > Fix it by ensuring that the livepatch and ftrace code patching
+> > operations -- and their respective permissions changes -- are protected
+> > by the text_mutex.
+> > 
+> > Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
+> > Fixes: 444d13ff10fb ("modules: add ro_after_init support")
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Acked-by: Jessica Yu <jeyu@kernel.org>
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+> 
+> This patch looks uncontroversial. I'm going to pull this one in and
+> start testing it. And if it works, I'll push to Linus.
 
+Triggered this on s390x. Masami CCed and Linus as well, because the patch 
+is in master branch and we are after -rc6. Thomas CCed because of commit 
+2d1e38f56622 ("kprobes: Cure hotplug lock ordering issues").
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.2.0-rc6 #1 Tainted: G           O  K  
+------------------------------------------------------
+insmod/1393 is trying to acquire lock:
+000000002fdee887 (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2e/0x60
+
+but task is already holding lock:
+000000005b22fb82 (text_mutex){+.+.}, at: ftrace_run_update_code+0x2a/0xa0
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (text_mutex){+.+.}:
+       validate_chain.isra.21+0xb32/0xd70
+       __lock_acquire+0x4b8/0x928
+       lock_acquire+0x102/0x230
+       __mutex_lock+0x88/0x908
+       mutex_lock_nested+0x32/0x40
+       register_kprobe+0x254/0x658
+       init_kprobes+0x11a/0x168
+       do_one_initcall+0x70/0x318
+       kernel_init_freeable+0x456/0x508
+       kernel_init+0x22/0x150
+       ret_from_fork+0x30/0x34
+       kernel_thread_starter+0x0/0xc
+
+-> #0 (cpu_hotplug_lock.rw_sem){++++}:
+       check_prev_add+0x90c/0xde0
+       validate_chain.isra.21+0xb32/0xd70
+       __lock_acquire+0x4b8/0x928
+       lock_acquire+0x102/0x230
+       cpus_read_lock+0x62/0xd0
+       stop_machine+0x2e/0x60
+       arch_ftrace_update_code+0x2e/0x40
+       ftrace_run_update_code+0x40/0xa0
+       ftrace_startup+0xb2/0x168
+       register_ftrace_function+0x64/0x88
+       klp_patch_object+0x1a2/0x290
+       klp_enable_patch+0x554/0x980
+       do_one_initcall+0x70/0x318
+       do_init_module+0x6e/0x250
+       load_module+0x1782/0x1990
+       __s390x_sys_finit_module+0xaa/0xf0
+       system_call+0xd8/0x2d0
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(text_mutex);
+                               lock(cpu_hotplug_lock.rw_sem);
+                               lock(text_mutex);
+  lock(cpu_hotplug_lock.rw_sem);
+
+ *** DEADLOCK ***
+
+3 locks held by insmod/1393:
+ #0: 00000000a9723159 (klp_mutex){+.+.}, at: klp_enable_patch+0x62/0x980
+ #1: 00000000bd173ffc (ftrace_lock){+.+.}, at: register_ftrace_function+0x56/0x88
+ #2: 000000005b22fb82 (text_mutex){+.+.}, at: ftrace_run_update_code+0x2a/0xa0
+
+stack backtrace:
+CPU: 0 PID: 1393 Comm: insmod Tainted: G           O  K   5.2.0-rc6 #1
+Hardware name: IBM 2827 H43 400 (KVM/Linux)
+Call Trace:
+([<00000000682100b4>] show_stack+0xb4/0x130)
+ [<0000000068adeb8c>] dump_stack+0x94/0xd8 
+ [<00000000682b563c>] print_circular_bug+0x1f4/0x328 
+ [<00000000682b7264>] check_prev_add+0x90c/0xde0 
+ [<00000000682b826a>] validate_chain.isra.21+0xb32/0xd70 
+ [<00000000682ba018>] __lock_acquire+0x4b8/0x928 
+ [<00000000682ba952>] lock_acquire+0x102/0x230 
+ [<0000000068243c12>] cpus_read_lock+0x62/0xd0 
+ [<0000000068336bf6>] stop_machine+0x2e/0x60 
+ [<0000000068355b3e>] arch_ftrace_update_code+0x2e/0x40 
+ [<0000000068355b90>] ftrace_run_update_code+0x40/0xa0 
+ [<000000006835971a>] ftrace_startup+0xb2/0x168 
+ [<0000000068359834>] register_ftrace_function+0x64/0x88 
+ [<00000000682e8a9a>] klp_patch_object+0x1a2/0x290 
+ [<00000000682e7d64>] klp_enable_patch+0x554/0x980 
+ [<00000000681fcaa0>] do_one_initcall+0x70/0x318 
+ [<000000006831449e>] do_init_module+0x6e/0x250 
+ [<0000000068312b52>] load_module+0x1782/0x1990 
+ [<0000000068313002>] __s390x_sys_finit_module+0xaa/0xf0 
+ [<0000000068b03f30>] system_call+0xd8/0x2d0 
+INFO: lockdep is turned off.
+
+If I am reading the code correctly, ftrace_run_update_code() takes 
+text_mutex now and then calls stop_machine(), which grabs 
+cpu_hotplug_lock for reading. do_optimize_kprobes() (see the comment 
+there) expects cpu_hotplug_lock to be held and takes text_mutex. Whoops.
+
+Maybe there is a simple fix, but reverting the commit in this stage seems 
+warranted.
+
+Miroslav
