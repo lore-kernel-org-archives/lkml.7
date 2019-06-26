@@ -2,168 +2,145 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4350BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A06C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5ED2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D2A2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfFZVOC (ORCPT
+        id S1726373AbfFZVQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:14:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33428 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726271AbfFZVOB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:14:01 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QL8Bcl128980
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 17:14:00 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tce4q5em0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 17:13:59 -0400
-Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Wed, 26 Jun 2019 22:13:59 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Jun 2019 22:13:55 +0100
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5QLDpTb48365984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 21:13:51 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D06CF136059;
-        Wed, 26 Jun 2019 21:13:51 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B205413604F;
-        Wed, 26 Jun 2019 21:13:50 +0000 (GMT)
-Received: from [9.60.84.60] (unknown [9.60.84.60])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Jun 2019 21:13:50 +0000 (GMT)
-Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate resource
- in use
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
- <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
- <20190618182558.7d7e025a.cohuck@redhat.com>
- <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
-Date:   Wed, 26 Jun 2019 17:13:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062621-8235-0000-0000-00000EAEF7B3
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011337; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01223700; UDB=6.00643999; IPR=6.01004879;
- MB=3.00027480; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-26 21:13:57
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062621-8236-0000-0000-0000462BE249
-Message-Id: <44f13e89-2fb4-bf8c-7849-641aae8d08cc@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906260245
+        Wed, 26 Jun 2019 17:16:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37032 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726223AbfFZVQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:16:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 79AC9AF1B;
+        Wed, 26 Jun 2019 21:16:05 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 23:16:05 +0200
+Message-ID: <s5hy31oqc8a.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     alsa-devel@alsa-project.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Amadeusz S*awi*ski" <amadeuszx.slawinski@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda: Use correct start/count for sysfs init
+In-Reply-To: <CAE=gft62iv=V=auOhocRRfPV2Tuc2WiRYJOH5_M+HkM0qH-Jhw@mail.gmail.com>
+References: <20190625215418.17548-1-evgreen@chromium.org>
+        <s5himsssqe8.wl-tiwai@suse.de>
+        <CAE=gft62iv=V=auOhocRRfPV2Tuc2WiRYJOH5_M+HkM0qH-Jhw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 9:04 AM, Tony Krowiak wrote:
-> On 6/18/19 12:25 PM, Cornelia Huck wrote:
->> On Thu, 13 Jun 2019 15:39:36 -0400
->> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>
->>> Introduces a new driver callback to prevent a root user from unbinding
->>> an AP queue from its device driver if the queue is in use. This prevents
->>> a root user from inadvertently taking a queue away from a guest and
->>> giving it to the host, or vice versa. The callback will be invoked
->>> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
->>> result in one or more AP queues being removed from its driver. If the
->>> callback responds in the affirmative for any driver queried, the change
->>> to the apmask or aqmask will be rejected with a device in use error.
->>>
->>> For this patch, only non-default drivers will be queried. Currently,
->>> there is only one non-default driver, the vfio_ap device driver. The
->>> vfio_ap device driver manages AP queues passed through to one or more
->>> guests and we don't want to unexpectedly take AP resources away from
->>> guests which are most likely independently administered.
->>>
->>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>> ---
->>>   drivers/s390/crypto/ap_bus.c | 138 
->>> +++++++++++++++++++++++++++++++++++++++++--
->>>   drivers/s390/crypto/ap_bus.h |   3 +
->>>   2 files changed, 135 insertions(+), 6 deletions(-)
->>
->> Hm... I recall objecting to this patch before, fearing that it makes it
->> possible for a bad actor to hog resources that can't be removed by
->> root, even forcefully. (I have not had time to look at the intervening
->> versions, so I might be missing something.)
->>
->> Is there a way for root to forcefully override this?
+On Wed, 26 Jun 2019 22:34:28 +0200,
+Evan Green wrote:
 > 
-> You recall correctly; however, after many internal crypto team
-> discussions, it was decided that this feature was important
-> and should be kept.
+> On Wed, Jun 26, 2019 at 1:27 AM Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > On Tue, 25 Jun 2019 23:54:18 +0200,
+> > Evan Green wrote:
+> > >
+> > > The normal flow through the widget sysfs codepath is that
+> > > snd_hdac_refresh_widgets() is called once without the sysfs bool set
+> > > to set up codec->num_nodes and friends, then another time with the
+> > > bool set to actually allocate all the sysfs widgets. However, during
+> > > the first time allocation, hda_widget_sysfs_reinit() ignores the new
+> > > num_nodes passed in via parameter and just calls hda_widget_sysfs_init(),
+> > > using whatever was in codec->num_nodes before the update. This is not
+> > > correct in cases where num_nodes changes. Here's an example:
+> > >
+> > > Sometime earlier:
+> > > snd_hdac_refresh_widgets(hdac, false)
+> > >   sets codec->num_nodes to 2, widgets is still not allocated
+> > >
+> > > Now:
+> > > snd_hdac_refresh_widgets(hdac, true)
+> > >   hda_widget_sysfs_reinit(num_nodes=7)
+> > >     hda_widget_sysfs_init()
+> > >       widget_tree_create()
+> > >         alloc(codec->num_nodes) // this is still 2
+> > >   codec->num_nodes = 7
+> > >
+> > > Pass num_nodes and start_nid down into widget_tree_create() so that
+> > > the right number of nodes are allocated in all cases.
+> > >
+> > > Signed-off-by: Evan Green <evgreen@chromium.org>
+> >
+> > Thanks for the patch.  That's indeed a problem, but I guess a simpler
+> > approach is just to return if sysfs didn't exist.  If the sysfs
+> > entries aren't present at the second call with sysfs=true, it implies
+> > that the codec object will be exposed anyway later, and the sysfs will
+> > be created there.  So, something like below would work instead?
 > 
-> Allow me to first address your fear that a bad actor can hog
-> resources that can't be removed by root. With this enhancement,
-> there is nothing preventing a root user from taking resources
-> from a matrix mdev, it simply forces him/her to follow the
-> proper procedure. The resources to be removed must first be
-> unassigned from the matrix mdev to which they are assigned.
-> The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
-> sysfs attributes can then be edited to transfer ownership
-> of the resources to zcrypt.
-> 
-> The rationale for keeping this feature is:
-> 
-> * It is a bad idea to steal an adapter in use from a guest. In the worst
->    case, the guest could end up without access to any crypto adapters
->    without knowing why. This could lead to performance issues on guests
->    that rely heavily on crypto such as guests used for blockchain
->    transactions.
-> 
-> * There are plenty of examples in linux of the kernel preventing a root
->    user from performing a task. For example, a module can't be removed
->    if references are still held for it. Another example would be trying
->    to bind a CEX4 adapter to a device driver not registered for CEX4;
->    this action will also be rejected.
-> 
-> * The semantics are much cleaner and the logic is far less complicated.
-> 
-> * It forces the use of the proper procedure to change ownership of AP
->    queues.
->
+> Hi Takashi,
+> Thanks for taking a look. I'm not sure you'd want to do that because
+> then you end up returning from sysfs_reinit without having allocated
+> any of the sysfs widgets. You'd be relying on the implicit behavior
+> that another call to init is coming later (despite having updated
+> num_nodes and start node), which is difficult to follow and easy to
+> break. In my opinion the slight bit of extra diffs is well worth the
+> clarity of having widget_tree_create always allocate the correct
+> start/count.
 
-Any feedback on this?
+Well, skipping is the right behavior, actually.  The whole need of the
+refresh function is just to refresh the widget list, and the current
+behavior to create a sysfs is rather superfluous.  This action has
+never been used, so better to get removed for avoiding misuse.
 
-Tony K
+> Actually, in looking at the widget lock patch, I don't think it's
+> sufficient either. It adds a lock around sysfs_reinit, but the setting
+> of codec->num_nodes and codec->start_nid is unprotected by the lock.
+> So you could have the two threads politely serialize through
+> sysfs_reinit, but then get reordered before setting codec->num_nodes,
+> landing you with an array whose length doesn't match num_nodes.
+
+The usage of snd_hdac_refresh_widgets() is supposed to be done only at
+the codec probe phase, hence there is no lock done in the core code;
+IOW, any concurrent access has to be protected in the caller side in
+general.
+
+Have you actually seen such concurrent accesses?  If yes, that's a
+problem in the usage.
+
+
+thanks,
+
+Takashi
 
 > 
->>
+> Let me craft up an additional patch to fix the locking.
+> -Evan
 > 
-
+> >
+> >
+> > thanks,
+> >
+> > Takashi
+> >
+> > --- a/sound/hda/hdac_sysfs.c
+> > +++ b/sound/hda/hdac_sysfs.c
+> > @@ -428,7 +428,7 @@ int hda_widget_sysfs_reinit(struct hdac_device *codec,
+> >         int i;
+> >
+> >         if (!codec->widgets)
+> > -               return hda_widget_sysfs_init(codec);
+> > +               return 0;
+> >
+> >         tree = kmemdup(codec->widgets, sizeof(*tree), GFP_KERNEL);
+> >         if (!tree)
+> 
