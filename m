@@ -2,104 +2,75 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA6BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77A0C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E3C214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561530273;
-	bh=fRBJvTZcKtFeRMn+qbJ8uLU1XusvmsSzwy8Nz6fD0Vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qwvsFuyGr5sUhdl5j72eYopQ8OED6N0J2uJeCFXC27fr5apRC9oQzSRB6eqCR5Zi2
-	 yoshonrXR4VKiaQaWvEB8hH1wUF50V2EkxD17vwJPnn636p7z4mMrlc3KXTfH0/8cA
-	 PXR9chkCjSK7nH61NhvKjHPLiswthgLdf2dpEaFo=
+	by mail.kernel.org (Postfix) with ESMTP id 8F29E2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:26:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="UBaIRenG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfFZGYc (ORCPT
+        id S1726760AbfFZG0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:24:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59580 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbfFZGYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:24:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 011A7AD47;
-        Wed, 26 Jun 2019 06:24:31 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 08:24:28 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org,
+        Wed, 26 Jun 2019 02:26:21 -0400
+Received: from first.geanix.com ([116.203.34.67]:59366 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbfFZG0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 02:26:20 -0400
+Received: from [192.168.100.94] (unknown [95.138.208.137])
+        by first.geanix.com (Postfix) with ESMTPSA id 1FEB8A8C;
+        Wed, 26 Jun 2019 06:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1561530346; bh=NDzWY1mn8lR9WsNTeOSRA7DhTJGZznkTv0X6E2FIZ0k=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=UBaIRenG4Cel4QngwSQ1B2hHFpou0eDA/c+J/ub1C3MTrt/jHs2A4lrSvuLxqhL0x
+         2AyWZxz0UBtrh+aqOSqIrin9+IQgBbjf8eZaIWe6WYmg/30Kcu5vexu6gDtM30iGMS
+         /ds5jksQ2rY2PDsDsOjT1aiXltgUkS45rKrHNYHNYBseg7Jo7ADD8GuMdztswItfvL
+         jtUQXFUq3MEPnZNgWNqJ6Tbk2/k7C8sY4rH1IjROks7Y54ZMsOgLxHdPi6baVHBaD7
+         mf4lS7wo/IRFKl+xoDgS77gbarFvId89gC9EisZvaYGvelNFQnzyc4h/HopvsXxWiu
+         Qrx41MMrxhEjQ==
+Subject: Re: [PATCH] can: mcp251x: add error check when wq alloc failed
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Weitao Hou <houweitaoo@gmail.com>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        David Miller <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 3/3] mm: Don't manually decrement num_poisoned_pages
-Message-ID: <20190626062428.GH17798@dhcp22.suse.cz>
-References: <20190626061124.16013-1-alastair@au1.ibm.com>
- <20190626061124.16013-4-alastair@au1.ibm.com>
+        allison@lohutok.net, tglx@linutronix.de, linux-can@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190625125048.28849-1-houweitaoo@gmail.com>
+ <CA+FuTSegsUvPSWX+CZuafSD32Sx+xJmYPiQ92geDNqAe8_JGrQ@mail.gmail.com>
+From:   Sean Nyekjaer <sean@geanix.com>
+Message-ID: <6a678bc9-648e-e566-9781-2b42a678ed86@geanix.com>
+Date:   Wed, 26 Jun 2019 08:26:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626061124.16013-4-alastair@au1.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+FuTSegsUvPSWX+CZuafSD32Sx+xJmYPiQ92geDNqAe8_JGrQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-06-19 16:11:23, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+
+
+On 25/06/2019 16.03, Willem de Bruijn wrote:
+> On Tue, Jun 25, 2019 at 8:51 AM Weitao Hou <houweitaoo@gmail.com> wrote:
+>>
+>> add error check when workqueue alloc failed, and remove
+>> redundant code to make it clear
+>>
+>> Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
 > 
-> Use the function written to do it instead.
-
-I am not sure a single line helper is a great win but this makes the
-code consistent at least.
-
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-> ---
->  mm/sparse.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Acked-by: Willem de Bruijn <willemb@google.com>
 > 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 1ec32aef5590..d9b3625bfdf0 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -11,6 +11,8 @@
->  #include <linux/export.h>
->  #include <linux/spinlock.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/swap.h>
-> +#include <linux/swapops.h>
->  
->  #include "internal.h"
->  #include <asm/dma.h>
-> @@ -772,7 +774,7 @@ static void clear_hwpoisoned_pages(struct page *memmap,
->  
->  	for (i = start; i < start + count; i++) {
->  		if (PageHWPoison(&memmap[i])) {
-> -			atomic_long_sub(1, &num_poisoned_pages);
-> +			num_poisoned_pages_dec();
->  			ClearPageHWPoison(&memmap[i]);
->  		}
->  	}
-> -- 
-> 2.21.0
-
--- 
-Michal Hocko
-SUSE Labs
+Tested-by: Sean Nyekjaer <sean@geanix.com>
