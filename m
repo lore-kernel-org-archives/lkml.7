@@ -2,109 +2,91 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5C1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C50C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333582080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:30:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="My7eCbBl"
+	by mail.kernel.org (Postfix) with ESMTP id 40AA82080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfFZR35 (ORCPT
+        id S1726407AbfFZRbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:29:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46456 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFZR35 (ORCPT
+        Wed, 26 Jun 2019 13:31:36 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:54289 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFZRbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:29:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so1696178pfy.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=5T6JwdKRjR0/RiG3X8PeL3Pv8Cc3TnWD4IRh13Xy5ag=;
-        b=My7eCbBlW0B5mb2GiL0BF8ubkmwJqvdlp2tjJodqd30zEwBuyaywestOcC28RB/fHl
-         eWqpPYluiFgdQJnQ5cdPaifnUof2fwhquXW/5BbSuJrUrZvfU+F1QWXW7N8qvQRvepYz
-         YuJkQJDQMoSFtGQ7zJtLkvhFrQ6V83tu+W1ALYoHtIHZBew3gtEM2P3hp4tnurJlS/vg
-         CE+jLYwkZgBpNtUXa3L5ysct7ElmiI7l4Hb0u+LZVma+wMG6OLTrCEVuKDZJiJVaIFhe
-         WHzIOALIYKaNa/uV0Ozs1qjve+pxiZpKu8Pa1KXzjfrqyRZkJ69xxlc5+Sf7y1oICyPd
-         SY5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=5T6JwdKRjR0/RiG3X8PeL3Pv8Cc3TnWD4IRh13Xy5ag=;
-        b=o6Iyu7FBk/L0Z9Qd9Pclq+p9oJ5mx5oYQtY2hFHJaG+m6cytRZBa+0UBO2Mo3Ex6Sx
-         w++vMH7qFEg/f+sZrLrv/W5P6ciE17kcSXwBwuVfvk0m7Q6+jzfOnHoVInPjJPelip8I
-         0FffMCrvcEGtzHGRomHwlEbP8Z/x/4LXEt3uonvQkYUWhfyds0/nqqTz7K5H4uMJsNpa
-         +YCbv+pfzFn3m/dwLsUyWs9wXEeEkuuitgCETezJYZefm7OBj/axwdnfHin7FnwktzZp
-         9OrawskIMiRwM2SFdB9HXIRxru5xP903QEEWtCaj13QNF3i0waAvTdkuk44R8x3So9Li
-         CMqw==
-X-Gm-Message-State: APjAAAX0KRf/uEpIPbaiXPou/hbsz7eDmuvG4fcWFh1c0fM060QPRyN4
-        yYjp3r85cVvGMf4dTOEzImw=
-X-Google-Smtp-Source: APXvYqzqQLv6YPA7wFT/1bH52+5xuqCsBHVv8kbrO5obSZEqzQEy5t8+odJ4iW8Nb9Gh6c2C+g2dmw==
-X-Received: by 2002:a17:90a:be08:: with SMTP id a8mr190221pjs.69.1561570196512;
-        Wed, 26 Jun 2019 10:29:56 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id 11sm30296257pfw.33.2019.06.26.10.29.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 10:29:55 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 22:59:51 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: hal: rtl8723b_hal_init: remove set but
- unused variable pHalData
-Message-ID: <20190626172951.GA7521@hari-Inspiron-1545>
+        Wed, 26 Jun 2019 13:31:35 -0400
+Received: from [192.168.1.110] ([77.4.50.183]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MfZ9C-1iD3bn302q-00fxyE; Wed, 26 Jun 2019 19:31:31 +0200
+Subject: Re: [PATCH 1/2] siox: add helper macro to simplify driver
+ registration
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        t.scherer@eckelmann.de
+References: <1561354834-22617-1-git-send-email-info@metux.net>
+ <1561354834-22617-2-git-send-email-info@metux.net>
+ <CACRpkdbZ68O41dx7uCccUF_jvmC3_YVvWEEo9igknMC95QEXhQ@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <c59bfd61-e6f2-2434-0085-f75e85b5deb0@metux.net>
+Date:   Wed, 26 Jun 2019 19:31:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CACRpkdbZ68O41dx7uCccUF_jvmC3_YVvWEEo9igknMC95QEXhQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:D+qaod/gY3lxTsAGn7wxZA/4ZJMGxEPhRPb4cAtIK9dTVoHeULo
+ 9r5GA/tOo/N5TfjrQf2yuz5/PiWTnPYq+0ZlAHgw2kUCAtYDWtBbeYIck6ysZVjEl61lsXV
+ 57OGScr6eAQ3n8QoJVvXRKG4HxY4RXzjCJDXD2ulmJ/aOiDcQhsKfogVzDUF8wjODvQiGO+
+ BVxg8bICsSaYNwMyQWalQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y/6NBZ6zpTI=:5kr/Jaw8pAeb09qLSQetrr
+ Pt/y8jIU0DL4yEcXIZuhFyUIWdyq9jWqj/PHjjzcUfYQVUSNWi/zDAR9Kg8d6vr/bwlPeWMfW
+ EEdNILCZPU6tA+IeD7O6nXkWWFMZ9c8PasoAK4rrtFSepHBjsYrazp39LlFOqNsidwiBqdc+V
+ sBMYPonBh8HmZhcbgFhvqiX8PrY+uk1MTNYPH+g5m/JJopVOjOirxBeYk0GnnxcdIFzLkX9JU
+ EINKP4nTBldzEDbnYwhYjPT1RXcNZvGStVXicIE/0Dd/PGIrA2dAN8Qf+Q5riL+pAOIBIhw92
+ lHU5+/qAhvTifS2Vk/FTb4wCvdIgbfJ0bIsYiVmMfQAJTzpxz49Cr14R58M6YB6YG8iP6kx2F
+ D08DWETEXk9YagkWyH3XXTS67m2Fqf3YtzOLxok18Fg5qEVNoz0M6oKMn5zh/Or3u2RElBMY/
+ fBalxpNx8lHepaMaIZ3jhvlPZmPqMXXaQ84FD+B8LZpufXGnj1BXnndu6OZx7tF9Zyv97aagD
+ uLeS2WMfy9KVqQJiLRhSzQeEaPwfL9zRWRiBrurxItjof4ejHUbuuFKeDG7IgoxyOxiaWHKOj
+ r5mEigYO0FJLE1MOV0f+zWncB/54L35qvn0SQn3SVr1ma9scBQdFkSpfqG72sjIn4zGqg672W
+ ORDthyTXTcqTcXH4BTvc/1iXi92DOba5OPjZMOb7kVeQnowFYbTCjUvpNFPTRWVwy1ahsNAy6
+ tOVoFVRoOKMhXXgRQAAC9B8b4lawoy2AviP4/c/vwFj5W5Sg+hXdFlbXQJQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove set but unsed variable pHalData in hw_var_set_mlme_join
-function
+On 25.06.19 11:26, Linus Walleij wrote:
+> On Mon, Jun 24, 2019 at 7:40 AM Enrico Weigelt, metux IT consult
+> <info@metux.net> wrote:
+> 
+>> From: Enrico Weigelt <info@metux.net>
+>>
+>> Add more helper macros for trivial driver init cases, similar to the
+>> already existing module_platform_driver() or module_i2c_driver().
+>>
+>> This helps to reduce driver init boilerplate.
+>>
+>> Signed-off-by: Enrico Weigelt <info@metux.net>
+> 
+> Patch applied with Uwe's ACK.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c | 2 --
- 1 file changed, 2 deletions(-)
+thanks to both of you :)
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-index 6cfd240..8ca6249 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-@@ -3579,14 +3579,12 @@ static void hw_var_set_mlme_join(struct adapter *padapter, u8 variable, u8 *val)
- 	u32 val32;
- 	u8 RetryLimit;
- 	u8 type;
--	struct hal_com_data *pHalData;
- 	struct mlme_priv *pmlmepriv;
- 	struct eeprom_priv *pEEPROM;
- 
- 
- 	RetryLimit = 0x30;
- 	type = *(u8 *)val;
--	pHalData = GET_HAL_DATA(padapter);
- 	pmlmepriv = &padapter->mlmepriv;
- 	pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
- 
+--mtx
+
 -- 
-2.7.4
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
