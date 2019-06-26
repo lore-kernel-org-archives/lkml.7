@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB59AC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53CFC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62A1208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD4320659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520550;
-	bh=WAtDkC3Sn0v7Nf68myXvlN9U3b+YFysUdkAh2NVep5k=;
+	s=default; t=1561520556;
+	bh=GkYRFi6+Q1FYjBC4OmhJ+2rLx9qaCNkhfSkl74jExm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbGgeWKf5YdHmCFGJQZEaAL47FSBUywyjq96c9OlAFHkMPBNButROZOXaKkC4NKdc
-	 7jdzWH45BM0kwe5OIhz+bdPJKN8FsJGPyW1/98WwP9/TdMtVOXztg1JJWiDVUPL+7y
-	 8OlGiQLGCtoVsmESVzaxlisLJDCs/K+3nsVDu3Kc=
+	b=V6FFqC3PGtJJE0UHxaJxldFfNGqjpnJFB4OvjfNaHkf5znOmnM7SeWht3HHRfxAtS
+	 ad3lM90+QraSSfgr8x8cACF6b5yAnZH42v6cTJX3jY/gwinOA7VWJzJ5dl7bM1mTQh
+	 ikujFrjduRkTh/fc83i6hMLMesFm53FjCPvggKrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfFZDm3 (ORCPT
+        id S1727128AbfFZDmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:42:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbfFZDmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:42:25 -0400
+        id S1726441AbfFZDmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:42:32 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E042F205ED;
-        Wed, 26 Jun 2019 03:42:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B532820659;
+        Wed, 26 Jun 2019 03:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520544;
-        bh=WAtDkC3Sn0v7Nf68myXvlN9U3b+YFysUdkAh2NVep5k=;
+        s=default; t=1561520551;
+        bh=GkYRFi6+Q1FYjBC4OmhJ+2rLx9qaCNkhfSkl74jExm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AL00VmcNKfQxEbprmSBTAYlSfSInGKZt8a0K5mQLQ4DlpsOgsFS7xtB1KWgY4UCUe
-         eqtvZ7xKMTsZOu7S/GYX/H0a8/b9OElqlFLdz9Vim8g3k8pwqSRFV+bmlPtMdY57YZ
-         FSZJIlYIo9gRLRsDzABRgWnOqSbzotrghNq8ojAg=
+        b=CI8sqr4n5NwpHWGHNUwy1qHwCupAyzgCoTfDvn2x4KwjXZULeFn5NWkO88ytI0M34
+         e4yb7LVpaLZEQg1YEDqJk23OneO3lyjXV1bcdfTrQOGM+oLGYQL8JZ9C9W08QF12Ra
+         MestL5fA+GG0Bio0kuaAMam7Hs5d4VurJO7sv97E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>,
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 24/51] usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
-Date:   Tue, 25 Jun 2019 23:40:40 -0400
-Message-Id: <20190626034117.23247-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 26/51] usb: gadget: dwc2: fix zlp handling
+Date:   Tue, 25 Jun 2019 23:40:42 -0400
+Message-Id: <20190626034117.23247-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -59,51 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 
-[ Upstream commit 62fd0e0a24abeebe2c19fce49dd5716d9b62042d ]
+[ Upstream commit 066cfd0770aba8a9ac79b59d99530653885d919d ]
 
-There is no deallocation of fusb300->ep[i] elements, allocated at
-fusb300_probe.
+The patch 10209abe87f5ebfd482a00323f5236d6094d0865
+usb: dwc2: gadget: Add scatter-gather mode
 
-The patch adds deallocation of fusb300->ep array elements.
+avoided a NULL pointer dereference (hs_ep->req == NULL) by
+calling dwc2_gadget_fill_nonisoc_xfer_dma_one() directly instead of through
+the dwc2_gadget_config_nonisoc_xfer_ddma() wrapper, which unconditionally
+dereferenced the said pointer.
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
+However, this was based on an incorrect assumption that in the context of
+dwc2_hsotg_program_zlp() the pointer is always NULL, which is not the case.
+The result were SB CV MSC tests failing starting from Test Case 6.
+
+Instead, this patch reverts to calling the wrapper and adds a check for
+the pointer being NULL inside the wrapper.
+
+Fixes: 10209abe87f5 (usb: dwc2: gadget: Add scatter-gather mode)
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/fusb300_udc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/dwc2/gadget.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/fusb300_udc.c b/drivers/usb/gadget/udc/fusb300_udc.c
-index 263804d154a7..00e3f66836a9 100644
---- a/drivers/usb/gadget/udc/fusb300_udc.c
-+++ b/drivers/usb/gadget/udc/fusb300_udc.c
-@@ -1342,12 +1342,15 @@ static const struct usb_gadget_ops fusb300_gadget_ops = {
- static int fusb300_remove(struct platform_device *pdev)
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index a749de7604c6..c99ef9753930 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -833,19 +833,22 @@ static void dwc2_gadget_fill_nonisoc_xfer_ddma_one(struct dwc2_hsotg_ep *hs_ep,
+  * with corresponding information based on transfer data.
+  */
+ static void dwc2_gadget_config_nonisoc_xfer_ddma(struct dwc2_hsotg_ep *hs_ep,
+-						 struct usb_request *ureq,
+-						 unsigned int offset,
++						 dma_addr_t dma_buff,
+ 						 unsigned int len)
  {
- 	struct fusb300 *fusb300 = platform_get_drvdata(pdev);
-+	int i;
++	struct usb_request *ureq = NULL;
+ 	struct dwc2_dma_desc *desc = hs_ep->desc_list;
+ 	struct scatterlist *sg;
+ 	int i;
+ 	u8 desc_count = 0;
  
- 	usb_del_gadget_udc(&fusb300->gadget);
- 	iounmap(fusb300->reg);
- 	free_irq(platform_get_irq(pdev, 0), fusb300);
- 
- 	fusb300_free_request(&fusb300->ep[0]->ep, fusb300->ep0_req);
-+	for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
-+		kfree(fusb300->ep[i]);
- 	kfree(fusb300);
- 
- 	return 0;
-@@ -1491,6 +1494,8 @@ static int fusb300_probe(struct platform_device *pdev)
- 		if (fusb300->ep0_req)
- 			fusb300_free_request(&fusb300->ep[0]->ep,
- 				fusb300->ep0_req);
-+		for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
-+			kfree(fusb300->ep[i]);
- 		kfree(fusb300);
++	if (hs_ep->req)
++		ureq = &hs_ep->req->req;
++
+ 	/* non-DMA sg buffer */
+-	if (!ureq->num_sgs) {
++	if (!ureq || !ureq->num_sgs) {
+ 		dwc2_gadget_fill_nonisoc_xfer_ddma_one(hs_ep, &desc,
+-			ureq->dma + offset, len, true);
++			dma_buff, len, true);
+ 		return;
  	}
- 	if (reg)
+ 
+@@ -1133,7 +1136,7 @@ static void dwc2_hsotg_start_req(struct dwc2_hsotg *hsotg,
+ 			offset = ureq->actual;
+ 
+ 		/* Fill DDMA chain entries */
+-		dwc2_gadget_config_nonisoc_xfer_ddma(hs_ep, ureq, offset,
++		dwc2_gadget_config_nonisoc_xfer_ddma(hs_ep, ureq->dma + offset,
+ 						     length);
+ 
+ 		/* write descriptor chain address to control register */
+@@ -2026,12 +2029,13 @@ static void dwc2_hsotg_program_zlp(struct dwc2_hsotg *hsotg,
+ 		dev_dbg(hsotg->dev, "Receiving zero-length packet on ep%d\n",
+ 			index);
+ 	if (using_desc_dma(hsotg)) {
++		/* Not specific buffer needed for ep0 ZLP */
++		dma_addr_t dma = hs_ep->desc_list_dma;
++
+ 		if (!index)
+ 			dwc2_gadget_set_ep0_desc_chain(hsotg, hs_ep);
+ 
+-		/* Not specific buffer needed for ep0 ZLP */
+-		dwc2_gadget_fill_nonisoc_xfer_ddma_one(hs_ep, &hs_ep->desc_list,
+-			hs_ep->desc_list_dma, 0, true);
++		dwc2_gadget_config_nonisoc_xfer_ddma(hs_ep, dma, 0);
+ 	} else {
+ 		dwc2_writel(hsotg, DXEPTSIZ_MC(1) | DXEPTSIZ_PKTCNT(1) |
+ 			    DXEPTSIZ_XFERSIZE(0),
 -- 
 2.20.1
 
