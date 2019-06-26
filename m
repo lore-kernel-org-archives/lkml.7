@@ -2,154 +2,108 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F8FC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0151C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD5B217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561569263;
-	bh=IPJPblNMOSzpc4o8oUY4BwkKbCN4n/1QDhjL5Fv7ep4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NjfBZ46RmKC8p+sXtR1YlzfQ2RIprxcpdCQ4ET1DmT68/a0BORb1TTaxCKcyBXFUj
-	 HwwR1lW1FRGHLRzIpyGT0f5WVcJEThnc3s+HQXqUxYzeNiFWGD09oVIFlfQilkWAFW
-	 QBMQGJv/t7LenDJkzH1oGBwqBgPGydcjU7CRmBPA=
+	by mail.kernel.org (Postfix) with ESMTP id C300A208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFZROW (ORCPT
+        id S1726671AbfFZROs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 13:14:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55248 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726379AbfFZROW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:14:22 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4A52184C
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 17:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561569260;
-        bh=IPJPblNMOSzpc4o8oUY4BwkKbCN4n/1QDhjL5Fv7ep4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m+cjANgMOKu9iYPrmIEkq3ir867euC6fdTabpwRWKebv6Efr6ulwc+y5QuteG304H
-         /QfQMK0QGFunEvQafok0oocQabttk4YNZs1+7OtTC3sL8zB6GFf2+B0BddImiFJWF2
-         BYP7KtBDmXc/06DRGFT2JJ7dkt9otFAQzEU2u14U=
-Received: by mail-wr1-f50.google.com with SMTP id n9so3667511wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:14:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAUn1DwDj4cdfh9s9WUYsakR+WU/NToNJmnrC2YgP/1wfG1FsDGM
-        2/FPg55wTbBgac6x8Lw9H9sxbSbb7rG4PCMXf+AUnA==
-X-Google-Smtp-Source: APXvYqwnPPumX5RBRaLP0km8dly68xVsmM8NNvDYkvDSTBBYKWMqVhDoaa+pINUPBix2TVy8TAUL3d69gE4hjyvE0Jw=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr4711752wro.343.1561569259059;
- Wed, 26 Jun 2019 10:14:19 -0700 (PDT)
+        id S1726179AbfFZROs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:14:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:14:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
+   d="scan'208";a="172793484"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 26 Jun 2019 10:14:46 -0700
+Date:   Wed, 26 Jun 2019 10:14:45 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH 04/25] mm: remove MEMORY_DEVICE_PUBLIC support
+Message-ID: <20190626171445.GA4605@iweiny-DESK2.sc.intel.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-5-hch@lst.de>
+ <CAPcyv4gTOf+EWzSGrFrh2GrTZt5HVR=e+xicUKEpiy57px8J+w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190501211217.5039-1-yu-cheng.yu@intel.com> <20190502111003.GO3567@e103592.cambridge.arm.com>
-In-Reply-To: <20190502111003.GO3567@e103592.cambridge.arm.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 26 Jun 2019 10:14:07 -0700
-X-Gmail-Original-Message-ID: <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
-Message-ID: <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gTOf+EWzSGrFrh2GrTZt5HVR=e+xicUKEpiy57px8J+w@mail.gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 4:10 AM Dave Martin <Dave.Martin@arm.com> wrote:
->
-> On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
-> > An ELF file's .note.gnu.property indicates features the executable file
-> > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
-> > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
-> > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+On Wed, Jun 26, 2019 at 09:00:47AM -0700, Dan Williams wrote:
+> [ add Ira ]
+> 
+> On Wed, Jun 26, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
 > >
-> > This patch was part of the Control-flow Enforcement series; the original
-> > patch is here: https://lkml.org/lkml/2018/11/20/205.  Dave Martin responded
-> > that ARM recently introduced new features to NT_GNU_PROPERTY_TYPE_0 with
-> > properties closely modelled on GNU_PROPERTY_X86_FEATURE_1_AND, and it is
-> > logical to split out the generic part.  Here it is.
+> > The code hasn't been used since it was added to the tree, and doesn't
+> > appear to actually be usable.
 > >
-> > With this patch, if an arch needs to setup features from ELF properties,
-> > it needs CONFIG_ARCH_USE_GNU_PROPERTY to be set, and a specific
-> > arch_setup_property().
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Acked-by: Michal Hocko <mhocko@suse.com>
+> [..]
+> > diff --git a/mm/swap.c b/mm/swap.c
+> > index 7ede3eddc12a..83107410d29f 100644
+> > --- a/mm/swap.c
+> > +++ b/mm/swap.c
+> > @@ -740,17 +740,6 @@ void release_pages(struct page **pages, int nr)
+> >                 if (is_huge_zero_page(page))
+> >                         continue;
 > >
-> > For example, for X86_64:
-> >
-> > int arch_setup_property(void *ehdr, void *phdr, struct file *f, bool inter)
-> > {
-> >       int r;
-> >       uint32_t property;
-> >
-> >       r = get_gnu_property(ehdr, phdr, f, GNU_PROPERTY_X86_FEATURE_1_AND,
-> >                            &property);
-> >       ...
-> > }
->
-> Thanks, this is timely for me.  I should be able to build the needed
-> arm64 support pretty quickly around this now.
->
-> [Cc'ing libc-alpha for the elf.h question -- see (2)]
->
->
-> A couple of questions before I look in more detail:
->
-> 1) Can we rely on PT_GNU_PROPERTY being present in the phdrs to describe
-> the NT_GNU_PROPERTY_TYPE_0 note?  If so, we can avoid trying to parse
-> irrelevant PT_NOTE segments.
->
->
-> 2) Are there standard types for things like the program property header?
-> If not, can we add something in elf.h?  We should try to coordinate with
-> libc on that.  Something like
->
+> > -               /* Device public page can not be huge page */
+> > -               if (is_device_public_page(page)) {
+> > -                       if (locked_pgdat) {
+> > -                               spin_unlock_irqrestore(&locked_pgdat->lru_lock,
+> > -                                                      flags);
+> > -                               locked_pgdat = NULL;
+> > -                       }
+> > -                       put_devmap_managed_page(page);
+> > -                       continue;
+> > -               }
+> > -
+> 
+> This collides with Ira's bug fix [1]. The MEMORY_DEVICE_FSDAX case
+> needs this to be converted to be independent of "public" pages.
+> Perhaps it should be pulled out of -mm and incorporated in this
+> series.
+> 
+> [1]: https://lore.kernel.org/lkml/20190605214922.17684-1-ira.weiny@intel.com/
 
-Where did PT_GNU_PROPERTY come from?  Are there actual docs for it?
-Can someone here tell us what the actual semantics of this new ELF
-thingy are?  From some searching, it seems like it's kind of an ELF
-note but kind of not.  An actual description would be fantastic.
+Agreed and Andrew picked the first 2 versions of it, mmotm commits:
 
-Also, I don't think there's any actual requirement that the upstream
-kernel recognize existing CET-enabled RHEL 8 binaries as being
-CET-enabled.  I tend to think that RHEL 8 jumped the gun here.  While
-the upstream kernel should make some reasonble effort to make sure
-that RHEL 8 binaries will continue to run, I don't see why we need to
-go out of our way to keep the full set of mitigations available for
-binaries that were developed against a non-upstream kernel.
+3eed114b5b6b mm-swap-fix-release_pages-when-releasing-devmap-pages-v2
+9b7d8d0f572f mm/swap.c: fix release_pages() when releasing devmap pages
 
-In fact, if we handle the legacy bitmap differently from RHEL 8, we
-may *have* to make sure that we don't recognize existing RHEL 8
-binaries as CET-enabled.
+I don't see v3 but there were no objections...
 
-Sigh.
+Ira
+
