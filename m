@@ -2,189 +2,138 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E30C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE34EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54D92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14B920659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="jNmhJUVj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J81cM/y5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LDThWHcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfFZKm6 (ORCPT
+        id S1727179AbfFZKnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:42:58 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:35821 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726550AbfFZKm5 (ORCPT
+        Wed, 26 Jun 2019 06:43:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58792 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfFZKnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:42:57 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 16F444F1;
-        Wed, 26 Jun 2019 06:42:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 26 Jun 2019 06:42:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        DJMU2zwHUW3gzuEp2RRHl9iyNK7pBQ4EI0maafWdFjs=; b=jNmhJUVjbAaAI9V2
-        KT5pFZgw+Chy7LckN54smOumJg6L7cHrL5/wZYVPMtSyrJwe5+XKC5rM8siBveeO
-        MCFhoXD227UmN+ILZ4vI/NtXx6/AV4Cpbdl8cWR3VzCd87wY7jpFhIt7N07S7mxU
-        sVL3Fxj+C3ZIRrdG0sqZY+s6ka9qaBfoI05REJa462rSJvpaN0MwF5JbrBmg8BoO
-        JbSacm8i76TXl377m0F509cJ1zXH9jYIswhLxT+mjH4Bw+MNWBdcDRityZNZQE9p
-        XcsGfG2dSGd32+z6TcwoY07wikP7wuQv72vf/j7hCeiyJlYHkPHheVL0KqXmf+7N
-        BTUstA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=DJMU2zwHUW3gzuEp2RRHl9iyNK7pBQ4EI0maafWdF
-        js=; b=J81cM/y5Qv8TJSHwgP6T98jMzz7CtJgo4bNqHzzbNiyJA2zAlHby2bYem
-        rI5P3K9oWnwB+LO7bN/o4N+YWMR0r/jZ6ad+Bd5drPJNIIdpS6rg8M6QzC7/i8Hq
-        NT4onCJEHO8lrmngSNBQ8dXTIqfLw1cFezOpkeCm8qdb8dD9H21Cpi3Ht9Z9Ymja
-        SVqdN/g8eoe9EjhS83L0le+PeJXwzUC8fYkmwgAySg/FPZHy8yDN9B6wro5RuXvf
-        +CnRYa0fxHwFKSP0nDQ4ycWyOMizXIscCRRXNxEZBcpXbOvP4pQPEdt1Pze35vaZ
-        fOlrQnkObtYEcsds8mBpNTS+Meb9g==
-X-ME-Sender: <xms:L0wTXQH-j6uhxRYmaBrSG_p9iQAdzKwZ8mU8QNLn9VHbMdYkvX-r4g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeigdeffecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
-    dujeefrdehfeenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgif
-    rdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:L0wTXYVt-fEVWhHPi3giRRym842XKjVeSxhlHwnuYb-qMDkIV2yaVw>
-    <xmx:L0wTXSa325skPZn6UzAmn1dgOEW9ATMgoiHVR2kotGaDYccoRyNErg>
-    <xmx:L0wTXec0k7O9wVNRQuXdqpRq9w6CNvcJGYK0Dr8YUb_pNQqBwLpIrg>
-    <xmx:L0wTXbYWYqm8cpMlKggb4hcKErfy8-4svtiyFXsGH4_R4bYJHBjdAA>
-Received: from pluto.themaw.net (unknown [118.208.173.53])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B2B7B8005A;
-        Wed, 26 Jun 2019 06:42:54 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by pluto.themaw.net (Postfix) with ESMTP id 2F0081C014F;
-        Wed, 26 Jun 2019 18:42:51 +0800 (AWST)
-Message-ID: <cf0361c2d1fc09ad0097f0da1e981b97ad39ab07.camel@themaw.net>
-Subject: Re: [PATCH 00/25] VFS: Introduce filesystem information query
- syscall [ver #14]
-From:   Ian Kent <raven@themaw.net>
-To:     Christian Brauner <christian@brauner.io>,
-        David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, mszeredi@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 26 Jun 2019 18:42:51 +0800
-In-Reply-To: <20190626100525.irdehd24jowz5f75@brauner.io>
-References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
-         <20190626100525.irdehd24jowz5f75@brauner.io>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 26 Jun 2019 06:43:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hW9JInVx6g/28QTS3QViHaTyJ87vpNU0Olana9v+OAE=; b=LDThWHcQVkL4dQjq1wGMb17LH
+        l7G/bcYxqYscnYMxtYKac1lAuA3dxcdaqKULLg/CjN+zBvjlWtTERyC8/KBemrJ0tiuP0RVKru7to
+        t3rEHetxPmT5eG65UTweM7ZULHnX1uAdFIIE+Pyjza7bNqf6r9FsUn7Jx1MB3FyDrJp6xX0XeJ/1+
+        3zn0RBQhdYdsnrN8NerfgF6p60WVLDTiF4HiSfOZZmS8yrqRMeINUlC+U3lUMAJtMhf2B5DlHLVAH
+        wV5GvZWWnR29l0/lKJDUG/35iVFRGl+GtoPWUS4BU559OtJ7iCuLjCffw2htlVbuGmTMRgpwSfSKb
+        xKTrOkKyQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hg5Od-0003bx-40; Wed, 26 Jun 2019 10:43:23 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 732B5209CEDA9; Wed, 26 Jun 2019 12:43:21 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 12:43:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shawn Landden <shawn@git.icu>,
+        clang-built-linux@googlegroups.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+Message-ID: <20190626104321.GC3463@hirez.programming.kicks-ass.net>
+References: <20190624203737.GL3436@hirez.programming.kicks-ass.net>
+ <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
+ <20190625071846.GN3436@hirez.programming.kicks-ass.net>
+ <201906251009.BCB7438@keescook>
+ <20190625180525.GA119831@archlinux-epyc>
+ <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
+ <20190625202746.GA83499@archlinux-epyc>
+ <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
+ <20190626092432.GJ3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626092432.GJ3419@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 12:05 +0200, Christian Brauner wrote:
-> On Mon, Jun 24, 2019 at 03:08:45PM +0100, David Howells wrote:
-> > Hi Al,
-> > 
-> > Here are a set of patches that adds a syscall, fsinfo(), that allows
-> > attributes of a filesystem/superblock to be queried.  Attribute values are
-> > of four basic types:
-> > 
-> >  (1) Version dependent-length structure (size defined by type).
-> > 
-> >  (2) Variable-length string (up to PAGE_SIZE).
-> > 
-> >  (3) Array of fixed-length structures (up to INT_MAX size).
-> > 
-> >  (4) Opaque blob (up to INT_MAX size).
-> > 
-> > Attributes can have multiple values in up to two dimensions and all the
-> > values of a particular attribute must have the same type.
-> > 
-> > Note that the attribute values *are* allowed to vary between dentries
-> > within a single superblock, depending on the specific dentry that you're
-> > looking at.
-> > 
-> > I've tried to make the interface as light as possible, so integer/enum
-> > attribute selector rather than string and the core does all the allocation
-> > and extensibility support work rather than leaving that to the filesystems.
-> > That means that for the first two attribute types, sb->s_op->fsinfo() may
-> > assume that the provided buffer is always present and always big enough.
-> > 
-> > Further, this removes the possibility of the filesystem gaining access to
-> > the
-> > userspace buffer.
-> > 
-> > 
-> > fsinfo() allows a variety of information to be retrieved about a filesystem
-> > and the mount topology:
-> > 
-> >  (1) General superblock attributes:
-> > 
-> >       - The amount of space/free space in a filesystem (as statfs()).
-> >       - Filesystem identifiers (UUID, volume label, device numbers, ...)
-> >       - The limits on a filesystem's capabilities
-> >       - Information on supported statx fields and attributes and IOC flags.
-> >       - A variety single-bit flags indicating supported capabilities.
-> >       - Timestamp resolution and range.
-> >       - Sources (as per mount(2), but fsconfig() allows multiple sources).
-> >       - In-filesystem filename format information.
-> >       - Filesystem parameters ("mount -o xxx"-type things).
-> >       - LSM parameters (again "mount -o xxx"-type things).
-> > 
-> >  (2) Filesystem-specific superblock attributes:
-> > 
-> >       - Server names and addresses.
-> >       - Cell name.
-> > 
-> >  (3) Filesystem configuration metadata attributes:
-> > 
-> >       - Filesystem parameter type descriptions.
-> >       - Name -> parameter mappings.
-> >       - Simple enumeration name -> value mappings.
-> > 
-> >  (4) Mount topology:
-> > 
-> >       - General information about a mount object.
-> >       - Mount device name(s).
-> >       - Children of a mount object and their relative paths.
-> > 
-> >  (5) Information about what the fsinfo() syscall itself supports, including
-> >      the number of attibutes supported and the number of capability bits
-> >      supported.
+On Wed, Jun 26, 2019 at 11:24:32AM +0200, Peter Zijlstra wrote:
+> That is, would something like this:
 > 
-> Phew, this patchset is a lot. It's good of course but can we please cut
-> some of the more advanced features such as querying by mount id,
-> submounts etc. pp. for now?
+> diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
+> index 06c3cc22a058..1761b1e76ddc 100644
+> --- a/arch/x86/include/asm/jump_label.h
+> +++ b/arch/x86/include/asm/jump_label.h
+> @@ -32,7 +32,7 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
+>  		: :  "i" (key), "i" (branch) : : l_yes);
+>  
+>  	return false;
+> -l_yes:
+> +l_yes: __attribute__((cold));
+>  	return true;
+>  }
+>  
+> @@ -49,7 +49,7 @@ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
+>  		: :  "i" (key), "i" (branch) : : l_yes);
+>  
+>  	return false;
+> -l_yes:
+> +l_yes: __attribute__((hot));
+>  	return true;
+>  }
+>  
+> Help LLVM?
 
-Did you mean the "vfs: Allow fsinfo() to look up a mount object by ID"
-patch?
+No, that's broken. What we do is the likely() and unlikely() hints in
+static_branch_{,un}likely():
 
-We would need to be very careful what was dropped.
+#define static_branch_likely(x)							\
+({										\
+	bool branch;								\
+	if (__builtin_types_compatible_p(typeof(*x), struct static_key_true))	\
+		branch = !arch_static_branch(&(x)->key, true);			\
+	else if (__builtin_types_compatible_p(typeof(*x), struct static_key_false)) \
+		branch = !arch_static_branch_jump(&(x)->key, true);		\
+	else									\
+		branch = ____wrong_branch_error();				\
+	likely(branch);								\
+})
 
-For example, I've found that the patch above is pretty much essential
-for fsinfo() to be useful from user space.
+#define static_branch_unlikely(x)						\
+({										\
+	bool branch;								\
+	if (__builtin_types_compatible_p(typeof(*x), struct static_key_true))	\
+		branch = arch_static_branch_jump(&(x)->key, false);		\
+	else if (__builtin_types_compatible_p(typeof(*x), struct static_key_false)) \
+		branch = arch_static_branch(&(x)->key, false);			\
+	else									\
+		branch = ____wrong_branch_error();				\
+	unlikely(branch);							\
+})
 
-> I feel this would help with review and since your interface is
-> extensible it's really not a big deal if we defer fancy features to
-> later cycles after people had more time to review and the interface has
-> seen some exposure.
-> 
-> The mount api changes over the last months have honestly been so huge
-> that any chance to make the changes smaller and easier to digest we
-> should take. (I'm really not complaining. Good that the work is done and
-> it's entirely ok that it's a lot of code.)
-> 
-> It would also be great if after you have dropped some stuff from this
-> patchset and gotten an Ack we could stuff it into linux-next for some
-> time because it hasn't been so far...
-> 
-> Christian
-
+That should convey out-of-line vs in-line 'hint'. And clearly that's
+broken for LLVM.
