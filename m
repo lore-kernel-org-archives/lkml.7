@@ -2,227 +2,102 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36342C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC75C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8AE2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:57:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561532234;
-	bh=h270XSQR4HolgMBKtPYzDJLyOe03vdnKPXJi7f/tNRM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ylDo9lGBiCIkZA4HANPFCt/onX4mpxV/HkMedi/fGTNyKG7QeM5klVN4gLK2ixN2Q
-	 R8uFi2aum7Yo2ECowvjq5Q2zeX25uaT+MZjC27Rwne16IjEkzwMj73yeTKbIco3OyV
-	 mwFZzBrYSCr6ADCFMKMvel7afJ8EsQyGDxXZUY6E=
+	by mail.kernel.org (Postfix) with ESMTP id B009F2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfFZG5M (ORCPT
+        id S1726874AbfFZG5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43978 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 02:57:42 -0400
+Received: from verein.lst.de ([213.95.11.211]:40637 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbfFZG5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:57:10 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 928EF2086D;
-        Wed, 26 Jun 2019 06:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561532228;
-        bh=h270XSQR4HolgMBKtPYzDJLyOe03vdnKPXJi7f/tNRM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HupmX+5Rtg9kMo0+c7MtqHspj5yq0C1i+GHhqAfPjXpvRXGFlJmGNWUbzYG4I4Vrf
-         Xc2a11E3p3qv2IjffyBBtc+hzBXn9wpdwWBB5O83bL9WUAaI462ArX8xxDF70mac3X
-         jG83M2a3D2nE4EQACKx7oBSWIzyjwwLvLTLN70TI=
-Received: by mail-wr1-f48.google.com with SMTP id k11so1348331wrl.1;
-        Tue, 25 Jun 2019 23:57:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAXypLMPFrVhEEXSu1lNP3GcgX2bEbQVUnPw3F7HTbnrCLFcc3MV
-        ONvMZiZnYDXqV1QX5u4Nr8jxvk/9YTZbvU0FFNM=
-X-Google-Smtp-Source: APXvYqyMc3SCW8AHCkxvuRUSme5yc5XG19mBM0GzvXnR8YWbXLG4W90TUwCbI4ickEEAG9SxmgbuA94jgtkfbGlbleA=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr2189723wro.343.1561532227206;
- Tue, 25 Jun 2019 23:57:07 -0700 (PDT)
+        id S1725876AbfFZG5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 02:57:42 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id C9BA468B05; Wed, 26 Jun 2019 08:57:08 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 08:57:08 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190626065708.GB24531@lst.de>
+References: <20190620161240.22738-1-logang@deltatee.com> <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
 MIME-Version: 1.0
-References: <cover.1561531557.git.han_mao@c-sky.com> <d874d7782d9acdad5d98f2f5c4a6fb26fbe41c5d.1561531557.git.han_mao@c-sky.com>
-In-Reply-To: <d874d7782d9acdad5d98f2f5c4a6fb26fbe41c5d.1561531557.git.han_mao@c-sky.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Wed, 26 Jun 2019 14:56:55 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRyma8sDMJaWCde1eOe6KSwn4_e=tJOT4d3kgmvzOxz8g@mail.gmail.com>
-Message-ID: <CAJF2gTRyma8sDMJaWCde1eOe6KSwn4_e=tJOT4d3kgmvzOxz8g@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf annotate csky: Add perf annotate support
-To:     Mao Han <han_mao@c-sky.com>
-Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thx Mao,
+On Tue, Jun 25, 2019 at 01:54:21PM -0600, Logan Gunthorpe wrote:
+> Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
+> that different. You still need roughly the same 'if' hooks for any
+> backed memory that isn't in the linear mapping and you can't get a
+> kernel mapping for directly.
+> 
+> It wouldn't be too hard to do a similar patch set that uses something
+> like phys_addr_t instead and have a request and queue flag for support
+> of non-mappable memory. But you'll end up with very similar 'if' hooks
+> and we'd have to clean up all bio-using drivers that access the struct
+> pages directly.
 
-Approved!
+We'll need to clean that mess up anyway, and I've been chugging
+along doing some of that.  A lot still assume no highmem, so we need
+to convert them over to something that kmaps anyway.  If we get
+the abstraction right that will actually help converting over to
+a better reprsentation.
 
-Best Regards
- Guo Ren
+> Though, we'd also still have the problem of how to recognize when the
+> address points to P2PDMA and needs to be translated to the bus offset.
+> The map-first inversion was what helped here because the driver
+> submitting the requests had all the information. Though it could be
+> another request flag and indicating non-mappable memory could be a flag
+> group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
 
-On Wed, Jun 26, 2019 at 2:53 PM Mao Han <han_mao@c-sky.com> wrote:
->
-> This patch add basic arch initialization and instruction associate suppor=
-t
-> for csky.
->
-> perf annotate --stdio2
-> Samples: 161  of event 'cpu-clock:pppH', 4000 Hz, Event count (approx.):
-> 40250000, [percent: local period]
-> test_4() /usr/lib/perf-test/callchain_test
-> Percent
->
->             Disassembly of section .text:
->
->             00008420 <test_4>:
->             test_4():
->               subi  sp, sp, 4
->               st.w  r8, (sp, 0x0)
->               mov   r8, sp
->               subi  sp, sp, 8
->               subi  r3, r8, 4
->               movi  r2, 0
->               st.w  r2, (r3, 0x0)
->             =E2=86=93 br    2e
-> 100.00  14:   subi  r3, r8, 4
->               ld.w  r2, (r3, 0x0)
->               subi  r3, r8, 8
->               st.w  r2, (r3, 0x0)
->               subi  r3, r8, 4
->               ld.w  r3, (r3, 0x0)
->               addi  r2, r3, 1
->               subi  r3, r8, 4
->               st.w  r2, (r3, 0x0)
->         2e:   subi  r3, r8, 4
->               ld.w  r2, (r3, 0x0)
->               lrw   r3, 0x98967f    // 8598 <main+0x28>
->               cmplt r3, r2
->             =E2=86=91 bf    14
->               mov   r0, r0
->               mov   r0, r0
->               mov   sp, r8
->               ld.w  r8, (sp, 0x0)
->               addi  sp, sp, 4
->             =E2=86=90 rts
->
-> Signed-off-by: Mao Han <han_mao@c-sky.com>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/arch/csky/annotate/instructions.c | 48 ++++++++++++++++++++++=
-++++++
->  tools/perf/util/annotate.c                   |  5 +++
->  2 files changed, 53 insertions(+)
->  create mode 100644 tools/perf/arch/csky/annotate/instructions.c
->
-> diff --git a/tools/perf/arch/csky/annotate/instructions.c b/tools/perf/ar=
-ch/csky/annotate/instructions.c
-> new file mode 100644
-> index 0000000..5337bfb
-> --- /dev/null
-> +++ b/tools/perf/arch/csky/annotate/instructions.c
-> @@ -0,0 +1,48 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
-> +
-> +#include <linux/compiler.h>
-> +
-> +static struct ins_ops *csky__associate_ins_ops(struct arch *arch,
-> +                                              const char *name)
-> +{
-> +       struct ins_ops *ops =3D NULL;
-> +
-> +       /* catch all kind of jumps */
-> +       if (!strcmp(name, "bt") ||
-> +           !strcmp(name, "bf") ||
-> +           !strcmp(name, "bez") ||
-> +           !strcmp(name, "bnez") ||
-> +           !strcmp(name, "bnezad") ||
-> +           !strcmp(name, "bhsz") ||
-> +           !strcmp(name, "bhz") ||
-> +           !strcmp(name, "blsz") ||
-> +           !strcmp(name, "blz") ||
-> +           !strcmp(name, "br") ||
-> +           !strcmp(name, "jmpi") ||
-> +           !strcmp(name, "jmp"))
-> +               ops =3D &jump_ops;
-> +
-> +       /* catch function call */
-> +       if (!strcmp(name, "bsr") ||
-> +           !strcmp(name, "jsri") ||
-> +           !strcmp(name, "jsr"))
-> +               ops =3D &call_ops;
-> +
-> +       /* catch function return */
-> +       if (!strcmp(name, "rts"))
-> +               ops =3D &ret_ops;
-> +
-> +       if (ops)
-> +               arch__associate_ins_ops(arch, name, ops);
-> +       return ops;
-> +}
-> +
-> +static int csky__annotate_init(struct arch *arch, char *cpuid __maybe_un=
-used)
-> +{
-> +       arch->initialized =3D true;
-> +       arch->objdump.comment_char =3D '/';
-> +       arch->associate_instruction_ops =3D csky__associate_ins_ops;
-> +
-> +       return 0;
-> +}
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 79db038..eb2456e 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -144,6 +144,7 @@ static int arch__associate_ins_ops(struct arch* arch,=
- const char *name, struct i
->  #include "arch/arc/annotate/instructions.c"
->  #include "arch/arm/annotate/instructions.c"
->  #include "arch/arm64/annotate/instructions.c"
-> +#include "arch/csky/annotate/instructions.c"
->  #include "arch/x86/annotate/instructions.c"
->  #include "arch/powerpc/annotate/instructions.c"
->  #include "arch/s390/annotate/instructions.c"
-> @@ -163,6 +164,10 @@ static struct arch architectures[] =3D {
->                 .init =3D arm64__annotate_init,
->         },
->         {
-> +               .name =3D "csky",
-> +               .init =3D csky__annotate_init,
-> +       },
-> +       {
->                 .name =3D "x86",
->                 .init =3D x86__annotate_init,
->                 .instructions =3D x86__instructions,
-> --
-> 2.7.4
->
+The assumes the request all has the same memory, which is a simplifing
+assuption.  My idea was that if had our new bio_vec like this:
 
+struct bio_vec {
+	phys_addr_t		paddr; // 64-bit on 64-bit systems
+	unsigned long		len;
+};
 
---=20
-Best Regards
- Guo Ren
+we have a hole behind len where we could store flag.  Preferably
+optionally based on a P2P or other magic memory types config
+option so that 32-bit systems with 32-bit phys_addr_t actually
+benefit from the smaller and better packing structure.
 
-ML: https://lore.kernel.org/linux-csky/
+> If you think any of the above ideas sound workable I'd be happy to try
+> to code up another prototype.
+
+Іt sounds workable.  To some of the first steps are cleanups independent
+of how the bio_vec is eventually going to look like.  That is making
+the DMA-API internals work on the phys_addr_t, which also unifies the
+map_resource implementation with map_page.  I plan to do that relatively
+soon.  The next is sorting out access to bios data by virtual address.
+All these need nice kmapping helper that avoid too much open coding.
+I was going to look into that next, mostly to kill the block layer
+bounce buffering code.  Similar things will also be needed at the
+scatterlist level I think.  After that we need to more audits of
+how bv_page is still used.  something like a bv_phys() helper that
+does "page_to_phys(bv->bv_page) + bv->bv_offset" might come in handy
+for example.
