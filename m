@@ -2,108 +2,99 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EFBC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D41C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A80920B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:52:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOxVhJOT"
+	by mail.kernel.org (Postfix) with ESMTP id 87E1921726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561575242;
+	bh=f5WpHBtEtFahIw3vdUhL2oQjYqmF7FGf/RrCjS8X2io=;
+	h=In-Reply-To:References:Subject:To:Cc:From:Date:List-ID:From;
+	b=o4txt7equ/pj2TL8erYLJm6NZxoUKxVQaMvH3F7pftWJK0tBnHHjhVfqvr/folEOZ
+	 rz80SpAXQ1oYJ4YDq2yn0Nqz8Df2NmCXSRd058BMdHbzSay8Dg7Hzgn89t+eKBAs8Z
+	 5sYMAM1X2PKC2TmzTDCgV/LxzCWOZhCee44Sr+s4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfFZSwe (ORCPT
+        id S1726633AbfFZSyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:52:34 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43206 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZSwe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:52:34 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so1909559plb.10;
-        Wed, 26 Jun 2019 11:52:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=jFUQd1a4KGSPHNAxPDeMNjxKEsd1P+Yd6RvsJx/5uQc=;
-        b=HOxVhJOTySx9Jybho1j8q1uMX5VGq6y0o6AXMcSjfoJ4/KBSXdAUO16s5x0IuDodcO
-         grpU9pElitmixZ3CWDWnBW34hExdqbMGOIBmLULt8SxkdS7SHtwoeMrvIIsirzIJQL+M
-         MVjzeShwpTCRnidbpUMiW37SwtuG3qMzyJTVzVBvdyLnMAzoox8jwmGyhUYkU0iLci5f
-         f9bOC2N6QrgG+yce5wqxaj9+uFqgB5PgfkKSkWlgHFNuunEPchYWVrNOdNoiK+43MdJQ
-         McYZFt03ftsZVRUmw9XVX2hQrWE+GZdrkeKSVoXr693OkHZAo/VQdoau2YyfuPBgtseg
-         2fpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jFUQd1a4KGSPHNAxPDeMNjxKEsd1P+Yd6RvsJx/5uQc=;
-        b=PlO7+TvxBP39oLhTzQDGeyj5oV8PM3uERRlX8is2/lYHR0xCkaUyae7tmukVe+dtP8
-         ra9EvU2cYhMA5Rt2piA9nzZNUL6FjkcolKLw2DS+yXu+xLrc3XqgJpSwVzHip6DhxzOb
-         jFSchmPU+gEV/v94L9w1QILYXVYolx2IIQJw+bcuaxeLgQMIOSmF9RzaNyWFDfmqO4LF
-         NSLAHM7J2HGQ2cqjkXDMf/z0Bce7Hs3vDeeLDkUAjGrc/nu+DJmsZeTw7E4pVNc865+M
-         lxVvv61a+x3tto4eymCSTuN2RG0vkSMj1nZqKMvyaDqPLcXDBG4rgLgZ9i56TIn5gANC
-         +X6w==
-X-Gm-Message-State: APjAAAUXv7tUVoSH1B+drIxw8Mm9n/XeIA43yhx3owt8JcP4Dm36pShP
-        L4P80ltwFDr8elTzLknBaBTFWXhg
-X-Google-Smtp-Source: APXvYqx8xcuzPF+3Q1H4Ucd6o7WTHj8KA2X/LjdtxpnaqkwN20/DS8zjhdwPiDFcZDkNITcE2JX/jg==
-X-Received: by 2002:a17:902:934a:: with SMTP id g10mr7349836plp.18.1561575153144;
-        Wed, 26 Jun 2019 11:52:33 -0700 (PDT)
-Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id y16sm24891832pff.89.2019.06.26.11.52.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 11:52:32 -0700 (PDT)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] media: staging/imx: Fix NULL deref in find_pipeline_entity()
-Date:   Wed, 26 Jun 2019 11:52:25 -0700
-Message-Id: <20190626185225.11992-1-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 26 Jun 2019 14:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfFZSyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:54:00 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D90C120B1F;
+        Wed, 26 Jun 2019 18:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561575240;
+        bh=f5WpHBtEtFahIw3vdUhL2oQjYqmF7FGf/RrCjS8X2io=;
+        h=In-Reply-To:References:Subject:To:Cc:From:Date:From;
+        b=2DgVwPGP72rgzQZSWHXMghXrWIppNM0nQ8i48SfoOD1tLrP9zDD7brzNtRI0QJOXc
+         Qe+aMbqYbnlToGBRDg97O+pH0iaHjjItDJlEQ5QnLdAvFL8zCBC8FrUnBJnw34Zq/W
+         juX/mJDB/4OZrSjpNW/8We1tG3C7qk6zjbQyeYFo=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190621093302.GJ23549@piout.net>
+References: <1560440205-4604-1-git-send-email-claudiu.beznea@microchip.com> <20190618095521.GE23549@piout.net> <929ac20b-db1d-3f7a-b37c-0dfb253156d5@microchip.com> <20190621093302.GJ23549@piout.net>
+Subject: Re: [PATCH 0/7] clk: at91: sckc: improve error path
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu.Beznea@microchip.com
+Cc:     mturquette@baylibre.com, Nicolas.Ferre@microchip.com,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, claudiu.beznea@gmail.com
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 26 Jun 2019 11:53:59 -0700
+Message-Id: <20190626185359.D90C120B1F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a cut&paste error in find_pipeline_entity(). The start entity must be
-passed to media_entity_to_video_device() in find_pipeline_entity(), not
-pad->entity. The pad is only put to use later, after determining the start
-entity is not the entity being searched for.
+Quoting Alexandre Belloni (2019-06-21 02:33:02)
+> On 20/06/2019 10:30:42+0000, Claudiu.Beznea@microchip.com wrote:
+> > Hi,
+> >=20
+> > On 18.06.2019 12:55, Alexandre Belloni wrote:
+> > > On 13/06/2019 15:37:06+0000, Claudiu.Beznea@microchip.com wrote:
+> > >> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+> > >>
+> > >> Hi,
+> > >>
+> > >> This series tries to improve error path for slow clock registrations
+> > >> by adding functions to free resources and using them on failures.
+> > >>
+> > >=20
+> > > Does the platform even boot when the slow clock is not available?=20
+> > >=20
+> > > The TCB clocksource would fail at:
+> > >=20
+> > >         tc.slow_clk =3D of_clk_get_by_name(node->parent, "slow_clk");
+> > >         if (IS_ERR(tc.slow_clk))
+> > >                 return PTR_ERR(tc.slow_clk);
+> > >=20
+> >=20
+> > In case of using TC as clocksource, yes, the platform wouldn't boot if =
+slow
+> > clock is not available, because, anyway the TC needs it. PIT may work
+> > without it (if slow clock is not used to drive the PIT).
+> >=20
+> > For sure there are other IPs (which may be or are driven by slow clock)
+> > which may not work if slow clock is driven them.
+> >=20
+> > Anyway, please let me know if you feel this series has no meaning.
+> >=20
+>=20
+> Well, I'm not sure it is worth it but at the same time, it is not adding
+> many lines and you already developed it...
+>=20
 
-Fixes: 3ef46bc97ca2 ("media: staging/imx: Improve pipeline searching")
-
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
----
- drivers/staging/media/imx/imx-media-utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-index b5b8a3b7730a..6fb88c22ee27 100644
---- a/drivers/staging/media/imx/imx-media-utils.c
-+++ b/drivers/staging/media/imx/imx-media-utils.c
-@@ -842,7 +842,7 @@ find_pipeline_entity(struct media_entity *start, u32 grp_id,
- 		if (sd->grp_id & grp_id)
- 			return &sd->entity;
- 	} else if (buftype && is_media_entity_v4l2_video_device(start)) {
--		vfd = media_entity_to_video_device(pad->entity);
-+		vfd = media_entity_to_video_device(start);
- 		if (buftype == vfd->queue->type)
- 			return &vfd->entity;
- 	}
--- 
-2.17.1
+Is that a Reviewed-by or a Rejected-by tag?
 
