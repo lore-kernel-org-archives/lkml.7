@@ -2,159 +2,118 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9E5C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1ECC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9377216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F374E2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h/IXXlmm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h57Q8Ma7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfFZOsK (ORCPT
+        id S1728484AbfFZOsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:48:10 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51122 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728398AbfFZOr5 (ORCPT
+        Wed, 26 Jun 2019 10:48:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38453 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728376AbfFZOrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:47:57 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5QElSHR080337;
-        Wed, 26 Jun 2019 09:47:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561560448;
-        bh=euKafHZbspwxm0WbBPizKb3mUMGv/MWPwIANUP7B8M8=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=h/IXXlmmt4ncU4+QQRtcmK4UwK9El/hxz7x4t8V/h8ghkG0KJ30UZL6Q+qb/Fc3Z3
-         99h4bwh+AHOjJj2hTZDDdoFzzuj548JusSiIacn7H6KNrdgPah3mV4orod+HhF52YF
-         Yz42z9yZzJLh3P13XA3zwJpZD4x3O+ye1pXGqNiQ=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5QElSp7067781
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Jun 2019 09:47:28 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 26
- Jun 2019 09:47:27 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 26 Jun 2019 09:47:27 -0500
-Received: from [10.250.96.121] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5QElOE7019579;
-        Wed, 26 Jun 2019 09:47:24 -0500
-Subject: Re: [RFC PATCH v4 net-next 06/11] net: ethernet: ti: introduce cpsw
- switchdev based driver part 1 - dual-emac
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-References: <20190621181314.20778-1-grygorii.strashko@ti.com>
- <20190621181314.20778-7-grygorii.strashko@ti.com>
- <20190626095839.GE6485@khorivan>
-From:   grygorii <grygorii.strashko@ti.com>
-Message-ID: <d6f1f1fb-21c3-ca5f-2585-8d1c3a4f571d@ti.com>
-Date:   Wed, 26 Jun 2019 17:47:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190626095839.GE6485@khorivan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 26 Jun 2019 10:47:51 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d18so3066829wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NrTLjCEQJCPZZPBocCnR2gGFul+oEek89zztJZXdth0=;
+        b=h57Q8Ma7QA2S62Pumxd4IWE4LAB/INnqTPU1uEJawVth6Pq50X9neJBTKuh6OyAZ7m
+         oY3MP7K3tFa4H34C2hQwW9heisfx5XMpEMRhGyeR6xv9XEtdpCjzwnZkDMKjAMHr50s5
+         WhjUdPc/yoUIEzD9s2ev5j9N+GANAzVh/MIDS4H2+R3BV6OCwYfyeoqwESRKPE6ZouHu
+         r1qBBrTd9t1rw6QjMR0EzjZAQhCKmpfvg8D1oNWDXqOFAAj7mdPB0dxCkHsI6ihhN6Uv
+         Fda5MbwzojrblJOZCWTkiT5quzNRRxJQx6RGumw/5Ji06gyUmki+3DefjcMtveHEDNf7
+         p7pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NrTLjCEQJCPZZPBocCnR2gGFul+oEek89zztJZXdth0=;
+        b=pxIDq+4JkEf/FAXaTCMNBafAmVvFtF5ZFmzQEkJJAsaqDLHU0dthNjKxY1t6DtXgU6
+         tJMAx9hYFWn2fc7EKMy4Hfw5g9OLVyIdjfo6PrNBSiPTJmJmppC1YLxlaOCcDWX7C986
+         h3Y2RbccQmAQlhg8HBvIL5rItBPTeUgyg7iHwlipposxGCtLnEhAe6+GXIE6QuGX/OJP
+         LvLev+VGx4s8gV0NeKQecOQ0H+dej82zNy2/KF3j2RTRTjNmzX1xAeyn1MXHVtXnzJLh
+         q2eh59vlpXY9K4xdO1sew50nSr+A9Vm9NTJUyy0VvLpg3X1oqtOBxL5aHrRVAQeZPzNH
+         OaQA==
+X-Gm-Message-State: APjAAAVe+upoaVlrpDnI+Dgh8Sp0EJttrnp9V06eWlYcX7wNnxEbaoEN
+        j1r6shV3DuqP5/qLeAxC5omCJw==
+X-Google-Smtp-Source: APXvYqxGpQiv5E4WGjCIQKYH9Y+gRBsbnKqD8dw94pr4vFwmPC93zjhp1ZIbYHoWZw3keMJc9Bn4Yg==
+X-Received: by 2002:a5d:5112:: with SMTP id s18mr3803585wrt.111.1561560468935;
+        Wed, 26 Jun 2019 07:47:48 -0700 (PDT)
+Received: from mai.imgcgcw.net (26.92.130.77.rev.sfr.net. [77.130.92.26])
+        by smtp.gmail.com with ESMTPSA id h84sm2718557wmf.43.2019.06.26.07.47.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 07:47:48 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT)
+Subject: [PATCH 22/25] clocksource/drivers/tegra: Cycles can't be 0
+Date:   Wed, 26 Jun 2019 16:46:48 +0200
+Message-Id: <20190626144651.16742-22-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190626144651.16742-1-daniel.lezcano@linaro.org>
+References: <adba7d03-e9bd-9542-60bc-0f2d4874a40e@linaro.org>
+ <20190626144651.16742-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dmitry Osipenko <digetx@gmail.com>
 
+Tegra's timer uses n+1 scheme for the counter, i.e. timer will fire after
+one tick if 0 is loaded. The minimum and maximum numbers of oneshot ticks
+are defined by clockevents_config_and_register(min, max) invocation and
+the min value is set to 1 tick. Hence "cycles" value can't ever be 0,
+unless it's a bug in clocksource core.
 
-On 26/06/2019 12:58, Ivan Khoronzhuk wrote:
-> Hi Grygorii
-> 
-> Too much code, but I've tried pass thru.
-> Probably expectation the devlink to be reviewed, but several
-> common replies that should be reflected in non RFC v.
-> 
-> On Fri, Jun 21, 2019 at 09:13:09PM +0300, Grygorii Strashko wrote:
->> From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
->>
->> Part 1:
->> Introduce basic CPSW dual_mac driver (cpsw_new.c) which is operating in
->> dual-emac mode by default, thus working as 2 individual network interfaces.
->> Main differences from legacy CPSW driver are:
->>
->> - optimized promiscuous mode: The P0_UNI_FLOOD (both ports) is enabled in
->> addition to ALLMULTI (current port) instead of ALE_BYPASS. So, Ports in
->> promiscuous mode will keep possibility of mcast and vlan filtering, which
->> is provides significant benefits when ports are joined to the same bridge,
->> but without enabling "switch" mode, or to different bridges.
->> - learning disabled on ports as it make not too much sense for
->>   segregated ports - no forwarding in HW.
->> - enabled basic support for devlink.
->>
->>     devlink dev show
->>         platform/48484000.ethernet_switch
->>
->>     devlink dev param show
->>      platform/48484000.ethernet_switch:
->>     name ale_bypass type driver-specific
->>      values:
->>         cmode runtime value false
->>
->> - "ale_bypass" devlink driver parameter allows to enable
->> ALE_CONTROL(4).BYPASS mode for debug purposes.
->> - updated DT bindings.
->>
->> Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/clocksource/timer-tegra.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-[...]
-
->> +
->> +    /* setup host port priority mapping */
->> +    writel_relaxed(CPDMA_TX_PRIORITY_MAP,
->> +               &cpsw->host_port_regs->cpdma_tx_pri_map);
->> +    writel_relaxed(0, &cpsw->host_port_regs->cpdma_rx_chan_map);
-> 
-> ----
->> +
->> +    /* disable priority elevation */
->> +    writel_relaxed(0, &cpsw->regs->ptype);
->> +
->> +    /* enable statistics collection only on all ports */
->> +    writel_relaxed(0x7, &cpsw->regs->stat_port_en);
->> +
->> +    /* Enable internal fifo flow control */
->> +    writel(0x7, &cpsw->regs->flow_control);
-> ---
-> 
-> Would be nice to do the same in old driver.
-> I mean moving it from ndo_open
-> Also were thoughts about this.
-
-I have no plans to perform any kind of optimization in old driver any more.
-
-Agree with other comments.
-
-[...]
-
-Thank you.
-
+diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+index 8e70f38f1898..a907e71065bd 100644
+--- a/drivers/clocksource/timer-tegra.c
++++ b/drivers/clocksource/timer-tegra.c
+@@ -56,9 +56,16 @@ static int tegra_timer_set_next_event(unsigned long cycles,
+ {
+ 	void __iomem *reg_base = timer_of_base(to_timer_of(evt));
+ 
+-	writel_relaxed(TIMER_PTV_EN |
+-		       ((cycles > 1) ? (cycles - 1) : 0), /* n+1 scheme */
+-		       reg_base + TIMER_PTV);
++	/*
++	 * Tegra's timer uses n+1 scheme for the counter, i.e. timer will
++	 * fire after one tick if 0 is loaded.
++	 *
++	 * The minimum and maximum numbers of oneshot ticks are defined
++	 * by clockevents_config_and_register(1, 0x1fffffff + 1) invocation
++	 * below in the code. Hence the cycles (ticks) can't be outside of
++	 * a range supportable by hardware.
++	 */
++	writel_relaxed(TIMER_PTV_EN | (cycles - 1), reg_base + TIMER_PTV);
+ 
+ 	return 0;
+ }
 -- 
-Best regards,
-grygorii
+2.17.1
+
