@@ -2,125 +2,156 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,TRACKER_ID,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2742C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A70C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFD42146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277122133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JWS56c7L"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="bFEo7QPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfFZDPc (ORCPT
+        id S1726545AbfFZDR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:15:32 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6685 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfFZDPc (ORCPT
+        Tue, 25 Jun 2019 23:17:29 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36114 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfFZDR3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:15:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d12e3520000>; Tue, 25 Jun 2019 20:15:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 25 Jun 2019 20:15:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 25 Jun 2019 20:15:31 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
- 2019 03:15:29 +0000
-Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-19-hch@lst.de> <20190613194430.GY22062@mellanox.com>
- <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com>
- <20190613195819.GA22062@mellanox.com>
- <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
- <d2b77ea1-7b27-e37d-c248-267a57441374@nvidia.com>
- <20190619192719.GO9374@mellanox.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <29f43c79-b454-0477-a799-7850e6571bd3@nvidia.com>
-Date:   Tue, 25 Jun 2019 20:15:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 25 Jun 2019 23:17:29 -0400
+Received: by mail-qt1-f193.google.com with SMTP id p15so867429qtl.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 20:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QXbgGBbC1ZPWs9kVe32pZF3SV3YhurcsmQQjsmIj0jM=;
+        b=bFEo7QPTIxz3R/0RJe+Jd0Ot522g/iQuYH+QbE7/ONtHfod1vnb0loQOJaGxs/LAuQ
+         gOseqMwFJoFAYeQkCqr5g0A/FQVTdahBuiyo1rn2gKLvHsjGOn9OPHp1EvGckEP+Ktf3
+         j6Lz4sF0Bqr8gMS9sv9bqeEJ8HQ1qYjeOQPVi9Gt83GUHJtEJbWJd274FYR2xayRK6KP
+         dPLmDCyhLmzrTf8ocyVAgpmq/TAC7BuiYa69OsazVPeFp1/Uw83bMdLyfrMfEE3QEC7n
+         XCdUo/1GCjixg33IdR/g3bxioDfWWLkJ0VzHmSMBtm00SNyQm/X8XlZxtXJk6+tbH4uA
+         2TTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QXbgGBbC1ZPWs9kVe32pZF3SV3YhurcsmQQjsmIj0jM=;
+        b=ogJtL/TZrEB6PGwXEM9qGn+rCWJ+6WJjmQTtcr3Zxov3FOUWNPREgtONrUtZ8626GL
+         zvV4aiwpwO8jx/dQVux7WMLALzXwDSwHsdjPrp/VIOXyhFjFKJjm4pSC9JYIp0LwA5Xq
+         xJ6Q8erefUCBZkS+FF/+ppULFQaIeNrZPoevyp/c37kOdgMb0M4hhE7mTmuGqnPBLSoY
+         OrQEfcBeev9SVbtJ8H+bqYsfil53POjoqF2LLWri18VFSg7mXzBmSLubKpquiiR6X/am
+         DVCXZKQ5Lwo74BVHPe0njcHtfI9JnD4huijUO/gjsBDccVIRGd+M9BcNNlWj0T/68nQA
+         W0tQ==
+X-Gm-Message-State: APjAAAV2aIEvUO3JsCpH8FvsYje9VvP28x8BTmEdnq0mZSW1mvYtZLIF
+        do0oTLxxVYJPHGKuI82U4ByThQ==
+X-Google-Smtp-Source: APXvYqycL18IaKmGrxnoZY2zfjjsh3SxqbDU6y692ls7oRMHnziYjvoshMYM0XnMA2whHynj2He4dg==
+X-Received: by 2002:a0c:aed0:: with SMTP id n16mr1519711qvd.101.1561519048297;
+        Tue, 25 Jun 2019 20:17:28 -0700 (PDT)
+Received: from localhost ([107.15.81.208])
+        by smtp.gmail.com with ESMTPSA id e4sm9340488qtc.3.2019.06.25.20.17.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 20:17:28 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 23:17:26 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        David Sterba <dsterba@suse.com>, lkp@01.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [LKP] [btrfs] c8eaeac7b7: aim7.jobs-per-min -11.7% regression
+Message-ID: <20190626031726.dd457kxc3zyuekyf@MacBook-Pro-91.local>
+References: <20190513025004.GG31424@shao2-debian>
+ <87blzl7itt.fsf@yhuang-dev.intel.com>
+ <87v9xdymdg.fsf@yhuang-dev.intel.com>
+ <877e9fahmk.fsf@yhuang-dev.intel.com>
+ <20190625142242.oxltqbj2veuckoxo@MacBook-Pro-91.local>
+ <a80ab85b-635f-90fe-24da-5f746c613811@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190619192719.GO9374@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561518930; bh=mFKCj/TnJw3viqoDN0No22dYQzshEvjZPsHuzsScphE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JWS56c7LDNZO2C+L8KR37PAJV/JNwy2VsATo0Y9o97x2OREZOXY1kW16CqdsdCF3p
-         h75heFhKUb3QKsr9tb1bJDlBPd+kZrKl1GNfPhJxKLLAVmTvovjBcLyjGppIJCVNJz
-         e/bL0Uz9WCABzn+s82NDbBpQtU8Quft0swt7Nfb9yv1tVnj/v8mVsJUeumTOsJqbpo
-         ejbFTmycRLy12cjephJ1Av4haOtY2fOQCECnDpWB4huqII/lRxMlc4SxDkKG4nThLq
-         s7yoeCAPZH4BEFoJuCbXa874ODwp/FlzUTE8v3eEQjQt1UYj/uSTcnPhWHZ0P2eSt5
-         drw5jV+XaTi+A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a80ab85b-635f-90fe-24da-5f746c613811@intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 12:27 PM, Jason Gunthorpe wrote:
-> On Thu, Jun 13, 2019 at 06:23:04PM -0700, John Hubbard wrote:
->> On 6/13/19 5:43 PM, Ira Weiny wrote:
->>> On Thu, Jun 13, 2019 at 07:58:29PM +0000, Jason Gunthorpe wrote:
->>>> On Thu, Jun 13, 2019 at 12:53:02PM -0700, Ralph Campbell wrote:
->>>>>
->> ...
->>> So I think it is ok.  Frankly I was wondering if we should remove the public
->>> type altogether but conceptually it seems ok.  But I don't see any users of it
->>> so...  should we get rid of it in the code rather than turning the config off?
->>>
->>> Ira
->>
->> That seems reasonable. I recall that the hope was for those IBM Power 9
->> systems to use _PUBLIC, as they have hardware-based coherent device (GPU)
->> memory, and so the memory really is visible to the CPU. And the IBM team
->> was thinking of taking advantage of it. But I haven't seen anything on
->> that front for a while.
+On Wed, Jun 26, 2019 at 10:39:36AM +0800, Rong Chen wrote:
+> On 6/25/19 10:22 PM, Josef Bacik wrote:
+> > On Fri, Jun 21, 2019 at 08:48:03AM +0800, Huang, Ying wrote:
+> > > "Huang, Ying" <ying.huang@intel.com> writes:
+> > > 
+> > > > "Huang, Ying" <ying.huang@intel.com> writes:
+> > > > 
+> > > > > Hi, Josef,
+> > > > > 
+> > > > > kernel test robot <rong.a.chen@intel.com> writes:
+> > > > > 
+> > > > > > Greeting,
+> > > > > > 
+> > > > > > FYI, we noticed a -11.7% regression of aim7.jobs-per-min due to commit:
+> > > > > > 
+> > > > > > 
+> > > > > > commit: c8eaeac7b734347c3afba7008b7af62f37b9c140 ("btrfs: reserve
+> > > > > > delalloc metadata differently")
+> > > > > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > > > > > 
+> > > > > > in testcase: aim7
+> > > > > > on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz with 384G memory
+> > > > > > with following parameters:
+> > > > > > 
+> > > > > > 	disk: 4BRD_12G
+> > > > > > 	md: RAID0
+> > > > > > 	fs: btrfs
+> > > > > > 	test: disk_rr
+> > > > > > 	load: 1500
+> > > > > > 	cpufreq_governor: performance
+> > > > > > 
+> > > > > > test-description: AIM7 is a traditional UNIX system level benchmark
+> > > > > > suite which is used to test and measure the performance of multiuser
+> > > > > > system.
+> > > > > > test-url: https://sourceforge.net/projects/aimbench/files/aim-suite7/
+> > > > > Here's another regression, do you have time to take a look at this?
+> > > > Ping
+> > > Ping again ...
+> > > 
+> > Finally got time to look at this but I can't get the reproducer to work
+> > 
+> > root@destiny ~/lkp-tests# bin/lkp run ~/job-aim.yaml
+> > Traceback (most recent call last):
+> >          11: from /root/lkp-tests/bin/run-local:18:in `<main>'
+> >          10: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+> >           9: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+> >           8: from /root/lkp-tests/lib/yaml.rb:5:in `<top (required)>'
+> >           7: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+> >           6: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+> >           5: from /root/lkp-tests/lib/common.rb:9:in `<top (required)>'
+> >           4: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+> >           3: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+> >           2: from /root/lkp-tests/lib/array_ext.rb:3:in `<top (required)>'
+> >           1: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
+> > /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require': cannot load such file -- active_support/core_ext/enumerable (LoadError)
 > 
-> Does anyone know who those people are and can we encourage them to
-> send some patches? :)
+> Hi Josef,
+> 
+> I tried the latest lkp-tests, and didn't have the problem. Could you please
+> update the lkp-tests repo and run "lkp install" again?
 > 
 
-I asked about this, and it seems that the idea was: DEVICE_PUBLIC was there
-in order to provide an alternative way to do things (such as migrate memory
-to and from a device), in case the combination of existing and near-future
-NUMA APIs was insufficient. This probably came as a follow-up to the early
-2017-ish conversations about NUMA, in which the linux-mm recommendation was
-"try using HMM mechanisms, and if those are inadequate, then maybe we can
-look at enhancing NUMA so that it has better handling of advanced (GPU-like)
-devices".
+I updated it this morning, and I just updated it now, my tree is on
 
-In the end, however, _PUBLIC was never used, nor does anyone in the local
-(NVIDIA + IBM) kernel vicinity seem to have plans to use it.  So it really
-does seem safe to remove, although of course it's good to start with 
-BROKEN and see if anyone pops up and complains.
+2c5b1a95b08dbe81bba64419c482a877a3b424ac
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+lkp install says everything is installed except
+
+No match for argument: libipc-run-perl
+
+and it still doesn't run properly.  Thanks,
+
+Josef
