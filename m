@@ -2,127 +2,116 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C17C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82E3C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC55C2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F61E2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:21:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="lNDZe0Ow";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="puLWPAjq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfFZHUy (ORCPT
+        id S1726992AbfFZHVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:20:54 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:57704 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfFZHUy (ORCPT
+        Wed, 26 Jun 2019 03:21:19 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:40337 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725930AbfFZHVN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:20:54 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 6E28580314;
-        Wed, 26 Jun 2019 09:20:49 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 09:20:48 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [v3 1/4] dt-bindngs: display: panel: Add BOE tv101wum-n16 panel
- bindings
-Message-ID: <20190626072048.GB14541@ravnborg.org>
-References: <20190626025400.109567-1-jitao.shi@mediatek.com>
- <20190626025400.109567-2-jitao.shi@mediatek.com>
+        Wed, 26 Jun 2019 03:21:13 -0400
+X-Greylist: delayed 332 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jun 2019 03:21:12 EDT
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7E04E1C22;
+        Wed, 26 Jun 2019 03:15:58 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 26 Jun 2019 03:15:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=fWlD1uewNsuOv
+        vJeyP+mMa6JLokQU6xzkQsW9nl9tuI=; b=lNDZe0OwrWhjUfAq+Ykf7egxE5PT+
+        TlpMZA8Aqdm9GKfmbzNSHzFTLTqiVth6hkZInumC9IlQvLXrRrLRRh/Nhmy2I2Oh
+        huZJy0QqifGtdjxtqD3DwAg+g4FX95lbpaSewrK7PzdPUYqL/oPHEE2Eh2ZGfcHh
+        DlEcUYWm6Agp/5fhcS+p5mgkBwGnXArZZwMtgD4MZuaS0AF4UDD9bh6szqY3WRBR
+        nAw3MHI8xYWqL7z7eVpn5FpiwCIHrKzXT6T+4EMtkyZFy+oWciefDbJmMJsLPoF4
+        B7D7d/qlqFLLT/if/Ja5aaNIPj7opctGOicwctW59RkcXYHZDRMBr++YA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=fWlD1uewNsuOvvJeyP+mMa6JLokQU6xzkQsW9nl9tuI=; b=puLWPAjq
+        whxH/c7QidyFvKjgWRqCymc6vEDpiIa/O0wlvq32w+ldyywucvsmSIJJ1JgNNkxa
+        VxsubG6LyhdPmq7RttIWL3pPJT/IBCAF8ZYbaPcw8TVBEG4wKCV/fkzuskhOg4HE
+        0cW7eE8wFvA7QXeVkEEsoU1LZ6MtbkWVEPbxYWUBuzt+ah6Dfc4Ey1LU8j9C62vx
+        fElrkRFsEZzQJeBDULfIE27y7zLAKabz4F7yIeWBC/H1a7giGl7u5sB9L9vOsRzh
+        xGVxNUmF4FkvO4Y2q6hKvkamFUihRcB1o1KlhLRnEkikoBk8pWMPp8OQ6dh5sR8z
+        GC+1YP3iDF1hfw==
+X-ME-Sender: <xms:rhsTXWlP9ws_PPZRzyZx3jZQVpTxB6KyWfzOBAM3H8MP0NYYodpJdA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
+    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
+    jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
+    hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
+    pedu
+X-ME-Proxy: <xmx:rhsTXea8AUim3q9k60F2hy0ukk1inKBD5-vkK0e7z1dtpVOUvq3qoQ>
+    <xmx:rhsTXV0gWSQ-XQyewoq0qSiXREhxFsnm6gkfUEnHub6LDw4V2gglIg>
+    <xmx:rhsTXURq--Q-jb9A_GChcDNgbzCXGK7AgsCwSSqBU7pyudU9rftbvg>
+    <xmx:rhsTXe1FVeEOkH_6ZkGh_RmuGM_dxyrquAVFKMSeErk5f_NxzwBhoQ>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9CDFB380076;
+        Wed, 26 Jun 2019 03:15:54 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     ryan_chen@aspeedtech.com, Andrew Jeffery <andrew@aj.id.au>,
+        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/8] MAINTAINERS: Add entry for ASPEED pinctrl drivers
+Date:   Wed, 26 Jun 2019 16:44:26 +0930
+Message-Id: <20190626071430.28556-5-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190626071430.28556-1-andrew@aj.id.au>
+References: <20190626071430.28556-1-andrew@aj.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626025400.109567-2-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=GOHkJZeNjhEJBjOU3QsA:9
-        a=CjuIK1q_8ugA:10 a=6heAxKwa5pAsJatQ0mat:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 10:53:57AM +0800, Jitao Shi wrote:
-> Add documentation for boe tv101wum-n16 panel.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../display/panel/boe,tv101wum-nl6.txt        | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
-> new file mode 100644
-> index 000000000000..bd44af636390
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.txt
-> @@ -0,0 +1,34 @@
-> +Boe Corporation 10.1" WUXGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "boe,tv101wum-nl6"
-> +- reg: the virtual channel number of a DSI peripheral
-> +- enable-gpios: a GPIO spec for the enable pin
-> +- pp1800-supply: core voltage supply
-> +- avdd-supply: phandle of the regulator that provides positive voltage
-> +- avee-supply: phandle of the regulator that provides negative voltage
-> +- backlight: phandle of the backlight device attached to the panel
-> +
-> +The device node can contain one 'port' child node with one child
-> +'endpoint' node, according to the bindings defined in
-> +media/video-interfaces.txt. This node should describe panel's video bus.
-> +
-> +Example:
-> +&dsi {
-> +	...
-> +	panel@0 {
-> +		compatible = "boe,tv101wum-nl6";
-> +		reg = <0>;
-> +		enable-gpios = <&pio 45 0>;
-> +		avdd-supply = <&ppvarn_lcd>;
-> +		avee-supply = <&ppvarp_lcd>;
-> +		pp1800-supply = <&pp1800_lcd>;
-> +		backlight = <&backlight_lcd0>;
-> +		status = "okay";
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.21.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Add myself as maintainer to avoid burdening others with the madness.
+
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a6954776a37e..978383f5c1ab 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2586,6 +2586,15 @@ S:	Maintained
+ F:	Documentation/hwmon/asc7621.rst
+ F:	drivers/hwmon/asc7621.c
+ 
++ASPEED PINCTRL DRIVERS
++M:	Andrew Jeffery <andrew@aj.id.au>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++F:	drivers/pinctrl/aspeed/
++F:	Documentation/devicetree/bindings/pinctrl/aspeed,*
++
+ ASPEED VIDEO ENGINE DRIVER
+ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
+-- 
+2.20.1
+
