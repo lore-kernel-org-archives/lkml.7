@@ -7,64 +7,65 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DC0C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF2BC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950B720B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C4920B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h1JRpI0J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WxB4Rfur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbfFZK2G (ORCPT
+        id S1727191AbfFZK2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:28:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41078 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfFZK2E (ORCPT
+        Wed, 26 Jun 2019 06:28:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33290 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfFZK2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:28:04 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so2083834wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:28:02 -0700 (PDT)
+        Wed, 26 Jun 2019 06:28:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so2127775wru.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:28:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=p/mgZFZvtz5MXeK97S6RAma7XXrIP4D9tjHX9nEHACY=;
-        b=h1JRpI0JBRfQ+DluKeXamJpk4K1xEhaXO9qNejSpmI2TPx6pE6d0M/X0rx6rND0y5j
-         QkCOjv+8SKTcJSBjx6qzWuyqzQWVDccPIQvjSmth3U45tdO5j9nV7qah3hOY8LrqGTIz
-         CyZaCFdvCuKCUyIhaUgxSnW2QdZx42O5Cf59ZrNQlCgFBc2v0cOacMc4UmJFCxyoUDNf
-         pNcS/G4MaJg3r/sRiC2fI2Ul+RQ2HzXudlA+TT62lbeltM4+rM3i3HGhLJlN5jdWEovs
-         +tSmZUlUczr64N34sWFPtmpR5Vb1DwuIwzNnL+I1NEqcNEwM8WxU+rf2qxJInvbGmoZ6
-         MF0g==
+        bh=5uzszV+7Ya3X0Ti8Q3j+2HtrxZYyAMfNJvKRoru6OH8=;
+        b=WxB4RfuruC/yhs4Ah8lZU7dPpnMc3rmfsmOYiXZIjFaaiKpKUyDWvEZrq2JnMwwanr
+         kvhkjQDzMf5yGS0Hfs58/UFdyYu3k6QhNBNNO52M/0j5G3GphUbG1XAnosFEvULcorOb
+         zsUK74hfTp17R+H5cgo4nM/sd5jPhV5XS/q9mwz16sbanKtyJUPXQMqTqy7AEq6p/+nc
+         JiLpwMDy230jq4H7Fuu7lCsSWy3d8tG0TFLnZEXc5NOVyQhIdqhtF3S+HANndt517xhI
+         X51m4mCErjy4cfilG6QuWjoMF3gHYjg8WQt1o/NrhaYZv5yO1CluxMO0grbW6kW5aNoh
+         15Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=p/mgZFZvtz5MXeK97S6RAma7XXrIP4D9tjHX9nEHACY=;
-        b=KNsVHDQeZIsd/HAw69LcLzo7WTpcVFFPGY5WUjbYjJI8KuyTamMgoLObECl8BWIbuz
-         QXcG5Ouswkr59/jZ9RrrAS24neQwmOhG9O8pPr7MNofHnPSUDFkWEyc+1lB+kzxe5GKI
-         L8dogKaAsmAtfNLX4jEkmnVF7AYdNymOKwgLbuJx/ebRXq0hKdmOqLR7MsyHiwDhETH6
-         3nHU+/cMZovCq5ehi0HHkH5/MiM09wDY208oJASZ3XDca8qn7WAvRW+JikCI2CIO1m0j
-         3JSlAnpyBM62SuleLMI28OUGLejenjZUg8NcO96EFsbWnxA1LLaQupx5l/m1MF4i+IMO
-         jd8w==
-X-Gm-Message-State: APjAAAXtShpQ2DgiBN++QWAnjYe6r5sfMhlBoyepXlvVUKLSr0s36K77
-        UTM3hMSTq1DN4PMlfejYHH5LfQ==
-X-Google-Smtp-Source: APXvYqyd0lrlxYf8LbmV4gTNQrlvndp90tSEhm81oxft/RmyBefcCA8J5bLEeYx7Gg53Kc04x6nMhw==
-X-Received: by 2002:adf:e40f:: with SMTP id g15mr2944999wrm.174.1561544881765;
-        Wed, 26 Jun 2019 03:28:01 -0700 (PDT)
+        bh=5uzszV+7Ya3X0Ti8Q3j+2HtrxZYyAMfNJvKRoru6OH8=;
+        b=lqS2Dx0fu1TDRo+2gq3trmYJ5+GypU03Qkj5fUBenfNRzsaLs/Hv82GPdzfs5jka3Z
+         3cz+Av5z+1mZ2XopkW3aDgqeEr0qdVjMmj60jevLZb/1FDpGz1GAlHr/K6RaIFLVJAm7
+         au+mBysx73hdIs6iVRIVeZk0smrKs4Y7aWItD30cPBIysUHr8XymX7tSiOs4oB/zk/Cy
+         wuhs4H/lBg3/rC55OcbJoMVByInQ8nKqSLrWuXYVoaF9DMR+RNnOydC50nQNcGWd44Di
+         rUTqzykTD751UMkTZuUJAqepRUjXYVTk0YiuYE5Rtac4rGBi8Qef058AcEDYzBijdsrm
+         b+vg==
+X-Gm-Message-State: APjAAAUOzsE3v1OGRYzctOuPT/0XuDsqcbfOiXra3/RFH7xm9PIFd54f
+        +BgassKHS5NVCqTYgN0UVMM1wA==
+X-Google-Smtp-Source: APXvYqwOOh/6r5I0clXZFBFcf0kKl5YKJ1PT8erpdFmoxoO6wMDlTANQsMHVrnxZQyWwvy3dHhIdkg==
+X-Received: by 2002:adf:ea8b:: with SMTP id s11mr3069165wrm.100.1561544885665;
+        Wed, 26 Jun 2019 03:28:05 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id z19sm2212042wmi.7.2019.06.26.03.28.00
+        by smtp.gmail.com with ESMTPSA id z19sm2212042wmi.7.2019.06.26.03.28.04
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:28:01 -0700 (PDT)
+        Wed, 26 Jun 2019 03:28:05 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org,
         Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        Rob Herring <robh@kernel.org>,
         Leonard Crestez <leonard.crestez@nxp.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 1/6] nvmem: imx-ocotp: Elongate OCOTP_CTRL ADDR field to eight bits
-Date:   Wed, 26 Jun 2019 11:27:28 +0100
-Message-Id: <20190626102733.11708-2-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 5/6] dt-bindings: imx-ocotp: Add i.MX8MM compatible
+Date:   Wed, 26 Jun 2019 11:27:32 +0100
+Message-Id: <20190626102733.11708-6-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190626102733.11708-1-srinivas.kandagatla@linaro.org>
 References: <20190626102733.11708-1-srinivas.kandagatla@linaro.org>
@@ -77,38 +78,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
 
-i.MX6 defines OCOTP_CTRLn:ADDR as seven bit address-field with a one bit
-RSVD0 field, i.MX7 defines OCOTP_CTRLn:ADDR as a four bit address-field
-with a four bit RSVD0 field.
-
-i.MX8 defines the OCOTP_CTRLn:ADDR bit-field as a full range eight bits.
-
-i.MX6 and i.MX7 should return zero for their respective RSVD0 bits and
-ignore a write-back of zero where i.MX8 will make use of the full range.
-
-This patch expands the bit-field definition for all users to eight bits,
-which is safe due to RSVD0 being a no-op for the i.MX6 and i.MX7.
+Add compatible for i.MX8MM as per arch/arm64/boot/dts/freescale/imx8mm.dtsi
 
 Signed-off-by: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Cc: Rob Herring <robh@kernel.org>
 Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/imx-ocotp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index bd016b928589..14c2bff2cd96 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -39,7 +39,7 @@
- #define IMX_OCOTP_ADDR_DATA2		0x0040
- #define IMX_OCOTP_ADDR_DATA3		0x0050
- 
--#define IMX_OCOTP_BM_CTRL_ADDR		0x0000007F
-+#define IMX_OCOTP_BM_CTRL_ADDR		0x000000FF
- #define IMX_OCOTP_BM_CTRL_BUSY		0x00000100
- #define IMX_OCOTP_BM_CTRL_ERROR		0x00000200
- #define IMX_OCOTP_BM_CTRL_REL_SHADOWS	0x00000400
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+index 68f7d6fdd140..96ffd06d2ca8 100644
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+@@ -15,6 +15,7 @@ Required properties:
+ 	"fsl,imx6sll-ocotp" (i.MX6SLL),
+ 	"fsl,imx7ulp-ocotp" (i.MX7ULP),
+ 	"fsl,imx8mq-ocotp" (i.MX8MQ),
++	"fsl,imx8mm-ocotp" (i.MX8MM),
+ 	followed by "syscon".
+ - #address-cells : Should be 1
+ - #size-cells : Should be 1
 -- 
 2.21.0
 
