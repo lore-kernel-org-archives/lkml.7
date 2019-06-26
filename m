@@ -2,217 +2,170 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0B8C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 941B3C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9F020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SWD4mTxX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BenseZD4"
+	by mail.kernel.org (Postfix) with ESMTP id 65FB6208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561537455;
+	bh=bMRTiDPGMP8fxo+3ckAdavBqCq0bsYHPyLNJZLN2WzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ncjWvRPWWA7ttIcJT09Pibg3pHSU4HzXD2kwYoTAcmiw4y/K90ftAm8ynoAlkH3mS
+	 WZrbtSKH+ZbCOfBv9XqjRyKqiEfcbGxAArxvaaLViipQ+4T5SgP/aJGbTEZGgLK2/Z
+	 sfuXWYZAQFTcbqOq8GWzG23scIlR+359iQkaqjuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfFZIX4 (ORCPT
+        id S1726932AbfFZIYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:23:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57714 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFZIXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:23:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E525D60AA8; Wed, 26 Jun 2019 08:23:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561537434;
-        bh=GQNcLhByL0BEPPkfGDxgHcRx/KIyGZMnjQCWcWMLvZg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWD4mTxXnPsVZTapMkgY6uFHdjnk6z5jH58wJbpRY9aOitl0c43wWvrWohwp/3TFN
-         EMvCDlGhcl7W5lbJktK7Gg+YpbFb4MRlGu7GSio75Km/ec4nTyZb35fPU/7DSDCH7c
-         pJAjxjy4SJGTTLiWxl2Sgvk4afI2BCh+HzzNVK6g=
-Received: from amasule-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 26 Jun 2019 04:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfFZIYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:24:14 -0400
+Received: from localhost (unknown [116.247.127.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: amasule@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 95F69607CA;
-        Wed, 26 Jun 2019 08:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561537433;
-        bh=GQNcLhByL0BEPPkfGDxgHcRx/KIyGZMnjQCWcWMLvZg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BenseZD4Zs/BdEFndqpUmPydWGQKl8I2cnV50HkaFBG/eEfHr8t/aDAk1QE5r6KXO
-         BTEBxHJVUBpMxXUJQaVk4LY+GzawPhfLT0RkiYoatjTODS4AgD92JYDaXy35mQaU+J
-         T/eCZFtWXokJ5uapYK2H4AjZE1iu2nE3wAbYpvDY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 95F69607CA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=amasule@codeaurora.org
-From:   Aniket Masule <amasule@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org, Aniket Masule <amasule@codeaurora.org>
-Subject: [PATCH] media: venus: Update to bitrate based clock scaling
-Date:   Wed, 26 Jun 2019 13:53:36 +0530
-Message-Id: <1561537416-2067-2-git-send-email-amasule@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1561537416-2067-1-git-send-email-amasule@codeaurora.org>
-References: <1561537416-2067-1-git-send-email-amasule@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2520120B7C;
+        Wed, 26 Jun 2019 08:24:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561537452;
+        bh=bMRTiDPGMP8fxo+3ckAdavBqCq0bsYHPyLNJZLN2WzQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gL4Q2EbNYmmurqssvE7tqFn8IOmKUjd4O/Q83vVHRSMBhyncHWG9ky60BEx4kqvN4
+         lXKhOORnoESfU93qBETnxhge7qLvx5bdTmp2ozLqbwFf8DIRFTpW+f+5BqHPel7n2o
+         3KRQ5ZqVt38e1eTjyA4qVFDcyo1VincEHKh7TVes=
+Date:   Wed, 26 Jun 2019 16:23:43 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Steam is broken on new kernels
+Message-ID: <20190626082343.GB4605@kroah.com>
+References: <CANn89iLU+NNy7QDPNLYPxNWMx5cXuhziOT7TX2uYt42uUJcNVg@mail.gmail.com>
+ <b72599d1-b5d5-1c23-15fc-8e2f9454af05@valvesoftware.com>
+ <CAHk-=wjZ1grLwJsGD+Fjz1_U_W47AFodBiwBX84HECUHt-guuw@mail.gmail.com>
+ <20190622073753.GA10516@kroah.com>
+ <20190626020220.GA22548@roeck-us.net>
+ <20190626022923.GA14595@kroah.com>
+ <53b23451-f45b-932d-a2f8-15f74f07a849@roeck-us.net>
+ <CANn89iL69qDuHDPPk7gksoQvCyVEmBRRs-Kc_EVDkpxZe7DwMw@mail.gmail.com>
+ <20190626051720.GA575@kroah.com>
+ <CANn89iJPcD9cOrFUHR_sSVyjxzqYGwB2mG-Crf5vhxc7L+LgsA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iJPcD9cOrFUHR_sSVyjxzqYGwB2mG-Crf5vhxc7L+LgsA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduced clock scaling using bitrate, current
-calculations consider only the cycles per mb.
-Also, clock scaling is now triggered before every
-buffer being queued to the device. This helps in
-deciding precise clock cycles required.
+On Wed, Jun 26, 2019 at 08:38:01AM +0200, Eric Dumazet wrote:
+> On Wed, Jun 26, 2019 at 8:22 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Jun 26, 2019 at 06:20:17AM +0200, Eric Dumazet wrote:
+> > > On Wed, Jun 26, 2019 at 5:43 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > >
+> > > > On 6/25/19 7:29 PM, Greg Kroah-Hartman wrote:
+> > > > > On Tue, Jun 25, 2019 at 07:02:20PM -0700, Guenter Roeck wrote:
+> > > > >> Hi Greg,
+> > > > >>
+> > > > >> On Sat, Jun 22, 2019 at 09:37:53AM +0200, Greg Kroah-Hartman wrote:
+> > > > >>> On Fri, Jun 21, 2019 at 10:28:21PM -0700, Linus Torvalds wrote:
+> > > > >>>> On Fri, Jun 21, 2019 at 6:03 PM Pierre-Loup A. Griffais
+> > > > >>>> <pgriffais@valvesoftware.com> wrote:
+> > > > >>>>>
+> > > > >>>>> I applied Eric's path to the tip of the branch and ran that kernel and
+> > > > >>>>> the bug didn't occur through several logout / login cycles, so things
+> > > > >>>>> look good at first glance. I'll keep running that kernel and report back
+> > > > >>>>> if anything crops up in the future, but I believe we're good, beyond
+> > > > >>>>> getting distros to ship this additional fix.
+> > > > >>>>
+> > > > >>>> Good. It's now in my tree, so we can get it quickly into stable and
+> > > > >>>> then quickly to distributions.
+> > > > >>>>
+> > > > >>>> Greg, it's commit b6653b3629e5 ("tcp: refine memory limit test in
+> > > > >>>> tcp_fragment()"), and I'm building it right now and I'll push it out
+> > > > >>>> in a couple of minutes assuming nothing odd is going on.
+> > > > >>>
+> > > > >>> This looks good for 4.19 and 5.1, so I'll push out new stable kernels in
+> > > > >>> a bit for them.
+> > > > >>>
+> > > > >>> But for 4.14 and older, we don't have the "hint" to know this is an
+> > > > >>> outbound going packet and not to apply these checks at that point in
+> > > > >>> time, so this patch doesn't work.
+> > > > >>>
+> > > > >>> I'll see if I can figure anything else later this afternoon for those
+> > > > >>> kernels...
+> > > > >>>
+> > > > >>
+> > > > >> I may have missed it, but I don't see a fix for the problem in
+> > > > >> older stable branches. Any news ?
+> > > > >>
+> > > > >> One possibility might be be to apply the part of 75c119afe14f7 which
+> > > > >> introduces TCP_FRAG_IN_WRITE_QUEUE and TCP_FRAG_IN_RTX_QUEUE, if that
+> > > > >> is acceptable.
+> > > > >
+> > > > > That's what people have already discussed on the stable mailing list a
+> > > > > few hours ago, hopefully a patch shows up soon as I'm traveling at the
+> > > > > moment and can't do it myself...
+> > > > >
+> > > >
+> > > > Sounds good. Let me know if nothing shows up; I'll be happy to do it
+> > > > if needed.
+> > >
+> > >
+> > > Without the rb-tree for rtx queues, old kernels are vulnerable to SACK
+> > > attacks if sk_sndbuf is too big,
+> > > so I would simply  add a cushion in the test, instead of trying to
+> > > backport an illusion of the rb-tree fixes.
+> > >
+> > >
+> > >
+> > > diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+> > > index a8772e11dc1cb42d4319b6fc072c625d284c7ad5..a554213afa4ac41120d781fe64b7cd18ff9b56e8
+> > > 100644
+> > > --- a/net/ipv4/tcp_output.c
+> > > +++ b/net/ipv4/tcp_output.c
+> > > @@ -1274,7 +1274,7 @@ int tcp_fragment(struct sock *sk, struct sk_buff
+> > > *skb, u32 len,
+> > >         if (nsize < 0)
+> > >                 nsize = 0;
+> > >
+> > > -       if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
+> > > +       if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 131072)) {
+> > >                 NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
+> > >                 return -ENOMEM;
+> > >         }
+> >
+> > That's a funny magic number, can we document what it means?
+> 
+> This is because TCP can cook skb with about 64KB of payload in
+> tcp_sendmsg() before
+> checking if memory limits are exceeded. (This is mentioned in commit
+> b6653b3629e5b88202be3c9abc44713973f5c4b4
+> " tcp: refine memory limit test in tcp_fragment()" changelog)
+> 
+> Then, if this giant TSO skb needs to be split in ~45 smaller skbs of
+> one segment each,
+> the resulting truesize might be twice bigger.
+> 
+> You could use 2 * 65536 if that looks better, and possibly a macro,
+>  but I feel that adding a macro for this one particular spot and
+> stable kernels might be overkill ?
 
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
----
- drivers/media/platform/qcom/venus/core.c    | 16 +++++------
- drivers/media/platform/qcom/venus/core.h    |  1 +
- drivers/media/platform/qcom/venus/helpers.c | 43 +++++++++++++++++++++++++----
- 3 files changed, 47 insertions(+), 13 deletions(-)
+Ah, yeah, 2*65536 makes more sense to me, seeing 131072 didn't trigger
+the same "power of 2" thing in my brain :)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index f1597d6..ad6bb74 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -474,14 +474,14 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- };
- 
- static struct codec_freq_data sdm845_codec_freq_data[] =  {
--	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675 },
--	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675 },
--	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675 },
--	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200 },
--	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200 },
--	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200 },
--	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200 },
--	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200 },
-+	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
-+	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
-+	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
-+	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
-+	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
- };
- 
- static const struct venus_resources sdm845_res = {
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index 2ed6496..b964b7c 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -39,6 +39,7 @@ struct codec_freq_data {
- 	u32 pixfmt;
- 	u32 session_type;
- 	unsigned int vpp_freq;
-+	unsigned int vsp_freq;
- };
- 
- struct venus_resources {
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index ef35fd8..634778a 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -379,6 +379,9 @@ static int scale_clocks(struct venus_inst *inst)
- 	unsigned int i;
- 	int ret;
- 
-+	if (inst->state == INST_START)
-+		return 0;
-+
- 	mbs_per_sec = load_per_type(core, VIDC_SESSION_TYPE_ENC) +
- 		      load_per_type(core, VIDC_SESSION_TYPE_DEC);
- 
-@@ -418,17 +421,26 @@ static int scale_clocks(struct venus_inst *inst)
- 	return ret;
- }
- 
--static unsigned long calculate_vpp_freq(struct venus_inst *inst)
-+static unsigned long calculate_inst_freq(struct venus_inst *inst,
-+					 unsigned long filled_len)
- {
--	unsigned long vpp_freq = 0;
-+	unsigned long vpp_freq = 0, vsp_freq = 0;
-+	u64 fps = inst->fps;
- 	u32 mbs_per_sec;
- 
- 	mbs_per_sec = load_per_instance(inst);
- 	vpp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vpp_freq;
- 	/* 21 / 20 is overhead factor */
- 	vpp_freq += vpp_freq / 20;
-+	vsp_freq = mbs_per_sec * inst->clk_data.codec_freq_data->vsp_freq;
-+
-+	/* 10 / 7 is overhead factor */
-+	if (inst->session_type == VIDC_SESSION_TYPE_ENC)
-+		vsp_freq = (inst->controls.enc.bitrate * 10) / 7;
-+	else
-+		vsp_freq = ((fps * filled_len * 8) * 10) / 7;
- 
--	return vpp_freq;
-+	return max(vpp_freq, vsp_freq);
- }
- 
- static int scale_clocks_v4(struct venus_inst *inst)
-@@ -436,14 +448,30 @@ static int scale_clocks_v4(struct venus_inst *inst)
- 	struct venus_core *core = inst->core;
- 	const struct freq_tbl *table = core->res->freq_tbl;
- 	unsigned int num_rows = core->res->freq_tbl_size;
--
-+	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
- 	struct clk *clk = core->clks[0];
- 	struct device *dev = core->dev;
-+
- 	unsigned int i;
- 	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
-+	unsigned long filled_len = 0;
-+	struct venus_buffer *buf, *n;
-+	struct vb2_buffer *vb;
- 	int ret;
- 
--	freq = calculate_vpp_freq(inst);
-+	mutex_lock(&inst->lock);
-+	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
-+		vb = &buf->vb.vb2_buf;
-+		filled_len = max(filled_len, vb2_get_plane_payload(vb, 0));
-+	}
-+	mutex_unlock(&inst->lock);
-+
-+	if (inst->session_type == VIDC_SESSION_TYPE_DEC && !filled_len) {
-+		dev_dbg(dev, "%s: No input to the session\n", __func__);
-+		return 0;
-+	}
-+
-+	freq = calculate_inst_freq(inst, filled_len);
- 
- 	if (freq > table[0].freq)
- 		goto err;
-@@ -471,6 +499,9 @@ static int scale_clocks_v4(struct venus_inst *inst)
- 
- 	freq = max(freq_core0, freq_core1);
- 
-+	if (clk_get_rate(clk) == freq)
-+		return 0;
-+
- 	ret = clk_set_rate(clk, freq);
- 	if (ret)
- 		goto err;
-@@ -1150,6 +1181,8 @@ void venus_helper_vb2_buf_queue(struct vb2_buffer *vb)
- 	if (ret)
- 		goto unlock;
- 
-+	load_scale_clocks(inst);
-+
- 	ret = session_process_buf(inst, vbuf);
- 	if (ret)
- 		return_buf_error(inst, vbuf);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I'll fix this up and queue it up now, thanks!
 
+greg k-h
