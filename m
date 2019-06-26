@@ -2,154 +2,102 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673CDC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3339C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5D4205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925CC2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:25:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="SCJ0fZCd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbfFZPWS (ORCPT
+        id S1728184AbfFZPZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:22:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:19115 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbfFZPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:22:17 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CED06C1ABC82D47A8304;
-        Wed, 26 Jun 2019 23:22:13 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Jun 2019
- 23:22:06 +0800
-Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
-To:     Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>
-References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
- <20190625112148.ckj7sgdgvyeel7vy@localhost>
- <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
- <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
-CC:     ARM-SoC Maintainers <arm@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <2e59728e-25fa-cc15-3c63-3566dc2ae69f@huawei.com>
-Date:   Wed, 26 Jun 2019 16:21:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Wed, 26 Jun 2019 11:25:09 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50277 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727543AbfFZPZI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 11:25:08 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c66so2555005wmf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 08:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hUrLpFjxYsSye8DlerGP/4UbAK7TW/gORsGDWMbyLBs=;
+        b=SCJ0fZCdTOxengu7vee9R/jq+qhvNjkLrpRKrIFPxtjSq//2fsA9WoC53/m2omdync
+         qZ8e7G2iYtnE3PiL89QSKu8vGnfY8hGhmA7i5KRvb6yLrK4VYoaZwgKN8qHzSEy49AoE
+         QzVs7xgqDLfQLFx1yYsI3bkOsTvnBoZTXczK++HcnvUpDkTFlXtp4Z2kiHQU84Meck37
+         Ha5oKwI6xJlgrZHxzsKoc64UPFmh13K4vh2kK3JChy+tBBGvipgWAK/yixp+LVo7ErHw
+         BqsmU8xr7Nb12Tqj+VzGIGsweNLTanK0F8yiiIy5hVSgGvBlJ9BJtf/6CaoYeXxCuZNY
+         u9lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hUrLpFjxYsSye8DlerGP/4UbAK7TW/gORsGDWMbyLBs=;
+        b=IQzDRThfpcruXJzojS98S4h61ygLWPMn8TxO69uhIY4q2Gkk9bN6ajaqTeyNa8qpLE
+         4IhIuGUuvlqggZZmhTVeqQn+Tls/mKRP9vtJ3ejmyE+ZQMM6cRsayJXhK0Gdtg1+Z+3H
+         3k11jqAz2RxbniKU/BFMhNDnzZOy1UBIP6co7haP1rqMrClknmujtmU3stISFkPJzsCN
+         PDoAlcvQIvmcYyN87KaH/DVTDOHWAhqJwehaAWoQS+ajoc6rSPrGB6u9NG7dszh14fhA
+         C5XgZU5/J91ZTE/ojE8Cbsk0ug3s7IOgJBjpHSNfUq2TrdR3LloJodibv08O58/OU06C
+         hy7g==
+X-Gm-Message-State: APjAAAUpV6nxqbkY0nvBLp8+w+sgAdNuXHzuIr1x1/t2wC8U00aiLp35
+        FZvQiFpOksjF3wMDBuuklm/EJg==
+X-Google-Smtp-Source: APXvYqzD3QddXeSn6DuAIyxnlAIDaLA7cl2h50Pmecv/u+lA3k1zUFNV80Hb1q4R9BHR1FehrrZ2XA==
+X-Received: by 2002:a05:600c:da:: with SMTP id u26mr3046184wmm.108.1561562706872;
+        Wed, 26 Jun 2019 08:25:06 -0700 (PDT)
+Received: from localhost (ip-89-176-222-26.net.upcbroadband.cz. [89.176.222.26])
+        by smtp.gmail.com with ESMTPSA id v27sm41854276wrv.45.2019.06.26.08.25.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 08:25:06 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 17:25:05 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, sdf@google.com, jianbol@mellanox.com,
+        jiri@mellanox.com, mirq-linux@rere.qmqm.pl, willemb@google.com,
+        sdf@fomichev.me, j.vosburgh@gmail.com, vfalico@gmail.com,
+        andy@greyhouse.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] bonding: Always enable vlan tx offload
+Message-ID: <20190626152505.GB2424@nanopsycho>
+References: <20190624135007.GA17673@nanopsycho>
+ <20190626080844.20796-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626080844.20796-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2019 14:31, John Garry wrote:
-> On 25/06/2019 14:03, Olof Johansson wrote:
->>>> are available in the Git repository at:
->>>> > >
->>>> > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
->>>> > >
->>>> > > for you to fetch changes up to
->>>> 07c811af1c00d7b4212eac86900b023b6405a954:
->>>> > >
->>>> > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set
->>>> at registration (2019-06-25 09:40:42 +0100)
->>>> > >
->>>> > > ----------------------------------------------------------------
->>>> > > Hisilicon fixes for v5.2-rc
->>>> > >
->>>> > > - fixed RCU usage in logical PIO
->>>> > > - Added a function to unregister a logical PIO range in logical PIO
->>>> > >   to support the fixes in the hisi-lpc driver
->>>> > > - fixed and optimized hisi-lpc driver to avoid potential
->>>> use-after-free
->>>> > >   and driver unbind crash
->>> >
->>> > Merged to fixes, thanks.
->>
->> This broke arm64 allmodconfig:
->>
->>        arm64.allmodconfig:
->> drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
->> 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
->> [-Werror=implicit-function-declaration]
-
-As an aside, I find it a little strange that arm64 allmodconfig does not 
-have CONFIG_ACPI set. It used to have it set, and this patch stopped that:
-
-5bcd44083a082f314032969cd6db1eb8275ac77a is the first bad commit
-commit 5bcd44083a082f314032969cd6db1eb8275ac77a
-Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Date:   Mon Jul 23 10:57:29 2018 +0900
-
-     drivers: acpi: add dependency of EFI for arm64
-
-     As Ard suggested, CONFIG_ACPI && !CONFIG_EFI doesn't make sense on 
-arm64,
-     while CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN doesn't make sense either.
-
-     As CONFIG_EFI already has a dependency of !CONFIG_CPU_BIG_ENDIAN, it is
-     good enough to add a dependency of CONFIG_EFI to avoid any useless
-     combination of configuration.
-
-     This bug, reported by Will, will be revealed when my patch series,
-     "arm64: kexec,kdump: fix boot failures on acpi-only system," is applied
-     and the kernel is built under allmodconfig.
-
-     Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-     Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-     Signed-off-by: Will Deacon <will.deacon@arm.com>
-
-That patch stopped many configs being set for allmodconfig.
-
-With this change, CONFIG_EFI is not set. I think that this is because 
-CONFIG_CPU_BIG_ENDIAN is set for arm64 allmodconfig.
-
-Any opinion on this? Could we change CONFIG_CPU_BIG_ENDIAN to be unset 
-for arm64?
-
->>
->>
+Wed, Jun 26, 2019 at 10:08:44AM CEST, yuehaibing@huawei.com wrote:
+>We build vlan on top of bonding interface, which vlan offload
+>is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
+>BOND_XMIT_POLICY_ENCAP34.
 >
-> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll
-> send a fixed v3 series.
+>Because vlan tx offload is off, vlan tci is cleared and skb push
+>the vlan header in validate_xmit_vlan() while sending from vlan
+>devices. Then in bond_xmit_hash, __skb_flow_dissect() fails to
+>get information from protocol headers encapsulated within vlan,
+>because 'nhoff' is points to IP header, so bond hashing is based
+>on layer 2 info, which fails to distribute packets across slaves.
 >
->>
->> Please build and test your branches before you send pull requests, Wei.
->>
->> I've dropped the branch again; please re-submit when fixed. I think
->> it's probably 5.3 material now.
->>
+>This patch always enable bonding's vlan tx offload, pass the vlan
+>packets to the slave devices with vlan tci, let them to handle
+>vlan implementation.
 >
-> Thanks,
-> John
->
->>
->> -Olof
->>
->> .
->>
->
+>Fixes: 278339a42a1b ("bonding: propogate vlan_features to bonding master")
+>Suggested-by: Jiri Pirko <jiri@resnulli.us>
+>Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 
+Could you please do the same for team? Thanks!
