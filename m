@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02AEC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BDCC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B114205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA60205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520985;
-	bh=UFcJ5ROrrZtcdmtox+gU2VxAuKCTi0iW/h7Wdx8cd98=;
+	s=default; t=1561520993;
+	bh=pvyaoqE/CGwLTREJutyweVUmIWowGZERg9Z0/N5L6U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ieDTXJ+VlTQB/UvjJw4xcGqi/hj1pwxgztwJWHLpTk6GZJqXlWEgsojH/nsQcEyJl
-	 nvsY8FThDnn56qxiNQTdHD4+DrjEdfXbtwy4JTsB5zY6ebHdJHxuQMMr7y18cNcS4h
-	 MIADPXM3a2k+sPzGmrycjqGlZAN+AzNFBxdo+FL0=
+	b=Kyrhw6MVQdBE2qO3NgSNv3SSsvSpJiv8yn6ipsQWhprtvWLkCK0jUw5a4fAR9ES1R
+	 TUWwS3N983Dx6cahKzLCoe2VRMo9v7kb2davbwGMoYkUF9Wpr0JkRVoEIo4KcIwFzJ
+	 3oBL2hJ5QwoxzaiE90gE0H26rskseWp+1nmRiZXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfFZDtk (ORCPT
+        id S1727804AbfFZDtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54856 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727362AbfFZDnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:35 -0400
+        id S1726912AbfFZDn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:26 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B02C216E3;
-        Wed, 26 Jun 2019 03:43:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD1220659;
+        Wed, 26 Jun 2019 03:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520613;
-        bh=UFcJ5ROrrZtcdmtox+gU2VxAuKCTi0iW/h7Wdx8cd98=;
+        s=default; t=1561520605;
+        bh=pvyaoqE/CGwLTREJutyweVUmIWowGZERg9Z0/N5L6U0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t+tNxe4ngtIYYmLPZKzPczShRiBTF7Z9fqiCbOEfGIutIJ+wVBeTrDQ4A4e+acwFe
-         jp1Y66kctlAa+wjGBIZrSTMLdJxKlGIB0iFIaZk16FVJ2numR8aHseax1sGKqKrnZ3
-         A9Kl8K8EMMIl1mnZOtvG0B0MBcp+i0HPLHoBI240=
+        b=t7N7MOjlnYtf6U2LOuZ4Z2AXJOQ9vVJNYyOaPLC3kadYLA/by5JmuvzQxwUrbLpyt
+         2Vmz1IMXxJf9QueOa4usU4S7m3q8prMtYvLewWPlsop/i5t/bq2l18hC1CIF9nkOLj
+         dZLKCrFGRvIXQOA7rbHW7LdzgwKsxbs7yzzckiKI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Li <liwei391@huawei.com>, Steven Rostedt <rostedt@goodmis.org>,
+Cc:     Manuel Traut <manut@linutronix.de>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 51/51] ftrace: Fix NULL pointer dereference in free_ftrace_func_mapper()
-Date:   Tue, 25 Jun 2019 23:41:07 -0400
-Message-Id: <20190626034117.23247-51-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 47/51] scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
+Date:   Tue, 25 Jun 2019 23:41:03 -0400
+Message-Id: <20190626034117.23247-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -58,112 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Manuel Traut <manut@linutronix.de>
 
-[ Upstream commit 04e03d9a616c19a47178eaca835358610e63a1dd ]
+[ Upstream commit c04e32e911653442fc834be6e92e072aeebe01a1 ]
 
-The mapper may be NULL when called from register_ftrace_function_probe()
-with probe->data == NULL.
+At least for ARM64 kernels compiled with the crosstoolchain from
+Debian/stretch or with the toolchain from kernel.org the line number is
+not decoded correctly by 'decode_stacktrace.sh':
 
-This issue can be reproduced as follow (it may be covered by compiler
-optimization sometime):
+  $ echo "[  136.513051]  f1+0x0/0xc [kcrash]" | \
+    CROSS_COMPILE=/opt/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux- \
+   ./scripts/decode_stacktrace.sh /scratch/linux-arm64/vmlinux \
+                                  /scratch/linux-arm64 \
+                                  /nfs/debian/lib/modules/4.20.0-devel
+  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:68) kcrash
 
-/ # cat /sys/kernel/debug/tracing/set_ftrace_filter
-#### all functions enabled ####
-/ # echo foo_bar:dump > /sys/kernel/debug/tracing/set_ftrace_filter
-[  206.949100] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[  206.952402] Mem abort info:
-[  206.952819]   ESR = 0x96000006
-[  206.955326]   Exception class = DABT (current EL), IL = 32 bits
-[  206.955844]   SET = 0, FnV = 0
-[  206.956272]   EA = 0, S1PTW = 0
-[  206.956652] Data abort info:
-[  206.957320]   ISV = 0, ISS = 0x00000006
-[  206.959271]   CM = 0, WnR = 0
-[  206.959938] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000419f3a000
-[  206.960483] [0000000000000000] pgd=0000000411a87003, pud=0000000411a83003, pmd=0000000000000000
-[  206.964953] Internal error: Oops: 96000006 [#1] SMP
-[  206.971122] Dumping ftrace buffer:
-[  206.973677]    (ftrace buffer empty)
-[  206.975258] Modules linked in:
-[  206.976631] Process sh (pid: 281, stack limit = 0x(____ptrval____))
-[  206.978449] CPU: 10 PID: 281 Comm: sh Not tainted 5.2.0-rc1+ #17
-[  206.978955] Hardware name: linux,dummy-virt (DT)
-[  206.979883] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  206.980499] pc : free_ftrace_func_mapper+0x2c/0x118
-[  206.980874] lr : ftrace_count_free+0x68/0x80
-[  206.982539] sp : ffff0000182f3ab0
-[  206.983102] x29: ffff0000182f3ab0 x28: ffff8003d0ec1700
-[  206.983632] x27: ffff000013054b40 x26: 0000000000000001
-[  206.984000] x25: ffff00001385f000 x24: 0000000000000000
-[  206.984394] x23: ffff000013453000 x22: ffff000013054000
-[  206.984775] x21: 0000000000000000 x20: ffff00001385fe28
-[  206.986575] x19: ffff000013872c30 x18: 0000000000000000
-[  206.987111] x17: 0000000000000000 x16: 0000000000000000
-[  206.987491] x15: ffffffffffffffb0 x14: 0000000000000000
-[  206.987850] x13: 000000000017430e x12: 0000000000000580
-[  206.988251] x11: 0000000000000000 x10: cccccccccccccccc
-[  206.988740] x9 : 0000000000000000 x8 : ffff000013917550
-[  206.990198] x7 : ffff000012fac2e8 x6 : ffff000012fac000
-[  206.991008] x5 : ffff0000103da588 x4 : 0000000000000001
-[  206.991395] x3 : 0000000000000001 x2 : ffff000013872a28
-[  206.991771] x1 : 0000000000000000 x0 : 0000000000000000
-[  206.992557] Call trace:
-[  206.993101]  free_ftrace_func_mapper+0x2c/0x118
-[  206.994827]  ftrace_count_free+0x68/0x80
-[  206.995238]  release_probe+0xfc/0x1d0
-[  206.995555]  register_ftrace_function_probe+0x4a8/0x868
-[  206.995923]  ftrace_trace_probe_callback.isra.4+0xb8/0x180
-[  206.996330]  ftrace_dump_callback+0x50/0x70
-[  206.996663]  ftrace_regex_write.isra.29+0x290/0x3a8
-[  206.997157]  ftrace_filter_write+0x44/0x60
-[  206.998971]  __vfs_write+0x64/0xf0
-[  206.999285]  vfs_write+0x14c/0x2f0
-[  206.999591]  ksys_write+0xbc/0x1b0
-[  206.999888]  __arm64_sys_write+0x3c/0x58
-[  207.000246]  el0_svc_common.constprop.0+0x408/0x5f0
-[  207.000607]  el0_svc_handler+0x144/0x1c8
-[  207.000916]  el0_svc+0x8/0xc
-[  207.003699] Code: aa0003f8 a9025bf5 aa0103f5 f946ea80 (f9400303)
-[  207.008388] ---[ end trace 7b6d11b5f542bdf1 ]---
-[  207.010126] Kernel panic - not syncing: Fatal exception
-[  207.011322] SMP: stopping secondary CPUs
-[  207.013956] Dumping ftrace buffer:
-[  207.014595]    (ftrace buffer empty)
-[  207.015632] Kernel Offset: disabled
-[  207.017187] CPU features: 0x002,20006008
-[  207.017985] Memory Limit: none
-[  207.019825] ---[ end Kernel panic - not syncing: Fatal exception ]---
+If addr2line from the toolchain is used the decoded line number is correct:
 
-Link: http://lkml.kernel.org/r/20190606031754.10798-1-liwei391@huawei.com
+  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:57) kcrash
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190527083425.3763-1-manut@linutronix.de
+Signed-off-by: Manuel Traut <manut@linutronix.de>
+Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ scripts/decode_stacktrace.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 045e7f46a74a..2469d54b3e43 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4230,10 +4230,13 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
- 	struct ftrace_func_entry *entry;
- 	struct ftrace_func_map *map;
- 	struct hlist_head *hhd;
--	int size = 1 << mapper->hash.size_bits;
--	int i;
-+	int size, i;
-+
-+	if (!mapper)
-+		return;
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index bcdd45df3f51..a7a36209a193 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -73,7 +73,7 @@ parse_symbol() {
+ 	if [[ "${cache[$module,$address]+isset}" == "isset" ]]; then
+ 		local code=${cache[$module,$address]}
+ 	else
+-		local code=$(addr2line -i -e "$objfile" "$address")
++		local code=$(${CROSS_COMPILE}addr2line -i -e "$objfile" "$address")
+ 		cache[$module,$address]=$code
+ 	fi
  
- 	if (free_func && mapper->hash.count) {
-+		size = 1 << mapper->hash.size_bits;
- 		for (i = 0; i < size; i++) {
- 			hhd = &mapper->hash.buckets[i];
- 			hlist_for_each_entry(entry, hhd, hlist) {
 -- 
 2.20.1
 
