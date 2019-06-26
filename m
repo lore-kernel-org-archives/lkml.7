@@ -2,62 +2,119 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158C4C48BD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05707C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA41E2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD911205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561516694;
+	bh=tCTLdj7kmeQrh0SW4QhLj12m5v6tZAk4UZt6Nbxh97c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MTc595u7TfF2niGgjyb/7uIrDLj78AvuYAGeoM9OU2X9LsgP+DRBJDM6LmM16ATlt
+	 ti1Geue+3xw1Wtzy1koWvPT2RhNTYKth9qeuTJsBwHXXj0wn41WSkzMVgqOGT8o60p
+	 ukx1t6JO2/B/l8lRVeNeeL6/OWxTGknZcmJKh574=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFZCgp (ORCPT
+        id S1726809AbfFZCiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:36:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:40411 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726623AbfFZCgm (ORCPT
+        Tue, 25 Jun 2019 22:38:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34771 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfFZCiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:36:42 -0400
-X-UUID: f2c90382853b47018fe70e3f259df81e-20190626
-X-UUID: f2c90382853b47018fe70e3f259df81e-20190626
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <lecopzer.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 654526010; Wed, 26 Jun 2019 10:36:28 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 26 Jun 2019 10:36:26 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 26 Jun 2019 10:36:26 +0800
-From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
-To:     <sebastian.reichel@collabora.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yj.chiang@mediatek.com>
-Subject: Re: [PATCH] test_power: Add CURRENT and CHARGE_COUNTER properties
-Date:   Wed, 26 Jun 2019 10:36:26 +0800
-Message-ID: <20190626023626.27603-1-lecopzer.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190625223537.6dlcooifqfs2rv2b@earth.universe>
-References: <20190625223537.6dlcooifqfs2rv2b@earth.universe>
+        Tue, 25 Jun 2019 22:38:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so530849plt.1;
+        Tue, 25 Jun 2019 19:38:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xyvmsuEmijKSbxFAnA4vq/E+5XBo5Wy44kba2nyP6go=;
+        b=BZ4Ebg4Mt6iFRuTXwwNgpnI8OJuJfNv6Djd1wfAGtRm4J6le9LnoXlG+dUNYWOR9D7
+         SHVbvleUAs8CQCfiP053jw77OWwAH7Qu+pCbIWytWn1qVhaklx8aiVg/91zaBAqJVQtp
+         sXkggoTIDiN/db5MeQ3pRaodF5e9xQTEcpluL/yT8iiuIiJ8pE+eoGGmkH0zII+dlNkT
+         4IIZ/BgaUA2p5OeaYmxSqry1EQBjr9/lb1BV0QgKZB9DnJmpILUtCQFi+Dm/Hh1V1rrV
+         mhlv8L/GIPHj6Kh0QlD02v8RGP8vBoN+9LtnPNuRNt0up7Nwe1pnhAz3F+YM+SX833Rp
+         8ZYw==
+X-Gm-Message-State: APjAAAXBfkt/cK+pdF8iQ9Rnchzts0gS6EGxjDfhR3ikZMvWGKP7Libt
+        jNDamToKkzhoHpeM+IGDZYc=
+X-Google-Smtp-Source: APXvYqzDq44Q6ELr7lMNQzzU3Ay+P/NMrvUlNETj0hOmt7FHk+liK3UY9V/aPmtCKjArXN7tpqRtdw==
+X-Received: by 2002:a17:902:e512:: with SMTP id ck18mr2107905plb.53.1561516691699;
+        Tue, 25 Jun 2019 19:38:11 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id a16sm20081945pfd.68.2019.06.25.19.38.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 19:38:10 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id BC94340336; Wed, 26 Jun 2019 02:38:09 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 02:38:09 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        gregkh@linuxfoundation.org, jpoimboe@redhat.com,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com
+Subject: Re: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190626023809.GW19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: EA14E0A17234A27FDBB97C8C70D467965C7AACC2B838C3E3EB0727BD39C702C42000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10feac3e-7621-65e5-fbf0-9c63fcbe09c9@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Sebastian,
+On Wed, Jun 19, 2019 at 06:17:51PM -0700, Frank Rowand wrote:
+> It does not matter whether KUnit provides additional things, relative
+> to kselftest.  The point I was making is that there appears to be
+> _some_ overlap between kselftest and KUnit, and if there is overlap
+> then it is worth considering whether the overlap can be unified instead
+> of duplicated.
 
-Thanks for your review and helpful suggestion,
-Since our platform is relative simple, I just miss the part you refer to.
+From my experience as an author of several kselftests drivers, one
+faily complex, and after reviewing the sysctl kunit test module, I
+disagree with this.
 
-I will fix them in patch v2.
+Even if there were an overlap, I'd say let the best test harness win.
+Just as we have different LSMs that do something similar.
 
+But this is not about that though. Although both are testing code,
+they do so in *very* different ways.
 
-Thanks,
-	Lecopzer
+The design philosophy and architecture are fundamentally different. The
+*only* thing I can think of where there is overlap is that both can test
+similar code paths. Beyond that, the layout of how one itemizes tests
+could be borrowed, but that would be up to each kselftest author to
+decide, in fact some ksefltests do exist which follow similar pattern of
+itemizing test cases and running them. Kunit just provides a proper
+framework to do this easily but also with a focus on UML. This last
+aspect makes kselftests fundamentally orthogonal from an architecture /
+design perspective.
+
+After careful review, I cannot personally identify what could be shared
+at this point. Can you? If you did identify one part, how do you
+recommend to share it?
+
+  Luis
