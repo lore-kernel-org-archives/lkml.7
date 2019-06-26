@@ -2,135 +2,115 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09113C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF2AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FD7216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561577131;
-	bh=17SmlQOB16n8ABcZcXfvr/VljlqwX+htptnV1U7ULd4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Z9hr6wYqN2pXHy9sJ3jmjztHmTokIf6Me/EMGLgVIisgeZaZtvYxwNjMVrQbchUl4
-	 i991aBAKHDVaUWBD1cUE2PEth7PVeCv1N8zHLyByYfH4ONI1kmCkImTeM1kIlxrmNT
-	 adOL/1zf4d+LR3ndB2xoitKzjo3FEW4QOEDkaSRE=
+	by mail.kernel.org (Postfix) with ESMTP id 552DB216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="JNT5ekWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfFZTZb (ORCPT
+        id S1726439AbfFZT1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfFZTZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:25:30 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 332CA20663;
-        Wed, 26 Jun 2019 19:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561577129;
-        bh=17SmlQOB16n8ABcZcXfvr/VljlqwX+htptnV1U7ULd4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KrW9kanM4nUc3adGaHL8IjyuCHfd35a1/SvKU/FDWO2dgY1ySWO/K0eCy0gvR/3tE
-         z1uHhBTD9PA3efM76gssVjC6xaCkQTLVsJA6l3vnBWkdL96thU5wu+xD3rzrjagS9Q
-         w05wyYTTtcOrqHjX1TvTqEjQWPB9dbLDtUwQjsAQ=
-Date:   Wed, 26 Jun 2019 20:25:25 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH V4 3/5] iio: adc: ad7124: Shift to dynamic allocation
- for channel configuration
-Message-ID: <20190626202525.6eec81fe@archlinux>
-In-Reply-To: <20190625081128.22190-3-mircea.caprioru@analog.com>
-References: <20190625081128.22190-1-mircea.caprioru@analog.com>
-        <20190625081128.22190-3-mircea.caprioru@analog.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Jun 2019 15:27:42 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:8069 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfFZT1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:27:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1561577260; x=1593113260;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=lkbk1SreqaQWD4wgjFtaRvmoSGGwedOqlja293CQfVs=;
+  b=JNT5ekWNWn2GcvhDDuck0bZS9rKkfVObGREmWg0DqX87sZ6Jl+V/arYf
+   P35B7egQ5uTDeN0IUnxKBRtB5Na2mT5pkDF1vMPRqYX/1+ElU/uPuW5Jo
+   E/2rNGaiWgtDi8MwuuOkbT2l82Qr4oJUHARCvu3dVaJhmVerKK08Hg9lM
+   I=;
+X-IronPort-AV: E=Sophos;i="5.62,420,1554768000"; 
+   d="scan'208";a="402538618"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 26 Jun 2019 19:27:38 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 53CE8A1E66;
+        Wed, 26 Jun 2019 19:27:37 +0000 (UTC)
+Received: from EX13D01EUB003.ant.amazon.com (10.43.166.248) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 26 Jun 2019 19:27:36 +0000
+Received: from EX13D01EUB003.ant.amazon.com (10.43.166.248) by
+ EX13D01EUB003.ant.amazon.com (10.43.166.248) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 26 Jun 2019 19:27:35 +0000
+Received: from EX13D01EUB003.ant.amazon.com ([10.43.166.248]) by
+ EX13D01EUB003.ant.amazon.com ([10.43.166.248]) with mapi id 15.00.1367.000;
+ Wed, 26 Jun 2019 19:27:35 +0000
+From:   "Raslan, KarimAllah" <karahmed@amazon.de>
+To:     "peterz@infradead.org" <peterz@infradead.org>
+CC:     "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kernellwp@gmail.com" <kernellwp@gmail.com>,
+        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
+Subject: Re: cputime takes cstate into consideration
+Thread-Topic: cputime takes cstate into consideration
+Thread-Index: AQHVLAPB6iUJbr9/fEyB9GgoQyBOoKatvSkAgABI2ICAABbjAIAAJXoAgAADBQCAAAQPAIAABxkAgAAB1gA=
+Date:   Wed, 26 Jun 2019 19:27:35 +0000
+Message-ID: <1561577254.25880.15.camel@amazon.de>
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
+         <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
+         <20190626145413.GE6753@char.us.oracle.com>
+         <20190626161608.GM3419@hirez.programming.kicks-ass.net>
+         <20190626183016.GA16439@char.us.oracle.com>
+         <alpine.DEB.2.21.1906262038040.32342@nanos.tec.linutronix.de>
+         <1561575336.25880.7.camel@amazon.de>
+         <20190626192100.GP3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190626192100.GP3419@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.165.217]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A74719A25336AC49AA46E8CE5AD11C1B@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019 11:11:26 +0300
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
-
-> This patch changes the channel configuration member of the device
-> structure from a fixed size array to a dynamic allocated one with a size
-> equal to the number of channels specified in the device tree. This will
-> ensure a more flexibility for compatible devices.
-> 
-> Ex. ad7124-4 - can have 4 differential or 8 pseudo-differential channels
-> ad7124-8 - can have 8 differential or 16 pseudo-differential channels
-> 
-> Also the device can suspport any other combination of differential and
-> pseudo-differential channels base on the physical number of inputs
-> available.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-Applied.
-
-Thanks,
-
-Jonathan
-
-> ---
-> 
-> Changelog v2:
-> - nothing changed here
-> 
-> Changelog v3:
-> - nothing changed here
-> 
-> Changelog v4:
-> - nothing changed here
-> 
->  drivers/iio/adc/ad7124.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
-> index ab52c5e9ecb1..edc6f1cc90b2 100644
-> --- a/drivers/iio/adc/ad7124.c
-> +++ b/drivers/iio/adc/ad7124.c
-> @@ -121,7 +121,7 @@ struct ad7124_channel_config {
->  struct ad7124_state {
->  	const struct ad7124_chip_info *chip_info;
->  	struct ad_sigma_delta sd;
-> -	struct ad7124_channel_config channel_config[4];
-> +	struct ad7124_channel_config *channel_config;
->  	struct regulator *vref[4];
->  	struct clk *mclk;
->  	unsigned int adc_control;
-> @@ -439,6 +439,7 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  	struct ad7124_state *st = iio_priv(indio_dev);
->  	struct device_node *child;
->  	struct iio_chan_spec *chan;
-> +	struct ad7124_channel_config *chan_config;
->  	unsigned int ain[2], channel = 0, tmp;
->  	int ret;
->  
-> @@ -453,8 +454,14 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
->  	if (!chan)
->  		return -ENOMEM;
->  
-> +	chan_config = devm_kcalloc(indio_dev->dev.parent, st->num_channels,
-> +				   sizeof(*chan_config), GFP_KERNEL);
-> +	if (!chan_config)
-> +		return -ENOMEM;
-> +
->  	indio_dev->channels = chan;
->  	indio_dev->num_channels = st->num_channels;
-> +	st->channel_config = chan_config;
->  
->  	for_each_available_child_of_node(np, child) {
->  		ret = of_property_read_u32(child, "reg", &channel);
+T24gV2VkLCAyMDE5LTA2LTI2IGF0IDIxOjIxICswMjAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
+Cj4gT24gV2VkLCBKdW4gMjYsIDIwMTkgYXQgMDY6NTU6MzZQTSArMDAwMCwgUmFzbGFuLCBLYXJp
+bUFsbGFoIHdyb3RlOg0KPiANCj4gPiANCj4gPiBJZiB0aGUgaG9zdCBpcyBjb21wbGV0ZWx5IGlu
+IG5vX2Z1bGxfaHogbW9kZSBhbmQgdGhlIHBDUFUgaXMgZGVkaWNhdGVkIHRvIGHCoA0KPiA+IHNp
+bmdsZSB2Q1BVL3Rhc2sgKGFuZCB0aGUgZ3Vlc3QgaXMgMTAwJSBDUFUgYm91bmQgYW5kIG5ldmVy
+IGV4aXRzKSwgeW91IHdvdWxkwqANCj4gPiBzdGlsbCBiZSB0aWNraW5nIGluIHRoZSBob3N0IG9u
+Y2UgZXZlcnkgc2Vjb25kIGZvciBob3VzZWtlZXBpbmcsIHJpZ2h0PyBXb3VsZMKgDQo+ID4gbm90
+IHVwZGF0aW5nIHRoZSBtd2FpdC10aW1lIG9uY2UgYSBzZWNvbmQgYmUgZW5vdWdoIGhlcmU/DQo+
+IA0KPiBQZW9wbGUgYXJlIHRyeWluZyB2ZXJ5IGhhcmQgdG8gZ2V0IHJpZCBvZiB0aGF0IHJlbW5h
+bnQgdGljay4gTGV0cyBub3QNCj4gYWRkIGRlcGVuZGVuY2llcyB0byBpdC4NCj4gDQo+IElNTyB0
+aGlzIGlzIGEgcmVhbGx5IHN0dXBpZCBpc3N1ZSwgMTAwJSB0aW1lIGlzIGNvcnJlY3QgaWYgdGhl
+IGd1ZXN0DQo+IGRvZXMgaWRsZSBpbiBwaW5uZWQgdmNwdSBtb2RlLg0KDQpPbmUgdXNlIGNhc2Ug
+Zm9yIHByb3BlciBhY2NvdW50aW5nIChvYnZpb3VzbHkgZm9yIGEgc2xpZ2h0bHkgcmVsYXhlZCBk
+ZWZpbml0aW9uwqANCm9yICpwcm9wZXIqKSBpcyAqZXh0ZXJuYWwqIG1vbml0b3Jpbmcgb2YgQ1BV
+IHV0aWxpemF0aW9uIGZvciBzY2FsaW5nIGdyb3VwDQooaS5lLiBtb3JlIFZNcyB3aWxsIGJlIGxh
+dW5jaGVkIHdoZW4geW91IHJlYWNoIGEgY2VydGFpbiBDUFUgdXRpbGl6YXRpb24pLg0KVGhlc2Ug
+ZXh0ZXJuYWwgbW9uaXRvcmluZyB0b29scyBuZWVkcyB0byBhY2NvdW50IENQVSB1dGlsaXphdGlv
+biBwcm9wZXJseS4KCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKS3Jh
+dXNlbnN0ci4gMzgKMTAxMTcgQmVybGluCkdlc2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNj
+aGxhZWdlciwgUmFsZiBIZXJicmljaApFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90
+dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIz
+NyA4NzkKCgo=
 
