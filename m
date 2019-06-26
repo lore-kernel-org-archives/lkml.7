@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C94DC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B61DC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AFB20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455FA216E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520603;
-	bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
+	s=default; t=1561520606;
+	bh=IH+6EZpg08KlszRjbeydaCe8y5/Ljqv5UQz8x6Wzkjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIcqDytsIZejDgCTa2Flig+W4a/hC1guvZ8gsnGHKEbU7lSdCJ3JnXyGDOa2cCdMf
-	 ShOafRqJ4lMhfa9yrEPmTWhqMv3M00RrAv0CB+SjOXRLSmSBBObs19oiT8838N0exF
-	 qyENkVvEHNp2nIpd2mTWyM2Tk4TFPticcYzhZCiQ=
+	b=COXkkXtfxON2IXSzHVAGNdhvTUBKFX3hdjXPwSmVqWBroW8tvywJuRWxZ5ypMJq1H
+	 pozGcxbMTyGkIwCLNfSEhKlJ5oWt3sEsDlvsCF9mq9HWGiXS2xcPnoXKM/D6Y1XKhN
+	 VoO3s9JpMstwKpxuTcjYC7XI6fdQfY1bKit/PeF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfFZDnW (ORCPT
+        id S1727330AbfFZDnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54360 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:43:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727268AbfFZDnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:12 -0400
+        id S1727278AbfFZDnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:16 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B73E20883;
-        Wed, 26 Jun 2019 03:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C706820883;
+        Wed, 26 Jun 2019 03:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520591;
-        bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
+        s=default; t=1561520594;
+        bh=IH+6EZpg08KlszRjbeydaCe8y5/Ljqv5UQz8x6Wzkjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p/s0ISrpG/npDrHlgob0d9wpyxB2TYpKyqC1p5/abdJ9ELcFzkcqZfHCOfHeAjNsa
-         5h+Oc+anlVfG97izM3YtCkR9fKBAP4cPTLRwcN4nYoW1eLUBtrTZOpPZI3m5A8ruuN
-         3I78PmhaTUVNOgjeCMQOXoPEGZu6spB0ncoZAzxc=
+        b=hKTa/b5rG0QicFE8ZIa9pBk+kIlMgKydMcMyaLDLtpkTuzuj3mVKBkwyzQlzZjDJ7
+         26YsYjAFcapjoghWpM+wYAqMvlT0Z1gjG1h+3v5RAvl5ZlviPeI2BeAvNWKqQwHH1p
+         8z+/wanNaOoHx8j/nmEQd8rqJQGAKL83R0/594rk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathew King <mathewk@chromium.org>,
-        Jett Rink <jettrink@chromium.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
+Cc:     Vadim Pasternak <vadimp@mellanox.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 41/51] platform/x86: intel-vbtn: Report switch events when event wakes device
-Date:   Tue, 25 Jun 2019 23:40:57 -0400
-Message-Id: <20190626034117.23247-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 43/51] platform/mellanox: mlxreg-hotplug: Add devm_free_irq call to remove flow
+Date:   Tue, 25 Jun 2019 23:40:59 -0400
+Message-Id: <20190626034117.23247-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -62,61 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathew King <mathewk@chromium.org>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
+[ Upstream commit 8c2eb7b6468ad4aa5600aed01aa0715f921a3f8b ]
 
-When a switch event, such as tablet mode/laptop mode or docked/undocked,
-wakes a device make sure that the value of the swich is reported.
-Without when a device is put in tablet mode from laptop mode when it is
-suspended or vice versa the device will wake up but mode will be
-incorrect.
+Add devm_free_irq() call to mlxreg-hotplug remove() for clean release
+of devices irq resource. Fix debugobjects warning triggered by rmmod
+It prevents of use-after-free memory, related to
+mlxreg_hotplug_work_handler.
 
-Tested by suspending a device in laptop mode and putting it in tablet
-mode, the device resumes and is in tablet mode. When suspending the
-device in tablet mode and putting it in laptop mode the device resumes
-and is in laptop mode.
+Issue has been reported as debugobjects warning triggered by
+'rmmod mlxtreg-hotplug' flow, while running kernel with
+CONFIG_DEBUG_OBJECTS* options.
 
-Signed-off-by: Mathew King <mathewk@chromium.org>
-Reviewed-by: Jett Rink <jettrink@chromium.org>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+[ 2489.623551] ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler+0x0/0x7f0 [mlxreg_hotplug]
+[ 2489.637097] WARNING: CPU: 5 PID: 3924 at lib/debugobjects.c:328 debug_print_object+0xfe/0x180
+[ 2489.637165] RIP: 0010:debug_print_object+0xfe/0x180
+?
+[ 2489.637214] Call Trace:
+[ 2489.637225]  __debug_check_no_obj_freed+0x25e/0x320
+[ 2489.637231]  kfree+0x82/0x110
+[ 2489.637238]  release_nodes+0x33c/0x4e0
+[ 2489.637242]  ? devres_remove_group+0x1b0/0x1b0
+[ 2489.637247]  device_release_driver_internal+0x146/0x270
+[ 2489.637251]  driver_detach+0x73/0xe0
+[ 2489.637254]  bus_remove_driver+0xa1/0x170
+[ 2489.637261]  __x64_sys_delete_module+0x29e/0x320
+[ 2489.637265]  ? __ia32_sys_delete_module+0x320/0x320
+[ 2489.637268]  ? blkcg_exit_queue+0x20/0x20
+[ 2489.637273]  ? task_work_run+0x7d/0x100
+[ 2489.637278]  ? exit_to_usermode_loop+0x5b/0xf0
+[ 2489.637281]  do_syscall_64+0x73/0x160
+[ 2489.637287]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 2489.637290] RIP: 0033:0x7f95c3596fd7
+
+The difference in release flow with and with no devm_free_irq is listed
+below:
+
+bus: 'platform': remove driver mlxreg-hotplug
+ mlxreg_hotplug_remove(start)
+					-> devm_free_irq (with new code)
+ mlxreg_hotplug_remove (end)
+ release_nodes (start)
+  mlxreg-hotplug: DEVRES REL devm_hwmon_release (8 bytes)
+  device: 'hwmon3': device_unregister
+  PM: Removing info for No Bus:hwmon3
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (88 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (6 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
+  mlxreg-hotplug: DEVRES REL devm_irq_release (16 bytes) (no new code)
+  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (1376 bytes)
+   ------------[ cut here ]------------ (no new code):
+   ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler
+
+ release_nodes(end)
+driver: 'mlxreg-hotplug': driver_release
+
+Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/platform/mellanox/mlxreg-hotplug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 06cd7e818ed5..a0d0cecff55f 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	struct platform_device *device = context;
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
--	const struct key_entry *ke_rel;
-+	const struct key_entry *ke, *ke_rel;
- 	bool autorelease;
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index 687ce6817d0d..f85a1b9d129b 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -694,6 +694,7 @@ static int mlxreg_hotplug_remove(struct platform_device *pdev)
  
- 	if (priv->wakeup_mode) {
--		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
-+		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
-+		if (ke) {
- 			pm_wakeup_hard_event(&device->dev);
-+
-+			/*
-+			 * Switch events like tablet mode will wake the device
-+			 * and report the new switch position to the input
-+			 * subsystem.
-+			 */
-+			if (ke->type == KE_SW)
-+				sparse_keymap_report_event(priv->input_dev,
-+							   event,
-+							   val,
-+							   0);
- 			return;
- 		}
- 		goto out_unknown;
+ 	/* Clean interrupts setup. */
+ 	mlxreg_hotplug_unset_irq(priv);
++	devm_free_irq(&pdev->dev, priv->irq, priv);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
