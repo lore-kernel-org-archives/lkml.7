@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAECC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BCFC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893A120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46AE20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520972;
-	bh=nnYynSGCi1MppCPfkSoj0fluPqsuvCwVVUsXQlsA094=;
+	s=default; t=1561520977;
+	bh=2mkfzhi/YQ6DnEGVd3mCPmKplmLD7uWXYZALZr9o2io=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R6L87INapHYJjdpuj7EPLr3E2lcDtIHiJPAABcUdke0kuQnPi6gbkZL7yebY7prTL
-	 w20cexODa3XqRv3m1JkxpqZCX32PDDO81jzdRAmy78GEf4hcaIwWw65OwsCKexoqwH
-	 UEZXqRnPXZiysbBfZJ1c9ie6/eJyLWhK2l9C1ijg=
+	b=hWHGcluHDv/RPXBH/SOOi8RCCUxvOpdyp4YtWJzejPnSzbgRGojTPN+AoMppqGSLi
+	 v5aSBQNiLXTAKhgYVamZkvccPCI1uD3htNVduUZNEkG7t9BqspWho2oFoc5Kl4tjiE
+	 lleDue/jKoS6YQu8G8EsS/uyagiquJsa4zE0WlT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfFZDta (ORCPT
+        id S1727789AbfFZDtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfFZDnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:43 -0400
+        id S1726937AbfFZDnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:41 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E1692168B;
-        Wed, 26 Jun 2019 03:43:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE00C205ED;
+        Wed, 26 Jun 2019 03:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520622;
-        bh=nnYynSGCi1MppCPfkSoj0fluPqsuvCwVVUsXQlsA094=;
+        s=default; t=1561520620;
+        bh=2mkfzhi/YQ6DnEGVd3mCPmKplmLD7uWXYZALZr9o2io=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RvYZHmBvnrRAYoeaPM8uGQpboec74K1oiPzhiZInPpMOMUEUUMUk9zG+jFGEyOQBM
-         rPRCy22/5cpJ0oOI01a8ZLrVqNPJ4UmZsk6sVoDjwUdqQSHXv00uQiTtUjDpGc2W4o
-         hQC11T4UMQUdW0wgslrv0bSUmKBP9xyxhP0r2uiU=
+        b=S4i4w7EAqEtRMsDfz4nEwo2BjhQvCNpfrkOgLiViIvX4fZHNIKE1uSjni1DPXMkUg
+         /bxrQA+WE9PzRkjeBNszGwGPFRNtJ0+O4g/wuvPKwxDSEuMibkDwMrBjUJsl0foSx9
+         of/g1HtFcd0+T1rj+auCYlsakYZyIExHFVuUC0IM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Libin Yang <libin.yang@intel.com>, Mark Brown <broonie@kernel.org>,
+Cc:     Viorel Suman <viorel.suman@nxp.com>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 03/34] ASoC: soc-pcm: BE dai needs prepare when pause release after resume
-Date:   Tue, 25 Jun 2019 23:43:04 -0400
-Message-Id: <20190626034335.23767-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/34] ASoC: ak4458: add return value for ak4458_probe
+Date:   Tue, 25 Jun 2019 23:43:03 -0400
+Message-Id: <20190626034335.23767-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -58,47 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Libin Yang <libin.yang@intel.com>
+From: Viorel Suman <viorel.suman@nxp.com>
 
-[ Upstream commit 5087a8f17df868601cd7568299e91c28086d2b45 ]
+[ Upstream commit a8dee20d792432740509237943700fbcfc230bad ]
 
-If playback/capture is paused and system enters S3, after system returns
-from suspend, BE dai needs to call prepare() callback when playback/capture
-is released from pause if RESUME_INFO flag is not set.
+AK4458 is probed successfully even if AK4458 is not present - this
+is caused by probe function returning no error on i2c access failure.
+Return an error on probe if i2c access has failed.
 
-Currently, the dpcm_be_dai_prepare() function will block calling prepare()
-if the pcm is in SND_SOC_DPCM_STATE_PAUSED state. This will cause the
-following test case fail if the pcm uses BE:
-
-playback -> pause -> S3 suspend -> S3 resume -> pause release
-
-The playback may exit abnormally when pause is released because the BE dai
-prepare() is not called.
-
-This patch allows dpcm_be_dai_prepare() to call dai prepare() callback in
-SND_SOC_DPCM_STATE_PAUSED state.
-
-Signed-off-by: Libin Yang <libin.yang@intel.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/codecs/ak4458.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 33060af18b5a..6566c8831a96 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -2451,7 +2451,8 @@ int dpcm_be_dai_prepare(struct snd_soc_pcm_runtime *fe, int stream)
+diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
+index 299ada4dfaa0..58b6ca1de993 100644
+--- a/sound/soc/codecs/ak4458.c
++++ b/sound/soc/codecs/ak4458.c
+@@ -492,9 +492,10 @@ static void ak4458_power_on(struct ak4458_priv *ak4458)
+ 	}
+ }
  
- 		if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_HW_PARAMS) &&
- 		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
--		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_SUSPEND))
-+		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_SUSPEND) &&
-+		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
- 			continue;
+-static void ak4458_init(struct snd_soc_component *component)
++static int ak4458_init(struct snd_soc_component *component)
+ {
+ 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
++	int ret;
  
- 		dev_dbg(be->dev, "ASoC: prepare BE %s\n",
+ 	/* External Mute ON */
+ 	if (ak4458->mute_gpiod)
+@@ -502,21 +503,21 @@ static void ak4458_init(struct snd_soc_component *component)
+ 
+ 	ak4458_power_on(ak4458);
+ 
+-	snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
++	ret = snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
+ 			    0x80, 0x80);   /* ACKS bit = 1; 10000000 */
++	if (ret < 0)
++		return ret;
+ 
+-	ak4458_rstn_control(component, 1);
++	return ak4458_rstn_control(component, 1);
+ }
+ 
+ static int ak4458_probe(struct snd_soc_component *component)
+ {
+ 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
+ 
+-	ak4458_init(component);
+-
+ 	ak4458->fs = 48000;
+ 
+-	return 0;
++	return ak4458_init(component);
+ }
+ 
+ static void ak4458_remove(struct snd_soc_component *component)
 -- 
 2.20.1
 
