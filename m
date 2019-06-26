@@ -2,191 +2,170 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5778FC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE94CC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2527220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D7AdT3iH"
+	by mail.kernel.org (Postfix) with ESMTP id BD8162080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfFZRdO (ORCPT
+        id S1726531AbfFZReA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:33:14 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:35992 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfFZRdO (ORCPT
+        Wed, 26 Jun 2019 13:34:00 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37881 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFZReA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:33:14 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A1035510;
-        Wed, 26 Jun 2019 19:27:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1561570050;
-        bh=i14VRbRUNWeaIKjEs5xAYIdwAOF9WuME1WNthjXo334=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D7AdT3iHB/0TaRDGPON3Uu1w9UZ1SWe8rNbHY0LKbFytsYZFOOX5xgYHPMDriKuNl
-         go7zLXJ7/ylQZy/6QEXBEdVbwSV8/fCmLJx1TavUSbtS+hWyPvGBMeIoy6KK91cFx1
-         xbNWGAxwk2PBZ+wMy9Yycyz0YHUUD+Ib8HSGU81c=
-Date:   Wed, 26 Jun 2019 20:25:03 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hugues FRUCHET <hugues.fruchet@st.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Philippe CORNU <philippe.cornu@st.com>,
-        Mickael GUENE <mickael.guene@st.com>
-Subject: Re: [PATCH v2 0/3] DCMI bridge support
-Message-ID: <20190626172503.GB6118@pendragon.ideasonboard.com>
-References: <1560242912-17138-1-git-send-email-hugues.fruchet@st.com>
- <20190620161721.h3wn4nibomrvriw4@kekkonen.localdomain>
- <ae097d67-58fe-82d7-78d6-2445664f28db@st.com>
+        Wed, 26 Jun 2019 13:34:00 -0400
+Received: by mail-io1-f70.google.com with SMTP id j18so3403140ioj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:33:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nMT5FioGFdyvzIgPbIYCsZ5hPNKhgIXY/QNeLPVyeZY=;
+        b=jNlA1Vyqf0DW+VsodgcsJCVwCXiJqoeG8Kimkzig5r8YEbiFWsDIcFYbTzTfFCSyF2
+         riXtgC+EMOiVDyNvnY7ImjplpEDCnAR/mJs5j4BYmsLlUkRTIXirL23gBnPm4/iJozT4
+         8fbnCC5GhbCr568b1Ym+rPuy00hacWQ1KHtPxYctui6MIDN/WiA/h7D7+3bcUdret8N5
+         GzeL49aBBEwKo9YaCbpWgxWGgkEsYmjEdWUTnCSWcflKeToUO9k7eCS2m699TUUgQxlQ
+         7czyEOQ3O7juISHjZTXTdF+Nk203OP2ikC/J6GgbVHApFuavwIbUQu9aZzc+ouqAIdbY
+         XiLA==
+X-Gm-Message-State: APjAAAXtckbnoqlQYwIW6T6CFsYOmqNjkBYRVEVbAzmg34qOIu0MDEcz
+        WM85wlNlTCfFB0zRAAyP+5A3LUilcdFOgzAH2oRItBt6ETYs
+X-Google-Smtp-Source: APXvYqwoqbpevi0oNIrYo99AxXhfPlFNWFTySK9Skhyl6+h7eI5rXg1AW5lI8CCkZq75G9V7i8fNEde0WHAryBYgZSdxm5rwYGVE
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ae097d67-58fe-82d7-78d6-2445664f28db@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a6b:b7d5:: with SMTP id h204mr6164466iof.188.1561570028284;
+ Wed, 26 Jun 2019 10:27:08 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 10:27:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d3f34b058c3d5a4f@google.com>
+Subject: INFO: rcu detected stall in ext4_write_checks
+From:   syzbot <syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com>
+To:     adilger.kernel@dilger.ca, davem@davemloft.net, eladr@mellanox.com,
+        idosch@mellanox.com, jiri@mellanox.com, john.stultz@linaro.org,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hugues,
+Hello,
 
-On Mon, Jun 24, 2019 at 10:10:05AM +0000, Hugues FRUCHET wrote:
-> Hi Sakari,
-> 
->  > - Where's the sub-device representing the bridge itself?
-> This is pointed by [1]: drivers/media/i2c/st-mipid02.c
-> 
->  > - As the driver becomes MC-centric, crop configuration takes place
-> through
->  >   V4L2 sub-device interface, not through the video device node.
->  > - Same goes for accessing sensor configuration: it does not take place
->  >   through video node but through the sub-device nodes.
-> 
-> Our objective is to be able to support either a simple parallel sensor
-> or a CSI-2 sensor connected through a bridge without any changes on 
-> userspace side because no additional processing or conversion involved, 
-> only deserialisation is m.
-> With the proposed set of patches, we succeeded to do so, the same 
-> non-regression tests campaign is passed with OV5640 parallel sensor 
-> (STM32MP1 evaluation board) or OV5640 CSI-2 sensor (Avenger96 board with 
-> D3 mezzanine board).
-> 
-> We don't want driver to be MC-centric, media controller support was 
-> required only to get access to the set of functions needed to link and
-> walk trough subdevices: media_create_pad_link(), 
-> media_entity_remote_pad(), etc...
-> 
-> We did a try with the v1 version of this patchset, delegating subdevices 
-> handling to userspace, by using media-controller, but this require to 
-> configure first the pipeline for each single change of resolution and 
-> format before making any capture using v4l2-ctl or GStreamer, quite 
-> heavy in fact.
-> Benjamin did another try using new libcamera codebase, but even for a 
-> basic capture use-case, negotiation code is quite tricky in order to
-> match the right subdevices bus format to the required V4L2 format.
+syzbot found the following crash on:
 
-Why would it be trickier in userspace than in the kernel ? The V4L2
-subdev operations are more or less expose verbatim through the subdev
-userspace API.
+HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1435aaf6a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
+dashboard link: https://syzkaller.appspot.com/bug?extid=4bfbbf28a2e50ab07368
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11234c41a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d7f026a00000
 
-> Moreover, it was not clear how to call libcamera library prior to any
-> v4l2-ctl or GStreamer calls.
+The bug was bisected to:
 
-libcamera isn't meant to be called before v4l2-ctl or GStreamer.
-Applications are supposed to be based directly on libcamera, or, for
-existing userspace APIs such as V4L2 or GStreamer, compatibility layers
-are supposed to be developed. For V4L2 it will take the form of a
-LD_PRELOAD-able .so that will intercept the V4L2 API calls, making most
-V4L2 applications work with libcamera unmodified (I said most as 100%
-compatibility will likely not be achievable). For GStreamer it will take
-the form of a GStreamer libcamera element that will replace the V4L2
-source element.
+commit 0c81ea5db25986fb2a704105db454a790c59709c
+Author: Elad Raz <eladr@mellanox.com>
+Date:   Fri Oct 28 19:35:58 2016 +0000
 
-> Adding 100 lines of code into DCMI to well configure resolution and 
-> formats fixes the point and allows us to keep backward compatibility
-> as per our objective, so it seems far more reasonable to us to do so
-> even if DCMI controls more than the subdevice it is connected to.
-> Moreover we found similar code in other video interfaces code like 
-> qcom/camss/camss.c and xilinx/xilinx-dma.c, controlling the whole 
-> pipeline, so it seems to us quite natural to go this way.
+     mlxsw: core: Add port type (Eth/IB) set API
 
-I can't comment on the qcom-camss driver as I'm not aware of its
-internals, but where have you found such code in the Xilinx V4L2 drivers
-?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10393a89a00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12393a89a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14393a89a00000
 
-> To summarize, if we cannot do the negotiation within kernel, delegating
-> this to userspace implies far more complexity and breaks compatibility
-> with existing applications without adding new functionalities.
-> 
-> Having all that in mind, what should be reconsidered in your opinion 
-> Sakari ? Do you have some alternatives ?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4bfbbf28a2e50ab07368@syzkaller.appspotmail.com
+Fixes: 0c81ea5db259 ("mlxsw: core: Add port type (Eth/IB) set API")
 
-First of all, let's note that your patch series performs to related but
-still independent changes: it enables MC support, *and* enables the V4L2
-subdev userspace API. The former is clearly needed and will allow you to
-use the MC API internally in the kernel, simplifying pipeline traversal.
-The latter then enables the V4L2 subdev userspace API, moving the
-pipeline configuration responsibility to userspace.
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+	(detected by 0, t=10502 jiffies, g=8969, q=26)
+rcu: All QSes seen, last rcu_preempt kthread activity 10503  
+(4295056736-4295046233), jiffies_till_next_fqs=1, root ->qsmask 0x0
+syz-executor778 R  running task    26464  9577   9576 0x00004000
+Call Trace:
+  <IRQ>
+  sched_show_task kernel/sched/core.c:5286 [inline]
+  sched_show_task.cold+0x291/0x2fc kernel/sched/core.c:5261
+  print_other_cpu_stall kernel/rcu/tree_stall.h:410 [inline]
+  check_cpu_stall kernel/rcu/tree_stall.h:536 [inline]
+  rcu_pending kernel/rcu/tree.c:2625 [inline]
+  rcu_sched_clock_irq.cold+0xaaf/0xbfd kernel/rcu/tree.c:2161
+  update_process_times+0x32/0x80 kernel/time/timer.c:1639
+  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:167
+  tick_sched_timer+0x47/0x130 kernel/time/tick-sched.c:1298
+  __run_hrtimer kernel/time/hrtimer.c:1389 [inline]
+  __hrtimer_run_queues+0x33b/0xdd0 kernel/time/hrtimer.c:1451
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
+  smp_apic_timer_interrupt+0x111/0x550 arch/x86/kernel/apic/apic.c:1066
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+  </IRQ>
+RIP: 0010:ext4_write_checks+0x1/0x260 fs/ext4/file.c:161
+Code: 61 fa ff ff e8 e0 3c 53 ff 55 48 89 e5 41 54 49 89 fc e8 f2 0a 81 ff  
+4c 89 e7 31 f6 e8 98 f9 ff ff 41 5c 5d c3 0f 1f 40 00 55 <48> 89 e5 41 56  
+41 55 49 89 f5 41 54 53 48 89 fb e8 ca 0a 81 ff 48
+RSP: 0018:ffff888093a97640 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+RAX: ffff88809901c100 RBX: ffff888093a977d8 RCX: ffffffff81efcb42
+RDX: 0000000000000000 RSI: ffff888093a97a08 RDI: ffff888093a977d8
+RBP: ffff888093a97768 R08: ffff88809901c100 R09: ffff88809901c9c8
+R10: ffff88809901c9a8 R11: ffff88809901c100 R12: 0000000000000001
+R13: ffff8880995df4f0 R14: ffff888093a97740 R15: 0000000000000000
+  call_write_iter include/linux/fs.h:1872 [inline]
+  do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+  do_iter_write fs/read_write.c:970 [inline]
+  do_iter_write+0x184/0x610 fs/read_write.c:951
+  vfs_iter_write+0x77/0xb0 fs/read_write.c:983
+  iter_file_splice_write+0x65c/0xbd0 fs/splice.c:746
+  do_splice_from fs/splice.c:848 [inline]
+  direct_splice_actor+0x123/0x190 fs/splice.c:1020
+  splice_direct_to_actor+0x366/0x970 fs/splice.c:975
+  do_splice_direct+0x1da/0x2a0 fs/splice.c:1063
+  do_sendfile+0x597/0xd00 fs/read_write.c:1464
+  __do_sys_sendfile64 fs/read_write.c:1519 [inline]
+  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+  __x64_sys_sendfile64+0x15a/0x220 fs/read_write.c:1511
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4417c9
+Code: e8 7c e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 bb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffce5c38198 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007ffce5c38340 RCX: 00000000004417c9
+RDX: 0000000020000000 RSI: 0000000000000003 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 00008080fffffffe R11: 0000000000000246 R12: 0000000000000000
+R13: 00000000004024a0 R14: 0000000000000000 R15: 0000000000000000
+rcu: rcu_preempt kthread starved for 10549 jiffies! g8969 f0x2  
+RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
+rcu: RCU grace-period kthread stack dump:
+rcu_preempt     R  running task    29056    10      2 0x80004000
+Call Trace:
+  context_switch kernel/sched/core.c:2818 [inline]
+  __schedule+0x7cb/0x1560 kernel/sched/core.c:3445
+  schedule+0xa8/0x260 kernel/sched/core.c:3509
+  schedule_timeout+0x486/0xc50 kernel/time/timer.c:1807
+  rcu_gp_fqs_loop kernel/rcu/tree.c:1589 [inline]
+  rcu_gp_kthread+0x9b2/0x18b0 kernel/rcu/tree.c:1746
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-You could in theory move to the MC API inside the kernel, without
-enabling support for the V4L2 subdev userspace API. Configuring the
-pipeline and propagating the formats would then be the responsibility of
-the kernel driver. However, this will limit your driver to the
-following:
 
-- Fully linear pipelines only (single sensor)
-- No support for controls implemented by multiple entities in the
-  pipeline (for instance controls that would exist in both the sensor
-  and the bridge, such as gains)
-- No proper support for scaling configuration if multiple components in
-  the pipeline can scale
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Are you willing to set those limitations in stone and give up on
-supporting those features ?
-
-> On 6/20/19 6:17 PM, Sakari Ailus wrote:
-> > On Tue, Jun 11, 2019 at 10:48:29AM +0200, Hugues Fruchet wrote:
-> >> This patch serie allows to connect non-parallel camera sensor to
-> >> DCMI thanks to a bridge connected in between such as STMIPID02 [1].
-> >>
-> >> Media controller support is introduced first, then support of
-> >> several sub-devices within pipeline with dynamic linking
-> >> between them.
-> >> In order to keep backward compatibility with applications
-> >> relying on V4L2 interface only, format set on video node
-> >> is propagated to all sub-devices connected to camera interface.
-> >>
-> >> [1] https://www.spinics.net/lists/devicetree/msg278002.html
-> > 
-> > General notes on the set, not related to any single patch:
-> > 
-> > - Where's the sub-device representing the bridge itself?
-> > 
-> > - As the driver becomes MC-centric, crop configuration takes place through
-> >    V4L2 sub-device interface, not through the video device node.
-> > 
-> > - Same goes for accessing sensor configuration: it does not take place
-> >    through video node but through the sub-device nodes.
-> > 
-
--- 
-Regards,
-
-Laurent Pinchart
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
