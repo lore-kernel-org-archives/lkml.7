@@ -2,123 +2,131 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE911C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A0BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DEF2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:00:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oun1IwP+"
+	by mail.kernel.org (Postfix) with ESMTP id 3C26420883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfFZC77 (ORCPT
+        id S1726640AbfFZDAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:59:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42478 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfFZC76 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:59:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so475670pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 19:59:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XLW3VDfNQt+x4xgu019bZp6QUcWMy6VZjqr8H1WuSuI=;
-        b=oun1IwP+E3E04t0XX3kzcUio+QFJqjeXWPRnlbMBHGvTgB/IiYGgyLa1gJxSEAIyH2
-         3RZhntJLRouJl1hVn5LVnFFKeCAYoZKi7DoC8caZpm4tf5xIPMluWrd5Es1C8332il3C
-         xjGmOL9DHdjYfMaG5+lMoF6qc9Zgyoia5lCw4YU5w3jja2oVSpp6q5CcUHmwrAmvl5my
-         CiMbXvW4rX8qNyPGfy7thR4zMJk6BRQqVls7pZ0R3QBbXqD5CrZ7fwpkFiLdtTmiaZZC
-         37b1s0g4xPRDz+wxrcdM6FoaT9PEI4lkRSqFN0x0JXGFwQuvoLrDYj2oLdb6d+EsTp/+
-         Awvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XLW3VDfNQt+x4xgu019bZp6QUcWMy6VZjqr8H1WuSuI=;
-        b=lCFLoKxDtsExgiESz4qZOUc3ctU2r/WL9EshCIqu0Fb0NZ+UCbwcCsTgaFjrfVZ7Mr
-         XdhWXv9YhxAcfeeVZrJsljgO2CiW9ppEjR7FcTO5w2rPFu8zCN5r/YDc7uI2L7sAK8bV
-         XeM7ekCvMSbnOTVyw/Sv2S3b8mFFcGm9Nc6f8RvFOjxpFrRcNlVPaRe2r0qIqDKpVfbY
-         SraCTFOfvv8brmDy1duwkjFXKzdYoIBRzvT6ud2ZQWOwpG6r/LbP1Q651jl7uXDtROa5
-         CByE7S9k5ejh3jHMpqSasSD4vVbeVOTphQl7cGx7R0ARJT5Ctx3LJxj//ZpjhDuZFVJi
-         Qwig==
-X-Gm-Message-State: APjAAAW/2jpmCDBzR/2kJ1fFkCbASKAmkI0xIR8UnMXtUD8A7OL0GCcV
-        K7OGh4rLo7WG7pfQTO8phCyLdw==
-X-Google-Smtp-Source: APXvYqz7sDl1G+SanSLvGSdHna89CYWVbXaQu4UOduO+ENOz+KC4InOP11D/tqw7ZNaiziCaIL7nPQ==
-X-Received: by 2002:a17:90a:3787:: with SMTP id v7mr1504677pjb.33.1561517997949;
-        Tue, 25 Jun 2019 19:59:57 -0700 (PDT)
-Received: from localhost ([122.172.211.128])
-        by smtp.gmail.com with ESMTPSA id q13sm4019084pgq.90.2019.06.25.19.59.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 19:59:57 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 08:29:53 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rjw@rjwysocki.net, edubezval@gmail.com,
-        linux-kernel@vger.kernel.org,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "open list:THERMAL/CPU_COOLING" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:TI BANDGAP AND THERMAL DRIVER" 
-        <linux-omap@vger.kernel.org>
-Subject: Re: [PATCH V3 3/3] thermal/drivers/cpu_cooling:
- cpufreq_cooling_register returns an int
-Message-ID: <20190626025953.aapgyiein5tggxei@vireshk-i7>
-References: <20190625113244.18146-1-daniel.lezcano@linaro.org>
- <20190625113244.18146-3-daniel.lezcano@linaro.org>
+        Tue, 25 Jun 2019 23:00:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8264 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfFZDAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:00:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 20:00:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,418,1557212400"; 
+   d="scan'208";a="360597671"
+Received: from d0798461-mobl.amr.corp.intel.com (HELO [10.254.106.237]) ([10.254.106.237])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Jun 2019 20:00:37 -0700
+Subject: Re: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+References: <20190613064813.8102-1-namit@vmware.com>
+ <20190613064813.8102-5-namit@vmware.com>
+ <723d63ee-c8cb-14a1-0eb9-265e580360f4@intel.com>
+ <1545B936-7CEC-4A1C-B776-74004F774218@vmware.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+Message-ID: <88a76cb8-2484-818a-2be6-d06a4ffef107@intel.com>
+Date:   Tue, 25 Jun 2019 20:00:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625113244.18146-3-daniel.lezcano@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <1545B936-7CEC-4A1C-B776-74004F774218@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-06-19, 13:32, Daniel Lezcano wrote:
-> It looks like after the changes in the patch the only reason for
-
-which patch ? Instead of "patch" you should refer to the latest
-changes in code, like "now that cpufreq_cooling_unregister() doesn't
-accept cdev as an argument ....."
-
-> returning (struct thermal_cooling_device *) from
-> cpufreq_cooling_register() is error checking, but it would be much
-> more straightforward to return int for this purpose.
+On 6/25/19 7:35 PM, Nadav Amit wrote:
+>>> 	const struct flush_tlb_info *f = info;
+>>> +	enum tlb_flush_reason reason;
+>>> +
+>>> +	reason = (f->mm == NULL) ? TLB_LOCAL_SHOOTDOWN : TLB_LOCAL_MM_SHOOTDOWN;
+>>
+>> Should we just add the "reason" to flush_tlb_info?  It's OK-ish to imply
+>> it like this, but seems like it would be nicer and easier to track down
+>> the origins of these things if we did this at the caller.
 > 
-> Moreover, that would prevent the callers of it from doing incorrect
-> things with the returned pointers (like using it to unregister the
-> cooling device).
-> 
-> Replace the returned value an integer instead of a pointer to a
+> I prefer not to. I want later to inline flush_tlb_info into the same
+> cacheline that holds call_function_data. Increasing the size of
+> flush_tlb_info for no good reason will not help…
 
-                             as ?
+Well, flush_tlb_info is at 6/8ths of a cacheline at the moment.
+call_function_data is 3/8ths.  To me, that means we have some slack in
+the size.
 
-> thermal cooling device structure.
-> 
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/thermal/cpu_cooling.c                 | 63 +++++++++----------
->  drivers/thermal/imx_thermal.c                 |  6 +-
->  .../ti-soc-thermal/ti-thermal-common.c        |  7 +--
->  include/linux/cpu_cooling.h                   | 16 ++---
->  4 files changed, 40 insertions(+), 52 deletions(-)
-
--- 
-viresh
