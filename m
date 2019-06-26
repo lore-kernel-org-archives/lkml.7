@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8433DC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518CAC48BD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A30F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CC81205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520907;
-	bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
+	s=default; t=1561520914;
+	bh=ZqvzL5QRBqlyvstiXKL/63rBGS2MmAum0563vuhRjJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dAL3PFHx7VsMcxkv982xFJIkutoaSSzzBXQUESuFhJ98yxmkL8CqKBeKorPVrPfz3
-	 mvATbv2E7yJ0rdYcNDkl2mjsvqqAQzUV56j5wCjwBPZBih8FpvLD2VsZPNT936L5Qv
-	 6FH6DjIk580RiJ5IpJ7uFQ/VfsSbbvQR77zeyF1g=
+	b=momb8f6j805UXMOFk7VkI0f1hJOtIO0bkMJE+WVzDtlUOxwA5fgc1+7N9+ZqBb7LI
+	 9sTvit+7aT7s0X2uvkhQXSAT7WwBl8GWcGiwaXdmxRkYjA00H/GhXEwHkk0H5n23tQ
+	 lw9nlVZ+RUSIFQ1mGYd1wRGa/0BfQDo/UwFTPRtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbfFZDor (ORCPT
+        id S1727624AbfFZDoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727623AbfFZDoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:44:39 -0400
+        id S1727589AbfFZDod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:44:33 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 089F1205ED;
-        Wed, 26 Jun 2019 03:44:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7F49205ED;
+        Wed, 26 Jun 2019 03:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520678;
-        bh=5rFNYZyvNdwrIOYTJ/UqqG+fqyrkLzHd4QdCCujhBts=;
+        s=default; t=1561520672;
+        bh=ZqvzL5QRBqlyvstiXKL/63rBGS2MmAum0563vuhRjJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CdK0zGucv9h/vLRsh4SpOBXuQ+0dtGfacyA9LwGoRaYaWfnSBqYyqhFHNVbEQ+Dmh
-         zQqNpYKHlF/CKmRzTFtjkw9DVDf5YfBU9i/O4BHHuJKIlvF6X/5SSnCUTMNd1PncCB
-         YiYYq9J1gAm8JQlidrwv/AZ1FtHbklmO74wCuZKg=
+        b=ZEMw154++EfymUlqaCyxRA8C7FeCitjZLn4LYAF5qj5ywKmj4/JVv3NH/4Fw/EdPW
+         NFlvzMvb4VZM+PEfLGu8yTH+iN5Chwkgr4+jlaQfKa8WqUnCJxWmKZEfLGcygSE2EK
+         NJXurjoNN8v3l7heXgeTv8pTpwawsEaCjXOsWomk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathew King <mathewk@chromium.org>,
-        Jett Rink <jettrink@chromium.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Jurgen Kramer <gtmkramer@xs4all.nl>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/34] platform/x86: intel-vbtn: Report switch events when event wakes device
-Date:   Tue, 25 Jun 2019 23:43:26 -0400
-Message-Id: <20190626034335.23767-25-sashal@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 22/34] drm: panel-orientation-quirks: Add quirk for GPD pocket2
+Date:   Tue, 25 Jun 2019 23:43:23 -0400
+Message-Id: <20190626034335.23767-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -62,61 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathew King <mathewk@chromium.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit cb1921b17adbe6509538098ac431033378cd7165 ]
+[ Upstream commit 15abc7110a77555d3bf72aaef46d1557db0a4ac5 ]
 
-When a switch event, such as tablet mode/laptop mode or docked/undocked,
-wakes a device make sure that the value of the swich is reported.
-Without when a device is put in tablet mode from laptop mode when it is
-suspended or vice versa the device will wake up but mode will be
-incorrect.
+GPD has done it again, make a nice device (good), use way too generic
+DMI strings (bad) and use a portrait screen rotated 90 degrees (ugly).
 
-Tested by suspending a device in laptop mode and putting it in tablet
-mode, the device resumes and is in tablet mode. When suspending the
-device in tablet mode and putting it in laptop mode the device resumes
-and is in laptop mode.
+Because of the too generic DMI strings this entry is also doing bios-date
+matching, so the gpd_pocket2 data struct may very well need to be updated
+with some extra bios-dates in the future.
 
-Signed-off-by: Mathew King <mathewk@chromium.org>
-Reviewed-by: Jett Rink <jettrink@chromium.org>
-Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Changes in v2:
+-Add one more known BIOS date to the list of BIOS dates
+
+Cc: Jurgen Kramer <gtmkramer@xs4all.nl>
+Reported-by: Jurgen Kramer <gtmkramer@xs4all.nl>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190524125759.14131-1-hdegoede@redhat.com
+(cherry picked from commit 6dab9102dd7b144e5723915438e0d6c473018cd0)
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 06cd7e818ed5..a0d0cecff55f 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -76,12 +76,24 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	struct platform_device *device = context;
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
- 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
--	const struct key_entry *ke_rel;
-+	const struct key_entry *ke, *ke_rel;
- 	bool autorelease;
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index ee4a5e1221f1..088363675940 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -50,6 +50,14 @@ static const struct drm_dmi_panel_orientation_data gpd_pocket = {
+ 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
+ };
  
- 	if (priv->wakeup_mode) {
--		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
-+		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
-+		if (ke) {
- 			pm_wakeup_hard_event(&device->dev);
++static const struct drm_dmi_panel_orientation_data gpd_pocket2 = {
++	.width = 1200,
++	.height = 1920,
++	.bios_dates = (const char * const []){ "06/28/2018", "08/28/2018",
++		"12/07/2018", NULL },
++	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
++};
 +
-+			/*
-+			 * Switch events like tablet mode will wake the device
-+			 * and report the new switch position to the input
-+			 * subsystem.
-+			 */
-+			if (ke->type == KE_SW)
-+				sparse_keymap_report_event(priv->input_dev,
-+							   event,
-+							   val,
-+							   0);
- 			return;
- 		}
- 		goto out_unknown;
+ static const struct drm_dmi_panel_orientation_data gpd_win = {
+ 	.width = 720,
+ 	.height = 1280,
+@@ -98,6 +106,14 @@ static const struct dmi_system_id orientation_data[] = {
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
+ 		},
+ 		.driver_data = (void *)&gpd_pocket,
++	}, {	/* GPD Pocket 2 (generic strings, also match on bios date) */
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
++		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Default string"),
++		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Default string"),
++		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Default string"),
++		},
++		.driver_data = (void *)&gpd_pocket2,
+ 	}, {	/* GPD Win (same note on DMI match as GPD Pocket) */
+ 		.matches = {
+ 		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
 -- 
 2.20.1
 
