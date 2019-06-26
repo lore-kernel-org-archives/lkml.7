@@ -2,116 +2,122 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F1FC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C01C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63DD217D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eMmJVSWF"
+	by mail.kernel.org (Postfix) with ESMTP id 40A33216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561580019;
+	bh=0jQodpDRuAkFZgDiEgerdZvI7o/ZwZ0KSv4xKSQprD8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=T0feCQXVixKb4eDIpRiYBLWbL1+DML5EysvOMEtANVebu5VpiKAMQDoWdDUfKNczt
+	 XcR+b9/2sqpexgq3IpYrKPMmELe+NBXpYQZVTcYa/lV1DqKCyCR9Kwnlk9CVfCToSX
+	 I76xQyRLwKgEQjLpE1PpJdsB+WVWfUqc74JnKSLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfFZUMX (ORCPT
+        id S1726447AbfFZUNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:12:23 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:40144 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZUMX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:12:23 -0400
-Received: by mail-yw1-f68.google.com with SMTP id b143so25506ywb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L0ag//sSTBXe5XwvoTeu79SND79oGWRbV/V2H0jwuDc=;
-        b=eMmJVSWFTXgd+rzN4EgYIz43VtVe7SHefB84LydsW1hd//DXNDpVKyAiRfV8sOy1RB
-         oy/AON7b+WlP5prltaZG69S0gGnapYL+SNAzCbXOucIC+pfvg2C9SQhDeNqFQfTqTA5w
-         U13vpROZ6fNJWE7FdsP7mByucPksx+KUqhUJyaVXtkc0+U1Xe2ZtHZ4ClVK9F5WyZGDd
-         eu1cH22XJTVtSRt+y5TTpFaAtth8jGWDh/kbx2qjGi9lj+MYcKKlKpALSEOoC8pHf+U4
-         3XLdBD1Yleo2WXcDrTaQBftfS6T7Acwuo+//1x2XB4BHhPOT4w8/aNDkNPVwrisK5bGs
-         4t+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L0ag//sSTBXe5XwvoTeu79SND79oGWRbV/V2H0jwuDc=;
-        b=XcKOBPNieSRrc1SVC735sz8ailT8lQsp7NftKSzWt3p+VR+g6UCdY9rXpB7Q9iBanx
-         HsXCKWiNxD3N7Ye8PETjWMopp0Nf0fjuQ1leEM+sO/6G+Cs0C0tBe3DheDToR1KDSXTS
-         oHLG7prcmOK07irXx0G3YLHJyUHKe0mNp7oTjVAOCj1v9xcb6vZMisFcatCyPo8lTbRV
-         RR1lOGxJNAQYv2oc+cMNU7qeJ8aLd1lwEOBK/EEvS4oBbtlHGAjiMiujdcLk4TmN3IRi
-         lwhZJpJC1m6A2G/8mNXwFCP/3nNzKVbiwVShYVA198laKToaSeypAZQRi37sqi0uPgK0
-         II6Q==
-X-Gm-Message-State: APjAAAWJ6mDoPwJh8KVZgwkhT+628V4tMwb28XP3WgB7MH3K0ELLMS63
-        72K/Jr5VBprxRgimC4mS6ClsoxIFpEue6nBCMLXFCg==
-X-Google-Smtp-Source: APXvYqyXgfBznM5WvMnMY1IBu6vtv0FfLfZ6WnZ1HnfaUfpy8CQptRkzmR+1cowaTM3vodbQT6bKM9UpbY2fNHUsi/U=
-X-Received: by 2002:a81:a909:: with SMTP id g9mr4063332ywh.233.1561579941805;
- Wed, 26 Jun 2019 13:12:21 -0700 (PDT)
+        Wed, 26 Jun 2019 16:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfFZUNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:13:37 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8EA32086D;
+        Wed, 26 Jun 2019 20:13:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561580016;
+        bh=0jQodpDRuAkFZgDiEgerdZvI7o/ZwZ0KSv4xKSQprD8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tiV3ftktTDsuAQeR2z4Vu6D7XRs6u+SF4+yX/FgFVai8l8bUkuTUjNKxRN+hTBvVu
+         aNhjRw7hskTBnc6xC++D5aSsmyL4+HvgvW4E7J1VEXO4x13+P8xYWfipHsMIrwoQ0S
+         hdTU5lJgCY0k6PYgyysagmt1viul5eTn+QvL1jao=
+Date:   Wed, 26 Jun 2019 21:13:31 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Stefan Popa <stefan.popa@analog.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] iio: frequency: adf4371: Add support for output
+ stage mute
+Message-ID: <20190626211331.6e335fe8@archlinux>
+In-Reply-To: <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
+References: <1561389236-26464-1-git-send-email-stefan.popa@analog.com>
+        <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190626195919.107425-1-dianders@chromium.org>
-In-Reply-To: <20190626195919.107425-1-dianders@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Wed, 26 Jun 2019 13:12:10 -0700
-Message-ID: <CABXOdTcKo=r9Yxj9KQEAdqgO5ok_4udak9x3ae7WEe_B7r5fZg@mail.gmail.com>
-Subject: Re: [PATCH] block, bfq: Init saved_wr_start_at_switch_to_srt in
- unlikely case
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Guenter Roeck <groeck@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        linux-block@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 1:00 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> Some debug code suggested by Paolo was tripping when I did reboot
-> stress tests.  Specifically in bfq_bfqq_resume_state()
-> "bic->saved_wr_start_at_switch_to_srt" was later than the current
-> value of "jiffies".  A bit of debugging showed that
-> "bic->saved_wr_start_at_switch_to_srt" was actually 0 and a bit more
-> debugging showed that was because we had run through the "unlikely"
-> case in the bfq_bfqq_save_state() function.
->
-> Let's init "saved_wr_start_at_switch_to_srt" in the unlikely case to
-> something sane.
->
-> NOTE: this fixes no known real-world errors.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Paolo Valente <paolo.valente@linaro.org>
+On Wed, 26 Jun 2019 13:59:49 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+> On Mon, Jun 24, 2019 at 9:14 AM Stefan Popa <stefan.popa@analog.com> wrote:
+> >
+> > Another feature of the ADF4371/ADF4372 is that the supply current to the
+> > RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
+> > as measured by the digital lock detect circuitry. The mute to lock
+> > detect bit (MUTE_LD) in REG25 enables this function.
+> >
+> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> > ---
+> >  .../devicetree/bindings/iio/frequency/adf4371.yaml          |  6 ++++++  
+> 
+> If you resend and in the future, please split bindings to separate patch.
+> 
+> >  drivers/iio/frequency/adf4371.c                             | 13 +++++++++++++
+> >  2 files changed, 19 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> > index a268a9d..6db8742 100644
+> > --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> > @@ -32,6 +32,12 @@ properties:
+> >      items:
+> >        - clkin
+> >
+> > +  adi,mute-till-lock-en:
+> > +    description:
+> > +      If this property is present, then the supply current to RF8P and RF8N
+> > +      output stage will shut down until the ADF4371/ADF4372 achieves lock as
+> > +      measured by the digital lock detect circuitry.  
+> 
+> You need to define the type:
+> 
+> type: boolean
+> 
+> Maybe Jonathan will fix up.
+Doh. I should have caught that.
 
->
-> ---
-> Paolo said to add his Reviewed-by in https://crrev.com/c/1678756.
->
->  block/bfq-iosched.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> index 72840ebf953e..008c93d6b8d7 100644
-> --- a/block/bfq-iosched.c
-> +++ b/block/bfq-iosched.c
-> @@ -2678,6 +2678,7 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
->                  * to enjoy weight raising if split soon.
->                  */
->                 bic->saved_wr_coeff = bfqq->bfqd->bfq_wr_coeff;
-> +               bic->saved_wr_start_at_switch_to_srt = bfq_smallest_from_now();
->                 bic->saved_wr_cur_max_time = bfq_wr_duration(bfqq->bfqd);
->                 bic->saved_last_wr_start_finish = jiffies;
->         } else {
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+Fixed up with
+type: boolean
+
+Hopefully I did it right
+
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=testing&id=6e68162fcc94ec81c1656e15e6e1893fee0c309a
+
+Thanks Rob!
+
+Jonathan
+
+> 
+> Rob
+
