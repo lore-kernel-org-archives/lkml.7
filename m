@@ -2,124 +2,107 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9B2C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F230C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E473C20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4AC20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfFZI6i (ORCPT
+        id S1727009AbfFZI6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:58:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52955 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFZI6i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:58:38 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hg3l8-0006dR-FY; Wed, 26 Jun 2019 10:58:30 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hg3l5-0008VO-Se; Wed, 26 Jun 2019 10:58:27 +0200
-Date:   Wed, 26 Jun 2019 10:58:27 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        od@zcrc.me, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
- down
-Message-ID: <20190626085827.fija4kfzb5uhwosi@pengutronix.de>
-References: <20190522163428.7078-1-paul@crapouillou.net>
- <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
- <20190621135608.GB11839@ulmo>
- <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
- <20190625093839.GB1516@ulmo>
+        Wed, 26 Jun 2019 04:58:53 -0400
+Received: from mail.us.es ([193.147.175.20]:45616 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfFZI6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:58:52 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 57B42BAEEA
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:58:49 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 48A0F114D9A
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:58:49 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 2AF5B6E7A0; Wed, 26 Jun 2019 10:58:49 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id CBA72DA4D0;
+        Wed, 26 Jun 2019 10:58:46 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Wed, 26 Jun 2019 10:58:46 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 9C4F24265A32;
+        Wed, 26 Jun 2019 10:58:46 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 10:58:46 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH net-next] net: ethtool: Allow parsing ETHER_FLOW types
+ when using flow_rule
+Message-ID: <20190626085846.ax277ojvyp5k3abt@salvia>
+References: <20190626084403.17749-1-maxime.chevallier@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190625093839.GB1516@ulmo>
+In-Reply-To: <20190626084403.17749-1-maxime.chevallier@bootlin.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:38:39AM +0200, Thierry Reding wrote:
-> On Mon, Jun 24, 2019 at 12:28:44PM +0100, Daniel Thompson wrote:
-> > [...] although given pwm-backlight is essentially a wrapper driver
-> > round a PWM I wondered why the pinctrl was on the backlight node
-> > (rather than the PWM node).
+On Wed, Jun 26, 2019 at 10:44:03AM +0200, Maxime Chevallier wrote:
+> When parsing an ethtool_rx_flow_spec, users can specify an ethernet flow
+> which could contain matches based on the ethernet header, such as the
+> MAC address, the VLAN tag or the ethertype.
 > 
-> I agree with this. We're defining the pin control state for the PWM pin,
-> so in my opinion it should be the PWM driver that controls it.
+> Only the ethtype field is specific to the ether flow, the MAC and vlan
+> fields are processed using the special FLOW_EXT and FLOW_MAC_EXT flags.
 > 
-> One reason why I think this is important is if we ever end up with a
-> device that requires pins from two different controllers to be
-> configured at runtime, then how would we model that? Since pin control
-> states cannot be aggregated, so you'd have to have multiple "default"
-> states, each for the pins that they control.
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
+>  net/core/ethtool.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+> index 4d1011b2e24f..01ceba556341 100644
+> --- a/net/core/ethtool.c
+> +++ b/net/core/ethtool.c
+> @@ -2883,6 +2883,18 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
+>  	match->mask.basic.n_proto = htons(0xffff);
+>  
+>  	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT | FLOW_RSS)) {
+> +	case ETHER_FLOW: {
+> +		const struct ethhdr *ether_spec, *ether_m_spec;
+> +
+> +		ether_spec = &fs->h_u.ether_spec;
+> +		ether_m_spec = &fs->m_u.ether_spec;
+> +
+> +		if (ether_m_spec->h_proto) {
+> +			match->key.basic.n_proto = ether_spec->h_proto;
+> +			match->mask.basic.n_proto = ether_m_spec->h_proto;
+> +		}
 
-I thought you can do:
+I see some drivers in the tree also interpret the h_source and h_dest
+fields?
 
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_in_first_pincontroller>, <&pinctrl_in_another_controller>;
+https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/sfc/falcon/ethtool.c#L1182
 
-if two (or more) controllers are involved.
- 
-> On the other hand if we associate the pin control states with each of
-> the resources that need those states, then when those resources are
-> controlled, they will automatically know how to deal with the states.
-> The top-level device (i.e. backlight) doesn't need to concern itself
-> with those details.
+Probably good to address this in this patch too?
 
-So the options are:
-
- a) put "active" and "inactive" pinctrls into the pwm-node, and nothing
-    related to the involved PWM pins in the consumer
-
- b) put the PWM pin config in the consumer's "default" pinctrl (and
-    maybe leave it out int "init" if you want smooth taking over).
-
-(Or maybe use "enabled" and "disabled" in a) to match the pwm_states
-.enabled?)
-
-The advantages I see in b) over a) are:
-
- - "default" and "init" are a known pinctrl concept that most people
-   should have understood.
-
- - You have all pinctrl config for the backlight in a single place.
-
- - none of the involved driver must explicitly handle pinctrl stuff
-
-You presume that b) being commonly done is a sign of "our device trees
-and kernel subsystems still maturing". But maybe it's only that the
-capabilities provided by pinctrl subsystem without extra effort is good
-enough?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Thanks.
