@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445C6C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9253EC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB1820B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684EB205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520784;
-	bh=GY7/yu4d1WzxAMavxNuN6csP7JVMuMxs5fYitBhD/do=;
+	s=default; t=1561520786;
+	bh=gDCNEqQy1JUz7bw/phgVJ/JlespFp+YqP6Dz1mJSYYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MocOgB+2vp0+9xzGM7mHmrVtOvFDdhcC2GjWnwF/+Qt/TREWXDEKc+KZhEnpI2dfP
-	 PcKL4ygZZ/o8+OCw0ig0CQBb+oTmZ+P/TEDsOy+k7HPT/UlotdnZ6JPDVgODqwd0lv
-	 nHbt6FQiA10nsJWqJDOh289FBpdshPBexu8/FtgA=
+	b=ommEsMnxXvj4ivaro30aDGw66NMMTv1bWh2hQnVBKRjMYzf3JPK2360K0GJ6iIzWu
+	 aBT/qwRyj+bTfgpzkYQzEJouLa5VliScbevbwhpglluWzpNntgHgKEIRCf5OUPQGmt
+	 3ovOXByHIvo14uXIPlT5RDnzYmn5JkSc6Qwt44gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfFZDqW (ORCPT
+        id S1727540AbfFZDqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57988 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727935AbfFZDqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:46:19 -0400
+        id S1727242AbfFZDqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:46:15 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-82.mobile.att.net [107.77.172.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E798205ED;
-        Wed, 26 Jun 2019 03:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DAF520B7C;
+        Wed, 26 Jun 2019 03:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520778;
-        bh=GY7/yu4d1WzxAMavxNuN6csP7JVMuMxs5fYitBhD/do=;
+        s=default; t=1561520774;
+        bh=gDCNEqQy1JUz7bw/phgVJ/JlespFp+YqP6Dz1mJSYYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkWhQQj8slPOZFx/QOD5ZFmWfk2edcBcaFADvu4GXKiUZDlWZriGH81CWZDrr1DZp
-         EeI9XpLQoCMifqj0J56bUMRLzFeRjjHyWoB3Rb2/MhzJTAirfXvlT//bISqBwIZpNd
-         KPtFYsdgYeZ+QozJtjTaEN4g4vccnN0Ts6fpimHY=
+        b=tV+k2EB1Rzpdf6d3Nx92cwPpo/L9nD660SDkTxc1d7IhXcx7NV9/BLNqvsEJdjWU9
+         ULXIO/dwnWYWdhm5A+KlP1ikBtOLYMRsxlM06swefGIUjj+9kVk6AtrFBKhuxKpw7G
+         KReQ5rIP2PxdkTASS5Alx61Z29dvi1ncp+v3Q+RA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Georgii Staroselskii <georgii.staroselskii@emlid.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 06/11] ASoC: max98090: remove 24-bit format support if RJ is 0
-Date:   Tue, 25 Jun 2019 23:45:56 -0400
-Message-Id: <20190626034602.24367-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 04/11] ASoC: sun4i-codec: fix first delay on Speaker
+Date:   Tue, 25 Jun 2019 23:45:54 -0400
+Message-Id: <20190626034602.24367-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034602.24367-1-sashal@kernel.org>
 References: <20190626034602.24367-1-sashal@kernel.org>
@@ -59,56 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+From: Georgii Staroselskii <georgii.staroselskii@emlid.com>
 
-[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
+[ Upstream commit 1f2675f6655838aaf910f911fd0abc821e3ff3df ]
 
-The supported formats are S16_LE and S24_LE now. However, by datasheet
-of max98090, S24_LE is only supported when it is in the right justified
-mode. We should remove 24-bit format if it is not in that mode to avoid
-triggering error.
+Allwinner DAC seems to have a delay in the Speaker audio routing. When
+playing a sound for the first time, the sound gets chopped. On a second
+play the sound is played correctly. After some time (~5s) the issue gets
+back.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+This commit seems to be fixing the same issue as bf14da7 but
+for another codepath.
+
+This is the DTS that was used to debug the problem.
+
+&codec {
+        allwinner,pa-gpios = <&r_pio 0 11 GPIO_ACTIVE_HIGH>; /* PL11 */
+        allwinner,audio-routing =
+                "Speaker", "LINEOUT";
+
+        status = "okay";
+}
+
+Signed-off-by: Georgii Staroselskii <georgii.staroselskii@emlid.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max98090.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ sound/soc/sunxi/sun4i-codec.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 3e65dc74eb33..e7aef841f87d 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index 56ed9472e89f..6099adea68c6 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -747,6 +747,15 @@ static int sun4i_codec_spk_event(struct snd_soc_dapm_widget *w,
+ 		gpiod_set_value_cansleep(scodec->gpio_pa,
+ 					 !!SND_SOC_DAPM_EVENT_ON(event));
+ 
++	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		/*
++		 * Need a delay to wait for DAC to push the data. 700ms seems
++		 * to be the best compromise not to feel this delay while
++		 * playing a sound.
++		 */
++		msleep(700);
++	}
++
  	return 0;
  }
  
-+static int max98090_dai_startup(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
-+	unsigned int fmt = max98090->dai_fmt;
-+
-+	/* Remove 24-bit format support if it is not in right justified mode. */
-+	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
-+		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
-+	}
-+	return 0;
-+}
-+
- static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
- 				   struct snd_pcm_hw_params *params,
- 				   struct snd_soc_dai *dai)
-@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
- #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
- 
- static const struct snd_soc_dai_ops max98090_dai_ops = {
-+	.startup = max98090_dai_startup,
- 	.set_sysclk = max98090_dai_set_sysclk,
- 	.set_fmt = max98090_dai_set_fmt,
- 	.set_tdm_slot = max98090_set_tdm_slot,
 -- 
 2.20.1
 
