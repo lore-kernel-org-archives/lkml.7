@@ -2,62 +2,83 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BC5C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC12C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B472133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7372133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbfFZP2T (ORCPT
+        id S1728220AbfFZP3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:28:19 -0400
-Received: from ms.lwn.net ([45.79.88.28]:40304 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfFZP2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:28:19 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id AE76C4BF;
-        Wed, 26 Jun 2019 15:28:18 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 09:28:17 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@iki.fi>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: On Nitrokey Pro's ECC support
-Message-ID: <20190626092817.3e5343e6@lwn.net>
-In-Reply-To: <20190626152138.GA28688@chatter.i7.local>
-References: <c9c1e7f83a55bc5fb621e2e4e1dab90c5b3aac01.camel@iki.fi>
-        <20190626082541.2cd5897c@lwn.net>
-        <20190626152138.GA28688@chatter.i7.local>
-Organization: LWN.net
+        Wed, 26 Jun 2019 11:29:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:19116 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbfFZP3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 11:29:44 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4A8C8D118A354417CDE0;
+        Wed, 26 Jun 2019 23:29:37 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Jun 2019
+ 23:29:31 +0800
+Subject: Re: [PATCH] bonding: Always enable vlan tx offload
+To:     Jiri Pirko <jiri@resnulli.us>
+References: <20190624135007.GA17673@nanopsycho>
+ <20190626080844.20796-1-yuehaibing@huawei.com>
+ <20190626152505.GB2424@nanopsycho>
+CC:     <davem@davemloft.net>, <sdf@google.com>, <jianbol@mellanox.com>,
+        <jiri@mellanox.com>, <mirq-linux@rere.qmqm.pl>,
+        <willemb@google.com>, <sdf@fomichev.me>, <j.vosburgh@gmail.com>,
+        <vfalico@gmail.com>, <andy@greyhouse.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <498bf1cb-1fb8-05a8-482a-79f37bf812dc@huawei.com>
+Date:   Wed, 26 Jun 2019 23:29:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190626152505.GB2424@nanopsycho>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 11:21:38 -0400
-Konstantin Ryabitsev <konstantin@linuxfoundation.org> wrote:
-
-> >Maybe Konstantin (copied) might be willing to supply an update to the
-> >document to reflect this?  
+On 2019/6/26 23:25, Jiri Pirko wrote:
+> Wed, Jun 26, 2019 at 10:08:44AM CEST, yuehaibing@huawei.com wrote:
+>> We build vlan on top of bonding interface, which vlan offload
+>> is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
+>> BOND_XMIT_POLICY_ENCAP34.
+>>
+>> Because vlan tx offload is off, vlan tci is cleared and skb push
+>> the vlan header in validate_xmit_vlan() while sending from vlan
+>> devices. Then in bond_xmit_hash, __skb_flow_dissect() fails to
+>> get information from protocol headers encapsulated within vlan,
+>> because 'nhoff' is points to IP header, so bond hashing is based
+>> on layer 2 info, which fails to distribute packets across slaves.
+>>
+>> This patch always enable bonding's vlan tx offload, pass the vlan
+>> packets to the slave devices with vlan tci, let them to handle
+>> vlan implementation.
+>>
+>> Fixes: 278339a42a1b ("bonding: propogate vlan_features to bonding master")
+>> Suggested-by: Jiri Pirko <jiri@resnulli.us>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > 
-> Hello:
+> Acked-by: Jiri Pirko <jiri@mellanox.com>
 > 
-> I just sent a patch with updates that reflect ECC capabilities in newer 
-> devices.
+> Could you please do the same for team? Thanks!
 
-Hey, man, that took you just under an hour to get done.  We can't all just
-wait around while you twiddle your thumbs... :)
+Sure, will send it, thank you!
 
-Seriously, though, thanks for doing this,
+> 
+> .
+> 
 
-jon
