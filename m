@@ -2,119 +2,141 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14632C48BD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3974BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD303208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561510610;
-	bh=IEdgHhVzO/KXfl1rhl0JQGR+FXQJwlwYb+hfIotRyw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zr2JFsz+GX/0U1CCebWUhfwmPpzj2rNT20m0ob3/2wJ22c19uxHjZgWRyVkhFh0lJ
-	 f9c4I7sP07pRoib3Y/Qic4HG/A5iKeCluC9n0Q3o/6uh9fCP+Mh5KggEMeTeylKTKt
-	 /uQmhQNCVsfc/fK5iWIkzMrzrwAxAKIgziPnliDM=
+	by mail.kernel.org (Postfix) with ESMTP id 155AF205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfFZA4t (ORCPT
+        id S1726518AbfFZA5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 20:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 20:57:36 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13465 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfFZA4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 20:56:48 -0400
-Received: from localhost (unknown [172.104.248.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63D47208E3;
-        Wed, 26 Jun 2019 00:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561510607;
-        bh=IEdgHhVzO/KXfl1rhl0JQGR+FXQJwlwYb+hfIotRyw8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OhyEESFkeURnMcVE7e+cjQoAuBwJalH3DtvaFQF6w5ZQwd6ohSqVQL+Z90iZ4CYoh
-         bHHhX0ZUlxZo+KJ/YPDB1kvkZZU5HwHvBn/yDQRuUnPpzUITcW3M7S3+zD8Gc3GwgG
-         IN6nZktvwZEW7/nALQ9AovCkj94cO3cOZ7Qi/EKs=
-Date:   Wed, 26 Jun 2019 08:55:05 +0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Muchun Song <smuchun@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Prateek Sood <prsood@codeaurora.org>,
-        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        zhaowuyun@wingtech.com
-Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
- glue directory
-Message-ID: <20190626005505.GD21530@kroah.com>
-References: <20190516142342.28019-1-smuchun@gmail.com>
- <20190524190443.GB29565@kroah.com>
- <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
- <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
- <20190618152859.GB1912@kroah.com>
- <CAPSr9jFMKb1bQAbCFLqP2+fb60kcbyJ+cDspkL5FH28CNKFz3A@mail.gmail.com>
- <20190618161340.GA13983@kroah.com>
- <e3e064d85790a56b661ef9641e02c571540c6f44.camel@kernel.crashing.org>
- <CAPSr9jExG2C6U0D2TN-PUxgi9waD5QkSR-icxNPP1w9nJx3GUQ@mail.gmail.com>
- <ef566c4c2881c70d673e8a76c47084c2a024cd5e.camel@kernel.crashing.org>
+        id S1726179AbfFZA5g (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 20:57:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 17:57:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,418,1557212400"; 
+   d="scan'208";a="172556908"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.208.68]) ([10.254.208.68])
+  by orsmga002.jf.intel.com with ESMTP; 25 Jun 2019 17:57:31 -0700
+Subject: Re: [PATCH v4 4/7] perf diff: Use hists to manage basic blocks per
+ symbol
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <1561041402-29444-1-git-send-email-yao.jin@linux.intel.com>
+ <1561041402-29444-5-git-send-email-yao.jin@linux.intel.com>
+ <20190625091134.GD9574@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <b8e461e9-e835-539b-119a-698e774194af@linux.intel.com>
+Date:   Wed, 26 Jun 2019 08:57:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef566c4c2881c70d673e8a76c47084c2a024cd5e.camel@kernel.crashing.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190625091134.GD9574@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 08:56:00AM +1000, Benjamin Herrenschmidt wrote:
-> On Tue, 2019-06-25 at 23:06 +0800, Muchun Song wrote:
-> > Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年6月19日周三
-> > 上午5:51写道：
-> > > 
-> > > On Tue, 2019-06-18 at 18:13 +0200, Greg KH wrote:
-> > > > 
-> > > > Again, I am totally confused and do not see a patch in an email
-> > > > that
-> > > > I
-> > > > can apply...
-> > > > 
-> > > > Someone needs to get people to agree here...
-> > > 
-> > > I think he was hoping you would chose which solution you prefered
-> > > here
-> > 
-> > Yeah, right, I am hoping you would chose which solution you prefered
-> > here.
-> > Thanks.
-> > 
-> > > :-) His original or the one I suggested instead. I don't think
-> > > there's
-> > > anybody else with understanding of sysfs guts around to form an
-> > > opinion.
-> > > 
+
+
+On 6/25/2019 5:11 PM, Jiri Olsa wrote:
+> On Thu, Jun 20, 2019 at 10:36:39PM +0800, Jin Yao wrote:
 > 
-> Muchun, I don't think Greg still has the previous emails. He deals with
-> too much to keep track of old stuff.
+> SNIP
 > 
-> Can you send both patches tagged as [OPT1] and [OPT2] along with a
-> comment in one go so Greg can see both and decide ?
+>> +
+>> +static void *block_entry_zalloc(size_t size)
+>> +{
+>> +	return zalloc(size + sizeof(struct hist_entry));
+>> +}
+>> +
+>> +static void block_entry_free(void *he)
+>> +{
+>> +	struct block_info *bi = ((struct hist_entry *)he)->block_info;
+>> +
+>> +	block_info__put(bi);
+>> +	free(he);
+>> +}
+> 
+> so if we carry block_info in 'struct hist_entry' we don't need
+> to use our own allocation in the 2nd level hist entries.. just
+> for the first level to carry the new 'struct block_hists'
+> 
+> the block_info should be released in hist_entry__delete then,
+> same as for other *info pointers
+> 
+> the rest of the patchset looks ok to me
+> 
+> thanks,
+> jirka
+> 
 
-That would be wonderful, thank you as I can't really find the "latest"
-versions of both options.
+Yes, releasing the block_info in hist_entry__delete is a better way. 
+Thanks Jiri, I will update the patch.
 
-> I think looking at the refcount is fragile, I might be wrong, but I
-> think it mostly paper over the root of the problem which is the fact
-> that the lock isn't taken accross both operations, thus exposing the
-> race. But I'm happy if Greg prefers your approach as long as it's
-> fixed.
+Thanks
+Jin Yao
 
-I'll look at them and try to figure this out next week, thanks.
-
-greg k-h
+>> +
+>> +struct hist_entry_ops block_entry_ops = {
+>> +	.new    = block_entry_zalloc,
+>> +	.free   = block_entry_free,
+>> +};
+>> +
+>> +static int process_block_per_sym(struct hist_entry *he)
+>> +{
+>> +	struct annotation *notes;
+>> +	struct cyc_hist *ch;
+>> +	struct block_hist *bh;
+>> +
+>> +	if (!he->ms.map || !he->ms.sym)
+>> +		return 0;
+>> +
+>> +	notes = symbol__annotation(he->ms.sym);
+>> +	if (!notes || !notes->src || !notes->src->cycles_hist)
+>> +		return 0;
+>> +
+>> +	bh = container_of(he, struct block_hist, he);
+>> +	init_block_hist(bh);
+>> +
+>> +	ch = notes->src->cycles_hist;
+>> +	for (unsigned int i = 0; i < symbol__size(he->ms.sym); i++) {
+>> +		if (ch[i].num_aggr) {
+>> +			struct block_info *bi;
+>> +			struct hist_entry *he_block;
+>> +
+>> +			bi = block_info__new();
+>> +			if (!bi)
+>> +				return -1;
+>> +
+>> +			init_block_info(bi, he->ms.sym, &ch[i], i);
+>> +			he_block = hists__add_entry_block(&bh->block_hists,
+>> +							  &block_entry_ops,
+>> +							  &dummy_al, bi);
+>> +			if (!he_block) {
+>> +				block_info__put(bi);
+>> +				return -1;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+> 
+> SNIP
+> 
