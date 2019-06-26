@@ -2,116 +2,246 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F060BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CF9C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27FB2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A0B20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fe+9zxnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfFZLA5 (ORCPT
+        id S1727118AbfFZLCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:00:57 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37408 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfFZLA5 (ORCPT
+        Wed, 26 Jun 2019 07:02:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45951 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfFZLCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:00:57 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t76so1591257oih.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 04:00:56 -0700 (PDT)
+        Wed, 26 Jun 2019 07:02:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id x21so2027668otq.12;
+        Wed, 26 Jun 2019 04:02:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BB3lIdtv3p+4asBNcb/GBEJsie+rkex27L+0WBCJpnc=;
+        b=fe+9zxnJB/7Ni8/FnRJH2vJw2oxrcvr+SL4uvEWPq8AxxkZV+ZwL+1Z9qoGStnuE5S
+         aDbmUqEexlRcuS1okFZIJByFdN4duohkATVPLVZxTi3wgfXfyBFQ8euWps77Nl6q5I9O
+         DHXkRQNIW6wVoaXKtf89E/cTQuzWGjgKe+Fw0/XFg57SK9H6U78mKsYnea5qI77qOWYl
+         +wsmABrEcOR0sWZ8wAKDRjaTU0G0uiFKtgGC3yfJHCInjYsVsWv840+o2rqXZZIjmO2V
+         Luqa6qv34CvtNhmyjKFkhoK9Uz5n0yGTY+lGxm8JIc6RlFjPc7Jt/iPBlasmFvWg6SsH
+         eqSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NjcQQqiktiXBUAIFd7nlpxXWyUzxY+DMuLEktEvbc30=;
-        b=hTTb45tKYuu6XzvD+F6xq3jEweX9FYE6ANqDGzkHs2I8dcwm8z7kPunAQQ+65eMJqP
-         HqNJan3IAwTZ+wSCxc1iRkFY1WkxhhuqV8sU1Dt4eyW/OkrtlX3rDCq92n44fSjCd+NW
-         3Kg6AEzPtRBsaFFjFXFJRgodzvSDHb9yrzemU3aYzUR2wIJPAQLdX4baS72/3O/BtEr7
-         MCij9xIN1N/ws+FZ0LLXhcGFTBzkMWiQTeSIDl4Ygxhxelpo7fETbR9Kg+mVupJrb9hQ
-         p/0t026ZSIFlv9HeB5GQlKx1Czjxb6YkcgAFvTKvRJKXddLB1x753GvIm7Y541+9YHWy
-         QD9g==
-X-Gm-Message-State: APjAAAUhtmUG80Mnp6l/kIh5RF+9YbuZnoeAhpRLu0bYoXVHO46JX1dP
-        0zO3hat9y4z6Hy5MKkhFKE2Ur4KNO4fLM1bRM/U=
-X-Google-Smtp-Source: APXvYqw+QzAqVD0/uhi53tE9uoKB3RSL2yacrvje0BgfWpSUun3tJn+/WYo/kC7jlQNrC3QeHXIziGe6uUTy8pqgvCY=
-X-Received: by 2002:a05:6808:3c5:: with SMTP id o5mr1377335oie.102.1561546856308;
- Wed, 26 Jun 2019 04:00:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BB3lIdtv3p+4asBNcb/GBEJsie+rkex27L+0WBCJpnc=;
+        b=WYFXDQ2pvlCXavb1L5FSJjNKTKrALOvk8dKFBDdGizVzXuM9Rhhyi8jN3qmomw02yF
+         iZEFeXY26gtU2CEMPDHw6t0emckyxNBvox87HBG4MCeQAlh/ihB6qGB5Vd7NBhRsI+o7
+         st6rZciDGDfPBQDx+3RXhlCKCOgDhO2UFpf0Q7owzdinTrxUOUnb8Om4vFfnddIPqQXq
+         IZyJVMaIwsS4eC0FWx5TjqfXYvc+rdvXh/4tyT1HocSyAHIPyztYvpzfaKO5TMbW4uHb
+         Yf+PlR6MZZUsvqn9ACO5sEXqHybVM9uFXMkxjPEFE9P7tsxLr1cWbaQ/n+Krq5uDGO5z
+         YDNg==
+X-Gm-Message-State: APjAAAWRJJeyeCdgsm5+PwjMnxhrTITqTHLYDTemJHC7yhTwmJACw6jY
+        X3Jcz8w7pOK57Euk6S6Fd8ovzYQKjZJ8uukKu3M=
+X-Google-Smtp-Source: APXvYqx6TZJovv/TqMVaVuUfpmHFJFT111eFYwesBK2n88t+VWleIJgnz09Yp5kfS3MiK2CsLmZgQeOPWqPqgPaJQ5o=
+X-Received: by 2002:a9d:6312:: with SMTP id q18mr2623861otk.45.1561546944381;
+ Wed, 26 Jun 2019 04:02:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190626093943.49780-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20190626093943.49780-1-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 26 Jun 2019 13:00:45 +0200
-Message-ID: <CAMuHMdWm7ftYNVQfjLdPxvzZQLa6mWQvjE8vGo98-QOGeyjZFQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kernel.h: Update comment about simple_strto<foo>() functions
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mans Rullgard <mans@mansr.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-3-git-send-email-wanpengli@tencent.com> <20190618133541.GA3932@amt.cnet>
+ <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
+ <20190619210346.GA13033@amt.cnet> <CANRm+Cwxz7rR3o2m1HKg0-0z30B8-O-i4RrVC6EMG1jgBRxWPg@mail.gmail.com>
+ <20190621214205.GA4751@amt.cnet> <CANRm+CxUgkF7zRmHC_MD2s00waj6qztWdPAm_u9Rhk34_bevfQ@mail.gmail.com>
+ <20190625190010.GA3377@amt.cnet>
+In-Reply-To: <20190625190010.GA3377@amt.cnet>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 26 Jun 2019 19:02:13 +0800
+Message-ID: <CANRm+CzmraRUNQfTWNZ3Bu5dJhjvL1eE9+=c2i_vwtYYT9ao2w@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by posted interrupt
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Wed, 26 Jun 2019 at 03:03, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Mon, Jun 24, 2019 at 04:53:53PM +0800, Wanpeng Li wrote:
+> > On Sat, 22 Jun 2019 at 06:11, Marcelo Tosatti <mtosatti@redhat.com> wro=
+te:
+> > >
+> > > On Fri, Jun 21, 2019 at 09:42:39AM +0800, Wanpeng Li wrote:
+> > > > On Thu, 20 Jun 2019 at 05:04, Marcelo Tosatti <mtosatti@redhat.com>=
+ wrote:
+> > > > >
+> > > > > Hi Li,
+> > > > >
+> > > > > On Wed, Jun 19, 2019 at 08:36:06AM +0800, Wanpeng Li wrote:
+> > > > > > On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.=
+com> wrote:
+> > > > > > >
+> > > > > > > On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
+> > > > > > > > From: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > >
+> > > > > > > > Dedicated instances are currently disturbed by unnecessary =
+jitter due
+> > > > > > > > to the emulated lapic timers fire on the same pCPUs which v=
+CPUs resident.
+> > > > > > > > There is no hardware virtual timer on Intel for guest like =
+ARM. Both
+> > > > > > > > programming timer in guest and the emulated timer fires inc=
+ur vmexits.
+> > > > > > > > This patch tries to avoid vmexit which is incurred by the e=
+mulated
+> > > > > > > > timer fires in dedicated instance scenario.
+> > > > > > > >
+> > > > > > > > When nohz_full is enabled in dedicated instances scenario, =
+the emulated
+> > > > > > > > timers can be offload to the nearest busy housekeeping cpus=
+ since APICv
+> > > > > > > > is really common in recent years. The guest timer interrupt=
+ is injected
+> > > > > > > > by posted-interrupt which is delivered by housekeeping cpu =
+once the emulated
+> > > > > > > > timer fires.
+> > > > > > > >
+> > > > > > > > The host admin should fine tuned, e.g. dedicated instances =
+scenario w/
+> > > > > > > > nohz_full cover the pCPUs which vCPUs resident, several pCP=
+Us surplus
+> > > > > > > > for busy housekeeping, disable mwait/hlt/pause vmexits to k=
+eep in non-root
+> > > > > > > > mode, ~3% redis performance benefit can be observed on Skyl=
+ake server.
+> > > > > > > >
+> > > > > > > > w/o patch:
+> > > > > > > >
+> > > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  M=
+ax Time   Avg time
+> > > > > > > >
+> > > > > > > > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   1=
+06.09us   0.71us ( +-   1.09% )
+> > > > > > > >
+> > > > > > > > w/ patch:
+> > > > > > > >
+> > > > > > > >             VM-EXIT  Samples  Samples%  Time%   Min Time  M=
+ax Time         Avg time
+> > > > > > > >
+> > > > > > > > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    =
+57.88us   0.72us ( +-   4.02% )
+> > > > > > > >
+> > > > > > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > > > > > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > > > > > > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > > > > > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > > > > > > ---
+> > > > > > > >  arch/x86/kvm/lapic.c            | 33 +++++++++++++++++++++=
++++++-------
+> > > > > > > >  arch/x86/kvm/lapic.h            |  1 +
+> > > > > > > >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
+> > > > > > > >  arch/x86/kvm/x86.c              |  5 +++++
+> > > > > > > >  arch/x86/kvm/x86.h              |  2 ++
+> > > > > > > >  include/linux/sched/isolation.h |  2 ++
+> > > > > > > >  kernel/sched/isolation.c        |  6 ++++++
+> > > > > > > >  7 files changed, 44 insertions(+), 8 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > > > > > > index 87ecb56..9ceeee5 100644
+> > > > > > > > --- a/arch/x86/kvm/lapic.c
+> > > > > > > > +++ b/arch/x86/kvm/lapic.c
+> > > > > > > > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct=
+ kvm_lapic *apic)
+> > > > > > > >       return apic->vcpu->vcpu_id;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > > > > > > > +{
+> > > > > > > > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu)=
+ &&
+> > > > > > > > +             kvm_hlt_in_guest(vcpu->kvm);
+> > > > > > > > +}
+> > > > > > > > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+> > > > > > >
+> > > > > > > Paolo, can you explain the reasoning behind this?
+> > > > > > >
+> > > > > > > Should not be necessary...
+> > > >
+> > > > https://lkml.org/lkml/2019/6/5/436  "Here you need to check
+> > > > kvm_halt_in_guest, not kvm_mwait_in_guest, because you need to go
+> > > > through kvm_apic_expired if the guest needs to be woken up from
+> > > > kvm_vcpu_block."
+> > >
+> > > Ah, i think he means that a sleeping vcpu (in kvm_vcpu_block) must
+> > > be woken up, if it receives a timer interrupt.
+> > >
+> > > But your patch will go through:
+> > >
+> > > kvm_apic_inject_pending_timer_irqs
+> > > __apic_accept_irq ->
+> > > vmx_deliver_posted_interrupt ->
+> > > kvm_vcpu_trigger_posted_interrupt returns false
+> > > (because vcpu->mode !=3D IN_GUEST_MODE) ->
+> > > kvm_vcpu_kick
+> > >
+> > > Which will wakeup the vcpu.
+> >
+> > Hi Marcelo,
+> >
+> > >
+> > > Apart from this oops, which triggers when running:
+> > > taskset -c 1 ./cyclictest -D 3600 -p 99 -t 1 -h 30 -m -n  -i 50000 -b=
+ 40
+> >
+> > I try both host and guest use latest kvm/queue  w/ CONFIG_PREEMPT
+> > enabled, and expose mwait as your config, however, there is no oops.
+> > Can you reproduce steadily or encounter casually? Can you reproduce
+> > w/o the patchset?
+>
+> Hi Li,
 
-On Wed, Jun 26, 2019 at 11:39 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> There were discussions in the past about use cases for
-> simple_strto<foo>() functions and in some rare cases they have a benefit
-> on kstrto<foo>() ones.
+Hi Marcelo,
 
-over
+>
+> Steadily.
+>
+> Do you have this as well:
 
-> Update a comment to reduce confusing about special use cases.
+w/ or w/o below diff, testing on both SKX and HSW servers on hand, I
+didn't see any oops. Could you observe the oops disappear when w/o
+below diff? If the answer is yes, then the oops will not block to
+merge the patchset since Paolo prefers to add the kvm_hlt_in_guest()
+condition to guarantee be woken up from kvm_vcpu_block(). For the
+exitless injection if the guest is running(DPDK style workloads that
+busy-spin on network card) scenarios, we can find a solution later.
 
-confusion
+Regards,
+Wanpeng Li
 
-> Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-
-> @@ -437,7 +435,15 @@ static inline int __must_check kstrtos32_from_user(const char __user *s, size_t
->         return kstrtoint_from_user(s, count, base, res);
+>
+> Index: kvm/arch/x86/kvm/lapic.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- kvm.orig/arch/x86/kvm/lapic.c
+> +++ kvm/arch/x86/kvm/lapic.c
+> @@ -129,8 +129,7 @@ static inline u32 kvm_x2apic_id(struct k
+>
+>  bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+>  {
+> -       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+> -               kvm_hlt_in_guest(vcpu->kvm);
+> +       return pi_inject_timer && kvm_vcpu_apicv_active(vcpu);
 >  }
->
-> -/* Obsolete, do not use.  Use kstrto<foo> instead */
-> +/*
-> + * Use kstrto<foo> instead.
-> + *
-> + * NOTE: The simple_strto<foo> does not check for overflow and,
-> + *      depending on the input, may give interesting results.
-> + *
-> + * Use these functions if and only if the code will need in place
-> + * conversion and otherwise looks very ugly. Keep in mind above caveat.
-
-What do you mean by "in place conversion"?
-The input buffer is const, and not modified by the callee.
-Do you mean that these functions do not require NUL termination (just
-after the number), and the characters making up the number don't have to
-be copied to a separate buffer to make them NUL-terminated?
-
-> + */
->
->  extern unsigned long simple_strtoul(const char *,char **,unsigned int);
->  extern long simple_strtol(const char *,char **,unsigned int);
-
-Yeah, they're still very useful.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
