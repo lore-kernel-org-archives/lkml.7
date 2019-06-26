@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCA7C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850AFC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9D3205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5446A205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520730;
-	bh=tOC3eF55wDr3CD1/ajWuQsH75cuj4apVTdjNE2tn8Jg=;
+	s=default; t=1561520733;
+	bh=J3EKBkqQ6Fi9ndXt6zUs1XAvR54dNFTGraK5SnzvLqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SLnEvyp18epQCNbAadOKu7VLHzHslx+TDv3GyUTw/yBah/PVjEESmRd0l6+gDRgRx
-	 xjKxh7VfrOdTM7nSn+hiTfYUfQ+s4K/CDWczBDGS5Zwaa+oj2+ihvGrc3J3n9WB/6l
-	 KYIY10o8lvqFT/oz+EcL5QE5vZC41enc5WPpapl8=
+	b=Bctize3zGQD0EyvgwLeYTg36W/Jqh9O4x5AtFRFNS8eqxS/wG2VXrre9Wqrx92lgW
+	 uuJHKydQ4QulJVcCAM0ikgyiT24HM2wqqKav/6LYCTea5GbVnPSf1C8WjEBecENDnD
+	 cUUxM2hcNmLwjIYVncB5CtU59uvOl8E5G33sO1Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfFZDp3 (ORCPT
+        id S1727335AbfFZDpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:45:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:45:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727763AbfFZDpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:45:23 -0400
+        id S1727315AbfFZDp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:45:29 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E9520659;
-        Wed, 26 Jun 2019 03:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B13020659;
+        Wed, 26 Jun 2019 03:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520723;
-        bh=tOC3eF55wDr3CD1/ajWuQsH75cuj4apVTdjNE2tn8Jg=;
+        s=default; t=1561520728;
+        bh=J3EKBkqQ6Fi9ndXt6zUs1XAvR54dNFTGraK5SnzvLqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUGBESJCp6bso1rhJFJ3k/Xj/1Zbrh9DAt9tx2AVXVbykvaBaQyVPQAZZwIhLi8xc
-         +bFYsP9NOTTVfLVdeVqx4x2IhMedhSjGoyGYgx97VN1RNccl3My4BVaJlmtpYvnK95
-         kz/80bs8wmKQRVdgHcFOGlr9BJc7W3q0drMeuKo8=
+        b=C+ONjOWroGmyswZshpNc3vcuQSpSRRDOE35bTv/Tj/fZFEwPdF1Bc3a15DbF3KtPF
+         Ub9Tl2VVMBbBcwTYeAOXN9AInPn+WtuEJQQFB0g7lnKDX/J1ZMlqDU0SULLA2vUJSm
+         9Bet5999wB+PfFgrXZ64GNArKW6mookmMK7LTnP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 07/21] drm/mediatek: call drm_atomic_helper_shutdown() when unbinding driver
-Date:   Tue, 25 Jun 2019 23:44:52 -0400
-Message-Id: <20190626034506.24125-7-sashal@kernel.org>
+Cc:     Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 09/21] ASoC: max98090: remove 24-bit format support if RJ is 0
+Date:   Tue, 25 Jun 2019 23:44:54 -0400
+Message-Id: <20190626034506.24125-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034506.24125-1-sashal@kernel.org>
 References: <20190626034506.24125-1-sashal@kernel.org>
@@ -59,32 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
 
-[ Upstream commit cf49b24ffa62766f8f04cd1c4cf17b75d29b240a ]
+[ Upstream commit 5628c8979642a076f91ee86c3bae5ad251639af0 ]
 
-shutdown all CRTC when unbinding drm driver.
+The supported formats are S16_LE and S24_LE now. However, by datasheet
+of max98090, S24_LE is only supported when it is in the right justified
+mode. We should remove 24-bit format if it is not in that mode to avoid
+triggering error.
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/max98090.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index a2ca90fc403c..cada1c75c41c 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -270,6 +270,7 @@ static int mtk_drm_kms_init(struct drm_device *drm)
- static void mtk_drm_kms_deinit(struct drm_device *drm)
- {
- 	drm_kms_helper_poll_fini(drm);
-+	drm_atomic_helper_shutdown(drm);
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index cc66ea5cc776..3fe09828745a 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -1924,6 +1924,21 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
+ 	return 0;
+ }
  
- 	component_unbind_all(drm->dev, drm);
- 	drm_mode_config_cleanup(drm);
++static int max98090_dai_startup(struct snd_pcm_substream *substream,
++				struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
++	unsigned int fmt = max98090->dai_fmt;
++
++	/* Remove 24-bit format support if it is not in right justified mode. */
++	if ((fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
++		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
++		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
++	}
++	return 0;
++}
++
+ static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
+ 				   struct snd_pcm_hw_params *params,
+ 				   struct snd_soc_dai *dai)
+@@ -2331,6 +2346,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
+ #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
+ 
+ static const struct snd_soc_dai_ops max98090_dai_ops = {
++	.startup = max98090_dai_startup,
+ 	.set_sysclk = max98090_dai_set_sysclk,
+ 	.set_fmt = max98090_dai_set_fmt,
+ 	.set_tdm_slot = max98090_set_tdm_slot,
 -- 
 2.20.1
 
