@@ -2,136 +2,131 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8E1C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E3FC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE711204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F32B204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:32:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="F9cnyT1p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfFZDba (ORCPT
+        id S1726656AbfFZDc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:31:30 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62068 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfFZDba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:31:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Jun 2019 20:31:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,418,1557212400"; 
-   d="scan'208";a="155729855"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
-  by orsmga008.jf.intel.com with ESMTP; 25 Jun 2019 20:31:27 -0700
-Subject: Re: [LKP] [btrfs] c8eaeac7b7: aim7.jobs-per-min -11.7% regression
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        David Sterba <dsterba@suse.com>, lkp@01.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190513025004.GG31424@shao2-debian>
- <87blzl7itt.fsf@yhuang-dev.intel.com> <87v9xdymdg.fsf@yhuang-dev.intel.com>
- <877e9fahmk.fsf@yhuang-dev.intel.com>
- <20190625142242.oxltqbj2veuckoxo@MacBook-Pro-91.local>
- <a80ab85b-635f-90fe-24da-5f746c613811@intel.com>
- <20190626031726.dd457kxc3zyuekyf@MacBook-Pro-91.local>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <a8cd42e0-339d-f8a7-40f7-bc0cd4fe9bff@intel.com>
-Date:   Wed, 26 Jun 2019 11:31:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190626031726.dd457kxc3zyuekyf@MacBook-Pro-91.local>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Jun 2019 23:32:28 -0400
+Received: from mail-eopbgr800075.outbound.protection.outlook.com ([40.107.80.75]:24064
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726339AbfFZDc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:32:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kwAChuyD23YBRtOl0BxcFTUWUjeFLfOlxOpirhwtyHg=;
+ b=F9cnyT1pvxeGJVvkH5SVE+pNvTtvCUiQX7cbtXGFks0jqTJALFsyNlMEhJ+SdvNy6Si54lQFkc61eJPdiHVOFfV1SfaiNuv0JOMQA/3VbG2YzGFkujyawrRHk2n/f1rSXO8R6n0l8Q0Akftwn15XekE9LrSw6MwnlIDax1qvAmw=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5541.namprd05.prod.outlook.com (20.177.186.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Wed, 26 Jun 2019 03:32:25 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Wed, 26 Jun 2019
+ 03:32:25 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
+Thread-Topic: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
+Thread-Index: AQHVIbQneqvfvnASJUSZoJZyXs9Ulaas9rUAgABVYwCAAAcogIAACOEA
+Date:   Wed, 26 Jun 2019 03:32:25 +0000
+Message-ID: <E4BD986D-F8A1-45D3-9DC1-AE0649D1F5C3@vmware.com>
+References: <20190613064813.8102-1-namit@vmware.com>
+ <20190613064813.8102-5-namit@vmware.com>
+ <723d63ee-c8cb-14a1-0eb9-265e580360f4@intel.com>
+ <1545B936-7CEC-4A1C-B776-74004F774218@vmware.com>
+ <88a76cb8-2484-818a-2be6-d06a4ffef107@intel.com>
+In-Reply-To: <88a76cb8-2484-818a-2be6-d06a4ffef107@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [204.134.128.110]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 72bd90e4-9c5f-4a44-f97c-08d6f9e6e835
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5541;
+x-ms-traffictypediagnostic: BYAPR05MB5541:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <BYAPR05MB5541533570E65D514C0B7A24D0E20@BYAPR05MB5541.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 00808B16F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(39860400002)(346002)(396003)(366004)(199004)(189003)(66946007)(86362001)(446003)(81156014)(486006)(25786009)(2616005)(2906002)(305945005)(8936002)(476003)(54906003)(3846002)(316002)(229853002)(256004)(6116002)(53936002)(71190400001)(66066001)(11346002)(33656002)(6486002)(99286004)(76176011)(6246003)(6512007)(6306002)(26005)(91956017)(66556008)(53546011)(66446008)(71200400001)(6506007)(8676002)(478600001)(64756008)(14454004)(73956011)(6436002)(66476007)(68736007)(7736002)(76116006)(4326008)(102836004)(7416002)(5660300002)(966005)(36756003)(6916009)(186003)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5541;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 4HQlkwJxrPpA/cYQt4H6P7qB9SFTOvyi2QI/O+/hDts5R7gV4dYxaauQils94xwFQftqbQZEt8f0Y65MkqAH5BT2Z9WhA9kx5xiM9KRvgfHBJFQQ7qs4qbqp9hm8sVQ5QqOC3F1U43paue7QyuIbe6yw12q1x4CJeiiSb95m9Zw5flib7VgQ0IJYpErH6O13/ukmI8yReB9CPF/05d5PBrV0Tay5VFB9cVnUUhsx+R/QE77JEYquvjr2JkoMH1hSWWnFN/nCIcICcRe9S9KsW4TSHUvjxwOVrAJWDNuHPzzhU7VcotFsnqhtL5khbQkDxnW6SNQszbAoGkEjrgJzEzanHQ3PiMP2BoggwnkRHRfv+zK4oOBFJD//8lITWqeR6Si3ySCbhLdvjMz6dzmfG+L/1jVNvpM6DCw70yf3600=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4A93801C3C77B54FBCD984EC5F738BCA@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72bd90e4-9c5f-4a44-f97c-08d6f9e6e835
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 03:32:25.2340
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5541
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/26/19 11:17 AM, Josef Bacik wrote:
-> On Wed, Jun 26, 2019 at 10:39:36AM +0800, Rong Chen wrote:
->> On 6/25/19 10:22 PM, Josef Bacik wrote:
->>> On Fri, Jun 21, 2019 at 08:48:03AM +0800, Huang, Ying wrote:
->>>> "Huang, Ying" <ying.huang@intel.com> writes:
->>>>
->>>>> "Huang, Ying" <ying.huang@intel.com> writes:
->>>>>
->>>>>> Hi, Josef,
->>>>>>
->>>>>> kernel test robot <rong.a.chen@intel.com> writes:
->>>>>>
->>>>>>> Greeting,
->>>>>>>
->>>>>>> FYI, we noticed a -11.7% regression of aim7.jobs-per-min due to commit:
->>>>>>>
->>>>>>>
->>>>>>> commit: c8eaeac7b734347c3afba7008b7af62f37b9c140 ("btrfs: reserve
->>>>>>> delalloc metadata differently")
->>>>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>>>>>>
->>>>>>> in testcase: aim7
->>>>>>> on test machine: 40 threads Intel(R) Xeon(R) CPU E5-2690 v2 @ 3.00GHz with 384G memory
->>>>>>> with following parameters:
->>>>>>>
->>>>>>> 	disk: 4BRD_12G
->>>>>>> 	md: RAID0
->>>>>>> 	fs: btrfs
->>>>>>> 	test: disk_rr
->>>>>>> 	load: 1500
->>>>>>> 	cpufreq_governor: performance
->>>>>>>
->>>>>>> test-description: AIM7 is a traditional UNIX system level benchmark
->>>>>>> suite which is used to test and measure the performance of multiuser
->>>>>>> system.
->>>>>>> test-url: https://sourceforge.net/projects/aimbench/files/aim-suite7/
->>>>>> Here's another regression, do you have time to take a look at this?
->>>>> Ping
->>>> Ping again ...
->>>>
->>> Finally got time to look at this but I can't get the reproducer to work
->>>
->>> root@destiny ~/lkp-tests# bin/lkp run ~/job-aim.yaml
->>> Traceback (most recent call last):
->>>           11: from /root/lkp-tests/bin/run-local:18:in `<main>'
->>>           10: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
->>>            9: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
->>>            8: from /root/lkp-tests/lib/yaml.rb:5:in `<top (required)>'
->>>            7: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
->>>            6: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
->>>            5: from /root/lkp-tests/lib/common.rb:9:in `<top (required)>'
->>>            4: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
->>>            3: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
->>>            2: from /root/lkp-tests/lib/array_ext.rb:3:in `<top (required)>'
->>>            1: from /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require'
->>> /usr/share/rubygems/rubygems/core_ext/kernel_require.rb:54:in `require': cannot load such file -- active_support/core_ext/enumerable (LoadError)
->> Hi Josef,
->>
->> I tried the latest lkp-tests, and didn't have the problem. Could you please
->> update the lkp-tests repo and run "lkp install" again?
->>
-> I updated it this morning, and I just updated it now, my tree is on
->
-> 2c5b1a95b08dbe81bba64419c482a877a3b424ac
->
-> lkp install says everything is installed except
->
-> No match for argument: libipc-run-perl
-
-I've just fixed it. could you add "libipc-run-perl: perl-IPC-Run" to the 
-end of distro/adaptation/fedora?
-
-Thanks,
-Rong Chen
-
-
->
-> and it still doesn't run properly.  Thanks,
->
-> Josef
+PiBPbiBKdW4gMjUsIDIwMTksIGF0IDg6MDAgUE0sIERhdmUgSGFuc2VuIDxkYXZlLmhhbnNlbkBp
+bnRlbC5jb20+IHdyb3RlOg0KPiANCj4gT24gNi8yNS8xOSA3OjM1IFBNLCBOYWRhdiBBbWl0IHdy
+b3RlOg0KPj4+PiBjb25zdCBzdHJ1Y3QgZmx1c2hfdGxiX2luZm8gKmYgPSBpbmZvOw0KPj4+PiAr
+CWVudW0gdGxiX2ZsdXNoX3JlYXNvbiByZWFzb247DQo+Pj4+ICsNCj4+Pj4gKwlyZWFzb24gPSAo
+Zi0+bW0gPT0gTlVMTCkgPyBUTEJfTE9DQUxfU0hPT1RET1dOIDogVExCX0xPQ0FMX01NX1NIT09U
+RE9XTjsNCj4+PiANCj4+PiBTaG91bGQgd2UganVzdCBhZGQgdGhlICJyZWFzb24iIHRvIGZsdXNo
+X3RsYl9pbmZvPyAgSXQncyBPSy1pc2ggdG8gaW1wbHkNCj4+PiBpdCBsaWtlIHRoaXMsIGJ1dCBz
+ZWVtcyBsaWtlIGl0IHdvdWxkIGJlIG5pY2VyIGFuZCBlYXNpZXIgdG8gdHJhY2sgZG93bg0KPj4+
+IHRoZSBvcmlnaW5zIG9mIHRoZXNlIHRoaW5ncyBpZiB3ZSBkaWQgdGhpcyBhdCB0aGUgY2FsbGVy
+Lg0KPj4gDQo+PiBJIHByZWZlciBub3QgdG8uIEkgd2FudCBsYXRlciB0byBpbmxpbmUgZmx1c2hf
+dGxiX2luZm8gaW50byB0aGUgc2FtZQ0KPj4gY2FjaGVsaW5lIHRoYXQgaG9sZHMgY2FsbF9mdW5j
+dGlvbl9kYXRhLiBJbmNyZWFzaW5nIHRoZSBzaXplIG9mDQo+PiBmbHVzaF90bGJfaW5mbyBmb3Ig
+bm8gZ29vZCByZWFzb24gd2lsbCBub3QgaGVscOKApg0KPiANCj4gV2VsbCwgZmx1c2hfdGxiX2lu
+Zm8gaXMgYXQgNi84dGhzIG9mIGEgY2FjaGVsaW5lIGF0IHRoZSBtb21lbnQuDQo+IGNhbGxfZnVu
+Y3Rpb25fZGF0YSBpcyAzLzh0aHMuICBUbyBtZSwgdGhhdCBtZWFucyB3ZSBoYXZlIHNvbWUgc2xh
+Y2sgaW4NCj4gdGhlIHNpemUuDQoNCkkgZG8gbm90IHVuZGVyc3RhbmQgeW91ciBtYXRoLi4gOigN
+Cg0KNiArIDMgPiA4IHNvIHB1dHRpbmcgYm90aCBmbHVzaF90bGJfaW5mbyBhbmQgY2FsbF9mdW5j
+dGlvbl9kYXRhIGRvZXMgbm90DQpsZWF2ZSB1cyBhbnkgc2xhY2sgKHdlIGNhbiBzYXZlIG9uZSBx
+d29yZCwgc28gd2UgY2FuIGFjdHVhbGx5IHB1dCB0aGVtDQphdCB0aGUgc2FtZSBjYWNoZWxpbmUp
+Lg0KDQpZb3UgY2FuIHNlZSBteSBjdXJyZW50IGltcGxlbWVudGF0aW9uIGhlcmU6DQoNCmh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTA1MzEwNjM2NDUuNDY5Ny00LW5hbWl0QHZtd2Fy
+ZS5jb20vVC8jbTBhYjVmZTA3OTliYTlmZjBkNDExOTdmMTA5NTY3OWZlMjZhZWJkNTcNCmh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTA1MzEwNjM2NDUuNDY5Ny00LW5hbWl0QHZtd2Fy
+ZS5jb20vVC8jbTdiMzVhOTNkZmZkMjNmYmI3Y2E4MTNjNzk1YTA3NzdkNGNkY2I1MWINCg0K
