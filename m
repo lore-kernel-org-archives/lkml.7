@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0196AC4646B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF19CC48BD6
 	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A5E208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0AA52147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520497;
-	bh=bDkVQeypVwfhZfCq1//tGQg0D9nICTUmO2ePc9iVSdg=;
+	s=default; t=1561520498;
+	bh=64UJjzoav9k81dLAz9IOwIUtcWqMXJ6obF0e8kbJoHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YDGPa0jHycQptZFliDBCqEgwZvmhLpwuYS3PPmPPYWn8UezX9yODaDalEWy1az5pC
-	 8CqYZXuk+HNCM++xfactykMmhL+EQxMPSIxEhNLb2tFq1OyxZE8cXECboNqWiaGb+G
-	 YWdvZACEXsst29xC7KPTO+tevmWUJG+idENZcSg0=
+	b=EDxawIACdhnQEBqpdR6nS8EZurWfGma92NKeyK9qBnodKZVagj02k3hyC0F5yldAC
+	 lNODfWEImuh9/Yo+nSZDXieS9IkyJl8aQnGlEr+4V1BcasBH4nafbj8hHPpS1cRUKi
+	 qn95yAOm+FyeyK2kSoBpHZWLRkkGbnHX2Z8SOUfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfFZDlg (ORCPT
+        id S1726841AbfFZDlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:41:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51976 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:41:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbfFZDlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:41:35 -0400
+        id S1726819AbfFZDlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:41:36 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E002C2146E;
-        Wed, 26 Jun 2019 03:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A8DB20659;
+        Wed, 26 Jun 2019 03:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520495;
-        bh=bDkVQeypVwfhZfCq1//tGQg0D9nICTUmO2ePc9iVSdg=;
+        s=default; t=1561520496;
+        bh=64UJjzoav9k81dLAz9IOwIUtcWqMXJ6obF0e8kbJoHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6epzu6BdolQ6IDJJvGF27MzA3qoXZM/1sFZiISFvIxefN31YhE+jTxpDksiGmlfM
-         C3HLWVo1Db5VPDDp8dYkj4GfitQgJcEVmmwC9iSd0FecurSdyeskeroaBRkzLqgAkt
-         wU9y8N/ntLuyhxL5fVSjUyAshIZ9lwOGIAIUi2EM=
+        b=mcXJy16xEfFAuU2UqNHz2mASdQ4aBI+aAs30PNp+iC2Cp5w5bUt59u2POHi62nzKk
+         aau0YgzNgGgms1Wl3+ZsQTN0bhZEIL3fG0KWPtB4bSLY9F6gmChEd+lNmLgeG52Yue
+         P5F9QTtm264vtD62UHK3m+SB+GKo4E2OkPHuGqxo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 07/51] ASoC: soc-dpm: fixup DAI active unbalance
-Date:   Tue, 25 Jun 2019 23:40:23 -0400
-Message-Id: <20190626034117.23247-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 08/51] ASoC: core: lock client_mutex while removing link components
+Date:   Tue, 25 Jun 2019 23:40:24 -0400
+Message-Id: <20190626034117.23247-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -59,70 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit f7c4842abfa1a219554a3ffd8c317e8fdd979bec ]
+[ Upstream commit 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb ]
 
-snd_soc_dai_link_event() is updating snd_soc_dai :: active,
-but it is unbalance.
-It counts up if it has startup callback.
+Removing link components results in topology unloading. So,
+acquire the client_mutex before removing components in
+soc_remove_link_components. This will prevent the lockdep warning
+seen when dai links are removed during topology removal.
 
-	case SND_SOC_DAPM_PRE_PMU:
-		...
-		snd_soc_dapm_widget_for_each_source_path(w, path) {
-			...
-			if (source->driver->ops->startup) {
-				...
-=>				source->active++;
-			}
-			...
-		}
-		...
-
-But, always counts down
-
-	case SND_SOC_DAPM_PRE_PMD:
-		...
-		snd_soc_dapm_widget_for_each_source_path(w, path) {
-			...
-=>			source->active--;
-			...
-		}
-
-This patch always counts up when SND_SOC_DAPM_PRE_PMD.
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 5d9d7678e4fa..1ee67716d558 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -3831,8 +3831,8 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- 						ret);
- 					goto out;
- 				}
--				source->active++;
- 			}
-+			source->active++;
- 			ret = soc_dai_hw_params(&substream, params, source);
- 			if (ret < 0)
- 				goto out;
-@@ -3853,8 +3853,8 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
- 						ret);
- 					goto out;
- 				}
--				sink->active++;
- 			}
-+			sink->active++;
- 			ret = soc_dai_hw_params(&substream, params, sink);
- 			if (ret < 0)
- 				goto out;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index a7b4fab92f26..a4668a788ed5 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1008,12 +1008,14 @@ static void soc_remove_link_components(struct snd_soc_card *card,
+ 	struct snd_soc_component *component;
+ 	struct snd_soc_rtdcom_list *rtdcom;
+ 
++	mutex_lock(&client_mutex);
+ 	for_each_rtdcom(rtd, rtdcom) {
+ 		component = rtdcom->component;
+ 
+ 		if (component->driver->remove_order == order)
+ 			soc_remove_component(component);
+ 	}
++	mutex_unlock(&client_mutex);
+ }
+ 
+ static void soc_remove_dai_links(struct snd_soc_card *card)
 -- 
 2.20.1
 
