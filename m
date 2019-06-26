@@ -2,100 +2,79 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7416EC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF85C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D74521670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dxu385K0"
+	by mail.kernel.org (Postfix) with ESMTP id AE243216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfFZNsj (ORCPT
+        id S1728150AbfFZNsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:48:39 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:51124 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727868AbfFZNry (ORCPT
+        Wed, 26 Jun 2019 09:48:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48120 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728109AbfFZNse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:47:54 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CF748C0C4F;
-        Wed, 26 Jun 2019 13:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561556874; bh=LSk/dW4zyxmZMD77PMR2MqUNJZFP8fAWo5ecqoxYj2k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dxu385K0Z1Us4dLKCUXhHFLQ9a1FnF8qgDXpXo9nNWtPFFE195Sqp6mQ9CtnxsM9c
-         GR+h7CTknyvKHhoKStRtCUszTp1v6BJU989CZ/X2rGrSMJExaZrsAM6pTZSAVN2F+T
-         hnr7sPtE6BVKF/UTywPvmdkxo64EzrMohYIhJsme8P5vn3MDPlKL6kFD94nlTuuJss
-         YVaE8VRUzps8mDRa8+DKPfiCKeZWD09r8aWYCPv+sj7U+egiPpiUzseBDtF0PKtTVn
-         DzlfXIoazo12zr1FmDQA/9AvuTwdW4iMtmzysSOsg5mlw8PPJ1/tZvfgiTIlM0cYJF
-         QN/UCGDzSe0Ig==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E4E90A0063;
-        Wed, 26 Jun 2019 13:47:51 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id A22F93B557;
-        Wed, 26 Jun 2019 15:47:51 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 00/10] net: stmmac: 10GbE using XGMAC
-Date:   Wed, 26 Jun 2019 15:47:34 +0200
-Message-Id: <cover.1561556555.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 26 Jun 2019 09:48:34 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hg8Hl-0002Ha-SM; Wed, 26 Jun 2019 15:48:30 +0200
+Date:   Wed, 26 Jun 2019 15:48:28 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Juergen Gross <jgross@suse.com>
+cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org,
+        peterz@infradead.org, srinivas.eeda@oracle.com,
+        Ingo Molnar <mingo@redhat.com>, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v2 4/7] Revert "xen: Introduce 'xen_nopv' to disable PV
+ extensions for HVM guests."
+In-Reply-To: <c77e5df3-77ac-bce2-ccd3-7848f1915b43@suse.com>
+Message-ID: <alpine.DEB.2.21.1906261546460.32342@nanos.tec.linutronix.de>
+References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com> <1561377779-28036-5-git-send-email-zhenzhong.duan@oracle.com> <c77e5df3-77ac-bce2-ccd3-7848f1915b43@suse.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support for 10Gb Link using XGMAC core plus some performance tweaks.
+On Wed, 26 Jun 2019, Juergen Gross wrote:
+> On 24.06.19 14:02, Zhenzhong Duan wrote:
+> > This reverts commit 8d693b911bb9c57009c24cb1772d205b84c7985c.
+> > 
+> > Instead we use an unified parameter 'nopv' for all the hypervisor
+> > platforms.
+> > 
+> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > Cc: Juergen Gross <jgross@suse.com>
+> > Cc: Stefano Stabellini <sstabellini@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: xen-devel@lists.xenproject.org
+> 
+> Reviewed-by: Juergen Gross <jgross@suse.com>
 
-Tested in a PCI based setup.
+You're really sure that you want to break existing setups which might use
+that already?
 
-iperf3 TCP results:
-	TSO ON, MTU=1500, TX Queues = 1, RX Queues = 1, Flow Control ON
-	Pinned CPU (-A), Zero-Copy (-Z)
+Command line parameters are ABI. You can map xen_nopv to the new shiny nopv
+implementation but removing it?
 
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-600.00 sec   643 GBytes  9.21 Gbits/sec    1             sender
-[  5]   0.00-600.00 sec   643 GBytes  9.21 Gbits/sec                  receiver
+Your decision, but you've been told :)
 
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Thanks,
 
-Jose Abreu (10):
-  net: stmmac: dwxgmac: Enable EDMA by default
-  net: stmmac: Do not try to enable PHY EEE if MAC does not support it
-  net: stmmac: Decrease default RX Watchdog value
-  net: stmmac: dwxgmac: Fix the undefined burst setting
-  net: stmmac: Add the missing speeds that XGMAC supports
-  net: stmmac: Do not disable interrupts when cleaning TX
-  net: stmmac: Enable support for > 32 Bits addressing in XGMAC
-  net: stmmac: Update RX Tail Pointer to last free entry
-  net: stmmac: Only disable interrupts if NAPI is scheduled
-  net: stmmac: Try to get C45 PHY if everything else fails
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |   9 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  14 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  14 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |   4 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  27 +++-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 165 ++++++++++++++++-----
- 6 files changed, 178 insertions(+), 55 deletions(-)
-
--- 
-2.7.4
-
+	tglx
