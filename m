@@ -2,108 +2,191 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADA6C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5778FC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FC820659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2527220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D7AdT3iH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfFZRdC (ORCPT
+        id S1726505AbfFZRdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:33:02 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:41971 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfFZRdB (ORCPT
+        Wed, 26 Jun 2019 13:33:14 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:35992 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFZRdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:33:01 -0400
-Received: from [192.168.1.110] ([77.4.50.183]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M6UVr-1hdirL1gd7-006uGv; Wed, 26 Jun 2019 19:27:06 +0200
-Subject: Re: [PATCH 01/30] include: linux: platform_device: more helpers for
- declaring platform drivers
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        mcoquelin.stm32@gmail.com, thloh@altera.com, festevam@gmail.com,
-        linus.walleij@linaro.org, khilman@kernel.org,
-        patches@opensource.cirrus.com, bgolaszewski@baylibre.com,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de, ssantosh@kernel.org,
-        linux-tegra@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        alexandre.torgue@st.com
-References: <1560796871-18560-1-git-send-email-info@metux.net>
- <20190626061405.qsqq5na4oactuo6f@pengutronix.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <30f541a7-ef9d-d687-ab76-22a4544258f8@metux.net>
-Date:   Wed, 26 Jun 2019 19:27:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 26 Jun 2019 13:33:14 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A1035510;
+        Wed, 26 Jun 2019 19:27:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1561570050;
+        bh=i14VRbRUNWeaIKjEs5xAYIdwAOF9WuME1WNthjXo334=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D7AdT3iHB/0TaRDGPON3Uu1w9UZ1SWe8rNbHY0LKbFytsYZFOOX5xgYHPMDriKuNl
+         go7zLXJ7/ylQZy/6QEXBEdVbwSV8/fCmLJx1TavUSbtS+hWyPvGBMeIoy6KK91cFx1
+         xbNWGAxwk2PBZ+wMy9Yycyz0YHUUD+Ib8HSGU81c=
+Date:   Wed, 26 Jun 2019 20:25:03 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Hugues FRUCHET <hugues.fruchet@st.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: Re: [PATCH v2 0/3] DCMI bridge support
+Message-ID: <20190626172503.GB6118@pendragon.ideasonboard.com>
+References: <1560242912-17138-1-git-send-email-hugues.fruchet@st.com>
+ <20190620161721.h3wn4nibomrvriw4@kekkonen.localdomain>
+ <ae097d67-58fe-82d7-78d6-2445664f28db@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20190626061405.qsqq5na4oactuo6f@pengutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:4cVH4PkCtQv/LUwiS6UCMsXOnJKPoFgtu8YIQh2qre1SlC0rID3
- iH0aKQ/MKkZJ2yEuVJpv7mEkC1UjMv1ovjIFymwEqaJMY5AQyXvkOzmTCMq13end5r0f9xS
- yMx11gxpvqiWbWj5JDclzAGEDJ/U+TuS0GJfpPcHqTpNdKo6+6kBrvObB6Qy47Oj5TZ6PPN
- S2g10gMfdY9wpMg6E4Uzg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p7DzD82Py24=:LTBxbNA+enqTVtVo1asr5u
- fojJY6VPTEzYaSJmnoo2Q08KvoDIOijxX27ZhdAkutA8pG3r2+igrKbf0Fr1hVHFN+0+Zm563
- xU3yBgs2kIQumCzDZakchFcCbHnWcLq1dDjHduz9l5x8WbJ/QjWvztmVLtLec6s3T/7wn9f4b
- hB94PAd14mx2OzyVmlsrfgS6p7iw5JWUcjH465pyFgPXWaa9f8VjH6xW5ux2bE6+rIMbpk5Ty
- junIYo1id38mTc1V85zeagLxg1x2WbqCQ08z0saH2UrLQj0TODg2fH+jgg1nULwKYD1b7QksU
- 5zYpMwlRIfQk33Hio6mvEahIFHMzJ4ehYRrJnkkp5az6d1WwBProOdeVWTK2qVW4zI/UFgwV6
- NAeOZfNFAsRJkPSNeywmV1Ms6jLg5J6SLBAW/b8VSQxanNDKjFtGLiUsQPGGrygYRASQ/lYRp
- +u8tbOCLBQKNl9ZVrApeSLLH0ksCfzNH+cZ8GNJCnSQitkHKMCw3t+mOxAGy0aif6rXMPdz9Q
- m6ftp/V4ktJEzSCtvq1zGgc6rxZALGDd1jSCx8umIEuSe4utCYnm2NJIpJ58Mh496OnAihtyD
- CHxFOC3zGdx+8PQVDH4pHkwEXG6nvHZfDaSNdRY6hV/UUbFvjekhcfWq+1Ms87SGmTwRNl2hy
- ec01eIhUZI7jd9eRtU9P3gL6qFG8ol+BFr7lrNRSyVSKVmlZmvsK8AlDOczVKKRXRAsYW9qoc
- AjvunGTjxWWoot/j7F503lFwZ0SKs+7YtXKRyB+QgYf4oTlYrIKhATZrRkE=
+Content-Disposition: inline
+In-Reply-To: <ae097d67-58fe-82d7-78d6-2445664f28db@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.06.19 08:14, Uwe Kleine-König wrote:
-Hi,
+Hi Hugues,
 
-> Would it make sense to do something like:
->
-> 	#define __module_platform_driver(__platform_driver, __initlvl) \
-> 	static int __init __platform_driver##_init(void) \
-> 	{ \
-> 		return platform_driver_register(&(__platform_driver)); \
-> 	} \
-> 	__initlvl ## _initcall(__platform_driver##_init); \
-> 	static void __exit __platform_driver##_exit(void) \
-> 	{ \
-> 		platform_driver_unregister(&(__platform_driver)); \
-> 	} \
-> 	module_exit(__platform_driver##_exit);
->
-> 	#define postcore_platform_driver(__platform_driver)
-__module_platform_driver(__platform_driver, postcore)
-> 	#define subsys_platform_driver(__platform_driver)
-__module_platform_driver(__platform_driver, subsys)
-> 	...
->
-> Which would be more compact and makes the difference between these
-> macros a bit more obvious.
-yeah, could do that, but not sure whether it's really good for
-readability when we have so many nested macros :p
+On Mon, Jun 24, 2019 at 10:10:05AM +0000, Hugues FRUCHET wrote:
+> Hi Sakari,
+> 
+>  > - Where's the sub-device representing the bridge itself?
+> This is pointed by [1]: drivers/media/i2c/st-mipid02.c
+> 
+>  > - As the driver becomes MC-centric, crop configuration takes place
+> through
+>  >   V4L2 sub-device interface, not through the video device node.
+>  > - Same goes for accessing sensor configuration: it does not take place
+>  >   through video node but through the sub-device nodes.
+> 
+> Our objective is to be able to support either a simple parallel sensor
+> or a CSI-2 sensor connected through a bridge without any changes on 
+> userspace side because no additional processing or conversion involved, 
+> only deserialisation is m.
+> With the proposed set of patches, we succeeded to do so, the same 
+> non-regression tests campaign is passed with OV5640 parallel sensor 
+> (STM32MP1 evaluation board) or OV5640 CSI-2 sensor (Avenger96 board with 
+> D3 mezzanine board).
+> 
+> We don't want driver to be MC-centric, media controller support was 
+> required only to get access to the set of functions needed to link and
+> walk trough subdevices: media_create_pad_link(), 
+> media_entity_remote_pad(), etc...
+> 
+> We did a try with the v1 version of this patchset, delegating subdevices 
+> handling to userspace, by using media-controller, but this require to 
+> configure first the pipeline for each single change of resolution and 
+> format before making any capture using v4l2-ctl or GStreamer, quite 
+> heavy in fact.
+> Benjamin did another try using new libcamera codebase, but even for a 
+> basic capture use-case, negotiation code is quite tricky in order to
+> match the right subdevices bus format to the required V4L2 format.
 
-OTOH, I didn't want to touch the existing macros for now, just trim down
-the actual init boilerplate, postponing further compactions for later.
+Why would it be trickier in userspace than in the kernel ? The V4L2
+subdev operations are more or less expose verbatim through the subdev
+userspace API.
 
---mtx
+> Moreover, it was not clear how to call libcamera library prior to any
+> v4l2-ctl or GStreamer calls.
+
+libcamera isn't meant to be called before v4l2-ctl or GStreamer.
+Applications are supposed to be based directly on libcamera, or, for
+existing userspace APIs such as V4L2 or GStreamer, compatibility layers
+are supposed to be developed. For V4L2 it will take the form of a
+LD_PRELOAD-able .so that will intercept the V4L2 API calls, making most
+V4L2 applications work with libcamera unmodified (I said most as 100%
+compatibility will likely not be achievable). For GStreamer it will take
+the form of a GStreamer libcamera element that will replace the V4L2
+source element.
+
+> Adding 100 lines of code into DCMI to well configure resolution and 
+> formats fixes the point and allows us to keep backward compatibility
+> as per our objective, so it seems far more reasonable to us to do so
+> even if DCMI controls more than the subdevice it is connected to.
+> Moreover we found similar code in other video interfaces code like 
+> qcom/camss/camss.c and xilinx/xilinx-dma.c, controlling the whole 
+> pipeline, so it seems to us quite natural to go this way.
+
+I can't comment on the qcom-camss driver as I'm not aware of its
+internals, but where have you found such code in the Xilinx V4L2 drivers
+?
+
+> To summarize, if we cannot do the negotiation within kernel, delegating
+> this to userspace implies far more complexity and breaks compatibility
+> with existing applications without adding new functionalities.
+> 
+> Having all that in mind, what should be reconsidered in your opinion 
+> Sakari ? Do you have some alternatives ?
+
+First of all, let's note that your patch series performs to related but
+still independent changes: it enables MC support, *and* enables the V4L2
+subdev userspace API. The former is clearly needed and will allow you to
+use the MC API internally in the kernel, simplifying pipeline traversal.
+The latter then enables the V4L2 subdev userspace API, moving the
+pipeline configuration responsibility to userspace.
+
+You could in theory move to the MC API inside the kernel, without
+enabling support for the V4L2 subdev userspace API. Configuring the
+pipeline and propagating the formats would then be the responsibility of
+the kernel driver. However, this will limit your driver to the
+following:
+
+- Fully linear pipelines only (single sensor)
+- No support for controls implemented by multiple entities in the
+  pipeline (for instance controls that would exist in both the sensor
+  and the bridge, such as gains)
+- No proper support for scaling configuration if multiple components in
+  the pipeline can scale
+
+Are you willing to set those limitations in stone and give up on
+supporting those features ?
+
+> On 6/20/19 6:17 PM, Sakari Ailus wrote:
+> > On Tue, Jun 11, 2019 at 10:48:29AM +0200, Hugues Fruchet wrote:
+> >> This patch serie allows to connect non-parallel camera sensor to
+> >> DCMI thanks to a bridge connected in between such as STMIPID02 [1].
+> >>
+> >> Media controller support is introduced first, then support of
+> >> several sub-devices within pipeline with dynamic linking
+> >> between them.
+> >> In order to keep backward compatibility with applications
+> >> relying on V4L2 interface only, format set on video node
+> >> is propagated to all sub-devices connected to camera interface.
+> >>
+> >> [1] https://www.spinics.net/lists/devicetree/msg278002.html
+> > 
+> > General notes on the set, not related to any single patch:
+> > 
+> > - Where's the sub-device representing the bridge itself?
+> > 
+> > - As the driver becomes MC-centric, crop configuration takes place through
+> >    V4L2 sub-device interface, not through the video device node.
+> > 
+> > - Same goes for accessing sensor configuration: it does not take place
+> >    through video node but through the sub-device nodes.
+> > 
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Regards,
+
+Laurent Pinchart
