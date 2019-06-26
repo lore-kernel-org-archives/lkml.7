@@ -2,955 +2,219 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0736CC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475F6C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC41D208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:10:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XUT++bpN"
+	by mail.kernel.org (Postfix) with ESMTP id 1AE24208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfFZIKB (ORCPT
+        id S1726664AbfFZILY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:10:01 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:17358 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfFZIKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:10:00 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190626080952epoutp029af7917e491645e24e49ad90b76ea741~rsUHw1afb2688326883epoutp02t
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 08:09:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190626080952epoutp029af7917e491645e24e49ad90b76ea741~rsUHw1afb2688326883epoutp02t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561536592;
-        bh=hwvzKux7nSoIBOUroXhjMa8F4uRoM+fnis1PGiReeQU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=XUT++bpNoHEwVQTy88F5qwr4PUAPOpEXTDRIJU+NwOHMWWNJYpp4SjMZg5cM7atGU
-         4fGgMgmhyXBoxDs1OcS0AkVsTVCJOuejL0NEtA1BQOU41vl8Jz6h8U/a8FgG7gzUUS
-         zb17f72YM7l5Ix93IXmUI4HjXZ/VgUAEeEs3uuXI=
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20190626080949epcas1p3a52b3db1ae388308edaa9f075048f00a~rsUE7js501930719307epcas1p3T;
-        Wed, 26 Jun 2019 08:09:49 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A0.D7.04142.D48231D5; Wed, 26 Jun 2019 17:09:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190626080948epcas1p329a2e1e68fbe15cbeb31c2f49dee95f0~rsUEIC6s41202312023epcas1p3B;
-        Wed, 26 Jun 2019 08:09:48 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190626080948epsmtrp13d16caf5a513307c186304fcebe3e279~rsUEG9PXB0308803088epsmtrp1n;
-        Wed, 26 Jun 2019 08:09:48 +0000 (GMT)
-X-AuditID: b6c32a36-cf9ff7000000102e-00-5d13284dfc1f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        48.36.03662.C48231D5; Wed, 26 Jun 2019 17:09:48 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190626080948epsmtip2a2b03c84482e91e4aaeba14293821820~rsUDw1iYn1405114051epsmtip26;
-        Wed, 26 Jun 2019 08:09:48 +0000 (GMT)
-Subject: Re: [PATCH RFC 1/2] PM / devfreq: Generic CPU frequency to device
- frequency mapping governor
-To:     Sibi Sankar <sibis@codeaurora.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Saravana Kannan <skannan@codeaurora.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Andrew-sh . Cheng" <andrew-sh.cheng@mediatek.com>,
-        linux-kernel-owner@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <17b27bc6-5dc7-8ffa-2022-93c526bdf1d1@samsung.com>
-Date:   Wed, 26 Jun 2019 17:12:25 +0900
+        Wed, 26 Jun 2019 04:11:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55692 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfFZILY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:11:24 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 39AD4811D8;
+        Wed, 26 Jun 2019 08:11:10 +0000 (UTC)
+Received: from [10.36.116.174] (ovpn-116-174.ams2.redhat.com [10.36.116.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 14D545D9C6;
+        Wed, 26 Jun 2019 08:11:06 +0000 (UTC)
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20190625075227.15193-1-osalvador@suse.de>
+ <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+ <20190626080249.GA30863@linux>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <2750c11a-524d-b248-060c-49e6b3eb8975@redhat.com>
+Date:   Wed, 26 Jun 2019 10:11:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <04bbd518efef8296e450e984e6afdba2@codeaurora.org>
+In-Reply-To: <20190626080249.GA30863@linux>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOJsWRmVeSWpSXmKPExsWy7bCmnq6vhnCswcsVchbb179gtZjQup3Z
-        4mzTG3aLTY+vsVosaxCzuLxrDpvF5eaLjBafe48wWjS1GFvcblzBZnFt4XtWiwMXJ7I58HjM
-        brjI4nG5r5fJY+esu+wem5fUe7Sc3M/i0bdlFaPH501yAexR2TYZqYkpqUUKqXnJ+SmZeem2
-        St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QGcqKZQl5pQChQISi4uV9O1sivJLS1IV
-        MvKLS2yVUgtScgosC/SKE3OLS/PS9ZLzc60MDQyMTIEKE7IznnzlKbg9iamiufkUawPj/xeM
-        XYycHBICJhIPlvxi72Lk4hAS2MEosfDpL2YI5xOjxN8T96Ccb4wSE1c3MsG0XDx3nA0isZdR
-        YseX2UwQzntGibtfJ7KBVAkLpEscO/4XyObgEBHwkti6Ow6khlngCrPExm+XWEBq2AS0JPa/
-        uAFWzy+gKHH1x2Owo3gF7CTaW6eB2SwCqhLrbl9kBbFFBSIkLm/ZBVUjKHFy5hOwOZxA9Wfm
-        /2MHsZkFxCVuPZnPBGHLSzRvnQ32goTAInaJ7r8XoF5wkVixeyMbhC0s8er4FnYIW0riZX8b
-        lF0tsfLkETaI5g5GiS37L7BCJIwl9i+dzATyGbOApsT6XfoQYUWJnb/nMkIs5pN497WHFaRE
-        QoBXoqNNCKJEWeLyg7tQJ0hKLG7vZJvAqDQLyTuzkLwwC8kLsxCWLWBkWcUollpQnJueWmxY
-        YIQc35sYwYlYy2wH46JzPocYBTgYlXh4G+SFYoVYE8uKK3MPMUpwMCuJ8C5NFIgV4k1JrKxK
-        LcqPLyrNSS0+xGgKDO2JzFKiyfnALJFXEm9oamRsbGxhYmhmamioJM4bz30zRkggPbEkNTs1
-        tSC1CKaPiYNTqoGRTyknPqfZ4uGT+/t8+3cqd17Yq/HsvKfTZWfOxwb3ZH9Or4upWKlpL1JQ
-        X/r3tHnb1mNB11Yuc9gRJnORPWbxpZcKvxVOVVY1G1zOnstknZAR837OOwvV+5NuzhG505do
-        xvHcKexExgNfhrjO/28mzI+J5PoqyFr14ZoGW3Fg2Cw9+eincs1KLMUZiYZazEXFiQC5hnX7
-        2gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIIsWRmVeSWpSXmKPExsWy7bCSvK6PhnCswb3ZChbb179gtZjQup3Z
-        4mzTG3aLTY+vsVosaxCzuLxrDpvF5eaLjBafe48wWjS1GFvcblzBZnFt4XtWiwMXJ7I58HjM
-        brjI4nG5r5fJY+esu+wem5fUe7Sc3M/i0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBlPvvIU
-        3J7EVNHcfIq1gfH/C8YuRk4OCQETiYvnjrN1MXJxCAnsZpR40fWMFSIhKTHt4lHmLkYOIFtY
-        4vDhYoiat4wSu09+ZgKpERZIlzh2/C8bSI2IgJfE1t1xIDXMAjeYJf4df8IE1cAksf/YJ7Ch
-        bAJaEvtf3GADsfkFFCWu/ngMdgWvgJ1Ee+s0MJtFQFVi3e2LYPWiAhESfW2z2SBqBCVOznzC
-        AmJzAtWfmf+PHcRmFlCX+DPvEjOELS5x68l8JghbXqJ562zmCYzCs5C0z0LSMgtJyywkLQsY
-        WVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgRHpJbWDsYTJ+IPMQpwMCrx8DbIC8UK
-        sSaWFVfmHmKU4GBWEuFdmigQK8SbklhZlVqUH19UmpNafIhRmoNFSZxXPv9YpJBAemJJanZq
-        akFqEUyWiYNTqoExZt7t0FO3HaK+r1XxbdBOiHNfrhwQKbGwhet2ZKr/sxP7DeNUU69+2Dk7
-        dW79lnWV+sJeF/euW7Gt9GLTUinWQ1Ulz/YYTNwY8pjheRnj7Wpmoz/xbGez0qf9ba8OLakt
-        OB2164Omua2RbuP1C1OfHd549Y5umUb5c4WK5+6pDwRu5Cbob25UYinOSDTUYi4qTgQAWfuR
-        YsQCAAA=
-X-CMS-MailID: 20190626080948epcas1p329a2e1e68fbe15cbeb31c2f49dee95f0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190618041513epcas5p1bc626114804cb68bbf857f0a826c7599
-References: <20190618041433.245629-1-hsinyi@chromium.org>
-        <CGME20190618041513epcas5p1bc626114804cb68bbf857f0a826c7599@epcas5p1.samsung.com>
-        <20190618041433.245629-2-hsinyi@chromium.org>
-        <958b27ff-6e64-b4e2-44e6-bc342e3606bc@samsung.com>
-        <CAJMQK-jELbhCUb5LYOnGMsBHjhZHnXMYQYDxWyEmriJf8OSpSQ@mail.gmail.com>
-        <04bbd518efef8296e450e984e6afdba2@codeaurora.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 26 Jun 2019 08:11:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sibi and Hsin-Yi,
-
-On 19. 6. 20. 오후 6:41, Sibi Sankar wrote:
-> Hey Hsin-Yi, Chanwoo
+On 26.06.19 10:03, Oscar Salvador wrote:
+> On Tue, Jun 25, 2019 at 10:25:48AM +0200, David Hildenbrand wrote:
+>>> [Coverletter]
+>>>
+>>> This is another step to make memory hotplug more usable. The primary
+>>> goal of this patchset is to reduce memory overhead of the hot-added
+>>> memory (at least for SPARSEMEM_VMEMMAP memory model). The current way we use
+>>> to populate memmap (struct page array) has two main drawbacks:
 > 
-> On 2019-06-20 15:02, Hsin-Yi Wang wrote:
->> Hi Chanwoo Choi, Saravana Kannan and Sibi Sankar,
->>
->> I've also tested Sibi Sankar's patch[1] locally with mt8183-cci, and
->> it works fine too!
->> It'd be great if Sibi Sankar or anyone who is familiar with the
->> original design can finish this implementation. But if no one has time
->> to do that, I think I can also help on address the comments. Thanks!
-> 
-> Now that we have a user :) I am happy
-> to repost the patch with the comments
-> addressed.
-> 
-> https://lkml.org/lkml/2019/6/14/4
-> Also with ^^ patch and few more in the
-> series the dt parsing of required-opps
-> should get further simplified.
+> First off, thanks for looking into this :-)
 
-Even if patch[1] suggested by Saravana is merged,
-the patch[2] is necessary. Because, until now,
-the child devfreq device cannot catch the timing
-of CPU frequency without CPUFREQ notification.
-
-The existing passive governor only supports between
-devfreq device and other devfreq device.
-
-[1] https://lkml.org/lkml/2019/6/14/4
-
-[2]
-[PATCH RFC 0/9] Add CPU based scaling support to Passive governor
-- https://lore.kernel.org/lkml/08c3cff8c39e3d82e044db93e992da72@codeaurora.org/T/
-[PATCH RFC 3/9] PM / devfreq: Add cpu based scaling support to passive_governor
-- https://lore.kernel.org/lkml/08c3cff8c39e3d82e044db93e992da72@codeaurora.org/T/#m1cafb7baf687d2a680d39c85d3ec7d1b590b68fc
-
-
+Thanks for working on this ;)
 
 > 
 >>
->>
->> [1]
->> [RFC,2/9] OPP: Export a number of helpers to prevent code duplication
->> - https://patchwork.kernel.org/patch/10875199/
->> [RFC,3/9] PM / devfreq: Add cpu based scaling support to passive_governor
->> - https://patchwork.kernel.org/patch/10875195/
->>
->> Hsin-Yi
->>
->> On Thu, Jun 20, 2019 at 2:56 PM Chanwoo Choi <cw00.choi@samsung.com> wrote:
->>>
->>> + Sibi Sankar
->>>
->>> Hi, Hsin-Yi Wang, Saravana Kannan and Sibi Sankar
->>>
->>> I summarized the history of the related patch about this title.
->>>
->>> Firstly,
->>> As I knew, Saravana sent the patch[1] which contains
->>> 'governor_cpufreq_map.c' last year. According to the Myungoo's comment,
->>>
->>> Secondly,
->>> Sibi Sankar modified the 'governor_passive.c'[2] in order to support
->>> the mapping between cpu frequency and device frequency.
->>> Unfortunately, Sibi Sankar stopped the development about this
->>> because he had found the other method to get his purpose as I knew.
->>>
->>> Thirdly,
->>> Hsin-Yi Wang send the original patch of Saravana without modification.
->>>
->>>
->>> Sincerely, I think that the mapping between cpu frequency and device
->>> frequency is necessary. And I prefer the Sibi's approach which implements
->>> stuff to the existing 'passive' governor.
->>>
->>> We need to discuss about how to implement them by whom.
->>>
->>>
->>> [1] [v3,1/2] PM / devfreq: Generic CPU frequency to device frequency mapping governor
->>> - https://patchwork.kernel.org/patch/10553171/
->>>
->>> [2]
->>> [PATCH RFC 0/9] Add CPU based scaling support to Passive governor
->>> - https://lore.kernel.org/lkml/08c3cff8c39e3d82e044db93e992da72@codeaurora.org/T/
->>> [PATCH RFC 3/9] PM / devfreq: Add cpu based scaling support to passive_governor
->>> - https://lore.kernel.org/lkml/08c3cff8c39e3d82e044db93e992da72@codeaurora.org/T/#m1cafb7baf687d2a680d39c85d3ec7d1b590b68fc
->>>
->>>
->>> Best Regards,
->>> Chanwoo Choi
->>>
->>> On 19. 6. 18. 오후 1:14, Hsin-Yi Wang wrote:
->>> > From: Saravana Kannan <skannan@codeaurora.org>
->>> >
->>> > From: Saravana Kannan <skannan@codeaurora.org>
->>> >
->>> > Many CPU architectures have caches that can scale independent of the CPUs.
->>> > Frequency scaling of the caches is necessary to make sure the cache is not
->>> > a performance bottleneck that leads to poor performance and power. The same
->>> > idea applies for RAM/DDR.
->>> >
->>> > To achieve this, this patch adds a generic devfreq governor that takes the
->>> > current frequency of each CPU frequency domain and then adjusts the
->>> > frequency of the cache (or any devfreq device) based on the frequency of
->>> > the CPUs. It listens to CPU frequency transition notifiers to keep itself
->>> > up to date on the current CPU frequency.
->>> >
->>> > To decide the frequency of the device, the governor does one of the
->>> > following:
->>> >
->>> > * Uses a CPU frequency to device frequency mapping table
->>> >   - Either one mapping table used for all CPU freq policies (typically used
->>> >     for system with homogeneous cores/clusters that have the same OPPs).
->>> >   - One mapping table per CPU freq policy (typically used for ASMP systems
->>> >     with heterogeneous CPUs with different OPPs)
->>> >
->>> > OR
->>> >
->>> > * Scales the device frequency in proportion to the CPU frequency. So, if
->>> >   the CPUs are running at their max frequency, the device runs at its max
->>> >   frequency.  If the CPUs are running at their min frequency, the device
->>> >   runs at its min frequency. And interpolated for frequencies in between.
->>> >
->>> > Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->>> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
->>> > ---
->>> >  .../bindings/devfreq/devfreq-cpufreq-map.txt  |  53 ++
->>> >  drivers/devfreq/Kconfig                       |   8 +
->>> >  drivers/devfreq/Makefile                      |   1 +
->>> >  drivers/devfreq/governor_cpufreq_map.c        | 583 ++++++++++++++++++
->>> >  4 files changed, 645 insertions(+)
->>> >  create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->>> >  create mode 100644 drivers/devfreq/governor_cpufreq_map.c
->>> >
->>> > diff --git a/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->>> > new file mode 100644
->>> > index 000000000000..982a30bcfc86
->>> > --- /dev/null
->>> > +++ b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->>> > @@ -0,0 +1,53 @@
->>> > +Devfreq CPUfreq governor
->>> > +
->>> > +devfreq-cpufreq-map is a parent device that contains one or more child devices.
->>> > +Each child device provides CPU frequency to device frequency mapping for a
->>> > +specific device. Examples of devices that could use this are: DDR, cache and
->>> > +CCI.
->>> > +
->>> > +Parent device name shall be "devfreq-cpufreq-map".
->>> > +
->>> > +Required child device properties:
->>> > +- cpu-to-dev-map, or cpu-to-dev-map-<X>:
->>> > +                     A list of tuples where each tuple consists of a
->>> > +                     CPU frequency (KHz) and the corresponding device
->>> > +                     frequency. CPU frequencies not listed in the table
->>> > +                     will use the device frequency that corresponds to the
->>> > +                     next rounded up CPU frequency.
->>> > +                     Use "cpu-to-dev-map" if all CPUs in the system should
->>> > +                     share same mapping.
->>> > +                     Use cpu-to-dev-map-<cpuid> to describe different
->>> > +                     mappings for different CPUs. The property should be
->>> > +                     listed only for the first CPU if multiple CPUs are
->>> > +                     synchronous.
->>> > +- target-dev:                Phandle to device that this mapping applies to.
->>> > +
->>> > +Example:
->>> > +     devfreq-cpufreq-map {
->>> > +             cpubw-cpufreq {
->>> > +                     target-dev = <&cpubw>;
->>> > +                     cpu-to-dev-map =
->>> > +                             <  300000  1144000 >,
->>> > +                             <  422400  2288000 >,
->>> > +                             <  652800  3051000 >,
->>> > +                             <  883200  5996000 >,
->>> > +                             < 1190400  8056000 >,
->>> > +                             < 1497600 10101000 >,
->>> > +                             < 1728000 12145000 >,
->>> > +                             < 2649600 16250000 >;
->>> > +             };
->>> > +
->>> > +             cache-cpufreq {
->>> > +                     target-dev = <&cache>;
->>> > +                     cpu-to-dev-map =
->>> > +                             <  300000  300000 >,
->>> > +                             <  422400  422400 >,
->>> > +                             <  652800  499200 >,
->>> > +                             <  883200  576000 >,
->>> > +                             <  960000  960000 >,
->>> > +                             < 1497600 1036800 >,
->>> > +                             < 1574400 1574400 >,
->>> > +                             < 1728000 1651200 >,
->>> > +                             < 2649600 1728000 >;
->>> > +             };
->>> > +     };
->>> > diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->>> > index 0c8204d6b78a..0303f5a400b6 100644
->>> > --- a/drivers/devfreq/Kconfig
->>> > +++ b/drivers/devfreq/Kconfig
->>> > @@ -74,6 +74,14 @@ config DEVFREQ_GOV_PASSIVE
->>> >         through sysfs entries. The passive governor recommends that
->>> >         devfreq device uses the OPP table to get the frequency/voltage.
->>> >
->>> > +config DEVFREQ_GOV_CPUFREQ_MAP
->>> > +     tristate "CPUfreq Map"
->>> > +     depends on CPU_FREQ
->>> > +     help
->>> > +       Chooses frequency based on the online CPUs' current frequency and a
->>> > +       CPU frequency to device frequency mapping table(s). This governor
->>> > +       can be useful for controlling devices such as DDR, cache, CCI, etc.
->>> > +
->>> >  comment "DEVFREQ Drivers"
->>> >
->>> >  config ARM_EXYNOS_BUS_DEVFREQ
->>> > diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
->>> > index 817dde779f16..81141e2c784f 100644
->>> > --- a/drivers/devfreq/Makefile
->>> > +++ b/drivers/devfreq/Makefile
->>> > @@ -6,6 +6,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PERFORMANCE) += governor_performance.o
->>> >  obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)  += governor_powersave.o
->>> >  obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)  += governor_userspace.o
->>> >  obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)    += governor_passive.o
->>> > +obj-$(CONFIG_DEVFREQ_GOV_CPUFREQ_MAP)        += governor_cpufreq_map.o
->>> >
->>> >  # DEVFREQ Drivers
->>> >  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ) += exynos-bus.o
->>> > diff --git a/drivers/devfreq/governor_cpufreq_map.c b/drivers/devfreq/governor_cpufreq_map.c
->>> > new file mode 100644
->>> > index 000000000000..084a3ffb8f54
->>> > --- /dev/null
->>> > +++ b/drivers/devfreq/governor_cpufreq_map.c
->>> > @@ -0,0 +1,583 @@
->>> > +// SPDX-License-Identifier: GPL-2.0
->>> > +/*
->>> > + * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
->>> > + */
->>> > +
->>> > +#define pr_fmt(fmt) "dev-cpufreq-map: " fmt
->>> > +
->>> > +#include <linux/devfreq.h>
->>> > +#include <linux/cpu.h>
->>> > +#include <linux/cpufreq.h>
->>> > +#include <linux/cpumask.h>
->>> > +#include <linux/slab.h>
->>> > +#include <linux/platform_device.h>
->>> > +#include <linux/of.h>
->>> > +#include <linux/module.h>
->>> > +#include "governor.h"
->>> > +
->>> > +struct cpu_state {
->>> > +     unsigned int freq;
->>> > +     unsigned int min_freq;
->>> > +     unsigned int max_freq;
->>> > +     unsigned int first_cpu;
->>> > +};
->>> > +static struct cpu_state *state[NR_CPUS];
->>> > +static int cpufreq_cnt;
->>> > +
->>> > +struct freq_map {
->>> > +     unsigned int cpu_khz;
->>> > +     unsigned int target_freq;
->>> > +};
->>> > +
->>> > +struct devfreq_node {
->>> > +     struct devfreq *df;
->>> > +     void *orig_data;
->>> > +     struct device *dev;
->>> > +     struct device_node *of_node;
->>> > +     struct list_head list;
->>> > +     struct freq_map **map;
->>> > +     struct freq_map *common_map;
->>> > +};
->>> > +static LIST_HEAD(devfreq_list);
->>> > +static DEFINE_MUTEX(state_lock);
->>> > +static DEFINE_MUTEX(cpufreq_reg_lock);
->>> > +
->>> > +static void update_all_devfreqs(void)
->>> > +{
->>> > +     struct devfreq_node *node;
->>> > +
->>> > +     list_for_each_entry(node, &devfreq_list, list) {
->>> > +             struct devfreq *df = node->df;
->>> > +
->>> > +             if (!node->df)
->>> > +                     continue;
->>> > +             mutex_lock(&df->lock);
->>> > +             update_devfreq(df);
->>> > +             mutex_unlock(&df->lock);
->>> > +
->>> > +     }
->>> > +}
->>> > +
->>> > +static struct devfreq_node *find_devfreq_node(struct device *dev)
->>> > +{
->>> > +     struct devfreq_node *node;
->>> > +
->>> > +     list_for_each_entry(node, &devfreq_list, list)
->>> > +             if (node->dev == dev || node->of_node == dev->of_node)
->>> > +                     return node;
->>> > +
->>> > +     return NULL;
->>> > +}
->>> > +
->>> > +/* ==================== cpufreq part ==================== */
->>> > +static struct cpu_state *add_policy(struct cpufreq_policy *policy)
->>> > +{
->>> > +     struct cpu_state *new_state;
->>> > +     unsigned int cpu, first_cpu;
->>> > +
->>> > +     new_state = kzalloc(sizeof(struct cpu_state), GFP_KERNEL);
->>> > +     if (!new_state)
->>> > +             return NULL;
->>> > +
->>> > +     first_cpu = cpumask_first(policy->related_cpus);
->>> > +     new_state->first_cpu = first_cpu;
->>> > +     new_state->freq = policy->cur;
->>> > +     new_state->min_freq = policy->cpuinfo.min_freq;
->>> > +     new_state->max_freq = policy->cpuinfo.max_freq;
->>> > +
->>> > +     for_each_cpu(cpu, policy->related_cpus)
->>> > +             state[cpu] = new_state;
->>> > +
->>> > +     return new_state;
->>> > +}
->>> > +
->>> > +static int cpufreq_trans_notifier(struct notifier_block *nb,
->>> > +             unsigned long event, void *data)
->>> > +{
->>> > +     struct cpufreq_freqs *freq = data;
->>> > +     struct cpu_state *s;
->>> > +     struct cpufreq_policy *policy = NULL;
->>> > +
->>> > +     if (event != CPUFREQ_POSTCHANGE)
->>> > +             return 0;
->>> > +
->>> > +     mutex_lock(&state_lock);
->>> > +
->>> > +     s = state[freq->cpu];
->>> > +     if (!s) {
->>> > +             policy = cpufreq_cpu_get(freq->cpu);
->>> > +             if (policy) {
->>> > +                     s = add_policy(policy);
->>> > +                     cpufreq_cpu_put(policy);
->>> > +             }
->>> > +     }
->>> > +     if (!s)
->>> > +             goto out;
->>> > +
->>> > +     if (s->freq != freq->new || policy) {
->>> > +             s->freq = freq->new;
->>> > +             update_all_devfreqs();
->>> > +     }
->>> > +
->>> > +out:
->>> > +     mutex_unlock(&state_lock);
->>> > +     return 0;
->>> > +}
->>> > +
->>> > +static struct notifier_block cpufreq_trans_nb = {
->>> > +     .notifier_call = cpufreq_trans_notifier
->>> > +};
->>> > +
->>> > +static int register_cpufreq(void)
->>> > +{
->>> > +     int ret = 0;
->>> > +     unsigned int cpu;
->>> > +     struct cpufreq_policy *policy;
->>> > +
->>> > +     mutex_lock(&cpufreq_reg_lock);
->>> > +
->>> > +     if (cpufreq_cnt)
->>> > +             goto cnt_not_zero;
->>> > +
->>> > +     get_online_cpus();
->>> > +     ret = cpufreq_register_notifier(&cpufreq_trans_nb,
->>> > +                             CPUFREQ_TRANSITION_NOTIFIER);
->>> > +     if (ret)
->>> > +             goto out;
->>> > +
->>> > +     for_each_online_cpu(cpu) {
->>> > +             policy = cpufreq_cpu_get(cpu);
->>> > +             if (policy) {
->>> > +                     add_policy(policy);
->>> > +                     cpufreq_cpu_put(policy);
->>> > +             }
->>> > +     }
->>> > +out:
->>> > +     put_online_cpus();
->>> > +cnt_not_zero:
->>> > +     if (!ret)
->>> > +             cpufreq_cnt++;
->>> > +     mutex_unlock(&cpufreq_reg_lock);
->>> > +     return ret;
->>> > +}
->>> > +
->>> > +static int unregister_cpufreq(void)
->>> > +{
->>> > +     int ret = 0;
->>> > +     int cpu;
->>> > +
->>> > +     mutex_lock(&cpufreq_reg_lock);
->>> > +
->>> > +     if (cpufreq_cnt > 1)
->>> > +             goto out;
->>> > +
->>> > +     cpufreq_unregister_notifier(&cpufreq_trans_nb,
->>> > +                             CPUFREQ_TRANSITION_NOTIFIER);
->>> > +
->>> > +     for (cpu = ARRAY_SIZE(state) - 1; cpu >= 0; cpu--) {
->>> > +             if (!state[cpu])
->>> > +                     continue;
->>> > +             if (state[cpu]->first_cpu == cpu)
->>> > +                     kfree(state[cpu]);
->>> > +             state[cpu] = NULL;
->>> > +     }
->>> > +
->>> > +out:
->>> > +     cpufreq_cnt--;
->>> > +     mutex_unlock(&cpufreq_reg_lock);
->>> > +     return ret;
->>> > +}
->>> > +
->>> > +/* ==================== devfreq part ==================== */
->>> > +
->>> > +static unsigned int interpolate_freq(struct devfreq *df, unsigned int cpu)
->>> > +{
->>> > +     unsigned long *freq_table = df->profile->freq_table;
->>> > +     unsigned int cpu_min = state[cpu]->min_freq;
->>> > +     unsigned int cpu_max = state[cpu]->max_freq;
->>> > +     unsigned int cpu_freq = state[cpu]->freq;
->>> > +     unsigned int dev_min, dev_max, cpu_percent;
->>> > +
->>> > +     if (freq_table) {
->>> > +             dev_min = freq_table[0];
->>> > +             dev_max = freq_table[df->profile->max_state - 1];
->>> > +     } else {
->>> > +             if (df->max_freq <= df->min_freq)
->>> > +                     return 0;
->>> > +             dev_min = df->min_freq;
->>> > +             dev_max = df->max_freq;
->>> > +     }
->>> > +
->>> > +     cpu_percent = ((cpu_freq - cpu_min) * 100) / (cpu_max - cpu_min);
->>> > +     return dev_min + mult_frac(dev_max - dev_min, cpu_percent, 100);
->>> > +}
->>> > +
->>> > +static unsigned int cpu_to_dev_freq(struct devfreq *df, unsigned int cpu)
->>> > +{
->>> > +     struct freq_map *map = NULL;
->>> > +     unsigned int cpu_khz = 0, freq;
->>> > +     struct devfreq_node *n = df->data;
->>> > +
->>> > +     if (!state[cpu] || state[cpu]->first_cpu != cpu) {
->>> > +             freq = 0;
->>> > +             goto out;
->>> > +     }
->>> > +
->>> > +     if (n->common_map)
->>> > +             map = n->common_map;
->>> > +     else if (n->map)
->>> > +             map = n->map[cpu];
->>> > +
->>> > +     cpu_khz = state[cpu]->freq;
->>> > +
->>> > +     if (!map) {
->>> > +             freq = interpolate_freq(df, cpu);
->>> > +             goto out;
->>> > +     }
->>> > +
->>> > +     while (map->cpu_khz && map->cpu_khz < cpu_khz)
->>> > +             map++;
->>> > +     if (!map->cpu_khz)
->>> > +             map--;
->>> > +     freq = map->target_freq;
->>> > +
->>> > +out:
->>> > +     dev_dbg(df->dev.parent, "CPU%u: %d -> dev: %u\n", cpu, cpu_khz, freq);
->>> > +     return freq;
->>> > +}
->>> > +
->>> > +static int devfreq_cpufreq_get_freq(struct devfreq *df,
->>> > +                                     unsigned long *freq)
->>> > +{
->>> > +     unsigned int cpu, tgt_freq = 0;
->>> > +     struct devfreq_node *node;
->>> > +
->>> > +     node = df->data;
->>> > +     if (!node) {
->>> > +             pr_err("Unable to find devfreq node!\n");
->>> > +             return -ENODEV;
->>> > +     }
->>> > +
->>> > +     for_each_possible_cpu(cpu)
->>> > +             tgt_freq = max(tgt_freq, cpu_to_dev_freq(df, cpu));
->>> > +
->>> > +     *freq = tgt_freq;
->>> > +     return 0;
->>> > +}
->>> > +
->>> > +static unsigned int show_table(char *buf, unsigned int len,
->>> > +                             struct freq_map *map)
->>> > +{
->>> > +     unsigned int cnt = 0;
->>> > +
->>> > +     cnt += snprintf(buf + cnt, len - cnt, "CPU freq\tDevice freq\n");
->>> > +
->>> > +     while (map->cpu_khz && cnt < len) {
->>> > +             cnt += snprintf(buf + cnt, len - cnt, "%8u\t%11u\n",
->>> > +                             map->cpu_khz, map->target_freq);
->>> > +             map++;
->>> > +     }
->>> > +     if (cnt < len)
->>> > +             cnt += snprintf(buf + cnt, len - cnt, "\n");
->>> > +
->>> > +     return cnt;
->>> > +}
->>> > +
->>> > +static ssize_t freq_map_show(struct device *dev, struct device_attribute *attr,
->>> > +                     char *buf)
->>> > +{
->>> > +     struct devfreq *df = to_devfreq(dev);
->>> > +     struct devfreq_node *n = df->data;
->>> > +     struct freq_map *map;
->>> > +     unsigned int cnt = 0, cpu;
->>> > +
->>> > +     mutex_lock(&state_lock);
->>> > +     if (n->common_map) {
->>> > +             map = n->common_map;
->>> > +             cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
->>> > +                             "Common table for all CPUs:\n");
->>> > +             cnt += show_table(buf + cnt, PAGE_SIZE - cnt, map);
->>> > +     } else if (n->map) {
->>> > +             for_each_possible_cpu(cpu) {
->>> > +                     map = n->map[cpu];
->>> > +                     if (!map)
->>> > +                             continue;
->>> > +                     cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
->>> > +                                     "CPU %u:\n", cpu);
->>> > +                     if (cnt >= PAGE_SIZE)
->>> > +                             break;
->>> > +                     cnt += show_table(buf + cnt, PAGE_SIZE - cnt, map);
->>> > +                     if (cnt >= PAGE_SIZE)
->>> > +                             break;
->>> > +             }
->>> > +     } else {
->>> > +             cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
->>> > +                             "Device freq interpolated based on CPU freq\n");
->>> > +     }
->>> > +     mutex_unlock(&state_lock);
->>> > +
->>> > +     return cnt;
->>> > +}
->>> > +
->>> > +static DEVICE_ATTR_RO(freq_map);
->>> > +static struct attribute *dev_attr[] = {
->>> > +     &dev_attr_freq_map.attr,
->>> > +     NULL,
->>> > +};
->>> > +
->>> > +static struct attribute_group dev_attr_group = {
->>> > +     .name = "cpufreq-map",
->>> > +     .attrs = dev_attr,
->>> > +};
->>> > +
->>> > +static int devfreq_cpufreq_gov_start(struct devfreq *devfreq)
->>> > +{
->>> > +     int ret = 0;
->>> > +     struct devfreq_node *node;
->>> > +     bool alloc = false;
->>> > +
->>> > +     ret = register_cpufreq();
->>> > +     if (ret)
->>> > +             return ret;
->>> > +
->>> > +     ret = sysfs_create_group(&devfreq->dev.kobj, &dev_attr_group);
->>> > +     if (ret) {
->>> > +             unregister_cpufreq();
->>> > +             return ret;
->>> > +     }
->>> > +
->>> > +     mutex_lock(&state_lock);
->>> > +
->>> > +     node = find_devfreq_node(devfreq->dev.parent);
->>> > +     if (node == NULL) {
->>> > +             node = kzalloc(sizeof(struct devfreq_node), GFP_KERNEL);
->>> > +             if (!node) {
->>> > +                     ret = -ENOMEM;
->>> > +                     goto alloc_fail;
->>> > +             }
->>> > +             alloc = true;
->>> > +             node->dev = devfreq->dev.parent;
->>> > +             list_add_tail(&node->list, &devfreq_list);
->>> > +     }
->>> > +     node->df = devfreq;
->>> > +     node->orig_data = devfreq->data;
->>> > +     devfreq->data = node;
->>> > +
->>> > +     mutex_lock(&devfreq->lock);
->>> > +     ret = update_devfreq(devfreq);
->>> > +     mutex_unlock(&devfreq->lock);
->>> > +     if (ret) {
->>> > +             pr_err("Freq update failed!\n");
->>> > +             goto update_fail;
->>> > +     }
->>> > +
->>> > +     mutex_unlock(&state_lock);
->>> > +     return 0;
->>> > +
->>> > +update_fail:
->>> > +     devfreq->data = node->orig_data;
->>> > +     if (alloc) {
->>> > +             list_del(&node->list);
->>> > +             kfree(node);
->>> > +     }
->>> > +alloc_fail:
->>> > +     mutex_unlock(&state_lock);
->>> > +     sysfs_remove_group(&devfreq->dev.kobj, &dev_attr_group);
->>> > +     unregister_cpufreq();
->>> > +     return ret;
->>> > +}
->>> > +
->>> > +static void devfreq_cpufreq_gov_stop(struct devfreq *devfreq)
->>> > +{
->>> > +     struct devfreq_node *node = devfreq->data;
->>> > +
->>> > +     mutex_lock(&state_lock);
->>> > +     devfreq->data = node->orig_data;
->>> > +     if (node->map || node->common_map) {
->>> > +             node->df = NULL;
->>> > +     } else {
->>> > +             list_del(&node->list);
->>> > +             kfree(node);
->>> > +     }
->>> > +     mutex_unlock(&state_lock);
->>> > +
->>> > +     sysfs_remove_group(&devfreq->dev.kobj, &dev_attr_group);
->>> > +     unregister_cpufreq();
->>> > +}
->>> > +
->>> > +static int devfreq_cpufreq_ev_handler(struct devfreq *devfreq,
->>> > +                                     unsigned int event, void *data)
->>> > +{
->>> > +     int ret;
->>> > +
->>> > +     switch (event) {
->>> > +     case DEVFREQ_GOV_START:
->>> > +
->>> > +             ret = devfreq_cpufreq_gov_start(devfreq);
->>> > +             if (ret) {
->>> > +                     pr_err("Governor start failed!\n");
->>> > +                     return ret;
->>> > +             }
->>> > +             pr_debug("Enabled CPUfreq-map governor\n");
->>> > +             break;
->>> > +
->>> > +     case DEVFREQ_GOV_STOP:
->>> > +
->>> > +             devfreq_cpufreq_gov_stop(devfreq);
->>> > +             pr_debug("Disabled dev CPUfreq-map governor\n");
->>> > +             break;
->>> > +     }
->>> > +
->>> > +     return 0;
->>> > +}
->>> > +
->>> > +static struct devfreq_governor devfreq_cpufreq = {
->>> > +     .name = "cpufreq-map",
->>> > +     .get_target_freq = devfreq_cpufreq_get_freq,
->>> > +     .event_handler = devfreq_cpufreq_ev_handler,
->>> > +};
->>> > +
->>> > +#define NUM_COLS     2
->>> > +static struct freq_map *read_tbl(struct device_node *of_node, char *prop_name)
->>> > +{
->>> > +     int len, nf, i, j;
->>> > +     u32 data;
->>> > +     struct freq_map *tbl;
->>> > +
->>> > +     if (!of_find_property(of_node, prop_name, &len))
->>> > +             return NULL;
->>> > +     len /= sizeof(data);
->>> > +
->>> > +     if (len % NUM_COLS || len == 0)
->>> > +             return NULL;
->>> > +     nf = len / NUM_COLS;
->>> > +
->>> > +     tbl = kzalloc((nf + 1) * sizeof(*tbl), GFP_KERNEL);
->>> > +     if (!tbl)
->>> > +             return NULL;
->>> > +
->>> > +     for (i = 0, j = 0; i < nf; i++, j += 2) {
->>> > +             of_property_read_u32_index(of_node, prop_name, j, &data);
->>> > +             tbl[i].cpu_khz = data;
->>> > +
->>> > +             of_property_read_u32_index(of_node, prop_name, j + 1, &data);
->>> > +             tbl[i].target_freq = data;
->>> > +     }
->>> > +     tbl[i].cpu_khz = 0;
->>> > +
->>> > +     return tbl;
->>> > +}
->>> > +
->>> > +#define PROP_TARGET "target-dev"
->>> > +#define PROP_TABLE "cpu-to-dev-map"
->>> > +static int add_table_from_of(struct device_node *of_node)
->>> > +{
->>> > +     struct device_node *target_of_node;
->>> > +     struct devfreq_node *node;
->>> > +     struct freq_map *common_tbl;
->>> > +     struct freq_map **tbl_list = NULL;
->>> > +     static char prop_name[] = PROP_TABLE "-999999";
->>> > +     int cpu, ret, cnt = 0, prop_sz = ARRAY_SIZE(prop_name);
->>> > +
->>> > +     target_of_node = of_parse_phandle(of_node, PROP_TARGET, 0);
->>> > +     if (!target_of_node)
->>> > +             return -EINVAL;
->>> > +
->>> > +     node = kzalloc(sizeof(struct devfreq_node), GFP_KERNEL);
->>> > +     if (!node)
->>> > +             return -ENOMEM;
->>> > +
->>> > +     common_tbl = read_tbl(of_node, PROP_TABLE);
->>> > +     if (!common_tbl) {
->>> > +             tbl_list = kzalloc(sizeof(*tbl_list) * NR_CPUS, GFP_KERNEL);
->>> > +             if (!tbl_list) {
->>> > +                     ret = -ENOMEM;
->>> > +                     goto err_list;
->>> > +             }
->>> > +
->>> > +             for_each_possible_cpu(cpu) {
->>> > +                     ret = snprintf(prop_name, prop_sz, "%s-%d",
->>> > +                                     PROP_TABLE, cpu);
->>> > +                     if (ret >= prop_sz) {
->>> > +                             pr_warn("More CPUs than I can handle!\n");
->>> > +                             pr_warn("Skipping rest of the tables!\n");
->>> > +                             break;
->>> > +                     }
->>> > +                     tbl_list[cpu] = read_tbl(of_node, prop_name);
->>> > +                     if (tbl_list[cpu])
->>> > +                             cnt++;
->>> > +             }
->>> > +     }
->>> > +     if (!common_tbl && !cnt) {
->>> > +             ret = -EINVAL;
->>> > +             goto err_tbl;
->>> > +     }
->>> > +
->>> > +     mutex_lock(&state_lock);
->>> > +     node->of_node = target_of_node;
->>> > +     node->map = tbl_list;
->>> > +     node->common_map = common_tbl;
->>> > +     list_add_tail(&node->list, &devfreq_list);
->>> > +     mutex_unlock(&state_lock);
->>> > +
->>> > +     return 0;
->>> > +err_tbl:
->>> > +     kfree(tbl_list);
->>> > +err_list:
->>> > +     kfree(node);
->>> > +     return ret;
->>> > +}
->>> > +
->>> > +static int __init devfreq_cpufreq_init(void)
->>> > +{
->>> > +     int ret;
->>> > +     struct device_node *of_par, *of_child;
->>> > +
->>> > +     of_par = of_find_node_by_name(NULL, "devfreq-cpufreq-map");
->>> > +     if (of_par) {
->>> > +             for_each_child_of_node(of_par, of_child) {
->>> > +                     ret = add_table_from_of(of_child);
->>> > +                     if (ret)
->>> > +                             pr_err("Parsing %s failed!\n", of_child->name);
->>> > +                     else
->>> > +                             pr_debug("Parsed %s.\n", of_child->name);
->>> > +             }
->>> > +             of_node_put(of_par);
->>> > +     } else {
->>> > +             pr_info("No tables parsed from DT.\n");
->>> > +     }
->>> > +
->>> > +     ret = devfreq_add_governor(&devfreq_cpufreq);
->>> > +     if (ret) {
->>> > +             pr_err("cpufreq-map governor add failed!\n");
->>> > +             return ret;
->>> > +     }
->>> > +
->>> > +     return 0;
->>> > +}
->>> > +subsys_initcall(devfreq_cpufreq_init);
->>> > +
->>> > +static void __exit devfreq_cpufreq_exit(void)
->>> > +{
->>> > +     int ret, cpu;
->>> > +     struct devfreq_node *node, *tmp;
->>> > +
->>> > +     ret = devfreq_remove_governor(&devfreq_cpufreq);
->>> > +     if (ret)
->>> > +             pr_err("cpufreq-map governor remove failed!\n");
->>> > +
->>> > +     mutex_lock(&state_lock);
->>> > +     list_for_each_entry_safe(node, tmp, &devfreq_list, list) {
->>> > +             kfree(node->common_map);
->>> > +             for_each_possible_cpu(cpu)
->>> > +                     kfree(node->map[cpu]);
->>> > +             kfree(node->map);
->>> > +             list_del(&node->list);
->>> > +             kfree(node);
->>> > +     }
->>> > +     mutex_unlock(&state_lock);
->>> > +}
->>> > +module_exit(devfreq_cpufreq_exit);
->>> > +
->>> > +MODULE_DESCRIPTION("devfreq gov that sets dev freq based on current CPU freq");
->>> > +MODULE_LICENSE("GPL v2");
->>> >
+>> Mental note: How will it be handled if a caller specifies "Allocate
+>> memmap from hotadded memory", but we are running under SPARSEMEM where
+>> we can't do this.
 > 
+> In add_memory_resource(), we have a call to mhp_check_correct_flags(), which is
+> in charge of checking if the flags passed are compliant with our configuration
+> among other things.
+> It also checks if both flags were passed (_MEMBLOCK|_DEVICE).
+> 
+> If a) any of the flags were specified and we are not on CONFIG_SPARSEMEM_VMEMMAP,
+> b) the flags are colliding with each other or c) the flags just do not make sense,
+> we print out a warning and drop the flags to 0, so we just ignore them.
+> 
+> I just realized that I can adjust the check even more (something for the next
+> version).
+> 
+> But to answer your question, flags are ignored under !CONFIG_SPARSEMEM_VMEMMAP.
 
+So it is indeed a hint only.
+
+> 
+>>
+>>>
+>>> a) it consumes an additional memory until the hotadded memory itself is
+>>>    onlined and
+>>> b) memmap might end up on a different numa node which is especially true
+>>>    for movable_node configuration.
+>>>
+>>> a) it is a problem especially for memory hotplug based memory "ballooning"
+>>>    solutions when the delay between physical memory hotplug and the
+>>>    onlining can lead to OOM and that led to introduction of hacks like auto
+>>>    onlining (see 31bc3858ea3e ("memory-hotplug: add automatic onlining
+>>>    policy for the newly added memory")).
+>>>
+>>> b) can have performance drawbacks.
+>>>
+>>> Another minor case is that I have seen hot-add operations failing on archs
+>>> because they were running out of order-x pages.
+>>> E.g On powerpc, in certain configurations, we use order-8 pages,
+>>> and given 64KB base pagesize, that is 16MB.
+>>> If we run out of those, we just fail the operation and we cannot add
+>>> more memory.
+>>
+>> At least for SPARSEMEM, we fallback to vmalloc() to work around this
+>> issue. I haven't looked into the populate_section_memmap() internals
+>> yet. Can you point me at the code that performs this allocation?
+> 
+> Yes, on SPARSEMEM we first try to allocate the pages physical configuous, and
+> then fallback to vmalloc.
+> This is because on CONFIG_SPARSEMEM memory model, the translations pfn_to_page/
+> page_to_pfn do not expect the memory to be contiguous.
+> 
+> But that is not the case on CONFIG_SPARSEMEM_VMEMMAP.
+> We do expect the memory to be physical contigous there, that is why a simply
+> pfn_to_page/page_to_pfn is a matter of adding/substracting vmemmap/pfn.
+
+Yeas, I explored that last week but didn't figure out where the actual
+vmmap population code resided - thanks :)
+
+> 
+> Powerpc code is at:
+> 
+> https://elixir.bootlin.com/linux/v5.2-rc6/source/arch/powerpc/mm/init_64.c#L175
+> 
+> 
+> 
+>> So, assuming we add_memory(1GB, MHP_MEMMAP_DEVICE) and then
+>> remove_memory(128MB) of the added memory, this will work?
+> 
+> No, MHP_MEMMAP_DEVICE is meant to be used when hot-adding and hot-removing work
+> in the same granularity.
+> This is because all memmap pages will be stored at the beginning of the memory
+> range.
+> Allowing hot-removing in a different granularity on MHP_MEMMAP_DEVICE would imply
+> a lot of extra work.
+> For example, we would have to parse the vmemmap-head of the hot-removed range,
+> and punch a hole in there to clear the vmemmap pages, and then be very carefull
+> when deleting those pagetables.
+> 
+> So I followed Michal's advice, and I decided to let the caller specify if he
+> either wants to allocate per memory block or per hot-added range(device).
+> Where per memory block, allows us to do:
+> 
+> add_memory(1GB, MHP_MEMMAP_MEMBLOCK)
+> remove_memory(128MB)
+
+Back then, I already mentioned that we might have some users that
+remove_memory() they never added in a granularity it wasn't added. My
+concerns back then were never fully sorted out.
+
+arch/powerpc/platforms/powernv/memtrace.c
+
+- Will remove memory in memory block size chunks it never added
+- What if that memory resides on a DIMM added via MHP_MEMMAP_DEVICE?
+
+Will it at least bail out? Or simply break?
+
+IOW: I am not yet 100% convinced that MHP_MEMMAP_DEVICE is save to be
+introduced.
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+
+Thanks,
+
+David / dhildenb
