@@ -2,192 +2,126 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40812C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842F7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12AB72080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543082080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561548513;
-	bh=Rx1WkGoiSEWh2wSDBDE2RSmbZjM1VyJ2Sb77lEjvA2w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AylrDByi0nNKgY0NBEiryHoe4c/4mF57U9eKCkV3aif+3jVE3aV6i0N9jyn108FHO
-	 vZld5DavWtg7lsIhGHMLminP2GDjTG/ybS6GgZXV/BjsdXF/ri9oZoE7fw+wiuVh0Z
-	 cvc8qgG43ktqgcUT+61DvUi+UxGgzMCr9+JqVevI=
+	s=default; t=1561548793;
+	bh=jNNMs9C9pSf/866YPMoiR4fS6dndOZiZHQaEyKA1g2M=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=kfRLfDY2+m6OCwwQRUfKcBFqUXxYUBftfg4Jnt0bkcVYuh/nR4Jpz1CTs9S826IsW
+	 7Yustuff3AP9yi22KGbDlZjcN2xmrJy0q2nfqNE5Lgz6owNg9/wQUueF6f127BNLil
+	 m2Gi556HfwlUIQNhQuRWumvIV8YyGVMjTW6yqR8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfFZL2b convert rfc822-to-8bit (ORCPT
+        id S1727327AbfFZLdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:28:31 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42749 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfFZL2b (ORCPT
+        Wed, 26 Jun 2019 07:33:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53680 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbfFZLdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:28:31 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so2119547otn.9;
-        Wed, 26 Jun 2019 04:28:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zYG7+FYrQci0B0NIIaV4SdyVIkXx7HP7jsA5/CTPT+A=;
-        b=I/rVUbKcJWx0fApH7NgpK6+ISwu3DE1elJmg+JSChHT5MddeovLDMcyCNgMsvF8L3V
-         x0hldkNCghWWU4eFQfXRRC0jwZtLFcnIUNZPXrFckHL4NrQdVkkCyls+82x3i+rUtp5V
-         4j4WmRF8xVeF0AjlP5CPuMIKy2WUzTjIizmvGsJQdzUGo/B5MVQty3855y9tLGsf8IyA
-         MHho5/17RwhTMyt3vCXJYwYJknCcPizUmh+G88iI3FaewxgAEYNnrBdRQLb8/4mtBvWa
-         EJk1iTE5LTMfujhzApk9a3qnzsdLf9Wy5dlTWLaR5Xh7FRTTzqW8ONWwyjD8sA/OYgxs
-         LT3A==
-X-Gm-Message-State: APjAAAWPMA82e1z6z6aBm9mXpacR1GSoy1biySEA77/lbDUww3tDNv89
-        cNMLcx3taCTUXLxUNJ2knGhcYm3DKe9lGxPEvOzgsbEg
-X-Google-Smtp-Source: APXvYqxQcfGkDZskFmpDKI+mK6sXWnA1QxcoJlpLtksnfosbfzd0ZwAqux1kiyfOCsazXPoyKgzI+/UQgzyr5VyCpbU=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr2713084oto.118.1561548510328;
- Wed, 26 Jun 2019 04:28:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190625113244.18146-1-daniel.lezcano@linaro.org>
- <20190625113244.18146-2-daniel.lezcano@linaro.org> <20190626025831.jmyzyypxr6ezpbtu@vireshk-i7>
- <da1d2603-e30a-d877-54c3-1fad218f9d57@linaro.org> <20190626063716.cechnzsb75q5lclr@vireshk-i7>
- <CAJZ5v0jFXmJ3ikEPQUp-cLv3+ZSnp1kP8CxdkZVofV1BS3+UwQ@mail.gmail.com> <8a9b7bd0-9b21-1ce1-6176-cffff4b8d739@linaro.org>
-In-Reply-To: <8a9b7bd0-9b21-1ce1-6176-cffff4b8d739@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Jun 2019 13:28:19 +0200
-Message-ID: <CAJZ5v0h7=BqnQqvULnQr3MuQsS2qwSn7RCZbMo-V+cUi+kbvSg@mail.gmail.com>
-Subject: Re: [PATCH V3 2/3] thermal/drivers/cpu_cooling: Unregister with the policy
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "open list:CPU FREQUENCY DRIVERS - ARM BIG LITTLE" 
-        <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:TI BANDGAP AND THERMAL DRIVER" 
-        <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Wed, 26 Jun 2019 07:33:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=KVT3HptzEAw2nCx6oohu1t8YhQ782ZH7OuAIVwdBjjQ=; b=FxcQWdPMJLmR
+        HG8OKmxGe3Z2aEIdkfuilC/uUKHKDfEV/tDnYkpc5RwcEViSb8Vfhk3dRmPAjky8oycPZMM/0smN+
+        XIWQByZxJlwjD5C5auPcdqxRA0tXW3CPVKUhaC4eNRH5v5JJLNyxb3HGXPBEq3HZR1uIrS/vuXloK
+        0cL7Y=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hg6AO-0007my-Ss; Wed, 26 Jun 2019 11:32:44 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 65B7144004C; Wed, 26 Jun 2019 12:32:44 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>, lars@metafoo.de,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: codecs: ad193x: Fix memory corruption on BE 64b systems" to the asoc tree
+In-Reply-To: <20190626104947.26547-1-codrin.ciubotariu@microchip.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190626113244.65B7144004C@finisterre.sirena.org.uk>
+Date:   Wed, 26 Jun 2019 12:32:44 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 12:19 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 26/06/2019 11:06, Rafael J. Wysocki wrote:
-> > On Wed, Jun 26, 2019 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >>
-> >> On 26-06-19, 08:02, Daniel Lezcano wrote:
-> >>> On 26/06/2019 04:58, Viresh Kumar wrote:
-> >>>> On 25-06-19, 13:32, Daniel Lezcano wrote:
-> >>>>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> >>>>> index aee024e42618..f07454249fbc 100644
-> >>>>> --- a/drivers/cpufreq/cpufreq.c
-> >>>>> +++ b/drivers/cpufreq/cpufreq.c
-> >>>>> @@ -1379,8 +1379,8 @@ static int cpufreq_online(unsigned int cpu)
-> >>>>>            cpufreq_driver->ready(policy);
-> >>>>>
-> >>>>>    if (cpufreq_thermal_control_enabled(cpufreq_driver))
-> >>>>> -          policy->cdev = of_cpufreq_cooling_register(policy);
-> >>>>> -
-> >>>>> +          of_cpufreq_cooling_register(policy);
-> >>>>> +
-> >>>>
-> >>>> We don't need any error checking here anymore ?
-> >>>
-> >>> There was no error checking initially. This comment and the others below
-> >>> are for an additional patch IMO, not a change in this one.
-> >>
-> >> right, but ...
-> >>
-> >>>>> -void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
-> >>>>> +void cpufreq_cooling_unregister(struct cpufreq_policy *policy)
-> >>>>>  {
-> >>>>>    struct cpufreq_cooling_device *cpufreq_cdev;
-> >>>>>    bool last;
-> >>>>>
-> >>>>> -  if (!cdev)
-> >>>>> -          return;
-> >>
-> >> we used to return without any errors from here. Now we will have
-> >> problems if regsitering fails for some reason.
-> >
-> > Specifically, the last cpufreq_cdev in the list will be unregistered
-> > AFAICS, and without removing it from the list for that matter, which
-> > isn't what the caller wants.
->
-> Indeed,
->
-> What about the resulting code above:
->
-> void __cpufreq_cooling_unregister(struct cpufreq_cooling_device
-> *cpufreq_cdev, int last)
-> {
->         /* Unregister the notifier for the last cpufreq cooling device */
->         if (last)
->                 cpufreq_unregister_notifier(&thermal_cpufreq_notifier_block,
->                                             CPUFREQ_POLICY_NOTIFIER);
->
+The patch
 
-Doesn't the notifier need to be unregistered under cooling_list_lock ?
+   ASoC: codecs: ad193x: Fix memory corruption on BE 64b systems
 
->         thermal_cooling_device_unregister(cpufreq_cdev->cdev);
->         ida_simple_remove(&cpufreq_ida, cpufreq_cdev->id);
->         kfree(cpufreq_cdev->idle_time);
->         kfree(cpufreq_cdev);
-> }
->
-> /**
->
->  * cpufreq_cooling_unregister - function to remove cpufreq cooling
-> device.
->  * @cdev: thermal cooling device pointer.
->
->  *
->
->  * This interface function unregisters the "thermal-cpufreq-%x" cooling
-> device.
->  */
-> void cpufreq_cooling_unregister(struct cpufreq_policy *policy)
-> {
->         struct cpufreq_cooling_device *cpufreq_cdev;
->         bool last;
->
->         mutex_lock(&cooling_list_lock);
->         list_for_each_entry(cpufreq_cdev, &cpufreq_cdev_list, node) {
->                 if (cpufreq_cdev->policy == policy) {
->                         list_del(&cpufreq_cdev->node);
->                         last = list_empty(&cpufreq_cdev_list);
->                         break;
->                 }
->         }
->         mutex_unlock(&cooling_list_lock);
->
->         if (cpufreq_cdev->policy == policy)
->                 __cpufreq_cooling_unregister(cpufreq_cdev, last);
-> }
-> EXPORT_SYMBOL_GPL(cpufreq_cooling_unregister);
->
->
->
->
-> --
->  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From da7260cc8d1dc3564eb4f33550b0525541d71a47 Mon Sep 17 00:00:00 2001
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Date: Wed, 26 Jun 2019 13:49:46 +0300
+Subject: [PATCH] ASoC: codecs: ad193x: Fix memory corruption on BE 64b systems
+
+Since change_bit() requires unsigned long*, making this cast on an
+unsigned int variable will change a wrong bit on BE platforms, causing
+memory corruption. Replace this function with a simple XOR.
+
+Fixes: 90f6e6803139 ("ASoC: codecs: ad193x: Fix frame polarity for DSP_A format")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/ad193x.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/codecs/ad193x.c b/sound/soc/codecs/ad193x.c
+index 96d7cb2e4a56..16e2d334bbe0 100644
+--- a/sound/soc/codecs/ad193x.c
++++ b/sound/soc/codecs/ad193x.c
+@@ -241,10 +241,8 @@ static int ad193x_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	}
+ 
+ 	/* For DSP_*, LRCLK's polarity must be inverted */
+-	if (fmt & SND_SOC_DAIFMT_DSP_A) {
+-		change_bit(ffs(AD193X_DAC_LEFT_HIGH) - 1,
+-			   (unsigned long *)&dac_fmt);
+-	}
++	if (fmt & SND_SOC_DAIFMT_DSP_A)
++		dac_fmt ^= AD193X_DAC_LEFT_HIGH;
+ 
+ 	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+ 	case SND_SOC_DAIFMT_CBM_CFM: /* codec clk & frm master */
+-- 
+2.20.1
+
