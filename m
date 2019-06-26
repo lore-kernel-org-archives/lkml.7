@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B009DC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BECC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE7F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C63205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521026;
-	bh=AarvZG2NZ422+D4FObF+VfCAtcqlVfY3f9aW0cHglZ8=;
+	s=default; t=1561521032;
+	bh=vCYeM5EFMB1SOUuq5Ofz12ylpaMRCJKxg1kTA73sMW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSxMlI2jwmTouRZ1Z1K/tHb3hkxtposcFFXQeyeodhnkA3G0ri4oH/rOSv3ty7+KO
-	 PooReWM3dmzaGimboezvtFiygCQQi9wjTpOWq2oiEZ8x7uqxaKq80SIKUU7QmqDYe8
-	 yh+I/dkZ4PeZGOCIKBYOk7MZ63tdbowm4dD1CchM=
+	b=tcoeTAKHMrU2yFPXTFR7dYJXgTijbup4Yv2FGpFv+Xz4NapgXbHQFSOzpe7n8zXs5
+	 N4WEdr8z++QZt48NAfPolLKg5uiinzyMfLKDzgkzrm0rv8MQif059yNNXIO2jwZoUc
+	 SUB9rjCgcV7KWlJ96BrB4U2ff9Kd/fQl6iWQD7uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfFZDuY (ORCPT
+        id S1727116AbfFZDmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:42:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbfFZDmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:42:45 -0400
+        id S1727071AbfFZDma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:42:30 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0EAC205ED;
-        Wed, 26 Jun 2019 03:42:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BBD4205ED;
+        Wed, 26 Jun 2019 03:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520564;
-        bh=AarvZG2NZ422+D4FObF+VfCAtcqlVfY3f9aW0cHglZ8=;
+        s=default; t=1561520549;
+        bh=vCYeM5EFMB1SOUuq5Ofz12ylpaMRCJKxg1kTA73sMW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqUJ9GEaAabHGvakQgZngp2sMeqR0X3sHPALu0je+UcIBqOlMWWsKc1+G7Zox3S1w
-         zH7C/wQyCQCTaGh5crwGJx/1pZlHydUJUvQH6Lh5xfuzqcRQ5bw9N4JhidxQ2QnGfU
-         pF8B4q2mZt7CRn4HHCKIvLXAjEG6O2pKooRbm/34=
+        b=t9hee2XKx5SIN/6VFxv9RCL6ZiFyj2H36UfrDwFz+94HF/kcHg4HSi3pM5r9BbnmW
+         nFqv7SWBM4Bvz63CCnhUcpv6PMEo2bMamPVyJtvpuQv9p/7gODummoxHcpqXm5D7Wa
+         HmJYnDviAZr/kGuEGatWgBJVu00TRx1QRLACWzOs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 30/51] ASoC: Intel: cht_bsw_rt5672: fix kernel oops with platform_name override
-Date:   Tue, 25 Jun 2019 23:40:46 -0400
-Message-Id: <20190626034117.23247-30-sashal@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        James Grant <jamesg@zaltys.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 25/51] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
+Date:   Tue, 25 Jun 2019 23:40:41 -0400
+Message-Id: <20190626034117.23247-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -59,42 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit 9bbc799318a34061703f2a980e2b6df7fc6760f0 ]
+[ Upstream commit fbc318afadd6e7ae2252d6158cf7d0c5a2132f7d ]
 
-The platform override code uses devm_ functions to allocate memory for
-the new name but the card device is not initialized. Fix by moving the
-init earlier.
+Gadget drivers may queue request in interrupt context. This would lead to
+a descriptor allocation in that context. In that case we would hit
+BUG_ON(in_interrupt()) in __get_vm_area_node.
 
-Fixes: f403906da05cd ("ASoC: Intel: cht_bsw_rt5672: platform name fixup support")
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Also remove the unnecessary cast.
+
+Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Tested-by: James Grant <jamesg@zaltys.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/cht_bsw_rt5672.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/lpc32xx_udc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/sound/soc/intel/boards/cht_bsw_rt5672.c b/sound/soc/intel/boards/cht_bsw_rt5672.c
-index 3d5a2b3a06f0..87ce3857376d 100644
---- a/sound/soc/intel/boards/cht_bsw_rt5672.c
-+++ b/sound/soc/intel/boards/cht_bsw_rt5672.c
-@@ -425,6 +425,7 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
+index b0781771704e..eafc2a00c96a 100644
+--- a/drivers/usb/gadget/udc/lpc32xx_udc.c
++++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+@@ -922,8 +922,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struct lpc32xx_udc *udc)
+ 	dma_addr_t			dma;
+ 	struct lpc32xx_usbd_dd_gad	*dd;
  
- 	/* override plaform name, if required */
-+	snd_soc_card_cht.dev = &pdev->dev;
- 	platform_name = mach->mach_params.platform;
+-	dd = (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
+-			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
++	dd = dma_pool_alloc(udc->dd_cache, GFP_ATOMIC | GFP_DMA, &dma);
+ 	if (dd)
+ 		dd->this_dma = dma;
  
- 	ret_val = snd_soc_fixup_dai_links_platform_name(&snd_soc_card_cht,
-@@ -442,7 +443,6 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
- 	snd_soc_card_set_drvdata(&snd_soc_card_cht, drv);
- 
- 	/* register the soc card */
--	snd_soc_card_cht.dev = &pdev->dev;
- 	ret_val = devm_snd_soc_register_card(&pdev->dev, &snd_soc_card_cht);
- 	if (ret_val) {
- 		dev_err(&pdev->dev,
 -- 
 2.20.1
 
