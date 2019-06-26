@@ -2,99 +2,115 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DC8C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C659C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA91208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561507316;
-	bh=eFpaKz3NzZBChCEIJuMToeIJiJq8Qt6ilNLqP4D8dx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AM25vAiQxxzbOThbTp80ele+7dRzLtzcPwGm2GzNGJI/uuXrjyAmQUsiyxf1aMJ57
-	 QfKpdYe2epxa7ATqROX6VYkmGdi2fThS2aaWoYxancv1zDsRJfRjsET3fXyhbPebxi
-	 +7/v9mkn3ZhNZW+LW0Nsf97WX7rV4ms7YtloQ1B4=
+	by mail.kernel.org (Postfix) with ESMTP id 3709320883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbfFZABy (ORCPT
+        id S1726385AbfFZADG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 20:01:54 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41270 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFZABy (ORCPT
+        Tue, 25 Jun 2019 20:03:06 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:60531 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725782AbfFZADF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 20:01:54 -0400
-Received: by mail-pf1-f193.google.com with SMTP id m30so247312pff.8;
-        Tue, 25 Jun 2019 17:01:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8jiVaE2JFBMfd+G3WCzNTPAlyBMExhnepJubp+vEbhM=;
-        b=k+q+lL9JnManagsxYEhmD0SBcXkhaynxhSHiLAl0Ja+vnLH1iUkw4tZmA1+71kxgZE
-         bgqgqaUKVuS0AOS342nb17+pjIKKxRi3U/ZWIYxDD7ND7INQyVWdDJisf5tOxstRt1Ky
-         QxAxufzM5o2vnvYo7pLaEI32jWlufcvAMoN6UQN3eWfrdH+PVSOFXJ26Q+gIqH2Yd4ik
-         buLtYhv3wnjU7FRRAHC7pWlG9dd0mPyoYvRDKEG1XdxXlXJmNJ4HfXqpk2FCdBoyDmOK
-         hfsMtbCBdWAg0ReHyde2M31PpclLEkcwoSDyubDLiob12mO1J5PnhKo/Ph+klZQvoVOD
-         Yoeg==
-X-Gm-Message-State: APjAAAVWja7kG8Zm87XUU0bTOOui8G/YIPiDi0TnKNdYJ2B5jsSUw9EX
-        mWX4/p/eXJ5PsjgU9ZOj1M8=
-X-Google-Smtp-Source: APXvYqzNTUiSwWdZ3UgJYHzcAJb5xsbwt8eGmi7SJjyzu5XA3lIGVxbDEngQABiwrdIPUAy8M4OQFg==
-X-Received: by 2002:a63:d756:: with SMTP id w22mr33935466pgi.156.1561507312844;
-        Tue, 25 Jun 2019 17:01:52 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id z22sm14694045pgu.28.2019.06.25.17.01.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 17:01:51 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0674940336; Wed, 26 Jun 2019 00:01:50 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 00:01:50 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, peterz@infradead.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu,
-        yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
-        julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Subject: Re: [PATCH v5 13/18] kunit: tool: add Python wrappers for running
- KUnit tests
-Message-ID: <20190626000150.GT19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-14-brendanhiggins@google.com>
+        Tue, 25 Jun 2019 20:03:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TVCYVJX_1561507375;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TVCYVJX_1561507375)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Jun 2019 08:03:02 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
+        shakeelb@google.com, rientjes@google.com, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v4 PATCH 0/4] Make deferred split shrinker memcg aware
+Date:   Wed, 26 Jun 2019 08:02:37 +0800
+Message-Id: <1561507361-59349-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617082613.109131-14-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:26:08AM -0700, Brendan Higgins wrote:
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-crash.log
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-failure.log
->  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-no_tests_run.log
->  create mode 100644 tools/testing/kunit/test_data/test_output_isolated_correctly.log
->  create mode 100644 tools/testing/kunit/test_data/test_read_from_file.kconfig
 
-Why are these being added upstream? The commit log does not explain
-this.
+Currently THP deferred split shrinker is not memcg aware, this may cause
+premature OOM with some configuration. For example the below test would
+run into premature OOM easily:
 
-  Luis
+$ cgcreate -g memory:thp
+$ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
+$ cgexec -g memory:thp transhuge-stress 4000
+
+transhuge-stress comes from kernel selftest.
+
+It is easy to hit OOM, but there are still a lot THP on the deferred
+split queue, memcg direct reclaim can't touch them since the deferred
+split shrinker is not memcg aware.
+
+Convert deferred split shrinker memcg aware by introducing per memcg
+deferred split queue.  The THP should be on either per node or per memcg
+deferred split queue if it belongs to a memcg.  When the page is
+immigrated to the other memcg, it will be immigrated to the target
+memcg's deferred split queue too.
+
+Reuse the second tail page's deferred_list for per memcg list since the
+same THP can't be on multiple deferred split queues.
+
+Make deferred split shrinker not depend on memcg kmem since it is not slab.
+It doesn’t make sense to not shrink THP even though memcg kmem is disabled.
+
+With the above change the test demonstrated above doesn’t trigger OOM even
+though with cgroup.memory=nokmem.
+
+
+Changelog:
+v4: * Replace list_del() to list_del_init() per Andrew.
+    * Fixed the build failure for different kconfig combo and tested the
+      below combo:
+          MEMCG + TRANSPARENT_HUGEPAGE
+          !MEMCG + TRANSPARENT_HUGEPAGE
+          MEMCG + !TRANSPARENT_HUGEPAGE
+          !MEMCG + !TRANSPARENT_HUGEPAGE
+    * Added Acked-by from Kirill Shutemov. 
+v3: * Adopted the suggestion from Kirill Shutemov to move mem_cgroup_uncharge()
+      out of __page_cache_release() in order to handle THP free properly. 
+    * Adjusted the sequence of the patches per Kirill Shutemov. Dropped the
+      patch 3/4 in v2.
+    * Moved enqueuing THP onto "to" memcg deferred split queue after
+      page->mem_cgroup is changed in memcg account move per Kirill Tkhai.
+ 
+v2: * Adopted the suggestion from Krill Shutemov to extract deferred split
+      fields into a struct to reduce code duplication (patch 1/4).  With this
+      change, the lines of change is shrunk down to 198 from 278.
+    * Removed memcg_deferred_list. Use deferred_list for both global and memcg.
+      With the code deduplication, it doesn't make too much sense to keep it.
+      Kirill Tkhai also suggested so.
+    * Fixed typo for SHRINKER_NONSLAB.
+
+Yang Shi (4):
+      mm: thp: extract split_queue_* into a struct
+      mm: move mem_cgroup_uncharge out of __page_cache_release()
+      mm: shrinker: make shrinker not depend on memcg kmem
+      mm: thp: make deferred split shrinker memcg aware
+
+ include/linux/huge_mm.h    |  9 +++++++
+ include/linux/memcontrol.h |  4 +++
+ include/linux/mm_types.h   |  1 +
+ include/linux/mmzone.h     | 12 ++++++---
+ include/linux/shrinker.h   |  3 ++-
+ mm/huge_memory.c           | 98 ++++++++++++++++++++++++++++++++++++++++++++++++++------------------
+ mm/memcontrol.c            | 24 +++++++++++++++++
+ mm/page_alloc.c            |  9 ++++---
+ mm/swap.c                  |  2 +-
+ mm/vmscan.c                | 36 +++++++++++++------------
+ 10 files changed, 147 insertions(+), 51 deletions(-)
