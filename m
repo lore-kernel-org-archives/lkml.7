@@ -2,81 +2,119 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AF1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A10BC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAF02086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeRsMz+9"
+	by mail.kernel.org (Postfix) with ESMTP id 39C0D2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfFZJoG (ORCPT
+        id S1726839AbfFZJpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:44:06 -0400
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:42499 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZJoG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:44:06 -0400
-Received: by mail-oi1-f170.google.com with SMTP id s184so1418799oie.9;
-        Wed, 26 Jun 2019 02:44:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FWE8M8rx2al2WmpLiaszR8ERWhndI8CHZ91PqS/pz0A=;
-        b=OeRsMz+9cjbakYaf2D3qd+/K+lxO/QrMUGGr/2vAjSRDEDzaKM7JFQS2zDbvrTnlpE
-         jfOPS9PfsjsNEaTNoq+pBDi4uZwyDFTgKtfzhDeB9NxR+fvxFh3Nzo/Tdkxhn/DVtZ8f
-         Yz8D6sYbF91qQXdb3y0z7OKpBrRZU2+R5Pq0xQ7g208v2Prdfqc0DkAbZNo0aPlKIzg7
-         baPSR14ZZjXFooQujIEfkX+LmeWxqhs8ITp9CRiumvsIIZZSINOPTm+WBCn7qFHOpyHs
-         ZN0SNk4nCKt1tQtoFKD7QIFafBXj4mSESsqiksb9BHCk/G1If3zLI0NF8SCuqvYY13pc
-         jSiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FWE8M8rx2al2WmpLiaszR8ERWhndI8CHZ91PqS/pz0A=;
-        b=JBT4qW9g1PDPWAl0nRi7i8WxeVEUu3odh9/h5+ozGBAOQRt9QlnLtB/USRvxt/rnmR
-         jjTWQ8OJFPyubGzlGfZcwpr17Elz2L5r9jvGCfrtSNgaVyXBTbm6BcT4piVU5+LDwPJe
-         9SL8nf1Yv/qxUHoqPKIW8JAdgTVEOF+1wl+c5+qqXUmq31TYXmHHCx6btuMK4NoAQiaL
-         ObvDzijH37/vfoxVmK9AE6Kdph0jeLx38QvCP4VQg+i5lFIxsuOMQ7om83DqPP/WcBhT
-         517cVRTNXCIPyV9w58rY/Qdlgb+agKzluiAlvrTfqITQWqTda+HqUKKNgUMQjFUXwgEa
-         okOg==
-X-Gm-Message-State: APjAAAU2Y4nJqGMjUZ2YqW7TkX2nlpoJ+SlEseL6ge92StnWluu9cGtc
-        orO06B96P4rC9PZd2UP9EFyUI/E4s7Nn9CWuuB8=
-X-Google-Smtp-Source: APXvYqz+xJQrf+JUKTlVpdGKJZZ1zqONbH4N9BougchUbsGfniXJhXCv4x23r5NorJCiZXPfOOMJBow3JfSicukXlrc=
-X-Received: by 2002:aca:b9d4:: with SMTP id j203mr1199591oif.5.1561542245446;
- Wed, 26 Jun 2019 02:44:05 -0700 (PDT)
+        Wed, 26 Jun 2019 05:45:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:57510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfFZJpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 05:45:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6D372B;
+        Wed, 26 Jun 2019 02:45:43 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B57BF3F718;
+        Wed, 26 Jun 2019 02:45:42 -0700 (PDT)
+Subject: Re: "arm64: vdso: Substitute gettimeofday() with C implementation"
+ breaks clang build
+To:     Will Deacon <will@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1561464964.5154.63.camel@lca.pw>
+ <e86774e4-7470-5cb2-fc3e-b7c1f529d253@arm.com>
+ <1561467369.5154.67.camel@lca.pw>
+ <00a78980-6b9c-5d5b-ed01-b28bb34be022@arm.com>
+ <1561470705.5154.68.camel@lca.pw>
+ <5113362e-1256-6712-6ce8-9599b1806cf1@arm.com>
+ <1561472887.5154.72.camel@lca.pw>
+ <668bbe72-b32b-8cee-ccad-d1f6110c6728@arm.com>
+ <CAKwvOdmCFjunXRbninTdqoDGPNJ6b7npgXLAPYGqFZas5ofNjw@mail.gmail.com>
+ <193c179e-16ca-4b4e-2584-75e8f6c1819f@arm.com>
+ <20190626093836.y2lofo54rhxw3xsm@willie-the-truck>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <897bf622-0f89-14f2-d278-b22f640b78f4@arm.com>
+Date:   Wed, 26 Jun 2019 10:45:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 26 Jun 2019 17:43:55 +0800
-Message-ID: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
-Subject: cputime takes cstate into consideration
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        KarimAllah <karahmed@amazon.de>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190626093836.y2lofo54rhxw3xsm@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
 
-After exposing mwait/monitor into kvm guest, the guest can make
-physical cpu enter deeper cstate through mwait instruction, however,
-the top command on host still observe 100% cpu utilization since qemu
-process is running even though guest who has the power management
-capability executes mwait. Actually we can observe the physical cpu
-has already enter deeper cstate by powertop on host. Could we take
-cstate into consideration when accounting cputime etc?
 
+On 26/06/2019 10:38, Will Deacon wrote:
+> On Tue, Jun 25, 2019 at 06:00:27PM +0100, Vincenzo Frascino wrote:
+>> On 25/06/2019 17:26, Nick Desaulniers wrote:
+>>> On Tue, Jun 25, 2019 at 7:54 AM Vincenzo Frascino
+>>> <vincenzo.frascino@arm.com> wrote:
+>>>>> but clang 7.0 is still use in many distros by default, so maybe this commit can
+>>>>> be fixed by adding a conditional check to use "small" if clang version < 8.0.
+>>>>>
+>>>>
+>>>> Could you please verify that the patch below works for you?
+>>>
+>>> Should it be checking against CONFIG_CLANG_VERSION, or better yet be
+>>> using cc-option macro?
+>>>
+>>
+>> This is what I did in my proposed patch, but I was surprised that clang-7
+>> generates relocations that clang-8 does not.
+>>
+>>   LD      arch/arm64/kernel/vdso/vdso.so.dbg
+>>   VDSOCHK arch/arm64/kernel/vdso/vdso.so.dbg
+>> 00000000000009d0 R_AARCH64_JUMP_SLOT  _mcount
+> 
+> Hmm. It would be nice to understand where the reference to _mcount is coming
+> from, since that sounds like ftrace is getting involved where it shouldn't
+> be.
+> 
+
+That's very true, it was a mistake in the Makefile change that I provided with
+the original iteration of this patch, that had as a side effect of having ftrace
+involved (_mcount is defined in entry-ftrace.c).
+
+I was overriding:
+
+CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) -Os
+
+with:
+
+CFLAGS_REMOVE_vgettimeofday.o = -mcmodel=tiny (selected if clang is < 8)
+
+that's why I said that I missed a "+" in my previous patch.
+
+Having:
+
+CFLAGS_REMOVE_vgettimeofday.o += -mcmodel=tiny
+
+restores the wanted behavior.
+
+Sorry for not being clear in my explanation.
+
+> Will
+> 
+
+-- 
 Regards,
-Wanpeng Li
+Vincenzo
