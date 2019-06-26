@@ -2,111 +2,101 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D161DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3253EC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD76020B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QhxqLBcN"
+	by mail.kernel.org (Postfix) with ESMTP id 1168A20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfFZH4O (ORCPT
+        id S1726648AbfFZH4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:56:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37888 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZH4O (ORCPT
+        Wed, 26 Jun 2019 03:56:22 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54846 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfFZH4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:56:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=liZehjV6yq2WxrgDL5h4NwlwF63olriPQGBcf7kidZk=; b=QhxqLBcNl1rG6mEsaPN11LcDl
-        m33b5go99KfJxgwuiMSZXqc1ssEG023S3UUtSkCT0DILnT4j1Du6IPP7y5avepmcYmwcfAPXGRybe
-        JFEXxjA+7/71H2VFnMcHoXA7M0N2zRu7r5L5VvKJAhVD+5YzRuYQbFcKB/bxFA14ZhSMeh1Cgc5sl
-        nZKAqDbRGL97BAXFf5MtqvUrY4mRWMY4kSJKP/k2xf2UfxfO0mgNvJfWwtuJ0tfKOtIkAKl2G3Z4c
-        7hbhWz1FhtVJD78+1CkEGc3skwsmn3pNj0cRiNRjyS1v67iKvVCqnMDVak2PxeqD4iyhFtoIlTvpK
-        6guZ6U3tQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg2mD-0006TL-KB; Wed, 26 Jun 2019 07:55:33 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4BAA6209CEE60; Wed, 26 Jun 2019 09:55:31 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 09:55:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Phillips, Kim" <kim.phillips@amd.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Martin Liska <mliska@suse.cz>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
-        "Hook, Gary" <Gary.Hook@amd.com>, Pu Wen <puwen@hygon.cn>,
-        Stephane Eranian <eranian@google.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 1/2 RESEND2] perf/x86/amd/uncore: Do not set ThreadMask
- and SliceMask for non-L3 PMCs
-Message-ID: <20190626075531.GG3419@hirez.programming.kicks-ass.net>
-References: <20190625145548.11600-1-kim.phillips@amd.com>
+        Wed, 26 Jun 2019 03:56:22 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 3F43180761; Wed, 26 Jun 2019 09:56:09 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 09:56:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Wen He <wen.he_1@nxp.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 55/90] drm/arm/mali-dp: Add a loop around the second
+ set CVAL and try 5 times
+Message-ID: <20190626075619.GB32248@amd>
+References: <20190624092313.788773607@linuxfoundation.org>
+ <20190624092317.745033085@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
 Content-Disposition: inline
-In-Reply-To: <20190625145548.11600-1-kim.phillips@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190624092317.745033085@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:56:23PM +0000, Phillips, Kim wrote:
-> From: Kim Phillips <kim.phillips@amd.com>
-> 
-> Commit d7cbbe49a930 ("perf/x86/amd/uncore: Set ThreadMask and SliceMask
-> for L3 Cache perf events") enables L3 PMC events for all threads and
-> slices by writing 1s in ChL3PmcCfg (L3 PMC PERF_CTL) register fields.
-> 
-> Those bitfields overlap with high order event select bits in the Data
-> Fabric PMC control register, however.
-> 
-> So when a user requests raw Data Fabric events (-e amd_df/event=0xYYY/),
-> the two highest order bits get inadvertently set, changing the counter
-> select to events that don't exist, and for which no counts are read.
-> 
-> This patch changes the logic to write the L3 masks only when dealing
-> with L3 PMC counters.
-> 
-> AMD Family 16h and below Northbridge (NB) counters were not affected.
-> 
-> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 
-Still base64 encoded garbage; the actual email reads like below.
-
-Please use a sane MUa and send it plain text.
-
----
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-Content-Transfer-Encoding: base64
+On Mon 2019-06-24 17:56:45, Greg Kroah-Hartman wrote:
+> [ Upstream commit 6a88e0c14813d00f8520d0e16cd4136c6cf8b4d4 ]
+>=20
+> This patch trying to fix monitor freeze issue caused by drm error
+> 'flip_done timed out' on LS1028A platform. this set try is make a loop
+> around the second setting CVAL and try like 5 times before giveing up.
 
-RnJvbTogS2ltIFBoaWxsaXBzIDxraW0ucGhpbGxpcHNAYW1kLmNvbT4NCg0KQ29tbWl0IGQ3Y2Ji
-ZTQ5YTkzMCAoInBlcmYveDg2L2FtZC91bmNvcmU6IFNldCBUaHJlYWRNYXNrIGFuZCBTbGljZU1h
-c2sNCmZvciBMMyBDYWNoZSBwZXJmIGV2ZW50cyIpIGVuYWJsZXMgTDMgUE1DIGV2ZW50cyBmb3Ig
-YWxsIHRocmVhZHMgYW5kDQpzbGljZXMgYnkgd3JpdGluZyAxcyBpbiBDaEwzUG1jQ2ZnIChMMyBQ
-TUMgUEVSRl9DVEwpIHJlZ2lzdGVyIGZpZWxkcy4NCg0KVGhvc2UgYml0ZmllbGRzIG92ZXJsYXAg
-d2l0aCBoaWdoIG9yZGVyIGV2ZW50IHNlbGVjdCBiaXRzIGluIHRoZSBEYXRhDQpGYWJyaWMgUE1D
-IGNvbnRyb2wgcmVnaXN0ZXIsIGhvd2V2ZXIuDQoNClNvIHdoZW4gYSB1c2VyIHJlcXVlc3RzIHJh
+
+> @@ -204,8 +205,18 @@ static void malidp_atomic_commit_hw_done(struct drm_=
+atomic_state *state)
+>  			drm_crtc_vblank_get(&malidp->crtc);
+> =20
+>  		/* only set config_valid if the CRTC is enabled */
+> -		if (malidp_set_and_wait_config_valid(drm) < 0)
+> +		if (malidp_set_and_wait_config_valid(drm) < 0) {
+> +			/*
+> +			 * make a loop around the second CVAL setting and
+> +			 * try 5 times before giving up.
+> +			 */
+> +			while (loop--) {
+> +				if (!malidp_set_and_wait_config_valid(drm))
+> +					break;
+> +			}
+>  			DRM_DEBUG_DRIVER("timed out waiting for updated configuration\n");
+> +		}
+> +
+
+We'll still get the debug message even if
+malidp_set_and_wait_config_valid() suceeded. That does not sound
+right.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl0TJSMACgkQMOfwapXb+vKtAgCeNGi0nFBLE7uq6SZwhkH941Op
+Fj0AoL5ZjsmX3Egg89O5I9S77t+0Ye5Z
+=xD1u
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
