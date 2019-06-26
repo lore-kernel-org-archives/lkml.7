@@ -2,280 +2,162 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4AFC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BC9C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670E721670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F11421670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TGcwS8eC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="az3YMGn6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfFZNFm (ORCPT
+        id S1727495AbfFZNGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:05:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59301 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZNFl (ORCPT
+        Wed, 26 Jun 2019 09:06:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35644 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfFZNGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:05:41 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5QD5Z3Z4114803
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 26 Jun 2019 06:05:35 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5QD5Z3Z4114803
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561554335;
-        bh=5BCLHXBqbdTloQllo6SEZafDzzeJha/ziGSIYQKqA88=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=TGcwS8eCi5teKWuVSSI1FNlMHuZQABIjupCByoNy25UllWpHZKSUeEvqI7DZsakVu
-         aNXa8ecL7J5mhj9Qi4AyNMWzqg67O80y3BbCPdCwrcK/JQeW9MZRikW7HX/oeTLB7w
-         ZfdYJrKHj+KhtfpdCUEqyko93lw7C7Bmuf55u1nv+UjVwrdMnrJY5S68/xK4SR7Js3
-         gAPFOWiIg1Nek2aLyVaSKC0loVGuNa4sO0/taUHAGuTeAGEEflTzLDS0CeImHRI8v9
-         wYr9zdIJ7xlG6lTS0tDF30MDBOVemMXwMOkQmnQQZSXmOEPZ8Wq8xhf1G8u2AOgm37
-         NXY4YLW1cWMxQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5QD5ZIt4114800;
-        Wed, 26 Jun 2019 06:05:35 -0700
-Date:   Wed, 26 Jun 2019 06:05:35 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Ferdinand Blomqvist <tipbot@zytor.com>
-Message-ID: <tip-991305dee585dd9e3107b2e253778ed02ee3fbd1@git.kernel.org>
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, ferdinand.blomqvist@gmail.com
-Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com,
-          mingo@kernel.org, ferdinand.blomqvist@gmail.com
-In-Reply-To: <20190620141039.9874-8-ferdinand.blomqvist@gmail.com>
-References: <20190620141039.9874-8-ferdinand.blomqvist@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/rslib] rslib: Fix remaining decoder flaws
-Git-Commit-ID: 991305dee585dd9e3107b2e253778ed02ee3fbd1
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 26 Jun 2019 09:06:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c6so2055393wml.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:06:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jasW8iOP/d7sV94RnAWZopvnxi1Y0wq0BsXNBk9SRx0=;
+        b=az3YMGn6W5/V0lTRT7btk/EvmdAaHV3zlj7lFfCrrDaPgWeW+GkaDdCLu5Ti3YcHJh
+         Fx7JihhubV9v9A08WOjo1XrhxT5tKrFosChP6JevXIKk+A8kTQvG6fox4JmIB7y1V+N8
+         JgMotdeT1jmFxqF2uEzKkknQCaPmv8DrNqEplpZpBan+ElZb4oW2suYIwNnMqCjoLSiH
+         hmjt/pQiYxutG3NxKvZZ/LO+LJ6es5KMaEVmgjmCWx+Vclj2PZHQZyE0xferHxhTR8ww
+         TF01LNoctOqtERCc0HaXPpKvxcKGAr2WArzXblymP/ju5pIv6V9uj1zcHczpyK2IQC1E
+         T2Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jasW8iOP/d7sV94RnAWZopvnxi1Y0wq0BsXNBk9SRx0=;
+        b=spCJG77mkRMgeDS6lcgvgWsq5lT08zjz5wj177i2FKMlSyqsIeNUGT1C01067qorOF
+         VO7hPlPlGbgBLfGwO4YbdO/gHm7a9rOzXZQyKfyUEDuePF6rHgkhwqcBuI5Xg2ym/mbp
+         waHWMw51UemQ4JuPAWefvwf3X2kA9DxKzwK7HOwLtyz8yu2p2+0uaTBuxIz9pSOv0kl+
+         gkIcSq9AyhgRjpK4adVQLPNrzlQrUJ7PmCMelXBkSb4yoT9VhxE/hayqxfDtS4AFlSGW
+         uh+XORRUt6tJuuJ51zlfuoQa9i0QkWn2hH0NGHE0tjqFZ4aFaqXV8XcR14smm3jnXmHc
+         B0RA==
+X-Gm-Message-State: APjAAAWAWIX7Vw7sLOIo+Y24wDALqSjHvBZF7YoKYn3zF8Ty14n7psmk
+        unhnAAAkOIMZHM5QSmBZA/iUzw==
+X-Google-Smtp-Source: APXvYqy7eXiwnfpfAmsno9wnKxOy/4jY/0GIhWf/bt1xBsOxMhdmhWTPBButZn+09ZxaqLFX7HZJOQ==
+X-Received: by 2002:a1c:c6:: with SMTP id 189mr2743811wma.112.1561554387914;
+        Wed, 26 Jun 2019 06:06:27 -0700 (PDT)
+Received: from dell ([2.27.35.164])
+        by smtp.gmail.com with ESMTPSA id d1sm15782413wru.41.2019.06.26.06.06.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 06:06:26 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 14:06:24 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: max8998: Add charger subnode
+ binding
+Message-ID: <20190626130624.GT21119@dell>
+References: <20190621115602.17559-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190621115602.17559-3-pawel.mikolaj.chmiel@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  991305dee585dd9e3107b2e253778ed02ee3fbd1
-Gitweb:     https://git.kernel.org/tip/991305dee585dd9e3107b2e253778ed02ee3fbd1
-Author:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-AuthorDate: Thu, 20 Jun 2019 17:10:39 +0300
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 26 Jun 2019 14:55:47 +0200
+On Fri, 21 Jun 2019, Paweł Chmiel wrote:
 
-rslib: Fix remaining decoder flaws
+> This patch adds devicetree bindings documentation for
+> battery charging controller as the subnode of MAX8998 PMIC.
 
-The decoder is flawed in the following ways:
+It makes sense to place this in:
 
-- The decoder sometimes fails silently, i.e. it announces success but
-  returns a word that is not a codeword.
+ Documentation/devicetree/bindings/power/supply/
 
-- The return value of the decoder is incoherent with respect to how
-  fixed erasures are counted. If the word to be decoded is a codeword,
-  then the decoder always returns zero even if some erasures are given.
-  On the other hand, if the word to be decoded contains errors, then the
-  number of erasures is always included in the count of corrected
-  symbols. So the decoder handles erasures without symbol corruption
-  inconsistently. This inconsistency probably doesn't affect anyone
-  using the decoder, but it is inconsistent with the documentation.
+And link to it from this file using the following syntax:
 
-- The error positions returned in eras_pos include all erasures, but the
-  corrections are only set in the correction buffer if there actually is
-  a symbol error. So if there are erasures without symbol corruption,
-  then the correction buffer will contain errors (unless initialized to
-  zero before calling the decoder) or some values will be unset (if the
-  correction buffer is uninitialized).
+ See: ../power/supply/<file>.txt
 
-- When correcting data in-place the decoder does not correct errors in
-  the parity. On the other hand, when returning the errors in correction
-  buffers, errors in the parity are included.
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+> Changes from v3:
+>   - Property prefix should be maxim, not max8998
+>   - Describe what End of Charge in percent means
+> 
+> Changes from v2:
+>   - Make charge-restart-level-microvolt optional.
+>   - Make charge-timeout-hours optional.
+> 
+> Changes from v1:
+>   - Removed unneeded Fixes tag
+>   - Correct description of all charger values
+>   - Added missing property unit
+> ---
+>  .../devicetree/bindings/mfd/max8998.txt       | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
+> index 5f2f07c09c90..368f787d6079 100644
+> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> @@ -48,6 +48,25 @@ Additional properties required if max8998,pmic-buck2-dvs-gpio is defined:
+>  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in microvolts
+>    for buck2 regulator that can be selected using dvs gpio.
+>  
+> +Charger: Configuration for battery charging controller should be added
+> +inside a child node named 'charger'.
+> +  Required properties:
+> +  - maxim,end-of-charge-percentage: End of Charge in percent.
+> +    When the charge current in constant-voltage phase drops below
+> +    end-of-charge-percentage of it's start value, charging is terminated.
+> +    If value equals 0, leave it unchanged. Otherwise it should be value
+> +    from 10 to 45 by 5 step.
+> +
+> +  Optional properties:
+> +  - maxim,charge-restart-threshold: Charge restart threshold in millivolts.
+> +    If property is not present, this will be disabled.
+> +    Valid values are: 0, 100, 150, 200. If the value equals 0, leave it
+> +    unchanged.
+> +
+> +  - maxim,charge-timeout: Charge timeout in hours. If property is not
+> +    present, this will be disabled. Valid values are: 0, 5, 6, 7.
+> +    If the value equals 0, leave it unchanged.
+> +
+>  Regulators: All the regulators of MAX8998 to be instantiated shall be
+>  listed in a child node named 'regulators'. Each regulator is represented
+>  by a child node of the 'regulators' node.
+> @@ -97,6 +116,13 @@ Example:
+>  		max8998,pmic-buck2-dvs-gpio = <&gpx0 0 3 0 0>; /* SET3 */
+>  		max8998,pmic-buck2-dvs-voltage = <1350000>, <1300000>;
+>  
+> +		/* Charger configuration */
+> +		charger {
+> +			maxim,end-of-charge-percentage = <20>;
+> +			maxim,charge-restart-threshold = <100>;
+> +			maxim,charge-timeout = <7>;
+> +		};
+> +
+>  		/* Regulators to instantiate */
+>  		regulators {
+>  			ldo2_reg: LDO2 {
 
-The respective fixed are:
-
-- The syndrome of a codeword is always zero, and the syndrome is linear,
-  .i.e, S(x+e) = S(x) + S(e). So compute the syndrome for the error and
-  check whether it equals the syndrome of the received word. If it does,
-  then we have decoded to a valid codeword, otherwise we know that we
-  have an uncorrectable error. Fortunately, some unrecoverable error
-  conditions can be detected earlier in the decoding, which saves some
-  processing power.
-
-- Simply count and return the number of symbols actually corrected.
-
-- Make sure to only return positions where symbols were corrected.
-
-- Also fix errors in parity when correcting in-place. Another option
-  would be to completely disregard errors in the parity, but then the
-  interface makes it impossible to write tests that test for silent
-  failures.
-
-Other changes:
-
-- Only fill the correction buffer and error position buffer if both of
-  them are provided. Otherwise correct in place. Previously the error
-  position buffer was always populated with the positions of the
-  corrected errors, irrespective of whether a correction buffer was
-  supplied or not. The rationale for this change is that there seems to
-  be two use cases for the decoder; correct in-place or use the
-  correction buffers. The caller does not need the positions of the
-  corrected errors when in-place correction is used. If in-place
-  correction is not used, then both the correction buffer and error
-  position buffer need to be populated.
-
-Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-8-ferdinand.blomqvist@gmail.com
-
----
- lib/reed_solomon/decode_rs.c | 88 ++++++++++++++++++++++++++++++++++----------
- 1 file changed, 68 insertions(+), 20 deletions(-)
-
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index b7264a712d46..805de84ae83d 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -22,6 +22,7 @@
- 	uint16_t *index_of = rs->index_of;
- 	uint16_t u, q, tmp, num1, num2, den, discr_r, syn_error;
- 	int count = 0;
-+	int num_corrected;
- 	uint16_t msk = (uint16_t) rs->nn;
- 
- 	/*
-@@ -184,6 +185,15 @@
- 		if (lambda[i] != nn)
- 			deg_lambda = i;
- 	}
-+
-+	if (deg_lambda == 0) {
-+		/*
-+		 * deg(lambda) is zero even though the syndrome is non-zero
-+		 * => uncorrectable error detected
-+		 */
-+		return -EBADMSG;
-+	}
-+
- 	/* Find roots of error+erasure locator polynomial by Chien search */
- 	memcpy(&reg[1], &lambda[1], nroots * sizeof(reg[0]));
- 	count = 0;		/* Number of roots of lambda(x) */
-@@ -197,6 +207,12 @@
- 		}
- 		if (q != 0)
- 			continue;	/* Not a root */
-+
-+		if (k < pad) {
-+			/* Impossible error location. Uncorrectable error. */
-+			return -EBADMSG;
-+		}
-+
- 		/* store root (index-form) and error location number */
- 		root[count] = i;
- 		loc[count] = k;
-@@ -231,7 +247,9 @@
- 	/*
- 	 * Compute error values in poly-form. num1 = omega(inv(X(l))), num2 =
- 	 * inv(X(l))**(fcr-1) and den = lambda_pr(inv(X(l))) all in poly-form
-+	 * Note: we reuse the buffer for b to store the correction pattern
- 	 */
-+	num_corrected = 0;
- 	for (j = count - 1; j >= 0; j--) {
- 		num1 = 0;
- 		for (i = deg_omega; i >= 0; i--) {
-@@ -239,6 +257,13 @@
- 				num1 ^= alpha_to[rs_modnn(rs, omega[i] +
- 							i * root[j])];
- 		}
-+
-+		if (num1 == 0) {
-+			/* Nothing to correct at this position */
-+			b[j] = 0;
-+			continue;
-+		}
-+
- 		num2 = alpha_to[rs_modnn(rs, root[j] * (fcr - 1) + nn)];
- 		den = 0;
- 
-@@ -250,29 +275,52 @@
- 						       i * root[j])];
- 			}
- 		}
--		/* Apply error to data */
--		if (num1 != 0 && loc[j] >= pad) {
--			uint16_t cor = alpha_to[rs_modnn(rs,index_of[num1] +
--						       index_of[num2] +
--						       nn - index_of[den])];
--			/* Store the error correction pattern, if a
--			 * correction buffer is available */
--			if (corr) {
--				corr[j] = cor;
--			} else {
--				/* If a data buffer is given and the
--				 * error is inside the message,
--				 * correct it */
--				if (data && (loc[j] < (nn - nroots)))
--					data[loc[j] - pad] ^= cor;
--			}
-+
-+		b[j] = alpha_to[rs_modnn(rs, index_of[num1] +
-+					       index_of[num2] +
-+					       nn - index_of[den])];
-+		num_corrected++;
-+	}
-+
-+	/*
-+	 * We compute the syndrome of the 'error' and check that it matches
-+	 * the syndrome of the received word
-+	 */
-+	for (i = 0; i < nroots; i++) {
-+		tmp = 0;
-+		for (j = 0; j < count; j++) {
-+			if (b[j] == 0)
-+				continue;
-+
-+			k = (fcr + i) * prim * (nn-loc[j]-1);
-+			tmp ^= alpha_to[rs_modnn(rs, index_of[b[j]] + k)];
- 		}
-+
-+		if (tmp != alpha_to[s[i]])
-+			return -EBADMSG;
- 	}
- 
--	if (eras_pos != NULL) {
--		for (i = 0; i < count; i++)
--			eras_pos[i] = loc[i] - pad;
-+	/*
-+	 * Store the error correction pattern, if a
-+	 * correction buffer is available
-+	 */
-+	if (corr && eras_pos) {
-+		j = 0;
-+		for (i = 0; i < count; i++) {
-+			if (b[i]) {
-+				corr[j] = b[i];
-+				eras_pos[j++] = loc[i] - pad;
-+			}
-+		}
-+	} else if (data && par) {
-+		/* Apply error to data and parity */
-+		for (i = 0; i < count; i++) {
-+			if (loc[i] < (nn - nroots))
-+				data[loc[i] - pad] ^= b[i];
-+			else
-+				par[loc[i] - pad - len] ^= b[i];
-+		}
- 	}
--	return count;
- 
-+	return  num_corrected;
- }
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
