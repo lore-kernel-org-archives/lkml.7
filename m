@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BA9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB58C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3544221670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925A621670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="vMI4r8pk"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ohwjVenQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfFZNEP (ORCPT
+        id S1727631AbfFZNE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:04:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47389 "EHLO
+        Wed, 26 Jun 2019 09:04:59 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39221 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZNEP (ORCPT
+        with ESMTP id S1726131AbfFZNE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:04:15 -0400
+        Wed, 26 Jun 2019 09:04:59 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5QD49si4114606
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5QD4qA44114662
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 26 Jun 2019 06:04:09 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5QD49si4114606
+        Wed, 26 Jun 2019 06:04:52 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5QD4qA44114662
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561554249;
-        bh=KtxY5Wka3hwoP3Ovfl3Ckf4YVnAZn5qUfm69TgUEqPo=;
+        s=2019061801; t=1561554293;
+        bh=+s0u7aVGHVKAuL2mRa+TO0g52PQbU/sLVQya3nyFqBA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=vMI4r8pk/yB2/V1BNPuMsfAUjM3CguuSTnMl63KOD8Y1xLtVgO/Ihl5qT1WBvVSQH
-         avF+nnZbTrlLGlw/exdDd49Yruw48Y0QebVqB+cd6FbwlzFeWQidfFEMaxEXOiLq9k
-         cKJlND323KumSNbrA5KJC5CHbkVtaHJQ9R4joFFsnV9TaTvR1/e2wr2mSvHrnjScN0
-         bSBYX5kK/NwEDTPgCrQhqdBWOkj/S71jUyMOx8wg8fhsR8epOUe+d0rgXuItQi6/lF
-         E1J2MyeP8U/hVnL/T0LMUOk7F+L5vDMtLs5ne13QAreli2IPoorWGAZPz7FAyfPlwe
-         ANpJC0eqYb89g==
+        b=ohwjVenQ7tTqZZBCV8tTPke9zKqjjTY79khJ85nR5gf+3BK+8BGArK/c9hWoU4NMx
+         +/L2LSDmIpGwiqgacYZRjaiNXs7OuqY04T6fzCOamaHqZG19zA5b84ILLLufW1LbmR
+         PtATQaSmzRD1wyoofg7+E6uTyslez5KZhvSRSpWwW5kgVcQjFaxTHiJjvXZB3t49mg
+         2yK5kgBeg3sLuLMiA2pWnb93BIzQkDG/yXs9q76Vhe/NKMji8KdN43fNyqA42XJFoB
+         IE3emWEkZmK/bZ2GwLwdDRE6hlg/XzqwO+Z1J+aYFG3Ow2KwZ4z77wycBOu2fbILgF
+         HZJmWeWfjPaTg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5QD49f14114603;
-        Wed, 26 Jun 2019 06:04:09 -0700
-Date:   Wed, 26 Jun 2019 06:04:09 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5QD4pOZ4114659;
+        Wed, 26 Jun 2019 06:04:51 -0700
+Date:   Wed, 26 Jun 2019 06:04:51 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Ferdinand Blomqvist <tipbot@zytor.com>
-Message-ID: <tip-ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9@git.kernel.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, hpa@zytor.com,
-        ferdinand.blomqvist@gmail.com, mingo@kernel.org
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org,
-          ferdinand.blomqvist@gmail.com, hpa@zytor.com, tglx@linutronix.de
-In-Reply-To: <20190620141039.9874-6-ferdinand.blomqvist@gmail.com>
-References: <20190620141039.9874-6-ferdinand.blomqvist@gmail.com>
+Message-ID: <tip-38cbae1434f8f7bbd8eaf24b29a385a4b88938fb@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        ferdinand.blomqvist@gmail.com, hpa@zytor.com
+Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
+          tglx@linutronix.de, ferdinand.blomqvist@gmail.com, hpa@zytor.com
+In-Reply-To: <20190620141039.9874-7-ferdinand.blomqvist@gmail.com>
+References: <20190620141039.9874-7-ferdinand.blomqvist@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/rslib] rslib: Fix handling of of caller provided syndrome
-Git-Commit-ID: ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9
+Subject: [tip:core/rslib] rslib: Update documentation
+Git-Commit-ID: 38cbae1434f8f7bbd8eaf24b29a385a4b88938fb
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -67,48 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9
-Gitweb:     https://git.kernel.org/tip/ef4d6a8556b637ad27c8c2a2cff1dda3da38e9a9
+Commit-ID:  38cbae1434f8f7bbd8eaf24b29a385a4b88938fb
+Gitweb:     https://git.kernel.org/tip/38cbae1434f8f7bbd8eaf24b29a385a4b88938fb
 Author:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-AuthorDate: Thu, 20 Jun 2019 17:10:37 +0300
+AuthorDate: Thu, 20 Jun 2019 17:10:38 +0300
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Wed, 26 Jun 2019 14:55:47 +0200
 
-rslib: Fix handling of of caller provided syndrome
+rslib: Update documentation
 
-Check if the syndrome provided by the caller is zero, and act
-accordingly.
+The decoder returns the number of corrected symbols, not bits.
+The caller provided syndrome must be in index form.
 
 Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190620141039.9874-6-ferdinand.blomqvist@gmail.com
+Link: https://lkml.kernel.org/r/20190620141039.9874-7-ferdinand.blomqvist@gmail.com
 
 ---
- lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ lib/reed_solomon/reed_solomon.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 78629bbe6590..b7264a712d46 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -42,8 +42,18 @@
- 	BUG_ON(pad < 0 || pad >= nn - nroots);
- 
- 	/* Does the caller provide the syndrome ? */
--	if (s != NULL)
--		goto decode;
-+	if (s != NULL) {
-+		for (i = 0; i < nroots; i++) {
-+			/* The syndrome is in index form,
-+			 * so nn represents zero
-+			 */
-+			if (s[i] != nn)
-+				goto decode;
-+		}
-+
-+		/* syndrome is zero, no errors to correct  */
-+		return 0;
-+	}
- 
- 	/* form the syndromes; i.e., evaluate data(x) at roots of
- 	 * g(x) */
+diff --git a/lib/reed_solomon/reed_solomon.c b/lib/reed_solomon/reed_solomon.c
+index e5fdc8b9e856..bbc01bad3053 100644
+--- a/lib/reed_solomon/reed_solomon.c
++++ b/lib/reed_solomon/reed_solomon.c
+@@ -340,7 +340,8 @@ EXPORT_SYMBOL_GPL(encode_rs8);
+  *  @data:	data field of a given type
+  *  @par:	received parity data field
+  *  @len:	data length
+- *  @s:		syndrome data field (if NULL, syndrome is calculated)
++ *  @s: 	syndrome data field, must be in index form
++ *		(if NULL, syndrome is calculated)
+  *  @no_eras:	number of erasures
+  *  @eras_pos:	position of erasures, can be NULL
+  *  @invmsk:	invert data mask (will be xored on data, not on parity!)
+@@ -354,7 +355,8 @@ EXPORT_SYMBOL_GPL(encode_rs8);
+  *  decoding, so the caller has to ensure that decoder invocations are
+  *  serialized.
+  *
+- *  Returns the number of corrected bits or -EBADMSG for uncorrectable errors.
++ *  Returns the number of corrected symbols or -EBADMSG for uncorrectable
++ *  errors. The count includes errors in the parity.
+  */
+ int decode_rs8(struct rs_control *rsc, uint8_t *data, uint16_t *par, int len,
+ 	       uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
+@@ -391,7 +393,8 @@ EXPORT_SYMBOL_GPL(encode_rs16);
+  *  @data:	data field of a given type
+  *  @par:	received parity data field
+  *  @len:	data length
+- *  @s:		syndrome data field (if NULL, syndrome is calculated)
++ *  @s: 	syndrome data field, must be in index form
++ *		(if NULL, syndrome is calculated)
+  *  @no_eras:	number of erasures
+  *  @eras_pos:	position of erasures, can be NULL
+  *  @invmsk:	invert data mask (will be xored on data, not on parity!)
+@@ -403,7 +406,8 @@ EXPORT_SYMBOL_GPL(encode_rs16);
+  *  decoding, so the caller has to ensure that decoder invocations are
+  *  serialized.
+  *
+- *  Returns the number of corrected bits or -EBADMSG for uncorrectable errors.
++ *  Returns the number of corrected symbols or -EBADMSG for uncorrectable
++ *  errors. The count includes errors in the parity.
+  */
+ int decode_rs16(struct rs_control *rsc, uint16_t *data, uint16_t *par, int len,
+ 		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
