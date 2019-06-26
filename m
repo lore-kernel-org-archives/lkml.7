@@ -2,133 +2,141 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6573CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E7DC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAAD21726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A128C2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WPxVI7wR"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XYNuR30T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbfFZVAb (ORCPT
+        id S1726462AbfFZVB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:00:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37257 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZVAb (ORCPT
+        Wed, 26 Jun 2019 17:01:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38042 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZVB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:00:31 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d15so2900817qkl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 14:00:30 -0700 (PDT)
+        Wed, 26 Jun 2019 17:01:27 -0400
+Received: by mail-io1-f68.google.com with SMTP id j6so6519355ioa.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 14:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Qf+CT2mZcsc1wHQKyoDf7Pyvzizaa33wknAn8WnxhsI=;
-        b=WPxVI7wR/DwoNAi7i3PyIvUgpTlkBnmoD2JTHStbRFDqb0McytK19CQWYQKatTjfnZ
-         GssU7arEPrVHitisRc67KBOl8S3z0cpWijE24J7/mVo6qVmmbkoMFZvvtkKQB7FsIKAd
-         1fJQOXVonx0pV3KLQneEhLhjW4cyQrYgdiFCE8LwRqu546LR5vuhg1SeuP4Y879VlmZS
-         SSWVqcHU8NhByBvuXaZdwEEwIlpZd9DWA+I6rLblnJrAiAzHK33dCo3GjgBWRehb4yT1
-         i1LTG4TxZUoO5SYY2098mC0brOvMx0R54xNsJY2rpcp38CuBJm5yunyl/qLifmfVP/lC
-         eegQ==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=PtByYI9t5DpYVWm2H7GeEhPtk58KGByxBL002Rq++Nc=;
+        b=XYNuR30T2ykXXMBZUWk7+kaY55TQJBy/Rx9mq1LrtlauSuY+nyJZ26jGoCSpbkfuur
+         nNIdMfn9ibJViTMYN5LUqvvZUJglVXOYUUDXonx8WoDIeudxDCHhzH5tyQ/hdxQ5pQNF
+         PzPWNQwzkIZktsTcU2hxcG8Biu/fJiki6ZfsHcPy6ogs9EdGZzjWHKBPJmKXjcOTa3OM
+         LoA8Lby6vONaglUTGTL77UUWdyI5+7+6Gb1fhg68jwo0Dkbqn3CeIMsIa8TKAp3qwlIj
+         CWMYJ31J5Jda9fDtjvzcn5JFUyHgQpfWLf0xjinGpC5aRTw0W6tzIZ7CXiZI8Wx85Xm+
+         jcNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Qf+CT2mZcsc1wHQKyoDf7Pyvzizaa33wknAn8WnxhsI=;
-        b=Tu/F7UcE6zZ4PdKo4u3HJ/WQOK0rl+aqbVcvDmWBjGMiYDdySyECCAnRcPeg97+sd4
-         EYhNRKNcvv6b37Fb0udyNBqAw2CYrszwqQdtEcQNAqXedGpeSq0iWXB3nKBUEjktufcK
-         WAnvqe6Y5iRTd5caGaWumnDy6t7y/WLq6KXJoVCq3ZC6kWJUL1HL9DQX0v5hKOvpguJn
-         uCzN8qM3nS2/OqLnk9oEGXR+iYYcoTDEsVfrx9j1Fsj5FItOgCM1KXlawvTYnhUfqRYI
-         Z3aATY3g23yoy39kTIMHejKezz5Qmru+ZX7WxD2NszZvRyws3KDv19n2NFR/U3qg0rRB
-         hFIw==
-X-Gm-Message-State: APjAAAUdxDWKvGjGFaBIAdUrCL7c+flN6XKVia6ZkYzwPw3HXwC7NyL7
-        4l+A38n44Rm1tYPExNgzfL2DoQ==
-X-Google-Smtp-Source: APXvYqz4ArMmY4amnoRNUTWTY/UqNE29DEE3V4j9H3MnV7OKZWACOHcxFi9QpO1iIKQ0WvAVOW9KFQ==
-X-Received: by 2002:a37:a142:: with SMTP id k63mr103601qke.278.1561582830308;
-        Wed, 26 Jun 2019 14:00:30 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id f6sm8486072qkk.79.2019.06.26.14.00.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 14:00:29 -0700 (PDT)
-Message-ID: <1561582828.5154.83.camel@lca.pw>
-Subject: Re: [RESEND PATCH] nvdimm: fix some compilation warnings
-From:   Qian Cai <cai@lca.pw>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Date:   Wed, 26 Jun 2019 17:00:28 -0400
-In-Reply-To: <cd6db786ff5758914c77add4d7a9391886038c84.camel@intel.com>
-References: <20190514150735.39625-1-cai@lca.pw>
-         <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
-         <7ba8164b60be4e41707559ed6623f9462c942735.camel@intel.com>
-         <CAPcyv4gLr_WrNOg58C5tfpZTp2wso1C=kHGDkMvH4+sGniLQMQ@mail.gmail.com>
-         <cd6db786ff5758914c77add4d7a9391886038c84.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=PtByYI9t5DpYVWm2H7GeEhPtk58KGByxBL002Rq++Nc=;
+        b=eLmJMNi1AtEteCHSj7+rCyWCYvKaUDAGV0jJhZ7iHyTWjsCq7AzaOMo050YeZzh+ug
+         +JDcQKGYN3H2cNMOQFgI+EzVustXj7b8KsKLM60o4RLDZmdjvALnMOL2N4AuCF7l12sW
+         WbWCsoDkxuY11deLMFKZfNxHxsolkWx8S5f4ZGPVLdzS0r7XKLwz/ffDmu3ep/YwnXKX
+         g5teyjN4rJul8bRHbHUe/5TrbnP8LHhCKTMT+d3LsqWqwkNAoSG1nL13TzsI/B0dRIVo
+         eLqfQUXCjJn4o21AuP7AwBSv3sSBT5MpckNXpzn9uoA142vfMairtEsqOLe0q8slovh9
+         VEng==
+X-Gm-Message-State: APjAAAUGCCXcpf26S4LlCPxdEAmn95bsejFAwShjApKTAQxuDHbhgEja
+        6nlQeGovaNS5kCQj2ErHnZEw7w==
+X-Google-Smtp-Source: APXvYqyaC/Rknevvr0RNsSk494GNIwNMoZEzEKFydW08aOjnIS+l9ESG3JKcMXLHukEsIAy5/kV9Ng==
+X-Received: by 2002:a5d:87c6:: with SMTP id q6mr223932ios.115.1561582886347;
+        Wed, 26 Jun 2019 14:01:26 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id d17sm206248iom.28.2019.06.26.14.01.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 14:01:25 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 14:01:23 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Rob Herring <robh@kernel.org>
+cc:     linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: riscv: resolve 'make dt_binding_check'
+ warnings
+In-Reply-To: <alpine.DEB.2.21.9999.1906261325290.23534@viisi.sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1906261358440.23534@viisi.sifive.com>
+References: <alpine.DEB.2.21.9999.1906260829030.21507@viisi.sifive.com> <CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com> <alpine.DEB.2.21.9999.1906261325290.23534@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-16 at 00:29 +0000, Verma, Vishal L wrote:
-> On Wed, 2019-05-15 at 17:26 -0700, Dan Williams wrote:
-> > On Wed, May 15, 2019 at 5:25 PM Verma, Vishal L
-> > <vishal.l.verma@intel.com> wrote:
-> > > On Wed, 2019-05-15 at 16:25 -0700, Dan Williams wrote:
-> > > > > diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-> > > > > index 4671776f5623..9f02a99cfac0 100644
-> > > > > --- a/drivers/nvdimm/btt.c
-> > > > > +++ b/drivers/nvdimm/btt.c
-> > > > > @@ -1269,11 +1269,9 @@ static int btt_read_pg(struct btt *btt,
-> > > > > struct bio_integrity_payload *bip,
-> > > > > 
-> > > > >                 ret = btt_data_read(arena, page, off, postmap,
-> > > > > cur_len);
-> > > > >                 if (ret) {
-> > > > > -                       int rc;
-> > > > > -
-> > > > >                         /* Media error - set the e_flag */
-> > > > > -                       rc = btt_map_write(arena, premap,
-> > > > > postmap, 0, 1,
-> > > > > -                               NVDIMM_IO_ATOMIC);
-> > > > > +                       btt_map_write(arena, premap, postmap, 0,
-> > > > > 1,
-> > > > > +                                     NVDIMM_IO_ATOMIC);
-> > > > >                         goto out_rtt;
-> > > > 
-> > > > This doesn't look correct to me, shouldn't we at least be logging
-> > > > that
-> > > > the bad-block failed to be persistently tracked?
-> > > 
-> > > Yes logging it sounds good to me. Qian, can you include this in your
-> > > respin or shall I send a fix for it separately (since we were always
-> > > ignoring the failure here regardless of this patch)?
+On Wed, 26 Jun 2019, Paul Walmsley wrote:
+
+> On Wed, 26 Jun 2019, Rob Herring wrote:
+> 
+> > On Wed, Jun 26, 2019 at 9:30 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> > >
+> > > Rob pointed out that one of the examples in the RISC-V 'cpus' YAML schema
+> > > results in warnings from 'make dt_binding_check'.  Fix these.
+> > >
+> > > While here, make the whitespace in the second example consistent with the
+> > > first example.
+> > >
+> > > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > ---
+> > >  .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
+> > >  1 file changed, 14 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> > > index 27f02ec4bb45..f97a4ecd7b91 100644
+> > > --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> > > +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> > > @@ -152,17 +152,19 @@ examples:
+> > >    - |
+> > >      // Example 2: Spike ISA Simulator with 1 Hart
+> > >      cpus {
+> > > -            cpu@0 {
+> > > -                    device_type = "cpu";
+> > > -                    reg = <0>;
+> > > -                    compatible = "riscv";
+> > > -                    riscv,isa = "rv64imafdc";
+> > > -                    mmu-type = "riscv,sv48";
+> > > -                    interrupt-controller {
+> > > -                            #interrupt-cells = <1>;
+> > > -                            interrupt-controller;
+> > > -                            compatible = "riscv,cpu-intc";
+> > > -                    };
+> > > -            };
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +        cpu@0 {
 > > 
-> > I think a separate fix for this makes more sense. Likely also needs to
-> > be a ratelimited message in case a storm of errors is encountered.
+> > This only works because you removed 'cpus' and therefore none of this
+> > schema is applied.
 > 
-> Yes good point on rate limiting - I was thinking WARN_ONCE but that
-> might mask errors for distinct blocks, but a rate limited printk should
-> work best. I'll prepare a patch.
-> 
+> I'm not following you - could you point out where "cpus" was removed?
 
-Verma, are you still working on this? I can still see this warning in the latest
-linux-next.
+If it helps, this patch is simply to fix the dtc warnings that you 
+mentioned in your post on devicetree-spec@.  Without this patch, with 
+"make dtbs_check", the following warnings are generated:
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1272:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
+  DTC     Documentation/devicetree/bindings/riscv/cpus.example.dtb
+Documentation/devicetree/bindings/riscv/cpus.example.dts:75.25-35: Warning (reg_format): /example-1/cpus/cpu@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/riscv/cpus.example.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/riscv/cpus.example.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/riscv/cpus.example.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/riscv/cpus.example.dts:73.23-84.19: Warning (avoid_default_addr_size): /example-1/cpus/cpu@0: Relying on default #address-cells value
+Documentation/devicetree/bindings/riscv/cpus.example.dts:73.23-84.19: Warning (avoid_default_addr_size): /example-1/cpus/cpu@0: Relying on default #size-cells value
 
+When the patch is applied, dtc doesn't report any of these warnings.
+
+Let me know if I'm missing something obvious.
+
+
+- Paul
