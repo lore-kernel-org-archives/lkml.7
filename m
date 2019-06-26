@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FA8C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA07C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8342B214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFD521726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520630;
-	bh=Lq68lLSaxopG34QtHV1LpCBzP7UEp0cuXx7y+JYFfKg=;
+	s=default; t=1561520635;
+	bh=2lP2cVHnR8w/VwbuHUPBtgIPPo8PiZCzItqKieFIUHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NkL+uOWj+3m0+xmPu75fJ0JXJdR/WtGIzPxAbFS2LETEY2xyBcHYGdlbo4VIqt2sX
-	 qIomMbWxV5nbwcj0+9bhxe2OSOHTdBUeiBChwGq198o2DkXCTedFT2xmvCCs8h/9bI
-	 85Cii7TUGg9u3ReIUYS2N/CMptgsz698EK7pmlu4=
+	b=Sr+oyqJI7wyyIsy7RZGG8YBsUj3MczYTbYrvMkzRZMLY+hxkSWarRG1oLH6NiQeae
+	 7EXA1nTr0O0KRCyJLgi/v4WQdl/QWBKtps9lnfL1rO6SBCy/9TU29JUwOo6ohEUygN
+	 kb76IZ6ZxmBh37cFTTStNIsQzaZvjS+X/RNPH1Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfFZDnt (ORCPT
+        id S1727445AbfFZDny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:43:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbfFZDnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:45 -0400
+        id S1727419AbfFZDnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:49 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37142205ED;
-        Wed, 26 Jun 2019 03:43:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0A9D205ED;
+        Wed, 26 Jun 2019 03:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520625;
-        bh=Lq68lLSaxopG34QtHV1LpCBzP7UEp0cuXx7y+JYFfKg=;
+        s=default; t=1561520628;
+        bh=2lP2cVHnR8w/VwbuHUPBtgIPPo8PiZCzItqKieFIUHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Io/qCXzrRl1W4XJ9lMOmCgluEQc/zMA5dhFezvd5ksgpxhh25JkQwZcziRwapO6LV
-         Kq0yGMvoQ40Anb4pPVt5mLZf2wEDyf9LrDcFEfe19TBrKmiKx80FImoaDES6VVX1L8
-         ILl0hM6aIqgrHE03P4vT60MN5iovVoEiycX0qB70=
+        b=i5vNnoSt2g8qNsrXaKOXjUPf4q6TwZ/Hitdd2RV8frqNbcKI2yOBMeSJjdOUTHf1E
+         0HJLqRe/ME+Sk4FaOz408DBFKNZvwou/oOTpZg/mrtU30umlm4suAAHynI1Es7MPqW
+         GnLK029W+hO9yUpa8SrgsJENnEZ3jQfajB2T58sQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viorel Suman <viorel.suman@nxp.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
+Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 04/34] ASoC: ak4458: rstn_control - return a non-zero on error only
-Date:   Tue, 25 Jun 2019 23:43:05 -0400
-Message-Id: <20190626034335.23767-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 06/34] ASoC: core: lock client_mutex while removing link components
+Date:   Tue, 25 Jun 2019 23:43:07 -0400
+Message-Id: <20190626034335.23767-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -61,39 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viorel Suman <viorel.suman@nxp.com>
+From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 
-[ Upstream commit 176a11834b65ec35e3b7a953f87fb9cc41309497 ]
+[ Upstream commit 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb ]
 
-snd_soc_component_update_bits() may return 1 if operation
-was successful and the value of the register changed.
-Return a non-zero in ak4458_rstn_control for an error only.
+Removing link components results in topology unloading. So,
+acquire the client_mutex before removing components in
+soc_remove_link_components. This will prevent the lockdep warning
+seen when dai links are removed during topology removal.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/ak4458.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index 58b6ca1de993..3bd57c02e6fd 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -272,7 +272,10 @@ static int ak4458_rstn_control(struct snd_soc_component *component, int bit)
- 					  AK4458_00_CONTROL1,
- 					  AK4458_RSTN_MASK,
- 					  0x0);
--	return ret;
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 62aa320c2070..71e13f8f2579 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -979,12 +979,14 @@ static void soc_remove_link_components(struct snd_soc_card *card,
+ 	struct snd_soc_component *component;
+ 	struct snd_soc_rtdcom_list *rtdcom;
+ 
++	mutex_lock(&client_mutex);
+ 	for_each_rtdcom(rtd, rtdcom) {
+ 		component = rtdcom->component;
+ 
+ 		if (component->driver->remove_order == order)
+ 			soc_remove_component(component);
+ 	}
++	mutex_unlock(&client_mutex);
  }
  
- static int ak4458_hw_params(struct snd_pcm_substream *substream,
+ static void soc_remove_dai_links(struct snd_soc_card *card)
 -- 
 2.20.1
 
