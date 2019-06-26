@@ -2,174 +2,219 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8039C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965CCC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB7A20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D9B20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561520209;
+	bh=TLJTrDoJ3RMbk/30bdZR6gAc+HjxD3agm9XeJSJgdP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZLO0kTYVpHRcxZSLRL8ouIo+CQxsWmr1VhJdoDeqml3bvpJC7mhh9xFHu+h8JozlU
+	 gMKvxSgDW+ylnhA3aykf4K6PUHjNaDV63L+0v2d+V+Z76oHAw73jvyCRTkDfEHh9ar
+	 BmtxooaqNWV7dJgiQlItyuVMXhVzM+FU2KJqGxkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfFZDgi (ORCPT
+        id S1726667AbfFZDgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:36:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43570 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726077AbfFZDgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:36:38 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C40E1D7433C33B160F3E;
-        Wed, 26 Jun 2019 11:36:35 +0800 (CST)
-Received: from [127.0.0.1] (10.133.205.80) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Jun 2019
- 11:36:27 +0800
-Subject: Re: [PATCH] modules: fix compile error if don't have strict module
- rwx
-To:     Jessica Yu <jeyu@kernel.org>
-References: <1561455628-50795-1-git-send-email-yangyingliang@huawei.com>
- <20190625192115.GA27913@linux-8ccs>
-CC:     <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
-        <namit@vmware.com>, <cj.chengjian@huawei.com>,
-        <sfr@canb.auug.org.au>, <linux-next@vger.kernel.org>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <5D12E83B.9000209@huawei.com>
-Date:   Wed, 26 Jun 2019 11:36:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Tue, 25 Jun 2019 23:36:48 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38599 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFZDgr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:36:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id y15so536120pfn.5;
+        Tue, 25 Jun 2019 20:36:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OjCrPT4hCWb7xnrRZjLNhlZP4Wd3/W1zcGw/ncRINUY=;
+        b=S7ITFUreRjMV5UrWi8LcqMAzzx1XGe7/m3mi+wW0lXI16hCfrXw7DqN9JL5ZelDHlr
+         zN/FWqTKKPlHrT803iWZGj+i+Ba9nf9YL+ZwDwKwhe6xwOoD88C8VskXkYQcUQ6I9vnE
+         2iq1b9ZhfzLONaPwRke0JzCXGQCDvIXUNU4ZiqPebdFSPY3zj2JkZZKQEBVUFqV1sb9q
+         dgoXWCY2vS8Mko5HBUx6GIVQpUvZyG/M+0LH2HRnPRSbvEM/8kjX8zvcCM72QPbAi/Fi
+         PesCilo08sCHALxzCBnxHJgPwV2nMyBGLdnDvPnZqtrFb8wUjFvlre1F7K67vF30uUkF
+         TtCw==
+X-Gm-Message-State: APjAAAWw+htNhxx0UqP3f6c7CsFLs221yW001IVZobiTK152za1w8wqQ
+        n89qXOvzB/7ANG6EzBO2Xbk=
+X-Google-Smtp-Source: APXvYqzdBmpyE53WQRasxEh7JB6Bcl0/Rzj4Dgw3h206UsHqJ5Xslk8HuWxgkcEgUlDNN6u05UT4Bg==
+X-Received: by 2002:a17:90a:2190:: with SMTP id q16mr1703219pjc.23.1561520205640;
+        Tue, 25 Jun 2019 20:36:45 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d187sm17418788pfa.38.2019.06.25.20.36.44
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 20:36:44 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id BA50240336; Wed, 26 Jun 2019 03:36:43 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 03:36:43 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Message-ID: <20190626033643.GX19023@42.do-not-panic.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com>
+ <20190625223312.GP19023@42.do-not-panic.com>
+ <CAFd5g46TLAONgXiZkFM98BPd-sariMTwhmYG9hSJ+M9=r-ixeg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625192115.GA27913@linux-8ccs>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.205.80]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g46TLAONgXiZkFM98BPd-sariMTwhmYG9hSJ+M9=r-ixeg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 25, 2019 at 05:07:32PM -0700, Brendan Higgins wrote:
+> On Tue, Jun 25, 2019 at 3:33 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 01:25:56AM -0700, Brendan Higgins wrote:
+> > > +/**
+> > > + * module_test() - used to register a &struct kunit_module with KUnit.
+> > > + * @module: a statically allocated &struct kunit_module.
+> > > + *
+> > > + * Registers @module with the test framework. See &struct kunit_module for more
+> > > + * information.
+> > > + */
+> > > +#define module_test(module) \
+> > > +             static int module_kunit_init##module(void) \
+> > > +             { \
+> > > +                     return kunit_run_tests(&module); \
+> > > +             } \
+> > > +             late_initcall(module_kunit_init##module)
+> >
+> > Becuase late_initcall() is used, if these modules are built-in, this
+> > would preclude the ability to test things prior to this part of the
+> > kernel under UML or whatever architecture runs the tests. So, this
+> > limits the scope of testing. Small detail but the scope whould be
+> > documented.
+> 
+> You aren't the first person to complain about this (and I am not sure
+> it is the first time you have complained about it). Anyway, I have
+> some follow on patches that will improve the late_initcall thing, and
+> people seemed okay with discussing the follow on patches as part of a
+> subsequent patchset after this gets merged.
+> 
+> I will nevertheless document the restriction until then.
 
+To be clear, I am not complaining about it. I just find it simply
+critical to document its limitations, so folks don't try to invest
+time and energy on kunit right away for an early init test, if it
+cannot support it.
 
-On 2019/6/26 3:21, Jessica Yu wrote:
-> +++ Yang Yingliang [25/06/19 17:40 +0800]:
->> If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is not defined,
->> we need stub for module_enable_nx() and module_enable_x().
->>
->> If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is defined, but
->> CONFIG_STRICT_MODULE_RWX is disabled, we need stub for
->> module_enable_nx.
->>
->> Move frob_text() outside of the CONFIG_STRICT_MODULE_RWX,
->> because it is needed anyway.
->
-> Maybe include a fixes tag?
->
-> Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
-OK, I will add it in v2.
->
->> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
->> ---
->> kernel/module.c | 13 +++++++++----
->> 1 file changed, 9 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/module.c b/kernel/module.c
->> index c3ae34c..cfff441 100644
->> --- a/kernel/module.c
->> +++ b/kernel/module.c
->> @@ -1875,7 +1875,7 @@ static void mod_sysfs_teardown(struct module *mod)
->>     mod_sysfs_fini(mod);
->> }
->>
->> -#ifdef CONFIG_STRICT_MODULE_RWX
->> +#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
->
-> Could you please explain why you introduced a new
-> CONFIG_ARCH_HAS_STRICT_MODULE_RWX #ifdef block instead of just moving
-> frob_text() and module_enable_x() outside of CONFIG_STRICT_MODULE_RWX?
-If CONFIG_STRICT_MODULE_RWX is not defined, it has two reasons, one is 
-that the
-arch don't have strict module rwx and the other reason is that 
-CONFIG_STRICT_MODULE_RWX
-is disabled. So I introduce CONFIG_ARCH_HAS_STRICT_MODULE_RWX #ifdef 
-block to
-distinguish this two cases.
+If support for that requires some work, it may be worth mentioning
+as well.
 
->
-> I do not have anything against it, although the nested #ifdef's are a
-> bit painful to read. But I could not find a better way to do it :/
-> It's awkward because we need module_enable_x() and frob_text()
-> regardless of of CONFIG_STRICT_MODULE_RWX for x86, but other arches
-> don't need to call module_enable_x(), they usually just call the empty 
-> stub.
-Yes, you are right.
-Actually, I was thinking moving all frob_* outside of 
-CONFIG_STRICT_MODULE_RWX,
-because they all should be regardless of of CONFIG_STRICT_MODULE_RWX. 
-But current
-only frob_next() is used, move other frob_* outside of 
-CONFIG_STRICT_MODULE_RWX
-will cause a compile warning if CONFIG_STRICT_MODULE_RWX is disabled, so 
-I left them
-in CONFIG_STRICT_MODULE_RWX.  We can move them outside of 
-CONFIG_STRICT_MODULE_RWX
-if they are used in future.
->
-> But I think having the CONFIG_ARCH_HAS_STRICT_MODULE_RWX block is OK,
-> for the reason of limiting the scope of the calls rather than
-> blanketly calling frob_text() andd module_enable_x() for arches that
-> don't need to call them. Was that your reasoning as well?
-Yes,  it's my reasoning.
+> > > +static void kunit_print_tap_version(void)
+> > > +{
+> > > +     if (!kunit_has_printed_tap_version) {
+> > > +             kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
+> >
+> > What is this TAP thing? Why should we care what version it is on?
+> > Why are we printing this?
+> 
+> It's part of the TAP specification[1]. Greg and Frank asked me to make
+> the intermediate format conform to TAP. Seems like something else I
+> should probable document...
 
+Yes thanks!
 
-Thanks,
-Yang
->
-> Thanks,
->
-> Jessica
->
->
->> /*
->>  * LKM RO/NX protection: protect module's text/ro-data
->>  * from modification and any data from execution.
->> @@ -1898,6 +1898,7 @@ static void frob_text(const struct 
->> module_layout *layout,
->>            layout->text_size >> PAGE_SHIFT);
->> }
->>
->> +#ifdef CONFIG_STRICT_MODULE_RWX
->> static void frob_rodata(const struct module_layout *layout,
->>             int (*set_memory)(unsigned long start, int num_pages))
->> {
->> @@ -2010,15 +2011,19 @@ void set_all_modules_text_ro(void)
->>     }
->>     mutex_unlock(&module_mutex);
->> }
->> -#else
->> +#else /* !CONFIG_STRICT_MODULE_RWX */
->> static void module_enable_nx(const struct module *mod) { }
->> -#endif
->> -
->> +#endif /*  CONFIG_STRICT_MODULE_RWX */
->> static void module_enable_x(const struct module *mod)
->> {
->>     frob_text(&mod->core_layout, set_memory_x);
->>     frob_text(&mod->init_layout, set_memory_x);
->> }
->> +#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
->> +static void module_enable_nx(const struct module *mod) { }
->> +static void module_enable_x(const struct module *mod) { }
->> +#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
->> +
->>
->> #ifdef CONFIG_LIVEPATCH
->> /*
->> -- 
->> 1.8.3
->>
->
-> .
->
+> > > +             kunit_has_printed_tap_version = true;
+> > > +     }
+> > > +}
+> > > +
+> > > +static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+> > > +{
+> > > +     struct kunit_case *test_case;
+> > > +     size_t len = 0;
+> > > +
+> > > +     for (test_case = test_cases; test_case->run_case; test_case++)
+> >
+> > If we make the last test case NULL, we'd just check for test_case here,
+> > and save ourselves an extra few bytes per test module. Any reason why
+> > the last test case cannot be NULL?
+> 
+> Is there anyway to make that work with a statically defined array?
 
+No you're right.
 
+> Basically, I want to be able to do something like:
+> 
+> static struct kunit_case example_test_cases[] = {
+>         KUNIT_CASE(example_simple_test),
+>         KUNIT_CASE(example_mock_test),
+>         {}
+> };
+> 
+> FYI,
+> #define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
+
+> 
+> In order to do what you are proposing, I think I need an array of
+> pointers to test cases, which is not ideal.
+
+Yeah, you're right. The only other alternative is to have a:
+
+struct kunit_module {
+       const char name[256];
+       int (*init)(struct kunit *test);
+       void (*exit)(struct kunit *test);
+       struct kunit_case *test_cases;
++       unsigned int num_cases;
+};
+
+And then something like:
+
+#define KUNIT_MODULE(name, init, exit, cases) { \
+	.name = name, \
+	.init = init, \
+	.exit = exit, \
+	.test_cases = cases,
+	num_cases = ARRAY_SIZE(cases), \
+}
+
+Let's evaluate which is better: one extra test case per all test cases, or
+an extra unsigned int for each kunit module.
+
+  Luis
