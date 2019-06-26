@@ -2,115 +2,144 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCCBC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8C5C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C53C208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A216208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfFZUpy (ORCPT
+        id S1726476AbfFZUqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:45:54 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:49582 "EHLO ale.deltatee.com"
+        Wed, 26 Jun 2019 16:46:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:60319 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfFZUpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:45:53 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hgEnT-0002Rd-NS; Wed, 26 Jun 2019 14:45:40 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726271AbfFZUqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:46:23 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 13:46:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
+   d="scan'208";a="360439398"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Jun 2019 13:46:21 -0700
+Date:   Wed, 26 Jun 2019 13:36:37 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
- <20190626202107.GA5850@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
-Date:   Wed, 26 Jun 2019 14:45:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+Message-ID: <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+ <1560897679-228028-10-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190626202107.GA5850@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-06-26 2:21 p.m., Jason Gunthorpe wrote:
-> On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
->>> we have a hole behind len where we could store flag.  Preferably
->>> optionally based on a P2P or other magic memory types config
->>> option so that 32-bit systems with 32-bit phys_addr_t actually
->>> benefit from the smaller and better packing structure.
->>
->> That seems sensible. The one thing that's unclear though is how to get
->> the PCI Bus address when appropriate. Can we pass that in instead of the
->> phys_addr with an appropriate flag? Or will we need to pass the actual
->> physical address and then, at the map step, the driver has to some how
->> lookup the PCI device to figure out the bus offset?
+On Wed, Jun 26, 2019 at 10:20:05PM +0200, Thomas Gleixner wrote:
+> On Tue, 18 Jun 2019, Fenghua Yu wrote:
+> > +
+> > +static atomic_t split_lock_debug;
+> > +
+> > +void split_lock_disable(void)
+> > +{
+> > +	/* Disable split lock detection on this CPU */
+> > +	this_cpu_and(msr_test_ctl_cached, ~MSR_TEST_CTL_SPLIT_LOCK_DETECT);
+> > +	wrmsrl(MSR_TEST_CTL, this_cpu_read(msr_test_ctl_cached));
+> > +
+> > +	/*
+> > +	 * Use the atomic variable split_lock_debug to ensure only the
+> > +	 * first CPU hitting split lock issue prints one single complete
+> > +	 * warning. This also solves the race if the split-lock #AC fault
+> > +	 * is re-triggered by NMI of perf context interrupting one
+> > +	 * split-lock warning execution while the original WARN_ONCE() is
+> > +	 * executing.
+> > +	 */
+> > +	if (atomic_cmpxchg(&split_lock_debug, 0, 1) == 0) {
+> > +		WARN_ONCE(1, "split lock operation detected\n");
+> > +		atomic_set(&split_lock_debug, 0);
 > 
-> I agree with CH, if we go down this path it is a layering violation
-> for the thing injecting bio's into the block stack to know what struct
-> device they egress&dma map on just to be able to do the dma_map up
-> front.
+> What's the purpose of this atomic_set()?
 
-Not sure I agree with this statement. The p2pdma code already *must*
-know and access the pci_dev of the dma device ahead of when it submits
-the IO to know if it's valid to allocate and use P2P memory at all. This
-is why the submitting driver has a lot of the information needed to map
-this memory that the mapping driver does not.
+atomic_set() releases the split_lock_debug flag after WARN_ONCE() is done.
+The same split_lock_debug flag will be used in sysfs write for atomic
+operation as well, as proposed by Ingo in https://lkml.org/lkml/2019/4/25/48
+So that's why the flag needs to be cleared, right?
 
-> So we must be able to go from this new phys_addr_t&flags to some BAR
-> information during dma_map.
+> 
+> > +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
+> > +{
+> > +	unsigned int trapnr = X86_TRAP_AC;
+> > +	char str[] = "alignment check";
+> > +	int signr = SIGBUS;
+> > +
+> > +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+> > +
+> > +	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) == NOTIFY_STOP)
+> > +		return;
+> > +
+> > +	cond_local_irq_enable(regs);
+> > +	if (!user_mode(regs) && static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT)) {
+> > +		/*
+> > +		 * Only split locks can generate #AC from kernel mode.
+> > +		 *
+> > +		 * The split-lock detection feature is a one-shot
+> > +		 * debugging facility, so we disable it immediately and
+> > +		 * print a warning.
+> > +		 *
+> > +		 * This also solves the instruction restart problem: we
+> > +		 * return the faulting instruction right after this it
+> 
+> we return the faulting instruction ... to the store so we get our deposit
+> back :)
+> 
+>   the fault handler returns to the faulting instruction which will be then
+>   executed without ....
+> 
+> Don't try to impersonate code, cpus or whatever. It doesn't make sense and
+> confuses people.
+> 
+> > +		 * will be executed without generating another #AC fault
+> > +		 * and getting into an infinite loop, instead it will
+> > +		 * continue without side effects to the interrupted
+> > +		 * execution context.
+> 
+> That last part 'instead .....' is redundant. It's entirely clear from the
+> above that the faulting instruction is reexecuted ....
+> 
+> Please write concise comments and do try to repeat the same information
+> with a different painting.
 
-> For instance we could use a small hash table of the upper phys addr
-> bits, or an interval tree, to do the lookup.
+I copied the comment completely from Ingo's comment on v8:
+https://lkml.org/lkml/2019/4/25/40
 
-Yes, if we're going to take a hard stance on this. But using an interval
-tree (or similar) is a lot more work for the CPU to figure out these
-mappings that may not be strictly necessary if we could just pass better
-information down from the submitting driver to the mapping driver.
+Thanks.
 
-> The bar info would give the exporting struct device and any other info
-> we need to make the iommu mapping.
-
-Well, the IOMMU mapping is the normal thing the mapping driver will
-always do. We'd really just need the submitting driver to, when
-appropriate, inform the mapping driver that this is a pci bus address
-and not to call dma_map_xxx(). Then, for special mappings for the CMB
-like Christoph is talking about, it's simply a matter of doing a range
-compare on the PCI Bus address and converting the bus address to a BAR
-and offset.
-
-Logan
+-Fenghua
