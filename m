@@ -2,102 +2,110 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36923C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DD1C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06267205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="CoKaEc3w"
+	by mail.kernel.org (Postfix) with ESMTP id A7E07205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbfFZOug (ORCPT
+        id S1728309AbfFZOu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:50:36 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41867 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbfFZOug (ORCPT
+        Wed, 26 Jun 2019 10:50:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41285 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727276AbfFZOu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:50:36 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p15so3750930eds.8
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xn5/sjr2SkMR21Q+6SAo5VDqXrDegQPvyCLgGPTTURs=;
-        b=CoKaEc3wxeHdnMcIofwNS4wPiIsB4YJ0MdREl3n8yGAalh9nxwnCt6s4C7YfqB8J7E
-         XZ9CeglN7DhsaHQPGmJ83Xl5B0+DGakBv2quoUi0orpESnYwIZqHJZM9JPLeH4wUZJuZ
-         FJg5EF2YLZN5kH2gFq0nfo1K9QphlQ+THUqGo+zpGmjyVGQo59izd65NQ8XrSHqXsJkV
-         r+kff83JiIWKJr7BCUU9RQqkV3uJayYQQaUfcPpzsf6Svs9Nf5b9ApGUsLLNm6A7nuXq
-         SEJyHZREjdICZ1ASaILln/JIbacf7oWT3YEAa3Gen4dxnBfWB6NHRmCJOP/+w/8WQDYR
-         rETw==
+        Wed, 26 Jun 2019 10:50:56 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c2so3072816wrm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:50:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xn5/sjr2SkMR21Q+6SAo5VDqXrDegQPvyCLgGPTTURs=;
-        b=CjZ0tQzOF7u1E76fHvNhi6KszG8sBWP6yyeiz2wDaySpI4L0bXOIz+9YaJOobsgwUL
-         GDNW00WC1kscPbFxLEA+Y+CD+TZ33fGc9ZneGcOqGtFuvUIxVqqGllTEwkEiTtY6SwWS
-         kxgPlTKH3wUGInnFIN/UpmwY9WxLmyiOXcg2IuerZkw23aTVJ6tzfmBF8Bda1cEE7egH
-         hSwGWX1LRaS0CncDwlwqYbD2ptpsGYIVzZmi5grVt5hE8rA2KvWaxXiZ0YAejbS2rnll
-         rck9vaBK15XRR1j1Ym6+/4VjScPI8HtwLps5sqiEkKC4YErEYA4HO+Sov8eq9jo1hiKJ
-         iQBw==
-X-Gm-Message-State: APjAAAXTDeBnHkCQxRWdGdO+PTxiUVgr5dPRSf9+AuH1jYMGHtfQ1NTg
-        m/qVJtREL6Mg0Q6frlQZtZ5YDA==
-X-Google-Smtp-Source: APXvYqxihuTlAVHp7Dtm+OQSgaT0vicToPsHIUlp7ShmYxpuuMQHg3Wi0UPDnVnoRgF96oLtm3CiGQ==
-X-Received: by 2002:a17:906:7f16:: with SMTP id d22mr4466398ejr.17.1561560634310;
-        Wed, 26 Jun 2019 07:50:34 -0700 (PDT)
-Received: from brauner.io (cable-89-16-153-196.cust.telecolumbus.net. [89.16.153.196])
-        by smtp.gmail.com with ESMTPSA id a6sm5477457eds.19.2019.06.26.07.50.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 07:50:33 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 16:50:32 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net, mszeredi@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/25] VFS: Introduce filesystem information query
- syscall [ver #14]
-Message-ID: <20190626145031.nvpekusplnt5kqw5@brauner.io>
-References: <20190626131902.6xat2ab65arc62td@brauner.io>
- <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
- <20190626100525.irdehd24jowz5f75@brauner.io>
- <9360.1561559497@warthog.procyon.org.uk>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zKwCVXqNSdxUFQzItp//hcjzWX/6aPHoSCaD5m20WdA=;
+        b=ggkusCuj5YmR9+iz+OqEGPmClbvLdXhu12qEVtxqZMQqCNih8X0Km8TFdEgYAmE8y7
+         4BHqkBNHOjy8ArQoxU3XsGId6JrhgN9oTw1Y0PVsUYL5JQApbk0HZsGmiELyCowndIQP
+         OX5CdIIZbL3Hc45cmfJortpWS+NlYfS7ZVDF0WwIaTfodKVOQu4xg2rMAVUV/6sOQQFU
+         hVRaUjTvZysb64qQAPvb5VrfG6skhghhm5ySRhqg/QEeKoQO+D3zMpKNEQq4XvBAD0EE
+         p/u/yl7mguRZp/sNt7URYGPd+5s3PQuEBUXnp0Cgli1n5o6Z29JBw4bRViesq2MMxrD0
+         tBsg==
+X-Gm-Message-State: APjAAAUssVrF6VcnJkl+MB38n7dqv8TUhk6ENBZtMEsHSVebxBDsRxF6
+        u0NGZyz6+0pZws9GNSewCODt8A==
+X-Google-Smtp-Source: APXvYqxycRsvlbgRNY6d2pMyCqDyrY9jNh7mW02JEED6LFOHbbuBdjHos3+Fqpxmv1eNh3joycNHMQ==
+X-Received: by 2002:a5d:5143:: with SMTP id u3mr3622743wrt.118.1561560653972;
+        Wed, 26 Jun 2019 07:50:53 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e88d:856c:e081:f67d? ([2001:b07:6468:f312:e88d:856c:e081:f67d])
+        by smtp.gmail.com with ESMTPSA id x129sm2501891wmg.44.2019.06.26.07.50.53
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 07:50:53 -0700 (PDT)
+Subject: Re: [PATCH 0/2] scsi: add support for request batching
+To:     dgilbert@interlog.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, stefanha@redhat.com
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+ <746ad64a-4047-1597-a0d4-f14f3529cc19@redhat.com>
+ <65e5ad25-a475-989a-ce3d-400a8c90cb61@interlog.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cbb24317-7682-a854-4460-e8828db1eb25@redhat.com>
+Date:   Wed, 26 Jun 2019 16:50:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <65e5ad25-a475-989a-ce3d-400a8c90cb61@interlog.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9360.1561559497@warthog.procyon.org.uk>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 03:31:37PM +0100, David Howells wrote:
-> Christian Brauner <christian@brauner.io> wrote:
+On 26/06/19 16:14, Douglas Gilbert wrote:
 > 
-> > And I also very much recommend to remove any potential cross-dependency
-> > between the fsinfo() and the notification patchset.
+> I have no objections, just a few questions.
 > 
-> The problem with that is that to make the notification patchset useful for
-> mount notifications, you need some information that you would obtain through
-> fsinfo().
+> To implement this is the scsi_debug driver, a per device queue would
+> need to be added, correct?
 
-But would it really be that bad if you'd just land fsinfo() and then
-focus on the notification stuff. This very much rather looks like a
-timing issue than a conceptual one, i.e. you could very much just push
-fsinfo() and leave the notification stuff alone until that is done.
+Yes, queuecommand would then return before calling schedule_resp (for
+all requests except the one with SCMD_LAST, see later).  schedule_resp
+would then be called for all requests in a batch.
 
-Once fsinfo() has landed you can then go on to put additional bits you
-need from or for fsinfo() for the notification patchset in there. Seems
-you have at least sketched both APIs sufficiently that you know what you
-need to look out for to not cause any regressions later on when you need
-to expand them.
+> Then a 'commit_rqs' call would be expected
+> at some later point and it would drain that queue and submit each
+> command. Or is the queue draining ongoing in the LLD and 'commit_rqs'
+> means: don't return until that queue is empty?
 
-Christian
+commit_rqs means the former; it is asynchronous.
+
+However, commit_rqs is only called if a request batch fails submission
+in the middle of the batch, so the request batch must be sent to the
+HBA.  If the whole request batch is sent successfully, then the LLD
+takes care of sending the batch to the HBA when it sees SCMD_LAST in the
+request.
+
+So, in the scsi_debug case schedule_resp would be called for the whole
+batch from commit_rqs *and* when queuecommand sees a command with the
+SCMD_LAST flag set.  This is exactly to avoid having two calls to the
+LLD in the case of no request batching.
+
+> So does that mean in the normal (i.e. non request batching) case
+> there are two calls to the LLD for each submitted command? Or is
+> 'commit_rqs' optional, a sync-ing type command?
+
+It's not syncing.  It's mandatory if the queuecommand function observes
+SCMD_LAST, not needed at all if queuecommand ignores it.  So it's not
+needed at all until your driver adds support for batched submission of
+requests to the HBA.
+
+(All this is documented by the patches in the comments for struct
+scsi_host_template, if those are not clear please reply to patch 1 with
+your doubts).
+
+Paolo
