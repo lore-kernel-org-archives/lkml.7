@@ -2,42 +2,42 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057C4C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DA9C48BD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF97B204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CD020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M5RvEFLk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jk74jAEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfFZM1t (ORCPT
+        id S1727510AbfFZM1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:27:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42670 "EHLO
+        Wed, 26 Jun 2019 08:27:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42682 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfFZM1r (ORCPT
+        with ESMTP id S1727460AbfFZM1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:27:47 -0400
+        Wed, 26 Jun 2019 08:27:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tNgbIaFusBSvgAH0tfiGZyikD01HyoX3FofXPz2PChg=; b=M5RvEFLk+xIi2sTIO00V1tX6nN
-        Gas2OAPsm1RlVSmT8mEzUg67uQy5Ztrh4Dy2+VDFaybxSBu9cD+Zubb2kEKq3ZgXa2N3+M+MjK4RS
-        /lvmIiR4bg6GCmFpkNQJEblVadLbxP29esClvEVUoJpempikVE3+jPaymXArWMF5wu1d+pU/lenHS
-        O832RJqlERaIYCMWPFXMC2DpvqxzI2jLAIukePF57ECvYnIUGaEn08FT4Md+/es9ooWC8+J73/u2t
-        wKW9puCoUaWunC/FTlqtJUVADewWKckr6vI895VX3CSClMhkQHH6I2GbIPFNNNGq5kmrXIBkvg173
-        XtY/cvdg==;
+        bh=BPkZHHIHMHfLZtQnho6ADB3HOg0fG+ODbmu+2ZG5xyw=; b=jk74jAEbOrotcGBG5yTuu12mN9
+        C7kyksJxP1KCYqUPKHazaYWg5kM7S7/Y93S1Dfun5FvBnkOn75aymSxIlC+REhc60+4tcuXRgTbBS
+        H5faXnHQq7hSL832z10DovznO408+wuzv7SZabppvcvXXiPJG5+EAKioh0Sqov/x3VderuyLZ/f3J
+        vJBmHaWcyJS9+qeWoVMZdkaOKi1XqR2KxkM7w9FwTgKp7Pu5xlHdH30hk8T+St23PY28xR1/Pkz4r
+        au6n9mzTWdfrklWEZECBO0+bqRU2RIMg379zl8o++5ajUzWzEVtuOnrvMCrwHG3Us4QU4vqDgbMkG
+        UbjgkTBg==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg71T-0001LI-FP; Wed, 26 Jun 2019 12:27:36 +0000
+        id 1hg71b-0001M0-MI; Wed, 26 Jun 2019 12:27:44 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -46,11 +46,10 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH 03/25] mm: remove hmm_devmem_add_resource
-Date:   Wed, 26 Jun 2019 14:27:02 +0200
-Message-Id: <20190626122724.13313-4-hch@lst.de>
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 06/25] mm: export alloc_pages_vma
+Date:   Wed, 26 Jun 2019 14:27:05 +0200
+Message-Id: <20190626122724.13313-7-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626122724.13313-1-hch@lst.de>
 References: <20190626122724.13313-1-hch@lst.de>
@@ -62,93 +61,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function has never been used since it was first added to the kernel
-more than a year and a half ago, and if we ever grow a consumer of the
-MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
-directly.
+nouveau is currently using this through an odd hmm wrapper, and I plan
+to switch it to the real thing later in this series.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
 ---
- include/linux/hmm.h |  3 ---
- mm/hmm.c            | 50 ---------------------------------------------
- 2 files changed, 53 deletions(-)
+ mm/mempolicy.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 99765be3284d..5c46b0f603fd 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -722,9 +722,6 @@ struct hmm_devmem {
- struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
- 				  struct device *device,
- 				  unsigned long size);
--struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
--					   struct device *device,
--					   struct resource *res);
- 
- /*
-  * hmm_devmem_page_set_drvdata - set per-page driver data field
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 00cc642b3d7e..bd260a3b6b09 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -1478,54 +1478,4 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
- 	return devmem;
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 01600d80ae01..f48569aa1863 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2098,6 +2098,7 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
+ out:
+ 	return page;
  }
- EXPORT_SYMBOL_GPL(hmm_devmem_add);
--
--struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
--					   struct device *device,
--					   struct resource *res)
--{
--	struct hmm_devmem *devmem;
--	void *result;
--	int ret;
--
--	if (res->desc != IORES_DESC_DEVICE_PUBLIC_MEMORY)
--		return ERR_PTR(-EINVAL);
--
--	dev_pagemap_get_ops();
--
--	devmem = devm_kzalloc(device, sizeof(*devmem), GFP_KERNEL);
--	if (!devmem)
--		return ERR_PTR(-ENOMEM);
--
--	init_completion(&devmem->completion);
--	devmem->pfn_first = -1UL;
--	devmem->pfn_last = -1UL;
--	devmem->resource = res;
--	devmem->device = device;
--	devmem->ops = ops;
--
--	ret = percpu_ref_init(&devmem->ref, &hmm_devmem_ref_release,
--			      0, GFP_KERNEL);
--	if (ret)
--		return ERR_PTR(ret);
--
--	devmem->pfn_first = devmem->resource->start >> PAGE_SHIFT;
--	devmem->pfn_last = devmem->pfn_first +
--			   (resource_size(devmem->resource) >> PAGE_SHIFT);
--	devmem->page_fault = hmm_devmem_fault;
--
--	devmem->pagemap.type = MEMORY_DEVICE_PUBLIC;
--	devmem->pagemap.res = *devmem->resource;
--	devmem->pagemap.page_free = hmm_devmem_free;
--	devmem->pagemap.altmap_valid = false;
--	devmem->pagemap.ref = &devmem->ref;
--	devmem->pagemap.data = devmem;
--	devmem->pagemap.kill = hmm_devmem_ref_kill;
--	devmem->pagemap.cleanup = hmm_devmem_ref_exit;
--
--	result = devm_memremap_pages(devmem->device, &devmem->pagemap);
--	if (IS_ERR(result))
--		return result;
--	return devmem;
--}
--EXPORT_SYMBOL_GPL(hmm_devmem_add_resource);
- #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
++EXPORT_SYMBOL(alloc_pages_vma);
+ 
+ /**
+  * 	alloc_pages_current - Allocate pages.
 -- 
 2.20.1
 
