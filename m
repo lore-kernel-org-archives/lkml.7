@@ -2,134 +2,198 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B5C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E88CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F29D208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:07:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="G49Ed7DH"
+	by mail.kernel.org (Postfix) with ESMTP id 3CB6A216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfFZNHX (ORCPT
+        id S1727641AbfFZNHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:07:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:49659 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZNHW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:07:22 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5QD771m4115517
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 26 Jun 2019 06:07:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5QD771m4115517
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561554428;
-        bh=M+HknD5PhsH6AD+/lxuIlR6Cxr1LBQ3MZt90rOeigVU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=G49Ed7DHKem32wYpCXQGR6S8a+hnUyz6zAfWzU6cJbgW/R7q1XhrV9LPm5ZRpjpam
-         ep+5o+YZbsXHMg/BsU8eOAUaWqAElEReYGS/2RUPwi034I5gg2Zflk4Ece1C2PgBmY
-         +taW06r+LYncojXwuNcPcVcKpQh9TEavbLTJwYfyPeHKDjNueHA9ExhteMtWd3j8hq
-         YgZSHyXFe9qg0OLGB4UxYtCOdpoBVpiplnPE8qFL09u5ALkMYt4ntgL0tjl6T5MVT4
-         GkhQWX2vx94dKOU8QMAFYB9lJZt8PR/MB3h+aZg+n2JxKn6PFDjnVLWpaNpWnOGRIG
-         xipBvuciI9J7w==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5QD77Nx4115514;
-        Wed, 26 Jun 2019 06:07:07 -0700
-Date:   Wed, 26 Jun 2019 06:07:07 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Linus Walleij <tipbot@zytor.com>
-Message-ID: <tip-670b004417e37b2d080ff6817703dc02e009dc94@git.kernel.org>
-Cc:     dilinger@queued.net, mingo@kernel.org, dvhart@infradead.org,
-        tglx@linutronix.de, linus.walleij@linaro.org, andy@infradead.org,
-        hpa@zytor.com, linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, andy@infradead.org,
-          linus.walleij@linaro.org, hpa@zytor.com, mingo@kernel.org,
-          dvhart@infradead.org, tglx@linutronix.de, dilinger@queued.net
-In-Reply-To: <20190626092119.3172-1-linus.walleij@linaro.org>
-References: <20190626092119.3172-1-linus.walleij@linaro.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/platform] x86/platform/geode: Drop <linux/gpio.h> includes
-Git-Commit-ID: 670b004417e37b2d080ff6817703dc02e009dc94
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 26 Jun 2019 09:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfFZNHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:07:52 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 422B421670;
+        Wed, 26 Jun 2019 13:07:51 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 09:07:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Matthew Garrett <matthewgarrett@google.com>
+Cc:     jmorris@namei.org, linux-security@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH V33 29/30] tracefs: Restrict tracefs when the kernel is
+ locked down
+Message-ID: <20190626090748.23eba868@gandalf.local.home>
+In-Reply-To: <20190621011941.186255-30-matthewgarrett@google.com>
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+        <20190621011941.186255-30-matthewgarrett@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  670b004417e37b2d080ff6817703dc02e009dc94
-Gitweb:     https://git.kernel.org/tip/670b004417e37b2d080ff6817703dc02e009dc94
-Author:     Linus Walleij <linus.walleij@linaro.org>
-AuthorDate: Wed, 26 Jun 2019 11:21:19 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 26 Jun 2019 15:00:12 +0200
+On Thu, 20 Jun 2019 18:19:40 -0700
+Matthew Garrett <matthewgarrett@google.com> wrote:
 
-x86/platform/geode: Drop <linux/gpio.h> includes
+> Tracefs may release more information about the kernel than desirable, so
+> restrict it when the kernel is locked down in confidentiality mode by
+> preventing open().
+> 
+> Signed-off-by: Matthew Garrett <mjg59@google.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  fs/tracefs/inode.c           | 41 +++++++++++++++++++++++++++++++++++-
+>  include/linux/security.h     |  1 +
+>  security/lockdown/lockdown.c |  1 +
+>  3 files changed, 42 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> index 7098c49f3693..f6c04fa8e415 100644
+> --- a/fs/tracefs/inode.c
+> +++ b/fs/tracefs/inode.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/parser.h>
+>  #include <linux/magic.h>
+>  #include <linux/slab.h>
+> +#include <linux/security.h>
+>  
+>  #define TRACEFS_DEFAULT_MODE	0700
+>  
+> @@ -31,6 +32,21 @@ static struct vfsmount *tracefs_mount;
+>  static int tracefs_mount_count;
+>  static bool tracefs_registered;
+>  
+> +static int default_open_file(struct inode *inode, struct file *filp)
+> +{
+> +	struct dentry *dentry = filp->f_path.dentry;
+> +	struct file_operations *real_fops;
+> +
+> +	if (!dentry)
+> +		return -EINVAL;
+> +
+> +	if (security_is_locked_down(LOCKDOWN_TRACEFS))
+> +		return -EPERM;
+> +
+> +	real_fops = dentry->d_fsdata;
+> +	return real_fops->open(inode, filp);
+> +}
+> +
+>  static ssize_t default_read_file(struct file *file, char __user *buf,
+>  				 size_t count, loff_t *ppos)
+>  {
+> @@ -50,6 +66,13 @@ static const struct file_operations tracefs_file_operations = {
+>  	.llseek =	noop_llseek,
+>  };
+>  
+> +static const struct file_operations tracefs_proxy_file_operations = {
+> +	.read =		default_read_file,
+> +	.write =	default_write_file,
+> +	.open =		default_open_file,
+> +	.llseek =	noop_llseek,
+> +};
 
-These board files only use gpio_keys not gpio in general.  This include is
-just surplus, delete it.
+This appears to be unused.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-gpio@vger.kernel.org
-Cc: Andres Salomon <dilinger@queued.net>
-Cc: linux-geode@lists.infradead.org
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190626092119.3172-1-linus.walleij@linaro.org
+> +
+>  static struct tracefs_dir_ops {
+>  	int (*mkdir)(const char *name);
+>  	int (*rmdir)(const char *name);
+> @@ -225,6 +248,12 @@ static int tracefs_apply_options(struct super_block *sb)
+>  	return 0;
+>  }
+>  
+> +static void tracefs_destroy_inode(struct inode *inode)
+> +{
+> +	if (S_ISREG(inode->i_mode))
+> +		kfree(inode->i_fop);
+> +}
+> +
+>  static int tracefs_remount(struct super_block *sb, int *flags, char *data)
+>  {
+>  	int err;
+> @@ -260,6 +289,7 @@ static int tracefs_show_options(struct seq_file *m, struct dentry *root)
+>  
+>  static const struct super_operations tracefs_super_operations = {
+>  	.statfs		= simple_statfs,
+> +	.destroy_inode  = tracefs_destroy_inode,
+>  	.remount_fs	= tracefs_remount,
+>  	.show_options	= tracefs_show_options,
+>  };
+> @@ -393,6 +423,7 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+>  {
+>  	struct dentry *dentry;
+>  	struct inode *inode;
+> +	struct file_operations *proxy_fops;
+>  
+>  	if (!(mode & S_IFMT))
+>  		mode |= S_IFREG;
+> @@ -406,8 +437,16 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+>  	if (unlikely(!inode))
+>  		return failed_creating(dentry);
+>  
+> +	proxy_fops = kzalloc(sizeof(struct file_operations), GFP_KERNEL);
+> +	if (!proxy_fops)
+> +		return failed_creating(dentry);
+> +
+> +	dentry->d_fsdata = fops ? (void *)fops :
+> +		(void *)&tracefs_file_operations;
+> +	memcpy(proxy_fops, dentry->d_fsdata, sizeof(struct file_operations));
+> +	proxy_fops->open = default_open_file;
+>  	inode->i_mode = mode;
+> -	inode->i_fop = fops ? fops : &tracefs_file_operations;
+> +	inode->i_fop = proxy_fops;
 
----
- arch/x86/platform/geode/alix.c    | 1 -
- arch/x86/platform/geode/geos.c    | 1 -
- arch/x86/platform/geode/net5501.c | 1 -
- 3 files changed, 3 deletions(-)
 
-diff --git a/arch/x86/platform/geode/alix.c b/arch/x86/platform/geode/alix.c
-index 1865c196f136..abcf27077bac 100644
---- a/arch/x86/platform/geode/alix.c
-+++ b/arch/x86/platform/geode/alix.c
-@@ -24,7 +24,6 @@
- #include <linux/moduleparam.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
--#include <linux/gpio.h>
- #include <linux/input.h>
- #include <linux/gpio_keys.h>
- #include <linux/dmi.h>
-diff --git a/arch/x86/platform/geode/geos.c b/arch/x86/platform/geode/geos.c
-index 4fcdb91318a0..529ad847d496 100644
---- a/arch/x86/platform/geode/geos.c
-+++ b/arch/x86/platform/geode/geos.c
-@@ -21,7 +21,6 @@
- #include <linux/string.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
--#include <linux/gpio.h>
- #include <linux/input.h>
- #include <linux/gpio_keys.h>
- #include <linux/dmi.h>
-diff --git a/arch/x86/platform/geode/net5501.c b/arch/x86/platform/geode/net5501.c
-index a2f6b982a729..30cb3377ecc7 100644
---- a/arch/x86/platform/geode/net5501.c
-+++ b/arch/x86/platform/geode/net5501.c
-@@ -22,7 +22,6 @@
- #include <linux/string.h>
- #include <linux/leds.h>
- #include <linux/platform_device.h>
--#include <linux/gpio.h>
- #include <linux/input.h>
- #include <linux/gpio_keys.h>
- 
+I think the above would look cleaner as:
+
+
+	if (!fops)
+		fops = &tracefs_file_operations;
+
+	dentry->d_fsdata = (void *)fops;
+	memcpy(proxy_fops, fops, sizeof(*proxy_fops);
+	proxy_fops->open = default_open_file;
+
+-- Steve
+
+>  	inode->i_private = data;
+>  	d_instantiate(dentry, inode);
+>  	fsnotify_create(dentry->d_parent->d_inode, dentry);
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 2563a9e3b415..040e7fc33397 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -100,6 +100,7 @@ enum lockdown_reason {
+>  	LOCKDOWN_KPROBES,
+>  	LOCKDOWN_BPF,
+>  	LOCKDOWN_PERF,
+> +	LOCKDOWN_TRACEFS,
+>  	LOCKDOWN_CONFIDENTIALITY_MAX,
+>  };
+>  
+> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+> index a6f7b0770e78..7dc601f06cd3 100644
+> --- a/security/lockdown/lockdown.c
+> +++ b/security/lockdown/lockdown.c
+> @@ -36,6 +36,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+>  	[LOCKDOWN_KPROBES] = "use of kprobes",
+>  	[LOCKDOWN_BPF] = "use of bpf",
+>  	[LOCKDOWN_PERF] = "unsafe use of perf",
+> +	[LOCKDOWN_TRACEFS] = "use of tracefs",
+>  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
+>  };
+>  
+
