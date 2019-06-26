@@ -2,114 +2,151 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F091C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8CDC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571442146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A195C2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZlQtchA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="al0bdWja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfFZK2Y (ORCPT
+        id S1727263AbfFZK23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:28:24 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53334 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZK2F (ORCPT
+        Wed, 26 Jun 2019 06:28:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43990 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfFZK22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:28:05 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x15so1519129wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:28:03 -0700 (PDT)
+        Wed, 26 Jun 2019 06:28:28 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p13so2072574wru.10;
+        Wed, 26 Jun 2019 03:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YkWgLbuNvvSsHDT8z49IMbijdNbjadafDfpCu7BT3J4=;
-        b=IZlQtchA8tyGkV6MypPeDsYD7GgL+RAXRgSwohzYZ7aL3OFSpkLqHTESsBLlDFsdC+
-         PL78y4k0DEkuD5Y1Jp7EDdcLshCHlLOMDs+jJWmxe4E5wqfqsV3P0XS5bvG5fGimUBNt
-         e5gm4KYH7twrUhQSRa6Xe/IfwZOJWcGlJ4oVE8iWTUdRELvnHQPLoAFYwnY0g2dZghB+
-         t/q7yjFbjwydx34vGUCfp5sdO9itDjxYmEU2//f9K2+JFVnjvblxa59G0pH2UErs9QMv
-         E/9DIaAe6aANUmXlQ4s6SN5sTdQSMv4KOH6CzlK6zmNTUbpppUvkGPzdIAU7xKUvBXRE
-         RcKw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kCaYA/FnXYJJu+TrRy4BKJsDWzoGNXiaayKbDb94w+c=;
+        b=al0bdWjaXkyCAS0ALgnrSOkTpGyasqItumozaBvYJ9hKll3uPqhNuo0j8JBUgn6Bss
+         01ltiSi2eTbREMnFv/OvMWWfICrmgPDqlAT171DJDrMF8UmjtdBxFkmegsK10yg0nfKE
+         Wv/uuLppeicqllMyoUa+xKzwMOKDRnrwuAas2oTHR9muXb3FDJnL9P8Vu0owk/CIRx0o
+         AkK8bRttG1k2XVK+ipSzf1D0UwBFppp5TzLxZJSPmsPacioK/MF8uhRs6m82m1lwDFea
+         QAEQYzw8Se/dXO5TtXcfxr+NUynP6i4FWTg6EIxjBUP+6zYQWu6/W/cqjGxbQdD1DoDB
+         4udg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YkWgLbuNvvSsHDT8z49IMbijdNbjadafDfpCu7BT3J4=;
-        b=gjFSgA24fycQgKJyQ1oPLFHxtrtkRuhAOvwakgXWuRDaK8I5qMQght0Be4TwS88xxP
-         /8alRSXByAErDKeAvGOAV1ODu+87XCHrCYdsYFimuHKWcKapAT2wVtdtVfzw0ECWWzPh
-         BQs7wvGwj0mHNElZq62qXZ6wL4p2z336O4d2DWeWi1ozAEJ6QhUypBBifYGoZxVapEKM
-         +xvKhu5I7AzN0RhC1b8vVlUaIBWYIXSgTLAEhVbzObT1+HnUO5zb1z83BaBWU123vGEc
-         SUynAFTZKglFPNmcq/S0WYZ2ybaj7h5V0LRHV/cCu1xGOj6ztOZTcYTOjbb2BYkHbxui
-         1kZw==
-X-Gm-Message-State: APjAAAVSWD5dsNJuqyrmCXp55h6jye8p5pPhfdhNdqxbDYRMPV8AahsD
-        NAeaNtdDl1t2XVboAxsBR46Mcw==
-X-Google-Smtp-Source: APXvYqweJGjACasTVnjTFzlKfUE0OHmQzMzYcn69iB2wzSBvKj6RYfTICKZgBvu12Lg4A4za2EwdCA==
-X-Received: by 2002:a1c:d10c:: with SMTP id i12mr2253393wmg.152.1561544882838;
-        Wed, 26 Jun 2019 03:28:02 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id z19sm2212042wmi.7.2019.06.26.03.28.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kCaYA/FnXYJJu+TrRy4BKJsDWzoGNXiaayKbDb94w+c=;
+        b=Tgc6xAy28eM3DMetuDIePu4KK7iQxOUhK55VDo8iDD1Ki4i5V0EulCrx6ZNSUpwK2J
+         eXs+Iy2uonOhBqxR/BbZXeoRqum2fiHCMY7H+eUpzdf/YwIU4v2mYMn+Bd+b5+ZRGpvI
+         KVQ5MJUbXDHit3mkPM1pgF0jBp3ncgzIV5SC5NuRuFAcnmyzBAhH3pviy2rd7f7xMCCa
+         8Ljt9qqbClSfX0gytR1YYX6jiKLAXJGr42AIDyeeBENciGLlvC6rW7PmDlfKvga/7S4k
+         MzIFgzY9vEu8Ul0TwL4iO4GsX/XV20j6Vy+OPG7zNt1oqug1T3gszhP0x11ybY2aaALD
+         LWtQ==
+X-Gm-Message-State: APjAAAW82xCuifiDx3mSK743vuysRTF4WBkK0WLkQMzv2qwUEYrEotq7
+        itrMSjxIef8sc1XwUk2btqs=
+X-Google-Smtp-Source: APXvYqwzL9B7b8q6dp307iySl6j91+IQ7iFGWkUjNojhUJMBDYWB/J9F0rnm0ZW538lTIC7sUVzO6w==
+X-Received: by 2002:adf:f104:: with SMTP id r4mr3290900wro.140.1561544905806;
+        Wed, 26 Jun 2019 03:28:25 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id r79sm1567240wme.2.2019.06.26.03.28.24
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:28:02 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <pure.logic@nexus-software.ie>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 2/6] nvmem: imx-ocotp: Ensure WAIT bits are preserved when setting timing
-Date:   Wed, 26 Jun 2019 11:27:29 +0100
-Message-Id: <20190626102733.11708-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190626102733.11708-1-srinivas.kandagatla@linaro.org>
-References: <20190626102733.11708-1-srinivas.kandagatla@linaro.org>
+        Wed, 26 Jun 2019 03:28:24 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 12:28:24 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V4 18/18] arm64: dts: tegra210-p2180: Jetson TX1 SC7
+ timings
+Message-ID: <20190626102824.GG6362@ulmo>
+References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
+ <1561345379-2429-19-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="APlYHCtpeOhspHkB"
+Content-Disposition: inline
+In-Reply-To: <1561345379-2429-19-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
 
-The i.MX6 and i.MX8 both have a bit-field spanning bits 27:22 called the
-WAIT field.
+--APlYHCtpeOhspHkB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The WAIT field according to the documentation for both parts "specifies
-time interval between auto read and write access in one time program. It is
-given in number of ipg_clk periods."
+On Sun, Jun 23, 2019 at 08:02:59PM -0700, Sowjanya Komatineni wrote:
+> This patch has Jetson TX1 platform specific SC7 timing configuration
+> in device tree.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-This patch ensures that the relevant field is read and written back to the
-timing register.
+Can you provide a similar patch for Jetson Nano (p3450-0000)? It'd be
+great if we can make new features like this available across all boards.
 
-Fixes: 0642bac7da42 ("nvmem: imx-ocotp: add write support")
+Thierry
 
-Signed-off-by: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/nvmem/imx-ocotp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/=
+boot/dts/nvidia/tegra210-p2180.dtsi
+> index 27723829d033..cb58f79deb48 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
+> @@ -279,6 +279,13 @@
+> =20
+>  	pmc@7000e400 {
+>  		nvidia,invert-interrupt;
+> +		nvidia,suspend-mode =3D <0>;
+> +		nvidia,cpu-pwr-good-time =3D <0>;
+> +		nvidia,cpu-pwr-off-time =3D <0>;
+> +		nvidia,core-pwr-good-time =3D <4587 3876>;
+> +		nvidia,core-pwr-off-time =3D <39065>;
+> +		nvidia,core-power-req-active-high;
+> +		nvidia,sys-clock-req-active-high;
+>  	};
+> =20
+>  	/* eMMC */
+> --=20
+> 2.7.4
+>=20
 
-diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index 14c2bff2cd96..f4e117bbf2c3 100644
---- a/drivers/nvmem/imx-ocotp.c
-+++ b/drivers/nvmem/imx-ocotp.c
-@@ -183,7 +183,8 @@ static void imx_ocotp_set_imx6_timing(struct ocotp_priv *priv)
- 	strobe_prog = clk_rate / (1000000000 / 10000) + 2 * (DEF_RELAX + 1) - 1;
- 	strobe_read = clk_rate / (1000000000 / 40) + 2 * (DEF_RELAX + 1) - 1;
- 
--	timing = strobe_prog & 0x00000FFF;
-+	timing = readl(priv->base + IMX_OCOTP_ADDR_TIMING) & 0x0FC00000;
-+	timing |= strobe_prog & 0x00000FFF;
- 	timing |= (relax       << 12) & 0x0000F000;
- 	timing |= (strobe_read << 16) & 0x003F0000;
- 
--- 
-2.21.0
+--APlYHCtpeOhspHkB
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TSMcACgkQ3SOs138+
+s6Hobg//bHL6IZg0MNnz6irMk4CtJYVFtTftwwB09UP8JKkxLxrMaYT9yjBG9AjT
+bjtGZeRdj66yVRCU0sj8xPSNJZjXMepVk6TXaEjuzFtQcJtrSH1kAz8b+dCPHspT
+5+GT3DXacuBqBB6rRQdbSA4MXFC7HWOoMgVPj9afqR4vu50+qhuimRjYQChjE6vF
+OM/IcV1NoGwoYWuWmg6JDgPIydS/XoEfifaSLxnCiJ/Xkx13xdTY7FFrcPWGHIjT
+X68dbzqKk/6nREuQaT/U9xsTkijD92PW0qTK4jfGEFK6d+DrMfNszfDudIYatw1/
+IkP0wgUN7ldmbVCvwArBaSWxZRfIBgAixFniBNjYhaFJ8ctNkXGkedNio20TDdne
+CRxgVQXQtmqgSXCbgFryl1NQk8vJGTOVDsYZlaJEBpPSlANx9IZNTOVpqXnD52FN
+jcJ+PrD83WUVvT1RCRw0p43Bjc2iCpxcfuYsSxU5AWpvf9P/Om6A0WmpMyZADIXB
+K5IUhJtRjBKZblfWPkJv6qX9eYLKx+QqwNy8AAl9Rqf3vjN0aH4J+JWuqSXHK/ko
+9hlH7D2x+dQv4PzCvq/FAmquMz+RIo9fT4IZk4Voi0iZ9Zolm7lbTFcOpFJWye5E
+wHh7HUyfgxxNYKYGzJFqPeBXPO30Ib6MaYUUQZdL4mM5D1M1IUg=
+=DNYf
+-----END PGP SIGNATURE-----
+
+--APlYHCtpeOhspHkB--
