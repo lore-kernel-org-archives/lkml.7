@@ -2,139 +2,102 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6641EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B8EC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435C42085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B772085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Gr39npG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfFZNrz (ORCPT
+        id S1727985AbfFZNsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 26 Jun 2019 09:48:03 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:51182 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727890AbfFZNrz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 09:47:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59124 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfFZNrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:47:53 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D77CF8830F;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C2CE1C0C4B;
+        Wed, 26 Jun 2019 13:47:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561556874; bh=0bswUsADavcsJuPhrKYDpslb3LXvmrbbf7KafZXBVSs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=Gr39npG9OoiEpu/y+EBpp6chklbb22d8DRjysaVGD6avm8m+ft4AK3yj+UvEBfYCM
+         Yk8Kg4xZ3nkLe4tQFNRnmqX7jnQV9Wx18TUY+YbMaZGlEl87TocaEbYe2jlD2JuxDw
+         LsU0+TU1e0oeSXptUddiHui+cEgD/gyJkz69d2cIE1pcPCVn7M4WCtb4cbznS2NpGq
+         TVtoOqW6C2GsDe47Ulk/1oGoajj1wuezj3N6Hwbamsi5oRuavZf8Uw03fmB0rK8s9T
+         DSd73o4w98a4j4iX9+7MbzO/c40ld5mT+sJ/yKZndTpxdynmNpk0QWn1BHC9WweYKy
+         hGFkqasrivJqQ==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 52568A0070;
         Wed, 26 Jun 2019 13:47:52 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-10.phx2.redhat.com [10.3.112.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE2365C205;
-        Wed, 26 Jun 2019 13:47:50 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 6470211A; Wed, 26 Jun 2019 10:47:46 -0300 (BRT)
-Date:   Wed, 26 Jun 2019 10:47:46 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Masanari Iida <standby24x7@gmail.com>
-Cc:     ak@linux.intel.com, kan.liang@intel.com,
-        linux-kernel@vger.kernel.org, acme@kernel.org
-Subject: Re: [PATCH] perf vendor events intel: Fix typos in
- floating-point.json
-Message-ID: <20190626134746.GA2227@redhat.com>
-References: <20190626110436.22563-1-standby24x7@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626110436.22563-1-standby24x7@gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 26 Jun 2019 13:47:52 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 44F013B578;
+        Wed, 26 Jun 2019 15:47:52 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH net-next 09/10] net: stmmac: Only disable interrupts if NAPI is scheduled
+Date:   Wed, 26 Jun 2019 15:47:43 +0200
+Message-Id: <372310483e674f14eb811c6e8c8355475496d520.1561556556.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1561556555.git.joabreu@synopsys.com>
+References: <cover.1561556555.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1561556555.git.joabreu@synopsys.com>
+References: <cover.1561556555.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jun 26, 2019 at 08:04:36PM +0900, Masanari Iida escreveu:
-> This patch fix some spelling typo in x86/*/floating-point.json
+Only disable the interrupts if RX NAPI gets to be scheduled. Also,
+schedule the TX NAPI only when the interrupts are disabled.
 
-These are auto-generated files, glad that you CCed your fixes to the
-Intel folks, hopefully they will in turn send it internally so that next
-time we get an update with the fixes, ok?
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks,
-
-- Arnaldo
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 0893af8b432d..bc949665c529 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2049,12 +2049,12 @@ static int stmmac_napi_check(struct stmmac_priv *priv, u32 chan)
+ 						 &priv->xstats, chan);
+ 	struct stmmac_channel *ch = &priv->channel[chan];
  
-> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-> ---
->  tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json    | 2 +-
->  tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json    | 2 +-
->  .../perf/pmu-events/arch/x86/westmereep-dp/floating-point.json  | 2 +-
->  .../perf/pmu-events/arch/x86/westmereep-sp/floating-point.json  | 2 +-
->  tools/perf/pmu-events/arch/x86/westmereex/floating-point.json   | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json b/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json
-> index 7d2f71a9dee3..6b9b9fe74f3b 100644
-> --- a/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json
-> +++ b/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json
-> @@ -15,7 +15,7 @@
->          "UMask": "0x4",
->          "EventName": "FP_ASSIST.INPUT",
->          "SampleAfterValue": "20000",
-> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
-> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
->      },
->      {
->          "PEBS": "1",
-> diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json b/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
-> index 7d2f71a9dee3..6b9b9fe74f3b 100644
-> --- a/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
-> +++ b/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
-> @@ -15,7 +15,7 @@
->          "UMask": "0x4",
->          "EventName": "FP_ASSIST.INPUT",
->          "SampleAfterValue": "20000",
-> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
-> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
->      },
->      {
->          "PEBS": "1",
-> diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> index 7d2f71a9dee3..6b9b9fe74f3b 100644
-> --- a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> +++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
-> @@ -15,7 +15,7 @@
->          "UMask": "0x4",
->          "EventName": "FP_ASSIST.INPUT",
->          "SampleAfterValue": "20000",
-> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
-> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
->      },
->      {
->          "PEBS": "1",
-> diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
-> index 7d2f71a9dee3..6b9b9fe74f3b 100644
-> --- a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
-> +++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
-> @@ -15,7 +15,7 @@
->          "UMask": "0x4",
->          "EventName": "FP_ASSIST.INPUT",
->          "SampleAfterValue": "20000",
-> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
-> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
->      },
->      {
->          "PEBS": "1",
-> diff --git a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
-> index 7d2f71a9dee3..6b9b9fe74f3b 100644
-> --- a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
-> +++ b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
-> @@ -15,7 +15,7 @@
->          "UMask": "0x4",
->          "EventName": "FP_ASSIST.INPUT",
->          "SampleAfterValue": "20000",
-> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
-> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
->      },
->      {
->          "PEBS": "1",
-> -- 
-> 2.22.0.214.g8dca754b1e87
+-	if (status)
+-		status |= handle_rx | handle_tx;
+-
+ 	if ((status & handle_rx) && (chan < priv->plat->rx_queues_to_use)) {
+-		stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
+-		napi_schedule_irqoff(&ch->rx_napi);
++		if (napi_schedule_prep(&ch->rx_napi)) {
++			stmmac_disable_dma_irq(priv, priv->ioaddr, chan);
++			__napi_schedule_irqoff(&ch->rx_napi);
++			status |= handle_tx;
++		}
+ 	}
+ 
+ 	if ((status & handle_tx) && (chan < priv->plat->tx_queues_to_use))
+-- 
+2.7.4
+
