@@ -2,185 +2,117 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829E9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92720C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67F112086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E712146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:55:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfFZGyF (ORCPT
+        id S1726841AbfFZGz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:54:05 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:41934 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725797AbfFZGyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:54:04 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07437235|-1;CH=green;DM=SPAM|CONTINUE|true|0.86325-0.00405368-0.132696;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.EqHrgI6_1561532027;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EqHrgI6_1561532027)
-          by smtp.aliyun-inc.com(10.147.43.95);
-          Wed, 26 Jun 2019 14:53:52 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, Guo Ren <guoren@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 1/1] perf annotate csky: Add perf annotate support
-Date:   Wed, 26 Jun 2019 14:52:19 +0800
-Message-Id: <d874d7782d9acdad5d98f2f5c4a6fb26fbe41c5d.1561531557.git.han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1561531557.git.han_mao@c-sky.com>
-References: <cover.1561531557.git.han_mao@c-sky.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 26 Jun 2019 02:55:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52760 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726468AbfFZGz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 02:55:58 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ACABF307D861;
+        Wed, 26 Jun 2019 06:55:57 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A7900608C1;
+        Wed, 26 Jun 2019 06:55:52 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id C27E016E1A; Wed, 26 Jun 2019 08:55:51 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     tzimmermann@suse.de, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
+        BOCHS VIRTUAL GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] drm/bochs: fix framebuffer setup.
+Date:   Wed, 26 Jun 2019 08:55:51 +0200
+Message-Id: <20190626065551.12956-3-kraxel@redhat.com>
+In-Reply-To: <20190626065551.12956-1-kraxel@redhat.com>
+References: <20190626065551.12956-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 26 Jun 2019 06:55:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add basic arch initialization and instruction associate support
-for csky.
+If bo->width doesn't match fb->width the driver fails to configure
+the display correctly, resulting in a scrambled display.  Fix it.
 
-perf annotate --stdio2
-Samples: 161  of event 'cpu-clock:pppH', 4000 Hz, Event count (approx.):
-40250000, [percent: local period]
-test_4() /usr/lib/perf-test/callchain_test
-Percent
-
-            Disassembly of section .text:
-
-            00008420 <test_4>:
-            test_4():
-              subi  sp, sp, 4
-              st.w  r8, (sp, 0x0)
-              mov   r8, sp
-              subi  sp, sp, 8
-              subi  r3, r8, 4
-              movi  r2, 0
-              st.w  r2, (r3, 0x0)
-            ↓ br    2e
-100.00  14:   subi  r3, r8, 4
-              ld.w  r2, (r3, 0x0)
-              subi  r3, r8, 8
-              st.w  r2, (r3, 0x0)
-              subi  r3, r8, 4
-              ld.w  r3, (r3, 0x0)
-              addi  r2, r3, 1
-              subi  r3, r8, 4
-              st.w  r2, (r3, 0x0)
-        2e:   subi  r3, r8, 4
-              ld.w  r2, (r3, 0x0)
-              lrw   r3, 0x98967f    // 8598 <main+0x28>
-              cmplt r3, r2
-            ↑ bf    14
-              mov   r0, r0
-              mov   r0, r0
-              mov   sp, r8
-              ld.w  r8, (sp, 0x0)
-              addi  sp, sp, 4
-            ← rts
-
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- tools/perf/arch/csky/annotate/instructions.c | 48 ++++++++++++++++++++++++++++
- tools/perf/util/annotate.c                   |  5 +++
- 2 files changed, 53 insertions(+)
- create mode 100644 tools/perf/arch/csky/annotate/instructions.c
+ drivers/gpu/drm/bochs/bochs.h     |  2 +-
+ drivers/gpu/drm/bochs/bochs_hw.c  | 13 +++++++++----
+ drivers/gpu/drm/bochs/bochs_kms.c |  1 +
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/arch/csky/annotate/instructions.c b/tools/perf/arch/csky/annotate/instructions.c
-new file mode 100644
-index 0000000..5337bfb
---- /dev/null
-+++ b/tools/perf/arch/csky/annotate/instructions.c
-@@ -0,0 +1,48 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
+diff --git a/drivers/gpu/drm/bochs/bochs.h b/drivers/gpu/drm/bochs/bochs.h
+index cc35d492142c..78c0283496cc 100644
+--- a/drivers/gpu/drm/bochs/bochs.h
++++ b/drivers/gpu/drm/bochs/bochs.h
+@@ -86,7 +86,7 @@ void bochs_hw_setmode(struct bochs_device *bochs,
+ void bochs_hw_setformat(struct bochs_device *bochs,
+ 			const struct drm_format_info *format);
+ void bochs_hw_setbase(struct bochs_device *bochs,
+-		      int x, int y, u64 addr);
++		      int x, int y, int fbwidth, u64 addr);
+ int bochs_hw_load_edid(struct bochs_device *bochs);
+ 
+ /* bochs_mm.c */
+diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+index 791ab2f79947..141aa02962d3 100644
+--- a/drivers/gpu/drm/bochs/bochs_hw.c
++++ b/drivers/gpu/drm/bochs/bochs_hw.c
+@@ -255,16 +255,21 @@ void bochs_hw_setformat(struct bochs_device *bochs,
+ }
+ 
+ void bochs_hw_setbase(struct bochs_device *bochs,
+-		      int x, int y, u64 addr)
++		      int x, int y, int fbwidth, u64 addr)
+ {
+-	unsigned long offset = (unsigned long)addr +
++	unsigned long offset;
++	unsigned int vx, vy;
 +
-+#include <linux/compiler.h>
-+
-+static struct ins_ops *csky__associate_ins_ops(struct arch *arch,
-+					       const char *name)
-+{
-+	struct ins_ops *ops = NULL;
-+
-+	/* catch all kind of jumps */
-+	if (!strcmp(name, "bt") ||
-+	    !strcmp(name, "bf") ||
-+	    !strcmp(name, "bez") ||
-+	    !strcmp(name, "bnez") ||
-+	    !strcmp(name, "bnezad") ||
-+	    !strcmp(name, "bhsz") ||
-+	    !strcmp(name, "bhz") ||
-+	    !strcmp(name, "blsz") ||
-+	    !strcmp(name, "blz") ||
-+	    !strcmp(name, "br") ||
-+	    !strcmp(name, "jmpi") ||
-+	    !strcmp(name, "jmp"))
-+		ops = &jump_ops;
-+
-+	/* catch function call */
-+	if (!strcmp(name, "bsr") ||
-+	    !strcmp(name, "jsri") ||
-+	    !strcmp(name, "jsr"))
-+		ops = &call_ops;
-+
-+	/* catch function return */
-+	if (!strcmp(name, "rts"))
-+		ops = &ret_ops;
-+
-+	if (ops)
-+		arch__associate_ins_ops(arch, name, ops);
-+	return ops;
-+}
-+
-+static int csky__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
-+{
-+	arch->initialized = true;
-+	arch->objdump.comment_char = '/';
-+	arch->associate_instruction_ops = csky__associate_ins_ops;
-+
-+	return 0;
-+}
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 79db038..eb2456e 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -144,6 +144,7 @@ static int arch__associate_ins_ops(struct arch* arch, const char *name, struct i
- #include "arch/arc/annotate/instructions.c"
- #include "arch/arm/annotate/instructions.c"
- #include "arch/arm64/annotate/instructions.c"
-+#include "arch/csky/annotate/instructions.c"
- #include "arch/x86/annotate/instructions.c"
- #include "arch/powerpc/annotate/instructions.c"
- #include "arch/s390/annotate/instructions.c"
-@@ -163,6 +164,10 @@ static struct arch architectures[] = {
- 		.init = arm64__annotate_init,
- 	},
- 	{
-+		.name = "csky",
-+		.init = csky__annotate_init,
-+	},
-+	{
- 		.name = "x86",
- 		.init = x86__annotate_init,
- 		.instructions = x86__instructions,
++	bochs->stride = fbwidth * (bochs->bpp / 8);
++	offset = (unsigned long)addr +
+ 		y * bochs->stride +
+ 		x * (bochs->bpp / 8);
+-	int vy = offset / bochs->stride;
+-	int vx = (offset % bochs->stride) * 8 / bochs->bpp;
++	vy = offset / bochs->stride;
++	vx = (offset % bochs->stride) * 8 / bochs->bpp;
+ 
+ 	DRM_DEBUG_DRIVER("x %d, y %d, addr %llx -> offset %lx, vx %d, vy %d\n",
+ 			 x, y, addr, offset, vx, vy);
++	bochs_dispi_write(bochs, VBE_DISPI_INDEX_VIRT_WIDTH, fbwidth);
+ 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_X_OFFSET, vx);
+ 	bochs_dispi_write(bochs, VBE_DISPI_INDEX_Y_OFFSET, vy);
+ }
+diff --git a/drivers/gpu/drm/bochs/bochs_kms.c b/drivers/gpu/drm/bochs/bochs_kms.c
+index 5904eddc83a5..1f6aa11a1dc9 100644
+--- a/drivers/gpu/drm/bochs/bochs_kms.c
++++ b/drivers/gpu/drm/bochs/bochs_kms.c
+@@ -36,6 +36,7 @@ static void bochs_plane_update(struct bochs_device *bochs,
+ 	bochs_hw_setbase(bochs,
+ 			 state->crtc_x,
+ 			 state->crtc_y,
++			 gbo->width,
+ 			 gbo->bo.offset);
+ 	bochs_hw_setformat(bochs, state->fb->format);
+ }
 -- 
-2.7.4
+2.18.1
 
