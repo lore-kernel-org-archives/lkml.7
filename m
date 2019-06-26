@@ -2,102 +2,127 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1455DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0643C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B552147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA0B2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="V58GbM/I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+yJI8Tb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfFZGbQ (ORCPT
+        id S1726781AbfFZGco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:31:16 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:34928 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFZGbQ (ORCPT
+        Wed, 26 Jun 2019 02:32:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43883 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfFZGco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:31:16 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 7D6B32DC68FE;
-        Wed, 26 Jun 2019 02:31:15 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1561530675;
-        bh=UI2GCXuBlxHgc850F1IfwNc+nsesrzgc20uhDpnUNSA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=V58GbM/IaY8yJHTevGM2YMXWyvjz94zsRDVbk87BElo745K17gBhdRcNgKLyMp0Yu
-         rrw8xk+rDD4ywtCaqoDh1th9okWQJbDyeeAfJedEb6iEG9LcCd0Z/Oqu8e6g0zYszq
-         jeeKBvDLHmjjwjclNcHZyNiGvGida3Vmdgu3v6K/ceJnScMvFHnI6OEdoAxXT7pKwO
-         7HB30vulphiiJ4hzta0WhmAs8gk6cyi5VK6HXy1X4aVpHXbjdx/3AyUHola0fRGjDJ
-         CiUnNQaaZwXn/gB/A+OlyuBWbLqnK5E1zTy9sYSPRBfPG81UiGiZPFBeie7g02QBFb
-         pDjgk3iqHfG+pX86sLyYH83bBo9Tcx/2eqc252x+WoCBlpeNIMfMib9bS0KvkQ4kJU
-         XSwpA7y0zzLE0Pg/lf6VxvRlfycnyivQGb6YYlqGp4qMvqm/JOu8B3mnj1/JUohSwz
-         CsZuFjyNo6T7eMj2v3TqMdu8HcVnGDn5YjXg3WNXNLy/X8Dr5W91drGLRDIUlNqGTk
-         vkB1zB+88tPhhHoAEQPhwRptORM4WyMZSaWTpyIERpvw6H5p1zxmi7Xpr55oBP1QzH
-         +38aqqzjJ/D+OdzV9CM3bQEFg7PvAf3rddF5+52jA+kXDnYWZU0q5bHoiSAuI8LjvD
-         hSehiItyqMXEbkOEOwvSTNTo=
-Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5Q6UtdL031388
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 26 Jun 2019 16:31:11 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-Message-ID: <edac179f0626a6e0bd91922d876934abf1b9bb19.camel@d-silva.org>
-Subject: Re: [PATCH v2 2/3] mm: don't hide potentially null memmap pointer
- in sparse_remove_one_section
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>, Qian Cai <cai@lca.pw>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Wed, 26 Jun 2019 16:30:55 +1000
-In-Reply-To: <20190626062344.GG17798@dhcp22.suse.cz>
-References: <20190626061124.16013-1-alastair@au1.ibm.com>
-         <20190626061124.16013-3-alastair@au1.ibm.com>
-         <20190626062344.GG17798@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Wed, 26 Jun 2019 02:32:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so692272pgv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 23:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9J7yY9IsrBjV9EwZIoxYx67Urs2h76Y56lMom2HrjYs=;
+        b=s+yJI8TbDA7PKV+ouYYkLagx/LFxocWciWiULrNzoYQm5O1SbTRcK4YjEZFyGdFdT5
+         j3hKvUukpK0YltEl5SxhVY0CWvF+G9UEC2AkevJ/aHMjlqv9s5/CUrrzyqaVRv+UmVuy
+         Et20GJpdEVATdDIkdoOLDHg8cINl68c1JUTC+bznZARtqx4RtmfBomFG/cFihjIFEvyN
+         zBA276uuWti68dC7MSKLB9NgxinAfY4VbDEG5z8JtpDphh4N6nECvtoAziEfo4/4Gvjg
+         Gx9M/UoyZnxbIPZOVhjeijVq+khqfRmE3+O4JXkLz4W9r1Snc5lmnLtzg6n8Stv9CfjC
+         2rlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9J7yY9IsrBjV9EwZIoxYx67Urs2h76Y56lMom2HrjYs=;
+        b=Kmfn8WuwyBvHGpF7ss7cpqoCA+VmSDBktsQwmBKjwv450Z56xwsb8f/8PiRm9zhzS3
+         6Amn8PEBx70RJ52q61f/hKIcRJBJa9DpwiAVreVpzT0nRbYDmG+CcRarURu34h9keW/W
+         4uJpI8kizqNRmV/RWOAYPqTjxoShAcpYGGu1m+NJFPwDX5H04/2oMbcEooXoSmdIoEd3
+         BbQZOdkkb2VDOWA9ZV6OkE1f+YHfkyjDllrgowltVsLPi2U7MIZHrfiB2jom/WSX41Tr
+         YD92GxZ+YBndhGg4jB1aO0qAsHPOavXftek42bSiDcb9hGuCXLBwKXERtx/D5Z8UypqL
+         od/g==
+X-Gm-Message-State: APjAAAXHbffhc3pR+JSKB4pFXv6sglaFy5gnWWu9ces2EniJhVUaERBU
+        uN7OXqwV+NmSOu2p0grSYrG+Tw==
+X-Google-Smtp-Source: APXvYqxvT6JezWFulmTNsMvZc+jUaV+8gqbTrwljamAEg/tB5vfYQJIk22XCfFhYxEqwGdu015Js1Q==
+X-Received: by 2002:a17:90a:d595:: with SMTP id v21mr2696932pju.34.1561530763408;
+        Tue, 25 Jun 2019 23:32:43 -0700 (PDT)
+Received: from localhost ([122.172.211.128])
+        by smtp.gmail.com with ESMTPSA id v27sm2215398pgn.76.2019.06.25.23.32.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 23:32:42 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 12:02:40 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 0/3] Add required-opps support to devfreq passive gov
+Message-ID: <20190626063240.kgdiy7xsz4mahrdr@vireshk-i7>
+References: <20190622003449.33707-1-saravanak@google.com>
+ <20190624094349.rtjb7nuv6g7zmsf2@vireshk-i7>
+ <CAGETcx_ggG8oDnAVaSfuHfip1ozjQpFiGs15cz8nLQnzjTiSTg@mail.gmail.com>
+ <20190625041054.2ceuvnuuebc6hsr5@vireshk-i7>
+ <CAGETcx8MuXkQyD5qZBC948-hOu=kWd4hPk2Qiu-zWOcHBCc=FA@mail.gmail.com>
+ <20190625052227.3v74l6xtrkydzx6w@vireshk-i7>
+ <CAGETcx_v05PfscMi2qiYwHRMLryyA_494+h+kmJ3mD+GOjjeLA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Wed, 26 Jun 2019 16:31:11 +1000 (AEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx_v05PfscMi2qiYwHRMLryyA_494+h+kmJ3mD+GOjjeLA@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 08:23 +0200, Michal Hocko wrote:
-> On Wed 26-06-19 16:11:22, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > By adding offset to memmap before passing it in to
-> > clear_hwpoisoned_pages,
-> > we hide a potentially null memmap from the null check inside
-> > clear_hwpoisoned_pages.
-> > 
-> > This patch passes the offset to clear_hwpoisoned_pages instead,
-> > allowing
-> > memmap to successfully peform it's null check.
+On 24-06-19, 22:29, Saravana Kannan wrote:
+> No, the CPUs will be the "parent" and the cache will be the "child".
+> CPU is a special case when it comes to the actual software (not DT) as
+> we'll need the devfreq governor to look at all the CPUfreq policies to
+> decide the cache frequency (max of all their requirements).
 > 
-> Same issue with the changelog as the previous patch (missing WHY).
-> 
+> I think "master" and "slave" would have been a better term as the
+> master device determines its frequency using whatever means and the
+> "slave" device just "follows" the master device.
 
-The first paragraph explains what the problem is with the existing code
-(same applies to 1/3 too).
+Okay, so to confirm again this is what we will have:
+
+- CPUs are called masters and Caches are slaves.
+
+- The devfreq governor we are talking about takes care of changing
+  frequency of caches (slaves) and chooses a target frequency for
+  caches based on what the masters are running at.
+
+- The CPUs OPP nodes will have required-opps property and will be
+  pointing to the caches OPP nodes. The CPUs may already be using
+  required-opps node for PM domain performance state thing.
+
+
+Now the problem is "required-opp" means something really *required*
+and it is not optional. Like a specific voltage level before we can
+switch to a particular frequency. And this is how I have though of it
+until now. And this shouldn't be handled asynchronously, i.e. required
+OPPs must be set while configuring OPP of a device.
+
+So, when a CPU changes frequency, we must change the performance state
+of PM domain and change frequency/bw of the cache synchronously. And
+in such a case "required-opps" can be a very good fit for this use
+case.
+
+But with what you are trying to do it is no longer required-opp but
+good-to-have-opp. And that worries me.
 
 -- 
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva    
-Twitter: @EvilDeece
-blog: http://alastair.d-silva.org
-
-
+viresh
