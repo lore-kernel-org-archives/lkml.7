@@ -2,86 +2,113 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BF0C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5ABC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B242086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 06:59:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561532381;
-	bh=p9jVfOcgOghwi4+WlcWkjNcm/swM7xVzspjPRuxNwGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NEK0t5t4Kp0P66q0xEZRD7qPLJSZnMPTsa9Z6Kp0JooK1gUzb8wiVdybhoZ1JQzpZ
-	 ymFgLLkv1LbCQzKESjqNKGBvt2dqnDmd9Gc+OW3eLsCNpzvZmXEvHuUxXFPSgJ4Miq
-	 lMLgi9hSV6U3fm3/UqyaEwKZEVk0dyWjPLGkih8M=
+	by mail.kernel.org (Postfix) with ESMTP id 1BFDC2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfFZG7k (ORCPT
+        id S1726747AbfFZHFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 02:59:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38682 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725876AbfFZG7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 02:59:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 94530AC83;
-        Wed, 26 Jun 2019 06:59:38 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 08:59:35 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alastair D'Silva <alastair@d-silva.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>, Qian Cai <cai@lca.pw>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 2/3] mm: don't hide potentially null memmap pointer in
- sparse_remove_one_section
-Message-ID: <20190626065935.GL17798@dhcp22.suse.cz>
-References: <20190626061124.16013-1-alastair@au1.ibm.com>
- <20190626061124.16013-3-alastair@au1.ibm.com>
- <20190626062344.GG17798@dhcp22.suse.cz>
- <edac179f0626a6e0bd91922d876934abf1b9bb19.camel@d-silva.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <edac179f0626a6e0bd91922d876934abf1b9bb19.camel@d-silva.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 26 Jun 2019 03:05:15 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47262 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfFZHFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 03:05:15 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 43245200256;
+        Wed, 26 Jun 2019 09:05:13 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C4E52008FD;
+        Wed, 26 Jun 2019 09:05:08 +0200 (CEST)
+Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 405874030F;
+        Wed, 26 Jun 2019 15:05:02 +0800 (SGT)
+From:   Anson.Huang@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, aisheng.dong@nxp.com, abel.vesa@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] soc: imx-scu: Add SoC UID(unique identifier) support
+Date:   Wed, 26 Jun 2019 15:07:06 +0800
+Message-Id: <20190626070706.24930-1-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-06-19 16:30:55, Alastair D'Silva wrote:
-> On Wed, 2019-06-26 at 08:23 +0200, Michal Hocko wrote:
-> > On Wed 26-06-19 16:11:22, Alastair D'Silva wrote:
-> > > From: Alastair D'Silva <alastair@d-silva.org>
-> > > 
-> > > By adding offset to memmap before passing it in to
-> > > clear_hwpoisoned_pages,
-> > > we hide a potentially null memmap from the null check inside
-> > > clear_hwpoisoned_pages.
-> > > 
-> > > This patch passes the offset to clear_hwpoisoned_pages instead,
-> > > allowing
-> > > memmap to successfully peform it's null check.
-> > 
-> > Same issue with the changelog as the previous patch (missing WHY).
-> > 
-> 
-> The first paragraph explains what the problem is with the existing code
-> (same applies to 1/3 too).
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Under what conditions that happens? Is this a theoretical problem or can
-you hit this by a (buggy) code? Please be much more specific.
+Add i.MX SCU SoC's UID(unique identifier) support, user
+can read it from sysfs:
 
+root@imx8qxpmek:~# cat /sys/devices/soc0/soc_uid
+7B64280B57AC1898
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/soc/imx/soc-imx-scu.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
+index 676f612..8d322a1 100644
+--- a/drivers/soc/imx/soc-imx-scu.c
++++ b/drivers/soc/imx/soc-imx-scu.c
+@@ -27,6 +27,36 @@ struct imx_sc_msg_misc_get_soc_id {
+ 	} data;
+ } __packed;
+ 
++struct imx_sc_msg_misc_get_soc_uid {
++	struct imx_sc_rpc_msg hdr;
++	u32 uid_low;
++	u32 uid_high;
++} __packed;
++
++static ssize_t soc_uid_show(struct device *dev,
++			    struct device_attribute *attr, char *buf)
++{
++	struct imx_sc_msg_misc_get_soc_uid msg;
++	struct imx_sc_rpc_msg *hdr = &msg.hdr;
++	u64 soc_uid;
++
++	hdr->ver = IMX_SC_RPC_VERSION;
++	hdr->svc = IMX_SC_RPC_SVC_MISC;
++	hdr->func = IMX_SC_MISC_FUNC_UNIQUE_ID;
++	hdr->size = 1;
++
++	/* the return value of SCU FW is in correct, skip return value check */
++	imx_scu_call_rpc(soc_ipc_handle, &msg, true);
++
++	soc_uid = msg.uid_high;
++	soc_uid <<= 32;
++	soc_uid |= msg.uid_low;
++
++	return sprintf(buf, "%016llX\n", soc_uid);
++}
++
++static DEVICE_ATTR_RO(soc_uid);
++
+ static int imx_scu_soc_id(void)
+ {
+ 	struct imx_sc_msg_misc_get_soc_id msg;
+@@ -102,6 +132,11 @@ static int imx_scu_soc_probe(struct platform_device *pdev)
+ 		goto free_revision;
+ 	}
+ 
++	ret = device_create_file(soc_device_to_device(soc_dev),
++				 &dev_attr_soc_uid);
++	if (ret)
++		goto free_revision;
++
+ 	return 0;
+ 
+ free_revision:
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
