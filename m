@@ -2,369 +2,60 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA690C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9B7C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9C0216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561579175;
-	bh=bZYPVz/hsNYdXeNd5hZ+9FEp8RbumIs/X2hApptAOPg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NGWZBoN21DPPxQSADdYzgWNpYbyOjO1fPkaVv/UXe3vatm5irujozcH34P1TFCE67
-	 xGXcIePb0dW1Tfy7Mrg7W2WvkwdKgZbOKg8fA8q9iOpM3dMnNqUVRDAdKYb06OZIwt
-	 PKBOlWdImDeOCikjdcd6mEZjm8Di+GWApE4GTFf4=
+	by mail.kernel.org (Postfix) with ESMTP id 2C128216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfFZT7e (ORCPT
+        id S1726505AbfFZT7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 15:59:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39468 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZT7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:59:34 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726104AbfFZT7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:59:39 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65561208E3;
-        Wed, 26 Jun 2019 19:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561579172;
-        bh=bZYPVz/hsNYdXeNd5hZ+9FEp8RbumIs/X2hApptAOPg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EhmZRoOCfhhiQyO4PpLoixpDJYE0u0pW4F18Z5C4XzU18HoRQO8vh/VJIZVTynPGc
-         tw5U8olN3ZugDlri6R6y76pDglcs1sIwBxGzoy1DpF0k6uP47KHlxE0uyanG4RfPsk
-         sDoXT9ghJ10NkPLIfEiaIY+E6XHQ1N+qYOhDXvAc=
-Date:   Wed, 26 Jun 2019 20:59:28 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maarten ter Huurne <maarten@treewalker.org>,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 4/4] IIO: Ingenic JZ47xx: Add support for JZ4770 SoC
- ADC.
-Message-ID: <20190626205928.3043b5d8@archlinux>
-In-Reply-To: <20190623184732.5492-4-contact@artur-rojek.eu>
-References: <20190623184732.5492-1-contact@artur-rojek.eu>
-        <20190623184732.5492-4-contact@artur-rojek.eu>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id CD6CDC05678B;
+        Wed, 26 Jun 2019 19:59:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A1827600CC;
+        Wed, 26 Jun 2019 19:59:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <1d868a7a-0a15-e2b1-d73b-13d9229855ad@infradead.org>
+References: <1d868a7a-0a15-e2b1-d73b-13d9229855ad@infradead.org> <20190626231617.1e858da3@canb.auug.org.au>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     dhowells@redhat.com, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Jun 26 (task_struct: cached_requested_key)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13369.1561579172.1@warthog.procyon.org.uk>
+Date:   Wed, 26 Jun 2019 20:59:32 +0100
+Message-ID: <13370.1561579172@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 26 Jun 2019 19:59:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Jun 2019 20:47:32 +0200
-Artur Rojek <contact@artur-rojek.eu> wrote:
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> Add support for the ADC hardware present on Ingenic JZ4770 SoC.
-> 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-Hi
+> Multiple build errors like this when CONFIG_KEYS is not set/enabled:
+> (this was seen on one i386 build)
 
-A few minor comments inline.  Main one is that I'd like some numbers
-to justify the added complexity in avoiding he uncontended mutex in
-the cases where we don't 'need' it.  That makes the code more
-complex, and I would like to have evidence that it is worth it.
+Ah - I forgot to make CONFIG_KEYS_REQUEST_CACHE depend on CONFIG_KEYS.
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/ingenic-adc.c | 134 +++++++++++++++++++++++++++++++---
->  1 file changed, 123 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-> index e234970b7150..68d1c3280d1a 100644
-> --- a/drivers/iio/adc/ingenic-adc.c
-> +++ b/drivers/iio/adc/ingenic-adc.c
-> @@ -25,9 +25,13 @@
->  #define JZ_ADC_REG_ADSDAT		0x20
->  #define JZ_ADC_REG_ADCLK		0x28
->  
-> +#define JZ_ADC_REG_ENABLE_PD		BIT(7)
-> +#define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
->  #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
->  #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
-> -#define JZ_ADC_REG_ADCLK_CLKDIV10US_LSB	16
-> +#define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
-> +#define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
-> +#define JZ4770_ADC_REG_ADCLK_CLKDIVMS_LSB	16
->  
->  #define JZ_ADC_AUX_VREF				3300
->  #define JZ_ADC_AUX_VREF_BITS			12
-> @@ -37,6 +41,8 @@
->  #define JZ4725B_ADC_BATTERY_HIGH_VREF_BITS	10
->  #define JZ4740_ADC_BATTERY_HIGH_VREF		(7500 * 0.986)
->  #define JZ4740_ADC_BATTERY_HIGH_VREF_BITS	12
-> +#define JZ4770_ADC_BATTERY_VREF			6600
-> +#define JZ4770_ADC_BATTERY_VREF_BITS		12
->  
->  struct ingenic_adc;
->  
-> @@ -47,6 +53,8 @@ struct ingenic_adc_soc_data {
->  	size_t battery_raw_avail_size;
->  	const int *battery_scale_avail;
->  	size_t battery_scale_avail_size;
-> +	unsigned int battery_vref_mode: 1;
-> +	unsigned int has_aux2: 1;
->  	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
->  };
->  
-> @@ -54,6 +62,7 @@ struct ingenic_adc {
->  	void __iomem *base;
->  	struct clk *clk;
->  	struct mutex lock;
-> +	struct mutex aux_lock;
->  	const struct ingenic_adc_soc_data *soc_data;
->  	bool low_vref_mode;
->  };
-> @@ -120,6 +129,8 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
->  	case IIO_CHAN_INFO_SCALE:
->  		switch (chan->channel) {
->  		case INGENIC_ADC_BATTERY:
-> +			if (!adc->soc_data->battery_vref_mode)
-> +				return -EINVAL;
->  			if (val > JZ_ADC_BATTERY_LOW_VREF) {
->  				ingenic_adc_set_config(adc,
->  						       JZ_ADC_REG_CFG_BAT_MD,
-> @@ -158,6 +169,14 @@ static const int jz4740_adc_battery_scale_avail[] = {
->  	JZ_ADC_BATTERY_LOW_VREF, JZ_ADC_BATTERY_LOW_VREF_BITS,
->  };
->  
-> +static const int jz4770_adc_battery_raw_avail[] = {
-> +	0, 1, (1 << JZ4770_ADC_BATTERY_VREF_BITS) - 1,
-> +};
-> +
-> +static const int jz4770_adc_battery_scale_avail[] = {
-> +	JZ4770_ADC_BATTERY_VREF, JZ4770_ADC_BATTERY_VREF_BITS,
-> +};
-> +
->  static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
->  {
->  	struct clk *parent_clk;
-> @@ -187,7 +206,45 @@ static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
->  	/* We also need a divider that produces a 10us clock. */
->  	div_10us = DIV_ROUND_UP(rate, 100000);
->  
-> -	writel(((div_10us - 1) << JZ_ADC_REG_ADCLK_CLKDIV10US_LSB) |
-> +	writel(((div_10us - 1) << JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB) |
-> +	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
-> +	       adc->base + JZ_ADC_REG_ADCLK);
-> +
-> +	return 0;
-> +}
-> +
-> +static int jz4770_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
-> +{
-> +	struct clk *parent_clk;
-> +	unsigned long parent_rate, rate;
-> +	unsigned int div_main, div_ms, div_10us;
-> +
-> +	parent_clk = clk_get_parent(adc->clk);
-> +	if (!parent_clk) {
-> +		dev_err(dev, "ADC clock has no parent\n");
-> +		return -ENODEV;
-> +	}
-> +	parent_rate = clk_get_rate(parent_clk);
-> +
-> +	/*
-> +	 * The JZ4770 ADC works at 20 kHz to 200 kHz.
-> +	 * We pick the highest rate possible.
-> +	 */
-> +	div_main = DIV_ROUND_UP(parent_rate, 200000);
-> +	div_main = clamp(div_main, 1u, 256u);
-> +	rate = parent_rate / div_main;
-> +	if (rate < 20000 || rate > 200000) {
-> +		dev_err(dev, "No valid divider for ADC main clock\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* We also need a divider that produces a 10us clock. */
-> +	div_10us = DIV_ROUND_UP(rate, 10000);
-> +	/* And another, which produces a 1ms clock. */
-> +	div_ms = DIV_ROUND_UP(rate, 1000);
-> +
-> +	writel(((div_ms - 1) << JZ4770_ADC_REG_ADCLK_CLKDIVMS_LSB) |
-> +	       ((div_10us - 1) << JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB) |
->  	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
->  	       adc->base + JZ_ADC_REG_ADCLK);
->  
-> @@ -201,6 +258,8 @@ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
->  	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
->  	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
->  	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
-> +	.battery_vref_mode = true,
-> +	.has_aux2 = false,
->  	.init_clk_div = jz4725b_adc_init_clk_div,
->  };
->  
-> @@ -211,9 +270,23 @@ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
->  	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
->  	.battery_scale_avail = jz4740_adc_battery_scale_avail,
->  	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
-> +	.battery_vref_mode = true,
-> +	.has_aux2 = false,
->  	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
->  };
->  
-> +static const struct ingenic_adc_soc_data jz4770_adc_soc_data = {
-> +	.battery_high_vref = JZ4770_ADC_BATTERY_VREF,
-> +	.battery_high_vref_bits = JZ4770_ADC_BATTERY_VREF_BITS,
-> +	.battery_raw_avail = jz4770_adc_battery_raw_avail,
-> +	.battery_raw_avail_size = ARRAY_SIZE(jz4770_adc_battery_raw_avail),
-> +	.battery_scale_avail = jz4770_adc_battery_scale_avail,
-> +	.battery_scale_avail_size = ARRAY_SIZE(jz4770_adc_battery_scale_avail),
-> +	.battery_vref_mode = false,
-> +	.has_aux2 = true,
-> +	.init_clk_div = jz4770_adc_init_clk_div,
-> +};
-> +
->  static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
->  				  struct iio_chan_spec const *chan,
->  				  const int **vals,
-> @@ -246,19 +319,37 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
->  				long m)
->  {
->  	struct ingenic_adc *adc = iio_priv(iio_dev);
-> -	int ret;
-> +	struct mutex *lock = NULL;
-
-The cost of a lock when not contended should be pretty low.
-If we are going to do the optimization of not having the lock for
-the single channel case, then I'd like some performance numbers
-to justify the complexity.  What difference is it making?
-
-> +	int bit, ret, engine = 0;
->  
->  	switch (m) {
->  	case IIO_CHAN_INFO_RAW:
-> -		clk_enable(adc->clk);
-> -		ret = ingenic_adc_capture(adc, chan->channel);
-> -		if (ret) {
-> -			clk_disable(adc->clk);
-> -			return ret;
-> +		switch (chan->channel) {
-> +		case INGENIC_ADC_AUX:
-> +		case INGENIC_ADC_AUX2:
-> +			if (adc->soc_data->has_aux2)
-> +				lock = &adc->aux_lock;
-> +			break;
-> +		case INGENIC_ADC_BATTERY:
-> +			engine = 1;
-> +			break;
->  		}
->  
-> +		if (lock) /* We cannot sample AUX/AUX2 in parallel. */
-> +			mutex_lock(lock);
-> +		if (adc->soc_data->has_aux2 && engine == 0) {
-> +			bit = BIT(chan->channel == INGENIC_ADC_AUX2);
-> +			ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_AUX_MD, bit);
-> +		}
-> +
-> +		clk_enable(adc->clk);
-> +		ret = ingenic_adc_capture(adc, engine);
-> +		if (ret)
-> +			goto out;
-> +
->  		switch (chan->channel) {
->  		case INGENIC_ADC_AUX:
-> +		case INGENIC_ADC_AUX2:
->  			*val = readw(adc->base + JZ_ADC_REG_ADSDAT);
->  			break;
->  		case INGENIC_ADC_BATTERY:
-> @@ -266,12 +357,12 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
->  			break;
->  		}
->  
-> -		clk_disable(adc->clk);
-> -
-> -		return IIO_VAL_INT;
-> +		ret = IIO_VAL_INT;
-> +		goto out;
->  	case IIO_CHAN_INFO_SCALE:
->  		switch (chan->channel) {
->  		case INGENIC_ADC_AUX:
-> +		case INGENIC_ADC_AUX2:
->  			*val = JZ_ADC_AUX_VREF;
->  			*val2 = JZ_ADC_AUX_VREF_BITS;
->  			break;
-> @@ -290,6 +381,13 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
->  	default:
->  		return -EINVAL;
->  	}
-> +
-> +out:
-> +	clk_disable(adc->clk);
-
-A bit tricky to follow with this code structure. I'd suggest factoring
-out the _RAW block as a utility function so we can avoid the
-breaking out of deeply nested code to the handler like this.
-
-> +	if (lock)
-> +		mutex_unlock(lock);
-> +
-> +	return ret;
->  }
->  
->  static void ingenic_adc_clk_cleanup(void *data)
-> @@ -322,6 +420,14 @@ static const struct iio_chan_spec ingenic_channels[] = {
->  		.indexed = 1,
->  		.channel = INGENIC_ADC_BATTERY,
->  	},
-> +	{ /* Must always be last in the array. */
-> +		.extend_name = "aux2",
-> +		.type = IIO_VOLTAGE,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_SCALE),
-> +		.indexed = 1,
-> +		.channel = INGENIC_ADC_AUX2,
-> +	},
->  };
->  
->  static int ingenic_adc_probe(struct platform_device *pdev)
-> @@ -343,6 +449,7 @@ static int ingenic_adc_probe(struct platform_device *pdev)
->  
->  	adc = iio_priv(iio_dev);
->  	mutex_init(&adc->lock);
-> +	mutex_init(&adc->aux_lock);
->  	adc->soc_data = soc_data;
->  
->  	mem_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -374,6 +481,7 @@ static int ingenic_adc_probe(struct platform_device *pdev)
->  	/* Put hardware in a known passive state. */
->  	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
->  	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
-> +	usleep_range(2000, 3000); /* Must wait at least 2ms. */
->  	clk_disable(adc->clk);
->  
->  	ret = devm_add_action_or_reset(dev, ingenic_adc_clk_cleanup, adc->clk);
-> @@ -387,6 +495,9 @@ static int ingenic_adc_probe(struct platform_device *pdev)
->  	iio_dev->modes = INDIO_DIRECT_MODE;
->  	iio_dev->channels = ingenic_channels;
->  	iio_dev->num_channels = ARRAY_SIZE(ingenic_channels);
-> +	/* Remove AUX2 from the list of supported channels. */
-> +	if (!adc->soc_data->has_aux2)
-> +		iio_dev->num_channels -= 1;
->  	iio_dev->info = &ingenic_adc_info;
->  
->  	ret = devm_iio_device_register(dev, iio_dev);
-> @@ -400,6 +511,7 @@ static int ingenic_adc_probe(struct platform_device *pdev)
->  static const struct of_device_id ingenic_adc_of_match[] = {
->  	{ .compatible = "ingenic,jz4725b-adc", .data = &jz4725b_adc_soc_data, },
->  	{ .compatible = "ingenic,jz4740-adc", .data = &jz4740_adc_soc_data, },
-> +	{ .compatible = "ingenic,jz4770-adc", .data = &jz4770_adc_soc_data, },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, ingenic_adc_of_match);
-
+David
