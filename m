@@ -2,126 +2,119 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 766FFC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1538C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5062C20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeftxwBt"
+	by mail.kernel.org (Postfix) with ESMTP id C151E208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfFZFsy (ORCPT
+        id S1726628AbfFZFtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 01:48:54 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46395 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfFZFsx (ORCPT
+        Wed, 26 Jun 2019 01:49:20 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38670 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfFZFtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 01:48:53 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so1100845wrw.13;
-        Tue, 25 Jun 2019 22:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xQ4ce+x35rsYY2o9p5K+v8CMy5RJxb4zWb9mr9D1IXc=;
-        b=EeftxwBtaYqbVh+JKbNLa0DToX40eFgJgREQDo/Uxz1oazpBRVViaNmD/bywZm2urd
-         WyXsH6lMSKRlgEwW9IjwloSyLIc9sCvrtIXbkAMQqbWLDm10T8XZ7XyDg5C84HWAlcep
-         zh30vyBFsSaFGGLC8KE50rO7+I7UXPD6gvIB3Jbl5jtU3uHqImETrewK4RvWjJIR60wg
-         XmjT9UDoAPpSE5N718dNjh88hXhpUFG/Ab6tWgLsW5UxzfeY4xqwdH3/7qtp9CceuWnR
-         HEk+afIHsLa6JCjHsx6l7gKtxLz86GLH1Gt0IgR741fovwBbCSb8el95mqNoC7+bxT6v
-         RM2Q==
+        Wed, 26 Jun 2019 01:49:20 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hg0o2-0007jK-Dn
+        for linux-kernel@vger.kernel.org; Wed, 26 Jun 2019 05:49:18 +0000
+Received: by mail-pl1-f200.google.com with SMTP id n1so753042plk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 22:49:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xQ4ce+x35rsYY2o9p5K+v8CMy5RJxb4zWb9mr9D1IXc=;
-        b=i05syPX1KynMsSyn98A4AHjtan+pszLIgMFQNxC+vMRVQ1IxItzdBoKXNKwxf1FDuK
-         hgD0IIQgyNLf2SVuHsFVLJskL/D5DdhZT3T2VeDTltmBMN61L3wsohqEEx0gCaveTuN0
-         JWv4rlFdMFsFGHEU8ADPvkQJ5REr5yCJCl0KhIOcvfHRF0Wa2KXk00PXF2lMJtDcTNTJ
-         Q7XNe5QYquUzjpqvGFVtEBF6Z9GWyJFrdZuc5WLiT7bFPVk848Ap79Co7XB4sU5CEi8e
-         rPtx699+dsX8nrdIm894tB3y6ixUYtFTgjhXl1VWg10kL/zuvlSH5PT/L23PCNfCzRV3
-         YNzw==
-X-Gm-Message-State: APjAAAVZfTnrvgIod9xz8OJabRWqWzW3p0E7sGtkM1qdrLRIrqylF9KK
-        gRfQKWyulIewl3GNt+25YZ4=
-X-Google-Smtp-Source: APXvYqzs68nCVLNXdvBtvfphp2c5AsFtEftsuIxWnLsNfPVw3Cgm6bUXIpmze0HkCQry6olx6IzSag==
-X-Received: by 2002:adf:c541:: with SMTP id s1mr1760212wrf.44.1561528131040;
-        Tue, 25 Jun 2019 22:48:51 -0700 (PDT)
-Received: from [10.43.17.24] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a84sm1236284wmf.29.2019.06.25.22.48.49
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 22:48:50 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 1/1] Add dm verity root hash pkcs7 sig validation.
-To:     Mike Snitzer <snitzer@redhat.com>,
-        Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, scottsh@microsoft.com,
-        ebiggers@google.com, jmorris@namei.org, dm-devel@redhat.com,
-        mpatocka@redhat.com, agk@redhat.com
-References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com>
- <20190619191048.20365-2-jaskarankhurana@linux.microsoft.com>
- <20190625182004.GA32075@redhat.com>
-From:   Milan Broz <gmazyland@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <e0cb17cc-35f9-46e2-ca1a-1c942989ed20@gmail.com>
-Date:   Wed, 26 Jun 2019 07:48:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20190625182004.GA32075@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=12ANf5jkxiue7axL1Y5xhLlkcaf3kHXDuZtfoS2gzUA=;
+        b=lgHd/8gQh1nWwigD2w2axGVyeBdtEJyEurwJXqLwEVAuqY9Bra35kwuYOGS1VjgXoR
+         6MoJwIDKxiaMtiU1t/yFhL2oXWsSKdsVk3hF8FiE4MHmZRXrTzcxVUNJhbfY1u+A/hZ1
+         DTv//8V6fM1SSosRTIXdpBB9kdAS+btgK/Kd21to7JtB+EU4NBBTkh4PagoFQRzlgwTy
+         UJJW5LKugO/9tx4xYNTygLDPfm5fUNePrX2DJ98LjGJ1V5nQ4M9fg468INmNt47PJnRp
+         cIgeVHyRgxrpBY5xtWuEgqQhmJXn8wnmjkcqQjOLsRwK0jcHp6ufTGnUzZytvuqKHP5o
+         hkJg==
+X-Gm-Message-State: APjAAAXeCDQeiLZqrohj61bZ+U/XCyYMehBw+sFw7fTBc6m5eTrmkowz
+        MrysqIRp/DfIHf/2i/0Xe7Ogk18uB5A+qycXPLl+euo7lqXvOy/0sIj11TWMgRzFgIcZwpKLyDm
+        h0MXQ+5Xa1Xz9mCJKGT9gK2xSDfxkeETQgAmXZeViNA==
+X-Received: by 2002:a17:902:9688:: with SMTP id n8mr3116872plp.227.1561528156893;
+        Tue, 25 Jun 2019 22:49:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwee9bWoCIWpnXOMY7SxZkgP4ELM68w+FNl6jhugNxsK+602xd1wI/6pPbktKeAaH3SPdhALQ==
+X-Received: by 2002:a17:902:9688:: with SMTP id n8mr3116854plp.227.1561528156633;
+        Tue, 25 Jun 2019 22:49:16 -0700 (PDT)
+Received: from [10.101.46.178] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id r15sm19728330pfh.121.2019.06.25.22.49.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 22:49:16 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [Intel-wired-lan] Opportunistic S0ix blocked by e1000e when
+ ethernet is in use
+From:   Kai Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <dfd57ef4-08bd-53cf-1f0a-86edc5bc0a67@intel.com>
+Date:   Wed, 26 Jun 2019 13:49:13 +0800
+Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <8C7BCE85-D027-4C0C-BD46-619FAD0E6AB8@canonical.com>
+References: <074E1145-A512-4835-9A6D-8FB6634DBD3C@canonical.com>
+ <E2D5225B-D683-4895-AC4F-EE01C339262B@canonical.com>
+ <95f88f45-fd6c-52e4-de8c-2db1b4c6c04e@intel.com>
+ <E8C45269-819C-41E0-A3D3-AA98710DBA4C@canonical.com>
+ <dfd57ef4-08bd-53cf-1f0a-86edc5bc0a67@intel.com>
+To:     "Neftin, Sasha" <sasha.neftin@intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/06/2019 20:20, Mike Snitzer wrote:
-> On Wed, Jun 19 2019 at  3:10pm -0400,
-> Jaskaran Khurana <jaskarankhurana@linux.microsoft.com> wrote:
-> 
->> The verification is to support cases where the roothash is not secured by
->> Trusted Boot, UEFI Secureboot or similar technologies.
->> One of the use cases for this is for dm-verity volumes mounted after boot,
->> the root hash provided during the creation of the dm-verity volume has to
->> be secure and thus in-kernel validation implemented here will be used
->> before we trust the root hash and allow the block device to be created.
->>
->> The signature being provided for verification must verify the root hash and
->> must be trusted by the builtin keyring for verification to succeed.
->>
->> The hash is added as a key of type "user" and the description is passed to 
->> the kernel so it can look it up and use it for verification.
->>
->> Kernel commandline parameter will indicate whether to check (only if 
->> specified) or force (for all dm verity volumes) roothash signature 
->> verification.
->>
->> Kernel commandline: dm_verity.verify_sig=1 or 2 for check/force root hash
->> signature validation respectively.
->>
->> Signed-off-by: Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
-> 
-> Milan and/or others: could you please provide review and if you're OK
-> with this patch respond accordingly?
+at 6:25 PM, Neftin, Sasha <sasha.neftin@intel.com> wrote:
 
-Stand by please :)
+> On 6/24/2019 18:06, Kai-Heng Feng wrote:
+>> at 19:56, Neftin, Sasha <sasha.neftin@intel.com> wrote:
+[Snipped]
+> Current HW have a limitation. Please, try follow workaround on your  
+> platform: echo 3 > /sys/kernel/debug/pmc_core/ltr_ignore
 
-I like the patch, I think all major problems were solved, but I still need to test it somehow.
+Yes, this does the trick.
 
-Anyway, for the time being, I keep all ongoing patches that need some later
-userspace support in my branch
-https://git.kernel.org/pub/scm/linux/kernel/git/mbroz/linux.git/log/?h=dm-cryptsetup
-so at least it get some automated testing.
+On 4.15 based kernel I can see the SoC enters PC10 but SLP_S0 is not  
+asserted.
 
-Milan
+On mainline kernel the SoC, PC10 is hit and SLP_S0 is asserted. Once SLP_S0  
+is asserted the SSH connection becomes really sluggish.
+
+>> >> S0ix support is under discussion with our architecture. We will try
+>>> enable S0ix in our e1000e OOT driver as first step.
+>> Is it possible to add Dynamic LTR as an option so users and downstream  
+>> distros can still benefit from it?
+> As I said before, this is not a stable solution. No guarantee that HW  
+> will work as properly.
+
+Can you describe the symptom of "HW will work as properly”? Is this the  
+sluggish connection I observed?
+
+Kai-Heng
+
+>> Kai-Heng
+>>>> Kai-Heng
+>>>>> Kai-Heng
+>>>> _______________________________________________
+>>>> Intel-wired-lan mailing list
+>>>> Intel-wired-lan@osuosl.org
+>>>> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
+>>>
+>>> Thanks
+>>> Sasha
+
 
