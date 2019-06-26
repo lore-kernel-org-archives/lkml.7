@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56950C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCE3C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E865217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488532177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfFZWj0 (ORCPT
+        id S1726741AbfFZWjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:39:26 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10653 "EHLO mga11.intel.com"
+        Wed, 26 Jun 2019 18:39:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10648 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfFZWjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:39:07 -0400
+        id S1726545AbfFZWjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:39:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 15:39:06 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 15:39:00 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
-   d="scan'208";a="313575020"
+   d="scan'208";a="313574975"
 Received: from spandruv-mobl.amr.corp.intel.com ([10.251.133.109])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2019 15:39:05 -0700
+  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2019 15:38:59 -0700
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     dvhart@infradead.org, andy@infradead.org,
         andriy.shevchenko@intel.com, corbet@lwn.net
@@ -35,9 +35,9 @@ Cc:     rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org,
         prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 09/10] platform/x86: ISST: Restore state on resume
-Date:   Wed, 26 Jun 2019 15:38:50 -0700
-Message-Id: <20190626223851.19138-10-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 03/10] platform/x86: ISST: Store per CPU information
+Date:   Wed, 26 Jun 2019 15:38:44 -0700
+Message-Id: <20190626223851.19138-4-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
 References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
@@ -46,414 +46,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commands which causes PUNIT writes, store them and restore them on system
-resume. The driver stores all such requests in a hash table and stores the
-the latest mailbox request parameters. On resume these commands mail box
-commands are executed again. There are only 5 such mail box commands which
-will trigger such processing so a very low overhead in store and execute
-on resume. Also there is no order requirement for mail box commands for
-these write/set commands. There is one MSR request for changing turbo
-ratio limits, this also stored and get restored on resume and cpu online.
+There are two per CPU data needs to be stored and cached to avoid repeated
+MSR readings for accessing them later:
+
+- Physical to logical CPU conversion
+The PUNIT uses a different CPU numbering scheme which is not APIC id based.
+So we need to establish relationship between PUNIT CPU number and Linux
+logical CPU numbering which is based on APIC id. There is an MSR 0x53
+(MSR_THREAD_ID), which gets physical CPU number for the local CPU where it
+is read. Also the CPU mask in some messages will inform which CPUs needs
+to be online/offline for a TDP level. During TDP switch if user offlined
+some CPUs, then the physical CPU mask can't be converted as we can't
+read MSR on an offlined CPU to go to a lower TDP level by onlining more
+CPUs. So the mapping needs to be established at the boot up time.
+
+- Bus number corresponding to a CPU
+A group of CPUs are in a control of a PUNIT. The PUNIT device is exported
+as PCI device. To do operation on a PUNIT for a CPU, we need to find out
+to which PCI device it is related to. This is done by reading MSR 0x128
+(MSR_CPU_BUS_NUMBER).
+
+So during CPU online stages the above MSRs are read and stored. Later
+this stored information is used to process IOCTLs request from the user
+space.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- .../intel_speed_select_if/isst_if_common.c    | 154 ++++++++++++++++++
- .../intel_speed_select_if/isst_if_common.h    |   3 +
- .../intel_speed_select_if/isst_if_mbox_msr.c  |  38 ++++-
- .../intel_speed_select_if/isst_if_mbox_pci.c  |  15 ++
- .../x86/intel_speed_select_if/isst_if_mmio.c  |  49 ++++++
- 5 files changed, 258 insertions(+), 1 deletion(-)
+ .../intel_speed_select_if/isst_if_common.c    | 114 +++++++++++++++++-
+ .../intel_speed_select_if/isst_if_common.h    |   1 +
+ 2 files changed, 114 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-index de2fb5292f1c..68d75391db57 100644
+index ab2bb4862dc8..0e16cbf685d0 100644
 --- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
 +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-@@ -10,6 +10,7 @@
- #include <linux/cpufeature.h>
- #include <linux/cpuhotplug.h>
+@@ -7,14 +7,22 @@
+  * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+  */
+ 
++#include <linux/cpufeature.h>
++#include <linux/cpuhotplug.h>
  #include <linux/fs.h>
-+#include <linux/hashtable.h>
  #include <linux/miscdevice.h>
  #include <linux/module.h>
- #include <linux/pci.h>
-@@ -58,6 +59,151 @@ static const struct isst_cmd_set_req_type isst_cmd_set_reqs[] = {
- 	{0x7F, 0x08, 0x00},
- };
- 
-+struct isst_cmd {
-+	struct hlist_node hnode;
-+	u64 data;
-+	u32 cmd;
-+	int cpu;
-+	int mbox_cmd_type;
-+	u32 param;
-+};
-+
-+static DECLARE_HASHTABLE(isst_hash, 8);
-+static DEFINE_MUTEX(isst_hash_lock);
-+
-+static int isst_store_new_cmd(int cmd, u32 cpu, int mbox_cmd_type, u32 param,
-+			      u32 data)
-+{
-+	struct isst_cmd *sst_cmd;
-+
-+	sst_cmd = kmalloc(sizeof(*sst_cmd), GFP_KERNEL);
-+	if (!sst_cmd)
-+		return -ENOMEM;
-+
-+	sst_cmd->cpu = cpu;
-+	sst_cmd->cmd = cmd;
-+	sst_cmd->mbox_cmd_type = mbox_cmd_type;
-+	sst_cmd->param = param;
-+	sst_cmd->data = data;
-+
-+	hash_add(isst_hash, &sst_cmd->hnode, sst_cmd->cmd);
-+
-+	return 0;
-+}
-+
-+static void isst_delete_hash(void)
-+{
-+	struct isst_cmd *sst_cmd;
-+	struct hlist_node *tmp;
-+	int i;
-+
-+	hash_for_each_safe(isst_hash, i, tmp, sst_cmd, hnode) {
-+		hash_del(&sst_cmd->hnode);
-+		kfree(sst_cmd);
-+	}
-+}
-+
-+/**
-+ * isst_store_cmd() - Store command to a hash table
-+ * @cmd: Mailbox command.
-+ * @sub_cmd: Mailbox sub-command or MSR id.
-+ * @mbox_cmd_type: Mailbox or MSR command.
-+ * @param: Mailbox parameter.
-+ * @data: Mailbox request data or MSR data.
-+ *
-+ * Stores the command to a hash table if there is no such command already
-+ * stored. If already stored update the latest parameter and data for the
-+ * command.
-+ *
-+ * Return: Return result of store to hash table, 0 for success, others for
-+ * failure.
-+ */
-+int isst_store_cmd(int cmd, int sub_cmd, u32 cpu, int mbox_cmd_type,
-+		   u32 param, u64 data)
-+{
-+	struct isst_cmd *sst_cmd;
-+	int full_cmd, ret;
-+
-+	full_cmd = (cmd & GENMASK_ULL(15, 0)) << 16;
-+	full_cmd |= (sub_cmd & GENMASK_ULL(15, 0));
-+	mutex_lock(&isst_hash_lock);
-+	hash_for_each_possible(isst_hash, sst_cmd, hnode, full_cmd) {
-+		if (sst_cmd->cmd == full_cmd && sst_cmd->cpu == cpu &&
-+		    sst_cmd->mbox_cmd_type == mbox_cmd_type) {
-+			sst_cmd->param = param;
-+			sst_cmd->data = data;
-+			mutex_unlock(&isst_hash_lock);
-+			return 0;
-+		}
-+	}
-+
-+	ret = isst_store_new_cmd(full_cmd, cpu, mbox_cmd_type, param, data);
-+	mutex_unlock(&isst_hash_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(isst_store_cmd);
-+
-+static void isst_mbox_resume_command(struct isst_if_cmd_cb *cb,
-+				     struct isst_cmd *sst_cmd)
-+{
-+	struct isst_if_mbox_cmd mbox_cmd;
-+	int wr_only;
-+
-+	mbox_cmd.command = (sst_cmd->cmd & GENMASK_ULL(31, 16)) >> 16;
-+	mbox_cmd.sub_command = sst_cmd->cmd & GENMASK_ULL(15, 0);
-+	mbox_cmd.parameter = sst_cmd->param;
-+	mbox_cmd.req_data = sst_cmd->data;
-+	mbox_cmd.logical_cpu = sst_cmd->cpu;
-+	(cb->cmd_callback)((u8 *)&mbox_cmd, &wr_only, 1);
-+}
-+
-+/**
-+ * isst_resume_common() - Process Resume request
-+ *
-+ * On resume replay all mailbox commands and MSRs.
-+ *
-+ * Return: None.
-+ */
-+void isst_resume_common(void)
-+{
-+	struct isst_cmd *sst_cmd;
-+	int i;
-+
-+	hash_for_each(isst_hash, i, sst_cmd, hnode) {
-+		struct isst_if_cmd_cb *cb;
-+
-+		if (sst_cmd->mbox_cmd_type) {
-+			cb = &punit_callbacks[ISST_IF_DEV_MBOX];
-+			if (cb->registered)
-+				isst_mbox_resume_command(cb, sst_cmd);
-+		} else {
-+			wrmsrl_safe_on_cpu(sst_cmd->cpu, sst_cmd->cmd,
-+					   sst_cmd->data);
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(isst_resume_common);
-+
-+static void isst_restore_msr_local(int cpu)
-+{
-+	struct isst_cmd *sst_cmd;
-+	int i;
-+
-+	mutex_lock(&isst_hash_lock);
-+	for (i = 0; i < ARRAY_SIZE(punit_msr_white_list); ++i) {
-+		if (!punit_msr_white_list[i])
-+			break;
-+
-+		hash_for_each_possible(isst_hash, sst_cmd, hnode,
-+				       punit_msr_white_list[i]) {
-+			if (!sst_cmd->mbox_cmd_type && sst_cmd->cpu == cpu)
-+				wrmsrl_safe(sst_cmd->cmd, sst_cmd->data);
-+		}
-+	}
-+	mutex_unlock(&isst_hash_lock);
-+}
-+
- /**
-  * isst_if_mbox_cmd_invalid() - Check invalid mailbox commands
-  * @cmd: Pointer to the command structure to verify.
-@@ -185,6 +331,8 @@ static int isst_if_cpu_online(unsigned int cpu)
- 	}
- 	isst_cpu_info[cpu].punit_cpu_id = data;
- 
-+	isst_restore_msr_local(cpu);
-+
- 	return 0;
- }
- 
-@@ -267,6 +415,10 @@ static long isst_if_msr_cmd_req(u8 *cmd_ptr, int *write_only, int resume)
- 					 msr_cmd->msr,
- 					 msr_cmd->data);
- 		*write_only = 1;
-+		if (!ret && !resume)
-+			ret = isst_store_cmd(0, msr_cmd->msr,
-+					     msr_cmd->logical_cpu,
-+					     0, 0, msr_cmd->data);
- 	} else {
- 		u64 data;
- 
-@@ -507,6 +659,8 @@ void isst_if_cdev_unregister(int device_type)
- 	mutex_lock(&punit_misc_dev_lock);
- 	misc_usage_count--;
- 	punit_callbacks[device_type].registered = 0;
-+	if (device_type == ISST_IF_DEV_MBOX)
-+		isst_delete_hash();
- 	if (!misc_usage_count && !misc_device_ret) {
- 		misc_deregister(&isst_if_char_driver);
- 		isst_if_cpu_info_exit();
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-index 7c0f71221da7..1409a5bb5582 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-@@ -63,4 +63,7 @@ void isst_if_cdev_unregister(int type);
- struct pci_dev *isst_if_get_pci_dev(int cpu, int bus, int dev, int fn);
- bool isst_if_mbox_cmd_set_req(struct isst_if_mbox_cmd *mbox_cmd);
- bool isst_if_mbox_cmd_invalid(struct isst_if_mbox_cmd *cmd);
-+int isst_store_cmd(int cmd, int sub_command, u32 cpu, int mbox_cmd,
-+		   u32 param, u64 data);
-+void isst_resume_common(void);
- #endif
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
-index a949ec436c73..afd0b23be5ba 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
-@@ -12,6 +12,7 @@
- #include <linux/pci.h>
- #include <linux/sched/signal.h>
- #include <linux/slab.h>
-+#include <linux/suspend.h>
- #include <linux/topology.h>
++#include <linux/pci.h>
++#include <linux/sched/signal.h>
++#include <linux/slab.h>
  #include <linux/uaccess.h>
  #include <uapi/linux/isst_if.h>
-@@ -128,11 +129,37 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
- 	if (ret)
- 		return ret;
- 
-+	if (!action.err && !resume && isst_if_mbox_cmd_set_req(action.mbox_cmd))
-+		action.err = isst_store_cmd(action.mbox_cmd->command,
-+					    action.mbox_cmd->sub_command,
-+					    action.mbox_cmd->logical_cpu, 1,
-+					    action.mbox_cmd->parameter,
-+					    action.mbox_cmd->req_data);
- 	*write_only = 0;
- 
- 	return action.err;
- }
- 
-+
-+static int isst_pm_notify(struct notifier_block *nb,
-+			       unsigned long mode, void *_unused)
-+{
-+	switch (mode) {
-+	case PM_POST_HIBERNATION:
-+	case PM_POST_RESTORE:
-+	case PM_POST_SUSPEND:
-+		isst_resume_common();
-+		break;
-+	default:
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static struct notifier_block isst_pm_nb = {
-+	.notifier_call = isst_pm_notify,
-+};
-+
- #define ICPU(model)     { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
- 
- static const struct x86_cpu_id isst_if_cpu_ids[] = {
-@@ -166,12 +193,21 @@ static int __init isst_if_mbox_init(void)
- 	cb.offset = offsetof(struct isst_if_mbox_cmds, mbox_cmd);
- 	cb.cmd_callback = isst_if_mbox_proc_cmd;
- 	cb.owner = THIS_MODULE;
--	return isst_if_cdev_register(ISST_IF_DEV_MBOX, &cb);
-+	ret = isst_if_cdev_register(ISST_IF_DEV_MBOX, &cb);
-+	if (ret)
-+		return ret;
-+
-+	ret = register_pm_notifier(&isst_pm_nb);
-+	if (ret)
-+		isst_if_cdev_unregister(ISST_IF_DEV_MBOX);
-+
-+	return ret;
- }
- module_init(isst_if_mbox_init)
- 
- static void __exit isst_if_mbox_exit(void)
- {
-+	unregister_pm_notifier(&isst_pm_nb);
- 	isst_if_cdev_unregister(ISST_IF_DEV_MBOX);
- }
- module_exit(isst_if_mbox_exit)
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-index f03e79afd3f1..100a76cc27a5 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-@@ -131,6 +131,12 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
- 	 */
- 	mutex_lock(&punit_dev->mutex);
- 	ret = isst_if_mbox_cmd(pdev, mbox_cmd);
-+	if (!ret && !resume && isst_if_mbox_cmd_set_req(mbox_cmd))
-+		ret = isst_store_cmd(mbox_cmd->command,
-+				     mbox_cmd->sub_command,
-+				     mbox_cmd->logical_cpu, 1,
-+				     mbox_cmd->parameter,
-+				     mbox_cmd->req_data);
- 	mutex_unlock(&punit_dev->mutex);
- 	if (ret)
- 		return ret;
-@@ -186,11 +192,20 @@ static void isst_if_mbox_remove(struct pci_dev *pdev)
- 	mutex_destroy(&punit_dev->mutex);
- }
- 
-+static int __maybe_unused isst_if_resume(struct device *device)
-+{
-+	isst_resume_common();
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(isst_if_pm_ops, NULL, isst_if_resume);
-+
- static struct pci_driver isst_if_pci_driver = {
- 	.name			= "isst_if_mbox_pci",
- 	.id_table		= isst_if_mbox_ids,
- 	.probe			= isst_if_mbox_probe,
- 	.remove			= isst_if_mbox_remove,
-+	.driver.pm		= &isst_if_pm_ops,
- };
- 
- module_pci_driver(isst_if_pci_driver);
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-index 1c25a1235b9e..f7266a115a08 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-@@ -15,8 +15,20 @@
  
  #include "isst_if_common.h"
  
-+struct isst_mmio_range {
-+	int beg;
-+	int end;
-+};
++#define MSR_THREAD_ID_INFO	0x53
++#define MSR_CPU_BUS_NUMBER	0x128
 +
-+struct isst_mmio_range mmio_range[] = {
-+	{0x04, 0x14},
-+	{0x20, 0xD0},
-+};
-+
- struct isst_if_device {
- 	void __iomem *punit_mmio;
-+	u32 range_0[5];
-+	u32 range_1[45];
- 	struct mutex mutex;
- };
+ static struct isst_if_cmd_cb punit_callbacks[ISST_IF_DEV_MAX];
  
-@@ -118,11 +130,48 @@ static void isst_if_remove(struct pci_dev *pdev)
- 	mutex_destroy(&punit_dev->mutex);
+ static int isst_if_get_platform_info(void __user *argp)
+@@ -33,6 +41,99 @@ static int isst_if_get_platform_info(void __user *argp)
+ 	return 0;
  }
  
-+static int __maybe_unused isst_if_suspend(struct device *device)
-+{
-+	struct pci_dev *pdev = to_pci_dev(device);
-+	struct isst_if_device *punit_dev;
-+	int i;
 +
-+	punit_dev = pci_get_drvdata(pdev);
-+	for (i = 0; i < ARRAY_SIZE(punit_dev->range_0); ++i)
-+		punit_dev->range_0[i] = readl(punit_dev->punit_mmio +
-+						mmio_range[0].beg + 4 * i);
-+	for (i = 0; i < ARRAY_SIZE(punit_dev->range_1); ++i)
-+		punit_dev->range_1[i] = readl(punit_dev->punit_mmio +
-+						mmio_range[1].beg + 4 * i);
++struct isst_if_cpu_info {
++	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
++	int bus_info[2];
++	int punit_cpu_id;
++};
++
++static struct isst_if_cpu_info *isst_cpu_info;
++
++/**
++ * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
++ * @cpu: Logical CPU number.
++ * @bus_number: The bus number assigned by the hardware.
++ * @dev: The device number assigned by the hardware.
++ * @fn: The function number assigned by the hardware.
++ *
++ * Using cached bus information, find out the PCI device for a bus number,
++ * device and function.
++ *
++ * Return: Return pci_dev pointer or NULL.
++ */
++struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
++{
++	int bus_number;
++
++	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
++	    cpu >= num_possible_cpus())
++		return NULL;
++
++	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
++	if (bus_number < 0)
++		return NULL;
++
++	return pci_get_domain_bus_and_slot(0, bus_number, PCI_DEVFN(dev, fn));
++}
++EXPORT_SYMBOL_GPL(isst_if_get_pci_dev);
++
++static int isst_if_cpu_online(unsigned int cpu)
++{
++	u64 data;
++	int ret;
++
++	ret = rdmsrl_safe(MSR_CPU_BUS_NUMBER, &data);
++	if (ret) {
++		/* This is not a fatal error on MSR mailbox only I/F */
++		isst_cpu_info[cpu].bus_info[0] = -1;
++		isst_cpu_info[cpu].bus_info[1] = -1;
++	} else {
++		isst_cpu_info[cpu].bus_info[0] = data & 0xff;
++		isst_cpu_info[cpu].bus_info[1] = (data >> 8) & 0xff;
++	}
++
++	ret = rdmsrl_safe(MSR_THREAD_ID_INFO, &data);
++	if (ret) {
++		isst_cpu_info[cpu].punit_cpu_id = -1;
++		return ret;
++	}
++	isst_cpu_info[cpu].punit_cpu_id = data;
 +
 +	return 0;
 +}
 +
-+static int __maybe_unused isst_if_resume(struct device *device)
-+{
-+	struct pci_dev *pdev = to_pci_dev(device);
-+	struct isst_if_device *punit_dev;
-+	int i;
++static int isst_if_online_id;
 +
-+	punit_dev = pci_get_drvdata(pdev);
-+	for (i = 0; i < ARRAY_SIZE(punit_dev->range_0); ++i)
-+		writel(punit_dev->range_0[i], punit_dev->punit_mmio +
-+						mmio_range[0].beg + 4 * i);
-+	for (i = 0; i < ARRAY_SIZE(punit_dev->range_1); ++i)
-+		writel(punit_dev->range_1[i], punit_dev->punit_mmio +
-+						mmio_range[1].beg + 4 * i);
++static int isst_if_cpu_info_init(void)
++{
++	int ret;
++
++	isst_cpu_info = kcalloc(num_possible_cpus(),
++				sizeof(*isst_cpu_info),
++				GFP_KERNEL);
++	if (!isst_cpu_info)
++		return -ENOMEM;
++
++	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++				"platform/x86/isst-if:online",
++				isst_if_cpu_online, NULL);
++	if (ret < 0) {
++		kfree(isst_cpu_info);
++		return ret;
++	}
++
++	isst_if_online_id = ret;
 +
 +	return 0;
 +}
 +
-+static SIMPLE_DEV_PM_OPS(isst_if_pm_ops, isst_if_suspend, isst_if_resume);
++static void isst_if_cpu_info_exit(void)
++{
++	cpuhp_remove_state(isst_if_online_id);
++	kfree(isst_cpu_info);
++};
 +
- static struct pci_driver isst_if_pci_driver = {
- 	.name			= "isst_if_pci",
- 	.id_table		= isst_if_ids,
- 	.probe			= isst_if_probe,
- 	.remove			= isst_if_remove,
-+	.driver.pm		= &isst_if_pm_ops,
- };
- 
- module_pci_driver(isst_if_pci_driver);
+ static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
+ 			      unsigned long arg)
+ {
+@@ -145,9 +246,18 @@ int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
+ 		return -EAGAIN;
+ 	}
+ 	if (!misc_usage_count) {
++		int ret;
++
+ 		misc_device_ret = misc_register(&isst_if_char_driver);
+ 		if (misc_device_ret)
+ 			goto unlock_exit;
++
++		ret = isst_if_cpu_info_init();
++		if (ret) {
++			misc_deregister(&isst_if_char_driver);
++			misc_device_ret = ret;
++			goto unlock_exit;
++		}
+ 	}
+ 	memcpy(&punit_callbacks[device_type], cb, sizeof(*cb));
+ 	punit_callbacks[device_type].registered = 1;
+@@ -173,8 +283,10 @@ void isst_if_cdev_unregister(int device_type)
+ 	mutex_lock(&punit_misc_dev_lock);
+ 	misc_usage_count--;
+ 	punit_callbacks[device_type].registered = 0;
+-	if (!misc_usage_count && !misc_device_ret)
++	if (!misc_usage_count && !misc_device_ret) {
+ 		misc_deregister(&isst_if_char_driver);
++		isst_if_cpu_info_exit();
++	}
+ 	mutex_unlock(&punit_misc_dev_lock);
+ }
+ EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+index 11f339226fb4..dade77c58b22 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+@@ -57,4 +57,5 @@ struct isst_if_cmd_cb {
+ /* Internal interface functions */
+ int isst_if_cdev_register(int type, struct isst_if_cmd_cb *cb);
+ void isst_if_cdev_unregister(int type);
++struct pci_dev *isst_if_get_pci_dev(int cpu, int bus, int dev, int fn);
+ #endif
 -- 
 2.17.2
 
