@@ -2,263 +2,270 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A83C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F33C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910E7204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IdUyfzpG"
+	by mail.kernel.org (Postfix) with ESMTP id 81931205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfFZNhY (ORCPT
+        id S1727911AbfFZNh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:37:24 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:36748 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFZNhY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:37:24 -0400
-Received: by mail-ua1-f65.google.com with SMTP id v20so765004uao.3;
-        Wed, 26 Jun 2019 06:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=is/ujkoZicHG2BibnpnLpAegsLraJDOqvg5EgkUGsS0=;
-        b=IdUyfzpGPTccHKxZnHQiTAf0O89bmOsqYbavdIQtAOB1kU8BwTZYT15uJkoj/1vEcN
-         rm4fS4IbFKYA9KlsN6w6Nk3djG2t7D3mR0MehHmeh4NjwAFi3XUY8R2N1IYSaXcN6zYO
-         4jC4eesVaM5c+rhzsoa5ZdtWe8RIFTYZWM3qDnccj8iaPfmk2VGW8EYwKhdqIswvghU2
-         2j47Itxu8AdbXZU1WLVO8S9s3IOtTBZMcRKa25dilMyRvlha0OcDa4Eg4leTVu7u/MD6
-         g3T+mMhfaVnIhHFrZag/e22PnhEEqGBAVHHSk1oRCxO8rn00KKW2rGEKBtQIi6cQNl5w
-         5d2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=is/ujkoZicHG2BibnpnLpAegsLraJDOqvg5EgkUGsS0=;
-        b=tIjjQrjGG7q2qezhkzIz1XeFgz2nEjRBUkE61LK60WJuJq0wSUW8Ib2NnSa+R0wdgt
-         FQbLUl/+sJjtqpa2omkwLB4Z7vCl9d4SUzYM2wO/kJWWkmIUh/faBwSsa8KUM3HjUDI9
-         Ffwg/Rh/1GypFZZ/VHLzNPAH38RJv+TpLH5pY4D2FcAzF3VaObdWdAkbkHHXe9l78909
-         RACd9/x0jl9ckqPtosazDfz/OhfnphiCgW3dcWAH4qClKXsWG24xSnpzT1NoQ2VthEOE
-         o0tjIXVxVnIQDrvpDer/DAD+5zha/z89NkFIhrxGGSUQy95eW6icY15Lf4jPrAoi/fdK
-         1urQ==
-X-Gm-Message-State: APjAAAXGS4TiunF1GVbiqVKEevSFEXgHlSxy+xTq/zi3Od5eq0wGvB2l
-        gibthMp0732yoHZmSNICVrccbOibPcfCUXbUkpKPv//Vx1I=
-X-Google-Smtp-Source: APXvYqy8R5tVK0LIjN1Tts0iTEE7Nh0qNsb/DwSEKJFOqodoXJVgTSYIWTeyUj8o6H0Q5YI9s6QKfHv+8c+bRRTvXLo=
-X-Received: by 2002:ab0:2850:: with SMTP id c16mr2498783uaq.128.1561556242469;
- Wed, 26 Jun 2019 06:37:22 -0700 (PDT)
+        Wed, 26 Jun 2019 09:37:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45086 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727443AbfFZNhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:37:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F19D7AF7B;
+        Wed, 26 Jun 2019 13:37:22 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 15:37:21 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de
+Subject: Re: [PATCH 1/3] module: Fix livepatch/ftrace module text permissions
+ race
+Message-ID: <20190626133721.ea2iuqqu4to2jpbv@pathway.suse.cz>
+References: <cover.1560474114.git.jpoimboe@redhat.com>
+ <ab43d56ab909469ac5d2520c5d944ad6d4abd476.1560474114.git.jpoimboe@redhat.com>
+ <20190614170408.1b1162dc@gandalf.local.home>
+ <alpine.LSU.2.21.1906260908170.22069@pobox.suse.cz>
 MIME-Version: 1.0
-References: <20190619020750.swzerehjbvx6sbk2@smtp.gmail.com>
- <20190619074856.GJ12905@phenom.ffwll.local> <20190619075059.GK12905@phenom.ffwll.local>
- <20190626020005.vb5gmqcvkyzgcjee@smtp.gmail.com> <CAKMK7uEd71XTeuZeu1Km8Vq1K1VJJbgANyaZNWm4v18Qh-OqVw@mail.gmail.com>
-In-Reply-To: <CAKMK7uEd71XTeuZeu1Km8Vq1K1VJJbgANyaZNWm4v18Qh-OqVw@mail.gmail.com>
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Date:   Wed, 26 Jun 2019 10:37:11 -0300
-Message-ID: <CADKXj+5+QHr1a0aiVZ1cSiPbtZhUAjmqiTmoQHGyEhodbcA2WQ@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH V4] drm/drm_vblank: Change EINVAL by the
- correct errno
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.1906260908170.22069@pobox.suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 4:53 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Wed, Jun 26, 2019 at 4:00 AM Rodrigo Siqueira
-> <rodrigosiqueiramelo@gmail.com> wrote:
-> >
-> > On 06/19, Daniel Vetter wrote:
-> > > On Wed, Jun 19, 2019 at 09:48:56AM +0200, Daniel Vetter wrote:
-> > > > On Tue, Jun 18, 2019 at 11:07:50PM -0300, Rodrigo Siqueira wrote:
-> > > > > For historical reason, the function drm_wait_vblank_ioctl always =
-return
-> > > > > -EINVAL if something gets wrong. This scenario limits the flexibi=
-lity
-> > > > > for the userspace make detailed verification of the problem and t=
-ake
-> > > > > some action. In particular, the validation of =E2=80=9Cif (!dev->=
-irq_enabled)=E2=80=9D
-> > > > > in the drm_wait_vblank_ioctl is responsible for checking if the d=
-river
-> > > > > support vblank or not. If the driver does not support VBlank, the
-> > > > > function drm_wait_vblank_ioctl returns EINVAL which does not repr=
-esent
-> > > > > the real issue; this patch changes this behavior by return EOPNOT=
-SUPP.
-> > > > > Additionally, some operations are unsupported by this function, a=
-nd
-> > > > > returns EINVAL; this patch also changes the return value to EOPNO=
-TSUPP
-> > > > > in this case. Lastly, the function drm_wait_vblank_ioctl is invok=
-ed by
-> > > > > libdrm, which is used by many compositors; because of this, it is
-> > > > > important to check if this change breaks any compositor. In this =
-sense,
-> > > > > the following projects were examined:
-> > > > >
-> > > > > * Drm-hwcomposer
-> > > > > * Kwin
-> > > > > * Sway
-> > > > > * Wlroots
-> > > > > * Wayland-core
-> > > > > * Weston
-> > > > > * Xorg (67 different drivers)
-> > > > >
-> > > > > For each repository the verification happened in three steps:
-> > > > >
-> > > > > * Update the main branch
-> > > > > * Look for any occurrence "drmWaitVBlank" with the command:
-> > > > >   git grep -n "drmWaitVBlank"
-> > > > > * Look in the git history of the project with the command:
-> > > > >   git log -SdrmWaitVBlank
-> > > > >
-> > > > > Finally, none of the above projects validate the use of EINVAL wh=
-ich
-> > > > > make safe, at least for these projects, to change the return valu=
-es.
-> > > > >
-> > > > > Change since V3:
-> > > > >  - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
-> > > > >
-> > > > > Change since V2:
-> > > > >  Daniel Vetter and Chris Wilson
-> > > > >  - Replace ENOTTY by EOPNOTSUPP
-> > > > >  - Return EINVAL if the parameters are wrong
-> > > > >
-> > > >
-> > > > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > > >
-> > > > Apologies for the confusion on the last time around. btw if someone=
- tells
-> > > > you "r-b (or a-b) with these changes", then just apply the r-b/a-b =
-tag
-> > > > next time around. Otherwise people will re-review the same thing ov=
-er and
-> > > > over again.
-> > >
-> > > btw when resending patches it's good practice to add anyone who comme=
-nted
-> > > on it (or who commented on the igt test for the same patch and other =
-way
-> > > round) onto the explicit Cc: list of the patch. That way it's easier =
-for
-> > > them to follow the patch evolution and do a quick r-b once they're ha=
-ppy.
-> >
-> > Thanks for these valuable tips.
-> > Do you think that is a good idea to resend this patch CC's everybody? O=
-r
-> > is it ok if I just apply it?
->
-> Hm I thought I answered that on irc ... but just today I realized that
-> we missed 2 ioctls. There's also drm_crtc_get_sequence_ioctl and
-> drm_crtc_queue_sequence_ioctl which have the same dev->irq_enabled
-> check and I think should be treated the same.
+On Wed 2019-06-26 10:22:45, Miroslav Benes wrote:
+> On Fri, 14 Jun 2019, Steven Rostedt wrote:
+> 
+> > On Thu, 13 Jun 2019 20:07:22 -0500
+> > Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > 
+> > > It's possible for livepatch and ftrace to be toggling a module's text
+> > > permissions at the same time, resulting in the following panic:
+> > > 
+> > 
+> > [..]
+> > 
+> > > The above panic occurs when loading two modules at the same time with
+> > > ftrace enabled, where at least one of the modules is a livepatch module:
+> > > 
+> > > CPU0					CPU1
+> > > klp_enable_patch()
+> > >   klp_init_object_loaded()
+> > >     module_disable_ro()
+> > >     					ftrace_module_enable()
+> > > 					  ftrace_arch_code_modify_post_process()
+> > > 				    	    set_all_modules_text_ro()
+> > >       klp_write_object_relocations()
+> > >         apply_relocate_add()
+> > > 	  *patches read-only code* - BOOM
+> > > 
+> > > A similar race exists when toggling ftrace while loading a livepatch
+> > > module.
+> > > 
+> > > Fix it by ensuring that the livepatch and ftrace code patching
+> > > operations -- and their respective permissions changes -- are protected
+> > > by the text_mutex.
+> > > 
+> > > Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
+> > > Fixes: 444d13ff10fb ("modules: add ro_after_init support")
+> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > Acked-by: Jessica Yu <jeyu@kernel.org>
+> > > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > > Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+> > 
+> > This patch looks uncontroversial. I'm going to pull this one in and
+> > start testing it. And if it works, I'll push to Linus.
+> 
+> Triggered this on s390x. Masami CCed and Linus as well, because the patch 
+> is in master branch and we are after -rc6. Thomas CCed because of commit 
+> 2d1e38f56622 ("kprobes: Cure hotplug lock ordering issues").
+> 
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.2.0-rc6 #1 Tainted: G           O  K  
+> ------------------------------------------------------
+> insmod/1393 is trying to acquire lock:
+> 000000002fdee887 (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2e/0x60
+> 
+> but task is already holding lock:
+> 000000005b22fb82 (text_mutex){+.+.}, at: ftrace_run_update_code+0x2a/0xa0
+> 
+> which lock already depends on the new lock.
+> 
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #1 (text_mutex){+.+.}:
+>        validate_chain.isra.21+0xb32/0xd70
+>        __lock_acquire+0x4b8/0x928
+>        lock_acquire+0x102/0x230
+>        __mutex_lock+0x88/0x908
+>        mutex_lock_nested+0x32/0x40
+>        register_kprobe+0x254/0x658
+>        init_kprobes+0x11a/0x168
+>        do_one_initcall+0x70/0x318
+>        kernel_init_freeable+0x456/0x508
+>        kernel_init+0x22/0x150
+>        ret_from_fork+0x30/0x34
+>        kernel_thread_starter+0x0/0xc
+> 
+> -> #0 (cpu_hotplug_lock.rw_sem){++++}:
+>        check_prev_add+0x90c/0xde0
+>        validate_chain.isra.21+0xb32/0xd70
+>        __lock_acquire+0x4b8/0x928
+>        lock_acquire+0x102/0x230
+>        cpus_read_lock+0x62/0xd0
+>        stop_machine+0x2e/0x60
+>        arch_ftrace_update_code+0x2e/0x40
+>        ftrace_run_update_code+0x40/0xa0
+>        ftrace_startup+0xb2/0x168
+>        register_ftrace_function+0x64/0x88
+>        klp_patch_object+0x1a2/0x290
+>        klp_enable_patch+0x554/0x980
+>        do_one_initcall+0x70/0x318
+>        do_init_module+0x6e/0x250
+>        load_module+0x1782/0x1990
+>        __s390x_sys_finit_module+0xaa/0xf0
+>        system_call+0xd8/0x2d0
+> 
+> other info that might help us debug this:
+> 
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(text_mutex);
+>                                lock(cpu_hotplug_lock.rw_sem);
+>                                lock(text_mutex);
+>   lock(cpu_hotplug_lock.rw_sem);
 
-Hi,
+It is similar problem that has been solved by 2d1e38f56622b9bb5af8
+("kprobes: Cure hotplug lock ordering issues"). This commit solved
+it by always taking cpu_hotplug_lock.rw_sem before text_mutex inside.
 
-I reexamined all the composers described in the commit message (latest
-versions) to check if any project use and validate the return value
-from  drm_crtc_get_sequence_ioctl and drm_crtc_queue_sequence_ioctl. I
-noticed that mesa and xserver use them. FWIU replace EINVAL by
-EOPNOTSUPP is harmless for mesa project, however it is not the same
-for xserver.
+If we follow the lock ordering then ftrace has to take text_mutex
+only when stop_machine() is not called or from code called via
+stop_machine() parameter.
 
-Take a look at line 189 and 238 of hw/xfree86/drivers/modesetting/vblank.c
+This is not easy with the current design. For example, arm calls
+set_all_modules_text_rw() already in ftrace_arch_code_modify_prepare(),
+see arch/arm/kernel/ftrace.c. And it is called:
 
-* https://gitlab.freedesktop.org/xorg/xserver/blob/master/hw/xfree86/driver=
-s/modesetting/vblank.c#L238
-* https://gitlab.freedesktop.org/xorg/xserver/blob/master/hw/xfree86/driver=
-s/modesetting/vblank.c#L189
+  + outside stop_machine() from ftrace_run_update_code()
+  + without stop_machine() from ftrace_module_enable()
 
-A little bit below the above lines, you can see a validation like that:
+A conservative solution for 5.2 release would be to move text_mutex
+locking from the generic kernel/trace/ftrace.c into
+arch/x86/kernel/ftrace.c:
 
-  if (ret !=3D -1 || (errno !=3D ENOTTY && errno !=3D EINVAL))
+   ftrace_arch_code_modify_prepare()
+   ftrace_arch_code_modify_post_process()
 
-In other words, if we change the EINVAL by EOPNOTSUPP
-drm_crtc_[get|queue]_sequence_ioctl we could break xserver. I noticed
-that Keith Packard introduced these ioctls to the kernel and also to
-the xserver, I will prepare a new version and CC Keith. Should I do
-another thing to notify xserver developers?
+It should be enough to fix the original problem because
+x86 is the only architecture that calls set_all_modules_text_rw()
+in ftrace path and supports livepatching at the same time.
 
-Thanks
+We would need to do some refactoring when livepatching is enabled
+for arm or nds32.
 
-> Can you pls resend with those addressed too? Then you can also resend
-> with the cc's all added.
-> -Daniel
->
-> >
-> > > If you don't do that then much bigger chances your patch gets ignored=
-.
-> > > -Daniel
-> > > >
-> > > > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > > > > ---
-> > > > >  drivers/gpu/drm/drm_vblank.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_v=
-blank.c
-> > > > > index 603ab105125d..bed233361614 100644
-> > > > > --- a/drivers/gpu/drm/drm_vblank.c
-> > > > > +++ b/drivers/gpu/drm/drm_vblank.c
-> > > > > @@ -1582,7 +1582,7 @@ int drm_wait_vblank_ioctl(struct drm_device=
- *dev, void *data,
-> > > > >   unsigned int flags, pipe, high_pipe;
-> > > > >
-> > > > >   if (!dev->irq_enabled)
-> > > > > -         return -EINVAL;
-> > > > > +         return -EOPNOTSUPP;
-> > > > >
-> > > > >   if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
-> > > > >           return -EINVAL;
-> > > > > --
-> > > > > 2.21.0
-> > > >
-> > > > --
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > http://blog.ffwll.ch
-> > >
-> > > --
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
-> >
-> > --
-> > Rodrigo Siqueira
-> > https://siqueira.tech
-> > _______________________________________________
-> > Intel-gfx mailing list
-> > Intel-gfx@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/intel-gfx
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+The conservative solution:
 
-
-
---=20
-
-Rodrigo Siqueira
-https://siqueira.tech
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 0927bb158ffc..33786044d5ac 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -22,6 +22,7 @@
+ #include <linux/init.h>
+ #include <linux/list.h>
+ #include <linux/module.h>
++#include <linux/memory.h>
+ 
+ #include <trace/syscall.h>
+ 
+@@ -35,6 +36,7 @@
+ 
+ int ftrace_arch_code_modify_prepare(void)
+ {
++	mutex_lock(&text_mutex);
+ 	set_kernel_text_rw();
+ 	set_all_modules_text_rw();
+ 	return 0;
+@@ -44,6 +46,7 @@ int ftrace_arch_code_modify_post_process(void)
+ {
+ 	set_all_modules_text_ro();
+ 	set_kernel_text_ro();
++	mutex_unlock(&text_mutex);
+ 	return 0;
+ }
+ 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 38277af44f5c..d3034a4a3fcc 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -34,7 +34,6 @@
+ #include <linux/hash.h>
+ #include <linux/rcupdate.h>
+ #include <linux/kprobes.h>
+-#include <linux/memory.h>
+ 
+ #include <trace/events/sched.h>
+ 
+@@ -2611,12 +2610,10 @@ static void ftrace_run_update_code(int command)
+ {
+ 	int ret;
+ 
+-	mutex_lock(&text_mutex);
+-
+ 	ret = ftrace_arch_code_modify_prepare();
+ 	FTRACE_WARN_ON(ret);
+ 	if (ret)
+-		goto out_unlock;
++		return ret;
+ 
+ 	/*
+ 	 * By default we use stop_machine() to modify the code.
+@@ -2628,9 +2625,6 @@ static void ftrace_run_update_code(int command)
+ 
+ 	ret = ftrace_arch_code_modify_post_process();
+ 	FTRACE_WARN_ON(ret);
+-
+-out_unlock:
+-	mutex_unlock(&text_mutex);
+ }
+ 
+ static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
+@@ -5784,7 +5778,6 @@ void ftrace_module_enable(struct module *mod)
+ 	struct ftrace_page *pg;
+ 
+ 	mutex_lock(&ftrace_lock);
+-	mutex_lock(&text_mutex);
+ 
+ 	if (ftrace_disabled)
+ 		goto out_unlock;
+@@ -5846,7 +5839,6 @@ void ftrace_module_enable(struct module *mod)
+ 		ftrace_arch_code_modify_post_process();
+ 
+  out_unlock:
+-	mutex_unlock(&text_mutex);
+ 	mutex_unlock(&ftrace_lock);
+ 
+ 	process_cached_mods(mod->name);
