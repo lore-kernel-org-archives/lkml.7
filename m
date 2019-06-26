@@ -2,253 +2,369 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0D9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA690C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810A5216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HxK3z5bq";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="jwA+yjsa"
+	by mail.kernel.org (Postfix) with ESMTP id AE9C0216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561579175;
+	bh=bZYPVz/hsNYdXeNd5hZ+9FEp8RbumIs/X2hApptAOPg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NGWZBoN21DPPxQSADdYzgWNpYbyOjO1fPkaVv/UXe3vatm5irujozcH34P1TFCE67
+	 xGXcIePb0dW1Tfy7Mrg7W2WvkwdKgZbOKg8fA8q9iOpM3dMnNqUVRDAdKYb06OZIwt
+	 PKBOlWdImDeOCikjdcd6mEZjm8Di+GWApE4GTFf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfFZT67 (ORCPT
+        id S1726465AbfFZT7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:58:59 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47298 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbfFZT66 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:58:58 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QJr6IO008922;
-        Wed, 26 Jun 2019 12:58:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=eXlooZuJifFwgXylXX+OEY8KpGxbHwT06IR5u+TuaJc=;
- b=HxK3z5bqhOddGnR6DP4clf3WJCVZFPG9jXQB1h6ORqKwK1c4Kauq5q8otkirpqFZY1a5
- MSGdlt+eQ+UNVURtairf8gfOBMO7LPw8n1JMccku9uL89Om3bpaelDryRbx8AHqtyvDD
- or28+tUicTTnVOEojK3h8PqN12vhWDlKYCs= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2tc80vsrp4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 26 Jun 2019 12:58:07 -0700
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 26 Jun 2019 12:58:04 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 26 Jun 2019 12:58:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eXlooZuJifFwgXylXX+OEY8KpGxbHwT06IR5u+TuaJc=;
- b=jwA+yjsat56/A/5QEcUGZICHG+sUSLw2zB9vCTdVUdeGmIHw+mgdmSVxs9KuMzKOsjv9XxXHeYeQEHJ1aUfV5MAiLL+Fjh5qYLbi8YXkqc+8JL+CD9Fftgq8crrI6NZ8SCq/BGmOWlPRkiNaFvrsjK3woYZmkUFNvL2nYZb/uEU=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB3346.namprd15.prod.outlook.com (20.179.75.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Wed, 26 Jun 2019 19:58:02 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::e594:155f:a43:92ad]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::e594:155f:a43:92ad%6]) with mapi id 15.20.2008.018; Wed, 26 Jun 2019
- 19:58:02 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Waiman Long <longman@redhat.com>
-CC:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "David Rientjes" <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        "Vladimir Davydov" <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH-next] mm, memcg: Add ":deact" tag for reparented kmem
- caches in memcg_slabinfo
-Thread-Topic: [PATCH-next] mm, memcg: Add ":deact" tag for reparented kmem
- caches in memcg_slabinfo
-Thread-Index: AQHVKFcNglbasX9zCEuQ74vKZQctgaauYjeA
-Date:   Wed, 26 Jun 2019 19:58:02 +0000
-Message-ID: <20190626195757.GB24698@tower.DHCP.thefacebook.com>
-References: <20190621173005.31514-1-longman@redhat.com>
-In-Reply-To: <20190621173005.31514-1-longman@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0009.namprd19.prod.outlook.com
- (2603:10b6:300:d4::19) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:5c5c]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 24eb911a-de96-4abc-df0a-08d6fa70989e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB3346;
-x-ms-traffictypediagnostic: BN8PR15MB3346:
-x-microsoft-antispam-prvs: <BN8PR15MB3346A134213FF89F0BB94767BEE20@BN8PR15MB3346.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2733;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(346002)(376002)(396003)(366004)(199004)(189003)(229853002)(71190400001)(6486002)(256004)(5024004)(6436002)(478600001)(486006)(7416002)(46003)(446003)(14444005)(11346002)(476003)(53936002)(6916009)(71200400001)(14454004)(4326008)(86362001)(6246003)(33656002)(9686003)(6512007)(7736002)(305945005)(81166006)(8936002)(6506007)(8676002)(316002)(386003)(81156014)(1076003)(66556008)(66476007)(66946007)(54906003)(99286004)(102836004)(76176011)(52116002)(6116002)(2906002)(25786009)(186003)(68736007)(64756008)(73956011)(66446008)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3346;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lw9alAOhz9P4hIFTIsnmuNgu27BvNSYa9+vmOzaVy83ggKfuREza0dZuNNPfd6RzsRgZ2H6wOv8wpjeq6ypRC8sAvJDWpUnv2fe6sxhVsYgZtT1DyzOhPwaRu4ye/DdhcjsMaJxSYqWrW7c4WdXC3+vZWHuOPvsIuCHJbljMFQ0jlD5b/LD3LvyFtjTVZcnPd0pZm/n3c9iHwA6CH/QsK6JQ/sMPbOFTNl+OtsdwB01sJ5/loz2b2wvtT5NvsZmCTZYl+ECcs41eDk1Bb1kiBkGwf303gnrFx4IzdiAJUjeyMA/Bhe2Va/eRlijpy3ZXCvtFWlKL0NpfPUMx7tdwqLK0CMT3st8xevwhixk3elWRAVN5t++TnWjENqCodjOtKDmPKbN878h0Vjx2+U6o4ygcsxvxAcVvv0j0Na76/UI=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D278BEA7E85A0F43965A400DA933A352@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 26 Jun 2019 15:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfFZT7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:59:34 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65561208E3;
+        Wed, 26 Jun 2019 19:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561579172;
+        bh=bZYPVz/hsNYdXeNd5hZ+9FEp8RbumIs/X2hApptAOPg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EhmZRoOCfhhiQyO4PpLoixpDJYE0u0pW4F18Z5C4XzU18HoRQO8vh/VJIZVTynPGc
+         tw5U8olN3ZugDlri6R6y76pDglcs1sIwBxGzoy1DpF0k6uP47KHlxE0uyanG4RfPsk
+         sDoXT9ghJ10NkPLIfEiaIY+E6XHQ1N+qYOhDXvAc=
+Date:   Wed, 26 Jun 2019 20:59:28 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 4/4] IIO: Ingenic JZ47xx: Add support for JZ4770 SoC
+ ADC.
+Message-ID: <20190626205928.3043b5d8@archlinux>
+In-Reply-To: <20190623184732.5492-4-contact@artur-rojek.eu>
+References: <20190623184732.5492-1-contact@artur-rojek.eu>
+        <20190623184732.5492-4-contact@artur-rojek.eu>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24eb911a-de96-4abc-df0a-08d6fa70989e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 19:58:02.6721
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3346
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906260232
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 01:30:05PM -0400, Waiman Long wrote:
-> With Roman's kmem cache reparent patch, multiple kmem caches of the same
-> type can be seen attached to the same memcg id. All of them, except
-> maybe one, are reparent'ed kmem caches. It can be useful to tag those
-> reparented caches by adding a new slab flag "SLAB_DEACTIVATED" to those
-> kmem caches that will be reparent'ed if it cannot be destroyed completely=
-.
->=20
-> For the reparent'ed memcg kmem caches, the tag ":deact" will now be
-> shown in <debugfs>/memcg_slabinfo.
->=20
-> Signed-off-by: Waiman Long <longman@redhat.com>
+On Sun, 23 Jun 2019 20:47:32 +0200
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-Hi Waiman!
+> Add support for the ADC hardware present on Ingenic JZ4770 SoC.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+Hi
 
-Sorry for the late reply. The patch overall looks good to me,
-except one nit. Please feel free to use my ack:
-Acked-by: Roman Gushchin <guro@fb.com>
+A few minor comments inline.  Main one is that I'd like some numbers
+to justify the added complexity in avoiding he uncontended mutex in
+the cases where we don't 'need' it.  That makes the code more
+complex, and I would like to have evidence that it is worth it.
+
+Thanks,
+
+Jonathan
 
 > ---
->  include/linux/slab.h |  4 ++++
->  mm/slab.c            |  1 +
->  mm/slab_common.c     | 14 ++++++++------
->  mm/slub.c            |  1 +
->  4 files changed, 14 insertions(+), 6 deletions(-)
->=20
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index fecf40b7be69..19ab1380f875 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -116,6 +116,10 @@
->  /* Objects are reclaimable */
->  #define SLAB_RECLAIM_ACCOUNT	((slab_flags_t __force)0x00020000U)
->  #define SLAB_TEMPORARY		SLAB_RECLAIM_ACCOUNT	/* Objects are short-lived =
-*/
+>  drivers/iio/adc/ingenic-adc.c | 134 +++++++++++++++++++++++++++++++---
+>  1 file changed, 123 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+> index e234970b7150..68d1c3280d1a 100644
+> --- a/drivers/iio/adc/ingenic-adc.c
+> +++ b/drivers/iio/adc/ingenic-adc.c
+> @@ -25,9 +25,13 @@
+>  #define JZ_ADC_REG_ADSDAT		0x20
+>  #define JZ_ADC_REG_ADCLK		0x28
+>  
+> +#define JZ_ADC_REG_ENABLE_PD		BIT(7)
+> +#define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
+>  #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
+>  #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
+> -#define JZ_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+> +#define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+> +#define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
+> +#define JZ4770_ADC_REG_ADCLK_CLKDIVMS_LSB	16
+>  
+>  #define JZ_ADC_AUX_VREF				3300
+>  #define JZ_ADC_AUX_VREF_BITS			12
+> @@ -37,6 +41,8 @@
+>  #define JZ4725B_ADC_BATTERY_HIGH_VREF_BITS	10
+>  #define JZ4740_ADC_BATTERY_HIGH_VREF		(7500 * 0.986)
+>  #define JZ4740_ADC_BATTERY_HIGH_VREF_BITS	12
+> +#define JZ4770_ADC_BATTERY_VREF			6600
+> +#define JZ4770_ADC_BATTERY_VREF_BITS		12
+>  
+>  struct ingenic_adc;
+>  
+> @@ -47,6 +53,8 @@ struct ingenic_adc_soc_data {
+>  	size_t battery_raw_avail_size;
+>  	const int *battery_scale_avail;
+>  	size_t battery_scale_avail_size;
+> +	unsigned int battery_vref_mode: 1;
+> +	unsigned int has_aux2: 1;
+>  	int (*init_clk_div)(struct device *dev, struct ingenic_adc *adc);
+>  };
+>  
+> @@ -54,6 +62,7 @@ struct ingenic_adc {
+>  	void __iomem *base;
+>  	struct clk *clk;
+>  	struct mutex lock;
+> +	struct mutex aux_lock;
+>  	const struct ingenic_adc_soc_data *soc_data;
+>  	bool low_vref_mode;
+>  };
+> @@ -120,6 +129,8 @@ static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
+>  	case IIO_CHAN_INFO_SCALE:
+>  		switch (chan->channel) {
+>  		case INGENIC_ADC_BATTERY:
+> +			if (!adc->soc_data->battery_vref_mode)
+> +				return -EINVAL;
+>  			if (val > JZ_ADC_BATTERY_LOW_VREF) {
+>  				ingenic_adc_set_config(adc,
+>  						       JZ_ADC_REG_CFG_BAT_MD,
+> @@ -158,6 +169,14 @@ static const int jz4740_adc_battery_scale_avail[] = {
+>  	JZ_ADC_BATTERY_LOW_VREF, JZ_ADC_BATTERY_LOW_VREF_BITS,
+>  };
+>  
+> +static const int jz4770_adc_battery_raw_avail[] = {
+> +	0, 1, (1 << JZ4770_ADC_BATTERY_VREF_BITS) - 1,
+> +};
 > +
-> +/* Slab deactivation flag */
-> +#define SLAB_DEACTIVATED	((slab_flags_t __force)0x10000000U)
+> +static const int jz4770_adc_battery_scale_avail[] = {
+> +	JZ4770_ADC_BATTERY_VREF, JZ4770_ADC_BATTERY_VREF_BITS,
+> +};
 > +
->  /*
->   * ZERO_SIZE_PTR will be returned for zero sized kmalloc requests.
->   *
-> diff --git a/mm/slab.c b/mm/slab.c
-> index a2e93adf1df0..e8c7743fc283 100644
-> --- a/mm/slab.c
-> +++ b/mm/slab.c
-> @@ -2245,6 +2245,7 @@ int __kmem_cache_shrink(struct kmem_cache *cachep)
->  #ifdef CONFIG_MEMCG
->  void __kmemcg_cache_deactivate(struct kmem_cache *cachep)
+>  static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
 >  {
-> +	cachep->flags |=3D SLAB_DEACTIVATED;
+>  	struct clk *parent_clk;
+> @@ -187,7 +206,45 @@ static int jz4725b_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
+>  	/* We also need a divider that produces a 10us clock. */
+>  	div_10us = DIV_ROUND_UP(rate, 100000);
+>  
+> -	writel(((div_10us - 1) << JZ_ADC_REG_ADCLK_CLKDIV10US_LSB) |
+> +	writel(((div_10us - 1) << JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB) |
+> +	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
+> +	       adc->base + JZ_ADC_REG_ADCLK);
+> +
+> +	return 0;
+> +}
+> +
+> +static int jz4770_adc_init_clk_div(struct device *dev, struct ingenic_adc *adc)
+> +{
+> +	struct clk *parent_clk;
+> +	unsigned long parent_rate, rate;
+> +	unsigned int div_main, div_ms, div_10us;
+> +
+> +	parent_clk = clk_get_parent(adc->clk);
+> +	if (!parent_clk) {
+> +		dev_err(dev, "ADC clock has no parent\n");
+> +		return -ENODEV;
+> +	}
+> +	parent_rate = clk_get_rate(parent_clk);
+> +
+> +	/*
+> +	 * The JZ4770 ADC works at 20 kHz to 200 kHz.
+> +	 * We pick the highest rate possible.
+> +	 */
+> +	div_main = DIV_ROUND_UP(parent_rate, 200000);
+> +	div_main = clamp(div_main, 1u, 256u);
+> +	rate = parent_rate / div_main;
+> +	if (rate < 20000 || rate > 200000) {
+> +		dev_err(dev, "No valid divider for ADC main clock\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* We also need a divider that produces a 10us clock. */
+> +	div_10us = DIV_ROUND_UP(rate, 10000);
+> +	/* And another, which produces a 1ms clock. */
+> +	div_ms = DIV_ROUND_UP(rate, 1000);
+> +
+> +	writel(((div_ms - 1) << JZ4770_ADC_REG_ADCLK_CLKDIVMS_LSB) |
+> +	       ((div_10us - 1) << JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB) |
+>  	       (div_main - 1) << JZ_ADC_REG_ADCLK_CLKDIV_LSB,
+>  	       adc->base + JZ_ADC_REG_ADCLK);
+>  
+> @@ -201,6 +258,8 @@ static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
+>  	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
+>  	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
+>  	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
+> +	.battery_vref_mode = true,
+> +	.has_aux2 = false,
+>  	.init_clk_div = jz4725b_adc_init_clk_div,
+>  };
+>  
+> @@ -211,9 +270,23 @@ static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
+>  	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
+>  	.battery_scale_avail = jz4740_adc_battery_scale_avail,
+>  	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
+> +	.battery_vref_mode = true,
+> +	.has_aux2 = false,
+>  	.init_clk_div = NULL, /* no ADCLK register on JZ4740 */
+>  };
+>  
+> +static const struct ingenic_adc_soc_data jz4770_adc_soc_data = {
+> +	.battery_high_vref = JZ4770_ADC_BATTERY_VREF,
+> +	.battery_high_vref_bits = JZ4770_ADC_BATTERY_VREF_BITS,
+> +	.battery_raw_avail = jz4770_adc_battery_raw_avail,
+> +	.battery_raw_avail_size = ARRAY_SIZE(jz4770_adc_battery_raw_avail),
+> +	.battery_scale_avail = jz4770_adc_battery_scale_avail,
+> +	.battery_scale_avail_size = ARRAY_SIZE(jz4770_adc_battery_scale_avail),
+> +	.battery_vref_mode = false,
+> +	.has_aux2 = true,
+> +	.init_clk_div = jz4770_adc_init_clk_div,
+> +};
+> +
+>  static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
+>  				  struct iio_chan_spec const *chan,
+>  				  const int **vals,
+> @@ -246,19 +319,37 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+>  				long m)
+>  {
+>  	struct ingenic_adc *adc = iio_priv(iio_dev);
+> -	int ret;
+> +	struct mutex *lock = NULL;
 
-A nit: it can be done from kmemcg_cache_deactivate() instead,
-and then you don't have to do it in slab and slub separately.
+The cost of a lock when not contended should be pretty low.
+If we are going to do the optimization of not having the lock for
+the single channel case, then I'd like some performance numbers
+to justify the complexity.  What difference is it making?
 
-Since it's not slab- or slub-specific code, it'd be better, IMO,
-to put it into slab_common.c.
-
-Thanks!
-
->  	__kmem_cache_shrink(cachep);
->  }
-> =20
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 146d8eaa639c..85cf0c374303 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1533,7 +1533,7 @@ static int memcg_slabinfo_show(struct seq_file *m, =
-void *unused)
->  	struct slabinfo sinfo;
-> =20
->  	mutex_lock(&slab_mutex);
-> -	seq_puts(m, "# <name> <css_id[:dead]> <active_objs> <num_objs>");
-> +	seq_puts(m, "# <name> <css_id[:dead|deact]> <active_objs> <num_objs>");
->  	seq_puts(m, " <active_slabs> <num_slabs>\n");
->  	list_for_each_entry(s, &slab_root_caches, root_caches_node) {
->  		/*
-> @@ -1544,22 +1544,24 @@ static int memcg_slabinfo_show(struct seq_file *m=
-, void *unused)
-> =20
->  		memset(&sinfo, 0, sizeof(sinfo));
->  		get_slabinfo(s, &sinfo);
-> -		seq_printf(m, "%-17s root      %6lu %6lu %6lu %6lu\n",
-> +		seq_printf(m, "%-17s root       %6lu %6lu %6lu %6lu\n",
->  			   cache_name(s), sinfo.active_objs, sinfo.num_objs,
->  			   sinfo.active_slabs, sinfo.num_slabs);
-> =20
->  		for_each_memcg_cache(c, s) {
->  			struct cgroup_subsys_state *css;
-> -			char *dead =3D "";
-> +			char *status =3D "";
-> =20
->  			css =3D &c->memcg_params.memcg->css;
->  			if (!(css->flags & CSS_ONLINE))
-> -				dead =3D ":dead";
-> +				status =3D ":dead";
-> +			else if (c->flags & SLAB_DEACTIVATED)
-> +				status =3D ":deact";
-> =20
->  			memset(&sinfo, 0, sizeof(sinfo));
->  			get_slabinfo(c, &sinfo);
-> -			seq_printf(m, "%-17s %4d%5s %6lu %6lu %6lu %6lu\n",
-> -				   cache_name(c), css->id, dead,
-> +			seq_printf(m, "%-17s %4d%-6s %6lu %6lu %6lu %6lu\n",
-> +				   cache_name(c), css->id, status,
->  				   sinfo.active_objs, sinfo.num_objs,
->  				   sinfo.active_slabs, sinfo.num_slabs);
+> +	int bit, ret, engine = 0;
+>  
+>  	switch (m) {
+>  	case IIO_CHAN_INFO_RAW:
+> -		clk_enable(adc->clk);
+> -		ret = ingenic_adc_capture(adc, chan->channel);
+> -		if (ret) {
+> -			clk_disable(adc->clk);
+> -			return ret;
+> +		switch (chan->channel) {
+> +		case INGENIC_ADC_AUX:
+> +		case INGENIC_ADC_AUX2:
+> +			if (adc->soc_data->has_aux2)
+> +				lock = &adc->aux_lock;
+> +			break;
+> +		case INGENIC_ADC_BATTERY:
+> +			engine = 1;
+> +			break;
 >  		}
-> diff --git a/mm/slub.c b/mm/slub.c
-> index a384228ff6d3..c965b4413658 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -4057,6 +4057,7 @@ void __kmemcg_cache_deactivate(struct kmem_cache *s=
-)
->  	 */
->  	slub_set_cpu_partial(s, 0);
->  	s->min_partial =3D 0;
-> +	s->flags |=3D SLAB_DEACTIVATED;
+>  
+> +		if (lock) /* We cannot sample AUX/AUX2 in parallel. */
+> +			mutex_lock(lock);
+> +		if (adc->soc_data->has_aux2 && engine == 0) {
+> +			bit = BIT(chan->channel == INGENIC_ADC_AUX2);
+> +			ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_AUX_MD, bit);
+> +		}
+> +
+> +		clk_enable(adc->clk);
+> +		ret = ingenic_adc_capture(adc, engine);
+> +		if (ret)
+> +			goto out;
+> +
+>  		switch (chan->channel) {
+>  		case INGENIC_ADC_AUX:
+> +		case INGENIC_ADC_AUX2:
+>  			*val = readw(adc->base + JZ_ADC_REG_ADSDAT);
+>  			break;
+>  		case INGENIC_ADC_BATTERY:
+> @@ -266,12 +357,12 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+>  			break;
+>  		}
+>  
+> -		clk_disable(adc->clk);
+> -
+> -		return IIO_VAL_INT;
+> +		ret = IIO_VAL_INT;
+> +		goto out;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		switch (chan->channel) {
+>  		case INGENIC_ADC_AUX:
+> +		case INGENIC_ADC_AUX2:
+>  			*val = JZ_ADC_AUX_VREF;
+>  			*val2 = JZ_ADC_AUX_VREF_BITS;
+>  			break;
+> @@ -290,6 +381,13 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
+>  	default:
+>  		return -EINVAL;
+>  	}
+> +
+> +out:
+> +	clk_disable(adc->clk);
+
+A bit tricky to follow with this code structure. I'd suggest factoring
+out the _RAW block as a utility function so we can avoid the
+breaking out of deeply nested code to the handler like this.
+
+> +	if (lock)
+> +		mutex_unlock(lock);
+> +
+> +	return ret;
 >  }
->  #endif	/* CONFIG_MEMCG */
-> =20
-> --=20
-> 2.18.1
->=20
+>  
+>  static void ingenic_adc_clk_cleanup(void *data)
+> @@ -322,6 +420,14 @@ static const struct iio_chan_spec ingenic_channels[] = {
+>  		.indexed = 1,
+>  		.channel = INGENIC_ADC_BATTERY,
+>  	},
+> +	{ /* Must always be last in the array. */
+> +		.extend_name = "aux2",
+> +		.type = IIO_VOLTAGE,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_AUX2,
+> +	},
+>  };
+>  
+>  static int ingenic_adc_probe(struct platform_device *pdev)
+> @@ -343,6 +449,7 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  
+>  	adc = iio_priv(iio_dev);
+>  	mutex_init(&adc->lock);
+> +	mutex_init(&adc->aux_lock);
+>  	adc->soc_data = soc_data;
+>  
+>  	mem_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -374,6 +481,7 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  	/* Put hardware in a known passive state. */
+>  	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
+>  	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+> +	usleep_range(2000, 3000); /* Must wait at least 2ms. */
+>  	clk_disable(adc->clk);
+>  
+>  	ret = devm_add_action_or_reset(dev, ingenic_adc_clk_cleanup, adc->clk);
+> @@ -387,6 +495,9 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  	iio_dev->modes = INDIO_DIRECT_MODE;
+>  	iio_dev->channels = ingenic_channels;
+>  	iio_dev->num_channels = ARRAY_SIZE(ingenic_channels);
+> +	/* Remove AUX2 from the list of supported channels. */
+> +	if (!adc->soc_data->has_aux2)
+> +		iio_dev->num_channels -= 1;
+>  	iio_dev->info = &ingenic_adc_info;
+>  
+>  	ret = devm_iio_device_register(dev, iio_dev);
+> @@ -400,6 +511,7 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  static const struct of_device_id ingenic_adc_of_match[] = {
+>  	{ .compatible = "ingenic,jz4725b-adc", .data = &jz4725b_adc_soc_data, },
+>  	{ .compatible = "ingenic,jz4740-adc", .data = &jz4740_adc_soc_data, },
+> +	{ .compatible = "ingenic,jz4770-adc", .data = &jz4770_adc_soc_data, },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, ingenic_adc_of_match);
+
