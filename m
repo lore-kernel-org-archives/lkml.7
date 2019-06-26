@@ -2,111 +2,84 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DEBC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C3C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C772214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A256721743
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfFZRir (ORCPT
+        id S1726413AbfFZRld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:38:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:18810 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfFZRir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:38:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:38:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
-   d="scan'208";a="183217012"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Jun 2019 10:38:46 -0700
-Message-ID: <9f7787e255ef859a39ea87e70132a50572f4db65.camel@intel.com>
-Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Wed, 26 Jun 2019 13:41:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39200 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfFZRld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:41:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x4so3719362wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:41:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=t2qwRs7koe0N7pYzHfarivbdbI697R0UkLvgOjEc6fg=;
+        b=rNWScwCtIc3FS+PqLO6TGwiLFcIJtJxD+jaULsarqZ2w74dugcaLPDSdvP0+lTIGSU
+         v33OiUzXZEsd7Wi7wY2sFZ53yOBP8sQLwJIgwPT+zjZ7+zHHQOgJzUBsi4Zov1dhpCjY
+         r26KvGml+iAKaU3ZFtDya4VU+1P8nlBOR/UL383c5wAnm+1S+Po3A1OnTOJQulqRbgzh
+         Z4HZhf9x8UAFJ9P2U1K5Sd0clH73ACAX0CV89X3ST6Wjo6NQolKtm6Qp4ADJ9L8too4k
+         d2u41GcJ9V9RqpFJFFlkG+AO0PvdPJErgDhSwo55gzXuyvKHcMuII0tpdAkhwGFwut71
+         wT6w==
+X-Gm-Message-State: APjAAAU+MqkkgJ4CF90FYZrqRyZ8zCGtrNb/RXWR8yagCWa18FrCV1LX
+        uE2NMWfJHkBn9mCZJyAhs+aRxFEiNuk=
+X-Google-Smtp-Source: APXvYqwJ4Z4pdKRax8Z2pKF/BL7aG7XRGilbIpnO+wMYHg1EmrVhaIhK8YsHNXK6Nvcm7thSb6IuMg==
+X-Received: by 2002:adf:ee91:: with SMTP id b17mr4595442wro.182.1561570891172;
+        Wed, 26 Jun 2019 10:41:31 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 72sm24638446wrk.22.2019.06.26.10.41.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 10:41:30 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>, Nadav Amit <namit@vmware.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>
-Date:   Wed, 26 Jun 2019 10:30:24 -0700
-In-Reply-To: <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
-References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
-         <20190502111003.GO3567@e103592.cambridge.arm.com>
-         <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH 6/9] KVM: x86: Provide paravirtualized flush_tlb_multi()
+In-Reply-To: <CALCETrW2kudQ-nt7KFKRizNjBAzDVfLW7qQRJmkuigSmsYBFhg@mail.gmail.com>
+References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-7-namit@vmware.com> <cb28f2b4-92f0-f075-648e-dddfdbdd2e3c@intel.com> <401C4384-98A1-4C27-8F71-4848F4B4A440@vmware.com> <CALCETrWcUWw8ep-n6RaOeojnL924xOM7g7eb9g=3DRwOHQAgnA@mail.gmail.com> <35755C67-E8EB-48C3-8343-BB9ABEB4E32C@vmware.com> <CALCETrUPKj1rRn1bKDYkwZ8cv1navBne72kTCtGHjnhTM0cOVw@mail.gmail.com> <A52332CE-80A2-4705-ABB0-3CDDB7AEC889@vmware.com> <CALCETrW2kudQ-nt7KFKRizNjBAzDVfLW7qQRJmkuigSmsYBFhg@mail.gmail.com>
+Date:   Wed, 26 Jun 2019 19:41:29 +0200
+Message-ID: <878stockhi.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 10:14 -0700, Andy Lutomirski wrote:
-> On Thu, May 2, 2019 at 4:10 AM Dave Martin <Dave.Martin@arm.com> wrote:
-> > 
-> > On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
-> > > An ELF file's .note.gnu.property indicates features the executable file
-> > > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
-> > > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
-> > > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
-> > > 
-[...]
-> 
-> Where did PT_GNU_PROPERTY come from?  Are there actual docs for it?
-> Can someone here tell us what the actual semantics of this new ELF
-> thingy are?  From some searching, it seems like it's kind of an ELF
-> note but kind of not.  An actual description would be fantastic.
-> 
-> Also, I don't think there's any actual requirement that the upstream
-> kernel recognize existing CET-enabled RHEL 8 binaries as being
-> CET-enabled.  I tend to think that RHEL 8 jumped the gun here.  While
-> the upstream kernel should make some reasonble effort to make sure
-> that RHEL 8 binaries will continue to run, I don't see why we need to
-> go out of our way to keep the full set of mitigations available for
-> binaries that were developed against a non-upstream kernel.
-> 
-> In fact, if we handle the legacy bitmap differently from RHEL 8, we
-> may *have* to make sure that we don't recognize existing RHEL 8
-> binaries as CET-enabled.
+Andy Lutomirski <luto@kernel.org> writes:
 
-We have worked out the issue.  Linux will look at only PT_GNU_PROPERTY, which is
-a shortcut pointing directly to .note.gnu.property.  I have an updated patch,
-and will send it out (although it is not yet perfect).
+> All this being said, do we currently have any system that supports
+> PCID *and* remote flushes?  I guess KVM has some mechanism, but I'm
+> not that familiar with its exact capabilities.  If I remember right,
+> Hyper-V doesn't expose PCID yet.
+>
 
-The Linux gABI extension draft is here: https://github.com/hjl-tools/linux-abi/w
-iki/linux-abi-draft.pdf.
+It already does (and support it to certain extent), see
 
-Yu-cheng
+commit 617ab45c9a8900e64a78b43696c02598b8cad68b
+Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+Date:   Wed Jan 24 11:36:29 2018 +0100
 
+    x86/hyperv: Stop suppressing X86_FEATURE_PCID
+
+-- 
+Vitaly
