@@ -2,127 +2,109 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1154CC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E365C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBFC121726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BA021726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iq4jfqas"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvu5sM2J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFZXfM (ORCPT
+        id S1726674AbfFZXhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 19:35:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49343 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbfFZXfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 19:35:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45YzsT2l4pz9sBZ;
-        Thu, 27 Jun 2019 09:35:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561592109;
-        bh=qMfcxqk4G2kzYq2wlabyoCO9Jbk0YAFRUFR1ilLG5kA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iq4jfqas37jNNL/akHubkPa0aPi6FwKRzK8q7n8gxV3ZPpkh6qrsL+4ChQ0VfOP/Y
-         ajwOvWE1ba6AE+uYOop9BuovurAwPWZWVIwtKzQnnnpaJkMItu3L7mcLQ2jHrCWSg8
-         K3nV6X+VhgNx6sr0GTztrboXt38ne9CEHV2t1lLjBPqxhvkpQElHSanC6zXQbnlk7/
-         biAUiK2ERQSfBS7MNoAZBwfiJntVOwuTg/vLiGzdhb4SUSHrf/f3O9mC99OH94lAi6
-         5442hZwLEy4556XF7m3pFfKybtNZdDZHtBq0gWLVgkB+KO9yWUaHdvSP7tk3rWJT1D
-         p84Kk+7jvOQoQ==
-Date:   Thu, 27 Jun 2019 09:35:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: linux-next: manual merge of the arm64 tree with the arm64-fixes
- tree
-Message-ID: <20190627093503.094106d9@canb.auug.org.au>
+        Wed, 26 Jun 2019 19:37:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37378 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfFZXhE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 19:37:04 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d11so275193lfb.4;
+        Wed, 26 Jun 2019 16:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UWeMijdRoJnwgbuUK5eFM3uClFjid/XTZeuE26M5QLw=;
+        b=lvu5sM2J7hZtAUwoJbPjFQ1EZb33EYm3kYdwOb7SuPJeX8950m7fk+ZgphMJux6LAG
+         PUCO/pJ9kLZ7/WShSqhyeq61lNRru/YTUSeoWAZYNpkOoyjmZBJ9EXC6HhbznUvH4nzA
+         yHGfjfZmOAo8ywA5721GLCPMEg/+BzosndbmXsX44LS2gtCcZ+LyJShLp8orxadQlWFM
+         Ny/Eu8VGWihQs8RdfCSNuk5fzt96diFcGvr0VTMg5L7yqdz+sWxTL1Yb9ySWCMhuNBgC
+         nyMnj6y29/nHcu13VEHvW54QMysqgtaa7LyIv23vES4oDL/87GsnbyDMAuWSSveijfNJ
+         nLtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UWeMijdRoJnwgbuUK5eFM3uClFjid/XTZeuE26M5QLw=;
+        b=C29unMA9WjrvnhLVgY9V+XiNCQJg0gdX5Zvg7UBld6LFJRZd4wl92GTOi8FPaMQG81
+         fShWZuoE3TQnXT9vP391kZiploHMbq6M+zmqjDboaexcSKaZsAcT8wi3snD93eu9i8RB
+         QzOZyMsGUIKLAxCmykwfpPtZS4nYST9q+8ecHREmlnTDWdPK1QCtnEhaD3JW/h7bhlnZ
+         2EycrePON2TkydVZyYh7VD0m146xoK5vCDAvJPSswVzb2kCUKNFclf4PNHP6MdlEWFlt
+         vAgSM6XRa1K4bPtxOkt8kpGK9A9fjLwJVpLNkt7ZQemUnk3N3ewKhFMVgQTGUrhJcRs3
+         rXpw==
+X-Gm-Message-State: APjAAAWnjhDO5zuf17bIYJuVBs+r6fuQf0De1HqbVgeuvznrPyjRBRX4
+        c4rAuQYfnoXBLkt8vaus6WHyQKog535I6509ReZ/MxZF
+X-Google-Smtp-Source: APXvYqyhrx+8+yHjkKDDMrfR6FJ/06ktGd/bOANIs8DsrCWxHaUboMHRhf7BkLfcmvmWTl6eUhoXtHiNBREmgVxKWyU=
+X-Received: by 2002:ac2:46f9:: with SMTP id q25mr362437lfo.181.1561592221728;
+ Wed, 26 Jun 2019 16:37:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/EHexR=Ls15yx5V+tV1u47RH"; protocol="application/pgp-signature"
+References: <20190627080521.5df8ccfc@canb.auug.org.au> <20190626221347.GA17762@tower.DHCP.thefacebook.com>
+In-Reply-To: <20190626221347.GA17762@tower.DHCP.thefacebook.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 26 Jun 2019 16:36:50 -0700
+Message-ID: <CAADnVQJiMH=jfuD0FGpr2JmzyQsMKHJ4pM1kfQ8jhSxrAe0XWg@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the bpf tree
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EHexR=Ls15yx5V+tV1u47RH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 26, 2019 at 3:14 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Thu, Jun 27, 2019 at 08:05:21AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > In commit
+> >
+> >   12771345a467 ("bpf: fix cgroup bpf release synchronization")
+> >
+> > Fixes tag
+> >
+> >   Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
+> >
+> > has these problem(s):
+> >
+> >   - Subject has leading but no trailing parentheses
+> >   - Subject has leading but no trailing quotes
+> >
+> > Please don't split Fixes tags across more than one line.
+>
+> Oops, sorry.
+>
+> Alexei, can you fix this in place?
+> Or should I send an updated version?
 
-Hi all,
+I cannot easily do it since -p and --signoff are incompatible flags.
+I need to use -p to preserve merge commits,
+but I also need to use --signoff to add my sob to all
+other commits that were committed by Daniel
+after your commit.
 
-Today's linux-next merge of the arm64 tree got a conflict in:
-
-  arch/arm64/kernel/module.c
-
-between commit:
-
-  6f496a555d93 ("arm64: kaslr: keep modules inside module region when KASAN=
- is enabled")
-
-from the arm64-fixes tree and commit:
-
-  7dfac3c5f40e ("arm64: module: create module allocations without exec perm=
-issions")
-
-from the arm64 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/kernel/module.c
-index 71530e080ecc,5b5936b7868c..000000000000
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@@ -29,12 -39,9 +29,12 @@@ void *module_alloc(unsigned long size
-  	if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
-  		gfp_mask |=3D __GFP_NOWARN;
- =20
- +	if (IS_ENABLED(CONFIG_KASAN))
- +		/* don't exceed the static module region - see below */
- +		module_alloc_end =3D MODULES_END;
- +
-  	p =3D __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
-- 				module_alloc_end, gfp_mask, PAGE_KERNEL_EXEC, 0,
- -				module_alloc_base + MODULES_VSIZE,
- -				gfp_mask, PAGE_KERNEL, 0,
-++				module_alloc_end, gfp_mask, PAGE_KERNEL, 0,
-  				NUMA_NO_NODE, __builtin_return_address(0));
- =20
-  	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
-
---Sig_/EHexR=Ls15yx5V+tV1u47RH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0UASgACgkQAVBC80lX
-0GzTxwf+OqovGorYRLpMze4h0oyLKXzv79/eFCgNoZJ/HyGszyMKkJb52BWi/juA
-Mph+lfAgue+VIp0/p8MiTDp882FnfVoi/SBpB4sgQiSrMb6602l60sVl++ZQs9S6
-/efkX042yTD3JwS+7LVl1Zm5Zg1+q3QM0W7RdK1yWVkKOR7aJFndnbQST2npjrna
-dGup4YzRT/TtFEd1CdJJJIwFPbE2eBn2lA4TkWCj/RGy7PwGnneV+qOAf0+l1AG7
-uEbQR4MSUDANHQR/nGKheh3dq0JLqSa9fsVSE9U4JVgwt3GKkmLJ572rC7VJd/IQ
-tWpnv+OMLNQ9BsHl6xsnEKL3D5NsOQ==
-=x+n7
------END PGP SIGNATURE-----
-
---Sig_/EHexR=Ls15yx5V+tV1u47RH--
+Daniel, can you fix Roman's patch instead?
+you can do:
+git rebase -i -p  12771345a467^
+fix Roman's, add you sob only to that one
+and re-push the whole thing.
