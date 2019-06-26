@@ -2,132 +2,104 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E11BEC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2347BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BAF216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="yWvxd7Pw"
+	by mail.kernel.org (Postfix) with ESMTP id E3A092086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561562504;
+	bh=2C45GR8QcNUlXUagChm3h55vqnTJi2n65xAwHFBqPMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mVLUZjMHwVfdD4ufzohLdv3JlHY4YmVNioqXRoKgOeetwx5uIruIk15LWnT/NJCkI
+	 I8W8TfOIESgAQn7zTHZMz+Kcxk9cd6fIVewP4WCiPdKUOfoJGBimcDgZfkd9DqAWBD
+	 mEUU7ccmoY0AXDtLmWDwGW42xC10LzQ4lXB3eBzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfFZPUl (ORCPT
+        id S1728316AbfFZPVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:20:41 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45442 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFZPUk (ORCPT
+        Wed, 26 Jun 2019 11:21:42 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45603 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbfFZPVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:20:40 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s22so1940301qkj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 08:20:40 -0700 (PDT)
+        Wed, 26 Jun 2019 11:21:42 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s22so1943624qkj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 08:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ELXLhOLz04A2c7tl3nrQG1+Ijqzqm4Q9d9UrTY8MYRg=;
-        b=yWvxd7Pwuo//+rbSXY1t/j5A20ZyNH31mVRjbjHmYPNP2Ydsjms4Ey0wTUNhIvE1lv
-         I8VLUog7xRGPwzt+ATI7UaLcSKgyFvVFv40zJnihWQPb31LhRUfD2RbFNF4ZiCWA1FFD
-         AFFG4lfi4t75EnKiZqmc0wTG3PHeiBb4yHkBvKlzuNGxfj+ttY3bK1bIT6T8B5cXK5m+
-         pHZWf4iunHW3XHxj8nADwTVUbq00UTVazxdsESfisOOP5/Ch0huLKPqkMLcUl07EqjAH
-         ITIaXZqPkM322LDQgCFcQepj7+WPo2zUmZ6hbPkGrOMSpuswHGNvDhgc4qP2mmmGsrdC
-         DL4Q==
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AqcyecsyR72Z800wF2DqV9Cha6bDH1l5BuA6pDWNwYs=;
+        b=KfrqTafq5djpR60pvGLE24kaqVkohaB+1Fpu1qAbV1Z3UJnWWZHWEBXkU6CphviNT1
+         omXIPfZ9zFPf4yGSgg17P5BQXYGiGGP+jB0FpgTBSR6f7jLWzuXvQnaH2UHQJ+jSUDQg
+         FENMBf5dbkbQn1mv8JdGHmZlZR/hQfBJ25Vcc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ELXLhOLz04A2c7tl3nrQG1+Ijqzqm4Q9d9UrTY8MYRg=;
-        b=RZ644Dw6PPA44hiesDTMynTrua49eouwr06UNSjPytpLLTZ4MZyVtwk742vgDf26cd
-         RDK9mtHTdQZydx3r4YtdF29iEogeNrRhuFZA8aRfyWhkDNqLS/7YYOWylZUmVm4xr9cA
-         fMYP8Uha0iiiET/qPHcqsHLv+sXLh5tKqDdMQ0dlkqLzdHZJiNjwXg75yYts8xm577Vw
-         vjfoG+blUwL014qN+HwSnMMLke1hPPV88LHc4R87zsN4RkN22I5nZTB8lXcqp4gZbZ6j
-         PwE+h4LlRvHobc+iSiEMinyB5brc2nnmj7YbHnVB6LCxzlKRllOiV+VfeR6q1DON8RSZ
-         PEcw==
-X-Gm-Message-State: APjAAAUni9Th/ikl51/lSwLpIQhcJaYyVH3sQ+7nTldxyHZdnASVTatw
-        ooWiGq+2FEOj88MxoP9UAGdzRTCJXb0+4BE7/wKQ1w==
-X-Google-Smtp-Source: APXvYqz23DtqahM0L3H5wlbSC7MZTjjpe1x3hDzHbGAVHmblW+IEs1zZMfufBkl3TyuTVXoHt4XAoOTzJXbeBnZT+aY=
-X-Received: by 2002:a37:6782:: with SMTP id b124mr4034848qkc.242.1561562439876;
- Wed, 26 Jun 2019 08:20:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=AqcyecsyR72Z800wF2DqV9Cha6bDH1l5BuA6pDWNwYs=;
+        b=FsZX5Q9awe5SIgHwpZwe9as/z45dr8HCOoQDvefn8ztjfzqQmlF1w8nVzXiNKDylSF
+         JEZJLMmDzBTTjROKCvKfQrt7IUsoFCrrTrAdXziQaY710Ri+9Z9Mj6YSZDsOHdtNGtuQ
+         i147AaXIxWKxBE8ihpIqIQ9pNEBJtyvSK5feVTHi6SRjJhRa1aW7tvFDCmeZGmPP146j
+         TSd83U8PZl+D8CBocfvStuk7mRgDq4LrSVypZRSQhKtuLTAvYGGSgC87ivRQvkWmEKYe
+         N629QSu5X6jIo1t8bs03g5TjCCw4dvmyw4Fy/Tc4XHHFgnH2djMzM2noCUnSJLOaxNwl
+         uFKA==
+X-Gm-Message-State: APjAAAWnz5STRNfo7d6H0NyrIZepyfdWSJt8M7alqIyrfOOr6PJ5ufvt
+        qdt+HN4ie1vUejB8JzFllUcm7LGRvE8=
+X-Google-Smtp-Source: APXvYqxzZ8iLSdr4K35JOc9DwvkixONaa8VxxhxUgn2Hu9TD/fRdCOA0eE8w19uDwLbWTvyFi2KN5A==
+X-Received: by 2002:a05:620a:1292:: with SMTP id w18mr4442657qki.416.1561562501107;
+        Wed, 26 Jun 2019 08:21:41 -0700 (PDT)
+Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
+        by smtp.gmail.com with ESMTPSA id k33sm8995923qte.69.2019.06.26.08.21.40
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 08:21:40 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 11:21:38 -0400
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@iki.fi>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: On Nitrokey Pro's ECC support
+Message-ID: <20190626152138.GA28688@chatter.i7.local>
+Mail-Followup-To: Jonathan Corbet <corbet@lwn.net>,
+        Jarkko Sakkinen <jarkko.sakkinen@iki.fi>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <c9c1e7f83a55bc5fb621e2e4e1dab90c5b3aac01.camel@iki.fi>
+ <20190626082541.2cd5897c@lwn.net>
 MIME-Version: 1.0
-References: <20190626132632.32629-1-axel.lin@ingics.com> <20190626132632.32629-2-axel.lin@ingics.com>
- <e1ba816f-1ecc-acc1-1f69-bc474da1061a@ti.com>
-In-Reply-To: <e1ba816f-1ecc-acc1-1f69-bc474da1061a@ti.com>
-From:   Axel Lin <axel.lin@ingics.com>
-Date:   Wed, 26 Jun 2019 23:20:28 +0800
-Message-ID: <CAFRkauCtHtG0mfqXp=FuBYYqGhhMGfP3o_N3iBoRHwkQNQYtNw@mail.gmail.com>
-Subject: Re: [RFT][PATCH 2/2] regulator: lm363x: Fix n_voltages setting for lm36274
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190626082541.2cd5897c@lwn.net>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Murphy <dmurphy@ti.com> =E6=96=BC 2019=E5=B9=B46=E6=9C=8826=E6=97=A5 =
-=E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8811:07=E5=AF=AB=E9=81=93=EF=BC=9A
+On Wed, Jun 26, 2019 at 08:25:41AM -0600, Jonathan Corbet wrote:
+>On Wed, 26 Jun 2019 17:11:46 +0300
+>Jarkko Sakkinen <jarkko.sakkinen@iki.fi> wrote:
 >
-> Hello
+>> I was getting myself a smartcard stick and looked for options from [1].
+>> The documentation says that Nitrokey Pro does not support ECC while it
+>> actually does [2]. I was already canceling my order when Jan Suhr, the
+>> CEO of that company, kindly pointed out to me this.
+>>
+>> [1] https://www.kernel.org/doc/html/latest/process/maintainer-pgp-guide.html
+>> [2] https://shop.nitrokey.com/shop/product/nitrokey-pro-2-3
 >
-> On 6/26/19 8:26 AM, Axel Lin wrote:
-> > According to the datasheet http://www.ti.com/lit/ds/symlink/lm36274.pdf=
-:
-> > Table 23. VPOS Bias Register Field Descriptions VPOS[5:0]:
-> > VPOS voltage (50-mV steps): VPOS =3D 4 V + (Code =C3=97 50 mV), 6.5 V m=
-ax
-> > 000000 =3D 4 V
-> > 000001 =3D 4.05 V
-> > :
-> > 011110 =3D 5.5 V (Default)
-> > :
-> > 110010 =3D 6.5 V
-> > 110011 to 111111 map to 6.5 V
-> >
-> > So the LM36274_LDO_VSEL_MAX should be 0b110010 (0x32).
-> > The valid selectors are 0 ... LM36274_LDO_VSEL_MAX, n_voltages should b=
-e
-> > LM36274_LDO_VSEL_MAX + 1. Similarly, the n_voltages should be
-> > LM36274_BOOST_VSEL_MAX + 1 for LM36274_BOOST.
-> >
-> > Fixes: bff5e8071533 ("regulator: lm363x: Add support for LM36274")
-> > Signed-off-by: Axel Lin <axel.lin@ingics.com>
-> > ---
-> >   drivers/regulator/lm363x-regulator.c | 8 ++++----
-> >   1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/l=
-m363x-regulator.c
-> > index e4a27d63bf90..4b9f618b07e9 100644
-> > --- a/drivers/regulator/lm363x-regulator.c
-> > +++ b/drivers/regulator/lm363x-regulator.c
-> > @@ -36,7 +36,7 @@
-> >
-> >   /* LM36274 */
-> >   #define LM36274_BOOST_VSEL_MAX              0x3f
-> > -#define LM36274_LDO_VSEL_MAX         0x34
-> > +#define LM36274_LDO_VSEL_MAX         0x32
->
-> This does not seem correct the max number of voltages are 0x34.
->
-> The register is zero based so you can have 33 voltage select levels and
-> + 1 is 34 total selectors
->
-> Liam/Mark correct me if I am incorrect.
+>Maybe Konstantin (copied) might be willing to supply an update to the
+>document to reflect this?
 
-From the datasheet, the maximum voltage 110010 =3D 6.5 V, the 0b110010 is 0=
-x32.
-I know it is 0 based, so .n_voltages     =3D LM36274_LDO_VSEL_MAX + 1,
-(And that coding style is to match the original code.)
+Hello:
 
-With your current code where LM36274_LDO_VSEL_MAX and n_voltages is 0x34,
-the maximum voltage will become 400000 + 50000 * 0x34 =3D 6.6V which
-does not match the datasheet.
+I just sent a patch with updates that reflect ECC capabilities in newer 
+devices.
 
-Would you mind double check again?
+Best,
+-K
