@@ -2,128 +2,175 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3069EC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B34C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E850420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2839320663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="q3JawTK3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkpiqxEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfFZMN1 (ORCPT
+        id S1727393AbfFZMOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:13:27 -0400
-Received: from mail-eopbgr30058.outbound.protection.outlook.com ([40.107.3.58]:17890
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726104AbfFZMN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:13:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=CRcyMRK3/R1/YWJtoqu94I6a2kHrD1k/q9QVDudy6ycAwgaDLXFZC5Ht16xERI/cqRnaY2xUnZnIzpd21/vOVi+T9i0sXW4LkzngBblyKVpzHi5ZnCHUCnGZyz309GESDa5M/nRGRpXSxO1ySQ2o1qJ28U+6c+XUaFUS/XzmvWo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MiWSnbvF+BF/JcWPOc1MvN6IavzbwC3tgTtiNZDaRcw=;
- b=k0RniEMUa++P2KaJL9ZIMIUaw3bAi+6F/J3by7hnW1YUQX+bqS/7wz5crczpjIkFv9IM1rVWJQ9KQPYARjdnJEspew+VQwHlac6cFFGhVqQfmtWS3ICSLDguaPAxDLubMoAeJ4uLz/RjwiwQCojKCf+gAwm1pjA+5dAHznwHH18=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MiWSnbvF+BF/JcWPOc1MvN6IavzbwC3tgTtiNZDaRcw=;
- b=q3JawTK3oRJIOtg36eYQqJQzmS2+/t4FyimNHQfXx/eIXBvPB/UhYHcfBU/0ZCqDSbEB8ZYQ1VmUyUuN3MPqbVQgoBZs9QO35ID60Vi7BA4/7uv91XYSwAPwN5LKvH8wcglCQcXWrN2KasnKj2uH3pUOii+AEo8nTAQ4p2MJAdg=
-Received: from VI1PR04MB5967.eurprd04.prod.outlook.com (20.178.123.141) by
- VI1PR04MB3998.eurprd04.prod.outlook.com (10.171.182.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Wed, 26 Jun 2019 12:13:23 +0000
-Received: from VI1PR04MB5967.eurprd04.prod.outlook.com
- ([fe80::3d8f:3ac3:c34e:eb7b]) by VI1PR04MB5967.eurprd04.prod.outlook.com
- ([fe80::3d8f:3ac3:c34e:eb7b%5]) with mapi id 15.20.2008.014; Wed, 26 Jun 2019
- 12:13:23 +0000
-From:   Robert Chiras <robert.chiras@nxp.com>
-To:     "sam@ravnborg.org" <sam@ravnborg.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "airlied@linux.ie" <airlied@linux.ie>
-Subject: Re: [EXT] Re: [PATCH v5 2/2] drm/panel: Add support for Raydium
- RM67191 panel driver
-Thread-Topic: [EXT] Re: [PATCH v5 2/2] drm/panel: Add support for Raydium
- RM67191 panel driver
-Thread-Index: AQHVLAjUHIR3x6RJE0mlIrxpmnY6X6atzcYAgAALQAA=
-Date:   Wed, 26 Jun 2019 12:13:23 +0000
-Message-ID: <1561551202.9328.93.camel@nxp.com>
-References: <1561544420-15572-1-git-send-email-robert.chiras@nxp.com>
-         <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
-         <20190626113306.GA24921@ravnborg.org>
-In-Reply-To: <20190626113306.GA24921@ravnborg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=robert.chiras@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af10ff88-1313-40bc-f0c8-08d6fa2faf97
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3998;
-x-ms-traffictypediagnostic: VI1PR04MB3998:
-x-microsoft-antispam-prvs: <VI1PR04MB3998AD3FDD2DA9269ED705BDE3E20@VI1PR04MB3998.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(396003)(346002)(376002)(199004)(189003)(2616005)(11346002)(54906003)(2501003)(44832011)(6486002)(2351001)(3846002)(305945005)(26005)(6116002)(2906002)(4326008)(66066001)(5640700003)(6916009)(36756003)(68736007)(478600001)(7736002)(486006)(50226002)(6436002)(103116003)(53936002)(102836004)(66476007)(446003)(64756008)(14454004)(476003)(73956011)(71190400001)(5660300002)(229853002)(6246003)(186003)(71200400001)(1730700003)(76116006)(256004)(14444005)(6512007)(81166006)(99286004)(6506007)(76176011)(8676002)(25786009)(81156014)(8936002)(66446008)(86362001)(66556008)(316002)(66946007)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3998;H:VI1PR04MB5967.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 202fcN4ivl29M/aEHqzMc1yxFkKhfocGEzBGmE2d7wyH5kdWh0sxbLyAYsD+BSOWaGJOir4CaHOc+FWhaY4aeqiCzXvZsGuQpkNdDbxQIfd7FpPmthR4nHCK6L6K69DEqG5/n4rD7KzIfIBYf6bSD2MS0KrGs60k+7ZGLxOyI/fvpemrUqhyTRYDscuWsHKVgP/CncibsVk2+1fILxQADFtB+g74An0oDHF15lIaenI8wG76N6B8qGmM4f0XqfpZ6jjKUZTYF79Wc1D1ufqFoY0q/xkxFT9rS6LoXzp5gTKTspen4WLa1JKKWes2XGAiBU6MmMmm2lEZGajD7YUN3jZlS+jJoqw8I5+4TRnZcZgQxIetS6AClgDfyK/WfC2QnF+Xg5zRo20ygWzKFyeYuPS2cxITWlt30Xup6JP1HUI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <891AD3EE32C2F64BB3ABB9E1B06E6B39@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 26 Jun 2019 08:14:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41408 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZMON (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 08:14:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y72so1139149pgd.8;
+        Wed, 26 Jun 2019 05:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nE8JZHrKvZIjpzwoCOV4W+kZMdzp32CH3OhSv9DzAQA=;
+        b=FkpiqxEmc1WKkr3sirer29jM7xKhdHyKj0fJ2SNPATI1XoRrgSCqtqr9u1BKAC5cXW
+         YFlgxc/7PYtwZNZTxfldcM14QmtYCm5V+lOlEqpU9Hb19P2FtbAt3wmSsrs4kBJ6AZQF
+         xNcQZqQR1b7/EuDIIVJO/0cj0Z7SHlyBVQdwSv7gbLf6RapeCmFI0xnvOW49BJh5bLeI
+         RS4umvJZCdtSFtR5EIM67n/KRpXkwZYMwHaqEykhtlh1F41v969pTFQAuq90Bf8RkXxB
+         sI6z8boSKMD/WDlvoH0rirK0/QKtqFKmzHexh6m20aylIOt7MKN0jHGhTlGHhSuKk+Hl
+         h75A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nE8JZHrKvZIjpzwoCOV4W+kZMdzp32CH3OhSv9DzAQA=;
+        b=fkQ7mRk02oW7Dw/gcQBl0xzjsLXvJP0HCyuJw8jnr1cxW7mUFHBQlG6bFMk0ept/po
+         GwkdsEKMXw2JBvdi6Qm/u7VTi305fhxw9POmYzOtsIvAhfY0Xm6jymAfZzZDjq2X0kPD
+         G7nR7mqlo2gky1uqkM4new+8NDYis7B5Nux0XCrQPYboHD1YbxAtpiQItDadw38bxOAN
+         LjDMp/TY2Qhi4K0nhedK/8MBlQofsA36nZpRSxb3vKO5alGZmfLwfmhsPDO2qyeEisla
+         k0F+lsDNdcbVL8vxaP+MTXwrEh8Fv3bsEteOA1T3W/ew85KtFjEQbFTGKWbTgnH3AtfI
+         41zw==
+X-Gm-Message-State: APjAAAVBrNBeU8Zn297k0IpDc0PINKkGH07q0nXXdvjYiIXkMfFaz6R3
+        RhijJQZRp5IWkorkFrEXEWTT4eIjp+U=
+X-Google-Smtp-Source: APXvYqyl/rcV1NaUbh6KN9ZCyayU/jSJPecs/2fph6Nkb+9gPHbGA+Bn5bVK4tmxcfI91FmEViay7g==
+X-Received: by 2002:a17:90a:214f:: with SMTP id a73mr4338153pje.21.1561551252708;
+        Wed, 26 Jun 2019 05:14:12 -0700 (PDT)
+Received: from [10.44.0.192] ([103.48.210.53])
+        by smtp.gmail.com with ESMTPSA id x128sm30778516pfd.17.2019.06.26.05.14.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 05:14:12 -0700 (PDT)
+From:   Greg Ungerer <gregungerer00@gmail.com>
+X-Google-Original-From: Greg Ungerer <gerg@linux-m68k.org>
+Subject: Re: [PATCH 08/17] binfmt_flat: consolidate two version of
+ flat_v2_reloc_t
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@lst.de>,
+        Michal Simek <monstr@monstr.eu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-c6x-dev@linux-c6x.org,
+        "moderated list:H8/300 ARCHITECTURE" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-riscv@lists.infradead.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190613070903.17214-1-hch@lst.de>
+ <20190613070903.17214-9-hch@lst.de>
+ <20190625222941.GA1343@ZenIV.linux.org.uk>
+ <f8a61a8e-0469-a9d6-e0a1-01a4619d7363@linux-m68k.org>
+ <CAMuHMdXkMh+pOqPNavmYAhKXTVT12nC5gKc10CJj_CXME+uhWQ@mail.gmail.com>
+Message-ID: <a2567a04-ac83-408f-51a2-53d23fcc0c36@linux-m68k.org>
+Date:   Wed, 26 Jun 2019 22:14:06 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af10ff88-1313-40bc-f0c8-08d6fa2faf97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 12:13:23.4601
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: robert.chiras@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3998
+In-Reply-To: <CAMuHMdXkMh+pOqPNavmYAhKXTVT12nC5gKc10CJj_CXME+uhWQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU2FtLA0KDQpPbiBNaSwgMjAxOS0wNi0yNiBhdCAxMzozMyArMDIwMCwgU2FtIFJhdm5ib3Jn
-IHdyb3RlOg0KPiBIaSBSb2JlcnQuDQo+IA0KPiBPbiBXZWQsIEp1biAyNiwgMjAxOSBhdCAwMToy
-MDoyMFBNICswMzAwLCBSb2JlcnQgQ2hpcmFzIHdyb3RlOg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2gg
-YWRkcyBSYXlkaXVtIFJNNjcxOTEgVEZUIExDRCBwYW5lbCBkcml2ZXIgKE1JUEktRFNJDQo+ID4g
-cHJvdG9jb2wpLg0KPiBJIHdhcyBhYm91dCB0byBhcHBseSB0aGVzZSAtIGJ1dCBJIGdldCBmb2xs
-b3dpbmcgd2FybmluZ3MgZHVyaW5nDQo+IGJ1aWxkOg0KPiDCoCBDQ8KgwqDCoMKgwqDCoGRyaXZl
-cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXlkaXVtLXJtNjcxOTEubw0KPiAvaG9tZS9zYW0vZHJt
-L2xpbnV4LmdpdC9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmF5ZGl1bS0NCj4gcm02NzE5
-MS5jOiBJbiBmdW5jdGlvbiDigJhyYWRfYmxfZ2V0X2JyaWdodG5lc3PigJk6DQo+IC9ob21lL3Nh
-bS9kcm0vbGludXguZ2l0L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXlkaXVtLQ0KPiBy
-bTY3MTkxLmM6NDcwOjE3OiB3YXJuaW5nOiB1bnVzZWQgdmFyaWFibGUg4oCYZGV24oCZIFstV3Vu
-dXNlZC12YXJpYWJsZV0NCj4gwqAgc3RydWN0IGRldmljZSAqZGV2ID0gJmRzaS0+ZGV2Ow0KPiDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgXn5+DQo+IC9ob21lL3NhbS9kcm0vbGlu
-dXguZ2l0L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1yYXlkaXVtLQ0KPiBybTY3MTkxLmM6
-IEluIGZ1bmN0aW9uIOKAmHJhZF9ibF91cGRhdGVfc3RhdHVz4oCZOg0KPiAvaG9tZS9zYW0vZHJt
-L2xpbnV4LmdpdC9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtcmF5ZGl1bS0NCj4gcm02NzE5
-MS5jOjQ5MjoxNzogd2FybmluZzogdW51c2VkIHZhcmlhYmxlIOKAmGRlduKAmSBbLVd1bnVzZWQt
-dmFyaWFibGVdDQo+IMKgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZkc2ktPmRldjsNCj4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoF5+fg0KPiANCj4gUGxlYXNlIGZpeCBhbmQgdXBk
-YXRlIHlvdXIgc2NyaXB0cyB0byBjYXRjaCB0aGlzIGluIHRoZSBmdXR1cmUuDQpPaCwgSSBhbSBz
-b3JyeSBhYm91dCB0aGF0LCBzZWVtcyB0aGF0IEkgbWlzc2VkIHRoYXQgOigNCkZpeGVkIGFuZCBz
-dWJtaXR0ZWQuDQo+IA0KPiDCoMKgwqDCoMKgwqDCoMKgU2FtDQoNClRoYW5rcywNClJvYmVydA==
+Hi Geert,
+
+On 26/6/19 6:18 pm, Geert Uytterhoeven wrote:
+> Hi Greg,
+> 
+> On Wed, Jun 26, 2019 at 9:23 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
+>> On 26/6/19 8:29 am, Al Viro wrote:
+>>> On Thu, Jun 13, 2019 at 09:08:54AM +0200, Christoph Hellwig wrote:
+>>>> Two branches of the ifdef maze actually have the same content, so merge
+>>>> them.
+>>>>
+>>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>>> ---
+>>>>    include/linux/flat.h | 6 ++----
+>>>>    1 file changed, 2 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/flat.h b/include/linux/flat.h
+>>>> index 2b7cda6e9c1b..19c586b74b99 100644
+>>>> --- a/include/linux/flat.h
+>>>> +++ b/include/linux/flat.h
+>>>> @@ -69,15 +69,13 @@ struct flat_hdr {
+>>>>    typedef union {
+>>>>       unsigned long   value;
+>>>>       struct {
+>>>> -# if defined(mc68000) && !defined(CONFIG_COLDFIRE)
+>>>> +#if defined(__LITTLE_ENDIAN_BITFIELD) || \
+>>>> +    (defined(mc68000) && !defined(CONFIG_COLDFIRE))
+>>>>               signed long offset : 30;
+>>>>               unsigned long type : 2;
+>>>>    # elif defined(__BIG_ENDIAN_BITFIELD)
+>>>>               unsigned long type : 2;
+>>>>               signed long offset : 30;
+>>>> -# elif defined(__LITTLE_ENDIAN_BITFIELD)
+>>>> -            signed long offset : 30;
+>>>> -            unsigned long type : 2;
+>>>>    # else
+>>>>    #          error "Unknown bitfield order for flat files."
+>>>>    # endif
+>>>> --
+>>>> 2.20.1
+>>>>
+>>>
+>>> FWIW, I wonder if keeping that type is worth bothering.
+>>> Something like
+>>> old_reloc(__be32 reloc)
+>>> {
+>>>        u32 v = be32_to_cpu(reloc);
+>>>        int offset, type;
+>>>
+>>> #if (defined(mc68000) && !defined(CONFIG_COLDFIRE))
+>>>        /* old m68k uses unusual format - type is in lower bits of octet 3 */
+>>>        type = v % 4;
+>>>        offset = (int)v / 4;
+>>> #else
+>>>        /* everything else (including coldfire) has it in upper bits of octet 0 */
+>>>        type = v >> 30;
+>>>        offset = (int)(v << 2) >> 2; /* or (v & 0x1fffffff) - (v & 0x20000000) * 4 */
+>>> #endif
+>>>        ...
+>>>
+>>> and to hell with bitfields, aliasing unions, etc.  Unless I'm misreading
+>>> the whole thing, that is...  Greg?
+>>
+>> I think you are right. This is much better.
+>> The old mc6800 is the odd one out, the rest have it in network order,
+>> and this makes that much clearer.
+> 
+> Is that correct for Microblaze, which can be big or little endian?
+
+It is true for all architectures that use flat. All fields inside a
+flat format binary are store in network order.
+
+The final processing of the relocation entries in the elf2flt
+converter tool:
+
+    for (i=0; i<reloc_len; i++) reloc[i] = htonl(reloc[i]);
+
+Regards
+Greg
+
+
