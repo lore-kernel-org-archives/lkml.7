@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EC5C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAECC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3949F20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893A120659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520962;
-	bh=CopbPDkmpyBYVPNLicCPlny+gTOGGt4Mg7HQaPoI71E=;
+	s=default; t=1561520972;
+	bh=nnYynSGCi1MppCPfkSoj0fluPqsuvCwVVUsXQlsA094=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4+CsMVcWIYG3Px/y0+ZxLTGhrPq/flTXbp+zvmZbSxoAUQkdtwKHwXnJGSIpOik5
-	 rN53fqNfMSLGevdHmme5n4Doy6JuyUyu664BQC/9rqN186XWsz5Weo48b8M2B0muIy
-	 AOOCy1wa1Q3Jis8XjNuJVkWZIJRN4O66zHGD4qZU=
+	b=R6L87INapHYJjdpuj7EPLr3E2lcDtIHiJPAABcUdke0kuQnPi6gbkZL7yebY7prTL
+	 w20cexODa3XqRv3m1JkxpqZCX32PDDO81jzdRAmy78GEf4hcaIwWw65OwsCKexoqwH
+	 UEZXqRnPXZiysbBfZJ1c9ie6/eJyLWhK2l9C1ijg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfFZDnv (ORCPT
+        id S1727648AbfFZDta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:43:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55102 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbfFZDns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:48 -0400
+        id S1726946AbfFZDnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:43 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D1D20883;
-        Wed, 26 Jun 2019 03:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E1692168B;
+        Wed, 26 Jun 2019 03:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520627;
-        bh=CopbPDkmpyBYVPNLicCPlny+gTOGGt4Mg7HQaPoI71E=;
+        s=default; t=1561520622;
+        bh=nnYynSGCi1MppCPfkSoj0fluPqsuvCwVVUsXQlsA094=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/U/lEbyOAoRcC0c1o69n2UCMcSWUz43pTCeL+f4Nt+0LdO7w0NjJlUVsd2ldUZZi
-         EFgbs/w/ChzcL1xN7fNb6+ts9LW2sZLxivCZxThPEMVoSrUYAgo2uQyjyZc0g9+64B
-         3BVimRW7PPsOo3524SX66hZEO8oIy1FwSemcWYzo=
+        b=RvYZHmBvnrRAYoeaPM8uGQpboec74K1oiPzhiZInPpMOMUEUUMUk9zG+jFGEyOQBM
+         rPRCy22/5cpJ0oOI01a8ZLrVqNPJ4UmZsk6sVoDjwUdqQSHXv00uQiTtUjDpGc2W4o
+         hQC11T4UMQUdW0wgslrv0bSUmKBP9xyxhP0r2uiU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/34] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-Date:   Tue, 25 Jun 2019 23:43:06 -0400
-Message-Id: <20190626034335.23767-5-sashal@kernel.org>
+Cc:     Libin Yang <libin.yang@intel.com>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 03/34] ASoC: soc-pcm: BE dai needs prepare when pause release after resume
+Date:   Tue, 25 Jun 2019 23:43:04 -0400
+Message-Id: <20190626034335.23767-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -62,86 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Libin Yang <libin.yang@intel.com>
 
-[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
+[ Upstream commit 5087a8f17df868601cd7568299e91c28086d2b45 ]
 
-If spi_register_master fails in spi_bitbang_start
-because device_add failure, We should return the
-error code other than 0, otherwise calling
-spi_bitbang_stop may trigger NULL pointer dereference
-like this:
+If playback/capture is paused and system enters S3, after system returns
+from suspend, BE dai needs to call prepare() callback when playback/capture
+is released from pause if RESUME_INFO flag is not set.
 
-BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
+Currently, the dpcm_be_dai_prepare() function will block calling prepare()
+if the pcm is in SND_SOC_DPCM_STATE_PAUSED state. This will cause the
+following test case fail if the pcm uses BE:
 
-CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- dump_stack+0xa9/0x10e
- ? __list_del_entry_valid+0x45/0xd0
- ? __list_del_entry_valid+0x45/0xd0
- __kasan_report+0x171/0x18d
- ? __list_del_entry_valid+0x45/0xd0
- kasan_report+0xe/0x20
- __list_del_entry_valid+0x45/0xd0
- spi_unregister_controller+0x99/0x1b0
- spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
- ? 0xffffffffc1128000
- ? klist_next+0x131/0x1e0
- ? driver_detach+0x40/0x40 [parport]
- port_check+0x3b/0x50 [parport]
- bus_for_each_dev+0x115/0x180
- ? subsys_dev_iter_exit+0x20/0x20
- __parport_register_driver+0x1f0/0x210 [parport]
- ? 0xffffffffc1150000
- do_one_initcall+0xb9/0x3b5
- ? perf_trace_initcall_level+0x270/0x270
- ? kasan_unpoison_shadow+0x30/0x40
- ? kasan_unpoison_shadow+0x30/0x40
- do_init_module+0xe0/0x330
- load_module+0x38eb/0x4270
- ? module_frob_arch_sections+0x20/0x20
- ? kernel_read_file+0x188/0x3f0
- ? find_held_lock+0x6d/0xd0
- ? fput_many+0x1a/0xe0
- ? __do_sys_finit_module+0x162/0x190
- __do_sys_finit_module+0x162/0x190
- ? __ia32_sys_init_module+0x40/0x40
- ? __mutex_unlock_slowpath+0xb4/0x3f0
- ? wait_for_completion+0x240/0x240
- ? vfs_write+0x160/0x2a0
- ? lockdep_hardirqs_off+0xb5/0x100
- ? mark_held_locks+0x1a/0x90
- ? do_syscall_64+0x14/0x2a0
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+playback -> pause -> S3 suspend -> S3 resume -> pause release
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+The playback may exit abnormally when pause is released because the BE dai
+prepare() is not called.
+
+This patch allows dpcm_be_dai_prepare() to call dai prepare() callback in
+SND_SOC_DPCM_STATE_PAUSED state.
+
+Signed-off-by: Libin Yang <libin.yang@intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bitbang.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-pcm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index f29176000b8d..06cf9388e74f 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -416,7 +416,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- 	if (ret)
- 		spi_master_put(master);
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 33060af18b5a..6566c8831a96 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2451,7 +2451,8 @@ int dpcm_be_dai_prepare(struct snd_soc_pcm_runtime *fe, int stream)
  
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
+ 		if ((be->dpcm[stream].state != SND_SOC_DPCM_STATE_HW_PARAMS) &&
+ 		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_STOP) &&
+-		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_SUSPEND))
++		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_SUSPEND) &&
++		    (be->dpcm[stream].state != SND_SOC_DPCM_STATE_PAUSED))
+ 			continue;
  
+ 		dev_dbg(be->dev, "ASoC: prepare BE %s\n",
 -- 
 2.20.1
 
