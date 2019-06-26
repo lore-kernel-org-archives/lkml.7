@@ -2,118 +2,175 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE5BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65594C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0087A2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3081F2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:11:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IuX+cTrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfFZSKq (ORCPT
+        id S1726484AbfFZSLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:10:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:23098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfFZSKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:10:45 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49C2D309264F;
-        Wed, 26 Jun 2019 18:10:45 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 132C25C1B4;
-        Wed, 26 Jun 2019 18:10:40 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     nouveau@lists.freedesktop.org
-Cc:     Marc Meledandri <m.meledandri@gmail.com>, stable@vger.kernel.org,
-        Ben Skeggs <bskeggs@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/nouveau: Enable i2c pads & busses during preinit
-Date:   Wed, 26 Jun 2019 14:10:27 -0400
-Message-Id: <20190626181029.4168-1-lyude@redhat.com>
+        Wed, 26 Jun 2019 14:11:09 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45403 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfFZSLJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:11:09 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m206so2622333oib.12
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 11:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kkYbiSTWGK4F/ssJpkJ5iQHzwJyTPwJlwzmqFVyv6BQ=;
+        b=IuX+cTrj8KVC0cjl5SAn479N9pAU8DQxPrzzBE+KeOgtp8IO5vGkZoo1b6DtkqQLW7
+         6d21Jp6rpnZE3YnpLVUDlJygM5ZIPZlWxbbuV79pzXHAn2m5bg+kQvN7kVFbCOHqgfEn
+         ELvbPLt/+puWfg4cbzmOiQpoCZCPPsiZR0y1xlsubLcwQ43nAITH4V1GlTzlB3wHQxDe
+         F/j9RQrTRQHFaRj7jH7xor95S7V/3GsJBVxxoabmshKHoKkoakQJUdlHUspv+PvenKc+
+         FsQeVckFhUWOdReLOnM4M1KbXZmssJ+8quAAYgF1U2WwybZVQiG/kitFssW3aagmzrld
+         cfbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kkYbiSTWGK4F/ssJpkJ5iQHzwJyTPwJlwzmqFVyv6BQ=;
+        b=Dg3IExLVEQDCpvYbj4GVTrHiENe4XcASCekAW2q9BLLZeiIE1GSnpOZ3nwx63LgT3P
+         MRzPOMXlFsSI7b8jGUX5Oqdvj38la+EeCTblL8nnPBlV9wmqDLTNFgQmGJrZymKR8UsA
+         kiTI2SmszrjD7yad7ot01SSr5mtODRD1puHyxCdyzYo+XeSJTfHacpSbq5K8fND9LstF
+         8mdLwQ+E2rs1dbkucXUMtZ1CwW8DsklD5XjmS4H27U/E5hzrTV1E+7tVh1FwZqacyPLk
+         fo/lMm7j7bqV/XT9AxFv0yTnDtdkC4rdTqkq8mZehp1FZKkVjXEuyIKHsX61qPP0elsr
+         znnA==
+X-Gm-Message-State: APjAAAWrqUeZy0fCc0BazRrznZQQlilkx6IeI+FPvKLCUsrz2ykq595W
+        pHf7Oo7Xy+domaZs8G9MgAIjS1GbGCADEQ2iAqtCNA==
+X-Google-Smtp-Source: APXvYqxTQuBLL+L0U/juwb7BvplBxisurDryI9LUdGwEANvm3S6wL+EqZeE03RTA0braPBtM9FtG2WhZRrHDETTfsbM=
+X-Received: by 2002:a05:6808:6c7:: with SMTP id m7mr221316oih.43.1561572667875;
+ Wed, 26 Jun 2019 11:11:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 26 Jun 2019 18:10:45 +0000 (UTC)
+References: <20190622003449.33707-1-saravanak@google.com> <20190624094349.rtjb7nuv6g7zmsf2@vireshk-i7>
+ <CAGETcx_ggG8oDnAVaSfuHfip1ozjQpFiGs15cz8nLQnzjTiSTg@mail.gmail.com>
+ <20190625041054.2ceuvnuuebc6hsr5@vireshk-i7> <CAGETcx8MuXkQyD5qZBC948-hOu=kWd4hPk2Qiu-zWOcHBCc=FA@mail.gmail.com>
+ <20190625052227.3v74l6xtrkydzx6w@vireshk-i7> <CAGETcx_v05PfscMi2qiYwHRMLryyA_494+h+kmJ3mD+GOjjeLA@mail.gmail.com>
+ <20190626063240.kgdiy7xsz4mahrdr@vireshk-i7>
+In-Reply-To: <20190626063240.kgdiy7xsz4mahrdr@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 26 Jun 2019 11:10:31 -0700
+Message-ID: <CAGETcx_KH6pqgqZFKddWmgiUX3n+XBU6BoFXkVvPdA4vMDHWsw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Add required-opps support to devfreq passive gov
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out that while disabling i2c bus access from software when the
-GPU is suspended was a step in the right direction with:
+On Tue, Jun 25, 2019 at 11:32 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 24-06-19, 22:29, Saravana Kannan wrote:
+> > No, the CPUs will be the "parent" and the cache will be the "child".
+> > CPU is a special case when it comes to the actual software (not DT) as
+> > we'll need the devfreq governor to look at all the CPUfreq policies to
+> > decide the cache frequency (max of all their requirements).
+> >
+> > I think "master" and "slave" would have been a better term as the
+> > master device determines its frequency using whatever means and the
+> > "slave" device just "follows" the master device.
+>
+> Okay, so to confirm again this is what we will have:
+>
+> - CPUs are called masters and Caches are slaves.
+>
+> - The devfreq governor we are talking about takes care of changing
+>   frequency of caches (slaves) and chooses a target frequency for
+>   caches based on what the masters are running at.
+>
+> - The CPUs OPP nodes will have required-opps property and will be
+>   pointing to the caches OPP nodes. The CPUs may already be using
+>   required-opps node for PM domain performance state thing.
+>
+>
+> Now the problem is "required-opp" means something really *required*
+> and it is not optional.
 
-commit 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after
-->fini()")
+But we could interpret it as "required" for different things.
 
-We also ended up accidentally breaking the vbios init scripts on some
-older Tesla GPUs, as apparently said scripts can actually use the i2c
-bus. Since these scripts are executed before initializing any
-subdevices, we end up failing to acquire access to the i2c bus which has
-left a number of cards with their fan controllers uninitialized. Luckily
-this doesn't break hardware - it just means the fan gets stuck at 100%.
+> Like a specific voltage level before we can
+> switch to a particular frequency.
 
-This also means that we've always been using our i2c busses before
-initializing them during the init scripts for older GPUs, we just didn't
-notice it until we started preventing them from being used until init.
-It's pretty impressive this never caused us any issues before!
+Required for stability.
 
-So, fix this by initializing our i2c pad and busses during subdev
-pre-init. We skip initializing aux busses during pre-init, as those are
-guaranteed to only ever be used by nouveau for DP aux transactions.
+> And this is how I have though of it
+> until now. And this shouldn't be handled asynchronously, i.e. required
+> OPPs must be set while configuring OPP of a device.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Tested-by: Marc Meledandri <m.meledandri@gmail.com>
-Fixes: 342406e4fbba ("drm/nouveau/i2c: Disable i2c bus access after ->fini()")
-Cc: stable@vger.kernel.org
----
- .../gpu/drm/nouveau/nvkm/subdev/i2c/base.c    | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
+The users of clocks are expected to set up the voltage correctly
+before changing the frequency, the drivers are expected to power up
+the device before trying to access its registers, etc. So I don't
+think there is one correct way. Also OPP sets the pstate only if
+dev_pm_opp_set_genpd_virt_dev() has been called to set them up. So
+this is not a mandatory principle in the kernel that a framework
+providing an API should have all the dependencies. So I don't think
+we'll be violating some golden rule.
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-index ecacb22834d7..719345074711 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
-@@ -184,6 +184,25 @@ nvkm_i2c_fini(struct nvkm_subdev *subdev, bool suspend)
- 	return 0;
- }
- 
-+static int
-+nvkm_i2c_preinit(struct nvkm_subdev *subdev)
-+{
-+	struct nvkm_i2c *i2c = nvkm_i2c(subdev);
-+	struct nvkm_i2c_bus *bus;
-+	struct nvkm_i2c_pad *pad;
-+
-+	/*
-+	 * We init our i2c busses as early as possible, since they may be
-+	 * needed by the vbios init scripts on some cards
-+	 */
-+	list_for_each_entry(pad, &i2c->pad, head)
-+		nvkm_i2c_pad_init(pad);
-+	list_for_each_entry(bus, &i2c->bus, head)
-+		nvkm_i2c_bus_init(bus);
-+
-+	return 0;
-+}
-+
- static int
- nvkm_i2c_init(struct nvkm_subdev *subdev)
- {
-@@ -238,6 +257,7 @@ nvkm_i2c_dtor(struct nvkm_subdev *subdev)
- static const struct nvkm_subdev_func
- nvkm_i2c = {
- 	.dtor = nvkm_i2c_dtor,
-+	.preinit = nvkm_i2c_preinit,
- 	.init = nvkm_i2c_init,
- 	.fini = nvkm_i2c_fini,
- 	.intr = nvkm_i2c_intr,
--- 
-2.21.0
+> So, when a CPU changes frequency, we must change the performance state
+> of PM domain and change frequency/bw of the cache synchronously.
 
+I mean, it's going to be changed when we get the CPUfreq transition
+notifiers. From a correctness point of view, setting it inside the OPP
+framework is not any better than doing it when we get the notifiers.
+
+> And
+> in such a case "required-opps" can be a very good fit for this use
+> case.
+
+Glad you agree :)
+
+> But with what you are trying to do it is no longer required-opp but
+> good-to-have-opp. And that worries me.
+
+I see this as "required for good performance". So I don't see it as
+redefining required-opps. If someone wants good performance/power
+balance they follow the "required-opps". Technically even the PM
+pstates are required for good power. Otherwise, the system could leave
+the voltage at max and stuff would still work.
+
+Also, the slave device might need to get input from multiple master
+devices and aggregate the request before setting the slave device
+frequency. So I don't think OPP  framework would be the right place to
+deal with those things. For example, L3 might (will) have different
+mappings for big vs little cores. So that needs to be aggregated and
+set properly by the slave device driver. Also, GPU might have a
+mapping for L3 too. In which case the L3 slave driver needs to take
+input from even more masters before it decides its frequency. But most
+importantly, we still need the ability to change governors for L3.
+Again these are just examples with L3 and it can get more complicated
+based on the situation.
+
+Most importantly, instead of always going by mapping, one might decide
+to scale the L3 based on some other governor (that looks at some HW
+counter). Or just set it to performance governor for a use case for
+which performance is more important. All of this comes for free with
+devfreq and if we always set it from OPP framework we don't give this
+required control to userspace.
+
+I think going through devfreq is the right approach for this. And we
+can always rewrite the software if we find problems in the future. But
+as it stands today, this will help cases like exynos without the need
+for a lot of changes. Hope I've convinced you.
+
+-Saravana
