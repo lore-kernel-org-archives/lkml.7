@@ -2,229 +2,235 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D033C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069A5C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6268A208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC95120B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:10:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQwE7NU+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEKY8Rsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfFZFGy (ORCPT
+        id S1726157AbfFZFKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 01:06:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43864 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfFZFGv (ORCPT
+        Wed, 26 Jun 2019 01:10:42 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43845 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfFZFKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 01:06:51 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so711621plb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 22:06:50 -0700 (PDT)
+        Wed, 26 Jun 2019 01:10:41 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e3so1295504edr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 22:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xzo/mnAvVEkpnq/buLdSuv4HV/H6/z86Y20R9WnPjE4=;
-        b=eQwE7NU+oCp9KQLtu9if6s1naRyX6V47OLHvSUOnQMJ57wE+SdMi2eKkLSlOb1qbh5
-         8LPJLx3BspfBQgsO4BgJ2IAotpJk7MPyWQiK5nw6qDnPpCv/smYkWpuyi9dDIwgBS8/M
-         D6AiPX8T8EQKfPoZwuHWUQLIN+peIPHkz0+eHbltgRjgCiuGV+OSWwobVagioOE9IKi/
-         j2KLd+qBcB9t36RKX+2Mzqrw2LcZx6/XOYdrdViJk1IxBlsDrFg8C/4oX7T7YgqYeO2B
-         zaYR3DLn5Y6/83Prbprq79lVnywZ75NHOvSHzOc3UX0YFm+YGx0MRfF6fi0YypiHyu5k
-         17sw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QJ/cbj94BxUhje6ss1rjJBjz5mHbDrI7tyvpFHn6cUc=;
+        b=nEKY8RsxPiuAPfF+wawn7P6+b3n9yfdxTel6qIgH6pobPR7HYkaIgfa926d2RPKBo/
+         GZvA3pLdBkp6DJ9JN0E3ip1EkE62HTk4Uj5tcJC0r72M76nyOYUnO/yL4lQo5jVXK7FJ
+         gkFW3nY2SFzaVjKbOXKdRNldSoWpDMIVYPE+1eeZEVJFy8zrmcXfaCv/tu9EVCLuCVja
+         FSDRaGYu7Nv4k5UkOWhQ0sTLu3ZZJ3YrTXJuVVvrB1ajQ5e46R/F8QwtVnuNhnNebxUG
+         bdzo1vkhUBsg08POBbYv52KMNlJ2iwJU+l1Jt8+Ff8mgPHqQKwIKN2srXVWaVuejMBvt
+         S7bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xzo/mnAvVEkpnq/buLdSuv4HV/H6/z86Y20R9WnPjE4=;
-        b=J1M1WVExQL2XQLbWuTUfnW1YgHbfvofNEuyffIwGXvvncjwuy1BUcXxBI+faZl/u5e
-         lLnc1nKl1JzEI0iPYCUL4kz+dIFqhygtGfkH4D2SQVd8EuRiZGl/cV2K7vVkFFFhTNej
-         4EJtWqbJocIimlsE8MaXH7iHoKEjwgiodMct1VvrebhAbs5/dWbDIN/3mARzw6ALqcji
-         DMVeLp61iea0T2DNsQFttzuAGpIMlXytjF/6vWkRO3gZYTLdt6GBtF/UYK/VaidFB81Y
-         PPSwE5pRFpbbvChQQO5cP8pWtEHADQj8O/IzSTphtZKfCwbFxKNAIvM8UWkyPc43LokF
-         Gu/g==
-X-Gm-Message-State: APjAAAWlkqNPSdzlD34tYEOGH5WUKB+ktEhAOH3fwwL3IncNJRfRzjjC
-        i6xPo2ICL2CRHcNfHD6YCwZ3IQ==
-X-Google-Smtp-Source: APXvYqzlP7Bt0TpK2sgaNGz2joalNPwHdeVOqqkSnKMMtWSLq9pJcJtSk7/ZeY5yXVukzdZR+tGFug==
-X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr2854591pld.119.1561525610441;
-        Tue, 25 Jun 2019 22:06:50 -0700 (PDT)
-Received: from localhost ([122.172.211.128])
-        by smtp.gmail.com with ESMTPSA id d6sm18462347pgf.55.2019.06.25.22.06.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 22:06:49 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        steven.sistare@oracle.com, subhra.mazumdar@oracle.com,
-        songliubraving@fb.com
-Subject: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU isn't found
-Date:   Wed, 26 Jun 2019 10:36:30 +0530
-Message-Id: <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
-In-Reply-To: <cover.1561523542.git.viresh.kumar@linaro.org>
-References: <cover.1561523542.git.viresh.kumar@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QJ/cbj94BxUhje6ss1rjJBjz5mHbDrI7tyvpFHn6cUc=;
+        b=EUmbR83uIQFTKMOlWX8zaEYQTOwMZYN6kvgv+hIme3FZWj2j7T+AJARHoeRkx4hsBE
+         RYfuJxmyaRh2gOWoZZM7rBg5fmjZEAuxzzF1Xet5Kf/nAh16d9gZN8u/ab3TR31++zkP
+         bQ7atXZ3xBPokDlpcaptdrhytGMF8ynocveOc10vlsFAgNm1qgNSewW1ejhvrIu/QWxl
+         IhJXpnJ6FHDgqZvtLumJE3s6FCWQWCj1mjc3N/ff9ZBlcqauEg0G8KpjXoqadn9LYFrl
+         UICBWMgdDUXatQTeUCouS19rppZp5kSCRHTgy/KJ6ykLoSoZMqmikm0K8lCX5M/qMOOt
+         UWNA==
+X-Gm-Message-State: APjAAAWy6T3GI1mk01jWRo6SUtOAVabl1AchUFxEJtJnQqUydXLkAIZG
+        F51HjxLWm74VdOR56STqH6w=
+X-Google-Smtp-Source: APXvYqxVF7VLCD1s6ZA95VMlfxCRszxkN/CjjtiKMIWOb8Uuyj7qLtZzpLR1bcA/R8FD+WCMIS7JiA==
+X-Received: by 2002:a50:f5f5:: with SMTP id x50mr2621321edm.89.1561525838866;
+        Tue, 25 Jun 2019 22:10:38 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id b1sm2716421ejo.9.2019.06.25.22.10.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 22:10:37 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 22:10:35 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shawn Landden <shawn@git.icu>,
+        clang-built-linux@googlegroups.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+Message-ID: <20190626051035.GA114229@archlinux-epyc>
+References: <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
+ <20190624203737.GL3436@hirez.programming.kicks-ass.net>
+ <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
+ <20190625071846.GN3436@hirez.programming.kicks-ass.net>
+ <201906251009.BCB7438@keescook>
+ <20190625180525.GA119831@archlinux-epyc>
+ <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
+ <20190625202746.GA83499@archlinux-epyc>
+ <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We try to find an idle CPU to run the next task, but in case we don't
-find an idle CPU it is better to pick a CPU which will run the task the
-soonest, for performance reason.
+On Tue, Jun 25, 2019 at 11:47:06PM +0200, Thomas Gleixner wrote:
+> On Tue, 25 Jun 2019, Nathan Chancellor wrote:
+> > On Tue, Jun 25, 2019 at 09:53:09PM +0200, Thomas Gleixner wrote:
+> > > 
+> > > But can the script please check for a minimal clang version required to
+> > > build that thing.
+> > > 
+> > > The default clang-3.8 which is installed on Debian stretch explodes. The
+> > > 6.0 variant from backports works as advertised.
+> > > 
+> > 
+> > Hmmm interesting, I test a lot of different distros using Docker
+> > containers to make sure the script works universally and that includes
+> > Debian stretch, which is the stress tester because all of the packages
+> > are older. I install the following packages then run the following
+> > command and it works fine for me (just tested):
+> > 
+> > $ apt update && apt install -y --no-install-recommends ca-certificates \
+> > ccache clang cmake curl file gcc g++ git make ninja-build python3 \
+> > texinfo zlib1g-dev
+> > $ ./build-llvm.py
+> > 
+> > If you could give me a build log, I'd be happy to look into it and see
+> > what I can do.
+> 
+> I can produce one tomorrow.
+>  
 
-A CPU which isn't idle but has only SCHED_IDLE activity queued on it
-should be a good target based on this criteria as any normal fair task
-will most likely preempt the currently running SCHED_IDLE task
-immediately. In fact, choosing a SCHED_IDLE CPU over a fully idle one
-shall give better results as it should be able to run the task sooner
-than an idle CPU (which requires to be woken up from an idle state).
+Great, thank you!
 
-This patch updates both fast and slow paths with this optimization.
+> > > Kernel builds with the new shiny compiler. Jump labels seem to be enabled.
+> > > 
+> > > It complains about a few type conversions:
+> > > 
+> > >  arch/x86/kvm/mmu.c:4596:39: warning: implicit conversion from 'int' to 'u8' (aka 'unsigned char') changes value from -205 to 51 [-Wconstant-conversion]
+> > >                 u8 wf = (pfec & PFERR_WRITE_MASK) ? ~w : 0;
+> > >                    ~~                               ^~
+> > > 
+> > 
+> > Yes, there was a patch sent to try and fix this but it was rejected by
+> > the maintainers:
+> > 
+> > https://github.com/ClangBuiltLinux/linux/issues/95
+> > 
+> > https://lore.kernel.org/lkml/20180619192504.180479-1-mka@chromium.org/
+> 
+> Just looked through it. I don't think it's an outright reject. Paolo was
+> not totally against it and then the whole discussion degraded into bikeshed
+> painting and bitching about compiler error messaged. Try again or should I?
+> 
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+Might be worth having you chime in, given that is the only instance of
+that type of warning that I see in my set of builds (I fixed the rest:
+https://github.com/ClangBuiltLinux/linux/issues?q=label%3A-Wconstant-conversion)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1277adc3e7ed..2e0527fd468c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5376,6 +5376,15 @@ static struct {
- 
- #endif /* CONFIG_NO_HZ_COMMON */
- 
-+/* CPU only has SCHED_IDLE tasks enqueued */
-+static int sched_idle_cpu(int cpu)
-+{
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
-+			rq->nr_running);
-+}
-+
- static unsigned long cpu_runnable_load(struct rq *rq)
- {
- 	return cfs_rq_runnable_load_avg(&rq->cfs);
-@@ -5698,7 +5707,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 	unsigned int min_exit_latency = UINT_MAX;
- 	u64 latest_idle_timestamp = 0;
- 	int least_loaded_cpu = this_cpu;
--	int shallowest_idle_cpu = -1;
-+	int shallowest_idle_cpu = -1, si_cpu = -1;
- 	int i;
- 
- 	/* Check if we have any choice: */
-@@ -5729,7 +5738,12 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 				latest_idle_timestamp = rq->idle_stamp;
- 				shallowest_idle_cpu = i;
- 			}
--		} else if (shallowest_idle_cpu == -1) {
-+		} else if (shallowest_idle_cpu == -1 && si_cpu == -1) {
-+			if (sched_idle_cpu(i)) {
-+				si_cpu = i;
-+				continue;
-+			}
-+
- 			load = cpu_runnable_load(cpu_rq(i));
- 			if (load < min_load) {
- 				min_load = load;
-@@ -5738,7 +5752,11 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
- 		}
- 	}
- 
--	return shallowest_idle_cpu != -1 ? shallowest_idle_cpu : least_loaded_cpu;
-+	if (shallowest_idle_cpu != -1)
-+		return shallowest_idle_cpu;
-+	if (si_cpu != -1)
-+		return si_cpu;
-+	return least_loaded_cpu;
- }
- 
- static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p,
-@@ -5891,7 +5909,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
-  */
- static int select_idle_smt(struct task_struct *p, int target)
- {
--	int cpu;
-+	int cpu, si_cpu = -1;
- 
- 	if (!static_branch_likely(&sched_smt_present))
- 		return -1;
-@@ -5901,9 +5919,11 @@ static int select_idle_smt(struct task_struct *p, int target)
- 			continue;
- 		if (available_idle_cpu(cpu))
- 			return cpu;
-+		if (si_cpu == -1 && sched_idle_cpu(cpu))
-+			si_cpu = cpu;
- 	}
- 
--	return -1;
-+	return si_cpu;
- }
- 
- #else /* CONFIG_SCHED_SMT */
-@@ -5931,7 +5951,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 	u64 avg_cost, avg_idle;
- 	u64 time, cost;
- 	s64 delta;
--	int cpu, nr = INT_MAX;
-+	int cpu, nr = INT_MAX, si_cpu = -1;
- 	int this = smp_processor_id();
- 
- 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
-@@ -5960,11 +5980,13 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- 
- 	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
- 		if (!--nr)
--			return -1;
-+			return si_cpu;
- 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
- 			continue;
- 		if (available_idle_cpu(cpu))
- 			break;
-+		if (si_cpu == -1 && sched_idle_cpu(cpu))
-+			si_cpu = cpu;
- 	}
- 
- 	time = cpu_clock(this) - time;
-@@ -5983,13 +6005,14 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	struct sched_domain *sd;
- 	int i, recent_used_cpu;
- 
--	if (available_idle_cpu(target))
-+	if (available_idle_cpu(target) || sched_idle_cpu(target))
- 		return target;
- 
- 	/*
- 	 * If the previous CPU is cache affine and idle, don't be stupid:
- 	 */
--	if (prev != target && cpus_share_cache(prev, target) && available_idle_cpu(prev))
-+	if (prev != target && cpus_share_cache(prev, target) &&
-+	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
- 		return prev;
- 
- 	/* Check a recently used CPU as a potential idle candidate: */
-@@ -5997,7 +6020,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	if (recent_used_cpu != prev &&
- 	    recent_used_cpu != target &&
- 	    cpus_share_cache(recent_used_cpu, target) &&
--	    available_idle_cpu(recent_used_cpu) &&
-+	    (available_idle_cpu(recent_used_cpu) || sched_idle_cpu(recent_used_cpu)) &&
- 	    cpumask_test_cpu(p->recent_used_cpu, p->cpus_ptr)) {
- 		/*
- 		 * Replace recent_used_cpu with prev as it is a potential
--- 
-2.21.0.rc0.269.g1a574e7a288b
-
+> > > but it also makes objtool unhappy:
+> > > 
+> > >  arch/x86/events/intel/core.o: warning: objtool: intel_pmu_nhm_workaround()+0xb3: unreachable
+> instruction
+> > >  kernel/fork.o: warning: objtool: free_thread_stack()+0x126: unreachable instruction
+> > >  mm/workingset.o: warning: objtool: count_shadow_nodes()+0x11f: unreachable instruction
+> > >  arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool: get_fixed_ranges()+0x9b: unreachable
+> instruction
+> > >  arch/x86/kernel/platform-quirks.o: warning: objtool: x86_early_init_platform_quirks()+0x84:
+> unreachable instruction
+> > >  drivers/iommu/irq_remapping.o: warning: objtool: irq_remap_enable_fault_handling()+0x1d:
+> unreachable instruction
+> 
+> > Unfortunately, we have quite a few of those outstanding, it's probably
+> > time to start really taking a look at them:
+> > 
+> > https://github.com/ClangBuiltLinux/linux/labels/objtool
+> 
+> I just checked two of them in the disassembly. In both cases it's jump
+> label related. Here is one:
+> 
+>       asm volatile("1: rdmsr\n"
+>  410:   b9 59 02 00 00          mov    $0x259,%ecx
+>  415:   0f 32                   rdmsr
+>  417:   49 89 c6                mov    %rax,%r14
+>  41a:   48 89 d3                mov    %rdx,%rbx
+>       return EAX_EDX_VAL(val, low, high);
+>  41d:   48 c1 e3 20             shl    $0x20,%rbx
+>  421:   48 09 c3                or     %rax,%rbx
+>  424:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+>  429:   eb 0f                   jmp    43a <get_fixed_ranges+0xaa>
+>       do_trace_read_msr(msr, val, 0);
+>  42b:   bf 59 02 00 00          mov    $0x259,%edi   <------- "unreachable"
+>  430:   48 89 de                mov    %rbx,%rsi
+>  433:   31 d2                   xor    %edx,%edx
+>  435:   e8 00 00 00 00          callq  43a <get_fixed_ranges+0xaa>
+>  43a:   44 89 35 00 00 00 00    mov    %r14d,0x0(%rip)        # 441 <get_fixed_ranges+0xb1>
+> 
+> Interestingly enough there are some more hunks of the same pattern in that
+> function which look all the same. Those are not upsetting objtool. Josh
+> might give an hint where to stare at.
+> 
+> Just for the fun of it I looked at the GCC output of the same file. It
+> takes a different apporach:
+> 
+>       asm volatile("1: rdmsr\n"
+>  c70:   b9 59 02 00 00          mov    $0x259,%ecx
+>  c75:   0f 32                   rdmsr
+>       return EAX_EDX_VAL(val, low, high);
+>  c77:   48 c1 e2 20             shl    $0x20,%rdx
+>  c7b:   48 89 d3                mov    %rdx,%rbx
+>  c7e:   48 09 c3                or     %rax,%rbx
+>  c81:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+>  c86:   48 89 1d 00 00 00 00    mov    %rbx,0x0(%rip)        # c8d <get_fixed_ranges.constprop.5+0x7d>
+> 
+> and the tracing code is completely out of line:
+> 
+>       do_trace_read_msr(msr, val, 0);
+>  ce2:   31 d2                   xor    %edx,%edx
+>  ce4:   48 89 de                mov    %rbx,%rsi
+>  ce7:   bf 59 02 00 00          mov    $0x259,%edi
+>  cec:   e8 00 00 00 00          callq  cf1 <get_fixed_ranges.constprop.5+0xe1>
+>  cf1:   eb 93                   jmp    c86 <get_fixed_ranges.constprop.5+0x76>
+> 
+> which makes a lot of sense as the normal path (tracepoint disabled) just
+> runs through linearly while in the clang version it has to jump around the
+> tracepoint code.
+> 
+> The jump itself is not a problem, but what matters is the $I cache
+> footprint. The GCC version hotpath fits in 3 cache lines while the Clang
+> version unconditionally eats 4.2 of them. That's a huge difference.
+> 
+> > Thanks for trying it out and letting us know. Please keep us in the loop
+> > if you happen to find anything amiss.
+> 
+> Will do.
+> 
+> Thanks,
+> 
+> 	tglx
