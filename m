@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA07C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD17C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFD521726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40817214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520635;
-	bh=2lP2cVHnR8w/VwbuHUPBtgIPPo8PiZCzItqKieFIUHs=;
+	s=default; t=1561520638;
+	bh=JfPrpINfTLNQoj4MOR/Lh1rAVhfgg9iWQ1WLtf68e88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sr+oyqJI7wyyIsy7RZGG8YBsUj3MczYTbYrvMkzRZMLY+hxkSWarRG1oLH6NiQeae
-	 7EXA1nTr0O0KRCyJLgi/v4WQdl/QWBKtps9lnfL1rO6SBCy/9TU29JUwOo6ohEUygN
-	 kb76IZ6ZxmBh37cFTTStNIsQzaZvjS+X/RNPH1Bg=
+	b=cD2QBPnn8ojKVm5Dd+1F/VRiOjeWsJKRAoOYTYxttMHq4BhUZbbCDNGWHoDVIFlkz
+	 h2fevWDm2PzNZpmvt1YylFaAwJNx0KmzmV3OkH1qy9uviOKK92+xJNxhkznK0pJB00
+	 Ml0cFeoXY1kdq7AFX69FH/w9kUbsRrVPc3fnFLQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfFZDny (ORCPT
+        id S1727462AbfFZDn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727419AbfFZDnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:49 -0400
+        id S1726955AbfFZDnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:52 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0A9D205ED;
-        Wed, 26 Jun 2019 03:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DCA020659;
+        Wed, 26 Jun 2019 03:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520628;
-        bh=2lP2cVHnR8w/VwbuHUPBtgIPPo8PiZCzItqKieFIUHs=;
+        s=default; t=1561520631;
+        bh=JfPrpINfTLNQoj4MOR/Lh1rAVhfgg9iWQ1WLtf68e88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5vNnoSt2g8qNsrXaKOXjUPf4q6TwZ/Hitdd2RV8frqNbcKI2yOBMeSJjdOUTHf1E
-         0HJLqRe/ME+Sk4FaOz408DBFKNZvwou/oOTpZg/mrtU30umlm4suAAHynI1Es7MPqW
-         GnLK029W+hO9yUpa8SrgsJENnEZ3jQfajB2T58sQ=
+        b=2LpX4XlFnR16nSudp6b3bpLlm/G1OCrnCSZoy1CKkxZRx+mYAU9TjRHQfSaFO1nuC
+         cCv6X1MyY6DCQxKUm79M6nYfufpxjnRfc7oAAXU2BCx8oH1EDr+ZnhCCLEeX+g+4PO
+         MWBj+ts2QYL+IeL2sCHdhn8ZSld9HSSc1jjdj7Ls=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+Cc:     Georgii Staroselskii <georgii.staroselskii@emlid.com>,
+        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 06/34] ASoC: core: lock client_mutex while removing link components
-Date:   Tue, 25 Jun 2019 23:43:07 -0400
-Message-Id: <20190626034335.23767-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 07/34] ASoC: sun4i-codec: fix first delay on Speaker
+Date:   Tue, 25 Jun 2019 23:43:08 -0400
+Message-Id: <20190626034335.23767-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -59,41 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+From: Georgii Staroselskii <georgii.staroselskii@emlid.com>
 
-[ Upstream commit 34ac3c3eb8f0c07252ceddf0a22dd240e5c91ccb ]
+[ Upstream commit 1f2675f6655838aaf910f911fd0abc821e3ff3df ]
 
-Removing link components results in topology unloading. So,
-acquire the client_mutex before removing components in
-soc_remove_link_components. This will prevent the lockdep warning
-seen when dai links are removed during topology removal.
+Allwinner DAC seems to have a delay in the Speaker audio routing. When
+playing a sound for the first time, the sound gets chopped. On a second
+play the sound is played correctly. After some time (~5s) the issue gets
+back.
 
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+This commit seems to be fixing the same issue as bf14da7 but
+for another codepath.
+
+This is the DTS that was used to debug the problem.
+
+&codec {
+        allwinner,pa-gpios = <&r_pio 0 11 GPIO_ACTIVE_HIGH>; /* PL11 */
+        allwinner,audio-routing =
+                "Speaker", "LINEOUT";
+
+        status = "okay";
+}
+
+Signed-off-by: Georgii Staroselskii <georgii.staroselskii@emlid.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/sunxi/sun4i-codec.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 62aa320c2070..71e13f8f2579 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -979,12 +979,14 @@ static void soc_remove_link_components(struct snd_soc_card *card,
- 	struct snd_soc_component *component;
- 	struct snd_soc_rtdcom_list *rtdcom;
+diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+index 9a3cb7704810..73f242460afd 100644
+--- a/sound/soc/sunxi/sun4i-codec.c
++++ b/sound/soc/sunxi/sun4i-codec.c
+@@ -1210,6 +1210,15 @@ static int sun4i_codec_spk_event(struct snd_soc_dapm_widget *w,
+ 	gpiod_set_value_cansleep(scodec->gpio_pa,
+ 				 !!SND_SOC_DAPM_EVENT_ON(event));
  
-+	mutex_lock(&client_mutex);
- 	for_each_rtdcom(rtd, rtdcom) {
- 		component = rtdcom->component;
- 
- 		if (component->driver->remove_order == order)
- 			soc_remove_component(component);
- 	}
-+	mutex_unlock(&client_mutex);
++	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		/*
++		 * Need a delay to wait for DAC to push the data. 700ms seems
++		 * to be the best compromise not to feel this delay while
++		 * playing a sound.
++		 */
++		msleep(700);
++	}
++
+ 	return 0;
  }
  
- static void soc_remove_dai_links(struct snd_soc_card *card)
 -- 
 2.20.1
 
