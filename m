@@ -2,96 +2,121 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA98C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DD6C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E810D20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB132146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561511568;
-	bh=rBZhPauoSDDehq7ofjORYPEEU1ACkLNNLGUBmHlNylk=;
+	s=default; t=1561511571;
+	bh=3OlpzYyKa6yLcvXYCQ1PS5dl9yEKICWKqWfnEFaJpGI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=juvxhBqqnhMoJ/YhcDzJnGBinBV1AUH0TENd05ej9v2YF323+mGQYTafM15kQym8Z
-	 jignd9dXJKhRQBOfszCe5wQbqFfEi3b367inScg1OaYo0zdRgPGDGCuUc/X+iQly8v
-	 1G0xiUKB6WIgbxU9dCS5jzmnKC076b7XTPGjtHpU=
+	b=INFSx5gy8pSRtCnyUGT0NppEdId1dDksJS0z/srIHYb58ukr4jypchCWUlD8oxUFW
+	 sret8N6/nX601vimNpl78SdD7R7/v7+6+DfJRZQp7CGzlglAqsUdIgyRxneiNNYwjm
+	 lEApYxmWWCiaD3FXaksSXeZSa6PYlVPojkrHlvNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfFZBMo (ORCPT
+        id S1726523AbfFZBMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38054 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 21:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbfFZBMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:12:43 -0400
+        id S1726223AbfFZBMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 21:12:50 -0400
 Received: from localhost (unknown [172.104.248.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD7AD20659;
-        Wed, 26 Jun 2019 01:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D0CA2086D;
+        Wed, 26 Jun 2019 01:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561511562;
-        bh=rBZhPauoSDDehq7ofjORYPEEU1ACkLNNLGUBmHlNylk=;
+        s=default; t=1561511569;
+        bh=3OlpzYyKa6yLcvXYCQ1PS5dl9yEKICWKqWfnEFaJpGI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P92pQSJjf0QXzLbVFgUxB0WFJM5VkPGPJIlR2oLdKCSMFu+Q5BynoQ3019OkAIX8D
-         s2qlEDU1Ch6lRkUX113g9vzaEW2nlxYXBUatxbYs7ew418d2xsyvs/DQTOU3LLzi6n
-         pCmckF6NrI32unPabnUm7817QITTlXaMCHMarfD4=
-Date:   Wed, 26 Jun 2019 09:07:46 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Myron Stowe <myron.stowe@redhat.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: mmap/munmap in sysfs
-Message-ID: <20190626010746.GA22454@kroah.com>
-References: <20190625223608.GB103694@google.com>
+        b=ta/DyoS/+ara90iiui7dB0fTlGKD2wsGcX+OYcrwO1ylp+rL3xzW6KEr5zT9U8Oeq
+         eRfvlueJRFv6yOL04uFq4TvR/MTUXJ/vcNoHQ9rhDGRDGEDqqN6WSewQEA3MIxbkCe
+         DT1ZEz5C3MMgkke7aPLNi3+w6w6YguhEQ4xG1XRQ=
+Date:   Wed, 26 Jun 2019 09:12:21 +0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tri Vo <trong@android.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, rafael@kernel.org,
+        hridya@google.com, sspatil@google.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com--annotate
+Subject: Re: [PATCH] PM / wakeup: show wakeup sources stats in sysfs
+Message-ID: <20190626011221.GB22454@kroah.com>
+References: <20190626005449.225796-1-trong@android.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625223608.GB103694@google.com>
+In-Reply-To: <20190626005449.225796-1-trong@android.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 05:36:08PM -0500, Bjorn Helgaas wrote:
-> Hi Greg, et al,
+On Tue, Jun 25, 2019 at 05:54:49PM -0700, Tri Vo wrote:
+> Userspace can use wakeup_sources debugfs node to plot history of suspend
+> blocking wakeup sources over device's boot cycle. This information can
+> then be used (1) for power-specific bug reporting and (2) towards
+> attributing battery consumption to specific processes over a period of
+> time.
 > 
-> Userspace can mmap PCI device memory via the resourceN files in sysfs,
-> which use pci_mmap_resource().  I think this path is unaware of power
-> management, so the device may be runtime-suspended, e.g., it may be in
-> D1, D2, or D3, where it will not respond to memory accesses.
+> However, debugfs doesn't have stable ABI. For this reason, expose wakeup
+> sources statistics in sysfs under /sys/power/wakeup_sources/<name>/
 > 
-> Userspace accesses while the device is suspended will cause PCI
-> errors, so I think we need something like the patch below.  But this
-> isn't sufficient by itself because we would need a corresponding
-> pm_runtime_put() when the mapping goes away.  Where should that go?
-> Or is there a better way to do this?
+> Add following attributes to each wakeup source. These attributes match
+> the columns of /sys/kernel/debug/wakeup_sources.
 > 
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 6d27475e39b2..aab7a47679a7 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1173,6 +1173,7 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
->  
->  	mmap_type = res->flags & IORESOURCE_MEM ? pci_mmap_mem : pci_mmap_io;
->  
-> +	pm_runtime_get_sync(pdev);
->  	return pci_mmap_resource_range(pdev, bar, vma, mmap_type, write_combine);
->  }
->  
+>   active_count
+>   event_count
+>   wakeup_count
+>   expire_count
+>   active_time (named "active_since" in debugfs)
+>   total_time
+>   max_time
+>   last_change
+>   prevent_suspend_time
 
-Ugh, we never thought about this when adding the mmap sysfs interface
-all those years ago :(
+Can you also add a Documentation/ABI/ update for your new sysfs files so
+that we can properly review this?
 
-I think you are right, this will not properly solve the issue, but I
-don't know off the top of my head where to solve this.  Maybe Rafael has
-a better idea as he knows the pm paths much better than I do?
+> Embedding a struct kobject into struct wakeup_source changes lifetime
+> requirements on the latter. To that end, change deallocation of struct
+> wakeup_source using kfree to kobject_put().
+
+Ick, are you sure you need a new kobject here?  Why wouldn't a named
+attribute group work instead?  That should keep this patch much smaller
+and simpler.
+
+> +static ssize_t wakeup_source_count_show(struct wakeup_source *ws,
+> +					struct wakeup_source_attribute *attr,
+> +					char *buf)
+> +{
+> +	unsigned long flags;
+> +	unsigned long var;
+> +
+> +	spin_lock_irqsave(&ws->lock, flags);
+> +	if (strcmp(attr->attr.name, "active_count") == 0)
+> +		var = ws->active_count;
+> +	else if (strcmp(attr->attr.name, "event_count") == 0)
+> +		var = ws->event_count;
+> +	else if (strcmp(attr->attr.name, "wakeup_count") == 0)
+> +		var = ws->wakeup_count;
+> +	else
+> +		var = ws->expire_count;
+> +	spin_unlock_irqrestore(&ws->lock, flags);
+> +
+> +	return sprintf(buf, "%lu\n", var);
+> +}
+
+Why is this lock always needed to be grabbed?  You are just reading a
+value, who cares if it changes inbetween reading it and returning the
+buffer string as it can change at that point in time anyway?
 
 thanks,
 
