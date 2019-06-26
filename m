@@ -2,65 +2,85 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88400C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF51C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C99C214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:55:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="wM7IIzVf"
+	by mail.kernel.org (Postfix) with ESMTP id 40161214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfFZMzT (ORCPT
+        id S1727562AbfFZM4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:55:19 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33406 "EHLO vps0.lunn.ch"
+        Wed, 26 Jun 2019 08:56:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49873 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727221AbfFZMzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:55:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=yT0rn71eJrhNpfTMWEQZBj+UoXHe3mCcO0rpDnUXHfI=; b=wM7IIzVfkAcMWl/r01gnBjtAtd
-        u4DFFqSkq89KtiYEKu6z8o3MreVw37EceFAzNVljrcdcTWs70kKWfr/xJisQ1M9L5NFsUv6T+IvkP
-        uDxoV/XGWrcvzNJDA+oz2EKzxSrgdqtfen22jIqDuWLdRCm+9rIleddlfCrTWXAPj14s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hg7SH-0001GD-2A; Wed, 26 Jun 2019 14:55:17 +0200
-Date:   Wed, 26 Jun 2019 14:55:17 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexander Dahl <ada@thorsis.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Pfahl <tpf@thorsis.com>
-Subject: Re: net: never suspend the ethernet PHY on certain boards?
-Message-ID: <20190626125517.GA3115@lunn.ch>
-References: <4693980.Yko7hG0E1C@ada>
+        id S1727181AbfFZM4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 08:56:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 05:56:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,419,1557212400"; 
+   d="scan'208";a="183165946"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 26 Jun 2019 05:56:07 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 26 Jun 2019 15:56:05 +0300
+Date:   Wed, 26 Jun 2019 15:56:05 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] PCI: PM: Avoid skipping bus-level PM on platforms
+ without ACPI
+Message-ID: <20190626125605.GT2640@lahna.fi.intel.com>
+References: <14605632.7Eqku7tdey@kreacher>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4693980.Yko7hG0E1C@ada>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <14605632.7Eqku7tdey@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> What I could do:
+On Wed, Jun 26, 2019 at 12:20:23AM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> 1) Revert that change on my tree, which would mean reverting a generic bugfix
-> 2) Patch smsc phy driver to not suspend anymore
-> 3) Invent some new way to prevent suspend on a configuration basis (dt?)
-> 4) Anything I did not think of yet
+> There are platforms that do not call pm_set_suspend_via_firmware(),
+> so pm_suspend_via_firmware() returns 'false' on them, but the power
+> states of PCI devices (PCIe ports in particular) are changed as a
+> result of powering down core platform components during system-wide
+> suspend.  Thus the pm_suspend_via_firmware() checks in
+> pci_pm_suspend_noirq() and pci_pm_resume_noirq() introduced by
+> commit 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-
+> idle") are not sufficient to determine that devices left in D0
+> during suspend will remain in D0 during resume and so the bus-level
+> power management can be skipped for them.
+> 
+> For this reason, introduce a new global suspend flag,
+> PM_SUSPEND_FLAG_NO_PLATFORM, set it for suspend-to-idle only
+> and replace the pm_suspend_via_firmware() checks mentioned above
+> with checks against this flag.
+> 
+> Fixes: 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-idle")
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-5) Enable WoL?
+I tested this patch on top of your (and mine) previous patches touching
+the ACPI/PCI PM and did not see any issues over several suspend-to-idle
+cycles with and without TBT device connected.
 
-There are other boards which have PHY clock issues. Let me check how
-they work around this.
-
-     Andrew
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
