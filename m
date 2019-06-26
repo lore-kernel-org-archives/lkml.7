@@ -2,160 +2,138 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763AAC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D6AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0952086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561582705;
-	bh=J6KbQPV2e/Zez6InThQEwTT6V7rv/8UmD15UJflw5nA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cFUQgaiwcuB9mL7CtXb3cKtSOc1d1IgE6eweVixqS9M/Ug2XS6ZHtUUBkjDeGd0Jc
-	 X4LdibQwOvewovGghh6VegE9/5la0nt383d0doz3+dSW/vFyhwte13gSokycWECbQt
-	 P8xr9t4V+Ps0Lf6jUP8JOmuTQeGH/GxbScuVZ4QM=
+	by mail.kernel.org (Postfix) with ESMTP id 4F31F2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Bzws5exL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfFZU6Y (ORCPT
+        id S1726431AbfFZVAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFZU6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:58:23 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ECE82086D;
-        Wed, 26 Jun 2019 20:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561582702;
-        bh=J6KbQPV2e/Zez6InThQEwTT6V7rv/8UmD15UJflw5nA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0Lq/2Dh48jI9qaCJmOHGGEcqPy9X/mzuOm1kotGuT4quGwvE93yhRHhZoWbhm2vOa
-         5/VaFXn320jKG4SMn4kRLUNWYsf1990mQ1owjNIa6Z8DVhsFyV94jQ+vbA5Gv4XPwl
-         CfkJPbHM1erOJe3VmBnp0eLPpS8vKZFNyLxiBYjA=
-Date:   Wed, 26 Jun 2019 21:58:17 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com,
-        dianders@chromium.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Support accelerometers for veyron_minnie
-Message-ID: <20190626215817.06a56125@archlinux>
-In-Reply-To: <882cf47c-c126-3e10-ba3a-23c926a68ce1@collabora.com>
-References: <20190624225312.131745-1-gwendal@chromium.org>
-        <5326bfb8-611f-765b-1c9c-c95032102c71@collabora.com>
-        <20190626202103.07e27e5e@archlinux>
-        <882cf47c-c126-3e10-ba3a-23c926a68ce1@collabora.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Jun 2019 17:00:21 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37909 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfFZVAU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:00:20 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g4so195plb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 14:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=n76JK0suQeeFW6xhcmoHNw4tHnQpupZZOhWEzOjxM6k=;
+        b=Bzws5exLVLEQgXXhLhLFWqBVYZgCRHFpKtPyJBjrSzDy5QeDAHSVxsk8YbisLRWP8K
+         gyvdK9QMRZC/Q9Lv8BEC1bfZcneBYta/G2rBRALUo6HTzmUqzFrqVSlVj6lxlLP8iVD/
+         ItXAUkEnikSxp7rVIR66tj23/0yyoFt6OR9A5zPnz0Zdh0XhP3IFRUqiX6ed1780IoNc
+         68xBPq3zg9j1M+eT5Cgt5VQeye7h1DSohOgMQOI97tGEfTRmJRNbHVsgZr/i/ymDA0oA
+         rvDhJ0nAfbrM6fDUXFbeFu7iU0ZewvMV7C6xqGI1Z1GztnlgZD3hT6pAeKUwZKjoJnKO
+         +dBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=n76JK0suQeeFW6xhcmoHNw4tHnQpupZZOhWEzOjxM6k=;
+        b=F9Qio9TzQrJgkzwbMTvTxZlHDzPTb/3FOY4S6MJUMf+cG0ogy8BRHBwIFSuT/NbHH8
+         cp0iord7yoS3R15jqzwGx/UsfHZ67AW9wX/VAEDgIpT70W7ftzMdhFN7yZyLJcEPHNVM
+         yB19839fAiZZziVaGdwYCtUoKQUrNshNxje0zLqKK8SWJMFypwzWVyyyZLdbeQSXsdo9
+         pQty6OhI6+AUa7C4BeVMMUNcapVFc2Kix1BZKSUT24KoGVVl6/hS4jIEaPQgWFBrJNjB
+         upcXvu0UIspTcXzAL5r/hcKQLeFvLalpxNy4zxoP2n+XdHo8jXLHHLQK9OFa5bBYx3Pj
+         nBTQ==
+X-Gm-Message-State: APjAAAXhH86fccWRBtJXfct8BzdmmS7hpZeDMcpmJo7H9sWUdHRiQotR
+        Q/drjaq+AXZZdsWZJEO31tnHGg==
+X-Google-Smtp-Source: APXvYqxn58rW6cya64e/DP42Cl4dWDsxuE9ORp8ZfuhKICUjVgykMrFxCwFRYmlyz7x1VeOTA+0fBw==
+X-Received: by 2002:a17:902:20b:: with SMTP id 11mr144473plc.78.1561582819849;
+        Wed, 26 Jun 2019 14:00:19 -0700 (PDT)
+Received: from ziepe.ca ([148.87.23.38])
+        by smtp.gmail.com with ESMTPSA id p27sm134242pfq.136.2019.06.26.14.00.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 14:00:19 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hgF1e-0001mN-Hl; Wed, 26 Jun 2019 18:00:18 -0300
+Date:   Wed, 26 Jun 2019 18:00:18 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190626210018.GB6392@ziepe.ca>
+References: <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 22:40:00 +0200
-Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
-
-> Hi Jonathan,
->=20
-> On 26/6/19 21:21, Jonathan Cameron wrote:
-> > On Tue, 25 Jun 2019 19:09:50 +0200
-> > Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
-> >  =20
-> >> Hi,
+On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-06-26 2:21 p.m., Jason Gunthorpe wrote:
+> > On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
+> >>> we have a hole behind len where we could store flag.  Preferably
+> >>> optionally based on a P2P or other magic memory types config
+> >>> option so that 32-bit systems with 32-bit phys_addr_t actually
+> >>> benefit from the smaller and better packing structure.
 > >>
-> >> On 25/6/19 0:53, Gwendal Grignou wrote: =20
-> >>> veyron_minnie - ASUS Chromebook Flip C100PA - embedded controller
-> >>> controls two accelerometers, one in the lid, one in the base.
-> >>> However, the EC firmware does not follow the new interface that
-> >>> cros_ec_accel driver use.
-> >>> Extend the legacy driver used on glimmer - Lenovo ThinkPad 11e
-> >>> Chromebook - to veyron_minnie.
-> >>> veyron_minnie being ARM based, issue command over the I2C bus to the =
-EC
-> >>> instead of relying on the shared registers over LPC.
-> >>>
-> >>> Gwendal Grignou (2):
-> >>>   iio: cros_ec: Add sign vector in core for backward compatibility
-> >>>   iio: cros_ec: Extend legacy support to ARM device
-> >>>
-> >>> Changes in v3:
-> >>> - Fix commit message, add reviewed-by for first patch.
-> >>>
-> >>> Changes in v2:
-> >>> - Readd empty line to reduce amount of change in patch.
-> >>> - Remove Keywords used by ChromeOS commit queue.
-> >>>
-> >>>  drivers/iio/accel/Kconfig                     |   4 +-
-> >>>  drivers/iio/accel/cros_ec_accel_legacy.c      | 350 ++++------------=
---
-> >>>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   4 +
-> >>>  .../linux/iio/common/cros_ec_sensors_core.h   |   1 +
-> >>>  4 files changed, 84 insertions(+), 275 deletions(-)
-> >>>    =20
-> >>
-> >> Just a side note that I think that this patch depends on [1] to have t=
-he legacy
-> >> sensors working on veyron minnie.
-> >>
-> >> For the full series:
-> >>
-> >> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com> =20
-> > Ah. I was assuming you mean a runtime dependency.  Whereas applying this
-> > on it's own is giving me a build problem:
-> >=20
-> >  drivers/iio/accel/cros_ec_accel_legacy.c: In function =E2=80=98cros_ec=
-_accel_legacy_read_cmd=E2=80=99:
-> > drivers/iio/accel/cros_ec_accel_legacy.c:50:16: error: =E2=80=98struct =
-<anonymous>=E2=80=99 has no member named =E2=80=98max_sensor_count=E2=80=99=
- =20
->=20
-> Right, this also build depends on the immutable branch (ib-mfd-cros-v5.3).
-Ah. I'd forgotten about that set.
+> >> That seems sensible. The one thing that's unclear though is how to get
+> >> the PCI Bus address when appropriate. Can we pass that in instead of the
+> >> phys_addr with an appropriate flag? Or will we need to pass the actual
+> >> physical address and then, at the map step, the driver has to some how
+> >> lookup the PCI device to figure out the bus offset?
+> > 
+> > I agree with CH, if we go down this path it is a layering violation
+> > for the thing injecting bio's into the block stack to know what struct
+> > device they egress&dma map on just to be able to do the dma_map up
+> > front.
+> 
+> Not sure I agree with this statement. The p2pdma code already *must*
+> know and access the pci_dev of the dma device ahead of when it submits
+> the IO to know if it's valid to allocate and use P2P memory at all.
 
->=20
->=20
-> >    50 |  st->param.dump.max_sensor_count =3D CROS_EC_SENSOR_LEGACY_NUM;
-> >       |                ^
-> > make[3]: *** [scripts/Makefile.build:285: drivers/iio/accel/cros_ec_acc=
-el_legacy.o] Error 1
-> > make[2]: *** [scripts/Makefile.build:489: drivers/iio/accel] Error 2
-> > make[1]: *** [scripts/Makefile.build:489: drivers/iio] Error 2
-> >=20
-> > Which I'll assume is related to that other set.
-> >=20
-> > I'm happy for these to go another route to sit on top of that series.
-> > If not I'll pick them up for the next cycle via IIO.
-> >=20
-> > Should they go another route,
-> >=20
-> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for both of th=
-em. =20
->=20
-> I'd be happy to pick this patch and add to the chrome-platform tree, idea=
-lly
-> once we manage to get [1] ready for land.
-Let's go with that.  If you change your mind, let me know.
+I don't think we should make drives do that. What if it got CMB memory
+on some other device?
 
-Thanks,
+> > For instance we could use a small hash table of the upper phys addr
+> > bits, or an interval tree, to do the lookup.
+> 
+> Yes, if we're going to take a hard stance on this. But using an interval
+> tree (or similar) is a lot more work for the CPU to figure out these
+> mappings that may not be strictly necessary if we could just pass better
+> information down from the submitting driver to the mapping driver.
 
-Jonathan
+Right, this is coming down to an optimization argument. I think there
+are very few cases (Basically yours) where the caller will know this
+info, so we need to support the other cases anyhow.
 
->=20
-> Thanks,
-> ~ Enric
->=20
-> >  =20
-> >>
-> >>
-> >> [1] https://lkml.org/lkml/2019/6/18/268 =20
-> >  =20
+I think with some simple caching this will become negligible for cases
+you care about
 
+Jason
