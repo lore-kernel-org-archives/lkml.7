@@ -2,125 +2,121 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0168C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E58CC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF589217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5C92063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ryl8/Pde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfFZO4r (ORCPT
+        id S1728244AbfFZO5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:56:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:52616 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfFZO4q (ORCPT
+        Wed, 26 Jun 2019 10:57:33 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34402 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfFZO5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:56:46 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hg9Ln-0007ls-0V; Wed, 26 Jun 2019 14:56:43 +0000
-Subject: Re: [PATCH] orangefs: remove redundant assignment to variable
- buffer_index
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Mike Marshall <hubcap@omnibond.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Martin Brandenburg <martin@omnibond.com>,
-        devel@lists.orangefs.org, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190511132700.4862-1-colin.king@canonical.com>
- <CAOg9mSQt42NQu-3nwZOCGOPx45y7G8aaiDaVe4SwotGnD9iY1A@mail.gmail.com>
- <20190521150311.GL31203@kadam>
- <CAOg9mSQmV=BDMpTNLJvb4QBr=f96qg4Hr9qu=bB6xZubB+1LZQ@mail.gmail.com>
- <20190626061801.GA18776@kadam>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <712efbc2-1c10-8e6e-7517-16fa57cb8709@canonical.com>
-Date:   Wed, 26 Jun 2019 15:56:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 10:57:32 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QEsBPp120867;
+        Wed, 26 Jun 2019 14:57:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=8doc8T026Qgzuel0n4TKmmc52HYkNsZ8TF7JIVqwUFg=;
+ b=ryl8/PdeUbI/B9eSS4S6nDmMCIqINo/1uxF5TiHQiv+WXs1GrX1Wum7t4Xme2DAwBW/W
+ SFNxoE+csDzrSvk2PeLXRLFt+3kXaSJPoaq3QpDPlAmte0vkBWmNtN5hS6YcyZF/i1Rz
+ wIAkyLtbYtM34lfknPjRv9ukNn0MbIK0MRGWV3wCb4tphVrc9Fk7ONa3PaQVAABeoCOn
+ zfd3uGfTSLNKbiOyIPDtzm0Po8uJdhVeQhDkZKCWLo6wzA/eePTqPrS2HTDo9zzDtU0f
+ VEaAi6wjW0sN/wMUukqXvsSTAqCPmOh3YlXQ66HwfmCgJLeNuXQg14nc/0n+kecAawW7 2Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t9cyqjt1v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 14:57:07 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QEtVW7064320;
+        Wed, 26 Jun 2019 14:57:07 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2t9accr86d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 14:57:06 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5QEutnF007543;
+        Wed, 26 Jun 2019 14:56:55 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Jun 2019 07:56:55 -0700
+Date:   Wed, 26 Jun 2019 17:56:36 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Tobias =?iso-8859-1?Q?Nie=DFen?= 
+        <tobias.niessen@stud.uni-hannover.de>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        Sabrina Gaube <sabrina-gaube@web.de>,
+        linux-kernel@vger.kernel.org, linux-kernel@i4.cs.fau.de
+Subject: Re: [PATCH 1/2] staging: rts5208: Rewrite redundant if statement to
+ improve code style
+Message-ID: <20190626145636.GG28859@kadam>
+References: <20190626142857.30155-1-tobias.niessen@stud.uni-hannover.de>
+ <20190626142857.30155-2-tobias.niessen@stud.uni-hannover.de>
 MIME-Version: 1.0
-In-Reply-To: <20190626061801.GA18776@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190626142857.30155-2-tobias.niessen@stud.uni-hannover.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=784
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906260176
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=837 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906260176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/06/2019 07:18, Dan Carpenter wrote:
-> On Tue, Jun 25, 2019 at 02:55:11PM -0400, Mike Marshall wrote:
->>>> You often send these patches before they hit linux-next so I had skipped
->>>> reviewing this one when you sent it.
->>
->> I know Linus is likely to refuse pull requests for stuff that
->> has not been through linux-next, so I make sure stuff has been
->> there at least a few days before asking for it to be pulled.
->> "A few days" is long enough for robots to see it, perhaps not
->> long enough for humans. I especially appreciate the human review. One of
->> the good things about Orangefs is that it is easy to install and configure,
->> especially for testing. Documentation/filesystems/orangefs.txt has
->> instructions for dnf installing orangefs on Fedora, and also how to download
->> a source tarball and install from that.
-> 
-> No, no, that comment was to Colin.  It's good that he's sending patches
-> for all the trees as soon as possible like the zero day bot does.  But
-> it does make it hard to review at times.
-> 
-> regards,
-> dan carpenter
-> 
-Indeed, I normally work against the latest code landing in linux-next,
-so apologies for any confusion.  Anyhow, by the look of it these minor
-nitpicks still need addressing (really low priority), so shall I leave
-that with you Mike to sort out?
+Both these patches seem fine.
 
-Colin
+On Wed, Jun 26, 2019 at 04:28:56PM +0200, Tobias Nieﬂen wrote:
+> This commit uses the fact that
+> 
+>     if (a) {
+>             if (b) {
+>                     ...
+>             }
+>     }
+> 
+> can instead be written as
+> 
+>     if (a && b) {
+>             ...
+>     }
+> 
+> without any change in behavior, allowing to decrease the indentation
+> of the contained code block and thus reducing the average line length.
+> 
+> Signed-off-by: Tobias Nieﬂen <tobias.niessen@stud.uni-hannover.de>
+> Signed-off-by: Sabrina Gaube <sabrina-gaube@web.de>
+
+Signed-off-by is like signing a legal document that you didn't put any
+of SCO's secret UNIXWARE source code into your patch or do other illegal
+activities.  Everyone who handles a patch is supposed to Sign it.
+
+It's weird to see Sabrina randomly signing your patches.  Probably there
+is a more appropriate kind of tag to use as well or instead such as
+Co-Developed-by, Reviewed-by or Suggested-by.
+
+regards,
+dan carpenter
+
