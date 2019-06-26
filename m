@@ -2,139 +2,99 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D1BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D5EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBF22085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OXD8lcND"
+	by mail.kernel.org (Postfix) with ESMTP id 109A32085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfFZU1y (ORCPT
+        id S1726368AbfFZUeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:27:54 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45560 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZU1y (ORCPT
+        Wed, 26 Jun 2019 16:34:14 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39192 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZUeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:27:54 -0400
-Received: by mail-io1-f68.google.com with SMTP id e3so7918513ioc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=LgZeRxC6RQ5LdUYNQeMc+ciFdAiQ/Cfk+AzdfLEuWwo=;
-        b=OXD8lcNDuVCQF0Os+37dJnhbEhLTPkAGYKnH2K/rTQrBwx0dYPUkpleQC7RAMj5qH6
-         6Dvz4/TPGz9pp5LOtdWnDvwImdz3fv9wNsqK+8NfJ+K1Okp0MVweKvPjncv+11qG35Dm
-         BXRbMdJxBUt/hIHhj1grg3+gaw7k29crfND37pkXQU0IPETEtomREiM2IA+VVYv4VWFY
-         APcbKHDu2R72a9mxEZbn/0tUBP2BL9dZ2R0eHgDCK6tO7Ib6/eHON231w1wYainB/xg9
-         xE/LV3MMhKT7qxgfmFSLdVrbWz6A98kF5ZXDqnlZdKlO7+iVTJh3VnjWjnr9hGWe39Fd
-         8YNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=LgZeRxC6RQ5LdUYNQeMc+ciFdAiQ/Cfk+AzdfLEuWwo=;
-        b=aISd5M+z7di2le7RV09Z+GvJsPFyrF8nBWsTm6BrgcG6vE/12pRxQC4F3uQ3U2644/
-         wQU2oUXOdxm/tmgxsJTnQ8ZV44rwO5DbXCdCGrJ0L0ma8jNQPPOBzIFh9l2mndGMil8L
-         sSwdWkZ5A9Ipt8z2vAzjeJvR4JUZCuvuB3k9aTSDpBrIPq0Hje7uxs1WILH7qo6vJgH9
-         QeVQEgIV3P+6jAayB0llYB3Qisyfx+UIQ6tZSw6eUj8SHtHjaBgljffMsHjOuBFHlKnp
-         6qlu3wht9iio/2ZharA16j3iqr2IHb3piNbaeRCWcTxiAox1tbYEx0+7UbAugSy1Kd9b
-         dcaw==
-X-Gm-Message-State: APjAAAU/9rL6z7ZszyCoGIo1274i1f/DXgy3N+SY7cjoFRpP/Vdiyndu
-        srjbl53mweGg3H78JCY49apdEibh4jM=
-X-Google-Smtp-Source: APXvYqwBABOk5P1lcHFrctT0fUSSr2Hv6vbQhbqcJSD5Q+1tQOnna356evEV+6djyREOBX4lf3JYkg==
-X-Received: by 2002:a02:ce92:: with SMTP id y18mr7192147jaq.40.1561580873575;
-        Wed, 26 Jun 2019 13:27:53 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id h19sm16188iol.65.2019.06.26.13.27.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 13:27:52 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 13:27:51 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Rob Herring <robh@kernel.org>
-cc:     linux-riscv@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: riscv: resolve 'make dt_binding_check'
- warnings
-In-Reply-To: <CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.9999.1906261325290.23534@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1906260829030.21507@viisi.sifive.com> <CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Wed, 26 Jun 2019 16:34:14 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id CABEE260E5C
+Subject: Re: [PATCH] platform/chrome: lightbar: Assign drvdata during probe
+To:     Rajat Jain <rajatja@google.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     evgreen@google.com, rajatxjain@gmail.com
+References: <20190625205101.33032-1-rajatja@google.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <a755588b-1062-7c4f-7c03-f35ca23f39a4@collabora.com>
+Date:   Wed, 26 Jun 2019 22:34:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190625205101.33032-1-rajatja@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019, Rob Herring wrote:
+Hi Rajat,
 
-> On Wed, Jun 26, 2019 at 9:30 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> >
-> > Rob pointed out that one of the examples in the RISC-V 'cpus' YAML schema
-> > results in warnings from 'make dt_binding_check'.  Fix these.
-> >
-> > While here, make the whitespace in the second example consistent with the
-> > first example.
-> >
-> > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> > Cc: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
-> >  1 file changed, 14 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > index 27f02ec4bb45..f97a4ecd7b91 100644
-> > --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> > @@ -152,17 +152,19 @@ examples:
-> >    - |
-> >      // Example 2: Spike ISA Simulator with 1 Hart
-> >      cpus {
-> > -            cpu@0 {
-> > -                    device_type = "cpu";
-> > -                    reg = <0>;
-> > -                    compatible = "riscv";
-> > -                    riscv,isa = "rv64imafdc";
-> > -                    mmu-type = "riscv,sv48";
-> > -                    interrupt-controller {
-> > -                            #interrupt-cells = <1>;
-> > -                            interrupt-controller;
-> > -                            compatible = "riscv,cpu-intc";
-> > -                    };
-> > -            };
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        cpu@0 {
+On 25/6/19 22:51, Rajat Jain wrote:
+> The lightbar driver never assigned the drvdata in probe method, and thus
+> causes a panic when it is accessed at the suspend time.
+
+Good catch, that's one of the problems I currently have with mainline on Samus.
+The other one, that I didn't find time to look at is, that for some reason, when
+I suspend the system reboots. Is suspend/resume working for you in current mainline?
+
+There is no drvdata because we don't really need extra private data for this
+driver, the ec_dev is directly the drvdata provided by device parent. I am
+wondering if you can just do
+
+   struct cros_ec_dev *ec_dev = to_cros_ec_dev(dev);
+
+in the suspend/resume calls like we do in the show/store calls or get the
+drvdata from its parent. I guess I prefer the first one.
+
 > 
-> This only works because you removed 'cpus' and therefore none of this
-> schema is applied.
 
-I'm not following you - could you point out where "cpus" was removed?
+Would be nice have a fixes tag here.
 
-> > +                device_type = "cpu";
-> > +                reg = <0>;
-> > +                compatible = "riscv";
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+>  drivers/platform/chrome/cros_ec_lightbar.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> According to the schema, this is wrong. It should have 2 strings. Or
-> the schema needs to allow this case, but 'riscv' is too vague to be
-> very useful.
+> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+> index d30a6650b0b5..98e514fc5830 100644
+> --- a/drivers/platform/chrome/cros_ec_lightbar.c
+> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+> @@ -578,11 +578,14 @@ static int cros_ec_lightbar_probe(struct platform_device *pd)
+>  
+>  	ret = sysfs_create_group(&ec_dev->class_dev.kobj,
+>  				 &cros_ec_lightbar_attr_group);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+>  		dev_err(dev, "failed to create %s attributes. err=%d\n",
+>  			cros_ec_lightbar_attr_group.name, ret);
+> +		return ret;
+> +	}
+>  
+> -	return ret;
+> +	platform_set_drvdata(pd, ec_dev);
+> +	return 0;
+>  }
+>  
+>  static int cros_ec_lightbar_remove(struct platform_device *pd)
+> 
 
-OK, I'll come up with something for Spike.
-
-> Also, I noticed that there's still a riscv/cpus.txt. That should be
-> removed and replaced with this file. Looks like the hart description
-> at least should be copied over (into top-level 'description').
-
-OK, will do that when I hear back from you.  
-
-
-- Paul
+Thanks,
+~ Enric
