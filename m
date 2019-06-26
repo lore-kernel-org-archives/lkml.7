@@ -6,51 +6,128 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD24C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595B7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A710204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFD6204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfFZNip (ORCPT
+        id S1727750AbfFZNji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:38:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42658 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZNio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:38:44 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D4E6C3084039;
-        Wed, 26 Jun 2019 13:38:44 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 987795C1A1;
-        Wed, 26 Jun 2019 13:38:43 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <835.1561539007@warthog.procyon.org.uk>
-References: <835.1561539007@warthog.procyon.org.uk>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, iwienand@redhat.com,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] AFS fixes
+        Wed, 26 Jun 2019 09:39:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48084 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZNjh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:39:37 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hg898-000208-EQ; Wed, 26 Jun 2019 15:39:34 +0200
+Date:   Wed, 26 Jun 2019 15:39:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, peterz@infradead.org,
+        srinivas.eeda@oracle.com
+Subject: Re: [PATCH v2 0/7] misc fixes to PV extentions code
+In-Reply-To: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
+Message-ID: <alpine.DEB.2.21.1906261511180.32342@nanos.tec.linutronix.de>
+References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <11509.1561556322.1@warthog.procyon.org.uk>
-Date:   Wed, 26 Jun 2019 14:38:42 +0100
-Message-ID: <11510.1561556322@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 26 Jun 2019 13:38:44 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops... I forgot to include the pull request bit.  Will resend.
+On Mon, 24 Jun 2019, Zhenzhong Duan wrote:
 
-David
+> [PATCH v2 1/7]  x86/xen: Mark xen_hvm_need_lapic() and xen_hvm_need_lapic() as __init
+> [PATCH v2 2/7]  x86/jailhouse: Mark jailhouse_x2apic_available as __init
+> 
+> Above two patches only add __init annotation to some functions, not
+> related to other patches. I didn't split the two out as following patches
+> need them to avoid conflicts.
+
+Not really. Just the XEN one conflicts. The jailhoise one is independent.
+
+> [PATCH v2 3/7]  x86: Add nopv parameter to disable PV extensions
+> [PATCH v2 4/7]  Revert "xen: Introduce 'xen_nopv' to disable PV extensions for HVM guests."
+> [PATCH v2 5/7]  x86/xen: nopv parameter support for HVM guest
+> 
+> Above three patches add an unified nopv prameter used for most of hypervisor
+> platform except XEN PV/PVH, jailhouse. Those need PV extensions to work.
+> 
+> I revert 'xen_nopv' as it's same effect as nopv on XEN platform, there is also
+> an issue using 'xen_nopv' with PVH, we should ignore 'xen_nopv' for PVH.
+
+Well, command line options are ABI. You cannot nilly willy remove them as
+it might break existing setups.
+
+The fact that nopv can replace xen_nopv is not a justification.
+
+Also if there is an issue with xen_nopv and PVH then this issue needs to be
+fixed first especially if that issue exists on older kernels.
+
+> [PATCH v2 6/7]  locking/spinlocks, paravirt, hyperv: Correct the hv_nopvspin case
+> 
+> This is a similar change as Commit e6fd28eb3522
+> ("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case"), but for
+> hyperv.
+
+This looks like an independent bug fix. Bug fixes should either be posted
+seperately or at least at the beginning of the series. And this one clearly
+is self contained so why hiding it in the middle of a pile of other
+patches?
+
+> [PATCH v2 7/7]  Revert "x86/paravirt: Set up the virt_spin_lock_key after static keys get initialized"
+> 
+> This revert an old change which is unnecessory now, I think the original change is smarter.
+
+Again, this has nothing to do with the meat of this series which deals with
+the command line parameters and is completely independent.
+
+So you give a list of patches with some explanation for them, but the cover
+letter should provide the big picture. The details of the patches need to
+be in the changelog.
+
+  1) Describe the context
+
+     The paravirtualization whatever lack whatever they lack and have the
+     shortcoming A, B, C.
+
+     For a consistent admin experience a common command line parameter set
+     across all PV guest implementations is a better choice, yada, yada
+     yada.
+
+  2) Describe the changes as overview
+
+     To achieve this introduce a new nopv parameter which is usable by
+     all PV guest implementation.
+
+     While analyzing the PV guest code several bugs were found and
+     fixed. (Patches 1 - 3). They can be applied independent of the
+     functional changes, but they are kept in the series as the functional
+     changes depend on them.
+
+Documentation/process/submitting-patches.rst clearly explains why it is a
+bad idea to send random collections of patches especially if some patches
+are independent and contain bug fixes.
+
+These rules exist for a reason and are not subject to personal
+interpretation. You want your patches to be reviewed and merged, so pretty
+please make the life of those who need to do that as easy as possible.
+
+It's not the job of reviewers and maintainers to distangle your randomly
+ordered patch series.
+
+Thanks,
+
+	tglx
