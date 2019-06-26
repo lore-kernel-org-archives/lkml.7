@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BDCC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46193C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA60205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B362205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520993;
-	bh=pvyaoqE/CGwLTREJutyweVUmIWowGZERg9Z0/N5L6U0=;
+	s=default; t=1561520999;
+	bh=d1+WP5N9McYnrs0TI4Boiqy40Gwh4H9/yG46Qc8deqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kyrhw6MVQdBE2qO3NgSNv3SSsvSpJiv8yn6ipsQWhprtvWLkCK0jUw5a4fAR9ES1R
-	 TUWwS3N983Dx6cahKzLCoe2VRMo9v7kb2davbwGMoYkUF9Wpr0JkRVoEIo4KcIwFzJ
-	 3oBL2hJ5QwoxzaiE90gE0H26rskseWp+1nmRiZXg=
+	b=SUM7yv611x0R9nR5OYvKuoQmu6GCrAQ5exig11xQWQbkJBQ7qdSMKh/zonO24WiTG
+	 srHhBCmeyIZe+La5c/VirEyh0ggk6zugPyYZ5Ecu+zSyi4r4K1NFB7yMBzVGCud9AO
+	 MHscN/cb/N1hOj9wurWm6C8zioxwE02V5dFm5APY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbfFZDtw (ORCPT
+        id S1727859AbfFZDt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54648 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfFZDn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:26 -0400
+        id S1727295AbfFZDnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:22 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD1220659;
-        Wed, 26 Jun 2019 03:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0AE5205ED;
+        Wed, 26 Jun 2019 03:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520605;
-        bh=pvyaoqE/CGwLTREJutyweVUmIWowGZERg9Z0/N5L6U0=;
+        s=default; t=1561520601;
+        bh=d1+WP5N9McYnrs0TI4Boiqy40Gwh4H9/yG46Qc8deqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t7N7MOjlnYtf6U2LOuZ4Z2AXJOQ9vVJNYyOaPLC3kadYLA/by5JmuvzQxwUrbLpyt
-         2Vmz1IMXxJf9QueOa4usU4S7m3q8prMtYvLewWPlsop/i5t/bq2l18hC1CIF9nkOLj
-         dZLKCrFGRvIXQOA7rbHW7LdzgwKsxbs7yzzckiKI=
+        b=PGZxK0IOaJfeGa5/cSdz/f2gI0S2nEtobBSg0reAmrdxbY3h93libLk2Ok8znyK/i
+         +LXSbnJHi4UfJPyM2aQ57BFzUX/RPY1wEoSD5eGeFqcThO3pAFj4n6NqY69FCTtAle
+         cybtqBbF7Ag/82ONOUdLuvVG4UwKhSy3pq/K2CF8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manuel Traut <manut@linutronix.de>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 47/51] scripts/decode_stacktrace.sh: prefix addr2line with $CROSS_COMPILE
-Date:   Tue, 25 Jun 2019 23:41:03 -0400
-Message-Id: <20190626034117.23247-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 45/51] arm64: tlbflush: Ensure start/end of address range are aligned to stride
+Date:   Tue, 25 Jun 2019 23:41:01 -0400
+Message-Id: <20190626034117.23247-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -61,48 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manuel Traut <manut@linutronix.de>
+From: Will Deacon <will.deacon@arm.com>
 
-[ Upstream commit c04e32e911653442fc834be6e92e072aeebe01a1 ]
+[ Upstream commit 01d57485fcdb9f9101a10a18e32d5f8b023cab86 ]
 
-At least for ARM64 kernels compiled with the crosstoolchain from
-Debian/stretch or with the toolchain from kernel.org the line number is
-not decoded correctly by 'decode_stacktrace.sh':
+Since commit 3d65b6bbc01e ("arm64: tlbi: Set MAX_TLBI_OPS to
+PTRS_PER_PTE"), we resort to per-ASID invalidation when attempting to
+perform more than PTRS_PER_PTE invalidation instructions in a single
+call to __flush_tlb_range(). Whilst this is beneficial, the mmu_gather
+code does not ensure that the end address of the range is rounded-up
+to the stride when freeing intermediate page tables in pXX_free_tlb(),
+which defeats our range checking.
 
-  $ echo "[  136.513051]  f1+0x0/0xc [kcrash]" | \
-    CROSS_COMPILE=/opt/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux- \
-   ./scripts/decode_stacktrace.sh /scratch/linux-arm64/vmlinux \
-                                  /scratch/linux-arm64 \
-                                  /nfs/debian/lib/modules/4.20.0-devel
-  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:68) kcrash
+Align the bounds passed into __flush_tlb_range().
 
-If addr2line from the toolchain is used the decoded line number is correct:
-
-  [  136.513051] f1 (/linux/drivers/staging/kcrash/kcrash.c:57) kcrash
-
-Link: http://lkml.kernel.org/r/20190527083425.3763-1-manut@linutronix.de
-Signed-off-by: Manuel Traut <manut@linutronix.de>
-Acked-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Reported-by: Hanjun Guo <guohanjun@huawei.com>
+Tested-by: Hanjun Guo <guohanjun@huawei.com>
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/decode_stacktrace.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/tlbflush.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index bcdd45df3f51..a7a36209a193 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -73,7 +73,7 @@ parse_symbol() {
- 	if [[ "${cache[$module,$address]+isset}" == "isset" ]]; then
- 		local code=${cache[$module,$address]}
- 	else
--		local code=$(addr2line -i -e "$objfile" "$address")
-+		local code=$(${CROSS_COMPILE}addr2line -i -e "$objfile" "$address")
- 		cache[$module,$address]=$code
- 	fi
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index 3a1870228946..dff8f9ea5754 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -195,6 +195,9 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 	unsigned long asid = ASID(vma->vm_mm);
+ 	unsigned long addr;
  
++	start = round_down(start, stride);
++	end = round_up(end, stride);
++
+ 	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
+ 		flush_tlb_mm(vma->vm_mm);
+ 		return;
 -- 
 2.20.1
 
