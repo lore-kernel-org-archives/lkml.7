@@ -2,157 +2,246 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83999C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADBFC48BD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF6520645
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jbtXscDh"
+	by mail.kernel.org (Postfix) with ESMTP id 70D56215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfFZJJG (ORCPT
+        id S1727065AbfFZJJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:09:06 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43214 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbfFZJJG (ORCPT
+        Wed, 26 Jun 2019 05:09:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726104AbfFZJJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:09:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id k20so3344179ios.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:09:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7dL7h7SkSMLVzpfEmrmJiFGBAxYoaIavJjZPSz0hU7I=;
-        b=jbtXscDhjsJEuONxCbh2rlWb09IQnHwk9phiuKReIYqMagEZRqkefxApOqrDgNTjwC
-         8cPxCqS0njqZUitqGx7byaBanzWe2tWExVqIf68fiYfH6GgLkeZEwPtnvUm1Lb0sJOQk
-         7Whmtox8TN6p53sDlWCs1Oeqo9AMZltPxv5s9W7A8jCwmFqppF8lT+ueiqYTm2ofp54L
-         J9pYfCTt5eh2Bbxi/Hb36NchgHNxMaDxlY6CWwQa/LX3TU7ltrsxZOTcb5RPsAUb9y4u
-         tX3irBmXchaHy8jhV2/r0EVfAxm5Z2Mk28WUGwx+Qjfvkf7HpEsbuKwE9m+UQeqR9zBN
-         MXdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7dL7h7SkSMLVzpfEmrmJiFGBAxYoaIavJjZPSz0hU7I=;
-        b=CclyRdb4PxZvVhybxGVfAY/2dvnnxCUyUKkmrjRX+btNE9zpPnE+tDLDsMeJ+uklYo
-         AgYJjxbEZ7ErU9A/HuU0nW+rSeQeo+/HFsRsJQhvTnd0rX5K7y3BKuWqSrnlmMOKTUGY
-         iUUqOT+2DrXxce5v9lx/zkFt0MjMWaOiwRtToBvMK0AAVWlt8ukb9/Onl8jDVNbmQx+g
-         C1yT1xqEV/DSuNcIDqM4BwXosVDfU5WKrVLg9RMivpYCHz/JJdDjjOLfRLfq85kw91F8
-         P0nxIsYyVNvei6uhzA/PngR9TFOTmpr2HU5Zpx0iON+Q44WLh9gvTJxxEIQP0T7NNhoL
-         snBw==
-X-Gm-Message-State: APjAAAXBhzerWVoUYx+oCvsTheX/TuT/yrV/521xxEI5/BsKPPgMYkmH
-        q3zjHQbtB8Jd/pj+ucNe4UzCuRFEUf2kT4loIEcLWA==
-X-Google-Smtp-Source: APXvYqyfAj3+7X5HQdYqxWCVc+aScPFHv4kHJEc2n+zGiaWOgxDOOyizFKHvtKMZ7FZ6f9dIyrSzDbudAT6xWVQ+DOM=
-X-Received: by 2002:a5d:8252:: with SMTP id n18mr2740479ioo.230.1561540145441;
- Wed, 26 Jun 2019 02:09:05 -0700 (PDT)
+        Wed, 26 Jun 2019 05:09:35 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5Q98m6l052280
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 05:09:34 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tc4ms2yx7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 05:09:34 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Wed, 26 Jun 2019 10:09:32 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Jun 2019 10:09:30 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5Q99J8p30802320
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 09:09:19 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9497D5204F;
+        Wed, 26 Jun 2019 09:09:28 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.124.35.188])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 079BC52067;
+        Wed, 26 Jun 2019 09:09:26 +0000 (GMT)
+Subject: Re: [PATCH v2 1/1] cpuidle-powernv : forced wakeup for stop states
+To:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, rjw@rjwysocki.net
+References: <20190617095648.18847-1-huntbag@linux.vnet.ibm.com>
+ <20190617095648.18847-2-huntbag@linux.vnet.ibm.com>
+ <1560917320.mk5nn6r8jw.astroid@bobo.none>
+ <689a52a7-7bfc-7225-e563-ac07f7357e75@linux.vnet.ibm.com>
+ <1560938644.5ukemauqsy.astroid@bobo.none>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Wed, 26 Jun 2019 14:39:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190625164733.11091-1-jorge.ramirez-ortiz@linaro.org> <20190625164733.11091-14-jorge.ramirez-ortiz@linaro.org>
-In-Reply-To: <20190625164733.11091-14-jorge.ramirez-ortiz@linaro.org>
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-Date:   Wed, 26 Jun 2019 11:08:54 +0200
-Message-ID: <CAHYWTt37Q1E_bggbKb8VdcHRj_YYubqaoVHNN7+1kcr8+XMX0g@mail.gmail.com>
-Subject: Re: [PATCH v3 13/14] arm64: dts: qcom: qcs404: Add DVFS support
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>, jassisinghbrar@gmail.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Will Deacon <will.deacon@arm.com>, arnd@arndb.de,
-        horms+renesas@verge.net.au, heiko@sntech.de,
-        Sibi Sankar <sibis@codeaurora.org>,
-        enric.balletbo@collabora.com,
-        Jagan Teki <jagan@amarulasolutions.com>, olof@lixom.net,
-        Vinod Koul <vkoul@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Khasim Syed Mohammed <khasim.mohammed@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1560938644.5ukemauqsy.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19062609-0020-0000-0000-0000034D7EEA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062609-0021-0000-0000-000021A0F2FD
+Message-Id: <003ea53f-1c11-96cf-5949-3d7bf6fc4b31@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906260111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I actually think that it makes sense to squash this patch with the
-[PATCH v3 10/14] arm64: dts: qcom: qcs404: Add OPP table
-patch.
-
-But that might be a personal preference.
-
-Either way, I think this series in ready for the real mailing list.
+Hi Nick,
 
 
+On 06/19/2019 03:39 PM, Nicholas Piggin wrote:
+> Abhishek's on June 19, 2019 7:08 pm:
+>> Hi Nick,
+>>
+>> Thanks for the review. Some replies below.
+>>
+>> On 06/19/2019 09:53 AM, Nicholas Piggin wrote:
+>>> Abhishek Goel's on June 17, 2019 7:56 pm:
+>>>> Currently, the cpuidle governors determine what idle state a idling CPU
+>>>> should enter into based on heuristics that depend on the idle history on
+>>>> that CPU. Given that no predictive heuristic is perfect, there are cases
+>>>> where the governor predicts a shallow idle state, hoping that the CPU will
+>>>> be busy soon. However, if no new workload is scheduled on that CPU in the
+>>>> near future, the CPU may end up in the shallow state.
+>>>>
+>>>> This is problematic, when the predicted state in the aforementioned
+>>>> scenario is a shallow stop state on a tickless system. As we might get
+>>>> stuck into shallow states for hours, in absence of ticks or interrupts.
+>>>>
+>>>> To address this, We forcefully wakeup the cpu by setting the
+>>>> decrementer. The decrementer is set to a value that corresponds with the
+>>>> residency of the next available state. Thus firing up a timer that will
+>>>> forcefully wakeup the cpu. Few such iterations will essentially train the
+>>>> governor to select a deeper state for that cpu, as the timer here
+>>>> corresponds to the next available cpuidle state residency. Thus, cpu will
+>>>> eventually end up in the deepest possible state.
+>>>>
+>>>> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+>>>> ---
+>>>>
+>>>> Auto-promotion
+>>>>    v1 : started as auto promotion logic for cpuidle states in generic
+>>>> driver
+>>>>    v2 : Removed timeout_needed and rebased the code to upstream kernel
+>>>> Forced-wakeup
+>>>>    v1 : New patch with name of forced wakeup started
+>>>>    v2 : Extending the forced wakeup logic for all states. Setting the
+>>>> decrementer instead of queuing up a hrtimer to implement the logic.
+>>>>
+>>>>    drivers/cpuidle/cpuidle-powernv.c | 38 +++++++++++++++++++++++++++++++
+>>>>    1 file changed, 38 insertions(+)
+>>>>
+>>>> diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
+>>>> index 84b1ebe212b3..bc9ca18ae7e3 100644
+>>>> --- a/drivers/cpuidle/cpuidle-powernv.c
+>>>> +++ b/drivers/cpuidle/cpuidle-powernv.c
+>>>> @@ -46,6 +46,26 @@ static struct stop_psscr_table stop_psscr_table[CPUIDLE_STATE_MAX] __read_mostly
+>>>>    static u64 default_snooze_timeout __read_mostly;
+>>>>    static bool snooze_timeout_en __read_mostly;
+>>>>    
+>>>> +static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
+>>>> +				 struct cpuidle_driver *drv,
+>>>> +				 int index)
+>>>> +{
+>>>> +	int i;
+>>>> +
+>>>> +	for (i = index + 1; i < drv->state_count; i++) {
+>>>> +		struct cpuidle_state *s = &drv->states[i];
+>>>> +		struct cpuidle_state_usage *su = &dev->states_usage[i];
+>>>> +
+>>>> +		if (s->disabled || su->disable)
+>>>> +			continue;
+>>>> +
+>>>> +		return (s->target_residency + 2 * s->exit_latency) *
+>>>> +			tb_ticks_per_usec;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>> It would be nice to not have this kind of loop iteration in the
+>>> idle fast path. Can we add a flag or something to the idle state?
+>> Currently, we do not have any callback notification or some feedback that
+>> notifies the driver everytime some state is enabled/disabled. So we have
+>> to parse everytime to get the next enabled state.
+> Ahh, that's why you're doing that.
+>
+>> Are you suggesting to
+>> add something like next_enabled_state in cpuidle state structure itself
+>> which will be updated when a state is enabled or disabled?
+> Hmm, I guess it normally should not iterate over more than one state
+> unless some idle states are disabled.
+>
+> What would have been nice is each state just have its own timeout
+> field with ticks already calculated, if that could be updated when
+> a state is enabled or disabled. How hard is that to add to the
+> cpuidle core?
 
+I have implemented a prototype which does what you have asked for. Added
+a  disable_callback which will update timeout whenever a state is 
+enabled or
+disabled. But It would mean adding some code to cpuidle.h and 
+cpuidle/sysfs.c.
+If that is not an issue, should I go ahead and post it?
+>>>> +
+>>>>    static u64 get_snooze_timeout(struct cpuidle_device *dev,
+>>>>    			      struct cpuidle_driver *drv,
+>>>>    			      int index)
+>>>> @@ -144,8 +164,26 @@ static int stop_loop(struct cpuidle_device *dev,
+>>>>    		     struct cpuidle_driver *drv,
+>>>>    		     int index)
+>>>>    {
+>>>> +	u64 dec_expiry_tb, dec, timeout_tb, forced_wakeup;
+>>>> +
+>>>> +	dec = mfspr(SPRN_DEC);
+>>>> +	timeout_tb = forced_wakeup_timeout(dev, drv, index);
+>>>> +	forced_wakeup = 0;
+>>>> +
+>>>> +	if (timeout_tb && timeout_tb < dec) {
+>>>> +		forced_wakeup = 1;
+>>>> +		dec_expiry_tb = mftb() + dec;
+>>>> +	}
+>>> The compiler probably can't optimise away the SPR manipulations so try
+>>> to avoid them if possible.
+>> Are you suggesting something like set_dec_before_idle?(in line with
+>> what you have suggested to do after idle, reset_dec_after_idle)
+> I should have been clear, I meant don't mfspr(SPRN_DEC) until you
+> have tested timeout_tb.
+>
+>>>> +
+>>>> +	if (forced_wakeup)
+>>>> +		mtspr(SPRN_DEC, timeout_tb);
+>>> This should just be put in the above 'if'.
+>> Fair point.
+>>>> +
+>>>>    	power9_idle_type(stop_psscr_table[index].val,
+>>>>    			 stop_psscr_table[index].mask);
+>>>> +
+>>>> +	if (forced_wakeup)
+>>>> +		mtspr(SPRN_DEC, dec_expiry_tb - mftb());
+>>> This will sometimes go negative and result in another timer interrupt.
+>>>
+>>> It also breaks irq work (which can be set here by machine check I
+>>> believe.
+>>>
+>>> May need to implement some timer code to do this for you.
+>>>
+>>> static void reset_dec_after_idle(void)
+>>> {
+>>> 	u64 now;
+>>>           u64 *next_tb;
+>>>
+>>> 	if (test_irq_work_pending())
+>>> 		return;
+>>> 	now = mftb;
+>>> 	next_tb = this_cpu_ptr(&decrementers_next_tb);
+>>>
+>>> 	if (now >= *next_tb)
+>>> 		return;
+>>> 	set_dec(*next_tb - now);
+>>> 	if (test_irq_work_pending())
+>>> 		set_dec(1);
+>>> }
+>>>
+>>> Something vaguely like that. See timer_interrupt().
+>> Ah, Okay. Will go through timer_interrupt().
+> Thanks,
+> Nick
 
-On Tue, 25 Jun 2019 at 18:48, Jorge Ramirez-Ortiz
-<jorge.ramirez-ortiz@linaro.org> wrote:
->
-> Support dynamic voltage and frequency scaling on qcs404.
->
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/qcs404.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> index 9569686dbc41..4b4ce0b5df76 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> @@ -34,6 +34,9 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> +                       clocks = <&apcs_glb>;
-> +                       operating-points-v2 = <&cpu_opp_table>;
-> +                       cpu-supply = <&pms405_s3>;
->                 };
->
->                 CPU1: cpu@101 {
-> @@ -43,6 +46,9 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> +                       clocks = <&apcs_glb>;
-> +                       operating-points-v2 = <&cpu_opp_table>;
-> +                       cpu-supply = <&pms405_s3>;
->                 };
->
->                 CPU2: cpu@102 {
-> @@ -52,6 +58,9 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> +                       clocks = <&apcs_glb>;
-> +                       operating-points-v2 = <&cpu_opp_table>;
-> +                       cpu-supply = <&pms405_s3>;
->                 };
->
->                 CPU3: cpu@103 {
-> @@ -61,6 +70,9 @@
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SLEEP_0>;
->                         next-level-cache = <&L2_0>;
-> +                       clocks = <&apcs_glb>;
-> +                       operating-points-v2 = <&cpu_opp_table>;
-> +                       cpu-supply = <&pms405_s3>;
->                 };
->
->                 L2_0: l2-cache {
-> --
-> 2.21.0
->
+Thanks,
+Abhishek
+
