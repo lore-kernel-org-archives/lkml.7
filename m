@@ -2,125 +2,125 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DCCC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E326C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5088B21726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="XZtnwI4n"
+	by mail.kernel.org (Postfix) with ESMTP id 4982F21738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561520507;
+	bh=rhVLW5hBkjFRb9VPCj9+agroOiXlytsEqAo5ZrqBteM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yKYrXd+Z5F2bsSVSz/R9EW6f6r5+QyK/g/h/lLpLw3csaAkw8x+gwiVCozIZsOHdG
+	 fgnVg2pBRfCmxiIx18wJT8LmfxRT3XE5DlS9kKi3LaivokhDp3FUA/1jfEOOUJC2tJ
+	 zaJp5x37q5AlTazcTXGmdbMms5p4lfU79d8x1x8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfFZDlo (ORCPT
+        id S1726902AbfFZDlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:41:44 -0400
-Received: from mail-eopbgr800083.outbound.protection.outlook.com ([40.107.80.83]:3956
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfFZDln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:41:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=beT+GnWI52iaZbiNZfwAiwcuJMFMKlvcJrLgDOZUrWw=;
- b=XZtnwI4n/Zw/eG162D/wwY7bpOjTcW/4DdgtfmUxTezNQtE7/MB0gonkjfkhYU83X71Rayqr6P3K0qX8CI94/fXgluw9jLYX+HSmDPXO3J08R3wxIV4uicVgUbxAyjknp/4crHCla82Nnb6LYFIfI96kWJfS8V5hkdrSt6/kjmY=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4808.namprd05.prod.outlook.com (52.135.235.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Wed, 26 Jun 2019 03:41:37 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Wed, 26 Jun 2019
- 03:41:37 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Andy Lutomirski <luto@kernel.org>
-CC:     Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH 6/9] KVM: x86: Provide paravirtualized flush_tlb_multi()
-Thread-Topic: [PATCH 6/9] KVM: x86: Provide paravirtualized flush_tlb_multi()
-Thread-Index: AQHVIbQq2DFUsKveqk6vAXwf0z5KPqas+eUAgABThoCAAA9+AIAAAcoA
-Date:   Wed, 26 Jun 2019 03:41:37 +0000
-Message-ID: <35755C67-E8EB-48C3-8343-BB9ABEB4E32C@vmware.com>
-References: <20190613064813.8102-1-namit@vmware.com>
- <20190613064813.8102-7-namit@vmware.com>
- <cb28f2b4-92f0-f075-648e-dddfdbdd2e3c@intel.com>
- <401C4384-98A1-4C27-8F71-4848F4B4A440@vmware.com>
- <CALCETrWcUWw8ep-n6RaOeojnL924xOM7g7eb9g=3DRwOHQAgnA@mail.gmail.com>
-In-Reply-To: <CALCETrWcUWw8ep-n6RaOeojnL924xOM7g7eb9g=3DRwOHQAgnA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [204.134.128.110]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 58e169ea-a6fd-447a-13f4-08d6f9e83183
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB4808;
-x-ms-traffictypediagnostic: BYAPR05MB4808:
-x-microsoft-antispam-prvs: <BYAPR05MB4808EF17C9331CF062C6DB7AD0E20@BYAPR05MB4808.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(346002)(376002)(366004)(54534003)(51444003)(189003)(199004)(5660300002)(316002)(36756003)(7416002)(66446008)(2616005)(53546011)(14454004)(2906002)(66476007)(86362001)(99286004)(81166006)(81156014)(64756008)(8936002)(3846002)(102836004)(66946007)(6116002)(6506007)(76176011)(26005)(305945005)(7736002)(486006)(8676002)(476003)(73956011)(68736007)(91956017)(76116006)(54906003)(71190400001)(4326008)(66556008)(478600001)(71200400001)(6436002)(6916009)(229853002)(14444005)(6512007)(33656002)(256004)(66066001)(446003)(25786009)(6246003)(6486002)(11346002)(186003)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4808;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3ctMZzIE1fOAPiFXBafjRtThAFxcrHMnw30nOzYOFjLuKuURfF+DVu08KbdXd1nniK14f45SJbDiLGIOf+bAHAH9zEUx/cO2O5Y+Lye9GLPEl9TktP3aSDsaF8kExE1vU9ckB7eEjVVnPZGrDkjlxbEn9ebcGFcSM8ebHFGFHRDLTRvMIoRAOjQSKH1fVOMiihH38Xi8ENzyf9Xyrkd8W0YdeL/Ha7JcfKe4MZbiKyksQpbJqLzeC7kuAN25//I+pnrSzfl6Q2w6UjafUwUnVbGqyBr+FDAIV7Wyzqiu09LM4ePn2E0FfO1lJ0K5NqK3LEGuXfPuzHL+3ieHTnxgEyc4ZwXniIxuXlS1A1Wzd/xhF6hJcqFwpDnAsOmwn7YiT01/QVgYUgplt6PyDBKIA9dS77V7Xz6oKCDrXnEz7gE=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BB0FFD6350543642ACE024F2FCB38150@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 25 Jun 2019 23:41:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726880AbfFZDlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:41:45 -0400
+Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6362F2168B;
+        Wed, 26 Jun 2019 03:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561520504;
+        bh=rhVLW5hBkjFRb9VPCj9+agroOiXlytsEqAo5ZrqBteM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HyHiRFwfQcYeSZJf5ZKGvWQrTk0IzbbfjLgKDxXeGGrGv6h61Uz6gNZPvoXsOni7d
+         SDV9s7kDnNfxU1QrtSHm/7GwZdEVnQTU79Lq3VaZv3c3oOCnHvNHdqQaMZeZ5JDjZg
+         Lnsl4v8LABC3AY5HTcTb7YpMGyAmggJ4LRJ4XUdI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?B=C5=82a=C5=BCej=20Szczygie=C5=82?= <spaz16@wp.pl>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 12/51] HID: a4tech: fix horizontal scrolling
+Date:   Tue, 25 Jun 2019 23:40:28 -0400
+Message-Id: <20190626034117.23247-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
+References: <20190626034117.23247-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58e169ea-a6fd-447a-13f4-08d6f9e83183
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 03:41:37.6757
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4808
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdW4gMjUsIDIwMTksIGF0IDg6MzUgUE0sIEFuZHkgTHV0b21pcnNraSA8bHV0b0BrZXJu
-ZWwub3JnPiB3cm90ZToNCj4gDQo+IE9uIFR1ZSwgSnVuIDI1LCAyMDE5IGF0IDc6MzkgUE0gTmFk
-YXYgQW1pdCA8bmFtaXRAdm13YXJlLmNvbT4gd3JvdGU6DQo+Pj4gT24gSnVuIDI1LCAyMDE5LCBh
-dCAyOjQwIFBNLCBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5AaW50ZWwuY29tPiB3cm90ZToNCj4+
-PiANCj4+PiBPbiA2LzEyLzE5IDExOjQ4IFBNLCBOYWRhdiBBbWl0IHdyb3RlOg0KPj4+PiBTdXBw
-b3J0IHRoZSBuZXcgaW50ZXJmYWNlIG9mIGZsdXNoX3RsYl9tdWx0aSwgd2hpY2ggYWxzbyBmbHVz
-aGVzIHRoZQ0KPj4+PiBsb2NhbCBDUFUncyBUTEIsIGluc3RlYWQgb2YgZmx1c2hfdGxiX290aGVy
-cyB0aGF0IGRvZXMgbm90LiBUaGlzDQo+Pj4+IGludGVyZmFjZSBpcyBtb3JlIHBlcmZvcm1hbnQg
-c2luY2UgaXQgcGFyYWxsZWxpemUgcmVtb3RlIGFuZCBsb2NhbCBUTEINCj4+Pj4gZmx1c2hlcy4N
-Cj4+Pj4gDQo+Pj4+IFRoZSBhY3R1YWwgaW1wbGVtZW50YXRpb24gb2YgZmx1c2hfdGxiX211bHRp
-KCkgaXMgYWxtb3N0IGlkZW50aWNhbCB0bw0KPj4+PiB0aGF0IG9mIGZsdXNoX3RsYl9vdGhlcnMo
-KS4NCj4+PiANCj4+PiBUaGlzIGNvbmZ1c2VkIG1lIGEgYml0LiAgSSB0aG91Z2h0IHdlIGRpZG4n
-dCBzdXBwb3J0IHBhcmF2aXJ0dWFsaXplZA0KPj4+IGZsdXNoX3RsYl9tdWx0aSgpIGZyb20gcmVh
-ZGluZyBlYXJsaWVyIGluIHRoZSBzZXJpZXMuDQo+Pj4gDQo+Pj4gQnV0LCBpdCBzZWVtcyBsaWtl
-IHRoYXQgbWlnaHQgYmUgWGVuLW9ubHkgYW5kIGRvZXNuJ3QgYXBwbHkgdG8gS1ZNIGFuZA0KPj4+
-IHBhcmF2aXJ0dWFsaXplZCBLVk0gaGFzIG5vIHByb2JsZW0gc3VwcG9ydGluZyBmbHVzaF90bGJf
-bXVsdGkoKS4gIElzDQo+Pj4gdGhhdCByaWdodD8gIEl0IG1pZ2h0IGJlIGdvb2QgdG8gaW5jbHVk
-ZSBzb21lIG9mIHRoYXQgYmFja2dyb3VuZCBpbiB0aGUNCj4+PiBjaGFuZ2Vsb2cgdG8gc2V0IHRo
-ZSBjb250ZXh0Lg0KPj4gDQo+PiBJ4oCZbGwgdHJ5IHRvIGltcHJvdmUgdGhlIGNoYW5nZS1sb2dz
-IGEgYml0LiBUaGVyZSBpcyBubyBpbmhlcmVudCByZWFzb24gZm9yDQo+PiBQViBUTEItZmx1c2hl
-cnMgbm90IHRvIGltcGxlbWVudCB0aGVpciBvd24gZmx1c2hfdGxiX211bHRpKCkuIEl0IGlzIGxl
-ZnQNCj4+IGZvciBmdXR1cmUgd29yaywgYW5kIGhlcmUgYXJlIHNvbWUgcmVhc29uczoNCj4+IA0K
-Pj4gMS4gSHlwZXItVi9YZW4gVExCLWZsdXNoaW5nIGNvZGUgaXMgbm90IHZlcnkgc2ltcGxlDQo+
-PiAyLiBJIGRvbuKAmXQgaGF2ZSBhIHByb3BlciBzZXR1cA0KPj4gMy4gSSBhbSBsYXp5DQo+IA0K
-PiBJbiB0aGUgbG9uZyBydW4sIEkgdGhpbmsgdGhhdCB3ZSdyZSBnb2luZyB0byB3YW50IGEgd2F5
-IGZvciBvbmUgQ1BVIHRvDQo+IGRvIGEgcmVtb3RlIGZsdXNoIGFuZCB0aGVuLCB3aXRoIGFwcHJv
-cHJpYXRlIGxvY2tpbmcsIHVwZGF0ZSB0aGUNCj4gdGxiX2dlbiBmaWVsZHMgZm9yIHRoZSByZW1v
-dGUgQ1BVLiAgR2V0dGluZyB0aGlzIHJpZ2h0IG1heSBiZSBhIGJpdA0KPiBub250cml2aWFsLg0K
-DQpXaGF0IGRvIHlvdSBtZWFuIGJ5IOKAnGRvIGEgcmVtb3RlIGZsdXNo4oCdPw0KDQo=
+From: Błażej Szczygieł <spaz16@wp.pl>
+
+[ Upstream commit abf82e8f7e9af40a49e3d905187c662a43c96c8f ]
+
+Since recent high resolution scrolling changes the A4Tech driver must
+check for the "REL_WHEEL_HI_RES" usage code.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203369
+Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e ("HID: input: use the Resolution Multiplier for high-resolution scrolling")
+Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/hid-a4tech.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+index 9428ea7cdf8a..c3a6ce3613fe 100644
+--- a/drivers/hid/hid-a4tech.c
++++ b/drivers/hid/hid-a4tech.c
+@@ -38,8 +38,10 @@ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ {
+ 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+ 
+-	if (usage->type == EV_REL && usage->code == REL_WHEEL)
++	if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
+ 		set_bit(REL_HWHEEL, *bit);
++		set_bit(REL_HWHEEL_HI_RES, *bit);
++	}
+ 
+ 	if ((a4->quirks & A4_2WHEEL_MOUSE_HACK_7) && usage->hid == 0x00090007)
+ 		return -1;
+@@ -60,7 +62,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 	input = field->hidinput->input;
+ 
+ 	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8) {
+-		if (usage->type == EV_REL && usage->code == REL_WHEEL) {
++		if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
+ 			a4->delayed_value = value;
+ 			return 1;
+ 		}
+@@ -68,6 +70,8 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 		if (usage->hid == 0x000100b8) {
+ 			input_event(input, EV_REL, value ? REL_HWHEEL :
+ 					REL_WHEEL, a4->delayed_value);
++			input_event(input, EV_REL, value ? REL_HWHEEL_HI_RES :
++					REL_WHEEL_HI_RES, a4->delayed_value * 120);
+ 			return 1;
+ 		}
+ 	}
+@@ -77,8 +81,9 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 		return 1;
+ 	}
+ 
+-	if (usage->code == REL_WHEEL && a4->hw_wheel) {
++	if (usage->code == REL_WHEEL_HI_RES && a4->hw_wheel) {
+ 		input_event(input, usage->type, REL_HWHEEL, value);
++		input_event(input, usage->type, REL_HWHEEL_HI_RES, value * 120);
+ 		return 1;
+ 	}
+ 
+-- 
+2.20.1
+
