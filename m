@@ -2,170 +2,122 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05737C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1BFC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF8E2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DA420B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IkHW2/q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfFZIDJ (ORCPT
+        id S1726565AbfFZIDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 26 Jun 2019 04:03:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53806 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726242AbfFZIDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34957 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZIDI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 04:03:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 16173AE20;
-        Wed, 26 Jun 2019 08:03:07 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 10:03:03 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com,
-        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
-        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
-Message-ID: <20190626080249.GA30863@linux>
-References: <20190625075227.15193-1-osalvador@suse.de>
- <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+Received: by mail-pf1-f195.google.com with SMTP id d126so931164pfd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 01:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nwcdyZlVJNYhzqAX8drYdwwlincSCC0RlYdtVUa7uAU=;
+        b=IkHW2/q5zYf/AiFOwOUn62sZGCukGK93pV5qaXaFIqAD6rVurvvvVguZ0CQNqSK004
+         PUW6XYRD1tpIvu/H8uK2xdNaMWkc3s+ZreXHoEsItZgP1H729MJ8nowT1aehVpl1AnJq
+         rAPmVbRpyeOR+0aKXV1iywesPypOO3F4fwUcKnHNHDKkSlnXU9KrB33bQAymKu7tZx6G
+         yt/Ix8apmwB+zPUY0f7g7GrCvvhKCA2B8FFf68JI9BW8d/snEU6oOmLqSE4EOwMnXWLP
+         uFddQ1SWm8yfpnKxzglfseoQZZbmazxOSGTrgVrxfJIOk1+YhP4zhoDMctTsB330F1Sn
+         /4dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nwcdyZlVJNYhzqAX8drYdwwlincSCC0RlYdtVUa7uAU=;
+        b=ZNIxTc9nsDJz3fjZomNhH/uSevfdUZbiWGyL8qlTaqlnncqYlACB2Vm4uPyr1fXy2r
+         NbGeRPYGBUG3iCIL8+uFn/w2Rakg+hIdt/qalABX8VsKR/WC/vym5mGMG6JamOY3c4CM
+         uyrjjGkpA+Hn3ironVAd/fVLipanGycoSvCMVGgwsWTIUeND8EFVX0sMC/y4DYO6D+R0
+         Qq542PMdDyegzr2gqgj60hoJpI+hKD/UhVvjRP7hbLUWu4GKhpkHLHQqaQKZ1jEf3nhc
+         r4+xP6Yp2vi63XSqfycXWzcb2s8iKXNfj14PNG2B5r2NhyHsPM5UG5aQmA60woxg78av
+         DoEg==
+X-Gm-Message-State: APjAAAWCR+dRVSxwbRq+DDQEOr7kRJqn9VWvYJeZ4+miGeF0iGNI700n
+        l9ovgR2jpTL5qM8Q5pIbU8Qzky1T8aETcUGMoXBX0A==
+X-Google-Smtp-Source: APXvYqzSvFzyXqC4mv+sYfABQnmt0YNMhvFTkgdzLZZeovItyFY3wThgA7+iWx0YSEf5WS6vtdXjsfVxGyJkZN8WaD8=
+X-Received: by 2002:a17:90a:9382:: with SMTP id q2mr3140021pjo.131.1561536186861;
+ Wed, 26 Jun 2019 01:03:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-14-brendanhiggins@google.com> <20190626000150.GT19023@42.do-not-panic.com>
+In-Reply-To: <20190626000150.GT19023@42.do-not-panic.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 26 Jun 2019 01:02:55 -0700
+Message-ID: <CAFd5g44kkepB2hZcpYL-NB5ZHYE5tP7W-0yducGCX7Khd9gd9w@mail.gmail.com>
+Subject: Re: [PATCH v5 13/18] kunit: tool: add Python wrappers for running
+ KUnit tests
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Felix Guo <felixguoxiuping@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:25:48AM +0200, David Hildenbrand wrote:
-> > [Coverletter]
-> > 
-> > This is another step to make memory hotplug more usable. The primary
-> > goal of this patchset is to reduce memory overhead of the hot-added
-> > memory (at least for SPARSEMEM_VMEMMAP memory model). The current way we use
-> > to populate memmap (struct page array) has two main drawbacks:
+On Tue, Jun 25, 2019 at 5:01 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 01:26:08AM -0700, Brendan Higgins wrote:
+> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
+> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-crash.log
+> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-failure.log
+> >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-no_tests_run.log
+> >  create mode 100644 tools/testing/kunit/test_data/test_output_isolated_correctly.log
+> >  create mode 100644 tools/testing/kunit/test_data/test_read_from_file.kconfig
+>
+> Why are these being added upstream? The commit log does not explain
+> this.
 
-First off, thanks for looking into this :-)
-
-> 
-> Mental note: How will it be handled if a caller specifies "Allocate
-> memmap from hotadded memory", but we are running under SPARSEMEM where
-> we can't do this.
-
-In add_memory_resource(), we have a call to mhp_check_correct_flags(), which is
-in charge of checking if the flags passed are compliant with our configuration
-among other things.
-It also checks if both flags were passed (_MEMBLOCK|_DEVICE).
-
-If a) any of the flags were specified and we are not on CONFIG_SPARSEMEM_VMEMMAP,
-b) the flags are colliding with each other or c) the flags just do not make sense,
-we print out a warning and drop the flags to 0, so we just ignore them.
-
-I just realized that I can adjust the check even more (something for the next
-version).
-
-But to answer your question, flags are ignored under !CONFIG_SPARSEMEM_VMEMMAP.
-
-> 
-> > 
-> > a) it consumes an additional memory until the hotadded memory itself is
-> >    onlined and
-> > b) memmap might end up on a different numa node which is especially true
-> >    for movable_node configuration.
-> > 
-> > a) it is a problem especially for memory hotplug based memory "ballooning"
-> >    solutions when the delay between physical memory hotplug and the
-> >    onlining can lead to OOM and that led to introduction of hacks like auto
-> >    onlining (see 31bc3858ea3e ("memory-hotplug: add automatic onlining
-> >    policy for the newly added memory")).
-> > 
-> > b) can have performance drawbacks.
-> > 
-> > Another minor case is that I have seen hot-add operations failing on archs
-> > because they were running out of order-x pages.
-> > E.g On powerpc, in certain configurations, we use order-8 pages,
-> > and given 64KB base pagesize, that is 16MB.
-> > If we run out of those, we just fail the operation and we cannot add
-> > more memory.
-> 
-> At least for SPARSEMEM, we fallback to vmalloc() to work around this
-> issue. I haven't looked into the populate_section_memmap() internals
-> yet. Can you point me at the code that performs this allocation?
-
-Yes, on SPARSEMEM we first try to allocate the pages physical configuous, and
-then fallback to vmalloc.
-This is because on CONFIG_SPARSEMEM memory model, the translations pfn_to_page/
-page_to_pfn do not expect the memory to be contiguous.
-
-But that is not the case on CONFIG_SPARSEMEM_VMEMMAP.
-We do expect the memory to be physical contigous there, that is why a simply
-pfn_to_page/page_to_pfn is a matter of adding/substracting vmemmap/pfn.
-
-Powerpc code is at:
-
-https://elixir.bootlin.com/linux/v5.2-rc6/source/arch/powerpc/mm/init_64.c#L175
-
-
-
-> So, assuming we add_memory(1GB, MHP_MEMMAP_DEVICE) and then
-> remove_memory(128MB) of the added memory, this will work?
-
-No, MHP_MEMMAP_DEVICE is meant to be used when hot-adding and hot-removing work
-in the same granularity.
-This is because all memmap pages will be stored at the beginning of the memory
-range.
-Allowing hot-removing in a different granularity on MHP_MEMMAP_DEVICE would imply
-a lot of extra work.
-For example, we would have to parse the vmemmap-head of the hot-removed range,
-and punch a hole in there to clear the vmemmap pages, and then be very carefull
-when deleting those pagetables.
-
-So I followed Michal's advice, and I decided to let the caller specify if he
-either wants to allocate per memory block or per hot-added range(device).
-Where per memory block, allows us to do:
-
-add_memory(1GB, MHP_MEMMAP_MEMBLOCK)
-remove_memory(128MB)
-
-
-> add_memory(8GB, MHP_MEMMAP_DEVICE)
-> 
-> For 8GB, we will need exactly 128MB of memmap if I did the math right.
-> So exactly one section. This section will still be marked as being
-> online (although not pages on it are actually online)?
-
-Yap, 8GB will fill the first section with vmemmap pages.
-It will be marked as online, yes.
-This is not to diverge too much from what we have right now, and starting
-treat some sections different than others.
-E.g: Early sections that are used for memmap pages on early boot stage.
-
-> > 
-> > What we do is that since when we hot-remove a memory-range, sections are being
-> > removed sequentially, we wait until we hit the last section, and then we free
-> > the hole range to vmemmap_free backwards.
-> > We know that it is the last section because in every pass we
-> > decrease head->_refcount, and when it reaches 0, we got our last section.
-> > 
-> > We also have to be careful about those pages during online and offline
-> > operations. They are simply skipped, so online will keep them
-> > reserved and so unusable for any other purpose and offline ignores them
-> > so they do not block the offline operation.
-> 
-> I assume that they will still be dumped normally by user space. (as they
-> are described by a "memory resource" and not PG_Offline)
-
-They are PG_Reserved.
-Anyway, you mean by crash-tool?
-
-
--- 
-Oscar Salvador
-SUSE L3
+Oh sorry, those are for testing purposes. I thought that was clear
+from being in the test_data directory. I will reference it in the
+commit log in the next revision.
