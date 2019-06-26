@@ -2,85 +2,97 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD8CC48BDA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEA1C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC57F2133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628C12133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfFZOap (ORCPT
+        id S1728110AbfFZOax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:30:45 -0400
-Received: from www62.your-server.de ([213.133.104.62]:44192 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfFZOap (ORCPT
+        Wed, 26 Jun 2019 10:30:53 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:39708 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfFZOav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:30:45 -0400
-Received: from [78.46.172.2] (helo=sslproxy05.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hg8wV-0000Sf-5y; Wed, 26 Jun 2019 16:30:35 +0200
-Received: from [2a02:1205:5054:6d70:b45c:ec96:516a:e956] (helo=linux.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hg8wU-000Rp6-U7; Wed, 26 Jun 2019 16:30:34 +0200
-Subject: Re: [PATCH] xsk: Properly terminate assignment in
- xskq_produce_flush_desc
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Huckleberry <nhuck@google.com>
-References: <20190625182352.13918-1-natechancellor@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <253f2fcd-f62d-90e1-2963-c8e5cdda4726@iogearbox.net>
-Date:   Wed, 26 Jun 2019 16:30:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Wed, 26 Jun 2019 10:30:51 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id A684C2003C;
+        Wed, 26 Jun 2019 16:30:47 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 16:30:46 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Xi Wang <wangxi11@huawei.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: add more hints about SUBDIRS replacement
+Message-ID: <20190626143046.GA12510@ravnborg.org>
+References: <20190625085127.9446-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <20190625182352.13918-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25492/Wed Jun 26 10:00:16 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625085127.9446-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8
+        a=c-n4J4-pAAAA:8 a=7gkXJVJtAAAA:8 a=Sq-7mj1JxeWlg5ll3zAA:9
+        a=CjuIK1q_8ugA:10 a=W4TVW4IDbPiebHqcZpNg:22 a=L0NDqeB7ZLmQzAogN4cw:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/25/2019 08:23 PM, Nathan Chancellor wrote:
-> Clang warns:
+On Tue, Jun 25, 2019 at 05:51:27PM +0900, Masahiro Yamada wrote:
+> Commit 0126be38d988 ("kbuild: announce removal of SUBDIRS if used")
+> added a hint about the 'SUBDIRS' replacement, but it was not clear
+> enough.
 > 
-> In file included from net/xdp/xsk_queue.c:10:
-> net/xdp/xsk_queue.h:292:2: warning: expression result unused
-> [-Wunused-value]
->         WRITE_ONCE(q->ring->producer, q->prod_tail);
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/compiler.h:284:6: note: expanded from macro 'WRITE_ONCE'
->         __u.__val;                                      \
->         ~~~ ^~~~~
-> 1 warning generated.
+> Multiple people sent me similar questions, patches.
 > 
-> The q->prod_tail assignment has a comma at the end, not a semi-colon.
-> Fix that so clang no longer warns and everything works as expected.
+>   https://lkml.org/lkml/2019/1/17/456
 > 
-> Fixes: c497176cb2e4 ("xsk: add Rx receive functions and poll support")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/544
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> I did not mean to suggest M= for building a subdirectory in the kernel
+> tree.
+> 
+> >From the commit 669efc76b317 ("net: hns3: fix compile error"), people
+> already (ab)use M=... to do that because it seems to work to some extent.
+> 
+> Documentation/kbuild/kbuild.txt says M= and KBUILD_EXTMOD are used for
+> building external modules.
+> 
+> In fact, Kbuild supports the single target '%/' for this purpose, but
+> this may not be noticed much.
+> 
+> Kindly add more hints.
+> 
+> Makefile:213: ================= WARNING ================
+> Makefile:214: 'SUBDIRS' will be removed after Linux 5.3
+> Makefile:215:
+> Makefile:216: If you are building an individual subdirectory
+> Makefile:217: in the kernel tree, you can do like this:
+> Makefile:218: $ make path/to/dir/you/want/to/build/
+> Makefile:219: (Do not forget the trailing slash)
+> Makefile:220:
+> Makefile:221: If you are building an external module,
+> Makefile:222: Please use 'M=' or 'KBUILD_EXTMOD' instead
+> Makefile:223: ==========================================
+> 
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Applied, thanks!
+Nice!
+
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+	Sam
