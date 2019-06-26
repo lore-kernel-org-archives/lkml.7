@@ -2,101 +2,131 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293E1C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB2CC48BD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0123F208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pVlUNDcM"
+	by mail.kernel.org (Postfix) with ESMTP id F3A9A2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfFZAQA (ORCPT
+        id S1726374AbfFZAXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 20:16:00 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:40146 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfFZAQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 20:16:00 -0400
-Received: by mail-yb1-f196.google.com with SMTP id i14so273711ybp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 17:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9hBC31XsM1drX/BZAp0N2OzT0r+e6co+lkmZ6G0GOVU=;
-        b=pVlUNDcM4cTi+agb1ezQeSRdpds872gA7cb6ZJ+baveCQCZw167X+Pb0NoSrYCPnIZ
-         sf2SLj7IntgrbvnK4d70pRjkOHGKLkGjpCUUeY1KiNj4MKlhKC7A60xtgR4RarZVhHa8
-         wUZY/HAv8uD8BwX9pcaLVVV9tVpVaTKtHLevMa/qA4Y4yPsSIy/xJzezpaGNRWYRP9dL
-         rUx+O8OaqM4GcgiHUT/QEEjFbkksKz10UfVJ98MwhivQPhcj7ocX9O1xHW8OSBY7TaUw
-         YHKHz2eNMBMhLFeUUtjp5QOHRhrZ9fxu2wmFJEC2OJjqXK3sJenC0N1OVW3pJNyS1pxO
-         BwdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9hBC31XsM1drX/BZAp0N2OzT0r+e6co+lkmZ6G0GOVU=;
-        b=aoeuuNCYiqixpwhLq0zKz5QtPQajsyXT54QMYsV+SbHN1pM5cEPzqhpFSsrhgSm2sw
-         FLfwAF1pnhBm1o/3QsieDXYnq0olmdEWHzkXVfLQiVyVMxYuPMYzdSM9rhHDKGoZp7KU
-         EVXsosLz1Q8DNuCxUqsbsnKYQENxtnO+vcM+PJ73a6I9BnGJ1BjOoJPVThAiojMwK75T
-         Lp+EjIUCVR4KGnWl33gP2vwIVZ0M3SelzI1poVXFn208C1WjLo3FVyIZ0gLcKTRpHX1D
-         MOdZJsEVVQjB7Vqj2ZdgQjVPJj4JZD2JvQ1NUkjXujkjJQ61vJDPy/aGJqilhk7pNGxc
-         mS3Q==
-X-Gm-Message-State: APjAAAXuJy1XtW+rC/QE2koOJ25FXm0tEqE4sb9T17zbq7BtKtlskj4X
-        5WWP12E3qndUpVX6QMGNxMybiuLTXCrxZbvl3lT2gw==
-X-Google-Smtp-Source: APXvYqziwXiEu45zHzvz6AOVywxIKSFUF9xqlnDZnM9NN4/TdLcixitnoMQV0xS/KG+Sf7SbappnvvAohrHdZMKzwm8=
-X-Received: by 2002:a25:a107:: with SMTP id z7mr790646ybh.165.1561508159394;
- Tue, 25 Jun 2019 17:15:59 -0700 (PDT)
+        Tue, 25 Jun 2019 20:23:12 -0400
+Received: from mx.ewheeler.net ([66.155.3.69]:47178 "EHLO mx.ewheeler.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725782AbfFZAXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 20:23:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mx.ewheeler.net (Postfix) with ESMTP id 439D3A0692;
+        Wed, 26 Jun 2019 00:23:10 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at ewheeler.net
+Received: from mx.ewheeler.net ([127.0.0.1])
+        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id XUUrvMZH-9KD; Wed, 26 Jun 2019 00:23:09 +0000 (UTC)
+Received: from mx.ewheeler.net (mx.ewheeler.net [66.155.3.69])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx.ewheeler.net (Postfix) with ESMTPSA id 769DFA067D;
+        Wed, 26 Jun 2019 00:23:09 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 00:23:09 +0000 (UTC)
+From:   Eric Wheeler <bcache@lists.ewheeler.net>
+X-X-Sender: lists@mx.ewheeler.net
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "open list\\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list\\:BCACHE \\(BLOCK LAYER CACHE\\)" 
+        <linux-bcache@vger.kernel.org>
+Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent
+ for hardware raid5/6
+In-Reply-To: <yq17e9ao9c3.fsf@oracle.com>
+Message-ID: <alpine.LRH.2.11.1906260005570.1114@mx.ewheeler.net>
+References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>        <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>        <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>        <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
+ <yq17e9ao9c3.fsf@oracle.com>
+User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
 MIME-Version: 1.0
-References: <20190611231813.3148843-1-guro@fb.com> <20190611231813.3148843-10-guro@fb.com>
-In-Reply-To: <20190611231813.3148843-10-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 25 Jun 2019 17:15:48 -0700
-Message-ID: <CALvZod4YoO0eoQmocHEFP7zrYpf3SzvaBEDpfDHS=_fiCyYcAA@mail.gmail.com>
-Subject: Re: [PATCH v7 09/10] mm: stop setting page->mem_cgroup pointer for
- slab pages
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Waiman Long <longman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 4:18 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Every slab page charged to a non-root memory cgroup has a pointer
-> to the memory cgroup and holds a reference to it, which protects
-> a non-empty memory cgroup from being released. At the same time
-> the page has a pointer to the corresponding kmem_cache, and also
-> hold a reference to the kmem_cache. And kmem_cache by itself
-> holds a reference to the cgroup.
->
-> So there is clearly some redundancy, which allows to stop setting
-> the page->mem_cgroup pointer and rely on getting memcg pointer
-> indirectly via kmem_cache. Further it will allow to change this
-> pointer easier, without a need to go over all charged pages.
->
-> So let's stop setting page->mem_cgroup pointer for slab pages,
-> and stop using the css refcounter directly for protecting
-> the memory cgroup from going away. Instead rely on kmem_cache
-> as an intermediate object.
->
-> Make sure that vmstats and shrinker lists are working as previously,
-> as well as /proc/kpagecgroup interface.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+On Mon, 24 Jun 2019, Martin K. Petersen wrote:
+> > Perhaps they do not set stripe_width using io_opt? I did a grep to see
+> > if any of them did, but I didn't see them. How is stripe_width
+> > indicated by RAID controllers?
+> 
+> The values are reported in the Block Limits VPD page for each SCSI block
+> device and are thus set by the SCSI disk driver. IOW, the RAID
+> controller device drivers have nothing to do with this.
+> 
+> For RAID controllers specifically, the controller firmware will fill out
+> the VPD fields for each virtual SCSI disk when you configure a RAID
+> set. For pretty much everything else, the Block Limits come straight
+> from the device itself.
+> 
+> Also note that these values aren't specific to RAID controllers at
+> all. Most new SCSI devices, including disk drives and SSDs, will fill
+> out the Block Limits VPD page one way or the other. Even some USB
+> storage devices are providing this page.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Thanks, that makes sense.  Interesting about USB.
+
+> > If they do set io_opt, then at least my Areca 1883 does not set io_opt
+> > as of 4.19.x. I also have a LSI MegaRAID 3108 which does not report
+> > io_opt as of 4.1.x, but that is an older kernel so maybe support has
+> > been added since then.
+> 
+> I have several MegaRAIDs that all report it. But it depends on the
+> controller firmware.
+> 
+> > Is it visible through sysfs or debugfs so I can check my hardware
+> > support without hacking debugging the kernel?
+> 
+> To print the block device topology:
+> 
+>   # lsblk -t
+> 
+> or look up io_opt in sysfs:
+> 
+>   # grep . /sys/block/sdX/queue/optimal_io_size
+> 
+> You can also query a SCSI device's Block Limits directly:
+> 
+>   # sg_vpd -p bl /dev/sdX
+
+Perfect, thank you for that.  I've tried the following controllers that I 
+have access to.  One worked (hspa/HP Gen8 Smart Array Controller), but the 
+others I tried are not providing VPDs:
+
+* LSI 2108 (Supermicro)
+* LSI 3108 (Dell)
+* Areca 1882
+* Areca 1883
+* Fibrechannel 8gbe connected to a Storwize 3700
+
+~]# sg_vpd -p bl /dev/sdb
+VPD page=0xb0
+fetching VPD page failed
+
+> If you want to tinker, you can simulate a SCSI disk with your choice of
+> io_opt:
+> 
+>   # modprobe scsi_debug opt_blks=N
+> 
+> where N is the number of logical blocks to report as being the optimal
+> I/O size.
+
+Neat, thanks for the hint!
+
+-Eric
+
+> 
+> -- 
+> Martin K. Petersen	Oracle Linux Engineering
+> 
