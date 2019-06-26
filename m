@@ -2,161 +2,215 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC259C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2689C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8532063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B39D22146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Iuc2V5mr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ih5M2Y3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfFZB5v (ORCPT
+        id S1726423AbfFZCAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:57:51 -0400
-Received: from mail-eopbgr780088.outbound.protection.outlook.com ([40.107.78.88]:1728
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726179AbfFZB5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:57:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UCgU2UIfthTc7xUNHwpOrLgWLHU77DfS0BTrmmOH1Gg=;
- b=Iuc2V5mriIE+rdiWksQpVH1QvXNXvLLbj9o4mFQvCmOvq5I3JPkZaOFAi5jmvIZp2peWSobVB+qQEy6zwX90pxxmuLqtNIu3UjVihfwgPTB22OpfXltxM0l7vffG0itrni6Wmw8Cxu7UmL0Vp2AYl9VHkswjsJ2jo7K+I/dPh9I=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB5208.namprd05.prod.outlook.com (20.177.231.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.12; Wed, 26 Jun 2019 01:57:46 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Wed, 26 Jun 2019
- 01:57:45 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 3/9] x86/mm/tlb: Refactor common code into
- flush_tlb_on_cpus()
-Thread-Topic: [PATCH 3/9] x86/mm/tlb: Refactor common code into
- flush_tlb_on_cpus()
-Thread-Index: AQHVIbQhVsEritjn5k+CF/E65fz2xqas8JOAgABRHIA=
-Date:   Wed, 26 Jun 2019 01:57:45 +0000
-Message-ID: <30E271DF-8D6B-4D5F-8033-9B17F6990994@vmware.com>
-References: <20190613064813.8102-1-namit@vmware.com>
- <20190613064813.8102-4-namit@vmware.com>
- <9079f1f2-103b-42ca-853e-07ae2566eb72@intel.com>
-In-Reply-To: <9079f1f2-103b-42ca-853e-07ae2566eb72@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [204.134.128.110]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2514195d-ff27-47d0-ff09-08d6f9d9af0a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5208;
-x-ms-traffictypediagnostic: BYAPR05MB5208:
-x-microsoft-antispam-prvs: <BYAPR05MB5208403A8B4134BD4A601F6FD0E20@BYAPR05MB5208.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(376002)(346002)(39860400002)(136003)(51914003)(189003)(199004)(8676002)(64756008)(71200400001)(3846002)(66556008)(73956011)(6116002)(66446008)(33656002)(54906003)(478600001)(6436002)(486006)(76116006)(316002)(5660300002)(14444005)(256004)(6916009)(25786009)(102836004)(14454004)(71190400001)(53936002)(53546011)(6486002)(26005)(66066001)(6506007)(91956017)(66476007)(4326008)(66946007)(86362001)(186003)(229853002)(305945005)(6246003)(2616005)(36756003)(11346002)(7736002)(446003)(81166006)(81156014)(476003)(2906002)(68736007)(76176011)(99286004)(6512007)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5208;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pWzwdvvTncVvWHVRBKSPga2TFNwzpCew6vmmLODKF/oAjF71wxwj/3Q+Zhay9GdRHFwLBW71yoxlrXKNcT0zH9MJappzzs6B21CrNd5x1dcKjNz92G+IpeyXhbOEW3RuiyR3ydiVAWITeCB6XmK8/xSwkTXnMEP7km8j3w9cNwXdBlUBScsgqbzzgjplAo5wC/IMYjY+dO06gsKFw3T397nSaZj/HWGaaGrmkYmCEL6rWiGGNQ1JQDOd3XN3ySL2HyZG0+fmYHS/XMQiEhUH1e7B3nxN14lP0hnkMcirErWY39cItSfFPXRLa3GvSOkprphmHTwOO+3MxGntSXkOMz/NHtqj1UA0ZY1yUIEroftuk1n80MJsE0xVBnsZrZ/EYKXIdcnYlVECMXj7DFzj9GhVXx4sYTP1qzlwEcFhjfo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <850B46AB0029C6479810B656182E5A57@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 25 Jun 2019 22:00:16 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40339 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfFZCAQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 22:00:16 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a15so702832qtn.7;
+        Tue, 25 Jun 2019 19:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HpuOAuDXoNiwLSESipUp418iEseXPPASUvyqCZTf5Mw=;
+        b=ih5M2Y3Xez7rNTHKOdlM0tA286STlKgr0/S9be5v1HeIoO44m1lsSarxkBC+N2Eb5e
+         W6TFBwV5Y8BTqg/UVh2Q54hNNwEsbBxxXJTu+Nb2X5wXpxnEybX189zU6B4XuLFm+1s9
+         py5t3So+h2DLha0uHL255bEV/OSvCwjNW6PG0y7in0SLWPPEeEJLyfA0jiyBloaytdFs
+         Dd314PKfwvjqJbLB37OF/cHZNgB7KDkLcPKvpjGCD9Ey++WWzZwJzsYsT0/7g948xvFB
+         8tXoC/jw5KrGSg/vsypNyJLNyiGtllA9achRbzPAnoKbCGCljkRnzzHLbFWafVbZr4h8
+         p/UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HpuOAuDXoNiwLSESipUp418iEseXPPASUvyqCZTf5Mw=;
+        b=ge33L5oGSKSR53+Fg6+/srbpG4PfEqdhv+xcH1C+7k0SS+3zQTXRGNrCdmuTb+mLi/
+         IqYStXuqPDEtXeNZ7OjTeBsHOB+1Pr0GYVw9WIDgYrn279akoahcC+VSL4BB7nzahWv5
+         MdT5clU6RyyoFQ6xJVPul+P2qXfjPxqAxZc+nc903wAdhIVVyVAjEf/VbbJGaehgIpS2
+         5QtxxIoU7v9M8WnBoRMF66hTD9m6/r5sEUCp8D5d7ViIcOfWC8PzX3udeTcSr1kEmglY
+         6zLT+sECmdnSwRNM37SPwu+Oh/1VIWwMDEZ6NQwIpY+YLw7MWc7Kv5IY/C3cVWThmEcX
+         9BMg==
+X-Gm-Message-State: APjAAAWMS/fs1CrKfNptAWW8lHd7xEc609Zof3KDwse217sSFuba/aTK
+        aHJVPszHnJd9/8pB1ecTu1c=
+X-Google-Smtp-Source: APXvYqxsk2sgNVPX0AcZD0OT3YkQmpZyeNJy6aJjXO819o3LNuOBXTzhKg373EnrondH0ZYKDY2mWg==
+X-Received: by 2002:a0c:b0ce:: with SMTP id p14mr1294280qvc.51.1561514415001;
+        Tue, 25 Jun 2019 19:00:15 -0700 (PDT)
+Received: from smtp.gmail.com ([187.121.151.146])
+        by smtp.gmail.com with ESMTPSA id a54sm6533140qtk.85.2019.06.25.19.00.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 25 Jun 2019 19:00:14 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 23:00:05 -0300
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH V4] drm/drm_vblank: Change EINVAL by the correct errno
+Message-ID: <20190626020005.vb5gmqcvkyzgcjee@smtp.gmail.com>
+References: <20190619020750.swzerehjbvx6sbk2@smtp.gmail.com>
+ <20190619074856.GJ12905@phenom.ffwll.local>
+ <20190619075059.GK12905@phenom.ffwll.local>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2514195d-ff27-47d0-ff09-08d6f9d9af0a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 01:57:45.8477
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5208
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="o7ebaymw2qc26tic"
+Content-Disposition: inline
+In-Reply-To: <20190619075059.GK12905@phenom.ffwll.local>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdW4gMjUsIDIwMTksIGF0IDI6MDcgUE0sIERhdmUgSGFuc2VuIDxkYXZlLmhhbnNlbkBp
-bnRlbC5jb20+IHdyb3RlOg0KPiANCj4gT24gNi8xMi8xOSAxMTo0OCBQTSwgTmFkYXYgQW1pdCB3
-cm90ZToNCj4+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9tbS90bGIuYyBiL2FyY2gveDg2L21tL3Rs
-Yi5jDQo+PiBpbmRleCA5MWY2ZGI5MjU1NGMuLmMzNGJjZjAzZjA2ZiAxMDA2NDQNCj4+IC0tLSBh
-L2FyY2gveDg2L21tL3RsYi5jDQo+PiArKysgYi9hcmNoL3g4Ni9tbS90bGIuYw0KPj4gQEAgLTcz
-NCw3ICs3MzQsMTEgQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgZmx1c2hfdGxiX2luZm8gKmdldF9m
-bHVzaF90bGJfaW5mbyhzdHJ1Y3QgbW1fc3RydWN0ICptbSwNCj4+IAkJCXVuc2lnbmVkIGludCBz
-dHJpZGVfc2hpZnQsIGJvb2wgZnJlZWRfdGFibGVzLA0KPj4gCQkJdTY0IG5ld190bGJfZ2VuKQ0K
-Pj4gew0KPj4gLQlzdHJ1Y3QgZmx1c2hfdGxiX2luZm8gKmluZm8gPSB0aGlzX2NwdV9wdHIoJmZs
-dXNoX3RsYl9pbmZvKTsNCj4+ICsJc3RydWN0IGZsdXNoX3RsYl9pbmZvICppbmZvOw0KPj4gKw0K
-Pj4gKwlwcmVlbXB0X2Rpc2FibGUoKTsNCj4+ICsNCj4+ICsJaW5mbyA9IHRoaXNfY3B1X3B0cigm
-Zmx1c2hfdGxiX2luZm8pOw0KPj4gDQo+PiAjaWZkZWYgQ09ORklHX0RFQlVHX1ZNDQo+PiAJLyoN
-Cj4+IEBAIC03NjIsNiArNzY2LDIzIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBwdXRfZmx1c2hfdGxi
-X2luZm8odm9pZCkNCj4+IAliYXJyaWVyKCk7DQo+PiAJdGhpc19jcHVfZGVjKGZsdXNoX3RsYl9p
-bmZvX2lkeCk7DQo+PiAjZW5kaWYNCj4+ICsJcHJlZW1wdF9lbmFibGUoKTsNCj4+ICt9DQo+IA0K
-PiBUaGUgYWRkaXRpb24gb2YgdGhpcyBkaXNhYmxlL2VuYWJsZSBwYWlyIGlzIHVuY2hhbmdlbG9n
-Z2VkIGFuZA0KPiB1bmNvbW1lbnRlZC4gIEkgdGhpbmsgaXQgbWFrZXMgc2Vuc2Ugc2luY2Ugd2Ug
-ZG8gbmVlZCB0byBtYWtlIHN1cmUgd2UNCj4gc3RheSBvbiB0aGlzIENQVSwgYnV0IGl0IHdvdWxk
-IGJlIG5pY2UgdG8gbWVudGlvbi4NCg0KSeKAmWxsIGFkZCBzb21lIGNvbW1lbnRzIGFuZCB1cGRh
-dGUgdGhlIGNoYW5nZWxpbmcgLiBJIHNlZSBJIG1hcmtlZA0KZ2V0X2ZsdXNoX3RsYl9pbmZvKCkg
-YXMg4oCcaW5saW5l4oCdIGZvciBubyByZWFzb24uIEnigJltIGdvaW5nIHRvIHJlbW92ZSBpdCBp
-bg0KdGhpcyBwYXRjaCwgdW5sZXNzIHlvdSBzYXkgaXQgc2hvdWxkIGJlIGluIGEgc2VwYXJhdGUg
-cGF0Y2guDQoNCj4+ICtzdGF0aWMgdm9pZCBmbHVzaF90bGJfb25fY3B1cyhjb25zdCBjcHVtYXNr
-X3QgKmNwdW1hc2ssDQo+PiArCQkJICAgICAgY29uc3Qgc3RydWN0IGZsdXNoX3RsYl9pbmZvICpp
-bmZvKQ0KPj4gK3sNCj4gDQo+IE1pZ2h0IGJlIG5pY2UgdG8gbWVudGlvbiB0aGF0IHByZWVtcHQg
-bXVzdCBiZSBkaXNhYmxlZC4gIEl0J3Mga2luZGENCj4gaW1wbGllZCBmcm9tIHRoZSBzbXBfcHJv
-Y2Vzc29yX2lkKCksIGJ1dCBiZWluZyBleHBsaWNpdCBpcyBhbHdheXMgbmljZSB0b28uDQoNCkkg
-d2lsbCBhZGQgYSBjb21tZW50LCBhbHRob3VnaCBzbXBfcHJvY2Vzc29yX2lkKCkgc2hvdWxkIGFu
-eWhvdyBzaG91dCBhdCB5b3UNCmlmIHlvdSB1c2UgaXQgd2l0aCBDT05GSUdfREVCVUdfUFJFRU1Q
-VD15Lg0KDQo+PiArCWludCB0aGlzX2NwdSA9IHNtcF9wcm9jZXNzb3JfaWQoKTsNCj4+ICsNCj4+
-ICsJaWYgKGNwdW1hc2tfdGVzdF9jcHUodGhpc19jcHUsIGNwdW1hc2spKSB7DQo+PiArCQlsb2Nr
-ZGVwX2Fzc2VydF9pcnFzX2VuYWJsZWQoKTsNCj4+ICsJCWxvY2FsX2lycV9kaXNhYmxlKCk7DQo+
-PiArCQlmbHVzaF90bGJfZnVuY19sb2NhbChpbmZvLCBUTEJfTE9DQUxfTU1fU0hPT1RET1dOKTsN
-Cj4+ICsJCWxvY2FsX2lycV9lbmFibGUoKTsNCj4+ICsJfQ0KPj4gKw0KPj4gKwlpZiAoY3B1bWFz
-a19hbnlfYnV0KGNwdW1hc2ssIHRoaXNfY3B1KSA8IG5yX2NwdV9pZHMpDQo+PiArCQlmbHVzaF90
-bGJfb3RoZXJzKGNwdW1hc2ssIGluZm8pOw0KPj4gfQ0KPj4gDQo+PiB2b2lkIGZsdXNoX3RsYl9t
-bV9yYW5nZShzdHJ1Y3QgbW1fc3RydWN0ICptbSwgdW5zaWduZWQgbG9uZyBzdGFydCwNCj4+IEBA
-IC03NzAsOSArNzkxLDYgQEAgdm9pZCBmbHVzaF90bGJfbW1fcmFuZ2Uoc3RydWN0IG1tX3N0cnVj
-dCAqbW0sIHVuc2lnbmVkIGxvbmcgc3RhcnQsDQo+PiB7DQo+PiAJc3RydWN0IGZsdXNoX3RsYl9p
-bmZvICppbmZvOw0KPj4gCXU2NCBuZXdfdGxiX2dlbjsNCj4+IC0JaW50IGNwdTsNCj4+IC0NCj4+
-IC0JY3B1ID0gZ2V0X2NwdSgpOw0KPj4gDQo+PiAJLyogU2hvdWxkIHdlIGZsdXNoIGp1c3QgdGhl
-IHJlcXVlc3RlZCByYW5nZT8gKi8NCj4+IAlpZiAoKGVuZCA9PSBUTEJfRkxVU0hfQUxMKSB8fA0K
-Pj4gQEAgLTc4NywxOCArODA1LDE4IEBAIHZvaWQgZmx1c2hfdGxiX21tX3JhbmdlKHN0cnVjdCBt
-bV9zdHJ1Y3QgKm1tLCB1bnNpZ25lZCBsb25nIHN0YXJ0LA0KPj4gCWluZm8gPSBnZXRfZmx1c2hf
-dGxiX2luZm8obW0sIHN0YXJ0LCBlbmQsIHN0cmlkZV9zaGlmdCwgZnJlZWRfdGFibGVzLA0KPj4g
-CQkJCSAgbmV3X3RsYl9nZW4pOw0KPj4gDQo+PiAtCWlmIChtbSA9PSB0aGlzX2NwdV9yZWFkKGNw
-dV90bGJzdGF0ZS5sb2FkZWRfbW0pKSB7DQo+PiAtCQlsb2NrZGVwX2Fzc2VydF9pcnFzX2VuYWJs
-ZWQoKTsNCj4+IC0JCWxvY2FsX2lycV9kaXNhYmxlKCk7DQo+PiAtCQlmbHVzaF90bGJfZnVuY19s
-b2NhbChpbmZvLCBUTEJfTE9DQUxfTU1fU0hPT1RET1dOKTsNCj4+IC0JCWxvY2FsX2lycV9lbmFi
-bGUoKTsNCj4+IC0JfQ0KPj4gKwkvKg0KPj4gKwkgKiBBc3NlcnQgdGhhdCBtbV9jcHVtYXNrKCkg
-Y29ycmVzcG9uZHMgd2l0aCB0aGUgbG9hZGVkIG1tLiBXZSBnb3Qgb25lDQo+PiArCSAqIGV4Y2Vw
-dGlvbjogZm9yIGluaXRfbW0gd2UgZG8gbm90IG5lZWQgdG8gZmx1c2ggYW55dGhpbmcsIGFuZCB0
-aGUNCj4+ICsJICogY3B1bWFzayBkb2VzIG5vdCBjb3JyZXNwb25kIHdpdGggbG9hZGVkX21tLg0K
-Pj4gKwkgKi8NCj4+ICsJVk1fV0FSTl9PTl9PTkNFKGNwdW1hc2tfdGVzdF9jcHUoc21wX3Byb2Nl
-c3Nvcl9pZCgpLCBtbV9jcHVtYXNrKG1tKSkgIT0NCj4+ICsJCQkobW0gPT0gdGhpc19jcHVfcmVh
-ZChjcHVfdGxic3RhdGUubG9hZGVkX21tKSkgJiYNCj4+ICsJCQltbSAhPSAmaW5pdF9tbSk7DQo+
-IA0KPiBWZXJ5IHZlcnkgY29vbC4gIFlvdSB0aG91Z2h0ICJ0aGVzZSBzaG91bGQgYmUgZXF1aXZh
-bGVudCIsIGFuZCB5b3UgYWRkZWQNCj4gYSBjb3JyZXNwb25kaW5nIHdhcm5pbmcgdG8gZW5zdXJl
-IHRoZXkgYXJlLg0KDQpUaGUgY3JlZGl0IGZvciB0aGlzIGFzc2VydGlvbiBnb2VzIHRvIFBldGVy
-IHdobyBzdWdnZXN0ZWQgSSBhZGQgaXQuLi4NCg0KPiANCj4+IC0JaWYgKGNwdW1hc2tfYW55X2J1
-dChtbV9jcHVtYXNrKG1tKSwgY3B1KSA8IG5yX2NwdV9pZHMpDQo+PiAtCQlmbHVzaF90bGJfb3Ro
-ZXJzKG1tX2NwdW1hc2sobW0pLCBpbmZvKTsNCj4+ICsJZmx1c2hfdGxiX29uX2NwdXMobW1fY3B1
-bWFzayhtbSksIGluZm8pOw0KPj4gDQo+PiAJcHV0X2ZsdXNoX3RsYl9pbmZvKCk7DQo+PiAtCXB1
-dF9jcHUoKTsNCj4+IH0NCj4gDQo+IA0KPiANCj4gUmV2aWV3ZWQtYnk6IERhdmUgSGFuc2VuIDxk
-YXZlLmhhbnNlbkBsaW51eC5pbnRlbC5jb20+DQoNClRoYW5rcyBmb3IgdGhlIHJldmlld3Mgb2Yg
-dGhpcyBwYXRjaCBhbmQgdGhlIG90aGVycyAoZG9u4oCZdCB3b3JyeSwgSSB3b27igJl0DQphZGQg
-dGhlIOKAnFJldmlld2VkLWJ54oCdIHRhZyB0byB0aGUgb3RoZXJzKS4=
+
+--o7ebaymw2qc26tic
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 06/19, Daniel Vetter wrote:
+> On Wed, Jun 19, 2019 at 09:48:56AM +0200, Daniel Vetter wrote:
+> > On Tue, Jun 18, 2019 at 11:07:50PM -0300, Rodrigo Siqueira wrote:
+> > > For historical reason, the function drm_wait_vblank_ioctl always retu=
+rn
+> > > -EINVAL if something gets wrong. This scenario limits the flexibility
+> > > for the userspace make detailed verification of the problem and take
+> > > some action. In particular, the validation of =E2=80=9Cif (!dev->irq_=
+enabled)=E2=80=9D
+> > > in the drm_wait_vblank_ioctl is responsible for checking if the driver
+> > > support vblank or not. If the driver does not support VBlank, the
+> > > function drm_wait_vblank_ioctl returns EINVAL which does not represent
+> > > the real issue; this patch changes this behavior by return EOPNOTSUPP.
+> > > Additionally, some operations are unsupported by this function, and
+> > > returns EINVAL; this patch also changes the return value to EOPNOTSUPP
+> > > in this case. Lastly, the function drm_wait_vblank_ioctl is invoked by
+> > > libdrm, which is used by many compositors; because of this, it is
+> > > important to check if this change breaks any compositor. In this sens=
+e,
+> > > the following projects were examined:
+> > >=20
+> > > * Drm-hwcomposer
+> > > * Kwin
+> > > * Sway
+> > > * Wlroots
+> > > * Wayland-core
+> > > * Weston
+> > > * Xorg (67 different drivers)
+> > >=20
+> > > For each repository the verification happened in three steps:
+> > >=20
+> > > * Update the main branch
+> > > * Look for any occurrence "drmWaitVBlank" with the command:
+> > >   git grep -n "drmWaitVBlank"
+> > > * Look in the git history of the project with the command:
+> > >   git log -SdrmWaitVBlank
+> > >=20
+> > > Finally, none of the above projects validate the use of EINVAL which
+> > > make safe, at least for these projects, to change the return values.
+> > >=20
+> > > Change since V3:
+> > >  - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
+> > >=20
+> > > Change since V2:
+> > >  Daniel Vetter and Chris Wilson
+> > >  - Replace ENOTTY by EOPNOTSUPP
+> > >  - Return EINVAL if the parameters are wrong
+> > >=20
+> >=20
+> > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> >=20
+> > Apologies for the confusion on the last time around. btw if someone tel=
+ls
+> > you "r-b (or a-b) with these changes", then just apply the r-b/a-b tag
+> > next time around. Otherwise people will re-review the same thing over a=
+nd
+> > over again.
+>=20
+> btw when resending patches it's good practice to add anyone who commented
+> on it (or who commented on the igt test for the same patch and other way
+> round) onto the explicit Cc: list of the patch. That way it's easier for
+> them to follow the patch evolution and do a quick r-b once they're happy.
+
+Thanks for these valuable tips.
+Do you think that is a good idea to resend this patch CC's everybody? Or
+is it ok if I just apply it?
+=20
+> If you don't do that then much bigger chances your patch gets ignored.
+> -Daniel
+> >=20
+> > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_vblank.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblan=
+k.c
+> > > index 603ab105125d..bed233361614 100644
+> > > --- a/drivers/gpu/drm/drm_vblank.c
+> > > +++ b/drivers/gpu/drm/drm_vblank.c
+> > > @@ -1582,7 +1582,7 @@ int drm_wait_vblank_ioctl(struct drm_device *de=
+v, void *data,
+> > >  	unsigned int flags, pipe, high_pipe;
+> > > =20
+> > >  	if (!dev->irq_enabled)
+> > > -		return -EINVAL;
+> > > +		return -EOPNOTSUPP;
+> > > =20
+> > >  	if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
+> > >  		return -EINVAL;
+> > > --=20
+> > > 2.21.0
+> >=20
+> > --=20
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+>=20
+> --=20
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+
+--=20
+Rodrigo Siqueira
+https://siqueira.tech
+
+--o7ebaymw2qc26tic
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl0S0aQACgkQWJzP/com
+vP9OChAAhjuLcUgtK3blJvPIR0GbBQ2YKI5GBvyvsD2cAeC3QEh7a/X+5S9BcncG
+AC/MTchAA76y0nXrgOKMDHD7E6y1wle9Ox+tJg4WsBpiya5f+Z6S8CllyLzfRFzS
+DpIiC2ouqfYJzsecJXj9gveMbblf4YlCE22Cbn0gLajB61yOpuJ8HJK3KhFK6Zjp
+KRD6sNXAuYkrWUPzsfNjOBt55r48DH2DfVtiMzANTo5qgs1yofYn1cwuYIsRqR+x
+ULgg0wKUWxJXuXIWqkk4H7KD0QmZuEwtpMHMxSC85UldTnJ7fxEHiQXA661163x+
+KAMlBLLUtK4LeGU5g2dbP3/ir3xLR5DuX07tZ1EXV8b5SGFzSKqrT1AEFYj2cpH1
+TG62Zc0J2DqX+JuvuISAUkOd0OgKsdC1bDxEMiEy0kZpHLsnl8YOAkLYZBhf58Dy
+O0RamNxYvfIEM9wcUm/wcxHtQVPAPYtqKRe2G1gOHSCHtDmRHF+Hpm8LAJcSRKdF
+FTm6HY/Qbk/Nwx7gSzlVdEqB/qrc8Keqw2f8q/rHCL+zqalsIPM3P55yBWJxroGp
+FM2dNRs6hN2XWRVNGpbZgaJ4im5IwzPCeIt+e+4EHu2AxPNa6jA55bW/JBOGLLOd
+J9BhpzIwTExBxHySR9M97PUNMsKPYeTXG6D+La98edR5uRCDT1U=
+=ksZ9
+-----END PGP SIGNATURE-----
+
+--o7ebaymw2qc26tic--
