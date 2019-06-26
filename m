@@ -2,96 +2,143 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6CFC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BD9C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B078214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:11:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5WIsJoa"
+	by mail.kernel.org (Postfix) with ESMTP id 63CE4214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:12:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfFZNLZ (ORCPT
+        id S1727437AbfFZNMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:11:25 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37074 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfFZNLY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:11:24 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f17so2057734wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=y3z8Sun4edo2/lb2VL2yIetLBziApp/FodnCsCfNo1o=;
-        b=n5WIsJoakAGTvpglAGJn0eiTq+QX9yzBmjXZYb0ehaaQ6tums/pGqTv+SkBMCwt+9h
-         E6yjsiwiIAJnuc3gNXCKZlH5qQXTcIz7M5GajgDt8Gks4qQlllrDfNLpanaJHgxePd2f
-         J35WeJSesn0ZzLgEqV6WD+yFjuSzV5CTJxMH1DbAyGGtmOEmdFpZ2bVedaQ023r2jBB8
-         bdHDXB4n+/onylo4QaQz4fb62RWoyLv2g/SV6YqhmJHpurKzh8v0I7LQULVF4OH6zFNA
-         9Da0fng3SDtDwXDzX82GUs4YWO6Vbo3GGdWB3cTPK2e73zpAcWnya5t3ZV0Wdyq4VsEh
-         e2OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=y3z8Sun4edo2/lb2VL2yIetLBziApp/FodnCsCfNo1o=;
-        b=CJnQDgJu6u2Vhme+gLmURJ6q6SnuE/ja7g2mavT+sC55/4H7oCTFYwL2ZsYP+7RQWI
-         +hUt3IpW/IyN6/wEme69x/HTDz+xLtMFbjnjjDtPJAPS7EwUT3H1pwNtqSuEqMsDeGWr
-         9JFeXskLWBg7PrNBlMwETf/c4gVo4nhmd7HBZX+zH41sW4n1A9MAXSsEm6qN8Z2ks0Pb
-         MvlB813XV6zBtwdXdtc4bYalstYG8Yg/0r/JVfUM5jC1mRPXG+Odi78WNAZ3srk9Kbid
-         AR21XQDP+913tpc49P2Throjo/XsjRPZA3HZKShtIvI8sIQ85TJsKEJflnt23Ihg+ap+
-         hv0g==
-X-Gm-Message-State: APjAAAXnuxKpSl/qclfgvBhuscvrx66i+dptNkHjUYWqEhJ78XafqNRU
-        yvUgZcKrFWtrp/mR+9SBGCg4dKmicco=
-X-Google-Smtp-Source: APXvYqycdW3BSZTSYAkmY8IN605qSS/KQG8i11x0cU/5+mleMqirsmyzT/6IQuJ7/jkcsnFLre45og==
-X-Received: by 2002:a1c:d107:: with SMTP id i7mr2905792wmg.92.1561554682600;
-        Wed, 26 Jun 2019 06:11:22 -0700 (PDT)
-Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id a7sm18318673wrs.94.2019.06.26.06.11.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Jun 2019 06:11:22 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 14:11:20 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: intel-lpss: release ida resources
-Message-ID: <20190626131120.GV21119@dell>
-References: <20190621125631.36872-1-andriy.shevchenko@linux.intel.com>
+        Wed, 26 Jun 2019 09:12:55 -0400
+Received: from sauhun.de ([88.99.104.3]:55882 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbfFZNMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:12:54 -0400
+Received: from localhost (p54B330AF.dip0.t-ipconnect.de [84.179.48.175])
+        by pokefinder.org (Postfix) with ESMTPSA id DBD962C0114;
+        Wed, 26 Jun 2019 15:12:51 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 15:12:51 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Artemi Ivanov <artemi.ivanov@cogentembedded.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH resend] can: rcar_canfd: fix possible IRQ storm on high
+ load
+Message-ID: <20190626131251.GB801@ninjato>
+References: <20190626130848.6671-1-nikita.yoush@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190621125631.36872-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190626130848.6671-1-nikita.yoush@cogentembedded.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Jun 2019, Andy Shevchenko wrote:
 
-> ida instances allocate some internal memory for ->free_bitmap
-> in addition to the base 'struct ida'. Use ida_destroy() to release
-> that memory at module_exit().
-> 
-> Fixes: 4b45efe85263 ("mfd: Add support for Intel Sunrisepoint LPSS devices")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--IrhDeMKUP4DT/M7F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 26, 2019 at 04:08:48PM +0300, Nikita Yushchenko wrote:
+> We have observed rcar_canfd driver entering IRQ storm under high load,
+> with following scenario:
+> - rcar_canfd_global_interrupt() in entered due to Rx available,
+> - napi_schedule_prep() is called, and sets NAPIF_STATE_SCHED in state
+> - Rx fifo interrupts are masked,
+> - rcar_canfd_global_interrupt() is entered again, this time due to
+>   error interrupt (e.g. due to overflow),
+> - since scheduled napi poller has not yet executed, condition for calling
+>   napi_schedule_prep() from rcar_canfd_global_interrupt() remains true,
+>   thus napi_schedule_prep() gets called and sets NAPIF_STATE_MISSED flag
+>   in state,
+> - later, napi poller function rcar_canfd_rx_poll() gets executed, and
+>   calls napi_complete_done(),
+> - due to NAPIF_STATE_MISSED flag in state, this call does not clear
+>   NAPIF_STATE_SCHED flag from state,
+> - on return from napi_complete_done(), rcar_canfd_rx_poll() unmasks Rx
+>   interrutps,
+> - Rx interrupt happens, rcar_canfd_global_interrupt() gets called
+>   and calls napi_schedule_prep(),
+> - since NAPIF_STATE_SCHED is set in state at this time, this call
+>   returns false,
+> - due to that false return, rcar_canfd_global_interrupt() returns
+>   without masking Rx interrupt
+> - and this results into IRQ storm: unmasked Rx interrupt happens again
+>   and again is misprocessed in the same way.
+>=20
+> This patch fixes that scenario by unmasking Rx interrupts only when
+> napi_complete_done() returns true, which means it has cleared
+> NAPIF_STATE_SCHED in state.
+>=20
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+
+CCing the driver author...
+
 > ---
->  drivers/mfd/intel-lpss.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/net/can/rcar/rcar_canfd.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rca=
+r_canfd.c
+> index 05410008aa6b..de34a4b82d4a 100644
+> --- a/drivers/net/can/rcar/rcar_canfd.c
+> +++ b/drivers/net/can/rcar/rcar_canfd.c
+> @@ -1508,10 +1508,11 @@ static int rcar_canfd_rx_poll(struct napi_struct =
+*napi, int quota)
+> =20
+>  	/* All packets processed */
+>  	if (num_pkts < quota) {
+> -		napi_complete_done(napi, num_pkts);
+> -		/* Enable Rx FIFO interrupts */
+> -		rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
+> -				   RCANFD_RFCC_RFIE);
+> +		if (napi_complete_done(napi, num_pkts)) {
+> +			/* Enable Rx FIFO interrupts */
+> +			rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
+> +					   RCANFD_RFCC_RFIE);
+> +		}
+>  	}
+>  	return num_pkts;
+>  }
+> --=20
+> 2.11.0
+>=20
 
-Applied, thanks.
+--IrhDeMKUP4DT/M7F
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0Tb1MACgkQFA3kzBSg
+KbaLaA//Wza8AWpDytatCR4+YVO8bhaKfX8Cxpi3bmnFG9stqfjA5qAiC9ADINPw
+mERmNC/IfW5GstYjHrQK7tsgThSoTb1326jm/Gg1KScq5cwos/SIsRV0VE6k006c
+UWHc/HIqSyDN8ILvh/n1tsUMFWz+KEtFCqqrNLsLX3zRnyJj3CIfqdG8Crby2MzQ
+jy1NVgUsWpj7VEZ19BkUTHfR3sMWvQGkqWIm+N0uNz+vcErnrNKon3eVt4UrysiZ
+2+/5qXNjcJS2KtEu4O2StunxA1vftTOX29p7dm2qCXlVN5oAq8HQQ/os/ucMvxWm
+ZSKqXxM7sVl2X1ZY2d8057XAnqTpgoz2cFoI5VznM/3PJ3ykG453K2qX3qon1hBl
+bgLAWRafnusja2eafqwzcjjymDu6aTFUAszodA+CPTMdM+9TjLZaZTKaoMVGbHqY
+rINTTbisLKKRqQ+cPPD9l4M5iQ1QyJr+lQledI4M9XzJn2as2B5OuUw06LgKPpBC
+FKIvuUuCxI6yIB5f1l2MXfRBnmTnNvLpmhi2SiRVMfaL8FXAzdlLMLJ+PD0K3LAj
+c7RLt0+q3TL72pPdXOBUtNB2ukyGRH7Rbmjg3cwIumyIQqC4v32tA0FTYdg+l5gy
+ZxHjMzQczyqroya5caDanJVNPWiDrZh39Y8Gy8ovE+tYOBXMXQ8=
+=ssZ5
+-----END PGP SIGNATURE-----
+
+--IrhDeMKUP4DT/M7F--
