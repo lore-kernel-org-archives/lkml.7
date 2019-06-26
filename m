@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDE2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CF6C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 582372080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51752080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfFZRgM (ORCPT
+        id S1726667AbfFZRgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:36:12 -0400
-Received: from ms.lwn.net ([45.79.88.28]:40900 "EHLO ms.lwn.net"
+        Wed, 26 Jun 2019 13:36:14 -0400
+Received: from ms.lwn.net ([45.79.88.28]:40902 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfFZRf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726481AbfFZRf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 13:35:56 -0400
 Received: from meer.lwn.net (localhost [127.0.0.1])
-        by ms.lwn.net (Postfix) with ESMTPA id CEB978E7;
+        by ms.lwn.net (Postfix) with ESMTPA id 7A3E65A0;
         Wed, 26 Jun 2019 17:29:11 +0000 (UTC)
 From:   Jonathan Corbet <corbet@lwn.net>
 To:     linux-doc@vger.kernel.org
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v3 4/4] docs: Note that :c:func: should no longer be used
-Date:   Wed, 26 Jun 2019 11:28:59 -0600
-Message-Id: <20190626172859.16113-5-corbet@lwn.net>
+Subject: [PATCH v3 3/4] kernel-doc: Don't try to mark up function names
+Date:   Wed, 26 Jun 2019 11:28:58 -0600
+Message-Id: <20190626172859.16113-4-corbet@lwn.net>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190626172859.16113-1-corbet@lwn.net>
 References: <20190626172859.16113-1-corbet@lwn.net>
@@ -40,39 +40,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we can mark up function() automatically, there is no reason to use
-:c:func: and every reason to avoid it.  Adjust the documentation to reflect
-that fact.
+We now have better automarkup in sphinx itself and, besides, this markup
+was incorrect and left :c:func: gunk in the processed docs.  Sort of
+discouraging that nobody ever noticed...:)
+
+As a first step toward the removal of impenetrable regex magic from
+kernel-doc it's a tiny one, but you have to start somewhere.
 
 Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 ---
- Documentation/doc-guide/sphinx.rst | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ scripts/kernel-doc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/doc-guide/sphinx.rst b/Documentation/doc-guide/sphinx.rst
-index e60a56640c63..f71ddd592aaa 100644
---- a/Documentation/doc-guide/sphinx.rst
-+++ b/Documentation/doc-guide/sphinx.rst
-@@ -241,11 +241,14 @@ The C domain of the kernel-doc has some additional features. E.g. you can
- 
- The func-name (e.g. ioctl) remains in the output but the ref-name changed from
- ``ioctl`` to ``VIDIOC_LOG_STATUS``. The index entry for this function is also
--changed to ``VIDIOC_LOG_STATUS`` and the function can now referenced by:
--
--.. code-block:: rst
--
--     :c:func:`VIDIOC_LOG_STATUS`
-+changed to ``VIDIOC_LOG_STATUS``.
-+
-+Please note that there is no need to use ``c:func:`` to generate cross
-+references to function documentation.  Due to some Sphinx extension magic,
-+the documentation build system will automatically turn a reference to
-+``function()`` into a cross reference if an index entry for the given
-+function name exists.  If you see ``c:func:`` use in a kernel document,
-+please feel free to remove it.
- 
- 
- list tables
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index c0cb41e65b9b..6b03012750da 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -249,7 +249,7 @@ my @highlights_rst = (
+                        [$type_member_func, "\\:c\\:type\\:`\$1\$2\$3\\\\(\\\\) <\$1>`"],
+                        [$type_member, "\\:c\\:type\\:`\$1\$2\$3 <\$1>`"],
+ 		       [$type_fp_param, "**\$1\\\\(\\\\)**"],
+-                       [$type_func, "\\:c\\:func\\:`\$1()`"],
++                       [$type_func, "\$1()"],
+                        [$type_enum, "\\:c\\:type\\:`\$1 <\$2>`"],
+                        [$type_struct, "\\:c\\:type\\:`\$1 <\$2>`"],
+                        [$type_typedef, "\\:c\\:type\\:`\$1 <\$2>`"],
 -- 
 2.21.0
 
