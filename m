@@ -2,98 +2,100 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70766C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33CBC48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45573216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1C821726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561577685;
+	bh=HrjAB2TnQcww6wt2Btc1X5FvZhuThBNZXuA1Zfytcus=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uBnfy0QWepYLKixYCSgKtGlcvxYa1ba+P4ySK/Btly7m/qmjUgcyLFc97O/swf2qY
+	 zBnmDuWC+1J7dud7hfu4TiBGhh/CX2pUQYAgGLtDcBpEiyIpE/cMMnXeG0xTqxQVvN
+	 b67a/KYG2H6BHk20NxZjZI7G+hnmP9hoc6L+tvt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfFZTcm (ORCPT
+        id S1726445AbfFZTeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:32:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50205 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZTcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:32:41 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgDem-0004av-8B; Wed, 26 Jun 2019 21:32:36 +0200
-Date:   Wed, 26 Jun 2019 21:32:35 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Raslan, KarimAllah" <karahmed@amazon.de>
-cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kernellwp@gmail.com" <kernellwp@gmail.com>,
-        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+        Wed, 26 Jun 2019 15:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfFZTeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:34:44 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 554D3216FD;
+        Wed, 26 Jun 2019 19:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561577683;
+        bh=HrjAB2TnQcww6wt2Btc1X5FvZhuThBNZXuA1Zfytcus=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wTzM+/3JcmSHNHlK8g5VjhM/WK+N0bxNbnlFvCiI9DKZpFGefXIdtv/k4k7zJkVLi
+         WHWykiddjcahopiKzRLGPdy6OFt1H+O9AUyqK1lWQgaXToz3N89ZAQPbn/A/rWHoT9
+         4S+ZTGAo0qhWlHPVDB8OpylM2iGmX0RKMulFD9oE=
+Date:   Wed, 26 Jun 2019 20:34:38 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
-Subject: Re: cputime takes cstate into consideration
-In-Reply-To: <1561577254.25880.15.camel@amazon.de>
-Message-ID: <alpine.DEB.2.21.1906262129200.32342@nanos.tec.linutronix.de>
-References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>  <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>  <20190626145413.GE6753@char.us.oracle.com>  <20190626161608.GM3419@hirez.programming.kicks-ass.net> 
- <20190626183016.GA16439@char.us.oracle.com>  <alpine.DEB.2.21.1906262038040.32342@nanos.tec.linutronix.de>  <1561575336.25880.7.camel@amazon.de>  <20190626192100.GP3419@hirez.programming.kicks-ass.net> <1561577254.25880.15.camel@amazon.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V4 5/5] dt-bindings: iio: adc: Add buffered input
+ property
+Message-ID: <20190626203438.59019143@archlinux>
+In-Reply-To: <CAL_Jsq+ryELXJNdzZBxzCfMQnMdeGr_xC+ABJ3wGx2tZum6AwA@mail.gmail.com>
+References: <20190625081128.22190-1-mircea.caprioru@analog.com>
+        <20190625081128.22190-5-mircea.caprioru@analog.com>
+        <CAL_Jsq+ryELXJNdzZBxzCfMQnMdeGr_xC+ABJ3wGx2tZum6AwA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-596458942-1561577556=:32342"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 26 Jun 2019 08:45:01 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
---8323329-596458942-1561577556=:32342
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 26 Jun 2019, Raslan, KarimAllah wrote:
-> On Wed, 2019-06-26 at 21:21 +0200, Peter Zijlstra wrote:
-> > On Wed, Jun 26, 2019 at 06:55:36PM +0000, Raslan, KarimAllah wrote:
-> > 
-> > > 
-> > > If the host is completely in no_full_hz mode and the pCPU is dedicated to a 
-> > > single vCPU/task (and the guest is 100% CPU bound and never exits), you would 
-> > > still be ticking in the host once every second for housekeeping, right? Would 
-> > > not updating the mwait-time once a second be enough here?
-> > 
-> > People are trying very hard to get rid of that remnant tick. Lets not
-> > add dependencies to it.
-> > 
-> > IMO this is a really stupid issue, 100% time is correct if the guest
-> > does idle in pinned vcpu mode.
+> On Tue, Jun 25, 2019 at 2:12 AM Mircea Caprioru
+> <mircea.caprioru@analog.com> wrote:
+> >
+> > This patch adds the buffered mode device tree property for positive and
+> > negative inputs. Each option can be enabled independently.
+> >
+> > In buffered mode, the input channel feeds into a high impedance input stage
+> > of the buffer amplifier. Therefore, the input can tolerate significant
+> > source impedances and is tailored for direct connection to external
+> > resistive type sensors such as strain gages or RTDs.
+> >
+> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> > ---
+> >
+> > Changelog v3:
+> > - added this separate commit for adi,buffered-positive and negative
+> >   properties
+> >
+> > Changelog v4:
+> > - nothing changed here
+> >
+> >  .../devicetree/bindings/iio/adc/adi,ad7124.yaml       | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)  
 > 
-> One use case for proper accounting (obviously for a slightly relaxed definition 
-> or *proper*) is *external* monitoring of CPU utilization for scaling group
-> (i.e. more VMs will be launched when you reach a certain CPU utilization).
-> These external monitoring tools needs to account CPU utilization properly.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Then you need a trusted cooperative guest and that can give you the
-information. If it doesn't, then either do not give him MWAIT or the scheme
-does not work.
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-If you can afford to waste performance counters for that, you can do that
-from user space.
+thanks,
 
-There are lots of options, but the kernel won't chose one because it's
-guaranteed to be the wrong choice for most scenarios.
-
-Thanks,
-
-	tglx
---8323329-596458942-1561577556=:32342--
+Jonathan
