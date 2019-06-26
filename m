@@ -2,117 +2,78 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71552C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B316DC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3487C2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDG9THSo"
+	by mail.kernel.org (Postfix) with ESMTP id 8E5DE2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 04:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfFZEkO (ORCPT
+        id S1726675AbfFZElC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 00:40:14 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34778 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfFZEkN (ORCPT
+        Wed, 26 Jun 2019 00:41:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:45481 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfFZElB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 00:40:13 -0400
-Received: by mail-ot1-f67.google.com with SMTP id n5so1228820otk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 21:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M1Tx6hW48tWiA/Izb/w3vicI3ly2WQB2siq+u/tEzxo=;
-        b=gDG9THSojY0XQqfQlzWkYg3ux8Ratr6ecHKdE4kag2yxNI2HzUDTaPuex8a79ZTUHg
-         KbA9skWcdhdIjp/WPLtaOARIGP18dHP8xYNj+LeaeAw0+hdgfj+hrIon7LR5t8zBmIv2
-         dyLVCZZbYt5v3UbtDcMAAMa4spIXnnZ6n5CSpAb2/NnqQnyhXknkGsr1/6M34mPoS7t5
-         XCRf1Vw/27pVy6ipVYnGRGeF4ww+dFdvvodRXMQdg3yQ2SwzvLC46/SLUyGs/o9UI1BA
-         rpl4qyMaxB7YCc7eyeqjD7+z5l+pa/27DAXWoFMC0Ft8SfF2VyLTLW4wYawaMl/+LX9O
-         wLzw==
+        Wed, 26 Jun 2019 00:41:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id b197so1113416iof.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 21:41:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M1Tx6hW48tWiA/Izb/w3vicI3ly2WQB2siq+u/tEzxo=;
-        b=ACF8rutsY+mJQOcVo4X/l3K9v0dOkV08eXXJ6nHJVM9L00itc50ga1MxPJQ75pqVhp
-         +7eIEPiMmmQ/peAgT+R4xeRjBsAaOLIUBywdHeOrvK/Uc4IN+rh/4dP/ddJuZ3o6Unzl
-         QYjpbPWTSoU0uiy6gYe73zUD9RdBXJZayy2Zsfh5ceKtinqpk2I6+A8PfiA8eJZ90t+z
-         M/rWif+NmMf/1xVmBfOwCmmTPoMUZnYUmBrPpiML/z5Y2YhUz4uYtxNjqWezl7Yf/r3C
-         AiUu+CnViMEQtqtNEGlNbcgzHI56XH65mzmo/bLGDdJWrt7sNCQ8tlsvTdcqsChO4LEy
-         TQLw==
-X-Gm-Message-State: APjAAAVVQ1T3JAXPLNlZC9voPdTzzyLVAnyCRQPfbgBRttTIWsoQxsud
-        72Uf0crF2E/ARJGGmLnacioGe4bTfgVK6E/hiTqhyf6/9Wg=
-X-Google-Smtp-Source: APXvYqzAeMq8PT8el6Qv/4swP/UqCGHHNkDDdTwN72DbcsXy9JARTKrLF0dJV5+LzMd+dweoCQwIMd+RwVqd93dqSuM=
-X-Received: by 2002:a9d:67d6:: with SMTP id c22mr1704290otn.327.1561524013040;
- Tue, 25 Jun 2019 21:40:13 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=jsPciA+puK9ooK4TlyjKh7gObZtMQdfgKm0QqLbpEs8=;
+        b=om+gFkdDp4RlLZsE0kNlhH4LB/ZSif8FLPQTKgePQNvf8nj3fu+vBBYkqhQEPyffT0
+         FPbHlXRoaIGJPk+i7QLSDwBsDvwFEatZDsmRa4jR4sSDzji9ZIuC1HdHjjcNYYOz5ict
+         aSi9VrRjrsUaI7Nmk6clD87KhP8CEpL0bnPoxV9+SNC2n9Db4MySH/CXcTdSM20fiUWL
+         MTcLDwTQ+RJ+ImWCOs9FPu+e0KeDqYO8kshg9yiwwwjbmgB9oIjicPVMq02nMskmorhR
+         v5OCC+YK0KmIX403azQZcr2NLtJkEeOF/H+AoSkxfYEhWva/SHto9D8kbQlXzzfQPWm/
+         hSKw==
+X-Gm-Message-State: APjAAAUk8EbJD1iXB8QjL3G9do8Y+bF22Z3/WyCfbqXEUgxBfwi+LewU
+        Hb2oJQv67+bQnHoi+t8nPFqtv1oBkACidKR9mD0RAdG0fF7O
+X-Google-Smtp-Source: APXvYqyXfpl4H9vcElTo0RyNBNTKRr1zt/joRVze4f5+kmA0j1HSzuur+KvWjGLp4vBlUOXhsUCfd2sdQ0vWM9rH41vo5ex9cnt8
 MIME-Version: 1.0
-References: <1561479779-6660-1-git-send-email-dianzhangchen0@gmail.com> <alpine.DEB.2.21.1906251835370.32342@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906251835370.32342@nanos.tec.linutronix.de>
-From:   Dianzhang Chen <dianzhangchen0@gmail.com>
-Date:   Wed, 26 Jun 2019 12:40:01 +0800
-Message-ID: <CAFbcbMBFS5h6asOpAma_Zq3T1TS31Pno1s9BkWDnYg0zk2ps0g@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/tls: Fix possible spectre-v1 in do_get_thread_area()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:54c1:: with SMTP id t184mr2597199jaa.10.1561524061066;
+ Tue, 25 Jun 2019 21:41:01 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 21:41:01 -0700
+In-Reply-To: <000000000000c7a272058c2cde21@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f7df7e058c32a611@google.com>
+Subject: Re: kernel panic: stack is corrupted in validate_chain
+From:   syzbot <syzbot+6ba34346b252f2d497c7@syzkaller.appspotmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 12:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, 26 Jun 2019, Dianzhang Chen wrote:
->
-> > The index to access the threads tls array is controlled by userspace
-> > via syscall: sys_ptrace(), hence leading to a potential exploitation
-> > of the Spectre variant 1 vulnerability.
-> > The idx can be controlled from:
-> >         ptrace -> arch_ptrace -> do_get_thread_area.
-> >
-> > Fix this by sanitizing idx before using it to index p->thread.tls_array.
->
-> Just that I can't find a place which sanitizes the value....
->
-> > +#include <linux/nospec.h>
->
-> and nothing which uses anything from this header file.
->
-> >  #include <linux/uaccess.h>
-> >  #include <asm/desc.h>
-> > @@ -220,6 +221,7 @@ int do_get_thread_area(struct task_struct *p, int idx,
-> >                      struct user_desc __user *u_info)
-> >  {
-> >       struct user_desc info;
-> > +     int index;
-> >
-> >       if (idx == -1 && get_user(idx, &u_info->entry_number))
-> >               return -EFAULT;
-> > @@ -227,8 +229,9 @@ int do_get_thread_area(struct task_struct *p, int idx,
-> >       if (idx < GDT_ENTRY_TLS_MIN || idx > GDT_ENTRY_TLS_MAX)
-> >               return -EINVAL;
-> >
-> > -     fill_user_desc(&info, idx,
-> > -                    &p->thread.tls_array[idx - GDT_ENTRY_TLS_MIN]);
-> > +     index = idx - GDT_ENTRY_TLS_MIN;
-> > +
-> > +     fill_user_desc(&info, idx, &p->thread.tls_array[index]);
->
-> So this is just a cosmetic change and the compiler will create probably
-> exactly the same binary.
->
-> Thanks,
->
->         tglx
->
+syzbot has bisected this bug to:
 
-sorry for being careless, my bad.
-And thanks for suggestion, i'll fix that in next version.
+commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+Author: John Fastabend <john.fastabend@gmail.com>
+Date:   Sat Jun 30 13:17:47 2018 +0000
+
+     bpf: sockhash fix omitted bucket lock in sock_close
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d4e129a00000
+start commit:   249155c2 Merge branch 'parisc-5.2-4' of git://git.kernel.o..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13d4e129a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d4e129a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9a31528e58cc12e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=6ba34346b252f2d497c7
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=135e34eea00000
+
+Reported-by: syzbot+6ba34346b252f2d497c7@syzkaller.appspotmail.com
+Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
