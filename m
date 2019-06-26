@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4419EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD58DC48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B519204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24EB204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:38:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYqgls57"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwstq9SV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfFZBiE (ORCPT
+        id S1726514AbfFZBih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:38:04 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40552 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFZBiE (ORCPT
+        Tue, 25 Jun 2019 21:38:37 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38361 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFZBih (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:38:04 -0400
-Received: by mail-qt1-f193.google.com with SMTP id a15so659173qtn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 18:38:03 -0700 (PDT)
+        Tue, 25 Jun 2019 21:38:37 -0400
+Received: by mail-qk1-f193.google.com with SMTP id a27so352735qkk.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 18:38:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Dcji4DG1mYdfSzaoYm1b9GBfrTHcBOQ4lNkuX8kgim8=;
-        b=QYqgls57UiwrwknJ+w6IfGJFDRY1zpL306MGaJVEbcPuLpkedTVidtXe12U7J8ObsL
-         wbnA98tWBTOmbjCY4W6urdJT+XoYAkh1CMcVlx23yB2q185Up7fYoNTmG8kzB+1/RXnu
-         1kS6yqT8hEIPPbhn6lbU7EFU1vfucpe3BpG1N0TGYR7rFzGl4nRcDpEGHVtzhuU0BUiV
-         AiNtow8FBlAob7PeSyxcmPQ0fiE5FrR5FI86blq5dGPvL6wPw/dXpnyy0tFYD+hzrr+U
-         BLE7As7vn5cIA+q4uxelG6GUVjGeEi4yJ6O1WqKcvlmAcbmG+pE4gulRp6NQ1AezulbF
-         PRBA==
+        bh=VhvsA2mFJL5Xe5+RHkMF0VDR29nwFdCWp8jzkz78NKs=;
+        b=rwstq9SV12XPNESW3bHDHzxMr1EbE9kLJvo0w/fufz8IIyTZmnFvZ5I0iflsdlXn1M
+         EZ356wSG1KOO40stlTjAjI/D9Wm64ctkumXNZZIrSFfuyMpm68Xxn1/xGSpDuSxCfvyp
+         nM81CeAOeXw3tiT6smx1EVrBpt08DuAqPWQyWS8yHQ7ZQrtZra7c+V5YSuk+Bm2da2O+
+         8myyuA5/z5qJY4aB4EGlNih5NEihjgGWqddNIcPNnao0NReUTUpy8cLiiPq5DPM3haCa
+         HpvJ6m7EtIhDXO9/mE+WUCaTmP/pWcHeGIStjWNU1VBab7O5vZ5c1WDOqx5g8OZ/fX+F
+         40Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Dcji4DG1mYdfSzaoYm1b9GBfrTHcBOQ4lNkuX8kgim8=;
-        b=ECTmlUtLCIPCq4db+abwwaTwCuYHFVVsCf81ME+X1Ri6rdN0jle2iwb/sQWKxGx+zj
-         iaEflKAMlSTZwf/fm7aMcLuUR0U6t3D0SZlkt6UqC5sMj5bBKNi184wqlh8fFQWOeuCb
-         PYSSF5clGFh7zjE06jK5IU6tbF90R2suynYZbID/G4zAXObyNYz6cYC/JVg4/R4r/EB1
-         ya9esVzwXbYRISEH0zI3ICUlqtWKRWrL9nBYUWQlZ3ZzotrGR9ifF/fJPuqK8X7KUbXS
-         NznXpqRZmegrwaVJeUn4bciUTmCwrvL7pTKve3U5H3xO3W4arb/MlwWj2h0FSnYIyHt7
-         D9zQ==
-X-Gm-Message-State: APjAAAUTGjOOHt33MxfZYLHjWJou/LKMnH3LrKejm4vhUwMpoehdg0mf
-        7J2hduD2Xh1TjoRed7hiq7w=
-X-Google-Smtp-Source: APXvYqwJv4ZMACGc1XJpqCZdYEetDgEmL+h2ns1p1TA6Wm0McZDXDfxD+AdQ2jcvbnMU6UqRAJyk/w==
-X-Received: by 2002:aed:3747:: with SMTP id i65mr1413779qtb.166.1561513083429;
-        Tue, 25 Jun 2019 18:38:03 -0700 (PDT)
+        bh=VhvsA2mFJL5Xe5+RHkMF0VDR29nwFdCWp8jzkz78NKs=;
+        b=Qi+RSPyDV2e4FvNr8dpazLqodcwdE346XptY1FZ+tyDbugss/7JzwGbmAORtet3tYH
+         KirrOzYrotnfn254EH+QDVtbPjN5P8Ht2t9aBq5weMYpqyVGqf5/3DqKfFwu8I3EcDUZ
+         MZ5s+NDXJbonmOqvGu/e+V/VLPeOUSYXpJ7nCHc+aoRUtlVff8kZhEb36NnBEfPVF7wQ
+         +3P3DiZO125A/kZhx4vbTWXvCsuSKMj/g0oN7qFU/ycUmrdp4YyfAEXtDEsBcMWVojax
+         y+Q363RXvnFmbCMMwXrYG8PINgkwjRfNlOp+OwkZS00h5KcoDq4QMsHw+Jy8Y8RP8j3F
+         Wy3w==
+X-Gm-Message-State: APjAAAViB/y0YCIn22jX//uZH4hdLvTV4QietY9d0LsM96fEoPaawDED
+        jiEOSZ1nfZnnpJjM7ogHzNfb1O96
+X-Google-Smtp-Source: APXvYqxZZf0LF7ILRzNdTHyeclwzLjQ3OWXOXs+v+XxDfPqPWC8/3w4blmvuCJH391wQzNWiyx780A==
+X-Received: by 2002:a37:668c:: with SMTP id a134mr1564017qkc.477.1561513116203;
+        Tue, 25 Jun 2019 18:38:36 -0700 (PDT)
 Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id e18sm7441097qkm.49.2019.06.25.18.37.59
+        by smtp.gmail.com with ESMTPSA id h40sm9967150qth.4.2019.06.25.18.38.33
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 18:38:03 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 22:37:58 -0300
+        Tue, 25 Jun 2019 18:38:35 -0700 (PDT)
+Date:   Tue, 25 Jun 2019 22:38:31 -0300
 From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 To:     Brian Starkey <brian.starkey@arm.com>,
         Liviu Dudau <liviu.dudau@arm.com>,
@@ -65,8 +65,8 @@ To:     Brian Starkey <brian.starkey@arm.com>,
         Haneen Mohammed <hamohammed.sa@gmail.com>,
         Simon Ser <contact@emersion.fr>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 3/5] drm/vkms: Decouple crc operations from composer
-Message-ID: <6e8a03dc7c666ee998ee36172a96cff39f8dd46d.1561491964.git.rodrigosiqueiramelo@gmail.com>
+Subject: [PATCH V3 4/5] drm/vkms: Compute CRC without change input data
+Message-ID: <ea7e3a0daa4ee502d8ec67a010120d53f88fa06b.1561491964.git.rodrigosiqueiramelo@gmail.com>
 References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -78,112 +78,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the vkms_composer.c, some of the functions related to CRC and compose
-have interdependence between each other. This patch reworks some
-functions inside vkms_composer to make crc and composer computation
-decoupled.
-
-This patch is preparation work for making vkms able to support new
-features.
+The compute_crc() function is responsible for calculating the
+framebuffer CRC value; due to the XRGB format, this function has to
+ignore the alpha channel during the CRC computation. Therefore,
+compute_crc() set zero to the alpha channel directly in the input
+framebuffer, which is not a problem since this function receives a copy
+of the original buffer. However, if we want to use this function in a
+context without a buffer copy, it will change the initial value. This
+patch makes compute_crc() calculate the CRC value without modifying the
+input framebuffer.
 
 Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 49 ++++++++++++++++------------
- 1 file changed, 29 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 31 +++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index eb7ea8be1f98..51a270514219 100644
+index 51a270514219..8126aa0f968f 100644
 --- a/drivers/gpu/drm/vkms/vkms_composer.c
 +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -105,35 +105,31 @@ static void compose_cursor(struct vkms_composer *cursor_composer,
- 	      primary_composer, cursor_composer);
- }
+@@ -6,33 +6,40 @@
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_gem_framebuffer_helper.h>
  
--static uint32_t _vkms_get_crc(struct vkms_composer *primary_composer,
--			      struct vkms_composer *cursor_composer)
-+static int compose_planes(void **vaddr_out,
-+			  struct vkms_composer *primary_composer,
-+			  struct vkms_composer *cursor_composer)
++static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
++				 const struct vkms_composer *composer)
++{
++	int src_offset = composer->offset + (y * composer->pitch)
++					  + (x * composer->cpp);
++
++	return *(u32 *)&buffer[src_offset];
++}
++
+ /**
+  * compute_crc - Compute CRC value on output frame
+  *
+- * @vaddr_out: address to final framebuffer
++ * @vaddr: address to final framebuffer
+  * @composer: framebuffer's metadata
+  *
+  * returns CRC value computed using crc32 on the visible portion of
+  * the final framebuffer at vaddr_out
+  */
+-static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
++static uint32_t compute_crc(const u8 *vaddr,
++			    const struct vkms_composer *composer)
  {
- 	struct drm_framebuffer *fb = &primary_composer->fb;
- 	struct drm_gem_object *gem_obj = drm_gem_fb_get_obj(fb, 0);
- 	struct vkms_gem_object *vkms_obj = drm_gem_to_vkms_gem(gem_obj);
--	void *vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
+-	int i, j, src_offset;
++	int x, y;
+ 	int x_src = composer->src.x1 >> 16;
+ 	int y_src = composer->src.y1 >> 16;
+ 	int h_src = drm_rect_height(&composer->src) >> 16;
+ 	int w_src = drm_rect_width(&composer->src) >> 16;
 -	u32 crc = 0;
++	u32 crc = 0, pixel = 0;
  
--	if (!vaddr_out) {
--		DRM_ERROR("Failed to allocate memory for output frame.");
--		return 0;
-+	if (!*vaddr_out) {
-+		*vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
-+		if (!*vaddr_out) {
-+			DRM_ERROR("Cannot allocate memory for output frame.");
-+			return -ENOMEM;
-+		}
+-	for (i = y_src; i < y_src + h_src; ++i) {
+-		for (j = x_src; j < x_src + w_src; ++j) {
+-			src_offset = composer->offset
+-				     + (i * composer->pitch)
+-				     + (j * composer->cpp);
++	for (y = y_src; y < y_src + h_src; ++y) {
++		for (x = x_src; x < x_src + w_src; ++x) {
+ 			/* XRGB format ignores Alpha channel */
+-			memset(vaddr_out + src_offset + 24, 0,  8);
+-			crc = crc32_le(crc, vaddr_out + src_offset,
+-				       sizeof(u32));
++			pixel = get_pixel_from_buffer(x, y, vaddr, composer);
++			bitmap_clear((void *)&pixel, 0, 8);
++			crc = crc32_le(crc, (void *)&pixel, sizeof(u32));
+ 		}
  	}
  
--	if (WARN_ON(!vkms_obj->vaddr)) {
--		kfree(vaddr_out);
--		return crc;
--	}
-+	if (WARN_ON(!vkms_obj->vaddr))
-+		return -EINVAL;
- 
--	memcpy(vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
-+	memcpy(*vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
- 
- 	if (cursor_composer)
--		compose_cursor(cursor_composer, primary_composer, vaddr_out);
-+		compose_cursor(cursor_composer, primary_composer, *vaddr_out);
- 
--	crc = compute_crc(vaddr_out, primary_composer);
--
--	kfree(vaddr_out);
--
--	return crc;
-+	return 0;
- }
- 
- /**
-@@ -154,9 +150,11 @@ void vkms_composer_worker(struct work_struct *work)
- 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
- 	struct vkms_composer *primary_composer = NULL;
- 	struct vkms_composer *cursor_composer = NULL;
-+	void *vaddr_out = NULL;
- 	u32 crc32 = 0;
- 	u64 frame_start, frame_end;
- 	bool crc_pending;
-+	int ret;
- 
- 	spin_lock_irq(&out->composer_lock);
- 	frame_start = crtc_state->frame_start;
-@@ -180,14 +178,25 @@ void vkms_composer_worker(struct work_struct *work)
- 	if (crtc_state->num_active_planes == 2)
- 		cursor_composer = crtc_state->active_planes[1]->composer;
- 
--	if (primary_composer)
--		crc32 = _vkms_get_crc(primary_composer, cursor_composer);
-+	if (!primary_composer)
-+		return;
-+
-+	ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
-+	if (ret) {
-+		if (ret == -EINVAL)
-+			kfree(vaddr_out);
-+		return;
-+	}
-+
-+	crc32 = compute_crc(vaddr_out, primary_composer);
- 
- 	/*
- 	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
- 	 */
- 	while (frame_start <= frame_end)
- 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
-+
-+	kfree(vaddr_out);
- }
- 
- static const char * const pipe_crc_sources[] = {"auto"};
 -- 
 2.21.0
