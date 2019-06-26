@@ -2,102 +2,132 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA29FC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11BEC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2C52086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BAF216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:20:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="yWvxd7Pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfFZPS7 (ORCPT
+        id S1728249AbfFZPUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:18:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49220 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFZPS7 (ORCPT
+        Wed, 26 Jun 2019 11:20:41 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45442 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZPUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:18:59 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hg9h0-0005Q2-FX; Wed, 26 Jun 2019 17:18:38 +0200
-Date:   Wed, 26 Jun 2019 17:18:37 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>,
-        clang-built-linux@googlegroups.com,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-In-Reply-To: <20190626051035.GA114229@archlinux-epyc>
-Message-ID: <alpine.DEB.2.21.1906261711540.32342@nanos.tec.linutronix.de>
-References: <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com> <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com> <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net> <201906251009.BCB7438@keescook> <20190625180525.GA119831@archlinux-epyc> <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de> <20190625202746.GA83499@archlinux-epyc>
- <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de> <20190626051035.GA114229@archlinux-epyc>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 26 Jun 2019 11:20:40 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s22so1940301qkj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 08:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ELXLhOLz04A2c7tl3nrQG1+Ijqzqm4Q9d9UrTY8MYRg=;
+        b=yWvxd7Pwuo//+rbSXY1t/j5A20ZyNH31mVRjbjHmYPNP2Ydsjms4Ey0wTUNhIvE1lv
+         I8VLUog7xRGPwzt+ATI7UaLcSKgyFvVFv40zJnihWQPb31LhRUfD2RbFNF4ZiCWA1FFD
+         AFFG4lfi4t75EnKiZqmc0wTG3PHeiBb4yHkBvKlzuNGxfj+ttY3bK1bIT6T8B5cXK5m+
+         pHZWf4iunHW3XHxj8nADwTVUbq00UTVazxdsESfisOOP5/Ch0huLKPqkMLcUl07EqjAH
+         ITIaXZqPkM322LDQgCFcQepj7+WPo2zUmZ6hbPkGrOMSpuswHGNvDhgc4qP2mmmGsrdC
+         DL4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ELXLhOLz04A2c7tl3nrQG1+Ijqzqm4Q9d9UrTY8MYRg=;
+        b=RZ644Dw6PPA44hiesDTMynTrua49eouwr06UNSjPytpLLTZ4MZyVtwk742vgDf26cd
+         RDK9mtHTdQZydx3r4YtdF29iEogeNrRhuFZA8aRfyWhkDNqLS/7YYOWylZUmVm4xr9cA
+         fMYP8Uha0iiiET/qPHcqsHLv+sXLh5tKqDdMQ0dlkqLzdHZJiNjwXg75yYts8xm577Vw
+         vjfoG+blUwL014qN+HwSnMMLke1hPPV88LHc4R87zsN4RkN22I5nZTB8lXcqp4gZbZ6j
+         PwE+h4LlRvHobc+iSiEMinyB5brc2nnmj7YbHnVB6LCxzlKRllOiV+VfeR6q1DON8RSZ
+         PEcw==
+X-Gm-Message-State: APjAAAUni9Th/ikl51/lSwLpIQhcJaYyVH3sQ+7nTldxyHZdnASVTatw
+        ooWiGq+2FEOj88MxoP9UAGdzRTCJXb0+4BE7/wKQ1w==
+X-Google-Smtp-Source: APXvYqz23DtqahM0L3H5wlbSC7MZTjjpe1x3hDzHbGAVHmblW+IEs1zZMfufBkl3TyuTVXoHt4XAoOTzJXbeBnZT+aY=
+X-Received: by 2002:a37:6782:: with SMTP id b124mr4034848qkc.242.1561562439876;
+ Wed, 26 Jun 2019 08:20:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190626132632.32629-1-axel.lin@ingics.com> <20190626132632.32629-2-axel.lin@ingics.com>
+ <e1ba816f-1ecc-acc1-1f69-bc474da1061a@ti.com>
+In-Reply-To: <e1ba816f-1ecc-acc1-1f69-bc474da1061a@ti.com>
+From:   Axel Lin <axel.lin@ingics.com>
+Date:   Wed, 26 Jun 2019 23:20:28 +0800
+Message-ID: <CAFRkauCtHtG0mfqXp=FuBYYqGhhMGfP3o_N3iBoRHwkQNQYtNw@mail.gmail.com>
+Subject: Re: [RFT][PATCH 2/2] regulator: lm363x: Fix n_voltages setting for lm36274
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Jun 2019, Nathan Chancellor wrote:
-> On Tue, Jun 25, 2019 at 11:47:06PM +0200, Thomas Gleixner wrote:
-> > On Tue, 25 Jun 2019, Nathan Chancellor wrote:
-> > > On Tue, Jun 25, 2019 at 09:53:09PM +0200, Thomas Gleixner wrote:
-> > > > 
-> > > > But can the script please check for a minimal clang version required to
-> > > > build that thing.
-> > > > 
-> > > > The default clang-3.8 which is installed on Debian stretch explodes. The
-> > > > 6.0 variant from backports works as advertised.
-> > > > 
-> > > 
-> > > Hmmm interesting, I test a lot of different distros using Docker
-> > > containers to make sure the script works universally and that includes
-> > > Debian stretch, which is the stress tester because all of the packages
-> > > are older. I install the following packages then run the following
-> > > command and it works fine for me (just tested):
-> > > 
-> > > $ apt update && apt install -y --no-install-recommends ca-certificates \
-> > > ccache clang cmake curl file gcc g++ git make ninja-build python3 \
-> > > texinfo zlib1g-dev
-> > > $ ./build-llvm.py
-> > > 
-> > > If you could give me a build log, I'd be happy to look into it and see
-> > > what I can do.
-> > 
-> > I can produce one tomorrow.
+Dan Murphy <dmurphy@ti.com> =E6=96=BC 2019=E5=B9=B46=E6=9C=8826=E6=97=A5 =
+=E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8811:07=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hello
+>
+> On 6/26/19 8:26 AM, Axel Lin wrote:
+> > According to the datasheet http://www.ti.com/lit/ds/symlink/lm36274.pdf=
+:
+> > Table 23. VPOS Bias Register Field Descriptions VPOS[5:0]:
+> > VPOS voltage (50-mV steps): VPOS =3D 4 V + (Code =C3=97 50 mV), 6.5 V m=
+ax
+> > 000000 =3D 4 V
+> > 000001 =3D 4.05 V
+> > :
+> > 011110 =3D 5.5 V (Default)
+> > :
+> > 110010 =3D 6.5 V
+> > 110011 to 111111 map to 6.5 V
+> >
+> > So the LM36274_LDO_VSEL_MAX should be 0b110010 (0x32).
+> > The valid selectors are 0 ... LM36274_LDO_VSEL_MAX, n_voltages should b=
+e
+> > LM36274_LDO_VSEL_MAX + 1. Similarly, the n_voltages should be
+> > LM36274_BOOST_VSEL_MAX + 1 for LM36274_BOOST.
+> >
+> > Fixes: bff5e8071533 ("regulator: lm363x: Add support for LM36274")
+> > Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> > ---
+> >   drivers/regulator/lm363x-regulator.c | 8 ++++----
+> >   1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/regulator/lm363x-regulator.c b/drivers/regulator/l=
+m363x-regulator.c
+> > index e4a27d63bf90..4b9f618b07e9 100644
+> > --- a/drivers/regulator/lm363x-regulator.c
+> > +++ b/drivers/regulator/lm363x-regulator.c
+> > @@ -36,7 +36,7 @@
+> >
+> >   /* LM36274 */
+> >   #define LM36274_BOOST_VSEL_MAX              0x3f
+> > -#define LM36274_LDO_VSEL_MAX         0x34
+> > +#define LM36274_LDO_VSEL_MAX         0x32
+>
+> This does not seem correct the max number of voltages are 0x34.
+>
+> The register is zero based so you can have 33 voltage select levels and
+> + 1 is 34 total selectors
+>
+> Liam/Mark correct me if I am incorrect.
 
-tarball with log and the preprocessed source and run scripts:
+From the datasheet, the maximum voltage 110010 =3D 6.5 V, the 0b110010 is 0=
+x32.
+I know it is 0 based, so .n_voltages     =3D LM36274_LDO_VSEL_MAX + 1,
+(And that coding style is to match the original code.)
 
-    https://tglx.de/~tglx/tc-crash.tar.bz2
+With your current code where LM36274_LDO_VSEL_MAX and n_voltages is 0x34,
+the maximum voltage will become 400000 + 50000 * 0x34 =3D 6.6V which
+does not match the datasheet.
 
-The machine runs up to date debian stretch which has backports enabled and
-I just used the install command from the github project page you linked
-to. Getting started section.
-
-Thanks,
-
-	tglx
+Would you mind double check again?
