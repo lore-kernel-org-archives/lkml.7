@@ -2,102 +2,126 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB35C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E15C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F712182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="l+5kJ6to"
+	by mail.kernel.org (Postfix) with ESMTP id EBE0C2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbfFZQOo (ORCPT
+        id S1726655AbfFZQPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:14:44 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:47063 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726320AbfFZQOn (ORCPT
+        Wed, 26 Jun 2019 12:15:12 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:58008 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZQPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:14:43 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z23so3062167ote.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 09:14:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XK0CaHJOVcsS/u0euQkBQYUAFEHomal+V6KfwmFuG+U=;
-        b=l+5kJ6tokPJ98bH2NME9M/AQ27NvFMKuOsXn1/Bb6bOBzelrSngvtDZJXmVwZKzpKi
-         qjSD/BPNZzWpZiBQzbopXZ4t+Owe9yGEnJZxcLTPAlrrPvnYO2K7gCbSAaaiJHFcBp4k
-         rxUq8p1DHnLMI0fRDu2WCtVRP/OHmPtRFurCHJX0OhgjoUZQUqGECtXD/hiUSR9PPelH
-         MnkCXYqaYmm4WKtHJZYWuY7L6Kj9qhni0KNGsJokbTzfJurnEEHErfJ69HKEvmfEeo+E
-         N7IwPwAkdbg4plX6eEOz52RHtcXnuvonc5/m143W02YNIvHsz5xJAtpZFJ8Hrcf91kdm
-         NShw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XK0CaHJOVcsS/u0euQkBQYUAFEHomal+V6KfwmFuG+U=;
-        b=t7yI0Oj1TgYg10prz38mKHpoAPrDXWPlrAwQTrghIG0YvpKzLg1u64jEO8YNha360a
-         Wpk4Ek0f2ea4OO9njlevMFaF/u6lPFp6u0f/smb2+DobFqaKSx5XcjtAg7rJSpB19Gqt
-         /lgArCfMYYpQVn6wIq43LoYBMUulK+fPphowwIf0PApbxvufouXQnHeRwv0jwlZNBq//
-         J8MA+wvdedEtl6n7XP4ZmPMNzU6vtSsP1yIfMZvyA5vN/v0w+myct5F/ezsP0HU11vtI
-         +7OaLrmCsIaEFmRaPmt+hT/ndY5TSVXjdNS9D4BzHNfr0XUCupMSBIZWEnGCwHalqXM7
-         O/5Q==
-X-Gm-Message-State: APjAAAV7PYHnUE2fgJxgXdgwST6xwtyxGDecsjdN5qxUlDwDEkUeoezX
-        Avhbu43gVIAtejMlP9pTeyGXbErRh9kEuN3wLVB5Mw==
-X-Google-Smtp-Source: APXvYqxlK4A4nPLhfNez6panLCe0oG2uZ68rpjoeO+K9OBDO45YdiJCTPi2DLYKpN0RI7gOpjzzUX8DJkFMKIZ4j7YA=
-X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr1155884otn.71.1561565683159;
- Wed, 26 Jun 2019 09:14:43 -0700 (PDT)
+        Wed, 26 Jun 2019 12:15:12 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hgAZd-0003CK-II; Wed, 26 Jun 2019 12:15:05 -0400
+Message-ID: <80debf449017604657abd9086d81b8cfc0e0ad5e.camel@surriel.com>
+Subject: Re: [PATCH 5/8] sched,cfs: use explicit cfs_rq of parent se helper
+From:   Rik van Riel <riel@surriel.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>, peterz@infradead.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        mgorman@techsingularity.com, vincent.guittot@linaro.org
+Date:   Wed, 26 Jun 2019 12:15:05 -0400
+In-Reply-To: <0032016d-78d1-8338-96af-3077d3219f47@arm.com>
+References: <20190612193227.993-1-riel@surriel.com>
+         <20190612193227.993-6-riel@surriel.com>
+         <0032016d-78d1-8338-96af-3077d3219f47@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-wYMOZdD6INRRhzcHO2Cu"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
- <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
- <20190625190038.GK11400@dhcp22.suse.cz> <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
- <20190626054645.GB17798@dhcp22.suse.cz>
-In-Reply-To: <20190626054645.GB17798@dhcp22.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 26 Jun 2019 09:14:32 -0700
-Message-ID: <CAPcyv4jLK2F2UHqbwp4bCEiB7tL8sVsr775egKMmJvfZG+W+NQ@mail.gmail.com>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 10:46 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 25-06-19 12:52:18, Dan Williams wrote:
-> [...]
-> > > Documentation/process/stable-api-nonsense.rst
-> >
-> > That document has failed to preclude symbol export fights in the past
-> > and there is a reasonable argument to try not to retract functionality
-> > that had been previously exported regardless of that document.
->
-> Can you point me to any specific example where this would be the case
-> for the core kernel symbols please?
 
-The most recent example that comes to mind was the thrash around
-__kernel_fpu_{begin,end} [1]. I referenced that when debating _GPL
-symbol policy with J=C3=A9r=C3=B4me [2].
+--=-wYMOZdD6INRRhzcHO2Cu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[1]: https://lore.kernel.org/lkml/20190522100959.GA15390@kroah.com/
-[2]: https://lore.kernel.org/lkml/CAPcyv4gb+r=3D=3DriKFXkVZ7gGdnKe62yBmZ7xO=
-a4uBBByhnK9Tzg@mail.gmail.com/
+On Wed, 2019-06-26 at 17:58 +0200, Dietmar Eggemann wrote:
+> On 6/12/19 9:32 PM, Rik van Riel wrote:
+> > Use an explicit "cfs_rq of parent sched_entity" helper in a few
+> > strategic places, where cfs_rq_of(se) may no longer point at the
+> > right runqueue once we flatten the hierarchical cgroup runqueues.
+> >=20
+> > No functional change.
+> >=20
+> > Signed-off-by: Rik van Riel <riel@surriel.com>
+> > ---
+> >  kernel/sched/fair.c | 17 +++++++++++++----
+> >  1 file changed, 13 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index dcc521d251e3..c6ede2ecc935 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -275,6 +275,15 @@ static inline struct cfs_rq
+> > *group_cfs_rq(struct sched_entity *grp)
+> >  	return grp->my_q;
+> >  }
+> > =20
+> > +/* runqueue owned by the parent entity */
+> > +static inline struct cfs_rq *group_cfs_rq_of_parent(struct
+> > sched_entity *se)
+> > +{
+> > +	if (se->parent)
+> > +		return group_cfs_rq(se->parent);
+> > +
+> > +	return &cfs_rq_of(se)->rq->cfs;
+>=20
+> The function name and the description is not 100% correct. For tasks
+> running naturally (not in a flattened taskgroup) in the root
+> taskgroup
+> or for the se representing a first level taskgroup (e.g. /tg1 (with
+> se->depth =3D 0)) it returns the root cfs_rq or easier se->cfs_rq.
+>=20
+> So you could replace
+>=20
+>     return &cfs_rq_of(se)->rq->cfs;
+>=20
+> with
+>=20
+>     return se->cfs_rq;
+>=20
+> or
+>=20
+>     return cfs_rq_of(se);
+
+Good point. I will do that for the v2 series.
+
+
+--=20
+All Rights Reversed.
+
+--=-wYMOZdD6INRRhzcHO2Cu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl0TmgkACgkQznnekoTE
+3oMhnQgAqlWTfa84qiBu5AU9Azs8y+MKl9j5ch2reI/vwTY/hQVnlNZyKkDlz4R9
+Hbtvw+e/XPQt41P/bz64wLLbalMIkgkKQRtEdDlfNLm+kpM+l7d3T9oik+xACir3
+whliujKCS1S6KglDFoM46/a110CCaCgemYorzZY1VWavY89vGSqqcEeLQGuS2Xm5
+i+1haWrNJUr007PyvtyqPGAqhOC3gZ4n9Fb+OESMzOi5yB1kXeRSMT4Bv6XfBcBj
+sKyqC+2AsCqdv5hjrlbLswgh1yN6iSoXtZrDzFwLnZp6hHwXGyG+CpDbTpo00EV+
+/iDEi8D/6C80G5At/k6I7ay2puXi5g==
+=dLeB
+-----END PGP SIGNATURE-----
+
+--=-wYMOZdD6INRRhzcHO2Cu--
+
