@@ -2,146 +2,102 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1875AC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0ABC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E212F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01D8205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521065;
-	bh=uuppBSg3eza1xx49952zPvGnZggmxSRSfmH5l1GAxdU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gNztec+NM66PhCC1Vq5n3l45u5LuISrCGyQG+AeG2M/BHb+pyNY9ew3QDpIFVD/4q
-	 2nlVbeKL9hDd0E8oQpg6PwmQvEUOktJnCGiUV8T+vx4sPs6FUGiUWj1XWkbqv5cJv7
-	 Tk2d4R7l67dpMnGmEd5/wqe+0FVLtgZBXR8TmQB4=
+	s=default; t=1561521080;
+	bh=bZ1G2S3PGPwXnzJ2rk9+AJfTR7RiYbBDCp2Ne0/fTPM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZY0z/72z/b8SkSBTaQdBd2XW0+FXnKQoEFtXE7ASvDmJDRp6GDMp+LNYYS1psfxn0
+	 BgRuvGnTcEkTyEAxarw74wfTpALz/oZVaLe0617kOfE/fZFXlCiLUjviZkozMZtYT3
+	 /8gYAOOGF0BMBt0PbjK9mJm5qxjcCX6JXArRYJ9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfFZDlg (ORCPT
+        id S1727197AbfFZDvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:41:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51924 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:51:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfFZDle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:41:34 -0400
-Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
+        id S1726849AbfFZDvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:51:18 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D629E214DA;
-        Wed, 26 Jun 2019 03:41:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 750A021743
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520493;
-        bh=uuppBSg3eza1xx49952zPvGnZggmxSRSfmH5l1GAxdU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RV2jKSFpNYVBRtT0BSvu7FCT6vwExbXKzKMBuk/PBL8Tk2PqzjRtom5tLtuzfjXCD
-         VqFE2WnT5N1Cy2K4ss4SfUO9Rno+vPa6+CUfRNBfgb/enqcUfvI81cVzbG2JAp7pnj
-         WiiXS6qZUiB/w1Z5j4OSxgBr1y1IPosqYkDtd0L0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 06/51] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-Date:   Tue, 25 Jun 2019 23:40:22 -0400
-Message-Id: <20190626034117.23247-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
-References: <20190626034117.23247-1-sashal@kernel.org>
+        s=default; t=1561521077;
+        bh=bZ1G2S3PGPwXnzJ2rk9+AJfTR7RiYbBDCp2Ne0/fTPM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hDpnehLLZWYQsb4aX9YZYzguXD8TTUSAIhULp729n8DAd3sPSpCCjjH+HzCPLwdZd
+         b7eIz7p7jzWRuAZuJf+gL4x8oEpDDZ1WHdrxlJzrAbNnzfkQ4tgX4ZJLAL3u/PvZx1
+         JmoDEivgDpfzwuzPz30YkfqmKdCjBVNxvm3Drhkk=
+Received: by mail-wr1-f44.google.com with SMTP id r16so888025wrl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 20:51:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAVB004iiPCJkipyiWgdQKAwN9a13uvg3Q9u2jwf2ku8KXRpJzPT
+        Xlicz8rIqloF3b65YKJgYKkjgBRxrk91wB5K5czxkw==
+X-Google-Smtp-Source: APXvYqxhbwnXC+HHtbgLXKDHMg8L3l+e67NPNctbsjFY5QgqxzbbdaPZPdECVjYrpk2ZK2KQAYoaSiz68v0i6AaL3z0=
+X-Received: by 2002:adf:f606:: with SMTP id t6mr1183395wrp.265.1561521076028;
+ Tue, 25 Jun 2019 20:51:16 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-5-namit@vmware.com>
+ <CALCETrXyJ8y7PSqf+RmGKjM4VSLXmNEGi6K=Jzw4jmckRQECTg@mail.gmail.com> <28C3D489-54E4-4670-B726-21B09FA469EE@vmware.com>
+In-Reply-To: <28C3D489-54E4-4670-B726-21B09FA469EE@vmware.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 25 Jun 2019 20:51:05 -0700
+X-Gmail-Original-Message-ID: <CALCETrUicyG0NJfj309zU6SX1Xdq6gcmC9+zGLqW4iFkodnWjw@mail.gmail.com>
+Message-ID: <CALCETrUicyG0NJfj309zU6SX1Xdq6gcmC9+zGLqW4iFkodnWjw@mail.gmail.com>
+Subject: Re: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        kvm list <kvm@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Tue, Jun 25, 2019 at 8:48 PM Nadav Amit <namit@vmware.com> wrote:
+>
+> > On Jun 25, 2019, at 8:36 PM, Andy Lutomirski <luto@kernel.org> wrote:
+> >
+> > On Wed, Jun 12, 2019 at 11:49 PM Nadav Amit <namit@vmware.com> wrote:
+> >> To improve TLB shootdown performance, flush the remote and local TLBs
+> >> concurrently. Introduce flush_tlb_multi() that does so. The current
+> >> flush_tlb_others() interface is kept, since paravirtual interfaces need
+> >> to be adapted first before it can be removed. This is left for future
+> >> work. In such PV environments, TLB flushes are not performed, at this
+> >> time, concurrently.
+> >
+> > Would it be straightforward to have a default PV flush_tlb_multi()
+> > that uses flush_tlb_others() under the hood?
+>
+> I prefer not to have a default PV implementation that should anyhow go away.
+>
+> I can create unoptimized untested versions for Xen and Hyper-V, if you want.
+>
 
-[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
-
-If spi_register_master fails in spi_bitbang_start
-because device_add failure, We should return the
-error code other than 0, otherwise calling
-spi_bitbang_stop may trigger NULL pointer dereference
-like this:
-
-BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
-
-CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- dump_stack+0xa9/0x10e
- ? __list_del_entry_valid+0x45/0xd0
- ? __list_del_entry_valid+0x45/0xd0
- __kasan_report+0x171/0x18d
- ? __list_del_entry_valid+0x45/0xd0
- kasan_report+0xe/0x20
- __list_del_entry_valid+0x45/0xd0
- spi_unregister_controller+0x99/0x1b0
- spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
- ? 0xffffffffc1128000
- ? klist_next+0x131/0x1e0
- ? driver_detach+0x40/0x40 [parport]
- port_check+0x3b/0x50 [parport]
- bus_for_each_dev+0x115/0x180
- ? subsys_dev_iter_exit+0x20/0x20
- __parport_register_driver+0x1f0/0x210 [parport]
- ? 0xffffffffc1150000
- do_one_initcall+0xb9/0x3b5
- ? perf_trace_initcall_level+0x270/0x270
- ? kasan_unpoison_shadow+0x30/0x40
- ? kasan_unpoison_shadow+0x30/0x40
- do_init_module+0xe0/0x330
- load_module+0x38eb/0x4270
- ? module_frob_arch_sections+0x20/0x20
- ? kernel_read_file+0x188/0x3f0
- ? find_held_lock+0x6d/0xd0
- ? fput_many+0x1a/0xe0
- ? __do_sys_finit_module+0x162/0x190
- __do_sys_finit_module+0x162/0x190
- ? __ia32_sys_init_module+0x40/0x40
- ? __mutex_unlock_slowpath+0xb4/0x3f0
- ? wait_for_completion+0x240/0x240
- ? vfs_write+0x160/0x2a0
- ? lockdep_hardirqs_off+0xb5/0x100
- ? mark_held_locks+0x1a/0x90
- ? do_syscall_64+0x14/0x2a0
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-bitbang.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index dd9a8c54a693..be95be4fe985 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -403,7 +403,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- 	if (ret)
- 		spi_master_put(master);
- 
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
- 
--- 
-2.20.1
-
+I think I prefer that approach.  We should be able to get the
+maintainers to test it.  I don't love having legacy paths in there,
+ahem, UV.
