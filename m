@@ -2,132 +2,231 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595B7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC66C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFD6204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E11204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QlQIqfZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfFZNji (ORCPT
+        id S1727847AbfFZNjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:39:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48084 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZNjh (ORCPT
+        Wed, 26 Jun 2019 09:39:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38156 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZNjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:39:37 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hg898-000208-EQ; Wed, 26 Jun 2019 15:39:34 +0200
-Date:   Wed, 26 Jun 2019 15:39:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
-        hpa@zytor.com, boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org,
-        srinivas.eeda@oracle.com
-Subject: Re: [PATCH v2 0/7] misc fixes to PV extentions code
-In-Reply-To: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
-Message-ID: <alpine.DEB.2.21.1906261511180.32342@nanos.tec.linutronix.de>
-References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 26 Jun 2019 09:39:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id j6so3388628ioa.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/cAvS1LUQ3PFFzfZHN6ExYDpya5Lbz77W0Hh810QZAQ=;
+        b=QlQIqfZLsUncOjgR6J7XBXNsxBPkMKttINCGUr3JOiLZYBrrefkQppK6vPhxJJo39Q
+         IEDpxy4Qi92mWuz9kjly7KDrYtJINta6PjyiKuTkkkEe4/rufeXZ+LZI7hjo9aZUHIgG
+         qMcQglFBSZbtAjBVrO66pg/0IbKW5bsHB0cO3xmA6cxQ4i8uhL6g2k9jeC7DYAAZZPJH
+         CNK9YDPBqWIGIzD6Wk04HVmp7Z/edVNMRKt1NUD3DWXTIV2mvCR/fncT+MrlHnOzbzCB
+         u4Dk4EBVknXwKSR9YQFuHv1O023cnwoMbKz0U+OPXO2Drv5U28+JInmdMTwjsLyTWMYu
+         R+ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/cAvS1LUQ3PFFzfZHN6ExYDpya5Lbz77W0Hh810QZAQ=;
+        b=mgukDAeqfeMPNTpdHLw4Q0/j64gtrv7JFBM3A2H+PSaJaFoTLP7VJXyL2AXwdgv4vu
+         W/ogM7q+h0ZqdDfE/f3vqHcRoYspyRqWdoPxVo4zTfGc20AhHZnlDfS03slTPGBIk21Q
+         pq8AjQnutj8KB5eMXBmdM6z44iZvviXwDJ8pIXO2Hkv4OgYIZpwAXNSYWF6iI0USHLaK
+         S+Ki8HfT94e/4tWxOkQgph+/3kP8zMGZGjKCuHavCP/c3ZMUXXVlmimx9r+khXAi5dO8
+         4QVhSHfQGfOeD3jlovzKHan5NqzDOrWnHaOW6wkwMlWKIhC9mL/5ZwJDv4u+ZPgb9L86
+         3P4g==
+X-Gm-Message-State: APjAAAUNt5vfWD+zWXzkeEYU68D4rhVsdU1/nEGBRMh9loU+KDV4ck2I
+        FxF0fby4ZXjgtMfiwHZjj0tnvQ==
+X-Google-Smtp-Source: APXvYqybuaxPW1RbfXyc363mFXjcU/txJRVh87bfpFvZeGdyNrgVd0DcyKpVr1MWTzRGhMlj+Re4iw==
+X-Received: by 2002:a02:6516:: with SMTP id u22mr5072865jab.49.1561556378050;
+        Wed, 26 Jun 2019 06:39:38 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id h19sm22843396iol.65.2019.06.26.06.39.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 06:39:37 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Dan Williams <dcbw@redhat.com>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+ <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+ <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+ <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+ <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+ <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+ <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+ <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
+ <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
+ <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
+ <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
+ <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <edea19ef-f225-bdcd-f394-77e326d1d3ad@linaro.org>
+Date:   Wed, 26 Jun 2019 08:39:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <efbcb3b84ff0a7d7eab875c37f3a5fa77e21d324.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019, Zhenzhong Duan wrote:
-
-> [PATCH v2 1/7]  x86/xen: Mark xen_hvm_need_lapic() and xen_hvm_need_lapic() as __init
-> [PATCH v2 2/7]  x86/jailhouse: Mark jailhouse_x2apic_available as __init
+On 6/25/19 9:19 AM, Johannes Berg wrote:
+> On Mon, 2019-06-24 at 18:40 +0200, Arnd Bergmann wrote:
+>> On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
+>>> On 6/18/19 2:03 PM, Johannes Berg wrote:
+>>>
+>>>> Really there are two possible ways (and they intersect to some extent).
+>>>>
+>>>> One is the whole multi-function device, where a single WWAN device is
+>>>> composed of channels offered by actually different drivers, e.g. for a
+>>>> typical USB device you might have something like cdc_ether and the
+>>>> usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
+>>>> similarly, e.g. by using the underlying USB device "struct device"
+>>>> pointer to tie it together.
+>>>
+>>> I *think* this model makes the most sense.  But at this point
+>>> it would take very little to convince me otherwise...  (And then
+>>> I saw Arnd's message advocating the other one, unfortunately...)
+>>>
+>>>> The other is something like IPA or the Intel modem driver, where the
+>>>> device is actually a single (e.g. PCIe) device and just has a single
+>>>> driver, but that single driver offers different channels.
+>>>
+>>> What I don't like about this is that it's more monolithic.  It
+>>> seems better to have the low-level IPA or Intel modem driver (or
+>>> any other driver that can support communication between the AP
+>>> and WWAN device) present communication paths that other function-
+>>> specific drivers can attach to and use.
+>>
+>> I did not understand Johannes description as two competing models
+>> for the same code, but rather two kinds of existing hardware that
+>> a new driver system would have to deal with.
 > 
-> Above two patches only add __init annotation to some functions, not
-> related to other patches. I didn't split the two out as following patches
-> need them to avoid conflicts.
-
-Not really. Just the XEN one conflicts. The jailhoise one is independent.
-
-> [PATCH v2 3/7]  x86: Add nopv parameter to disable PV extensions
-> [PATCH v2 4/7]  Revert "xen: Introduce 'xen_nopv' to disable PV extensions for HVM guests."
-> [PATCH v2 5/7]  x86/xen: nopv parameter support for HVM guest
+> Right.
 > 
-> Above three patches add an unified nopv prameter used for most of hypervisor
-> platform except XEN PV/PVH, jailhouse. Those need PV extensions to work.
+>> I was trying to simplify it to just having the second model, by adding
+>> a hack to support the first, but my view was rather unpopular so
+>> far, so if everyone agrees on one way to do it, don't worry about me ;-)
 > 
-> I revert 'xen_nopv' as it's same effect as nopv on XEN platform, there is also
-> an issue using 'xen_nopv' with PVH, we should ignore 'xen_nopv' for PVH.
-
-Well, command line options are ABI. You cannot nilly willy remove them as
-it might break existing setups.
-
-The fact that nopv can replace xen_nopv is not a justification.
-
-Also if there is an issue with xen_nopv and PVH then this issue needs to be
-fixed first especially if that issue exists on older kernels.
-
-> [PATCH v2 6/7]  locking/spinlocks, paravirt, hyperv: Correct the hv_nopvspin case
+> :-)
 > 
-> This is a similar change as Commit e6fd28eb3522
-> ("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case"), but for
-> hyperv.
+> However, to also reply to Alex: I don't know exactly how IPA works, but
+> for the Intel modem at least you can't fundamentally have two drivers
+> for different parts of the functionality, since it's just a single piece
+> of hardware and you need to allocate hardware resources from a common
+> pool etc. So you cannot split the driver into "Intel modem control
+> channel driver" and "Intel modem data channel driver". In fact, it's
+> just a single "struct device" on the PCIe bus that you can bind to, and
+> only one driver can bind at a time.
 
-This looks like an independent bug fix. Bug fixes should either be posted
-seperately or at least at the beginning of the series. And this one clearly
-is self contained so why hiding it in the middle of a pile of other
-patches?
+Interesting.  So a single modem driver needs to implement
+*all* of the features/functions?  Like GPS or data log or
+whatever, all needs to share the same struct device?
+Or does what you're describing apply to a subset of the
+modem's functionality?  Or something else?
 
-> [PATCH v2 7/7]  Revert "x86/paravirt: Set up the virt_spin_lock_key after static keys get initialized"
+> So, IOW, I'm not sure I see how you'd split that up. I guess you could
+> if you actually do something like the "rmnet" model, and I suppose
+> you're free to do that for IPA if you like, but I tend to think that's
+> actually a burden, not a win since you just get more complex code that
+> needs to interact with more pieces. A single driver for a single
+> hardware that knows about the few types of channels seems simpler to me.
 > 
-> This revert an old change which is unnecessory now, I think the original change is smarter.
+>> - to answer Johannes question, my understanding is that the interface
+>>   between kernel and firmware/hardware for IPA has a single 'struct
+>>   device' that is used for both the data and the control channels,
+>>   rather than having a data channel and an independent control device,
+>>   so this falls into the same category as the Intel one (please correct
+>>   me on that)
 
-Again, this has nothing to do with the meat of this series which deals with
-the command line parameters and is completely independent.
+I don't think that's quite right, but it might be partially
+right.  There is a single device representing IPA, but the
+picture is a little more complicated.
 
-So you give a list of patches with some explanation for them, but the cover
-letter should provide the big picture. The details of the patches need to
-be in the changelog.
+The IPA hardware is actually something that sits *between* the
+AP and the modem.  It implements one form of communication
+pathway (IP data), but there are others (including QMI, which
+presents a network-like interface but it's actually implemented
+via clever use of shared memory and interrupts).
 
-  1) Describe the context
+What we're talking about here is WWAN/modem management more
+generally though.  It *sounds* like the Intel modem is
+more like a single device, which requires a single driver,
+that seems to implement a bunch of distinct functions.
 
-     The paravirtualization whatever lack whatever they lack and have the
-     shortcoming A, B, C.
+On this I'm not very knowledgeable but for Qualcomm there is
+user space code that is in charge of overall management of
+the modem.  It implements what I think you're calling control
+functions, negotiating with the modem to allow new data channels
+to be created.  Normally the IPA driver would provide information
+to user space about available resources, but would only make a
+communication pathway available when requested.
 
-     For a consistent admin experience a common command line parameter set
-     across all PV guest implementations is a better choice, yada, yada
-     yada.
+I'm going to leave it at that for now.
 
-  2) Describe the changes as overview
+> That sounds about the same then, right.
+> 
+> Are the control channels to IPA are actually also tunnelled over the
+> rmnet protocol? And even if they are, perhaps they have a different
+> hardware queue or so? That'd be the case for Intel - different hardware
+> queue, same (or at least similar) protocol spoken for the DMA hardware
+> itself, but different contents of the messages obviously.
 
-     To achieve this introduce a new nopv parameter which is usable by
-     all PV guest implementation.
+I want to be careful talking about "control" but for IPA it comes
+from user space.  For the purpose of getting initial code upstream,
+all of that control functionality (which was IOCTL based) has been
+removed, and a fixed configuration is assumed.
 
-     While analyzing the PV guest code several bugs were found and
-     fixed. (Patches 1 - 3). They can be applied independent of the
-     functional changes, but they are kept in the series as the functional
-     changes depend on them.
+>> - The user space being proprietary is exactly what we need to avoid
+>>   with the wwan subsystem. We need to be able to use the same
+>>   method for setting up Intel, Qualcomm, Samsung, Unisoc or
+>>   Hisilicon modems or anything else that hooks into the subsystem,
+>>   and support that in network manager as well as the Android
+>>   equivalent.
+>>   If Qualcomm wants to provide their own proprietary user space
+>>   solution, we can't stop them, but then that should also work on
+>>   all the others unless they intentionally break it. ;-)
 
-Documentation/process/submitting-patches.rst clearly explains why it is a
-bad idea to send random collections of patches especially if some patches
-are independent and contain bug fixes.
+I won't comment on this, in part because I really don't know
+right now what is proprietary or why.  I think that having
+user space (proprietary or not) be able to provide management
+capability is a good thing.  If a unified kernel interface
+provides a common/generic way to manage the modem, I don't
+know why Qualcomm wouldn't adapt their code to use it.
+But I can't really speak for Qualcomm.
 
-These rules exist for a reason and are not subject to personal
-interpretation. You want your patches to be reviewed and merged, so pretty
-please make the life of those who need to do that as easy as possible.
+. . .
 
-It's not the job of reviewers and maintainers to distangle your randomly
-ordered patch series.
-
-Thanks,
-
-	tglx
+					-Alex
