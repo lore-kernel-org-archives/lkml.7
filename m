@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAB9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E728C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F66205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F4A4205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521003;
-	bh=hj9KGbkr4AqICPcOaWd8LGYkgMnOsDSZM4G15WuTWFA=;
+	s=default; t=1561521009;
+	bh=hUo1DawkrbOiYGwf0Eu8Nmn4EYbfNyvNmAkdzzf0q1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jfMwZFjleNyJo9uM3jAoOjDv/rSA9qJzztq4yc5jmoDcZS/QYe7fsnSxze+nWqpgT
-	 hsveFgDU3jZLAS9xlQJ6OX5bECTZP8+wKiQJmmx46JicPeD0CtDjzq5MnEqCt1apbX
-	 XJ0D3NsXdDEfARO1daZ8lB33ffvHq/ifvmbKaORM=
+	b=lqR4EmjM6rybzbRpFO21mpg0A2gRC41jxopXkMmanZqpI+u3lCObbG0bOk4cdqKhM
+	 ZNQiZyV0fjknyq+usMsmpPHq6VSVYtYPwaYJhxakOwZeUMTwzpSwabY4AK7E9BFRUD
+	 U6Muyrhd30pJVX8aoTQTJ/u4ZaUOIX9b5DCc3kgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfFZDnV (ORCPT
+        id S1727770AbfFZDuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:43:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:50:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727259AbfFZDnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:10 -0400
+        id S1727272AbfFZDnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:14 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E48216E3;
-        Wed, 26 Jun 2019 03:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D7B6208CB;
+        Wed, 26 Jun 2019 03:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520590;
-        bh=hj9KGbkr4AqICPcOaWd8LGYkgMnOsDSZM4G15WuTWFA=;
+        s=default; t=1561520593;
+        bh=hUo1DawkrbOiYGwf0Eu8Nmn4EYbfNyvNmAkdzzf0q1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sqk8UGj8DD5xuGjgD4umAgMMSndgQUyJy9qyT7SNjLu6r5o0/Q/r7zgzKMy8ex+IR
-         dcJdDTuBo95Fhbq9Q2EP5X3XWTw4PDEYYTsCnOazcfAXnlUp7db5DVWLtnYNpF7ftm
-         y+H4AHeQJKytzX33p0zC0rB+Er+5EMMLnHIUSNSo=
+        b=xthoMv12TCMXKkxxcJj+0P8Yq3IS0N/7QwxJXBMfLSnn6kWC+p4/HQ9UBp4Ia09zv
+         rx4VZRkV6p6kA5FbnjqyFNrh2lK9IpbTmmChdPlzlM6ApuA/HRhiZTrUlQeULsW9IW
+         t3vqBCtIc4FPHGj9aaFUyMJosF5n20WL5dX4wLM0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
+Cc:     Vadim Pasternak <vadimp@mellanox.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 40/51] platform/x86: asus-wmi: Only Tell EC the OS will handle display hotkeys from asus_nb_wmi
-Date:   Tue, 25 Jun 2019 23:40:56 -0400
-Message-Id: <20190626034117.23247-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 42/51] platform/x86: mlx-platform: Fix parent device in i2c-mux-reg device registration
+Date:   Tue, 25 Jun 2019 23:40:58 -0400
+Message-Id: <20190626034117.23247-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,106 +60,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Vadim Pasternak <vadimp@mellanox.com>
 
-[ Upstream commit 401fee8195d401b2b94dee57383f627050724d5b ]
+[ Upstream commit 160da20b254dd4bfc5828f12c208fa831ad4be6c ]
 
-Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
-handle the display off hotkey") causes the backlight to be permanently off
-on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
-1015BX, Asus EeePC 1025C).
+Fix the issue found while running kernel with the option
+CONFIG_DEBUG_TEST_DRIVER_REMOVE.
+Driver 'mlx-platform' registers 'i2c_mlxcpld' device and then registers
+few underlying 'i2c-mux-reg' devices:
+	priv->pdev_i2c = platform_device_register_simple("i2c_mlxcpld", nr,
+							 NULL, 0);
+	...
+	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+		priv->pdev_mux[i] = platform_device_register_resndata(
+						&mlxplat_dev->dev,
+						"i2c-mux-reg", i, NULL,
+						0, &mlxplat_mux_data[i],
+						sizeof(mlxplat_mux_data[i]));
 
-The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
-by that commit is made conditional in this commit and only enabled in
-the quirk_entry structs in the asus-nb-wmi driver fixing the broken
-display / backlight on various EeePC laptop models.
+But actual parent of "i2c-mux-reg" device is priv->pdev_i2c->dev and
+not mlxplat_dev->dev.
+Patch fixes parent device parameter in a call to
+platform_device_register_resndata() for "i2c-mux-reg".
 
-Cc: João Paulo Rechi Vita <jprvita@endlessm.com>
-Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+It solves the race during initialization flow while 'i2c_mlxcpld.1' is
+removing after probe, while 'i2c-mux-reg.0' is still in probing flow:
+'i2c_mlxcpld.1'	flow:	probe -> remove -> probe.
+'i2c-mux-reg.0'	flow:		  probe -> ...
+
+[   12:621096] Registering platform device 'i2c_mlxcpld.1'. Parent at platform
+[   12:621117] device: 'i2c_mlxcpld.1': device_add
+[   12:621155] bus: 'platform': add device i2c_mlxcpld.1
+[   12:621384] Registering platform device 'i2c-mux-reg.0'. Parent at mlxplat
+[   12:621395] device: 'i2c-mux-reg.0': device_add
+[   12:621425] bus: 'platform': add device i2c-mux-reg.0
+[   12:621806] Registering platform device 'i2c-mux-reg.1'. Parent at mlxplat
+[   12:621828] device: 'i2c-mux-reg.1': device_add
+[   12:621892] bus: 'platform': add device i2c-mux-reg.1
+[   12:621906] bus: 'platform': add driver i2c_mlxcpld
+[   12:621996] bus: 'platform': driver_probe_device: matched device i2c_mlxcpld.1 with driver i2c_mlxcpld
+[   12:622003] bus: 'platform': really_probe: probing driver i2c_mlxcpld with device i2c_mlxcpld.1
+[   12:622100] i2c_mlxcpld i2c_mlxcpld.1: no default pinctrl state
+[   12:622293] device: 'i2c-1': device_add
+[   12:627280] bus: 'i2c': add device i2c-1
+[   12:627692] device: 'i2c-1': device_add
+[   12.629639] bus: 'platform': add driver i2c-mux-reg
+[   12.629718] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.0 with driver i2c-mux-reg
+[   12.629723] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.0
+[   12.629818] i2c-mux-reg i2c-mux-reg.0: no default pinctrl state
+[   12.629981] platform i2c-mux-reg.0: Driver i2c-mux-reg requests probe deferral
+[   12.629986] platform i2c-mux-reg.0: Added to deferred list
+[   12.629992] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.1 with driver i2c-mux-reg
+[   12.629997] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.1
+[   12.630091] i2c-mux-reg i2c-mux-reg.1: no default pinctrl state
+[   12.630247] platform i2c-mux-reg.1: Driver i2c-mux-reg requests probe deferral
+[   12.630252] platform i2c-mux-reg.1: Added to deferred list
+[   12.640892] devices_kset: Moving i2c-mux-reg.0 to end of list
+[   12.640900] platform i2c-mux-reg.0: Retrying from deferred list
+[   12.640911] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.0 with driver i2c-mux-reg
+[   12.640919] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.0
+[   12.640999] i2c-mux-reg i2c-mux-reg.0: no default pinctrl state
+[   12.641177] platform i2c-mux-reg.0: Driver i2c-mux-reg requests probe deferral
+[   12.641187] platform i2c-mux-reg.0: Added to deferred list
+[   12.641198] devices_kset: Moving i2c-mux-reg.1 to end of list
+[   12.641219] platform i2c-mux-reg.1: Retrying from deferred list
+[   12.641237] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.1 with driver i2c-mux-reg
+[   12.641247] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.1
+[   12.641331] i2c-mux-reg i2c-mux-reg.1: no default pinctrl state
+[   12.641465] platform i2c-mux-reg.1: Driver i2c-mux-reg requests probe deferral
+[   12.641469] platform i2c-mux-reg.1: Added to deferred list
+[   12.646427] device: 'i2c-1': device_add
+[   12.646647] bus: 'i2c': add device i2c-1
+[   12.647104] device: 'i2c-1': device_add
+[   12.669231] devices_kset: Moving i2c-mux-reg.0 to end of list
+[   12.669240] platform i2c-mux-reg.0: Retrying from deferred list
+[   12.669258] bus: 'platform': driver_probe_device: matched device i2c-mux-reg.0 with driver i2c-mux-reg
+[   12.669263] bus: 'platform': really_probe: probing driver i2c-mux-reg with device i2c-mux-reg.0
+[   12.669343] i2c-mux-reg i2c-mux-reg.0: no default pinctrl state
+[   12.669585] device: 'i2c-2': device_add
+[   12.669795] bus: 'i2c': add device i2c-2
+[   12.670201] device: 'i2c-2': device_add
+[   12.671427] i2c i2c-1: Added multiplexed i2c bus 2
+[   12.671514] device: 'i2c-3': device_add
+[   12.671724] bus: 'i2c': add device i2c-3
+[   12.672136] device: 'i2c-3': device_add
+[   12.673378] i2c i2c-1: Added multiplexed i2c bus 3
+[   12.673472] device: 'i2c-4': device_add
+[   12.673676] bus: 'i2c': add device i2c-4
+[   12.674060] device: 'i2c-4': device_add
+[   12.675861] i2c i2c-1: Added multiplexed i2c bus 4
+[   12.675941] device: 'i2c-5': device_add
+[   12.676150] bus: 'i2c': add device i2c-5
+[   12.676550] device: 'i2c-5': device_add
+[   12.678103] i2c i2c-1: Added multiplexed i2c bus 5
+[   12.678193] device: 'i2c-6': device_add
+[   12.678395] bus: 'i2c': add device i2c-6
+[   12.678774] device: 'i2c-6': device_add
+[   12.679969] i2c i2c-1: Added multiplexed i2c bus 6
+[   12.680065] device: 'i2c-7': device_add
+[   12.680275] bus: 'i2c': add device i2c-7
+[   12.680913] device: 'i2c-7': device_add
+[   12.682506] i2c i2c-1: Added multiplexed i2c bus 7
+[   12.682600] device: 'i2c-8': device_add
+[   12.682808] bus: 'i2c': add device i2c-8
+[   12.683189] device: 'i2c-8': device_add
+[   12.683907] device: 'i2c-1': device_unregister
+[   12.683945] device: 'i2c-1': device_unregister
+[   12.684387] device: 'i2c-1': device_create_release
+[   12.684536] bus: 'i2c': remove device i2c-1
+[   12.686019] i2c i2c-8: Failed to create compatibility class link
+[   12.686086] ------------[ cut here ]------------
+[   12.686087] can't create symlink to mux device
+[   12.686224] Workqueue: events deferred_probe_work_func
+[   12.686135] WARNING: CPU: 7 PID: 436 at drivers/i2c/i2c-mux.c:416 i2c_mux_add_adapter+0x729/0x7d0 [i2c_mux]
+[   12.686232] RIP: 0010:i2c_mux_add_adapter+0x729/0x7d0 [i2c_mux]
+[   0x190/0x190 [i2c_mux]
+[   12.686300]  ? i2c_mux_alloc+0xac/0x110 [i2c_mux]
+[   12.686306]  ? i2c_mux_reg_set+0x200/0x200 [i2c_mux_reg]
+[   12.686313]  i2c_mux_reg_probe+0x22c/0x731 [i2c_mux_reg]
+[   12.686322]  ? i2c_mux_reg_deselect+0x60/0x60 [i2c_mux_reg]
+[   12.686346]  platform_drv_probe+0xa8/0x110
+[   12.686351]  really_probe+0x185/0x720
+[   12.686358]  driver_probe_device+0xdf/0x1f0
+...
+[   12.686522] i2c i2c-1: Added multiplexed i2c bus 8
+[   12.686621] device: 'i2c-9': device_add
+[   12.686626] kobject_add_internal failed for i2c-9 (error: -2 parent: i2c-1)
+[   12.694729] i2c-core: adapter 'i2c-1-mux (chan_id 8)': can't register device (-2)
+[   12.705726] i2c i2c-1: failed to add mux-adapter 8 as bus 9 (error=-2)
+[   12.714494] device: 'i2c-8': device_unregister
+[   12.714537] device: 'i2c-8': device_unregister
+
+Fixes: 6613d18e9038 ("platform/x86: mlx-platform: Move module from arch/x86")
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
- drivers/platform/x86/asus-wmi.c    | 2 +-
- drivers/platform/x86/asus-wmi.h    | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/platform/x86/mlx-platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index b6f2ff95c3ed..59f3a37a44d7 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 48fa7573e29b..0e5f073e51bc 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -1828,7 +1828,7 @@ static int __init mlxplat_init(void)
  
- static struct quirk_entry quirk_asus_unknown = {
- 	.wapf = 0,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_q500a = {
- 	.i8042_filter = asus_q500a_i8042_filter,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- /*
-@@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a = {
- static struct quirk_entry quirk_asus_x55u = {
- 	.wapf = 4,
- 	.wmi_backlight_power = true,
-+	.wmi_backlight_set_devstate = true,
- 	.no_display_toggle = true,
- };
- 
- static struct quirk_entry quirk_asus_wapf4 = {
- 	.wapf = 4,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_x200ca = {
- 	.wapf = 2,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_ux303ub = {
- 	.wmi_backlight_native = true,
-+	.wmi_backlight_set_devstate = true,
- };
- 
- static struct quirk_entry quirk_asus_x550lb = {
-+	.wmi_backlight_set_devstate = true,
- 	.xusb2pr = 0x01D9,
- };
- 
- static struct quirk_entry quirk_asus_forceals = {
-+	.wmi_backlight_set_devstate = true,
- 	.wmi_force_als_set = true,
- };
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ee1fa93708ec..a66e99500c12 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2131,7 +2131,7 @@ static int asus_wmi_add(struct platform_device *pdev)
- 		err = asus_wmi_backlight_init(asus);
- 		if (err && err != -ENODEV)
- 			goto fail_backlight;
--	} else
-+	} else if (asus->driver->quirks->wmi_backlight_set_devstate)
- 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
- 
- 	status = wmi_install_notify_handler(asus->driver->event_guid,
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 6c1311f4b04d..57a79bddb286 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -44,6 +44,7 @@ struct quirk_entry {
- 	bool store_backlight_power;
- 	bool wmi_backlight_power;
- 	bool wmi_backlight_native;
-+	bool wmi_backlight_set_devstate;
- 	bool wmi_force_als_set;
- 	int wapf;
- 	/*
+ 	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
+ 		priv->pdev_mux[i] = platform_device_register_resndata(
+-						&mlxplat_dev->dev,
++						&priv->pdev_i2c->dev,
+ 						"i2c-mux-reg", i, NULL,
+ 						0, &mlxplat_mux_data[i],
+ 						sizeof(mlxplat_mux_data[i]));
 -- 
 2.20.1
 
