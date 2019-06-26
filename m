@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F120C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EC5C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1127720659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3949F20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520960;
-	bh=RRF2SmZ25ndOjvk6QjLmzorhtZQ3m2Fth1qQ1Ic4NXM=;
+	s=default; t=1561520962;
+	bh=CopbPDkmpyBYVPNLicCPlny+gTOGGt4Mg7HQaPoI71E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JllUhn0m0oAfq7gH6Jrn2fGzR6w8J6DqoPlOJXrjlA7955e37PaBCKKRJm5XIdGnt
-	 DMkyQs88kTWTBb7hBYeu2HQ1L/F4FGvLTHi0dLkWQmP7Nh8BNhlN3fwPicRu9mMeTR
-	 wFSIYKt4Eex0WBXyf0UkC4Gozb8PqpJDfx8yI5Pc=
+	b=C4+CsMVcWIYG3Px/y0+ZxLTGhrPq/flTXbp+zvmZbSxoAUQkdtwKHwXnJGSIpOik5
+	 rN53fqNfMSLGevdHmme5n4Doy6JuyUyu664BQC/9rqN186XWsz5Weo48b8M2B0muIy
+	 AOOCy1wa1Q3Jis8XjNuJVkWZIJRN4O66zHGD4qZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfFZDtS (ORCPT
+        id S1727432AbfFZDnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727441AbfFZDnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:53 -0400
+        id S1726955AbfFZDns (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:48 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D9520883;
-        Wed, 26 Jun 2019 03:43:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D1D20883;
+        Wed, 26 Jun 2019 03:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520633;
-        bh=RRF2SmZ25ndOjvk6QjLmzorhtZQ3m2Fth1qQ1Ic4NXM=;
+        s=default; t=1561520627;
+        bh=CopbPDkmpyBYVPNLicCPlny+gTOGGt4Mg7HQaPoI71E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/RfcKL0mv8xcZoYL9jeqJs3SVxnODBvpNT3A0U3sNflbPxnxA9eS282iIeWH7z8E
-         LTSqgjD4ucvfovbTnJa6TsV0itJzOhhgIzVEfzDF/uO7OOoLmmHjZXpdDSemEZMhvi
-         yna4OzO5PHpEinO5l8mC6PnAmMmd/JHtT7lxVsi0=
+        b=u/U/lEbyOAoRcC0c1o69n2UCMcSWUz43pTCeL+f4Nt+0LdO7w0NjJlUVsd2ldUZZi
+         EFgbs/w/ChzcL1xN7fNb6+ts9LW2sZLxivCZxThPEMVoSrUYAgo2uQyjyZc0g9+64B
+         3BVimRW7PPsOo3524SX66hZEO8oIy1FwSemcWYzo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 08/34] drm/mediatek: fix unbind functions
-Date:   Tue, 25 Jun 2019 23:43:09 -0400
-Message-Id: <20190626034335.23767-8-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/34] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+Date:   Tue, 25 Jun 2019 23:43:06 -0400
+Message-Id: <20190626034335.23767-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -59,34 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hsin-Yi Wang <hsinyi@chromium.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 8fd7a37b191f93737f6280a9b5de65f98acc12c9 ]
+[ Upstream commit 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 ]
 
-detatch panel in mtk_dsi_destroy_conn_enc(), since .bind will try to
-attach it again.
+If spi_register_master fails in spi_bitbang_start
+because device_add failure, We should return the
+error code other than 0, otherwise calling
+spi_bitbang_stop may trigger NULL pointer dereference
+like this:
 
-Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
+Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
+
+CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ dump_stack+0xa9/0x10e
+ ? __list_del_entry_valid+0x45/0xd0
+ ? __list_del_entry_valid+0x45/0xd0
+ __kasan_report+0x171/0x18d
+ ? __list_del_entry_valid+0x45/0xd0
+ kasan_report+0xe/0x20
+ __list_del_entry_valid+0x45/0xd0
+ spi_unregister_controller+0x99/0x1b0
+ spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
+ ? 0xffffffffc1128000
+ ? klist_next+0x131/0x1e0
+ ? driver_detach+0x40/0x40 [parport]
+ port_check+0x3b/0x50 [parport]
+ bus_for_each_dev+0x115/0x180
+ ? subsys_dev_iter_exit+0x20/0x20
+ __parport_register_driver+0x1f0/0x210 [parport]
+ ? 0xffffffffc1150000
+ do_one_initcall+0xb9/0x3b5
+ ? perf_trace_initcall_level+0x270/0x270
+ ? kasan_unpoison_shadow+0x30/0x40
+ ? kasan_unpoison_shadow+0x30/0x40
+ do_init_module+0xe0/0x330
+ load_module+0x38eb/0x4270
+ ? module_frob_arch_sections+0x20/0x20
+ ? kernel_read_file+0x188/0x3f0
+ ? find_held_lock+0x6d/0xd0
+ ? fput_many+0x1a/0xe0
+ ? __do_sys_finit_module+0x162/0x190
+ __do_sys_finit_module+0x162/0x190
+ ? __ia32_sys_init_module+0x40/0x40
+ ? __mutex_unlock_slowpath+0xb4/0x3f0
+ ? wait_for_completion+0x240/0x240
+ ? vfs_write+0x160/0x2a0
+ ? lockdep_hardirqs_off+0xb5/0x100
+ ? mark_held_locks+0x1a/0x90
+ ? do_syscall_64+0x14/0x2a0
+ do_syscall_64+0x72/0x2a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-bitbang.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 66df1b177959..84bb66866631 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -841,6 +841,8 @@ static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi)
- 	/* Skip connector cleanup if creation was delegated to the bridge */
- 	if (dsi->conn.dev)
- 		drm_connector_cleanup(&dsi->conn);
-+	if (dsi->panel)
-+		drm_panel_detach(dsi->panel);
- }
+diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
+index f29176000b8d..06cf9388e74f 100644
+--- a/drivers/spi/spi-bitbang.c
++++ b/drivers/spi/spi-bitbang.c
+@@ -416,7 +416,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
+ 	if (ret)
+ 		spi_master_put(master);
  
- static void mtk_dsi_ddp_start(struct mtk_ddp_comp *comp)
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(spi_bitbang_start);
+ 
 -- 
 2.20.1
 
