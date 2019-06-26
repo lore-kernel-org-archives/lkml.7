@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BCFC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6526BC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46AE20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F407205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520977;
-	bh=2mkfzhi/YQ6DnEGVd3mCPmKplmLD7uWXYZALZr9o2io=;
+	s=default; t=1561520983;
+	bh=s093pJ5X4SJ39pDwCs25wm3kxqLJKlbUMRofKgwIBd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hWHGcluHDv/RPXBH/SOOi8RCCUxvOpdyp4YtWJzejPnSzbgRGojTPN+AoMppqGSLi
-	 v5aSBQNiLXTAKhgYVamZkvccPCI1uD3htNVduUZNEkG7t9BqspWho2oFoc5Kl4tjiE
-	 lleDue/jKoS6YQu8G8EsS/uyagiquJsa4zE0WlT0=
+	b=RNA038khd0Y6PBfSAEDw07DDHQZAGND4KdDDtx5IoO2QBW86yulwPoKzG2JqX6ZTc
+	 3y9BkOrL19Bsr12US47F80lNsBAr7GcO/qNThpyeU3XPEreEZ1Qa6xfJNRNM+tGMzw
+	 zA9uaH3mVRpsE0YDB0fSB3kcEvXZL3yV1b2ay5+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfFZDtf (ORCPT
+        id S1727848AbfFZDtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:49:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54976 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:49:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfFZDnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:41 -0400
-Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
+        id S1727360AbfFZDnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:33 -0400
+Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE00C205ED;
-        Wed, 26 Jun 2019 03:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3DB421655;
+        Wed, 26 Jun 2019 03:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520620;
-        bh=2mkfzhi/YQ6DnEGVd3mCPmKplmLD7uWXYZALZr9o2io=;
+        s=default; t=1561520612;
+        bh=s093pJ5X4SJ39pDwCs25wm3kxqLJKlbUMRofKgwIBd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4i4w7EAqEtRMsDfz4nEwo2BjhQvCNpfrkOgLiViIvX4fZHNIKE1uSjni1DPXMkUg
-         /bxrQA+WE9PzRkjeBNszGwGPFRNtJ0+O4g/wuvPKwxDSEuMibkDwMrBjUJsl0foSx9
-         of/g1HtFcd0+T1rj+auCYlsakYZyIExHFVuUC0IM=
+        b=ktUzKmG+7EUhr1GrKilaE3ulluPLvHdI4wYD4r9TuCOMdhcAlQ17LLKYMWjrq/eV0
+         aQSPTNJu87DkQ0+BkWKLLtcztTMa1xOvkhF3PDPGCP1PT4I9G7WMTGQoT/2CLwP+69
+         oCccBblIAQho1i+XXALBDftL7jDTH7kDPxJyIxRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Viorel Suman <viorel.suman@nxp.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 02/34] ASoC: ak4458: add return value for ak4458_probe
-Date:   Tue, 25 Jun 2019 23:43:03 -0400
-Message-Id: <20190626034335.23767-2-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Jessica Yu <jeyu@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>, live-patching@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 50/51] module: Fix livepatch/ftrace module text permissions race
+Date:   Tue, 25 Jun 2019 23:41:06 -0400
+Message-Id: <20190626034117.23247-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
-References: <20190626034335.23767-1-sashal@kernel.org>
+In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
+References: <20190626034117.23247-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,65 +62,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viorel Suman <viorel.suman@nxp.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit a8dee20d792432740509237943700fbcfc230bad ]
+[ Upstream commit 9f255b632bf12c4dd7fc31caee89aa991ef75176 ]
 
-AK4458 is probed successfully even if AK4458 is not present - this
-is caused by probe function returning no error on i2c access failure.
-Return an error on probe if i2c access has failed.
+It's possible for livepatch and ftrace to be toggling a module's text
+permissions at the same time, resulting in the following panic:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  BUG: unable to handle page fault for address: ffffffffc005b1d9
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0003) - permissions violation
+  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
+  Oops: 0003 [#1] PREEMPT SMP PTI
+  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+  RIP: 0010:apply_relocate_add+0xbe/0x14c
+  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
+  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
+  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
+  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
+  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
+  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
+  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
+  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   klp_init_object_loaded+0x10f/0x219
+   ? preempt_latency_start+0x21/0x57
+   klp_enable_patch+0x662/0x809
+   ? virt_to_head_page+0x3a/0x3c
+   ? kfree+0x8c/0x126
+   patch_init+0x2ed/0x1000 [livepatch_test02]
+   ? 0xffffffffc0060000
+   do_one_initcall+0x9f/0x1c5
+   ? kmem_cache_alloc_trace+0xc4/0xd4
+   ? do_init_module+0x27/0x210
+   do_init_module+0x5f/0x210
+   load_module+0x1c41/0x2290
+   ? fsnotify_path+0x3b/0x42
+   ? strstarts+0x2b/0x2b
+   ? kernel_read+0x58/0x65
+   __do_sys_finit_module+0x9f/0xc3
+   ? __do_sys_finit_module+0x9f/0xc3
+   __x64_sys_finit_module+0x1a/0x1c
+   do_syscall_64+0x52/0x61
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The above panic occurs when loading two modules at the same time with
+ftrace enabled, where at least one of the modules is a livepatch module:
+
+CPU0					CPU1
+klp_enable_patch()
+  klp_init_object_loaded()
+    module_disable_ro()
+    					ftrace_module_enable()
+					  ftrace_arch_code_modify_post_process()
+				    	    set_all_modules_text_ro()
+      klp_write_object_relocations()
+        apply_relocate_add()
+	  *patches read-only code* - BOOM
+
+A similar race exists when toggling ftrace while loading a livepatch
+module.
+
+Fix it by ensuring that the livepatch and ftrace code patching
+operations -- and their respective permissions changes -- are protected
+by the text_mutex.
+
+Link: http://lkml.kernel.org/r/ab43d56ab909469ac5d2520c5d944ad6d4abd476.1560474114.git.jpoimboe@redhat.com
+
+Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
+Fixes: 444d13ff10fb ("modules: add ro_after_init support")
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/ak4458.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/livepatch/core.c |  6 ++++++
+ kernel/trace/ftrace.c   | 10 +++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index 299ada4dfaa0..58b6ca1de993 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -492,9 +492,10 @@ static void ak4458_power_on(struct ak4458_priv *ak4458)
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index eb0ee10a1981..05d5b0afc864 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -30,6 +30,7 @@
+ #include <linux/elf.h>
+ #include <linux/moduleloader.h>
+ #include <linux/completion.h>
++#include <linux/memory.h>
+ #include <asm/cacheflush.h>
+ #include "core.h"
+ #include "patch.h"
+@@ -746,16 +747,21 @@ static int klp_init_object_loaded(struct klp_patch *patch,
+ 	struct klp_func *func;
+ 	int ret;
+ 
++	mutex_lock(&text_mutex);
++
+ 	module_disable_ro(patch->mod);
+ 	ret = klp_write_object_relocations(patch->mod, obj);
+ 	if (ret) {
+ 		module_enable_ro(patch->mod, true);
++		mutex_unlock(&text_mutex);
+ 		return ret;
  	}
- }
  
--static void ak4458_init(struct snd_soc_component *component)
-+static int ak4458_init(struct snd_soc_component *component)
+ 	arch_klp_init_object_loaded(patch, obj);
+ 	module_enable_ro(patch->mod, true);
+ 
++	mutex_unlock(&text_mutex);
++
+ 	klp_for_each_func(obj, func) {
+ 		ret = klp_find_object_symbol(obj->name, func->old_name,
+ 					     func->old_sympos,
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 538f0b1c7ea2..045e7f46a74a 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -34,6 +34,7 @@
+ #include <linux/hash.h>
+ #include <linux/rcupdate.h>
+ #include <linux/kprobes.h>
++#include <linux/memory.h>
+ 
+ #include <trace/events/sched.h>
+ 
+@@ -2614,10 +2615,12 @@ static void ftrace_run_update_code(int command)
  {
- 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
-+	int ret;
+ 	int ret;
  
- 	/* External Mute ON */
- 	if (ak4458->mute_gpiod)
-@@ -502,21 +503,21 @@ static void ak4458_init(struct snd_soc_component *component)
++	mutex_lock(&text_mutex);
++
+ 	ret = ftrace_arch_code_modify_prepare();
+ 	FTRACE_WARN_ON(ret);
+ 	if (ret)
+-		return;
++		goto out_unlock;
  
- 	ak4458_power_on(ak4458);
+ 	/*
+ 	 * By default we use stop_machine() to modify the code.
+@@ -2629,6 +2632,9 @@ static void ftrace_run_update_code(int command)
  
--	snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
-+	ret = snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
- 			    0x80, 0x80);   /* ACKS bit = 1; 10000000 */
-+	if (ret < 0)
-+		return ret;
- 
--	ak4458_rstn_control(component, 1);
-+	return ak4458_rstn_control(component, 1);
+ 	ret = ftrace_arch_code_modify_post_process();
+ 	FTRACE_WARN_ON(ret);
++
++out_unlock:
++	mutex_unlock(&text_mutex);
  }
  
- static int ak4458_probe(struct snd_soc_component *component)
- {
- 	struct ak4458_priv *ak4458 = snd_soc_component_get_drvdata(component);
+ static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
+@@ -5779,6 +5785,7 @@ void ftrace_module_enable(struct module *mod)
+ 	struct ftrace_page *pg;
  
--	ak4458_init(component);
--
- 	ak4458->fs = 48000;
+ 	mutex_lock(&ftrace_lock);
++	mutex_lock(&text_mutex);
  
--	return 0;
-+	return ak4458_init(component);
- }
+ 	if (ftrace_disabled)
+ 		goto out_unlock;
+@@ -5840,6 +5847,7 @@ void ftrace_module_enable(struct module *mod)
+ 		ftrace_arch_code_modify_post_process();
  
- static void ak4458_remove(struct snd_soc_component *component)
+  out_unlock:
++	mutex_unlock(&text_mutex);
+ 	mutex_unlock(&ftrace_lock);
+ 
+ 	process_cached_mods(mod->name);
 -- 
 2.20.1
 
