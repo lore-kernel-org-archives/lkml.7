@@ -2,112 +2,77 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AFAC48BD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F8FC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4126520663
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="YIuixC0f"
+	by mail.kernel.org (Postfix) with ESMTP id 8690C20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfFZLz6 (ORCPT
+        id S1727356AbfFZMB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:55:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39757 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfFZLz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:55:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id r185so4351121iod.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 04:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4SPPlml4y9TrtWAQCUjsdfHfQIRX6Xl2SugOU3jklTk=;
-        b=YIuixC0fgcOTmNzhQ0tG8LlDNyCIharFpnNWQfgSkOPOQvT7VdXv6dl56xlVouu8yB
-         ixeqNz2NVdvdkdyLm2pAO3zbdZkTqp+VfRuC9Te7ap1lHgacEF6zwDG3uZDgaSnnUqqA
-         487NLC2XN7KA9+8q9md/J2bfIjmzcxth2AWjhLN7XFiPQ4IKYOw8qBX3M96Nhss5JPNv
-         y4/0Yd+VKsRQ6YmKjbC8+ypnQhA4R4yRbiAXsQkQRgXREOpLtvhDfnIkPKgYpmrO/uJn
-         uxp3ZSnNKblEsDhUDe4qul4JRYPT4fS6tb6HkwbEeRYyIfsTLRfNuBT101uW9njyKcOi
-         AXsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4SPPlml4y9TrtWAQCUjsdfHfQIRX6Xl2SugOU3jklTk=;
-        b=X9GuQ6ME47aTt3j41trKEDK4veNP1+LpuuWSfvQRMJ3GDIm631urEt3rNXSpw91Cy7
-         C3bG/KpuHtgo0v6c4mZVPsqgb9Q1EvguiQa/RrGwg8oR/Xkcxj3hm+pVCjxMk5e+z/MU
-         IXyjRKE8ktmYQwkWfHi4JOgVa+BnZ5nXTnrE2tR/SkYz+IdIqRDHHTs2e7ko//nT79Ke
-         xKNW37Rnme96yeNKjR3eHz77SVUBdLUMfOZAEX6VZ2B3ojmLIhJ5c0pd1EA/7ib8IQ2s
-         GoswQXOKVEw/z1uEuFCEm0wjsDX9yjpvcwnh4PY9HfYCYuvapDH2E4sXvifcZuOiuHku
-         T9Og==
-X-Gm-Message-State: APjAAAUUn4qrSbakRj8oyDD/2bvqTbPQNkEax+lpgkDz1hNTgSj8kI32
-        IfhqSD7wFUi3z3dSIijzw5/HDkITTuJHJh/vPDqAGg==
-X-Google-Smtp-Source: APXvYqwpdcuRVyNm6p7HASJTMkXe0GXnJa2EAUcoFgp21Y11biCuzhb0eiFPtro7366T4+3bMlStGVjSfd60h4iHnB4=
-X-Received: by 2002:a5d:80c3:: with SMTP id h3mr4673851ior.167.1561550157015;
- Wed, 26 Jun 2019 04:55:57 -0700 (PDT)
+        Wed, 26 Jun 2019 08:01:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:59558 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbfFZMBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 08:01:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EC56360;
+        Wed, 26 Jun 2019 05:01:55 -0700 (PDT)
+Received: from [10.162.40.140] (p8cg001049571a15.blr.arm.com [10.162.40.140])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A35C3F718;
+        Wed, 26 Jun 2019 05:01:53 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190626214125.6d313c15@canb.auug.org.au>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <9e850319-8564-5b1f-2e1b-7d327215043f@arm.com>
+Date:   Wed, 26 Jun 2019 17:32:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190626084557.11847-1-brgl@bgdev.pl> <CACRpkdZXtFUimMATgKA6Qdo4-mTLW5xV3XvdcBShpO9c32_gbQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZXtFUimMATgKA6Qdo4-mTLW5xV3XvdcBShpO9c32_gbQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 26 Jun 2019 13:55:46 +0200
-Message-ID: <CAMRc=MfgvzKbUmttkHj1tWwFU_fZX93hnD6SDmaJV8ZYiRCU2g@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: mockup: no need to check return value of
- debugfs_create functions
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190626214125.6d313c15@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 26 cze 2019 o 13:54 Linus Walleij <linus.walleij@linaro.org> napi=
-sa=C5=82(a):
->
-> On Wed, Jun 26, 2019 at 10:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
-e:
->
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > When calling debugfs functions, there is no need to ever check the
-> > return value.  The function can work or not, but the code logic should
-> > never do something different based on this.
-> >
-> > Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Cc: linux-gpio@vger.kernel.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > [Bartosz: removed one more check for debugfs return value]
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> > v1 -> v2:
-> > - fix build warning found by kbuild
-> > - fix build error found by kbuild
-> >
-> > v2 -> v3:
-> > - remove one more unnecessary ifdef
->
-> Looks good
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Will you send me this in a pull request with the rest of
-> the stuff you have queued?
->
-> Yours,
-> Linus Walleij
+Hello Stephen,
 
-Yes, I'll do it shortly.
+On 06/26/2019 05:11 PM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the akpm-current tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> ld: lib/ioremap.o: in function `.ioremap_huge_init':
+> ioremap.c:(.init.text+0x3c): undefined reference to `.arch_ioremap_p4d_supported'
 
-Bart
+I believe this might be caused by a patch for powerpc enabling HAVE_ARCH_HUGE_VMAP
+without an arch_ioremap_p4d_supported() definition.
+
+> 
+> Caused by commit
+> 
+>   749940680d0b ("mm/ioremap: probe platform for p4d huge map support")
+> 
+> I have reverted that commit for today.
+
+All it needs is a powerpc definition for arch_ioremap_p4d_supported() which can just
+return false if it is not supported. Shall I send a patch for the powerpc fix or just
+re-spin the original patch which added arch_ioremap_p4d_supported(). Please suggest.
+
+Today's linux-next (next-20190625) does not have powerpc subscribing HAVE_ARCH_HUGE_VMAP.
+Could you please point to the branch I should pull for this failure. Thanks !
+
+- Anshuman
+
