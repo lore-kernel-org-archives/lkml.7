@@ -2,84 +2,139 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D2CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160DDC48BD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74D82085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34782086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:10:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xsAnA6we"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfFZBF2 (ORCPT
+        id S1726382AbfFZBKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:05:28 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46290 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726223AbfFZBF1 (ORCPT
+        Tue, 25 Jun 2019 21:10:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37158 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZBKt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:05:27 -0400
-X-UUID: 6130bc13c6334e4485ec934b11c452d9-20190626
-X-UUID: 6130bc13c6334e4485ec934b11c452d9-20190626
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 87491432; Wed, 26 Jun 2019 09:05:23 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 26 Jun 2019 09:05:22 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 26 Jun 2019 09:05:22 +0800
-Message-ID: <1561511122.24282.10.camel@mtksdaap41>
-Subject: Re: [RFC v1] clk: core: support clocks that need to be enabled
- during re-parent
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, Biao Huang <biao.huang@mediatek.com>
-Date:   Wed, 26 Jun 2019 09:05:22 +0800
-In-Reply-To: <20190625221415.B0DC22086D@mail.kernel.org>
-References: <1560138293-4163-1-git-send-email-weiyi.lu@mediatek.com>
-         <20190625221415.B0DC22086D@mail.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 25 Jun 2019 21:10:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=UtW5OvMCSjQYk0vQjDM8NYHUQEBuLOBRls0IoB2nKTs=; b=xsAnA6weNkKTfYGnYr65dpdaI0
+        IowfByeZt/ku9RrguyPceaIexJ4vtqnZGbqKx1+1cpwAVxkNt46HoYucOCKRWgu/GlykISrhxQr0r
+        s7FS3+vjwjB2DRbaBR0v/oTzKUOAL/mKXzjjs4YwQ4EvTcOlj8GuJsPwCz9h1we9G/8ppsxr0/vUx
+        62PSjolrNJIr/rrwJJyeJabZKFu1wXyrdmk/+HLc5DDsejRhK4LieK3WDT2JFKEkZQ80SWIMsG68G
+        0VVpU01ii5XAnZe2K7MqB4WQtSHOKs1ya8IILXlK0MkMku2eWM5EPG/NJX/lzxD/N9ZSHajbYh0EZ
+        oZCp2GFA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfwSQ-0002pd-J8; Wed, 26 Jun 2019 01:10:43 +0000
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] extcon: fix fsa9480 Kconfig warning and build errors
+Message-ID: <1075ea60-6657-ce8d-b527-639b4fc896ec@infradead.org>
+Date:   Tue, 25 Jun 2019 18:10:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 15:14 -0700, Stephen Boyd wrote:
-> Quoting Weiyi Lu (2019-06-09 20:44:53)
-> > When using property assigned-clock-parents to assign parent clocks,
-> > core clocks might still be disabled during re-parent.
-> > Add flag 'CLK_OPS_CORE_ENABLE' for those clocks must be enabled
-> > during re-parent.
-> > 
-> > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> 
-> Can you further describe the scenario where this is a problem? Is it
-> some sort of clk that is enabled by default out of the bootloader and is
-> then configured to have an 'assigned-clock-parents' property to change
-> the parent, but that clk needs to be "enabled" so that the framework
-> turns on the parents for the parent switch?
+From: Randy Dunlap <rdunlap@infradead.org>
 
-When driver is built as module(.ko) and install at runtime after the
-whole initialization stage. Clk might already be turned off before
-configuring by assigned-clock-parents. For such clock design that need
-to have clock enabled during re-parent, the configuration of
-assigned-clock-parents might be failed. That's the problem we have now.
-Do you have any suggestion for such usage of clocks? Many thanks.
+Fix Kconfig dependency warning and subsequent build errors caused by
+the Kconfig entry for EXTCON-FSA9480.  It should not select
+REGMAP_I2C unless I2C is already set/enabled.
 
-> 
+WARNING: unmet direct dependencies detected for REGMAP_I2C
+  Depends on [n]: I2C [=n]
+  Selected by [y]:
+  - EXTCON_FSA9480 [=y] && EXTCON [=y] && INPUT [=y]
+
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_byte_reg_read’:
+../drivers/base/regmap/regmap-i2c.c:25:2: error: implicit declaration of function ‘i2c_smbus_read_byte_data’ [-Werror=implicit-function-declaration]
+  ret = i2c_smbus_read_byte_data(i2c, reg);
+  ^
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_byte_reg_write’:
+../drivers/base/regmap/regmap-i2c.c:43:2: error: implicit declaration of function ‘i2c_smbus_write_byte_data’ [-Werror=implicit-function-declaration]
+  return i2c_smbus_write_byte_data(i2c, reg, val);
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_reg_read’:
+../drivers/base/regmap/regmap-i2c.c:61:2: error: implicit declaration of function ‘i2c_smbus_read_word_data’ [-Werror=implicit-function-declaration]
+  ret = i2c_smbus_read_word_data(i2c, reg);
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_reg_write’:
+../drivers/base/regmap/regmap-i2c.c:79:2: error: implicit declaration of function ‘i2c_smbus_write_word_data’ [-Werror=implicit-function-declaration]
+  return i2c_smbus_write_word_data(i2c, reg, val);
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_read_swapped’:
+../drivers/base/regmap/regmap-i2c.c:97:2: error: implicit declaration of function ‘i2c_smbus_read_word_swapped’ [-Werror=implicit-function-declaration]
+  ret = i2c_smbus_read_word_swapped(i2c, reg);
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_write_swapped’:
+../drivers/base/regmap/regmap-i2c.c:115:2: error: implicit declaration of function ‘i2c_smbus_write_word_swapped’ [-Werror=implicit-function-declaration]
+  return i2c_smbus_write_word_swapped(i2c, reg, val);
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_write’:
+../drivers/base/regmap/regmap-i2c.c:129:2: error: implicit declaration of function ‘i2c_master_send’ [-Werror=implicit-function-declaration]
+  ret = i2c_master_send(i2c, data, count);
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_gather_write’:
+../drivers/base/regmap/regmap-i2c.c:150:2: error: implicit declaration of function ‘i2c_check_functionality’ [-Werror=implicit-function-declaration]
+  if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_NOSTART))
+../drivers/base/regmap/regmap-i2c.c:163:2: error: implicit declaration of function ‘i2c_transfer’ [-Werror=implicit-function-declaration]
+  ret = i2c_transfer(i2c->adapter, xfer, 2);
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_smbus_i2c_write’:
+../drivers/base/regmap/regmap-i2c.c:218:2: error: implicit declaration of function ‘i2c_smbus_write_i2c_block_data’ [-Werror=implicit-function-declaration]
+  return i2c_smbus_write_i2c_block_data(i2c, ((u8 *)data)[0], count,
+../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_smbus_i2c_read’:
+../drivers/base/regmap/regmap-i2c.c:233:2: error: implicit declaration of function ‘i2c_smbus_read_i2c_block_data’ [-Werror=implicit-function-declaration]
+  ret = i2c_smbus_read_i2c_block_data(i2c, ((u8 *)reg)[0], val_size, val);
+
+../drivers/extcon/extcon-fsa9480.c: In function ‘fsa9480_module_init’:
+../drivers/extcon/extcon-fsa9480.c:383:2: error: implicit declaration of function ‘i2c_add_driver’ [-Werror=implicit-function-declaration]
+  return i2c_add_driver(&fsa9480_i2c_driver);
+../drivers/extcon/extcon-fsa9480.c: In function ‘fsa9480_module_exit’:
+../drivers/extcon/extcon-fsa9480.c:389:2: error: implicit declaration of function ‘i2c_del_driver’ [-Werror=implicit-function-declaration]
+  i2c_del_driver(&fsa9480_i2c_driver);
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
+---
+Found in mmotm; applies to linux-next.
+
+To extcon maintainers:  there are a few more extcon driver Kconfig
+entries that seem to have this same problem of selecting REGMAP_I2C
+without checking that I2C is set/enabled.
+
+ drivers/extcon/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- mmotm-2019-0625-1620.orig/drivers/extcon/Kconfig
++++ mmotm-2019-0625-1620/drivers/extcon/Kconfig
+@@ -39,7 +39,7 @@ config EXTCON_AXP288
+ 
+ config EXTCON_FSA9480
+ 	tristate "FSA9480 EXTCON Support"
+-	depends on INPUT
++	depends on INPUT && I2C
+ 	select IRQ_DOMAIN
+ 	select REGMAP_I2C
+ 	help
 
 
