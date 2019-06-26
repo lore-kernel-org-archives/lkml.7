@@ -2,101 +2,128 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC66C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32562C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F9D216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04391216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:59:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="qZbBS4ql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfFZS5K (ORCPT
+        id S1726443AbfFZS7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:57:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38466 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726227AbfFZS5K (ORCPT
+        Wed, 26 Jun 2019 14:59:31 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:15928 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZS7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:57:10 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QIv0ox069700;
-        Wed, 26 Jun 2019 14:57:02 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tcdn91yp4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Jun 2019 14:57:02 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5QIt86o015240;
-        Wed, 26 Jun 2019 18:57:01 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma01wdc.us.ibm.com with ESMTP id 2t9by7152j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Jun 2019 18:57:01 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5QIv0hI57475498
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 18:57:00 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7284FC6057;
-        Wed, 26 Jun 2019 18:57:00 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0623EC6055;
-        Wed, 26 Jun 2019 18:56:59 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.179.222])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Jun 2019 18:56:59 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, joel@jms.id.au, andrew@aj.id.au,
-        Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH] fsi: sbefifo: Don't fail operations when in SBE IPL state
-Date:   Wed, 26 Jun 2019 13:56:55 -0500
-Message-Id: <1561575415-3282-1-git-send-email-eajames@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906260219
+        Wed, 26 Jun 2019 14:59:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1561575570; x=1593111570;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=CT6ElSc2GZ3wKXKC1lG5OYakWHL+cI1N18YJRLUfo44=;
+  b=qZbBS4qlNvX9DF+8WpiLjCdNUGAs5JI4+EyrnTv13Y+y6VcpnPOPw0Rm
+   qsKuWhAZe/4QL82dVC/IfCytnOsM35Ptntq6QSwZP0iruWqGigY/BQn4d
+   Xox3xyYIWo3pRehInF8tQnPOYhoLjSU2T/HOAwd+kriOdsiN6T2vHRuNb
+   g=;
+X-IronPort-AV: E=Sophos;i="5.62,420,1554768000"; 
+   d="scan'208";a="682321801"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 Jun 2019 18:59:02 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 195AFA1F6A;
+        Wed, 26 Jun 2019 18:58:58 +0000 (UTC)
+Received: from EX13D01EUB004.ant.amazon.com (10.43.166.180) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 26 Jun 2019 18:58:58 +0000
+Received: from EX13D01EUB003.ant.amazon.com (10.43.166.248) by
+ EX13D01EUB004.ant.amazon.com (10.43.166.180) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 26 Jun 2019 18:58:57 +0000
+Received: from EX13D01EUB003.ant.amazon.com ([10.43.166.248]) by
+ EX13D01EUB003.ant.amazon.com ([10.43.166.248]) with mapi id 15.00.1367.000;
+ Wed, 26 Jun 2019 18:58:57 +0000
+From:   "Raslan, KarimAllah" <karahmed@amazon.de>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "kernellwp@gmail.com" <kernellwp@gmail.com>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>
+Subject: Re: cputime takes cstate into consideration
+Thread-Topic: cputime takes cstate into consideration
+Thread-Index: AQHVLAPB6iUJbr9/fEyB9GgoQyBOoKatvSkAgABI2ICAAERgAA==
+Date:   Wed, 26 Jun 2019 18:58:57 +0000
+Message-ID: <1561575536.25880.10.camel@amazon.de>
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
+         <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
+         <20190626145413.GE6753@char.us.oracle.com>
+In-Reply-To: <20190626145413.GE6753@char.us.oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.166.107]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6054BA1676D0AB47AD5D503A03CE81D1@amazon.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SBE fifo operations should be allowed while the SBE is in any of the
-"IPL" states. Operations should succeed in this state.
-
-Fixes: 9f4a8a2d7f9d fsi/sbefifo: Add driver for the SBE FIFO
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-Tested-by: Alistair Popple <alistair@popple.id.au>
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/fsi/fsi-sbefifo.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/fsi/fsi-sbefifo.c b/drivers/fsi/fsi-sbefifo.c
-index d92f5b8..f54df9e 100644
---- a/drivers/fsi/fsi-sbefifo.c
-+++ b/drivers/fsi/fsi-sbefifo.c
-@@ -289,11 +289,11 @@ static int sbefifo_check_sbe_state(struct sbefifo *sbefifo)
- 	switch ((sbm & CFAM_SBM_SBE_STATE_MASK) >> CFAM_SBM_SBE_STATE_SHIFT) {
- 	case SBE_STATE_UNKNOWN:
- 		return -ESHUTDOWN;
-+	case SBE_STATE_DMT:
-+		return -EBUSY;
- 	case SBE_STATE_IPLING:
- 	case SBE_STATE_ISTEP:
- 	case SBE_STATE_MPIPL:
--	case SBE_STATE_DMT:
--		return -EBUSY;
- 	case SBE_STATE_RUNTIME:
- 	case SBE_STATE_DUMP: /* Not sure about that one */
- 		break;
--- 
-1.8.3.1
+T24gV2VkLCAyMDE5LTA2LTI2IGF0IDEwOjU0IC0wNDAwLCBLb25yYWQgUnplc3p1dGVrIFdpbGsg
+d3JvdGU6DQo+IE9uIFdlZCwgSnVuIDI2LCAyMDE5IGF0IDEyOjMzOjMwUE0gKzAyMDAsIFRob21h
+cyBHbGVpeG5lciB3cm90ZToNCj4gPiANCj4gPiBPbiBXZWQsIDI2IEp1biAyMDE5LCBXYW5wZW5n
+IExpIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiBBZnRlciBleHBvc2luZyBtd2FpdC9tb25pdG9yIGlu
+dG8ga3ZtIGd1ZXN0LCB0aGUgZ3Vlc3QgY2FuIG1ha2UNCj4gPiA+IHBoeXNpY2FsIGNwdSBlbnRl
+ciBkZWVwZXIgY3N0YXRlIHRocm91Z2ggbXdhaXQgaW5zdHJ1Y3Rpb24sIGhvd2V2ZXIsDQo+ID4g
+PiB0aGUgdG9wIGNvbW1hbmQgb24gaG9zdCBzdGlsbCBvYnNlcnZlIDEwMCUgY3B1IHV0aWxpemF0
+aW9uIHNpbmNlIHFlbXUNCj4gPiA+IHByb2Nlc3MgaXMgcnVubmluZyBldmVuIHRob3VnaCBndWVz
+dCB3aG8gaGFzIHRoZSBwb3dlciBtYW5hZ2VtZW50DQo+ID4gPiBjYXBhYmlsaXR5IGV4ZWN1dGVz
+IG13YWl0LiBBY3R1YWxseSB3ZSBjYW4gb2JzZXJ2ZSB0aGUgcGh5c2ljYWwgY3B1DQo+ID4gPiBo
+YXMgYWxyZWFkeSBlbnRlciBkZWVwZXIgY3N0YXRlIGJ5IHBvd2VydG9wIG9uIGhvc3QuIENvdWxk
+IHdlIHRha2UNCj4gPiA+IGNzdGF0ZSBpbnRvIGNvbnNpZGVyYXRpb24gd2hlbiBhY2NvdW50aW5n
+IGNwdXRpbWUgZXRjPw0KPiA+IA0KPiA+IElmIE1XQUlUIGNhbiBiZSB1c2VkIGluc2lkZSB0aGUg
+Z3Vlc3QgdGhlbiB0aGUgaG9zdCBjYW5ub3QgZGlzdGluZ3Vpc2gNCj4gPiBiZXR3ZWVuIGV4ZWN1
+dGlvbiBhbmQgc3R1Y2sgaW4gbXdhaXQuDQo+ID4gDQo+ID4gSXQnZCBuZWVkIHRvIHBvbGwgdGhl
+IHBvd2VyIG1vbml0b3JpbmcgTVNScyBvbiBldmVyeSBvY2Nhc2lvbiB3aGVyZSB0aGUNCj4gPiBh
+Y2NvdW50aW5nIGhhcHBlbnMuDQo+ID4gDQo+ID4gVGhpcyBjb21wbGV0ZWx5IGZhbGxzIGFwYXJ0
+IHdoZW4geW91IGhhdmUgemVybyBleGl0IGd1ZXN0LiAodGhpbmsNCj4gPiBOT0haX0ZVTEwpLiBU
+aGVuIHlvdSdkIGhhdmUgdG8gYnJpbmcgdGhlIGd1ZXN0IG91dCB3aXRoIGFuIElQSSB0byBhY2Nl
+c3MNCj4gPiB0aGUgcGVyIENQVSBNU1JzLg0KPiA+IA0KPiA+IEkgYXNzdW1lIGEgbG90IG9mIHBl
+b3BsZSB3aWxsIGJlIGhhcHB5IGFib3V0IGFsbCB0aGF0IDopDQo+IA0KPiBUaGVyZSB3ZXJlIHNv
+bWUgaWRlYXMgdGhhdCBBbmt1ciAoQ0MtZWQpIG1lbnRpb25lZCB0byBtZSBvZiB1c2luZyB0aGUg
+cGVyZg0KPiBjb3VudGVycyAoaW4gdGhlIGhvc3QpIHRvIHNhbXBsZSB0aGUgZ3Vlc3QgYW5kIGNv
+bnN0cnVjdCBhIGJldHRlcg0KPiBhY2NvdW50aW5nIGlkZWEgb2Ygd2hhdCB0aGUgZ3Vlc3QgZG9l
+cy4gVGhhdCB3YXkgdGhlIGRhc2hib2FyZA0KPiBmcm9tIHRoZSBob3N0IHdvdWxkIG5vdCBzaG93
+IDEwMCUgQ1BVIHV0aWxpemF0aW9uLg0KDQpZb3UgY2FuIGVpdGhlciB1c2UgdGhlIFVOSEFMVEVE
+IGN5Y2xlcyBwZXJmLWNvdW50ZXIgb3IgeW91IGNhbiB1c2UgTVBFUkYvQVBFUkbCoA0KTVNScyBm
+b3IgdGhhdC4gKHNvcnJ5IEkgZ290IGRpc3RyYWN0ZWQgYW5kIGZvcmdvdCB0byBzZW5kIHRoZSBw
+YXRjaCkNCg0KPiANCj4gQnV0IHRoZSBwYXRjaGVzIHRoYXQgTWFyY2VsbyBwb3N0ZWQgKCIgY3B1
+aWRsZS1oYWx0cG9sbCBkcml2ZXIiKSBpbiANCj4gInNvbHZlcyIgdGhlIHByb2JsZW0gZm9yIExp
+bnV4LiBUaGF0IGlzIHRoZSBndWVzdCB3YW50cyBhd2Vzb21lIGxhdGVuY3kgYW5kDQo+IG9uZSB3
+YXkgd2FzIHRvIGV4cG9zZSBNV0FJVCB0byB0aGUgZ3Vlc3QsIG9yIGp1c3QgdHdlYWsgdGhlIGd1
+ZXN0IHRvIGRvIHRoZQ0KPiBpZGxpbmcgYSBiaXQgZGlmZmVyZW50Lg0KPiANCj4gTWFyY2VsbyBw
+YXRjaGVzIGFyZSBhbGwgZ29vZCBmb3IgTGludXgsIGJ1dCBXaW5kb3dzIGlzIHN0aWxsIGFuIGlz
+c3VlLg0KPiANCj4gQW5rdXIsIHdvdWxkIHlvdSBiZSBPSyBzaGFyaW5nIHNvbWUgb2YgeW91ciBp
+ZGVhcz8NCj4gPiANCj4gPiANCj4gPiBUaGFua3MsDQo+ID4gDQo+ID4gCXRnbHgNCj4gPiANCgoK
+CkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEw
+MTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIFJhbGYg
+SGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIg
+SFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
 
