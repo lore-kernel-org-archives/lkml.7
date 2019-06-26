@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACFDC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947ACC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BBC20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F43120659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520641;
-	bh=69JBGRVZZebGFp3cKz817XpiF0fevRucteMGEfPlY0w=;
+	s=default; t=1561520646;
+	bh=aeY81NVWE7aislMsiIi332nS2n19XbOzG1G9XfUMHhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a+osbuMau9BdrdwitvEC/7kYnOBLC8qWF/5tNArDzFTDlgPdARwZI7RC9T1iacbNS
-	 dMEM6klKuAKLiPSBtPHrkBusz7NRmjMAxFUpV2uONzzjNPbH6NLIsxeQCYtiNkSt0X
-	 N1YVaQw7mYvj23l1rnHkAfWKn5YgUji4wyEhfDgM=
+	b=T2+lnyiAfm6vP1Mj+CKzVgHJNlLIQ2tR/VUOGOGOT8KHvJnrDVYJiXf24eiedDYZJ
+	 gTZtdwCOSbCDji2ZoZKupn7/X5Qb2XoWMRS1zoNMcEqy6pJWbdNfHvShn7tGWzje4X
+	 Ol+TxDL9pPoEuJEVMuebQu+iDsZmq7vwGMC7KPo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfFZDoA (ORCPT
+        id S1727501AbfFZDoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:44:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:44:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727446AbfFZDnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:55 -0400
+        id S1727446AbfFZDoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:44:01 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 997E3214DA;
-        Wed, 26 Jun 2019 03:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E370216F4;
+        Wed, 26 Jun 2019 03:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520634;
-        bh=69JBGRVZZebGFp3cKz817XpiF0fevRucteMGEfPlY0w=;
+        s=default; t=1561520640;
+        bh=aeY81NVWE7aislMsiIi332nS2n19XbOzG1G9XfUMHhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b396NENMU9PnPwl0m579tc7BpXGyS1hwh5+A9Vvx2+DxXIV25M8uzpR4GOJV3BJUg
-         mXdRPVA/S66JRuG/zgVNqSIQTlLZ31K9I8+2rNFvILWwz6FFkNkNh6EiRXpglfagzg
-         3hc/hMJE4aCXMnyRDHRBCvUPRGe1jTY/rP2UNha8=
+        b=qL7QavxX8FO6tPLe5YQ32CaGbKmJZjSh4kTnn/OS/myFoPpMJw9lsvd0QelvcBQu8
+         /5DqFKvn4+DjjK9e3S5DjBj4Y8YgYOlIHg0COnyiwOTMDmeuC8RRsmJ8qQLDvKcheP
+         Q6udIp7QRDAoV54LiZ9tr7dU3PH+ZcVexDW5Pdus=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 09/34] drm/mediatek: unbind components in mtk_drm_unbind()
-Date:   Tue, 25 Jun 2019 23:43:10 -0400
-Message-Id: <20190626034335.23767-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 12/34] drm/mediatek: call mtk_dsi_stop() after mtk_drm_crtc_atomic_disable()
+Date:   Tue, 25 Jun 2019 23:43:13 -0400
+Message-Id: <20190626034335.23767-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -61,53 +61,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit f0fd848342802bc0f74620d387eead53e8905804 ]
+[ Upstream commit 2458d9d6d94be982b917e93c61a89b4426f32e31 ]
 
-Unbinding components (i.e. mtk_dsi and mtk_disp_ovl/rdma/color) will
-trigger master(mtk_drm)'s .unbind(), and currently mtk_drm's unbind
-won't actually unbind components. During the next bind,
-mtk_drm_kms_init() is called, and the components are added back.
+mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(), which
+needs ovl irq for drm_crtc_wait_one_vblank(), since after mtk_dsi_stop() is
+called, ovl irq will be disabled. If drm_crtc_wait_one_vblank() is called
+after last irq, it will timeout with this message: "vblank wait timed out
+on crtc 0". This happens sometimes when turning off the screen.
 
-.unbind() should call mtk_drm_kms_deinit() to unbind components.
+In drm_atomic_helper.c#disable_outputs(),
+the calling sequence when turning off the screen is:
 
-And since component_master_del() in .remove() will trigger .unbind(),
-which will also unregister device, it's fine to remove original functions
-called here.
+1. mtk_dsi_encoder_disable()
+     --> mtk_output_dsi_disable()
+       --> mtk_dsi_stop();  /* sometimes make vblank timeout in
+                               atomic_disable */
+       --> mtk_dsi_poweroff();
+2. mtk_drm_crtc_atomic_disable()
+     --> drm_crtc_wait_one_vblank();
+     ...
+       --> mtk_dsi_ddp_stop()
+         --> mtk_dsi_poweroff();
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+mtk_dsi_poweroff() has reference count design, change to make
+mtk_dsi_stop() called in mtk_dsi_poweroff() when refcount is 0.
+
+Fixes: 0707632b5bac ("drm/mediatek: update DSI sub driver flow for sending commands to panel")
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 47ec604289b7..bbe57ad9acf1 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -390,6 +390,7 @@ static void mtk_drm_unbind(struct device *dev)
- 	struct mtk_drm_private *private = dev_get_drvdata(dev);
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 84bb66866631..0dd317ac5fe5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -630,6 +630,15 @@ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+ 	if (--dsi->refcount != 0)
+ 		return;
  
- 	drm_dev_unregister(private->drm);
-+	mtk_drm_kms_deinit(private->drm);
- 	drm_dev_put(private->drm);
- 	private->drm = NULL;
- }
-@@ -559,13 +560,8 @@ static int mtk_drm_probe(struct platform_device *pdev)
- static int mtk_drm_remove(struct platform_device *pdev)
- {
- 	struct mtk_drm_private *private = platform_get_drvdata(pdev);
--	struct drm_device *drm = private->drm;
- 	int i;
++	/*
++	 * mtk_dsi_stop() and mtk_dsi_start() is asymmetric, since
++	 * mtk_dsi_stop() should be called after mtk_drm_crtc_atomic_disable(),
++	 * which needs irq for vblank, and mtk_dsi_stop() will disable irq.
++	 * mtk_dsi_start() needs to be called in mtk_output_dsi_enable(),
++	 * after dsi is fully set.
++	 */
++	mtk_dsi_stop(dsi);
++
+ 	if (!mtk_dsi_switch_to_cmd_mode(dsi, VM_DONE_INT_FLAG, 500)) {
+ 		if (dsi->panel) {
+ 			if (drm_panel_unprepare(dsi->panel)) {
+@@ -696,7 +705,6 @@ static void mtk_output_dsi_disable(struct mtk_dsi *dsi)
+ 		}
+ 	}
  
--	drm_dev_unregister(drm);
--	mtk_drm_kms_deinit(drm);
--	drm_dev_put(drm);
--
- 	component_master_del(&pdev->dev, &mtk_drm_ops);
- 	pm_runtime_disable(&pdev->dev);
- 	of_node_put(private->mutex_node);
+-	mtk_dsi_stop(dsi);
+ 	mtk_dsi_poweroff(dsi);
+ 
+ 	dsi->enabled = false;
 -- 
 2.20.1
 
