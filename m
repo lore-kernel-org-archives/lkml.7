@@ -2,267 +2,143 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964DFC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF204C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6528820665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F5E2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JRpaYLci"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="epc0pi3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfFZQ1e (ORCPT
+        id S1726516AbfFZQ17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:27:34 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:5161 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfFZQ1e (ORCPT
+        Wed, 26 Jun 2019 12:27:59 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33673 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfFZQ16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:27:34 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d139cf20000>; Wed, 26 Jun 2019 09:27:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 26 Jun 2019 09:27:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 26 Jun 2019 09:27:32 -0700
-Received: from [10.2.169.244] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
- 2019 16:27:28 +0000
-Subject: Re: [PATCH V4 14/18] soc/tegra: pmc: add pmc wake support for
- tegra210
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-15-git-send-email-skomatineni@nvidia.com>
- <20190626102614.GF6362@ulmo>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <272f25b0-aa1c-eb3c-fcfe-eb4eeec3c346@nvidia.com>
-Date:   Wed, 26 Jun 2019 09:27:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 12:27:58 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i11so4196750edq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 09:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bsUqs0n2JVX/ZHVQlVV/zYXIO+Z2K2kc9Ql7fOjOo7Y=;
+        b=epc0pi3nmEwkTCiUljCqQQ7IQU6202q82Q75Ml2Iw+wDg98cP6TYWDl71HZ3y6wbsi
+         NBUo/5QinUkrqDuMPM/XJ2KV2y1rCbfUyNUhIFBEoie2Qo4N7TarQZb+nLu8+zKqW5Db
+         BREOCZt0tbzc7sR0r7yQxsjMK3y4thSosLLus=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=bsUqs0n2JVX/ZHVQlVV/zYXIO+Z2K2kc9Ql7fOjOo7Y=;
+        b=oWEK8ppqyvhLDUNzyH6/b/Gv7WquJLMbB/2JAjv90kIJIbC2qbgJPmtdOAgRjb2L9j
+         tjW0Fo952IA0b+gQdq69pYpOFAgQmB+noDdppPkh+2sZTBkXH2m9oc4QpsY3ZQtdBq2L
+         +bFkEyqTWK1GmhHRTqfCaSXAvUQUuKTvcKWaV+iex29H4xbwSGXkk4NQ/z/O4lMA+Kr9
+         ZvTjBhRL4kJDU/kIcdM8mwQ73cDuBNrUBAjzLs927Yo/ujA1L679K+e5LQ18dcmIRs1A
+         pCSTxzWdNIK95fMilY+2x8yBRAZ4tTRTnGVSVHI8fZr/1gHuD2BI71FVjzNuID0mqfYs
+         A58A==
+X-Gm-Message-State: APjAAAUy8VWnMavj8yKC4ljNwq+IxElg7Vi9nHZNv/1KZS9UyCnz8mgs
+        FaRJZI6/rbWwbicsCSofjXbJSg==
+X-Google-Smtp-Source: APXvYqwBNfKf7SIdROKkPaUQx5tJA3Bjy6L4WN2tFsurahT7SnAhhQBCE8+s9kljhzSwiaPh2GC1QA==
+X-Received: by 2002:a17:906:474a:: with SMTP id j10mr5068067ejs.104.1561566476982;
+        Wed, 26 Jun 2019 09:27:56 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id k11sm5612880edq.54.2019.06.26.09.27.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 09:27:56 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 18:27:54 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        tzimmermann@suse.de, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH 1/2] drm/vram: store dumb bo dimensions.
+Message-ID: <20190626162754.GV12905@phenom.ffwll.local>
+Mail-Followup-To: Sam Ravnborg <sam@ravnborg.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        tzimmermann@suse.de, Sean Paul <sean@poorly.run>
+References: <20190626065551.12956-1-kraxel@redhat.com>
+ <20190626065551.12956-2-kraxel@redhat.com>
+ <20190626144013.GB12510@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <20190626102614.GF6362@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561566450; bh=7qRJA9aotziCpz0L/Yu280AftF0lT3W783QhiqlRpK0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=JRpaYLciMtPeTJNhHTK1LWZxMvmjO3wzjMqDTeHFYT+lkSALH90RyTh7wI8uFMerK
-         7w/mnB6GK8o7I+xCxsC7OAl7JAk1MotXwigSq5AZE7EJQ12YPD2wTHLb5ymemKqgJX
-         LvAi41tzK13MOWoACc5qPYeeTg1iO6kfW39TCCuqNTfPG2pFnZ0POiTsxf97L2srxX
-         WqfdTsVBjuYde5iFyMIeZl59qqw9Ijo9F189TBMqly+UqMNYSE5HyM/MqDxhL9TiOI
-         hXkqN7sYcjA7L1fEOlAbUsHGBgvQIYUvULZzAaupSvB6i4xVig1ZTU2Y6o1CtZLxDw
-         AyfOHj1mfqkGw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626144013.GB12510@ravnborg.org>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 26, 2019 at 04:40:13PM +0200, Sam Ravnborg wrote:
+> Hi Gerd.
+> 
+> On Wed, Jun 26, 2019 at 08:55:50AM +0200, Gerd Hoffmann wrote:
+> > Store width and height of the bo.  Needed in case userspace
+> > sets up a framebuffer with fb->width != bo->width..
+> > 
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> > ---
+> >  include/drm/drm_gem_vram_helper.h     | 1 +
+> >  drivers/gpu/drm/drm_gem_vram_helper.c | 2 ++
+> >  2 files changed, 3 insertions(+)
+> > 
+> > diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
+> > index 1a0ea18e7a74..3692dba167df 100644
+> > --- a/include/drm/drm_gem_vram_helper.h
+> > +++ b/include/drm/drm_gem_vram_helper.h
+> > @@ -39,6 +39,7 @@ struct drm_gem_vram_object {
+> >  	struct drm_gem_object gem;
+> >  	struct ttm_buffer_object bo;
+> >  	struct ttm_bo_kmap_obj kmap;
+> > +	unsigned int width, height;
+> >  
+> >  	/* Supported placements are %TTM_PL_VRAM and %TTM_PL_SYSTEM */
+> >  	struct ttm_placement placement;
+> > diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+> > index 4de782ca26b2..c02bf7694117 100644
+> > --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> > +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> > @@ -377,6 +377,8 @@ int drm_gem_vram_fill_create_dumb(struct drm_file *file,
+> >  	gbo = drm_gem_vram_create(dev, bdev, size, pg_align, interruptible);
+> >  	if (IS_ERR(gbo))
+> >  		return PTR_ERR(gbo);
+> > +	gbo->width = args->width;
+> > +	gbo->height = args->height;
+> >  
+> >  	ret = drm_gem_handle_create(file, &gbo->gem, &handle);
+> >  	if (ret)
+> 
+> Be warned, I may have missed something in the bigger picture.
+> 
+> Your patch will set width and height only for dumb bo's
+> But we have several users of drm_gem_vram_create() that will
+> not set the width and height.
+> 
+> So only in some cases can we rely on them being set.
+> Should this be refactored so we always set width, height.
+> Or maybe say in a small comment that width,height are only
+> set for dumb bo's?
 
-On 6/26/19 3:26 AM, Thierry Reding wrote:
-> On Sun, Jun 23, 2019 at 08:02:55PM -0700, Sowjanya Komatineni wrote:
->> This patch implements PMC wakeup sequence for Tegra210 and defines
->> common used RTC alarm wake event.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/soc/tegra/pmc.c | 111 ++++++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 111 insertions(+)
-> One general note, and it's a really pedantic one, which means that this
-> patch is plenty good already: sstart the commit subject with a capital
-> letter after the prefix, and watch the capitalization of the rest of the
-> line:
->
-> 	soc/tegra: pmc: Add PMC wake support for Tegra210
->
-> I will usually fix up these trivialities when applying, but you can save
-> me a couple of seconds per patch by doing this right to begin with. =)
->
-> Thanks again for the great work on this series!
->
-> Thierry
-Sorry Thierry. Sure will follow that from now on...
->> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->> index e87f29a35fcf..603fc3bd73f5 100644
->> --- a/drivers/soc/tegra/pmc.c
->> +++ b/drivers/soc/tegra/pmc.c
->> @@ -57,6 +57,12 @@
->>   #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
->>   #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
->>   #define  PMC_CNTRL_MAIN_RST		BIT(4)
->> +#define  PMC_CNTRL_LATCH_WAKEUPS	BIT(5)
->> +
->> +#define PMC_WAKE_MASK			0x0c
->> +#define PMC_WAKE_LEVEL			0x10
->> +#define PMC_WAKE_STATUS			0x14
->> +#define PMC_SW_WAKE_STATUS		0x18
->>   
->>   #define DPD_SAMPLE			0x020
->>   #define  DPD_SAMPLE_ENABLE		BIT(0)
->> @@ -87,6 +93,11 @@
->>   
->>   #define PMC_SCRATCH41			0x140
->>   
->> +#define PMC_WAKE2_MASK			0x160
->> +#define PMC_WAKE2_LEVEL			0x164
->> +#define PMC_WAKE2_STATUS		0x168
->> +#define PMC_SW_WAKE2_STATUS		0x16c
->> +
->>   #define PMC_SENSOR_CTRL			0x1b0
->>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->>   #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
->> @@ -1921,6 +1932,55 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
->>   	.alloc = tegra_pmc_irq_alloc,
->>   };
->>   
->> +static int tegra210_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->> +{
->> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->> +	unsigned int offset, bit;
->> +	u32 value;
->> +
->> +	if (data->hwirq == ULONG_MAX)
->> +		return 0;
->> +
->> +	offset = data->hwirq / 32;
->> +	bit = data->hwirq % 32;
->> +
->> +	/*
->> +	 * latch wakeups to SW_WAKE_STATUS register to capture events
->> +	 * that would not make it into wakeup event register during LP0 exit.
->> +	 */
->> +	value = tegra_pmc_readl(pmc, PMC_CNTRL);
->> +	value |= PMC_CNTRL_LATCH_WAKEUPS;
->> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->> +	udelay(120);
->> +
->> +	value &= ~PMC_CNTRL_LATCH_WAKEUPS;
->> +	tegra_pmc_writel(pmc, value, PMC_CNTRL);
->> +	udelay(120);
->> +
->> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE_STATUS);
->> +	tegra_pmc_writel(pmc, 0, PMC_SW_WAKE2_STATUS);
->> +
->> +	tegra_pmc_writel(pmc, 0, PMC_WAKE_STATUS);
->> +	tegra_pmc_writel(pmc, 0, PMC_WAKE2_STATUS);
->> +
->> +	/* enable PMC wake */
->> +	if (data->hwirq >= 32)
->> +		offset = PMC_WAKE2_MASK;
->> +	else
->> +		offset = PMC_WAKE_MASK;
->> +
->> +	value = tegra_pmc_readl(pmc, offset);
->> +
->> +	if (on)
->> +		value |= 1 << bit;
->> +	else
->> +		value &= ~(1 << bit);
->> +
->> +	tegra_pmc_writel(pmc, value, offset);
->> +
->> +	return 0;
->> +}
->> +
->>   static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->>   {
->>   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->> @@ -1953,6 +2013,49 @@ static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->>   	return 0;
->>   }
->>   
->> +static int tegra210_pmc_irq_set_type(struct irq_data *data, unsigned int type)
->> +{
->> +	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->> +	unsigned int offset, bit;
->> +	u32 value;
->> +
->> +	if (data->hwirq == ULONG_MAX)
->> +		return 0;
->> +
->> +	offset = data->hwirq / 32;
->> +	bit = data->hwirq % 32;
->> +
->> +	if (data->hwirq >= 32)
->> +		offset = PMC_WAKE2_LEVEL;
->> +	else
->> +		offset = PMC_WAKE_LEVEL;
->> +
->> +	value = tegra_pmc_readl(pmc, offset);
->> +
->> +	switch (type) {
->> +	case IRQ_TYPE_EDGE_RISING:
->> +	case IRQ_TYPE_LEVEL_HIGH:
->> +		value |= 1 << bit;
->> +		break;
->> +
->> +	case IRQ_TYPE_EDGE_FALLING:
->> +	case IRQ_TYPE_LEVEL_LOW:
->> +		value &= ~(1 << bit);
->> +		break;
->> +
->> +	case IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING:
->> +		value ^= 1 << bit;
->> +		break;
->> +
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	tegra_pmc_writel(pmc, value, offset);
->> +
->> +	return 0;
->> +}
->> +
->>   static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
->>   {
->>   	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->> @@ -2541,6 +2644,10 @@ static const struct pinctrl_pin_desc tegra210_pin_descs[] = {
->>   	TEGRA210_IO_PAD_TABLE(TEGRA_IO_PIN_DESC)
->>   };
->>   
->> +static const struct tegra_wake_event tegra210_wake_events[] = {
->> +	TEGRA_WAKE_IRQ("rtc", 16, 2),
->> +};
->> +
->>   static const struct tegra_pmc_soc tegra210_pmc_soc = {
->>   	.num_powergates = ARRAY_SIZE(tegra210_powergates),
->>   	.powergates = tegra210_powergates,
->> @@ -2558,10 +2665,14 @@ static const struct tegra_pmc_soc tegra210_pmc_soc = {
->>   	.regs = &tegra20_pmc_regs,
->>   	.init = tegra20_pmc_init,
->>   	.setup_irq_polarity = tegra20_pmc_setup_irq_polarity,
->> +	.irq_set_wake = tegra210_pmc_irq_set_wake,
->> +	.irq_set_type = tegra210_pmc_irq_set_type,
->>   	.reset_sources = tegra210_reset_sources,
->>   	.num_reset_sources = ARRAY_SIZE(tegra210_reset_sources),
->>   	.reset_levels = NULL,
->>   	.num_reset_levels = 0,
->> +	.num_wake_events = ARRAY_SIZE(tegra210_wake_events),
->> +	.wake_events = tegra210_wake_events,
->>   };
->>   
->>   #define TEGRA186_IO_PAD_TABLE(_pad)					     \
->> -- 
->> 2.7.4
+Also for dumb bo allocated buffers if userspace gets the dimensions wrong
+between dumb_create and the addfb, something is wrong. Papering over that
+by remembering the right dimensions doesn't look like a good solution.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
