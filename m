@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8316DC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7C0C48BD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529322063F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89EF2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qeW+utdJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uYRez3iz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfFZM2p (ORCPT
+        id S1727667AbfFZM2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:28:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43156 "EHLO
+        Wed, 26 Jun 2019 08:28:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42984 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbfFZM2f (ORCPT
+        with ESMTP id S1727641AbfFZM2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:28:35 -0400
+        Wed, 26 Jun 2019 08:28:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8c7Qw79j4iTVfYu8BDZ4XSZccS1fj4ydMQxMOZ0rYRM=; b=qeW+utdJvjdhQsheXW/BJJc+6E
-        Je3Qw7KX8yqGRD61b+aMkwDnKhRl79dbPTB2oSJS9EJkkp6B04gH0AKwiMVXmZSWXedEVwmeZuHtd
-        rxfolj9Lb0kntloPPle3ysnemn+eVNPk1PVLI65krTeg8f8ixCclNzvQ1VMgjJNdcaSfpbGEE5JqZ
-        LdQuIQpaH4WpWeh96t9pFdDMHn8Nlh1iBjfjdCn7Tu5xaSa1u8SC412S343cnc/TFWSgHhCX2D4kz
-        T8P1Ggyzn7yKEs00DA9YZRe2O9RSSxL1RnyDktKkewIGQSovonLhKuAUk0FzNPPqOPnS9qC33UPWA
-        glFwMabA==;
+        bh=O8xTiSY5VJngyKM6+yEPSiv/sNrzxm4spoPZD5fr/FE=; b=uYRez3izVT1tTJ2inEjlr+sqzJ
+        mQ/FCU73nGQFwZr8hbyBONC+pRy4Y5zWmPKwE4e+/VnM1Wd54RXoko27P7OJdwYWEVZyOfhCpakZS
+        NceKKQi8BIED/6Zf1boEQOc2fhm7lXJtPKrQRbyudvIk9ok/2lsM7oKgHQmN0A0NUt1wauMOTrnNb
+        YztM4+JK3tURRAcVPdB2QDw04eLlKqyMRUZblAnCS+8D4s/P8NuKrPuYvEzOGKhpFIyCfq1gDkpSy
+        T+Z7xfSW0MFySDPpzpi2T3kL1+k8AT2+W9JX8ZK8GzydNUFd8VyzyqZ163oz2EZ+8MZT6vIfA9Trk
+        2ljmFk6A==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg72M-0001fg-QA; Wed, 26 Jun 2019 12:28:31 +0000
+        id 1hg724-0001YD-CI; Wed, 26 Jun 2019 12:28:12 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -46,9 +46,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 24/25] mm: remove the HMM config option
-Date:   Wed, 26 Jun 2019 14:27:23 +0200
-Message-Id: <20190626122724.13313-25-hch@lst.de>
+Subject: [PATCH 17/25] PCI/P2PDMA: use the dev_pagemap internal refcount
+Date:   Wed, 26 Jun 2019 14:27:16 +0200
+Message-Id: <20190626122724.13313-18-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626122724.13313-1-hch@lst.de>
 References: <20190626122724.13313-1-hch@lst.de>
@@ -60,148 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the mm/hmm.c code is better keyed off HMM_MIRROR.  Also let nouveau
-depend on it instead of the mix of a dummy dependency symbol plus the
-actually selected one.  Drop various odd dependencies, as the code is
-pretty portable.
+The functionality is identical to the one currently open coded in
+p2pdma.c.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/gpu/drm/nouveau/Kconfig |  3 +--
- include/linux/hmm.h             |  5 +----
- include/linux/mm_types.h        |  2 +-
- mm/Kconfig                      | 27 ++++-----------------------
- mm/Makefile                     |  2 +-
- mm/hmm.c                        |  2 --
- 6 files changed, 8 insertions(+), 33 deletions(-)
+ drivers/pci/p2pdma.c | 57 ++++----------------------------------------
+ 1 file changed, 4 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index 6303d203ab1d..66c839d8e9d1 100644
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -84,11 +84,10 @@ config DRM_NOUVEAU_BACKLIGHT
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index ebd8ce3bba2e..608f84df604a 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -24,12 +24,6 @@ struct pci_p2pdma {
+ 	bool p2pmem_published;
+ };
  
- config DRM_NOUVEAU_SVM
- 	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
--	depends on ARCH_HAS_HMM
- 	depends on DEVICE_PRIVATE
- 	depends on DRM_NOUVEAU
-+	depends on HMM_MIRROR
- 	depends on STAGING
--	select HMM_MIRROR
- 	default n
- 	help
- 	  Say Y here if you want to enable experimental support for
-diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index 3d00e9550e77..b697496e85ba 100644
---- a/include/linux/hmm.h
-+++ b/include/linux/hmm.h
-@@ -62,7 +62,7 @@
- #include <linux/kconfig.h>
- #include <asm/pgtable.h>
+-struct p2pdma_pagemap {
+-	struct dev_pagemap pgmap;
+-	struct percpu_ref ref;
+-	struct completion ref_done;
+-};
+-
+ static ssize_t size_show(struct device *dev, struct device_attribute *attr,
+ 			 char *buf)
+ {
+@@ -78,32 +72,6 @@ static const struct attribute_group p2pmem_group = {
+ 	.name = "p2pmem",
+ };
  
--#if IS_ENABLED(CONFIG_HMM)
-+#ifdef CONFIG_HMM_MIRROR
- 
- #include <linux/device.h>
- #include <linux/migrate.h>
-@@ -332,9 +332,6 @@ static inline uint64_t hmm_pfn_from_pfn(const struct hmm_range *range,
- 	return hmm_device_entry_from_pfn(range, pfn);
+-static struct p2pdma_pagemap *to_p2p_pgmap(struct percpu_ref *ref)
+-{
+-	return container_of(ref, struct p2pdma_pagemap, ref);
+-}
+-
+-static void pci_p2pdma_percpu_release(struct percpu_ref *ref)
+-{
+-	struct p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(ref);
+-
+-	complete(&p2p_pgmap->ref_done);
+-}
+-
+-static void pci_p2pdma_percpu_kill(struct dev_pagemap *pgmap)
+-{
+-	percpu_ref_kill(pgmap->ref);
+-}
+-
+-static void pci_p2pdma_percpu_cleanup(struct dev_pagemap *pgmap)
+-{
+-	struct p2pdma_pagemap *p2p_pgmap =
+-		container_of(pgmap, struct p2pdma_pagemap, pgmap);
+-
+-	wait_for_completion(&p2p_pgmap->ref_done);
+-	percpu_ref_exit(&p2p_pgmap->ref);
+-}
+-
+ static void pci_p2pdma_release(void *data)
+ {
+ 	struct pci_dev *pdev = data;
+@@ -153,11 +121,6 @@ static int pci_p2pdma_setup(struct pci_dev *pdev)
+ 	return error;
  }
  
+-static const struct dev_pagemap_ops pci_p2pdma_pagemap_ops = {
+-	.kill		= pci_p2pdma_percpu_kill,
+-	.cleanup	= pci_p2pdma_percpu_cleanup,
+-};
 -
+ /**
+  * pci_p2pdma_add_resource - add memory for use as p2p memory
+  * @pdev: the device to add the memory to
+@@ -171,7 +134,6 @@ static const struct dev_pagemap_ops pci_p2pdma_pagemap_ops = {
+ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+ 			    u64 offset)
+ {
+-	struct p2pdma_pagemap *p2p_pgmap;
+ 	struct dev_pagemap *pgmap;
+ 	void *addr;
+ 	int error;
+@@ -194,26 +156,15 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+ 			return error;
+ 	}
+ 
+-	p2p_pgmap = devm_kzalloc(&pdev->dev, sizeof(*p2p_pgmap), GFP_KERNEL);
+-	if (!p2p_pgmap)
++	pgmap = devm_kzalloc(&pdev->dev, sizeof(*pgmap), GFP_KERNEL);
++	if (!pgmap)
+ 		return -ENOMEM;
 -
--#if IS_ENABLED(CONFIG_HMM_MIRROR)
- /*
-  * Mirroring: how to synchronize device page table with CPU page table.
-  *
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index f33a1289c101..8d37182f8dbe 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -501,7 +501,7 @@ struct mm_struct {
- #endif
- 		struct work_struct async_put_work;
- 
--#if IS_ENABLED(CONFIG_HMM)
-+#ifdef CONFIG_HMM_MIRROR
- 		/* HMM needs to track a few things per mm */
- 		struct hmm *hmm;
- #endif
-diff --git a/mm/Kconfig b/mm/Kconfig
-index eecf037a54b3..1e426c26b1d6 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -669,37 +669,18 @@ config ZONE_DEVICE
- 
- 	  If FS_DAX is enabled, then say Y.
- 
--config ARCH_HAS_HMM_MIRROR
--	bool
--	default y
--	depends on (X86_64 || PPC64)
--	depends on MMU && 64BIT
+-	init_completion(&p2p_pgmap->ref_done);
+-	error = percpu_ref_init(&p2p_pgmap->ref,
+-			pci_p2pdma_percpu_release, 0, GFP_KERNEL);
+-	if (error)
+-		goto pgmap_free;
 -
--config ARCH_HAS_HMM
--	bool
--	depends on (X86_64 || PPC64)
--	depends on ZONE_DEVICE
--	depends on MMU && 64BIT
--	depends on MEMORY_HOTPLUG
--	depends on MEMORY_HOTREMOVE
--	depends on SPARSEMEM_VMEMMAP
--	default y
+-	pgmap = &p2p_pgmap->pgmap;
 -
- config MIGRATE_VMA_HELPER
- 	bool
+ 	pgmap->res.start = pci_resource_start(pdev, bar) + offset;
+ 	pgmap->res.end = pgmap->res.start + size - 1;
+ 	pgmap->res.flags = pci_resource_flags(pdev, bar);
+-	pgmap->ref = &p2p_pgmap->ref;
+ 	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
+ 	pgmap->pci_p2pdma_bus_offset = pci_bus_address(pdev, bar) -
+ 		pci_resource_start(pdev, bar);
+-	pgmap->ops = &pci_p2pdma_pagemap_ops;
  
- config DEV_PAGEMAP_OPS
- 	bool
+ 	addr = devm_memremap_pages(&pdev->dev, pgmap);
+ 	if (IS_ERR(addr)) {
+@@ -224,7 +175,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+ 	error = gen_pool_add_owner(pdev->p2pdma->pool, (unsigned long)addr,
+ 			pci_bus_address(pdev, bar) + offset,
+ 			resource_size(&pgmap->res), dev_to_node(&pdev->dev),
+-			&p2p_pgmap->ref);
++			pgmap->ref);
+ 	if (error)
+ 		goto pages_free;
  
--config HMM
--	bool
--	select MMU_NOTIFIER
--	select MIGRATE_VMA_HELPER
--
- config HMM_MIRROR
- 	bool "HMM mirror CPU page table into a device page table"
--	depends on ARCH_HAS_HMM
--	select HMM
-+	depends on (X86_64 || PPC64)
-+	depends on MMU && 64BIT
-+	select MMU_NOTIFIER
-+	select MIGRATE_VMA_HELPER
- 	help
- 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
- 	  process into a device page table. Here, mirror means "keep synchronized".
-diff --git a/mm/Makefile b/mm/Makefile
-index ac5e5ba78874..91c99040065c 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -102,5 +102,5 @@ obj-$(CONFIG_FRAME_VECTOR) += frame_vector.o
- obj-$(CONFIG_DEBUG_PAGE_REF) += debug_page_ref.o
- obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
- obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
--obj-$(CONFIG_HMM) += hmm.o
-+obj-$(CONFIG_HMM_MIRROR) += hmm.o
- obj-$(CONFIG_MEMFD_CREATE) += memfd.o
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 90ca0cdab9db..d62ce64d6bca 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -25,7 +25,6 @@
- #include <linux/mmu_notifier.h>
- #include <linux/memory_hotplug.h>
- 
--#if IS_ENABLED(CONFIG_HMM_MIRROR)
- static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
- 
- static inline struct hmm *mm_get_hmm(struct mm_struct *mm)
-@@ -1326,4 +1325,3 @@ long hmm_range_dma_unmap(struct hmm_range *range,
- 	return cpages;
+@@ -236,7 +187,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
+ pages_free:
+ 	devm_memunmap_pages(&pdev->dev, pgmap);
+ pgmap_free:
+-	devm_kfree(&pdev->dev, p2p_pgmap);
++	devm_kfree(&pdev->dev, pgmap);
+ 	return error;
  }
- EXPORT_SYMBOL(hmm_range_dma_unmap);
--#endif /* IS_ENABLED(CONFIG_HMM_MIRROR) */
+ EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
 -- 
 2.20.1
 
