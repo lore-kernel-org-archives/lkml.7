@@ -2,134 +2,133 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AA5C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB5EC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0582177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:45:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Z5RQcz7A"
+	by mail.kernel.org (Postfix) with ESMTP id 7C35221743
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfFZPpx (ORCPT
+        id S1726425AbfFZP4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:45:53 -0400
-Received: from mail-eopbgr60049.outbound.protection.outlook.com ([40.107.6.49]:33513
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725958AbfFZPpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:45:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=idasF+fNV/2NSNpe05cKLARhKYMfEgGNwaq6PUXzCoA=;
- b=Z5RQcz7A+HJv5tjI2l1kP+sDLCmzjxHl1vyMQxO3dMx7PM00d4r92FStrgemvkhnlGzWwUUg66C9HkrY0PLYqHthEKzjAbm0JVbqTuOs/kr9hCLgpyROYQepZIIVyisHcWHuDE30n0RloKCKvOfAfxUD4KN7XU33B2bCIsCBpUU=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6575.eurprd05.prod.outlook.com (20.179.25.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Wed, 26 Jun 2019 15:45:47 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Wed, 26 Jun 2019
- 15:45:47 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
-Thread-Topic: [PATCH v3 0/4] Devmap cleanups + arm64 support
-Thread-Index: AQHVK/HAM2r3dJ5EjUuvQfApLyHQmKat3lEAgAA0MoCAAAH5AA==
-Date:   Wed, 26 Jun 2019 15:45:47 +0000
-Message-ID: <20190626154532.GA3088@mellanox.com>
-References: <cover.1558547956.git.robin.murphy@arm.com>
- <20190626073533.GA24199@infradead.org>
- <20190626123139.GB20635@lakrids.cambridge.arm.com>
- <20190626153829.GA22138@infradead.org>
-In-Reply-To: <20190626153829.GA22138@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR01CA0014.prod.exchangelabs.com (2603:10b6:a02:80::27)
- To VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.199.206.50]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 395090c3-c108-460c-e2cd-08d6fa4d5b82
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6575;
-x-ms-traffictypediagnostic: VI1PR05MB6575:
-x-microsoft-antispam-prvs: <VI1PR05MB6575250D31F7320E2C693BC8CFE20@VI1PR05MB6575.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(366004)(39860400002)(199004)(189003)(81166006)(25786009)(8676002)(53936002)(476003)(6506007)(81156014)(508600001)(6486002)(54906003)(446003)(71200400001)(6512007)(7416002)(71190400001)(6916009)(11346002)(66556008)(2616005)(4326008)(486006)(64756008)(7736002)(6246003)(66446008)(66066001)(305945005)(66946007)(99286004)(73956011)(66476007)(3846002)(386003)(6116002)(52116002)(76176011)(14454004)(26005)(33656002)(86362001)(36756003)(229853002)(6436002)(8936002)(2906002)(256004)(316002)(102836004)(186003)(68736007)(5660300002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6575;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: PO7x2UUHnxQV/A4UKLcEVnD6eJR4Ysj2OBxUB42vJc3dQ95Tq26noIFSHH/c3BEDXNvLIC1YLhjPJAJ9SCxyljVlaJGaZjtsrQflagLvIEbeIbutLKtVj/Zq8aUNdaazTSYPpTGM+nMh80KonObvrCWd96/MeQFkHr8bnaFbZwmRXpZn5NsH/rdIVMeREHr3lmEJGegA+Ciu33JfCqik0gMneY5Nj+1VrVVx2GQupE6hc1rKZ3pqDm/7ahjGLEtzxi5mbF1+4fBpXXLC9lVWZdy9Itn8ouDfUv3jZ7VVv+p3HOwAJqXXZ0FznKWD3fZdbGVeFuCvk1IoSoeCqBM0FvLQnnM40cu2HTx65ap+6noEGGBw5H4B9EzWUy5rXEloAhiqN42y4ab+cu7x9r7CuoemHie6qNwbPknt9MKruXg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6C512E815C6B3B468056524CEC187B15@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 26 Jun 2019 11:56:19 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:56185 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725958AbfFZP4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 11:56:18 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.85)
+          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1hgAHP-003PGt-My>; Wed, 26 Jun 2019 17:56:15 +0200
+Received: from p5b13a8c2.dip0.t-ipconnect.de ([91.19.168.194] helo=[192.168.178.40])
+          by inpost2.zedat.fu-berlin.de (Exim 4.85)
+          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1hgAHP-001AlZ-Af>; Wed, 26 Jun 2019 17:56:15 +0200
+Subject: Re: [RFC] remove arch/sh?
+To:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Adam Borowski <kilobyte@angband.pl>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190625085616.GA32399@lst.de>
+ <ccfa78f3-35c2-1d26-98b5-b21a76b90e1e@physik.fu-berlin.de>
+ <20190625112146.GA9580@angband.pl>
+ <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
+ <CAK8P3a3irwwwCQ_kPh5BTg-jGGbJOj=3fhVrTDBUZgH1V7bpFQ@mail.gmail.com>
+ <20190625142832.GD1506@brightrain.aerifal.cx>
+ <CAK8P3a0j_9fzZxhxqCMHfoJ5DdZpHFvANEPqs1pbP23TCei6ng@mail.gmail.com>
+ <87tvccr3kv.wl-ysato@users.sourceforge.jp>
+ <20190626153820.GP1506@brightrain.aerifal.cx>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <cf3c3583-2b6c-8c45-a37f-357aca8ee80c@physik.fu-berlin.de>
+Date:   Wed, 26 Jun 2019 17:56:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 395090c3-c108-460c-e2cd-08d6fa4d5b82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 15:45:47.7482
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6575
+In-Reply-To: <20190626153820.GP1506@brightrain.aerifal.cx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: 91.19.168.194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 08:38:29AM -0700, Christoph Hellwig wrote:
-> On Wed, Jun 26, 2019 at 01:31:40PM +0100, Mark Rutland wrote:
-> > On Wed, Jun 26, 2019 at 12:35:33AM -0700, Christoph Hellwig wrote:
-> > > Robin, Andrew:
-> >=20
-> > As a heads-up, Robin is currently on holiday, so this is all down to
-> > Andrew's preference.
-> >=20
-> > > I have a series for the hmm tree, which touches the section size
-> > > bits, and remove device public memory support.
-> > >=20
-> > > It might be best if we include this series in the hmm tree as well
-> > > to avoid conflicts.  Is it ok to include the rebase version of at lea=
-st
-> > > the cleanup part (which looks like it is not required for the actual
-> > > arm64 support) in the hmm tree to avoid conflicts?
-> >=20
-> > Per the cover letter, the arm64 patch has a build dependency on the
-> > others, so that might require a stable brnach for the common prefix.
->=20
-> I guess we'll just have to live with the merge errors then, as the
-> mm tree is a patch series and thus can't easily use a stable base
-> tree.  That is unlike Andrew wants to pull in the hmm tree as a prep
-> patch for the series.
+On 6/26/19 5:38 PM, Rich Felker wrote:
+>>> Maybe everything but J2 and SH4(a) can just get retired?
+>>>
+>>>      Arnd
+>>
+>> I also have some boards, so it's possible to rewrite more.
+>> I can not rewrite the target I do not have, so I think that
+>> there is nothing but to retire.
+> 
+> To clarify, are you agreeing with Arnd's suggestion to retire/remove
+> everything but jcore and sh4[a]?
 
-It looks like the first three patches apply cleanly to hmm.git ..
+I would keep J-Core, SH3 and SH4[a]. SH5 can go in any case since there
+is no hardware available and gcc has no longer support for the target
+either.
 
-So what we can do is base this 4 patch series off rc6 and pull the
-first 3 into hmm and the full 4 into arm.git. We use this workflow often
-with rdma and netdev.
+Adrian
 
-Let me know and I can help orchestate this.
-
-Jason
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
