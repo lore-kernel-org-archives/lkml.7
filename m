@@ -2,149 +2,66 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C975C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F34BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6458F20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N/a93ebu"
+	by mail.kernel.org (Postfix) with ESMTP id F017C205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfFZQcJ (ORCPT
+        id S1726531AbfFZQdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:32:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47658 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfFZQcI (ORCPT
+        Wed, 26 Jun 2019 12:33:19 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37580 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfFZQdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:32:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QGU4Wg004218;
-        Wed, 26 Jun 2019 16:30:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Mz7em8B5BcTHywkzCrR8lugIdy2ootcWo4w3RRWBYaM=;
- b=N/a93ebuSSKM+1UIO0buPOjR9AvCbLsHhw01AwBMp/XW9BUb98JLnzoJbLgwOZFWmGyw
- hJdpkR7HkvPCAWlWLDnQsdQatbUdssqmn37SwPrTcAyE+/9x/iin4aJ6YtVFtP1GNmmr
- W4gQLbQG2SBcdOy5QNpDSE2/3fIVqQVrn7mZXub6KhldCj8Zzx/yQQ7a5EH7pzSZXmup
- IrJvp7zWK9kXgRoeoC8dGqS2tKAzLiR74Ta5S5LQWYLQBZWpbM10fUskgAys8/96vQdr
- G26RY/thy8CrA4lCa0mPtRoigi2YSG7nQksiKL4VCeGiPZV6yAFAimBMe+B5DQlWGUUd ig== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t9brtbf85-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 16:30:39 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QGRxdd192423;
-        Wed, 26 Jun 2019 16:28:38 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 2t9p6uvctr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Jun 2019 16:28:38 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5QGScxQ193859;
-        Wed, 26 Jun 2019 16:28:38 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t9p6uvctj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 16:28:38 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5QGSZWS032167;
-        Wed, 26 Jun 2019 16:28:35 GMT
-Received: from localhost (/10.159.137.246)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 09:28:35 -0700
-Date:   Wed, 26 Jun 2019 09:28:31 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, hch@infradead.org,
-        clm@fb.com, adilger.kernel@dilger.ca, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 5/5] vfs: don't allow writes to swap files
-Message-ID: <20190626162831.GF5171@magnolia>
-References: <156151637248.2283603.8458727861336380714.stgit@magnolia>
- <156151641177.2283603.7806026378321236401.stgit@magnolia>
- <20190626035151.GA10613@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626035151.GA10613@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906260193
+        Wed, 26 Jun 2019 12:33:19 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CB29414B5B882;
+        Wed, 26 Jun 2019 09:33:18 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 09:33:18 -0700 (PDT)
+Message-Id: <20190626.093318.2241574529231651608.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Joao.Pinto@synopsys.com, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com
+Subject: Re: [PATCH net-next 01/10] net: stmmac: dwxgmac: Enable EDMA by
+ default
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <6df599b8c2d57db9d82e42861ce897d7cf003424.1561556555.git.joabreu@synopsys.com>
+References: <cover.1561556555.git.joabreu@synopsys.com>
+        <cover.1561556555.git.joabreu@synopsys.com>
+        <6df599b8c2d57db9d82e42861ce897d7cf003424.1561556555.git.joabreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Jun 2019 09:33:19 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 04:51:51AM +0100, Al Viro wrote:
-> On Tue, Jun 25, 2019 at 07:33:31PM -0700, Darrick J. Wong wrote:
-> > --- a/fs/attr.c
-> > +++ b/fs/attr.c
-> > @@ -236,6 +236,9 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
-> >  	if (IS_IMMUTABLE(inode))
-> >  		return -EPERM;
-> >  
-> > +	if (IS_SWAPFILE(inode))
-> > +		return -ETXTBSY;
-> > +
-> >  	if ((ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_TIMES_SET)) &&
-> >  	    IS_APPEND(inode))
-> >  		return -EPERM;
-> 
-> Er...  So why exactly is e.g. chmod(2) forbidden for swapfiles?  Or touch(1),
-> for that matter...
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Wed, 26 Jun 2019 15:47:35 +0200
 
-Oops, that check is overly broad; I think the only attribute change we
-need to filter here is ATTR_SIZE.... which we could do unconditionally
-in inode_newsize_ok.
+> @@ -122,6 +122,8 @@ static void dwxgmac2_dma_axi(void __iomem *ioaddr, struct stmmac_axi *axi)
+>  	}
+>  
+>  	writel(value, ioaddr + XGMAC_DMA_SYSBUS_MODE);
+> +	writel(GENMASK(29, 0), ioaddr + XGMAC_TX_EDMA_CTRL);
+> +	writel(GENMASK(29, 0), ioaddr + XGMAC_RX_EDMA_CTRL);
+>  }
 
-What's the use case for allowing userspace to increase the size of an
-active swapfile?  I don't see any; the kernel has a permanent lease on
-the file space mapping (at least until swapoff)...
+This mask is magic and there is no indication what the bits mean and
+in particular what it means to set bits 0 -- 29
 
-> > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> > index 596ac98051c5..1ca4ee8c2d60 100644
-> > --- a/mm/swapfile.c
-> > +++ b/mm/swapfile.c
-> > @@ -3165,6 +3165,19 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
-> >  	if (error)
-> >  		goto bad_swap;
-> >  
-> > +	/*
-> > +	 * Flush any pending IO and dirty mappings before we start using this
-> > +	 * swap file.
-> > +	 */
-> > +	if (S_ISREG(inode->i_mode)) {
-> > +		inode->i_flags |= S_SWAPFILE;
-> > +		error = inode_drain_writes(inode);
-> > +		if (error) {
-> > +			inode->i_flags &= ~S_SWAPFILE;
-> > +			goto bad_swap;
-> > +		}
-> > +	}
-> 
-> Why are swap partitions any less worthy of protection?
-
-Hmm, yeah, S_SWAPFILE should apply to block devices too.  I figured that
-the mantra of "sane tools will open block devices with O_EXCL" should
-have sufficed, but there's really no reason to allow that either.
-
---D
+You have to document what these bits mean and thus what these register
+writes actually do.
