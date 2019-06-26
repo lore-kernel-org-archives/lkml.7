@@ -2,109 +2,103 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E365C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BBCC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BA021726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:37:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvu5sM2J"
+	by mail.kernel.org (Postfix) with ESMTP id 9E9F62083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfFZXhF (ORCPT
+        id S1726563AbfFZXoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 19:37:05 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37378 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfFZXhE (ORCPT
+        Wed, 26 Jun 2019 19:44:11 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:52161 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726385AbfFZXoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 19:37:04 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d11so275193lfb.4;
-        Wed, 26 Jun 2019 16:37:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UWeMijdRoJnwgbuUK5eFM3uClFjid/XTZeuE26M5QLw=;
-        b=lvu5sM2J7hZtAUwoJbPjFQ1EZb33EYm3kYdwOb7SuPJeX8950m7fk+ZgphMJux6LAG
-         PUCO/pJ9kLZ7/WShSqhyeq61lNRru/YTUSeoWAZYNpkOoyjmZBJ9EXC6HhbznUvH4nzA
-         yHGfjfZmOAo8ywA5721GLCPMEg/+BzosndbmXsX44LS2gtCcZ+LyJShLp8orxadQlWFM
-         Ny/Eu8VGWihQs8RdfCSNuk5fzt96diFcGvr0VTMg5L7yqdz+sWxTL1Yb9ySWCMhuNBgC
-         nyMnj6y29/nHcu13VEHvW54QMysqgtaa7LyIv23vES4oDL/87GsnbyDMAuWSSveijfNJ
-         nLtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UWeMijdRoJnwgbuUK5eFM3uClFjid/XTZeuE26M5QLw=;
-        b=C29unMA9WjrvnhLVgY9V+XiNCQJg0gdX5Zvg7UBld6LFJRZd4wl92GTOi8FPaMQG81
-         fShWZuoE3TQnXT9vP391kZiploHMbq6M+zmqjDboaexcSKaZsAcT8wi3snD93eu9i8RB
-         QzOZyMsGUIKLAxCmykwfpPtZS4nYST9q+8ecHREmlnTDWdPK1QCtnEhaD3JW/h7bhlnZ
-         2EycrePON2TkydVZyYh7VD0m146xoK5vCDAvJPSswVzb2kCUKNFclf4PNHP6MdlEWFlt
-         vAgSM6XRa1K4bPtxOkt8kpGK9A9fjLwJVpLNkt7ZQemUnk3N3ewKhFMVgQTGUrhJcRs3
-         rXpw==
-X-Gm-Message-State: APjAAAWnjhDO5zuf17bIYJuVBs+r6fuQf0De1HqbVgeuvznrPyjRBRX4
-        c4rAuQYfnoXBLkt8vaus6WHyQKog535I6509ReZ/MxZF
-X-Google-Smtp-Source: APXvYqyhrx+8+yHjkKDDMrfR6FJ/06ktGd/bOANIs8DsrCWxHaUboMHRhf7BkLfcmvmWTl6eUhoXtHiNBREmgVxKWyU=
-X-Received: by 2002:ac2:46f9:: with SMTP id q25mr362437lfo.181.1561592221728;
- Wed, 26 Jun 2019 16:37:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190627080521.5df8ccfc@canb.auug.org.au> <20190626221347.GA17762@tower.DHCP.thefacebook.com>
-In-Reply-To: <20190626221347.GA17762@tower.DHCP.thefacebook.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 26 Jun 2019 16:36:50 -0700
-Message-ID: <CAADnVQJiMH=jfuD0FGpr2JmzyQsMKHJ4pM1kfQ8jhSxrAe0XWg@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the bpf tree
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 26 Jun 2019 19:44:10 -0400
+Date:   27 Jun 2019 08:44:08 +0900
+X-IronPort-AV: E=Sophos;i="5.62,421,1554735600"; 
+   d="scan'208";a="19798148"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 27 Jun 2019 08:44:08 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2BEA9410CD74;
+        Thu, 27 Jun 2019 08:44:08 +0900 (JST)
+Message-ID: <877e97kj7s.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 2/2] ASoC: soc-core: support dai_link with platforms_num != 1
+In-Reply-To: <20190626133617.25959-3-jbrunet@baylibre.com>
+References: <20190626133617.25959-1-jbrunet@baylibre.com>
+        <20190626133617.25959-3-jbrunet@baylibre.com>
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 3:14 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Thu, Jun 27, 2019 at 08:05:21AM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > In commit
-> >
-> >   12771345a467 ("bpf: fix cgroup bpf release synchronization")
-> >
-> > Fixes tag
-> >
-> >   Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
-> >
-> > has these problem(s):
-> >
-> >   - Subject has leading but no trailing parentheses
-> >   - Subject has leading but no trailing quotes
-> >
-> > Please don't split Fixes tags across more than one line.
->
-> Oops, sorry.
->
-> Alexei, can you fix this in place?
-> Or should I send an updated version?
 
-I cannot easily do it since -p and --signoff are incompatible flags.
-I need to use -p to preserve merge commits,
-but I also need to use --signoff to add my sob to all
-other commits that were committed by Daniel
-after your commit.
+Hi Jerome
 
-Daniel, can you fix Roman's patch instead?
-you can do:
-git rebase -i -p  12771345a467^
-fix Roman's, add you sob only to that one
-and re-push the whole thing.
+Thank you for your patch.
+This is nice !
+
+> Add support platforms_num != 1 in dai_link. Initially, the main purpose of
+> this change was to make the platform optional in the dai_link, instead of
+> inserting the dummy platform driver.
+> 
+> This particular case had just been solved by Kuninori Morimoto with
+> commit 1d7689892878 ("ASoC: soc-core: allow no Platform on dai_link").
+> 
+> However, this change may still be useful for those who need multiple
+> platform components on a single dai_link (it solves one of the FIXME
+> note in soc-core)
+> 
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+(snip)
+> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+> index 002ddbf4e5a3..3053a4a461b3 100644
+> --- a/sound/soc/soc-core.c
+> +++ b/sound/soc/soc-core.c
+> @@ -887,7 +887,7 @@ static int soc_bind_dai_link(struct snd_soc_card *card,
+>  	struct snd_soc_dai_link *dai_link)
+>  {
+>  	struct snd_soc_pcm_runtime *rtd;
+> -	struct snd_soc_dai_link_component *codecs;
+> +	struct snd_soc_dai_link_component *dlc;
+>  	struct snd_soc_component *component;
+>  	int i;
+
+This is nitpick, but having both "codecs" and "platforms" is
+easy to read / understand code.
+
+> @@ -1051,22 +1053,22 @@ static int soc_init_dai_link(struct snd_soc_card *card,
+>  			     struct snd_soc_dai_link *link)
+>  {
+>  	int i;
+> -	struct snd_soc_dai_link_component *codec;
+> +	struct snd_soc_dai_link_component *dlc;
+
+Same here.
+
+For other parts
+
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+
+Thank you for your help !!
+Best regards
+---
+Kuninori Morimoto
