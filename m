@@ -2,109 +2,137 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846B1C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44BBC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61ED721726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1E421726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561571518;
+	bh=Sca4Z3OaKtXYUI/5YyPbiGGtd0DSIOE2gztWP1tFwRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T0VTAm4lkA0S6HE+Hg3FJpTGL3+AiyEiPFYWYAq24mwVEtdzdY0DOvflS06RzDFiI
+	 BJ8rH/ySsXzz9qy5zqhWvwQ8Fqox29lQ4VHpZOB3T+QwAWHhoBx0VV2/sDUi/svRb4
+	 QVYp+i1M85ebdYHc68I3EoN6MKS95eGW6TP+MAoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfFZRvx (ORCPT
+        id S1726820AbfFZRv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:51:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49814 "EHLO mga01.intel.com"
+        Wed, 26 Jun 2019 13:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfFZRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:51:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:51:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
-   d="scan'208";a="337288597"
-Received: from rchatre-s.jf.intel.com ([10.54.70.76])
-  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 10:51:08 -0700
-From:   Reinette Chatre <reinette.chatre@intel.com>
-To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
-        tony.luck@intel.com
-Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>
-Subject: [PATCH 06/10] x86/resctrl: Introduce utility to return pseudo-locked cache portion
-Date:   Wed, 26 Jun 2019 10:48:45 -0700
-Message-Id: <f64478fab77211c05df848658ad523ce942ce3b1.1561569068.git.reinette.chatre@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
-References: <cover.1561569068.git.reinette.chatre@intel.com>
-In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
-References: <cover.1561569068.git.reinette.chatre@intel.com>
+        id S1726796AbfFZRvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:51:55 -0400
+Received: from localhost (c-67-164-175-55.hsd1.co.comcast.net [67.164.175.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B046B216FD;
+        Wed, 26 Jun 2019 17:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561571514;
+        bh=Sca4Z3OaKtXYUI/5YyPbiGGtd0DSIOE2gztWP1tFwRg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LZnYzW45b3DGtb+CSPIw9lW7eg1jZASAqQPgdDRKfJ/J8WWC8+6IG/TKWE9KqQEdV
+         1qvhJ3wa+JEDaYDwsmK2m9ViNBpE+a6nXrW7LmK++vw19GHOw3SzLOY98opv9FCoEH
+         8lOrIL5bqyp5EksDA0XqzgVxiLhcPXvGcyMNLcNo=
+Date:   Wed, 26 Jun 2019 12:51:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
+        pombredanne@nexb.com, shawn.lin@rock-chips.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCHv2 2/2] PCI: layerscape: EP and RC drivers are compiled
+ separately
+Message-ID: <20190626175153.GC103694@google.com>
+References: <20190626111139.32878-1-xiaowei.bao@nxp.com>
+ <20190626111139.32878-2-xiaowei.bao@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626111139.32878-2-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prevent eviction of pseudo-locked memory it is required that no
-other resource group uses any portion of a cache that is in use by
-a cache pseudo-locked region.
+If you post another revision for any reason, please change the subject
+so it's worded as a command and mentions the new config options, e.g.,
 
-Introduce a utility that will return a Capacity BitMask (CBM) indicating
-all portions of a provided cache instance being used for cache
-pseudo-locking. This CBM can be used in overlap checking as well as
-cache usage reporting.
+  PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
 
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/internal.h    |  1 +
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 65f558a2e806..f17633cf4776 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -568,6 +568,7 @@ int rdtgroup_tasks_assigned(struct rdtgroup *r);
- int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
- int rdtgroup_locksetup_exit(struct rdtgroup *rdtgrp);
- bool rdtgroup_cbm_overlaps_pseudo_locked(struct rdt_domain *d, unsigned long cbm);
-+u32 rdtgroup_pseudo_locked_bits(struct rdt_resource *r, struct rdt_domain *d);
- bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_domain *d);
- int rdt_pseudo_lock_init(void);
- void rdt_pseudo_lock_release(void);
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 3ad0c5b59d34..9a4dbdb72d3e 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -1630,3 +1630,26 @@ void rdt_pseudo_lock_release(void)
- 	unregister_chrdev(pseudo_lock_major, "pseudo_lock");
- 	pseudo_lock_major = 0;
- }
-+
-+/**
-+ * rdt_pseudo_locked_bits - Portions of cache instance used for pseudo-locking
-+ * @r:		RDT resource to which cache instance belongs
-+ * @d:		Cache instance
-+ *
-+ * Return: bits in CBM of @d that are used for cache pseudo-locking
-+ */
-+u32 rdtgroup_pseudo_locked_bits(struct rdt_resource *r, struct rdt_domain *d)
-+{
-+	struct rdtgroup *rdtgrp;
-+	u32 pseudo_locked = 0;
-+
-+	list_for_each_entry(rdtgrp, &rdt_all_groups, rdtgroup_list) {
-+		if (!rdtgrp->plr)
-+			continue;
-+		if (rdtgrp->plr->r && rdtgrp->plr->r->rid == r->rid &&
-+		    rdtgrp->plr->d_id == d->id)
-+			pseudo_locked |= rdtgrp->plr->cbm;
-+	}
-+
-+	return pseudo_locked;
-+}
--- 
-2.17.2
-
+On Wed, Jun 26, 2019 at 07:11:39PM +0800, Xiaowei Bao wrote:
+> Compile the EP and RC drivers separately with different configuration
+> options, this looks clearer.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - No change.
+> 
+>  drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
+>  drivers/pci/controller/dwc/Makefile |    3 ++-
+>  2 files changed, 20 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index a6ce1ee..a41ccf5 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
+>  	  DesignWare core functions to implement the driver.
+>  
+>  config PCI_LAYERSCAPE
+> -	bool "Freescale Layerscape PCIe controller"
+> +	bool "Freescale Layerscape PCIe controller - Host mode"
+>  	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	select MFD_SYSCON
+>  	select PCIE_DW_HOST
+>  	help
+> -	  Say Y here if you want PCIe controller support on Layerscape SoCs.
+> +	  Say Y here if you want to enable PCIe controller support on Layerscape
+> +	  SoCs to work in Host mode.
+> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
+> +	  determines which PCIe controller works in EP mode and which PCIe
+> +	  controller works in RC mode.
+> +
+> +config PCI_LAYERSCAPE_EP
+> +	bool "Freescale Layerscape PCIe controller - Endpoint mode"
+> +	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	help
+> +	  Say Y here if you want to enable PCIe controller support on Layerscape
+> +	  SoCs to work in Endpoint mode.
+> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
+> +	  determines which PCIe controller works in EP mode and which PCIe
+> +	  controller works in RC mode.
+>  
+>  config PCI_HISI
+>  	depends on OF && (ARM64 || COMPILE_TEST)
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index b085dfd..824fde7 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
+>  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
+> -obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
+> +obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+> +obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> -- 
+> 1.7.1
+> 
