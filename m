@@ -2,97 +2,168 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61A2C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7ADC48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 717F1205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561515597;
-	bh=AhDbUSmvtyf8eIMbo3KZ3zFxztWUxMXejiff2eDKUMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rn6JnRH36APPoZTbUTn3k5p0VuH6y1V9iudu646AwZsq/0V6EI84C0ygz32QJmk4h
-	 WjCznrjsnEVwj7oat13qlkSexGWg/zdDeDh+M7vpGztFffoT8P2Asf7EhJ+7FRs15O
-	 Fvoke27hslf7KwnvfUiAH9Czy76x0g5uDpO5SgRg=
+	by mail.kernel.org (Postfix) with ESMTP id 80251205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:22:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="YtvmbDc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfFZCT4 (ORCPT
+        id S1726553AbfFZCWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:19:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40775 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFZCTz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:19:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so385423pgj.7;
-        Tue, 25 Jun 2019 19:19:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ImbOmbqru+Yum9wVwWkpBNaUFJnZhA+Sv2EnuogBtJ8=;
-        b=pjd3EmA/SgbJkLY0T4kf0sILY1MilxTH2gxd25xyacQiuehXVNOCvVUQHkT8v2oshV
-         F8f0MNSb9iCWMg5LzQ+U8aAVUT7pLL9A7NHEPl69WRMYjrD3rzf8b9QbEZfauVv3fFBQ
-         +za5+45e4XGz/KmqIRB8/hoJTjlAwnbHJ0YAjA2OFkwe94u3gATZJv7Fl6uI8aS6pxgN
-         XocbDRTHUZRnSj7JeazeWsU8ZPnUlIkgka7XnPUPMUvJEqUaTwc1a0MPZo5zkpU1+nty
-         ePUhQLtM9BaeMvxrzOxHUPL8laopiaWoRbeTgFk2KKCEdrMqwX91a+zu/QW5Grgb7cbN
-         O3Ag==
-X-Gm-Message-State: APjAAAXkntHcst0oOXh1jeAG4iDLmB36FLKYnIwr51P+QziQRAfU/joW
-        kF7B94wEXB6iZD8T/Hna+aI=
-X-Google-Smtp-Source: APXvYqz/ak3oqhDInPfCtSC5xTrl5WLmu4WvNmi0OnSYEvLdryLAAJJtmF40zvlfJnfwrjGTHOLxzA==
-X-Received: by 2002:a17:90a:2486:: with SMTP id i6mr1267695pje.125.1561515594542;
-        Tue, 25 Jun 2019 19:19:54 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id q1sm23369013pfn.178.2019.06.25.19.19.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 19:19:53 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id BB23740336; Wed, 26 Jun 2019 02:19:52 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 02:19:52 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, peterz@infradead.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu,
-        yamada.masahiro@socionext.com, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
-        julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        rdunlap@infradead.org, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com
-Subject: Re: [PATCH v5 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Message-ID: <20190626021952.GV19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-19-brendanhiggins@google.com>
+        Tue, 25 Jun 2019 22:22:08 -0400
+Received: from onstation.org ([52.200.56.107]:46094 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbfFZCWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 22:22:06 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id C8D3E3EA13;
+        Wed, 26 Jun 2019 02:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1561515725;
+        bh=NNWCQFfV7/jn6sShBvH15o4aX6Z5qXDaPn1VH92lNBA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YtvmbDc04vrtth/SjLVbjE1oEa/Pi4SdiKla7YqQnAhKSoyOWOmZd2cL/uxZqY8gQ
+         5M5ULnBDfNJSIBjF11ZCcLwMwEi9+0Mt2vMjPVbFJOavfhfxg5u+kZBi8MrANFNYjj
+         UC1qGeuoptN1OL9GlxMOcbx1L7FWiKWQ26f7p3GU=
+From:   Brian Masney <masneyb@onstation.org>
+To:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
+        robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        jonathan@marek.ca, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        jcrouse@codeaurora.org
+Subject: [PATCH v3 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
+Date:   Tue, 25 Jun 2019 22:21:43 -0400
+Message-Id: <20190626022148.23712-2-masneyb@onstation.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190626022148.23712-1-masneyb@onstation.org>
+References: <20190626022148.23712-1-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617082613.109131-19-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:26:13AM -0700, Brendan Higgins wrote:
-> Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Add device tree bindings for the On Chip Memory (OCMEM) that is present
+on some Qualcomm Snapdragon SoCs.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+Changes since v2:
+- Add *-sram node and gmu-sram to example.
 
-  Luis
+Changes since v1:
+- Rename qcom,ocmem-msm8974 to qcom,msm8974-ocmem
+- Renamed reg-names to ctrl and mem
+- update hardware description
+- moved from soc to sram namespace in the device tree bindings
+
+ .../bindings/sram/qcom/qcom,ocmem.yaml        | 84 +++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+
+diff --git a/Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+new file mode 100644
+index 000000000000..a0bf0af4860a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sram/qcom/qcom,ocmem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
++
++maintainers:
++  - Brian Masney <masneyb@onstation.org>
++
++description: |
++  The On Chip Memory (OCMEM) is typically used by the GPU, camera/video, and
++  audio components on some Snapdragon SoCs.
++
++properties:
++  compatible:
++    const: qcom,msm8974-ocmem
++
++  reg:
++    items:
++      - description: Control registers
++      - description: OCMEM address range
++
++  reg-names:
++    items:
++      - const: ctrl
++      - const: mem
++
++  clocks:
++    items:
++      - description: Core clock
++      - description: Interface clock
++
++  clock-names:
++    items:
++      - const: core
++      - const: iface
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++
++patternProperties:
++  "^.+-sram$":
++    type: object
++    description: |
++      A region of reserved memory.
++
++    properties:
++      reg:
++        maxItems: 1
++
++    required:
++      - reg
++
++examples:
++  - |
++      #include <dt-bindings/clock/qcom,rpmcc.h>
++      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
++
++      ocmem: ocmem@fdd00000 {
++        compatible = "qcom,msm8974-ocmem";
++
++        reg = <0xfdd00000 0x2000>,
++              <0xfec00000 0x180000>;
++        reg-names = "ctrl",
++                    "mem";
++
++        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
++                 <&mmcc OCMEMCX_OCMEMNOC_CLK>;
++        clock-names = "core",
++                      "iface";
++
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        gmu-sram@0 {
++                reg = <0x0 0x100000>;
++        };
++      };
+-- 
+2.20.1
+
