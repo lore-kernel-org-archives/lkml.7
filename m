@@ -2,100 +2,113 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA20BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E6DC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1699208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561548237;
-	bh=7ietyuIcaBatOPYfddSSylJ4sxAZ+ZLKOiAKxLzp6es=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y6WO/tXEiTKPowkLyQ01UW/VRub1blsP6aZrnRTGugoRKT8k0mBY4HF85RpPOMKz8
-	 VsjiqKyeSWU/n9NoGKNpf0ndjs3iWNK3tqWTGNmPF8o8F6mx5HOkKTrLJQlpADe8ka
-	 NpffI/R2wLPRiSXs1+JYQxaKugrYEM9XhGL42fR0=
+	by mail.kernel.org (Postfix) with ESMTP id 5A8372080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfFZLX4 (ORCPT
+        id S1727230AbfFZLZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:23:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38082 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFZLXz (ORCPT
+        Wed, 26 Jun 2019 07:25:27 -0400
+Received: from mail02.asahi-net.or.jp ([202.224.55.14]:47378 "EHLO
+        mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfFZLZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:23:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7ietyuIcaBatOPYfddSSylJ4sxAZ+ZLKOiAKxLzp6es=; b=F05n5gh9dgVKij6KvK7Jni2sH
-        EpeOadTX2njYnxIy/4tL586k+XHd3PAuDNzyWFoNrkPfQvszMo0pMX+orsIoIjRWPWlE/GXoEMRms
-        keb34VYGi2rDr7DuZVl17wH4XqywWKeNJooQcH8gstxaCL4pTEz6TqN/a/JIGYp8xZWUI=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hg61U-0007me-6n; Wed, 26 Jun 2019 11:23:32 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id B4DFD440046; Wed, 26 Jun 2019 12:23:31 +0100 (BST)
-Date:   Wed, 26 Jun 2019 12:23:31 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        lars@metafoo.de, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com
-Subject: Re: [PATCH 2/2] ASoC: codecs: ad193x: Reset DAC Control 1 register
- at probe
-Message-ID: <20190626112331.GB5316@sirena.org.uk>
-References: <20190626104947.26547-1-codrin.ciubotariu@microchip.com>
- <20190626104947.26547-2-codrin.ciubotariu@microchip.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0LPhsWsL1Ga+XLL0"
-Content-Disposition: inline
-In-Reply-To: <20190626104947.26547-2-codrin.ciubotariu@microchip.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 26 Jun 2019 07:25:27 -0400
+Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.ablenetvps.ne.jp [61.195.96.97])
+        (Authenticated sender: PQ4Y-STU)
+        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id 0D47647375;
+        Wed, 26 Jun 2019 20:25:22 +0900 (JST)
+Received: from yo-satoh-debian.ysato.ml (p033253.dynamic.ppp.asahi-net.or.jp [221.113.33.253])
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id A1DC6240085;
+        Wed, 26 Jun 2019 20:25:21 +0900 (JST)
+Date:   Wed, 26 Jun 2019 20:25:20 +0900
+Message-ID: <87tvccr3kv.wl-ysato@users.sourceforge.jp>
+From:   Yoshinori Sato <ysato@users.sourceforge.jp>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] remove arch/sh?
+In-Reply-To: <CAK8P3a0j_9fzZxhxqCMHfoJ5DdZpHFvANEPqs1pbP23TCei6ng@mail.gmail.com>
+References: <20190625085616.GA32399@lst.de>
+        <ccfa78f3-35c2-1d26-98b5-b21a76b90e1e@physik.fu-berlin.de>
+        <20190625112146.GA9580@angband.pl>
+        <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
+        <CAK8P3a3irwwwCQ_kPh5BTg-jGGbJOj=3fhVrTDBUZgH1V7bpFQ@mail.gmail.com>
+        <20190625142832.GD1506@brightrain.aerifal.cx>
+        <CAK8P3a0j_9fzZxhxqCMHfoJ5DdZpHFvANEPqs1pbP23TCei6ng@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/25.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 26 Jun 2019 00:48:09 +0900,
+Arnd Bergmann wrote:
+> 
+> On Tue, Jun 25, 2019 at 4:28 PM Rich Felker <dalias@libc.org> wrote:
+> > On Tue, Jun 25, 2019 at 02:50:01PM +0200, Arnd Bergmann wrote:
+> > > don't build, or are incomplete and not worked on for a long
+> > > time, compared to the bits that are known to work and that someone
+> > > is still using or at least playing with.
+> > > I guess a lot of the SoCs that have no board support other than
+> > > the Hitachi/Renesas reference platform can go away too, as any products
+> > > based on those boards have long stopped updating their kernels.
+> >
+> > My intent here was always, after getting device tree theoretically
+> > working for some reasonable subset of socs/boards, drop the rest and
+> > add them back as dts files (possibly plus some small drivers) only if
+> > there's demand/complaint about regression.
+> 
+> Do you still think that this is a likely scenario for the future though?
+> 
+> If nobody's actively working on the DT support for the old chips and
+> this is unlikely to change soon, removing the known-broken bits earlier
+> should at least make it easier to keep maintaining the working bits
+> afterwards.
+> 
+> FWIW, I went through the SH2, SH2A and SH3 based boards that
+> are supported in the kernel and found almost all of them to
+> be just reference platforms, with no actual product ever merged.
+> IIRC the idea back then was that users would supply their
+> own board files as an add-on patch, but I would consider all the
+> ones that did to be obsolete now.
+> 
+> HP Jornada 6xx is the main machine that was once supported, but
+> given that according to the defconfig file it only comes with 4MB
+> of RAM, it is unlikely to still boot any 5.x kernel, let alone user
+> space (wikipedia claims there were models with 16MB of RAM,
+> but that is still not a lot these days).
+> 
+> "Magicpanel" was another product that is supported in theory, but
+> the google search showed the 2007 patch for the required
+> flash storage driver that was never merged.
+> 
+> Maybe everything but J2 and SH4(a) can just get retired?
+> 
+>      Arnd
 
---0LPhsWsL1Ga+XLL0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I also have some boards, so it's possible to rewrite more.
+I can not rewrite the target I do not have, so I think that
+there is nothing but to retire.
 
-On Wed, Jun 26, 2019 at 01:49:47PM +0300, Codrin Ciubotariu wrote:
-> Since the ad193x codecs have no software reset, we have to reinitialize the
-> registers after a hardware reset. For example, if we change the
-> device-tree between these resets, changing the audio format of the DAI link
-> from DSP_A with 8 TDM channels to I2S 2 channels, DAC Control 1 register
-> will remain configured for 8 channels. This patch resets this register at
-> probe to its default value.
+There are too many unique parts of SH and it will be difficult
+to maintain in the future.
 
-Would it not be more robust/complete to have a set of register defaults
-and write the whole lot out rather than individually going through and
-adding writes for specific registers as needed?
-
---0LPhsWsL1Ga+XLL0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0TVbIACgkQJNaLcl1U
-h9B5dQf/cxYmztEqqJW7n7EhRXlsxlPo8LHdNVs1D7b4aSBNJZTPs4ydlpRlCQga
-MQ7cYmznzzNCJSNwIBi/ra/arsQWHoyM1gHaQH01vhjaEoMYgm3Tbtn2IDR16tR4
-sU1ffhFgQmve2BD6q5fRVYdZldcvJuBkY8fnYO5BktFrQXil/YiQXudVjAiP0/tW
-tZMoigVLniRxERF9FwQ5XWzVeW8Pa6/tSZ1xAs+MyXNdvXa9jrL1Wrwze6S/i12U
-yT0QVxnVBhOBZfgH1bGHO8V3Al2lAn6P1n9uHfvl63HeZgnPp6qfScLVkXLzCpO1
-hb2duf3THhcgLRM+qZA88qsgyyRW4w==
-=ZAHw
------END PGP SIGNATURE-----
-
---0LPhsWsL1Ga+XLL0--
+-- 
+Yosinori Sato
