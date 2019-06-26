@@ -2,103 +2,81 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B3BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E01C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78A7216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD9E2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561551703;
+	bh=bzzuAsJFpALlF09800RIXkmFifwZs/0LsYp0Xdjf7lA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tKKEzGi/kXI4GzTe7tp8M0wvPszsHRZz9mKrh2XXVORwrqZk51OAscAgg4h/fPHmm
+	 KSzBzh9I0Ii6FD95w/MN7nu2K+4Csb9DKOw6x9APfqhpN5g4UgRih6eiWX2TGVtpfF
+	 xBp78wCS9ey2u/Q1hy9oxQLID2K8R6J0ZmHyZviQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfFZMVQ (ORCPT
+        id S1727409AbfFZMVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:21:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59914 "EHLO mx1.redhat.com"
+        Wed, 26 Jun 2019 08:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZMVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:21:15 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726104AbfFZMVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 08:21:42 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6DBE3308792C;
-        Wed, 26 Jun 2019 12:20:52 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DAEC5D9C6;
-        Wed, 26 Jun 2019 12:20:49 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 26F8E1806B0E;
-        Wed, 26 Jun 2019 12:20:43 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 08:20:42 -0400 (EDT)
-From:   Bob Peterson <rpeterso@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew garrett <matthew.garrett@nebula.com>, yuchao0@huawei.com,
-        tytso@mit.edu, shaggy@kernel.org,
-        ard biesheuvel <ard.biesheuvel@linaro.org>,
-        josef@toxicpanda.com, hch@infradead.org, clm@fb.com,
-        adilger kernel <adilger.kernel@dilger.ca>, jk@ozlabs.org,
-        jack@suse.com, dsterba@suse.com, jaegeuk@kernel.org,
-        viro@zeniv.linux.org.uk, linux-xfs@vger.kernel.org,
-        jfs-discussion@lists.sourceforge.net, linux-efi@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-btrfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Christoph Hellwig <hch@lst.de>, ocfs2-devel@oss.oracle.com
-Message-ID: <868182386.37358699.1561551642881.JavaMail.zimbra@redhat.com>
-In-Reply-To: <156151633004.2283456.4175543089138173586.stgit@magnolia>
-References: <156151632209.2283456.3592379873620132456.stgit@magnolia> <156151633004.2283456.4175543089138173586.stgit@magnolia>
-Subject: Re: [Cluster-devel] [PATCH 1/5] vfs: create a generic checking and
- prep function for FS_IOC_SETFLAGS
+        by mail.kernel.org (Postfix) with ESMTPSA id 54F0E20663;
+        Wed, 26 Jun 2019 12:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561551701;
+        bh=bzzuAsJFpALlF09800RIXkmFifwZs/0LsYp0Xdjf7lA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QG5wNuPmjrSNBSjDiSSCgTZlz/8TXSmjSfBQaTeh2HpKuAucc31EfN0oweUcEWWTz
+         UaVUE0sG5oMoB6F/Q9kYiwXqsgOhR5khCwluVydKxhPDnfDZ8gt0iSrFYKL9djGBt9
+         HPnxRmX9CVEVhrUeI27SI6mVupT9IPj5JYfKqL2E=
+Date:   Wed, 26 Jun 2019 13:21:35 +0100
+From:   Will Deacon <will@kernel.org>
+To:     jinho lim <jordan.lim@samsung.com>, catalin.marinas@arm.com
+Cc:     will.deacon@arm.com, mark.rutland@arm.com,
+        anshuman.khandual@arm.com, marc.zyngier@arm.com,
+        andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        seroto7@gmail.com, ebiederm@xmission.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] arm64: rename dump_instr as dump_kernel_instr
+Message-ID: <20190626122134.fg7s6di5o3d3gim4@willie-the-truck>
+References: <CGME20190626115016epcas1p455530417de86ea2e72ce1b389ae57a75@epcas1p4.samsung.com>
+ <20190626115013.13044-1-jordan.lim@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.3.116.201, 10.4.195.9]
-Thread-Topic: create a generic checking and prep function for FS_IOC_SETFLAGS
-Thread-Index: 5u1cuSAsKRaw36dS1F+PjLFgFqc7sA==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 26 Jun 2019 12:21:15 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626115013.13044-1-jordan.lim@samsung.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Original Message -----
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Jun 26, 2019 at 08:50:13PM +0900, jinho lim wrote:
+> In traps.c, only __die calls dump_instr.
+> However, this function has sub-function as __dump_instr.
 > 
-> Create a generic function to check incoming FS_IOC_SETFLAGS flag values
-> and later prepare the inode for updates so that we can standardize the
-> implementations that follow ext4's flag values.
+> dump_kernel_instr can replace those functions.
+> By using aarch64_insn_read, it does not have to change fs to KERNEL_DS.
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: jinho lim <jordan.lim@samsung.com>
 > ---
->  fs/btrfs/ioctl.c    |   13 +++++--------
->  fs/efivarfs/file.c  |   26 +++++++++++++++++---------
->  fs/ext2/ioctl.c     |   16 ++++------------
->  fs/ext4/ioctl.c     |   13 +++----------
->  fs/f2fs/file.c      |    7 ++++---
->  fs/gfs2/file.c      |   42 +++++++++++++++++++++++++++++-------------
->  fs/hfsplus/ioctl.c  |   21 ++++++++++++---------
->  fs/inode.c          |   24 ++++++++++++++++++++++++
->  fs/jfs/ioctl.c      |   22 +++++++---------------
->  fs/nilfs2/ioctl.c   |    9 ++-------
->  fs/ocfs2/ioctl.c    |   13 +++----------
->  fs/orangefs/file.c  |   35 ++++++++++++++++++++++++++---------
->  fs/reiserfs/ioctl.c |   10 ++++------
->  fs/ubifs/ioctl.c    |   13 +++----------
->  include/linux/fs.h  |    3 +++
->  15 files changed, 146 insertions(+), 121 deletions(-)
+>  arch/arm64/kernel/traps.c | 23 +++++++----------------
+>  1 file changed, 7 insertions(+), 16 deletions(-)
 
-The gfs2 portion looks correct.
+Thanks, this looks good to me now:
 
-Reviewed-by: Bob Peterson <rpeterso@redhat.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
 
-Regards,
+Catalin can pick this up for 5.3.
 
-Bob Peterson
+Will
