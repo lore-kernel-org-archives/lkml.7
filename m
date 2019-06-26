@@ -5,61 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1F4C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61058C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5553F20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C0A2082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:59:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaqgAuFE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AW93f0+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfFZK6x (ORCPT
+        id S1727146AbfFZK7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:58:53 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38360 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZK6w (ORCPT
+        Wed, 26 Jun 2019 06:59:46 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37058 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZK7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:58:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r9so1714973ljg.5;
-        Wed, 26 Jun 2019 03:58:50 -0700 (PDT)
+        Wed, 26 Jun 2019 06:59:46 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 131so1720265ljf.4;
+        Wed, 26 Jun 2019 03:59:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vBnSNkpp1XS13FbQfXNNjthLGvaxRDnVZe4G6iUXAtU=;
-        b=GaqgAuFEfvv3hBS0MaU6uk4aVJXr6o+2pG+er+XZSrXJmKaX1hSvGbNyogXUrcLE1F
-         8uPyzO20cWhgn+6ogJWZGBUDgM/+hmdodS2rGfiJw+hYmHysEcAjmj6xP3Fee5JK8Emq
-         loi84Jm74kjpfhji/XqX0xwnoCYYdgWSjGLQq8wzHtt2nSe0/KvZ6HHheCZpk8jL9kN5
-         ePK310T6x5hfCUeiiB+CAwL2vR/E5Nd3/aRMdJydETRe0FPBo9xfRQRHMxYNWqCI5m8P
-         pUZHLmizbJuiS5WGXpaGO86UWbuiqs23zbiILID8Ga3NGnYbkerHBO9gQa2OE40nmKrC
-         g3Rw==
+        bh=Fv9xgHLhDYmnhdRlJ12b6ZaV6F7rsmVKSKGlSFypmB0=;
+        b=AW93f0+wWO8xHqfQfeq02+uVvagQqg6g2aSwBswZ1jGXrtgSYEwDc4vrVjHnuHlusy
+         9ITI9WY6oemJDG13jGFQ8JytMx1Wa6+NtkgUnCFPVstLuqJRoQ0O5fdaD95S064TV+OU
+         xsm1LPYvsy/e1ujhFxUSIEw4YlJCcYUSYVeKqUYv0gNJB9Gl5AKBknpE1JbXhUssFjW6
+         NRRBN/FDvEPV6ZTQ+caKanSaEFRg4K5nDzMdsWRdhr2kRNxzkH8HjaMxPX8WcNvtMlHe
+         qIkm6FpIuodkpacPFmqbfYd/KNpwm/U8iwvnw05/9R5sDtmghJT31ZCCBLXkKrdiz8So
+         FBFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vBnSNkpp1XS13FbQfXNNjthLGvaxRDnVZe4G6iUXAtU=;
-        b=cWX+3LE8slfiGr1ef79WOIbIA0KtK2eYL783MjmS4fKxc61YL5w9IG1nNWjNRgiEgp
-         hMzz5xQa37pFSqD1G05ZF88viMe7OT7/1RoA/Cp+k0sq5ccV7hP1V3pCa/rOClvTNONM
-         8ANK2Gcl/WkW5HAvNhU8seIvYeqbkb+FQ5ji5qZAbkM9y8oVIdleTngyPNaQcuNbLAV7
-         E9vTqpSLwfVWlSRO0r6Mqmc0YusEqH3O1CtI/AUFPweGF3513dfBfSjCt9jh0BBA/gmm
-         qqxr4/We5SEpZVlTSN7W+tsBd8XOsMfaXtA42VKdgAlXZQ3ah3I6wcKiWz+MTz2Dl1tz
-         Jcvw==
-X-Gm-Message-State: APjAAAV2vrQdKDSR2xNLb7yBcXQTkU+kSb7WOE2XQpbk1KGw2cR4Tt0c
-        rZ18uF+R88dI0Rp9+tM5ve9NUZ8yIGXDxFqF5pc=
-X-Google-Smtp-Source: APXvYqxgoOFc17kD7+phBGYs9B/nP1o8ns/3dGiVnoxKpmtsSjv06Im4LhGmDTJDnuu5JdispKhyHp6RMeFmjrm7eYo=
-X-Received: by 2002:a2e:8650:: with SMTP id i16mr2529260ljj.178.1561546729355;
- Wed, 26 Jun 2019 03:58:49 -0700 (PDT)
+        bh=Fv9xgHLhDYmnhdRlJ12b6ZaV6F7rsmVKSKGlSFypmB0=;
+        b=WsVfXgivSu+nH93Hnpb01QKOR/mHShnBzU0Uv32QGdaNnzlJTg8E1nI/74ieOHQbLD
+         gJHvI3FiS8S2KzkxWZy4v8nmVadmT7kYcD7YH3j96c3peM1el+HghYXuzdpoiXeYtUxD
+         BfKlWMUg8Ahlip4rHoTMHyx/cbyVIoVOe+00hvg5N70QZIQ9jQnWUStwDlN7ZXX78TRN
+         U+EFkD1Idie3gN6QJmRrsWJCxHUxT0MWorGWo04Y4w0x0nOi/wyenrAvMp9oBK7srQEl
+         hD6wGJJhauCK9D20G4weAX5iGQ4zoXUSvy5wX8X5rGGNHaoOjht0zDx4ov3KfNegcMpF
+         gQ5w==
+X-Gm-Message-State: APjAAAXxsTDYILH0kcFLky2pPvrxOWjzpmmXUBcq3rD0Aetgn/SHZ430
+        fyl7+XszHFUNtL504coi1ywYYAgIeLuZN4WbNLY=
+X-Google-Smtp-Source: APXvYqyaajySBdajl3vqXKwz2VD2Lk2DSCmiP3YMTp9EcxBO9jpD7CRAiLKwQLplLJ3nVmvjUP4aURNpERdDUfw/E+8=
+X-Received: by 2002:a2e:7d03:: with SMTP id y3mr2525177ljc.240.1561546784065;
+ Wed, 26 Jun 2019 03:59:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <1561544420-15572-1-git-send-email-robert.chiras@nxp.com> <1561544420-15572-2-git-send-email-robert.chiras@nxp.com>
-In-Reply-To: <1561544420-15572-2-git-send-email-robert.chiras@nxp.com>
+References: <1561544420-15572-1-git-send-email-robert.chiras@nxp.com> <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 26 Jun 2019 07:58:39 -0300
-Message-ID: <CAOMZO5AKOgcRcyOyz71MyHY5VbGF2OCSdVfREwoNPrVk8rbVAA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: display: panel: Add support for
- Raydium RM67191 panel
+Date:   Wed, 26 Jun 2019 07:59:34 -0300
+Message-ID: <CAOMZO5CFSXHe7bFQ1xudmnm2=9sUL-FRqtzOtf_c=f7=e=bdqg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] drm/panel: Add support for Raydium RM67191 panel driver
 To:     Robert Chiras <robert.chiras@nxp.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -78,11 +77,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Robert,
+
 On Wed, Jun 26, 2019 at 7:21 AM Robert Chiras <robert.chiras@nxp.com> wrote:
 >
-> Add dt-bindings documentation for Raydium RM67191 DSI panel.
+> This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
+> protocol).
 >
 > Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
+Looks good to me:
+
 Reviewed-by: Fabio Estevam <festevam@gmail.com>
+
+Thanks
