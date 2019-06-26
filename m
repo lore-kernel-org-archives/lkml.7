@@ -2,123 +2,125 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AF7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D98C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D08620659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="IYOpHiHy"
+	by mail.kernel.org (Postfix) with ESMTP id 69A8920663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfFZJbo (ORCPT
+        id S1726673AbfFZJdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:31:44 -0400
-Received: from mail-eopbgr50097.outbound.protection.outlook.com ([40.107.5.97]:28647
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbfFZJbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:31:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3UmchpQjV68nFeTKcfNuDUgiEf9Z412PKJjMH8xTT7M=;
- b=IYOpHiHy71/4wSgdsxaXRvYDqHg06a4UAWK++vN3xI12i1dAuGq9czRlb4rYMb2FDe0au3nA5m0NCWBkgpTL6bkQQcTcsYu9JZqAbU0NBcsdjsN1hj715xAX/+ZeC1SaXy+OWgU00sqA9jCXZgHlPUNn96c7Vq/k50wEIH2/Xrs=
-Received: from AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM (10.255.30.92) by
- AM0PR10MB2289.EURPRD10.PROD.OUTLOOK.COM (20.177.109.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Wed, 26 Jun 2019 09:31:39 +0000
-Received: from AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d591:47a7:70ee:3162]) by AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::d591:47a7:70ee:3162%7]) with mapi id 15.20.2008.014; Wed, 26 Jun 2019
- 09:31:39 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-CC:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Wed, 26 Jun 2019 05:33:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:57356 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfFZJdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 05:33:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 640EF2B;
+        Wed, 26 Jun 2019 02:33:30 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9367F3F718;
+        Wed, 26 Jun 2019 02:33:29 -0700 (PDT)
+Subject: Re: [PATCH 12/21] EDAC, ghes: Add support for legacy API counters
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] can: dev: call netif_carrier_off() in
- register_candev()
-Thread-Topic: [PATCH net-next] can: dev: call netif_carrier_off() in
- register_candev()
-Thread-Index: AQHVKmeahsDxJm0SfUSG50fnY2XQS6arDw4AgAKgCYA=
-Date:   Wed, 26 Jun 2019 09:31:39 +0000
-Message-ID: <ff8160d4-3357-9b4f-1840-bbe46195da5a@prevas.dk>
-References: <20190624083352.29257-1-rasmus.villemoes@prevas.dk>
- <CA+FuTSeHhz1kntLyeUfAB4ZbtYjO1=Ornwse-yQbPwo5c-_2=g@mail.gmail.com>
-In-Reply-To: <CA+FuTSeHhz1kntLyeUfAB4ZbtYjO1=Ornwse-yQbPwo5c-_2=g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0202CA0014.eurprd02.prod.outlook.com
- (2603:10a6:3:8c::24) To AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:160::28)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5afc0410-8121-4538-06a1-08d6fa191741
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM0PR10MB2289;
-x-ms-traffictypediagnostic: AM0PR10MB2289:
-x-microsoft-antispam-prvs: <AM0PR10MB228975B70913236166A778338AE20@AM0PR10MB2289.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(39850400004)(366004)(136003)(346002)(189003)(199004)(229853002)(6436002)(8936002)(14444005)(6512007)(6486002)(256004)(5660300002)(8976002)(72206003)(478600001)(4326008)(25786009)(66446008)(64756008)(66556008)(305945005)(73956011)(66476007)(66946007)(7736002)(31686004)(14454004)(8676002)(81166006)(81156014)(68736007)(2906002)(71200400001)(71190400001)(26005)(476003)(486006)(54906003)(44832011)(36756003)(99286004)(2616005)(3846002)(186003)(6116002)(11346002)(316002)(66066001)(76176011)(52116002)(53546011)(6506007)(386003)(102836004)(6246003)(74482002)(446003)(6916009)(42882007)(53936002)(31696002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR10MB2289;H:AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: g7a0gOxCMwZmkstquGvSTeNpVlE98g5sp17AH8HU8Jhyn4kTWA7Na0TqMuV/bNQNuAGxNyD0OBtpv516OdybeaxxR2UvNWSYz9F1pioOQEV7Iy45ojZXJQWvkdcPRzyrKHXYbAaxNhLuWjIUDu1yJv3Wxrhm7V54MbPwLhbNfM7+92DSxQ4ym/jWFCHKq5BWpgHPjHk43jYctaEpub01WUSOiHnB48Ft3L3O2x3rMyzSMcFINBbPOiPqJItvCW18AArzv6ZsQrLPctQ7yBMkpr3wimvkX4GF5jyJi4ha3rWWKO97ClVLp5IP4hqbT3LkyAf3rwVLApjv9DhKAJHgEyCDsU5DY/j8mw7dTG4fz70UKrwxlAIspA8CvMw5D/bVXdjlhBDgC9Z07U1hsZExxEK56Jt3CcGb1sAYZyI7FG8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1038AA6E0DD7FA4689BDA53C0FEA4596@EURPRD10.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+References: <20190529084344.28562-1-rrichter@marvell.com>
+ <20190529084344.28562-13-rrichter@marvell.com>
+ <92eda11f-dad9-bb2b-3a87-80b6c8d8e228@arm.com>
+ <20190612184058.2plbdweri6bjmppr@rric.localdomain>
+ <c08290d8-3690-efa9-3bc7-37f8b1fdbfd4@arm.com>
+ <20190620065527.qqulgpk6k5wva4mj@rric.localdomain>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <043a14f2-3d08-bc81-3a7e-b275179ec1c0@arm.com>
+Date:   Wed, 26 Jun 2019 10:33:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5afc0410-8121-4538-06a1-08d6fa191741
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 09:31:39.4635
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2289
+In-Reply-To: <20190620065527.qqulgpk6k5wva4mj@rric.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjQvMDYvMjAxOSAxOS4yNiwgV2lsbGVtIGRlIEJydWlqbiB3cm90ZToNCj4gT24gTW9uLCBK
-dW4gMjQsIDIwMTkgYXQgNDozNCBBTSBSYXNtdXMgVmlsbGVtb2VzDQo+IDxyYXNtdXMudmlsbGVt
-b2VzQHByZXZhcy5kaz4gd3JvdGU6DQo+Pg0KPj4gQ09ORklHX0NBTl9MRURTIGlzIGRlcHJlY2F0
-ZWQuIFdoZW4gdHJ5aW5nIHRvIHVzZSB0aGUgZ2VuZXJpYyBuZXRkZXYNCj4+IHRyaWdnZXIgYXMg
-c3VnZ2VzdGVkLCB0aGVyZSdzIGEgc21hbGwgaW5jb25zaXN0ZW5jeSB3aXRoIHRoZSBsaW5rDQo+
-PiBwcm9wZXJ0eTogVGhlIExFRCBpcyBvbiBpbml0aWFsbHksIHN0YXlzIG9uIHdoZW4gdGhlIGRl
-dmljZSBpcyBicm91Z2h0DQo+PiB1cCwgYW5kIHRoZW4gdHVybnMgb2ZmIChhcyBleHBlY3RlZCkg
-d2hlbiB0aGUgZGV2aWNlIGlzIGJyb3VnaHQgZG93bi4NCj4+DQo+PiBNYWtlIHN1cmUgdGhlIExF
-RCBhbHdheXMgcmVmbGVjdHMgdGhlIHN0YXRlIG9mIHRoZSBDQU4gZGV2aWNlLg0KPj4NCj4+IFNp
-Z25lZC1vZmYtYnk6IFJhc211cyBWaWxsZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJldmFzLmRr
-Pg0KPiANCj4gU2hvdWxkIHRoaXMgdGFyZ2V0IG5ldD8NCg0KTm8sIEkgdGhpbmsgdGhpcyBzaG91
-bGQgZ28gdGhyb3VnaCB0aGUgQ0FOIHRyZWUuIFBlcmhhcHMgSSd2ZQ0KbWlzdW5kZXJzdG9vZCB3
-aGVuIHRvIHVzZSB0aGUgbmV0LW5leHQgcHJlZml4IC0gaXMgdGhhdCBvbmx5IGZvciB0aGluZ3MN
-CnRoYXQgc2hvdWxkIGJlIGFwcGxpZWQgZGlyZWN0bHkgdG8gdGhlIG5ldC1uZXh0IHRyZWU/IElm
-IHNvLCBzb3JyeS4NCg0KPiBSZWdhcmRsZXNzIG9mIENPTkZJR19DQU5fTEVEUyBkZXByZWNhdGlv
-biwNCj4gdGhpcyBpcyBhbHJlYWR5IG5vdCBpbml0aWFsaXplZCBwcm9wZXJseSBpZiB0aGF0IENP
-TkZJRyBpcyBkaXNhYmxlZA0KPiBhbmQgYSBjYW5fbGVkX2V2ZW50IGNhbGwgYXQgZGV2aWNlIHBy
-b2JlIGlzIGEgbm9vcC4NCg0KSSdtIG5vdCBzdXJlIEkgdW5kZXJzdGFuZCB0aGlzIHBhcnQuIFRo
-ZSBDT05GSUdfQ0FOX0xFRFMgc3VwcG9ydCBmb3INCnNob3dpbmcgdGhlIHN0YXRlIG9mIHRoZSBp
-bnRlcmZhY2UgaXMgaW1wbGVtZW50ZWQgdmlhIGhvb2tpbmcgaW50byB0aGUNCm5kb19vcGVuL25k
-b19zdG9wIGNhbGxiYWNrcywgYW5kIGRvZXMgbm90IGxvb2sgYXQgb3IgdG91Y2ggdGhlDQpfX0xJ
-TktfU1RBVEVfTk9DQVJSSUVSIGJpdCBhdCBhbGwuDQoNCk90aGVyIHRoYW4gdmlhIHRoZSBuZXRk
-ZXYgTEVEIHRyaWdnZXIgSSBkb24ndCB0aGluayBvbmUgY2FuIGV2ZW4gb2JzZXJ2ZQ0KdGhlIHNs
-aWdodGx5IG9kZCBpbml0aWFsIHN0YXRlIG9mIHRoZSBfX0xJTktfU1RBVEVfTk9DQVJSSUVSIGJp
-dCBmb3IgQ0FODQpkZXZpY2VzLCB3aGljaCBpcyB3aHkgSSBmcmFtZWQgdGhpcyBhcyBhIGZpeCBw
-dXJlbHkgdG8gYWxsb3cgdGhlIG5ldGRldg0KdHJpZ2dlciB0byBiZSBhIGNsb3NlciBkcm9wLWlu
-IHJlcGxhY2VtZW50IGZvciBDT05GSUdfQ0FOX0xFRFMuDQoNClJhc211cw0K
+Hi Robert,
+
+On 20/06/2019 07:55, Robert Richter wrote:
+> On 19.06.19 18:22:32, James Morse wrote:
+>>> In any case, this patch cleans up code as old API's counter code is
+>>> isolated and moved to common code. Making the counter's work for ghes
+>>> is actually a side-effect here. The cleanup is a prerequisit for
+>>> follow on patches.
+>>
+>> I'm all for removing/warning-its-broken it when ghes_edac is in use. But the convincing
+>> argument is debian ships a 'current' version of edac-utils that predates 199747106934,
+>> (that made all this fake csrow stuff deprecated), and debian's popcon says ~1000 people
+>> have it installed.
+> 
+> All arm64 distribution kernels that I have checked come with:
+> 
+> CONFIG_EDAC_SUPPORT=y
+> CONFIG_EDAC=y
+> CONFIG_EDAC_LEGACY_SYSFS=y
+> # CONFIG_EDAC_DEBUG is not set
+> CONFIG_EDAC_GHES=y
+> CONFIG_EDAC_LAYERSCAPE=m
+> CONFIG_EDAC_THUNDERX=m
+> CONFIG_EDAC_XGENE=m
+
+(distros also enable drivers for hardware no-one has!)
+
+Who uses this? edac-utils, on both arm64 and x86.
+
+
+>> If you want it fixed, please don't do it as a side effect of cleanup. Fixes need to be a
+>> small separate series that can be backported. (unless we're confident no-one uses it, in
+>> which case, why fix it?)
+
+> It is not that I am keen on fixing legacy edac sysfs. It just happens
+> while unifying the error handlers in ghes_edac and edac_mc. As I see
+> you are reluctant on just letting it go, let's just disable
+> EDAC_LEGACY_SYSFS for ARM64.
+
+That would break other drivers where those legacy counters expose valid values.
+
+You're painting me as some kind of stubborn villan here. You're right my initial reaction
+was 'what for?'. Adding new support for legacy counters that have never worked with
+ghes_edac looks like the wrong thing to do.
+
+But unfortunately edac-utils is still using this legacy interface.
+
+If we're going to fix it, could we fix it properly? (separate series that can be
+backported to stable).
+
+
+> Though, I don't agree with it as there
+> still could be some userland tools that use this interface that cannot
+> be used any longer after a transition from x86 to arm64.
+
+I don't think this is the right thing to do. ghes_edac's behaviour should not change
+between architectures.
+
+
+Where we aren't agreeing is how we fix bugs:
+
+Its either broken, and no-one cares, we should remove it.
+Or, we should fix it and those fixes should go to stable.
+
+We can't mix fixes and features in a patch series, as the fixes then can't easily be
+backported. If its ever in doubt, the patches should still be as separate fixes so the
+maintainer can decide.
+
+
+Thanks,
+
+James
