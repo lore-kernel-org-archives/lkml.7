@@ -2,85 +2,157 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35579C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8043C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E48216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JE9favaL"
+	by mail.kernel.org (Postfix) with ESMTP id 7B8F3216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfFZSfU (ORCPT
+        id S1726697AbfFZSfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:35:20 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47084 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfFZSfS (ORCPT
+        Wed, 26 Jun 2019 14:35:31 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:35694 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfFZSf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:35:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=04YOcDLjot3ihaIK+O8DqmUkZ1/ZeU9r17gmohos7MI=; b=JE9favaLmIW7xwmMIJXeyJ+wxh
-        tit/6UQDt1ktt1DQKuSCV53K0rWRIhVovN8QuxRAI/HItb1tDl9Zrb/F9pJBKV5n1O0oyYM3jGXb/
-        DG64MCratex7p/P8h69Fo5+YUzvIeBo28M8TMsy9f0fGDjNw/VLNz4BCmMw2OUQGhsunbazxxvw7a
-        Ueggf1oUYsxLLMyDM4bn+TB0JekVqknnw/NoxT4pQITGWL2Mfs3y2DY/9blejIrClJv1t5cP1nXVj
-        0yoUwseIxWtOE4FJKFfeVLp7NkMPvyOgUP1/C+Q41HbAk3juTRcmyIill8MnuqOKn4zeUCXhXiZUV
-        y+PYeIwg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgClH-000123-9D; Wed, 26 Jun 2019 18:35:15 +0000
-Subject: Re: linux-next: Tree for Jun 26 (security/integrity/ima/)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-References: <20190626231617.1e858da3@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ee503bc1-a588-81f5-47e0-1762f590662f@infradead.org>
-Date:   Wed, 26 Jun 2019 11:35:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 26 Jun 2019 14:35:28 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id BAC2A9E7F55;
+        Wed, 26 Jun 2019 19:35:25 +0100 (BST)
+Date:   Wed, 26 Jun 2019 19:35:24 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH 3/5] iio: imu: adis: Add support for SPI transfer
+ cs_change_stall_delay_us
+Message-ID: <20190626193524.2bf08a14@archlinux>
+In-Reply-To: <20190625131328.11883-3-alexandru.ardelean@analog.com>
+References: <20190625131328.11883-1-alexandru.ardelean@analog.com>
+        <20190625131328.11883-3-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190626231617.1e858da3@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/26/19 6:16 AM, Stephen Rothwell wrote:
-> Hi all,
+On Tue, 25 Jun 2019 16:13:26 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> The ADIS16460 requires a higher delay before the next transfer. Since the
+> SPI framework supports configuring the delay before the next transfer, this
+> driver will become the first user of it.
 > 
-> The sparc64 builds are broken in this tree, sorry.
+> The support for this functionality in ADIS16460 requires an addition to the
+> ADIS lib to support the `cs_change_stall_delay_us` functionality in SPI.
 > 
-> Changes since 20190625:
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject to previous patch naming etc, this is fine and I'll pick it up once
+that's sorted.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/adis.c       | 9 +++++++++
+>  include/linux/iio/imu/adis.h | 2 ++
+>  2 files changed, 11 insertions(+)
 > 
+> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> index c771ae6803a9..90dac69910b3 100644
+> --- a/drivers/iio/imu/adis.c
+> +++ b/drivers/iio/imu/adis.c
+> @@ -40,28 +40,33 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		}, {
+>  			.tx_buf = adis->tx + 2,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		}, {
+>  			.tx_buf = adis->tx + 4,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		}, {
+>  			.tx_buf = adis->tx + 6,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		}, {
+>  			.tx_buf = adis->tx + 8,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		},
+>  	};
+>  
+> @@ -134,12 +139,14 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->write_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		}, {
+>  			.tx_buf = adis->tx + 2,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->read_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		}, {
+>  			.tx_buf = adis->tx + 4,
+>  			.rx_buf = adis->rx,
+> @@ -147,11 +154,13 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
+>  			.len = 2,
+>  			.cs_change = 1,
+>  			.delay_usecs = adis->data->read_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		}, {
+>  			.rx_buf = adis->rx + 2,
+>  			.bits_per_word = 8,
+>  			.len = 2,
+>  			.delay_usecs = adis->data->read_delay,
+> +			.cs_change_stall_delay_us = adis->data->cs_stall_delay,
+>  		},
+>  	};
+>  
+> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> index 469a493f7ae0..4aa248b6b3bd 100644
+> --- a/include/linux/iio/imu/adis.h
+> +++ b/include/linux/iio/imu/adis.h
+> @@ -27,6 +27,7 @@ struct adis_burst;
+>   * struct adis_data - ADIS chip variant specific data
+>   * @read_delay: SPI delay for read operations in us
+>   * @write_delay: SPI delay for write operations in us
+> + * @cs_stall_delay: SPI stall delay between transfers in us
+>   * @glob_cmd_reg: Register address of the GLOB_CMD register
+>   * @msc_ctrl_reg: Register address of the MSC_CTRL register
+>   * @diag_stat_reg: Register address of the DIAG_STAT register
+> @@ -36,6 +37,7 @@ struct adis_burst;
+>  struct adis_data {
+>  	unsigned int read_delay;
+>  	unsigned int write_delay;
+> +	unsigned int cs_stall_delay;
+>  
+>  	unsigned int glob_cmd_reg;
+>  	unsigned int msc_ctrl_reg;
 
-on x86_64:
-
-11 warnings like this one (in a randconfig build):
-
-  CC      security/integrity/ima/ima_fs.o
-In file included from ../security/integrity/ima/ima.h:25:0,
-                 from ../security/integrity/ima/ima_fs.c:26:
-../security/integrity/ima/../integrity.h:170:18: warning: ‘struct key_acl’ declared inside parameter list [enabled by default]
-           struct key_acl *acl)
-                  ^
-../security/integrity/ima/../integrity.h:170:18: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
-
-
-
--- 
-~Randy
