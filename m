@@ -2,136 +2,150 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364D7C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0D9C48BDA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7CF21783
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561572034;
-	bh=amZXky+dzy6w//rZtfTX48NyKxgLPjoPas3mxcVTbe4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GIhK5VVDxmkSYcfk0TIPBiSo9Uwq328m56aR2muOLY7HjnweCO/trD/Nyw5noz1mD
-	 IPLgN63X4qujmhZF6rQjPcVG8hCsIVAJveMC8wrwxPiH5cDPBLUw5YRy7QGtLmSnC3
-	 l3LuFZK07RNnYmGzrjABGqVhEPbWCOLHhiRhBzHs=
+	by mail.kernel.org (Postfix) with ESMTP id C1FF0208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbfFZSAc (ORCPT
+        id S1726562AbfFZSBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51152 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 14:01:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:1255 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfFZSAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:00:32 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2FC12177B;
-        Wed, 26 Jun 2019 18:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561572030;
-        bh=amZXky+dzy6w//rZtfTX48NyKxgLPjoPas3mxcVTbe4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yjWHcRlpFsV3Ts63y+nh2Wr5JEyOiV/tm3lCQSVSJrExovUYgChIQnL3RkPEkPy//
-         tRDUh7tJNyr68TWwrj1bgCY2qwIjsKCfUqYb45HxZltQOPAlWt/6Vm7V739Xajuanf
-         wfGUH0ykQmRyIrO+fVMe1WlTsvKPI8heorx98kQA=
-Date:   Wed, 26 Jun 2019 19:00:26 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     will.deacon@arm.com, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, robin.murphy@arm.com,
-        jacob.jun.pan@linux.intel.com, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, eric.auger@redhat.com
-Subject: Re: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
-Message-ID: <20190626180025.g4clm6qnbbna65de@willie-the-truck>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-5-jean-philippe.brucker@arm.com>
+        id S1726042AbfFZSBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:01:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 11:01:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
+   d="scan'208";a="164032950"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Jun 2019 11:01:22 -0700
+Date:   Wed, 26 Jun 2019 11:01:22 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH 08/25] memremap: validate the pagemap type passed to
+ devm_memremap_pages
+Message-ID: <20190626180122.GB4605@iweiny-DESK2.sc.intel.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-9-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610184714.6786-5-jean-philippe.brucker@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190626122724.13313-9-hch@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 07:47:10PM +0100, Jean-Philippe Brucker wrote:
-> At the moment, the SMMUv3 driver implements only one stage-1 or stage-2
-> page directory per device. However SMMUv3 allows more than one address
-> space for some devices, by providing multiple stage-1 page directories. In
-> addition to the Stream ID (SID), that identifies a device, we can now have
-> Substream IDs (SSID) identifying an address space. In PCIe, SID is called
-> Requester ID (RID) and SSID is called Process Address-Space ID (PASID).
+On Wed, Jun 26, 2019 at 02:27:07PM +0200, Christoph Hellwig wrote:
+> Most pgmap types are only supported when certain config options are
+> enabled.  Check for a type that is valid for the current configuration
+> before setting up the pagemap.  For this the usage of the 0 type for
+> device dax gets replaced with an explicit MEMORY_DEVICE_DEVDAX type.
 > 
-> Prepare the driver for SSID support, by adding context descriptor tables
-> in STEs (previously a single static context descriptor). A complete
-> stage-1 walk is now performed like this by the SMMU:
-> 
->       Stream tables          Ctx. tables          Page tables
->         +--------+   ,------->+-------+   ,------->+-------+
->         :        :   |        :       :   |        :       :
->         +--------+   |        +-------+   |        +-------+
->    SID->|  STE   |---'  SSID->|  CD   |---'  IOVA->|  PTE  |--> IPA
->         +--------+            +-------+            +-------+
->         :        :            :       :            :       :
->         +--------+            +-------+            +-------+
-> 
-> Implement a single level of context descriptor table for now, but as with
-> stream and page tables, an SSID can be split to index multiple levels of
-> tables.
-> 
-> In all stream table entries, we set S1DSS=SSID0 mode, making translations
-> without an SSID use context descriptor 0. Although it would be possible by
-> setting S1DSS=BYPASS, we don't currently support SSID when user selects
-> iommu.passthrough.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-I don't understand your comment here: iommu.passthrough works just as it did
-before, right, since we set bypass in the STE config field so S1DSS is not
-relevant? I also notice that SSID0 causes transactions with SSID==0 to
-abort. Is a PASID of 0 reserved, so this doesn't matter?
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-> @@ -1062,33 +1143,90 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
->  	return val;
->  }
+> ---
+>  drivers/dax/device.c     |  1 +
+>  include/linux/memremap.h |  8 ++++++++
+>  kernel/memremap.c        | 22 ++++++++++++++++++++++
+>  3 files changed, 31 insertions(+)
+> 
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index 8465d12fecba..79014baa782d 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -468,6 +468,7 @@ int dev_dax_probe(struct device *dev)
+>  	dev_dax->pgmap.ref = &dev_dax->ref;
+>  	dev_dax->pgmap.kill = dev_dax_percpu_kill;
+>  	dev_dax->pgmap.cleanup = dev_dax_percpu_exit;
+> +	dev_dax->pgmap.type = MEMORY_DEVICE_DEVDAX;
+>  	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
+>  	if (IS_ERR(addr))
+>  		return PTR_ERR(addr);
+> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+> index 995c62c5a48b..0c86f2c5ac9c 100644
+> --- a/include/linux/memremap.h
+> +++ b/include/linux/memremap.h
+> @@ -45,13 +45,21 @@ struct vmem_altmap {
+>   * wakeup is used to coordinate physical address space management (ex:
+>   * fs truncate/hole punch) vs pinned pages (ex: device dma).
+>   *
+> + * MEMORY_DEVICE_DEVDAX:
+> + * Host memory that has similar access semantics as System RAM i.e. DMA
+> + * coherent and supports page pinning. In contrast to
+> + * MEMORY_DEVICE_FS_DAX, this memory is access via a device-dax
+> + * character device.
+> + *
+>   * MEMORY_DEVICE_PCI_P2PDMA:
+>   * Device memory residing in a PCI BAR intended for use with Peer-to-Peer
+>   * transactions.
+>   */
+>  enum memory_type {
+> +	/* 0 is reserved to catch uninitialized type fields */
+>  	MEMORY_DEVICE_PRIVATE = 1,
+>  	MEMORY_DEVICE_FS_DAX,
+> +	MEMORY_DEVICE_DEVDAX,
+>  	MEMORY_DEVICE_PCI_P2PDMA,
+>  };
 >  
-> -static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
-> -				    struct arm_smmu_s1_cfg *cfg)
-> +static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-> +				   int ssid, struct arm_smmu_ctx_desc *cd)
->  {
->  	u64 val;
-> +	bool cd_live;
-> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> +	__le64 *cdptr = arm_smmu_get_cd_ptr(&smmu_domain->s1_cfg, ssid);
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index 6e1970719dc2..abda62d1e5a3 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -157,6 +157,28 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  	pgprot_t pgprot = PAGE_KERNEL;
+>  	int error, nid, is_ram;
 >  
->  	/*
-> -	 * We don't need to issue any invalidation here, as we'll invalidate
-> -	 * the STE when installing the new entry anyway.
-> +	 * This function handles the following cases:
-> +	 *
-> +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
-> +	 * (2) Install a secondary CD, for SID+SSID traffic.
-> +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
-> +	 *     CD, then invalidate the old entry and mappings.
-> +	 * (4) Remove a secondary CD.
->  	 */
-> -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
+> +	switch (pgmap->type) {
+> +	case MEMORY_DEVICE_PRIVATE:
+> +		if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
+> +			WARN(1, "Device private memory not supported\n");
+> +			return ERR_PTR(-EINVAL);
+> +		}
+> +		break;
+> +	case MEMORY_DEVICE_FS_DAX:
+> +		if (!IS_ENABLED(CONFIG_ZONE_DEVICE) ||
+> +		    IS_ENABLED(CONFIG_FS_DAX_LIMITED)) {
+> +			WARN(1, "File system DAX not supported\n");
+> +			return ERR_PTR(-EINVAL);
+> +		}
+> +		break;
+> +	case MEMORY_DEVICE_DEVDAX:
+> +	case MEMORY_DEVICE_PCI_P2PDMA:
+> +		break;
+> +	default:
+> +		WARN(1, "Invalid pgmap type %d\n", pgmap->type);
+> +		break;
+> +	}
 > +
-> +	if (!cdptr)
-> +		return -ENOMEM;
-> +
-> +	val = le64_to_cpu(cdptr[0]);
-> +	cd_live = !!(val & CTXDESC_CD_0_V);
-> +
-> +	if (!cd) { /* (4) */
-> +		cdptr[0] = 0;
-
-Should we be using WRITE_ONCE here? (although I notice we don't seem to
-bother for STEs either...)
-
-Will
+>  	if (!pgmap->ref || !pgmap->kill || !pgmap->cleanup) {
+>  		WARN(1, "Missing reference count teardown definition\n");
+>  		return ERR_PTR(-EINVAL);
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Linux-nvdimm mailing list
+> Linux-nvdimm@lists.01.org
+> https://lists.01.org/mailman/listinfo/linux-nvdimm
