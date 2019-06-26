@@ -2,124 +2,372 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9904EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8CBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742A220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7020204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GOqCrVY6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xnb2xHQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfFZIuP (ORCPT
+        id S1726716AbfFZI4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:50:15 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:40516 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbfFZIuO (ORCPT
+        Wed, 26 Jun 2019 04:56:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42221 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFZI4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:50:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MnbGZyeauwdtRRBuDtpt/nX8iYBnfXaGwgsVnSG6ZVU=; b=GOqCrVY6cjwTuGPiLLiJipoUG
-        x3EFIWHaOUGlDmQy/q6crK2iTtlDI6meLjoeZvQldxzMTHSDApQbrHmi5s33SJVFR0XtY2po/qWLX
-        XBEZJ81BHQ0W8nsYGzgZJDaWASFzBM2iphuH8H1xKVMfPFuQyXoywBJoKTwXTYKwoPSrIcEMpx5O9
-        Tz2cyvXNwTRbL9UjmJtokdq9klvyZThRw4PVYB2rYzyaY35tEaNfqKWUPdyjR0iOSb3NP5N4irZV6
-        w4Op+Re7s4ahGmKtQf3jI6KYZyr8zfv9jtktAxF0tomRPJ0z8HkkhkPXJo392h0+8jt3BglCZ7g2l
-        Pea/4kuhQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg3cR-0005gU-Cv; Wed, 26 Jun 2019 08:49:31 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 702E5209CEE63; Wed, 26 Jun 2019 10:49:27 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 10:49:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Shawn Landden <shawn@git.icu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Chandler Carruth <chandlerc@google.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-Message-ID: <20190626084927.GI3419@hirez.programming.kicks-ass.net>
-References: <20190624161913.GA32270@embeddedor>
- <20190624193123.GI3436@hirez.programming.kicks-ass.net>
- <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net>
- <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net>
- <CANiq72=zzZ+Cx8uM+5UW7HeB9XtbXRhXmC2y2tz5EzPX77gHMw@mail.gmail.com>
- <CAKwvOdn5j8Hkc_jrLMbhg-4jbNya+agtMJi=c9o01RPCno1Q+w@mail.gmail.com>
+        Wed, 26 Jun 2019 04:56:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so987232pff.9;
+        Wed, 26 Jun 2019 01:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=Q8ca+vruqU+IqZ3SbIbtiESWjiaIBTLl933ro8ZdJw0=;
+        b=Xnb2xHQubYq85R3eL23tYq7TcAQH4r/T0iHYuHWFsrjBeV/gov5Wrn8EWUCMJjzuS9
+         +frB/V7EZhArioE2Nz2E+wRMT8mWPcpwpRm50Zd9AoLHqtgpWUMSHCBPMMl5cMqy4Ebg
+         Ry5eXuZCHOlXZB2dD9zCoEz1u3BNdsvh2YvGa564eHfWRJJjQ0iqa3s9iX7uc8LdOTCM
+         Hv1RBR0npVnCfiLczK5LXLxZoOS1k5gh113X9GlQlNrV+0bdX9LdKb6q6JU/3vZUyFTG
+         YD3fDWStvEBkpw47yrDleXU54bZFADwMztsTVvXvDdoM0REXmTgsbCvi2fzRWmdwncnr
+         y2pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=Q8ca+vruqU+IqZ3SbIbtiESWjiaIBTLl933ro8ZdJw0=;
+        b=PH17GFswWU9DglKsSwG57ZG58fhJCLBOwlDvnEeEwPAxEVcGuwt3hZ7iV2fnICsDko
+         vA95jeq459a8N9IgI2pwTy7ZwFjr7E4EQ6WUsNxJQm+rtudFFsDNZ4KaZA8ypjx6wq2X
+         gLUgWjkz1vmFPgjYFhmLwv6kFC37yADyUmWdGk2eopyQ/nMSR7SUAMPSS2eaV6dQB6S9
+         9XcvfFu1wLtIRSOygZJCozqguZcXvUZoeKQyCjqumOLtJR3ONkttHrUOzc9jb8PR26kR
+         qqF9d/64FYZHX27gIkkSuQopn8rbfeznGxWBP14hFdOCv4VIEdH8nZujXXM3uaQzbVHA
+         ZQuQ==
+X-Gm-Message-State: APjAAAVZVLfKdyUWd7RLojwNlMhmEyTXgR/F/Nf873cg/U+Ys5242U7Y
+        RtSEjVWVgrsllY9TmJmqcz0=
+X-Google-Smtp-Source: APXvYqxoM3Zp1wW+1G88x/FYQQFMfvh++ZD4QgtQaFtqb+72pwYLiDev+WgABndeGFWTDG5hZ+iubQ==
+X-Received: by 2002:a17:90a:290b:: with SMTP id g11mr3408583pjd.122.1561539410927;
+        Wed, 26 Jun 2019 01:56:50 -0700 (PDT)
+Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
+        by smtp.gmail.com with ESMTPSA id n1sm14799954pgv.15.2019.06.26.01.56.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 01:56:49 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "kishon@ti.com" <kishon@ti.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH V9 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
+Thread-Topic: [PATCH V9 2/3] PCI: dwc: Cleanup DBI,ATU read and write APIs
+Thread-Index: AXN2MDgwOgOxjCFXb0E7BOTT18TfsnN2MDgwv8/oMr4=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Wed, 26 Jun 2019 08:56:44 +0000
+Message-ID: <PSXP216MB0662372E45E6B4961531B299AAE20@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
+References: <20190625092238.13207-1-vidyas@nvidia.com>
+ <20190625092238.13207-2-vidyas@nvidia.com>
+In-Reply-To: <20190625092238.13207-2-vidyas@nvidia.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdn5j8Hkc_jrLMbhg-4jbNya+agtMJi=c9o01RPCno1Q+w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:15:57AM -0700, Nick Desaulniers wrote:
+On 6/25/19, 6:22 PM, Vidya Sagar wrote:
+>
+> Cleanup DBI read and write APIs by removing "__" (underscore) from their
+> names as there are no no-underscore versions and the underscore versions
+> are already doing what no-underscore versions typically do. It also remov=
+es
+> passing dbi/dbi2 base address as one of the arguments as the same can be
+> derived with in read and write APIs. Since dw_pcie_{readl/writel}_dbi()
+> APIs can't be used for ATU read/write as ATU base address could be
+> different from DBI base address, this patch attempts to implement
+> ATU read/write APIs using ATU base address without using
+> dw_pcie_{readl/writel}_dbi() APIs.
+>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-> Unreleased versions of Clang built from source can;
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 
-I've bad experiences with using unreleased compilers; life is too short.
+Best regards,
+Jingoo Han
 
-> We're currently planning multiple output constraint support w/ asm
-> goto, and have recently implemented things like
-> __GCC_ASM_FLAG_OUTPUTS__.
+> ---
+> Changes from v8:
+> * Removed exporting dw_pcie_{read/write}_atu() APIs
+>
+> Changes from v7:
+> * Based on suggestion from Jingoo Han, moved implementation of readl, wri=
+tel for ATU
+>   region to separate APIs dw_pcie_{read/write}_atu() in pcie-designware.c=
+ file and
+>   calling them from pcie-designware.h file.
+>
+> Changes from v6:
+> * Modified ATU read/write APIs to use implementation specific DBI read/wr=
+ite
+>   APIs if present.
+>
+> Changes from v5:
+> * Removed passing base address as one of the arguments as the same can be=
+ derived within
+>   the API itself.
+> * Modified ATU read/write APIs to call dw_pcie_{write/read}() API
+>
+> Changes from v4:
+> * This is a new patch in this series
+>
+>  drivers/pci/controller/dwc/pcie-designware.c | 57 ++++++++++++++------
+>  drivers/pci/controller/dwc/pcie-designware.h | 34 ++++++------
+>  2 files changed, 57 insertions(+), 34 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/c=
+ontroller/dwc/pcie-designware.c
+> index 9d7c51c32b3b..c2843ea1d1e8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -52,68 +52,93 @@ int dw_pcie_write(void __iomem *addr, int size, u32 v=
+al)
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+> =20
+> -u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -		       size_t size)
+> +u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
+>  {
+>  	int ret;
+>  	u32 val;
+> =20
+>  	if (pci->ops->read_dbi)
+> -		return pci->ops->read_dbi(pci, base, reg, size);
+> +		return pci->ops->read_dbi(pci, pci->dbi_base, reg, size);
+> =20
+> -	ret =3D dw_pcie_read(base + reg, size, &val);
+> +	ret =3D dw_pcie_read(pci->dbi_base + reg, size, &val);
+>  	if (ret)
+>  		dev_err(pci->dev, "Read DBI address failed\n");
+> =20
+>  	return val;
+>  }
+> =20
+> -void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 re=
+g,
+> -			 size_t size, u32 val)
+> +void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 va=
+l)
+>  {
+>  	int ret;
+> =20
+>  	if (pci->ops->write_dbi) {
+> -		pci->ops->write_dbi(pci, base, reg, size, val);
+> +		pci->ops->write_dbi(pci, pci->dbi_base, reg, size, val);
+>  		return;
+>  	}
+> =20
+> -	ret =3D dw_pcie_write(base + reg, size, val);
+> +	ret =3D dw_pcie_write(pci->dbi_base + reg, size, val);
+>  	if (ret)
+>  		dev_err(pci->dev, "Write DBI address failed\n");
+>  }
+> =20
+> -u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg=
+,
+> -			size_t size)
+> +u32 dw_pcie_read_dbi2(struct dw_pcie *pci, u32 reg, size_t size)
+>  {
+>  	int ret;
+>  	u32 val;
+> =20
+>  	if (pci->ops->read_dbi2)
+> -		return pci->ops->read_dbi2(pci, base, reg, size);
+> +		return pci->ops->read_dbi2(pci, pci->dbi_base2, reg, size);
+> =20
+> -	ret =3D dw_pcie_read(base + reg, size, &val);
+> +	ret =3D dw_pcie_read(pci->dbi_base2 + reg, size, &val);
+>  	if (ret)
+>  		dev_err(pci->dev, "read DBI address failed\n");
+> =20
+>  	return val;
+>  }
+> =20
+> -void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 r=
+eg,
+> -			  size_t size, u32 val)
+> +void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 v=
+al)
+>  {
+>  	int ret;
+> =20
+>  	if (pci->ops->write_dbi2) {
+> -		pci->ops->write_dbi2(pci, base, reg, size, val);
+> +		pci->ops->write_dbi2(pci, pci->dbi_base2, reg, size, val);
+>  		return;
+>  	}
+> =20
+> -	ret =3D dw_pcie_write(base + reg, size, val);
+> +	ret =3D dw_pcie_write(pci->dbi_base2 + reg, size, val);
+>  	if (ret)
+>  		dev_err(pci->dev, "write DBI address failed\n");
+>  }
+> =20
+> +u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	if (pci->ops->read_dbi)
+> +		return pci->ops->read_dbi(pci, pci->atu_base, reg, size);
+> +
+> +	ret =3D dw_pcie_read(pci->atu_base + reg, size, &val);
+> +	if (ret)
+> +		dev_err(pci->dev, "Read ATU address failed\n");
+> +
+> +	return val;
+> +}
+> +
+> +void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 va=
+l)
+> +{
+> +	int ret;
+> +
+> +	if (pci->ops->write_dbi) {
+> +		pci->ops->write_dbi(pci, pci->atu_base, reg, size, val);
+> +		return;
+> +	}
+> +
+> +	ret =3D dw_pcie_write(pci->atu_base + reg, size, val);
+> +	if (ret)
+> +		dev_err(pci->dev, "Write ATU address failed\n");
+> +}
+> +
+>  static u32 dw_pcie_readl_ob_unroll(struct dw_pcie *pci, u32 index, u32 r=
+eg)
+>  {
+>  	u32 offset =3D PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/c=
+ontroller/dwc/pcie-designware.h
+> index 14762e262758..ffed084a0b4f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -254,14 +254,12 @@ struct dw_pcie {
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> =20
+> -u32 __dw_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base, u32 reg,
+> -		       size_t size);
+> -void __dw_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base, u32 re=
+g,
+> -			 size_t size, u32 val);
+> -u32 __dw_pcie_read_dbi2(struct dw_pcie *pci, void __iomem *base, u32 reg=
+,
+> -			size_t size);
+> -void __dw_pcie_write_dbi2(struct dw_pcie *pci, void __iomem *base, u32 r=
+eg,
+> -			  size_t size, u32 val);
+> +u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size);
+> +void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 va=
+l);
+> +u32 dw_pcie_read_dbi2(struct dw_pcie *pci, u32 reg, size_t size);
+> +void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 v=
+al);
+> +u32 dw_pcie_read_atu(struct dw_pcie *pci, u32 reg, size_t size);
+> +void dw_pcie_write_atu(struct dw_pcie *pci, u32 reg, size_t size, u32 va=
+l);
+>  int dw_pcie_link_up(struct dw_pcie *pci);
+>  int dw_pcie_wait_for_link(struct dw_pcie *pci);
+>  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+> @@ -275,52 +273,52 @@ void dw_pcie_setup(struct dw_pcie *pci);
+> =20
+>  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 =
+val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x4, val);
+> +	dw_pcie_write_dbi(pci, reg, 0x4, val);
+>  }
+> =20
+>  static inline u32 dw_pcie_readl_dbi(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x4);
+> +	return dw_pcie_read_dbi(pci, reg, 0x4);
+>  }
+> =20
+>  static inline void dw_pcie_writew_dbi(struct dw_pcie *pci, u32 reg, u16 =
+val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x2, val);
+> +	dw_pcie_write_dbi(pci, reg, 0x2, val);
+>  }
+> =20
+>  static inline u16 dw_pcie_readw_dbi(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x2);
+> +	return dw_pcie_read_dbi(pci, reg, 0x2);
+>  }
+> =20
+>  static inline void dw_pcie_writeb_dbi(struct dw_pcie *pci, u32 reg, u8 v=
+al)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->dbi_base, reg, 0x1, val);
+> +	dw_pcie_write_dbi(pci, reg, 0x1, val);
+>  }
+> =20
+>  static inline u8 dw_pcie_readb_dbi(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->dbi_base, reg, 0x1);
+> +	return dw_pcie_read_dbi(pci, reg, 0x1);
+>  }
+> =20
+>  static inline void dw_pcie_writel_dbi2(struct dw_pcie *pci, u32 reg, u32=
+ val)
+>  {
+> -	__dw_pcie_write_dbi2(pci, pci->dbi_base2, reg, 0x4, val);
+> +	dw_pcie_write_dbi2(pci, reg, 0x4, val);
+>  }
+> =20
+>  static inline u32 dw_pcie_readl_dbi2(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi2(pci, pci->dbi_base2, reg, 0x4);
+> +	return dw_pcie_read_dbi2(pci, reg, 0x4);
+>  }
+> =20
+>  static inline void dw_pcie_writel_atu(struct dw_pcie *pci, u32 reg, u32 =
+val)
+>  {
+> -	__dw_pcie_write_dbi(pci, pci->atu_base, reg, 0x4, val);
+> +	dw_pcie_write_atu(pci, reg, 0x4, val);
+>  }
+> =20
+>  static inline u32 dw_pcie_readl_atu(struct dw_pcie *pci, u32 reg)
+>  {
+> -	return __dw_pcie_read_dbi(pci, pci->atu_base, reg, 0x4);
+> +	return dw_pcie_read_atu(pci, reg, 0x4);
+>  }
+> =20
+>  static inline void dw_pcie_dbi_ro_wr_en(struct dw_pcie *pci)
+> --=20
+> 2.17.1
 
-That's good to hear.
-
-> If there's other features that we should
-> start implementing, please let us know.
-
-If you've got any ideas on how to make this:
-
-  https://lkml.kernel.org/r/20190621120923.GT3463@hirez.programming.kicks-ass.net
-
-work, that'd be nice. Basically I wanted the asm goto to emit a 2 or 5
-byte JMP/NOP depending on the displacement size. We can trivially get
-JMP right by using:
-
-	jmp \l_yes
-
-and letting the assembler sort it, but getting the NOP right has so far
-eluded me:
-
-.if \l_yes - (. + 2) < 127
-	.byte 0x66, 0x90
-.else
-	.byte STATIC_KEY_INIT_NOP
-.endif
-
-doesn't work. We can ofcourse unconditionally emit the JMP and then
-rewrite the binary afterward, and replace the emitted jumps with the
-right size NOP, but that's a bit yuck.
-
-Once it emits the variable size instruction consistently, we can update
-the patching side to use the same condition to select the new
-instruction (and fix objtool).
