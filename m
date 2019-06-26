@@ -2,96 +2,120 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3A0C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981DBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D969720663
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:15:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561547713;
-	bh=QYAj5A5FpDXBPVQV8B1W7SDHpFYvv3+jE8YYAowYHa0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xZ9PmviNGsG/6T7XuIdzXPt6Klu4YoJxIhe5zgtXRhPN3a7e4uMe/rCr3dJlqNxH7
-	 WiBII+HhzyUO/YCksqjmqI3Tw9j9ZJdMsbywGnGPoYnCDcHaoyWBpzzibE0fhLBNux
-	 5kaZRIScA7LySuXy+rcVK/5GCmf3arFWLfHOuGro=
+	by mail.kernel.org (Postfix) with ESMTP id 7212920663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfFZLPL (ORCPT
+        id S1727218AbfFZLQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:15:11 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51624 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfFZLPL (ORCPT
+        Wed, 26 Jun 2019 07:16:20 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34736 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFZLQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:15:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hCsFlXTmKIL5pbPF4lr3Dore+Wo+pEJWPvtSxDXBTMI=; b=TpPOXRwDyEDONpsXQa+v9AbLk
-        qbyaMP/0I+qXgJwOfbCBrT1SnyzV5HZSRihDw5ZA1GH2Xlu1AbGOTnWqZRnwZYvzdPpYtqvo9U0lW
-        wvELymQG3dNryhBAzwCZHsHoUTBLaGp+rHCXD+FnBROuU3AjBT8inns/uKlqmo9W2wr7w=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hg5tN-0007mE-59; Wed, 26 Jun 2019 11:15:09 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id A4FA6440046; Wed, 26 Jun 2019 12:15:08 +0100 (BST)
-Date:   Wed, 26 Jun 2019 12:15:08 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [RFC][PATCH] regmap: Drop CONFIG_64BIT checks from core
-Message-ID: <20190626111508.GA5316@sirena.org.uk>
-References: <20190625233116.2889-1-marex@denx.de>
+        Wed, 26 Jun 2019 07:16:20 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n5so315443otk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 04:16:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+oUsCfiwRANQZCtoGbfBH6uCohdW7HJeSi/lsFWf0E0=;
+        b=fS56MueZwVxIzV2UYq1fF8UjT52D7SnwV4uDNWw0Wm+giZPeZpYldHLJvE9JifjGu9
+         2N61+udiTRREipDphZWlT1T53OhIaOvkeugJNDY3j9WWpBKFCt9BLPkzV0G01DE10ERZ
+         hhiRPKAbENzMmJazlQf84/VTsnrusYrpSF2E+B4nTb6rnSN6GD0EKxwvfR4Wvk2wO9CD
+         M4wRky2XzYoq0QbahV9EZtp1M5Skmvb57U8n8WRuXtQUOAKFpBvEoJoeSKNFWMtGa2i9
+         uGoLemXi3jnLkv2TjYaVt6zyJGq037Km8HOvS8QTs2uYgrnX5HLoMz6EJJzeCakFuOyL
+         Dyag==
+X-Gm-Message-State: APjAAAWFwBAEJottQUBOAgDJqQlL4f+woyw45wZDi8l/J5Qar1X3GDED
+        WsfvtVlBducuydKdHi9a8VNWqAKtHTCeROfYUNbWjA==
+X-Google-Smtp-Source: APXvYqz75HUBVj9WdgyDb9x38SdmsS3/BxiDHe7/zH9MTMUgcYrAo9lziykUzYZO/O1Zx5o7x7iz2eduDibHF1dBtH8=
+X-Received: by 2002:a9d:529:: with SMTP id 38mr2852025otw.145.1561547779905;
+ Wed, 26 Jun 2019 04:16:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HrSaiTVTrTHIlYwZ"
-Content-Disposition: inline
-In-Reply-To: <20190625233116.2889-1-marex@denx.de>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190417115350.20479-1-pmladek@suse.com> <20190417115350.20479-8-pmladek@suse.com>
+ <CAMuHMdVX+2tRjCabqVNR9HcnWE+EU0bR55KAW9bbD=GBEoE-=w@mail.gmail.com> <20190626104633.arpobvevpxnkrt5k@pathway.suse.cz>
+In-Reply-To: <20190626104633.arpobvevpxnkrt5k@pathway.suse.cz>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 26 Jun 2019 13:16:08 +0200
+Message-ID: <CAMuHMdW6wD0G1Nzf_0T+G8rBmUNwM-C2LdL=QdS=7hLd0DUCGA@mail.gmail.com>
+Subject: Re: [PATCH v7 07/10] vsprintf: Consolidate handling of unknown
+ pointer specifiers
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Petr,
 
---HrSaiTVTrTHIlYwZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Jun 26, 2019 at 12:46 PM Petr Mladek <pmladek@suse.com> wrote:
+> On Tue 2019-06-25 12:59:57, Geert Uytterhoeven wrote:
+> > On Wed, Apr 17, 2019 at 1:56 PM Petr Mladek <pmladek@suse.com> wrote:
+> > > There are few printk formats that make sense only with two or more
+> > > specifiers. Also some specifiers make sense only when a kernel feature
+> > > is enabled.
+> > >
+> > > The handling of unknown specifiers is inconsistent and not helpful.
+> > > Using WARN() looks like an overkill for this type of error. pr_warn()
+> > > is not good either. It would by handled via printk_safe buffer and
+> > > it might be hard to match it with the problematic string.
+> > >
+> > > A reasonable compromise seems to be writing the unknown format specifier
+> > > into the original string with a question mark, for example (%pC?).
+> > > It should be self-explaining enough. Note that it is in brackets
+> > > to follow the (null) style.
+> > >
+> > > Note that it introduces a warning about that test_hashed() function
+> > > is unused. It is going to be used again by a later patch.
+> > >
+> > > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> >
+> > > --- a/lib/vsprintf.c
+> > > +++ b/lib/vsprintf.c
+> > > @@ -1706,7 +1712,7 @@ char *clock(char *buf, char *end, struct clk *clk, struct printf_spec spec,
+> > >  #ifdef CONFIG_COMMON_CLK
+> > >                 return string(buf, end, __clk_get_name(clk), spec);
+> > >  #else
+> > > -               return ptr_to_id(buf, end, clk, spec);
+> > > +               return string_nocheck(buf, end, "(%pC?)", spec);
+> >
+> > What's the reason behind this change? This is not an error case,
+> > but for printing the clock pointer as a distinguishable ID when using
+> > the legacy clock framework, which does not store names with clocks.
+>
+> You are right. We should put back ptr_to_id() there.
 
-On Wed, Jun 26, 2019 at 01:31:16AM +0200, Marek Vasut wrote:
-> Drop the CONFIG_64BIT checks from core regmap code, as it is well
-> possible to access e.g. an SPI device with 64bit registers from a
-> 32bit CPU. The CONFIG_64BIT checks are still left in place in the
-> regmap mmio code however.
+Thanks for the confirmation!
 
-The issue with 8 bit registers was that we use unsigned long for
-addresses and values and a 64 bit value won't fit in those on a 32 bit
-system.  Some of the bulk APIs will work but things like individual
-register writes and the caches will have problems.
+> Would you like to send a patch?
 
---HrSaiTVTrTHIlYwZ
-Content-Type: application/pgp-signature; name="signature.asc"
+Sure, will do.
 
------BEGIN PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0TU7sACgkQJNaLcl1U
-h9DUbQf+KeXw2w35Ww7MW8vMYn5FgPDcYmnIsgBoo/fBgtNO9/u/88a7TdT75f1u
-Y1yeW/frswYuHdEkjHABpXJOo1MGH3SNNBgPp1FkAVlkS6voxYs4ApoklPi6A+FD
-uACxuhDjoTO5Rbw/44dLKsqJSR+YJiT0R/aSGA2qwFGlV/Y6G9w2KAcdJTkPFPTj
-Q7gWi8/zrEr5fVl/+bS6mD4n20tMN+9gcjUWcW+hDnggt9lXduIfS8te2CLhIg1n
-gEiWDBenZp0bt+zziUYqoPBqXDNBPsYwj8lKg/wMDu42WCR7l9h0FqDw+PcAZGLQ
-DymTVkk2yqco1s2uJP7Zi81QT2tHhg==
-=OBmU
------END PGP SIGNATURE-----
+                        Geert
 
---HrSaiTVTrTHIlYwZ--
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
