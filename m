@@ -2,136 +2,126 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35474C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15B4C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6672085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7744D2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:51:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLE5440H"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="AZdX9lcI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfFZNvI (ORCPT
+        id S1728020AbfFZNve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:51:08 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40164 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbfFZNvF (ORCPT
+        Wed, 26 Jun 2019 09:51:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33398 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727641AbfFZNvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:51:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id n5so1787957ioc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:51:04 -0700 (PDT)
+        Wed, 26 Jun 2019 09:51:33 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n9so2876125wru.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qhiniuMba/JWZz4DtFdVyzygq/a6ifqx5axR5It0RV0=;
-        b=dLE5440HlC3TTuDBSwEG78wHGjrHRqtO5Eko0Iz+zvSod51w0BiJ3Rmo/9TSrfqlfX
-         L14L00JtFnYMz6Sqc11zCuvdgYAQc2oka2/2ApEb1wCtJao0yiiCROnCmzNRqXhtDx/2
-         ACB8KAp3R2LJcPov5FkXzqBWnzBgcSL1+Cb5SEzUp2F1DHc3fmbEexu4WpZys9PqNIFJ
-         RvpplLPDwvQb/wmJsaTiX1xZcx23HwvjLzRi2PpzhijQ/3SHMTMNh1Sb9AwDd6JTk1nj
-         d3v7u3rGQ4cjlLm1S6QSGPgf+uLZCTSSm/JArvuSgbUA9nyVj2AvTHIl+1YIJJl8RiOA
-         a8eg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=lQ+kH+8OcyY0c8JYG72kvfeQsmfca58t7L4uorcaVGM=;
+        b=AZdX9lcI5pjztVWxh656eaPnCtDHPZIem9X1kHLHfQTwUBsdYtK5oOQI27PKLVQBAG
+         tGieFaS3NaXfIKUVngX/yG7F/MsF1abmxcDVGjGl8LtqM4Ft4xNanGFiOHur+L4fMzni
+         4SIBrex/1DpF4X2ieQFR18ORpZDkUZZ4/jJG51g1n8a2DCXWxXWBNEUO445g+xvQxG3r
+         ZYGKpOSi3j251UPTv+4v3y99LtOniPLV79FBnhV0kgk+vLzFe/lBc68p0GIGg+MC3MDK
+         /Yi0ArFLRfUh9HOjNNsOgtueVIVs3NDhdJ2k97FNPxB1vvF8xcCGiI8tD9XmwbeSlfTc
+         coYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qhiniuMba/JWZz4DtFdVyzygq/a6ifqx5axR5It0RV0=;
-        b=SzBcBR4EPz4LcwPq/tlJCR/ZmDPBmDIBY/3xNMIclwprZAWydXNG4rHZ+G2UpOT2uJ
-         JggcExhslJgw1Mg32lPgxwtDmMYonVqzK8dgjx4bpjkCQEa1k9CcEIa7Ti5pQmEptwKC
-         ExySl+8Iu7+F2i6dRWy2tfUOs3KCz/vFTkEwbAXcFREEPjAVhfQCTWmiH8/hA1ofFpMM
-         ngRx5HPdU+fMKLNeKn5CXuGtanIPW/nN8EGtuGd/gMaT6N3woTvR0jauXFZbQNZERleY
-         pGKTqx1JGfG/amjF2D7ORlNfTGuXSegKUDbCzoFtgvATjw4OfMUVJk6naTV47uGpuoK/
-         An9A==
-X-Gm-Message-State: APjAAAVvauZRns4vCIzFi/fMkt9iUAtEb7AbFX04apxk8BEM5rp9hFTd
-        sqhvorSH4rux7z5vY3XZZD1cXA==
-X-Google-Smtp-Source: APXvYqxnbvSw1FOj/CRECKm1NLwNrHD2AF6HsUr3uwNyBiLIRP0SF418WWmgo0Oqg5IvVF9PpTRmsw==
-X-Received: by 2002:a02:b68f:: with SMTP id i15mr4922765jam.107.1561557064470;
-        Wed, 26 Jun 2019 06:51:04 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id e22sm25713339iob.66.2019.06.26.06.51.03
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=lQ+kH+8OcyY0c8JYG72kvfeQsmfca58t7L4uorcaVGM=;
+        b=mO1FwS43FftOBizBz60Sq6RnPUhZjddA2K9tHncKzryIYOXcCQI3Lx7wmtWO2enw/w
+         mAEEnMaV2z9uImfRamYPGnnFTpoY8uhfxR6RkBK23WclmHiVp8NJVvxA62s7AQ6pRCM9
+         NbuhiPN67BlZe9IjkHKW+WFuttVkZg1IyPAl0qyApd7mysMgxms/5y24jN9T8SCJAwK9
+         D2tH7X+4IKxI1511KM3sxJo8kFOZCaoYizxzVm8McP1DViluslmVQ8hhfWbVLdFEeTk8
+         7YzqzNy82iiCEn9eHuQSk56cLsADFUnQMuTxQDUzNsB8BbDDk+OPugpgmFhrpA1pnokp
+         l1Cg==
+X-Gm-Message-State: APjAAAVhtGzwA8vu//jHATK4kFWUePxpMQIdvvCAKkuMqUqGVlqPVNcZ
+        WCbvFhGxHp58wAbnTWaeiyPcFw==
+X-Google-Smtp-Source: APXvYqyBmr+Lzsm4/mh9XTKT8ZZbwyUyCiiwkdjHz6yVHf2At2LeK/udBwT33alRB5RzAif+CCgxqA==
+X-Received: by 2002:adf:d081:: with SMTP id y1mr4067653wrh.34.1561557091538;
+        Wed, 26 Jun 2019 06:51:31 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id h21sm2991135wmb.47.2019.06.26.06.51.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 06:51:03 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dcbw@redhat.com>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
- <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
- <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
- <db34aa39-6cf1-4844-1bfe-528e391c3729@linaro.org>
- <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <2d40bbcc-1d29-3aa7-e8cb-b0bc5835b8dc@linaro.org>
-Date:   Wed, 26 Jun 2019 08:51:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 06:51:30 -0700 (PDT)
+Message-ID: <5d137862.1c69fb81.609f3.fa81@mx.google.com>
+Date:   Wed, 26 Jun 2019 06:51:30 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1ixL9ZjYz=pWTxvMfeD89S6QxSeHt9ZCL9dkCNV5pMHQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.14.130-2-g2f84eb215456
+X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190626083606.248422423@linuxfoundation.org>
+References: <20190626083606.248422423@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 0/1] 4.14.131-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 11:40 AM, Arnd Bergmann wrote:
-> On Mon, Jun 24, 2019 at 6:21 PM Alex Elder <elder@linaro.org> wrote:
->> On 6/18/19 2:03 PM, Johannes Berg wrote:
->>
->>> Really there are two possible ways (and they intersect to some extent).
+stable-rc/linux-4.14.y boot: 129 boots: 2 failed, 127 passed (v4.14.130-2-g=
+2f84eb215456)
 
-. . .
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.130-2-g2f84eb215456/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.130-2-g2f84eb215456/
 
->>> The other is something like IPA or the Intel modem driver, where the
->>> device is actually a single (e.g. PCIe) device and just has a single
->>> driver, but that single driver offers different channels.
->>
->> What I don't like about this is that it's more monolithic.  It
->> seems better to have the low-level IPA or Intel modem driver (or
->> any other driver that can support communication between the AP
->> and WWAN device) present communication paths that other function-
->> specific drivers can attach to and use.
-> 
-> I did not understand Johannes description as two competing models
-> for the same code, but rather two kinds of existing hardware that
-> a new driver system would have to deal with.
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.130-2-g2f84eb215456
+Git Commit: 2f84eb215456bfd772fc0d9efc8446a66a3faa1b
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 68 unique boards, 24 SoC families, 15 builds out of 201
 
-Based on my understanding of what he said in a message I just
-responded to, I think you are exactly right.
+Boot Regressions Detected:
 
-. . .
+arm:
 
-> What we should try to avoid though is a way to add driver private
-> interfaces that risk having multiple drivers create similar functionality
-> in incompatible ways.
+    multi_v7_defconfig:
+        gcc-8:
+          sun7i-a20-bananapi:
+              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
+29-52-g57f3c9aebc30 - first fail: v4.14.130)
 
-Agreed.
+    sunxi_defconfig:
+        gcc-8:
+          sun7i-a20-bananapi:
+              lab-baylibre-seattle: failing since 1 day (last pass: v4.14.1=
+29-52-g57f3c9aebc30 - first fail: v4.14.130)
 
-					-Alex
+Boot Failures Detected:
+
+arm:
+    sunxi_defconfig:
+        gcc-8:
+            sun7i-a20-bananapi: 1 failed lab
+
+    multi_v7_defconfig:
+        gcc-8:
+            sun7i-a20-bananapi: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
