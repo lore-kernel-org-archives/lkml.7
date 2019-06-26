@@ -2,81 +2,134 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CDDC48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7E7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724552084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB64D2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfFZQVu (ORCPT
+        id S1726385AbfFZQXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:21:50 -0400
-Received: from fieldses.org ([173.255.197.46]:35062 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfFZQVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:21:49 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 597E3C56; Wed, 26 Jun 2019 12:21:49 -0400 (EDT)
-Date:   Wed, 26 Jun 2019 12:21:49 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
-Message-ID: <20190626162149.GB4144@fieldses.org>
-References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
- <1561042275-12723-9-git-send-email-bfields@redhat.com>
- <20190621174544.GC25590@fieldses.org>
- <201906211431.E6552108@keescook>
- <20190622190058.GD5343@fieldses.org>
- <201906221320.5BFC134713@keescook>
- <20190624210512.GA20331@fieldses.org>
+        Wed, 26 Jun 2019 12:23:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37948 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZQXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:23:45 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 155F72753CB;
+        Wed, 26 Jun 2019 17:23:43 +0100 (BST)
+Date:   Wed, 26 Jun 2019 18:23:39 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     <bbrezillon@kernel.org>, <matthias.bgg@gmail.com>,
+        <linux-i3c@lists.infradead.org>, <gregkh@linuxfoundation.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
+        <liguo.zhang@mediatek.com>, <xinping.qian@mediatek.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Document MediaTek I3C master
+ bindings
+Message-ID: <20190626182339.0c6301a2@collabora.com>
+In-Reply-To: <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+References: <1561527388-4829-1-git-send-email-qii.wang@mediatek.com>
+        <1561527388-4829-2-git-send-email-qii.wang@mediatek.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190624210512.GA20331@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 05:05:12PM -0400, J. Bruce Fields wrote:
-> On Sat, Jun 22, 2019 at 01:22:56PM -0700, Kees Cook wrote:
-> > On Sat, Jun 22, 2019 at 03:00:58PM -0400, J. Bruce Fields wrote:
-> > > The logic around ESCAPE_NP and the "only" string is really confusing.  I
-> > > started assuming I could just add an ESCAPE_NONASCII flag and stick "
-> > > and \ into the "only" string, but it doesn't work that way.
-> > 
-> > Yeah, if ESCAPE_NP isn't specified, the "only" characters are passed
-> > through. It'd be nice to have an "add" or a clearer way to do actual
-> > ctype subsets, etc. If there isn't an obviously clear way to refactor
-> > it, just skip it for now and I'm happy to ack your original patch. :)
+On Wed, 26 Jun 2019 13:36:27 +0800
+Qii Wang <qii.wang@mediatek.com> wrote:
+
+> Document MediaTek I3C master DT bindings.
 > 
-> There may well be some simplification possible here....  There aren't
-> really many users of "only", for example.  I'll look into it some more.
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> ---
+>  .../devicetree/bindings/i3c/mtk,i3c-master.txt     |   47 ++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> new file mode 100644
+> index 0000000..3fd4f17
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/mtk,i3c-master.txt
+> @@ -0,0 +1,47 @@
+> +Bindings for MediaTek I3C master block
+> +=====================================
+> +
+> +Required properties:
+> +--------------------
+> +- compatible: shall be "mediatek,i3c-master"
+> +- reg: physical base address of the controller and apdma base, length of
+> +  memory mapped region.
+> +- reg-names: should be "main" for controller and "dma" for apdma.
+> +- interrupts: interrupt number to the cpu.
 
-The printk users are kind of mysterious to me.  I did a grep for
+Depending on the interrupt controller, each interrupt cell might
+contain more than just the interrupt number.
 
-	git grep '%[0-9.*]pE'
+> +- clocks: clock name from clock manager.
 
-which got 75 hits.  All of them for pE.  I couldn't find any of the
-other pE[achnops] variants.  pE is equivalent to ESCAPE_ANY|ESCAPE_NP.
-Confusingly, ESCAPE_NP doesn't mean "escape non-printable", it means
-"don't escape printable".  So things like carriage returns aren't
-escaped.
+This property does not contain clock names but clk references.
 
-Of those 57 were in drivers/net/wireless, and from a quick check seemed
-mostly to be for SSIDs in debug messages.  I *think* SSIDs can be
-arbitrary bytes?  If they really want them escaped then I suspect they
-want more than just nonprintable characters escaped.
+> +- clock-names: must include "main" and "dma".
+> +
+> +Mandatory properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- #address-cells: shall be set to 3
+> +- #size-cells: shall be set to 0
+> +
+> +Optional properties defined by the generic binding (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+> +
+> +- i2c-scl-hz
+> +- i3c-scl-hz
+> +
+> +I3C device connected on the bus follow the generic description (see
+> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+> +
+> +Example:
+> +
+> +	i3c0: i3c@1100d000 {
+> +		compatible = "mediatek,i3c-master";
+> +		reg = <0x1100d000 0x100>,
+> +		      <0x11000300 0x80>;
+> +		reg-names = "main", "dma";
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&i3c0_ck>, <&ap_dma_ck>;
+> +		clock-names = "main", "dma";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		i2c-scl-hz = <100000>;
+> +
+> +		nunchuk: nunchuk@52 {
+> +			compatible = "nintendo,nunchuk";
+> +			reg = <0x52 0x80000010 0>;
 
-One of the hits outside wireless code was in drm_dp_cec_adap_status,
-which was printing some device ID into a debugfs file with "ID: %*pE\n".
-If the ID actually needs escaping, then I suspect the meant to escape \n
-too to prevent misparsing that output.
+reg is wrong here, should be
 
---b.
+			reg = <0x52 0x0 0x10>;
+
+While at it, can you send a patch to fix the example in the cadence
+binding doc?
+
+> +		};
+> +	};
+
