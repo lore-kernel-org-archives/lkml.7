@@ -2,90 +2,64 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658CDC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B289C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D3621738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561565389;
-	bh=SRV0HIqXdDFg4a6CdNz8n82O2vossBfK3WIAq063H08=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SVAI+dQYu2IDJYyB5K8Q3eppgPYO+LNrbAA/fr3WpwmBQ4Vko/HVKh4Euq+eWO0uo
-	 3MjJ/MhG/O9HMy9IMxb5QX0A7k53Rn3bzAv+ifu1rDa0U9UsD1zSZi7MNuRI40V1WJ
-	 EgEVBSGia6TKaAkU7sH4/sSmir5gcW7U4TW8ai1M=
+	by mail.kernel.org (Postfix) with ESMTP id 05C31216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfFZQJr (ORCPT
+        id S1726576AbfFZQK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:09:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57706 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZQJr (ORCPT
+        Wed, 26 Jun 2019 12:10:57 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:37236 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZQK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:09:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gCTAps/lYoSk9lPt+qf517YJddtp5CleOCu5z7O8PhY=; b=Nf/H1sdFoSNlSGwY2S6sd4HVQ
-        nmeKZ3Z/tecPr3cXWRdyRA8+fl0gJKFC33IUlNN1M0Udy2sZann0YYMW4Piy+St/Tx1zLsS58sc6M
-        F7L78si7kGv5NeOBGl0cV4Jah94hDY/MlnfgI6s42ZnuAVu3UhmYWpEwepAP3NKlF2noMIlDD/Lu6
-        9g21Ncqgi6b+fSmQOacDqSEYJ7z0DANeQ44bl6essqwqCrrlRfEWdk39koNTa5K/Wu7AQA1AsYtpv
-        wDupzG57mzknnSHdqVVa1WC0E72OtZMYIUZ4PGhH+/3QNdPdTfn6pcqtKiy83iSwUWTJ53p5hdLGC
-        Hsl9WcoQQ==;
-Received: from [186.213.242.156] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgAUU-0002Um-Vg; Wed, 26 Jun 2019 16:09:46 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgAUR-00083F-FM; Wed, 26 Jun 2019 13:09:43 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org
-Subject: [PATCH v2] docs: gpu: add msm-crash-dump.rst to the index.rst file
-Date:   Wed, 26 Jun 2019 13:09:42 -0300
-Message-Id: <f6cc8cf99067d44b0a43c2b7cfbee273e8cc974b.1561565379.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 26 Jun 2019 12:10:57 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 79C12144FF0E7;
+        Wed, 26 Jun 2019 09:10:56 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 09:10:55 -0700 (PDT)
+Message-Id: <20190626.091055.2250153974662071717.davem@davemloft.net>
+To:     jonathanh@nvidia.com
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: stmmac: Fix possible deadlock when disabling
+ EEE support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190626102322.18821-1-jonathanh@nvidia.com>
+References: <20190626102322.18821-1-jonathanh@nvidia.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Jun 2019 09:10:56 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file is currently orphaned.
+From: Jon Hunter <jonathanh@nvidia.com>
+Date: Wed, 26 Jun 2019 11:23:21 +0100
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/gpu/drivers.rst | 1 +
- 1 file changed, 1 insertion(+)
+> When stmmac_eee_init() is called to disable EEE support, then the timer
+> for EEE support is stopped and we return from the function. Prior to
+> stopping the timer, a mutex was acquired but in this case it is never
+> released and so could cause a deadlock. Fix this by releasing the mutex
+> prior to returning from stmmax_eee_init() when stopping the EEE timer.
+> 
+> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
 
-diff --git a/Documentation/gpu/drivers.rst b/Documentation/gpu/drivers.rst
-index 4bfb7068e9f7..6c88c57b90cf 100644
---- a/Documentation/gpu/drivers.rst
-+++ b/Documentation/gpu/drivers.rst
-@@ -20,6 +20,7 @@ GPU Driver Documentation
-    xen-front
-    afbc
-    komeda-kms
-+   msm-crash-dump
- 
- .. only::  subproject and html
- 
--- 
-2.21.0
+When targetting net-next for a set of changes, make this explicit and clear
+by saying "[PATCH net-next ...] ..." in your Subject lines in the future.
 
+Applied.
