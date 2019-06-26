@@ -2,82 +2,111 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62E0C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3040C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD37121726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C6E216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfFZNjp (ORCPT
+        id S1727939AbfFZNjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 26 Jun 2019 09:39:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:43541 "EHLO mga11.intel.com"
+Received: from sauhun.de ([88.99.104.3]:56332 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZNjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:39:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 06:39:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
-   d="scan'208";a="167043312"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 26 Jun 2019 06:39:40 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 143A0162; Wed, 26 Jun 2019 16:39:39 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] io-mapping: Use PHYS_PFN() macro in io_mapping_map_atomic_wc()
-Date:   Wed, 26 Jun 2019 16:39:39 +0300
-Message-Id: <20190626133939.1998-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727858AbfFZNjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:39:44 -0400
+Received: from localhost (p54B330AF.dip0.t-ipconnect.de [84.179.48.175])
+        by pokefinder.org (Postfix) with ESMTPSA id 1C93B2C0114;
+        Wed, 26 Jun 2019 15:39:42 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 15:39:41 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Qii Wang <qii.wang@mediatek.com>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        leilk.liu@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek i2c AC timing binding
+Message-ID: <20190626133941.GL801@ninjato>
+References: <1560240715-22595-1-git-send-email-qii.wang@mediatek.com>
+ <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VBq/nvTu32OVLBUP"
+Content-Disposition: inline
+In-Reply-To: <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use PHYS_PFN() macro in io_mapping_map_atomic_wc() instead of
-open coded variant.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/io-mapping.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+--VBq/nvTu32OVLBUP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/include/linux/io-mapping.h b/include/linux/io-mapping.h
-index 6e125e9b4187..837058bc1c9f 100644
---- a/include/linux/io-mapping.h
-+++ b/include/linux/io-mapping.h
-@@ -28,6 +28,7 @@ struct io_mapping {
- 
- #ifdef CONFIG_HAVE_ATOMIC_IOMAP
- 
-+#include <linux/pfn.h>
- #include <asm/iomap.h>
- /*
-  * For small address space machines, mapping large objects
-@@ -64,12 +65,10 @@ io_mapping_map_atomic_wc(struct io_mapping *mapping,
- 			 unsigned long offset)
- {
- 	resource_size_t phys_addr;
--	unsigned long pfn;
- 
- 	BUG_ON(offset >= mapping->size);
- 	phys_addr = mapping->base + offset;
--	pfn = (unsigned long) (phys_addr >> PAGE_SHIFT);
--	return iomap_atomic_prot_pfn(pfn, mapping->prot);
-+	return iomap_atomic_prot_pfn(PHYS_PFN(phys_addr), mapping->prot);
- }
- 
- static inline void
--- 
-2.20.1
+Hi,
 
+On Tue, Jun 11, 2019 at 04:11:54PM +0800, Qii Wang wrote:
+> Add i2c AC timing binding to binding file. It can give the AC
+> timing parameters to meet I2C specification at different speed.
+>=20
+> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+
+I think this is a too specific 1:1 mapping of your register set into DT
+world. We already have these generic parameters:
+
+- clock-frequency
+        frequency of bus clock in Hz.
+
+- i2c-scl-falling-time-ns
+        Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
+        specification.
+
+- i2c-scl-internal-delay-ns
+        Number of nanoseconds the IP core additionally needs to setup SCL.
+
+- i2c-scl-rising-time-ns
+        Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
+        specification.
+
+- i2c-sda-falling-time-ns
+        Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+        specification.
+
+(check Documentation/devicetree/bindings/i2c/i2c.txt)
+
+Can't you use those to derive your values from that? Which ones are you mis=
+sing
+if not?
+
+Regards,
+
+   Wolfram
+
+--VBq/nvTu32OVLBUP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0TdZ0ACgkQFA3kzBSg
+KbYdwg//dQgqHhmthL0M3JNNdA09iWqGwQ9bMoPtMtoM/+hklFt9CRstWC+xJM/Z
+R0urToI6NYfU6uUHLyk/Rm+qLRpxjdm49flzF/e0MbEEwW1xXifpbQJOK5Dcwb1w
+qRI46Nb8IjHa3+P6az+WgHlKg/1xURj5oPnVgbl/vNsxXbdubtpYUlOm10WROnNE
+vx+ge9+OzERZ2KhNkOWbvx3szlBE5KF183VZVfXYvYnR4X0Uz8LJt1H90o9ointF
+5dXC/UzCOBOkyp5lL4KqbDTcoSeaTEWkAnt3tKnyXig+vgK1O/aeOdAENd4m2xsh
+1kfdlwXrACKg5zUN5jUPF4KF9r0+YI2GJZHgyxqmzuWabRd9F1o+rXvKwintgJ0L
+Ffb9SOLW7fqDVJKBCOkFOglJZUOWxeU6TfsQWYwNhYorI0HcJ+EcQR4195ZyhtD3
+zEEpeh6Qpxk+maQyvO9NzBd7+HLLEUqHQZWTsOctYucIyLbpolJ2Iq6V9LasLiwO
+U5N29cEdhN/YLXC+aAzBu9iJlPc2C+blG99j80l3D/uDY42G0cHXkThzgDSSTEmx
+lIz41aICZKF/3RHgbSz7yEKH5ulFOvd8qFz5Yn2nQQEHKzm/sN1XU0o3VgWIEnbN
+byFUoWjaiu3xM0xFmKf5WtZ0qpRM0y5VIUO27JwSkBREDVJ7QV4=
+=h1Pk
+-----END PGP SIGNATURE-----
+
+--VBq/nvTu32OVLBUP--
