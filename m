@@ -2,82 +2,81 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12698C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CFCC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD74B2182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD332147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfFZQEP (ORCPT
+        id S1726559AbfFZQEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:04:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfFZQEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:04:15 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09AAE217D7;
-        Wed, 26 Jun 2019 16:04:13 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 12:04:12 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Preisner <linux@tpreisner.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: add simple oneshot function tracer
-Message-ID: <20190626120412.662e8cf9@gandalf.local.home>
-In-Reply-To: <20190623120555.nka2357agpqovxla@stud.informatik.uni-erlangen.de>
-References: <20190529104552.146fa97c@oasis.local.home>
-        <20190612212935.4xq6dyua5d5vrrvj@stud.informatik.uni-erlangen.de>
-        <20190617201627.647547c7@gandalf.local.home>
-        <20190623120555.nka2357agpqovxla@stud.informatik.uni-erlangen.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Jun 2019 12:04:32 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:54374 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbfFZQEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:04:31 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 64C8DDA4DBBAD2CF71A4;
+        Thu, 27 Jun 2019 00:04:11 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 27 Jun 2019
+ 00:04:03 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <sdf@google.com>, <jianbol@mellanox.com>,
+        <jiri@mellanox.com>, <mirq-linux@rere.qmqm.pl>,
+        <willemb@google.com>, <sdf@fomichev.me>, <jiri@resnulli.us>,
+        <j.vosburgh@gmail.com>, <vfalico@gmail.com>, <andy@greyhouse.net>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] team: Always enable vlan tx offload
+Date:   Thu, 27 Jun 2019 00:03:39 +0800
+Message-ID: <20190626160339.35152-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20190624135007.GA17673@nanopsycho>
+References: <20190624135007.GA17673@nanopsycho>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Jun 2019 14:05:55 +0200
-Thomas Preisner <linux@tpreisner.de> wrote:
+We should rather have vlan_tci filled all the way down
+to the transmitting netdevice and let it do the hw/sw
+vlan implementation.
+
+Suggested-by: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/team/team.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index b48006e7fa2f..a8bb25341bed 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2128,12 +2128,12 @@ static void team_setup(struct net_device *dev)
+ 	dev->features |= NETIF_F_NETNS_LOCAL;
+ 
+ 	dev->hw_features = TEAM_VLAN_FEATURES |
+-			   NETIF_F_HW_VLAN_CTAG_TX |
+ 			   NETIF_F_HW_VLAN_CTAG_RX |
+ 			   NETIF_F_HW_VLAN_CTAG_FILTER;
+ 
+ 	dev->hw_features |= NETIF_F_GSO_ENCAP_ALL | NETIF_F_GSO_UDP_L4;
+ 	dev->features |= dev->hw_features;
++	dev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_STAG_TX;
+ }
+ 
+ static int team_newlink(struct net *src_net, struct net_device *dev,
+-- 
+2.20.1
 
 
-> I've created this tracer with kernel tailoring in mind since the
-> tailoring process of e.g. undertaker heavily benefits from a more
-> precise set of input data.
-> 
-> A "oneshot" option for the function tracer would be a viable
-> possibility. However, this may add a lot of overhead (performance wise)
-> in comparison to my current approach? After all, the use case of my
-> tracer would be some sort of kernel activity monitoring during "normal
-> usage" in order to get a grasp of (hopefully) all required kernel
-> functions.
-
-Coming back from vacation and not having this threaded in my inbox,
-I have to ask (to help cache this back into my head), what was the
-"current approach" compared to the "oneshot" option, and why would it
-have better performance?
-
-> 
-> Also, there is no strong reason to add a new event type,
-> this was just a means of reducing the collected data (which may as well
-> be omitted since there is no real benefit).
-
-+1
-
-> 
-> My "oneshot tracer" actually collects and outputs every parent in order
-> to get a more thorough view on used kernel code. Therefore, I would
-> suggest to keep this functionality and maybe make it configurable
-> instead?
-
-Configure which? (again, coming back from vacation, I need a refresher
-on this ;-)
-
--- Steve
