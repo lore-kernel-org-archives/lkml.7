@@ -2,177 +2,160 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D5EC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763AAC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:58:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A66C2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0952086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561582705;
+	bh=J6KbQPV2e/Zez6InThQEwTT6V7rv/8UmD15UJflw5nA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cFUQgaiwcuB9mL7CtXb3cKtSOc1d1IgE6eweVixqS9M/Ug2XS6ZHtUUBkjDeGd0Jc
+	 X4LdibQwOvewovGghh6VegE9/5la0nt383d0doz3+dSW/vFyhwte13gSokycWECbQt
+	 P8xr9t4V+Ps0Lf6jUP8JOmuTQeGH/GxbScuVZ4QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfFZUzZ (ORCPT
+        id S1726381AbfFZU6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:55:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39260 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfFZUzU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:55:20 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id A44972639EE
-Subject: Re: [PATCH v2] platform/chrome: Expose resume result via debugfs
-To:     Lee Jones <lee.jones@linaro.org>, Evan Green <evgreen@chromium.org>
-Cc:     Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>
-References: <20190617215234.260982-1-evgreen@chromium.org>
- <20190625130515.GJ21119@dell>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <e9e6e090-7c9b-ff5c-7389-702f9deb6712@collabora.com>
-Date:   Wed, 26 Jun 2019 22:55:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 16:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfFZU6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:58:23 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ECE82086D;
+        Wed, 26 Jun 2019 20:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561582702;
+        bh=J6KbQPV2e/Zez6InThQEwTT6V7rv/8UmD15UJflw5nA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0Lq/2Dh48jI9qaCJmOHGGEcqPy9X/mzuOm1kotGuT4quGwvE93yhRHhZoWbhm2vOa
+         5/VaFXn320jKG4SMn4kRLUNWYsf1990mQ1owjNIa6Z8DVhsFyV94jQ+vbA5Gv4XPwl
+         CfkJPbHM1erOJe3VmBnp0eLPpS8vKZFNyLxiBYjA=
+Date:   Wed, 26 Jun 2019 21:58:17 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com,
+        dianders@chromium.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] Support accelerometers for veyron_minnie
+Message-ID: <20190626215817.06a56125@archlinux>
+In-Reply-To: <882cf47c-c126-3e10-ba3a-23c926a68ce1@collabora.com>
+References: <20190624225312.131745-1-gwendal@chromium.org>
+        <5326bfb8-611f-765b-1c9c-c95032102c71@collabora.com>
+        <20190626202103.07e27e5e@archlinux>
+        <882cf47c-c126-3e10-ba3a-23c926a68ce1@collabora.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190625130515.GJ21119@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Evan,
+On Wed, 26 Jun 2019 22:40:00 +0200
+Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
 
-Two few comments and I think I'm fine with it.
+> Hi Jonathan,
+>=20
+> On 26/6/19 21:21, Jonathan Cameron wrote:
+> > On Tue, 25 Jun 2019 19:09:50 +0200
+> > Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
+> >  =20
+> >> Hi,
+> >>
+> >> On 25/6/19 0:53, Gwendal Grignou wrote: =20
+> >>> veyron_minnie - ASUS Chromebook Flip C100PA - embedded controller
+> >>> controls two accelerometers, one in the lid, one in the base.
+> >>> However, the EC firmware does not follow the new interface that
+> >>> cros_ec_accel driver use.
+> >>> Extend the legacy driver used on glimmer - Lenovo ThinkPad 11e
+> >>> Chromebook - to veyron_minnie.
+> >>> veyron_minnie being ARM based, issue command over the I2C bus to the =
+EC
+> >>> instead of relying on the shared registers over LPC.
+> >>>
+> >>> Gwendal Grignou (2):
+> >>>   iio: cros_ec: Add sign vector in core for backward compatibility
+> >>>   iio: cros_ec: Extend legacy support to ARM device
+> >>>
+> >>> Changes in v3:
+> >>> - Fix commit message, add reviewed-by for first patch.
+> >>>
+> >>> Changes in v2:
+> >>> - Readd empty line to reduce amount of change in patch.
+> >>> - Remove Keywords used by ChromeOS commit queue.
+> >>>
+> >>>  drivers/iio/accel/Kconfig                     |   4 +-
+> >>>  drivers/iio/accel/cros_ec_accel_legacy.c      | 350 ++++------------=
+--
+> >>>  .../cros_ec_sensors/cros_ec_sensors_core.c    |   4 +
+> >>>  .../linux/iio/common/cros_ec_sensors_core.h   |   1 +
+> >>>  4 files changed, 84 insertions(+), 275 deletions(-)
+> >>>    =20
+> >>
+> >> Just a side note that I think that this patch depends on [1] to have t=
+he legacy
+> >> sensors working on veyron minnie.
+> >>
+> >> For the full series:
+> >>
+> >> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com> =20
+> > Ah. I was assuming you mean a runtime dependency.  Whereas applying this
+> > on it's own is giving me a build problem:
+> >=20
+> >  drivers/iio/accel/cros_ec_accel_legacy.c: In function =E2=80=98cros_ec=
+_accel_legacy_read_cmd=E2=80=99:
+> > drivers/iio/accel/cros_ec_accel_legacy.c:50:16: error: =E2=80=98struct =
+<anonymous>=E2=80=99 has no member named =E2=80=98max_sensor_count=E2=80=99=
+ =20
+>=20
+> Right, this also build depends on the immutable branch (ib-mfd-cros-v5.3).
+Ah. I'd forgotten about that set.
 
-On 25/6/19 15:05, Lee Jones wrote:
-> On Mon, 17 Jun 2019, Evan Green wrote:
-> 
->> For ECs that support it, the EC returns the number of slp_s0
->> transitions and whether or not there was a timeout in the resume
->> response. Expose the last resume result to usermode via debugfs so
->> that usermode can detect and report S0ix timeouts.
->>
->> Signed-off-by: Evan Green <evgreen@chromium.org>
-> 
-> This still needs a platform/chrome Ack.
-> 
->> ---
->>
->> Changes in v2:
->>  - Moved from sysfs to debugfs (Enric)
->>  - Added documentation (Enric)
->>
->>
->> ---
->>  Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
->>  drivers/mfd/cros_ec.c                     |  6 +++++-
->>  drivers/platform/chrome/cros_ec_debugfs.c |  7 +++++++
->>  include/linux/mfd/cros_ec.h               |  1 +
->>  4 files changed, 35 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
->> index 573a82d23c89..008b31422079 100644
->> --- a/Documentation/ABI/testing/debugfs-cros-ec
->> +++ b/Documentation/ABI/testing/debugfs-cros-ec
->> @@ -32,3 +32,25 @@ Description:
->>  		is used for synchronizing the AP host time with the EC
->>  		log. An error is returned if the command is not supported
->>  		by the EC or there is a communication problem.
->> +
->> +What:		/sys/kernel/debug/cros_ec/last_resume_result
-
-Thinking about it, as other the other interfaces, I'd do
-
-s/cros_ec/<cros-ec-device>/
-
-I know that for now only cros_ec supports that, but we don't know what will
-happen in the future, specially now that the number of cros devices is incrementing.
-
->> +Date:		June 2019
->> +KernelVersion:	5.3
->> +Description:
->> +		Some ECs have a feature where they will track transitions to
->> +		the (Intel) processor's SLP_S0 line, in order to detect cases
->> +		where a system failed to go into S0ix. When the system resumes,
->> +		an EC with this feature will return a summary of SLP_S0
->> +		transitions that occurred. The last_resume_result file returns
->> +		the most recent response from the AP's resume message to the EC.
->> +
->> +		The bottom 31 bits contain a count of the number of SLP_S0
->> +		transitions that occurred since the suspend message was
->> +		received. Bit 31 is set if the EC attempted to wake the
->> +		system due to a timeout when watching for SLP_S0 transitions.
->> +		Callers can use this to detect a wake from the EC due to
->> +		S0ix timeouts. The result will be zero if no suspend
->> +		transitions have been attempted, or the EC does not support
->> +		this feature.
->> +
->> +		Output will be in the format: "0x%08x\n".
->> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
->> index 5d5c41ac3845..2a9ac5213893 100644
->> --- a/drivers/mfd/cros_ec.c
->> +++ b/drivers/mfd/cros_ec.c
->> @@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
->>  
->>  	/* For now, report failure to transition to S0ix with a warning. */
->>  	if (ret >= 0 && ec_dev->host_sleep_v1 &&
->> -	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
->> +	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
->> +		ec_dev->last_resume_result =
->> +			buf.u.resp1.resume_response.sleep_transitions;
->> +
->>  		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
->>  			  EC_HOST_RESUME_SLEEP_TIMEOUT,
->>  			  "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
->>  			  buf.u.resp1.resume_response.sleep_transitions &
->>  			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
->> +	}
->>  
->>  	return ret;
->>  }
->> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
->> index cd3fb9c22a44..663bebf699bf 100644
->> --- a/drivers/platform/chrome/cros_ec_debugfs.c
->> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
->> @@ -447,6 +447,13 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
->>  	debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
->>  			    &cros_ec_uptime_fops);
->>  
->> +	if (!strcmp(ec->class_dev.kobj.name, CROS_EC_DEV_NAME)) {
-
-For debugfs I don't care having the file exposed even is not supported, anyway
-there are some CROS_EC_DEV_NAME that won't support it, so just make this simple
-and create the file always.
-
->> +		debugfs_create_x32("last_resume_result",
->> +				   0444,
->> +				   debug_info->dir,
->> +				   &ec->ec_dev->last_resume_result);
->> +	}
->> +
->>  	ec->debug_info = debug_info;
->>  
->>  	dev_set_drvdata(&pd->dev, ec);
->> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
->> index 5ddca44be06d..45aba26db964 100644
->> --- a/include/linux/mfd/cros_ec.h
->> +++ b/include/linux/mfd/cros_ec.h
->> @@ -155,6 +155,7 @@ struct cros_ec_device {
->>  	struct ec_response_get_next_event_v1 event_data;
->>  	int event_size;
->>  	u32 host_event_wake_mask;
->> +	u32 last_resume_result;
->>  };
->>  
->>  /**
-> 
+>=20
+>=20
+> >    50 |  st->param.dump.max_sensor_count =3D CROS_EC_SENSOR_LEGACY_NUM;
+> >       |                ^
+> > make[3]: *** [scripts/Makefile.build:285: drivers/iio/accel/cros_ec_acc=
+el_legacy.o] Error 1
+> > make[2]: *** [scripts/Makefile.build:489: drivers/iio/accel] Error 2
+> > make[1]: *** [scripts/Makefile.build:489: drivers/iio] Error 2
+> >=20
+> > Which I'll assume is related to that other set.
+> >=20
+> > I'm happy for these to go another route to sit on top of that series.
+> > If not I'll pick them up for the next cycle via IIO.
+> >=20
+> > Should they go another route,
+> >=20
+> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for both of th=
+em. =20
+>=20
+> I'd be happy to pick this patch and add to the chrome-platform tree, idea=
+lly
+> once we manage to get [1] ready for land.
+Let's go with that.  If you change your mind, let me know.
 
 Thanks,
-~ Enric
+
+Jonathan
+
+>=20
+> Thanks,
+> ~ Enric
+>=20
+> >  =20
+> >>
+> >>
+> >> [1] https://lkml.org/lkml/2019/6/18/268 =20
+> >  =20
+
