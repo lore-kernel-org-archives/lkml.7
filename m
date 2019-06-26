@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55604C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B009DC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2624B205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE7F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521018;
-	bh=d2mos+JEfbQZ2N1S1mqLaKmvyRthD8wQuPYK08TlLjA=;
+	s=default; t=1561521026;
+	bh=AarvZG2NZ422+D4FObF+VfCAtcqlVfY3f9aW0cHglZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0kVZXoNzyfjqWjmkHD5uRvwmRIz6pG8a8gJTciiycXNnQGgVBhy9I+twLG68zNY49
-	 dV6HjJir+0Gl11nHywglrmhvmRni/+O9XY5SdC4Ui4R0GDbcXC4JrXglnwPZeDWIcZ
-	 QCqhykwoy7m0s0O8HoNEQO2DR+9iVweRzUCAxN84=
+	b=lSxMlI2jwmTouRZ1Z1K/tHb3hkxtposcFFXQeyeodhnkA3G0ri4oH/rOSv3ty7+KO
+	 PooReWM3dmzaGimboezvtFiygCQQi9wjTpOWq2oiEZ8x7uqxaKq80SIKUU7QmqDYe8
+	 yh+I/dkZ4PeZGOCIKBYOk7MZ63tdbowm4dD1CchM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfFZDm5 (ORCPT
+        id S1727530AbfFZDuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53862 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:50:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727168AbfFZDmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:42:51 -0400
+        id S1727158AbfFZDmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:42:45 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A0B1208CB;
-        Wed, 26 Jun 2019 03:42:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0EAC205ED;
+        Wed, 26 Jun 2019 03:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520570;
-        bh=d2mos+JEfbQZ2N1S1mqLaKmvyRthD8wQuPYK08TlLjA=;
+        s=default; t=1561520564;
+        bh=AarvZG2NZ422+D4FObF+VfCAtcqlVfY3f9aW0cHglZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxNqB5i0MeO+XvgRgzwxQyn2jipAvo/0an2DKWotdf8G1jEQsxo9oZDg0mtZu8P4v
-         8r5UQRmqotMOfk9ARfmAjToMJoLOFTbHF9SGOCQh3s5pKCyH5gBC4DarIdjgxPiFw9
-         bD1y+eBAR1NG+pDOWIApJEhjkdDXGjxVCGgqD9YA=
+        b=EqUJ9GEaAabHGvakQgZngp2sMeqR0X3sHPALu0je+UcIBqOlMWWsKc1+G7Zox3S1w
+         zH7C/wQyCQCTaGh5crwGJx/1pZlHydUJUvQH6Lh5xfuzqcRQ5bw9N4JhidxQ2QnGfU
+         pF8B4q2mZt7CRn4HHCKIvLXAjEG6O2pKooRbm/34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 33/51] SoC: rt274: Fix internal jack assignment in set_jack callback
-Date:   Tue, 25 Jun 2019 23:40:49 -0400
-Message-Id: <20190626034117.23247-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 30/51] ASoC: Intel: cht_bsw_rt5672: fix kernel oops with platform_name override
+Date:   Tue, 25 Jun 2019 23:40:46 -0400
+Message-Id: <20190626034117.23247-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,53 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 04268bf2757a125616b6c2140e6250f43b7b737a ]
+[ Upstream commit 9bbc799318a34061703f2a980e2b6df7fc6760f0 ]
 
-When we call snd_soc_component_set_jack(component, NULL, NULL) we should
-set rt274->jack to passed jack, so when interrupt is triggered it calls
-snd_soc_jack_report(rt274->jack, ...) with proper value.
+The platform override code uses devm_ functions to allocate memory for
+the new name but the card device is not initialized. Fix by moving the
+init earlier.
 
-This fixes problem in machine where in register, we call
-snd_soc_register(component, &headset, NULL), which just calls
-rt274_mic_detect via callback.
-Now when machine driver is removed "headset" will be gone, so we
-need to tell codec driver that it's gone with:
-snd_soc_register(component, NULL, NULL), but we also need to be able
-to handle NULL jack argument here gracefully.
-If we don't set it to NULL, next time the rt274_irq runs it will call
-snd_soc_jack_report with first argument being invalid pointer and there
-will be Oops.
-
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+Fixes: f403906da05cd ("ASoC: Intel: cht_bsw_rt5672: platform name fixup support")
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt274.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/intel/boards/cht_bsw_rt5672.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
-index adf59039a3b6..cdd312db3e78 100644
---- a/sound/soc/codecs/rt274.c
-+++ b/sound/soc/codecs/rt274.c
-@@ -405,6 +405,8 @@ static int rt274_mic_detect(struct snd_soc_component *component,
- {
- 	struct rt274_priv *rt274 = snd_soc_component_get_drvdata(component);
- 
-+	rt274->jack = jack;
-+
- 	if (jack == NULL) {
- 		/* Disable jack detection */
- 		regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
-@@ -412,7 +414,6 @@ static int rt274_mic_detect(struct snd_soc_component *component,
- 
- 		return 0;
+diff --git a/sound/soc/intel/boards/cht_bsw_rt5672.c b/sound/soc/intel/boards/cht_bsw_rt5672.c
+index 3d5a2b3a06f0..87ce3857376d 100644
+--- a/sound/soc/intel/boards/cht_bsw_rt5672.c
++++ b/sound/soc/intel/boards/cht_bsw_rt5672.c
+@@ -425,6 +425,7 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
  	}
--	rt274->jack = jack;
  
- 	regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
- 				RT274_IRQ_EN, RT274_IRQ_EN);
+ 	/* override plaform name, if required */
++	snd_soc_card_cht.dev = &pdev->dev;
+ 	platform_name = mach->mach_params.platform;
+ 
+ 	ret_val = snd_soc_fixup_dai_links_platform_name(&snd_soc_card_cht,
+@@ -442,7 +443,6 @@ static int snd_cht_mc_probe(struct platform_device *pdev)
+ 	snd_soc_card_set_drvdata(&snd_soc_card_cht, drv);
+ 
+ 	/* register the soc card */
+-	snd_soc_card_cht.dev = &pdev->dev;
+ 	ret_val = devm_snd_soc_register_card(&pdev->dev, &snd_soc_card_cht);
+ 	if (ret_val) {
+ 		dev_err(&pdev->dev,
 -- 
 2.20.1
 
