@@ -2,123 +2,115 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CBEC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8986AC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C112080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561548803;
-	bh=hyODjz4HAg1Hyw7FOb0ptQwuOIA5FGO1/Z5ZC9N1PyI=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qi+1NRhk8SBXMFTVqxm4wOJua/V0szdv485NEhIDRDILGS9/xBhWrfyu2ibW7tY+q
-	 kvDNbcy22PdFMaOG1C1vYc5tXCV61atYQ/mza9vXaWriRtedfVNPQ+17rMx+fVqi2b
-	 lmR6rR01dXhJfdsPLGAxRYQN9g3+gGH1yPDr3xOI=
+	by mail.kernel.org (Postfix) with ESMTP id 5FC752080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727128AbfFZLdH (ORCPT
+        id S1727185AbfFZLfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:33:07 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53590 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfFZLdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:33:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=kXrqPsqlfq/GQQd949LGt1UJI7yWwccTvb5Mmx6tCNs=; b=qLJtWDcBxbXT
-        RuHEd+jFf1QRWbDnAcPmOrP38dbQnxM2e94Ewk1KRbpkMg6jiRYklCt0rd7KlT4m7QAxM8H5sOcZd
-        3OHfxRXa3u9mqWRjrFIPO7LH1ZPDIS9sX+Rzbicg3Jwv6lr8C0Sd80EDtpkwGks7veGjN7S6q+925
-        OCsUE=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hg6Ad-0007oc-8b; Wed, 26 Jun 2019 11:32:59 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id BD290440046; Wed, 26 Jun 2019 12:32:58 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Cc:     broonie@kernel.org, hayashibara.keiji@socionext.com,
-        jaswinder.singh@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, masami.hiramatsu@linaro.org,
-        yamada.masahiro@socionext.com
-Subject: Applied "spi: uniphier: fix zero-length transfer" to the spi tree
-In-Reply-To: <1561509708-4175-3-git-send-email-hayashibara.keiji@socionext.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190626113258.BD290440046@finisterre.sirena.org.uk>
-Date:   Wed, 26 Jun 2019 12:32:58 +0100 (BST)
+        Wed, 26 Jun 2019 07:35:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48536 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725930AbfFZLfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 07:35:52 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 85506CFD3134A0E4BC1F;
+        Wed, 26 Jun 2019 19:35:50 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Jun 2019
+ 19:35:45 +0800
+Subject: Re: [PATCH -next v4] drm/amdgpu: return 'ret' immediately if failed
+ in amdgpu_pmu_init
+To:     "Kim, Jonathan" <Jonathan.Kim@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "julia.lawall@lip6.fr" <julia.lawall@lip6.fr>
+References: <20190624094850.GQ18776@kadam>
+ <20190624112318.149299-1-maowenan@huawei.com>
+ <CH2PR12MB3831BE36FF61D74FC529F64F85E00@CH2PR12MB3831.namprd12.prod.outlook.com>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <2d7c2525-4503-3706-7d00-0b9bf230266d@huawei.com>
+Date:   Wed, 26 Jun 2019 19:35:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <CH2PR12MB3831BE36FF61D74FC529F64F85E00@CH2PR12MB3831.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   spi: uniphier: fix zero-length transfer
 
-has been applied to the spi tree at
+On 2019/6/25 1:42, Kim, Jonathan wrote:
+> Immediate return should be ok since perf registration isn't dependent on gpu hw.
+> 
+> Reviewed-by: Jonathan Kim <Jonathan.Kim@amd.com>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+thanks for review.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 2b947137f2b8f77474dfe77d68c52778bf6ae453 Mon Sep 17 00:00:00 2001
-From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Date: Wed, 26 Jun 2019 09:41:48 +0900
-Subject: [PATCH] spi: uniphier: fix zero-length transfer
-
-The zero-length transfer results in timeout error because
-the transfer doesn't start.
-This commit modified to return success in this case.
-
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-uniphier.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
-index c3c35c041ef1..b32c77df5d49 100644
---- a/drivers/spi/spi-uniphier.c
-+++ b/drivers/spi/spi-uniphier.c
-@@ -331,6 +331,10 @@ static int uniphier_spi_transfer_one(struct spi_master *master,
- 	struct device *dev = master->dev.parent;
- 	unsigned long time_left;
- 
-+	/* Terminate and return success for 0 byte length transfer */
-+	if (!t->len)
-+		return 0;
-+
- 	uniphier_spi_setup_transfer(spi, t);
- 
- 	reinit_completion(&priv->xfer_done);
--- 
-2.20.1
+> 
+> -----Original Message-----
+> From: Mao Wenan <maowenan@huawei.com> 
+> Sent: Monday, June 24, 2019 7:23 AM
+> To: airlied@linux.ie; daniel@ffwll.ch; Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>; Zhou, David(ChunMing) <David1.Zhou@amd.com>; dan.carpenter@oracle.com; julia.lawall@lip6.fr
+> Cc: kernel-janitors@vger.kernel.org; amd-gfx@lists.freedesktop.org; linux-kernel@vger.kernel.org; Kim, Jonathan <Jonathan.Kim@amd.com>; Mao Wenan <maowenan@huawei.com>
+> Subject: [PATCH -next v4] drm/amdgpu: return 'ret' immediately if failed in amdgpu_pmu_init
+> 
+> [CAUTION: External Email]
+> 
+> There is one warning:
+> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c: In function ‘amdgpu_pmu_init’:
+> drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c:249:6: warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+>   int ret = 0;
+>       ^
+> amdgpu_pmu_init() is called by amdgpu_device_init() in drivers/gpu/drm/amd/amdgpu/amdgpu_device.c,
+> which will use the return value. So it should return 'ret' immediately if init_pmu_by_type() failed.
+> amdgpu_device_init()
+>         r = amdgpu_pmu_init(adev);
+> 
+> Fixes: 9c7c85f7ea1f ("drm/amdgpu: add pmu counters")
+> 
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  v1->v2: change the subject for this patch; change the indenting when it calls init_pmu_by_type; use the value 'ret' in  amdgpu_pmu_init().
+>  v2->v3: change the subject for this patch; return 'ret' immediately if failed to call init_pmu_by_type().
+>  v3->v4: delete the indenting for init_pmu_by_type() arguments. The original indenting is correct.
+> 
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+> index 0e6dba9f60f0..c98cf77a37f3 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c
+> @@ -254,6 +254,8 @@ int amdgpu_pmu_init(struct amdgpu_device *adev)
+>                 ret = init_pmu_by_type(adev, df_v3_6_attr_groups,
+>                                        "DF", "amdgpu_df", PERF_TYPE_AMDGPU_DF,
+>                                        DF_V3_6_MAX_COUNTERS);
+> +               if (ret)
+> +                       return ret;
+> 
+>                 /* other pmu types go here*/
+>                 break;
+> --
+> 2.20.1
+> 
 
