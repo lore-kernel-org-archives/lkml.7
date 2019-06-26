@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BECC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BF2C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C63205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45428205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521032;
-	bh=vCYeM5EFMB1SOUuq5Ofz12ylpaMRCJKxg1kTA73sMW8=;
+	s=default; t=1561521037;
+	bh=2BamhSXQQ1kCNISV5ylSHG+iQ9VFL9LpD2+McAI8IzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tcoeTAKHMrU2yFPXTFR7dYJXgTijbup4Yv2FGpFv+Xz4NapgXbHQFSOzpe7n8zXs5
-	 N4WEdr8z++QZt48NAfPolLKg5uiinzyMfLKDzgkzrm0rv8MQif059yNNXIO2jwZoUc
-	 SUB9rjCgcV7KWlJ96BrB4U2ff9Kd/fQl6iWQD7uY=
+	b=KW/5CW9B2aTFKETQrMXPRI7/67JRJOtdIEBl/xYN3/L11sxc47WAUG8Wps64So7jC
+	 Ul7uk7ACitYsC6/NbCWl3t9mQMAS5DEK7/AZLjhuTG8MAiZJrLOswdZ6nYylKxiWXg
+	 Z6eXpFpoZkHx4INbVTZoImx/UjyMZ+qv1gkFupmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfFZDmd (ORCPT
+        id S1727084AbfFZDm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:42:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53394 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:42:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbfFZDma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:42:30 -0400
+        id S1727063AbfFZDmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:42:22 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BBD4205ED;
-        Wed, 26 Jun 2019 03:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6434B20883;
+        Wed, 26 Jun 2019 03:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520549;
-        bh=vCYeM5EFMB1SOUuq5Ofz12ylpaMRCJKxg1kTA73sMW8=;
+        s=default; t=1561520541;
+        bh=2BamhSXQQ1kCNISV5ylSHG+iQ9VFL9LpD2+McAI8IzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t9hee2XKx5SIN/6VFxv9RCL6ZiFyj2H36UfrDwFz+94HF/kcHg4HSi3pM5r9BbnmW
-         nFqv7SWBM4Bvz63CCnhUcpv6PMEo2bMamPVyJtvpuQv9p/7gODummoxHcpqXm5D7Wa
-         HmJYnDviAZr/kGuEGatWgBJVu00TRx1QRLACWzOs=
+        b=oX3X8iYm0/02J+qHW02EnfxbOESynd9tK1gu9CiQrstFLDv3+A/O6ntq6vnLfryGW
+         hj8Avp/xPoXQDqI4V7n7+qM6Nd6na/Xkl3rCwzegjFkFPenrm73UUyoG2IyHYe7AtQ
+         Bdb2WevWkYi0EKHwLMW/xT1uUVb1KXSvIFEW1Buk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        James Grant <jamesg@zaltys.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 25/51] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
-Date:   Tue, 25 Jun 2019 23:40:41 -0400
-Message-Id: <20190626034117.23247-25-sashal@kernel.org>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        rui.zhang@intel.com, Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 23/51] x86/CPU: Add more Icelake model numbers
+Date:   Tue, 25 Jun 2019 23:40:39 -0400
+Message-Id: <20190626034117.23247-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
@@ -61,39 +66,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit fbc318afadd6e7ae2252d6158cf7d0c5a2132f7d ]
+[ Upstream commit e35faeb64146f2015f2aec14b358ae508e4066db ]
 
-Gadget drivers may queue request in interrupt context. This would lead to
-a descriptor allocation in that context. In that case we would hit
-BUG_ON(in_interrupt()) in __get_vm_area_node.
+Add the CPUID model numbers of Icelake (ICL) desktop and server
+processors to the Intel family list.
 
-Also remove the unnecessary cast.
+ [ Qiuxu: Sort the macros by model number. ]
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Tested-by: James Grant <jamesg@zaltys.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Cc: rui.zhang@intel.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190603134122.13853-1-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index b0781771704e..eafc2a00c96a 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -922,8 +922,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struct lpc32xx_udc *udc)
- 	dma_addr_t			dma;
- 	struct lpc32xx_usbd_dd_gad	*dd;
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 9f15384c504a..310118805f57 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -52,6 +52,9 @@
  
--	dd = (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
--			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
-+	dd = dma_pool_alloc(udc->dd_cache, GFP_ATOMIC | GFP_DMA, &dma);
- 	if (dd)
- 		dd->this_dma = dma;
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
  
++#define INTEL_FAM6_ICELAKE_X		0x6A
++#define INTEL_FAM6_ICELAKE_XEON_D	0x6C
++#define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+ 
+ /* "Small Core" Processors (Atom) */
 -- 
 2.20.1
 
