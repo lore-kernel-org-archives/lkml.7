@@ -2,110 +2,107 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA0EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A8DC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D02E21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561577697;
-	bh=HJ30wok6lm2G6MtsJuoh1ktza4QAqOZwpKAj/5W6ACM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QItycRxxZHi8d7rPPEzONX3jret2LHi/eRN0yUuRzpcgUeeIWHrp6koGbaK7/xUHU
-	 VbpxtdWalLHSNLLbDoksIo3nU8oNJG1u+nfpu+YLTkfZAKZAjW3yzil05VMBba79sD
-	 AadRWpFH2tZ9lA8VDCvNOQPb+zIW7czwu1pLiNt4=
+	by mail.kernel.org (Postfix) with ESMTP id C5FB82085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:39:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KOoNaQnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfFZTe4 (ORCPT
+        id S1726381AbfFZTjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:34:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZTez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:34:55 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F7821726;
-        Wed, 26 Jun 2019 19:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561577694;
-        bh=HJ30wok6lm2G6MtsJuoh1ktza4QAqOZwpKAj/5W6ACM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FMNtPdrQxeSkwgQkopqi+QT+Z9GH3oSIW9LVekftpzsaXG8aiP8wKyFQbdn6nBFOq
-         4mKKH+PSxWDF6JvVOfDt83rVg/AajnR2aUDziylQsOnSp8VL3co0nbV7frGQHs4iKf
-         zkf+ZJixR4r1MBVgAYWKDC3gUqabaPnLoLC1tGzU=
-Date:   Wed, 26 Jun 2019 20:34:49 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 4/5] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-Message-ID: <20190626203449.75e2a8ea@archlinux>
-In-Reply-To: <CAL_JsqLHpT1z3O5QctG6WWB6bcOms5XYTOOrq6tK6uOZPNQtDQ@mail.gmail.com>
-References: <20190625081128.22190-1-mircea.caprioru@analog.com>
-        <20190625081128.22190-4-mircea.caprioru@analog.com>
-        <CAL_JsqLHpT1z3O5QctG6WWB6bcOms5XYTOOrq6tK6uOZPNQtDQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Jun 2019 15:39:43 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44180 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZTjn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:39:43 -0400
+Received: by mail-io1-f65.google.com with SMTP id s7so4687462iob.11
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 12:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HrgKV2laxb7CmMhAO2Zht6dY5cjmqevbQFQ/CfbqMLo=;
+        b=KOoNaQnzlS7is373aZlIpXHi9c/FdczNBYXNJFlghPA2DuSObQ02XSjoB1IECTklM+
+         lu+Dc+nt5KYYNp13+gCQ+cSPlInpBMLEywNBGsksqwRjnrv4SgUO4PXqNuruj9JYNsLm
+         kz6tlMgIJDouZH1XfpYKhctzWZ+76XIHOprLbjuymNqrlW+9lhNJvZkyzXwBn0LCXAv1
+         bgQrnFzdo87+D0PZ6JlClu2ag5qEUE87IshPvZXHlnIwnO4AHs/bvDfaaqoDHucFvW0c
+         JdK7yuvbRLz0qrXD7/fy4fHElKOQlRQjn69aL3tJlmmNO9FR5oavdTLDNvBKbt8YQRmt
+         E+MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HrgKV2laxb7CmMhAO2Zht6dY5cjmqevbQFQ/CfbqMLo=;
+        b=JHi7O7xX4pWxQTGnv1WS5daRptCkEpilYoPaz7pEYEoKkE+3Tx4iO0nlRgPWEuA867
+         u9iHf3hm46FSsG6YH1oHLniuLr/L46Ub5j8IzEfZT9TqzyyOvntSvG89Xidee36fK+27
+         Iq8SUrCKpWw0UU7hP0hayfOLOlKMWoq/4bW/Dtz1rgPRz1XPmpex4H+GMZnv1VkimGJk
+         AMUnFMtJPlHUnUGMhPHgegmeVplPH+fcz5yUYaY5b13HBI9o26EW7vOOcFzbJ3N0E3GW
+         GkW4sdfRZy1Iji9WgRq2D2UBjvWflwqLpvczNwMg50Ga4xb7zgLbNGPyzIxLw4eU7D88
+         cM1Q==
+X-Gm-Message-State: APjAAAXyGNqHSjE/JPi79eZaXOSkrG6E2Olx0Ro568KLnEvPuQo3K44E
+        NlH2F1ML+WoiSqt2a3DOY38jYHaPs1wRkZQeI3yFGNRO+qc=
+X-Google-Smtp-Source: APXvYqzZOm3tnncwSNKOqbGjfZFdhqffwjA+jtK7Mdjt6sdyN+pEm2CYZ51R95H0ZHN2OwG9zQHYDMww4fcojyvf4zk=
+X-Received: by 2002:a02:3308:: with SMTP id c8mr4225629jae.103.1561577982127;
+ Wed, 26 Jun 2019 12:39:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+ <20190621011941.186255-30-matthewgarrett@google.com> <20190626090748.23eba868@gandalf.local.home>
+In-Reply-To: <20190626090748.23eba868@gandalf.local.home>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 26 Jun 2019 12:39:31 -0700
+Message-ID: <CACdnJuubBJxrybsV6+hyz9RyUR2AUyzy=4WJEeoYrNgbh_=FCQ@mail.gmail.com>
+Subject: Re: [PATCH V33 29/30] tracefs: Restrict tracefs when the kernel is
+ locked down
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     James Morris <jmorris@namei.org>, linux-security@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 08:44:36 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+On Wed, Jun 26, 2019 at 6:07 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Thu, 20 Jun 2019 18:19:40 -0700
+> Matthew Garrett <matthewgarrett@google.com> wrote:
+> > +static const struct file_operations tracefs_proxy_file_operations = {
+> > +     .read =         default_read_file,
+> > +     .write =        default_write_file,
+> > +     .open =         default_open_file,
+> > +     .llseek =       noop_llseek,
+> > +};
+>
+> This appears to be unused.
 
-> On Tue, Jun 25, 2019 at 2:12 AM Mircea Caprioru
-> <mircea.caprioru@analog.com> wrote:
-> >
-> > Convert AD7124 bindings documentation to YAML format.
-> >
-> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> > ---
-> >
-> > Changelog v2:
-> > - modified SPDX license to GPL-2.0 OR BSD-2-Clause
-> > - added regex for a range from 0 to 15
-> > - added minimum and maximum constraints for reg property
-> > - set type and range of values for adi,reference-select property
-> > - used items for diff-channels property
-> > - set bipolar, adi,buffered-positive and negative to type: boolean
-> >
-> > Changelog v3:
-> > - moved adi,buffered-positive and negative properties to own commit
-> >
-> > Changelog v4:
-> > - removed old txt dt-binding
-> >
-> >  .../bindings/iio/adc/adi,ad7124.txt           |  75 ---------
-> >  .../bindings/iio/adc/adi,ad7124.yaml          | 144 ++++++++++++++++++
-> >  2 files changed, 144 insertions(+), 75 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml  
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Something a bit odd happened when trying to apply this, so I ended up doing
-it rather manually.
+Oops, yup - dropped.
 
-error: cannot convert from y to UTF-8
-fatal: could not parse patch
+> > +     dentry->d_fsdata = fops ? (void *)fops :
+> > +             (void *)&tracefs_file_operations;
+> > +     memcpy(proxy_fops, dentry->d_fsdata, sizeof(struct file_operations));
+> > +     proxy_fops->open = default_open_file;
+> >       inode->i_mode = mode;
+> > -     inode->i_fop = fops ? fops : &tracefs_file_operations;
+> > +     inode->i_fop = proxy_fops;
+>
+>
+> I think the above would look cleaner as:
+>
+>
+>         if (!fops)
+>                 fops = &tracefs_file_operations;
+>
+>         dentry->d_fsdata = (void *)fops;
+>         memcpy(proxy_fops, fops, sizeof(*proxy_fops);
+>         proxy_fops->open = default_open_file;
 
-Anyhow, I think it's fine now, but would welcome any suggestion on what causes
-that one?  Patch was perfectly happy with it.
-
-Jonathan
-
-
+ACK.
