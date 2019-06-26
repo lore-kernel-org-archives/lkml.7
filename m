@@ -2,39 +2,39 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C128BC48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C049C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADF220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366F620659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:22:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Yu9N++HX"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="vjDl/c5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfFZCWa (ORCPT
+        id S1726487AbfFZCWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:22:30 -0400
-Received: from onstation.org ([52.200.56.107]:46118 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbfFZCWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Jun 2019 22:22:06 -0400
+Received: from onstation.org ([52.200.56.107]:46072 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfFZCWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 22:22:05 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 49C903EE74;
-        Wed, 26 Jun 2019 02:22:05 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id BE7C03E887;
+        Wed, 26 Jun 2019 02:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1561515725;
-        bh=OXpAhLy5srruCKMhwhvoAj0B2oecFMLNetfymmEW4Eg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yu9N++HXluSC7if/HhprtF0gPOTHMDYHeTbWS5ufkbnJ8KHq1/Dqulfxkem//oKuJ
-         F4co2TuaAO7Hweaeq8aCrNuEduy6I3QbId2O4f0J9nlxGmhSEcZSsnkKNvqo//RCbL
-         PW33jIlHDDqjzJRe2YbQ4ntNpgTyXGDvklvU3g/k=
+        s=default; t=1561515724;
+        bh=6wTPy9KKBizKnrnUdUtaxPyNqun7HU3CFL9ZBYn8eao=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vjDl/c5rDxt9/iXgEfyHgGFUd4hclgr5iKX9dqRsko7AYdv5rS5SfORMqoIhPIJNX
+         yhNUD0sPAdBvrfFsLJaFFN1eIS2U62QfBhjMgFhdozVqifGycrWEwn1TqF5VIVgsoJ
+         Gk3dy0Ndiq6iePQi2whkM7NVmsJfrJpVZC2Va/0c=
 From:   Brian Masney <masneyb@onstation.org>
 To:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
         robh+dt@kernel.org, bjorn.andersson@linaro.org
@@ -43,12 +43,10 @@ Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
         jcrouse@codeaurora.org
-Subject: [PATCH v3 2/6] dt-bindings: display: msm: gmu: add optional ocmem property
-Date:   Tue, 25 Jun 2019 22:21:44 -0400
-Message-Id: <20190626022148.23712-3-masneyb@onstation.org>
+Subject: [PATCH v3 0/6] qcom: add OCMEM support
+Date:   Tue, 25 Jun 2019 22:21:42 -0400
+Message-Id: <20190626022148.23712-1-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626022148.23712-1-masneyb@onstation.org>
-References: <20190626022148.23712-1-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,86 +54,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
-must use the On Chip MEMory (OCMEM) in order to be functional. Add the
-optional ocmem property to the Adreno Graphics Management Unit bindings.
+This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
+that is needed in order to support some a3xx and a4xx-based GPUs
+upstream. This is based on Rob Clark's patch series that he submitted
+in October 2015 and I am resubmitting updated patches with his
+permission. See the individual patches for the changelog.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-Changes since v2:
-- Add a3xx example with OCMEM
+This was tested with the GPU on a LG Nexus 5 (hammerhead) phone and
+this will work on other msm8974-based systems. For a summary of what
+currently works upstream on the Nexus 5, see my status page at
+https://masneyb.github.io/nexus-5-upstream/.
 
-Changes since v1:
-- None
+Brian Masney (4):
+  dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
+  dt-bindings: display: msm: gmu: add optional ocmem property
+  soc: qcom: add OCMEM driver
+  drm/msm/gpu: add ocmem init/cleanup functions
 
- .../devicetree/bindings/display/msm/gmu.txt   | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Rob Clark (2):
+  firmware: qcom: scm: add OCMEM lock/unlock interface
+  firmware: qcom: scm: add support to restore secure config to
+    qcm_scm-32
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-index 90af5b0a56a9..e5596994df7b 100644
---- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-@@ -31,6 +31,10 @@ Required properties:
- - iommus: phandle to the adreno iommu
- - operating-points-v2: phandle to the OPP operating points
- 
-+Optional properties:
-+- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-+         SoCs. See Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml.
-+
- Example:
- 
- / {
-@@ -63,3 +67,49 @@ Example:
- 		operating-points-v2 = <&gmu_opp_table>;
- 	};
- };
-+
-+a3xx example with OCMEM support:
-+
-+/ {
-+	...
-+
-+	gpu: adreno@fdb00000 {
-+		compatible = "qcom,adreno-330.2",
-+		             "qcom,adreno";
-+		reg = <0xfdb00000 0x10000>;
-+		reg-names = "kgsl_3d0_reg_memory";
-+		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "kgsl_3d0_irq";
-+		clock-names = "core",
-+		              "iface",
-+		              "mem_iface";
-+		clocks = <&mmcc OXILI_GFX3D_CLK>,
-+		         <&mmcc OXILICX_AHB_CLK>,
-+		         <&mmcc OXILICX_AXI_CLK>;
-+		ocmem = <&ocmem>;
-+		power-domains = <&mmcc OXILICX_GDSC>;
-+		operating-points-v2 = <&gpu_opp_table>;
-+		iommus = <&gpu_iommu 0>;
-+	};
-+
-+	ocmem: ocmem@fdd00000 {
-+		compatible = "qcom,msm8974-ocmem";
-+
-+		reg = <0xfdd00000 0x2000>,
-+		      <0xfec00000 0x180000>;
-+		reg-names = "ctrl",
-+		             "mem";
-+
-+		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-+		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-+		clock-names = "core",
-+		              "iface";
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		gmu-sram@0 {
-+			reg = <0x0 0x100000>;
-+		};
-+	};
-+};
+ .../devicetree/bindings/display/msm/gmu.txt   |  50 ++
+ .../bindings/sram/qcom/qcom,ocmem.yaml        |  84 ++++
+ drivers/firmware/qcom_scm-32.c                |  52 ++-
+ drivers/firmware/qcom_scm-64.c                |  12 +
+ drivers/firmware/qcom_scm.c                   |  53 +++
+ drivers/firmware/qcom_scm.h                   |   9 +
+ drivers/gpu/drm/msm/Kconfig                   |   1 +
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.c         |  28 +-
+ drivers/gpu/drm/msm/adreno/a3xx_gpu.h         |   3 +-
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.c         |  25 +-
+ drivers/gpu/drm/msm/adreno/a4xx_gpu.h         |   3 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  40 ++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h       |  10 +
+ drivers/soc/qcom/Kconfig                      |  10 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/ocmem.c                      | 433 ++++++++++++++++++
+ include/linux/qcom_scm.h                      |  26 ++
+ include/soc/qcom/ocmem.h                      |  62 +++
+ 18 files changed, 857 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sram/qcom/qcom,ocmem.yaml
+ create mode 100644 drivers/soc/qcom/ocmem.c
+ create mode 100644 include/soc/qcom/ocmem.h
+
 -- 
 2.20.1
 
