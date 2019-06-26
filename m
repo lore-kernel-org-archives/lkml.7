@@ -2,119 +2,92 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B042BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982ECC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843B8205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="XC+xHE8m"
+	by mail.kernel.org (Postfix) with ESMTP id 7250420659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561520944;
+	bh=jR+4A1dwMOdo0F/s8t4BNQ1CilH+GXDKBG8569YINPI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=apwg0+5ylWusylVtOzY2k8NvMrpF9veyG1FQQn/Dlh48/uJg4wW38yfmAogfVOXPo
+	 wirKrSlzoXoq+RgPihhhIQgGkjm9rfjlnHyV59QVZVfonS7KhnnrAL63pF9vG4lNBn
+	 tNDc71tW5w7LP6GES7kvNjviUSI9D2R3HqfQ9YnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfFZDs4 (ORCPT
+        id S1727485AbfFZDoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:48:56 -0400
-Received: from mail-eopbgr680052.outbound.protection.outlook.com ([40.107.68.52]:63875
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726631AbfFZDsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:48:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MipVIl/vK4jT6xfDxXZnl22+gCgO6Ner30cT/dH+FYA=;
- b=XC+xHE8mDv2cKU9kwuQMb6VQg0eKbWnjkIk5SsfB0kSFU6ULjTRlUEqFWgmQz7a3Q9kmvR/84s4vmm/7KHXrf1VEfLvCmLPxwYjh6pwTI5XdghYKz6BtechdSpjdRTe4tw0uOepeVhFRAbM9c820ZvwzV2NyforHfSAJ8DOR4Yg=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4918.namprd05.prod.outlook.com (52.135.235.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Wed, 26 Jun 2019 03:48:49 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Wed, 26 Jun 2019
- 03:48:49 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Andy Lutomirski <luto@kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
+        Tue, 25 Jun 2019 23:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbfFZDn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:59 -0400
+Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8231020883;
+        Wed, 26 Jun 2019 03:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561520639;
+        bh=jR+4A1dwMOdo0F/s8t4BNQ1CilH+GXDKBG8569YINPI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bPqq6y8Z9KMBkyrPHLdY/0kQpYXXSxfN4b32NlZQ/KxrwJO64nH1T6k5/XLmMNx1u
+         fq9mZx5ngIDrVrBIh3CZyUYvrxKNB51eOWGiiwXq/Iav441hHsR2fQcj60DU8dH5no
+         Txns8/7kun7nBWelcgdHzyZOQol1wycKBDl9eIYY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
         Sasha Levin <sashal@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        kvm list <kvm@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
-Thread-Topic: [PATCH 4/9] x86/mm/tlb: Flush remote and local TLBs concurrently
-Thread-Index: AQHVIbQneqvfvnASJUSZoJZyXs9UlaatXWmAgAADTQA=
-Date:   Wed, 26 Jun 2019 03:48:49 +0000
-Message-ID: <28C3D489-54E4-4670-B726-21B09FA469EE@vmware.com>
-References: <20190613064813.8102-1-namit@vmware.com>
- <20190613064813.8102-5-namit@vmware.com>
- <CALCETrXyJ8y7PSqf+RmGKjM4VSLXmNEGi6K=Jzw4jmckRQECTg@mail.gmail.com>
-In-Reply-To: <CALCETrXyJ8y7PSqf+RmGKjM4VSLXmNEGi6K=Jzw4jmckRQECTg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [204.134.128.110]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eb2700b8-7c95-44a7-7ea3-08d6f9e932f9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB4918;
-x-ms-traffictypediagnostic: BYAPR05MB4918:
-x-microsoft-antispam-prvs: <BYAPR05MB4918241570189A72A62A0AD6D0E20@BYAPR05MB4918.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(346002)(136003)(376002)(199004)(189003)(76116006)(102836004)(33656002)(91956017)(81156014)(76176011)(446003)(2616005)(316002)(11346002)(6486002)(73956011)(7736002)(6116002)(6916009)(36756003)(229853002)(54906003)(305945005)(66066001)(81166006)(66556008)(6506007)(8936002)(14454004)(7416002)(476003)(256004)(86362001)(4326008)(2906002)(53546011)(64756008)(6512007)(8676002)(26005)(6436002)(6246003)(4744005)(66946007)(71190400001)(66446008)(53936002)(186003)(25786009)(486006)(68736007)(478600001)(66476007)(71200400001)(3846002)(99286004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4918;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: my4KTkN3aqGXmWhsjfVVxjr2Sm5jxWwCaMIuqKK1SsSqfx8cHPx4n7R/9FEhekYtgpGmPoA2h6nrHG+Rz9L+JQsOqVLuwNvdEQaMWrCZP5qmj2mkG2t8zspoeNUHe6nCs4Y376EXS5L+59rbBaGcI7/Uh5HlOSRZEGrZdEiUA+DWcY+l2XlRv9JlVTF/g2eykA/66MtRJsOCSLrhfyecmaFOXkw9qYctXE2l1tb4y03sQ948HXUHOY4Sm2rNKOqk6IcdUuaYwgu2eYDCUjv3QsrQk85ptyza2hGIyDPYsJNr/D2fB3z+zk1AWlB0T9oDTOsQLCVM30dXJaJTr6JzyyuaVbSXADluDzrGIjHaSB+X+uG1sYe+/Oz6VFJpDdB7qrQQOhC59RFt//fXiwkrodWD5nTlq09DMzrcv+Fmdyo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E62AD8D44ED93F48AE881F9F9D2418DD@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 11/34] drm/mediatek: clear num_pipes when unbind driver
+Date:   Tue, 25 Jun 2019 23:43:12 -0400
+Message-Id: <20190626034335.23767-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
+References: <20190626034335.23767-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb2700b8-7c95-44a7-7ea3-08d6f9e932f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 03:48:49.6652
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4918
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 25, 2019, at 8:36 PM, Andy Lutomirski <luto@kernel.org> wrote:
->=20
-> On Wed, Jun 12, 2019 at 11:49 PM Nadav Amit <namit@vmware.com> wrote:
->> To improve TLB shootdown performance, flush the remote and local TLBs
->> concurrently. Introduce flush_tlb_multi() that does so. The current
->> flush_tlb_others() interface is kept, since paravirtual interfaces need
->> to be adapted first before it can be removed. This is left for future
->> work. In such PV environments, TLB flushes are not performed, at this
->> time, concurrently.
->=20
-> Would it be straightforward to have a default PV flush_tlb_multi()
-> that uses flush_tlb_others() under the hood?
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-I prefer not to have a default PV implementation that should anyhow go away=
-.
+[ Upstream commit a4cd1d2b016d5d043ab2c4b9c4ec50a5805f5396 ]
 
-I can create unoptimized untested versions for Xen and Hyper-V, if you want=
-.
+num_pipes is used for mutex created in mtk_drm_crtc_create(). If we
+don't clear num_pipes count, when rebinding driver, the count will
+be accumulated. From mtk_disp_mutex_get(), there can only be at most
+10 mutex id. Clear this number so it starts from 0 in every rebind.
+
+Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 3df8a9dbccfe..fd83046d8376 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -393,6 +393,7 @@ static void mtk_drm_unbind(struct device *dev)
+ 	drm_dev_unregister(private->drm);
+ 	mtk_drm_kms_deinit(private->drm);
+ 	drm_dev_put(private->drm);
++	private->num_pipes = 0;
+ 	private->drm = NULL;
+ }
+ 
+-- 
+2.20.1
 
