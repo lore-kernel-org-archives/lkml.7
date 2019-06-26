@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5FFC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F84C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B6E20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDBF208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520792;
-	bh=tUJqsXK2fNnQ9HIBJm3gi0wORPA2OfQ0ajQBMKCUlys=;
+	s=default; t=1561520794;
+	bh=R7T6KrqbYIB+EsbZJFs9v2U5PJ6bU6CdNAq4TxwyQxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H91XZQW8B9QvUfD/UDmEtJOCHXSLdLdNQvDhdXhKqMASIweg8qRTHWZA8KyQGmst5
-	 ywPJNQhd5eKLRnz4qjL3rG47EbL/tbC4TFDYB6yIHCzpmaM9F3tgdc0pMsvEv5le4b
-	 ewHk9R63ALd9SlOV5s3DWNnbWS8bVeSHo5KAGy1Y=
+	b=SJfnr1S1mY29X7NURA6Jzd6BoW2QhZA4BaR4MGphm6fa46DHvZP80y0nI+d3HyytR
+	 YzjF+VcK+AWfJN2NXqmr7DQrF5fx8MM2s4Iz8Zc39iKilBPBhD9z+1SNVmLk6khVJe
+	 wsV5jHHPx4LiNVAnwBukPMfORSPIJnyBw3iKOzPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfFZDqb (ORCPT
+        id S1727994AbfFZDqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58178 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727087AbfFZDq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:46:29 -0400
+        id S1726357AbfFZDqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:46:30 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-82.mobile.att.net [107.77.172.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B644205ED;
-        Wed, 26 Jun 2019 03:46:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CBE8214DA;
+        Wed, 26 Jun 2019 03:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520788;
-        bh=tUJqsXK2fNnQ9HIBJm3gi0wORPA2OfQ0ajQBMKCUlys=;
+        s=default; t=1561520790;
+        bh=R7T6KrqbYIB+EsbZJFs9v2U5PJ6bU6CdNAq4TxwyQxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ec3PoCVsUxDLzCh/s0aK5VWO/Dq+e7YA4tRtBPIQQnNF0EEQnWeJ3RwJCNNXVg+MV
-         h3lRucYcAgSVrTqHedQ1+36ygdr4+r7vAzIaudHcbUhYLOwKqX2i2aKeFOAIUS4t/B
-         uiqRxpUJ9FYy1xvOiVq4qWC+SRPQ8H0C+/t11VIk=
+        b=dWYWY3XPoNbi5x4gykhP1M7FPFiZ5T51spoqz34Gw4GPSsyWp7SD69AD86CmLRLPQ
+         lu1bIOrnMZk8mqBPSCSxO3fN4O7DjGpYowKd1sbxtAwcFC79VfS+sqaQ0NM6uAfvbe
+         GMO4sFmNObeKwHWLyG+EAw8nIxlvz08hgsxzVYh0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        James Grant <jamesg@zaltys.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/11] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
-Date:   Tue, 25 Jun 2019 23:45:58 -0400
-Message-Id: <20190626034602.24367-8-sashal@kernel.org>
+Cc:     Don Brace <don.brace@microsemi.com>,
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Matt Perricone <matt.perricone@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/11] scsi: hpsa: correct ioaccel2 chaining
+Date:   Tue, 25 Jun 2019 23:45:59 -0400
+Message-Id: <20190626034602.24367-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034602.24367-1-sashal@kernel.org>
 References: <20190626034602.24367-1-sashal@kernel.org>
@@ -61,39 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Don Brace <don.brace@microsemi.com>
 
-[ Upstream commit fbc318afadd6e7ae2252d6158cf7d0c5a2132f7d ]
+[ Upstream commit 625d7d3518875c4d303c652a198feaa13d9f52d9 ]
 
-Gadget drivers may queue request in interrupt context. This would lead to
-a descriptor allocation in that context. In that case we would hit
-BUG_ON(in_interrupt()) in __get_vm_area_node.
+- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_LAST_SG for
+  the last s/g element.
 
-Also remove the unnecessary cast.
+- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_CHAIN when
+  chaining.
 
-Acked-by: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Tested-by: James Grant <jamesg@zaltys.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Matt Perricone <matt.perricone@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/hpsa.c     | 7 ++++++-
+ drivers/scsi/hpsa_cmd.h | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index 8f32b5ee7734..6df1aded4503 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -935,8 +935,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struct lpc32xx_udc *udc)
- 	dma_addr_t			dma;
- 	struct lpc32xx_usbd_dd_gad	*dd;
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 0b8db8a74d50..9f98c7211ec2 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -4815,7 +4815,7 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
+ 			curr_sg->reserved[0] = 0;
+ 			curr_sg->reserved[1] = 0;
+ 			curr_sg->reserved[2] = 0;
+-			curr_sg->chain_indicator = 0x80;
++			curr_sg->chain_indicator = IOACCEL2_CHAIN;
  
--	dd = (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
--			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
-+	dd = dma_pool_alloc(udc->dd_cache, GFP_ATOMIC | GFP_DMA, &dma);
- 	if (dd)
- 		dd->this_dma = dma;
+ 			curr_sg = h->ioaccel2_cmd_sg_list[c->cmdindex];
+ 		}
+@@ -4832,6 +4832,11 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
+ 			curr_sg++;
+ 		}
  
++		/*
++		 * Set the last s/g element bit
++		 */
++		(curr_sg - 1)->chain_indicator = IOACCEL2_LAST_SG;
++
+ 		switch (cmd->sc_data_direction) {
+ 		case DMA_TO_DEVICE:
+ 			cp->direction &= ~IOACCEL2_DIRECTION_MASK;
+diff --git a/drivers/scsi/hpsa_cmd.h b/drivers/scsi/hpsa_cmd.h
+index 5961705eef76..39bcbec93c60 100644
+--- a/drivers/scsi/hpsa_cmd.h
++++ b/drivers/scsi/hpsa_cmd.h
+@@ -516,6 +516,7 @@ struct ioaccel2_sg_element {
+ 	u8 reserved[3];
+ 	u8 chain_indicator;
+ #define IOACCEL2_CHAIN 0x80
++#define IOACCEL2_LAST_SG 0x40
+ };
+ 
+ /*
 -- 
 2.20.1
 
