@@ -2,175 +2,142 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65594C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB4CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3081F2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B41C2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IuX+cTrj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Bisy1OAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfFZSLJ (ORCPT
+        id S1726437AbfFZSPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:11:09 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45403 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfFZSLJ (ORCPT
+        Wed, 26 Jun 2019 14:15:24 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47141 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbfFZSPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:11:09 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m206so2622333oib.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 11:11:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kkYbiSTWGK4F/ssJpkJ5iQHzwJyTPwJlwzmqFVyv6BQ=;
-        b=IuX+cTrj8KVC0cjl5SAn479N9pAU8DQxPrzzBE+KeOgtp8IO5vGkZoo1b6DtkqQLW7
-         6d21Jp6rpnZE3YnpLVUDlJygM5ZIPZlWxbbuV79pzXHAn2m5bg+kQvN7kVFbCOHqgfEn
-         ELvbPLt/+puWfg4cbzmOiQpoCZCPPsiZR0y1xlsubLcwQ43nAITH4V1GlTzlB3wHQxDe
-         F/j9RQrTRQHFaRj7jH7xor95S7V/3GsJBVxxoabmshKHoKkoakQJUdlHUspv+PvenKc+
-         FsQeVckFhUWOdReLOnM4M1KbXZmssJ+8quAAYgF1U2WwybZVQiG/kitFssW3aagmzrld
-         cfbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kkYbiSTWGK4F/ssJpkJ5iQHzwJyTPwJlwzmqFVyv6BQ=;
-        b=Dg3IExLVEQDCpvYbj4GVTrHiENe4XcASCekAW2q9BLLZeiIE1GSnpOZ3nwx63LgT3P
-         MRzPOMXlFsSI7b8jGUX5Oqdvj38la+EeCTblL8nnPBlV9wmqDLTNFgQmGJrZymKR8UsA
-         kiTI2SmszrjD7yad7ot01SSr5mtODRD1puHyxCdyzYo+XeSJTfHacpSbq5K8fND9LstF
-         8mdLwQ+E2rs1dbkucXUMtZ1CwW8DsklD5XjmS4H27U/E5hzrTV1E+7tVh1FwZqacyPLk
-         fo/lMm7j7bqV/XT9AxFv0yTnDtdkC4rdTqkq8mZehp1FZKkVjXEuyIKHsX61qPP0elsr
-         znnA==
-X-Gm-Message-State: APjAAAWrqUeZy0fCc0BazRrznZQQlilkx6IeI+FPvKLCUsrz2ykq595W
-        pHf7Oo7Xy+domaZs8G9MgAIjS1GbGCADEQ2iAqtCNA==
-X-Google-Smtp-Source: APXvYqxTQuBLL+L0U/juwb7BvplBxisurDryI9LUdGwEANvm3S6wL+EqZeE03RTA0braPBtM9FtG2WhZRrHDETTfsbM=
-X-Received: by 2002:a05:6808:6c7:: with SMTP id m7mr221316oih.43.1561572667875;
- Wed, 26 Jun 2019 11:11:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190622003449.33707-1-saravanak@google.com> <20190624094349.rtjb7nuv6g7zmsf2@vireshk-i7>
- <CAGETcx_ggG8oDnAVaSfuHfip1ozjQpFiGs15cz8nLQnzjTiSTg@mail.gmail.com>
- <20190625041054.2ceuvnuuebc6hsr5@vireshk-i7> <CAGETcx8MuXkQyD5qZBC948-hOu=kWd4hPk2Qiu-zWOcHBCc=FA@mail.gmail.com>
- <20190625052227.3v74l6xtrkydzx6w@vireshk-i7> <CAGETcx_v05PfscMi2qiYwHRMLryyA_494+h+kmJ3mD+GOjjeLA@mail.gmail.com>
- <20190626063240.kgdiy7xsz4mahrdr@vireshk-i7>
-In-Reply-To: <20190626063240.kgdiy7xsz4mahrdr@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 26 Jun 2019 11:10:31 -0700
-Message-ID: <CAGETcx_KH6pqgqZFKddWmgiUX3n+XBU6BoFXkVvPdA4vMDHWsw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Add required-opps support to devfreq passive gov
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 26 Jun 2019 14:15:24 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190626181522euoutp01ceea69eb533df2a00e2211888b003ff4~r0kyv81li0221802218euoutp01a
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 18:15:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190626181522euoutp01ceea69eb533df2a00e2211888b003ff4~r0kyv81li0221802218euoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561572922;
+        bh=SAjVXWVU+wN/bLQEdEYQ4VStpx/WPHw7CzyrLqzCoig=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Bisy1OAYnpfhKL11dIJlF085onDtBeX46jzjM2sCApKz4pXBhOS0jP9+eMuCcSJ6k
+         /KsfOzdD4nAgbTm0tPTF8RdbbaA7m1Ckf63ZHuywYmKZrC/wmR8QFYEXWPUpM+ub6b
+         5R4SM7pRNd3/nfTF8g8V612+VvqwflLMPCdoUaoc=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190626181521eucas1p2ba4b961787a9c429885d8bb3ffa158c8~r0kxclAcY3035230352eucas1p2S;
+        Wed, 26 Jun 2019 18:15:21 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id CE.BB.04298.836B31D5; Wed, 26
+        Jun 2019 19:15:20 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190626181520eucas1p1817d31d958b8755600f0745e92edef5a~r0kwrobEp2194821948eucas1p1U;
+        Wed, 26 Jun 2019 18:15:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190626181520eusmtrp2264b0ed253ef69b9931615ce8127cb08~r0kwdkFar2043720437eusmtrp2L;
+        Wed, 26 Jun 2019 18:15:20 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-3c-5d13b638801e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7D.34.04140.836B31D5; Wed, 26
+        Jun 2019 19:15:20 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190626181519eusmtip2d493497d0d5fa4fc1a0b7c5c29712618~r0kvu_NFz0894308943eusmtip2D;
+        Wed, 26 Jun 2019 18:15:19 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH bpf v4 0/2] xdp: fix hang while unregistering device bound
+ to xdp socket
+Date:   Wed, 26 Jun 2019 21:15:13 +0300
+Message-Id: <20190626181515.1640-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSbUhTYRTHe3a3u6u1uk7R0yaKU0ElNakPF5VqYDD6ZI4gJstuedGRm7r5
+        mlCrRE2pRViiCJqSr2RmQ91QyWGaZhrmB400XwqnoplmKTNt80769jv/F87h4SEwYQlPRKg0
+        GYxWQ6dIcFdue//2SCjV7q48uVMRRe0UtCJqo28Ap2qf/caoytF8LjVeuM2n+q35OGVuKceo
+        T+ZKnGqwvLNr1Z5Uh6EHnTssMzZOcmSmiim+rLZrkSMrnhjDZGUls5jsobEJyTbafGL5Ctfo
+        RCZFlcVow89cdU1++lme9grPWdra5OjRArcYuRBAnob5ykZeMXIlhGQDgumFeufwC4Hp4w+c
+        HTYQ3DVX8Q4q95cLcAcLyXoEY3OX2NAWguH+L/sGTp6AoeY+5GAPUgQ/Ozv4jhBGlmNgnC/d
+        X+5OKmBYX4E5mEsGgnlqju9gARkJq7VNOLvNF5pb32COMpA2HKwvTBzWiIE+g4XPsjssDRid
+        7A17pipn5jZ8zV9EbLkIQZll12mcBePyiL1A2E8KhpfmcFaWwve3E/sykEdhYsXNIWN2fNxe
+        hrGyAIoKhGw6AGy99RjLIphc3XBeIIM73TVc9oGU0Fk3ij9CPhX/d1Uj1IS8mEydOonRRWiY
+        7DAdrdZlapLCrqeq25D9i7zfHVjvRJtj1yyIJJDkiEDvK1QKeXSWLldtQUBgEg/Bc5pUCgWJ
+        dO5NRpuaoM1MYXQWJCa4Ei9B3qGZeCGZRGcwNxgmjdEeuBzCRaRHPq+j9HT7Mcn8+YvrNYr0
+        ANvMg6D4kLrL48H9M/Lj0T0mEb+3WlWo34mbVo+tWQOTGnc0f0J7/C8kdq907RFNynhv7Jtb
+        i/yeOCHI+GQkhuHb1rKHygct1nQ/qXRWGls6mGK4FReena7M8yzM+eBn+2sQq8RX6iZP+UdO
+        yxUSri6ZjgjBtDr6H5frnlUeAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsVy+t/xe7oW24RjDdb8ZrP407aB0eLzkeNs
+        FosXfmO2mHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
+        nbPusnss3vOSyaPrxiVmj+ndD5k9+rasYvT4vEkugD1Kz6Yov7QkVSEjv7jEVina0MJIz9DS
+        Qs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2PareCCjWwVr358ZWpgfM7SxcjJISFgItH5
+        uo2ti5GLQ0hgKaNEy85DbBAJKYkfvy6wQtjCEn+udUEVfWOUWHbiJDNIgk1AR+LU6iOMILYI
+        UMPHHdvZQWxmgYXMEl8mmYDYwgIRElvWrAGLswioSuy6+wjM5hWwkni3eBXUMnmJ1RsOME9g
+        5FnAyLCKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMHi3Hfu5ZQdj17vgQ4wCHIxKPLwN8kKx
+        QqyJZcWVuYcYJTiYlUR4lyYKxArxpiRWVqUW5ccXleakFh9iNAVaPpFZSjQ5HxhZeSXxhqaG
+        5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGM8x7HNwvfy7Oza2c1HvzowN
+        l5lU0sIvn91gtn4iT211rlnhOnfm3zOWaC//+qJ/RXap7bP/Fjs7Y389tG2eteDJ+9sLT2cw
+        NTPcrrjzU6RhxreDEjst3+cJbtwawjtPz1yteeV+ZYHsA4siU+76VPRJPzEV8+aqPRzF/sb+
+        ccDHqXanFnI+X63EUpyRaKjFXFScCAAneowpdAIAAA==
+X-CMS-MailID: 20190626181520eucas1p1817d31d958b8755600f0745e92edef5a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190626181520eucas1p1817d31d958b8755600f0745e92edef5a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190626181520eucas1p1817d31d958b8755600f0745e92edef5a
+References: <CGME20190626181520eucas1p1817d31d958b8755600f0745e92edef5a@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:32 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 24-06-19, 22:29, Saravana Kannan wrote:
-> > No, the CPUs will be the "parent" and the cache will be the "child".
-> > CPU is a special case when it comes to the actual software (not DT) as
-> > we'll need the devfreq governor to look at all the CPUfreq policies to
-> > decide the cache frequency (max of all their requirements).
-> >
-> > I think "master" and "slave" would have been a better term as the
-> > master device determines its frequency using whatever means and the
-> > "slave" device just "follows" the master device.
->
-> Okay, so to confirm again this is what we will have:
->
-> - CPUs are called masters and Caches are slaves.
->
-> - The devfreq governor we are talking about takes care of changing
->   frequency of caches (slaves) and chooses a target frequency for
->   caches based on what the masters are running at.
->
-> - The CPUs OPP nodes will have required-opps property and will be
->   pointing to the caches OPP nodes. The CPUs may already be using
->   required-opps node for PM domain performance state thing.
->
->
-> Now the problem is "required-opp" means something really *required*
-> and it is not optional.
+Version 4:
 
-But we could interpret it as "required" for different things.
+    * 'xdp_umem_clear_dev' exposed to be used while unregistering.
+    * Added XDP socket state to track if resources already unbinded.
+    * Splitted in two fixes.
 
-> Like a specific voltage level before we can
-> switch to a particular frequency.
+Version 3:
 
-Required for stability.
+    * Declaration lines ordered from longest to shortest.
+    * Checking of event type moved to the top to avoid unnecessary
+      locking.
 
-> And this is how I have though of it
-> until now. And this shouldn't be handled asynchronously, i.e. required
-> OPPs must be set while configuring OPP of a device.
+Version 2:
 
-The users of clocks are expected to set up the voltage correctly
-before changing the frequency, the drivers are expected to power up
-the device before trying to access its registers, etc. So I don't
-think there is one correct way. Also OPP sets the pstate only if
-dev_pm_opp_set_genpd_virt_dev() has been called to set them up. So
-this is not a mandatory principle in the kernel that a framework
-providing an API should have all the dependencies. So I don't think
-we'll be violating some golden rule.
+    * Completely re-implemented using netdev event handler.
 
-> So, when a CPU changes frequency, we must change the performance state
-> of PM domain and change frequency/bw of the cache synchronously.
+Ilya Maximets (2):
+  xdp: hold device for umem regardless of zero-copy mode
+  xdp: fix hang while unregistering device bound to xdp socket
 
-I mean, it's going to be changed when we get the CPUfreq transition
-notifiers. From a correctness point of view, setting it inside the OPP
-framework is not any better than doing it when we get the notifiers.
+ include/net/xdp_sock.h |  5 +++
+ net/xdp/xdp_umem.c     | 27 +++++++------
+ net/xdp/xdp_umem.h     |  1 +
+ net/xdp/xsk.c          | 88 ++++++++++++++++++++++++++++++++++++------
+ 4 files changed, 99 insertions(+), 22 deletions(-)
 
-> And
-> in such a case "required-opps" can be a very good fit for this use
-> case.
+-- 
+2.17.1
 
-Glad you agree :)
-
-> But with what you are trying to do it is no longer required-opp but
-> good-to-have-opp. And that worries me.
-
-I see this as "required for good performance". So I don't see it as
-redefining required-opps. If someone wants good performance/power
-balance they follow the "required-opps". Technically even the PM
-pstates are required for good power. Otherwise, the system could leave
-the voltage at max and stuff would still work.
-
-Also, the slave device might need to get input from multiple master
-devices and aggregate the request before setting the slave device
-frequency. So I don't think OPP  framework would be the right place to
-deal with those things. For example, L3 might (will) have different
-mappings for big vs little cores. So that needs to be aggregated and
-set properly by the slave device driver. Also, GPU might have a
-mapping for L3 too. In which case the L3 slave driver needs to take
-input from even more masters before it decides its frequency. But most
-importantly, we still need the ability to change governors for L3.
-Again these are just examples with L3 and it can get more complicated
-based on the situation.
-
-Most importantly, instead of always going by mapping, one might decide
-to scale the L3 based on some other governor (that looks at some HW
-counter). Or just set it to performance governor for a use case for
-which performance is more important. All of this comes for free with
-devfreq and if we always set it from OPP framework we don't give this
-required control to userspace.
-
-I think going through devfreq is the right approach for this. And we
-can always rewrite the software if we find problems in the future. But
-as it stands today, this will help cases like exynos without the need
-for a lot of changes. Hope I've convinced you.
-
--Saravana
