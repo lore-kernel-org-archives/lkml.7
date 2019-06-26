@@ -2,139 +2,97 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 160DDC48BD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA98C48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34782086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xsAnA6we"
+	by mail.kernel.org (Postfix) with ESMTP id E810D20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561511568;
+	bh=rBZhPauoSDDehq7ofjORYPEEU1ACkLNNLGUBmHlNylk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=juvxhBqqnhMoJ/YhcDzJnGBinBV1AUH0TENd05ej9v2YF323+mGQYTafM15kQym8Z
+	 jignd9dXJKhRQBOfszCe5wQbqFfEi3b367inScg1OaYo0zdRgPGDGCuUc/X+iQly8v
+	 1G0xiUKB6WIgbxU9dCS5jzmnKC076b7XTPGjtHpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726382AbfFZBKt (ORCPT
+        id S1726467AbfFZBMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:10:49 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37158 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZBKt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:10:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UtW5OvMCSjQYk0vQjDM8NYHUQEBuLOBRls0IoB2nKTs=; b=xsAnA6weNkKTfYGnYr65dpdaI0
-        IowfByeZt/ku9RrguyPceaIexJ4vtqnZGbqKx1+1cpwAVxkNt46HoYucOCKRWgu/GlykISrhxQr0r
-        s7FS3+vjwjB2DRbaBR0v/oTzKUOAL/mKXzjjs4YwQ4EvTcOlj8GuJsPwCz9h1we9G/8ppsxr0/vUx
-        62PSjolrNJIr/rrwJJyeJabZKFu1wXyrdmk/+HLc5DDsejRhK4LieK3WDT2JFKEkZQ80SWIMsG68G
-        0VVpU01ii5XAnZe2K7MqB4WQtSHOKs1ya8IILXlK0MkMku2eWM5EPG/NJX/lzxD/N9ZSHajbYh0EZ
-        oZCp2GFA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfwSQ-0002pd-J8; Wed, 26 Jun 2019 01:10:43 +0000
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] extcon: fix fsa9480 Kconfig warning and build errors
-Message-ID: <1075ea60-6657-ce8d-b527-639b4fc896ec@infradead.org>
-Date:   Tue, 25 Jun 2019 18:10:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 25 Jun 2019 21:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726223AbfFZBMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 21:12:43 -0400
+Received: from localhost (unknown [172.104.248.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD7AD20659;
+        Wed, 26 Jun 2019 01:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561511562;
+        bh=rBZhPauoSDDehq7ofjORYPEEU1ACkLNNLGUBmHlNylk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P92pQSJjf0QXzLbVFgUxB0WFJM5VkPGPJIlR2oLdKCSMFu+Q5BynoQ3019OkAIX8D
+         s2qlEDU1Ch6lRkUX113g9vzaEW2nlxYXBUatxbYs7ew418d2xsyvs/DQTOU3LLzi6n
+         pCmckF6NrI32unPabnUm7817QITTlXaMCHMarfD4=
+Date:   Wed, 26 Jun 2019 09:07:46 +0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Myron Stowe <myron.stowe@redhat.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: mmap/munmap in sysfs
+Message-ID: <20190626010746.GA22454@kroah.com>
+References: <20190625223608.GB103694@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625223608.GB103694@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Tue, Jun 25, 2019 at 05:36:08PM -0500, Bjorn Helgaas wrote:
+> Hi Greg, et al,
+> 
+> Userspace can mmap PCI device memory via the resourceN files in sysfs,
+> which use pci_mmap_resource().  I think this path is unaware of power
+> management, so the device may be runtime-suspended, e.g., it may be in
+> D1, D2, or D3, where it will not respond to memory accesses.
+> 
+> Userspace accesses while the device is suspended will cause PCI
+> errors, so I think we need something like the patch below.  But this
+> isn't sufficient by itself because we would need a corresponding
+> pm_runtime_put() when the mapping goes away.  Where should that go?
+> Or is there a better way to do this?
+> 
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 6d27475e39b2..aab7a47679a7 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1173,6 +1173,7 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
+>  
+>  	mmap_type = res->flags & IORESOURCE_MEM ? pci_mmap_mem : pci_mmap_io;
+>  
+> +	pm_runtime_get_sync(pdev);
+>  	return pci_mmap_resource_range(pdev, bar, vma, mmap_type, write_combine);
+>  }
+>  
 
-Fix Kconfig dependency warning and subsequent build errors caused by
-the Kconfig entry for EXTCON-FSA9480.  It should not select
-REGMAP_I2C unless I2C is already set/enabled.
+Ugh, we never thought about this when adding the mmap sysfs interface
+all those years ago :(
 
-WARNING: unmet direct dependencies detected for REGMAP_I2C
-  Depends on [n]: I2C [=n]
-  Selected by [y]:
-  - EXTCON_FSA9480 [=y] && EXTCON [=y] && INPUT [=y]
+I think you are right, this will not properly solve the issue, but I
+don't know off the top of my head where to solve this.  Maybe Rafael has
+a better idea as he knows the pm paths much better than I do?
 
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_byte_reg_read’:
-../drivers/base/regmap/regmap-i2c.c:25:2: error: implicit declaration of function ‘i2c_smbus_read_byte_data’ [-Werror=implicit-function-declaration]
-  ret = i2c_smbus_read_byte_data(i2c, reg);
-  ^
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_byte_reg_write’:
-../drivers/base/regmap/regmap-i2c.c:43:2: error: implicit declaration of function ‘i2c_smbus_write_byte_data’ [-Werror=implicit-function-declaration]
-  return i2c_smbus_write_byte_data(i2c, reg, val);
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_reg_read’:
-../drivers/base/regmap/regmap-i2c.c:61:2: error: implicit declaration of function ‘i2c_smbus_read_word_data’ [-Werror=implicit-function-declaration]
-  ret = i2c_smbus_read_word_data(i2c, reg);
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_reg_write’:
-../drivers/base/regmap/regmap-i2c.c:79:2: error: implicit declaration of function ‘i2c_smbus_write_word_data’ [-Werror=implicit-function-declaration]
-  return i2c_smbus_write_word_data(i2c, reg, val);
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_read_swapped’:
-../drivers/base/regmap/regmap-i2c.c:97:2: error: implicit declaration of function ‘i2c_smbus_read_word_swapped’ [-Werror=implicit-function-declaration]
-  ret = i2c_smbus_read_word_swapped(i2c, reg);
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_smbus_word_write_swapped’:
-../drivers/base/regmap/regmap-i2c.c:115:2: error: implicit declaration of function ‘i2c_smbus_write_word_swapped’ [-Werror=implicit-function-declaration]
-  return i2c_smbus_write_word_swapped(i2c, reg, val);
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_write’:
-../drivers/base/regmap/regmap-i2c.c:129:2: error: implicit declaration of function ‘i2c_master_send’ [-Werror=implicit-function-declaration]
-  ret = i2c_master_send(i2c, data, count);
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_gather_write’:
-../drivers/base/regmap/regmap-i2c.c:150:2: error: implicit declaration of function ‘i2c_check_functionality’ [-Werror=implicit-function-declaration]
-  if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_NOSTART))
-../drivers/base/regmap/regmap-i2c.c:163:2: error: implicit declaration of function ‘i2c_transfer’ [-Werror=implicit-function-declaration]
-  ret = i2c_transfer(i2c->adapter, xfer, 2);
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_smbus_i2c_write’:
-../drivers/base/regmap/regmap-i2c.c:218:2: error: implicit declaration of function ‘i2c_smbus_write_i2c_block_data’ [-Werror=implicit-function-declaration]
-  return i2c_smbus_write_i2c_block_data(i2c, ((u8 *)data)[0], count,
-../drivers/base/regmap/regmap-i2c.c: In function ‘regmap_i2c_smbus_i2c_read’:
-../drivers/base/regmap/regmap-i2c.c:233:2: error: implicit declaration of function ‘i2c_smbus_read_i2c_block_data’ [-Werror=implicit-function-declaration]
-  ret = i2c_smbus_read_i2c_block_data(i2c, ((u8 *)reg)[0], val_size, val);
+thanks,
 
-../drivers/extcon/extcon-fsa9480.c: In function ‘fsa9480_module_init’:
-../drivers/extcon/extcon-fsa9480.c:383:2: error: implicit declaration of function ‘i2c_add_driver’ [-Werror=implicit-function-declaration]
-  return i2c_add_driver(&fsa9480_i2c_driver);
-../drivers/extcon/extcon-fsa9480.c: In function ‘fsa9480_module_exit’:
-../drivers/extcon/extcon-fsa9480.c:389:2: error: implicit declaration of function ‘i2c_del_driver’ [-Werror=implicit-function-declaration]
-  i2c_del_driver(&fsa9480_i2c_driver);
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
----
-Found in mmotm; applies to linux-next.
-
-To extcon maintainers:  there are a few more extcon driver Kconfig
-entries that seem to have this same problem of selecting REGMAP_I2C
-without checking that I2C is set/enabled.
-
- drivers/extcon/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- mmotm-2019-0625-1620.orig/drivers/extcon/Kconfig
-+++ mmotm-2019-0625-1620/drivers/extcon/Kconfig
-@@ -39,7 +39,7 @@ config EXTCON_AXP288
- 
- config EXTCON_FSA9480
- 	tristate "FSA9480 EXTCON Support"
--	depends on INPUT
-+	depends on INPUT && I2C
- 	select IRQ_DOMAIN
- 	select REGMAP_I2C
- 	help
-
-
+greg k-h
