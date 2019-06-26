@@ -2,93 +2,100 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61058C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0412FC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C0A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95A12082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AW93f0+w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBDF2Ibh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfFZK7q (ORCPT
+        id S1726948AbfFZLAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:59:46 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37058 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZK7q (ORCPT
+        Wed, 26 Jun 2019 07:00:47 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45860 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfFZLAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:59:46 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 131so1720265ljf.4;
-        Wed, 26 Jun 2019 03:59:44 -0700 (PDT)
+        Wed, 26 Jun 2019 07:00:47 -0400
+Received: by mail-pl1-f195.google.com with SMTP id bi6so1237903plb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 04:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fv9xgHLhDYmnhdRlJ12b6ZaV6F7rsmVKSKGlSFypmB0=;
-        b=AW93f0+wWO8xHqfQfeq02+uVvagQqg6g2aSwBswZ1jGXrtgSYEwDc4vrVjHnuHlusy
-         9ITI9WY6oemJDG13jGFQ8JytMx1Wa6+NtkgUnCFPVstLuqJRoQ0O5fdaD95S064TV+OU
-         xsm1LPYvsy/e1ujhFxUSIEw4YlJCcYUSYVeKqUYv0gNJB9Gl5AKBknpE1JbXhUssFjW6
-         NRRBN/FDvEPV6ZTQ+caKanSaEFRg4K5nDzMdsWRdhr2kRNxzkH8HjaMxPX8WcNvtMlHe
-         qIkm6FpIuodkpacPFmqbfYd/KNpwm/U8iwvnw05/9R5sDtmghJT31ZCCBLXkKrdiz8So
-         FBFw==
+        h=from:to:cc:subject:date:message-id;
+        bh=VdhU2ks81jo9UrjXZOm8gn8RMZx/sg7VdDnqoRepyqE=;
+        b=rBDF2IbhJqsbejWYMTlxvc33psvRPXREmLlH1kdj1sffS2GEpRGBd/3KU+XhYKueKo
+         X+EQyfMddlzhcC9Tl0wzQORvQ1bW66K6b0gsa9wt3R6/H1Axhm8w2kKwnFbpwFlcOdvz
+         6tRlrliU4HwUEcR9KZQ09pXc+vpCSgC2wdEePTtVVRRSlKeQQ5s81RkbDssKTwnhZneg
+         ct0dmSY17I3QbZ/5SUFm/H3tyoEyMLNhw2PFHI+ZNJscDX4J3xybD9YWMs9gYK+2Op7/
+         en73nUmQ3xiIIGmzxayHgcccJ8POvkUb5YkUA2t14LWTKWYmjBgHKbXO17UO+1IBF+8j
+         MZxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fv9xgHLhDYmnhdRlJ12b6ZaV6F7rsmVKSKGlSFypmB0=;
-        b=WsVfXgivSu+nH93Hnpb01QKOR/mHShnBzU0Uv32QGdaNnzlJTg8E1nI/74ieOHQbLD
-         gJHvI3FiS8S2KzkxWZy4v8nmVadmT7kYcD7YH3j96c3peM1el+HghYXuzdpoiXeYtUxD
-         BfKlWMUg8Ahlip4rHoTMHyx/cbyVIoVOe+00hvg5N70QZIQ9jQnWUStwDlN7ZXX78TRN
-         U+EFkD1Idie3gN6QJmRrsWJCxHUxT0MWorGWo04Y4w0x0nOi/wyenrAvMp9oBK7srQEl
-         hD6wGJJhauCK9D20G4weAX5iGQ4zoXUSvy5wX8X5rGGNHaoOjht0zDx4ov3KfNegcMpF
-         gQ5w==
-X-Gm-Message-State: APjAAAXxsTDYILH0kcFLky2pPvrxOWjzpmmXUBcq3rD0Aetgn/SHZ430
-        fyl7+XszHFUNtL504coi1ywYYAgIeLuZN4WbNLY=
-X-Google-Smtp-Source: APXvYqyaajySBdajl3vqXKwz2VD2Lk2DSCmiP3YMTp9EcxBO9jpD7CRAiLKwQLplLJ3nVmvjUP4aURNpERdDUfw/E+8=
-X-Received: by 2002:a2e:7d03:: with SMTP id y3mr2525177ljc.240.1561546784065;
- Wed, 26 Jun 2019 03:59:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <1561544420-15572-1-git-send-email-robert.chiras@nxp.com> <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
-In-Reply-To: <1561544420-15572-3-git-send-email-robert.chiras@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 26 Jun 2019 07:59:34 -0300
-Message-ID: <CAOMZO5CFSXHe7bFQ1xudmnm2=9sUL-FRqtzOtf_c=f7=e=bdqg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] drm/panel: Add support for Raydium RM67191 panel driver
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VdhU2ks81jo9UrjXZOm8gn8RMZx/sg7VdDnqoRepyqE=;
+        b=bWUH4DUZNrqe6lEHOYUnimFaLN6rH26q5xYZ5aH7Xs3Jf7F+YYcBsoKoDINN+p5/z6
+         yTdwYCKtgKDdM582trlm7iTgrEK0ZgdR5hkElK1By9oXXvi00rxchYDlJLhxh9AbPJ7F
+         5ZR+AZRtOEC8a9GIaeIQqISPrZvcAlJ01dY4JI78S6jMAIA2zBn7knKXEeP+TuQ+hHJJ
+         U08vps9DckeaA4P8xTf/EXzKGrn0NSMe2Bk0Qi/nfqttAByVyq03ezPiaPSZq4Jjr1NR
+         eYLkY3s0oKI3HOm+6fhYRJZT/hdkjZNFNEYoF4XQf3PfxppjbqKZnrKBecZifVz9w6eY
+         v4Ag==
+X-Gm-Message-State: APjAAAXrxBaddc6LVB422rwShSY09zpVYVQh4/UIjGed43VMSwWP6ZBk
+        z84nMIw+gpR3AViiMff3ioQ=
+X-Google-Smtp-Source: APXvYqzBd85hjMi95y7wvZswP72zOfwbAYxL/u39AlDoY64MjcDYg9no5lCwuw6Hum4qX/JCV/hAtQ==
+X-Received: by 2002:a17:902:542:: with SMTP id 60mr4831596plf.68.1561546846595;
+        Wed, 26 Jun 2019 04:00:46 -0700 (PDT)
+Received: from huyue2.ccdomain.com ([218.189.10.173])
+        by smtp.gmail.com with ESMTPSA id w187sm19008873pfb.4.2019.06.26.04.00.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 04:00:45 -0700 (PDT)
+From:   Yue Hu <zbestahu@gmail.com>
+To:     gaoxiang25@huawei.com, yuchao0@huawei.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, huyue2@yulong.com
+Subject: [PATCH RESEND v2] staging: erofs: remove unsupported ->datamode check in fill_inline_data()
+Date:   Wed, 26 Jun 2019 19:00:32 +0800
+Message-Id: <20190626110032.3688-1-zbestahu@gmail.com>
+X-Mailer: git-send-email 2.17.1.windows.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+From: Yue Hu <huyue2@yulong.com>
 
-On Wed, Jun 26, 2019 at 7:21 AM Robert Chiras <robert.chiras@nxp.com> wrote:
->
-> This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
-> protocol).
->
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Already check if ->datamode is supported in read_inode(), no need to check
+again in the next fill_inline_data() only called by fill_inode().
 
-Looks good to me:
+Signed-off-by: Yue Hu <huyue2@yulong.com>
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+---
+v2: add tags.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+ drivers/staging/erofs/inode.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Thanks
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index e51348f..d6e1e16 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -129,8 +129,6 @@ static int fill_inline_data(struct inode *inode, void *data,
+ 	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
+ 	const int mode = vi->datamode;
+ 
+-	DBG_BUGON(mode >= EROFS_INODE_LAYOUT_MAX);
+-
+ 	/* should be inode inline C */
+ 	if (mode != EROFS_INODE_LAYOUT_INLINE)
+ 		return 0;
+-- 
+1.9.1
+
