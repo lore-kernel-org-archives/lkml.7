@@ -2,342 +2,132 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07349C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C785C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDCB821738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157952080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ICoHuZUW"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="dG0Kh3Lo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfFZQqi (ORCPT
+        id S1726601AbfFZQs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:46:38 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8493 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZQqh (ORCPT
+        Wed, 26 Jun 2019 12:48:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46604 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfFZQs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:46:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d13a16d0001>; Wed, 26 Jun 2019 09:46:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 26 Jun 2019 09:46:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 26 Jun 2019 09:46:34 -0700
-Received: from [10.2.169.244] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
- 2019 16:46:31 +0000
-Subject: Re: [PATCH V4 12/18] clk: tegra210: support for Tegra210 clocks
- suspend and resume
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <marc.zyngier@arm.com>,
-        <linus.walleij@linaro.org>, <stefan@agner.ch>,
-        <mark.rutland@arm.com>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <sboyd@kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <jckuo@nvidia.com>, <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-13-git-send-email-skomatineni@nvidia.com>
- <20190626101616.GE6362@ulmo>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <2dad8c70-2501-5cc0-9b8a-9c1a437ebc05@nvidia.com>
-Date:   Wed, 26 Jun 2019 09:46:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 12:48:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so3501739wrw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 09:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=OoEaJv7aaqTqsijzQaaYdkI+HMpgRA4Nz4+oOvolsqU=;
+        b=dG0Kh3Lo3L+KjkpWUyRqJHULACKCqOiHDzKZMCIhv80+LK5mAayW0rFQ63wrU0q4x8
+         Q0BbXgQ+irrQMzb0OW7JXp4ad13a6m5qbyVXQ36STSmCHIgq2/8MQxuvbbzRr3KBNB/8
+         coofV77Wy2DHdKB1ChjxSpCnSZ9ezyt96+67mw0HNqsIL3v63NlBlFa8Tc2umtPTTlGc
+         +qbIV6RR5O0yywpBNjAde9z2OKnn8g7D/GjAhjOTVZfTrALXfSirrDPQYW6rNzqPJQRD
+         E2RuWftv70iIKw7ABFMOJjbC42BbNpBdXr/AbKi3IyRTJYFyLOui4uRpsPlQd+I2W2T7
+         HktA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=OoEaJv7aaqTqsijzQaaYdkI+HMpgRA4Nz4+oOvolsqU=;
+        b=KDZPCGVLkIgoup5VouKBe6bYb+c0GTr/L3nm9601VFMtm+4xbjk38ETBgwc4FPAVYV
+         Fmt13dIObnIFNl3vWI0nspdfAHcQ3QqcBXhqsZXZtZ9oOUHjfOXhtETfrknhIlUUB5X7
+         qVe4hwJzBbFonJXvY0FejKSkgq2F9c9Ls0GnYcIR/LKHpDcSjSKuplGfpn6dbKZ29EJT
+         /WOFlvD1Mg0BnEQHsr2ka8OqX3OfyWkrA7fKwI4dFpJ0NX3oQkLL7SyZNFjbmKpiPG5O
+         JwdqfYKOiD9Qyp5f6c2Ilcr2ukGS3pagglBSk9SXOoM3hV+yzxFXdpOG0d3mWruFWBKY
+         2m3w==
+X-Gm-Message-State: APjAAAXgFCLdZmy8gAI23Gl0BE3pwc8/68S4Dt9ryC8GOJQu6CXD7LIo
+        sOLHyADeVY2k/6VShegNcsOvww==
+X-Google-Smtp-Source: APXvYqzljHLjpMMOMI1Yqco6tVQVtYxV8w+lvdpSFV8LZdGnL4jU6y/yU8JphcP1IsxPsHN/z/ex1A==
+X-Received: by 2002:a5d:5702:: with SMTP id a2mr4649769wrv.89.1561567735012;
+        Wed, 26 Jun 2019 09:48:55 -0700 (PDT)
+Received: from localhost (ip-89-176-222-26.net.upcbroadband.cz. [89.176.222.26])
+        by smtp.gmail.com with ESMTPSA id o6sm3792212wmc.15.2019.06.26.09.48.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 09:48:54 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 18:48:53 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     mirq-linux@rere.qmqm.pl
+Cc:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        sdf@google.com, jianbol@mellanox.com, jiri@mellanox.com,
+        willemb@google.com, sdf@fomichev.me, j.vosburgh@gmail.com,
+        vfalico@gmail.com, andy@greyhouse.net,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] bonding: Always enable vlan tx offload
+Message-ID: <20190626164853.GC2424@nanopsycho>
+References: <20190624135007.GA17673@nanopsycho>
+ <20190626080844.20796-1-yuehaibing@huawei.com>
+ <20190626161337.GA18953@qmqm.qmqm.pl>
 MIME-Version: 1.0
-In-Reply-To: <20190626101616.GE6362@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561567597; bh=f/btVB27Am+mVQsxQjKjkhfm1RXwG9pGuiNvyRx23jo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ICoHuZUWkTAXTSDtyT4AGtdPQyfi3+bu0lN93jP0fk0AihzFg70+w8iX18IQ579p0
-         aL6WIU6qoLxe2e5BV8beNtZnZLMt2h9XoZi2f/0wq2n9/Naw6XLnxQqKr6YCxp4mr3
-         sjw55r3p98+4/HdZD7xYr8Qm7/WMBoi3eheESH6ma/sztmVNCU3ZWfl6d39Ww5ndHU
-         zp5v0zFfNFDAWwHf399R6gvtzAq9f+JMYT+rqh0Szyc3L1GlHiZk7wB+L3N1aRRoTg
-         9z+Dg96VFU8ECs3UMhKkoahcYVdGmvqGZq+3hCBZiV1Bm9pkeP404euMlKd1BxruIc
-         QyQ36HubLaeFQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190626161337.GA18953@qmqm.qmqm.pl>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Wed, Jun 26, 2019 at 06:13:38PM CEST, mirq-linux@rere.qmqm.pl wrote:
+>On Wed, Jun 26, 2019 at 04:08:44PM +0800, YueHaibing wrote:
+>> We build vlan on top of bonding interface, which vlan offload
+>> is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
+>> BOND_XMIT_POLICY_ENCAP34.
+>> 
+>> Because vlan tx offload is off, vlan tci is cleared and skb push
+>> the vlan header in validate_xmit_vlan() while sending from vlan
+>> devices. Then in bond_xmit_hash, __skb_flow_dissect() fails to
+>> get information from protocol headers encapsulated within vlan,
+>> because 'nhoff' is points to IP header, so bond hashing is based
+>> on layer 2 info, which fails to distribute packets across slaves.
+>> 
+>> This patch always enable bonding's vlan tx offload, pass the vlan
+>> packets to the slave devices with vlan tci, let them to handle
+>> vlan implementation.
+>[...]
+>> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+>> index 407f4095a37a..799fc38c5c34 100644
+>> --- a/drivers/net/bonding/bond_main.c
+>> +++ b/drivers/net/bonding/bond_main.c
+>> @@ -4320,12 +4320,12 @@ void bond_setup(struct net_device *bond_dev)
+>>  	bond_dev->features |= NETIF_F_NETNS_LOCAL;
+>>  
+>>  	bond_dev->hw_features = BOND_VLAN_FEATURES |
+>> -				NETIF_F_HW_VLAN_CTAG_TX |
+>>  				NETIF_F_HW_VLAN_CTAG_RX |
+>>  				NETIF_F_HW_VLAN_CTAG_FILTER;
+>>  
+>>  	bond_dev->hw_features |= NETIF_F_GSO_ENCAP_ALL | NETIF_F_GSO_UDP_L4;
+>>  	bond_dev->features |= bond_dev->hw_features;
+>> +	bond_dev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_STAG_TX;
+>>  }
+>>  
+>>  /* Destroy a bonding device.
+>> 
+>
+>I can see that bonding driver uses dev_queue_xmit() to pass packets to
+>slave links, but I can't see where in the path it does software fallback
+>for devices without HW VLAN tagging. Generally drivers that don't ever
+>do VLAN offload also ignore vlan_tci presence. Am I missing something
+>here?
 
-On 6/26/19 3:16 AM, Thierry Reding wrote:
-> On Sun, Jun 23, 2019 at 08:02:53PM -0700, Sowjanya Komatineni wrote:
->> This patch adds system suspend and resume support for Tegra210
->> clocks.
->>
->> All the CAR controller settings are lost on suspend when core power
->> goes off.
->>
->> This patch has implementation for saving and restoring all the PLLs
->> and clocks context during system suspend and resume to have the
->> clocks back to same state for normal operation.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/clk/tegra/clk-tegra210.c | 115 ++++++++++++++++++++++++++++++++++++++-
->>   drivers/clk/tegra/clk.c          |  14 +++++
->>   drivers/clk/tegra/clk.h          |   1 +
->>   3 files changed, 127 insertions(+), 3 deletions(-)
-> Can you give a brief overview of how you've been testing this? Is this
-> just about confirming that "things work fine" after resume? Could we be
-> more methodical and perhaps check the state of the clock tree before
-> suspend (perhaps by inspecting debugfs) and comparing it to the state
-> after resume?
+validate_xmit_skb->validate_xmit_vlan
+
+
 >
-> One minor nit below...
-Yes, I tested by checking clock tree for counts and rate through debugfs 
-clk_rate nodes as well for all clocks before suspend and on resume.
->> diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
->> index c414cd72d045..4fb3509fe9f6 100644
->> --- a/drivers/clk/tegra/clk-tegra210.c
->> +++ b/drivers/clk/tegra/clk-tegra210.c
->> @@ -9,10 +9,12 @@
->>   #include <linux/clkdev.h>
->>   #include <linux/of.h>
->>   #include <linux/of_address.h>
->> +#include <linux/of_platform.h>
->>   #include <linux/delay.h>
->>   #include <linux/export.h>
->>   #include <linux/mutex.h>
->>   #include <linux/clk/tegra.h>
->> +#include <linux/syscore_ops.h>
->>   #include <dt-bindings/clock/tegra210-car.h>
->>   #include <dt-bindings/reset/tegra210-car.h>
->>   #include <linux/iopoll.h>
->> @@ -20,6 +22,7 @@
->>   #include <soc/tegra/pmc.h>
->>   
->>   #include "clk.h"
->> +#include "clk-dfll.h"
->>   #include "clk-id.h"
->>   
->>   /*
->> @@ -225,6 +228,7 @@
->>   
->>   #define CLK_RST_CONTROLLER_RST_DEV_Y_SET 0x2a8
->>   #define CLK_RST_CONTROLLER_RST_DEV_Y_CLR 0x2ac
->> +#define CPU_SOFTRST_CTRL 0x380
->>   
->>   #define LVL2_CLK_GATE_OVRA 0xf8
->>   #define LVL2_CLK_GATE_OVRC 0x3a0
->> @@ -2820,6 +2824,7 @@ static int tegra210_enable_pllu(void)
->>   	struct tegra_clk_pll_freq_table *fentry;
->>   	struct tegra_clk_pll pllu;
->>   	u32 reg;
->> +	int ret;
->>   
->>   	for (fentry = pll_u_freq_table; fentry->input_rate; fentry++) {
->>   		if (fentry->input_rate == pll_ref_freq)
->> @@ -2847,10 +2852,10 @@ static int tegra210_enable_pllu(void)
->>   	fence_udelay(1, clk_base);
->>   	reg |= PLL_ENABLE;
->>   	writel(reg, clk_base + PLLU_BASE);
->> +	fence_udelay(1, clk_base);
->>   
->> -	readl_relaxed_poll_timeout_atomic(clk_base + PLLU_BASE, reg,
->> -					  reg & PLL_BASE_LOCK, 2, 1000);
->> -	if (!(reg & PLL_BASE_LOCK)) {
->> +	ret = tegra210_wait_for_mask(&pllu, PLLU_BASE, PLL_BASE_LOCK);
->> +	if (ret) {
->>   		pr_err("Timed out waiting for PLL_U to lock\n");
->>   		return -ETIMEDOUT;
->>   	}
->> @@ -3282,6 +3287,103 @@ static void tegra210_disable_cpu_clock(u32 cpu)
->>   }
->>   
->>   #ifdef CONFIG_PM_SLEEP
->> +static u32 cpu_softrst_ctx[3];
->> +static struct platform_device *dfll_pdev;
->> +#define car_readl(_base, _off) readl_relaxed(clk_base + (_base) + ((_off) * 4))
->> +#define car_writel(_val, _base, _off) \
->> +		writel_relaxed(_val, clk_base + (_base) + ((_off) * 4))
->> +
->> +static int tegra210_clk_suspend(void)
->> +{
->> +	int i;
-> This can be unsigned int.
->
->> +	struct device_node *node;
->> +
->> +	tegra_cclkg_burst_policy_save_context();
->> +
->> +	if (!dfll_pdev) {
->> +		node = of_find_compatible_node(NULL, NULL,
->> +					       "nvidia,tegra210-dfll");
->> +		if (node)
->> +			dfll_pdev = of_find_device_by_node(node);
->> +
->> +		of_node_put(node);
->> +		if (!dfll_pdev)
->> +			pr_err("dfll node not found. no suspend for dfll\n");
->> +	}
->> +
->> +	if (dfll_pdev)
->> +		tegra_dfll_suspend(dfll_pdev);
->> +
->> +	/* Enable PLLP_OUT_CPU after dfll suspend */
->> +	tegra_clk_set_pllp_out_cpu(true);
->> +
->> +	tegra_sclk_cclklp_burst_policy_save_context();
->> +
->> +	clk_save_context();
->> +
->> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->> +		cpu_softrst_ctx[i] = car_readl(CPU_SOFTRST_CTRL, i);
->> +
->> +	return 0;
->> +}
->> +
->> +static void tegra210_clk_resume(void)
->> +{
->> +	int i;
-> And here too.
->
-> With that:
->
-> Acked-by: Thierry Reding <treding@nvidia.com>
->
->> +	struct clk_hw *parent;
->> +	struct clk *clk;
->> +
->> +	/*
->> +	 * clk_restore_context restores clocks as per the clock tree.
->> +	 *
->> +	 * dfllCPU_out is first in the clock tree to get restored and it
->> +	 * involves programming DFLL controller along with restoring CPUG
->> +	 * clock burst policy.
->> +	 *
->> +	 * DFLL programming needs dfll_ref and dfll_soc peripheral clocks
->> +	 * to be restores which are part ofthe peripheral clocks.
->> +	 * So, peripheral clocks restore should happen prior to dfll clock
->> +	 * restore.
->> +	 */
->> +
->> +	tegra_clk_osc_resume(clk_base);
->> +	for (i = 0; i < ARRAY_SIZE(cpu_softrst_ctx); i++)
->> +		car_writel(cpu_softrst_ctx[i], CPU_SOFTRST_CTRL, i);
->> +
->> +	/* restore all plls and peripheral clocks */
->> +	tegra210_init_pllu();
->> +	clk_restore_context();
->> +
->> +	fence_udelay(5, clk_base);
->> +
->> +	/* resume SCLK and CPULP clocks */
->> +	tegra_sclk_cpulp_burst_policy_restore_context();
->> +
->> +	/*
->> +	 * restore CPUG clocks:
->> +	 * - enable DFLL in open loop mode
->> +	 * - switch CPUG to DFLL clock source
->> +	 * - close DFLL loop
->> +	 * - sync PLLX state
->> +	 */
->> +	if (dfll_pdev)
->> +		tegra_dfll_resume(dfll_pdev, false);
->> +
->> +	tegra_cclkg_burst_policy_restore_context();
->> +	fence_udelay(2, clk_base);
->> +
->> +	if (dfll_pdev)
->> +		tegra_dfll_resume(dfll_pdev, true);
->> +
->> +	parent = clk_hw_get_parent(__clk_get_hw(clks[TEGRA210_CLK_CCLK_G]));
->> +	clk = clks[TEGRA210_CLK_PLL_X];
->> +	if (parent != __clk_get_hw(clk))
->> +		tegra_clk_sync_state_pll(__clk_get_hw(clk));
->> +
->> +	/* Disable PLL_OUT_CPU after DFLL resume */
->> +	tegra_clk_set_pllp_out_cpu(false);
->> +}
->> +
->>   static void tegra210_cpu_clock_suspend(void)
->>   {
->>   	/* switch coresite to clk_m, save off original source */
->> @@ -3297,6 +3399,11 @@ static void tegra210_cpu_clock_resume(void)
->>   }
->>   #endif
->>   
->> +static struct syscore_ops tegra_clk_syscore_ops = {
->> +	.suspend = tegra210_clk_suspend,
->> +	.resume = tegra210_clk_resume,
->> +};
->> +
->>   static struct tegra_cpu_car_ops tegra210_cpu_car_ops = {
->>   	.wait_for_reset	= tegra210_wait_cpu_in_reset,
->>   	.disable_clock	= tegra210_disable_cpu_clock,
->> @@ -3582,5 +3689,7 @@ static void __init tegra210_clock_init(struct device_node *np)
->>   	tegra210_mbist_clk_init();
->>   
->>   	tegra_cpu_car_ops = &tegra210_cpu_car_ops;
->> +
->> +	register_syscore_ops(&tegra_clk_syscore_ops);
->>   }
->>   CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
->> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
->> index 9e863362d2bf..96cc9937ea37 100644
->> --- a/drivers/clk/tegra/clk.c
->> +++ b/drivers/clk/tegra/clk.c
->> @@ -23,6 +23,7 @@
->>   #define CLK_OUT_ENB_W			0x364
->>   #define CLK_OUT_ENB_X			0x280
->>   #define CLK_OUT_ENB_Y			0x298
->> +#define CLK_ENB_PLLP_OUT_CPU		BIT(31)
->>   #define CLK_OUT_ENB_SET_L		0x320
->>   #define CLK_OUT_ENB_CLR_L		0x324
->>   #define CLK_OUT_ENB_SET_H		0x328
->> @@ -205,6 +206,19 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
->>   	}
->>   }
->>   
->> +void tegra_clk_set_pllp_out_cpu(bool enable)
->> +{
->> +	u32 val;
->> +
->> +	val = readl_relaxed(clk_base + CLK_OUT_ENB_Y);
->> +	if (enable)
->> +		val |= CLK_ENB_PLLP_OUT_CPU;
->> +	else
->> +		val &= ~CLK_ENB_PLLP_OUT_CPU;
->> +
->> +	writel_relaxed(val, clk_base + CLK_OUT_ENB_Y);
->> +}
->> +
->>   void tegra_cclkg_burst_policy_save_context(void)
->>   {
->>   	unsigned int i;
->> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
->> index 7b99496fefb9..b994dfaa9602 100644
->> --- a/drivers/clk/tegra/clk.h
->> +++ b/drivers/clk/tegra/clk.h
->> @@ -862,6 +862,7 @@ void tegra_cclkg_burst_policy_restore_context(void);
->>   void tegra_sclk_cclklp_burst_policy_save_context(void);
->>   void tegra_sclk_cpulp_burst_policy_restore_context(void);
->>   void tegra_clk_osc_resume(void __iomem *clk_base);
->> +void tegra_clk_set_pllp_out_cpu(bool enable);
->>   
->>   /* Combined read fence with delay */
->>   #define fence_udelay(delay, reg)	\
->> -- 
->> 2.7.4
->>
+>Best Regards,
+>Michał Mirosław
