@@ -2,118 +2,110 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B01C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7A7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADDD0205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DE2205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfFZNcY (ORCPT
+        id S1727763AbfFZNc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:32:24 -0400
-Received: from sauhun.de ([88.99.104.3]:56248 "EHLO pokefinder.org"
+        Wed, 26 Jun 2019 09:32:27 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57316 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZNcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:32:23 -0400
-Received: from localhost (p54B330AF.dip0.t-ipconnect.de [84.179.48.175])
-        by pokefinder.org (Postfix) with ESMTPSA id DD83E2C0114;
-        Wed, 26 Jun 2019 15:32:20 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 15:32:20 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Artemi Ivanov <artemi.ivanov@cogentembedded.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH resend] can: rcar_canfd: fix possible IRQ storm on high
- load
-Message-ID: <20190626133220.GK801@ninjato>
-References: <20190626130848.6671-1-nikita.yoush@cogentembedded.com>
- <20190626131251.GB801@ninjato>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ogUXNSQj4OI1q3LQ"
-Content-Disposition: inline
-In-Reply-To: <20190626131251.GB801@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726462AbfFZNcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:32:25 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1DB852009AC;
+        Wed, 26 Jun 2019 15:32:22 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1069F2009AB;
+        Wed, 26 Jun 2019 15:32:22 +0200 (CEST)
+Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6078A205DB;
+        Wed, 26 Jun 2019 15:32:21 +0200 (CEST)
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH 00/10] Improvements and fixes for mxsfb DRM driver
+Date:   Wed, 26 Jun 2019 16:32:08 +0300
+Message-Id: <1561555938-21595-1-git-send-email-robert.chiras@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
+and 8QXP). Following, are the new features added and fixes from this
+patch-set:
 
---ogUXNSQj4OI1q3LQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+1. Add support for drm_bridge
+On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
+display connector, where an LCD panel can be attached, but instead it is
+connected to DSI controller. Since this DSI stands between the display
+controller (eLCDIF) and the physical connector, the DSI can be implemented
+as a DRM bridge. So, in order to be able to connect the mxsfb driver to
+the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
+driver (the actual driver for the eLCDIF block).
 
-On Wed, Jun 26, 2019 at 03:12:51PM +0200, Wolfram Sang wrote:
-> On Wed, Jun 26, 2019 at 04:08:48PM +0300, Nikita Yushchenko wrote:
-> > We have observed rcar_canfd driver entering IRQ storm under high load,
-> > with following scenario:
-> > - rcar_canfd_global_interrupt() in entered due to Rx available,
-> > - napi_schedule_prep() is called, and sets NAPIF_STATE_SCHED in state
-> > - Rx fifo interrupts are masked,
-> > - rcar_canfd_global_interrupt() is entered again, this time due to
-> >   error interrupt (e.g. due to overflow),
-> > - since scheduled napi poller has not yet executed, condition for calli=
-ng
-> >   napi_schedule_prep() from rcar_canfd_global_interrupt() remains true,
-> >   thus napi_schedule_prep() gets called and sets NAPIF_STATE_MISSED flag
-> >   in state,
-> > - later, napi poller function rcar_canfd_rx_poll() gets executed, and
-> >   calls napi_complete_done(),
-> > - due to NAPIF_STATE_MISSED flag in state, this call does not clear
-> >   NAPIF_STATE_SCHED flag from state,
-> > - on return from napi_complete_done(), rcar_canfd_rx_poll() unmasks Rx
-> >   interrutps,
-> > - Rx interrupt happens, rcar_canfd_global_interrupt() gets called
-> >   and calls napi_schedule_prep(),
-> > - since NAPIF_STATE_SCHED is set in state at this time, this call
-> >   returns false,
-> > - due to that false return, rcar_canfd_global_interrupt() returns
-> >   without masking Rx interrupt
-> > - and this results into IRQ storm: unmasked Rx interrupt happens again
-> >   and again is misprocessed in the same way.
-> >=20
-> > This patch fixes that scenario by unmasking Rx interrupts only when
-> > napi_complete_done() returns true, which means it has cleared
-> > NAPIF_STATE_SCHED in state.
-> >=20
-> > Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
->=20
-> CCing the driver author...
+2. Add support for additional pixel formats
+Some of the pixel formats needed by Android were not implemented in this
+driver, but they were actually supported. So, add support for them.
 
-Bounced :(
+3. Add support for horizontal stride
+Having support for horizontal stride allows the use of eLCDIF with a GPU
+(for example) that can only output resolution sizes multiple of a power of
+8. For example, 1080 is not a power of 16, so in order to support 1920x1080
+output from GPUs that can produce linear buffers only in sizes multiple to 16,
+this feature is needed.
 
+3. Few minor features and bug-fixing
+The addition of max-res DT property was actually needed in order to limit
+the bandwidth usage of the eLCDIF block. This is need on systems where
+multiple display controllers are presend and the memory bandwidth is not
+enough to handle all of them at maximum capacity (like it is the case on
+8MQ, where there are two display controllers: DCSS and eLCDIF).
+The rest of the patches are bug-fixes.
 
---ogUXNSQj4OI1q3LQ
-Content-Type: application/pgp-signature; name="signature.asc"
+Mirela Rabulea (1):
+  drm/mxsfb: Signal mode changed when bpp changed
 
------BEGIN PGP SIGNATURE-----
+Robert Chiras (9):
+  drm/mxsfb: Update mxsfb to support a bridge
+  drm/mxsfb: Update mxsfb with additional pixel formats
+  drm/mxsfb: Fix the vblank events
+  dt-bindings: display: Add max-res property for mxsfb
+  drm/mxsfb: Add max-res property for MXSFB
+  drm/mxsfb: Update mxsfb to support LCD reset
+  drm/mxsfb: Improve the axi clock usage
+  drm/mxsfb: Clear OUTSTANDING_REQS bits
+  drm/mxsfb: Add support for horizontal stride
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0Tc+QACgkQFA3kzBSg
-Kbb75BAAhLltyFkBZdASqi3rHjdUTq/5x4rdFSNMulB8Cf9rrTMAt091eREUWO/f
-0aks7VxUHsBR3ojRJkzO90kB4Ep/6ph5KksO951YYCfRec4m5kMwLSl6aIDI+i9S
-ECa/PF9BYLVFi8WqreaFobkMf60pJrJ0505PBSFEEqM2be5AEuJqTuB51UN+6VEG
-BvTx8d3AEQLnvVsfWF+zKfR3YjDmmTHLqwe8KzwqTOmJ8DFhQCtQLQdQyeWNwkug
-KNvWA/Epo4XpxsY2IV0gElZhY1tFPJUpjlkFwWgKTONeXQywAdEaoMIaMD/5mQKV
-mlKrq5Mi+ZHGmTVikJJs1xUlG6P7s2aPlj3TqYtpmkXK2ySSBULTmvJxkzyZEYWv
-BLs7mGZsKT2sqkHk68GcIcPSElof+hkBruJMRZDpW+4XSsarU05/U3i2XG2J2bM3
-xCfIlTpEr1X8jkXCwGCfw+aRa7/7rbWv2yeOyKb89MW6U8Z9oXlwaKnwdg1GJVF5
-u/Y3kuYtmYtJN6KlOioWSymDn12H3q4Dex+FWUfALknKJvjUFggpjOBp+HmYulr7
-LY6AqdLEYEKyG+BsW+xfLuZELUwJdbIU96dEZBli3QvYAxuguhenKFJ93Sy6Qhfg
-oJhl7OvQsmKnpmJOe1vHKaBTwqdP0a5uzzJ64zflQCsSE8ItQ1I=
-=/Yw0
------END PGP SIGNATURE-----
+ .../devicetree/bindings/display/mxsfb.txt          |   6 +
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 290 ++++++++++++++++++---
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 189 +++++++++++---
+ drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  10 +-
+ drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 128 ++++++---
+ 6 files changed, 531 insertions(+), 118 deletions(-)
 
---ogUXNSQj4OI1q3LQ--
+-- 
+2.7.4
+
