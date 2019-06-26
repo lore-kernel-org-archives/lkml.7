@@ -2,337 +2,122 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661A7C48BD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D77C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328BE20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DXSZ+VO0"
+	by mail.kernel.org (Postfix) with ESMTP id 9065C2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:07:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561540046;
+	bh=fqzXaLicowOQfj5BHV8kIwSFlbbcCc+D+pxBPU71G0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Cxm5RXKzoSGj2VEn12aQ3hpLp/vxk0880cZXkcavCkfmMeI7vOhgDfnNHLMse1caK
+	 BJNHB1QDhNjDgWaY28V219HELpY9JlemU8SGSskApPunPPCIa8n4+vH1CKDhNhtrBh
+	 sPV32kI2I50yMDTBRP/DRqMStNiMOXfoTJLXOHgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfFZJHV (ORCPT
+        id S1727270AbfFZJHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:07:21 -0400
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:43159 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbfFZJGv (ORCPT
+        Wed, 26 Jun 2019 05:07:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44101 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfFZJGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:06:51 -0400
-Received: by mail-wr1-f51.google.com with SMTP id p13so1753486wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:06:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N2giQ2yIsAWn8MusPqgS1CP/DkqViRRuAeJS4LgppK4=;
-        b=DXSZ+VO0OEC6jKtn+s80RNGXITCcDwHwpLndzhr+8/KJniKqMGcmDjaqxbUJjooJGg
-         F93CGu/xmItuu5qshmofSmPhYhdz+Xg27J6AaPOmcfkQ5jwdz38oQ1J53U2paFI6LBjh
-         ZFTAa0oUmX7iJqvSrOiDK8oXod/fF3aumKEhRhZgq3vnY+JI5+vAHf0MU1rsn3a4hmv6
-         WhX+cqC7EmxBY/EwU+TSTEcQJBbQ0KNLr7t3hNd8M6AfS1rqEuOJL1NDetJemg5hlmQP
-         13pM9OArLIhYk/rg36EuouDxealfUL6WRZbinROyxqCmyjPP7fjEtcIsJoN1DVUfbcwJ
-         Ua2Q==
+        Wed, 26 Jun 2019 05:06:50 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b7so1742942otl.11;
+        Wed, 26 Jun 2019 02:06:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N2giQ2yIsAWn8MusPqgS1CP/DkqViRRuAeJS4LgppK4=;
-        b=lwLYaTqfcWALqXiwmfSJt5/UIgmkKZv7mhJqpltBEoMqWMLbmyntAMvlSTb7YkNo77
-         b6MmryCJSvSjVarUpJjBJ6sPu92zy/V6J93GQQ595DVyCOdI9Vrm7cdTcw1h/f47Oraq
-         biIq60py7DkJ/Hi+yPV7Ah2MVp/Iqq4Y9g7PNkUb7+pVAQClZYuauuCddfw7oJ0J0rOJ
-         +Bd4I+QGtcAgjqDZXpcfd3ynfY86gLvm7UIwGcd7V3fIWammwIYRwXQ9W8SMtg7noFAp
-         VrA/ZWgQsvfrpGXG/mvMZ38a2TGk9XcLcCImWud96/FIbFY53aH02arZzsmWG+8vjQdw
-         TTgQ==
-X-Gm-Message-State: APjAAAVmJNXfeoj1QzHrpqkkKrWltvn4NDKO15wohqkaKr/P0iUHXjuz
-        9vjpDTAddgi3NmGwJU08Y73uwA==
-X-Google-Smtp-Source: APXvYqz4hNZI6MaHjKVesPZ/4zgZ1NEbidAbDtUEDcFlcGeFBwbA5LHEybYag7mNYd9FG0MHg+dHJA==
-X-Received: by 2002:adf:f503:: with SMTP id q3mr2722506wro.43.1561540009429;
-        Wed, 26 Jun 2019 02:06:49 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o6sm1925797wmc.46.2019.06.26.02.06.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 26 Jun 2019 02:06:48 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     jbrunet@baylibre.com, khilman@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
-        linux-gpio@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC/RFT v2 12/14] arm64: dts: meson-g12a: enable DVFS on G12A boards
-Date:   Wed, 26 Jun 2019 11:06:30 +0200
-Message-Id: <20190626090632.7540-13-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190626090632.7540-1-narmstrong@baylibre.com>
-References: <20190626090632.7540-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nXcB2j55vLYg6MDB7LwJc9ADk0v2xKnaarUFg29mB3U=;
+        b=tmCoC4ZGXaK/d3+Y6luqX0OOFDpCJxWrtnsEw98qgMiGm8YjL3E5Uer/21FDIvegDj
+         cFFjxBN+elV02KWn/PcJ5qWwa64CmXnXV8ptrcArpVIFcwDoNFnFy8Au3gnxDZcXsrKC
+         zCtRF4VjuarpKUOdxaWvq6+UtFaLccLGGZwNDPCp9SDOpBQYs+e9ixbal7pl12X8/tn7
+         ZO2w20B8lrM1xOxoJtvpgC/s8ri90IyfUHtvtaB0kI1HK2jAHnDrtNkCrklMg5jeDJp5
+         F5GjlNCISlhsYRxD2q/Q/qDjs/f8mkjDHMhWCtKqynXPYPlU77y8QLUt25lIRCI++VCs
+         n/aQ==
+X-Gm-Message-State: APjAAAVP4ebMZRvs+9f/1wRPbcvuZef9qUbnJtgsKHsaxwTId+MiPst/
+        k0gfJjiE5FFoNmTgTKwt4dzf5CPzNpa0V/W8L1I=
+X-Google-Smtp-Source: APXvYqxAMlqMGoLtV/QmBAgMoUUA9cBy7sBIjE9vyQtzL3Kn6zZnoAHCV0Kt+poYGG0SYlg4n+WaG0SHkySo/zYgcng=
+X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr2300310otp.189.1561540009295;
+ Wed, 26 Jun 2019 02:06:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190625113244.18146-1-daniel.lezcano@linaro.org>
+ <20190625113244.18146-2-daniel.lezcano@linaro.org> <20190626025831.jmyzyypxr6ezpbtu@vireshk-i7>
+ <da1d2603-e30a-d877-54c3-1fad218f9d57@linaro.org> <20190626063716.cechnzsb75q5lclr@vireshk-i7>
+In-Reply-To: <20190626063716.cechnzsb75q5lclr@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Jun 2019 11:06:38 +0200
+Message-ID: <CAJZ5v0jFXmJ3ikEPQUp-cLv3+ZSnp1kP8CxdkZVofV1BS3+UwQ@mail.gmail.com>
+Subject: Re: [PATCH V3 2/3] thermal/drivers/cpu_cooling: Unregister with the policy
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "open list:CPU FREQUENCY DRIVERS - ARM BIG LITTLE" 
+        <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:TI BANDGAP AND THERMAL DRIVER" 
+        <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable DVFS for the U200, SEI520 and X96-Max Amlogic G12A based board
-by setting the clock, OPP and supply for each CPU cores.
+On Wed, Jun 26, 2019 at 8:37 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 26-06-19, 08:02, Daniel Lezcano wrote:
+> > On 26/06/2019 04:58, Viresh Kumar wrote:
+> > > On 25-06-19, 13:32, Daniel Lezcano wrote:
+> > >> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > >> index aee024e42618..f07454249fbc 100644
+> > >> --- a/drivers/cpufreq/cpufreq.c
+> > >> +++ b/drivers/cpufreq/cpufreq.c
+> > >> @@ -1379,8 +1379,8 @@ static int cpufreq_online(unsigned int cpu)
+> > >>            cpufreq_driver->ready(policy);
+> > >>
+> > >>    if (cpufreq_thermal_control_enabled(cpufreq_driver))
+> > >> -          policy->cdev = of_cpufreq_cooling_register(policy);
+> > >> -
+> > >> +          of_cpufreq_cooling_register(policy);
+> > >> +
+> > >
+> > > We don't need any error checking here anymore ?
+> >
+> > There was no error checking initially. This comment and the others below
+> > are for an additional patch IMO, not a change in this one.
+>
+> right, but ...
+>
+> > >> -void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev)
+> > >> +void cpufreq_cooling_unregister(struct cpufreq_policy *policy)
+> > >>  {
+> > >>    struct cpufreq_cooling_device *cpufreq_cdev;
+> > >>    bool last;
+> > >>
+> > >> -  if (!cdev)
+> > >> -          return;
+>
+> we used to return without any errors from here. Now we will have
+> problems if regsitering fails for some reason.
 
-The CPU cluster power supply can achieve 0.73V to 1.01V using a PWM
-output clocked at 800KHz with an inverse duty-cycle.
-
-DVFS has been tested by running the arm64 cpuburn at [1] and cycling
-between all the possible cpufreq translations and checking the final
-frequency using the clock-measurer, script at [2].
-
-[1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
-[2] https://gist.github.com/superna9999/d4de964dbc0f84b7d527e1df2ddea25f
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../boot/dts/amlogic/meson-g12a-sei510.dts    | 55 +++++++++++++++++++
- .../boot/dts/amlogic/meson-g12a-u200.dts      | 55 +++++++++++++++++++
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 52 ++++++++++++++++++
- 3 files changed, 162 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index bd26b35102ff..be45437c51e1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-@@ -129,6 +129,25 @@
- 		enable-active-high;
- 	};
- 
-+	vddcpu: regulator-vddcpu {
-+		/*
-+		 * SY8120B1ABC DC/DC Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU";
-+		regulator-min-microvolt = <721000>;
-+		regulator-max-microvolt = <1022000>;
-+
-+		vin-supply = <&dc_in>;
-+
-+		pwms = <&pwm_AO_cd 1 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	vddio_ao1v8: regulator-vddio_ao1v8 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VDDIO_AO1V8";
-@@ -297,6 +316,34 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
- &cvbs_vdac_port {
- 	cvbs_vdac_out: endpoint {
- 		remote-endpoint = <&cvbs_connector_in>;
-@@ -339,6 +386,14 @@
- 	pinctrl-names = "default";
- };
- 
-+&pwm_AO_cd {
-+	pinctrl-0 = <&pwm_ao_d_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin1";
-+	status = "okay";
-+};
-+
- &pwm_ef {
- 	status = "okay";
- 	pinctrl-0 = <&pwm_e_pins>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-index 332a4b27174b..b6bd96ee394a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-@@ -136,6 +136,25 @@
- 		regulator-always-on;
- 	};
- 
-+	vddcpu: regulator-vddcpu {
-+		/*
-+		 * MP8756GD Regulator.
-+		 */
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU";
-+		regulator-min-microvolt = <721000>;
-+		regulator-max-microvolt = <1022000>;
-+
-+		vin-supply = <&main_12v>;
-+
-+		pwms = <&pwm_AO_cd 1 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "amlogic,axg-sound-card";
- 		model = "G12A-U200";
-@@ -305,6 +324,34 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
- &cvbs_vdac_port {
- 	cvbs_vdac_out: endpoint {
- 		remote-endpoint = <&cvbs_connector_in>;
-@@ -369,6 +416,14 @@
- 	pinctrl-names = "default";
- };
- 
-+&pwm_AO_cd {
-+	pinctrl-0 = <&pwm_ao_d_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin1";
-+	status = "okay";
-+};
-+
- /* SD card */
- &sd_emmc_b {
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index d37868d21114..099ccf67547e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -132,6 +132,22 @@
- 		regulator-always-on;
- 	};
- 
-+	vddcpu: regulator-vddcpu {
-+		compatible = "pwm-regulator";
-+
-+		regulator-name = "VDDCPU";
-+		regulator-min-microvolt = <721000>;
-+		regulator-max-microvolt = <1022000>;
-+
-+		vin-supply = <&dc_in>;
-+
-+		pwms = <&pwm_AO_cd 1 1250 0>;
-+		pwm-dutycycle-range = <100 0>;
-+
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "amlogic,axg-sound-card";
- 		model = "G12A-X96-MAX";
-@@ -242,6 +258,34 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vddcpu>;
-+	operating-points-v2 = <&cpu_opp_table>;
-+	clocks = <&clkc CLKID_CPU_CLK>;
-+	clock-latency = <50000>;
-+};
-+
- &cvbs_vdac_port {
- 	cvbs_vdac_out: endpoint {
- 		remote-endpoint = <&cvbs_connector_in>;
-@@ -279,6 +323,14 @@
- 	pinctrl-names = "default";
- };
- 
-+&pwm_AO_cd {
-+	pinctrl-0 = <&pwm_ao_d_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&xtal>;
-+	clock-names = "clkin1";
-+	status = "okay";
-+};
-+
- &ext_mdio {
- 	external_phy: ethernet-phy@0 {
- 		/* Realtek RTL8211F (0x001cc916) */
--- 
-2.21.0
-
+Specifically, the last cpufreq_cdev in the list will be unregistered
+AFAICS, and without removing it from the list for that matter, which
+isn't what the caller wants.
