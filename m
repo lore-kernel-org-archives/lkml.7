@@ -2,245 +2,84 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEB8C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B560C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD9021670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="onBGOizx"
+	by mail.kernel.org (Postfix) with ESMTP id 1F6C8205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfFZRmL (ORCPT
+        id S1726469AbfFZRn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:42:11 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:32772 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfFZRmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:42:10 -0400
-Received: by mail-io1-f66.google.com with SMTP id u13so6532133iop.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZKsEzAEn+zTozZeyiV/e1LwfvFOgAuBk1MCTImiKLZA=;
-        b=onBGOizxsfiCRd7+gXbaT4hAW6mqsDds5B4NbecGa5qCbrZwUlZKaUd8d9sc91lChN
-         6p5GnD6ymeH10NabPIoVjBxJ2cieNgGYlB7B2r47VOuUCSzlgnGhfpMC12zEohslJRMy
-         YGkCnl6tXZ+lCkt57UOzxqs04jbh4VNyBHxxAYH4lAI2Eg0ZKN2e5XExnBhMHhCqgrlm
-         WjffAFmf1Yu2L9onBnMGPP8XZ1pzdMJebNqHY6nbp8CcAP04BXFe4GZpZiFbVTWdQdX8
-         J136o+dqdFHN6P0Ge8G2KnzX/2vsduc71V5PcFarONPkW4LBJ+ECv0Z+8zmthoeVj4Sx
-         2UFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZKsEzAEn+zTozZeyiV/e1LwfvFOgAuBk1MCTImiKLZA=;
-        b=CZttgyTovLbpMzQqxlvT/xy4faSAbOv0tq4e1f/qQCeKJNjvlWIxp2INtWFkTE7FDx
-         z5WSiNW/BDran6a0T3I0HvLNHWT7Gl/K4iH53WvKQBFz+a/jgcSDdxv3iwqpeWaAePYA
-         3s65H2js15nB2feU2h5zBjz1KeSytc7mO+OXm7pK+IZy4rSc8/TPOLGr90N1dTgsRqp1
-         6lYauUtUnZs7OtKFWFRiUzbmsU69Po4VZqHr+PUOgx2uxgu/q0HfLlZfdCqOLu5PC/Sb
-         F0IMn4GqYuhym/YE9VL9qe8JwEcix6g/BwL8L49wrvY/xHXmFhm9xIsc6EKIW5guHQvX
-         o0Pg==
-X-Gm-Message-State: APjAAAWKZyZJCmwvNtfxXeSnNTiSi/PCuSZCPevbFXeeMA/pMT+HbgUV
-        H9w3JBOn6n05G+GwQtDtDvol9mZLqa22eYaWp1LMQTXkAfc=
-X-Google-Smtp-Source: APXvYqzP67fOblQX+UL3RTr8NEKsVBKZNmmryeKDByfNumC6w51Z6JbSESfRJHVRXeUS4Dcqs0atYnirT3xgPzBD4GQ=
-X-Received: by 2002:a5d:9613:: with SMTP id w19mr6438554iol.140.1561570929448;
- Wed, 26 Jun 2019 10:42:09 -0700 (PDT)
+        Wed, 26 Jun 2019 13:43:27 -0400
+Received: from ms.lwn.net ([45.79.88.28]:40982 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbfFZRn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:43:27 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id C679B2AE;
+        Wed, 26 Jun 2019 17:43:25 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 11:43:24 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mark Gross <mgross@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+Subject: Re: [PATCH v6] Documentation: Add section about CPU vulnerabilities
+ for Spectre
+Message-ID: <20190626114324.2c78d73d@lwn.net>
+In-Reply-To: <20190620231050.22816-1-tim.c.chen@linux.intel.com>
+References: <20190620231050.22816-1-tim.c.chen@linux.intel.com>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org> <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 26 Jun 2019 11:41:58 -0600
-Message-ID: <CANLsYky6D5EsCL2vOa4hHaqTQRXbN+TT0pSzFrykDL_fHEkiBQ@mail.gmail.com>
-Subject: Re: [PATCHv3 1/1] coresight: Do not default to CPU0 for missing CPU phandle
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sai,
+On Thu, 20 Jun 2019 16:10:50 -0700
+Tim Chen <tim.c.chen@linux.intel.com> wrote:
 
-On Sun, 23 Jun 2019 at 21:36, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Coresight platform support assumes that a missing "cpu" phandle
-> defaults to CPU0. This could be problematic and unnecessarily binds
-> components to CPU0, where they may not be. Let us make the DT binding
-> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
-> affinity information.
->
-> Also in coresight etm and cpu-debug drivers, abort the probe
-> for such cases.
->
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  .../bindings/arm/coresight-cpu-debug.txt         |  4 ++--
->  .../devicetree/bindings/arm/coresight.txt        |  8 +++++---
->  .../hwtracing/coresight/coresight-cpu-debug.c    |  3 +++
->  drivers/hwtracing/coresight/coresight-etm3x.c    |  3 +++
->  drivers/hwtracing/coresight/coresight-etm4x.c    |  3 +++
->  drivers/hwtracing/coresight/coresight-platform.c | 16 ++++++++--------
->  6 files changed, 24 insertions(+), 13 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> index 298291211ea4..f1de3247c1b7 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> @@ -26,8 +26,8 @@ Required properties:
->                 processor core is clocked by the internal CPU clock, so it
->                 is enabled with CPU clock by default.
->
-> -- cpu : the CPU phandle the debug module is affined to. When omitted
-> -       the module is considered to belong to CPU0.
-> +- cpu : the CPU phandle the debug module is affined to. Do not assume it
-> +        to default to CPU0 if omitted.
->
->  Optional properties:
->
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index 8a88ddebc1a2..fcc3bacfd8bc 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -59,6 +59,11 @@ its hardware characteristcs.
->
->         * port or ports: see "Graph bindings for Coresight" below.
->
-> +* Additional required property for Embedded Trace Macrocell (version 3.x and
-> +  version 4.x):
-> +       * cpu: the cpu phandle this ETM/PTM is affined to. Do not
-> +         assume it to default to CPU0 if omitted.
-> +
->  * Additional required properties for System Trace Macrocells (STM):
->         * reg: along with the physical base address and length of the register
->           set as described above, another entry is required to describe the
-> @@ -87,9 +92,6 @@ its hardware characteristcs.
->         * arm,cp14: must be present if the system accesses ETM/PTM management
->           registers via co-processor 14.
->
-> -       * cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
-> -         source is considered to belong to CPU0.
-> -
->  * Optional property for TMC:
->
->         * arm,buffer-size: size of contiguous buffer space for TMC ETR
-> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> index 07a1367c733f..58bfd6319f65 100644
-> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> @@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
->                 return -ENOMEM;
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       if (drvdata->cpu < 0)
-> +               return drvdata->cpu;
-> +
->         if (per_cpu(debug_drvdata, drvdata->cpu)) {
->                 dev_err(dev, "CPU%d drvdata has already been initialized\n",
->                         drvdata->cpu);
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-> index 225c2982e4fe..e2cb6873c3f2 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-> @@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->         }
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       if (drvdata->cpu < 0)
-> +               return drvdata->cpu;
-> +
->         desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
->         if (!desc.name)
->                 return -ENOMEM;
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 7fe266194ab5..7bcac8896fc1 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->         spin_lock_init(&drvdata->spinlock);
->
->         drvdata->cpu = coresight_get_cpu(dev);
-> +       if (drvdata->cpu < 0)
-> +               return drvdata->cpu;
-> +
->         desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
->         if (!desc.name)
->                 return -ENOMEM;
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 3c5ceda8db24..4990da2c13e9 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
->         struct device_node *dn;
->
->         if (!dev->of_node)
-> -               return 0;
-> +               return -ENODEV;
-> +
->         dn = of_parse_phandle(dev->of_node, "cpu", 0);
-> -       /* Affinity defaults to CPU0 */
->         if (!dn)
-> -               return 0;
-> +               return -ENODEV;
-> +
->         cpu = of_cpu_node_to_id(dn);
->         of_node_put(dn);
->
-> -       /* Affinity to CPU0 if no cpu nodes are found */
-> -       return (cpu < 0) ? 0 : cpu;
-> +       return cpu;
->  }
+> Add documentation for Spectre vulnerability and the mitigation mechanisms:
+> 
+> - Explain the problem and risks
+> - Document the mitigation mechanisms
+> - Document the command line controls
+> - Document the sysfs files
+> 
+> Co-developed-by: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> Co-developed-by: Tim Chen <tim.c.chen@linux.intel.com>
+> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: stable@vger.kernel.org
 
-Function of_coresight_get_cpu() needs to return -ENODEV rather than 0
-when !CONFIG_OF
+Applied, thanks.
 
->
->  /*
-> @@ -734,14 +734,14 @@ static int acpi_coresight_get_cpu(struct device *dev)
->         struct acpi_device *adev = ACPI_COMPANION(dev);
->
->         if (!adev)
-> -               return 0;
-> +               return -ENODEV;
->         status = acpi_get_parent(adev->handle, &cpu_handle);
->         if (ACPI_FAILURE(status))
-> -               return 0;
-> +               return -ENODEV;
->
->         cpu = acpi_handle_to_logical_cpuid(cpu_handle);
->         if (cpu >= nr_cpu_ids)
-> -               return 0;
-> +               return -ENODEV;
->         return cpu;
->  }
->
-
-Same as above, but for !CONFIG_ACPI
-
-Thanks,
-Mathieu
-
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+jon
