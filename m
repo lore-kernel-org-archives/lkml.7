@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E04C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F91C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB522147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E312146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561538748;
-	bh=3JwA4yrbPtdlyNARL29BOmB3wlnDHGk5OrcLu1cofeE=;
+	s=default; t=1561538751;
+	bh=m+r8WZn0JHNESip98hh0zbj8d9dUzzzsVYLBLHsf/5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqJNE51Pp0rLm38yolt219NpLB4C5DSNEgCqhrYuYnU/5eUokz3Q6Kr0TT4W1Gqwr
-	 z8yBmsX4kMuOGXKGOSyC4RWkoUHPj53TKxhO5xmMetszXtfYIKVYWsL2l5Y+7bdORz
-	 9UmyQZ9U+iOaK08vNlUz5P3eUiwVsKbipXJwXeEE=
+	b=Sa3vyzpkat5ctEJivEvXHBLKfFke38aU80VWt5CaAw3ZySm0jSUAeVcOggXv5AfXF
+	 oQwc5RKW7L17KNwsOjX6VzkPp5xWIPm+x+V8myCMNNUvPPdzoP8VDqEq1Nl8OLwyir
+	 wRJXysgX7MS2fXEs7MLvuoIE5ryYmCy/nSw72Fj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfFZIpr (ORCPT
+        id S1727078AbfFZIpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37998 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 04:45:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727005AbfFZIpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:45:46 -0400
+        id S1726851AbfFZIpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:45:49 -0400
 Received: from localhost (unknown [116.247.127.123])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E255A208E3;
-        Wed, 26 Jun 2019 08:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89F30208E3;
+        Wed, 26 Jun 2019 08:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561538745;
-        bh=3JwA4yrbPtdlyNARL29BOmB3wlnDHGk5OrcLu1cofeE=;
+        s=default; t=1561538749;
+        bh=m+r8WZn0JHNESip98hh0zbj8d9dUzzzsVYLBLHsf/5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mX5IaQ8WV8tgLKgMXQxdD6QpzMGQJwS96K3g5BuvFcQyiouDkNkROn99DKLL3Uv6K
-         pi54D889rWMH7mumsRXQK7NzeW7rDAnqc3Av3ECPAeercO7hvLnT231E/uLQo2Vtms
-         lX/sT0RWPa86xBCmENu27RE4DFoaaJXt+LiTkr80=
+        b=ZBolewu2FJlE249SQz1bC/bW9zxyfNo9J/fZWCSfn3PDZM94kzrdpWCw9avCWu+Nz
+         dbtiHakDeNtUPRV0q2bh2gOJ7wPV3tdW45NWl31EHVnSVv8U98YMIFuN0EM2P9YokJ
+         yoa3Fgh/RIxu94YUfnaPwQ7YmduCRsbRS2ONNoVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
         Christoph Paasch <cpaasch@apple.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 1/1] tcp: refine memory limit test in tcp_fragment()
-Date:   Wed, 26 Jun 2019 16:45:13 +0800
-Message-Id: <20190626083606.407433249@linuxfoundation.org>
+Subject: [PATCH 4.14 1/1] tcp: refine memory limit test in tcp_fragment()
+Date:   Wed, 26 Jun 2019 16:45:21 +0800
+Message-Id: <20190626083606.343066126@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190626083606.302057200@linuxfoundation.org>
-References: <20190626083606.302057200@linuxfoundation.org>
+In-Reply-To: <20190626083606.248422423@linuxfoundation.org>
+References: <20190626083606.248422423@linuxfoundation.org>
 User-Agent: quilt/0.66
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -87,7 +87,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/net/ipv4/tcp_output.c
 +++ b/net/ipv4/tcp_output.c
-@@ -1185,7 +1185,7 @@ int tcp_fragment(struct sock *sk, struct
+@@ -1274,7 +1274,7 @@ int tcp_fragment(struct sock *sk, struct
  	if (nsize < 0)
  		nsize = 0;
  
