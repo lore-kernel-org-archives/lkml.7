@@ -2,167 +2,227 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C04C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D34C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFA2216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F1C21726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QLa+k3Dg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S6f2tU7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfFZWPv (ORCPT
+        id S1726565AbfFZWQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:15:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44788 "EHLO
+        Wed, 26 Jun 2019 18:16:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46264 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFZWPu (ORCPT
+        with ESMTP id S1726470AbfFZWQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:15:50 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so131130pfe.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 15:15:50 -0700 (PDT)
+        Wed, 26 Jun 2019 18:16:50 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 81so127936pfy.13
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 15:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZcR+OhoZvK/rtRwZF0U9HfgerZx9aU/OIPtD1HeI1sk=;
-        b=QLa+k3DgmzA3uFZuxJn0/YfcQZhoYugh5PCgCCiiPqktDF35A8rnRQ/00VcW7c7L/K
-         MmV/o6HI1B7+dviaEN82hfXtJJ61WQQ8NVu2R++VYhc+89sJp9Uh4Oln0kkvMa5lrGHx
-         I+wEfvvp+C9xjx//RKjWJSXplRJ63FPXUPDUP3h4UJzaNeqHumk/9F9P/Xd8pDh2SJYv
-         B6DTR5WwQhh+aThE0wEsJlbC3kCgUk+DTKHwu6GwM3+BfcSR6fCzoNS4k1tLiMQlONPI
-         N3Rbi1OvBNHdvZUP/7SbcHR0JF5RQq8u/s/mhV3N5cWFXwQYZg3f24ldbUGJOJ/QT+TW
-         0Qrg==
+        bh=GeRJM7RinPoMIQ6Cxu4JfD/FJhf/Q7830l4heE4Z/70=;
+        b=S6f2tU7Miw4rgiEW47807L33bYsjxaGq9kSV5FlqDefi2WxZ9lTn6WNXPehPhg/T1u
+         QlukqMtHkRexD1aKOxiS1bTcFztoPMq6vRmfl07xvAlF8qkmKEYcRYv6yewHpyrNh/C2
+         b54UNQQh2z4Ml5QHakDNUwkkVSa3wpee9qOwZX656U2rr12uOzmYMsnmgvSxd7nO2lJu
+         uPRgbm1UzaYtxmtry6zEXpmUHhjd6DhSWjC+3Gn8V/HQxryzbZ7pGyLo06Eq0gUDpp5U
+         DjOJXTOOdEhiALmttRxHwycmxPuBaL40MgKhCWjDKs1lUcvOyyLeVeXFZ4cT8o8pd53u
+         IzAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZcR+OhoZvK/rtRwZF0U9HfgerZx9aU/OIPtD1HeI1sk=;
-        b=U3AdjemesrgtZKZCp88iIw3ZscBqR4SpBKqUl6rplqANgyD4yZGjrqCCagDJVk9ItB
-         /pb90tTmNHQ8liUeS6ryae2182JCK45/HqKLuf/7bWkrtmQHYgkZcku1iz+asRzuk7Ds
-         YYMe2ABhk5OkbzimPezAItgHbI2iV6iDsDG87m3Qawd69AU42ZjRHZ0hdQNZ6PSOq97P
-         T50owo3rfrLKj3021i0xcSXIDVdbSY4+ehDXKNqr1uZuu5QyU90Hn7pSPXr376DgLZnI
-         6IsDlnht8Z/q6NYnyyNro6M7SwGc4K1WYJAuAJ7R5jxLu+5aW+Z/DLJhqNh1YzPBw+nK
-         pbMA==
-X-Gm-Message-State: APjAAAU5x3ZEuVut9qJYeQU4b+LQtrvE1ECXJb7DbriQnzd+NQvHvVOn
-        QWqabUADnKgFrKHRKIPS+0sbTN6mELCR7IHr9f+Yhw==
-X-Google-Smtp-Source: APXvYqzv4aUDf3pH+e1PaW2H6k0H/gY8j3eUsOg53jWXmrm7BFYO6L7d8sFqNaMGGWr5H4nYD2CnMfG38ms/zRzft2s=
-X-Received: by 2002:a63:10a:: with SMTP id 10mr237268pgb.263.1561587349200;
- Wed, 26 Jun 2019 15:15:49 -0700 (PDT)
+        bh=GeRJM7RinPoMIQ6Cxu4JfD/FJhf/Q7830l4heE4Z/70=;
+        b=miOEqwFU1M645Pfib+roKcv4+unJw4Fg8b0pDG+M/bWg4iGkbqNQm7refktULrq0L4
+         zm19r6D1BCLSaCiZC8sHX9Au2NJZotBw3jeYBoqs2u7Wt6UtyUMp79dU/H87QTUicYJn
+         kKvvDuNWr9yqkb8Wbv3gUdHGrAtt+AyTJhSuKX/yRbxvwqEVKscB37YjfoXnISaosUlx
+         nhlgCHFOT4DI3VIxOyve/U6u6pwOZiMBpNvLl4rZRGsJnVE/LwUNzS5/md29k/AgV5t2
+         GhdLQYDPePE0Zb7U7JLX/34qNcfi7DZOmwHZwYOtTVWuFLMXWtpmRaE92Gukn/qY/8d1
+         Lg2Q==
+X-Gm-Message-State: APjAAAVGrzYSaBQzxu1yqoshMmC7Z+IwA2GZ21nyPlpGKuKVLyJXVjR1
+        9LeiJcMFO9/TuLrqFWP+dQY+0e/Rf42ZW6XiTN8Tag==
+X-Google-Smtp-Source: APXvYqzsQMLB7isztv92bzu5YXVWaHFQchBB4ZbMDdOvCDM8VotktY7nYV0uIl6GRCqZMb6GciobJW+UAft7ArjB2vg=
+X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr1630712pjb.117.1561587408779;
+ Wed, 26 Jun 2019 15:16:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
- <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net> <201906251009.BCB7438@keescook>
- <20190625180525.GA119831@archlinux-epyc> <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
- <20190625202746.GA83499@archlinux-epyc> <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
- <20190626092432.GJ3419@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190626092432.GJ3419@hirez.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 26 Jun 2019 15:15:38 -0700
-Message-ID: <CAKwvOdm3qvaFH47MxJ9PWMbhYumt9V7gTASO5-ZAzwTVBUQqyA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-2-brendanhiggins@google.com> <20190625223312.GP19023@42.do-not-panic.com>
+ <CAFd5g46TLAONgXiZkFM98BPd-sariMTwhmYG9hSJ+M9=r-ixeg@mail.gmail.com> <20190626033643.GX19023@42.do-not-panic.com>
+In-Reply-To: <20190626033643.GX19023@42.do-not-panic.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 26 Jun 2019 15:16:36 -0700
+Message-ID: <CAFd5g45PTtPumkpp1i41kkixZaR55pbqaF2DsuKNmh5UyAVwOg@mail.gmail.com>
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 2:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Jun 25, 2019 at 8:36 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
 >
-> On Tue, Jun 25, 2019 at 11:47:06PM +0200, Thomas Gleixner wrote:
-> > > On Tue, Jun 25, 2019 at 09:53:09PM +0200, Thomas Gleixner wrote:
->
-> > > > but it also makes objtool unhappy:
-> > > >
-> > > >  arch/x86/events/intel/core.o: warning: objtool: intel_pmu_nhm_workaround()+0xb3: unreachable instruction
-> > > >  kernel/fork.o: warning: objtool: free_thread_stack()+0x126: unreachable instruction
-> > > >  mm/workingset.o: warning: objtool: count_shadow_nodes()+0x11f: unreachable instruction
-> > > >  arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool: get_fixed_ranges()+0x9b: unreachable instruction
-> > > >  arch/x86/kernel/platform-quirks.o: warning: objtool: x86_early_init_platform_quirks()+0x84: unreachable instruction
-> > > >  drivers/iommu/irq_remapping.o: warning: objtool: irq_remap_enable_fault_handling()+0x1d: unreachable instruction
->
-> > I just checked two of them in the disassembly. In both cases it's jump
-> > label related. Here is one:
+> On Tue, Jun 25, 2019 at 05:07:32PM -0700, Brendan Higgins wrote:
+> > On Tue, Jun 25, 2019 at 3:33 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > >
+> > > On Mon, Jun 17, 2019 at 01:25:56AM -0700, Brendan Higgins wrote:
+> > > > +/**
+> > > > + * module_test() - used to register a &struct kunit_module with KUnit.
+> > > > + * @module: a statically allocated &struct kunit_module.
+> > > > + *
+> > > > + * Registers @module with the test framework. See &struct kunit_module for more
+> > > > + * information.
+> > > > + */
+> > > > +#define module_test(module) \
+> > > > +             static int module_kunit_init##module(void) \
+> > > > +             { \
+> > > > +                     return kunit_run_tests(&module); \
+> > > > +             } \
+> > > > +             late_initcall(module_kunit_init##module)
+> > >
+> > > Becuase late_initcall() is used, if these modules are built-in, this
+> > > would preclude the ability to test things prior to this part of the
+> > > kernel under UML or whatever architecture runs the tests. So, this
+> > > limits the scope of testing. Small detail but the scope whould be
+> > > documented.
 > >
-> >       asm volatile("1: rdmsr\n"
-> >  410:   b9 59 02 00 00          mov    $0x259,%ecx
-> >  415:   0f 32                   rdmsr
-> >  417:   49 89 c6                mov    %rax,%r14
-> >  41a:   48 89 d3                mov    %rdx,%rbx
-> >       return EAX_EDX_VAL(val, low, high);
-> >  41d:   48 c1 e3 20             shl    $0x20,%rbx
-> >  421:   48 09 c3                or     %rax,%rbx
-> >  424:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> >  429:   eb 0f                   jmp    43a <get_fixed_ranges+0xaa>
-> >       do_trace_read_msr(msr, val, 0);
-> >  42b:   bf 59 02 00 00          mov    $0x259,%edi   <------- "unreachable"
-> >  430:   48 89 de                mov    %rbx,%rsi
-> >  433:   31 d2                   xor    %edx,%edx
-> >  435:   e8 00 00 00 00          callq  43a <get_fixed_ranges+0xaa>
-> >  43a:   44 89 35 00 00 00 00    mov    %r14d,0x0(%rip)        # 441 <get_fixed_ranges+0xb1>
+> > You aren't the first person to complain about this (and I am not sure
+> > it is the first time you have complained about it). Anyway, I have
+> > some follow on patches that will improve the late_initcall thing, and
+> > people seemed okay with discussing the follow on patches as part of a
+> > subsequent patchset after this gets merged.
 > >
-> > Interestingly enough there are some more hunks of the same pattern in that
-> > function which look all the same. Those are not upsetting objtool. Josh
-> > might give an hint where to stare at.
+> > I will nevertheless document the restriction until then.
 >
-> That's pretty atrocious code-gen :/ Does LLVM support things like label
-> attributes? Back when we did jump labels GCC didn't, or rather, it
-> ignored it completely when combined with asm goto (and it might still).
+> To be clear, I am not complaining about it. I just find it simply
+> critical to document its limitations, so folks don't try to invest
+> time and energy on kunit right away for an early init test, if it
+> cannot support it.
 >
-> That is, would something like this:
->
-> diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
-> index 06c3cc22a058..1761b1e76ddc 100644
-> --- a/arch/x86/include/asm/jump_label.h
-> +++ b/arch/x86/include/asm/jump_label.h
-> @@ -32,7 +32,7 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
->                 : :  "i" (key), "i" (branch) : : l_yes);
->
->         return false;
-> -l_yes:
-> +l_yes: __attribute__((cold));
->         return true;
->  }
->
-> @@ -49,7 +49,7 @@ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
->                 : :  "i" (key), "i" (branch) : : l_yes);
->
->         return false;
-> -l_yes:
-> +l_yes: __attribute__((hot));
->         return true;
->  }
->
-> Help LLVM?
+> If support for that requires some work, it may be worth mentioning
+> as well.
 
-So Clang definitely complains about putting attribute hot/cold on
-labels: https://godbolt.org/z/N-Z33Q
-In my test case I wasn't able to influence code gen with them though
-in GCC at -O2 or -O0.  Maybe GCC has a test case that shows how they
-should work?
--- 
-Thanks,
-~Nick Desaulniers
+Makes sense. And in anycase, it is something I do want to do, just not
+right now. I will put a TODO here in the next revision.
+
+> > > > +static void kunit_print_tap_version(void)
+> > > > +{
+> > > > +     if (!kunit_has_printed_tap_version) {
+> > > > +             kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
+> > >
+> > > What is this TAP thing? Why should we care what version it is on?
+> > > Why are we printing this?
+> >
+> > It's part of the TAP specification[1]. Greg and Frank asked me to make
+> > the intermediate format conform to TAP. Seems like something else I
+> > should probable document...
+>
+> Yes thanks!
+>
+> > > > +             kunit_has_printed_tap_version = true;
+> > > > +     }
+> > > > +}
+> > > > +
+> > > > +static size_t kunit_test_cases_len(struct kunit_case *test_cases)
+> > > > +{
+> > > > +     struct kunit_case *test_case;
+> > > > +     size_t len = 0;
+> > > > +
+> > > > +     for (test_case = test_cases; test_case->run_case; test_case++)
+> > >
+> > > If we make the last test case NULL, we'd just check for test_case here,
+> > > and save ourselves an extra few bytes per test module. Any reason why
+> > > the last test case cannot be NULL?
+> >
+> > Is there anyway to make that work with a statically defined array?
+>
+> No you're right.
+>
+> > Basically, I want to be able to do something like:
+> >
+> > static struct kunit_case example_test_cases[] = {
+> >         KUNIT_CASE(example_simple_test),
+> >         KUNIT_CASE(example_mock_test),
+> >         {}
+> > };
+> >
+> > FYI,
+> > #define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
+>
+> >
+> > In order to do what you are proposing, I think I need an array of
+> > pointers to test cases, which is not ideal.
+>
+> Yeah, you're right. The only other alternative is to have a:
+>
+> struct kunit_module {
+>        const char name[256];
+>        int (*init)(struct kunit *test);
+>        void (*exit)(struct kunit *test);
+>        struct kunit_case *test_cases;
+> +       unsigned int num_cases;
+> };
+>
+> And then something like:
+>
+> #define KUNIT_MODULE(name, init, exit, cases) { \
+>         .name = name, \
+>         .init = init, \
+>         .exit = exit, \
+>         .test_cases = cases,
+>         num_cases = ARRAY_SIZE(cases), \
+> }
+>
+> Let's evaluate which is better: one extra test case per all test cases, or
+> an extra unsigned int for each kunit module.
+
+I am in favor of the current method since init and exit are optional
+arguments. I could see myself (actually I am planning on) adding more
+optional things to the kunit_module, so having optional arguments will
+make my life a lot easier since I won't have to go through big
+refactorings around the kernel to support new features that tie in
+here.
