@@ -2,153 +2,112 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE92C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEA5C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110B02085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A516D208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kyg5STNu"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="kVT6f/J1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfFZUfM (ORCPT
+        id S1726381AbfFZUjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:35:12 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33545 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfFZUfJ (ORCPT
+        Wed, 26 Jun 2019 16:39:15 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41747 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZUjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:35:09 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y17so43397lfe.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:35:07 -0700 (PDT)
+        Wed, 26 Jun 2019 16:39:14 -0400
+Received: by mail-oi1-f194.google.com with SMTP id g7so150109oia.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LTRf588K19VR3uE4xJO4Ojwc8tEPausRnAboL2Ui+lU=;
-        b=kyg5STNuNn7xfncn6wo2Yv/G5ZEt6xObU+gLxf5bai1e0LwHH3HnqqpmBIDfCmVxlS
-         qz+z5g81bjwQWPsYzAdU9I4U77GW33GYOGebiIVAVbGpBrcTkwORPHT2q7vcucoNZwg8
-         ePNS9c2+vF0OyA0BDj2kyQSCfD65z6LrU8Zzg=
+        bh=VYeWRlp6n/vQnTa+fYFmAoEUxn0NMI33stOLW194NWI=;
+        b=kVT6f/J18N4jOGjKVrrG9wNomn8jDVg05k4WFQXf36XrjtMQpEmVpWPIuNysiAbKsx
+         n+Z718Sxszq/I1fyvWJXsD01Zp8W0/LbsKFY24ybfeyRgsqfCUshdCH7ZoW7/ONLXJdN
+         lD9TT3SmGvQUVxDWCD1qHC1hTkzE10LJ57KQWSYjPlWxqr+J4LzT7uhc9aNdJ7JwhKKB
+         kTLAPG10/ZPxQsIMrTIvi7pepmWglKVqEy7PBkHxAU5DIyV7aNyjbNLUdQltXRmZLL9f
+         8H0FR7ztfQUo0clbwtw2o44u24imsaxpG3L9ecnsJ6w6WyNKf8/pW5Eab6KslfuserKb
+         EmDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LTRf588K19VR3uE4xJO4Ojwc8tEPausRnAboL2Ui+lU=;
-        b=NMBp8ZC9F+uN2Vtiuw6DG8g5vzjzmKah7984ZHYfqZApL7CwCAfGmDvi66NQNOrGb+
-         E+CVYpyYVscbwnA4bY8fULE5xdUPL27IEnlSWMi6yi8GBrjU1mZscmMxBNwOdup5UsvS
-         3wuwlXS7x7d8il15Ht69Is0Q4aNM/GYVnSyk/5Q9t44zwOFAEB9YLZrZOojaqX/BCNKg
-         41TFcKLyBvAlOC7kAOAHf4A3N8g+h3+ZUYhFIT7/ZZr5qWasXrztXWbjt9szmf3yn1Sx
-         gRVOGGfr5P/LQd7iC6zXLNj3jALVW59C9fBsq/Z2b51JU8DgG8DMttTuNif2WNKBEpqI
-         Sdjw==
-X-Gm-Message-State: APjAAAViIVsmQRdUQjjbNZJI9jg2rfwzip4RI/jgX5nQ5dGus2J2aIzq
-        FRdjCwoJeXvf/xhcYDSRbDQyVFsoIRI=
-X-Google-Smtp-Source: APXvYqyV9uWgTXc/6cEaRtmaba7SakBnEkJ+SOmrssfPjkeFetA92ABrO0y/Cv1ryjfLb3QT6phy4A==
-X-Received: by 2002:ac2:4904:: with SMTP id n4mr38847lfi.53.1561581306421;
-        Wed, 26 Jun 2019 13:35:06 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id 80sm12449lfz.56.2019.06.26.13.35.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 13:35:05 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id 131so3587852ljf.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:35:05 -0700 (PDT)
-X-Received: by 2002:a2e:9c41:: with SMTP id t1mr142105ljj.6.1561581304868;
- Wed, 26 Jun 2019 13:35:04 -0700 (PDT)
+        bh=VYeWRlp6n/vQnTa+fYFmAoEUxn0NMI33stOLW194NWI=;
+        b=ITd1vPtit7PPdP8BqNojAJoYTHaZOAeWTx8mZJOKpQUc8lTjp06rQChAakNXdXFs6J
+         N1JDmhY6eRPjJgrA/mOPcg4lvhRtW5j9OjRuIwrCvGzZO3/HvZH77pZb9klzojqR6XvL
+         LCehP+b35hWyvwe0OYzxUciyjKRscuP35OhBzAi1zd0GaooeeE+SYXi+kjH+4naBzmzJ
+         iYVy9I1A3AO8jJbESf5kWLewYEFZiARUzuZpt+G4WRpxoy3Wou4b3uS4YeJkxeInHF98
+         vj7xKFCzJXXklFXcdCna7R6lwQQjsBXd5iVC8Juzj4FmWXWF6Kb2QgVVgfH/32hgXbqG
+         E0pQ==
+X-Gm-Message-State: APjAAAU27yq/oZk3Qw8mU5PBzEX41y144URyJXubsoLAFPXcpMKhSG7J
+        4ROKmAnobmPfgMuyPyHHYhvZOzQvdYxzjVQRUtY6BA==
+X-Google-Smtp-Source: APXvYqzOW0zZUogI9bpo993SYdjNzW7+XY8OQvRzfJZPA3+Cc3WWKwMsRZL6wtJbO/WerGOW6fDqo9Ufat9fvVAWYZw=
+X-Received: by 2002:aca:d80a:: with SMTP id p10mr179462oig.105.1561581553855;
+ Wed, 26 Jun 2019 13:39:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190625215418.17548-1-evgreen@chromium.org> <s5himsssqe8.wl-tiwai@suse.de>
-In-Reply-To: <s5himsssqe8.wl-tiwai@suse.de>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 26 Jun 2019 13:34:28 -0700
-X-Gmail-Original-Message-ID: <CAE=gft62iv=V=auOhocRRfPV2Tuc2WiRYJOH5_M+HkM0qH-Jhw@mail.gmail.com>
-Message-ID: <CAE=gft62iv=V=auOhocRRfPV2Tuc2WiRYJOH5_M+HkM0qH-Jhw@mail.gmail.com>
-Subject: Re: [PATCH] ALSA: hda: Use correct start/count for sysfs init
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     alsa-devel@alsa-project.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Amadeusz S*awi*ski" <amadeuszx.slawinski@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190620161240.22738-1-logang@deltatee.com> <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca>
+In-Reply-To: <20190626202107.GA5850@ziepe.ca>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 26 Jun 2019 13:39:01 -0700
+Message-ID: <CAPcyv4hCNoMeFyOE588=kuNUXaPS-rzaXnF2cN2TFejso1SGRw@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 1:27 AM Takashi Iwai <tiwai@suse.de> wrote:
+On Wed, Jun 26, 2019 at 1:21 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 >
-> On Tue, 25 Jun 2019 23:54:18 +0200,
-> Evan Green wrote:
+> On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
+> > > we have a hole behind len where we could store flag.  Preferably
+> > > optionally based on a P2P or other magic memory types config
+> > > option so that 32-bit systems with 32-bit phys_addr_t actually
+> > > benefit from the smaller and better packing structure.
 > >
-> > The normal flow through the widget sysfs codepath is that
-> > snd_hdac_refresh_widgets() is called once without the sysfs bool set
-> > to set up codec->num_nodes and friends, then another time with the
-> > bool set to actually allocate all the sysfs widgets. However, during
-> > the first time allocation, hda_widget_sysfs_reinit() ignores the new
-> > num_nodes passed in via parameter and just calls hda_widget_sysfs_init(),
-> > using whatever was in codec->num_nodes before the update. This is not
-> > correct in cases where num_nodes changes. Here's an example:
-> >
-> > Sometime earlier:
-> > snd_hdac_refresh_widgets(hdac, false)
-> >   sets codec->num_nodes to 2, widgets is still not allocated
-> >
-> > Now:
-> > snd_hdac_refresh_widgets(hdac, true)
-> >   hda_widget_sysfs_reinit(num_nodes=7)
-> >     hda_widget_sysfs_init()
-> >       widget_tree_create()
-> >         alloc(codec->num_nodes) // this is still 2
-> >   codec->num_nodes = 7
-> >
-> > Pass num_nodes and start_nid down into widget_tree_create() so that
-> > the right number of nodes are allocated in all cases.
-> >
-> > Signed-off-by: Evan Green <evgreen@chromium.org>
+> > That seems sensible. The one thing that's unclear though is how to get
+> > the PCI Bus address when appropriate. Can we pass that in instead of the
+> > phys_addr with an appropriate flag? Or will we need to pass the actual
+> > physical address and then, at the map step, the driver has to some how
+> > lookup the PCI device to figure out the bus offset?
 >
-> Thanks for the patch.  That's indeed a problem, but I guess a simpler
-> approach is just to return if sysfs didn't exist.  If the sysfs
-> entries aren't present at the second call with sysfs=true, it implies
-> that the codec object will be exposed anyway later, and the sysfs will
-> be created there.  So, something like below would work instead?
+> I agree with CH, if we go down this path it is a layering violation
+> for the thing injecting bio's into the block stack to know what struct
+> device they egress&dma map on just to be able to do the dma_map up
+> front.
+>
+> So we must be able to go from this new phys_addr_t&flags to some BAR
+> information during dma_map.
+>
+> For instance we could use a small hash table of the upper phys addr
+> bits, or an interval tree, to do the lookup.
 
-Hi Takashi,
-Thanks for taking a look. I'm not sure you'd want to do that because
-then you end up returning from sysfs_reinit without having allocated
-any of the sysfs widgets. You'd be relying on the implicit behavior
-that another call to init is coming later (despite having updated
-num_nodes and start node), which is difficult to follow and easy to
-break. In my opinion the slight bit of extra diffs is well worth the
-clarity of having widget_tree_create always allocate the correct
-start/count.
+Hmm, that sounds like dev_pagemap without the pages.
 
-Actually, in looking at the widget lock patch, I don't think it's
-sufficient either. It adds a lock around sysfs_reinit, but the setting
-of codec->num_nodes and codec->start_nid is unprotected by the lock.
-So you could have the two threads politely serialize through
-sysfs_reinit, but then get reordered before setting codec->num_nodes,
-landing you with an array whose length doesn't match num_nodes.
-
-Let me craft up an additional patch to fix the locking.
--Evan
-
->
->
-> thanks,
->
-> Takashi
->
-> --- a/sound/hda/hdac_sysfs.c
-> +++ b/sound/hda/hdac_sysfs.c
-> @@ -428,7 +428,7 @@ int hda_widget_sysfs_reinit(struct hdac_device *codec,
->         int i;
->
->         if (!codec->widgets)
-> -               return hda_widget_sysfs_init(codec);
-> +               return 0;
->
->         tree = kmemdup(codec->widgets, sizeof(*tree), GFP_KERNEL);
->         if (!tree)
+There's already no requirement that dev_pagemap point to real /
+present pages (DEVICE_PRIVATE) seems a straightforward extension to
+use it for helping coordinate phys_addr_t in 'struct bio'. Then
+Logan's future plans to let userspace coordinate p2p operations could
+build on PTE_DEVMAP.
