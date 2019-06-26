@@ -2,124 +2,148 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F5CC48BD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353D1C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82CE32080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aYeWvHgh"
+	by mail.kernel.org (Postfix) with ESMTP id 145142080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfFZMCt (ORCPT
+        id S1727323AbfFZMEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:02:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:55759 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfFZMCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:02:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 26 Jun 2019 08:04:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36428 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZMEX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 08:04:23 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45YhVX2Y9jz9s3C;
-        Wed, 26 Jun 2019 22:02:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561550565;
-        bh=w+QRbv9L2/ZXmnp052EBNEJxLhRrtzCyrMYK4G+/uqU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aYeWvHghTT7MDezFGVvdSsdRo3/VfdVPeSzVrHCh8vXL+ncKzR/3DS+uX0/LrIUMK
-         FRigKjrMiVHZZfBx37rexsaz/ouZRUMmLgGJwYUVtw9gKMiTlyQtG07bgXxj4azP/l
-         2RpubkVDYAV4wc7xj/rFMrNm/TiXMs7vX6dwPhV6a9cXFWM5qa+V28A/jxHk0tM+uq
-         W/5R9+K5J7PaSPnkbCwMVuSXGYi1gktv2f5xg8bZLNN1hQO2yYslCXagUDYvtIDrcf
-         ZeUZcyYXxtXiW9mrbB4zDfi/HjB0jsSw9Nbs9J7cckmGxmgzvaftXIgwwZcYfBgMcf
-         lDowXfPhYlnhQ==
-Date:   Wed, 26 Jun 2019 22:02:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        Matteo Croce <mcroce@redhat.com>
-Subject: linux-next: manual merge of the akpm tree with the net tree
-Message-ID: <20190626220242.26fc2d3e@canb.auug.org.au>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A70A2289366;
+        Wed, 26 Jun 2019 13:04:20 +0100 (BST)
+Date:   Wed, 26 Jun 2019 14:04:17 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Naga Sureshkumar Relli <nagasure@xilinx.com>
+Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "helmut.grohne@intenta.de" <helmut.grohne@intenta.de>,
+        "richard@nod.at" <richard@nod.at>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [LINUX PATCH v17 1/2] mtd: rawnand: nand_micron: Do not over
+ write driver's read_page()/write_page()
+Message-ID: <20190626140417.440cf762@collabora.com>
+In-Reply-To: <DM6PR02MB4779D347620E88BDB943DEB4AFE20@DM6PR02MB4779.namprd02.prod.outlook.com>
+References: <20190625044630.31717-1-naga.sureshkumar.relli@xilinx.com>
+        <20190626084807.3f06e718@collabora.com>
+        <DM6PR02MB47796E3306C166A91E0BAE91AFE20@DM6PR02MB4779.namprd02.prod.outlook.com>
+        <20190626132715.6128d8b1@collabora.com>
+        <DM6PR02MB4779D347620E88BDB943DEB4AFE20@DM6PR02MB4779.namprd02.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/IAiEFUnBd=9XVVSDEnGhKa6"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IAiEFUnBd=9XVVSDEnGhKa6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 26 Jun 2019 11:51:12 +0000
+Naga Sureshkumar Relli <nagasure@xilinx.com> wrote:
 
-Hi all,
+> Hi Boris,
+> 
+> > -----Original Message-----
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > Sent: Wednesday, June 26, 2019 4:57 PM
+> > To: Naga Sureshkumar Relli <nagasure@xilinx.com>
+> > Cc: miquel.raynal@bootlin.com; helmut.grohne@intenta.de; richard@nod.at;
+> > dwmw2@infradead.org; computersforpeace@gmail.com; marek.vasut@gmail.com;
+> > vigneshr@ti.com; bbrezillon@kernel.org; yamada.masahiro@socionext.com; linux-
+> > mtd@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [LINUX PATCH v17 1/2] mtd: rawnand: nand_micron: Do not over write
+> > driver's read_page()/write_page()
+> > 
+> > On Wed, 26 Jun 2019 11:22:33 +0000
+> > Naga Sureshkumar Relli <nagasure@xilinx.com> wrote:
+> >   
+> > > Hi Boris,
+> > >  
+> > > > -----Original Message-----
+> > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > Sent: Wednesday, June 26, 2019 12:18 PM
+> > > > To: Naga Sureshkumar Relli <nagasure@xilinx.com>
+> > > > Cc: miquel.raynal@bootlin.com; helmut.grohne@intenta.de;
+> > > > richard@nod.at; dwmw2@infradead.org; computersforpeace@gmail.com;
+> > > > marek.vasut@gmail.com; vigneshr@ti.com; bbrezillon@kernel.org;
+> > > > yamada.masahiro@socionext.com; linux- mtd@lists.infradead.org;
+> > > > linux-kernel@vger.kernel.org
+> > > > Subject: Re: [LINUX PATCH v17 1/2] mtd: rawnand: nand_micron: Do not
+> > > > over write driver's read_page()/write_page()
+> > > >
+> > > > On Mon, 24 Jun 2019 22:46:29 -0600
+> > > > Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com> wrote:
+> > > >  
+> > > > > Add check before assigning chip->ecc.read_page() and
+> > > > > chip->ecc.write_page()
+> > > > >
+> > > > > Signed-off-by: Naga Sureshkumar Relli
+> > > > > <naga.sureshkumar.relli@xilinx.com>
+> > > > > ---
+> > > > >  drivers/mtd/nand/raw/nand_micron.c | 7 +++++--
+> > > > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/mtd/nand/raw/nand_micron.c
+> > > > > b/drivers/mtd/nand/raw/nand_micron.c
+> > > > > index cbd4f09ac178..565f2696c747 100644
+> > > > > --- a/drivers/mtd/nand/raw/nand_micron.c
+> > > > > +++ b/drivers/mtd/nand/raw/nand_micron.c
+> > > > > @@ -500,8 +500,11 @@ static int micron_nand_init(struct nand_chip *chip)
+> > > > >  		chip->ecc.size = 512;
+> > > > >  		chip->ecc.strength = chip->base.eccreq.strength;
+> > > > >  		chip->ecc.algo = NAND_ECC_BCH;
+> > > > > -		chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> > > > > -		chip->ecc.write_page = micron_nand_write_page_on_die_ecc;
+> > > > > +		if (!chip->ecc.read_page)
+> > > > > +			chip->ecc.read_page = micron_nand_read_page_on_die_ecc;
+> > > > > +
+> > > > > +		if (!chip->ecc.write_page)
+> > > > > +			chip->ecc.write_page = micron_nand_write_page_on_die_ecc;  
+> > > >
+> > > > That's wrong, if you don't want on-die ECC to be used, simply don't
+> > > > set nand-ecc-mode to "on- die".  
+> > > Ok. But if we want to use on-die ECC then you mean to say it is mandatory to use  
+> > micron_nand_read/write_page_on_die_ecc()?
+> > 
+> > Absolutely, and if it doesn't work that means you driver does not
+> > implement raw accesses correctly, which means it's still buggy...  
+> I agree. But let's say, if there is a limitation with the controller. Then it is must to have this check right?
+> I mean, for pl353 controller, we must clear the CS during the data phase, hence we are splitting the 
+> Transfer in the pl353_read/write_page_raw().
+> +	pl353_nand_read_data_op(chip, buf, mtd->writesize, false);
+> +	p = chip->oob_poi;
+> +	pl353_nand_read_data_op(chip, p,
+> +				(mtd->oobsize -
+> +				PL353_NAND_LAST_TRANSFER_LENGTH), false);
+> +	p += (mtd->oobsize - PL353_NAND_LAST_TRANSFER_LENGTH);
+> +	xnfc->dataphase_addrflags |= PL353_NAND_CLEAR_CS;
+> +	pl353_nand_read_data_op(chip, p, PL353_NAND_LAST_TRANSFER_LENGTH,
+> +				false);
+> As the above sequence is needed even for raw access, PL353 is unable to use the on_die_page reads.
 
-Today's linux-next merge of the akpm tree got a conflict in:
-
-  net/ipv6/route.c
-
-between commit:
-
-  b8e8a86337c2 ("net/ipv6: Fix misuse of proc_dointvec "skip_notify_on_dev_=
-down"")
-
-from the net tree and patch:
-
-  "proc/sysctl: add shared variables for range check"
-
-from the akpm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/ipv6/route.c
-index a0994415484e,c5125cdff32c..000000000000
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@@ -6077,9 -6074,9 +6074,9 @@@ static struct ctl_table ipv6_route_tabl
-  		.data		=3D	&init_net.ipv6.sysctl.skip_notify_on_dev_down,
-  		.maxlen		=3D	sizeof(int),
-  		.mode		=3D	0644,
- -		.proc_handler	=3D	proc_dointvec,
- +		.proc_handler	=3D	proc_dointvec_minmax,
-- 		.extra1		=3D	&zero,
-- 		.extra2		=3D	&one,
-+ 		.extra1		=3D	SYSCTL_ZERO,
-+ 		.extra2		=3D	SYSCTL_ONE,
-  	},
-  	{ }
-  };
-
---Sig_/IAiEFUnBd=9XVVSDEnGhKa6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0TXuIACgkQAVBC80lX
-0GzVGQgAi6KpMwwYvxK6TZnE4Xv4rKpUNWLM+tX4+Z02jY4ue7Igt3X2IRURmt7J
-2jJx0UlDRsExYucQdAQQHwnaKzZ9nFQPGezGoc6KsoYrry9adJkZ2FZeoHj/ZPJ8
-VSsG4hf3pdhHcFoV53bnY0V1Ai0/TXgg80LdXOSY+TdQNtDj9hkIznS3vTOaQ4ar
-dqhoLtKPz4lJr+9unfUACWR1r2TGiZ5tywc3j9/XEo0KLx/yPB0nE+zTVCjX0I65
-dSKLZpo+g3sWrEb77E9Alokj2OXx4qBtnpXzkXXlXjgRUOM2shFDCAUUH9gjRqnx
-RUFR153oJ89iXTbWGO9+FCWZExL+8Q==
-=CNIh
------END PGP SIGNATURE-----
-
---Sig_/IAiEFUnBd=9XVVSDEnGhKa6--
+This "de-assert CS on last access" logic should be done in the
+exec_op() implementation. I also wonder how that works for operations
+that don't have data cycles. Oh, BTW, most chips are CE-don't-care,
+which means you can assert/de-assert CS on each read_data_op() without
+any issues.
