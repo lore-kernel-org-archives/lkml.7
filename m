@@ -2,58 +2,53 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086FBC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E32BC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D293A20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B4420659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520821;
-	bh=xAO+47BYi6CocDTGfQCyEFzZYu+zG+pRn6MsY7FyQXo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlTaI29WByxO9rQ65vzgurCvhJaE8v5lUgS01/yRY8immMUlnQRhaCFpvNn0uqKiR
-	 gSPAb8ythzP/GHy5jVoitKYfPmOdZihknMnZapFcYs6iS9CegMX27K5m8dXt8+78UV
-	 oM2mv7P0mpOkJ1MOSFT6vyO1UBaaPMfiZ8MVXUrY=
+	s=default; t=1561520844;
+	bh=HYdAbmhEThN365al8l0g9ektYP5jbJ8Nth9fQjo/xjY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jNZhZjVmU5CY/+PQif6jO7nNT7jiMOcsBWPW7/fL+vjnvMaVnc14TDC2Z+hiuYCzC
+	 Ao44xsQSprYojKSKWfwhKB9bYjh/HH8QsXibgGeu6OUlnYgXOKD54cXXoLitBDVrGT
+	 v4go4lL2I8J6wRm9jMIE2tQwdOGk53+atiXYgVAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfFZDq4 (ORCPT
+        id S1727908AbfFZDqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58856 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfFZDqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:46:54 -0400
-Received: from sasha-vm.mshome.net (mobile-107-77-172-90.mobile.att.net [107.77.172.90])
+        id S1727457AbfFZDqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:46:05 -0400
+Received: from sasha-vm.mshome.net (mobile-107-77-172-82.mobile.att.net [107.77.172.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00CCB20659;
-        Wed, 26 Jun 2019 03:46:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBCF520B7C;
+        Wed, 26 Jun 2019 03:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520813;
-        bh=xAO+47BYi6CocDTGfQCyEFzZYu+zG+pRn6MsY7FyQXo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZ6XMGYBemlHQRA4gtVJi8YuRYN+GiDtx0dIfqsWQn2e3NxM6bxS0VVh94wn37Msm
-         Ot9Idv4h1KSzb+j2rLLwpwE5RuL2y8Up85tYcgTtJ2ElnUcvEm3Nw2tayd1LNmvpsp
-         nDD/6BhWmCIHWd984Nsu4mw7zaEmO4dJ8gdHrb3c=
+        s=default; t=1561520765;
+        bh=HYdAbmhEThN365al8l0g9ektYP5jbJ8Nth9fQjo/xjY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tw1S8LN0SgLpHD9u3vM74c59O9asySfDwmMKPeU4yxGw06ZquEbZXRsx01dU7NgZx
+         TOX9zQCFh6RcWs7Co+pXvkOth3G7+yacFeWOM7gpm2PjbTZCNdD7GhRUN5wTMtG2UA
+         Z0tUpgDV9l4f3r4rAYgmb3SRrUo5PWpLWcDXkUhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Don Brace <don.brace@microsemi.com>,
-        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Matt Perricone <matt.perricone@microsemi.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, esc.storagedev@microsemi.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 6/6] scsi: hpsa: correct ioaccel2 chaining
-Date:   Tue, 25 Jun 2019 23:46:37 -0400
-Message-Id: <20190626034637.24515-6-sashal@kernel.org>
+Cc:     Matt Flax <flatmax@flatmax.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/11] ASoC : cs4265 : readable register too low
+Date:   Tue, 25 Jun 2019 23:45:51 -0400
+Message-Id: <20190626034602.24367-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626034637.24515-1-sashal@kernel.org>
-References: <20190626034637.24515-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,64 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Don Brace <don.brace@microsemi.com>
+From: Matt Flax <flatmax@flatmax.org>
 
-[ Upstream commit 625d7d3518875c4d303c652a198feaa13d9f52d9 ]
+[ Upstream commit f3df05c805983427319eddc2411a2105ee1757cf ]
 
-- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_LAST_SG for
-  the last s/g element.
+The cs4265_readable_register function stopped short of the maximum
+register.
 
-- set ioaccel2_sg_element member 'chain_indicator' to IOACCEL2_CHAIN when
-  chaining.
+An example bug is taken from :
+https://github.com/Audio-Injector/Ultra/issues/25
 
-Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Matt Perricone <matt.perricone@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Where alsactl store fails with :
+Cannot read control '2,0,0,C Data Buffer,0': Input/output error
+
+This patch fixes the bug by setting the cs4265 to have readable
+registers up to the maximum hardware register CS4265_MAX_REGISTER.
+
+Signed-off-by: Matt Flax <flatmax@flatmax.org>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hpsa.c     | 7 ++++++-
- drivers/scsi/hpsa_cmd.h | 1 +
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ sound/soc/codecs/cs4265.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 910b795fc5eb..e0952882e132 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -4562,7 +4562,7 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
- 			curr_sg->reserved[0] = 0;
- 			curr_sg->reserved[1] = 0;
- 			curr_sg->reserved[2] = 0;
--			curr_sg->chain_indicator = 0x80;
-+			curr_sg->chain_indicator = IOACCEL2_CHAIN;
- 
- 			curr_sg = h->ioaccel2_cmd_sg_list[c->cmdindex];
- 		}
-@@ -4579,6 +4579,11 @@ static int hpsa_scsi_ioaccel2_queue_command(struct ctlr_info *h,
- 			curr_sg++;
- 		}
- 
-+		/*
-+		 * Set the last s/g element bit
-+		 */
-+		(curr_sg - 1)->chain_indicator = IOACCEL2_LAST_SG;
-+
- 		switch (cmd->sc_data_direction) {
- 		case DMA_TO_DEVICE:
- 			cp->direction &= ~IOACCEL2_DIRECTION_MASK;
-diff --git a/drivers/scsi/hpsa_cmd.h b/drivers/scsi/hpsa_cmd.h
-index 26488e2a7f02..7ffde12d57d4 100644
---- a/drivers/scsi/hpsa_cmd.h
-+++ b/drivers/scsi/hpsa_cmd.h
-@@ -513,6 +513,7 @@ struct ioaccel2_sg_element {
- 	u8 reserved[3];
- 	u8 chain_indicator;
- #define IOACCEL2_CHAIN 0x80
-+#define IOACCEL2_LAST_SG 0x40
- };
- 
- /*
+diff --git a/sound/soc/codecs/cs4265.c b/sound/soc/codecs/cs4265.c
+index 6e8eb1f5a041..bed64723e5d9 100644
+--- a/sound/soc/codecs/cs4265.c
++++ b/sound/soc/codecs/cs4265.c
+@@ -60,7 +60,7 @@ static const struct reg_default cs4265_reg_defaults[] = {
+ static bool cs4265_readable_register(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
+-	case CS4265_CHIP_ID ... CS4265_SPDIF_CTL2:
++	case CS4265_CHIP_ID ... CS4265_MAX_REGISTER:
+ 		return true;
+ 	default:
+ 		return false;
 -- 
 2.20.1
 
