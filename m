@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CFCC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35B7C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05D8208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4BC2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520724;
-	bh=zWkZeK4pjebkDsCj9+ZDlmiqNxTOH5lh8zWGG/6w7XY=;
+	s=default; t=1561520727;
+	bh=OU/4WKwgggwrqpznLVHSs6qLLU2TlObBPG2bsakOXFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J/CaxeDT42XY4RC77bQOkoVhjWKM6f17Twf0D6Kd3+7gx51uzonWlwpfZM/g1Ly+G
-	 AF4cxI5eu/s8AwSy/qyVL3Rolq/WMwwzK+e/LsryXlSpyPTXvZyMJLPv31i1CcKrbT
-	 ff5hcdeSWnyWvRxbgNLkRR4Hk4A554ojEkhyrbDs=
+	b=IZtLESNv7gdKW/gTEBVE3MpO93i8JM2MpOdDaljm1+2XLgyibjufVSlDsnaxI+IzP
+	 jkjgjFEvgSC/9RM05Oli7QAwf+XBcuSfDagOatopBVVNW35LdbMWnCacM9wSqYjPKz
+	 dZPSMChTqf2QUDs6rhiCsZ+5ku+BPmPijtgNNmGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfFZDpY (ORCPT
+        id S1727772AbfFZDp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbfFZDpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:45:21 -0400
+        id S1727300AbfFZDpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:45:22 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19126205ED;
-        Wed, 26 Jun 2019 03:45:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B0C92168B;
+        Wed, 26 Jun 2019 03:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520720;
-        bh=zWkZeK4pjebkDsCj9+ZDlmiqNxTOH5lh8zWGG/6w7XY=;
+        s=default; t=1561520721;
+        bh=OU/4WKwgggwrqpznLVHSs6qLLU2TlObBPG2bsakOXFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HBlkdQwtjob3UAvGeeZx1WZFnHgDse188L7kk3JUu1gSe8TqNoXkB0vnuBMN04LKb
-         SI+BTSaAr+KpQ1CQxRfQVdhb3HAyye1XjmfBr9GuXG3jPTH22P9a6gHyeE/g4ukTYt
-         PVy/Zqt9XwV6f5APN/jAQUTWvEmXYIFraQZAyIwU=
+        b=EnFCUT+mrtOIgK5NaQkNULf1GUNRBUSb8INitLesocaerhWquNj15B5OMzomjX0Mj
+         UmjTfub+S6eD+6kOByQLozQErSQXokEaR9aZlMVvWXYcpnPBx3o7DT8kxPlV2JyGzO
+         TxDiLEZasSHR/GcUOZRq6aLD4wPWEGy/FsXGnsew=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 05/21] ASoC: sun4i-codec: fix first delay on Speaker
-Date:   Tue, 25 Jun 2019 23:44:50 -0400
-Message-Id: <20190626034506.24125-5-sashal@kernel.org>
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 06/21] drm/mediatek: fix unbind functions
+Date:   Tue, 25 Jun 2019 23:44:51 -0400
+Message-Id: <20190626034506.24125-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034506.24125-1-sashal@kernel.org>
 References: <20190626034506.24125-1-sashal@kernel.org>
@@ -59,56 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgii Staroselskii <georgii.staroselskii@emlid.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 1f2675f6655838aaf910f911fd0abc821e3ff3df ]
+[ Upstream commit 8fd7a37b191f93737f6280a9b5de65f98acc12c9 ]
 
-Allwinner DAC seems to have a delay in the Speaker audio routing. When
-playing a sound for the first time, the sound gets chopped. On a second
-play the sound is played correctly. After some time (~5s) the issue gets
-back.
+detatch panel in mtk_dsi_destroy_conn_enc(), since .bind will try to
+attach it again.
 
-This commit seems to be fixing the same issue as bf14da7 but
-for another codepath.
-
-This is the DTS that was used to debug the problem.
-
-&codec {
-        allwinner,pa-gpios = <&r_pio 0 11 GPIO_ACTIVE_HIGH>; /* PL11 */
-        allwinner,audio-routing =
-                "Speaker", "LINEOUT";
-
-        status = "okay";
-}
-
-Signed-off-by: Georgii Staroselskii <georgii.staroselskii@emlid.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 2e54c14e310f ("drm/mediatek: Add DSI sub driver")
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-codec.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index baa9007464ed..0391297eecd6 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -1174,6 +1174,15 @@ static int sun4i_codec_spk_event(struct snd_soc_dapm_widget *w,
- 	gpiod_set_value_cansleep(scodec->gpio_pa,
- 				 !!SND_SOC_DAPM_EVENT_ON(event));
- 
-+	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		/*
-+		 * Need a delay to wait for DAC to push the data. 700ms seems
-+		 * to be the best compromise not to feel this delay while
-+		 * playing a sound.
-+		 */
-+		msleep(700);
-+	}
-+
- 	return 0;
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 7e5e24c2152a..413313f19c36 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -851,6 +851,8 @@ static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi)
+ 	/* Skip connector cleanup if creation was delegated to the bridge */
+ 	if (dsi->conn.dev)
+ 		drm_connector_cleanup(&dsi->conn);
++	if (dsi->panel)
++		drm_panel_detach(dsi->panel);
  }
  
+ static void mtk_dsi_ddp_start(struct mtk_ddp_comp *comp)
 -- 
 2.20.1
 
