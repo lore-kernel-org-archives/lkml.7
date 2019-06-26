@@ -2,131 +2,98 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADC1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA86C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E293214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561586635;
-	bh=O5IDpBpB2hvqpEeXNDpiUTaT0TBqph3bZmivRws57ug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zlvh152fp+UFpOiMZczWLtftKU12LjCXzXfmcNpHQk4oFj+nRQPuJ6XcIWMkBI3GR
-	 pB4ILjKMp8LKOw0ENtbSpHzjTa5DfxQHtxPltxYxPV9lec/Y63fYewe41JfkeFSaKW
-	 uK+j750hzVlMhl7nl3C1g4npoy4qYvIe5/Os8vCA=
+	by mail.kernel.org (Postfix) with ESMTP id 7307F216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e0t5w33F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfFZWDy (ORCPT
+        id S1726470AbfFZWF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:03:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33003 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfFZWDx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:03:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x15so142146pfq.0;
-        Wed, 26 Jun 2019 15:03:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2/PNSJ1/n2Sf5XjBVfcC1JCMKtBWU3f+geLh+mw2r8k=;
-        b=j7/rOM+cvthbF58ZwyBw0YxHb4PZxAmws9pvjqxbAN/mNcMQuGOc/xll6POP9ZIr7U
-         xbcM66TWwY0uM4FZ4/hJIUnY5VnT6bkQUnkXSPRvSfryPNPaDX8q3t2JlgPsFSFBYyC9
-         b1Z3fI6bv4avaDePQjHxW/9DtJkz25QiLTPhotLGzkZpglRUbR8x++q0ZdwAnLVQArKs
-         hMJpVz+4TllNFOXyXJrAGomTclD24yDyWx6UHxoqkL1zszOkzzFH4aEd38an8xi4iJxk
-         ntz43alVLnbSzlz1OFFitV92y88//f3vVxKRLS0hLIj980hrBGq5bRNG3HOjHhq2J2S7
-         dOOg==
-X-Gm-Message-State: APjAAAX5DguREj6F9/EADpVykAWSwhmxs46d9M1VJnMF3jjyOfBD1ans
-        USPoJ5XxQH6YGvKtNSRngzA=
-X-Google-Smtp-Source: APXvYqw88JPlk1NMugJQCJe5YC3I+KLyTyrQ1NxeCgEmtlZtT8YwpdCjtZvQ3Q7z9dJOH+5nmM/tbA==
-X-Received: by 2002:a63:6cc3:: with SMTP id h186mr215927pgc.292.1561586632642;
-        Wed, 26 Jun 2019 15:03:52 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j23sm110168pgb.63.2019.06.26.15.03.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 15:03:51 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5B297401D0; Wed, 26 Jun 2019 22:03:50 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 22:03:50 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Wed, 26 Jun 2019 18:05:26 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58371 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfFZWF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:05:26 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Yxsv1zbNz9s7h;
+        Thu, 27 Jun 2019 08:05:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561586723;
+        bh=aFVKHRPVPEo0qXPtz+bXPjvSCVM6YK0xpM05+SIg750=;
+        h=Date:From:To:Cc:Subject:From;
+        b=e0t5w33F8NCtUDVOnNGJQLmxUFMalIfdo5tCmljxiP6eTO1IJ6GcY22Bhr69zTKCb
+         cLwJXqj7MU9VQQFSJvRLw3lAs8bXRTwTY69MfESN4Ub3VYhR5EUFLZYkG0pGw4IXDw
+         sn5qakBnmd6thQ1sOTIcUna06wAVxxBlUPVnSx5ixf4GknQnU/RLvPjHWLD9q9E71/
+         m03/nXoCN0QwzA6Eq5xcnoDD8MSoh61W7vbUdkJXA9kXcU5sSvHXfZC4Ge53riIzJz
+         IkL5ujqYYdIDmHK0vqePo1tM16Jx1u5nccnYNs8BI5U1g1gdfEqk3QCGuIEmPAB/W9
+         fI1zRpT/yuB7Q==
+Date:   Thu, 27 Jun 2019 08:05:21 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Subject: Re: [PATCH v5 13/18] kunit: tool: add Python wrappers for running
- KUnit tests
-Message-ID: <20190626220350.GA19023@42.do-not-panic.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-14-brendanhiggins@google.com>
- <20190626000150.GT19023@42.do-not-panic.com>
- <CAFd5g44kkepB2hZcpYL-NB5ZHYE5tP7W-0yducGCX7Khd9gd9w@mail.gmail.com>
+        Roman Gushchin <guro@fb.com>
+Subject: linux-next: Fixes tag needs some work in the bpf tree
+Message-ID: <20190627080521.5df8ccfc@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g44kkepB2hZcpYL-NB5ZHYE5tP7W-0yducGCX7Khd9gd9w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/8Ta+s6lmpk2nM8laSgNAE6G"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 01:02:55AM -0700, Brendan Higgins wrote:
-> On Tue, Jun 25, 2019 at 5:01 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> >
-> > On Mon, Jun 17, 2019 at 01:26:08AM -0700, Brendan Higgins wrote:
-> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
-> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-crash.log
-> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-failure.log
-> > >  create mode 100644 tools/testing/kunit/test_data/test_is_test_passed-no_tests_run.log
-> > >  create mode 100644 tools/testing/kunit/test_data/test_output_isolated_correctly.log
-> > >  create mode 100644 tools/testing/kunit/test_data/test_read_from_file.kconfig
-> >
-> > Why are these being added upstream? The commit log does not explain
-> > this.
-> 
-> Oh sorry, those are for testing purposes. I thought that was clear
-> from being in the test_data directory. I will reference it in the
-> commit log in the next revision.
+--Sig_/8Ta+s6lmpk2nM8laSgNAE6G
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Still, I don't get it. They seem to be results from a prior run. Why do
-we need them for testing purposes?
+Hi all,
 
-  Luis
+In commit
+
+  12771345a467 ("bpf: fix cgroup bpf release synchronization")
+
+Fixes tag
+
+  Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please don't split Fixes tags across more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/8Ta+s6lmpk2nM8laSgNAE6G
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0T7CEACgkQAVBC80lX
+0GzJqQf/S4NbQBhkJx7jju0NV9PRQ+Z8h2fHnrZO6MfyJMWkAL9RvcEb04dbS7hb
+oCIA32EwuHbyIBqA2iYJ0YaIRf6I9pKLQ/gj40DhJYxUpeelb36zrBhs8TJ2UTRZ
+sGnf9V8buF7k9wTa/qWW8lh7zMbdh93dbSy9SEi6/CsxiFHne7Qi0JOXAFvZld17
+Pi6b3w5OpIrCmcUPtjQmMUCrmJoxHy+R65XMTV5Fe7MsiKCfYfxCc60ihXgVr2C7
+v1QC/UXQd1yanCUIi+oSf7CgCKiIrnbUL7yBLtQp5AwgzqIkr5ouMn1UvnNe7/pC
+4cPNUCL4f4/yZe/otn99OkefNr+n5Q==
+=ARa9
+-----END PGP SIGNATURE-----
+
+--Sig_/8Ta+s6lmpk2nM8laSgNAE6G--
