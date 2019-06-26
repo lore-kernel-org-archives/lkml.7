@@ -2,368 +2,102 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71155C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB35C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF3E21738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F712182B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="l+5kJ6to"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfFZQOX (ORCPT
+        id S1726641AbfFZQOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:14:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:36380 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFZQOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:14:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6476C2B;
-        Wed, 26 Jun 2019 09:14:21 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B27B73F706;
-        Wed, 26 Jun 2019 09:14:18 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 17:14:16 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, Shijith Thotton <sthotton@marvell.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Huw Davies <huw@codeweavers.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
- implementation
-Message-ID: <20190626161413.GA2790@e103592.cambridge.arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-5-vincenzo.frascino@arm.com>
- <20190625153336.GZ2790@e103592.cambridge.arm.com>
- <f5ac379a-731d-0662-2f5b-bd046e3bd1c5@arm.com>
+        Wed, 26 Jun 2019 12:14:44 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:47063 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbfFZQOn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:14:43 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z23so3062167ote.13
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 09:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XK0CaHJOVcsS/u0euQkBQYUAFEHomal+V6KfwmFuG+U=;
+        b=l+5kJ6tokPJ98bH2NME9M/AQ27NvFMKuOsXn1/Bb6bOBzelrSngvtDZJXmVwZKzpKi
+         qjSD/BPNZzWpZiBQzbopXZ4t+Owe9yGEnJZxcLTPAlrrPvnYO2K7gCbSAaaiJHFcBp4k
+         rxUq8p1DHnLMI0fRDu2WCtVRP/OHmPtRFurCHJX0OhgjoUZQUqGECtXD/hiUSR9PPelH
+         MnkCXYqaYmm4WKtHJZYWuY7L6Kj9qhni0KNGsJokbTzfJurnEEHErfJ69HKEvmfEeo+E
+         N7IwPwAkdbg4plX6eEOz52RHtcXnuvonc5/m143W02YNIvHsz5xJAtpZFJ8Hrcf91kdm
+         NShw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XK0CaHJOVcsS/u0euQkBQYUAFEHomal+V6KfwmFuG+U=;
+        b=t7yI0Oj1TgYg10prz38mKHpoAPrDXWPlrAwQTrghIG0YvpKzLg1u64jEO8YNha360a
+         Wpk4Ek0f2ea4OO9njlevMFaF/u6lPFp6u0f/smb2+DobFqaKSx5XcjtAg7rJSpB19Gqt
+         /lgArCfMYYpQVn6wIq43LoYBMUulK+fPphowwIf0PApbxvufouXQnHeRwv0jwlZNBq//
+         J8MA+wvdedEtl6n7XP4ZmPMNzU6vtSsP1yIfMZvyA5vN/v0w+myct5F/ezsP0HU11vtI
+         +7OaLrmCsIaEFmRaPmt+hT/ndY5TSVXjdNS9D4BzHNfr0XUCupMSBIZWEnGCwHalqXM7
+         O/5Q==
+X-Gm-Message-State: APjAAAV7PYHnUE2fgJxgXdgwST6xwtyxGDecsjdN5qxUlDwDEkUeoezX
+        Avhbu43gVIAtejMlP9pTeyGXbErRh9kEuN3wLVB5Mw==
+X-Google-Smtp-Source: APXvYqxlK4A4nPLhfNez6panLCe0oG2uZ68rpjoeO+K9OBDO45YdiJCTPi2DLYKpN0RI7gOpjzzUX8DJkFMKIZ4j7YA=
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr1155884otn.71.1561565683159;
+ Wed, 26 Jun 2019 09:14:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5ac379a-731d-0662-2f5b-bd046e3bd1c5@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-6-hch@lst.de>
+ <20190620191733.GH12083@dhcp22.suse.cz> <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
+ <20190625072317.GC30350@lst.de> <20190625150053.GJ11400@dhcp22.suse.cz>
+ <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
+ <20190625190038.GK11400@dhcp22.suse.cz> <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
+ <20190626054645.GB17798@dhcp22.suse.cz>
+In-Reply-To: <20190626054645.GB17798@dhcp22.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 26 Jun 2019 09:14:32 -0700
+Message-ID: <CAPcyv4jLK2F2UHqbwp4bCEiB7tL8sVsr775egKMmJvfZG+W+NQ@mail.gmail.com>
+Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:27:59PM +0100, Vincenzo Frascino wrote:
-> Hi Dave,
-> 
-> On 25/06/2019 16:33, Dave Martin wrote:
-> > On Fri, Jun 21, 2019 at 10:52:31AM +0100, Vincenzo Frascino wrote:
-> >> To take advantage of the commonly defined vdso interface for
-> >> gettimeofday the architectural code requires an adaptation.
-> >>
-> >> Re-implement the gettimeofday vdso in C in order to use lib/vdso.
-> >>
-> >> With the new implementation arm64 gains support for CLOCK_BOOTTIME
-> >> and CLOCK_TAI.
-> >>
-> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >> Cc: Will Deacon <will.deacon@arm.com>
-> >> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> >> Tested-by: Shijith Thotton <sthotton@marvell.com>
-> >> Tested-by: Andre Przywara <andre.przywara@arm.com>
-> > 
-> > [...]
-> > 
-> >> diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-> >> new file mode 100644
-> >> index 000000000000..bc3cb6738051
-> >> --- /dev/null
-> >> +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-> >> @@ -0,0 +1,86 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * Copyright (C) 2018 ARM Limited
-> >> + */
-> >> +#ifndef __ASM_VDSO_GETTIMEOFDAY_H
-> >> +#define __ASM_VDSO_GETTIMEOFDAY_H
-> >> +
-> >> +#ifndef __ASSEMBLY__
-> >> +
-> >> +#include <asm/unistd.h>
-> >> +#include <uapi/linux/time.h>
-> >> +
-> >> +#define VDSO_HAS_CLOCK_GETRES		1
-> >> +
-> >> +static __always_inline int gettimeofday_fallback(
-> >> +					struct __kernel_old_timeval *_tv,
-> >> +					struct timezone *_tz)
-> > 
-> > Out of interest, does this need to be __always_inline?
-> > 
-> 
-> It is a design choice. Philosophically, I prefer to control and reduce the scope
-> of the decisions the compiler has to make in order to not have surprises.
-> 
-> >> +{
-> >> +	register struct timezone *tz asm("x1") = _tz;
-> >> +	register struct __kernel_old_timeval *tv asm("x0") = _tv;
-> >> +	register long ret asm ("x0");
-> >> +	register long nr asm("x8") = __NR_gettimeofday;
-> >> +
-> >> +	asm volatile(
-> >> +	"       svc #0\n"
-> > 
-> > Can inlining of this function result in non-trivial expressions being
-> > substituted for _tz or _tv?
-> > 
-> > A function call can clobber register asm vars that are assigned to the
-> > caller-save registers or that the PCS uses for function arguments, and
-> > the situations where this can happen are poorly defined AFAICT.  There's
-> > also no reliable way to detect at build time whether the compiler has
-> > done this, and no robust way to stop if happening.
-> > 
-> > (IMHO the compiler is wrong to do this, but it's been that way for ever,
-> > and I think I saw GCC 9 show this behaviour recently when I was
-> > investigating something related.)
-> > 
-> > 
-> > To be safe, it's better to put this out of line, or remove the reg asm()
-> > specifiers, mark x0-x18 and lr as clobbered here (so that the compiler
-> > doesn't map arguments to them), and put movs in the asm to move things
-> > into the right registers.  The syscall number can be passed with an "i"
-> > constraint.  (And yes, this sucks.)
-> > 
-> > If the code this is inlined in is simple enough though, we can be fairly
-> > confident of getting away with it.
+On Tue, Jun 25, 2019 at 10:46 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 25-06-19 12:52:18, Dan Williams wrote:
+> [...]
+> > > Documentation/process/stable-api-nonsense.rst
 > >
-> 
-> I took very seriously what you are mentioning here because I think
-> that robustness of the code comes before than everything especially
-> in the kernel and I carried on some experiments to try to verify if
-> in this case is safe to assume that the compiler is doing the right
-> thing.
-> 
-> Based on my investigation and on previous observations of the
-> generation of the vDSO library, I can conclude that the approach
-> seems safe due to the fact that the usage of this code is very
-> limited, the code itself is simple enough and that gcc would inline
-> this code anyway based on the current compilation options.
+> > That document has failed to preclude symbol export fights in the past
+> > and there is a reasonable argument to try not to retract functionality
+> > that had been previously exported regardless of that document.
+>
+> Can you point me to any specific example where this would be the case
+> for the core kernel symbols please?
 
-I'd caution about "seems safe".  A lot of subtly wrong code not only
-seems safe, but _is_ safe in its original context, in practice.  Add
-some code to the vdso over time though, or tweak the compilation options
-at some point in the future, or use a different compiler, and things
-could still go wrong.
+The most recent example that comes to mind was the thrash around
+__kernel_fpu_{begin,end} [1]. I referenced that when debating _GPL
+symbol policy with J=C3=A9r=C3=B4me [2].
 
-(Further comments below.)
-
-> The experiment that I did was to define some self-contained code that
-> tries to mimic what you are describing and compile it with 3
-> different versions of gcc (6.4, 8.1 and 8.3) and in all the tree
-> cases the behavior seems correct.
-> 
-> Code:
-> =====
-> 
-> typedef int ssize_t;
-> typedef int size_t;
-> 
-> static int my_strlen(const char *s)
-> {
-> 	int i = 0;
-> 
-> 	while (s[i] == '\0')
-> 		i++;
-> 
-> 	return i;
-> }
-> 
-> static inline ssize_t my_syscall(int fd, const void *buf, size_t count)
-> {
-> 	register ssize_t arg1 asm ("x0") = fd;
-> 	register const void *arg2 asm ("x1") = buf;
-> 	register size_t arg3 asm ("x2") = count;
-> 
-> 	__asm__ volatile (
-> 		"mov x8, #64\n"
-> 		"svc #0\n"
-> 		: "=&r" (arg1)
-> 		: "r" (arg2), "r" (arg3)
-> 		: "x8"
->         );
-> 
->         return arg1;
-> }
-> 
-> void sys_caller(const char *s)
-> {
-> 	my_syscall(1, s, my_strlen(s));
-> }
-> 
-> 
-> GCC 8.3.0:
-> ==========
-> 
-> main.8.3.0.o:     file format elf64-littleaarch64
-> 
-> 
-> Disassembly of section .text:
-> 
-> 0000000000000000 <sys_caller>:
->    0:	39400001 	ldrb	w1, [x0]
->    4:	35000161 	cbnz	w1, 30 <sys_caller+0x30>
->    8:	d2800023 	mov	x3, #0x1                   	// #1
->    c:	d1000404 	sub	x4, x0, #0x1
->   10:	2a0303e2 	mov	w2, w3
->   14:	91000463 	add	x3, x3, #0x1
->   18:	38636881 	ldrb	w1, [x4, x3]
->   1c:	34ffffa1 	cbz	w1, 10 <sys_caller+0x10>
->   20:	aa0003e1 	mov	x1, x0
->   24:	d2800808 	mov	x8, #0x40                  	// #64
->   28:	d4000001 	svc	#0x0
->   2c:	d65f03c0 	ret
->   30:	52800002 	mov	w2, #0x0                   	// #0
->   34:	17fffffb 	b	20 <sys_caller+0x20>
-> 
-> 
-> GCC 8.1.0:
-> ==========
-> 
-> main.8.1.0.o:     file format elf64-littleaarch64
-> 
-> 
-> Disassembly of section .text:
-> 
-> 0000000000000000 <sys_caller>:
->    0:	39400001 	ldrb	w1, [x0]
->    4:	35000161 	cbnz	w1, 30 <sys_caller+0x30>
->    8:	d2800023 	mov	x3, #0x1                   	// #1
->    c:	d1000404 	sub	x4, x0, #0x1
->   10:	2a0303e2 	mov	w2, w3
->   14:	91000463 	add	x3, x3, #0x1
->   18:	38636881 	ldrb	w1, [x4, x3]
->   1c:	34ffffa1 	cbz	w1, 10 <sys_caller+0x10>
->   20:	aa0003e1 	mov	x1, x0
->   24:	d2800808 	mov	x8, #0x40                  	// #64
->   28:	d4000001 	svc	#0x0
->   2c:	d65f03c0 	ret
->   30:	52800002 	mov	w2, #0x0                   	// #0
->   34:	17fffffb 	b	20 <sys_caller+0x20>
-> 
-> 
-> 
-> GCC 6.4.0:
-> ==========
-> 
-> main.6.4.0.o:     file format elf64-littleaarch64
-> 
-> 
-> Disassembly of section .text:
-> 
-> 0000000000000000 <sys_caller>:
->    0:	39400001 	ldrb	w1, [x0]
->    4:	35000161 	cbnz	w1, 30 <sys_caller+0x30>
->    8:	d2800023 	mov	x3, #0x1                   	// #1
->    c:	d1000404 	sub	x4, x0, #0x1
->   10:	2a0303e2 	mov	w2, w3
->   14:	91000463 	add	x3, x3, #0x1
->   18:	38636881 	ldrb	w1, [x4, x3]
->   1c:	34ffffa1 	cbz	w1, 10 <sys_caller+0x10>
->   20:	aa0003e1 	mov	x1, x0
->   24:	d2800808 	mov	x8, #0x40                  	// #64
->   28:	d4000001 	svc	#0x0
->   2c:	d65f03c0 	ret
->   30:	52800002 	mov	w2, #0x0                   	// #0
->   34:	17fffffb 	b	20 <sys_caller+0x20>
-
-Thanks for having a go at this.  If the compiler can show the
-problematic behaviour, it looks like your could could probably trigger
-it, and as you observe, it doesn't trigger.
-
-I am sure I have seen it in the past, but today I am struggling
-to tickle the compiler in the right way.  My original reproducer may
-have involved LTO, but either way I don't still have it :(
-
-
-The classic example of this (triggered directly and not due to inlining)
-would be something like:
-
-int bar(int, int);
-
-void foo(int x, int y)
-{
-	register int x_ asm("r0") = x;
-	register int y_ asm("r1") = bar(x, y);
-
-	asm volatile (
-		"svc	#0"
-		:: "r" (x_), "r" (y_)
-		: "memory"
-	);
-}
-
-->
-
-0000000000000000 <foo>:
-   0:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
-   4:   910003fd        mov     x29, sp
-   8:   94000000        bl      0 <bar>
-   c:   2a0003e1        mov     w1, w0
-  10:   d4000001        svc     #0x0
-  14:   a8c17bfd        ldp     x29, x30, [sp], #16
-  18:   d65f03c0        ret
-
-
-The gcc documentation is vague and ambiguous about precisely whan this
-can happen and about how to avoid it.
-
-The case where this behaviour is triggered by inlining an expression
-that involves a (possibly implicit) function call seems hard to
-reproduce.
-
-
-However, the workaround is cheap, and to avoid the chance of subtle
-intermittent code gen bugs it may be worth it:
-
-void foo(int x, int y)
-{
-	asm volatile (
-		"mov	x0, %0\n\t"
-		"mov	x1, %1\n\t"
-		"svc	#0"
-		:: "r" (x), "r" (bar(x, y))
-		: "r0", "r1", "memory"
-	);
-}
-
-->
-
-0000000000000000 <foo>:
-   0:   a9be7bfd        stp     x29, x30, [sp, #-32]!
-   4:   910003fd        mov     x29, sp
-   8:   f9000bf3        str     x19, [sp, #16]
-   c:   2a0003f3        mov     w19, w0
-  10:   94000000        bl      0 <bar>
-  14:   2a0003e2        mov     w2, w0
-  18:   aa1303e0        mov     x0, x19
-  1c:   aa0203e1        mov     x1, x2
-  20:   d4000001        svc     #0x0
-  24:   f9400bf3        ldr     x19, [sp, #16]
-  28:   a8c27bfd        ldp     x29, x30, [sp], #32
-  2c:   d65f03c0        ret
-
-
-What do you think?
-
-Cheers
----Dave
+[1]: https://lore.kernel.org/lkml/20190522100959.GA15390@kroah.com/
+[2]: https://lore.kernel.org/lkml/CAPcyv4gb+r=3D=3DriKFXkVZ7gGdnKe62yBmZ7xO=
+a4uBBByhnK9Tzg@mail.gmail.com/
