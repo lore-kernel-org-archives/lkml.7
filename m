@@ -2,42 +2,42 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE846C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53086C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A596D20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2623620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:28:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KN1fXz1V"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tbo19KxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfFZM2j (ORCPT
+        id S1727757AbfFZM2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:28:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43166 "EHLO
+        Wed, 26 Jun 2019 08:28:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43122 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfFZM2h (ORCPT
+        with ESMTP id S1727738AbfFZM2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:28:37 -0400
+        Wed, 26 Jun 2019 08:28:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZjBYUWyGZeQFbLdeL3I3vLQlcbJ5I4BbNFzVpFyfAyY=; b=KN1fXz1VRCySW0ycRrfAX1GqWC
-        nBzrlUj6EH8tEn5EKRnrhZ/clBQwfvfHZco8c9jjozD1fh/my91ln6undw3f0URs/bl+BIWm9b6hu
-        GRC9l8p7WXmZ8Xxi9iA+E0W9Gm1MASDaRp1hsctZvyH++evwZDdjgMK5FluTFNT1RwdwEeDzbsvSM
-        2Vaw9si/vPSSHdp8MpGf4yt7KV6VBBfa72BTk2t+4oMw4Ihq6663f/SIsQz3QotN454E3JNgKTXLf
-        k83PbIqllqoxK5hwQg9uLoykDjdc5EnRrvh/P54vz5TNn3UfdvW/VR54c5mGcZIc55bXkoE7hGw3x
-        iOkrcrng==;
+        bh=Q7MnaJX/iVm/t0Em26EnUyAunznzqEObFDwyR3G5AJk=; b=Tbo19KxPBD9CoStAag7hFRkhL1
+        UVbFR8/CEYnn6vco/RRdP7PkksW7LjaWOT2ywOSCt9dpWa1RFcZy8LipzSnYlREvTu9l5/oK26ATg
+        Nk0WFaww+s7avBAde8Jm8KV50DOvVQEgDhHB6A8NSXWHXbsvgvkGAlYyeSqX2vJCoK3eLU9ouWC1p
+        iel5ayxHoDx57ghhSjAUcaejPQLgxHwBJURlO9R2A5MY23VdntE10dntwJYao10el5aD5sXkfAOSY
+        FOQs8Fuhnmthsq51h7FNDZAyBxsUOGDEFV0k50lYyd/nwnlHH9m9h+Q6hRj6OU7uwuOEV50gFx+DI
+        HsH+LMPw==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg72P-0001gm-Ia; Wed, 26 Jun 2019 12:28:33 +0000
+        id 1hg72K-0001eP-1U; Wed, 26 Jun 2019 12:28:28 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -46,9 +46,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 25/25] mm: don't select MIGRATE_VMA_HELPER from HMM_MIRROR
-Date:   Wed, 26 Jun 2019 14:27:24 +0200
-Message-Id: <20190626122724.13313-26-hch@lst.de>
+Subject: [PATCH 23/25] mm: sort out the DEVICE_PRIVATE Kconfig mess
+Date:   Wed, 26 Jun 2019 14:27:22 +0200
+Message-Id: <20190626122724.13313-24-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626122724.13313-1-hch@lst.de>
 References: <20190626122724.13313-1-hch@lst.de>
@@ -60,41 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The migrate_vma helper is only used by noveau to migrate device private
-pages around.  Other HMM_MIRROR users like amdgpu or infiniband don't
-need it.
+The ZONE_DEVICE support doesn't depend on anything HMM related, just on
+various bits of arch support as indicated by the architecture.  Also
+don't select the option from nouveau as it isn't present in many setups,
+and depend on it instead.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 ---
- drivers/gpu/drm/nouveau/Kconfig | 1 +
- mm/Kconfig                      | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/Kconfig | 2 +-
+ mm/Kconfig                      | 5 ++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index 66c839d8e9d1..96b9814e6d06 100644
+index dba2613f7180..6303d203ab1d 100644
 --- a/drivers/gpu/drm/nouveau/Kconfig
 +++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -88,6 +88,7 @@ config DRM_NOUVEAU_SVM
+@@ -85,10 +85,10 @@ config DRM_NOUVEAU_BACKLIGHT
+ config DRM_NOUVEAU_SVM
+ 	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+ 	depends on ARCH_HAS_HMM
++	depends on DEVICE_PRIVATE
  	depends on DRM_NOUVEAU
- 	depends on HMM_MIRROR
  	depends on STAGING
-+	select MIGRATE_VMA_HELPER
+ 	select HMM_MIRROR
+-	select DEVICE_PRIVATE
  	default n
  	help
  	  Say Y here if you want to enable experimental support for
 diff --git a/mm/Kconfig b/mm/Kconfig
-index 1e426c26b1d6..40cf0562412d 100644
+index 6f35b85b3052..eecf037a54b3 100644
 --- a/mm/Kconfig
 +++ b/mm/Kconfig
-@@ -680,7 +680,6 @@ config HMM_MIRROR
+@@ -677,13 +677,13 @@ config ARCH_HAS_HMM_MIRROR
+ 
+ config ARCH_HAS_HMM
+ 	bool
+-	default y
  	depends on (X86_64 || PPC64)
+ 	depends on ZONE_DEVICE
  	depends on MMU && 64BIT
- 	select MMU_NOTIFIER
--	select MIGRATE_VMA_HELPER
+ 	depends on MEMORY_HOTPLUG
+ 	depends on MEMORY_HOTREMOVE
+ 	depends on SPARSEMEM_VMEMMAP
++	default y
+ 
+ config MIGRATE_VMA_HELPER
+ 	bool
+@@ -709,8 +709,7 @@ config HMM_MIRROR
+ 
+ config DEVICE_PRIVATE
+ 	bool "Unaddressable device memory (GPU memory, ...)"
+-	depends on ARCH_HAS_HMM
+-	select HMM
++	depends on ZONE_DEVICE
+ 	select DEV_PAGEMAP_OPS
+ 
  	help
- 	  Select HMM_MIRROR if you want to mirror range of the CPU page table of a
- 	  process into a device page table. Here, mirror means "keep synchronized".
 -- 
 2.20.1
 
