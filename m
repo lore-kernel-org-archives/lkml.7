@@ -2,124 +2,79 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DE9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F331EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E941F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C017820656
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwwRz0HD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NeFOx4g+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfFZKMd (ORCPT
+        id S1727132AbfFZKNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:12:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33108 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbfFZKMd (ORCPT
+        Wed, 26 Jun 2019 06:13:32 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:41278 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbfFZKNc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:12:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n9so2067361wru.0;
-        Wed, 26 Jun 2019 03:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Qtrtj++mHK5StqAXXXNpN3E6e7ze0VKwEn/hQgcsepo=;
-        b=TwwRz0HDM9PWSlGfs6pmAx4CMx0yiKqp21HSGujzByvMwOW13oBDpMVQrFnf3LWHEB
-         u/TOND8AZS9hWT0oQJ2C37ynPi9bXtxR6AJcWrViXtVr6CW4tY3umvEafDl27R3XDRxA
-         TTgGijV/ZKqxJI8eE4Wvuv5ggKgib+wvI9xxtnW2QsEiD0K9EGQ+3lJsifEA5r2vKHP7
-         /S7LjxNAGM3b3v9bCkFnLv6Jsb0wBiRVCoAAe62GHOooe+aGVH8sdVgnyJOgmXTgtqCi
-         mjnCxBnMjYTbpvgExxub0p21n7kjJByaTWn2v1rCyMcS+Ybnzh1m740ibCxXzgPPeTxR
-         y3VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qtrtj++mHK5StqAXXXNpN3E6e7ze0VKwEn/hQgcsepo=;
-        b=d/B7XjlabOYIENbOr6eFzS5JYK2CLilcKBvAGC8LL6npplo/9F0A4Ip/KT+S+NVuEF
-         m/67HPy2aL/QZXVvuEUahfRPG074OAGjYDbxQJn4hFDzhHl1tr9BeTQ5QqvhxlISyx2x
-         d0QP6AyU6HF1BCv3+fqxTabAWuC3o9MbG2O1S/cRcN84f5FD85m/Td9hpZJo5EFA2j4o
-         Ambnu/mxxoXWjdkKsEz+2rSuUuirdaHGj615gNzxQY39QOPL1tyWNQsFlKfmu8IgSTZu
-         CJ1l1cp9xYt0R8aGzd2cndT8ISrgQxaj70sB/qD68Iifv6Zo5LVur2aVPUA6YrwWVV4L
-         7ZXg==
-X-Gm-Message-State: APjAAAWACYAlezlzmebpboyQrFXljIa/KipPmJmH0106F5K9vGXUbH24
-        Pi/1aWp/NxHvP7nzRBFOjZk=
-X-Google-Smtp-Source: APXvYqyEdIpkEhzWrobQp314/h9W+m+5ALceKHXGo4g2XWwx9yMT+JCcpimw+HzpIpg5ddF4lAqZgg==
-X-Received: by 2002:adf:c614:: with SMTP id n20mr3117096wrg.17.1561543950134;
-        Wed, 26 Jun 2019 03:12:30 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id n14sm36381639wra.75.2019.06.26.03.12.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:12:29 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 12:12:28 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 11/18] clk: tegra210: use fence_udelay during PLLU init
-Message-ID: <20190626101228.GD6362@ulmo>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-12-git-send-email-skomatineni@nvidia.com>
+        Wed, 26 Jun 2019 06:13:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IEd8NPH/Ien/DbwAb2Kxr57A5BcbWTAKe/DrLHbjp14=; b=NeFOx4g+OFBtrkQG23rBcnrLa
+        wfcMBDmOM5ITFU8Rko8ySC+qouVEs4JzAfkqbR615wKs1efECqwHdawkcqb1OBCfiV3wFuhRjQl4o
+        rSFQ49VXh4lPLrN/nomgzgXLiBTqmtJDUueTVatuK6n+C/FK4N85Bjst7ccASekIYxnVB79uvIf18
+        loAFzQ0sV7BonRTb9VYB3hrVyvbQ1ocn0ZJzZqD+TVT4ufjPSYmHBJLdPFEvsnOZ1sUhvhWERZO2P
+        yWc62o45nQz0JTnZQ3psxtJkvSsJYjtDnfNrkx3khDNY6FsClQ13zM6Fuzhxk9v0W92Q6VcjOMFZZ
+        18Q1PP8HQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hg4vb-00062r-N2; Wed, 26 Jun 2019 10:13:23 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 03470209CEDA8; Wed, 26 Jun 2019 12:13:20 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 12:13:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        KarimAllah <karahmed@amazon.de>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Subject: Re: cputime takes cstate into consideration
+Message-ID: <20190626101320.GX3402@hirez.programming.kicks-ass.net>
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tEFtbjk+mNEviIIX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1561345379-2429-12-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 26, 2019 at 05:43:55PM +0800, Wanpeng Li wrote:
+> Hi all,
+> 
+> After exposing mwait/monitor into kvm guest, the guest can make
+> physical cpu enter deeper cstate through mwait instruction, however,
+> the top command on host still observe 100% cpu utilization since qemu
+> process is running even though guest who has the power management
+> capability executes mwait. Actually we can observe the physical cpu
+> has already enter deeper cstate by powertop on host. Could we take
+> cstate into consideration when accounting cputime etc?
 
---tEFtbjk+mNEviIIX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Either we account runtime on the CPU itself, in which case it will not
+be in a C state due to actually running an interrupt that does
+accounting, or we do it remote (NOHZ_FULL case) and there is no way to
+know what C state, if any, that CPU is in.
 
-On Sun, Jun 23, 2019 at 08:02:52PM -0700, Sowjanya Komatineni wrote:
-> This patch uses fence_udelay rather than udelay during PLLU
-> initialization to ensure writes to clock registers happens before
-> waiting for specified delay.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra210.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---tEFtbjk+mNEviIIX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TRQwACgkQ3SOs138+
-s6EECBAAt983RKDFZsDzVg2lEPVZgSiZ/mMjKovPSk3AqmF0/JH4M5X6AD6qjDuO
-smN43eRR9Wq+WHL2FMUsf5Dvl0DPAWLw1i/ptulYJy34DHyrzMHFDzoDuC4WwJhw
-HYtYZeHoYpRh8bBbpKuMCCtTFM8QR+At5/EQmGqG7Pqc5txnVzFMJYKh1WLxTVFL
-th0zX1naYsRAHLah6qkM+m1/LzYd+kBLZBe+K5OyjOS4Huc2I3LA5hcye7OPTEGp
-6t/U81LqcvwO0DqKBl7QJIhnDfPDASa2GBPrd1s29ryl1y5/C8ZWKs4mU56tTmKh
-xMOCEYwRXjKWbZkGHAq9xsHxlhOn95/3QwR/807QAPk5tTxOaPtYsfA7dTcPj7xW
-4WNRMfke6/46tQuhc8DHypBjcXdw1Rj3ypFJVBnlEWUIQRCurabL/EyLM2DDm1We
-9oBJgQYLPiB4cMvjAXkRa5TmdGH35JDHQ4c+ce+vAfNawL55cpaNykpe4OeOBkx5
-dWJmS5WvLPaKmdmLg0x+3Bg5/7aEAWGpwu+3vUm3uOL0hGW+E0AdqXAG34u+CxVj
-A8a0yGA6Kbv30UYO5P1/AZhvxYaefvXzHDH+F/BLHgqNCn0JIEDNdnF7pCct3sgy
-/Pkt5F/kDPpM+m0B2jnuWyXTJpS1YGM2Jf6tBgEbb6b5azCcBTg=
-=NGxm
------END PGP SIGNATURE-----
-
---tEFtbjk+mNEviIIX--
