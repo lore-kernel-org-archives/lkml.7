@@ -7,63 +7,64 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75F9C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F091C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8217820B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571442146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R5NXGadO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZlQtchA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfFZK2T (ORCPT
+        id S1726830AbfFZK2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:28:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43942 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfFZK2G (ORCPT
+        Wed, 26 Jun 2019 06:28:24 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53334 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbfFZK2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:28:06 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so2071184wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:28:05 -0700 (PDT)
+        Wed, 26 Jun 2019 06:28:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id x15so1519129wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mvSt9hJ9riivcaZUoiXx5QKwOryBX80+CmAuVklqVuY=;
-        b=R5NXGadOK14TqMvGFxi5JBu0gnCPHKST2RzdeMIqI3j+ns642EdrPmjEwDrJlZNxdL
-         0poBYaMQpPcvKLibCyqWRYdXSWbKgO8BvSHYDPFEDJSM9o4f7VgqBQOfBN7WBHSZj0kd
-         amqwmru4k9QFqpsb9W5oYqGTk8bEFYdWhJdeipf4CZW4CLsI3j/r0Iul69JRS+pWdLEF
-         92gr3Hg5vY/TZyZg4UYxENt89GDwoXXhIdlCRKKE24hFUtugO3hA9d7FZw/nxjhcWkUw
-         BiAGE0mKurK4Jee+XfvSy+mvQ4ZknfbEW1HJZAS7wvx7F2eJtmeRT0h5QPJ2x1isr5GK
-         DoRQ==
+        bh=YkWgLbuNvvSsHDT8z49IMbijdNbjadafDfpCu7BT3J4=;
+        b=IZlQtchA8tyGkV6MypPeDsYD7GgL+RAXRgSwohzYZ7aL3OFSpkLqHTESsBLlDFsdC+
+         PL78y4k0DEkuD5Y1Jp7EDdcLshCHlLOMDs+jJWmxe4E5wqfqsV3P0XS5bvG5fGimUBNt
+         e5gm4KYH7twrUhQSRa6Xe/IfwZOJWcGlJ4oVE8iWTUdRELvnHQPLoAFYwnY0g2dZghB+
+         t/q7yjFbjwydx34vGUCfp5sdO9itDjxYmEU2//f9K2+JFVnjvblxa59G0pH2UErs9QMv
+         E/9DIaAe6aANUmXlQ4s6SN5sTdQSMv4KOH6CzlK6zmNTUbpppUvkGPzdIAU7xKUvBXRE
+         RcKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mvSt9hJ9riivcaZUoiXx5QKwOryBX80+CmAuVklqVuY=;
-        b=kFkRstgxcupI4Sk+OE1F9xj9I85j/usYcpnTcNqUDQcfMflirsR15fyModUU0jSVaC
-         jTCZEkfOW64fWdzbj0io3PEGJPImwEysnY0x0c3JayuYzeJ4NbuogMTnvpEIZiA2EMDl
-         GZloKSVmOipTeEZMWsr7/8dlXEP4oHCPDbncAKYhVQR7otxMqHI8ZmtR4llmdyheyYsj
-         6hX9CSuhJmNabL80cnwU8X/mfmEOrZhvfmkuudWoPr7fdL+391eFXVj4gDuzsZrWAtlc
-         Qt+DpBwOzlvMy2aJpGpFZBiTJ/bfuTWeKxPOolFbcM3y0dFMzASi3iD60vPz8dp3mNhP
-         62pw==
-X-Gm-Message-State: APjAAAUMFcnt1/a1KvCq8XRLLNxf9ZI+UpeYoW5G9dIWtsFLNVfLquBc
-        xKwf3h5dhPEgZr2Fa0zI5G6glg==
-X-Google-Smtp-Source: APXvYqyUxp2HTk10/TPYId0f9iiqXY9bc1/NCL/3FY2t/2gSKs0yuX312ojOKmF38kJFexSu2bDW1w==
-X-Received: by 2002:adf:ea4a:: with SMTP id j10mr3038947wrn.3.1561544884817;
-        Wed, 26 Jun 2019 03:28:04 -0700 (PDT)
+        bh=YkWgLbuNvvSsHDT8z49IMbijdNbjadafDfpCu7BT3J4=;
+        b=gjFSgA24fycQgKJyQ1oPLFHxtrtkRuhAOvwakgXWuRDaK8I5qMQght0Be4TwS88xxP
+         /8alRSXByAErDKeAvGOAV1ODu+87XCHrCYdsYFimuHKWcKapAT2wVtdtVfzw0ECWWzPh
+         BQs7wvGwj0mHNElZq62qXZ6wL4p2z336O4d2DWeWi1ozAEJ6QhUypBBifYGoZxVapEKM
+         +xvKhu5I7AzN0RhC1b8vVlUaIBWYIXSgTLAEhVbzObT1+HnUO5zb1z83BaBWU123vGEc
+         SUynAFTZKglFPNmcq/S0WYZ2ybaj7h5V0LRHV/cCu1xGOj6ztOZTcYTOjbb2BYkHbxui
+         1kZw==
+X-Gm-Message-State: APjAAAVSWD5dsNJuqyrmCXp55h6jye8p5pPhfdhNdqxbDYRMPV8AahsD
+        NAeaNtdDl1t2XVboAxsBR46Mcw==
+X-Google-Smtp-Source: APXvYqweJGjACasTVnjTFzlKfUE0OHmQzMzYcn69iB2wzSBvKj6RYfTICKZgBvu12Lg4A4za2EwdCA==
+X-Received: by 2002:a1c:d10c:: with SMTP id i12mr2253393wmg.152.1561544882838;
+        Wed, 26 Jun 2019 03:28:02 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id z19sm2212042wmi.7.2019.06.26.03.28.03
+        by smtp.gmail.com with ESMTPSA id z19sm2212042wmi.7.2019.06.26.03.28.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:28:04 -0700 (PDT)
+        Wed, 26 Jun 2019 03:28:02 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org,
         Bryan O'Donoghue <pure.logic@nexus-software.ie>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 4/6] nvmem: imx-ocotp: Add i.MX8MM support
-Date:   Wed, 26 Jun 2019 11:27:31 +0100
-Message-Id: <20190626102733.11708-5-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 2/6] nvmem: imx-ocotp: Ensure WAIT bits are preserved when setting timing
+Date:   Wed, 26 Jun 2019 11:27:29 +0100
+Message-Id: <20190626102733.11708-3-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190626102733.11708-1-srinivas.kandagatla@linaro.org>
 References: <20190626102733.11708-1-srinivas.kandagatla@linaro.org>
@@ -76,47 +77,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
 
-This patch adds support to burn the fuses on the i.MX8MM.
-https://www.nxp.com/webapp/Download?colCode=IMX8MMRM
+The i.MX6 and i.MX8 both have a bit-field spanning bits 27:22 called the
+WAIT field.
 
-The i.MX8MM is similar to i.MX6 processors in terms of addressing and clock
-setup.
+The WAIT field according to the documentation for both parts "specifies
+time interval between auto read and write access in one time program. It is
+given in number of ipg_clk periods."
 
-The documentation specifies 60 discreet OTP registers but, the fusemap
-address space encompasses up to 256 registers. We map the entire putative
-256 OTP registers.
+This patch ensures that the relevant field is read and written back to the
+timing register.
+
+Fixes: 0642bac7da42 ("nvmem: imx-ocotp: add write support")
 
 Signed-off-by: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/imx-ocotp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/nvmem/imx-ocotp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-index b7dacf53c715..340ab336f987 100644
+index 14c2bff2cd96..f4e117bbf2c3 100644
 --- a/drivers/nvmem/imx-ocotp.c
 +++ b/drivers/nvmem/imx-ocotp.c
-@@ -473,6 +473,12 @@ static const struct ocotp_params imx8mq_params = {
- 	.set_timing = imx_ocotp_set_imx7_timing,
- };
+@@ -183,7 +183,8 @@ static void imx_ocotp_set_imx6_timing(struct ocotp_priv *priv)
+ 	strobe_prog = clk_rate / (1000000000 / 10000) + 2 * (DEF_RELAX + 1) - 1;
+ 	strobe_read = clk_rate / (1000000000 / 40) + 2 * (DEF_RELAX + 1) - 1;
  
-+static const struct ocotp_params imx8mm_params = {
-+	.nregs = 256,
-+	.bank_address_words = 0,
-+	.set_timing = imx_ocotp_set_imx6_timing,
-+};
-+
- static const struct of_device_id imx_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx6q-ocotp",  .data = &imx6q_params },
- 	{ .compatible = "fsl,imx6sl-ocotp", .data = &imx6sl_params },
-@@ -483,6 +489,7 @@ static const struct of_device_id imx_ocotp_dt_ids[] = {
- 	{ .compatible = "fsl,imx6sll-ocotp", .data = &imx6sll_params },
- 	{ .compatible = "fsl,imx7ulp-ocotp", .data = &imx7ulp_params },
- 	{ .compatible = "fsl,imx8mq-ocotp", .data = &imx8mq_params },
-+	{ .compatible = "fsl,imx8mm-ocotp", .data = &imx8mm_params },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, imx_ocotp_dt_ids);
+-	timing = strobe_prog & 0x00000FFF;
++	timing = readl(priv->base + IMX_OCOTP_ADDR_TIMING) & 0x0FC00000;
++	timing |= strobe_prog & 0x00000FFF;
+ 	timing |= (relax       << 12) & 0x0000F000;
+ 	timing |= (strobe_read << 16) & 0x003F0000;
+ 
 -- 
 2.21.0
 
