@@ -2,160 +2,69 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C0BC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAC4C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F032133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4FF2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfFZH0g (ORCPT
+        id S1726757AbfFZHdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:26:36 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:58270 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfFZH0g (ORCPT
+        Wed, 26 Jun 2019 03:33:55 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:52655 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfFZHdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:26:36 -0400
+        Wed, 26 Jun 2019 03:33:55 -0400
 Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id BB02B80324;
-        Wed, 26 Jun 2019 09:26:29 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 09:26:28 +0200
+        by asavdk3.altibox.net (Postfix) with ESMTPS id B585220039;
+        Wed, 26 Jun 2019 09:33:51 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 09:33:50 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>, stonea168@163.com,
-        dri-devel@lists.freedesktop.org,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        cawa.cheng@mediatek.com,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [v3 4/4] drm/panel: support for auo, kd101n80-45na wuxga dsi
- video mode panel
-Message-ID: <20190626072628.GC14541@ravnborg.org>
-References: <20190626025400.109567-1-jitao.shi@mediatek.com>
- <20190626025400.109567-5-jitao.shi@mediatek.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        marek.belisko@gmail.com, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, tomi.valkeinen@ti.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel@lists.freedesktop.org, letux-kernel@openphoenux.org
+Subject: Re: [PATCH v3 0/5] drm/panel-simple: Add panel parameters for
+ ortustech-com37h3m05dtc/99dtc and sharp-lq070y3dg3b
+Message-ID: <20190626073350.GA15288@ravnborg.org>
+References: <cover.1559905870.git.hns@goldelico.com>
+ <0842FF88-D8E0-441B-837B-769C2EF6C1CB@goldelico.com>
+ <20190625204356.GF18595@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626025400.109567-5-jitao.shi@mediatek.com>
+In-Reply-To: <20190625204356.GF18595@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
         a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=mpaa-ttXAAAA:8
-        a=e5mUnYsNAAAA:8 a=noVse8_2oiOjf6f6wEgA:9 a=CjuIK1q_8ugA:10
-        a=6heAxKwa5pAsJatQ0mat:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=WeB7a6NEp7-J1G8srcAA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 10:54:00AM +0800, Jitao Shi wrote:
-> Auo,kd101n80-45na's connector is same as boe,tv101wum-nl6.
-> The most codes can be reuse.
-> So auo,kd101n80-45na and boe,tv101wum-nl6 use one driver file.
-> Add the different parts in driver data.
+Hi Nikolaus.
 
-Very nice consolidation.
-Have you considered another filename that better tell this is a driver
-for different types of displays?
+> > 
+> > any progress towards merging this somewhere? It did not yet arrive in linux-next.
+> > 
+> > BTW: should also be applied to 5.2
+> The drm bits are reviewed. The DT bits needs OK from DT people.
+> When we have OK from DT people we can apply them all to drm-misc-next.
 
-And the Kconfig text needs some adjustment to tell this driver now
-supports an extra type of display.
+I got OK on irc from Rob to process these.
+All patches are now applied to drm-misc-next.
 
 	Sam
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> index 30d1f53dcbaf..6ff49f900cd2 100644
-> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> @@ -372,6 +372,15 @@ static const struct panel_init_cmd boe_init_cmd[] = {
->  	{},
->  };
->  
-> +static const struct panel_init_cmd auo_init_cmd[] = {
-> +	_INIT_DELAY_CMD(24),
-> +	_INIT_DCS_CMD(0x11),
-> +	_INIT_DELAY_CMD(120),
-> +	_INIT_DCS_CMD(0x29),
-> +	_INIT_DELAY_CMD(120),
-> +	{},
-> +};
-> +
->  static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
->  {
->  	return container_of(panel, struct boe_panel, base);
-> @@ -571,6 +580,33 @@ static const struct panel_desc boe_tv101wum_nl6_desc = {
->  	.init_cmds = boe_init_cmd,
->  };
->  
-> +static const struct drm_display_mode auo_default_mode = {
-> +	.clock = 157000,
-> +	.hdisplay = 1200,
-> +	.hsync_start = 1200 + 80,
-> +	.hsync_end = 1200 + 80 + 24,
-> +	.htotal = 1200 + 80 + 24 + 36,
-> +	.vdisplay = 1920,
-> +	.vsync_start = 1920 + 16,
-> +	.vsync_end = 1920 + 16 + 4,
-> +	.vtotal = 1920 + 16 + 4 + 16,
-> +	.vrefresh = 60,
-> +};
-> +
-> +static const struct panel_desc auo_kd101n80_45na_desc = {
-> +	.modes = &auo_default_mode,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 135,
-> +		.height = 216,
-> +	},
-> +	.lanes = 4,
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> +		      MIPI_DSI_MODE_LPM,
-> +	.init_cmds = auo_init_cmd,
-> +};
-> +
->  static int boe_panel_get_modes(struct drm_panel *panel)
->  {
->  	struct boe_panel *boe = to_boe_panel(panel);
-> @@ -694,6 +730,9 @@ static const struct of_device_id boe_of_match[] = {
->  	{ .compatible = "boe,tv101wum-nl6",
->  	  .data = &boe_tv101wum_nl6_desc
->  	},
-> +	{ .compatible = "auo,kd101n80-45na",
-> +	  .data = &auo_kd101n80_45na_desc
-> +	},
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, boe_of_match);
-> -- 
-> 2.21.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
