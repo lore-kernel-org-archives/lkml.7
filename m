@@ -2,407 +2,127 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CF2C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B18C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904532085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52FC204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ervszTLU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L/0XFdCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfFZBjJ (ORCPT
+        id S1726423AbfFZBmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:39:09 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42136 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbfFZBjI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:39:08 -0400
-Received: by mail-qk1-f196.google.com with SMTP id b18so333218qkc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 18:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+TXqSwTZjDGWj2L4S+KWzT9OrVj0CDUBdtM8IFJVBGA=;
-        b=ervszTLUC9g6PMkHh8xFdbXLwqy2ptpocTo5YeYt7pVLR20sibEuff45n1pnTXuW3D
-         vN6A5y05aPfQ6lDOMxGnPVSncqduSje1eBfEjligVaL64TqIPlgCC8scG9v7lVXQx/6n
-         FA30vHpln56hKSmoCAevu372laHXG40EzMEVP4/4gsHce62dR29poZ0da+dY39dMQQET
-         yawTCqi9v10NrFqsLpVDqg4TUvoPNd1GM7CPa9ffhLCF5G37F2Az93mo6aGvPAaFhSl2
-         iaySm6RVe9bJ+V7uC00uya9turvVA0ngBh4FXgSyvPlH9fqpjcGCefoh1nIkH7KmwX//
-         r3fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+TXqSwTZjDGWj2L4S+KWzT9OrVj0CDUBdtM8IFJVBGA=;
-        b=mHq641G3vQ+gWgrSbMyxDUwe1N6HYMeWBfQyXtCEOaLsmNsziY8ZtgF+V7EIGhy6G0
-         nReMwG1Bc0D0RZb+tK4AuzCrIp08L2uPMBVB4vwfjFKXEMoD2Y87pfEdNLV92PolDfkU
-         70JUHcOwHMG9ZA38NtDKJEsNqOIgWCTXrw7FR6NqArQdW8qEc6sm+bMj9TvBKAvIJlEX
-         xL9Oa3bcUuo+7ApIu8j1D9ACJAvpbUMhQZAqELZ8+2oEZDFlNUDvKZn044cgtgiKHOI5
-         2b7cpjrSyE9eP05c/YGxLeie8bK1TjoHg+bImNtcCAbN8aRDzK5dxh6cVfWv8LHA1YZN
-         RUQg==
-X-Gm-Message-State: APjAAAWnkAYFwKz5yQ0ZsdpubUdMBk1krgVISwYrFHm0w791Z5kpP6cf
-        lkSlsv+6z1xOY657XlZeb4c=
-X-Google-Smtp-Source: APXvYqyDm2BNTI3hkynfdVEW0uNDWRhaj/k3V+V3hMvZHuUvQvsEyv0xpzQ4c2GCjDSMKsAURE7XJA==
-X-Received: by 2002:a05:620a:624:: with SMTP id 4mr1470510qkv.15.1561513147526;
-        Tue, 25 Jun 2019 18:39:07 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id q29sm8219747qkq.77.2019.06.25.18.39.04
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 18:39:07 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 22:39:03 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 5/5] drm/vkms: Add support for writeback
-Message-ID: <917fda9b620cd84a0826d2d5a59bff9ea07bfde2.1561491964.git.rodrigosiqueiramelo@gmail.com>
-References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+        Tue, 25 Jun 2019 21:42:55 -0400
+Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:40846
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726307AbfFZBmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 21:42:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tZVqGS9K5sTkvVIqgTU2Ye5pdZMkkBpRjs9hZxvDNeY=;
+ b=L/0XFdCf6OuHo1+kvO4rhb7yuzIY7ih8d0aqWiJxxxbAZk1Qv3jyZQkZJl79Xg8ftjl9hnDCRlX7L6dbgBIFHjLgSSo/3LLO0Gl/E9y/sexs2ll9FOFqo/i79aZfwzTzA23Thf5B3teyHLguvHKUuoTq/mrLbzzamPD0S+GszdE=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3900.eurprd04.prod.outlook.com (52.134.71.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Wed, 26 Jun 2019 01:42:48 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2008.014; Wed, 26 Jun 2019
+ 01:42:48 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
+ clock-frequency property
+Thread-Topic: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
+ clock-frequency property
+Thread-Index: AQHVKcBeREE6S4ew/U+TyYIcUsyobqas4eqAgABJq2A=
+Date:   Wed, 26 Jun 2019 01:42:48 +0000
+Message-ID: <DB3PR0402MB3916AB9F2260B0E46CCDDEC0F5E20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <20190623123850.22584-1-Anson.Huang@nxp.com>
+ <55abafbd-c010-32b5-6d76-26040830d5b0@linaro.org>
+In-Reply-To: <55abafbd-c010-32b5-6d76-26040830d5b0@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 01bbb761-a46f-46ff-3e22-08d6f9d7984b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3900;
+x-ms-traffictypediagnostic: DB3PR0402MB3900:
+x-microsoft-antispam-prvs: <DB3PR0402MB3900636172950BF8AFCEBB21F5E20@DB3PR0402MB3900.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 00808B16F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(3846002)(6116002)(44832011)(81166006)(53936002)(110136005)(8936002)(486006)(74316002)(476003)(256004)(305945005)(68736007)(71200400001)(6436002)(229853002)(2501003)(316002)(9686003)(76176011)(2906002)(81156014)(55016002)(86362001)(6246003)(2201001)(7416002)(8676002)(4326008)(14454004)(33656002)(52536014)(478600001)(66946007)(64756008)(25786009)(5660300002)(66446008)(71190400001)(186003)(7736002)(66476007)(66556008)(76116006)(73956011)(11346002)(26005)(102836004)(446003)(7696005)(99286004)(6506007)(53546011)(66066001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3900;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: w453HTHzL6Zp40JvfUzUu3HLN5JQvqcwNQ+eHuJ+71SbcVo5AR/bALfGKUjX2kPs86BbrTKPoeuqR4rVDQ97z3Ez/UylJI8Pho/pM6CvpHSQaui2Yhq+QHRvP6Yg9nHLcjqhEQpc6fg5OvA/2kxFqI4YXStJbNFLLzdhBwRGReA91M0zOWY5+QM6PdBDApgvWOoxGsxTzOYx2gm7tlJG5wlQXnX2Nn3/LcgZ521GRHgOj+wEbbuHZe1VQU2Vkr13iTTLsBGew6tZoNTOe12ETZdoWRLbL5PO/cKlcQ+FD1Kdl+HhgRHESbh9oFS+y3u3sDSN7Napl8pgacXt3FKOa9rrPQc1Cf6uux2AmDKnwmX4n1a5cviiH4j7dca69wb0rq5rz5pC18TXsLutkArdJ9SoCyovWW2qHuFEYUusV4Y=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01bbb761-a46f-46ff-3e22-08d6f9d7984b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 01:42:48.5468
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3900
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements the necessary functions to add writeback support
-for vkms. This feature is useful for testing compositors if you don't
-have hardware with writeback support.
-
-Change in V3 (Daniel):
-- If writeback is enabled, compose everything into the writeback buffer
-instead of CRC private buffer.
-- Guarantees that the CRC will match exactly what we have in the
-writeback buffer.
-
-Change in V2:
-- Rework signal completion (Brian)
-- Integrates writeback with active_planes (Daniel)
-- Compose cursor (Daniel)
-
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
----
- drivers/gpu/drm/vkms/Makefile         |   9 +-
- drivers/gpu/drm/vkms/vkms_composer.c  |  16 ++-
- drivers/gpu/drm/vkms/vkms_drv.c       |   4 +
- drivers/gpu/drm/vkms/vkms_drv.h       |   8 ++
- drivers/gpu/drm/vkms/vkms_output.c    |  10 ++
- drivers/gpu/drm/vkms/vkms_writeback.c | 141 ++++++++++++++++++++++++++
- 6 files changed, 185 insertions(+), 3 deletions(-)
- create mode 100644 drivers/gpu/drm/vkms/vkms_writeback.c
-
-diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
-index 0b767d7efa24..333d3cead0e3 100644
---- a/drivers/gpu/drm/vkms/Makefile
-+++ b/drivers/gpu/drm/vkms/Makefile
-@@ -1,4 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-only
--vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_composer.o
-+vkms-y := \
-+	vkms_drv.o \
-+	vkms_plane.o \
-+	vkms_output.o \
-+	vkms_crtc.o \
-+	vkms_gem.o \
-+	vkms_composer.o \
-+	vkms_writeback.o
- 
- obj-$(CONFIG_DRM_VKMS) += vkms.o
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 8126aa0f968f..2317803e7320 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -157,16 +157,17 @@ void vkms_composer_worker(struct work_struct *work)
- 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
- 	struct vkms_composer *primary_composer = NULL;
- 	struct vkms_composer *cursor_composer = NULL;
-+	bool crc_pending, wb_pending;
- 	void *vaddr_out = NULL;
- 	u32 crc32 = 0;
- 	u64 frame_start, frame_end;
--	bool crc_pending;
- 	int ret;
- 
- 	spin_lock_irq(&out->composer_lock);
- 	frame_start = crtc_state->frame_start;
- 	frame_end = crtc_state->frame_end;
- 	crc_pending = crtc_state->crc_pending;
-+	wb_pending = crtc_state->wb_pending;
- 	crtc_state->frame_start = 0;
- 	crtc_state->frame_end = 0;
- 	crtc_state->crc_pending = false;
-@@ -188,9 +189,12 @@ void vkms_composer_worker(struct work_struct *work)
- 	if (!primary_composer)
- 		return;
- 
-+	if (wb_pending)
-+		vaddr_out = crtc_state->active_writeback;
-+
- 	ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
- 	if (ret) {
--		if (ret == -EINVAL)
-+		if (ret == -EINVAL && !wb_pending)
- 			kfree(vaddr_out);
- 		return;
- 	}
-@@ -203,6 +207,14 @@ void vkms_composer_worker(struct work_struct *work)
- 	while (frame_start <= frame_end)
- 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
- 
-+	if (wb_pending) {
-+		drm_writeback_signal_completion(&out->wb_connector, 0);
-+		spin_lock_irq(&out->composer_lock);
-+		crtc_state->wb_pending = false;
-+		spin_unlock_irq(&out->composer_lock);
-+		return;
-+	}
-+
- 	kfree(vaddr_out);
- }
- 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index ac790b6527e4..152d7de24a76 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -30,6 +30,10 @@ bool enable_cursor;
- module_param_named(enable_cursor, enable_cursor, bool, 0444);
- MODULE_PARM_DESC(enable_cursor, "Enable/Disable cursor support");
- 
-+bool enable_writeback;
-+module_param_named(enable_writeback, enable_writeback, bool, 0444);
-+MODULE_PARM_DESC(enable_writeback, "Enable/Disable writeback connector");
-+
- static const struct file_operations vkms_driver_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= drm_open,
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index fc6cda164336..9ff2cd4ebf81 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -7,6 +7,7 @@
- #include <drm/drm.h>
- #include <drm/drm_gem.h>
- #include <drm/drm_encoder.h>
-+#include <drm/drm_writeback.h>
- #include <linux/hrtimer.h>
- 
- #define XRES_MIN    20
-@@ -19,6 +20,7 @@
- #define YRES_MAX  8192
- 
- extern bool enable_cursor;
-+extern bool enable_writeback;
- 
- struct vkms_composer {
- 	struct drm_framebuffer fb;
-@@ -52,9 +54,11 @@ struct vkms_crtc_state {
- 	int num_active_planes;
- 	/* stack of active planes for crc computation, should be in z order */
- 	struct vkms_plane_state **active_planes;
-+	void *active_writeback;
- 
- 	/* below three are protected by vkms_output.composer_lock */
- 	bool crc_pending;
-+	bool wb_pending;
- 	u64 frame_start;
- 	u64 frame_end;
- };
-@@ -63,6 +67,7 @@ struct vkms_output {
- 	struct drm_crtc crtc;
- 	struct drm_encoder encoder;
- 	struct drm_connector connector;
-+	struct drm_writeback_connector wb_connector;
- 	struct hrtimer vblank_hrtimer;
- 	ktime_t period_ns;
- 	struct drm_pending_vblank_event *event;
-@@ -147,4 +152,7 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
- /* Composer Support */
- void vkms_composer_worker(struct work_struct *work);
- 
-+/* Writeback */
-+int enable_writeback_connector(struct vkms_device *vkmsdev);
-+
- #endif /* _VKMS_DRV_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index fb1941a6522c..aea1d4410864 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -84,6 +84,16 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
- 		goto err_attach;
- 	}
- 
-+	if (enable_writeback) {
-+		ret = enable_writeback_connector(vkmsdev);
-+		if (!ret) {
-+			output->composer_enabled = true;
-+			DRM_INFO("Writeback connector enabled");
-+		} else {
-+			DRM_ERROR("Failed to init writeback connector\n");
-+		}
-+	}
-+
- 	drm_mode_config_reset(dev);
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
-new file mode 100644
-index 000000000000..34dad37a0236
---- /dev/null
-+++ b/drivers/gpu/drm/vkms/vkms_writeback.c
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include "vkms_drv.h"
-+#include <drm/drm_writeback.h>
-+#include <drm/drm_probe_helper.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+
-+static const u32 vkms_wb_formats[] = {
-+	DRM_FORMAT_XRGB8888,
-+};
-+
-+static const struct drm_connector_funcs vkms_wb_connector_funcs = {
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.destroy = drm_connector_cleanup,
-+	.reset = drm_atomic_helper_connector_reset,
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+};
-+
-+static int vkms_wb_encoder_atomic_check(struct drm_encoder *encoder,
-+					struct drm_crtc_state *crtc_state,
-+					struct drm_connector_state *conn_state)
-+{
-+	struct drm_framebuffer *fb;
-+	const struct drm_display_mode *mode = &crtc_state->mode;
-+
-+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-+		return 0;
-+
-+	fb = conn_state->writeback_job->fb;
-+	if (fb->width != mode->hdisplay || fb->height != mode->vdisplay) {
-+		DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
-+			      fb->width, fb->height);
-+		return -EINVAL;
-+	}
-+
-+	if (fb->format->format != DRM_FORMAT_XRGB8888) {
-+		struct drm_format_name_buf format_name;
-+
-+		DRM_DEBUG_KMS("Invalid pixel format %s\n",
-+			      drm_get_format_name(fb->format->format,
-+						  &format_name));
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct drm_encoder_helper_funcs vkms_wb_encoder_helper_funcs = {
-+	.atomic_check = vkms_wb_encoder_atomic_check,
-+};
-+
-+static int vkms_wb_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct drm_device *dev = connector->dev;
-+
-+	return drm_add_modes_noedid(connector, dev->mode_config.max_width,
-+				    dev->mode_config.max_height);
-+}
-+
-+static int vkms_wb_prepare_job(struct drm_writeback_connector *wb_connector,
-+			       struct drm_writeback_job *job)
-+{
-+	struct vkms_gem_object *vkms_obj;
-+	struct drm_gem_object *gem_obj;
-+	int ret;
-+
-+	if (!job->fb)
-+		return 0;
-+
-+	gem_obj = drm_gem_fb_get_obj(job->fb, 0);
-+	ret = vkms_gem_vmap(gem_obj);
-+	if (ret) {
-+		DRM_ERROR("vmap failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	vkms_obj = drm_gem_to_vkms_gem(gem_obj);
-+	job->priv = vkms_obj->vaddr;
-+
-+	return 0;
-+}
-+
-+static void vkms_wb_cleanup_job(struct drm_writeback_connector *connector,
-+				struct drm_writeback_job *job)
-+{
-+	struct drm_gem_object *gem_obj;
-+
-+	if (!job->fb)
-+		return;
-+
-+	gem_obj = drm_gem_fb_get_obj(job->fb, 0);
-+	vkms_gem_vunmap(gem_obj);
-+}
-+
-+static void vkms_wb_atomic_commit(struct drm_connector *conn,
-+				  struct drm_connector_state *state)
-+{
-+	struct vkms_device *vkmsdev = drm_device_to_vkms_device(conn->dev);
-+	struct vkms_output *output = &vkmsdev->output;
-+	struct drm_writeback_connector *wb_conn = &output->wb_connector;
-+	struct drm_connector_state *conn_state = wb_conn->base.state;
-+	struct vkms_crtc_state *crtc_state = output->composer_state;
-+
-+	if (!conn_state)
-+		return;
-+
-+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb) {
-+		DRM_DEBUG_DRIVER("Disable writeback\n");
-+		return;
-+	}
-+
-+	spin_lock_irq(&output->composer_lock);
-+	crtc_state->active_writeback = conn_state->writeback_job->priv;
-+	crtc_state->wb_pending = true;
-+	spin_unlock_irq(&output->composer_lock);
-+	drm_writeback_queue_job(wb_conn, state);
-+}
-+
-+static const struct drm_connector_helper_funcs vkms_wb_conn_helper_funcs = {
-+	.get_modes = vkms_wb_connector_get_modes,
-+	.prepare_writeback_job = vkms_wb_prepare_job,
-+	.cleanup_writeback_job = vkms_wb_cleanup_job,
-+	.atomic_commit = vkms_wb_atomic_commit,
-+};
-+
-+int enable_writeback_connector(struct vkms_device *vkmsdev)
-+{
-+	struct drm_writeback_connector *wb = &vkmsdev->output.wb_connector;
-+
-+	vkmsdev->output.wb_connector.encoder.possible_crtcs = 1;
-+	drm_connector_helper_add(&wb->base, &vkms_wb_conn_helper_funcs);
-+
-+	return drm_writeback_connector_init(&vkmsdev->drm, wb,
-+					    &vkms_wb_connector_funcs,
-+					    &vkms_wb_encoder_helper_funcs,
-+					    vkms_wb_formats,
-+					    ARRAY_SIZE(vkms_wb_formats));
-+}
-+
--- 
-2.21.0
+SGksIERhbmllbA0KDQo+IE9uIDIzLzA2LzIwMTkgMTQ6MzgsIEFuc29uLkh1YW5nQG54cC5jb20g
+d3JvdGU6DQo+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4N
+Cj4gPiBTeXN0ZW1zIHdoaWNoIHVzZSBwbGF0Zm9ybSBkcml2ZXIgbW9kZWwgZm9yIGNsb2NrIGRy
+aXZlciByZXF1aXJlIHRoZQ0KPiA+IGNsb2NrIGZyZXF1ZW5jeSB0byBiZSBzdXBwbGllZCB2aWEg
+ZGV2aWNlIHRyZWUgd2hlbiBzeXN0ZW0gY291bnRlcg0KPiA+IGRyaXZlciBpcyBlbmFibGVkLg0K
+PiA+DQo+ID4gVGhpcyBpcyBuZWNlc3NhcnkgYXMgaW4gdGhlIHBsYXRmb3JtIGRyaXZlciBtb2Rl
+bCB0aGUgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucyBkbyBub3Qgd29yayBjb3JyZWN0bHkgYmVjYXVz
+ZSBzeXN0ZW0gY291bnRlciBkcml2ZXIgaXMNCj4gPiBpbml0aWFsaXplZCBpbiBlYXJseSBwaGFz
+ZSBvZiBzeXN0ZW0gYm9vdCB1cCwgYW5kIGNsb2NrIGRyaXZlciB1c2luZw0KPiA+IHBsYXRmb3Jt
+IGRyaXZlciBtb2RlbCBpcyBOT1QgcmVhZHkgYXQgdGhhdCB0aW1lLCBpdCB3aWxsIGNhdXNlIHN5
+c3RlbQ0KPiA+IGNvdW50ZXIgZHJpdmVyIGluaXRpYWxpemF0aW9uIGZhaWxlZC4NCj4gPg0KPiA+
+IEFkZCB0aGUgb3B0aW5hbCBjbG9jay1mcmVxdWVuY3kgdG8gdGhlIGRldmljZSB0cmVlIGJpbmRp
+bmdzIG9mIHRoZSBOWFANCj4gPiBzeXN0ZW0gY291bnRlciwgc28gdGhlIGZyZXF1ZW5jeSBjYW4g
+YmUgaGFuZGVkIGluIGFuZCB0aGUgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucyBjYW4gYmUgc2tpcHBl
+ZC4NCj4gDQo+IElzbid0IGl0IHBvc3NpYmxlIHRvIGNyZWF0ZSBhIGZpeGVkLWNsb2NrIGFuZCBy
+ZWZlciB0byBpdD8gU28gbm8gbmVlZCB0byBjcmVhdGUgYQ0KPiBzcGVjaWZpYyBhY3Rpb24gYmVm
+b3JlIGNhbGxpbmcgdGltZXJfb2ZfaW5pdCgpID8NCj4gDQoNCkFzIHRoZSBjbG9jayBtdXN0IGJl
+IHJlYWR5IGJlZm9yZSB0aGUgVElNRVJfT0ZfREVDTEFSRSwgc28gYWRkaW5nIGEgQ0xLX09GX0RF
+Q0xBUkVfRFJJVkVSIGluDQpjbG9jayBkcml2ZXIgdG8gT05MWSByZWdpc3RlciBhIGZpeGVkLWNs
+b2NrPyBUaGUgc3lzdGVtIGNvdW50ZXIncyBmcmVxdWVuY3kgYXJlIGRpZmZlcmVudCBvbiBkaWZm
+ZXJlbnQNCnBsYXRmb3Jtcywgc28gYWRkaW5nIGZpeGVkIGNsb2NrIGluIHN5c3RlbSBjb3VudGVy
+IGRyaXZlciBpcyBOT1QgYSBnb29kIGlkZWEsIE9OTFkgdGhlIERUIG5vZGUgb3IgdGhlDQpjbG9j
+ayBkcml2ZXIgY2FuIGNyZWF0ZSB0aGlzIGZpeGVkIGNsb2NrIGFjY29yZGluZyB0byBwbGF0Zm9y
+bXMsIGNhbiB5b3UgYWR2aXNlIHdoZXJlIHRvIGNyZWF0ZSB0aGlzIGZpeGVkDQpjbG9jayBpcyBi
+ZXR0ZXI/DQoNClRoYW5rcywNCkFuc29uIA0KDQo=
