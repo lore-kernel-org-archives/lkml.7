@@ -2,118 +2,331 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE96BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E44C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C06208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B9CE2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:26:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="R79Ha6g+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Diw36Rcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfFZHXR (ORCPT
+        id S1726873AbfFZH0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbfFZHXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:23:16 -0400
-Received: from [10.44.0.22] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1008020665;
-        Wed, 26 Jun 2019 07:23:13 +0000 (UTC)
-Subject: Re: [PATCH 08/17] binfmt_flat: consolidate two version of
- flat_v2_reloc_t
-To:     Al Viro <viro@zeniv.linux.org.uk>, Christoph Hellwig <hch@lst.de>
-Cc:     Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-m68k@lists.linux-m68k.org, linux-riscv@lists.infradead.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-kernel@vger.kernel.org
-References: <20190613070903.17214-1-hch@lst.de>
- <20190613070903.17214-9-hch@lst.de>
- <20190625222941.GA1343@ZenIV.linux.org.uk>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <f8a61a8e-0469-a9d6-e0a1-01a4619d7363@linux-m68k.org>
-Date:   Wed, 26 Jun 2019 17:23:11 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 26 Jun 2019 03:26:14 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:41333 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbfFZH0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 03:26:14 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 81BAE1DA9;
+        Wed, 26 Jun 2019 03:16:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 26 Jun 2019 03:16:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm3; bh=o/ghzHrj1X7yl
+        XihRgJKS1cvGXzCMJPgUc8IsbXlG3Q=; b=R79Ha6g++rC7IaCm+ifBfu9AD4+HS
+        v6GGRSKsTtS7ugDI5UdKYaTtDy2gTxtzW+MqbOSpB388R3UsOwQqQR7YFl5T3qMG
+        n5D11EUlqlAVPQ6+NEPU+mYIMImldiljtGXCWhL6BtNhHIXSOAvfZQ1biu6EtPat
+        WXBcl2bAjlRdSxEDB39omtihY5RItwtAjf5QBh8ac6MgG4DxMNPguF0RU4RfI4Xv
+        9hfk9SLrd0P77WmoC8xIkkkjvptur33cFOE/tybPcHzcZL9gx/rX5O6NHGaDrLdz
+        TrsxAFTtIOO/Myyb/nLYeh+DYtar7lZfuZVVdsw9m4iejnOPBm7Zn/P7w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=o/ghzHrj1X7ylXihRgJKS1cvGXzCMJPgUc8IsbXlG3Q=; b=Diw36Rcy
+        C67TKYNy3OGM7AKpQ33NK7XrePCJcMe0hrhWmYWnaHpo6LJZSbGl+93l7U+9GsA3
+        gYLP0oAFKzsyPwy/kwkP+8U00bBNoRYTztK94zGnsrW88epl1e9kv9CBR3kZjRh+
+        zqX3SuAIFjDrhlKF5CEkxTuJkfwpWJ4fxIOQwLwQ92WerfFsDS9YqssfZesIp/Vq
+        f1Tt+OJ4swXssWg+rJXiUSu/PfTn+ApYzFU4hSj7DCp3OkO8aHvFxyVaNUS26tsp
+        HkkrHYI3CCXiZqYaakiwM+6f9t4iRKfquq9wXpImxvolDca7NJYBatWWtWKRmm3x
+        kE7QkV3IL/sMWw==
+X-ME-Sender: <xms:vxsTXWift_nnqs93kIhr5EVsWEIJ7KOvC9n4_6I5ClyO4MQFzQAhNQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudehgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
+    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
+    jhdrihgurdgruheqnecukfhppedvtddvrdekuddrudekrdeftdenucfrrghrrghmpehmrg
+    hilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigv
+    peeg
+X-ME-Proxy: <xmx:vxsTXXNrmy0-aJmKmgvVLp57PdCV-bF8NdAoBE72L3Nd7Fznkoje8w>
+    <xmx:vxsTXQt3nSkqVXCzQ7tm-ldhCykfxbc5e8SvN1HJF5uRqsxWwHEAhw>
+    <xmx:vxsTXa2Io89txAQTgXj9VAvHcSA3d_VvbYQBtsCZL2_uZ8_xjePkRw>
+    <xmx:vxsTXfh2mXauXZfoz-4GdDpMNjstImZDGkmM94TZqM3o26nXnweAdg>
+Received: from mistburn.au.ibm.com (bh02i525f01.au.ibm.com [202.81.18.30])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A5594380076;
+        Wed, 26 Jun 2019 03:16:11 -0400 (EDT)
+From:   Andrew Jeffery <andrew@aj.id.au>
+To:     linux-gpio@vger.kernel.org
+Cc:     ryan_chen@aspeedtech.com, Andrew Jeffery <andrew@aj.id.au>,
+        linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 8/8] pinctrl: aspeed: Add implementation-related documentation
+Date:   Wed, 26 Jun 2019 16:44:30 +0930
+Message-Id: <20190626071430.28556-9-andrew@aj.id.au>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190626071430.28556-1-andrew@aj.id.au>
+References: <20190626071430.28556-1-andrew@aj.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20190625222941.GA1343@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The ASPEED pinctrl driver implementations make heavy use of macros to
+minimise tedium of implementation and maximise the chance that the
+compiler will catch errors in defining signal and pin configurations.
+While the goal of minimising errors is achieved, it is at the cost of
+the complexity of the macros.
 
-On 26/6/19 8:29 am, Al Viro wrote:
-> On Thu, Jun 13, 2019 at 09:08:54AM +0200, Christoph Hellwig wrote:
->> Two branches of the ifdef maze actually have the same content, so merge
->> them.
->>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->> ---
->>   include/linux/flat.h | 6 ++----
->>   1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/flat.h b/include/linux/flat.h
->> index 2b7cda6e9c1b..19c586b74b99 100644
->> --- a/include/linux/flat.h
->> +++ b/include/linux/flat.h
->> @@ -69,15 +69,13 @@ struct flat_hdr {
->>   typedef union {
->>   	unsigned long	value;
->>   	struct {
->> -# if defined(mc68000) && !defined(CONFIG_COLDFIRE)
->> +#if defined(__LITTLE_ENDIAN_BITFIELD) || \
->> +    (defined(mc68000) && !defined(CONFIG_COLDFIRE))
->>   		signed long offset : 30;
->>   		unsigned long type : 2;
->>   # elif defined(__BIG_ENDIAN_BITFIELD)
->>   		unsigned long type : 2;
->>   		signed long offset : 30;
->> -# elif defined(__LITTLE_ENDIAN_BITFIELD)
->> -		signed long offset : 30;
->> -		unsigned long type : 2;
->>   # else
->>   #   	error "Unknown bitfield order for flat files."
->>   # endif
->> -- 
->> 2.20.1
->>
-> 
-> FWIW, I wonder if keeping that type is worth bothering.
-> Something like
-> old_reloc(__be32 reloc)
-> {
-> 	u32 v = be32_to_cpu(reloc);
-> 	int offset, type;
-> 
-> #if (defined(mc68000) && !defined(CONFIG_COLDFIRE))
-> 	/* old m68k uses unusual format - type is in lower bits of octet 3 */
-> 	type = v % 4;
-> 	offset = (int)v / 4;
-> #else
-> 	/* everything else (including coldfire) has it in upper bits of octet 0 */
-> 	type = v >> 30;
-> 	offset = (int)(v << 2) >> 2; /* or (v & 0x1fffffff) - (v & 0x20000000) * 4 */
-> #endif
-> 	...
-> 
-> and to hell with bitfields, aliasing unions, etc.  Unless I'm misreading
-> the whole thing, that is...  Greg?
+Document examples of the expanded form of pin declarations to
+demonstrate the operation of the macros.
 
-I think you are right. This is much better.
-The old mc6800 is the odd one out, the rest have it in network order,
-and this makes that much clearer.
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ drivers/pinctrl/aspeed/pinmux-aspeed.h | 204 ++++++++++++++++++++++++-
+ 1 file changed, 200 insertions(+), 4 deletions(-)
 
-Regards
-Greg
-
+diff --git a/drivers/pinctrl/aspeed/pinmux-aspeed.h b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+index a036ce8f1571..329d54d48667 100644
+--- a/drivers/pinctrl/aspeed/pinmux-aspeed.h
++++ b/drivers/pinctrl/aspeed/pinmux-aspeed.h
+@@ -18,7 +18,8 @@
+  * priority level are frequently not the same (i.e. cannot just flip a bit to
+  * change from a high to low priority signal), or even in the same register.
+  * Further, not all signals can be unmuxed, as some expressions depend on
+- * values in the hardware strapping register (which is treated as read-only).
++ * values in the hardware strapping register (which may be treated as
++ * read-only).
+  *
+  * SoC Multi-function Pin Expression Examples
+  * ------------------------------------------
+@@ -172,9 +173,9 @@
+  * * A signal expression is the smallest set of signal descriptors whose
+  *   comparisons must evaluate 'true' for a signal to be enabled on a pin.
+  *
+- * * A function's signal is active on a pin if evaluating all signal
+- *   descriptors in the pin's signal expression for the function yields a 'true'
+- *   result
++ * * A signal participating in a function is active on a pin if evaluating all
++ *   signal descriptors in the pin's signal expression for the function yields
++ *   a 'true' result
+  *
+  * * A signal at a given priority on a given pin is active if any of the
+  *   functions in which the signal participates are active, and no higher
+@@ -221,6 +222,201 @@
+  * well as pins) required for the group's configuration will already be in use,
+  * likely in a way that's inconsistent with the requirements of the failed
+  * group.
++ *
++ * Implementation
++ * --------------
++ *
++ * Beyond the documentation below the various structures and helper macros that
++ * allow the implementation to hang together are defined. The macros are fairly
++ * dense, so below we walk through some raw examples of the configuration
++ * tables in an effort to clarify the concepts.
++ *
++ * The complexity of configuring the mux combined with the scale of the pins
++ * and functions was a concern, so the table design along with the macro jungle
++ * is an attempt to address it. The rough principles of the approach are:
++ *
++ * 1. Use a data-driven solution rather than embedding state into code
++ * 2. Minimise editing to the specifics of the given mux configuration
++ * 3. Detect as many errors as possible at compile time
++ *
++ * Addressing point 3 leads to naming of symbols in terms of the four
++ * properties associated with a given mux configuration: The pin, the signal,
++ * the group and the function. In this way copy/paste errors cause duplicate
++ * symbols to be defined, which prevents successful compilation. Failing to
++ * properly parent the tables leads to unused symbol warnings, and use of
++ * designated initialisers and additional warnings ensures that there are
++ * no override errors in the pin, group and function arrays.
++ *
++ * Addressing point 2 drives the development of the macro jungle, as it
++ * centralises the definition noise at the cost of taking some time to
++ * understand.
++ *
++ * Here's a complete, concrete "pre-processed" example of the table structures
++ * used to describe the D6 ball from the examples above:
++ *
++ * ```
++ * static const struct aspeed_sig_desc sig_descs_MAC1LINK_MAC1LINK[] = {
++ *     {
++ *         .ip = ASPEED_IP_SCU,
++ *         .reg = 0x80,
++ *         .mask = BIT(0),
++ *         .enable = 1,
++ *         .disable = 0
++ *     },
++ * };
++ *
++ * static const struct aspeed_sig_expr sig_expr_MAC1LINK_MAC1LINK = {
++ *     .signal = "MAC1LINK",
++ *     .function = "MAC1LINK",
++ *     .ndescs = ARRAY_SIZE(sig_descs_MAC1LINK_MAC1LINK),
++ *     .descs = &(sig_descs_MAC1LINK_MAC1LINK)[0],
++ * };
++ *
++ * static const struct aspeed_sig_expr *sig_exprs_MAC1LINK_MAC1LINK[] = {
++ *     &sig_expr_MAC1LINK_MAC1LINK,
++ *     NULL,
++ * };
++ *
++ * static const struct aspeed_sig_desc sig_descs_GPIOA0_GPIOA0[] = { };
++ *
++ * static const struct aspeed_sig_expr sig_expr_GPIOA0_GPIOA0 = {
++ *     .signal = "GPIOA0",
++ *     .function = "GPIOA0",
++ *     .ndescs = ARRAY_SIZE(sig_descs_GPIOA0_GPIOA0),
++ *     .descs = &(sig_descs_GPIOA0_GPIOA0)[0],
++ * };
++ *
++ * static const struct aspeed_sig_expr *sig_exprs_GPIOA0_GPIOA0[] = {
++ *     &sig_expr_GPIOA0_GPIOA0,
++ *     NULL
++ * };
++ *
++ * static const struct aspeed_sig_expr **pin_exprs_0[] = {
++ *     sig_exprs_MAC1LINK_MAC1LINK,
++ *     sig_exprs_GPIOA0_GPIOA0,
++ *     NULL
++ * };
++ *
++ * static const struct aspeed_pin_desc pin_0 = { "0", (&pin_exprs_0[0]) };
++ * static const int group_pins_MAC1LINK[] = { 0 };
++ * static const char *func_groups_MAC1LINK[] = { "MAC1LINK" };
++ *
++ * static struct pinctrl_pin_desc aspeed_g4_pins[] = {
++ *     [0] = { .number = 0, .name = "D6", .drv_data = &pin_0 },
++ * };
++ *
++ * static const struct aspeed_pin_group aspeed_g4_groups[] = {
++ *     {
++ *         .name = "MAC1LINK",
++ *         .pins = &(group_pins_MAC1LINK)[0],
++ *         .npins = ARRAY_SIZE(group_pins_MAC1LINK),
++ *     },
++ * };
++ *
++ * static const struct aspeed_pin_function aspeed_g4_functions[] = {
++ *     {
++ *         .name = "MAC1LINK",
++ *         .groups = &func_groups_MAC1LINK[0],
++ *         .ngroups = ARRAY_SIZE(func_groups_MAC1LINK),
++ *     },
++ * };
++ * ```
++ *
++ * At the end of the day much of the above code is compressed into the
++ * following two lines:
++ *
++ * ```
++ * #define D6 0
++ * SSSF_PIN_DECL(D6, GPIOA0, MAC1LINK, SIG_DESC_SET(SCU80, 0));
++ * ```
++ *
++ * The two examples below show just the differences from the example above.
++ *
++ * Ball E18 demonstrates a function, EXTRST, that requires multiple descriptors
++ * be set for it to be muxed:
++ *
++ * ```
++ * static const struct aspeed_sig_desc sig_descs_EXTRST_EXTRST[] = {
++ *     {
++ *         .ip = ASPEED_IP_SCU,
++ *         .reg = 0x3C,
++ *         .mask = BIT(3),
++ *         .enable = 1,
++ *         .disable = 0
++ *     },
++ *     {
++ *         .ip = ASPEED_IP_SCU,
++ *         .reg = 0x80,
++ *         .mask = BIT(15),
++ *         .enable = 1,
++ *         .disable = 0
++ *     },
++ *     {
++ *         .ip = ASPEED_IP_SCU,
++ *         .reg = 0x90,
++ *         .mask = BIT(31),
++ *         .enable = 0,
++ *         .disable = 1
++ *     },
++ * };
++ *
++ * static const struct aspeed_sig_expr sig_expr_EXTRST_EXTRST = {
++ *     .signal = "EXTRST",
++ *     .function = "EXTRST",
++ *     .ndescs = ARRAY_SIZE(sig_descs_EXTRST_EXTRST),
++ *     .descs = &(sig_descs_EXTRST_EXTRST)[0],
++ * };
++ * ...
++ * ```
++ *
++ * For ball E19, we have multiple functions enabling a single signal, LPCRST#.
++ * The data structures look like:
++ *
++ * static const struct aspeed_sig_desc sig_descs_LPCRST_LPCRST[] = {
++ *     {
++ *         .ip = ASPEED_IP_SCU,
++ *         .reg = 0x80,
++ *         .mask = BIT(12),
++ *         .enable = 1,
++ *         .disable = 0
++ *     },
++ * };
++ *
++ * static const struct aspeed_sig_expr sig_expr_LPCRST_LPCRST = {
++ *     .signal = "LPCRST",
++ *     .function = "LPCRST",
++ *     .ndescs = ARRAY_SIZE(sig_descs_LPCRST_LPCRST),
++ *     .descs = &(sig_descs_LPCRST_LPCRST)[0],
++ * };
++ *
++ * static const struct aspeed_sig_desc sig_descs_LPCRST_LPCRSTS[] = {
++ *     {
++ *         .ip = ASPEED_IP_SCU,
++ *         .reg = 0x70,
++ *         .mask = BIT(14),
++ *         .enable = 1,
++ *         .disable = 0
++ *     },
++ * };
++ *
++ * static const struct aspeed_sig_expr sig_expr_LPCRST_LPCRSTS = {
++ *     .signal = "LPCRST",
++ *     .function = "LPCRSTS",
++ *     .ndescs = ARRAY_SIZE(sig_descs_LPCRST_LPCRSTS),
++ *     .descs = &(sig_descs_LPCRST_LPCRSTS)[0],
++ * };
++ *
++ * static const struct aspeed_sig_expr *sig_exprs_LPCRST_LPCRST[] = {
++ *     &sig_expr_LPCRST_LPCRST,
++ *     &sig_expr_LPCRST_LPCRSTS,
++ *     NULL,
++ * };
++ * ...
++ * ```
++ *
++ * Both expressions listed in the sig_exprs_LPCRST_LPCRST array need to be set
++ * to disabled for the associated GPIO to be muxed.
++ *
+  */
+ 
+ #define ASPEED_IP_SCU		0
+-- 
+2.20.1
 
