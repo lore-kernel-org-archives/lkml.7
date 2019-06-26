@@ -2,131 +2,139 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071C9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F0AC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74E32086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A752520B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxWG7d2h"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="twieobuK";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="FOin/gDc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfFZKJB (ORCPT
+        id S1726864AbfFZKMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:09:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51392 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZKJB (ORCPT
+        Wed, 26 Jun 2019 06:12:13 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:12106 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725930AbfFZKMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:09:01 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 207so1462713wma.1;
-        Wed, 26 Jun 2019 03:08:58 -0700 (PDT)
+        Wed, 26 Jun 2019 06:12:12 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QAAUwj026047;
+        Wed, 26 Jun 2019 03:12:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=YU3jEC3revccOEMX97igRP30XXNp1hoKtOmoWJr+cRo=;
+ b=twieobuK1kJkrLEQaqIIOtcbLw1Fz7UNuJ6wEsDiO8w8SSlyv0yYxMLEhhPc/izPLuBl
+ DeEidhCIFGGqIs3TO7Y8HTGhItKChHLXBNFr1Aq+GFF40ybcG6ks4DCSWcr1fcJxT3Op
+ TjTXkDSxO8e71L1HurNq6B9t+dn9D9A8HgFCYRb5cWqmqqCtCsDN+VcydBq5qFPegJIa
+ uS0D4ehw/xV+UynKJm1XGFK9fcaGotu+yVEUc32QUtO7zNOu7c3oyAP1RRyt+VmRxb9c
+ 8P/kwiQxtgebxXN4+x5DIdKMEHITQJ/TmqI9716k0MRvffht/yaRYCAjs6n4B7czTWf1 Mw== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2tc3s6rp47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 26 Jun 2019 03:12:00 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 26 Jun
+ 2019 03:11:58 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (104.47.49.52) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 26 Jun 2019 03:11:58 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eh72jYgq1NzpoJM5GSmuS2w6GC2KJuJcmy3C/KF8pOo=;
-        b=NxWG7d2hsU8+G8B+sd6acROP9qiVfzFqGwM5+Um+4E31aiHqecuQHX0sSBikcOx5o9
-         D9KplpB0Fae5BYlPx52E9MOxMDTcdPR1AInrtZBQDq2GJu9iMqf1ZXKucGQAxlddk2/7
-         tlyyGPJ3FHP0s5CfM6sTrwZcQbM2fgeRNqaVEZgEt0uIVoQ6Bkalav+oCi9hEXe7cLhz
-         N/WkMm3QNiCo+0DujMxzMp6ceKZTHTn2vO7LP967BkFSroigY1abp481PGaWEWiXzDNd
-         Rvnh/v+lcHrrExVLppPy9HAJCg2sX1RKfNQJIfY7yPvXBhzrprtFM1zI0stHcP1/wfQe
-         nKow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eh72jYgq1NzpoJM5GSmuS2w6GC2KJuJcmy3C/KF8pOo=;
-        b=fd63sfQOdK6e8cOPTtk5PD12Jr6nf9xdlxZQkSXpIqoP3chjhzTukOnioS9r4uA2cs
-         qsvfb43Xf5ifwYgHN6nq20VI8BSdtxLXgimMfOwnjfJ8b8B8J+Ik1LmVsTGKqeAgDAK7
-         kG1aTbl07xSekb3Sfn+nC2KsV7KihzxO88Jlb1p2sM3KKGtEHoCpzSvcssWctfz1rnIR
-         nyxNhPHatGbyMLsXVJgA7cQg93WkdyeL/6U1pqn2OMrMD5xCfy2lp32p4UzCzweEFfZ5
-         A0KVbQqN/mETZdVUSZqxM1PdmkZPgaaJePpAQ72n1pZnvfWr2p8SB3RH2XMXvbsvS/mU
-         ndWQ==
-X-Gm-Message-State: APjAAAWMhzA9PKGOIKYFVpI5bVK9TIFiNpl7xcp1gTS3gLWFfZIl2gGZ
-        6UJ5CMu+/Pxf1ja5/O+LdWM=
-X-Google-Smtp-Source: APXvYqzoA6QrxagizSCN3/1xiuVTfua3S6di9JlBeGe8VSiJJ/5Vd7rsm01UbWZyaC21FwnCwR7IKQ==
-X-Received: by 2002:a1c:9813:: with SMTP id a19mr2097774wme.11.1561543738215;
-        Wed, 26 Jun 2019 03:08:58 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id x17sm15782750wrq.64.2019.06.26.03.08.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:08:57 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 12:08:56 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 02/18] pinctrl: tegra: add suspend and resume support
-Message-ID: <20190626100856.GB6362@ulmo>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YU3jEC3revccOEMX97igRP30XXNp1hoKtOmoWJr+cRo=;
+ b=FOin/gDc7+KCVktKYvI8j2k9hqjSgHAUZkCfDuQuVj3ET4NPuvouU0Byn+ym7p6UnTKT5RwgcpJpTtFT94gHN7gZjQBqK6MRnpjt2bDIAFO/u1Vo1T7Wbd9m/f8KvfM1NvrXHNoh8d2+OtqVQbCUXkL6Oov0wIuUbffTePpeaOw=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB2462.namprd18.prod.outlook.com (20.179.80.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Wed, 26 Jun 2019 10:11:57 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d3:794c:1b94:cf3]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::d3:794c:1b94:cf3%4]) with mapi id 15.20.2008.018; Wed, 26 Jun 2019
+ 10:11:57 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     James Morse <james.morse@arm.com>
+CC:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 24/24] EDAC, ghes: Disable legacy API for ARM64
+Thread-Topic: [PATCH v2 24/24] EDAC, ghes: Disable legacy API for ARM64
+Thread-Index: AQHVLAeVmqlsv0iEmUOCnB6z9FfTpQ==
+Date:   Wed, 26 Jun 2019 10:11:56 +0000
+Message-ID: <20190626101149.sfhh2nepvqkejoin@rric.localdomain>
+References: <20190624150758.6695-1-rrichter@marvell.com>
+ <20190624150758.6695-25-rrichter@marvell.com>
+ <a4a99baf-757a-90f2-6172-c1e6814e5e1c@arm.com>
+In-Reply-To: <a4a99baf-757a-90f2-6172-c1e6814e5e1c@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR09CA0084.eurprd09.prod.outlook.com
+ (2603:10a6:7:3d::28) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [92.254.182.202]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d4318e36-175c-478d-cbf6-08d6fa1eb836
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2462;
+x-ms-traffictypediagnostic: MN2PR18MB2462:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MN2PR18MB2462D3A3A6E86ADE7D4D5D5DD9E20@MN2PR18MB2462.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 00808B16F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(136003)(346002)(396003)(189003)(199004)(446003)(6306002)(6246003)(316002)(4326008)(11346002)(71190400001)(14444005)(966005)(26005)(186003)(71200400001)(256004)(6506007)(6916009)(81166006)(8936002)(81156014)(52116002)(99286004)(8676002)(76176011)(102836004)(54906003)(476003)(14454004)(486006)(68736007)(2906002)(6486002)(66066001)(6116002)(3846002)(478600001)(1076003)(53546011)(86362001)(386003)(25786009)(229853002)(6436002)(66446008)(66476007)(66556008)(4744005)(66946007)(64756008)(73956011)(5660300002)(7736002)(9686003)(53936002)(305945005)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2462;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VHBrABFoRri3ZakkktEmWSFBMhs9Z+yyJXNG8Uh5qt4TK/mR622g9rL2/81nTJnNjaCl3DxtV4BwoboAIkf4V4hZ+azj7Cq2ZaC+p5bVNx+ng9K7aUTeqkQerjFHfk8IaSQazjWDyhyBPkIsTFTkLOi2djZVnMuB/VtDSn64e/ibykD03BKvlk9Ki0idUN8QdWx38Kg5rjytNbbwmxKlyNKKu0sys9jGPf4wU8GAp2oPN9XHExJhRscZztCy2QCtoW0yEIQFt8Tnmxj45p45i+0OKOCe4owYuSAP1Q/LdRTgtlvpFB0MlMZ60LR4Cawtg5xIoZK7TFpX50odsjJsAY9ZU327NRsXt+6zGELraANbYuOHa7rmcL24qxOsMSKgby7IGWGPThonBfP9E1ERhyZ3v1jDVA1vuj5FR+0agTY=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9706EA759A6DAD4D86A526BBAE8C23F4@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
-Content-Disposition: inline
-In-Reply-To: <1561345379-2429-3-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4318e36-175c-478d-cbf6-08d6fa1eb836
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 10:11:56.8993
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rrichter@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2462
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---WhfpMioaduB5tiZL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jun 23, 2019 at 08:02:43PM -0700, Sowjanya Komatineni wrote:
-> This patch adds support for Tegra pinctrl driver suspend and resume.
+On 26.06.19 10:33:39, James Morse wrote:
+> On 24/06/2019 16:09, Robert Richter wrote:
+> > James Morse: "I'm all for removing/warning-its-broken it when
+> > ghes_edac is in use."
 >=20
-> During suspend, context of all pinctrl registers are stored and
-> on resume they are all restored to have all the pinmux and pad
-> configuration for normal operation.
+> Thanks for taking that out of context. The very next word was 'but':
+> http://lore.kernel.org/r/c08290d8-3690-efa9-3bc7-37f8b1fdbfd4@arm.com
 >=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c    | 47 ++++++++++++++++++++++++++=
-++++++
->  drivers/pinctrl/tegra/pinctrl-tegra.h    |  4 +++
->  drivers/pinctrl/tegra/pinctrl-tegra210.c |  6 ++++
->  3 files changed, 57 insertions(+)
+> followed by details of the user-space that is still using this.
+>=20
+>=20
+> > Let's just disable legacy API for the ghes driver on arm64. Though, I
+> > don't agree with it as there still could be some userland tools that
+>=20
+> Not could. Are. Someone went and found them for you.
+>=20
+>=20
+> > use this interface that cannot be used any longer after a transition
+> > from x86 to arm64.
 
-With Dmitry's comments addressed, this is:
+Ok, thanks for clarifying.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---WhfpMioaduB5tiZL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TRDUACgkQ3SOs138+
-s6GvzxAAiFH/gYSVcwCuGy396VD5pJeLGEfJDzcnWqlSTP7KjyLuPUbzCaT79xLd
-d3YULAplbjAKrhKnlWQJdI/8yFkOUB8fVsj1Dsxw6uMsPvh9UeRjGS7QV1a5ophH
-xLTPD3WuXqY8BHmQ2uTQ8gTGq2/6JT3F+wNl/Uv7jj3i0EieUo0/o1nvUhkX6obL
-hW1quyskaRdTtJDGlGwOqbV/eqCSoW1nRoCGHL/4JTcuVa6hovz86g0jgl2ugMxu
-Rn2jHHHhVoq3WA856YGzSGn453Oj7ddh1gCX8ZG0NfjA2JfBLjb6s1EB35FNtot/
-jI68p7QZV0AVwE4CFjEy4Dc7YUP/I8xQvwOeaFu3/++v6EPckyNP00grYhsf42GW
-oZQoQ0LgyCL1BGzxfD3AoioDVIxqtI4H8jCObu1Hond7B+4FI+mXa+SGf+vm25y4
-doXsqjgv4Nu1QkFd+xToWK1irVnQoXYIYsub96XnX6+AsPb6EOB50rtl6zXfCzZn
-ZWa8KCk00T/ur2CI2Sk12rHxlQ0nA9IDq2eFeEuQwz3O2R6+ZUwISeLLRvI1bGji
-dhwO65R/a9FQc5PM0tzkrfhoxKatl/vVxmBFIeEIVpFBhaJ7rA1HlPoscQQ5J50C
-lv+T2xtIODfuEchmgf4tZc4QMnZ8gw1UG+2n71EZZRX3qp5QQ6s=
-=iW3N
------END PGP SIGNATURE-----
-
---WhfpMioaduB5tiZL--
+-Robert
