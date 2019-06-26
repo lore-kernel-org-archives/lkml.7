@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E8CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F92C48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9DB214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9151720883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZttdUf7h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxKfXKnP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfFZBgI (ORCPT
+        id S1726538AbfFZBfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:36:08 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44666 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbfFZBfH (ORCPT
+        Tue, 25 Jun 2019 21:35:03 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41954 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFZBfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:35:07 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k18so395867ljc.11;
-        Tue, 25 Jun 2019 18:35:06 -0700 (PDT)
+        Tue, 25 Jun 2019 21:35:00 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 136so353131lfa.8;
+        Tue, 25 Jun 2019 18:34:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ES/vfze9v/7K/EDiZc6SJwTqcOwXLf9AWF6aBFoXttY=;
-        b=ZttdUf7hWHbaB81wbjh+EvDj/Mpwg1YtoXbxtL0qk9UojPdodpPrruN5gkyJB+DeWc
-         g6ONXUa27Hshc2cY42Ft0OZEJWsUI1doM2LjCLnmU9tVFulkDlgkeLqyTHuHjkwPdP0e
-         gUz7NsOnV+qedlsefC2KhwEy5NcpzYHHp6/U+Zcy7FNzoUg/cmiTx0GwbThuOnSv1t6O
-         HxMUTBLiXTXWnyLHAgc6h0nsB/ntEG7MZBUNjUi9CLrCjci+2568TsmkJHSrbgXTpqoh
-         AvWgicDdRes/OCplKeNm15WIASM+o6Zk5QXPldsA+2sAhxdHUVjiHi3H3UJjYGRlYppi
-         lHAQ==
+        bh=1GRslL4EnHGZP4FEUc01VEaloEpJ+EJtnU0AoEc0Vkg=;
+        b=MxKfXKnPT5mUDPoqglh5+YiohAZpvcCzyzIufEJPnla0muTv3ly39mxL5xkdwZ28zh
+         sAnpH48Qu2jYcLaiMxQ/g0GAy+POkFl7vGZFEWd0+ejhJM7YgMrmMNMU7Lg4UG1gmPzW
+         sQWsIfrKZ+SpFU6g8ODMs+LkoSEHYCoQ+Nv31OpEAk87957B+DpDChUJAA24O5QnhWFd
+         T6JbsavoIi6e/HfTV81nKTSFMMKLSWLg3lkh4bSiO9rcNqdM41uZffUM79WLcdW78kBD
+         hzwrPWUAXhm6A4n+zsF0uGyThYYqlOGriOtq3zsWvhUSFhncUIshrcVgowCgySNlfmit
+         IoVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ES/vfze9v/7K/EDiZc6SJwTqcOwXLf9AWF6aBFoXttY=;
-        b=IJHeXVbvwHtp3C/IHXSyRgkAr7gg5Jb1ovBeCD+/FUjmJMxPfD/ci+Eaoef4CcMOtO
-         ReLVIH6F9+o4UrCzmzxZL8CugjuZ+r+hjusSJFarEtqw7oRbYN1zvjnIByNzUA8Bq92Q
-         +g0Q2YtEl+eFGokQ50eaklymqR0qNU3rOl1NncffIy243GjDyZgK0WekqPUvlhpv2PC6
-         TQ1dw+vjh7WwHBO4zSrkIt55uS4I95fejw6DDZNciOjmE0owiSaJEsyAiOsXXVQ82pY/
-         6ySJwEE20B7gzNq/PRVTLVXi1+cD8kaNi2YESO2vcrYytTjptZ77Jgy4/9rwg1oPVhsR
-         y2xw==
-X-Gm-Message-State: APjAAAU7O19ifMm7Aqj3P7kRLd+UKDD7TCpUiuxSjSQMx121QUlif/Kp
-        mOjnH9fmGbH1KwoDeMnkBsA=
-X-Google-Smtp-Source: APXvYqwaZuxZv1us6taG9s9eaWKkPnGOJ76CBFEm46O4t7cCsWvFg84pMcQHQoAQfxQ+PF5jjvFsmw==
-X-Received: by 2002:a2e:9ad1:: with SMTP id p17mr938152ljj.34.1561512905920;
-        Tue, 25 Jun 2019 18:35:05 -0700 (PDT)
+        bh=1GRslL4EnHGZP4FEUc01VEaloEpJ+EJtnU0AoEc0Vkg=;
+        b=f7mzOq+cly+UZxwz2MqFEghFhtqb9JBxkP2eLBuZxm6B8XCA1Na4uy6LAFM9RqUrQy
+         pn5D+3/FDo00+2vug6MLco5042zgm1Y+ov+5eKMD8SUkS4Hrueq6ZYc96hEtYtY94RYI
+         B935M2Y13SwKhqRWKT2dXM1wFasweyvg4cgI+Vhqrdmw8HGtgBuhr7zNtP4Qx4O3IYAk
+         X9ZqooiXz7PrEUvsEhxu4U/DLgzu3yG8vLM+1IknbLksbfee1x7LB7W809jWwHdTdmo+
+         xszajNJjPx4g2J4sklZOW2YVDW6tp1s7iO7oFf+XgiAvj1HFzggYj3jincgZnaHMbMzn
+         /w2Q==
+X-Gm-Message-State: APjAAAWXqaj69YYxMyVq4spOyRf44aIOSQbFfyTvFp6nfONjzT4qzJ6E
+        6B8f6x7GY29QItN3SUUgmks=
+X-Google-Smtp-Source: APXvYqwAYLR5E9BD2lpKo/RSk2pbuwUzj90QG0Wyb23ZecxQAZBkqRtrgFTtPsw63j9o7CBQ/Nhu5Q==
+X-Received: by 2002:ac2:484f:: with SMTP id 15mr928166lfy.51.1561512897944;
+        Tue, 25 Jun 2019 18:34:57 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id 199sm2549581ljf.44.2019.06.25.18.35.04
+        by smtp.gmail.com with ESMTPSA id 199sm2549581ljf.44.2019.06.25.18.34.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 18:35:05 -0700 (PDT)
+        Tue, 25 Jun 2019 18:34:57 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/17] PM / devfreq: tegra30: Reset boosting on startup
-Date:   Wed, 26 Jun 2019 04:32:43 +0300
-Message-Id: <20190626013252.30470-10-digetx@gmail.com>
+Subject: [PATCH v2 01/17] PM / devfreq: tegra30: Change irq type to unsigned int
+Date:   Wed, 26 Jun 2019 04:32:35 +0300
+Message-Id: <20190626013252.30470-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190626013252.30470-1-digetx@gmail.com>
 References: <20190626013252.30470-1-digetx@gmail.com>
@@ -79,29 +79,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Governor could be stopped while boosting is active. We have assumption
-that everything is reset on governor's restart, including the boosting
-value, which was missed.
+IRQ numbers are always positive, hence the corresponding variable should
+be unsigned to keep types consistent. This is a minor change that cleans
+up code a tad more.
 
+Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/devfreq/tegra30-devfreq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 8e1c56790ac3..b36d5d644c6e 100644
+index a6ba75f4106d..a27300f40b0b 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -534,6 +534,9 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
- {
- 	u32 val = 0, target_freq;
+@@ -160,7 +160,7 @@ struct tegra_devfreq {
  
-+	/* we don't want boosting on restart */
-+	dev->boost_freq = 0;
-+
- 	target_freq = clk_get_rate(tegra->emc_clock) / KHZ;
- 	dev->avg_count = target_freq * ACTMON_SAMPLING_PERIOD;
- 	device_writel(dev, dev->avg_count, ACTMON_DEV_INIT_AVG);
+ 	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
+ 
+-	int irq;
++	unsigned int		irq;
+ };
+ 
+ struct tegra_actmon_emc_ratio {
+@@ -618,12 +618,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(tegra->emc_clock);
+ 	}
+ 
+-	tegra->irq = platform_get_irq(pdev, 0);
+-	if (tegra->irq < 0) {
+-		err = tegra->irq;
++	err = platform_get_irq(pdev, 0);
++	if (err < 0) {
+ 		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
+ 		return err;
+ 	}
++	tegra->irq = err;
+ 
+ 	reset_control_assert(tegra->reset);
+ 
 -- 
 2.22.0
 
