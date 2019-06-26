@@ -2,133 +2,153 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300CAC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4124CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F7821670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E92A214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="D9jj2u8G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJBruFOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfFZNJA (ORCPT
+        id S1727424AbfFZNK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:09:00 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53324 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfFZNI7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:08:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id x15so2041694wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:08:58 -0700 (PDT)
+        Wed, 26 Jun 2019 09:10:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33866 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfFZNK2 (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:10:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c85so1359356pfc.1
+        for <Linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=UlAyafwoDWOEZg6jMds0rhcbFjBfyg8hnA1+xEC/Yao=;
-        b=D9jj2u8GMuzxKU98G6kRXnbV9c+RQt++kXvN4FEFtgycPae8cdS/Aq6nD+2tCgJ6Sz
-         o42/OZOTQwjC+l7lSrgOJhdXQSQQzfMcEeCtJzNRik/ohayCwPAInW9bH/yq1KFnnNj8
-         JHOT/9wbnneNrrt67ZxJho/0B6j/eW1ng2C6MzdOTX+jGRVYoNKUSlsK7onoPoT1FH2N
-         lw1wqztnx5cWqz2pl1ReVLa7b6vnHVO7zH8c27WNUzw4pribsjpFa53DFIQ8Ri2/CAp/
-         C91LYRzikIJlV+WC4SyaHKNhya/JXfsRH1sq+uNVUhPCfQiyAacRTPrFaDD+uNm7dt6y
-         tZRQ==
+        bh=opO5RMkXYD+cDHitMAzTrap5fSpuloWy8AelrA+yk/o=;
+        b=sJBruFOkU1pdY68j41Bmt5j3/69/hEkBrAX4Bp/SPQ6CqwEmjI51KZUNEziJRJmGmI
+         E8vsukdW1rIBucMxnN+ym7qQai6Mtu2L4PKIzGzNpIs3ALajss1lnxvIS797IlEcocVy
+         CB5SoYCSWJQAqcUwj/kukLpeWhO7TiA5YiMvRMSTVhO5C3ljUGriG/y53zuxCqil4i5t
+         bYi9WglS8QScCREAjjCS3ixCsiacTwwfTOiRJ/c1ULq0KNSWc9s00o4VvYS3YoL/DiMt
+         oSRSCGGS7cXtDlmIZGlb5ScX44Zoc3KoR5JQxVenDJ2C2WuuIZycPtS6gy6MwP8Y1bTD
+         XlCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UlAyafwoDWOEZg6jMds0rhcbFjBfyg8hnA1+xEC/Yao=;
-        b=hAgz1XEIMkuApiHTlFyQo8wA86LgxcbrPqzwCccvumWgrzaX9vlU6XbOUmm34W3qm6
-         B8ze9hlPqURSUwEXLfEgxngKpNpan93KJqFzR6llsPQO1Drj6k/GIMPjhFH4RQ7vakVQ
-         mzSceJ5fe29Ex4oANWVPqq0812n9GUO4YnSMUaTrwWqw9Ld8+g7/WSBqZXIFcgbsS2bL
-         TSPI43FV+wncQKLg951b1t3AcjY+e65cWF8uL5n1VE5HCNdOXNsvsuYv4Oz1KxHL7/XA
-         K+95wCDuhPNHbMOirxHMixY4bGHxbIxPxZg0Bi2FC1ZsllrjcDGMAh+nq9JbGLIvWGMq
-         xgJQ==
-X-Gm-Message-State: APjAAAU6cP21lBEc2gVuFI3lULGlplNu2E862z8gGiC/LqQray4yDoyH
-        Pq/yHKUL7Td/H7hr63GhL37Q7Q==
-X-Google-Smtp-Source: APXvYqwKysgktY1GpqtaQ+PYDOj5SUC1kpqiac/ggfHtzlyx9cDcNQ/sdW+AT8RFtOuz94FidUEZgg==
-X-Received: by 2002:a1c:b706:: with SMTP id h6mr2640507wmf.119.1561554537502;
-        Wed, 26 Jun 2019 06:08:57 -0700 (PDT)
-Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
-        by smtp.gmail.com with ESMTPSA id n5sm1832855wmi.21.2019.06.26.06.08.55
+        bh=opO5RMkXYD+cDHitMAzTrap5fSpuloWy8AelrA+yk/o=;
+        b=JslWk9OGLByKCrzqLJ5/zTkhueFxfA6FVLJcCKNq62vGEW7YJWTw9EbKwJpf8xvob5
+         0VNQ1DYGEHRnGoZg3Y9lvwE/ZGcrGb8oJjm68vhHZUQhFjyBacsQz7Wmz3C0zaUZhnda
+         iCT/yyyLMv8jsX/aMdnnUYkh85WE6ueZfZbMKoPeoY9Qpqu7cQtvldcIEomeNNTD7B7a
+         FFlf2SAVKiZvyRGIdhTITXMLDF0NLggpJ9lXX6LA5lBknGePq6heOCht7RGsecK6JfTa
+         Cd3EX/D6uUyk25wGr4dCguMfe0rUIdI8Cq9mqoIGQvJ+WaZwwEv64/ZJ7z4ISzArIDjs
+         6U6A==
+X-Gm-Message-State: APjAAAWnlZ9zUrgAyRQjEStqGw5TVTvWTo7a0NjPoQDRO8WU+kI8Ed1K
+        nysTlQdO9S6ExVo3AuPVuQ==
+X-Google-Smtp-Source: APXvYqw5SVoQ7Z6nytDeDRYCYO28cK9DunjzJLV+rLqsiNAIPyNrv7UGLab3d/LLwAkh6fOmQEOWiQ==
+X-Received: by 2002:a63:fe51:: with SMTP id x17mr3035587pgj.61.1561554627862;
+        Wed, 26 Jun 2019 06:10:27 -0700 (PDT)
+Received: from mylaptop.redhat.com ([2408:8207:7820:4fb0:dc47:8733:627e:cd6d])
+        by smtp.gmail.com with ESMTPSA id i14sm27533585pfk.0.2019.06.26.06.10.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 06:08:56 -0700 (PDT)
-From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Artemi Ivanov <artemi.ivanov@cogentembedded.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: [PATCH resend] can: rcar_canfd: fix possible IRQ storm on high load
-Date:   Wed, 26 Jun 2019 16:08:48 +0300
-Message-Id: <20190626130848.6671-1-nikita.yoush@cogentembedded.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 26 Jun 2019 06:10:26 -0700 (PDT)
+From:   Pingfan Liu <kernelfans@gmail.com>
+To:     Linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Linux-kernel@vger.kernel.org
+Subject: [PATCHv4] mm/gup: speed up check_and_migrate_cma_pages() on huge page
+Date:   Wed, 26 Jun 2019 21:10:00 +0800
+Message-Id: <1561554600-5274-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.7.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have observed rcar_canfd driver entering IRQ storm under high load,
-with following scenario:
-- rcar_canfd_global_interrupt() in entered due to Rx available,
-- napi_schedule_prep() is called, and sets NAPIF_STATE_SCHED in state
-- Rx fifo interrupts are masked,
-- rcar_canfd_global_interrupt() is entered again, this time due to
-  error interrupt (e.g. due to overflow),
-- since scheduled napi poller has not yet executed, condition for calling
-  napi_schedule_prep() from rcar_canfd_global_interrupt() remains true,
-  thus napi_schedule_prep() gets called and sets NAPIF_STATE_MISSED flag
-  in state,
-- later, napi poller function rcar_canfd_rx_poll() gets executed, and
-  calls napi_complete_done(),
-- due to NAPIF_STATE_MISSED flag in state, this call does not clear
-  NAPIF_STATE_SCHED flag from state,
-- on return from napi_complete_done(), rcar_canfd_rx_poll() unmasks Rx
-  interrutps,
-- Rx interrupt happens, rcar_canfd_global_interrupt() gets called
-  and calls napi_schedule_prep(),
-- since NAPIF_STATE_SCHED is set in state at this time, this call
-  returns false,
-- due to that false return, rcar_canfd_global_interrupt() returns
-  without masking Rx interrupt
-- and this results into IRQ storm: unmasked Rx interrupt happens again
-  and again is misprocessed in the same way.
+Both hugetlb and thp locate on the same migration type of pageblock, since
+they are allocated from a free_list[]. Based on this fact, it is enough to
+check on a single subpage to decide the migration type of the whole huge
+page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+similar on other archs.
 
-This patch fixes that scenario by unmasking Rx interrupts only when
-napi_complete_done() returns true, which means it has cleared
-NAPIF_STATE_SCHED in state.
+Furthermore, when executing isolate_huge_page(), it avoid taking global
+hugetlb_lock many times, and meanless remove/add to the local link list
+cma_page_list.
 
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Linux-kernel@vger.kernel.org
 ---
- drivers/net/can/rcar/rcar_canfd.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+v3 -> v4: fix C language precedence issue
 
-diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
-index 05410008aa6b..de34a4b82d4a 100644
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -1508,10 +1508,11 @@ static int rcar_canfd_rx_poll(struct napi_struct *napi, int quota)
+ mm/gup.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index ddde097..ffca55b 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1342,19 +1342,22 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+ 	LIST_HEAD(cma_page_list);
  
- 	/* All packets processed */
- 	if (num_pkts < quota) {
--		napi_complete_done(napi, num_pkts);
--		/* Enable Rx FIFO interrupts */
--		rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
--				   RCANFD_RFCC_RFIE);
-+		if (napi_complete_done(napi, num_pkts)) {
-+			/* Enable Rx FIFO interrupts */
-+			rcar_canfd_set_bit(priv->base, RCANFD_RFCC(ridx),
-+					   RCANFD_RFCC_RFIE);
-+		}
+ check_again:
+-	for (i = 0; i < nr_pages; i++) {
++	for (i = 0; i < nr_pages;) {
++
++		struct page *head = compound_head(pages[i]);
++		long step = 1;
++
++		if (PageCompound(head))
++			step = (1 << compound_order(head)) - (pages[i] - head);
+ 		/*
+ 		 * If we get a page from the CMA zone, since we are going to
+ 		 * be pinning these entries, we might as well move them out
+ 		 * of the CMA zone if possible.
+ 		 */
+-		if (is_migrate_cma_page(pages[i])) {
+-
+-			struct page *head = compound_head(pages[i]);
+-
+-			if (PageHuge(head)) {
++		if (is_migrate_cma_page(head)) {
++			if (PageHuge(head))
+ 				isolate_huge_page(head, &cma_page_list);
+-			} else {
++			else {
+ 				if (!PageLRU(head) && drain_allow) {
+ 					lru_add_drain_all();
+ 					drain_allow = false;
+@@ -1369,6 +1372,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+ 				}
+ 			}
+ 		}
++
++		i += step;
  	}
- 	return num_pkts;
- }
+ 
+ 	if (!list_empty(&cma_page_list)) {
 -- 
-2.11.0
+2.7.5
 
