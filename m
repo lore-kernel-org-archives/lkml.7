@@ -2,151 +2,101 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8CDC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852BFC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A195C2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:28:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="al0bdWja"
+	by mail.kernel.org (Postfix) with ESMTP id 59EF920663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561545137;
+	bh=4CKHa1A8vrfykHgGSNll1KY4BiJQ+KUGJASQX4F/EWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PYLfpWTyB768AVGjXi6dtqLRQPruePY68IR5uf/ft/JruANnk1Pg5NYBbMn+rJ7NM
+	 X5twMB2+fTRyj7Q5Nssg/Xhb0AX243ZMX++RBJGGEJUKo2+9aDNMlvuWRyTo/YCT/a
+	 VtZ/oRR49acybBact3Ktogz0/GpAwwriovqcz1vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfFZK23 (ORCPT
+        id S1726772AbfFZKcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:28:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43990 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfFZK22 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:28:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p13so2072574wru.10;
-        Wed, 26 Jun 2019 03:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kCaYA/FnXYJJu+TrRy4BKJsDWzoGNXiaayKbDb94w+c=;
-        b=al0bdWjaXkyCAS0ALgnrSOkTpGyasqItumozaBvYJ9hKll3uPqhNuo0j8JBUgn6Bss
-         01ltiSi2eTbREMnFv/OvMWWfICrmgPDqlAT171DJDrMF8UmjtdBxFkmegsK10yg0nfKE
-         Wv/uuLppeicqllMyoUa+xKzwMOKDRnrwuAas2oTHR9muXb3FDJnL9P8Vu0owk/CIRx0o
-         AkK8bRttG1k2XVK+ipSzf1D0UwBFppp5TzLxZJSPmsPacioK/MF8uhRs6m82m1lwDFea
-         QAEQYzw8Se/dXO5TtXcfxr+NUynP6i4FWTg6EIxjBUP+6zYQWu6/W/cqjGxbQdD1DoDB
-         4udg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kCaYA/FnXYJJu+TrRy4BKJsDWzoGNXiaayKbDb94w+c=;
-        b=Tgc6xAy28eM3DMetuDIePu4KK7iQxOUhK55VDo8iDD1Ki4i5V0EulCrx6ZNSUpwK2J
-         eXs+Iy2uonOhBqxR/BbZXeoRqum2fiHCMY7H+eUpzdf/YwIU4v2mYMn+Bd+b5+ZRGpvI
-         KVQ5MJUbXDHit3mkPM1pgF0jBp3ncgzIV5SC5NuRuFAcnmyzBAhH3pviy2rd7f7xMCCa
-         8Ljt9qqbClSfX0gytR1YYX6jiKLAXJGr42AIDyeeBENciGLlvC6rW7PmDlfKvga/7S4k
-         MzIFgzY9vEu8Ul0TwL4iO4GsX/XV20j6Vy+OPG7zNt1oqug1T3gszhP0x11ybY2aaALD
-         LWtQ==
-X-Gm-Message-State: APjAAAW82xCuifiDx3mSK743vuysRTF4WBkK0WLkQMzv2qwUEYrEotq7
-        itrMSjxIef8sc1XwUk2btqs=
-X-Google-Smtp-Source: APXvYqwzL9B7b8q6dp307iySl6j91+IQ7iFGWkUjNojhUJMBDYWB/J9F0rnm0ZW538lTIC7sUVzO6w==
-X-Received: by 2002:adf:f104:: with SMTP id r4mr3290900wro.140.1561544905806;
-        Wed, 26 Jun 2019 03:28:25 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id r79sm1567240wme.2.2019.06.26.03.28.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 03:28:24 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 12:28:24 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V4 18/18] arm64: dts: tegra210-p2180: Jetson TX1 SC7
- timings
-Message-ID: <20190626102824.GG6362@ulmo>
-References: <1561345379-2429-1-git-send-email-skomatineni@nvidia.com>
- <1561345379-2429-19-git-send-email-skomatineni@nvidia.com>
+        Wed, 26 Jun 2019 06:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfFZKcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 06:32:15 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42C052133F;
+        Wed, 26 Jun 2019 10:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561545134;
+        bh=4CKHa1A8vrfykHgGSNll1KY4BiJQ+KUGJASQX4F/EWU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0PEH7is8D1pTrioeduFf6lwQeETXQ2mQc3c4x7Mq/OqaWrCUuYjPsKLrDap/zZVF/
+         3GghfjxVZg5/fg1F4VISO5tbJjV4uVeEY6+wc6+zuJoexqYensgcVDExl2PqPAsiB7
+         HNyx+hw9BNHRNL7gPj3SxG0lY05Gambd1He339TA=
+Date:   Wed, 26 Jun 2019 11:32:10 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Fangrui Song <maskray@google.com>,
+        Peter Smith <peter.smith@linaro.org>
+Subject: Re: [PATCH] arm64/efi: Mark __efistub_stext_offset as an absolute
+ symbol explicitly
+Message-ID: <20190626103209.foq3bheaxzrqoeem@willie-the-truck>
+References: <20190626042017.54773-1-natechancellor@gmail.com>
+ <CAKv+Gu85xLD+-CqwgNQtC3Hr9z2R5bm5th8_zd_jMSzA3JE8og@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="APlYHCtpeOhspHkB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1561345379-2429-19-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAKv+Gu85xLD+-CqwgNQtC3Hr9z2R5bm5th8_zd_jMSzA3JE8og@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 26, 2019 at 09:07:00AM +0200, Ard Biesheuvel wrote:
+> On Wed, 26 Jun 2019 at 06:20, Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > After r363059 and r363928 in LLVM, a build using ld.lld as the linker
+> > with CONFIG_RANDOMIZE_BASE enabled fails like so:
+> >
+> > ld.lld: error: relocation R_AARCH64_ABS32 cannot be used against symbol
+> > __efistub_stext_offset; recompile with -fPIC
+> >
+> > Fangrui and Peter figured out that ld.lld is incorrectly considering
+> > __efistub_stext_offset as a relative symbol because of the order in
+> > which symbols are evaluated. _text is treated as an absolute symbol
+> > and stext is a relative symbol, making __efistub_stext_offset a
+> > relative symbol.
+> >
+> > Adding ABSOLUTE will force ld.lld to evalute this expression in the
+> > right context and does not change ld.bfd's behavior. ld.lld will
+> > need to be fixed but the developers do not see a quick or simple fix
+> > without some research (see the linked issue for further explanation).
+> > Add this simple workaround so that ld.lld can continue to link kernels.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/561
+> > Link: https://github.com/llvm/llvm-project/commit/025a815d75d2356f2944136269aa5874721ec236
+> > Link: https://github.com/llvm/llvm-project/commit/249fde85832c33f8b06c6b4ac65d1c4b96d23b83
+> > Debugged-by: Fangrui Song <maskray@google.com>
+> > Debugged-by: Peter Smith <peter.smith@linaro.org>
+> > Suggested-by: Fangrui Song <maskray@google.com>
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
---APlYHCtpeOhspHkB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks. I'll pick this up and add the link to the Clang issue as a comment
+in the header.
 
-On Sun, Jun 23, 2019 at 08:02:59PM -0700, Sowjanya Komatineni wrote:
-> This patch has Jetson TX1 platform specific SC7 timing configuration
-> in device tree.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-
-Can you provide a similar patch for Jetson Nano (p3450-0000)? It'd be
-great if we can make new features like this available across all boards.
-
-Thierry
-
->=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/=
-boot/dts/nvidia/tegra210-p2180.dtsi
-> index 27723829d033..cb58f79deb48 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-> @@ -279,6 +279,13 @@
-> =20
->  	pmc@7000e400 {
->  		nvidia,invert-interrupt;
-> +		nvidia,suspend-mode =3D <0>;
-> +		nvidia,cpu-pwr-good-time =3D <0>;
-> +		nvidia,cpu-pwr-off-time =3D <0>;
-> +		nvidia,core-pwr-good-time =3D <4587 3876>;
-> +		nvidia,core-pwr-off-time =3D <39065>;
-> +		nvidia,core-power-req-active-high;
-> +		nvidia,sys-clock-req-active-high;
->  	};
-> =20
->  	/* eMMC */
-> --=20
-> 2.7.4
->=20
-
---APlYHCtpeOhspHkB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TSMcACgkQ3SOs138+
-s6Hobg//bHL6IZg0MNnz6irMk4CtJYVFtTftwwB09UP8JKkxLxrMaYT9yjBG9AjT
-bjtGZeRdj66yVRCU0sj8xPSNJZjXMepVk6TXaEjuzFtQcJtrSH1kAz8b+dCPHspT
-5+GT3DXacuBqBB6rRQdbSA4MXFC7HWOoMgVPj9afqR4vu50+qhuimRjYQChjE6vF
-OM/IcV1NoGwoYWuWmg6JDgPIydS/XoEfifaSLxnCiJ/Xkx13xdTY7FFrcPWGHIjT
-X68dbzqKk/6nREuQaT/U9xsTkijD92PW0qTK4jfGEFK6d+DrMfNszfDudIYatw1/
-IkP0wgUN7ldmbVCvwArBaSWxZRfIBgAixFniBNjYhaFJ8ctNkXGkedNio20TDdne
-CRxgVQXQtmqgSXCbgFryl1NQk8vJGTOVDsYZlaJEBpPSlANx9IZNTOVpqXnD52FN
-jcJ+PrD83WUVvT1RCRw0p43Bjc2iCpxcfuYsSxU5AWpvf9P/Om6A0WmpMyZADIXB
-K5IUhJtRjBKZblfWPkJv6qX9eYLKx+QqwNy8AAl9Rqf3vjN0aH4J+JWuqSXHK/ko
-9hlH7D2x+dQv4PzCvq/FAmquMz+RIo9fT4IZk4Voi0iZ9Zolm7lbTFcOpFJWye5E
-wHh7HUyfgxxNYKYGzJFqPeBXPO30Ib6MaYUUQZdL4mM5D1M1IUg=
-=DNYf
------END PGP SIGNATURE-----
-
---APlYHCtpeOhspHkB--
+Will
