@@ -2,97 +2,62 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEA1C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C94C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628C12133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE4B2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbfFZOax (ORCPT
+        id S1728147AbfFZObm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:30:53 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:39708 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfFZOav (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:30:51 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 26 Jun 2019 10:31:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60676 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbfFZObm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 10:31:42 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id A684C2003C;
-        Wed, 26 Jun 2019 16:30:47 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 16:30:46 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Xi Wang <wangxi11@huawei.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: add more hints about SUBDIRS replacement
-Message-ID: <20190626143046.GA12510@ravnborg.org>
-References: <20190625085127.9446-1-yamada.masahiro@socionext.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 6C56F30832DE;
+        Wed, 26 Jun 2019 14:31:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 04FE15D717;
+        Wed, 26 Jun 2019 14:31:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190626131902.6xat2ab65arc62td@brauner.io>
+References: <20190626131902.6xat2ab65arc62td@brauner.io> <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk> <20190626100525.irdehd24jowz5f75@brauner.io>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        mszeredi@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/25] VFS: Introduce filesystem information query syscall [ver #14]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625085127.9446-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=D19gQVrFAAAA:8
-        a=c-n4J4-pAAAA:8 a=7gkXJVJtAAAA:8 a=Sq-7mj1JxeWlg5ll3zAA:9
-        a=CjuIK1q_8ugA:10 a=W4TVW4IDbPiebHqcZpNg:22 a=L0NDqeB7ZLmQzAogN4cw:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9359.1561559497.1@warthog.procyon.org.uk>
+Date:   Wed, 26 Jun 2019 15:31:37 +0100
+Message-ID: <9360.1561559497@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 26 Jun 2019 14:31:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 05:51:27PM +0900, Masahiro Yamada wrote:
-> Commit 0126be38d988 ("kbuild: announce removal of SUBDIRS if used")
-> added a hint about the 'SUBDIRS' replacement, but it was not clear
-> enough.
-> 
-> Multiple people sent me similar questions, patches.
-> 
->   https://lkml.org/lkml/2019/1/17/456
-> 
-> I did not mean to suggest M= for building a subdirectory in the kernel
-> tree.
-> 
-> >From the commit 669efc76b317 ("net: hns3: fix compile error"), people
-> already (ab)use M=... to do that because it seems to work to some extent.
-> 
-> Documentation/kbuild/kbuild.txt says M= and KBUILD_EXTMOD are used for
-> building external modules.
-> 
-> In fact, Kbuild supports the single target '%/' for this purpose, but
-> this may not be noticed much.
-> 
-> Kindly add more hints.
-> 
-> Makefile:213: ================= WARNING ================
-> Makefile:214: 'SUBDIRS' will be removed after Linux 5.3
-> Makefile:215:
-> Makefile:216: If you are building an individual subdirectory
-> Makefile:217: in the kernel tree, you can do like this:
-> Makefile:218: $ make path/to/dir/you/want/to/build/
-> Makefile:219: (Do not forget the trailing slash)
-> Makefile:220:
-> Makefile:221: If you are building an external module,
-> Makefile:222: Please use 'M=' or 'KBUILD_EXTMOD' instead
-> Makefile:223: ==========================================
-> 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Christian Brauner <christian@brauner.io> wrote:
 
-Nice!
+> And I also very much recommend to remove any potential cross-dependency
+> between the fsinfo() and the notification patchset.
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+The problem with that is that to make the notification patchset useful for
+mount notifications, you need some information that you would obtain through
+fsinfo().
 
-	Sam
+David
