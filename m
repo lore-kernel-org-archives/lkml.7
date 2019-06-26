@@ -2,201 +2,96 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9836BC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282BEC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6438C2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8996214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520464;
-	bh=YjnOrrgSNhT6RWlqKXwtbjuCaQYM6DgeF+J68o3kqsE=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=RFuo8uh0fqkC/FTsoIoWZfNYxkbIv2eqDTdGj40UeqLhol3lsrhw6vKHOLfEnW7bI
-	 EgIwGadnjhd4KMpvI18IFuqeU+Kps8AOfvQ+qutDw/0oGQNotvGxp0vWko8mJHGQmn
-	 90J9U9ZLv+2bS/RaMdiRsOcnZCdXZOn29M5tpgW4=
+	s=default; t=1561520483;
+	bh=ILdNPj3z8+pezhYzm9dmkr3+dbNKAPUfRHgz8RruHVE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=07RQnMyuqMpl902HVgNl1er+4q/jm78rqB1acSjvr1JWiMx1TIjaLU0ndSWtBrucg
+	 y4PUgFj7oNAmCPXGWNzT6ABxc5t+fG43afrQYz7x80zl2jG8Ol/ZMUOp7LxYt4mXD3
+	 jWc1fwA3vSuDwFXl/VOBTTWD2yV8CyapZ9tKYOJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfFZDlD (ORCPT
+        id S1726648AbfFZDlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51194 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbfFZDlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:41:02 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726077AbfFZDlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:41:21 -0400
+Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B238520883;
-        Wed, 26 Jun 2019 03:41:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FCC820659;
+        Wed, 26 Jun 2019 03:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520460;
-        bh=YjnOrrgSNhT6RWlqKXwtbjuCaQYM6DgeF+J68o3kqsE=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=TozaXDPsvQQt/kVas3URc54NSndgjkoC4JTDYWEqG70XXqn3fWJpPNfLyDu06hZCO
-         ksLT9uE8zoDvTnwOTaGmRz8VF+Rm9bpa8KzXo9tWm3/qM5QRpGdRrtfc1krtZGPl7s
-         UrIkXsoPp/B2GQ3tBVMxOkqmDHBq+Vr71I5oFTqc=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1561520480;
+        bh=ILdNPj3z8+pezhYzm9dmkr3+dbNKAPUfRHgz8RruHVE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cm/aPTtJt6wfLaEafSQjy45xWKhn/Uqe0U1Yp9vw7d01UG1hIt75e9fnuXYHbglHT
+         mf8wfRhuplYPZ2CP5u3f0NEx4Iof5NQgkb4y2v0uD+ibp5j6rh9QrEpE4COIfWqVlK
+         KdjLxB/iMyM2pBOmCWTIfezvXPTf2Ha3QnYmXKVA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 01/51] HID: i2c-hid: add iBall Aer3 to descriptor override
+Date:   Tue, 25 Jun 2019 23:40:17 -0400
+Message-Id: <20190626034117.23247-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com> <20190617082613.109131-2-brendanhiggins@google.com> <20190620001526.93426218BE@mail.kernel.org> <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-User-Agent: alot/0.8.1
-Date:   Tue, 25 Jun 2019 20:40:59 -0700
-Message-Id: <20190626034100.B238520883@mail.kernel.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-06-25 13:28:25)
-> On Wed, Jun 19, 2019 at 5:15 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Brendan Higgins (2019-06-17 01:25:56)
-> > > diff --git a/kunit/test.c b/kunit/test.c
-> > > new file mode 100644
-> > > index 0000000000000..d05d254f1521f
-> > > --- /dev/null
-> > > +++ b/kunit/test.c
-> > > @@ -0,0 +1,210 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Base unit test (KUnit) API.
-> > > + *
-> > > + * Copyright (C) 2019, Google LLC.
-> > > + * Author: Brendan Higgins <brendanhiggins@google.com>
-> > > + */
-> > > +
-> > > +#include <linux/sched/debug.h>
-> > > +#include <kunit/test.h>
-> > > +
-> > > +static bool kunit_get_success(struct kunit *test)
-> > > +{
-> > > +       unsigned long flags;
-> > > +       bool success;
-> > > +
-> > > +       spin_lock_irqsave(&test->lock, flags);
-> > > +       success =3D test->success;
-> > > +       spin_unlock_irqrestore(&test->lock, flags);
-> >
-> > I still don't understand the locking scheme in this code. Is the
-> > intention to make getter and setter APIs that are "safe" by adding in a
-> > spinlock that is held around getting and setting various members in the
-> > kunit structure?
->=20
-> Yes, your understanding is correct. It is possible for a user to write
-> a test such that certain elements may be updated in different threads;
-> this would most likely happen in the case where someone wants to make
-> an assertion or an expectation in a thread created by a piece of code
-> under test. Although this should generally be avoided, it is possible,
-> and there are occasionally good reasons to do so, so it is
-> functionality that we should support.
->=20
-> Do you think I should add a comment to this effect?
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-No, I think the locking should be removed.
+[ Upstream commit eb6964fa6509b4f1152313f1e0bb67f0c54a6046 ]
 
->=20
-> > In what situation is there more than one thread reading or writing the
-> > kunit struct? Isn't it only a single process that is going to be
->=20
-> As I said above, it is possible that the code under test may spawn a
-> new thread that may make an expectation or an assertion. It is not a
-> super common use case, but it is possible.
+This device uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override
+list.
 
-Sure, sounds super possible and OK.
+BugLink: https://bugs.launchpad.net/bugs/1825718
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
->=20
-> > operating on this structure? And why do we need to disable irqs? Are we
-> > expecting to be modifying the unit tests from irq contexts?
->=20
-> There are instances where someone may want to test a driver which has
-> an interrupt handler in it. I actually have (not the greatest) example
-> here. Now in these cases, I expect someone to use a mock irqchip or
-> some other fake mechanism to trigger the interrupt handler and not
-> actual hardware; technically speaking in this case, it is not going to
-> be accessed from a "real" irq context; however, the code under test
-> should think that it is in an irq context; given that, I figured it is
-> best to just treat it as a real irq context. Does that make sense?
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index fd1b6eea6d2f..75078c83be1a 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -354,6 +354,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "iBall Aer3",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "iBall"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Aer3"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
+ 
+-- 
+2.20.1
 
-Can you please describe the scenario in which grabbing the lock here,
-updating a single variable, and then releasing the lock right after
-does anything useful vs. not having the lock? I'm looking for a two CPU
-scenario like below, but where it is a problem. There could be three
-CPUs, or even one CPU and three threads if you want to describe the
-extra thread scenario.
-
-Here's my scenario where it isn't needed:
-
-    CPU0                                      CPU1
-    ----                                      ----
-    kunit_run_test(&test)
-                                              test_case_func()
-					        ....
-                                              [mock hardirq]
-					        kunit_set_success(&test)
-					      [hardirq ends]
-                                                ...
-                                                complete(&test_done)
-      wait_for_completion(&test_done)
-      kunit_get_success(&test)
-
-We don't need to care about having locking here because success or
-failure only happens in one place and it's synchronized with the
-completion.
-
->=20
-> > > +
-> > > +       return success;
-> > > +}
-> > > +
-> > > +static void kunit_set_success(struct kunit *test, bool success)
-> > > +{
-> > > +       unsigned long flags;
-> > > +
-> > > +       spin_lock_irqsave(&test->lock, flags);
-> > > +       test->success =3D success;
-> > > +       spin_unlock_irqrestore(&test->lock, flags);
-> > > +}
