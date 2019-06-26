@@ -2,252 +2,130 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76408C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E11AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A40E216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D381021726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561571550;
+	bh=S4bu6cwTK6G6hRMIv9GnhZMiK0UIi3WZJaspSurZK8c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qga7muybtbjq23RmhBhsyrJN0LADctH4yhH+jf/rqCFyUzmt6w0VR1+oLYlkkbgWO
+	 f4PsFhKPEdMTebtrn5yN8iOH9bG4my4GCsaL5QJqpomVz5oc7kb+WTISU20Cu0eLqu
+	 rsVBvKDXNc7za9u7+T2y/ywVoMRbcCDqe17dstHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfFZRvw (ORCPT
+        id S1726525AbfFZRw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:51:52 -0400
-Received: from mga12.intel.com ([192.55.52.136]:19497 "EHLO mga12.intel.com"
+        Wed, 26 Jun 2019 13:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfFZRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:51:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:51:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
-   d="scan'208";a="337288608"
-Received: from rchatre-s.jf.intel.com ([10.54.70.76])
-  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 10:51:08 -0700
-From:   Reinette Chatre <reinette.chatre@intel.com>
-To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
-        tony.luck@intel.com
-Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Reinette Chatre <reinette.chatre@intel.com>
-Subject: [PATCH 09/10] x86/resctrl: Pseudo-lock portions of multiple resources
-Date:   Wed, 26 Jun 2019 10:48:48 -0700
-Message-Id: <918552f95d59d20fb9a09dd3b6666ad2f82bdf0c.1561569068.git.reinette.chatre@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
-References: <cover.1561569068.git.reinette.chatre@intel.com>
-In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
-References: <cover.1561569068.git.reinette.chatre@intel.com>
+        id S1726289AbfFZRw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:52:29 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEAB8208E3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 17:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561571548;
+        bh=S4bu6cwTK6G6hRMIv9GnhZMiK0UIi3WZJaspSurZK8c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iTGLj9aHRqtXaoP5kL+6QCzw5thEdaa1+j11XVbxBG4Xkir9g9ETqPKwLPjOnFrtb
+         dPSzi7QPpH3sx0BlkgIrs0kdLYCzA9MHJSn3bbfpR1/yrVvWvuPjkt1W2a/6P4cA5q
+         4NerJND/1KUOAE4bg7+g2SrLx6VU0Q1YF/aUlksU=
+Received: by mail-qk1-f172.google.com with SMTP id a27so2419386qkk.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:52:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAXjE/ja0EnJ7LL7NYU8sb+eMYo1h2FuUrfMtHIZOC6GOeWPfAFi
+        X7AUzIYepbjWljYleHeiunmWqigZQX4HhVoM8A==
+X-Google-Smtp-Source: APXvYqzYhMv6rHrklns2vFmg1wcR2zD/R9gJFkeBnxKK/fLi2eSyCZ0bHo4Q8sz4Of0SuTqILRJ4kcOafVCphnT/TOk=
+X-Received: by 2002:ae9:ebd1:: with SMTP id b200mr5212035qkg.152.1561571547170;
+ Wed, 26 Jun 2019 10:52:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <alpine.DEB.2.21.9999.1906260829030.21507@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1906260829030.21507@viisi.sifive.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 26 Jun 2019 11:52:15 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com>
+Message-ID: <CAL_JsqJs6MtvmuyAknsUxQymbmoV=G+=JfS1PQj9kNHV7fjC9g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: riscv: resolve 'make dt_binding_check' warnings
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A cache pseudo-locked region may span more than one level of cache. A
-part of the pseudo-locked region that falls on one cache level is
-referred to as a pseudo-lock portion that was introduced previously.
+On Wed, Jun 26, 2019 at 9:30 AM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+>
+>
+> Rob pointed out that one of the examples in the RISC-V 'cpus' YAML schema
+> results in warnings from 'make dt_binding_check'.  Fix these.
+>
+> While here, make the whitespace in the second example consistent with the
+> first example.
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> index 27f02ec4bb45..f97a4ecd7b91 100644
+> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+> @@ -152,17 +152,19 @@ examples:
+>    - |
+>      // Example 2: Spike ISA Simulator with 1 Hart
+>      cpus {
+> -            cpu@0 {
+> -                    device_type = "cpu";
+> -                    reg = <0>;
+> -                    compatible = "riscv";
+> -                    riscv,isa = "rv64imafdc";
+> -                    mmu-type = "riscv,sv48";
+> -                    interrupt-controller {
+> -                            #interrupt-cells = <1>;
+> -                            interrupt-controller;
+> -                            compatible = "riscv,cpu-intc";
+> -                    };
+> -            };
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        cpu@0 {
 
-Now a pseudo-locked region is allowed to have two portions instead of
-the previous limit of one. When a pseudo-locked region consists out of
-two portions it can only span a L2 and L3 resctrl resource.
-When a pseudo-locked region consists out of a L2 and L3 portion then
-there are some requirements:
-- the L2 and L3 cache has to be in same cache hierarchy
-- the L3 portion must be same size or larger than L2 portion
+This only works because you removed 'cpus' and therefore none of this
+schema is applied.
 
-As documented in previous changes the list of portions are
-maintained so that the L2 portion would always appear first in the list
-to simplify any information retrieval.
+> +                device_type = "cpu";
+> +                reg = <0>;
+> +                compatible = "riscv";
 
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 142 +++++++++++++++++++++-
- 1 file changed, 139 insertions(+), 3 deletions(-)
+According to the schema, this is wrong. It should have 2 strings. Or
+the schema needs to allow this case, but 'riscv' is too vague to be
+very useful.
 
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index a7fe53447a7e..4e47ad582db6 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -339,13 +339,104 @@ static int pseudo_lock_single_portion_valid(struct pseudo_lock_region *plr,
- 	return -1;
- }
- 
-+/**
-+ * pseudo_lock_l2_l3_portions_valid - Verify region across L2 and L3
-+ * @plr: Pseudo-Locked region
-+ * @l2_portion: L2 Cache portion of pseudo-locked region
-+ * @l3_portion: L3 Cache portion of pseudo-locked region
-+ *
-+ * User requested a pseudo-locked region consisting of a L2 as well as L3
-+ * cache portion. The portions are tested as follows:
-+ *   - L2 and L3 cache instances have to be in the same cache hierarchy.
-+ *     This is tested by ensuring that the L2 portion's cpumask is a
-+ *     subset of the L3 portion's cpumask.
-+ *   - L3 portion must be same size or larger than L2 portion.
-+ *
-+ * Return: -1 if the portions are unable to be used for a pseudo-locked
-+ *         region, 0 if the portions could be used for a pseudo-locked
-+ *         region. When returning 0:
-+ *         - the pseudo-locked region's size, line_size (cache line length)
-+ *           and CPU on which locking thread will be run are set.
-+ *         - CPUs associated with L2 cache portion are constrained from
-+ *           entering C-state that will affect the pseudo-locked region.
-+ */
-+static int pseudo_lock_l2_l3_portions_valid(struct pseudo_lock_region *plr,
-+					    struct pseudo_lock_portion *l2_p,
-+					    struct pseudo_lock_portion *l3_p)
-+{
-+	struct rdt_domain *l2_d, *l3_d;
-+	unsigned int l2_size, l3_size;
-+
-+	l2_d = rdt_find_domain(l2_p->r, l2_p->d_id, NULL);
-+	if (IS_ERR_OR_NULL(l2_d)) {
-+		rdt_last_cmd_puts("Cannot locate L2 cache domain\n");
-+		return -1;
-+	}
-+
-+	l3_d = rdt_find_domain(l3_p->r, l3_p->d_id, NULL);
-+	if (IS_ERR_OR_NULL(l3_d)) {
-+		rdt_last_cmd_puts("Cannot locate L3 cache domain\n");
-+		return -1;
-+	}
-+
-+	if (!cpumask_subset(&l2_d->cpu_mask, &l3_d->cpu_mask)) {
-+		rdt_last_cmd_puts("L2 and L3 caches need to be in same hierarchy\n");
-+		return -1;
-+	}
-+
-+	if (pseudo_lock_cstates_constrain(plr, &l2_d->cpu_mask)) {
-+		rdt_last_cmd_puts("Cannot limit C-states\n");
-+		return -1;
-+	}
-+
-+	l2_size = rdtgroup_cbm_to_size(l2_p->r, l2_d, l2_p->cbm);
-+	l3_size = rdtgroup_cbm_to_size(l3_p->r, l3_d, l3_p->cbm);
-+
-+	if (l2_size > l3_size) {
-+		rdt_last_cmd_puts("L3 cache portion has to be same size or larger than L2 cache portion\n");
-+		goto err_size;
-+	}
-+
-+	plr->size = l2_size;
-+
-+	l2_size = get_cache_line_size(cpumask_first(&l2_d->cpu_mask),
-+				      l2_p->r->cache_level);
-+	l3_size = get_cache_line_size(cpumask_first(&l3_d->cpu_mask),
-+				      l3_p->r->cache_level);
-+	if (l2_size != l3_size) {
-+		rdt_last_cmd_puts("L2 and L3 caches have different coherency cache line sizes\n");
-+		goto err_line;
-+	}
-+
-+	plr->line_size = l2_size;
-+
-+	plr->cpu = cpumask_first(&l2_d->cpu_mask);
-+
-+	if (!cpu_online(plr->cpu)) {
-+		rdt_last_cmd_printf("CPU %u associated with cache not online\n",
-+				    plr->cpu);
-+		goto err_cpu;
-+	}
-+
-+	return 0;
-+
-+err_cpu:
-+	plr->line_size = 0;
-+	plr->cpu = 0;
-+err_line:
-+	plr->size = 0;
-+err_size:
-+	pseudo_lock_cstates_relax(plr);
-+	return -1;
-+}
-+
- /**
-  * pseudo_lock_region_init - Initialize pseudo-lock region information
-  * @plr: pseudo-lock region
-  *
-  * Called after user provided a schemata to be pseudo-locked. From the
-  * schemata the &struct pseudo_lock_region is on entry already initialized
-- * with the resource, domain, and capacity bitmask. Here the
-+ * with the resource(s), domain(s), and capacity bitmask(s). Here the
-  * provided data is validated and information required for pseudo-locking
-  * deduced, and &struct pseudo_lock_region initialized further. This
-  * information includes:
-@@ -355,13 +446,24 @@ static int pseudo_lock_single_portion_valid(struct pseudo_lock_region *plr,
-  * - a cpu associated with the cache instance on which the pseudo-locking
-  *   flow can be executed
-  *
-+ * A user provides a schemata for a pseudo-locked region. This schemata may
-+ * contain portions that span different resources, for example, a cache
-+ * pseudo-locked region that spans L2 and L3 cache. After the schemata is
-+ * parsed into portions it needs to be verified that the provided portions
-+ * are valid with the following tests:
-+ *
-+ * - L2 only portion on system that has only L2 resource - OK
-+ * - L3 only portion on any system that supports it - OK
-+ * - L2 portion on system that has L3 resource - require L3 portion
-+ **
-+ *
-  * Return: 0 on success, <0 on failure. Descriptive error will be written
-  * to last_cmd_status buffer.
-  */
- static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
- {
- 	struct rdt_resource *l3_resource = &rdt_resources_all[RDT_RESOURCE_L3];
--	struct pseudo_lock_portion *p;
-+	struct pseudo_lock_portion *p, *n_p, *tmp;
- 	int ret;
- 
- 	if (list_empty(&plr->portions)) {
-@@ -397,8 +499,42 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
- 			rdt_last_cmd_puts("Invalid resource or just L2 provided when L3 is required\n");
- 			goto out_region;
- 		}
-+	}
-+
-+	/*
-+	 * List is neither empty nor singular, process first and second portions
-+	 */
-+	p = list_first_entry(&plr->portions, struct pseudo_lock_portion, list);
-+	n_p = list_next_entry(p, list);
-+
-+	/*
-+	 * If the second portion is not also the last portion user provided
-+	 * more portions than can be supported.
-+	 */
-+	tmp = list_last_entry(&plr->portions, struct pseudo_lock_portion, list);
-+	if (n_p != tmp) {
-+		rdt_last_cmd_puts("Only two pseudo-lock portions supported\n");
-+		goto out_region;
-+	}
-+
-+	if (p->r->rid == RDT_RESOURCE_L2 && n_p->r->rid == RDT_RESOURCE_L3) {
-+		ret = pseudo_lock_l2_l3_portions_valid(plr, p, n_p);
-+		if (ret < 0)
-+			goto out_region;
-+		return 0;
-+	} else if (p->r->rid == RDT_RESOURCE_L3 &&
-+		   n_p->r->rid == RDT_RESOURCE_L2) {
-+		if (pseudo_lock_l2_l3_portions_valid(plr, n_p, p) == 0) {
-+			/*
-+			 * Let L2 and L3 portions appear in order in the
-+			 * portions list in support of consistent output to
-+			 * user space.
-+			 */
-+			list_rotate_left(&plr->portions);
-+			return 0;
-+		}
- 	} else {
--		rdt_last_cmd_puts("Multiple pseudo-lock portions unsupported\n");
-+		rdt_last_cmd_puts("Invalid combination of resources\n");
- 	}
- 
- out_region:
--- 
-2.17.2
+Also, I noticed that there's still a riscv/cpus.txt. That should be
+removed and replaced with this file. Looks like the hart description
+at least should be copied over (into top-level 'description').
 
+> +                riscv,isa = "rv64imafdc";
+> +                mmu-type = "riscv,sv48";
+> +                interrupt-controller {
+> +                        #interrupt-cells = <1>;
+> +                        interrupt-controller;
+> +                        compatible = "riscv,cpu-intc";
+> +                };
+> +        };
+>      };
+>  ...
+> --
+> 2.20.1
+>
