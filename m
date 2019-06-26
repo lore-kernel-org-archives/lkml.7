@@ -2,115 +2,102 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C491C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B13DC48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D79214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420AB214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561585987;
+	bh=Em7BFXBUVAw3tOzfszzYUmTuhp0WqPlkpgw7kbAWyIY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Kmx8/Egb/+bulRW/x7NRHaIUOOM3k2l+vhNtHtif/RVQCfE9q7U23us8Ssfpd9b0V
+	 ZvkiGaC6AviRnxKPVKJyfp6Tw90Cub4Qn0fjis33MVHKwGxZH+FVJY2W0Szol3HsnD
+	 gMCHORB+fkDx3g/ddUYd0saS5rOV02MC1CUjLyB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfFZVwP (ORCPT
+        id S1726439AbfFZVxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:52:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50424 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFZVwO (ORCPT
+        Wed, 26 Jun 2019 17:53:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41029 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfFZVxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:52:14 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgFpg-0008Cm-OQ; Wed, 26 Jun 2019 23:52:00 +0200
-Date:   Wed, 26 Jun 2019 23:51:59 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v9 15/17] x86/split_lock: Add documentation for split
- lock detection interface
-In-Reply-To: <1560897679-228028-16-git-send-email-fenghua.yu@intel.com>
-Message-ID: <alpine.DEB.2.21.1906262348540.32342@nanos.tec.linutronix.de>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-16-git-send-email-fenghua.yu@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 26 Jun 2019 17:53:05 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g7so294190oia.8;
+        Wed, 26 Jun 2019 14:53:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jh0+2mAWjXJNoSTW5MRBB2B6YwXLkK5uhGK/sZ0vNz0=;
+        b=VYKYI7LG9M+IoA76H4gvkGz990KdpGz8P0USFriJ56mo8vhlMB0owIY+FVVDICdLr7
+         3iRzy9PdwMb7KqJ3PHwrOJcq9wn7MjaaOIwufaVkmZY0vzbtHMuJetd+hi7Nu9CDLRsH
+         foxhJXlhiRa+R+Q8C9BDyVqnj+UvarZ/sBlI2Oe+xfhFgenjKDfnNxD3Fj3qQM5UdvpV
+         ETFM3kt7yY1RNbqWpK1/bktTmpF3cU75k4UKzlVnwJhb8VpB6tIfKbu2kZnw9vMpVWXK
+         y9t3VhZCeahpUs1ZXuaCGjp7NZcdNK5QURN0/5ThpTaGsVeiHG+deiWuHya8jU1WNgKT
+         VW6A==
+X-Gm-Message-State: APjAAAWYU89iHA5CDxlT2R3NUPtN2UQb0XUvJNbtoGXbpoqMdcL40sB2
+        STW+WzXdKOrUlvkNcl7S+I3gVa2haAP80qrpqTc=
+X-Google-Smtp-Source: APXvYqyMH6FBcdjQemrvt91EvobeYBF97A7D7wROknFepaWD+3MoOnQN4+IIFpySjm5YjkeHs4OWeFsy0d2f+J2wJ4c=
+X-Received: by 2002:aca:edc8:: with SMTP id l191mr344550oih.103.1561585984728;
+ Wed, 26 Jun 2019 14:53:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <14605632.7Eqku7tdey@kreacher> <20190626125605.GT2640@lahna.fi.intel.com>
+In-Reply-To: <20190626125605.GT2640@lahna.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Jun 2019 23:52:54 +0200
+Message-ID: <CAJZ5v0gAejzYYo1TO01K3xTfZDr-1UT6XsVxY=u4LvnHmNcc9w@mail.gmail.com>
+Subject: Re: [PATCH] PCI: PM: Avoid skipping bus-level PM on platforms without ACPI
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019, Fenghua Yu wrote:
+On Wed, Jun 26, 2019 at 2:56 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Wed, Jun 26, 2019 at 12:20:23AM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > There are platforms that do not call pm_set_suspend_via_firmware(),
+> > so pm_suspend_via_firmware() returns 'false' on them, but the power
+> > states of PCI devices (PCIe ports in particular) are changed as a
+> > result of powering down core platform components during system-wide
+> > suspend.  Thus the pm_suspend_via_firmware() checks in
+> > pci_pm_suspend_noirq() and pci_pm_resume_noirq() introduced by
+> > commit 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-
+> > idle") are not sufficient to determine that devices left in D0
+> > during suspend will remain in D0 during resume and so the bus-level
+> > power management can be skipped for them.
+> >
+> > For this reason, introduce a new global suspend flag,
+> > PM_SUSPEND_FLAG_NO_PLATFORM, set it for suspend-to-idle only
+> > and replace the pm_suspend_via_firmware() checks mentioned above
+> > with checks against this flag.
+> >
+> > Fixes: 3e26c5feed2a ("PCI: PM: Skip devices in D0 for suspend-to-idle")
+> > Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> > Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> I tested this patch on top of your (and mine) previous patches touching
+> the ACPI/PCI PM and did not see any issues over several suspend-to-idle
+> cycles with and without TBT device connected.
+>
+> Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-> It is useful for development and debugging to document the new debugfs
-> interface /sys/kernel/debug/x86/split_lock_detect.
-> 
-> A new debugfs documentation is created to describe the split lock detection
-> interface. In the future, more entries may be added in the documentation to
-> describe other interfaces under /sys/kernel/debug/x86 directory.
-> 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> ---
->  Documentation/ABI/testing/debugfs-x86 | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/ABI/testing/debugfs-x86
-> 
-> diff --git a/Documentation/ABI/testing/debugfs-x86 b/Documentation/ABI/testing/debugfs-x86
-> new file mode 100644
-> index 000000000000..17a1e9ed6712
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/debugfs-x86
-> @@ -0,0 +1,21 @@
-> +What:		/sys/kernel/debugfs/x86/split_lock_detect
-> +Date:		May 2019
-> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> +Description:	(RW) Control split lock detection on Intel Tremont and
-> +		future CPUs
-> +
-> +		Reads return split lock detection status:
-> +			0: disabled
-> +			1: enabled
-> +
-> +		Writes enable or disable split lock detection:
-> +			The first character is one of 'Nn0' or [oO][fF] for off
-> +			disables the feature.
-> +			The first character is one of 'Yy1' or [oO][nN] for on
-> +			enables the feature.
-> +
-> +		Please note the interface only shows or controls global setting.
-> +		During run time, split lock detection on one CPU may be
-> +		disabled if split lock operation in kernel code happens on
-> +		the CPU. The interface doesn't show or control split lock
-> +		detection on individual CPU.
-
-But it should show that the debug output for the kernel has been globally
-disabled instead of merily stating 'enabled' while it's already disabled on
-a bunch on CPUs. I fundamentally despise inconsistent information. Even in
-debugfs files inconsistency is a pain because it make debugging via mail/
-bugzille etc. unnecessarily cumbersome.
-
-Thanks,
-
-	tglx
-
-
+Thanks!
