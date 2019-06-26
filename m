@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C51C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5170CC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A19F2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F002085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VMXKg+nE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSxFPFz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfFZHGv (ORCPT
+        id S1726862AbfFZHHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:06:51 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46683 "EHLO
+        Wed, 26 Jun 2019 03:07:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36083 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFZHGu (ORCPT
+        with ESMTP id S1725790AbfFZHHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:06:50 -0400
-Received: by mail-io1-f67.google.com with SMTP id i10so959544iol.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 00:06:50 -0700 (PDT)
+        Wed, 26 Jun 2019 03:07:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id h6so1080216ioh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 00:07:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=u94vxob2SrQiWiR32vSHPUe28bBMbdJvX+quOFiRIe4=;
-        b=VMXKg+nEEH/ksApacPol6+RHMDCcfwTm4prt5zxds86nFMfCPWBTSvEuWqzWnBG7nL
-         qWum/stOqDRcHLID6xVa7dNuzwab00uJa9PkJ2BQzDbMUmAQOuAn4A8mk/TxQscdlpgq
-         834fvN3flZR8EelVrtjGBx2LuBDglQK4z0K7goZ3aEyTKDH6LdiKWkduh/GuLpxLV+ob
-         fCB2wKCcY2AQvEQ2TaZ9v+YxD8OH75E1f/wIC/7g9NziySm7uRmUHlz7UHUdYND2U7sO
-         LnztQg4Blru/dtWMGH6RtUy8KSlUaMRwhcWbtn0N2MYUOdGGFOpolh4RhrJ30O4yq+2e
-         8XkA==
+        bh=YO3NTtUqQg+q5y+jLevvg6DdA+MqWwydBFISViHdvIg=;
+        b=uSxFPFz1oOhSaCmWOKp7072jHy7BtOTB5oQPPcoEsjkMzC0GDSdCUibZ0FnOAbKoN+
+         V22GqVPuxH+X7LFD3UGeDwKZzHTfEdw2lSv1IxhOB6vL7VEKGE3Eeps4viQAFq8brg8/
+         WHPQs+sZh/FXV83NvXHnx2R06RkWQLPoUDTz5HJiZTbMXv/uqAfA6ji7dkWrHBij0l5N
+         Ngxq0uvzA2UK9pMGLxHQekggDgkrXY7BIgDg3nNPPF5jgXNbTaIwFPQvTLcEYv41Ks7D
+         vmIytaUPzzz3nObxwbEkIppJTv02PwMaGz5QG3iCow7IL/VmILcJ00jcYIGeXtpmi9kT
+         fRrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u94vxob2SrQiWiR32vSHPUe28bBMbdJvX+quOFiRIe4=;
-        b=PcNKRwwR0Wjhp/PeAWPtq6BjXdCoSzQYoG8XWCQvQqzhHfjlrlGvch1zVJVDS6CicR
-         cviSGSObcXNJ48LwJAO3aNmkOHwO6XLSuqM2vyc+34216RbiCAFpueivu41OO5RcxFRf
-         wFt77rbwGB/64vBdsKgzxE/e0deVKbxO5GnP7Ij/RuyQVAlASDbSZ+gygILv7EsV7jDE
-         jwEYdbtfxQF4C+Q4EbdhC9OG3HsCQLIJHDjTnoMCBNi8WftA7MhYgIfCXY5tjNBebtgI
-         zROroO4awrmF8084byoAFkgHKYqjQnuREt8tRofXGEiFuBvEpDIgpPWTm670NUIdVLbK
-         pHlg==
-X-Gm-Message-State: APjAAAUEnnI7cQIiEa9/laaeWrJr2Al8PLQigmDF9sDorMklyQ9iFr/v
-        vKqV+ojrugHCykYvk/baLuOdTHbEbWC/DwTvxBfaLQ==
-X-Google-Smtp-Source: APXvYqwifeDzdNlUZpwjBY8J7RLuaCite3HcilCUVCyG1sd4TgJIOv4iw3avZEGOcpBykyAsl8NAL4ezvnGpNEDepfc=
-X-Received: by 2002:a5d:9d97:: with SMTP id 23mr3432834ion.204.1561532810008;
- Wed, 26 Jun 2019 00:06:50 -0700 (PDT)
+        bh=YO3NTtUqQg+q5y+jLevvg6DdA+MqWwydBFISViHdvIg=;
+        b=gzTi70iwoEDyvyniI9Ay7Svkwl/g/vEwIwAJpl4EB8nCr7e53z1xaaHPXlA/Jhw6xm
+         DZ7ZTWPbV7rRTbThDwnqCTrU8t/5Y+l3gn7f7pZgA1bWewkK4dwjKeT0bR445vrUU43G
+         tsBJf19bdNSxXnm6vXx4ffem8haASIxrwHhXBFmbshRXv4p/CZNin3brbn7UmwclCLmi
+         icU7ABl//cbZhJ4VpWPC/6Uk0J/hGHcWu0AVJ544KJQi5Hhu+AU4ET8vU4ujEEOv6/O9
+         X/HRth9HJ+yXH9CQd1F5y/zTP2Qnpi585Lx+J5UwCn+5yd4/LD16ZVG3j2RAuPWDF7aU
+         PQog==
+X-Gm-Message-State: APjAAAVLru9cfDno3tpvc7ESFnkNvNNqC5JWn4VZoAhGonvD2jgHUzMP
+        V7UyPmLroUcX0a2zv+HJTbNMHKqb/UuRjYnkF+tZo1DlmFc=
+X-Google-Smtp-Source: APXvYqwUVeURJFgq5+tDgeunYYmLvd6FqPHhlPb/ql/shK6VJGGdE9qcDN4/pinr9Th11F4v8t/w1seE5/vbWzXl9qw=
+X-Received: by 2002:a5d:9d83:: with SMTP id 3mr3210336ion.65.1561532832763;
+ Wed, 26 Jun 2019 00:07:12 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190626042017.54773-1-natechancellor@gmail.com>
 In-Reply-To: <20190626042017.54773-1-natechancellor@gmail.com>
 From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 26 Jun 2019 09:06:36 +0200
-Message-ID: <CAKv+Gu_jhKsQN-pPyXQn5iFh1wikJirGZ4vxsME7oLJTUO6MmA@mail.gmail.com>
+Date:   Wed, 26 Jun 2019 09:07:00 +0200
+Message-ID: <CAKv+Gu85xLD+-CqwgNQtC3Hr9z2R5bm5th8_zd_jMSzA3JE8og@mail.gmail.com>
 Subject: Re: [PATCH] arm64/efi: Mark __efistub_stext_offset as an absolute
  symbol explicitly
 To:     Nathan Chancellor <natechancellor@gmail.com>
@@ -102,6 +102,9 @@ On Wed, 26 Jun 2019 at 06:20, Nathan Chancellor
 > Debugged-by: Peter Smith <peter.smith@linaro.org>
 > Suggested-by: Fangrui Song <maskray@google.com>
 > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+
 > ---
 >  arch/arm64/kernel/image.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
