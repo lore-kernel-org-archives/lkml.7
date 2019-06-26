@@ -2,131 +2,116 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB2CC48BD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBA8C48BD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A9A2086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160602086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561508924;
+	bh=Km0I2vZz1dbQgpiCFAtqQtHlESx88n9D4mRYjCAFUk8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a70g+r7x2pybJYVXlQBtQhnJ0h+fhz8FoEFB4poYSadWyIZITUI1dNnjNgGMEmso5
+	 z1a0pF9Y0guwtxpkFPaIOV6YCo311EDJHK/z2bOg4cwjMprTIp6HwN8LAWJubW0chD
+	 zT+hwhKTUSljK184mxj9j/sjFejXpOf6Ocpd6Xwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfFZAXM (ORCPT
+        id S1726407AbfFZA2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 20:23:12 -0400
-Received: from mx.ewheeler.net ([66.155.3.69]:47178 "EHLO mx.ewheeler.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725782AbfFZAXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 20:23:11 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mx.ewheeler.net (Postfix) with ESMTP id 439D3A0692;
-        Wed, 26 Jun 2019 00:23:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at ewheeler.net
-Received: from mx.ewheeler.net ([127.0.0.1])
-        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id XUUrvMZH-9KD; Wed, 26 Jun 2019 00:23:09 +0000 (UTC)
-Received: from mx.ewheeler.net (mx.ewheeler.net [66.155.3.69])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx.ewheeler.net (Postfix) with ESMTPSA id 769DFA067D;
-        Wed, 26 Jun 2019 00:23:09 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 00:23:09 +0000 (UTC)
-From:   Eric Wheeler <bcache@lists.ewheeler.net>
-X-X-Sender: lists@mx.ewheeler.net
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-cc:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "open list\\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list\\:BCACHE \\(BLOCK LAYER CACHE\\)" 
-        <linux-bcache@vger.kernel.org>
-Subject: Re: [PATCH] bcache: make stripe_size configurable and persistent
- for hardware raid5/6
-In-Reply-To: <yq17e9ao9c3.fsf@oracle.com>
-Message-ID: <alpine.LRH.2.11.1906260005570.1114@mx.ewheeler.net>
-References: <d3f7fd44-9287-c7fa-ee95-c3b8a4d56c93@suse.de>        <1561245371-10235-1-git-send-email-bcache@lists.ewheeler.net>        <200638b0-7cba-38b4-20c4-b325f3cfe862@suse.de>        <alpine.LRH.2.11.1906241800350.1114@mx.ewheeler.net>
- <yq17e9ao9c3.fsf@oracle.com>
-User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
+        Tue, 25 Jun 2019 20:28:42 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40025 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfFZA2m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 20:28:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id n5so643092ioc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 17:28:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T/uR/4PciUq//wm8VvTrYpqXShwr7/kFFKyCPyP8pcs=;
+        b=YeX/xFTe86cLjtEiwNDGr0CKTn6yvfRoFVYAyjGpJqcjyjOauh0oSms8qNpsPWv76x
+         eRvUUgmWL0+6wScBbr8rD2ZZ/RfhNpAX4UKm1peplkD8GmwmOk+8uVKUsB9hanwxe3Dm
+         H0krLG+sD5Fzr71HJU1x0kXlYQzuI9cWXt4LY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T/uR/4PciUq//wm8VvTrYpqXShwr7/kFFKyCPyP8pcs=;
+        b=DKvMbFGcnSWCGPWOzyv/WzaOhALwY7A2z+rh3WEY4K/gLrUUhKAXjQXvw5YsjL4Tfn
+         P7+VNrbrdVv+FU+HVN465MKg/nEzTD6GQl3BTmLNZ0CHCt0TAJfZZTRPYmOc2MdjcFLQ
+         ygD/8z0piUXIOiiMiEfoN7phpfZenfCC91czpRfteS90rr0MorTlUnmuypoIbxPHwSAL
+         ej9xevlSXwR9XnY+KNTqbs7elNU3ya8I8EAdMAlhkJJoYaowt7HMDT1k+QT+hm2h1lre
+         KgYcbiM5tLVLsrLw3ewPucZ0NjtpIBWurxXVE2+qs2Jy+NoMt7Y/xub2DAqa6ZpamM6J
+         ck+A==
+X-Gm-Message-State: APjAAAXvAmED7Lgx81Jcz7YNBCZBVX3faQ5C8kfzL4VcCju8e8uvX6mU
+        OADWiZAF+Gu/0T29uOImNb0rajZvzLMguabSCSRfLQ==
+X-Google-Smtp-Source: APXvYqxX0Qrt909cJIALCW0svY89PQl3z7r/J2jSYrLO+BEo6+PoMkKF1jAWxKfLc2PBHctF8DPoeOKanHzXan7VOSY=
+X-Received: by 2002:a6b:6d07:: with SMTP id a7mr1751422iod.254.1561508921439;
+ Tue, 25 Jun 2019 17:28:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
+In-Reply-To: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 26 Jun 2019 08:28:30 +0800
+Message-ID: <CAADWXX8wdEPNZ26SFJUfwrhQson3HPTrZ7D2jju3RhEeMuc+QQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
+To:     Hoan Tran OS <hoan@os.amperecomputing.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Open Source Submission <patches@amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Jun 2019, Martin K. Petersen wrote:
-> > Perhaps they do not set stripe_width using io_opt? I did a grep to see
-> > if any of them did, but I didn't see them. How is stripe_width
-> > indicated by RAID controllers?
-> 
-> The values are reported in the Block Limits VPD page for each SCSI block
-> device and are thus set by the SCSI disk driver. IOW, the RAID
-> controller device drivers have nothing to do with this.
-> 
-> For RAID controllers specifically, the controller firmware will fill out
-> the VPD fields for each virtual SCSI disk when you configure a RAID
-> set. For pretty much everything else, the Block Limits come straight
-> from the device itself.
-> 
-> Also note that these values aren't specific to RAID controllers at
-> all. Most new SCSI devices, including disk drives and SSDs, will fill
-> out the Block Limits VPD page one way or the other. Even some USB
-> storage devices are providing this page.
+This is not a comment on the patch series itself, it is a comment on the emails.
 
-Thanks, that makes sense.  Interesting about USB.
+Your email is mis-configured and ends up all being marked as spam for
+me, because you go through the wrong smtp server (or maybe your smtp
+server itself is miconfigured)
 
-> > If they do set io_opt, then at least my Areca 1883 does not set io_opt
-> > as of 4.19.x. I also have a LSI MegaRAID 3108 which does not report
-> > io_opt as of 4.1.x, but that is an older kernel so maybe support has
-> > been added since then.
-> 
-> I have several MegaRAIDs that all report it. But it depends on the
-> controller firmware.
-> 
-> > Is it visible through sysfs or debugfs so I can check my hardware
-> > support without hacking debugging the kernel?
-> 
-> To print the block device topology:
-> 
->   # lsblk -t
-> 
-> or look up io_opt in sysfs:
-> 
->   # grep . /sys/block/sdX/queue/optimal_io_size
-> 
-> You can also query a SCSI device's Block Limits directly:
-> 
->   # sg_vpd -p bl /dev/sdX
+All your emails fail dmarc, because the "From" header is
+os.amperecomputing.com, but the DKIM signature is for
+amperemail.onmicrosoft.com.
 
-Perfect, thank you for that.  I've tried the following controllers that I 
-have access to.  One worked (hspa/HP Gen8 Smart Array Controller), but the 
-others I tried are not providing VPDs:
+End result: it wil all go into the spam box of anybody who checks DKIM.
 
-* LSI 2108 (Supermicro)
-* LSI 3108 (Dell)
-* Areca 1882
-* Areca 1883
-* Fibrechannel 8gbe connected to a Storwize 3700
+                       Linus
 
-~]# sg_vpd -p bl /dev/sdb
-VPD page=0xb0
-fetching VPD page failed
-
-> If you want to tinker, you can simulate a SCSI disk with your choice of
-> io_opt:
-> 
->   # modprobe scsi_debug opt_blks=N
-> 
-> where N is the number of logical blocks to report as being the optimal
-> I/O size.
-
-Neat, thanks for the hint!
-
--Eric
-
-> 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
-> 
+On Wed, Jun 26, 2019 at 6:30 AM Hoan Tran OS
+<hoan@os.amperecomputing.com> wrote:
+>
+> This patch set enables CONFIG_NODES_SPAN_OTHER_NODES by default
+> for NUMA. [...]
