@@ -4,94 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17804C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC32BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF433214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2362147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:24:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfFZNVc (ORCPT
+        id S1727605AbfFZNYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:21:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:32828 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbfFZNVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:21:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D595360;
-        Wed, 26 Jun 2019 06:21:31 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.140])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4550F3F71E;
-        Wed, 26 Jun 2019 06:21:25 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org
-Subject: [PATCH] powerpc/64s/radix: Define arch_ioremap_p4d_supported()
-Date:   Wed, 26 Jun 2019 18:51:00 +0530
-Message-Id: <1561555260-17335-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 26 Jun 2019 09:24:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49060 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfFZNYd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:24:33 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hg7uW-0008DR-43; Wed, 26 Jun 2019 13:24:28 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Nikola Cornij <nikola.cornij@amd.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next[ drm/amd/display: fix a couple of spelling mistakes
+Date:   Wed, 26 Jun 2019 14:24:27 +0100
+Message-Id: <20190626132427.12615-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recent core ioremap changes require HAVE_ARCH_HUGE_VMAP subscribing archs
-provide arch_ioremap_p4d_supported() failing which will result in a build
-failure like the following.
+From: Colin Ian King <colin.king@canonical.com>
 
-ld: lib/ioremap.o: in function `.ioremap_huge_init':
-ioremap.c:(.init.text+0x3c): undefined reference to
-`.arch_ioremap_p4d_supported'
+There are a couple of spelling mistakes in dm_error messages and
+a comment. Fix these.
 
-This defines a stub implementation for arch_ioremap_p4d_supported() keeping
-it disabled for now to fix the build problem.
-
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org
-
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-This has been just build tested and fixes the problem reported earlier.
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c | 2 +-
+ drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c      | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
- arch/powerpc/mm/book3s64/radix_pgtable.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index 8904aa1..c81da88 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -1124,6 +1124,11 @@ void radix__ptep_modify_prot_commit(struct vm_area_struct *vma,
- 	set_pte_at(mm, addr, ptep, pte);
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
+index be49fc7f4abe..ffd0014ec3b5 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_dsc.c
+@@ -126,7 +126,7 @@ static void dsc2_get_enc_caps(struct dsc_enc_caps *dsc_enc_caps, int pixel_clock
  
-+int __init arch_ioremap_p4d_supported(void)
-+{
-+	return 0;
-+}
-+
- int __init arch_ioremap_pud_supported(void)
- {
- 	/* HPT does not cope with large pages in the vmalloc area */
+ 	/* Maximum total throughput with all the slices combined. This is different from how DP spec specifies it.
+ 	 * Our decoder's total throughput in Pix/s is equal to DISPCLK. This is then shared between slices.
+-	 * The value below is the absolute maximum value. The actual througput may be lower, but it'll always
++	 * The value below is the absolute maximum value. The actual throughput may be lower, but it'll always
+ 	 * be sufficient to process the input pixel rate fed into a single DSC engine.
+ 	 */
+ 	dsc_enc_caps->max_total_throughput_mps = DCN20_MAX_DISPLAY_CLOCK_Mhz;
+diff --git a/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c b/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
+index 77e7a0f8a527..ef5f84a144c3 100644
+--- a/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
++++ b/drivers/gpu/drm/amd/display/dc/dsc/dc_dsc.c
+@@ -47,7 +47,7 @@ static bool dsc_buff_block_size_from_dpcd(int dpcd_buff_block_size, int *buff_bl
+ 		*buff_block_size = 64 * 1024;
+ 		break;
+ 	default: {
+-			dm_error("%s: DPCD DSC buffer size not recoginzed.\n", __func__);
++			dm_error("%s: DPCD DSC buffer size not recognized.\n", __func__);
+ 			return false;
+ 		}
+ 	}
+@@ -63,7 +63,7 @@ static bool dsc_line_buff_depth_from_dpcd(int dpcd_line_buff_bit_depth, int *lin
+ 	else if (dpcd_line_buff_bit_depth == 8)
+ 		*line_buff_bit_depth = 8;
+ 	else {
+-		dm_error("%s: DPCD DSC buffer depth not recoginzed.\n", __func__);
++		dm_error("%s: DPCD DSC buffer depth not recognized.\n", __func__);
+ 		return false;
+ 	}
+ 
+@@ -123,7 +123,7 @@ static bool dsc_throughput_from_dpcd(int dpcd_throughput, int *throughput)
+ 		*throughput = 1000;
+ 		break;
+ 	default: {
+-			dm_error("%s: DPCD DSC througput mode not recoginzed.\n", __func__);
++			dm_error("%s: DPCD DSC throughput mode not recognized.\n", __func__);
+ 			return false;
+ 		}
+ 	}
+@@ -152,7 +152,7 @@ static bool dsc_bpp_increment_div_from_dpcd(int bpp_increment_dpcd, uint32_t *bp
+ 		*bpp_increment_div = 1;
+ 		break;
+ 	default: {
+-		dm_error("%s: DPCD DSC bits-per-pixel increment not recoginzed.\n", __func__);
++		dm_error("%s: DPCD DSC bits-per-pixel increment not recognized.\n", __func__);
+ 		return false;
+ 	}
+ 	}
 -- 
-2.7.4
+2.20.1
 
