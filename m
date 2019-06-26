@@ -2,102 +2,151 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B1BC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87DCC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FE3208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CCC2086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521490;
-	bh=avFzZ4O2c+/K29+kDv53q6xh6xHapF0kzXoy3BP0j54=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KzVK4T8ENd1YxIEqLdtRGCAI57+X33I3IF3oFHuLnHuPPzreWARXf+/M6i4Ye8Lc2
-	 8V7sCuGlWb7AVJnqN/ge/tABad0gM3BqtOTQ/TKMCQaxqiUyILz6hS1XxWgJEvbief
-	 agM1jhT+1kJFSwl+jgQS9zVhj2nrLawi8naWFjvs=
+	s=default; t=1561521515;
+	bh=dZrcNqIzOwpo1T1nUicHF33e2BQ4nozFeDaDoCNLpQc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Si0RyeswC8SXYDlkMetabR8JLJrmvHnGRgyj37f/glTkmEFC68RmYNhDy6/Snb4YN
+	 ubh8U20Ii+yvb/bzWZ+KU78CfoXGbRTaZkZMzzbUrgaghciebwDXdR/EK+GE/pRHta
+	 mMfEFrMemZdPdZzEyZTRjSqUFOXTrQ7rVNB9CRrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfFZD6J (ORCPT
+        id S1726905AbfFZD6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43696 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfFZD6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:58:08 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726620AbfFZD6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:58:33 -0400
+Received: from localhost (unknown [106.201.40.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 017E0208CB
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:58:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 862AE2082F;
+        Wed, 26 Jun 2019 03:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561521488;
-        bh=avFzZ4O2c+/K29+kDv53q6xh6xHapF0kzXoy3BP0j54=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z9RMt+T/gc0ZJyl8ZFG1PJLgqZxyyIgKqs/T3VSzIasR83pgQC5s3OFDqIT2S1dMk
-         8iCh8oB+uJK2IXVxjXGBM1rD8tnXhlaF170qAb9ImnvkSRTb0zM1NswqZb+UCD9/m0
-         sEe2COBWenM/+LWPhgRBiqS80tW7iPxyNIY6+Cys=
-Received: by mail-wm1-f44.google.com with SMTP id g135so531491wme.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 20:58:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAWTGEoZgcCgxWCjoZe7OLXnT5N2Ho4Ufglt5bRejuy6TCVYs0rS
-        8kRj73Zn7LY2Lo0l1tqHO36Ctt+zwMu5xRkUEeJxIg==
-X-Google-Smtp-Source: APXvYqxW8KyNHGbrsqLX3wAjZrmO6i7qfo2PeSj40E/NfFtWyBAQxsOTIpZkKpXr/3lBP3MynIAMaAzMcSQC90OFjk4=
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr879120wmi.0.1561521486613;
- Tue, 25 Jun 2019 20:58:06 -0700 (PDT)
+        s=default; t=1561521512;
+        bh=dZrcNqIzOwpo1T1nUicHF33e2BQ4nozFeDaDoCNLpQc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ecakFxLahM2q1r0VVcpO0dlTkWbefJrDcy4C7S2mMFgexGcMsNzk19wBxBkb+YLmA
+         rwW1dX3eGqb6Yrqf/m/KcjFLZJJ7gLu9N/8APyo7hkjZm5GaMcXhoSX7q9i6wbAEz/
+         beV3H9anhwCTJoZBZfHKxPjREO0Q+iV3rk+FHl5c=
+Date:   Wed, 26 Jun 2019 09:25:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] linux/kernel.h: fix overflow for DIV_ROUND_UP_ULL
+Message-ID: <20190626035522.GN2962@vkoul-mobl>
+References: <20190625100518.30753-1-vkoul@kernel.org>
+ <20190625152938.d1ebf43f0da5f5276c77cf4c@linux-foundation.org>
+ <20190625153231.9b2d2fb8d8bf35c6acd5aafd@linux-foundation.org>
 MIME-Version: 1.0
-References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-9-namit@vmware.com>
- <aa90347f-d1da-6bd7-dbf0-786f157eb370@intel.com>
-In-Reply-To: <aa90347f-d1da-6bd7-dbf0-786f157eb370@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 25 Jun 2019 20:57:54 -0700
-X-Gmail-Original-Message-ID: <CALCETrVM8GafRLTzbE-3CFjRxhorMeB=s2LYWNuH0nZn8YO2Yw@mail.gmail.com>
-Message-ID: <CALCETrVM8GafRLTzbE-3CFjRxhorMeB=s2LYWNuH0nZn8YO2Yw@mail.gmail.com>
-Subject: Re: [PATCH 8/9] x86/tlb: Privatize cpu_tlbstate
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Nadav Amit <namit@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625153231.9b2d2fb8d8bf35c6acd5aafd@linux-foundation.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 2:52 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 6/12/19 11:48 PM, Nadav Amit wrote:
-> > cpu_tlbstate is mostly private and only the variable is_lazy is shared.
-> > This causes some false-sharing when TLB flushes are performed.
->
-> Presumably, all CPUs doing TLB flushes read 'is_lazy'.  Because of this,
-> when we write to it we have to do the cache coherency dance to get rid
-> of all the CPUs that might have a read-only copy.
->
-> I would have *thought* that we only do writes when we enter or exist
-> lazy mode.  That's partially true.  We do write in enter_lazy_tlb(), but
-> we also *unconditionally* write in switch_mm_irqs_off().  That seems
-> like it might be responsible for a chunk (or even a vast majority) of
-> the cacheline bounces.
->
-> Is there anything preventing us from turning the switch_mm_irqs_off()
-> write into:
->
->         if (was_lazy)
->                 this_cpu_write(cpu_tlbstate.is_lazy, false);
->
-> ?
->
-> I think this patch is probably still a good general idea, but I just
-> wonder if reducing the writes is a better way to reduce bounces.
+On 25-06-19, 15:32, Andrew Morton wrote:
+> On Tue, 25 Jun 2019 15:29:38 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+> 
+> > On Tue, 25 Jun 2019 15:35:18 +0530 Vinod Koul <vkoul@kernel.org> wrote:
+> > 
+> > > DIV_ROUND_UP_ULL adds the two arguments and then invokes
+> > > DIV_ROUND_DOWN_ULL. But on a 32bit system the addition of two 32 bit
+> > > values can overflow. DIV_ROUND_DOWN_ULL does it correctly and stashes
+> > > the addition into a unsigned long long so cast the result to unsigned
+> > > long long here to avoid the overflow condition.
+> > >
+> > > ...
+> > >
+> > > --- a/include/linux/kernel.h
+> > > +++ b/include/linux/kernel.h
+> > > @@ -93,7 +93,8 @@
+> > >  #define DIV_ROUND_DOWN_ULL(ll, d) \
+> > >  	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
+> > >  
+> > > -#define DIV_ROUND_UP_ULL(ll, d)		DIV_ROUND_DOWN_ULL((ll) + (d) - 1, (d))
+> > > +#define DIV_ROUND_UP_ULL(ll, d) \
+> > > +	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
+> > >  
+> > 
+> > This clearly wasn't tested :(
 
-Good catch!  I'm usually pretty good about this for
-test_and_set()-style things, but I totally missed this obvious
-unnecessary write when I did this.  I hereby apologize for all the
-cycles I wasted :)
+Apologies for that, I did test and stash, but failed to amend the
+commit. I should have noticed while sending but :(
 
---Andy
+Anyway I had the same conclusion as yous, so all is good.
+
+Thanks for fixing this
+
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Tested-by: Vinod Koul <vkoul@kernel.org>
+
+> > 
+> > fs/fs-writeback.c: In function wb_split_bdi_pages:
+> > ./include/linux/kernel.h:97:65: error: expected ; before } token
+> >   ({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
+> >                                                                  ^
+> > fs/fs-writeback.c:811:10: note: in expansion of macro DIV_ROUND_UP_ULL
+> >    return DIV_ROUND_UP_ULL((u64)nr_pages * this_bw, tot_bw);
+> > 
+> > 
+> > From: Andrew Morton <akpm@linux-foundation.org>
+> > Subject: linux-kernelh-fix-overflow-for-div_round_up_ull-fix
+> > 
+> > DIV_ROUND_UP_ULL must be an rval
+> > 
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> > ---
+> > 
+> >  include/linux/kernel.h |    6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > --- a/include/linux/kernel.h~linux-kernelh-fix-overflow-for-div_round_up_ull-fix
+> > +++ a/include/linux/kernel.h
+> > @@ -93,8 +93,10 @@
+> >  #define DIV_ROUND_DOWN_ULL(ll, d) \
+> >  	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
+> >  
+> > -#define DIV_ROUND_UP_ULL(ll, d) \
+> > -	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
+> > +#define DIV_ROUND_UP_ULL(ll, d) ({ \
+> > +	unsigned long long _tmp; \
+> > +	_tmp = DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)); \
+> > +	_tmp; })
+> 
+> Simpler:
+> 
+> --- a/include/linux/kernel.h~linux-kernelh-fix-overflow-for-div_round_up_ull-fix
+> +++ a/include/linux/kernel.h
+> @@ -94,7 +94,7 @@
+>  	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
+>  
+>  #define DIV_ROUND_UP_ULL(ll, d) \
+> -	({ DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d)) })
+> +	DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
+>  
+>  #if BITS_PER_LONG == 32
+>  # define DIV_ROUND_UP_SECTOR_T(ll,d) DIV_ROUND_UP_ULL(ll, d)
+> _
+
+-- 
+~Vinod
