@@ -2,137 +2,130 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8541C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E57C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88CD2085A
+	by mail.kernel.org (Postfix) with ESMTP id D45BE216FD
 	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G0Y7nsmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfFZS1x (ORCPT
+        id S1726464AbfFZS1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:27:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40131 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfFZS1x (ORCPT
+        Wed, 26 Jun 2019 14:27:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58425 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZS1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:27:53 -0400
-Received: by mail-io1-f67.google.com with SMTP id n5so3838877ioc.7;
-        Wed, 26 Jun 2019 11:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sZfM3WNDDF9GuJKzE5mdCdSAtOo3TH52oJkX/nrxJjM=;
-        b=G0Y7nsmQdmW7klneIUIoJ3Pb5aD5br9jJpfpTuL41AlhhjSMaEA7NKcN4FNTP9Czmp
-         iIi1g/Nlh0hIndZaxk6sMXCEURxf+fu+VVScYvY5NPC8vsmxpwPvO2Icji+7q3XU2HZv
-         LHYILL5lIS3+YS3tWTQV1cP2q3uq89/TCwggdyXJZRuvnDEz5aDusH47p58E38okLekG
-         lcRHbFfvQUxi4rLpaLJKmzu8CJNO+n1BA8YBadPMmgD7HY17iB0qwEiwRt4QRzVKfYMl
-         nkPAvI0uw1BYCNrxP1mqMjTe850DG5MSSw0ncRFAmHr3/uLI/jfBgxZhYLjTENWtjirM
-         dvkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sZfM3WNDDF9GuJKzE5mdCdSAtOo3TH52oJkX/nrxJjM=;
-        b=jdrPNlJ5tGb1EyfQ9xnWq5TJGGn0/g8Parc9TEWwEGwCz6JqWy/NJ62acDK69cvqXR
-         rm01TE/l+11iOTTACaytRZ/sJN1w7uP3D1SioVU1iDcEGziCLxF0ZWsp/XEhTAr9ZUIh
-         CLVuuB5V449G1bMXRctqhW9kl3wMzAEPL4htMAWU7MgIRgoIK+yWPZfj04qIDnVYHzz4
-         zaN8rbAyWGwQABUA/6RC/RtQ3qkpanYHlh2ccw4ypfHtZd7GFhOlUVLymhk7JIIh7J6O
-         4Qmw7VqaKYnrpANIBxLtG2xNPLTdhZpfGoiPhw3GM3Z4NfTsmboQEcFHrrjUXfBYw8EH
-         JNQA==
-X-Gm-Message-State: APjAAAUywvu1jNYQhdDbv0lzb4+LDs4QSORQQbkhGjw9tNnV7N3TrerB
-        jPO5aA1ZPN7LJJRzW8QoK06jx4ZbdLKYs4mSYMs=
-X-Google-Smtp-Source: APXvYqzICV2CVaS0x99+KU5be+tDhkjLlvc37tKr4vvOVEWKczPXIXw4jK2QjINe4XC+jyYlQ7NLHLeaSXSzULDIjX8=
-X-Received: by 2002:a02:c492:: with SMTP id t18mr6474836jam.67.1561573672517;
- Wed, 26 Jun 2019 11:27:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190603083005.4304-1-peng.fan@nxp.com> <20190603083005.4304-3-peng.fan@nxp.com>
- <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
- <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
- <AM0PR04MB44814D3BD59033ECDDE3094C88E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
-In-Reply-To: <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 26 Jun 2019 13:27:41 -0500
-Message-ID: <CABb+yY2B_bGqZhd3HRm2qOwGNXG8UYvRo0_uBmwGbx_1gA-vfA@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        ", Sascha Hauer" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
+        Wed, 26 Jun 2019 14:27:54 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hgCe7-00050T-T2; Wed, 26 Jun 2019 18:27:51 +0000
+To:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Shawn Guo <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: re: media: staging/imx: Improve pipeline searching (bug report)
+Message-ID: <9b6d7f0e-f191-e5d5-e20b-9244800678fe@canonical.com>
+Date:   Wed, 26 Jun 2019 19:27:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 6/26/19 6:31 AM, Peng Fan wrote:
-> >>> The firmware driver might not have func-id, such as SCMI/SCPI.
-> >>> So add an optional func-id to let smc mailbox driver could
-> >>> use smc SiP func id.
-> >>>
-> >> There is no end to conforming to protocols. Controller drivers should
-> >> be written having no particular client in mind.
-> >
-> > If the func-id needs be passed from user, then the chan_id suggested
-> > by Sudeep should also be passed from user, not in mailbox driver.
-> >
-> > Jassi, so from your point, arm_smc_send_data just send a0 - a6
-> > to firmware, right?
-> >
-> > Sudeep, Andre, Florian,
-> >
-> > What's your suggestion? SCMI not support, do you have
-> > plan to add smc transport in SCMI?
->
-> On the platforms that I work with, we have taken the liberty of
-> implementing SCMI in our monitor firmware because the other MCU we use
-> for dynamic voltage and frequency scaling did not have enough memory to
-> support that and we still had the ability to make that firmware be
-> trusted enough we could give it power management responsibilities. I
-> would certainly feel more comfortable if the SCMI specification was
-> amended to indicate that the Agent could be such a software entity,
-> still residing on the same host CPU as the Platform(s), but if not,
-> that's fine.
->
-> This has lead us to implement a mailbox driver that uses a proprietary
-> SMC call for the P2A path ("tx" channel) and the return being done via
-> either that same SMC or through SGI. You can take a look at it in our
-> downstream tree here actually:
->
-> https://github.com/Broadcom/stblinux-4.9/blob/master/linux/drivers/mailbox/brcmstb-mailbox.c
->
-> If we can get rid of our own driver and uses a standard SMC based
-> mailbox driver that supports our use case that involves interrupts (we
-> can always change their kind without our firmware/boot loader since FDT
-> is generated from that component), that would be great.
->
-static irqreturn_t brcm_isr(void)
-{
-         mbox_chan_received_data(&chans[0], NULL);
-         return IRQ_HANDLED;
-}
+Hi,
 
-Sorry, I fail to understand why the irq can't be moved inside the
-client driver itself? There can't be more cost to it and there
-definitely is no functionality lost.
+Static analysis with Coverity on Linux next has found a potential issue
+with the following commit:
+
+commit 3ef46bc97ca2c918b7657a08220c7340a9bb07a2
+Author: Steve Longerbeam <slongerbeam@gmail.com>
+Date:   Fri May 10 17:50:11 2019 -0400
+
+    media: staging/imx: Improve pipeline searching
+
+
+The issue is in drivers/staging/media/imx/imx-media-utils.c in function
+find_pipeline_entity:
+
+        struct media_pad *pad = NULL;
+
+pad is assigned a NULL
+
+        struct video_device *vfd;
+        struct v4l2_subdev *sd;
+
+        if (grp_id && is_media_entity_v4l2_subdev(start)) {
+                sd = media_entity_to_v4l2_subdev(start);
+                if (sd->grp_id & grp_id)
+                        return &sd->entity;
+        } else if (buftype && is_media_entity_v4l2_video_device(start)) {
+                vfd = media_entity_to_video_device(pad->entity);
+
+..and above the null pad is being dereferenced causing a kernel oops.
+
+                if (buftype == vfd->queue->type)
+                        return &vfd->entity;
+        }
+
+
+Colin
