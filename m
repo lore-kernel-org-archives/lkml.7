@@ -2,98 +2,59 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA86C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A2AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7307F216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e0t5w33F"
+	by mail.kernel.org (Postfix) with ESMTP id 92262208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfFZWF0 (ORCPT
+        id S1726416AbfFZWJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:05:26 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58371 "EHLO ozlabs.org"
+        Wed, 26 Jun 2019 18:09:39 -0400
+Received: from ms.lwn.net ([45.79.88.28]:42036 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfFZWF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:05:26 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726239AbfFZWJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:09:39 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Yxsv1zbNz9s7h;
-        Thu, 27 Jun 2019 08:05:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561586723;
-        bh=aFVKHRPVPEo0qXPtz+bXPjvSCVM6YK0xpM05+SIg750=;
-        h=Date:From:To:Cc:Subject:From;
-        b=e0t5w33F8NCtUDVOnNGJQLmxUFMalIfdo5tCmljxiP6eTO1IJ6GcY22Bhr69zTKCb
-         cLwJXqj7MU9VQQFSJvRLw3lAs8bXRTwTY69MfESN4Ub3VYhR5EUFLZYkG0pGw4IXDw
-         sn5qakBnmd6thQ1sOTIcUna06wAVxxBlUPVnSx5ixf4GknQnU/RLvPjHWLD9q9E71/
-         m03/nXoCN0QwzA6Eq5xcnoDD8MSoh61W7vbUdkJXA9kXcU5sSvHXfZC4Ge53riIzJz
-         IkL5ujqYYdIDmHK0vqePo1tM16Jx1u5nccnYNs8BI5U1g1gdfEqk3QCGuIEmPAB/W9
-         fI1zRpT/yuB7Q==
-Date:   Thu, 27 Jun 2019 08:05:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
+        by ms.lwn.net (Postfix) with ESMTPSA id C89B44BF;
+        Wed, 26 Jun 2019 22:09:38 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 16:09:37 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
 Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Roman Gushchin <guro@fb.com>
-Subject: linux-next: Fixes tag needs some work in the bpf tree
-Message-ID: <20190627080521.5df8ccfc@canb.auug.org.au>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the jc_docs
+ tree
+Message-ID: <20190626160937.4a8d8548@lwn.net>
+In-Reply-To: <20190627080123.5fd05a63@canb.auug.org.au>
+References: <20190627080123.5fd05a63@canb.auug.org.au>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/8Ta+s6lmpk2nM8laSgNAE6G"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8Ta+s6lmpk2nM8laSgNAE6G
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 27 Jun 2019 08:01:23 +1000
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Hi all,
+> Commit
+> 
+>   fad3d54ef8a8 ("Documentation: PGP: update for newer HW devices")
+> 
+> is missing a Signed-off-by from its committer.
 
-In commit
+Argh.  I had to jump through some hoops to apply that patch and ...
+screwed up.
 
-  12771345a467 ("bpf: fix cgroup bpf release synchronization")
+Thanks,
 
-Fixes tag
-
-  Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please don't split Fixes tags across more than one line.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/8Ta+s6lmpk2nM8laSgNAE6G
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0T7CEACgkQAVBC80lX
-0GzJqQf/S4NbQBhkJx7jju0NV9PRQ+Z8h2fHnrZO6MfyJMWkAL9RvcEb04dbS7hb
-oCIA32EwuHbyIBqA2iYJ0YaIRf6I9pKLQ/gj40DhJYxUpeelb36zrBhs8TJ2UTRZ
-sGnf9V8buF7k9wTa/qWW8lh7zMbdh93dbSy9SEi6/CsxiFHne7Qi0JOXAFvZld17
-Pi6b3w5OpIrCmcUPtjQmMUCrmJoxHy+R65XMTV5Fe7MsiKCfYfxCc60ihXgVr2C7
-v1QC/UXQd1yanCUIi+oSf7CgCKiIrnbUL7yBLtQp5AwgzqIkr5ouMn1UvnNe7/pC
-4cPNUCL4f4/yZe/otn99OkefNr+n5Q==
-=ARa9
------END PGP SIGNATURE-----
-
---Sig_/8Ta+s6lmpk2nM8laSgNAE6G--
+jon
