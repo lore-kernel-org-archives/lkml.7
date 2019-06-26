@@ -2,89 +2,81 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7315BC48BD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43111C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F1B208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:11:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j76bodnB"
+	by mail.kernel.org (Postfix) with ESMTP id 1C7C8208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfFZOLL (ORCPT
+        id S1727830AbfFZOMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:11:11 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:47007 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFZOLL (ORCPT
+        Wed, 26 Jun 2019 10:12:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48534 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZOMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:11:11 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so2341527ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZgFMa9Y26kQCWHNOMiCF1qTPzlaDQuATgwwzmRwsuO8=;
-        b=j76bodnB5J0pEQD7YCCdT+lcMefBQm3vIuqwobKnnGnPbxOmDElj//6NotynhdX8U2
-         K0JFu2W+90LrnMfwQEdwGYWHd14P3beVyR4qQby97mEBtBpV/iluRSwOBr6LjlAevFh6
-         VH0StCUrKKckkzZNu/Hfh8NHBQzoIUqaQvhTklvYMEalXQBvggF4jqMovkGJ5Bw91Mv6
-         ts3173Q83nCFybDvVWbttJ1dhg0elmsugM69fHWtZoCFcFCSoP+xfj5Ly7y0OQ+fmucp
-         Nc/AfWWS2Kgmb2STnlETIrDnfz9UYfnpvHpuxPlhBk5LjEIumuObs7j9W4VGPDQwmojI
-         aUNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZgFMa9Y26kQCWHNOMiCF1qTPzlaDQuATgwwzmRwsuO8=;
-        b=ZCPHMFIvjlrqv56dvSCprg2x6hQEm1c+W2ICdOPVrvVIbWwvB6RnQoxV2nCBu5T8ED
-         P84AKw5t7CM6lEPWZke9Pa8ADcoKUDIGJB14t8UbNLFDg3aBq/BL5naysPoGc9t+ROL9
-         hRcb9CIf8lK5pNA8xzwN0Etix9FbZX6X+87g4dyevvOU8JlDoG7x+XOda3R2fmh3vu+F
-         L3fsAPOQiUsWNn7/ZbmDIQZvrVZnJkKg5mQ4pULJ+PZZqBrHfVIzhrgaPmcsPkNJjYsP
-         lYriLBktahDVWiSsNEy6Wh3SwftdGzlu7XwE4ATAQw230Ryrtap5JjzIsuTBS7g8iQOk
-         h2DQ==
-X-Gm-Message-State: APjAAAWnngBMXgHgupKY5R7hhBo5h41b6qmxIjuHM6ntl6ghshNHLFZl
-        9zLNp870tnkN+PUD0F/cnTNLsifhfBobrEO+LRIS4g==
-X-Google-Smtp-Source: APXvYqzMnWdtbJcUq8EUwMWYCTDwVph/PVgkZMkdDc2sOwi2XRH4GT/0UaU1fJ6GixYV5fCVdWOf8+4XDJzn4k27zGA=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr3170958ljm.180.1561558268960;
- Wed, 26 Jun 2019 07:11:08 -0700 (PDT)
+        Wed, 26 Jun 2019 10:12:19 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hg8em-0003AX-BH; Wed, 26 Jun 2019 16:12:16 +0200
+Date:   Wed, 26 Jun 2019 16:12:15 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Tejun Heo <tj@kernel.org>
+cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 0/6] workqueue: convert to raw_spinlock_t
+In-Reply-To: <20190626140112.GU657710@devbig004.ftw2.facebook.com>
+Message-ID: <alpine.DEB.2.21.1906261608260.32342@nanos.tec.linutronix.de>
+References: <20190613145027.27753-1-bigeasy@linutronix.de> <20190626071719.psyftqdop4ny3zxd@linutronix.de> <20190626134957.GT657710@devbig004.ftw2.facebook.com> <alpine.DEB.2.21.1906261551190.32342@nanos.tec.linutronix.de>
+ <20190626140112.GU657710@devbig004.ftw2.facebook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190626235011.7b449eb0@canb.auug.org.au>
-In-Reply-To: <20190626235011.7b449eb0@canb.auug.org.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 26 Jun 2019 16:10:56 +0200
-Message-ID: <CACRpkdaHyb=o=9YzSvKWRbbyPCbsOUxC=zoz+acnTWNvp=vu5w@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the pinctrl tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 3:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Tejun,
 
-> In commit
->
->   99fd24aa4a45 ("pinctrl: mediatek: Ignore interrupts that are wake only during resume")
->
-> Fixes tag
->
->   Fixes: bf22ff45bed ("genirq: Avoid unnecessary low level irq function calls")
->
-> has these problem(s):
->
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+On Wed, 26 Jun 2019, Tejun Heo wrote:
+> On Wed, Jun 26, 2019 at 03:53:43PM +0200, Thomas Gleixner wrote:
+> > > I don't now what to make of the series.  AFAICS, there's no benefit to
+> > > mainline.  What am I missing?
+> > 
+> > there is no downside either, right?
+> 
+> Sure, but that usually isn't enough for merging patches, right?
 
-Thanks Stephen, fixed this.
+Depends :)
+ 
+> > It helps with the ongoing RT integration into the mainline kernel and we
+> > would appreciate if we can get the non controversial bits an pieces sorted.
+> 
+> I see.  I understand the intention and it was a lot clearer when the
+> changes were beneficial to mainline kernel too and I'm not sure this
+> is a decision we wanna make per-subsystem.  Maybe I'm just out of
+> loop.  Are we generally doing this?
 
-Yours,
-Linus Walleij
+We are working hard to get the remaining pieces in and to the best of my
+knowledge there is no hard resistance against merging them.
+
+What we are trying at the moment is to reduce the surface of the bulk of RT
+changes and get the 'innocent' ones in. If you feel more comfortable, then
+we can surely redo the series and pick 1,2,6 for now and keep 3-5 for the
+final submission.
+
+Thanks,
+
+	tglx
+
