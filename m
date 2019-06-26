@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9253EC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1648CC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684EB205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FB820659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520786;
-	bh=gDCNEqQy1JUz7bw/phgVJ/JlespFp+YqP6Dz1mJSYYI=;
+	s=default; t=1561520789;
+	bh=1Bdi0/AIjYlIMigrOFZsl0rMjuXzCsm30opJkibrcrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ommEsMnxXvj4ivaro30aDGw66NMMTv1bWh2hQnVBKRjMYzf3JPK2360K0GJ6iIzWu
-	 aBT/qwRyj+bTfgpzkYQzEJouLa5VliScbevbwhpglluWzpNntgHgKEIRCf5OUPQGmt
-	 3ovOXByHIvo14uXIPlT5RDnzYmn5JkSc6Qwt44gs=
+	b=btJi6+zBGskvGGlQZNYHfSqu47I4MH/poG2ZPiVkR/wtuM8Ti/hMrHiWlxVdctSwm
+	 FdaiP0J24f3nBHQyV5vo/38Ied2jlO21N/Vpvu6ktRUXNkrOQryFAv34LUZZrpYGw0
+	 97VTOpbNcALQwL5AQDTV93IPs5wFOfFFBTyINl2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfFZDqV (ORCPT
+        id S1727968AbfFZDq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57896 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:46:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfFZDqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:46:15 -0400
+        id S1727087AbfFZDqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:46:25 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-82.mobile.att.net [107.77.172.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DAF520B7C;
-        Wed, 26 Jun 2019 03:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D89C205ED;
+        Wed, 26 Jun 2019 03:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520774;
-        bh=gDCNEqQy1JUz7bw/phgVJ/JlespFp+YqP6Dz1mJSYYI=;
+        s=default; t=1561520784;
+        bh=1Bdi0/AIjYlIMigrOFZsl0rMjuXzCsm30opJkibrcrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tV+k2EB1Rzpdf6d3Nx92cwPpo/L9nD660SDkTxc1d7IhXcx7NV9/BLNqvsEJdjWU9
-         ULXIO/dwnWYWdhm5A+KlP1ikBtOLYMRsxlM06swefGIUjj+9kVk6AtrFBKhuxKpw7G
-         KReQ5rIP2PxdkTASS5Alx61Z29dvi1ncp+v3Q+RA=
+        b=LcQUmmuBXeukxEIMEN5drkfLHfjKKT56YQDdsEXQ/KYXlSWP2eA3W4vtyiJJ9wLHa
+         IRjAIOZff8z2PDTgpWBEpAduQbv7zCxJZoBoLI65iOQkoBloDg700Fe96QSCrYLAp2
+         0Bqete1UZDcDXDdqJQyCoLVg1fWnHslfifUHkyxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Georgii Staroselskii <georgii.staroselskii@emlid.com>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 04/11] ASoC: sun4i-codec: fix first delay on Speaker
-Date:   Tue, 25 Jun 2019 23:45:54 -0400
-Message-Id: <20190626034602.24367-4-sashal@kernel.org>
+Cc:     Young Xiao <92siuyang@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/11] usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
+Date:   Tue, 25 Jun 2019 23:45:57 -0400
+Message-Id: <20190626034602.24367-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034602.24367-1-sashal@kernel.org>
 References: <20190626034602.24367-1-sashal@kernel.org>
@@ -59,56 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgii Staroselskii <georgii.staroselskii@emlid.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit 1f2675f6655838aaf910f911fd0abc821e3ff3df ]
+[ Upstream commit 62fd0e0a24abeebe2c19fce49dd5716d9b62042d ]
 
-Allwinner DAC seems to have a delay in the Speaker audio routing. When
-playing a sound for the first time, the sound gets chopped. On a second
-play the sound is played correctly. After some time (~5s) the issue gets
-back.
+There is no deallocation of fusb300->ep[i] elements, allocated at
+fusb300_probe.
 
-This commit seems to be fixing the same issue as bf14da7 but
-for another codepath.
+The patch adds deallocation of fusb300->ep array elements.
 
-This is the DTS that was used to debug the problem.
-
-&codec {
-        allwinner,pa-gpios = <&r_pio 0 11 GPIO_ACTIVE_HIGH>; /* PL11 */
-        allwinner,audio-routing =
-                "Speaker", "LINEOUT";
-
-        status = "okay";
-}
-
-Signed-off-by: Georgii Staroselskii <georgii.staroselskii@emlid.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-codec.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/usb/gadget/udc/fusb300_udc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
-index 56ed9472e89f..6099adea68c6 100644
---- a/sound/soc/sunxi/sun4i-codec.c
-+++ b/sound/soc/sunxi/sun4i-codec.c
-@@ -747,6 +747,15 @@ static int sun4i_codec_spk_event(struct snd_soc_dapm_widget *w,
- 		gpiod_set_value_cansleep(scodec->gpio_pa,
- 					 !!SND_SOC_DAPM_EVENT_ON(event));
+diff --git a/drivers/usb/gadget/udc/fusb300_udc.c b/drivers/usb/gadget/udc/fusb300_udc.c
+index 948845c90e47..351012c498c5 100644
+--- a/drivers/usb/gadget/udc/fusb300_udc.c
++++ b/drivers/usb/gadget/udc/fusb300_udc.c
+@@ -1345,12 +1345,15 @@ static const struct usb_gadget_ops fusb300_gadget_ops = {
+ static int fusb300_remove(struct platform_device *pdev)
+ {
+ 	struct fusb300 *fusb300 = platform_get_drvdata(pdev);
++	int i;
  
-+	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		/*
-+		 * Need a delay to wait for DAC to push the data. 700ms seems
-+		 * to be the best compromise not to feel this delay while
-+		 * playing a sound.
-+		 */
-+		msleep(700);
-+	}
-+
+ 	usb_del_gadget_udc(&fusb300->gadget);
+ 	iounmap(fusb300->reg);
+ 	free_irq(platform_get_irq(pdev, 0), fusb300);
+ 
+ 	fusb300_free_request(&fusb300->ep[0]->ep, fusb300->ep0_req);
++	for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
++		kfree(fusb300->ep[i]);
+ 	kfree(fusb300);
+ 
  	return 0;
- }
- 
+@@ -1494,6 +1497,8 @@ static int fusb300_probe(struct platform_device *pdev)
+ 		if (fusb300->ep0_req)
+ 			fusb300_free_request(&fusb300->ep[0]->ep,
+ 				fusb300->ep0_req);
++		for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
++			kfree(fusb300->ep[i]);
+ 		kfree(fusb300);
+ 	}
+ 	if (reg)
 -- 
 2.20.1
 
