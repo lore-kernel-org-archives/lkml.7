@@ -2,304 +2,118 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4251AC48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BC9C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA2620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747C820665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfFZVrv (ORCPT
+        id S1726463AbfFZVr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:47:51 -0400
-Received: from mga05.intel.com ([192.55.52.43]:34557 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbfFZVrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:47:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 14:47:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
-   d="scan'208";a="162409132"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Jun 2019 14:47:50 -0700
-Date:   Wed, 26 Jun 2019 14:47:50 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org
-Subject: Re: [PATCH 15/25] memremap: provide an optional internal refcount in
- struct dev_pagemap
-Message-ID: <20190626214750.GC8399@iweiny-DESK2.sc.intel.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-16-hch@lst.de>
+        Wed, 26 Jun 2019 17:47:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50412 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZVr4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:47:56 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgFlW-00088d-0n; Wed, 26 Jun 2019 23:47:42 +0200
+Date:   Wed, 26 Jun 2019 23:47:40 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
+ lock
+In-Reply-To: <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+Message-ID: <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626122724.13313-16-hch@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:27:14PM +0200, Christoph Hellwig wrote:
-> Provide an internal refcounting logic if no ->ref field is provided
-> in the pagemap passed into devm_memremap_pages so that callers don't
-> have to reinvent it poorly.
+On Wed, 26 Jun 2019, Fenghua Yu wrote:
+
+> On Wed, Jun 26, 2019 at 10:20:05PM +0200, Thomas Gleixner wrote:
+> > On Tue, 18 Jun 2019, Fenghua Yu wrote:
+> > > +
+> > > +static atomic_t split_lock_debug;
+> > > +
+> > > +void split_lock_disable(void)
+> > > +{
+> > > +	/* Disable split lock detection on this CPU */
+> > > +	this_cpu_and(msr_test_ctl_cached, ~MSR_TEST_CTL_SPLIT_LOCK_DETECT);
+> > > +	wrmsrl(MSR_TEST_CTL, this_cpu_read(msr_test_ctl_cached));
+> > > +
+> > > +	/*
+> > > +	 * Use the atomic variable split_lock_debug to ensure only the
+> > > +	 * first CPU hitting split lock issue prints one single complete
+> > > +	 * warning. This also solves the race if the split-lock #AC fault
+> > > +	 * is re-triggered by NMI of perf context interrupting one
+> > > +	 * split-lock warning execution while the original WARN_ONCE() is
+> > > +	 * executing.
+> > > +	 */
+> > > +	if (atomic_cmpxchg(&split_lock_debug, 0, 1) == 0) {
+> > > +		WARN_ONCE(1, "split lock operation detected\n");
+> > > +		atomic_set(&split_lock_debug, 0);
+> > 
+> > What's the purpose of this atomic_set()?
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/memremap.h          |  4 ++
->  kernel/memremap.c                 | 64 ++++++++++++++++++++++++-------
->  tools/testing/nvdimm/test/iomap.c | 58 ++++++++++++++++++++++------
->  3 files changed, 101 insertions(+), 25 deletions(-)
-> 
-> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> index e25685b878e9..f8a5b2a19945 100644
-> --- a/include/linux/memremap.h
-> +++ b/include/linux/memremap.h
-> @@ -95,6 +95,8 @@ struct dev_pagemap_ops {
->   * @altmap: pre-allocated/reserved memory for vmemmap allocations
->   * @res: physical address range covered by @ref
->   * @ref: reference count that pins the devm_memremap_pages() mapping
-> + * @internal_ref: internal reference if @ref is not provided by the caller
-> + * @done: completion for @internal_ref
->   * @dev: host device of the mapping for debug
->   * @data: private data pointer for page_free()
->   * @type: memory type: see MEMORY_* in memory_hotplug.h
-> @@ -105,6 +107,8 @@ struct dev_pagemap {
->  	struct vmem_altmap altmap;
->  	struct resource res;
->  	struct percpu_ref *ref;
-> +	struct percpu_ref internal_ref;
-> +	struct completion done;
->  	struct device *dev;
->  	enum memory_type type;
->  	unsigned int flags;
-> diff --git a/kernel/memremap.c b/kernel/memremap.c
-> index eee490e7d7e1..bea6f887adad 100644
-> --- a/kernel/memremap.c
-> +++ b/kernel/memremap.c
-> @@ -29,7 +29,7 @@ static void devmap_managed_enable_put(void *data)
->  
->  static int devmap_managed_enable_get(struct device *dev, struct dev_pagemap *pgmap)
->  {
-> -	if (!pgmap->ops->page_free) {
-> +	if (!pgmap->ops || !pgmap->ops->page_free) {
->  		WARN(1, "Missing page_free method\n");
->  		return -EINVAL;
->  	}
-> @@ -75,6 +75,24 @@ static unsigned long pfn_next(unsigned long pfn)
->  #define for_each_device_pfn(pfn, map) \
->  	for (pfn = pfn_first(map); pfn < pfn_end(map); pfn = pfn_next(pfn))
->  
-> +static void dev_pagemap_kill(struct dev_pagemap *pgmap)
-> +{
-> +	if (pgmap->ops && pgmap->ops->kill)
-> +		pgmap->ops->kill(pgmap);
-> +	else
-> +		percpu_ref_kill(pgmap->ref);
-> +}
-> +
-> +static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
-> +{
-> +	if (pgmap->ops && pgmap->ops->cleanup) {
-> +		pgmap->ops->cleanup(pgmap);
-> +	} else {
-> +		wait_for_completion(&pgmap->done);
-> +		percpu_ref_exit(pgmap->ref);
-> +	}
-> +}
-> +
->  static void devm_memremap_pages_release(void *data)
->  {
->  	struct dev_pagemap *pgmap = data;
-> @@ -84,10 +102,10 @@ static void devm_memremap_pages_release(void *data)
->  	unsigned long pfn;
->  	int nid;
->  
-> -	pgmap->ops->kill(pgmap);
-> +	dev_pagemap_kill(pgmap);
->  	for_each_device_pfn(pfn, pgmap)
->  		put_page(pfn_to_page(pfn));
-> -	pgmap->ops->cleanup(pgmap);
-> +	dev_pagemap_cleanup(pgmap);
->  
->  	/* pages are dead and unused, undo the arch mapping */
->  	align_start = res->start & ~(SECTION_SIZE - 1);
-> @@ -114,20 +132,29 @@ static void devm_memremap_pages_release(void *data)
->  		      "%s: failed to free all reserved pages\n", __func__);
->  }
->  
-> +static void dev_pagemap_percpu_release(struct percpu_ref *ref)
-> +{
-> +	struct dev_pagemap *pgmap =
-> +		container_of(ref, struct dev_pagemap, internal_ref);
-> +
-> +	complete(&pgmap->done);
-> +}
-> +
->  /**
->   * devm_memremap_pages - remap and provide memmap backing for the given resource
->   * @dev: hosting device for @res
->   * @pgmap: pointer to a struct dev_pagemap
->   *
->   * Notes:
-> - * 1/ At a minimum the res, ref and type and ops members of @pgmap must be
-> - *    initialized by the caller before passing it to this function
-> + * 1/ At a minimum the res and type members of @pgmap must be initialized
-> + *    by the caller before passing it to this function
->   *
->   * 2/ The altmap field may optionally be initialized, in which case
->   *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
->   *
-> - * 3/ pgmap->ref must be 'live' on entry and will be killed and reaped
-> - *    at devm_memremap_pages_release() time, or if this routine fails.
-> + * 3/ The ref field may optionally be provided, in which pgmap->ref must be
-> + *    'live' on entry and will be killed and reaped at
-> + *    devm_memremap_pages_release() time, or if this routine fails.
->   *
->   * 4/ res is expected to be a host memory range that could feasibly be
->   *    treated as a "System RAM" range, i.e. not a device mmio range, but
-> @@ -175,10 +202,21 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
->  		break;
->  	}
->  
-> -	if (!pgmap->ref || !pgmap->ops || !pgmap->ops->kill ||
-> -	    !pgmap->ops->cleanup) {
-> -		WARN(1, "Missing reference count teardown definition\n");
-> -		return ERR_PTR(-EINVAL);
-> +	if (!pgmap->ref) {
-> +		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
-> +			return ERR_PTR(-EINVAL);
-> +
-> +		init_completion(&pgmap->done);
-> +		error = percpu_ref_init(&pgmap->internal_ref,
-> +				dev_pagemap_percpu_release, 0, GFP_KERNEL);
-> +		if (error)
-> +			return ERR_PTR(error);
-> +		pgmap->ref = &pgmap->internal_ref;
-> +	} else {
-> +		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
-> +			WARN(1, "Missing reference count teardown definition\n");
-> +			return ERR_PTR(-EINVAL);
-> +		}
+> atomic_set() releases the split_lock_debug flag after WARN_ONCE() is done.
+> The same split_lock_debug flag will be used in sysfs write for atomic
+> operation as well, as proposed by Ingo in https://lkml.org/lkml/2019/4/25/48
 
-After this series are there any users who continue to supply their own
-reference object and these callbacks?
+Your comment above lacks any useful information about that whole thing.
 
-As it stands:
+> So that's why the flag needs to be cleared, right?
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Errm. No.
 
->  	}
->  
->  	if (need_devmap_managed) {
-> @@ -296,8 +334,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
->   err_pfn_remap:
->  	pgmap_array_delete(res);
->   err_array:
-> -	pgmap->ops->kill(pgmap);
-> -	pgmap->ops->cleanup(pgmap);
-> +	dev_pagemap_kill(pgmap);
-> +	dev_pagemap_cleanup(pgmap);
->  	return ERR_PTR(error);
->  }
->  EXPORT_SYMBOL_GPL(devm_memremap_pages);
-> diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/iomap.c
-> index 82f901569e06..cd040b5abffe 100644
-> --- a/tools/testing/nvdimm/test/iomap.c
-> +++ b/tools/testing/nvdimm/test/iomap.c
-> @@ -100,26 +100,60 @@ static void nfit_test_kill(void *_pgmap)
->  {
->  	struct dev_pagemap *pgmap = _pgmap;
->  
-> -	WARN_ON(!pgmap || !pgmap->ref || !pgmap->ops || !pgmap->ops->kill ||
-> -		!pgmap->ops->cleanup);
-> -	pgmap->ops->kill(pgmap);
-> -	pgmap->ops->cleanup(pgmap);
-> +	WARN_ON(!pgmap || !pgmap->ref);
-> +
-> +	if (pgmap->ops && pgmap->ops->kill)
-> +		pgmap->ops->kill(pgmap);
-> +	else
-> +		percpu_ref_kill(pgmap->ref);
-> +
-> +	if (pgmap->ops && pgmap->ops->cleanup) {
-> +		pgmap->ops->cleanup(pgmap);
-> +	} else {
-> +		wait_for_completion(&pgmap->done);
-> +		percpu_ref_exit(pgmap->ref);
-> +	}
-> +}
-> +
-> +static void dev_pagemap_percpu_release(struct percpu_ref *ref)
-> +{
-> +	struct dev_pagemap *pgmap =
-> +		container_of(ref, struct dev_pagemap, internal_ref);
-> +
-> +	complete(&pgmap->done);
->  }
->  
->  void *__wrap_devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
->  {
-> +	int error;
->  	resource_size_t offset = pgmap->res.start;
->  	struct nfit_test_resource *nfit_res = get_nfit_res(offset);
->  
-> -	if (nfit_res) {
-> -		int rc;
-> -
-> -		rc = devm_add_action_or_reset(dev, nfit_test_kill, pgmap);
-> -		if (rc)
-> -			return ERR_PTR(rc);
-> -		return nfit_res->buf + offset - nfit_res->res.start;
-> +	if (!nfit_res)
-> +		return devm_memremap_pages(dev, pgmap);
-> +
-> +	pgmap->dev = dev;
-> +	if (!pgmap->ref) {
-> +		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
-> +			return ERR_PTR(-EINVAL);
-> +
-> +		init_completion(&pgmap->done);
-> +		error = percpu_ref_init(&pgmap->internal_ref,
-> +				dev_pagemap_percpu_release, 0, GFP_KERNEL);
-> +		if (error)
-> +			return ERR_PTR(error);
-> +		pgmap->ref = &pgmap->internal_ref;
-> +	} else {
-> +		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
-> +			WARN(1, "Missing reference count teardown definition\n");
-> +			return ERR_PTR(-EINVAL);
-> +		}
->  	}
-> -	return devm_memremap_pages(dev, pgmap);
-> +
-> +	error = devm_add_action_or_reset(dev, nfit_test_kill, pgmap);
-> +	if (error)
-> +		return ERR_PTR(error);
-> +	return nfit_res->buf + offset - nfit_res->res.start;
->  }
->  EXPORT_SYMBOL_GPL(__wrap_devm_memremap_pages);
->  
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Linux-nvdimm mailing list
-> Linux-nvdimm@lists.01.org
-> https://lists.01.org/mailman/listinfo/linux-nvdimm
+CPU 0					CPU 1
+					
+hits AC					hits AC
+  if (atomic_cmpxchg() == success)	  if (atomic_cmpxchg() == success)
+  	warn()	       	  		     warn()
+
+So only one of the CPUs will win the cmpxchg race, set te variable to 1 and
+warn, the other and any subsequent AC on any other CPU will not warn
+either. So you don't need WARN_ONCE() at all. It's redundant and confusing
+along with the atomic_set().
+
+Whithout reading that link [1], what Ingo proposed was surely not the
+trainwreck which you decided to put into that debugfs thing.
+
+Thanks,
+
+	tglx
+
+[1] lkml.org sucks. We have https://lkml.kernel.org/r/$MESSAGEID for
+    that. That actually works.
