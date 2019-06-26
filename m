@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A59AC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E41C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CFD21726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A24C208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520754;
-	bh=odmqd7N0vyTbULHtnRfBWJqYVpmDph2GFtV1HpPQYlQ=;
+	s=default; t=1561520758;
+	bh=DZe5PTe4zle8QnQQX1FE+nwEIWNj8Vl0WiZFq6FsARA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L/7xofbU+gaQmWuXXoKcM9Lnim2+jLTl7FYPn8QD2Q+UkXZgYDfJXSj6HuAE56tL7
-	 ChLiDDI5uRTybWEyMYYrI8a+Me06thcWkuvs4PxS1Bj5E5uKiQ4yMUqsZy2gVaUrEZ
-	 M3S/NparUH07CdYMnvW0NN73siWtZLkeNrrrV2jQ=
+	b=AkbNMh5wJ/7pjRkT/coBujKTv+A1wh2JXGv01g/24dsOoJX1lDDpIAbx2CwwwQqrU
+	 o23eUUwEOxCZuyiPNyDLU//mas5WZovPiiBWiTHuHc65rx1e3WzSnMcOo5peQu3vA7
+	 7DY88TNBIu/AcsPlEwC5VmfVKtWjRZPbRBGTGOg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbfFZDpx (ORCPT
+        id S1727862AbfFZDp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:45:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57426 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727392AbfFZDpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:45:45 -0400
+        id S1727405AbfFZDpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:45:53 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E7882082F;
-        Wed, 26 Jun 2019 03:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64AC0214DA;
+        Wed, 26 Jun 2019 03:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520744;
-        bh=odmqd7N0vyTbULHtnRfBWJqYVpmDph2GFtV1HpPQYlQ=;
+        s=default; t=1561520751;
+        bh=DZe5PTe4zle8QnQQX1FE+nwEIWNj8Vl0WiZFq6FsARA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xiT1EYZUPzK6G/WgcLPn7TVYjCVHvyLcz6/ofsfZ/+ygrAmSJa8K3plZ0rhMCoks2
-         3H/nzsEqvLDqzarCSYKjS/W//1ux/TXPpQtF7Y7ILaDRRwZGLEkvg0uVHy++IR3lQA
-         zTv5TzUucEYjKs6TiZ5yBTJvHv24VjXxpeO7QlI0=
+        b=y2MA7T/TcTQhzg+T96feYRF92qTjg/aOK00uNpVNNfUgUHL2PhIpqfskWH5Jh0Mhl
+         IpRjVrsPyGPnx6py4/rZfKGpLWt/udSgz3RJFTocGWDrONRAEGMOzHSUbOo3bHhIn+
+         xGdPCZxhOtsLWw7V+gA1JJo2iR4pFlqe7+wLf2fE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 14/21] SoC: rt274: Fix internal jack assignment in set_jack callback
-Date:   Tue, 25 Jun 2019 23:44:59 -0400
-Message-Id: <20190626034506.24125-14-sashal@kernel.org>
+Cc:     Joel Savitz <jsavitz@redhat.com>, Waiman Long <longman@redhat.com>,
+        Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/21] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
+Date:   Tue, 25 Jun 2019 23:45:02 -0400
+Message-Id: <20190626034506.24125-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034506.24125-1-sashal@kernel.org>
 References: <20190626034506.24125-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,53 +61,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+From: Joel Savitz <jsavitz@redhat.com>
 
-[ Upstream commit 04268bf2757a125616b6c2140e6250f43b7b737a ]
+[ Upstream commit d477f8c202d1f0d4791ab1263ca7657bbe5cf79e ]
 
-When we call snd_soc_component_set_jack(component, NULL, NULL) we should
-set rt274->jack to passed jack, so when interrupt is triggered it calls
-snd_soc_jack_report(rt274->jack, ...) with proper value.
+In the case that a process is constrained by taskset(1) (i.e.
+sched_setaffinity(2)) to a subset of available cpus, and all of those are
+subsequently offlined, the scheduler will set tsk->cpus_allowed to
+the current value of task_cs(tsk)->effective_cpus.
 
-This fixes problem in machine where in register, we call
-snd_soc_register(component, &headset, NULL), which just calls
-rt274_mic_detect via callback.
-Now when machine driver is removed "headset" will be gone, so we
-need to tell codec driver that it's gone with:
-snd_soc_register(component, NULL, NULL), but we also need to be able
-to handle NULL jack argument here gracefully.
-If we don't set it to NULL, next time the rt274_irq runs it will call
-snd_soc_jack_report with first argument being invalid pointer and there
-will be Oops.
+This is done via a call to do_set_cpus_allowed() in the context of
+cpuset_cpus_allowed_fallback() made by the scheduler when this case is
+detected. This is the only call made to cpuset_cpus_allowed_fallback()
+in the latest mainline kernel.
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+However, this is not sane behavior.
+
+I will demonstrate this on a system running the latest upstream kernel
+with the following initial configuration:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	ffffffff,fffffff
+	Cpus_allowed_list:	0-63
+
+(Where cpus 32-63 are provided via smt.)
+
+If we limit our current shell process to cpu2 only and then offline it
+and reonline it:
+
+	# taskset -p 4 $$
+	pid 2272's current affinity mask: ffffffffffffffff
+	pid 2272's new affinity mask: 4
+
+	# echo off > /sys/devices/system/cpu/cpu2/online
+	# dmesg | tail -3
+	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
+	[ 2195.872700] IRQ 114: no longer affine to CPU2
+	[ 2195.879128] smpboot: CPU 2 is now offline
+
+	# echo on > /sys/devices/system/cpu/cpu2/online
+	# dmesg | tail -1
+	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
+
+We see that our current process now has an affinity mask containing
+every cpu available on the system _except_ the one we originally
+constrained it to:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:   ffffffff,fffffffb
+	Cpus_allowed_list:      0-1,3-63
+
+This is not sane behavior, as the scheduler can now not only place the
+process on previously forbidden cpus, it can't even schedule it on
+the cpu it was originally constrained to!
+
+Other cases result in even more exotic affinity masks. Take for instance
+a process with an affinity mask containing only cpus provided by smt at
+the moment that smt is toggled, in a configuration such as the following:
+
+	# taskset -p f000000000 $$
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	000000f0,00000000
+	Cpus_allowed_list:	36-39
+
+A double toggle of smt results in the following behavior:
+
+	# echo off > /sys/devices/system/cpu/smt/control
+	# echo on > /sys/devices/system/cpu/smt/control
+	# grep -i cpus /proc/$$/status
+	Cpus_allowed:	ffffff00,ffffffff
+	Cpus_allowed_list:	0-31,40-63
+
+This is even less sane than the previous case, as the new affinity mask
+excludes all smt-provided cpus with ids less than those that were
+previously in the affinity mask, as well as those that were actually in
+the mask.
+
+With this patch applied, both of these cases end in the following state:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	ffffffff,ffffffff
+	Cpus_allowed_list:	0-63
+
+The original policy is discarded. Though not ideal, it is the simplest way
+to restore sanity to this fallback case without reinventing the cpuset
+wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
+for the previous affinity mask to be restored in this fallback case can use
+that mechanism instead.
+
+This patch modifies scheduler behavior by instead resetting the mask to
+task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
+mode. I tested the cases above on both modes.
+
+Note that the scheduler uses this fallback mechanism if and only if
+_every_ other valid avenue has been traveled, and it is the last resort
+before calling BUG().
+
+Suggested-by: Waiman Long <longman@redhat.com>
+Suggested-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+Acked-by: Phil Auld <pauld@redhat.com>
+Acked-by: Waiman Long <longman@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt274.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/cgroup/cpuset.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rt274.c b/sound/soc/codecs/rt274.c
-index cd048df76232..43086ac9ffec 100644
---- a/sound/soc/codecs/rt274.c
-+++ b/sound/soc/codecs/rt274.c
-@@ -398,6 +398,8 @@ static int rt274_mic_detect(struct snd_soc_codec *codec,
- {
- 	struct rt274_priv *rt274 = snd_soc_codec_get_drvdata(codec);
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 4657e2924ecb..0a0e1aa11f5e 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -2436,10 +2436,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+ 	spin_unlock_irqrestore(&callback_lock, flags);
+ }
  
-+	rt274->jack = jack;
++/**
++ * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
++ * @tsk: pointer to task_struct with which the scheduler is struggling
++ *
++ * Description: In the case that the scheduler cannot find an allowed cpu in
++ * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
++ * mode however, this value is the same as task_cs(tsk)->effective_cpus,
++ * which will not contain a sane cpumask during cases such as cpu hotplugging.
++ * This is the absolute last resort for the scheduler and it is only used if
++ * _every_ other avenue has been traveled.
++ **/
 +
- 	if (jack == NULL) {
- 		/* Disable jack detection */
- 		regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
-@@ -405,7 +407,6 @@ static int rt274_mic_detect(struct snd_soc_codec *codec,
+ void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+ {
+ 	rcu_read_lock();
+-	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
++	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
++		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
+ 	rcu_read_unlock();
  
- 		return 0;
- 	}
--	rt274->jack = jack;
- 
- 	regmap_update_bits(rt274->regmap, RT274_EAPD_GPIO_IRQ_CTRL,
- 				RT274_IRQ_EN, RT274_IRQ_EN);
+ 	/*
 -- 
 2.20.1
 
