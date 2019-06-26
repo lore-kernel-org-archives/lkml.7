@@ -2,237 +2,263 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CFAC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A83C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74790216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910E7204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SeqWi607"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IdUyfzpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfFZNg6 (ORCPT
+        id S1727890AbfFZNhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:36:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35558 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfFZNg5 (ORCPT
+        Wed, 26 Jun 2019 09:37:24 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:36748 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZNhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:36:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id m24so1842196ioo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:36:57 -0700 (PDT)
+        Wed, 26 Jun 2019 09:37:24 -0400
+Received: by mail-ua1-f65.google.com with SMTP id v20so765004uao.3;
+        Wed, 26 Jun 2019 06:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ENXGaIGRT1B00/CXHLaCHuqYUO45S2El+5e8iF1gDj8=;
-        b=SeqWi607qF5e+FkdwUpfQcC/7QmOJ5s24nuXUNnvHpwi0h4L+RtrFlE5rEkApvgBHz
-         GDrElVUIpoFHsuK8pcPj8vR86x82glVHL64SRytOVMkS9FAk+UvjboZR2V4kCa+H6t/+
-         dcRWLwAhkAxIRInKIjGHEKZDyXnGUIyMqzfT7n/+qEdclfO/OWhJARRXe5KCdblVK606
-         inK+GP3tUAd7nE/rRGizyjoSnOSqLHiKvlhOsh3qkipCsaDokiWvNP57E1bQF7bl526r
-         eLXHlUt/RKzAxhgTR8H7S9CJC79Ey9g6AscwcxBdYH3ATaw38nynLDlkRqtD5KE1XYVp
-         gCSg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=is/ujkoZicHG2BibnpnLpAegsLraJDOqvg5EgkUGsS0=;
+        b=IdUyfzpGPTccHKxZnHQiTAf0O89bmOsqYbavdIQtAOB1kU8BwTZYT15uJkoj/1vEcN
+         rm4fS4IbFKYA9KlsN6w6Nk3djG2t7D3mR0MehHmeh4NjwAFi3XUY8R2N1IYSaXcN6zYO
+         4jC4eesVaM5c+rhzsoa5ZdtWe8RIFTYZWM3qDnccj8iaPfmk2VGW8EYwKhdqIswvghU2
+         2j47Itxu8AdbXZU1WLVO8S9s3IOtTBZMcRKa25dilMyRvlha0OcDa4Eg4leTVu7u/MD6
+         g3T+mMhfaVnIhHFrZag/e22PnhEEqGBAVHHSk1oRCxO8rn00KKW2rGEKBtQIi6cQNl5w
+         5d2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ENXGaIGRT1B00/CXHLaCHuqYUO45S2El+5e8iF1gDj8=;
-        b=kpK0dHP7B+E/3uI5lIok8JPzGkyKzWGttxZIci+J6S1010oYwm1CDgVDVtVNFeY4gh
-         +mgvq0Buo6TXzQS1Hjk5EyU4vMVUMeZNdbEJ1A1p+81U60yQPotx1vXgm5iwobPUDSSv
-         caEN5gJXVFg1LfS0BiQGk9XOFEKUu9AxPSE/rYJQcxu7OgQHSsx/hNq0nI1P0FAB+wsm
-         n/jf1S4nL4/s5tIe0Zy05L5gFUcWmRjnBguIGnybQBREaa1emd2egaunB9/2SYiLkKrq
-         BuMPHkdGYii31FIVwikjrAS97OjoOiP7AF0SiQX5AgonMgFo+SlonFEKg8MQIt1EJBq2
-         bXRw==
-X-Gm-Message-State: APjAAAXOZcABpSDZIWoOp7kXfC0MTWegs9GrqLK9WifFipHxNAzWufSA
-        WAGvNGYYB4qwercDuY6i6KXjNw==
-X-Google-Smtp-Source: APXvYqyQBoux0KuEkaaWXNLkz2zfITjJ9SPM1X71L3pCiTDjFxyyBoi8+PhKT4ho+S/U4RXMgvZJCQ==
-X-Received: by 2002:a5d:948a:: with SMTP id v10mr5072911ioj.103.1561556216461;
-        Wed, 26 Jun 2019 06:36:56 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id t4sm15432505ioj.26.2019.06.26.06.36.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 06:36:55 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Dan Williams <dcbw@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
- <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <e6ba8a9063e63506c0b88a70418d74ca4efe85cd.camel@sipsolutions.net>
- <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org>
- <84153d9e7c903084b492ceccc0dd98cbb32c12ac.camel@redhat.com>
- <7de004be-27b6-ac63-389d-8ea9d23d0361@linaro.org>
- <868e949b1fc8cf22307f579ab1f14543064bec20.camel@sipsolutions.net>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <0f5c0332-6894-2fdd-fd25-7af9a21b445b@linaro.org>
-Date:   Wed, 26 Jun 2019 08:36:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=is/ujkoZicHG2BibnpnLpAegsLraJDOqvg5EgkUGsS0=;
+        b=tIjjQrjGG7q2qezhkzIz1XeFgz2nEjRBUkE61LK60WJuJq0wSUW8Ib2NnSa+R0wdgt
+         FQbLUl/+sJjtqpa2omkwLB4Z7vCl9d4SUzYM2wO/kJWWkmIUh/faBwSsa8KUM3HjUDI9
+         Ffwg/Rh/1GypFZZ/VHLzNPAH38RJv+TpLH5pY4D2FcAzF3VaObdWdAkbkHHXe9l78909
+         RACd9/x0jl9ckqPtosazDfz/OhfnphiCgW3dcWAH4qClKXsWG24xSnpzT1NoQ2VthEOE
+         o0tjIXVxVnIQDrvpDer/DAD+5zha/z89NkFIhrxGGSUQy95eW6icY15Lf4jPrAoi/fdK
+         1urQ==
+X-Gm-Message-State: APjAAAXGS4TiunF1GVbiqVKEevSFEXgHlSxy+xTq/zi3Od5eq0wGvB2l
+        gibthMp0732yoHZmSNICVrccbOibPcfCUXbUkpKPv//Vx1I=
+X-Google-Smtp-Source: APXvYqy8R5tVK0LIjN1Tts0iTEE7Nh0qNsb/DwSEKJFOqodoXJVgTSYIWTeyUj8o6H0Q5YI9s6QKfHv+8c+bRRTvXLo=
+X-Received: by 2002:ab0:2850:: with SMTP id c16mr2498783uaq.128.1561556242469;
+ Wed, 26 Jun 2019 06:37:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <868e949b1fc8cf22307f579ab1f14543064bec20.camel@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190619020750.swzerehjbvx6sbk2@smtp.gmail.com>
+ <20190619074856.GJ12905@phenom.ffwll.local> <20190619075059.GK12905@phenom.ffwll.local>
+ <20190626020005.vb5gmqcvkyzgcjee@smtp.gmail.com> <CAKMK7uEd71XTeuZeu1Km8Vq1K1VJJbgANyaZNWm4v18Qh-OqVw@mail.gmail.com>
+In-Reply-To: <CAKMK7uEd71XTeuZeu1Km8Vq1K1VJJbgANyaZNWm4v18Qh-OqVw@mail.gmail.com>
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Date:   Wed, 26 Jun 2019 10:37:11 -0300
+Message-ID: <CADKXj+5+QHr1a0aiVZ1cSiPbtZhUAjmqiTmoQHGyEhodbcA2WQ@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH V4] drm/drm_vblank: Change EINVAL by the
+ correct errno
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/25/19 9:14 AM, Johannes Berg wrote:
-> Hi Alex,
-> 
-> I'll just pick a few or your messages and reply there - some other
-> subthreads seem to have pretty much completed.
-> 
+On Wed, Jun 26, 2019 at 4:53 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Wed, Jun 26, 2019 at 4:00 AM Rodrigo Siqueira
+> <rodrigosiqueiramelo@gmail.com> wrote:
+> >
+> > On 06/19, Daniel Vetter wrote:
+> > > On Wed, Jun 19, 2019 at 09:48:56AM +0200, Daniel Vetter wrote:
+> > > > On Tue, Jun 18, 2019 at 11:07:50PM -0300, Rodrigo Siqueira wrote:
+> > > > > For historical reason, the function drm_wait_vblank_ioctl always =
+return
+> > > > > -EINVAL if something gets wrong. This scenario limits the flexibi=
+lity
+> > > > > for the userspace make detailed verification of the problem and t=
+ake
+> > > > > some action. In particular, the validation of =E2=80=9Cif (!dev->=
+irq_enabled)=E2=80=9D
+> > > > > in the drm_wait_vblank_ioctl is responsible for checking if the d=
+river
+> > > > > support vblank or not. If the driver does not support VBlank, the
+> > > > > function drm_wait_vblank_ioctl returns EINVAL which does not repr=
+esent
+> > > > > the real issue; this patch changes this behavior by return EOPNOT=
+SUPP.
+> > > > > Additionally, some operations are unsupported by this function, a=
+nd
+> > > > > returns EINVAL; this patch also changes the return value to EOPNO=
+TSUPP
+> > > > > in this case. Lastly, the function drm_wait_vblank_ioctl is invok=
+ed by
+> > > > > libdrm, which is used by many compositors; because of this, it is
+> > > > > important to check if this change breaks any compositor. In this =
+sense,
+> > > > > the following projects were examined:
+> > > > >
+> > > > > * Drm-hwcomposer
+> > > > > * Kwin
+> > > > > * Sway
+> > > > > * Wlroots
+> > > > > * Wayland-core
+> > > > > * Weston
+> > > > > * Xorg (67 different drivers)
+> > > > >
+> > > > > For each repository the verification happened in three steps:
+> > > > >
+> > > > > * Update the main branch
+> > > > > * Look for any occurrence "drmWaitVBlank" with the command:
+> > > > >   git grep -n "drmWaitVBlank"
+> > > > > * Look in the git history of the project with the command:
+> > > > >   git log -SdrmWaitVBlank
+> > > > >
+> > > > > Finally, none of the above projects validate the use of EINVAL wh=
+ich
+> > > > > make safe, at least for these projects, to change the return valu=
+es.
+> > > > >
+> > > > > Change since V3:
+> > > > >  - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
+> > > > >
+> > > > > Change since V2:
+> > > > >  Daniel Vetter and Chris Wilson
+> > > > >  - Replace ENOTTY by EOPNOTSUPP
+> > > > >  - Return EINVAL if the parameters are wrong
+> > > > >
+> > > >
+> > > > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > > >
+> > > > Apologies for the confusion on the last time around. btw if someone=
+ tells
+> > > > you "r-b (or a-b) with these changes", then just apply the r-b/a-b =
+tag
+> > > > next time around. Otherwise people will re-review the same thing ov=
+er and
+> > > > over again.
+> > >
+> > > btw when resending patches it's good practice to add anyone who comme=
+nted
+> > > on it (or who commented on the igt test for the same patch and other =
+way
+> > > round) onto the explicit Cc: list of the patch. That way it's easier =
+for
+> > > them to follow the patch evolution and do a quick r-b once they're ha=
+ppy.
+> >
+> > Thanks for these valuable tips.
+> > Do you think that is a good idea to resend this patch CC's everybody? O=
+r
+> > is it ok if I just apply it?
+>
+> Hm I thought I answered that on irc ... but just today I realized that
+> we missed 2 ioctls. There's also drm_crtc_get_sequence_ioctl and
+> drm_crtc_queue_sequence_ioctl which have the same dev->irq_enabled
+> check and I think should be treated the same.
 
-. . .
+Hi,
 
->>> Linux usually tries to keep drivers generic and focused; each driver is
->>> written for a specific function. For example, a USB device usually
->>> provides multiple USB interfaces which will be bound to different Linux
->>> drivers like a TTY, cdc-ether, QMI (via qmi_wwan), cdc-acm, etc.
->>
->> So USB has some attributes similar to what we're talking about
->> here.  But if I'm not mistaken we want some sort of an overall
->> management scheme as well.
-> 
-> Yes. For the record, I think the part about "keep drivers generic and
-> focused" really only works for USB devices that expose different pieces
-> that look like any other network device or a TTY device on the USB
-> level, just the combination of these things (and knowing about that)
-> really makes them a modem.
-> 
-> For things like IPA or the (hypothetical) Intel driver we're talking
-> about, it's still all managed by a single (PCIe) driver. For the Intel
-> device in particular, even all the control channels are over exactly the
-> same transport mechanism as the data channels.
+I reexamined all the composers described in the commit message (latest
+versions) to check if any project use and validate the return value
+from  drm_crtc_get_sequence_ioctl and drm_crtc_queue_sequence_ioctl. I
+noticed that mesa and xserver use them. FWIU replace EINVAL by
+EOPNOTSUPP is harmless for mesa project, however it is not the same
+for xserver.
 
-Actually the setup for IPA requires certain things to be done via
-QMI by something outside the IPA driver, and it uses a separate
-communication path.  But I understand what you're saying.
+Take a look at line 189 and 238 of hw/xfree86/drivers/modesetting/vblank.c
 
-. . .
+* https://gitlab.freedesktop.org/xorg/xserver/blob/master/hw/xfree86/driver=
+s/modesetting/vblank.c#L238
+* https://gitlab.freedesktop.org/xorg/xserver/blob/master/hw/xfree86/driver=
+s/modesetting/vblank.c#L189
 
->> I don't like the "maybe" API unless there's no other way to do it.
->>
->> Instead I think it would be better for the probing driver to register
->> with a whatever the WWAN core is, and then have the WWAN core be
->> responsible for pulling things all together when it receives a
->> request to do so.  I.e., something in user space should request
->> that a registered data interface be brought up, and at that
->> time everything "knows" it's implemented as part of a WWAN
->> device.
-> 
-> Right, but then we just punt to userspace. Mostly we *do* (eventually!)
-> know that it's a WWAN device, just not every component can detect it.
-> Some components typically can.
+A little bit below the above lines, you can see a validation like that:
 
-We need to identify the existence of a WWAN device (which is I
-guess--typically? always?--a modem).  Perhaps that can be
-discovered in some cases but I think it means a node described
-by Device Tree.
+  if (ret !=3D -1 || (errno !=3D ENOTTY && errno !=3D EINVAL))
 
-> So for example, you might have a USB multi-function device with a
-> network function (looks just like ethernet pretty much) but another TTY
-> control channel that actually has some specific WWAN IDs, so that part
-> can know it's a WWAN.
-> 
-> Here, the ethernet function would need "maybe" attach, and the control
-> channel would "definitively" attach, pulling it together as a WWAN
-> device without requiring any more action or information.
+In other words, if we change the EINVAL by EOPNOTSUPP
+drm_crtc_[get|queue]_sequence_ioctl we could break xserver. I noticed
+that Keith Packard introduced these ioctls to the kernel and also to
+the xserver, I will prepare a new version and CC Keith. Should I do
+another thing to notify xserver developers?
 
-So you're saying you have a single Ethernet driver, and it can
-drive an Ethernet device connected to a WWAN, or not connected
-to a WWAN, without any changes.  The only distinction is that
-if the device is part of a WWAN it needs to register with the
-WWAN framework.  Is that right?
+Thanks
 
->> So maybe:
->> - Hardware probe detects a WWAN device
->> - The drivers that detect the WWAN device register it with the
->>   WWAN core code.
->> - A control channel is instantiated at/before the time the WWAN
->>   device is registered
->> - Something in user space should manage the bring-up of any
->>   other things on the WWAN device thereafter
-> 
-> But those things need to actually get connected first :-)
+> Can you pls resend with those addressed too? Then you can also resend
+> with the cc's all added.
+> -Daniel
+>
+> >
+> > > If you don't do that then much bigger chances your patch gets ignored=
+.
+> > > -Daniel
+> > > >
+> > > > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/drm_vblank.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_v=
+blank.c
+> > > > > index 603ab105125d..bed233361614 100644
+> > > > > --- a/drivers/gpu/drm/drm_vblank.c
+> > > > > +++ b/drivers/gpu/drm/drm_vblank.c
+> > > > > @@ -1582,7 +1582,7 @@ int drm_wait_vblank_ioctl(struct drm_device=
+ *dev, void *data,
+> > > > >   unsigned int flags, pipe, high_pipe;
+> > > > >
+> > > > >   if (!dev->irq_enabled)
+> > > > > -         return -EINVAL;
+> > > > > +         return -EOPNOTSUPP;
+> > > > >
+> > > > >   if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
+> > > > >           return -EINVAL;
+> > > > > --
+> > > > > 2.21.0
+> > > >
+> > > > --
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > http://blog.ffwll.ch
+> > >
+> > > --
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+> >
+> > --
+> > Rodrigo Siqueira
+> > https://siqueira.tech
+> > _______________________________________________
+> > Intel-gfx mailing list
+> > Intel-gfx@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+>
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
 
-What I meant is that the registering with the "WWAN core code"
-is what does that "connecting."  The WWAN code has the information
-about what got registered.  But as I said above, this WWAN device
-needs to be identified, and I think (at least for IPA) that will
-require something in Device Tree.  That will "connect" them.
 
-Or I might be misunderstanding your point.
 
-> In IPA/Intel case this is easy since it's a single driver. But if
-> there's multi-function device with ethernet being a completely separate
-> driver, the control channel cannot even reach that to tell it to create
-> a new data channel.
+--=20
 
-There's a lot more to talk about with control.  I think
-you discuss this in another message, and I'll get to that
-shortly.  But I think understand your point, and again
-I think it comes back to having an abstraction that
-represents the modem, distinct from (but "connected" to)
-the functions it implements/includes.
-
->>> userspace should probably always create the netdevices (since they are
->>> always useless until userspace coordinates with the firmware about
->>> them) but that's not how things are yet.
->>
->> That's too bad.  How hard would that be to change?
-> 
-> Depends, but as I said above it's probably orthogonal to the question.
-> The data channel driver would still need to attach to the WWAN device
-> somehow so it becomes reachable by the control plane (note this isn't
-> the same as "control channel" since the latter talks to the modem, the
-> control plane talks to the kernel drivers).
-> 
->>>> - What causes a created channel to be removed?
->>>
->>> Driver removal, userspace WWAN daemon terminating the packet data
->>> connection which the channel represents, the modem terminating the
->>> packet data connection (eg network initiated disconnect), etc.
->>
->> OK this is as I expected.  Driver (or device) removal is somewhat
->> obvious, but you're confirming user space might request it as well.
-> 
-> If userspace actually had the ability to create (data) channels, then it
-> would have the ability to also remove them. Right now, this may or may
-> not be supported by the drivers that act together to form the interfaces
-> to a WWAN device.
-
-I think this (user space control) needs to be an option, but
-it doesn't have to be the only way.
-
-. . .
-
-You made some other good clarifications in this message but I'm
-going to try to capture them elsewhere rather than respond here.
-
-					-Alex
+Rodrigo Siqueira
+https://siqueira.tech
