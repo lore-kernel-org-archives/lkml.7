@@ -2,108 +2,252 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A4EC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76408C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22CD216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDlX7aiZ"
+	by mail.kernel.org (Postfix) with ESMTP id 4A40E216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfFZRwB (ORCPT
+        id S1726785AbfFZRvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:52:01 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40042 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726328AbfFZRv7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:51:59 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w10so1551483pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:51:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=PYRuyD1HElut26s/f7k9wlmyAWeFCl38SzC1C9BI8tY=;
-        b=XDlX7aiZwQokBsiCMdvUOmEJQsIlxeCrOI3mc84lr5R7kBNv78OIPHppyWoDe5UeNH
-         QGAj8tK1u83UflPF+m0lb+fllt8uoyjJhH1wQi218pbhA1yZMinKQjkB4S3O5xksopTG
-         ts9als020BCHH6PJmv5n88nInO2k+zonOtT4BxxwdVE3mUCqBWV7rKjA5Rt1K4W6ANYu
-         s7I8Suz73D05eUsDH6sQN9+k/6S9yjHlerk5gCLWKy0CAnbU5E1jd9bdUgUtUdEUMEaD
-         E8rD4vUuwZrvESBgAwV5b+aYt1BMHx/4vYJd8TVsrAcLZBVdBHEwZ62DinJDao4tNWn5
-         jkVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=PYRuyD1HElut26s/f7k9wlmyAWeFCl38SzC1C9BI8tY=;
-        b=bitQjjOb+WY2BqDKUh5XBGnkNQI1FBMMHvluP6d5pEpns5A+fb9OguU5w7re7BBzE9
-         T26rooaecWfqGvtIlwlVAsOo17N+GBlg49gdgKihZGhLgYlaAAXnTxVcizaovaFg8gzS
-         hO7iahMk08O4SRoUMex5qj71TjGINM66UfuGSjh3qV7jD7Qi47qbKUDuWOZu8NoCLgeT
-         FhADEnjl3VACvVju20KsUOaeURJkXtovd4vV9yZEEddXkx8fVksYB9rzGRJXcQrghLKh
-         d6pFrZnKINKxokH5OJJid2QkYJY9y0ZzUWFNQpHUi89CFGGb04zUETiJPlr84VK2bT41
-         c4GQ==
-X-Gm-Message-State: APjAAAXAakwN+1gbrh/eXpu7fz9iY7LXyb9oV/DaY0NWGQ3MBNvRfGTf
-        FF1dzyhC0x7b2vb9BLZHZC4=
-X-Google-Smtp-Source: APXvYqwTJk2prCUh4y+T1TfDWS6E+syxqfxVUP1FpSbpCkIQJbYVwja7RnF65f4XO2fpa2hhxlGJCw==
-X-Received: by 2002:a63:1723:: with SMTP id x35mr4053469pgl.233.1561571519161;
-        Wed, 26 Jun 2019 10:51:59 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id s9sm2465026pjp.7.2019.06.26.10.51.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 10:51:58 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 23:21:55 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: hal: rtl8723b_rf6052: collect return
- status directly
-Message-ID: <20190626175155.GA9162@hari-Inspiron-1545>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 26 Jun 2019 13:51:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:19497 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbfFZRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:51:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:51:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
+   d="scan'208";a="337288608"
+Received: from rchatre-s.jf.intel.com ([10.54.70.76])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 10:51:08 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: [PATCH 09/10] x86/resctrl: Pseudo-lock portions of multiple resources
+Date:   Wed, 26 Jun 2019 10:48:48 -0700
+Message-Id: <918552f95d59d20fb9a09dd3b6666ad2f82bdf0c.1561569068.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
+References: <cover.1561569068.git.reinette.chatre@intel.com>
+In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
+References: <cover.1561569068.git.reinette.chatre@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove variable rtStatus and return phy_RF6052_Config_ParaFile function
-directly
+A cache pseudo-locked region may span more than one level of cache. A
+part of the pseudo-locked region that falls on one cache level is
+referred to as a pseudo-lock portion that was introduced previously.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Now a pseudo-locked region is allowed to have two portions instead of
+the previous limit of one. When a pseudo-locked region consists out of
+two portions it can only span a L2 and L3 resctrl resource.
+When a pseudo-locked region consists out of a L2 and L3 portion then
+there are some requirements:
+- the L2 and L3 cache has to be in same cache hierarchy
+- the L3 portion must be same size or larger than L2 portion
+
+As documented in previous changes the list of portions are
+maintained so that the L2 portion would always appear first in the list
+to simplify any information retrieval.
+
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 142 +++++++++++++++++++++-
+ 1 file changed, 139 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
-index c205345..d0ffe0a 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
-@@ -194,7 +194,6 @@ static int phy_RF6052_Config_ParaFile(struct adapter *Adapter)
- int PHY_RF6052_Config8723B(struct adapter *Adapter)
- {
- 	struct hal_com_data *pHalData = GET_HAL_DATA(Adapter);
--	int rtStatus = _SUCCESS;
- 
- 	/*  */
- 	/*  Initialize general global value */
-@@ -208,8 +207,7 @@ int PHY_RF6052_Config8723B(struct adapter *Adapter)
- 	/*  */
- 	/*  Config BB and RF */
- 	/*  */
--	rtStatus = phy_RF6052_Config_ParaFile(Adapter);
--	return rtStatus;
-+	return phy_RF6052_Config_ParaFile(Adapter);
- 
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index a7fe53447a7e..4e47ad582db6 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -339,13 +339,104 @@ static int pseudo_lock_single_portion_valid(struct pseudo_lock_region *plr,
+ 	return -1;
  }
  
++/**
++ * pseudo_lock_l2_l3_portions_valid - Verify region across L2 and L3
++ * @plr: Pseudo-Locked region
++ * @l2_portion: L2 Cache portion of pseudo-locked region
++ * @l3_portion: L3 Cache portion of pseudo-locked region
++ *
++ * User requested a pseudo-locked region consisting of a L2 as well as L3
++ * cache portion. The portions are tested as follows:
++ *   - L2 and L3 cache instances have to be in the same cache hierarchy.
++ *     This is tested by ensuring that the L2 portion's cpumask is a
++ *     subset of the L3 portion's cpumask.
++ *   - L3 portion must be same size or larger than L2 portion.
++ *
++ * Return: -1 if the portions are unable to be used for a pseudo-locked
++ *         region, 0 if the portions could be used for a pseudo-locked
++ *         region. When returning 0:
++ *         - the pseudo-locked region's size, line_size (cache line length)
++ *           and CPU on which locking thread will be run are set.
++ *         - CPUs associated with L2 cache portion are constrained from
++ *           entering C-state that will affect the pseudo-locked region.
++ */
++static int pseudo_lock_l2_l3_portions_valid(struct pseudo_lock_region *plr,
++					    struct pseudo_lock_portion *l2_p,
++					    struct pseudo_lock_portion *l3_p)
++{
++	struct rdt_domain *l2_d, *l3_d;
++	unsigned int l2_size, l3_size;
++
++	l2_d = rdt_find_domain(l2_p->r, l2_p->d_id, NULL);
++	if (IS_ERR_OR_NULL(l2_d)) {
++		rdt_last_cmd_puts("Cannot locate L2 cache domain\n");
++		return -1;
++	}
++
++	l3_d = rdt_find_domain(l3_p->r, l3_p->d_id, NULL);
++	if (IS_ERR_OR_NULL(l3_d)) {
++		rdt_last_cmd_puts("Cannot locate L3 cache domain\n");
++		return -1;
++	}
++
++	if (!cpumask_subset(&l2_d->cpu_mask, &l3_d->cpu_mask)) {
++		rdt_last_cmd_puts("L2 and L3 caches need to be in same hierarchy\n");
++		return -1;
++	}
++
++	if (pseudo_lock_cstates_constrain(plr, &l2_d->cpu_mask)) {
++		rdt_last_cmd_puts("Cannot limit C-states\n");
++		return -1;
++	}
++
++	l2_size = rdtgroup_cbm_to_size(l2_p->r, l2_d, l2_p->cbm);
++	l3_size = rdtgroup_cbm_to_size(l3_p->r, l3_d, l3_p->cbm);
++
++	if (l2_size > l3_size) {
++		rdt_last_cmd_puts("L3 cache portion has to be same size or larger than L2 cache portion\n");
++		goto err_size;
++	}
++
++	plr->size = l2_size;
++
++	l2_size = get_cache_line_size(cpumask_first(&l2_d->cpu_mask),
++				      l2_p->r->cache_level);
++	l3_size = get_cache_line_size(cpumask_first(&l3_d->cpu_mask),
++				      l3_p->r->cache_level);
++	if (l2_size != l3_size) {
++		rdt_last_cmd_puts("L2 and L3 caches have different coherency cache line sizes\n");
++		goto err_line;
++	}
++
++	plr->line_size = l2_size;
++
++	plr->cpu = cpumask_first(&l2_d->cpu_mask);
++
++	if (!cpu_online(plr->cpu)) {
++		rdt_last_cmd_printf("CPU %u associated with cache not online\n",
++				    plr->cpu);
++		goto err_cpu;
++	}
++
++	return 0;
++
++err_cpu:
++	plr->line_size = 0;
++	plr->cpu = 0;
++err_line:
++	plr->size = 0;
++err_size:
++	pseudo_lock_cstates_relax(plr);
++	return -1;
++}
++
+ /**
+  * pseudo_lock_region_init - Initialize pseudo-lock region information
+  * @plr: pseudo-lock region
+  *
+  * Called after user provided a schemata to be pseudo-locked. From the
+  * schemata the &struct pseudo_lock_region is on entry already initialized
+- * with the resource, domain, and capacity bitmask. Here the
++ * with the resource(s), domain(s), and capacity bitmask(s). Here the
+  * provided data is validated and information required for pseudo-locking
+  * deduced, and &struct pseudo_lock_region initialized further. This
+  * information includes:
+@@ -355,13 +446,24 @@ static int pseudo_lock_single_portion_valid(struct pseudo_lock_region *plr,
+  * - a cpu associated with the cache instance on which the pseudo-locking
+  *   flow can be executed
+  *
++ * A user provides a schemata for a pseudo-locked region. This schemata may
++ * contain portions that span different resources, for example, a cache
++ * pseudo-locked region that spans L2 and L3 cache. After the schemata is
++ * parsed into portions it needs to be verified that the provided portions
++ * are valid with the following tests:
++ *
++ * - L2 only portion on system that has only L2 resource - OK
++ * - L3 only portion on any system that supports it - OK
++ * - L2 portion on system that has L3 resource - require L3 portion
++ **
++ *
+  * Return: 0 on success, <0 on failure. Descriptive error will be written
+  * to last_cmd_status buffer.
+  */
+ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ {
+ 	struct rdt_resource *l3_resource = &rdt_resources_all[RDT_RESOURCE_L3];
+-	struct pseudo_lock_portion *p;
++	struct pseudo_lock_portion *p, *n_p, *tmp;
+ 	int ret;
+ 
+ 	if (list_empty(&plr->portions)) {
+@@ -397,8 +499,42 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ 			rdt_last_cmd_puts("Invalid resource or just L2 provided when L3 is required\n");
+ 			goto out_region;
+ 		}
++	}
++
++	/*
++	 * List is neither empty nor singular, process first and second portions
++	 */
++	p = list_first_entry(&plr->portions, struct pseudo_lock_portion, list);
++	n_p = list_next_entry(p, list);
++
++	/*
++	 * If the second portion is not also the last portion user provided
++	 * more portions than can be supported.
++	 */
++	tmp = list_last_entry(&plr->portions, struct pseudo_lock_portion, list);
++	if (n_p != tmp) {
++		rdt_last_cmd_puts("Only two pseudo-lock portions supported\n");
++		goto out_region;
++	}
++
++	if (p->r->rid == RDT_RESOURCE_L2 && n_p->r->rid == RDT_RESOURCE_L3) {
++		ret = pseudo_lock_l2_l3_portions_valid(plr, p, n_p);
++		if (ret < 0)
++			goto out_region;
++		return 0;
++	} else if (p->r->rid == RDT_RESOURCE_L3 &&
++		   n_p->r->rid == RDT_RESOURCE_L2) {
++		if (pseudo_lock_l2_l3_portions_valid(plr, n_p, p) == 0) {
++			/*
++			 * Let L2 and L3 portions appear in order in the
++			 * portions list in support of consistent output to
++			 * user space.
++			 */
++			list_rotate_left(&plr->portions);
++			return 0;
++		}
+ 	} else {
+-		rdt_last_cmd_puts("Multiple pseudo-lock portions unsupported\n");
++		rdt_last_cmd_puts("Invalid combination of resources\n");
+ 	}
+ 
+ out_region:
 -- 
-2.7.4
+2.17.2
 
