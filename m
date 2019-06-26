@@ -2,100 +2,98 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9B2C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51871C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9E0214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 12:59:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UVHnhcB8"
+	by mail.kernel.org (Postfix) with ESMTP id 32014214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfFZM7f (ORCPT
+        id S1727538AbfFZNAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 08:59:35 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:39326 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbfFZM7f (ORCPT
+        Wed, 26 Jun 2019 09:00:14 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:36119 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfFZNAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 08:59:35 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QCwkwj012710;
-        Wed, 26 Jun 2019 07:58:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=5q6jUCOYM9n5oRbj1I8q/MxVpQIaNgBFlodxyx/t+e4=;
- b=UVHnhcB8kZVj1Dea0QCv3pbFg9aByid6wKNlGLkaW5QVhUZw8NBnvirI2gLiglzaV0lD
- QkzxHqFVDoQJ0TW3qXqakmrZ5IlRsTomW5vzuHRZCYCyNSv/b5OTzHRhORbK02ZJDWXs
- g7ZmPyn13mK8e0Ja2S0x9rvGDyfdFdUwyK/pjlzZMxSiufo/7U944rgdjdkpj2/SqvZd
- s1aGekjmaAYCxSxMYfpbllDfw/Qraf19Fmf4RCmWl0Jc4us23zd3gYzHOt5tUfnKE0ve
- tPzSsqTPPG9kca7KIhjfnaVHwpNZpqjN6P75yvlgEGvu3nQzCzUJ5I93DMgrecD36Xko Ew== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2tc7gt8576-1;
-        Wed, 26 Jun 2019 07:58:45 -0500
-Received: from EDIEX01.ad.cirrus.com (ediex01.ad.cirrus.com [198.61.84.80])
-        by mail4.cirrus.com (Postfix) with ESMTP id 5306C611C8AF;
-        Wed, 26 Jun 2019 07:58:47 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 26 Jun
- 2019 13:58:45 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Wed, 26 Jun 2019 13:58:45 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 038CA45;
-        Wed, 26 Jun 2019 13:58:45 +0100 (BST)
-Date:   Wed, 26 Jun 2019 13:58:45 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <wsa@the-dreams.de>, <jarkko.nikula@linux.intel.com>,
-        <linux-i2c@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <benjamin.tissoires@redhat.com>,
-        <jbroadus@gmail.com>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v6 4/7] i2c: core: Make i2c_acpi_get_irq available to the
- rest of the I2C core
-Message-ID: <20190626125845.GD54126@ediswmail.ad.cirrus.com>
-References: <20190621100815.12417-1-ckeepax@opensource.cirrus.com>
- <20190621100815.12417-5-ckeepax@opensource.cirrus.com>
- <20190625115011.GE2640@lahna.fi.intel.com>
- <20190625124245.GC54126@ediswmail.ad.cirrus.com>
- <20190625132515.GA9224@smile.fi.intel.com>
+        Wed, 26 Jun 2019 09:00:14 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 03DA42003C;
+        Wed, 26 Jun 2019 15:00:08 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 15:00:07 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Brian Norris <briannorris@chromium.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Enric =?iso-8859-1?Q?Balletb=F2?= <enric.balletbo@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>, mka@chromium.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 0/7] drm/panel: simple: Add mode support to devicetree
+Message-ID: <20190626130007.GE23428@ravnborg.org>
+References: <20190401171724.215780-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190625132515.GA9224@smile.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=678 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906260155
+In-Reply-To: <20190401171724.215780-1-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8
+        a=cKMTf3WC4CzyLkAXteUA:9 a=CjuIK1q_8ugA:10 a=PO69wPE_V6wA:10
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 04:25:15PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 25, 2019 at 01:42:45PM +0100, Charles Keepax wrote:
-> > On Tue, Jun 25, 2019 at 02:50:11PM +0300, Mika Westerberg wrote:
-> 
-> > I would be happy to squash the two patches, and go back to the
-> > i2c_client approach, if that was preferred and  as long as Andy
-> > doesn't mind.
-> 
-> I don't.
-> 
+Hi Douglas.
 
-Groovy alright think I will squash these two patches and return
-to the i2c_client interface.
+On Mon, Apr 01, 2019 at 10:17:17AM -0700, Douglas Anderson wrote:
+> I'm reviving Sean Paul's old patchset to get mode support in device
+> tree.  The cover letter for his v3 is at:
+> https://lists.freedesktop.org/archives/dri-devel/2018-February/165162.html
+> 
+> No code is different between v4 and v5, just commit messages and text
+> in the bindings.
+> 
+> I've pulled together the patches that didn't land in v3, addressed
+> outstanding feedback, and reposted.  Atop them I've added patches for
+> rk3288-veyron-chromebook (used for jaq, jerry, mighty, speedy) and
+> rk3288-veryon-minnie.
+> 
+> Please let me know how they look.
+> 
+> In general I have added people to the whole series who I think would
+> like the whole series and then let get_maintainer pick extra people it
+> thinks are relevant to each individual patch.  If I see you respond to
+> any of the patches in the series, though, I'll add you to the whole
+> series Cc list next time.
+> 
+> Changes in v5:
+> - Removed bit about OS may ignore (Rob/Ezequiel)
+> - Added Heiko's Tested-by
+> - It's not just jerry, it's most rk3288 Chromebooks (Heiko)
 
-Thanks,
-Charles
+What are the plans to move forward with this?
+Or did you drop the whole idea again?
+
+	Sam
