@@ -2,111 +2,129 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3040C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10346C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C6E216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E678121670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfFZNjp (ORCPT
+        id S1727951AbfFZNj5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:39:45 -0400
-Received: from sauhun.de ([88.99.104.3]:56332 "EHLO pokefinder.org"
+        Wed, 26 Jun 2019 09:39:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48128 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbfFZNjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:39:44 -0400
-Received: from localhost (p54B330AF.dip0.t-ipconnect.de [84.179.48.175])
-        by pokefinder.org (Postfix) with ESMTPSA id 1C93B2C0114;
-        Wed, 26 Jun 2019 15:39:42 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 15:39:41 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Qii Wang <qii.wang@mediatek.com>
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        leilk.liu@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: i2c: Add MediaTek i2c AC timing binding
-Message-ID: <20190626133941.GL801@ninjato>
-References: <1560240715-22595-1-git-send-email-qii.wang@mediatek.com>
- <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
+        id S1726484AbfFZNj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:39:56 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 575C63086204;
+        Wed, 26 Jun 2019 13:39:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E299160852;
+        Wed, 26 Jun 2019 13:39:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, iwienand@redhat.com,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [GIT PULL] AFS fixes
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="VBq/nvTu32OVLBUP"
-Content-Disposition: inline
-In-Reply-To: <1560240715-22595-2-git-send-email-qii.wang@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <11570.1561556393.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 26 Jun 2019 14:39:53 +0100
+Message-ID: <11571.1561556393@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 26 Jun 2019 13:39:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---VBq/nvTu32OVLBUP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Could you pull this please?
 
-Hi,
+There are four patches:
 
-On Tue, Jun 11, 2019 at 04:11:54PM +0800, Qii Wang wrote:
-> Add i2c AC timing binding to binding file. It can give the AC
-> timing parameters to meet I2C specification at different speed.
->=20
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+ (1) Fix the printing of the "vnode modified" warning to exclude checks on
+     files for which we don't have a callback promise from the server (and
+     so don't expect the server to tell us when it changes).
 
-I think this is a too specific 1:1 mapping of your register set into DT
-world. We already have these generic parameters:
+     Without this, for every file or directory for which we still have an
+     in-core inode that gets changed on the server, we may get a message
+     logged when we next look at it.  This can happen in bulk if, for
+     instance, someone does "vos release" to update a R/O volume from a R/W
+     volume and a whole set of files are all changed together.
 
-- clock-frequency
-        frequency of bus clock in Hz.
+     We only really want to log a message if the file changed and the
+     server didn't tell us about it or we failed to track the state
+     internally.
 
-- i2c-scl-falling-time-ns
-        Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
-        specification.
+ (2) Fix accidental corruption of either afs_vlserver struct objects or the
+     the following memory locations (which could hold anything).  The issue
+     is caused by a union that points to two different structs in struct
+     afs_call (to save space in the struct).  The call cleanup code assumes
+     that it can simply call the cleanup for one of those structs if not
+     NULL - when it might be actually pointing to the other struct.
 
-- i2c-scl-internal-delay-ns
-        Number of nanoseconds the IP core additionally needs to setup SCL.
+     This means that every Volume Location RPC op is going to corrupt
+     something.
 
-- i2c-scl-rising-time-ns
-        Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
-        specification.
+ (3) Fix an uninitialised spinlock.  This isn't too bad, it just causes a
+     one-off warning if lockdep is enabled when "vos release" is called,
+     but the spinlock still behaves correctly.
 
-- i2c-sda-falling-time-ns
-        Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
-        specification.
+ (4) Fix the setting of i_block in the inode.  This causes du, for example,
+     to produce incorrect results, but otherwise should not be dangerous to
+     the kernel.
 
-(check Documentation/devicetree/bindings/i2c/i2c.txt)
+The in-kernel AFS client has been undergoing testing on opendev.org on one
+of their mirror machines.  They are using AFS to hold data that is then
+served via apache, and Ian Wienand had reported seeing oopses, spontaneous
+machine reboots and updates to volumes going missing.  This patch series
+appears to have fixed the problem, very probably due to patch (2), but it's
+not 100% certain.
 
-Can't you use those to derive your values from that? Which ones are you mis=
-sing
-if not?
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+Tested-by: Marc Dionne <marc.dionne@auristor.com>
+Tested-by: Ian Wienand <iwienand@redhat.com>
 
-Regards,
+---
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-   Wolfram
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
---VBq/nvTu32OVLBUP
-Content-Type: application/pgp-signature; name="signature.asc"
+are available in the Git repository at:
 
------BEGIN PGP SIGNATURE-----
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20190620
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0TdZ0ACgkQFA3kzBSg
-KbYdwg//dQgqHhmthL0M3JNNdA09iWqGwQ9bMoPtMtoM/+hklFt9CRstWC+xJM/Z
-R0urToI6NYfU6uUHLyk/Rm+qLRpxjdm49flzF/e0MbEEwW1xXifpbQJOK5Dcwb1w
-qRI46Nb8IjHa3+P6az+WgHlKg/1xURj5oPnVgbl/vNsxXbdubtpYUlOm10WROnNE
-vx+ge9+OzERZ2KhNkOWbvx3szlBE5KF183VZVfXYvYnR4X0Uz8LJt1H90o9ointF
-5dXC/UzCOBOkyp5lL4KqbDTcoSeaTEWkAnt3tKnyXig+vgK1O/aeOdAENd4m2xsh
-1kfdlwXrACKg5zUN5jUPF4KF9r0+YI2GJZHgyxqmzuWabRd9F1o+rXvKwintgJ0L
-Ffb9SOLW7fqDVJKBCOkFOglJZUOWxeU6TfsQWYwNhYorI0HcJ+EcQR4195ZyhtD3
-zEEpeh6Qpxk+maQyvO9NzBd7+HLLEUqHQZWTsOctYucIyLbpolJ2Iq6V9LasLiwO
-U5N29cEdhN/YLXC+aAzBu9iJlPc2C+blG99j80l3D/uDY42G0cHXkThzgDSSTEmx
-lIz41aICZKF/3RHgbSz7yEKH5ulFOvd8qFz5Yn2nQQEHKzm/sN1XU0o3VgWIEnbN
-byFUoWjaiu3xM0xFmKf5WtZ0qpRM0y5VIUO27JwSkBREDVJ7QV4=
-=h1Pk
------END PGP SIGNATURE-----
+for you to fetch changes up to 2cd42d19cffa0ec3dfb57b1b3e1a07a9bf4ed80a:
 
---VBq/nvTu32OVLBUP--
+  afs: Fix setting of i_blocks (2019-06-20 18:12:02 +0100)
+
+----------------------------------------------------------------
+AFS fixes
+
+----------------------------------------------------------------
+David Howells (4):
+      afs: Fix over zealous "vnode modified" warnings
+      afs: Fix vlserver record corruption
+      afs: Fix uninitialised spinlock afs_volume::cb_break_lock
+      afs: Fix setting of i_blocks
+
+ fs/afs/callback.c |  4 ++--
+ fs/afs/inode.c    | 31 +++++++++++++++++++------------
+ fs/afs/internal.h |  8 +++-----
+ fs/afs/volume.c   |  1 +
+ 4 files changed, 25 insertions(+), 19 deletions(-)
