@@ -2,78 +2,126 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98081C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766FFC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73933208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561528009;
-	bh=fJBY/PjXpnYRiXMdHxBFOVurN3zO5qefcGhU4TELsu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zJnlssfh4fvFq6FbtUyBxC5n685GWN6qzcm7J9E7+RjtIYauIqNlqyjdlLesaLsUE
-	 oF4ZXJ7gY4xZ1CiADHrdHJEvmP/oVH157J10sju7jNIpWF2hNnU/FYWyJ3aUUsTTsI
-	 7UUWreu0RPr0LFRmXacDuSxpPFNMQxL+rAvRQGCM=
+	by mail.kernel.org (Postfix) with ESMTP id 5062C20B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:48:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeftxwBt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfFZFqs (ORCPT
+        id S1726565AbfFZFsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 01:46:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51842 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbfFZFqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 01:46:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B5BEDAF03;
-        Wed, 26 Jun 2019 05:46:46 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 07:46:45 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-Message-ID: <20190626054645.GB17798@dhcp22.suse.cz>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-6-hch@lst.de>
- <20190620191733.GH12083@dhcp22.suse.cz>
- <CAPcyv4h9+Ha4FVrvDAe-YAr1wBOjc4yi7CAzVuASv=JCxPcFaw@mail.gmail.com>
- <20190625072317.GC30350@lst.de>
- <20190625150053.GJ11400@dhcp22.suse.cz>
- <CAPcyv4j1e5dbBHnc+wmtsNUyFbMK_98WxHNwuD_Vxo4dX9Ce=Q@mail.gmail.com>
- <20190625190038.GK11400@dhcp22.suse.cz>
- <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
+        Wed, 26 Jun 2019 01:48:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46395 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfFZFsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 01:48:53 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so1100845wrw.13;
+        Tue, 25 Jun 2019 22:48:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xQ4ce+x35rsYY2o9p5K+v8CMy5RJxb4zWb9mr9D1IXc=;
+        b=EeftxwBtaYqbVh+JKbNLa0DToX40eFgJgREQDo/Uxz1oazpBRVViaNmD/bywZm2urd
+         WyXsH6lMSKRlgEwW9IjwloSyLIc9sCvrtIXbkAMQqbWLDm10T8XZ7XyDg5C84HWAlcep
+         zh30vyBFsSaFGGLC8KE50rO7+I7UXPD6gvIB3Jbl5jtU3uHqImETrewK4RvWjJIR60wg
+         XmjT9UDoAPpSE5N718dNjh88hXhpUFG/Ab6tWgLsW5UxzfeY4xqwdH3/7qtp9CceuWnR
+         HEk+afIHsLa6JCjHsx6l7gKtxLz86GLH1Gt0IgR741fovwBbCSb8el95mqNoC7+bxT6v
+         RM2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xQ4ce+x35rsYY2o9p5K+v8CMy5RJxb4zWb9mr9D1IXc=;
+        b=i05syPX1KynMsSyn98A4AHjtan+pszLIgMFQNxC+vMRVQ1IxItzdBoKXNKwxf1FDuK
+         hgD0IIQgyNLf2SVuHsFVLJskL/D5DdhZT3T2VeDTltmBMN61L3wsohqEEx0gCaveTuN0
+         JWv4rlFdMFsFGHEU8ADPvkQJ5REr5yCJCl0KhIOcvfHRF0Wa2KXk00PXF2lMJtDcTNTJ
+         Q7XNe5QYquUzjpqvGFVtEBF6Z9GWyJFrdZuc5WLiT7bFPVk848Ap79Co7XB4sU5CEi8e
+         rPtx699+dsX8nrdIm894tB3y6ixUYtFTgjhXl1VWg10kL/zuvlSH5PT/L23PCNfCzRV3
+         YNzw==
+X-Gm-Message-State: APjAAAVZfTnrvgIod9xz8OJabRWqWzW3p0E7sGtkM1qdrLRIrqylF9KK
+        gRfQKWyulIewl3GNt+25YZ4=
+X-Google-Smtp-Source: APXvYqzs68nCVLNXdvBtvfphp2c5AsFtEftsuIxWnLsNfPVw3Cgm6bUXIpmze0HkCQry6olx6IzSag==
+X-Received: by 2002:adf:c541:: with SMTP id s1mr1760212wrf.44.1561528131040;
+        Tue, 25 Jun 2019 22:48:51 -0700 (PDT)
+Received: from [10.43.17.24] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a84sm1236284wmf.29.2019.06.25.22.48.49
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 22:48:50 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 1/1] Add dm verity root hash pkcs7 sig validation.
+To:     Mike Snitzer <snitzer@redhat.com>,
+        Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, scottsh@microsoft.com,
+        ebiggers@google.com, jmorris@namei.org, dm-devel@redhat.com,
+        mpatocka@redhat.com, agk@redhat.com
+References: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com>
+ <20190619191048.20365-2-jaskarankhurana@linux.microsoft.com>
+ <20190625182004.GA32075@redhat.com>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <e0cb17cc-35f9-46e2-ca1a-1c942989ed20@gmail.com>
+Date:   Wed, 26 Jun 2019 07:48:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hU13v7dSQpF0WTQTxQM3L3UsHMUhsFMVz7i4UGLoM89g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190625182004.GA32075@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25-06-19 12:52:18, Dan Williams wrote:
-[...]
-> > Documentation/process/stable-api-nonsense.rst
+On 25/06/2019 20:20, Mike Snitzer wrote:
+> On Wed, Jun 19 2019 at  3:10pm -0400,
+> Jaskaran Khurana <jaskarankhurana@linux.microsoft.com> wrote:
 > 
-> That document has failed to preclude symbol export fights in the past
-> and there is a reasonable argument to try not to retract functionality
-> that had been previously exported regardless of that document.
+>> The verification is to support cases where the roothash is not secured by
+>> Trusted Boot, UEFI Secureboot or similar technologies.
+>> One of the use cases for this is for dm-verity volumes mounted after boot,
+>> the root hash provided during the creation of the dm-verity volume has to
+>> be secure and thus in-kernel validation implemented here will be used
+>> before we trust the root hash and allow the block device to be created.
+>>
+>> The signature being provided for verification must verify the root hash and
+>> must be trusted by the builtin keyring for verification to succeed.
+>>
+>> The hash is added as a key of type "user" and the description is passed to 
+>> the kernel so it can look it up and use it for verification.
+>>
+>> Kernel commandline parameter will indicate whether to check (only if 
+>> specified) or force (for all dm verity volumes) roothash signature 
+>> verification.
+>>
+>> Kernel commandline: dm_verity.verify_sig=1 or 2 for check/force root hash
+>> signature validation respectively.
+>>
+>> Signed-off-by: Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+> 
+> Milan and/or others: could you please provide review and if you're OK
+> with this patch respond accordingly?
 
-Can you point me to any specific example where this would be the case
-for the core kernel symbols please?
--- 
-Michal Hocko
-SUSE Labs
+Stand by please :)
+
+I like the patch, I think all major problems were solved, but I still need to test it somehow.
+
+Anyway, for the time being, I keep all ongoing patches that need some later
+userspace support in my branch
+https://git.kernel.org/pub/scm/linux/kernel/git/mbroz/linux.git/log/?h=dm-cryptsetup
+so at least it get some automated testing.
+
+Milan
+
