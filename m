@@ -2,127 +2,104 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B18C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE18C48BD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52FC204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L/0XFdCf"
+	by mail.kernel.org (Postfix) with ESMTP id BA7C82085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561513690;
+	bh=lhOKRprT7HVe0Z8Cz+OabL8qmzBmCh0WUg8YKiJg6kI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JdNthWzGVGqfOdQJ6NU/QHnD4js3yrZpEEUkkFz8fBjqYac6mUMuKdx0KGvbbrLOD
+	 gaSJr1ADMZHa/mMPNGb9DEsKcu1HI0QDZUomZdP5F3fFEOynKioHHh3zylJkq0/2C3
+	 b6n9uSEd2SlQMu5oU6pWsAUx19xWMSx/xKXw4RvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfFZBmz (ORCPT
+        id S1726468AbfFZBsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:42:55 -0400
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:40846
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726307AbfFZBmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:42:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tZVqGS9K5sTkvVIqgTU2Ye5pdZMkkBpRjs9hZxvDNeY=;
- b=L/0XFdCf6OuHo1+kvO4rhb7yuzIY7ih8d0aqWiJxxxbAZk1Qv3jyZQkZJl79Xg8ftjl9hnDCRlX7L6dbgBIFHjLgSSo/3LLO0Gl/E9y/sexs2ll9FOFqo/i79aZfwzTzA23Thf5B3teyHLguvHKUuoTq/mrLbzzamPD0S+GszdE=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3900.eurprd04.prod.outlook.com (52.134.71.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Wed, 26 Jun 2019 01:42:48 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3945:fcda:5bdd:8191%4]) with mapi id 15.20.2008.014; Wed, 26 Jun 2019
- 01:42:48 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "ccaione@baylibre.com" <ccaione@baylibre.com>,
-        "angus@akkea.ca" <angus@akkea.ca>,
-        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
-        "agx@sigxcpu.org" <agx@sigxcpu.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
- clock-frequency property
-Thread-Topic: [PATCH RESEND V2 1/3] clocksource/drivers/sysctr: Add optional
- clock-frequency property
-Thread-Index: AQHVKcBeREE6S4ew/U+TyYIcUsyobqas4eqAgABJq2A=
-Date:   Wed, 26 Jun 2019 01:42:48 +0000
-Message-ID: <DB3PR0402MB3916AB9F2260B0E46CCDDEC0F5E20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190623123850.22584-1-Anson.Huang@nxp.com>
- <55abafbd-c010-32b5-6d76-26040830d5b0@linaro.org>
-In-Reply-To: <55abafbd-c010-32b5-6d76-26040830d5b0@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 01bbb761-a46f-46ff-3e22-08d6f9d7984b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3900;
-x-ms-traffictypediagnostic: DB3PR0402MB3900:
-x-microsoft-antispam-prvs: <DB3PR0402MB3900636172950BF8AFCEBB21F5E20@DB3PR0402MB3900.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(3846002)(6116002)(44832011)(81166006)(53936002)(110136005)(8936002)(486006)(74316002)(476003)(256004)(305945005)(68736007)(71200400001)(6436002)(229853002)(2501003)(316002)(9686003)(76176011)(2906002)(81156014)(55016002)(86362001)(6246003)(2201001)(7416002)(8676002)(4326008)(14454004)(33656002)(52536014)(478600001)(66946007)(64756008)(25786009)(5660300002)(66446008)(71190400001)(186003)(7736002)(66476007)(66556008)(76116006)(73956011)(11346002)(26005)(102836004)(446003)(7696005)(99286004)(6506007)(53546011)(66066001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3900;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: w453HTHzL6Zp40JvfUzUu3HLN5JQvqcwNQ+eHuJ+71SbcVo5AR/bALfGKUjX2kPs86BbrTKPoeuqR4rVDQ97z3Ez/UylJI8Pho/pM6CvpHSQaui2Yhq+QHRvP6Yg9nHLcjqhEQpc6fg5OvA/2kxFqI4YXStJbNFLLzdhBwRGReA91M0zOWY5+QM6PdBDApgvWOoxGsxTzOYx2gm7tlJG5wlQXnX2Nn3/LcgZ521GRHgOj+wEbbuHZe1VQU2Vkr13iTTLsBGew6tZoNTOe12ETZdoWRLbL5PO/cKlcQ+FD1Kdl+HhgRHESbh9oFS+y3u3sDSN7Napl8pgacXt3FKOa9rrPQc1Cf6uux2AmDKnwmX4n1a5cviiH4j7dca69wb0rq5rz5pC18TXsLutkArdJ9SoCyovWW2qHuFEYUusV4Y=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 25 Jun 2019 21:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726401AbfFZBsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 21:48:09 -0400
+Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC5C204EC;
+        Wed, 26 Jun 2019 01:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561513688;
+        bh=lhOKRprT7HVe0Z8Cz+OabL8qmzBmCh0WUg8YKiJg6kI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BL8S8BzsOC1JOHpaxjj/CTatmCr1mGi07Q7JwyCKDT+4+v22IeNWUhCXfpmspHgxG
+         cUK/l3MuLXJTLFZSH+DOHSUmj+O8ZYqciueHRuR7ZoT3lqpr5xlAA+jyBRjKq7h60F
+         V9Ii3OEqVpE7rxOOnaIqsvmncQprx25jWE1XQuvA=
+Date:   Wed, 26 Jun 2019 09:46:33 +0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tri Vo <trong@android.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [PATCH] PM / wakeup: show wakeup sources stats in sysfs
+Message-ID: <20190626014633.GA22610@kroah.com>
+References: <20190626005449.225796-1-trong@android.com>
+ <20190626011221.GB22454@kroah.com>
+ <CANA+-vBoabFTD=fMz+0d5Sbe9rPwnxcuxJxaMCT3KAwXYHSD7w@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01bbb761-a46f-46ff-3e22-08d6f9d7984b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 01:42:48.5468
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3900
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANA+-vBoabFTD=fMz+0d5Sbe9rPwnxcuxJxaMCT3KAwXYHSD7w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IE9uIDIzLzA2LzIwMTkgMTQ6MzgsIEFuc29uLkh1YW5nQG54cC5jb20g
-d3JvdGU6DQo+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4N
-Cj4gPiBTeXN0ZW1zIHdoaWNoIHVzZSBwbGF0Zm9ybSBkcml2ZXIgbW9kZWwgZm9yIGNsb2NrIGRy
-aXZlciByZXF1aXJlIHRoZQ0KPiA+IGNsb2NrIGZyZXF1ZW5jeSB0byBiZSBzdXBwbGllZCB2aWEg
-ZGV2aWNlIHRyZWUgd2hlbiBzeXN0ZW0gY291bnRlcg0KPiA+IGRyaXZlciBpcyBlbmFibGVkLg0K
-PiA+DQo+ID4gVGhpcyBpcyBuZWNlc3NhcnkgYXMgaW4gdGhlIHBsYXRmb3JtIGRyaXZlciBtb2Rl
-bCB0aGUgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucyBkbyBub3Qgd29yayBjb3JyZWN0bHkgYmVjYXVz
-ZSBzeXN0ZW0gY291bnRlciBkcml2ZXIgaXMNCj4gPiBpbml0aWFsaXplZCBpbiBlYXJseSBwaGFz
-ZSBvZiBzeXN0ZW0gYm9vdCB1cCwgYW5kIGNsb2NrIGRyaXZlciB1c2luZw0KPiA+IHBsYXRmb3Jt
-IGRyaXZlciBtb2RlbCBpcyBOT1QgcmVhZHkgYXQgdGhhdCB0aW1lLCBpdCB3aWxsIGNhdXNlIHN5
-c3RlbQ0KPiA+IGNvdW50ZXIgZHJpdmVyIGluaXRpYWxpemF0aW9uIGZhaWxlZC4NCj4gPg0KPiA+
-IEFkZCB0aGUgb3B0aW5hbCBjbG9jay1mcmVxdWVuY3kgdG8gdGhlIGRldmljZSB0cmVlIGJpbmRp
-bmdzIG9mIHRoZSBOWFANCj4gPiBzeXN0ZW0gY291bnRlciwgc28gdGhlIGZyZXF1ZW5jeSBjYW4g
-YmUgaGFuZGVkIGluIGFuZCB0aGUgb2ZfY2xrDQo+ID4gb3BlcmF0aW9ucyBjYW4gYmUgc2tpcHBl
-ZC4NCj4gDQo+IElzbid0IGl0IHBvc3NpYmxlIHRvIGNyZWF0ZSBhIGZpeGVkLWNsb2NrIGFuZCBy
-ZWZlciB0byBpdD8gU28gbm8gbmVlZCB0byBjcmVhdGUgYQ0KPiBzcGVjaWZpYyBhY3Rpb24gYmVm
-b3JlIGNhbGxpbmcgdGltZXJfb2ZfaW5pdCgpID8NCj4gDQoNCkFzIHRoZSBjbG9jayBtdXN0IGJl
-IHJlYWR5IGJlZm9yZSB0aGUgVElNRVJfT0ZfREVDTEFSRSwgc28gYWRkaW5nIGEgQ0xLX09GX0RF
-Q0xBUkVfRFJJVkVSIGluDQpjbG9jayBkcml2ZXIgdG8gT05MWSByZWdpc3RlciBhIGZpeGVkLWNs
-b2NrPyBUaGUgc3lzdGVtIGNvdW50ZXIncyBmcmVxdWVuY3kgYXJlIGRpZmZlcmVudCBvbiBkaWZm
-ZXJlbnQNCnBsYXRmb3Jtcywgc28gYWRkaW5nIGZpeGVkIGNsb2NrIGluIHN5c3RlbSBjb3VudGVy
-IGRyaXZlciBpcyBOT1QgYSBnb29kIGlkZWEsIE9OTFkgdGhlIERUIG5vZGUgb3IgdGhlDQpjbG9j
-ayBkcml2ZXIgY2FuIGNyZWF0ZSB0aGlzIGZpeGVkIGNsb2NrIGFjY29yZGluZyB0byBwbGF0Zm9y
-bXMsIGNhbiB5b3UgYWR2aXNlIHdoZXJlIHRvIGNyZWF0ZSB0aGlzIGZpeGVkDQpjbG9jayBpcyBi
-ZXR0ZXI/DQoNClRoYW5rcywNCkFuc29uIA0KDQo=
+On Tue, Jun 25, 2019 at 06:33:08PM -0700, Tri Vo wrote:
+> On Tue, Jun 25, 2019 at 6:12 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > +static ssize_t wakeup_source_count_show(struct wakeup_source *ws,
+> > > +                                     struct wakeup_source_attribute *attr,
+> > > +                                     char *buf)
+> > > +{
+> > > +     unsigned long flags;
+> > > +     unsigned long var;
+> > > +
+> > > +     spin_lock_irqsave(&ws->lock, flags);
+> > > +     if (strcmp(attr->attr.name, "active_count") == 0)
+> > > +             var = ws->active_count;
+> > > +     else if (strcmp(attr->attr.name, "event_count") == 0)
+> > > +             var = ws->event_count;
+> > > +     else if (strcmp(attr->attr.name, "wakeup_count") == 0)
+> > > +             var = ws->wakeup_count;
+> > > +     else
+> > > +             var = ws->expire_count;
+> > > +     spin_unlock_irqrestore(&ws->lock, flags);
+> > > +
+> > > +     return sprintf(buf, "%lu\n", var);
+> > > +}
+> >
+> > Why is this lock always needed to be grabbed?  You are just reading a
+> > value, who cares if it changes inbetween reading it and returning the
+> > buffer string as it can change at that point in time anyway?
+> 
+> Right, we don't care if the value changes in between us reading and
+> printing it. However, IIUC not grabbing this lock results in a data
+> race, which is undefined behavior.
+
+A data race where?  Writing to the value?  How can that happen?  All you
+are doing is incrementing this variable elsewhere, what is the worst
+that can happen?
+
+thanks,
+
+greg k-h
