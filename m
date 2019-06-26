@@ -2,447 +2,132 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F052C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A73C48BD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB082085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 00:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2032085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="IM4uCCJP"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="NoxHUcBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfFZA7g (ORCPT
+        id S1726470AbfFZBC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 20:59:36 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36516 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZA7f (ORCPT
+        Tue, 25 Jun 2019 21:02:59 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:56172 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726274AbfFZBC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 20:59:35 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r6so818171oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 17:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wKHRg8uOA5yOOWmOFVjkDPxJJux0F6cgriRh/pJljaI=;
-        b=IM4uCCJP6fx9lJ1slU8HqlGbugehpag1yFr2gXzhHbts2RXC6jVzadtropQMIYDzZG
-         6/7uhc7UgWitsU6inNaR6b+oDEr7EZgy4KJt8Cv3zOWkstmX7D71f1eO0Yd9XpTcmhEt
-         K5JkTePoPh4A8UYxOacHhHXb5lkBzuPddeGCDf2B4RgcW2XK/1W/jaQlpzXaeuldsyq8
-         OHo65giv9ELk1E/k4L6M6vkYMTei4478ZFpDPOKDtO5v61PDrFH+YkZwHBtHA4TVjSPW
-         WKAKiNcERpm8+GzCtWNQE0ivuIBbYiXvBQORlLeVElCYLGuJUcEFnJFpISFleYMbqkYY
-         HWvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wKHRg8uOA5yOOWmOFVjkDPxJJux0F6cgriRh/pJljaI=;
-        b=ZC+wbZFkfVZnCn35E/BjidO1bFK64wyhaq95QJP17mkrpYvDRTrPS4LeQ4sDDVClwC
-         rUGB/chWsrXGCrowe3YxDhobW0AhlhZnZ7kU/vn1dkaG9amYgqIrHtPhouaVEBF4mvya
-         bbfo7OZGzIu9rDaj7Lhw+1qt/2AdYHcSuKlkmZ/2WiiWWBtP7PT2DX/JVDtPAodFXLk3
-         p6KzjdiQ5f+KrUWhL/MyjD1BFzhHwI9Y1FVdY8FcIWQ4ygGPOCIyxiKHwF0DxEmeY1mD
-         Rptbk10ysF6NmYjzMCVjyPCjRjTwtterdjEsPJa+REs7qrKUv18MNP7kKH6PBTrimVaP
-         ig4A==
-X-Gm-Message-State: APjAAAUdTMVCeiclfs6HcIc4Khk6VDBuxkxD/3cDmzv5jHyeOFr/d7Io
-        FWHVia/KzHO/9DldLQe23xHkAvPO/bH+EpQ4/N70rg==
-X-Google-Smtp-Source: APXvYqwbpUhZXs/okqa3xCGE2T9qwbsjqnRskhy7bVjiHOUjMtPzlvS5U+svMNy2Lt0BfPb5KQh2zcXATO6RpiLfpL0=
-X-Received: by 2002:a9d:7a45:: with SMTP id z5mr1068288otm.197.1561510774685;
- Tue, 25 Jun 2019 17:59:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190626005449.225796-1-trong@android.com>
-In-Reply-To: <20190626005449.225796-1-trong@android.com>
-From:   Tri Vo <trong@android.com>
-Date:   Tue, 25 Jun 2019 17:59:23 -0700
-Message-ID: <CANA+-vAKFqaAdNMp2boKa6g0=j4szSUHUjW4e94Xi3YGina2=g@mail.gmail.com>
-Subject: Re: [PATCH] PM / wakeup: show wakeup sources stats in sysfs
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Tue, 25 Jun 2019 21:02:59 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id E27A72DC0076;
+        Tue, 25 Jun 2019 21:02:57 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1561510978;
+        bh=alTGTolfSOaJib81/HV1xk13UMDoyRYklK/SpUrmd7w=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=NoxHUcByzLTCusX5pVe1lsXlBMGElTVDnI/XfJAy1Nl2CPCT+1tOht6i2EK/ciNkm
+         K9KG5Y432fz/6LApPs3O84qtWA9SlyMmA/wuAdUcSD4rSsw1vczNmq2IadH3d8Yjjj
+         5s/aRpOn+J8LZ+0EdQegjtRsGUm+NIxhK/RJ9SV1bF1UePOw1rCMB/TgxdowIewNFZ
+         Ra5cgiPNVLsA+gWt+IwCMHonGdcRTTyshPS7dwjlm4RdNgxtOKDy+eQbfRQfotbzjs
+         B5QQnvu0X2cSsH+yxVwnjSR18+Dt0Tt9kbJq7vhB7kczzOGw3vGeE9Nsk1oow8i/1I
+         3EN2KiSeiTlphcIF4jujWhyKJYRq8hKZqgXXkbYQ8cniR0sy1e4f3msouuG7u7FAGN
+         4N62OPQDxWHpA6QCR2bkcmJBVH1Jb6OE2kFfBG7EgyAY7YE5RDCG3qHf3x06F/DOxs
+         QIPziAUS4TwpT/g1pYu4AH2VTerslwlrRiUj0wkS6makKQ6LJI017iD3ClsF1dCjvw
+         9OKcxJoGQDOPUyeiE1V2QvnozdCZZJ0tZIwv2ngVO0Y5g38kYMSlrgiQm08cGPPyV1
+         1vTrS9K7ZJD22fxteol1WonkF1zHEWTT8Eu6rNYpH6cAVTxvZ5Uw16GXOQ+goHTzVz
+         m6Ftvv6Q+FYsWPnR2eqrJFq0=
+Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5Q12T29029544
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 26 Jun 2019 11:02:45 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+Message-ID: <e16caf5b98aafea4033bfc0e49845ef987c02678.camel@d-silva.org>
+Subject: Re: [PATCH v4 0/7] Hexdump Enhancements
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Date:   Wed, 26 Jun 2019 11:02:29 +1000
+In-Reply-To: <3ae4c1a4a72f8ee6b75c45adfbe543fc0a7b5da1.camel@perches.com>
+References: <20190625031726.12173-1-alastair@au1.ibm.com>
+         <3ae4c1a4a72f8ee6b75c45adfbe543fc0a7b5da1.camel@perches.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Wed, 26 Jun 2019 11:02:53 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 5:55 PM Tri Vo <trong@android.com> wrote:
->
-> Userspace can use wakeup_sources debugfs node to plot history of suspend
-> blocking wakeup sources over device's boot cycle. This information can
-> then be used (1) for power-specific bug reporting and (2) towards
-> attributing battery consumption to specific processes over a period of
-> time.
->
-> However, debugfs doesn't have stable ABI. For this reason, expose wakeup
-> sources statistics in sysfs under /sys/power/wakeup_sources/<name>/
->
-> Add following attributes to each wakeup source. These attributes match
-> the columns of /sys/kernel/debug/wakeup_sources.
->
->   active_count
->   event_count
->   wakeup_count
->   expire_count
->   active_time (named "active_since" in debugfs)
->   total_time
->   max_time
->   last_change
->   prevent_suspend_time
->
-> Embedding a struct kobject into struct wakeup_source changes lifetime
-> requirements on the latter. To that end, change deallocation of struct
-> wakeup_source using kfree to kobject_put().
->
-> Signed-off-by: Tri Vo <trong@android.com>
-> ---
->  drivers/base/power/Makefile       |   2 +-
->  drivers/base/power/wakeup.c       |  13 +-
->  drivers/base/power/wakeup_sysfs.c | 204 ++++++++++++++++++++++++++++++
->  include/linux/pm_wakeup.h         |   9 ++
->  kernel/power/wakelock.c           |  13 +-
->  5 files changed, 236 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/base/power/wakeup_sysfs.c
->
-> diff --git a/drivers/base/power/Makefile b/drivers/base/power/Makefile
-> index e1bb691cf8f1..e6ea9eb46275 100644
-> --- a/drivers/base/power/Makefile
-> +++ b/drivers/base/power/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_PM)       += sysfs.o generic_ops.o common.o qos.o runtime.o wakeirq.o
-> -obj-$(CONFIG_PM_SLEEP) += main.o wakeup.o
-> +obj-$(CONFIG_PM_SLEEP) += main.o wakeup.o wakeup_sysfs.o
->  obj-$(CONFIG_PM_TRACE_RTC)     += trace.o
->  obj-$(CONFIG_PM_GENERIC_DOMAINS)       +=  domain.o domain_governor.o
->  obj-$(CONFIG_HAVE_CLK) += clock_ops.o
-> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-> index 5b2b6a05a4f3..6fcbb4d2045f 100644
-> --- a/drivers/base/power/wakeup.c
-> +++ b/drivers/base/power/wakeup.c
-> @@ -96,12 +96,22 @@ EXPORT_SYMBOL_GPL(wakeup_source_prepare);
->  struct wakeup_source *wakeup_source_create(const char *name)
->  {
->         struct wakeup_source *ws;
-> +       int ret;
->
->         ws = kmalloc(sizeof(*ws), GFP_KERNEL);
->         if (!ws)
->                 return NULL;
->
->         wakeup_source_prepare(ws, name ? kstrdup_const(name, GFP_KERNEL) : NULL);
-> +
-> +       ws->kobj.kset = wakeup_source_kset;
-> +       ret = kobject_init_and_add(&ws->kobj, &wakeup_source_ktype, NULL, "%s",
-> +                       ws->name);
-> +       if (ret) {
-> +               kobject_put(&ws->kobj);
-> +               return NULL;
-> +       }
-> +
->         return ws;
->  }
->  EXPORT_SYMBOL_GPL(wakeup_source_create);
-> @@ -147,8 +157,7 @@ void wakeup_source_destroy(struct wakeup_source *ws)
->
->         __pm_relax(ws);
->         wakeup_source_record(ws);
-> -       kfree_const(ws->name);
-> -       kfree(ws);
-> +       kobject_put(&ws->kobj);
->  }
->  EXPORT_SYMBOL_GPL(wakeup_source_destroy);
->
-> diff --git a/drivers/base/power/wakeup_sysfs.c b/drivers/base/power/wakeup_sysfs.c
-> new file mode 100644
-> index 000000000000..d872afc645d9
-> --- /dev/null
-> +++ b/drivers/base/power/wakeup_sysfs.c
-> @@ -0,0 +1,204 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/slab.h>
-> +
-> +#include "power.h"
-> +
-> +struct wakeup_source_attribute {
-> +       struct attribute attr;
-> +       ssize_t (*show)(struct wakeup_source *ws,
-> +                       struct wakeup_source_attribute *attr, char *buf);
-> +       ssize_t (*store)(struct wakeup_source *ws,
-> +                        struct wakeup_source_attribute *attr, const char *buf,
-> +                        size_t count);
-> +};
-> +
-> +#define to_wakeup_source_obj(x) container_of(x, struct wakeup_source, kobj)
-> +#define to_wakeup_source_attr(x) \
-> +       container_of(x, struct wakeup_source_attribute, attr)
-> +
-> +static ssize_t wakeup_source_attr_show(struct kobject *kobj,
-> +                                      struct attribute *attr,
-> +                                      char *buf)
-> +{
-> +       struct wakeup_source_attribute *attribute;
-> +       struct wakeup_source *ws;
-> +
-> +       ws = to_wakeup_source_obj(kobj);
-> +       attribute = to_wakeup_source_attr(attr);
-> +
-> +       if (!attribute->show)
-> +               return -EIO;
-> +
-> +       return attribute->show(ws, attribute, buf);
-> +}
-> +
-> +static const struct sysfs_ops wakeup_source_sysfs_ops = {
-> +       .show = wakeup_source_attr_show,
-> +};
-> +
-> +static void wakeup_source_release(struct kobject *kobj)
-> +{
-> +       struct wakeup_source *ws;
-> +
-> +       ws = to_wakeup_source_obj(kobj);
-> +       kfree_const(ws->name);
-> +       kfree(ws);
-> +}
-> +
-> +static ssize_t wakeup_source_count_show(struct wakeup_source *ws,
-> +                                       struct wakeup_source_attribute *attr,
-> +                                       char *buf)
-> +{
-> +       unsigned long flags;
-> +       unsigned long var;
-> +
-> +       spin_lock_irqsave(&ws->lock, flags);
-> +       if (strcmp(attr->attr.name, "active_count") == 0)
-> +               var = ws->active_count;
-> +       else if (strcmp(attr->attr.name, "event_count") == 0)
-> +               var = ws->event_count;
-> +       else if (strcmp(attr->attr.name, "wakeup_count") == 0)
-> +               var = ws->wakeup_count;
-> +       else
-> +               var = ws->expire_count;
-> +       spin_unlock_irqrestore(&ws->lock, flags);
-> +
-> +       return sprintf(buf, "%lu\n", var);
-> +}
-> +
-> +#define wakeup_source_count_attr(_name)                        \
-> +static struct wakeup_source_attribute _name##_attr = { \
-> +       .attr   = {                                     \
-> +               .name = __stringify(_name),             \
-> +               .mode = 0444,                           \
-> +       },                                              \
-> +       .show   = wakeup_source_count_show,             \
-> +}
-> +
-> +wakeup_source_count_attr(active_count);
-> +wakeup_source_count_attr(event_count);
-> +wakeup_source_count_attr(wakeup_count);
-> +wakeup_source_count_attr(expire_count);
-> +
-> +#define wakeup_source_attr(_name) \
-> +static struct wakeup_source_attribute _name##_attr = __ATTR_RO(_name)
-> +
-> +static ssize_t active_time_show(struct wakeup_source *ws,
-> +                               struct wakeup_source_attribute *attr,
-> +                               char *buf)
-> +{
-> +       unsigned long flags;
-> +       ktime_t active_time;
-> +
-> +       spin_lock_irqsave(&ws->lock, flags);
-> +       active_time = ws->active ? ktime_sub(ktime_get(), ws->last_time) : 0;
-> +       spin_unlock_irqrestore(&ws->lock, flags);
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(active_time));
-> +}
-> +wakeup_source_attr(active_time);
-> +
-> +static ssize_t total_time_show(struct wakeup_source *ws,
-> +                              struct wakeup_source_attribute *attr,
-> +                              char *buf)
-> +{
-> +       unsigned long flags;
-> +       ktime_t active_time;
-> +       ktime_t total_time;
-> +
-> +       spin_lock_irqsave(&ws->lock, flags);
-> +       total_time = ws->total_time;
-> +       if (ws->active) {
-> +               active_time = ktime_sub(ktime_get(), ws->last_time);
-> +               total_time = ktime_add(total_time, active_time);
-> +       }
-> +       spin_unlock_irqrestore(&ws->lock, flags);
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(total_time));
-> +}
-> +wakeup_source_attr(total_time);
-> +
-> +static ssize_t max_time_show(struct wakeup_source *ws,
-> +                            struct wakeup_source_attribute *attr,
-> +                            char *buf)
-> +{
-> +       unsigned long flags;
-> +       ktime_t active_time;
-> +       ktime_t max_time;
-> +
-> +       spin_lock_irqsave(&ws->lock, flags);
-> +       max_time = ws->max_time;
-> +       if (ws->active) {
-> +               active_time = ktime_sub(ktime_get(), ws->last_time);
-> +               if (active_time > max_time)
-> +                       max_time = active_time;
-> +       }
-> +       spin_unlock_irqrestore(&ws->lock, flags);
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(max_time));
-> +}
-> +wakeup_source_attr(max_time);
-> +
-> +static ssize_t last_change_show(struct wakeup_source *ws,
-> +                               struct wakeup_source_attribute *attr,
-> +                               char *buf)
-> +{
-> +       unsigned long flags;
-> +       ktime_t last_time;
-> +
-> +       spin_lock_irqsave(&ws->lock, flags);
-> +       last_time = ws->last_time;
-> +       spin_unlock_irqrestore(&ws->lock, flags);
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(last_time));
-> +}
-> +wakeup_source_attr(last_change);
-> +
-> +static ssize_t prevent_suspend_time_show(struct wakeup_source *ws,
-> +                                        struct wakeup_source_attribute *attr,
-> +                                        char *buf)
-> +{
-> +       unsigned long flags;
-> +       ktime_t prevent_sleep_time;
-> +
-> +       spin_lock_irqsave(&ws->lock, flags);
-> +       prevent_sleep_time = ws->prevent_sleep_time;
-> +       if (ws->active && ws->autosleep_enabled) {
-> +               prevent_sleep_time = ktime_add(prevent_sleep_time,
-> +                       ktime_sub(ktime_get(), ws->start_prevent_time));
-> +       }
-> +       spin_unlock_irqrestore(&ws->lock, flags);
-> +       return sprintf(buf, "%lld\n", ktime_to_ms(prevent_sleep_time));
-> +}
-> +wakeup_source_attr(prevent_suspend_time);
-> +
-> +static struct attribute *wakeup_source_default_attrs[] = {
-> +       &active_count_attr.attr,
-> +       &event_count_attr.attr,
-> +       &wakeup_count_attr.attr,
-> +       &expire_count_attr.attr,
-> +       &active_time_attr.attr,
-> +       &total_time_attr.attr,
-> +       &max_time_attr.attr,
-> +       &last_change_attr.attr,
-> +       &prevent_suspend_time_attr.attr,
-> +       NULL,
-> +};
-> +ATTRIBUTE_GROUPS(wakeup_source_default);
-> +
-> +struct kobj_type wakeup_source_ktype = {
-> +       .sysfs_ops = &wakeup_source_sysfs_ops,
-> +       .release = wakeup_source_release,
-> +       .default_groups = wakeup_source_default_groups,
-> +};
-> +
-> +struct kset *wakeup_source_kset;
-> +
-> +static int __init wakeup_sources_sysfs_init(void)
-> +{
-> +       wakeup_source_kset = kset_create_and_add("wakeup_sources", NULL,
-> +                       power_kobj);
-> +       if (!wakeup_source_kset)
-> +               return -ENOMEM;
-> +
-> +       return 0;
-> +}
-> +
-> +postcore_initcall(wakeup_sources_sysfs_init);
-> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-> index ce57771fab9b..9af3bdd50557 100644
-> --- a/include/linux/pm_wakeup.h
-> +++ b/include/linux/pm_wakeup.h
-> @@ -57,6 +57,7 @@ struct wakeup_source {
->         unsigned long           wakeup_count;
->         bool                    active:1;
->         bool                    autosleep_enabled:1;
-> +       struct kobject          kobj;
->  };
->
->  #ifdef CONFIG_PM_SLEEP
-> @@ -100,6 +101,10 @@ extern void pm_relax(struct device *dev);
->  extern void pm_wakeup_ws_event(struct wakeup_source *ws, unsigned int msec, bool hard);
->  extern void pm_wakeup_dev_event(struct device *dev, unsigned int msec, bool hard);
->
-> +/* drivers/base/power/wakeup_sysfs.c */
-> +extern struct kobj_type wakeup_source_ktype;
-> +extern struct kset *wakeup_source_kset;
-> +
->  #else /* !CONFIG_PM_SLEEP */
->
->  static inline void device_set_wakeup_capable(struct device *dev, bool capable)
-> @@ -179,6 +184,10 @@ static inline void pm_wakeup_ws_event(struct wakeup_source *ws,
->  static inline void pm_wakeup_dev_event(struct device *dev, unsigned int msec,
->                                        bool hard) {}
->
-> +/* drivers/base/power/wakeup_sysfs.c */
-> +static struct kobj_type wakeup_source_ktype;
-> +static struct kset *wakeup_source_kset;
-> +
->  #endif /* !CONFIG_PM_SLEEP */
->
->  static inline void wakeup_source_init(struct wakeup_source *ws,
-> diff --git a/kernel/power/wakelock.c b/kernel/power/wakelock.c
-> index 4210152e56f0..71535eebfbbf 100644
-> --- a/kernel/power/wakelock.c
-> +++ b/kernel/power/wakelock.c
-> @@ -124,8 +124,7 @@ static void __wakelocks_gc(struct work_struct *work)
->                         wakeup_source_remove(&wl->ws);
->                         rb_erase(&wl->node, &wakelocks_tree);
->                         list_del(&wl->lru);
-> -                       kfree(wl->name);
-> -                       kfree(wl);
-> +                       kobject_put(&wl->ws->kobj);
->                         decrement_wakelocks_number();
->                 }
->         }
-> @@ -153,6 +152,7 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
->         struct rb_node **node = &wakelocks_tree.rb_node;
->         struct rb_node *parent = *node;
->         struct wakelock *wl;
-> +       int ret;
->
->         while (*node) {
->                 int diff;
-> @@ -189,6 +189,15 @@ static struct wakelock *wakelock_lookup_add(const char *name, size_t len,
->         }
->         wl->ws.name = wl->name;
->         wl->ws.last_time = ktime_get();
-> +
-> +       wl->ws.kobj.kset = wakeup_source_kset;
-> +       ret = kobject_init_and_add(&wl->ws.kobj, &wakeup_source_ktype, NULL,
-> +                       "%s", wl->ws.name);
-> +       if (ret) {
-> +               kobject_put(&wl->ws.kobj);
-> +               return ERR_PTR(ret);
-> +       }
-> +
->         wakeup_source_add(&wl->ws);
->         rb_link_node(&wl->node, parent, node);
->         rb_insert_color(&wl->node, &wakelocks_tree);
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+On Mon, 2019-06-24 at 22:01 -0700, Joe Perches wrote:
+> On Tue, 2019-06-25 at 13:17 +1000, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Apologies for the large CC list, it's a heads up for those
+> > responsible
+> > for subsystems where a prototype change in generic code causes a
+> > change
+> > in those subsystems.
+> []
+> > The default behaviour of hexdump is unchanged, however, the
+> > prototype
+> > for hex_dump_to_buffer() has changed, and print_hex_dump() has been
+> > renamed to print_hex_dump_ext(), with a wrapper replacing it for
+> > compatibility with existing code, which would have been too
+> > invasive to
+> > change.
+> 
+> I believe this cover letter is misleading.
+> 
+> The point of the wrapper is to avoid unnecessary changes
+> in existing
+> code.
+> 
+> 
+
+The wrapper is for print_hex_dump(), which has many callers.
+
+The changes to existing code are for hex_dump_to_buffer(), which is
+called in relatively few places.
+
+-- 
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva    
+Twitter: @EvilDeece
+blog: http://alastair.d-silva.org
+
+
