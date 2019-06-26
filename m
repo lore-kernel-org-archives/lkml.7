@@ -2,85 +2,108 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD35AC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663FAC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A907217D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:38:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iqa/5AWM"
+	by mail.kernel.org (Postfix) with ESMTP id 4694F21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfFZPic (ORCPT
+        id S1728366AbfFZPip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:38:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:45322 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfFZPic (ORCPT
+        Wed, 26 Jun 2019 11:38:45 -0400
+Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:38774 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfFZPip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:38:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+/or7RUo8RlGi5/xsF/irgqT3ptx8jRXk2ETY+C794o=; b=iqa/5AWMRhPrM653o+fAvvzP/
-        3Lu11i5qtEA4ol0XFXBypacKt3hMduvti/cE2K/yNgiQ4JRON9meWX+Po+pL5yBo6NP8FgwZSYEFc
-        Mdj4WQn2vH6kw8etGhdrkBZHybPguu7XHlfgj+JQix/X/BYr1OfCIztMkG8B2KcHQ05PMK0WbemnH
-        v50nvf7jL5fZ2lPZYTnNbtdWlaY7trB2NndBDzJ9Nf+Dm5tLjPQUoHrmoaAT8wTKYmzbFSOO+uUbZ
-        F2Bz/idD0WyKulTxAegisbOggsq6y/MYuNqTHpvvgnVktWlVD18xTtxTQlhbkT6gRspskDQF9ZtLw
-        6G1KTOdiw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgA0D-0006Qo-QY; Wed, 26 Jun 2019 15:38:29 +0000
-Date:   Wed, 26 Jun 2019 08:38:29 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>, linux-mm@kvack.org,
-        akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com, anshuman.khandual@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
-Message-ID: <20190626153829.GA22138@infradead.org>
-References: <cover.1558547956.git.robin.murphy@arm.com>
- <20190626073533.GA24199@infradead.org>
- <20190626123139.GB20635@lakrids.cambridge.arm.com>
+        Wed, 26 Jun 2019 11:38:45 -0400
+Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
+        id 1hgA05-0005dv-00; Wed, 26 Jun 2019 15:38:21 +0000
+Date:   Wed, 26 Jun 2019 11:38:21 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] remove arch/sh?
+Message-ID: <20190626153820.GP1506@brightrain.aerifal.cx>
+References: <20190625085616.GA32399@lst.de>
+ <ccfa78f3-35c2-1d26-98b5-b21a76b90e1e@physik.fu-berlin.de>
+ <20190625112146.GA9580@angband.pl>
+ <401b12c0-d175-2720-d26c-b96ce3b28c71@physik.fu-berlin.de>
+ <CAK8P3a3irwwwCQ_kPh5BTg-jGGbJOj=3fhVrTDBUZgH1V7bpFQ@mail.gmail.com>
+ <20190625142832.GD1506@brightrain.aerifal.cx>
+ <CAK8P3a0j_9fzZxhxqCMHfoJ5DdZpHFvANEPqs1pbP23TCei6ng@mail.gmail.com>
+ <87tvccr3kv.wl-ysato@users.sourceforge.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626123139.GB20635@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <87tvccr3kv.wl-ysato@users.sourceforge.jp>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 01:31:40PM +0100, Mark Rutland wrote:
-> On Wed, Jun 26, 2019 at 12:35:33AM -0700, Christoph Hellwig wrote:
-> > Robin, Andrew:
-> 
-> As a heads-up, Robin is currently on holiday, so this is all down to
-> Andrew's preference.
-> 
-> > I have a series for the hmm tree, which touches the section size
-> > bits, and remove device public memory support.
+On Wed, Jun 26, 2019 at 08:25:20PM +0900, Yoshinori Sato wrote:
+> On Wed, 26 Jun 2019 00:48:09 +0900,
+> Arnd Bergmann wrote:
 > > 
-> > It might be best if we include this series in the hmm tree as well
-> > to avoid conflicts.  Is it ok to include the rebase version of at least
-> > the cleanup part (which looks like it is not required for the actual
-> > arm64 support) in the hmm tree to avoid conflicts?
+> > On Tue, Jun 25, 2019 at 4:28 PM Rich Felker <dalias@libc.org> wrote:
+> > > On Tue, Jun 25, 2019 at 02:50:01PM +0200, Arnd Bergmann wrote:
+> > > > don't build, or are incomplete and not worked on for a long
+> > > > time, compared to the bits that are known to work and that someone
+> > > > is still using or at least playing with.
+> > > > I guess a lot of the SoCs that have no board support other than
+> > > > the Hitachi/Renesas reference platform can go away too, as any products
+> > > > based on those boards have long stopped updating their kernels.
+> > >
+> > > My intent here was always, after getting device tree theoretically
+> > > working for some reasonable subset of socs/boards, drop the rest and
+> > > add them back as dts files (possibly plus some small drivers) only if
+> > > there's demand/complaint about regression.
+> > 
+> > Do you still think that this is a likely scenario for the future though?
+> > 
+> > If nobody's actively working on the DT support for the old chips and
+> > this is unlikely to change soon, removing the known-broken bits earlier
+> > should at least make it easier to keep maintaining the working bits
+> > afterwards.
+> > 
+> > FWIW, I went through the SH2, SH2A and SH3 based boards that
+> > are supported in the kernel and found almost all of them to
+> > be just reference platforms, with no actual product ever merged.
+> > IIRC the idea back then was that users would supply their
+> > own board files as an add-on patch, but I would consider all the
+> > ones that did to be obsolete now.
+> > 
+> > HP Jornada 6xx is the main machine that was once supported, but
+> > given that according to the defconfig file it only comes with 4MB
+> > of RAM, it is unlikely to still boot any 5.x kernel, let alone user
+> > space (wikipedia claims there were models with 16MB of RAM,
+> > but that is still not a lot these days).
+> > 
+> > "Magicpanel" was another product that is supported in theory, but
+> > the google search showed the 2007 patch for the required
+> > flash storage driver that was never merged.
+> > 
+> > Maybe everything but J2 and SH4(a) can just get retired?
+> > 
+> >      Arnd
 > 
-> Per the cover letter, the arm64 patch has a build dependency on the
-> others, so that might require a stable brnach for the common prefix.
+> I also have some boards, so it's possible to rewrite more.
+> I can not rewrite the target I do not have, so I think that
+> there is nothing but to retire.
 
-I guess we'll just have to live with the merge errors then, as the
-mm tree is a patch series and thus can't easily use a stable base
-tree.  That is unlike Andrew wants to pull in the hmm tree as a prep
-patch for the series.
+To clarify, are you agreeing with Arnd's suggestion to retire/remove
+everything but jcore and sh4[a]?
+
+Rich
