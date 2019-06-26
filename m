@@ -2,109 +2,107 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989F5C48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C37BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6F7208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561579203;
-	bh=PqkQacy8e28qP3sUTBhoHayPPBYArIhVloWeM/yincM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Shv+6mLL4TQf2lwR8YpUhJcApaXPfaFhHZ0LVjvxVu6SClGNoIHbhQYHeVBpBfIUD
-	 oDBf1GQEJXgRqGwq5N+IlUghyNzR4Qq0Ps+dVkCEp9EwU+I5voir/mFldqIq5EYwIS
-	 nExOn4RD/5yy3bYh5siRZndsE1Wk0b0o3pyN+di4=
+	by mail.kernel.org (Postfix) with ESMTP id D3903216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:00:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CkNwh7Im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfFZUAC (ORCPT
+        id S1726564AbfFZUAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZUAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:00:01 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE3DB217D4;
-        Wed, 26 Jun 2019 20:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561579201;
-        bh=PqkQacy8e28qP3sUTBhoHayPPBYArIhVloWeM/yincM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0TnV2TM+KzAMvU87BxAxZvIfn2O43BItJkPjOAxnXJJbRL7twuT6s8UmGCGTQQPMf
-         y/iRLLHN4+NXEi2N0uza+PD3gq2vWSTIcJU15mINmVGI7UXqIBRGCvBkz+G+FUXiiI
-         4isHic/ZCW2TRL6tf7kAb+Ul5hlkYJRHqy23BCOo=
-Received: by mail-qt1-f181.google.com with SMTP id w40so3847113qtk.0;
-        Wed, 26 Jun 2019 13:00:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAUYdI2livavuRGssqdAKph+DmhuBXAGcS9EqmTRmPX4l/LTBJ+k
-        hCO4/Bmviyukme9M8EUBZ6WOEG3gEKIJAtgMsg==
-X-Google-Smtp-Source: APXvYqzq5VKBQtvH5B3vNDjgzQKna5ozyimyAo13hCtAdjYwyS3AUtxMI+8ovK7r0ch9L898z9KqjFrg6te9ckWuQB4=
-X-Received: by 2002:ac8:368a:: with SMTP id a10mr5473062qtc.143.1561579200198;
- Wed, 26 Jun 2019 13:00:00 -0700 (PDT)
+        Wed, 26 Jun 2019 16:00:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37108 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfFZUAe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:00:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 25so554831pgy.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 13:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cbc5Dh7+LimPALKjevNG5TAL9t57bWZBL2kItsK/MGQ=;
+        b=CkNwh7ImC7XRLo+IkDMSV65GVm9m0viwqgH4AavERqe8iu6suGXWtvaUEOEbUOT3Wr
+         Od3Vtk8Cjoz/hAPqd1KEq/YT4O8aCxDN8/lTdkHwqmka+YIsPr26ZS9J0caSV3HfN6fB
+         9W6mrgrc400ohIbFHSKvo0cHaaF4OOfE1xRm8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cbc5Dh7+LimPALKjevNG5TAL9t57bWZBL2kItsK/MGQ=;
+        b=eXJ4yCUTbbQ1mb/EXBMX6uGJBSexJzPEp7DRX94f6RdqTW3sDkf5AjyRYUHfARVs/8
+         BA84PChrfQcIQRESamarWVZrQ22yNEdfX5KafGegp3beUnXQ6AULQqCTJigyOMfFAF4X
+         XfMtRZ/BraOH3ZrrF6hnrRLYvQuGNMqqy+Z4QMtk2ixsNzJZL89YOP29fEKViCgnMaXp
+         pW5DVewzIuhv7vtg2Sf/2eDcYENfbmOTZXwLlrMIJbGD5+rpLONxgAmCcAKM+jNvpsw4
+         j6p8PLig3p53BtzuSmkexOldN/ecV/UvTd2RliC9dbREjeRN6P5lonjU5Oyngbi17dAY
+         Zu4g==
+X-Gm-Message-State: APjAAAVAjIYkmoQjz07SUF1xRH2QIMS5yDr2WZzKaX4rxhCs5KOeQ+sx
+        jTMtN8F/LYRfyJCUtjV8qgjVQw==
+X-Google-Smtp-Source: APXvYqwB3pTyrU5OpVfKMXgRlwrNkGcKuGijwGZQPEfQcgd8uyGotsUUkSTgOyEqSDdxAqwt78e5IA==
+X-Received: by 2002:a63:c006:: with SMTP id h6mr4516271pgg.285.1561579233579;
+        Wed, 26 Jun 2019 13:00:33 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id e20sm59204pfi.35.2019.06.26.13.00.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 13:00:33 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     groeck@chromium.org, drinkcat@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] block, bfq: Init saved_wr_start_at_switch_to_srt in unlikely case
+Date:   Wed, 26 Jun 2019 12:59:19 -0700
+Message-Id: <20190626195919.107425-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-References: <1561389236-26464-1-git-send-email-stefan.popa@analog.com>
-In-Reply-To: <1561389236-26464-1-git-send-email-stefan.popa@analog.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Jun 2019 13:59:49 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
-Message-ID: <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] iio: frequency: adf4371: Add support for output stage mute
-To:     Stefan Popa <stefan.popa@analog.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 24, 2019 at 9:14 AM Stefan Popa <stefan.popa@analog.com> wrote:
->
-> Another feature of the ADF4371/ADF4372 is that the supply current to the
-> RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
-> as measured by the digital lock detect circuitry. The mute to lock
-> detect bit (MUTE_LD) in REG25 enables this function.
->
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> ---
->  .../devicetree/bindings/iio/frequency/adf4371.yaml          |  6 ++++++
+Some debug code suggested by Paolo was tripping when I did reboot
+stress tests.  Specifically in bfq_bfqq_resume_state()
+"bic->saved_wr_start_at_switch_to_srt" was later than the current
+value of "jiffies".  A bit of debugging showed that
+"bic->saved_wr_start_at_switch_to_srt" was actually 0 and a bit more
+debugging showed that was because we had run through the "unlikely"
+case in the bfq_bfqq_save_state() function.
 
-If you resend and in the future, please split bindings to separate patch.
+Let's init "saved_wr_start_at_switch_to_srt" in the unlikely case to
+something sane.
 
->  drivers/iio/frequency/adf4371.c                             | 13 +++++++++++++
->  2 files changed, 19 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> index a268a9d..6db8742 100644
-> --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> @@ -32,6 +32,12 @@ properties:
->      items:
->        - clkin
->
-> +  adi,mute-till-lock-en:
-> +    description:
-> +      If this property is present, then the supply current to RF8P and RF8N
-> +      output stage will shut down until the ADF4371/ADF4372 achieves lock as
-> +      measured by the digital lock detect circuitry.
+NOTE: this fixes no known real-world errors.
 
-You need to define the type:
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Paolo Valente <paolo.valente@linaro.org>
+---
+Paolo said to add his Reviewed-by in https://crrev.com/c/1678756.
 
-type: boolean
+ block/bfq-iosched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Maybe Jonathan will fix up.
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 72840ebf953e..008c93d6b8d7 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -2678,6 +2678,7 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
+ 		 * to enjoy weight raising if split soon.
+ 		 */
+ 		bic->saved_wr_coeff = bfqq->bfqd->bfq_wr_coeff;
++		bic->saved_wr_start_at_switch_to_srt = bfq_smallest_from_now();
+ 		bic->saved_wr_cur_max_time = bfq_wr_duration(bfqq->bfqd);
+ 		bic->saved_last_wr_start_finish = jiffies;
+ 	} else {
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-Rob
