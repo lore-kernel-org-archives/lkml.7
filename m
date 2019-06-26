@@ -2,84 +2,70 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C3C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20B9C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A256721743
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DE0214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfFZRld (ORCPT
+        id S1726497AbfFZRlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:41:33 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39200 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfFZRld (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:41:33 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so3719362wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:41:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=t2qwRs7koe0N7pYzHfarivbdbI697R0UkLvgOjEc6fg=;
-        b=rNWScwCtIc3FS+PqLO6TGwiLFcIJtJxD+jaULsarqZ2w74dugcaLPDSdvP0+lTIGSU
-         v33OiUzXZEsd7Wi7wY2sFZ53yOBP8sQLwJIgwPT+zjZ7+zHHQOgJzUBsi4Zov1dhpCjY
-         r26KvGml+iAKaU3ZFtDya4VU+1P8nlBOR/UL383c5wAnm+1S+Po3A1OnTOJQulqRbgzh
-         Z4HZhf9x8UAFJ9P2U1K5Sd0clH73ACAX0CV89X3ST6Wjo6NQolKtm6Qp4ADJ9L8too4k
-         d2u41GcJ9V9RqpFJFFlkG+AO0PvdPJErgDhSwo55gzXuyvKHcMuII0tpdAkhwGFwut71
-         wT6w==
-X-Gm-Message-State: APjAAAU+MqkkgJ4CF90FYZrqRyZ8zCGtrNb/RXWR8yagCWa18FrCV1LX
-        uE2NMWfJHkBn9mCZJyAhs+aRxFEiNuk=
-X-Google-Smtp-Source: APXvYqwJ4Z4pdKRax8Z2pKF/BL7aG7XRGilbIpnO+wMYHg1EmrVhaIhK8YsHNXK6Nvcm7thSb6IuMg==
-X-Received: by 2002:adf:ee91:: with SMTP id b17mr4595442wro.182.1561570891172;
-        Wed, 26 Jun 2019 10:41:31 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 72sm24638446wrk.22.2019.06.26.10.41.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 10:41:30 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>, Nadav Amit <namit@vmware.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH 6/9] KVM: x86: Provide paravirtualized flush_tlb_multi()
-In-Reply-To: <CALCETrW2kudQ-nt7KFKRizNjBAzDVfLW7qQRJmkuigSmsYBFhg@mail.gmail.com>
-References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-7-namit@vmware.com> <cb28f2b4-92f0-f075-648e-dddfdbdd2e3c@intel.com> <401C4384-98A1-4C27-8F71-4848F4B4A440@vmware.com> <CALCETrWcUWw8ep-n6RaOeojnL924xOM7g7eb9g=3DRwOHQAgnA@mail.gmail.com> <35755C67-E8EB-48C3-8343-BB9ABEB4E32C@vmware.com> <CALCETrUPKj1rRn1bKDYkwZ8cv1navBne72kTCtGHjnhTM0cOVw@mail.gmail.com> <A52332CE-80A2-4705-ABB0-3CDDB7AEC889@vmware.com> <CALCETrW2kudQ-nt7KFKRizNjBAzDVfLW7qQRJmkuigSmsYBFhg@mail.gmail.com>
-Date:   Wed, 26 Jun 2019 19:41:29 +0200
-Message-ID: <878stockhi.fsf@vitty.brq.redhat.com>
+        Wed, 26 Jun 2019 13:41:42 -0400
+Received: from ms.lwn.net ([45.79.88.28]:40948 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726239AbfFZRlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:41:42 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 655782AE;
+        Wed, 26 Jun 2019 17:41:41 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 11:41:40 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Cezary Jackiewicz <cezary.jackiewicz@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v2] Documentation: platform: Delete
+ x86-laptop-drivers.txt
+Message-ID: <20190626114140.52af4bb5@lwn.net>
+In-Reply-To: <CAHp75Ve+v7o=Ar=5Vc7yZndCxUNf3sn8YwpCHXMwdeJxuLKMoA@mail.gmail.com>
+References: <20190620183827.23704-1-puranjay12@gmail.com>
+        <CAHp75Ve+v7o=Ar=5Vc7yZndCxUNf3sn8YwpCHXMwdeJxuLKMoA@mail.gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
+On Thu, 20 Jun 2019 22:50:17 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> All this being said, do we currently have any system that supports
-> PCID *and* remote flushes?  I guess KVM has some mechanism, but I'm
-> not that familiar with its exact capabilities.  If I remember right,
-> Hyper-V doesn't expose PCID yet.
->
+> On Thu, Jun 20, 2019 at 9:38 PM Puranjay Mohan <puranjay12@gmail.com> wrote:
+> >
+> > The list of laptops supported by drivers in PDx86 subsystem is quite
+> > big and growing. x86-laptop-drivers.txt contains details of very few
+> > laptop models. Remove it because it does not  serve any purpose.
+> >  
+> 
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
 
-It already does (and support it to certain extent), see
+I have applied this, thanks.
 
-commit 617ab45c9a8900e64a78b43696c02598b8cad68b
-Author: Vitaly Kuznetsov <vkuznets@redhat.com>
-Date:   Wed Jan 24 11:36:29 2018 +0100
-
-    x86/hyperv: Stop suppressing X86_FEATURE_PCID
-
--- 
-Vitaly
+jon
