@@ -2,202 +2,88 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D00C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C9BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07273217D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561567055;
-	bh=Bwoi/52zO9ILP6ACaFflaMC9eRq2pCusKuY50s//+DY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fYRyw2wlItnvidfTqhrpZfZr9hvjHiCHVI9QyuDgmObC9DKx1iDAehAs5zBzbkzbu
-	 HsjSSTYyw+JIfWG7h1/i1BFRBZobVrFNio1ONU4faSzNSnthZrebOKUJiau8IF5G0V
-	 g/h47jLGQIMYph8fXfOFUESRX4CWLRfVOpEr9VMU=
+	by mail.kernel.org (Postfix) with ESMTP id 8164221738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfFZQhd (ORCPT
+        id S1726597AbfFZQim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFZQhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:37:33 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5374F217F5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 16:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561567052;
-        bh=Bwoi/52zO9ILP6ACaFflaMC9eRq2pCusKuY50s//+DY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TUyISNDxdFqIEgj3On1gDi9E1NP3HQUJ5IyOaYpw+o0hjYu8F0CAfEa4YKLYjVGRP
-         4jDZEyFOiVZvdZ+V/2oAS2z+/t/pU/Wh0n0NNHmhd4+f9xF98meomjXsPt+aLxb4HE
-         55pOOm2B0L7f0xQg6cjPdhqwBAW2pYEEkgzhCeXA=
-Received: by mail-wm1-f48.google.com with SMTP id v19so2765311wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 09:37:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAUUhWFAXrL2RUOLSN/yawk6DhF4xXezluI20qoAbPdwLf95SZxj
-        thuyL3VnuLzLbBD++S3UqVvU2kMkTZZqYbBMLc8NHw==
-X-Google-Smtp-Source: APXvYqxRwb5cr2qiC3vK3YEiw0qCxogxmQvuNJwcAjmGFoynNsZ1yT+YsDO3pvTXiSN/dydwD1e10qbPtEzxcgjXXCM=
-X-Received: by 2002:a1c:1a56:: with SMTP id a83mr3567922wma.161.1561567050755;
- Wed, 26 Jun 2019 09:37:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-7-namit@vmware.com>
- <cb28f2b4-92f0-f075-648e-dddfdbdd2e3c@intel.com> <401C4384-98A1-4C27-8F71-4848F4B4A440@vmware.com>
- <CALCETrWcUWw8ep-n6RaOeojnL924xOM7g7eb9g=3DRwOHQAgnA@mail.gmail.com>
- <35755C67-E8EB-48C3-8343-BB9ABEB4E32C@vmware.com> <CALCETrUPKj1rRn1bKDYkwZ8cv1navBne72kTCtGHjnhTM0cOVw@mail.gmail.com>
- <A52332CE-80A2-4705-ABB0-3CDDB7AEC889@vmware.com>
-In-Reply-To: <A52332CE-80A2-4705-ABB0-3CDDB7AEC889@vmware.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 26 Jun 2019 09:37:19 -0700
-X-Gmail-Original-Message-ID: <CALCETrW2kudQ-nt7KFKRizNjBAzDVfLW7qQRJmkuigSmsYBFhg@mail.gmail.com>
-Message-ID: <CALCETrW2kudQ-nt7KFKRizNjBAzDVfLW7qQRJmkuigSmsYBFhg@mail.gmail.com>
-Subject: Re: [PATCH 6/9] KVM: x86: Provide paravirtualized flush_tlb_multi()
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 26 Jun 2019 12:38:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49543 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfFZQil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:38:41 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgAw8-0007Ue-U0; Wed, 26 Jun 2019 18:38:21 +0200
+Date:   Wed, 26 Jun 2019 18:38:19 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrey Vagin <avagin@openvz.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dmitry Safonov <dima@arista.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shijith Thotton <sthotton@marvell.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Huw Davies <huw@codeweavers.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:timers/vdso] MAINTAINERS: Add entry for the generic VDSO
+ library
+In-Reply-To: <CALCETrWaUEnnTiyh-xDoywji1GdfoeoSmy635MYcXMe9CgYkCA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1906261837170.32342@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1906240142000.32342@nanos.tec.linutronix.de> <tip-e70980312a946a56173843cbc0104b3b0e57a0c7@git.kernel.org> <CALCETrWaUEnnTiyh-xDoywji1GdfoeoSmy635MYcXMe9CgYkCA@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 11:30 PM Nadav Amit <namit@vmware.com> wrote:
->
-> > On Jun 25, 2019, at 8:56 PM, Andy Lutomirski <luto@kernel.org> wrote:
+On Wed, 26 Jun 2019, Andy Lutomirski wrote:
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index d0ed735994a5..13ece5479167 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -6664,6 +6664,18 @@ L:       kvm@vger.kernel.org
+> >  S:     Supported
+> >  F:     drivers/uio/uio_pci_generic.c
 > >
-> > On Tue, Jun 25, 2019 at 8:41 PM Nadav Amit <namit@vmware.com> wrote:
-> >>> On Jun 25, 2019, at 8:35 PM, Andy Lutomirski <luto@kernel.org> wrote:
-> >>>
-> >>> On Tue, Jun 25, 2019 at 7:39 PM Nadav Amit <namit@vmware.com> wrote:
-> >>>>> On Jun 25, 2019, at 2:40 PM, Dave Hansen <dave.hansen@intel.com> wr=
-ote:
-> >>>>>
-> >>>>> On 6/12/19 11:48 PM, Nadav Amit wrote:
-> >>>>>> Support the new interface of flush_tlb_multi, which also flushes t=
-he
-> >>>>>> local CPU's TLB, instead of flush_tlb_others that does not. This
-> >>>>>> interface is more performant since it parallelize remote and local=
- TLB
-> >>>>>> flushes.
-> >>>>>>
-> >>>>>> The actual implementation of flush_tlb_multi() is almost identical=
- to
-> >>>>>> that of flush_tlb_others().
-> >>>>>
-> >>>>> This confused me a bit.  I thought we didn't support paravirtualize=
-d
-> >>>>> flush_tlb_multi() from reading earlier in the series.
-> >>>>>
-> >>>>> But, it seems like that might be Xen-only and doesn't apply to KVM =
-and
-> >>>>> paravirtualized KVM has no problem supporting flush_tlb_multi().  I=
-s
-> >>>>> that right?  It might be good to include some of that background in=
- the
-> >>>>> changelog to set the context.
-> >>>>
-> >>>> I=E2=80=99ll try to improve the change-logs a bit. There is no inher=
-ent reason for
-> >>>> PV TLB-flushers not to implement their own flush_tlb_multi(). It is =
-left
-> >>>> for future work, and here are some reasons:
-> >>>>
-> >>>> 1. Hyper-V/Xen TLB-flushing code is not very simple
-> >>>> 2. I don=E2=80=99t have a proper setup
-> >>>> 3. I am lazy
-> >>>
-> >>> In the long run, I think that we're going to want a way for one CPU t=
-o
-> >>> do a remote flush and then, with appropriate locking, update the
-> >>> tlb_gen fields for the remote CPU.  Getting this right may be a bit
-> >>> nontrivial.
-> >>
-> >> What do you mean by =E2=80=9Cdo a remote flush=E2=80=9D?
-> >
-> > I mean a PV-assisted flush on a CPU other than the CPU that started
-> > it.  If you look at flush_tlb_func_common(), it's doing some work that
-> > is rather fancier than just flushing the TLB.  By replacing it with
-> > just a pure flush on Xen or Hyper-V, we're losing the potential CR3
-> > switch and this bit:
-> >
-> >        /* Both paths above update our state to mm_tlb_gen. */
-> >        this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb=
-_gen);
-> >
-> > Skipping the former can hurt idle performance, although we should
-> > consider just disabling all the lazy optimizations on systems with PV
-> > flush.  (And I've asked Intel to help us out here in future hardware.
-> > I have no idea what the result of asking will be.)  Skipping the
-> > cpu_tlbstate write means that we will do unnecessary flushes in the
-> > future, and that's not doing us any favors.
-> >
-> > In principle, we should be able to do something like:
-> >
-> > flush_tlb_multi(...);
-> > for(each CPU that got flushed) {
-> >  spin_lock(something appropriate?);
-> >  per_cpu_write(cpu, cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, f->new_t=
-lb_gen);
-> >  spin_unlock(...);
-> > }
-> >
-> > with the caveat that it's more complicated than this if the flush is a
-> > partial flush, and that we'll want to check that the ctx_id still
-> > matches, etc.
-> >
-> > Does this make sense?
->
-> Thanks for the detailed explanation. Let me check that I got it right.
->
-> You want to optimize cases in which:
->
-> 1. A virtual machine
+> > +GENERIC VDSO LIBRARY:
+> > +M:     Andy Lutomirksi <luto@kernel.org>
+> 
+> s/ksi/ski :)
+> 
+> Yes, it's a mouthful.
 
-Yes.
-
->
-> 2. Which issues mtultiple (remote) TLB shootdowns
-
-Yes.  Or just one followed by a context switch.  Right now it's
-suboptimal with just two vCPUs and a single remote flush.  If CPU 0
-does a remote PV flush of CPU1 and then CPU1 context switches away
-from the running mm and back, it will do an unnecessary flush on the
-way back because the tlb_gen won't match.
-
->
-> 2. To remote vCPU which is preempted by the hypervisor
-
-Yes, or even one that isn't preempted.
-
->
-> 4. And unlike KVM, the hypervisor does not provide facilities for the VM =
-to
-> know which vCPU is preempted, and atomically request TLB flush when the v=
-CPU
-> is scheduled.
->
-
-I'm not sure this makes much difference to the case I'm thinking of.
-
-All this being said, do we currently have any system that supports
-PCID *and* remote flushes?  I guess KVM has some mechanism, but I'm
-not that familiar with its exact capabilities.  If I remember right,
-Hyper-V doesn't expose PCID yet.
-
-
-> Right?
->
+/me blushes some more
