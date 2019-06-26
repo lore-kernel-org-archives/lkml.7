@@ -2,93 +2,103 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7BDC48BD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897F2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBB7208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561579494;
-	bh=X/TJG4C67uj+QUKHwisoqZfc5Kvj94fNEcC3CN0WB94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qKu8FfVwGNYHW/fyIcKsKjiQeXOQdmmrtFoNOKpWak3LHf8JSWsMpCqlG9FCSVr5/
-	 NQiMqwQrfuXdZAAx8FiZ7e4E0792IKxGJB/gJW/RcCFKVoQT8VOjbfV62JDCIkAbZ5
-	 nuXkqX/nL8BDFEmf2qHppISFBOs9dE+s1Ah3KKjI=
+	by mail.kernel.org (Postfix) with ESMTP id 6005A21726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjAsEbbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfFZUEx (ORCPT
+        id S1726542AbfFZUFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:04:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFZUEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:04:53 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E78421726;
-        Wed, 26 Jun 2019 20:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561579492;
-        bh=X/TJG4C67uj+QUKHwisoqZfc5Kvj94fNEcC3CN0WB94=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l8Gsoh/SJBlaAxZJZN8+Aw1gi526kwtkbhRGPFAL/rPI9VcVGHSg0XyKNs0662pkE
-         UVTvGUkCenYwtnIbZ7hEwwLm3hWhoBxY08KOUrW8ggIJx/pH+TzpvswxO2JPFlJaKw
-         BL8S9x2dlOQcyuIPOj8O0YupH5/Xim22p9lVtOPU=
-Received: by mail-qk1-f170.google.com with SMTP id c11so2755109qkk.8;
-        Wed, 26 Jun 2019 13:04:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAUb+25L+upX1s4ads9MHz8e0O4eRgTD4EzHZuz4BE0qutU0mHOJ
-        U0xA+D0clGrFV+dnoVxPlxo2oDv8ChCzUg3zgQ==
-X-Google-Smtp-Source: APXvYqx9Wqp3U8SYJhFU7onUuLcS2mEmyi7gNYeK7pL8Fg15uhD2NucDRkOOFa4EDWtQPKvRvcevUInPbBwLEdWt56Y=
-X-Received: by 2002:ae9:ebd1:: with SMTP id b200mr5743819qkg.152.1561579491498;
- Wed, 26 Jun 2019 13:04:51 -0700 (PDT)
+        Wed, 26 Jun 2019 16:05:14 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40806 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZUFN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:05:13 -0400
+Received: by mail-lf1-f68.google.com with SMTP id a9so2440931lff.7;
+        Wed, 26 Jun 2019 13:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H2zmKJo2VtijLlWc4slNGMFioWOkeMTocZiK11ccxII=;
+        b=CjAsEbbCoxJByXYTLbRXo2DNrikWbe3orPG4AFaj5saY5KjaJjAGs17ilXPQKVVx9c
+         7rGMijHgtUBknkD6z5sL3OraKHsm1jtiHAVWXJvtdCE2gJ+SRkAltND8qHfVEhY/+aJ9
+         ja8juk+ss1Mdp5Al26LUgPEzfMrk1zWHiDAXJ0liif9hFo4zKIB/VElDOuUOlYSy8V6R
+         h93MANRtYoSUWpulyYaQPk2k6W1VLWgTpg9e7RHYz3y7pNsQyL4bhURmM82PuZMSxyMH
+         N1O5Vm5hSHUTm9tSZ4qNQIoCMH0cSWO6Ljoq4hH8BKqkWg9MIQhW+CWpZdmoUJQ3Hugl
+         KNbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H2zmKJo2VtijLlWc4slNGMFioWOkeMTocZiK11ccxII=;
+        b=GoxxCxRGVEypznW7oDLmtR0U6hUxSHIX1LrM6e56pFKBw9z3xd27Q0957obL+dTR2+
+         4/YGVvddPLt6ni89MNfY7kFQM+VFj9tMr6deK/4oeAkm6msiadPWDeTasACGLoL9/wHT
+         ugVnqHf/3mS6NjtTCxQwzqoIwD0i9bhEzABe/Ef9WqmuR0odd2JmUwc5+G+nZsPcsK4n
+         /I5KfkCbWaUKV2OdaI7yGNaC5oyo9JT/6QIaanLlHVUIhAykGep6zGqedMfK/+3YcWmi
+         /tmLmWpvxyH+8PJiS/47a8wUyoflHOORQkEHTJsFMmEScb0jO/g+nMbeCeqGUM16XZU1
+         kLXA==
+X-Gm-Message-State: APjAAAX4F9vbpYhdjAtZ88YtjzvK9zUqVQBJEc56BkJQnFpSYj8/pd/I
+        r70N2WzvkZvaF+U78e/BczduhvIxANJZSOCr/ZY=
+X-Google-Smtp-Source: APXvYqxzn8aLoF5ivVzptd25fkmnfutmDPv7fJI/F/I1IpUhl6t7Jye9DvgsU4wu9s1jYbque2urbRjt+UhTm5cPO2g=
+X-Received: by 2002:a19:ca0e:: with SMTP id a14mr3728351lfg.19.1561579511372;
+ Wed, 26 Jun 2019 13:05:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <1561389236-26464-1-git-send-email-stefan.popa@analog.com> <20190626204820.513fb866@archlinux>
-In-Reply-To: <20190626204820.513fb866@archlinux>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Jun 2019 14:04:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLmXi6Uy9W0tXX87tHuV99H05_+yc98mRUmX_JA0bG=4Q@mail.gmail.com>
-Message-ID: <CAL_JsqLmXi6Uy9W0tXX87tHuV99H05_+yc98mRUmX_JA0bG=4Q@mail.gmail.com>
-Subject: Re: [PATCH 4/4] iio: frequency: adf4371: Add support for output stage mute
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Stefan Popa <stefan.popa@analog.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190625213858.22459-1-guro@fb.com>
+In-Reply-To: <20190625213858.22459-1-guro@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 26 Jun 2019 13:04:59 -0700
+Message-ID: <CAADnVQLMG5_Liz_UkG7m3mN0r9ZOwkCdAOmWgbgdgir6t+tBfg@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next] bpf: fix cgroup bpf release synchronization
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>, Tejun Heo <tj@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 1:48 PM Jonathan Cameron <jic23@kernel.org> wrote:
+On Tue, Jun 25, 2019 at 2:39 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> On Mon, 24 Jun 2019 18:13:56 +0300
-> Stefan Popa <stefan.popa@analog.com> wrote:
+> Since commit 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf
+> from cgroup itself"), cgroup_bpf release occurs asynchronously
+> (from a worker context), and before the release of the cgroup itself.
 >
-> > Another feature of the ADF4371/ADF4372 is that the supply current to the
-> > RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
-> > as measured by the digital lock detect circuitry. The mute to lock
-> > detect bit (MUTE_LD) in REG25 enables this function.
-> >
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> Bit of fuzz on this due to me ignoring patch 1 for now.
+> This introduced a previously non-existing race between the release
+> and update paths. E.g. if a leaf's cgroup_bpf is released and a new
+> bpf program is attached to the one of ancestor cgroups at the same
+> time. The race may result in double-free and other memory corruptions.
 >
-> Rob probably missed the binding as it was buried inside a patch that wasn't
-> clearly labelled and it is unlike him to review part of the bindings in
-> a series.
+> To fix the problem, let's protect the body of cgroup_bpf_release()
+> with cgroup_mutex, as it was effectively previously, when all this
+> code was called from the cgroup release path with cgroup mutex held.
+>
+> Also let's skip cgroups, which have no chances to invoke a bpf
+> program, on the update path. If the cgroup bpf refcnt reached 0,
+> it means that the cgroup is offline (no attached processes), and
+> there are no associated sockets left. It means there is no point
+> in updating effective progs array! And it can lead to a leak,
+> if it happens after the release. So, let's skip such cgroups.
+>
+> Big thanks for Tejun Heo for discovering and debugging of this
+> problem!
+>
+> Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
+> cgroup itself")
+> Reported-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-I wrote my reply this morning, but then got distracted with why the
-meta-schema didn't catch the problem of missing a type definition. Now
-it will once I commit it and fix the other cases that we already have.
-
-Rob
+Applied. Thanks
