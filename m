@@ -2,112 +2,86 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E3DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E7CC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCB0217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5C421738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FS7iy+g9"
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="ZaJnj72v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbfFZXQN (ORCPT
+        id S1726557AbfFZXUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 19:16:13 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43079 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfFZXQM (ORCPT
+        Wed, 26 Jun 2019 19:20:50 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33643 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbfFZXUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 19:16:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f25so74136pgv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 16:16:12 -0700 (PDT)
+        Wed, 26 Jun 2019 19:20:50 -0400
+Received: by mail-io1-f66.google.com with SMTP id u13so622797iop.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 16:20:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=cs.washington.edu; s=goo201206;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rIf45gOhciYi+BEA1QhcjyjxejhgA9SV6NIAGt0tSas=;
-        b=FS7iy+g9zx3oAMlGG3D0W0JPwy/tDVHMgqzpmeT3Jjn6nxVRhEdg5/NYFSTnvkmFQ2
-         PgRZcXG3jBuuwnI/8XWYb2iNxhsmALBgVW1c+OkAbD4ooDo4VMNk0SbnbK4TQmaTMWM3
-         C1Y+vTBcFOAcuS0BxH7wa9KaorGywvPrTRh5boVWorsYt9KP2pP0AkauYNjtxUyeIzRw
-         xZ78zCa6IxdboMARhhpRN0KyB2+jWNV/gaWAy0FPdMUwYRb01kQ6+TburGkruRGhusW2
-         iZAw1ncDgj+WIQh8eG4JQl0hVsvxKNHEHwtaTtLP7v4fChdp7sWSJpcL0svKF/MOd89q
-         z4aw==
+         :cc:content-transfer-encoding;
+        bh=brea/2Qx9pBcYGaH6DB1Fc3qM+qPNzkSABIn8ioCvPU=;
+        b=ZaJnj72valkhOWXD57cAGw+gAAyEfQy/JR47wmIiwfnDtp1TQpOJwz7GpvJSXTUD0u
+         ZA/U+rG82kpbeH8Uqa6aoazQ8fD/ngaK2CVgNrTaqAQFz3f57WqXINxufX5TlzRjxCQa
+         xI8Ss8Ko+wdFKlJb0vWMvWfg8h0WPripGQ3EU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rIf45gOhciYi+BEA1QhcjyjxejhgA9SV6NIAGt0tSas=;
-        b=M+DUuMnTaFC8lT5H1v2ZhH5KsP40sV0daz7CFoF8iKT0kQsDK6gWcZAnQ8WFU0L9wO
-         KnmAp6S0mCnISCYKQRQiGRIiqRMWl6eFMf67Qc64FOI6VYBzO3o86OVnWdf561ZONKqV
-         d6Yc2o3LeEv/iUBuYKLncST4oOnbH+7phYlxYMTD0Vu1gYDECElzYdpF1mxooISjC/tH
-         BEFd5jA6RmY59Ot7xVRhGuaQcs3e8c43F7zmiEerhFJArBhlEdhlQxXyZygfgIlQxTgt
-         BAMemsTTdObu2t/qtfB9lD7F8UAg7MDjF5DTJ+CMTHDnewBJu0oIWL2aVtRyd8jELAC7
-         XVuQ==
-X-Gm-Message-State: APjAAAWCEDMEDwku3ZvLGzVuByFPIcwQiKcZSIBxs9KgUHxLQpIiSwF0
-        zuVmPgsDkl92WQ3Lfwxq70OBGAvYWF+z8b23bcI3yg==
-X-Google-Smtp-Source: APXvYqyNTvkeYr9yHAr4kkMQHawMvd4eAgdghexDn0r87WS31+gHv8nTPqSRhuedpXee40C9Duptq1f/n/6kv4UnlhY=
-X-Received: by 2002:a63:52:: with SMTP id 79mr442512pga.381.1561590971627;
- Wed, 26 Jun 2019 16:16:11 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=brea/2Qx9pBcYGaH6DB1Fc3qM+qPNzkSABIn8ioCvPU=;
+        b=SmTtd+Aer3QRmy57a5+6qfdkaM63AQnh+MHBptMC93Rxo9pYSuO+Vncp0i/efa0ktW
+         GwHiqQUq23S9FTMmGxieNE7D0F4XnFsdA6HyfrKyfCbx82nClJl3/VVb8DZzbf3UMumU
+         vIgIxMOrTaUr4U9vTC87V/nVPrrh5XG4ONvwS5qJOb0m/VwYI1oyMbFzRyARRNJB37rP
+         HPNVm5rsxJoivivP3qfnyeD4FcXCghj9KBGTnjOedih8IvNoSKiNRJQHDws4FNuV0jG/
+         Y1BUmKnnXhkC8Lyn7oMO9QShEjJXRzr+cwto14dHA4924fbsi70+6e60qzitlFAVz+gQ
+         g1XQ==
+X-Gm-Message-State: APjAAAUuMSyCpT+LJvqSJi5XMgYHhgX1/94j+6lt5pr5vBi8pKMQ2xn7
+        yTkT+DlZpkM5mS8S3td/Pu5ONut2aruJHqtE8EwRpQ==
+X-Google-Smtp-Source: APXvYqx4WUGRRdnDMn1qRC9QzduXjQrWAsPLCwLSndDqxI0ewueoPskdlrvCJKhtJLOzQy0pNf8LolgeC9PNFB3+1so=
+X-Received: by 2002:a6b:f90f:: with SMTP id j15mr894411iog.43.1561591247732;
+ Wed, 26 Jun 2019 16:20:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
- <20190617222034.10799-8-linux@rasmusvillemoes.dk> <CAKwvOdn5fhCTqtciKBwAj3vYQMhi06annzxcdC1GjKxri=dHnw@mail.gmail.com>
- <12bd1adc-2258-ad5d-f6c9-079fdf0821b8@rasmusvillemoes.dk> <CAKwvOdkqy8=V17qEM_SMDEAh=UX5Y2-nj9EUkC169nEiXc_JzA@mail.gmail.com>
- <70aa7b96-e19d-5f8b-1ff6-af15715623e5@rasmusvillemoes.dk> <CAKwvOdkWo5yG7LrtGL_ht-XHFgNqx_t6rP+hHhcPyb+Ud1N+HA@mail.gmail.com>
-In-Reply-To: <CAKwvOdkWo5yG7LrtGL_ht-XHFgNqx_t6rP+hHhcPyb+Ud1N+HA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 26 Jun 2019 16:16:00 -0700
-Message-ID: <CAKwvOdnFt18ffO0BV-AZ9+mYuOBMroPObxrakXdV1v4iL3CS3Q@mail.gmail.com>
-Subject: Re: [PATCH v6 7/8] dynamic_debug: add asm-generic implementation for DYNAMIC_DEBUG_RELATIVE_POINTERS
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190621225938.27030-1-lukenels@cs.washington.edu> <CAJ+HfNgHOt4gMSq_gufwxb=cKekCfLrk-uGJuGeDiOeQV1-wwQ@mail.gmail.com>
+In-Reply-To: <CAJ+HfNgHOt4gMSq_gufwxb=cKekCfLrk-uGJuGeDiOeQV1-wwQ@mail.gmail.com>
+From:   Luke Nelson <lukenels@cs.washington.edu>
+Date:   Wed, 26 Jun 2019 16:20:37 -0700
+Message-ID: <CADasFoC6ga_DuHL+RxLPzBhMHr+Jj5OgGkjuUgX0o6Rx5vsvdw@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next] RV32G eBPF JIT
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     Luke Nelson <luke.r.nels@gmail.com>, Xi Wang <xi.wang@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-riscv@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 3:18 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
-> 2. pci_pm_suspend_noirq seems to exist twice(?) before your patches, once after
-> 3. xhci_urb_enqueue seems to exist three times before your patches, twice after
+On Mon, Jun 24, 2019 at 3:11 AM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.co=
+m> wrote:
+> >   - Far branches
+> >       These are not supported in RV64G either.
+>
+> This would be really nice to have, now that the size of BPF programs
+> are getting larger.
 
-PEBKAC, I advanced my master branch without rebasing my local branch
-with these changes.  With the local branch rebased onto master, there
-are no differences.  2888 in both cases, line numbers do not differ.
+I've sent out an updated version of the patch here, with support for
+far branches: https://patchwork.ozlabs.org/patch/1123052
 
-I wasn't able to trip any logs in kobject:
-(initramfs) echo "file kobject.c +p" > /dfs/dynamic_debug/control
-(initramfs) cat /dfs/dynamic_debug/control | grep kobject
-lib/kobject.c:161 [kobject]fill_kobj_path =p "kobject: '%s' (%p): %s:
-path = '%s'\012"
-lib/kobject.c:668 [kobject]kobject_cleanup =p "kobject: '%s' (%p): %s,
-parent %p\012"
-lib/kobject.c:672 [kobject]kobject_cleanup =p "kobject: '%s' (%p):
-does not have a release() func"
-lib/kobject.c:677 [kobject]kobject_cleanup =p "kobject: '%s' (%p):
-auto cleanup 'remove' event\01"
-lib/kobject.c:684 [kobject]kobject_cleanup =p "kobject: '%s' (%p):
-auto cleanup kobject_del\012"
-lib/kobject.c:690 [kobject]kobject_cleanup =p "kobject: '%s' (%p):
-calling ktype release\012"
-lib/kobject.c:696 [kobject]kobject_cleanup =p "kobject: '%s': free name\012"
-lib/kobject.c:744 [kobject]dynamic_kobj_release =p "kobject: (%p): %s\012"
-lib/kobject.c:253 [kobject]kobject_add_internal =p "kobject: '%s'
-(%p): %s: parent: '%s', set: '%"
-lib/kobject.c:915 [kobject]kset_release =p "kobject: '%s' (%p): %s\012"
-
-The prints should show up in dmesg right, assuming you do something to
-trigger them?  Can you provide more details for a test case that's
-easy to trip? What's an easy case to reproduce from a limited
-buildroot env (basic shell/toybox)?
--- 
-Thanks,
-~Nick Desaulniers
+Thanks!
