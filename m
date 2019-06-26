@@ -2,513 +2,298 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E390C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8D0C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358E120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B10C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfFZREN (ORCPT
+        id S1726614AbfFZRF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:04:13 -0400
-Received: from smtprelay0032.hostedemail.com ([216.40.44.32]:42322 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726042AbfFZREM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:04:12 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 42F9F180A812D;
-        Wed, 26 Jun 2019 17:04:08 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: music83_5e3400ed49d20
-X-Filterd-Recvd-Size: 15519
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 26 Jun 2019 17:04:07 +0000 (UTC)
-Message-ID: <f4b94da60292c29d90a20cfdd508c2e343b17509.camel@perches.com>
-Subject: trivial script to update MAINTAINERS directory patterns
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Jun 2019 10:04:05 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 26 Jun 2019 13:05:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:37366 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbfFZRFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:05:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0A682B;
+        Wed, 26 Jun 2019 10:05:53 -0700 (PDT)
+Received: from [192.168.3.111] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 248973F706;
+        Wed, 26 Jun 2019 10:05:52 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+To:     Peng Fan <peng.fan@nxp.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        ", Sascha Hauer" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+ <20190603083005.4304-3-peng.fan@nxp.com>
+ <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
+ <AM0PR04MB4481210CE83416353575C3D988E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <20c6cd30-642d-5f6e-15b8-2ef925ed90a6@arm.com>
+Date:   Wed, 26 Jun 2019 18:05:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <AM0PR04MB4481210CE83416353575C3D988E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Almost all directory file patterns in MAINTAINERS end with a trailing /.
-There are some directory file patterns that do not.
-It'd be nice to update those without the trailing / properly.
+On 25/06/2019 08:20, Peng Fan wrote:
+> Hi Jassi,
+> 
+>> -----Original Message-----
+>> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
+>> Sent: 2019年6月21日 0:50
+>> To: Peng Fan <peng.fan@nxp.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+>> <mark.rutland@arm.com>; Sudeep Holla <sudeep.holla@arm.com>; Florian
+>> Fainelli <f.fainelli@gmail.com>; , Sascha Hauer <kernel@pengutronix.de>;
+>> dl-linux-imx <linux-imx@nxp.com>; Shawn Guo <shawnguo@kernel.org>;
+>> festevam@gmail.com; Devicetree List <devicetree@vger.kernel.org>; Linux
+>> Kernel Mailing List <linux-kernel@vger.kernel.org>;
+>> linux-arm-kernel@lists.infradead.org; Andre Przywara
+>> <andre.przywara@arm.com>; van.freenix@gmail.com
+>> Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+>>
+>> On Mon, Jun 3, 2019 at 3:28 AM <peng.fan@nxp.com> wrote:
+>>>
+>>> From: Peng Fan <peng.fan@nxp.com>
+>>>
+>>> This mailbox driver implements a mailbox which signals transmitted
+>>> data via an ARM smc (secure monitor call) instruction. The mailbox
+>>> receiver is implemented in firmware and can synchronously return data
+>>> when it returns execution to the non-secure world again.
+>>> An asynchronous receive path is not implemented.
+>>> This allows the usage of a mailbox to trigger firmware actions on SoCs
+>>> which either don't have a separate management processor or on which
+>>> such a core is not available. A user of this mailbox could be the SCP
+>>> interface.
+>>>
+>>> Modified from Andre Przywara's v2 patch
+>>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
+>>> .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=02%7C01%7
+>> Cpeng.fa
+>>>
+>> n%40nxp.com%7C1237677cb01044ad714508d6f59f648f%7C686ea1d3bc2b4
+>> c6fa92cd
+>>>
+>> 99c5c301635%7C0%7C0%7C636966462272457978&amp;sdata=Hzgeu43m5
+>> ZkeRMtL8Bx
+>>> gUm3%2B6FBObib1OPHPlSccE%2B0%3D&amp;reserved=0
+>>>
+>>> Cc: Andre Przywara <andre.przywara@arm.com>
+>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>>> ---
+>>>
+>>> V2:
+>>>  Add interrupts notification support.
+>>>
+>>>  drivers/mailbox/Kconfig                 |   7 ++
+>>>  drivers/mailbox/Makefile                |   2 +
+>>>  drivers/mailbox/arm-smc-mailbox.c       | 190
+>> ++++++++++++++++++++++++++++++++
+>>>  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
+>>>  4 files changed, 209 insertions(+)
+>>>  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
+>>> 100644 include/linux/mailbox/arm-smc-mailbox.h
+>>>
+>>> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
+>>> 595542bfae85..c3bd0f1ddcd8 100644
+>>> --- a/drivers/mailbox/Kconfig
+>>> +++ b/drivers/mailbox/Kconfig
+>>> @@ -15,6 +15,13 @@ config ARM_MHU
+>>>           The controller has 3 mailbox channels, the last of which can be
+>>>           used in Secure mode only.
+>>>
+>>> +config ARM_SMC_MBOX
+>>> +       tristate "Generic ARM smc mailbox"
+>>> +       depends on OF && HAVE_ARM_SMCCC
+>>> +       help
+>>> +         Generic mailbox driver which uses ARM smc calls to call into
+>>> +         firmware for triggering mailboxes.
+>>> +
+>>>  config IMX_MBOX
+>>>         tristate "i.MX Mailbox"
+>>>         depends on ARCH_MXC || COMPILE_TEST diff --git
+>>> a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
+>>> c22fad6f696b..93918a84c91b 100644
+>>> --- a/drivers/mailbox/Makefile
+>>> +++ b/drivers/mailbox/Makefile
+>>> @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)      += mailbox-test.o
+>>>
+>>>  obj-$(CONFIG_ARM_MHU)  += arm_mhu.o
+>>>
+>>> +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
+>>> +
+>>>  obj-$(CONFIG_IMX_MBOX) += imx-mailbox.o
+>>>
+>>>  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)    +=
+>> armada-37xx-rwtm-mailbox.o
+>>> diff --git a/drivers/mailbox/arm-smc-mailbox.c
+>>> b/drivers/mailbox/arm-smc-mailbox.c
+>>> new file mode 100644
+>>> index 000000000000..fef6e38d8b98
+>>> --- /dev/null
+>>> +++ b/drivers/mailbox/arm-smc-mailbox.c
+>>> @@ -0,0 +1,190 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Copyright (C) 2016,2017 ARM Ltd.
+>>> + * Copyright 2019 NXP
+>>> + */
+>>> +
+>>> +#include <linux/arm-smccc.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/mailbox_controller.h> #include
+>>> +<linux/mailbox/arm-smc-mailbox.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/platform_device.h>
+>>> +
+>>> +#define ARM_SMC_MBOX_USE_HVC   BIT(0)
+>>> +#define ARM_SMC_MBOX_USB_IRQ   BIT(1)
+>>> +
+>> IRQ bit is unused (and unnecessary IMO)
+> 
+> This will be removed in next version.
+> 
+>>
+>>> +struct arm_smc_chan_data {
+>>> +       u32 function_id;
+>>> +       u32 flags;
+>>> +       int irq;
+>>> +};
+>>> +
+>>> +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
+>>> +       struct arm_smc_chan_data *chan_data = link->con_priv;
+>>> +       struct arm_smccc_mbox_cmd *cmd = data;
+>>> +       struct arm_smccc_res res;
+>>> +       u32 function_id;
+>>> +
+>>> +       if (chan_data->function_id != UINT_MAX)
+>>> +               function_id = chan_data->function_id;
+>>> +       else
+>>> +               function_id = cmd->a0;
+>>> +
+>> Not sure about chan_data->function_id.  Why restrict from DT?
+>> 'a0' is the function_id register, let the user pass func-id via the 'a0' like other
+>> values via 'a[1-7]'
+>>
+>>
+>>> +       if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
+>>> +               arm_smccc_hvc(function_id, cmd->a1, cmd->a2,
+>> cmd->a3, cmd->a4,
+>>> +                             cmd->a5, cmd->a6, cmd->a7, &res);
+>>> +       else
+>>> +               arm_smccc_smc(function_id, cmd->a1, cmd->a2,
+>> cmd->a3, cmd->a4,
+>>> +                             cmd->a5, cmd->a6, cmd->a7, &res);
+>>> +
+>>> +       if (chan_data->irq)
+>>> +               return 0;
+>>> +
+>> This irq thing seems like oob signalling, that is, a protocol thing.
+>> And then it provides lesser info via chan_irq_handler (returns NULL) than
+>> res.a0 - which can always be ignored if not needed.
+>> So the irq should be implemented in the upper layer if the protocol needs it.
+> 
+> The interrupts was added here because in v1, Florian suggest
+> "
+> I would just put a
+> provision in the binding to support an optional interrupt such that
+> asynchronism gets reasonably easy to plug in when it is available (and
+> desirable).
+> "
+> 
+> So I introduced interrupt in V2. In my testcase, after smc call done,
+> it means firmware->smc mailbox->firmware done. Interrupt notification
+> from firmware->Linux, means firmware has done the operation.
+> 
+> When using interrupts, we could not know res.a0 as smc sync call.
+> 
+> Interrupts is not a must in my testcase, Florian, Andre, do you have
+> any comments? Should I keep interrupts in V3 or drop it as Jassi comments?
 
-At some point, it'd be good to run:
+The smc mailbox is by its very design a one-way channel - and it's
+synchronous. I think this is all the mailbox driver should be concerned
+about. The fact that there is a protocol user that would benefit from a
+return channel is a separate issue.
+The SCMI binding explicitly mentions *two* mailboxes, one TX, one RX, so
+the return channel could be very well implemented by a separate driver.
+I am wondering if we get away without a functioning return channel, at
+least for a subset of SCMI functionality? Can we use some dummy driver?
+Or specify another smc channel with some unhandled/ignored channel ID
+for that purpose?
 
-$ git grep -h "^[FX]:" MAINTAINERS | \
-  cut -f2- | grep -vP '/$|\*|\?|\[' | \
-  while read file ; do \
-    if [ -d $file ]; then \
-      sed -i -e "s@${file}\$@${file}/@" MAINTAINERS ; \
-    fi ; \
-  done
+So I would leave the IRQ return channel out for now, unless we
+desperately need it.
 
-Today this produces on -next:
----
- MAINTAINERS | 106 ++++++++++++++++++++++++++++++------------------------------
- 1 file changed, 53 insertions(+), 53 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 720741afc0ef..3946fafb712b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -369,7 +369,7 @@ M:	Sudeep Holla <sudeep.holla@arm.com>
- L:	linux-acpi@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
--F:	drivers/acpi/arm64
-+F:	drivers/acpi/arm64/
- 
- ACPI I2C MULTI INSTANTIATE DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
-@@ -1054,7 +1054,7 @@ L:	devel@driverdev.osuosl.org
- L:	dri-devel@lists.freedesktop.org
- L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
- S:	Supported
--F:	drivers/staging/android/ion
-+F:	drivers/staging/android/ion/
- F:	drivers/staging/android/uapi/ion.h
- 
- AOA (Apple Onboard Audio) ALSA DRIVER
-@@ -1436,10 +1436,10 @@ M:	Jesper Nilsson <jesper.nilsson@axis.com>
- M:	Lars Persson <lars.persson@axis.com>
- S:	Maintained
- L:	linux-arm-kernel@axis.com
--F:	arch/arm/mach-artpec
-+F:	arch/arm/mach-artpec/
- F:	arch/arm/boot/dts/artpec6*
--F:	drivers/clk/axis
--F:	drivers/crypto/axis
-+F:	drivers/clk/axis/
-+F:	drivers/crypto/axis/
- F:	drivers/pinctrl/pinctrl-artpec*
- F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- 
-@@ -1593,7 +1593,7 @@ F:	drivers/clk/sirf/
- F:	drivers/clocksource/timer-prima2.c
- F:	drivers/clocksource/timer-atlas7.c
- N:	[^a-z]sirf
--X:	drivers/gnss
-+X:	drivers/gnss/
- 
- ARM/EBSA110 MACHINE SUPPORT
- M:	Russell King <linux@armlinux.org.uk>
-@@ -2283,7 +2283,7 @@ M:	Orson Zhai <orsonzhai@gmail.com>
- M:	Baolin Wang <baolin.wang@linaro.org>
- M:	Chunyan Zhang <zhang.lyra@gmail.com>
- S:	Maintained
--F:	arch/arm64/boot/dts/sprd
-+F:	arch/arm64/boot/dts/sprd/
- N:	sprd
- 
- ARM/STI ARCHITECTURE
-@@ -2757,7 +2757,7 @@ M:	Bradley Grove <linuxdrivers@attotech.com>
- L:	linux-scsi@vger.kernel.org
- W:	http://www.attotech.com
- S:	Supported
--F:	drivers/scsi/esas2r
-+F:	drivers/scsi/esas2r/
- 
- ATUSB IEEE 802.15.4 RADIO DRIVER
- M:	Stefan Schmidt <stefan@datenfreihafen.org>
-@@ -2865,7 +2865,7 @@ S:	Maintained
- F:	drivers/video/backlight/
- F:	include/linux/backlight.h
- F:	include/linux/pwm_backlight.h
--F:	Documentation/devicetree/bindings/leds/backlight
-+F:	Documentation/devicetree/bindings/leds/backlight/
- 
- BATMAN ADVANCED
- M:	Marek Lindner <mareklindner@neomailbox.ch>
-@@ -2907,7 +2907,7 @@ L:	linux-media@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- W:	https://linuxtv.org
- S:	Supported
--F:	drivers/media/platform/sti/bdisp
-+F:	drivers/media/platform/sti/bdisp/
- 
- BECKHOFF CX5020 ETHERCAT MASTER DRIVER
- M:	Dariusz Marcinkiewicz <reksio@newterm.pl>
-@@ -3137,7 +3137,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://github.com/anholt/linux
- S:	Maintained
- N:	bcm2835
--F:	drivers/staging/vc04_services
-+F:	drivers/staging/vc04_services/
- 
- BROADCOM BCM47XX MIPS ARCHITECTURE
- M:	Hauke Mehrtens <hauke@hauke-m.de>
-@@ -3694,7 +3694,7 @@ T:	git git://linuxtv.org/media_tree.git
- W:	http://linuxtv.org
- S:	Supported
- F:	Documentation/media/kapi/cec-core.rst
--F:	Documentation/media/uapi/cec
-+F:	Documentation/media/uapi/cec/
- F:	drivers/media/cec/
- F:	drivers/media/rc/keymaps/rc-cec.c
- F:	include/media/cec.h
-@@ -4361,7 +4361,7 @@ M:	Karen Xie <kxie@chelsio.com>
- L:	linux-scsi@vger.kernel.org
- W:	http://www.chelsio.com
- S:	Supported
--F:	drivers/scsi/cxgbi/cxgb3i
-+F:	drivers/scsi/cxgbi/cxgb3i/
- 
- CXGB3 IWARP RNIC DRIVER (IW_CXGB3)
- M:	Potnuri Bharat Teja <bharat@chelsio.com>
-@@ -4376,7 +4376,7 @@ M:	Atul Gupta <atul.gupta@chelsio.com>
- L:	linux-crypto@vger.kernel.org
- W:	http://www.chelsio.com
- S:	Supported
--F:	drivers/crypto/chelsio
-+F:	drivers/crypto/chelsio/
- 
- CXGB4 ETHERNET DRIVER (CXGB4)
- M:	Vishal Kulkarni <vishal@chelsio.com>
-@@ -4390,7 +4390,7 @@ M:	Karen Xie <kxie@chelsio.com>
- L:	linux-scsi@vger.kernel.org
- W:	http://www.chelsio.com
- S:	Supported
--F:	drivers/scsi/cxgbi/cxgb4i
-+F:	drivers/scsi/cxgbi/cxgb4i/
- 
- CXGB4 IWARP RNIC DRIVER (IW_CXGB4)
- M:	Potnuri Bharat Teja <bharat@chelsio.com>
-@@ -4623,7 +4623,7 @@ L:	linux-media@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- W:	https://linuxtv.org
- S:	Supported
--F:	drivers/media/platform/sti/delta
-+F:	drivers/media/platform/sti/delta/
- 
- DENALI NAND DRIVER
- M:	Masahiro Yamada <yamada.masahiro@socionext.com>
-@@ -4908,7 +4908,7 @@ DOCUMENTATION/ITALIAN
- M:	Federico Vaga <federico.vaga@vaga.pv.it>
- L:	linux-doc@vger.kernel.org
- S:	Maintained
--F:	Documentation/translations/it_IT
-+F:	Documentation/translations/it_IT/
- 
- DONGWOON DW9714 LENS VOICE COIL DRIVER
- M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-@@ -4937,7 +4937,7 @@ DPAA2 DATAPATH I/O (DPIO) DRIVER
- M:	Roy Pledge <Roy.Pledge@nxp.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
--F:	drivers/soc/fsl/dpio
-+F:	drivers/soc/fsl/dpio/
- 
- DPAA2 ETHERNET DRIVER
- M:	Ioana Radulescu <ruxandra.radulescu@nxp.com>
-@@ -4954,7 +4954,7 @@ M:	Ioana Radulescu <ruxandra.radulescu@nxp.com>
- M:	Ioana Ciornei <ioana.ciornei@nxp.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
--F:	drivers/staging/fsl-dpaa2/ethsw
-+F:	drivers/staging/fsl-dpaa2/ethsw/
- 
- DPT_I2O SCSI RAID DRIVER
- M:	Adaptec OEM Raid Solutions <aacraid@microsemi.com>
-@@ -5393,7 +5393,7 @@ M:	Vincent Abriou <vincent.abriou@st.com>
- L:	dri-devel@lists.freedesktop.org
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- S:	Maintained
--F:	drivers/gpu/drm/sti
-+F:	drivers/gpu/drm/sti/
- F:	Documentation/devicetree/bindings/display/st,stih4xx.txt
- 
- DRM DRIVERS FOR STM
-@@ -5404,7 +5404,7 @@ M:	Vincent Abriou <vincent.abriou@st.com>
- L:	dri-devel@lists.freedesktop.org
- T:	git git://anongit.freedesktop.org/drm/drm-misc
- S:	Maintained
--F:	drivers/gpu/drm/stm
-+F:	drivers/gpu/drm/stm/
- F:	Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
- 
- DRM DRIVERS FOR TI LCDC
-@@ -6092,7 +6092,7 @@ EZchip NPS platform support
- M:	Vineet Gupta <vgupta@synopsys.com>
- M:	Ofer Levi <oferle@mellanox.com>
- S:	Supported
--F:	arch/arc/plat-eznps
-+F:	arch/arc/plat-eznps/
- F:	arch/arc/boot/dts/eznps.dts
- 
- F2FS FILE SYSTEM
-@@ -6405,13 +6405,13 @@ FREESCALE QORIQ DPAA ETHERNET DRIVER
- M:	Madalin Bucur <madalin.bucur@nxp.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--F:	drivers/net/ethernet/freescale/dpaa
-+F:	drivers/net/ethernet/freescale/dpaa/
- 
- FREESCALE QORIQ DPAA FMAN DRIVER
- M:	Madalin Bucur <madalin.bucur@nxp.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--F:	drivers/net/ethernet/freescale/fman
-+F:	drivers/net/ethernet/freescale/fman/
- F:	Documentation/devicetree/bindings/net/fsl-fman.txt
- 
- FREESCALE QORIQ PTP CLOCK DRIVER
-@@ -6722,9 +6722,9 @@ M:	Vincenzo Frascino <vincenzo.frascino@arm.com>
- L:	linux-kernel@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/vdso
- S:	Maintained
--F:	lib/vdso
-+F:	lib/vdso/
- F:	kernel/time/vsyscall.c
--F:	include/vdso
-+F:	include/vdso/
- F:	include/asm-generic/vdso/vsyscall.h
- 
- GENWQE (IBM Generic Workqueue Card)
-@@ -7087,7 +7087,7 @@ M:	Mike Marciniszyn <mike.marciniszyn@intel.com>
- M:	Dennis Dalessandro <dennis.dalessandro@intel.com>
- L:	linux-rdma@vger.kernel.org
- S:	Supported
--F:	drivers/infiniband/hw/hfi1
-+F:	drivers/infiniband/hw/hfi1/
- 
- HFS FILESYSTEM
- L:	linux-fsdevel@vger.kernel.org
-@@ -7206,7 +7206,7 @@ HISILICON PMU DRIVER
- M:	Shaokun Zhang <zhangshaokun@hisilicon.com>
- W:	http://www.hisilicon.com
- S:	Supported
--F:	drivers/perf/hisilicon
-+F:	drivers/perf/hisilicon/
- F:	Documentation/perf/hisi-pmu.txt
- 
- HISILICON ROCE DRIVER
-@@ -7333,7 +7333,7 @@ L:	linux-media@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- W:	https://linuxtv.org
- S:	Supported
--F:	drivers/media/platform/sti/hva
-+F:	drivers/media/platform/sti/hva/
- 
- HWPOISON MEMORY FAILURE HANDLING
- M:	Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-@@ -7361,7 +7361,7 @@ F:	arch/x86/include/asm/mshyperv.h
- F:	arch/x86/include/asm/trace/hyperv.h
- F:	arch/x86/include/asm/hyperv-tlfs.h
- F:	arch/x86/kernel/cpu/mshyperv.c
--F:	arch/x86/hyperv
-+F:	arch/x86/hyperv/
- F:	drivers/hid/hid-hyperv.c
- F:	drivers/hv/
- F:	drivers/input/serio/hyperv-keyboard.c
-@@ -7526,7 +7526,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-bus-i3c
- F:	Documentation/devicetree/bindings/i3c/
--F:	Documentation/driver-api/i3c
-+F:	Documentation/driver-api/i3c/
- F:	drivers/i3c/
- F:	include/linux/i3c/
- 
-@@ -7715,7 +7715,7 @@ F:	Documentation/networking/ieee802154.rst
- IFE PROTOCOL
- M:	Yotam Gigi <yotam.gi@gmail.com>
- M:	Jamal Hadi Salim <jhs@mojatatu.com>
--F:	net/ife
-+F:	net/ife/
- F:	include/net/ife.h
- F:	include/uapi/linux/ife.h
- 
-@@ -8460,7 +8460,7 @@ L:	linux-rdma@vger.kernel.org
- L:	target-devel@vger.kernel.org
- S:	Supported
- W:	http://www.linux-iscsi.org
--F:	drivers/infiniband/ulp/isert
-+F:	drivers/infiniband/ulp/isert/
- 
- ISDN/mISDN SUBSYSTEM
- M:	Karsten Keil <isdn@linux-pingi.de>
-@@ -8468,8 +8468,8 @@ L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
- L:	netdev@vger.kernel.org
- W:	http://www.isdn4linux.de
- S:	Maintained
--F:	drivers/isdn/mISDN
--F:	drivers/isdn/hardware
-+F:	drivers/isdn/mISDN/
-+F:	drivers/isdn/hardware/
- 
- ISDN/CAPI SUBSYSTEM
- M:	Karsten Keil <isdn@linux-pingi.de>
-@@ -8890,7 +8890,7 @@ L3MDEV
- M:	David Ahern <dsa@cumulusnetworks.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
--F:	net/l3mdev
-+F:	net/l3mdev/
- F:	include/net/l3mdev.h
- 
- L7 BPF FRAMEWORK
-@@ -8917,8 +8917,8 @@ LANTIQ MIPS ARCHITECTURE
- M:	John Crispin <john@phrozen.org>
- L:	linux-mips@vger.kernel.org
- S:	Maintained
--F:	arch/mips/lantiq
--F:	drivers/soc/lantiq
-+F:	arch/mips/lantiq/
-+F:	drivers/soc/lantiq/
- 
- LAPB module
- L:	linux-x25@vger.kernel.org
-@@ -9155,7 +9155,7 @@ F:	drivers/rtc/rtc-opal.c
- F:	drivers/scsi/ibmvscsi/
- F:	drivers/tty/hvc/hvc_opal.c
- F:	drivers/watchdog/wdrtas.c
--F:	tools/testing/selftests/powerpc
-+F:	tools/testing/selftests/powerpc/
- N:	/pmac
- N:	powermac
- N:	powernv
-@@ -10368,7 +10368,7 @@ MICROCHIP AUDIO ASOC DRIVERS
- M:	Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- S:	Supported
--F:	sound/soc/atmel
-+F:	sound/soc/atmel/
- 
- MICROCHIP DMA DRIVER
- M:	Ludovic Desroches <ludovic.desroches@microchip.com>
-@@ -11277,7 +11277,7 @@ M:	Pavel Machek <pavel@ucw.cz>
- M:	Sakari Ailus <sakari.ailus@iki.fi>
- L:	linux-media@vger.kernel.org
- S:	Maintained
--F:	drivers/media/i2c/et8ek8
-+F:	drivers/media/i2c/et8ek8/
- F:	drivers/media/i2c/ad5820.c
- 
- NOKIA N900 POWER SUPPLY DRIVERS
-@@ -11418,7 +11418,7 @@ NXP SJA1105 ETHERNET SWITCH DRIVER
- M:	Vladimir Oltean <olteanv@gmail.com>
- L:	linux-kernel@vger.kernel.org
- S:	Maintained
--F:	drivers/net/dsa/sja1105
-+F:	drivers/net/dsa/sja1105/
- 
- NXP TDA998X DRM DRIVER
- M:	Russell King <linux@armlinux.org.uk>
-@@ -11442,7 +11442,7 @@ M:	Cl�ment Perrochaud <clement.perrochaud@effinnov.com>
- R:	Charles Gorand <charles.gorand@effinnov.com>
- L:	linux-nfc@lists.01.org (moderated for non-subscribers)
- S:	Supported
--F:	drivers/nfc/nxp-nci
-+F:	drivers/nfc/nxp-nci/
- 
- OBJAGG
- M:	Jiri Pirko <jiri@mellanox.com>
-@@ -11808,7 +11808,7 @@ M:	Dennis Dalessandro <dennis.dalessandro@intel.com>
- M:	Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>
- L:	linux-rdma@vger.kernel.org
- S:	Supported
--F:	drivers/infiniband/ulp/opa_vnic
-+F:	drivers/infiniband/ulp/opa_vnic/
- 
- OPEN FIRMWARE AND DEVICE TREE OVERLAYS
- M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-@@ -12851,7 +12851,7 @@ F:	drivers/block/ps3vram.c
- PSAMPLE PACKET SAMPLING SUPPORT:
- M:	Yotam Gigi <yotam.gi@gmail.com>
- S:	Maintained
--F:	net/psample
-+F:	net/psample/
- F:	include/net/psample.h
- F:	include/uapi/linux/psample.h
- 
-@@ -13224,7 +13224,7 @@ M:	Avinash Patil <avinashp@quantenna.com>
- M:	Sergey Matyukevich <smatyukevich@quantenna.com>
- L:	linux-wireless@vger.kernel.org
- S:	Maintained
--F:	drivers/net/wireless/quantenna
-+F:	drivers/net/wireless/quantenna/
- 
- RADEON and AMDGPU DRM DRIVERS
- M:	Alex Deucher <alexander.deucher@amd.com>
-@@ -13290,7 +13290,7 @@ RALINK MIPS ARCHITECTURE
- M:	John Crispin <john@phrozen.org>
- L:	linux-mips@vger.kernel.org
- S:	Maintained
--F:	arch/mips/ralink
-+F:	arch/mips/ralink/
- 
- RALINK RT2X00 WIRELESS LAN DRIVER
- P:	rt2x00 project
-@@ -13348,7 +13348,7 @@ R:	Lai Jiangshan <jiangshanlai@gmail.com>
- L:	rcu@vger.kernel.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
--F:	tools/testing/selftests/rcutorture
-+F:	tools/testing/selftests/rcutorture/
- 
- RDC R-321X SoC
- M:	Florian Fainelli <florian@openwrt.org>
-@@ -13365,7 +13365,7 @@ M:	Dennis Dalessandro <dennis.dalessandro@intel.com>
- M:	Mike Marciniszyn <mike.marciniszyn@intel.com>
- L:	linux-rdma@vger.kernel.org
- S:	Supported
--F:	drivers/infiniband/sw/rdmavt
-+F:	drivers/infiniband/sw/rdmavt/
- 
- RDS - RELIABLE DATAGRAM SOCKETS
- M:	Santosh Shilimkar <santosh.shilimkar@oracle.com>
-@@ -13947,7 +13947,7 @@ M:	Robert Baldyga <r.baldyga@samsung.com>
- M:	Krzysztof Opasiak <k.opasiak@samsung.com>
- L:	linux-nfc@lists.01.org (moderated for non-subscribers)
- S:	Supported
--F:	drivers/nfc/s3fwrn5
-+F:	drivers/nfc/s3fwrn5/
- 
- SAMSUNG S5C73M3 CAMERA DRIVER
- M:	Kyungmin Park <kyungmin.park@samsung.com>
-@@ -15307,7 +15307,7 @@ F:	Documentation/devicetree/bindings/clock/snps,pll-clock.txt
- SYNOPSYS ARC SDP platform support
- M:	Alexey Brodkin <abrodkin@synopsys.com>
- S:	Supported
--F:	arch/arc/plat-axs10x
-+F:	arch/arc/plat-axs10x/
- F:	arch/arc/boot/dts/ax*
- F:	Documentation/devicetree/bindings/arc/axs10*
- 
-@@ -17361,7 +17361,7 @@ L:	platform-driver-x86@vger.kernel.org
- L:	x86@kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
- S:	Maintained
--F:	arch/x86/platform
-+F:	arch/x86/platform/
- 
- X86 VDSO
- M:	Andy Lutomirski <luto@kernel.org>
-@@ -17379,7 +17379,7 @@ F:	lib/idr.c
- F:	lib/xarray.c
- F:	include/linux/idr.h
- F:	include/linux/xarray.h
--F:	tools/testing/radix-tree
-+F:	tools/testing/radix-tree/
- 
- XBOX DVD IR REMOTE
- M:	Benjamin Valentin <benpicco@googlemail.com>
-
-
+Cheers,
+Andre.
