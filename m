@@ -2,84 +2,99 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CE9C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5F5C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89B420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2305208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:45:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561538731;
+	bh=MvX15utEKAcATYppKZNs7AWrpDtaWHcM6Ve5Lm0+uOA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=U6jbOb6slQYO76Bsf4TU3nylZU7J93vF9E2ZSEFNYFYPIUfKMt8a9Y926xS9MU/w3
+	 xgoMJ2Ukmi5Gdl+EQkM5z/RQmMK21h0r5iZYiwkvQX3e0L1LZb+oFx95/kYs7fxkoU
+	 d5yGnEO4Udr3Mh0lgwftFX/2G3C8RJcinykqjkKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfFZIoQ (ORCPT
+        id S1726882AbfFZIp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:44:16 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56683 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbfFZIoP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:44:15 -0400
-X-Originating-IP: 86.250.200.211
-Received: from mc-bl-xps13.lan (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 973EFC000C;
-        Wed, 26 Jun 2019 08:44:07 +0000 (UTC)
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com
-Subject: [PATCH net-next] net: ethtool: Allow parsing ETHER_FLOW types when using flow_rule
-Date:   Wed, 26 Jun 2019 10:44:03 +0200
-Message-Id: <20190626084403.17749-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 26 Jun 2019 04:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfFZIp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:45:29 -0400
+Received: from localhost (unknown [116.247.127.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA49E20663;
+        Wed, 26 Jun 2019 08:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561538728;
+        bh=MvX15utEKAcATYppKZNs7AWrpDtaWHcM6Ve5Lm0+uOA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eLF0zI1tmilDCcXwmz3nZNm1u7iDXv9u5bofe+A0Ka6eInJ+0zlvpxrpAqZV4jve3
+         tmocHAvqOlI3oCPulQXHvc0+9xrZ6Ma8EePrU6ZGCmddfeyxYv0QMkU6zsnKLkjkZr
+         siia6yBqo9CpbxuZjeBns7PRwgJphpQ80SLNewvM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Christoph Paasch <cpaasch@apple.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 1/1] tcp: refine memory limit test in tcp_fragment()
+Date:   Wed, 26 Jun 2019 16:45:05 +0800
+Message-Id: <20190626083604.952026980@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190626083604.894288021@linuxfoundation.org>
+References: <20190626083604.894288021@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When parsing an ethtool_rx_flow_spec, users can specify an ethernet flow
-which could contain matches based on the ethernet header, such as the
-MAC address, the VLAN tag or the ethertype.
+From: Eric Dumazet <edumazet@google.com>
 
-Only the ethtype field is specific to the ether flow, the MAC and vlan
-fields are processed using the special FLOW_EXT and FLOW_MAC_EXT flags.
+commit b6653b3629e5b88202be3c9abc44713973f5c4b4 upstream.
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+tcp_fragment() might be called for skbs in the write queue.
+
+Memory limits might have been exceeded because tcp_sendmsg() only
+checks limits at full skb (64KB) boundaries.
+
+Therefore, we need to make sure tcp_fragment() wont punish applications
+that might have setup very low SO_SNDBUF values.
+
+Fixes: f070ef2ac667 ("tcp: tcp_fragment() should apply sane memory limits")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Tested-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/core/ethtool.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/ipv4/tcp_output.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-index 4d1011b2e24f..01ceba556341 100644
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -2883,6 +2883,18 @@ ethtool_rx_flow_rule_create(const struct ethtool_rx_flow_spec_input *input)
- 	match->mask.basic.n_proto = htons(0xffff);
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1161,7 +1161,7 @@ int tcp_fragment(struct sock *sk, struct
+ 	if (nsize < 0)
+ 		nsize = 0;
  
- 	switch (fs->flow_type & ~(FLOW_EXT | FLOW_MAC_EXT | FLOW_RSS)) {
-+	case ETHER_FLOW: {
-+		const struct ethhdr *ether_spec, *ether_m_spec;
-+
-+		ether_spec = &fs->h_u.ether_spec;
-+		ether_m_spec = &fs->m_u.ether_spec;
-+
-+		if (ether_m_spec->h_proto) {
-+			match->key.basic.n_proto = ether_spec->h_proto;
-+			match->mask.basic.n_proto = ether_m_spec->h_proto;
-+		}
-+		}
-+		break;
- 	case TCP_V4_FLOW:
- 	case UDP_V4_FLOW: {
- 		const struct ethtool_tcpip4_spec *v4_spec, *v4_m_spec;
--- 
-2.20.1
+-	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
++	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
+ 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
+ 		return -ENOMEM;
+ 	}
+
 
