@@ -7,77 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE02BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9622C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D458216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983C121670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KQ5btisT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aTMI536E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbfFZOrY (ORCPT
+        id S1728258AbfFZOr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:47:24 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43482 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbfFZOrU (ORCPT
+        Wed, 26 Jun 2019 10:47:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40600 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbfFZOrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:47:20 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so3043131wru.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:47:19 -0700 (PDT)
+        Wed, 26 Jun 2019 10:47:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so2399019wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GnURz9uBDl/JIVDRIJyHSxWewLcsuwU4f5F+HbyZmEk=;
-        b=KQ5btisTZtuBgX3s5dqhAy9z1WRj8n9/5MKEJo4MF5cUOEuJVWT59lzvSJli34Ae21
-         iV7BM1IiLxpZjlXc4U/PSvZ0uTGm9C1OZag5uvgAmapx1x4Z+V0pcz3mdcWVQiyefhE/
-         pJOaSeG9yj1LRqoqtf/oUXu4I8DMt8P9IC8Ti3lz+/yJeUME9lJAGcMBF/L2i2WF5yWm
-         NTQeR3ueMzafid23YxD4WI0WnHBygKBjhcibBdd836MnpUbCNQ6ELTN7KeiQW6f42nTX
-         7qXi5g5P7fzqqBl2oX8lGke2ZK1QriMJLHGxHDpiwjEB6jG6B/W6SfU/gQWUU1T8wCTD
-         B7ug==
+        bh=pCTMtso5AmHagoM0kbPRWJWMA6Wb3OobegULM1kp5BM=;
+        b=aTMI536Eim8TcauDkcrVaRm5YZ9JFMT4cTZJ2X0B45UB0iPzfxC9MpXor3iIIP6oJI
+         p5QiNRqa0HSMBlBQo10RFmlCtC5oo7epSxMKNgAjS1shoeMzuAC+YTpl3ZbPFPefs590
+         TDP11d3vu1zDy4pOZxpVNcJLsgP+k1uxQ0l2rU7rjjc2cR3hH4MI1/nnzTNjWq7/fqu3
+         sf0z4YJT7d8dnWRnSfOqkwHsFOHArPIqxLvkQO4O39eP6nzLv1x4cuhldNohB3s6Qra6
+         NDjvVjlhqwMk9bJk1NqWhM3qqxf7/MOMsK1ho/zjX7llQQ01AyNXlL9dJ4NA4Aasojv5
+         2zLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=GnURz9uBDl/JIVDRIJyHSxWewLcsuwU4f5F+HbyZmEk=;
-        b=lp+OJeuWwPKjx3rCFkpkSEawprXCo3igetXKhx4vvZ02mOEUEIjUauz1TnZzKOYi3H
-         hb9/CFd7+HTG2o/ILs+UF0FvUnwQ0FUaOUy7gdTtNlTSKUqRv51/Wigioz9ofhBNwrWL
-         hSMYkmz6TIJ0b4EJ3PtiB2Ip5a1BZRmzWVI8J41WTgRMHKxrNiSocQ/DY15Vzkz5Et9g
-         H+bzMjkI24F/KQ0CxsHiuQ8jmQaK9RxzFHoTbNrsNtLA11XffC7dbWRctm79dZiFbrMw
-         IrPd9aZEDUc8Ec4PmKab5zXqNGE7deGx8mHGepRmE6EKva2/Hv/2lu0YYPZe4aKnNtgQ
-         IBPQ==
-X-Gm-Message-State: APjAAAWgIFH6WQze49Cfgahi3YJA9yI1wqNeAPoAtLURsm7dW4ujToHd
-        wc/XK/wR4iUHZYiQIh2ohURv5Q==
-X-Google-Smtp-Source: APXvYqwwouIsWhDWc6BkFntC79BsmzDpRrHtrTK+mkPNbfBFrxQaW7YY2H0Ua1xIsJZ/0Bwx0wvhpA==
-X-Received: by 2002:adf:ce88:: with SMTP id r8mr4325093wrn.42.1561560438445;
-        Wed, 26 Jun 2019 07:47:18 -0700 (PDT)
+        bh=pCTMtso5AmHagoM0kbPRWJWMA6Wb3OobegULM1kp5BM=;
+        b=oyxiAknuLp85Zm71Lkqzwek2B5MkGOx9SD4VmJEkkz+pv1IVWy9sHULXLjsJUZQfMl
+         PhMOoZGkjUF+7e9TAVYNNdHbq0PtvZwTp8lV7Wp26hS6OS6SR1ePag6KuSbtsJYqgSUU
+         ZeeCvsh0BfCg0tuwUsDgVy1JD+YuweB46YdbFg3luXtv5vdb4VZhYsB/5dZ+XNnJUooV
+         IYNHuUSLHdobR1axsIP3JJxckG/LY2Lpt+uRcl7czAWoy9WizMkoGUl9+i9CEpSIk10/
+         WLQx4ozyMFsWjASdHXjVZCz6B9vxoyuNdL0derP/wJGj8BfFAbxoBTYBWG+VNcj+fJ+k
+         wrFA==
+X-Gm-Message-State: APjAAAWDKjgjQUxO2xI7g88RFCTR7YvJJe/gSrRn4Iah78LhjvyEs0oN
+        TQV6g3MUvZmRMzBIbMnwpnOO5w==
+X-Google-Smtp-Source: APXvYqzJtLxMzasX4DvcArKJ1/ZEMlTvM8AryQ+14SrXPDW5dpSRolFHNBkYxA8xHDBzWrY5LQXFGA==
+X-Received: by 2002:a1c:6c08:: with SMTP id h8mr3190763wmc.62.1561560439887;
+        Wed, 26 Jun 2019 07:47:19 -0700 (PDT)
 Received: from mai.imgcgcw.net (26.92.130.77.rev.sfr.net. [77.130.92.26])
-        by smtp.gmail.com with ESMTPSA id h84sm2718557wmf.43.2019.06.26.07.47.16
+        by smtp.gmail.com with ESMTPSA id h84sm2718557wmf.43.2019.06.26.07.47.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 07:47:17 -0700 (PDT)
+        Wed, 26 Jun 2019 07:47:19 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "Kulkarni, Ganapatrao" <Ganapatrao.Kulkarni@cavium.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Guo Ren <ren_guo@c-sky.com>, Joseph Lo <josephl@nvidia.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hoan Tran <Hoan@os.amperecomputing.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG EXYNOS
-        ARM ARCHITECTURES),
-        linux-samsung-soc@vger.kernel.org (moderated list:ARM/SAMSUNG EXYNOS
-        ARM ARCHITECTURES)
-Subject: [PATCH 04/25] clocksource/drivers/exynos_mct: Increase priority over ARM arch timer
-Date:   Wed, 26 Jun 2019 16:46:30 +0200
-Message-Id: <20190626144651.16742-4-daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT)
+Subject: [PATCH 05/25] clocksource/drivers/tegra: Support per-CPU timers on all Tegra's
+Date:   Wed, 26 Jun 2019 16:46:31 +0200
+Message-Id: <20190626144651.16742-5-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190626144651.16742-1-daniel.lezcano@linaro.org>
 References: <adba7d03-e9bd-9542-60bc-0f2d4874a40e@linaro.org>
@@ -87,73 +73,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-Exynos SoCs based on CA7/CA15 have 2 timer interfaces: custom Exynos MCT
-(Multi Core Timer) and standard ARM Architected Timers.
+Assign TMR1-4 per-CPU core on 32bit Tegra's in a way it is done for
+Tegra210. In a result each core can handle its own timer events, less
+code is unique to ARM64 and Tegra's clock events driver now has higher
+rating on all Tegra's, replacing the ARM's TWD timer which isn't very
+accurate due to the clock rate jitter caused by CPU frequency scaling.
 
-There are use cases, where both timer interfaces are used simultanously.
-One of such examples is using Exynos MCT for the main system timer and
-ARM Architected Timers for the KVM and virtualized guests (KVM requires
-arch timers).
-
-Exynos Multi-Core Timer driver (exynos_mct) must be however started
-before ARM Architected Timers (arch_timer), because they both share some
-common hardware blocks (global system counter) and turning on MCT is
-needed to get ARM Architected Timer working properly.
-
-To ensure selecting Exynos MCT as the main system timer, increase MCT
-timer rating. To ensure proper starting order of both timers during
-suspend/resume cycle, increase MCT hotplug priority over ARM Archictected
-Timers.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/exynos_mct.c | 4 ++--
- include/linux/cpuhotplug.h       | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/clocksource/timer-tegra20.c | 120 ++++++++++------------------
+ 1 file changed, 43 insertions(+), 77 deletions(-)
 
-diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-index 34bd250d46c6..6aa10cbc1d59 100644
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -209,7 +209,7 @@ static void exynos4_frc_resume(struct clocksource *cs)
+diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
+index 1e7ece279730..4b30ba6228c1 100644
+--- a/drivers/clocksource/timer-tegra20.c
++++ b/drivers/clocksource/timer-tegra20.c
+@@ -40,13 +40,18 @@
+ #define TIMER_PCR_INTR_CLR	BIT(30)
  
- static struct clocksource mct_frc = {
- 	.name		= "mct-frc",
--	.rating		= 400,
-+	.rating		= 450,	/* use value higher than ARM arch timer */
- 	.read		= exynos4_frc_read,
- 	.mask		= CLOCKSOURCE_MASK(32),
- 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-@@ -464,7 +464,7 @@ static int exynos4_mct_starting_cpu(unsigned int cpu)
- 	evt->set_state_oneshot_stopped = set_state_shutdown;
- 	evt->tick_resume = set_state_shutdown;
- 	evt->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
--	evt->rating = 450;
-+	evt->rating = 500;	/* use value higher than ARM arch timer */
+ #ifdef CONFIG_ARM
+-#define TIMER_CPU0		0x50 /* TIMER3 */
++#define TIMER_CPU0		0x00 /* TIMER1 */
++#define TIMER_CPU2		0x50 /* TIMER3 */
++#define TIMER1_IRQ_IDX		0
++#define IRQ_IDX_FOR_CPU(cpu)	(TIMER1_IRQ_IDX + cpu)
++#define TIMER_BASE_FOR_CPU(cpu)	\
++	(((cpu) & 1) * 8 + ((cpu) < 2 ? TIMER_CPU0 : TIMER_CPU2))
+ #else
+ #define TIMER_CPU0		0x90 /* TIMER10 */
+ #define TIMER10_IRQ_IDX		10
+ #define IRQ_IDX_FOR_CPU(cpu)	(TIMER10_IRQ_IDX + cpu)
+-#endif
+ #define TIMER_BASE_FOR_CPU(cpu) (TIMER_CPU0 + (cpu) * 8)
++#endif
  
- 	exynos4_mct_write(TICK_BASE_CNT, mevt->base + MCT_L_TCNTB_OFFSET);
+ static u32 usec_config;
+ static void __iomem *timer_reg_base;
+@@ -109,7 +114,6 @@ static void tegra_timer_resume(struct clock_event_device *evt)
+ 	writel(usec_config, timer_reg_base + TIMERUS_USEC_CFG);
+ }
  
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 5c6062206760..87c211adf49e 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -116,10 +116,10 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_ARM_ACPI_STARTING,
- 	CPUHP_AP_PERF_ARM_STARTING,
- 	CPUHP_AP_ARM_L2X0_STARTING,
-+	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
- 	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
- 	CPUHP_AP_JCORE_TIMER_STARTING,
--	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_TWD_STARTING,
- 	CPUHP_AP_QCOM_TIMER_STARTING,
- 	CPUHP_AP_TEGRA_TIMER_STARTING,
+-#ifdef CONFIG_ARM64
+ static DEFINE_PER_CPU(struct timer_of, tegra_to) = {
+ 	.flags = TIMER_OF_CLOCK | TIMER_OF_BASE,
+ 
+@@ -150,33 +154,8 @@ static int tegra_timer_stop(unsigned int cpu)
+ 
+ 	return 0;
+ }
+-#else /* CONFIG_ARM */
+-static struct timer_of tegra_to = {
+-	.flags = TIMER_OF_CLOCK | TIMER_OF_BASE | TIMER_OF_IRQ,
+-
+-	.clkevt = {
+-		.name = "tegra_timer",
+-		.rating	= 300,
+-		.features = CLOCK_EVT_FEAT_ONESHOT |
+-			    CLOCK_EVT_FEAT_PERIODIC |
+-			    CLOCK_EVT_FEAT_DYNIRQ,
+-		.set_next_event	= tegra_timer_set_next_event,
+-		.set_state_shutdown = tegra_timer_shutdown,
+-		.set_state_periodic = tegra_timer_set_periodic,
+-		.set_state_oneshot = tegra_timer_shutdown,
+-		.tick_resume = tegra_timer_shutdown,
+-		.suspend = tegra_timer_suspend,
+-		.resume = tegra_timer_resume,
+-		.cpumask = cpu_possible_mask,
+-	},
+-
+-	.of_irq = {
+-		.index = 2,
+-		.flags = IRQF_TIMER | IRQF_TRIGGER_HIGH,
+-		.handler = tegra_timer_isr,
+-	},
+-};
+ 
++#ifdef CONFIG_ARM
+ static u64 notrace tegra_read_sched_clock(void)
+ {
+ 	return readl(timer_reg_base + TIMERUS_CNTR_1US);
+@@ -213,10 +192,12 @@ static struct clocksource suspend_rtc_clocksource = {
+ };
+ #endif
+ 
+-static int tegra_timer_common_init(struct device_node *np, struct timer_of *to)
++static int tegra_init_timer(struct device_node *np, bool tegra20)
+ {
+-	int ret = 0;
++	struct timer_of *to;
++	int cpu, ret;
+ 
++	to = this_cpu_ptr(&tegra_to);
+ 	ret = timer_of_init(np, to);
+ 	if (ret < 0)
+ 		goto out;
+@@ -258,29 +239,19 @@ static int tegra_timer_common_init(struct device_node *np, struct timer_of *to)
+ 		goto out;
+ 	}
+ 
+-	writel(usec_config, timer_of_base(to) + TIMERUS_USEC_CFG);
+-
+-out:
+-	return ret;
+-}
+-
+-#ifdef CONFIG_ARM64
+-static int __init tegra_init_timer(struct device_node *np)
+-{
+-	int cpu, ret = 0;
+-	struct timer_of *to;
+-
+-	to = this_cpu_ptr(&tegra_to);
+-	ret = tegra_timer_common_init(np, to);
+-	if (ret < 0)
+-		goto out;
++	writel(usec_config, timer_reg_base + TIMERUS_USEC_CFG);
+ 
+ 	for_each_possible_cpu(cpu) {
+-		struct timer_of *cpu_to;
++		struct timer_of *cpu_to = per_cpu_ptr(&tegra_to, cpu);
++
++		/*
++		 * TIMER1-9 are fixed to 1MHz, TIMER10-13 are running off the
++		 * parent clock.
++		 */
++		if (tegra20)
++			cpu_to->of_clk.rate = 1000000;
+ 
+-		cpu_to = per_cpu_ptr(&tegra_to, cpu);
+ 		cpu_to->of_base.base = timer_reg_base + TIMER_BASE_FOR_CPU(cpu);
+-		cpu_to->of_clk.rate = timer_of_rate(to);
+ 		cpu_to->clkevt.cpumask = cpumask_of(cpu);
+ 		cpu_to->clkevt.irq =
+ 			irq_of_parse_and_map(np, IRQ_IDX_FOR_CPU(cpu));
+@@ -322,43 +293,39 @@ static int __init tegra_init_timer(struct device_node *np)
+ 	timer_of_cleanup(to);
+ 	return ret;
+ }
++
++#ifdef CONFIG_ARM64
++static int __init tegra210_init_timer(struct device_node *np)
++{
++	return tegra_init_timer(np, false);
++}
++TIMER_OF_DECLARE(tegra210_timer, "nvidia,tegra210-timer", tegra210_init_timer);
+ #else /* CONFIG_ARM */
+-static int __init tegra_init_timer(struct device_node *np)
++static int __init tegra20_init_timer(struct device_node *np)
+ {
+-	int ret = 0;
++	struct timer_of *to;
++	int err;
+ 
+-	ret = tegra_timer_common_init(np, &tegra_to);
+-	if (ret < 0)
+-		goto out;
++	err = tegra_init_timer(np, true);
++	if (err)
++		return err;
+ 
+-	tegra_to.of_base.base = timer_reg_base + TIMER_BASE_FOR_CPU(0);
+-	tegra_to.of_clk.rate = 1000000; /* microsecond timer */
++	to = this_cpu_ptr(&tegra_to);
+ 
+ 	sched_clock_register(tegra_read_sched_clock, 32,
+-			     timer_of_rate(&tegra_to));
+-	ret = clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
+-				    "timer_us", timer_of_rate(&tegra_to),
++			     timer_of_rate(to));
++	err = clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
++				    "timer_us", timer_of_rate(to),
+ 				    300, 32, clocksource_mmio_readl_up);
+-	if (ret) {
+-		pr_err("Failed to register clocksource\n");
+-		goto out;
+-	}
++	if (err)
++		pr_err("Failed to register clocksource: %d\n", err);
+ 
+ 	tegra_delay_timer.read_current_timer =
+ 			tegra_delay_timer_read_counter_long;
+-	tegra_delay_timer.freq = timer_of_rate(&tegra_to);
++	tegra_delay_timer.freq = timer_of_rate(to);
+ 	register_current_timer_delay(&tegra_delay_timer);
+ 
+-	clockevents_config_and_register(&tegra_to.clkevt,
+-					timer_of_rate(&tegra_to),
+-					0x1,
+-					0x1fffffff);
+-
+-	return ret;
+-out:
+-	timer_of_cleanup(&tegra_to);
+-
+-	return ret;
++	return 0;
+ }
+ 
+ static int __init tegra20_init_rtc(struct device_node *np)
+@@ -374,6 +341,5 @@ static int __init tegra20_init_rtc(struct device_node *np)
+ 	return 0;
+ }
+ TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
++TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra20_init_timer);
+ #endif
+-TIMER_OF_DECLARE(tegra210_timer, "nvidia,tegra210-timer", tegra_init_timer);
+-TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra_init_timer);
 -- 
 2.17.1
 
