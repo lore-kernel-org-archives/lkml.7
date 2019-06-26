@@ -2,86 +2,110 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 398E2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAF2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010DE217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uxdz562l"
+	by mail.kernel.org (Postfix) with ESMTP id 0055321726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561576963;
+	bh=VtNAJvPAlN7MdrrgP7iDPLLlHySWmZPh02eLT8C8OTY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VlohT8+zes3rP5YBHAAs/n3fzsMjW04e3dHRq7+eeP4S6/t1iJ9toUR7sJBfdgFHO
+	 vZbwUmP771/XNdfVNkagoV8/GKBMLUHZExiUDuHaLKZQzlG37jZ5Pl4WJwAePT5ReD
+	 srgultMxAP+4O9THLpdw6EQR+7fXuokucQ6QQtxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfFZTVV (ORCPT
+        id S1726520AbfFZTWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:21:21 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47614 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfFZTVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:21:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=V0jLxYAn+nqGzG0R8aNQz9MoPnspgo1/uyky7k+5p+k=; b=uxdz562loKTGsLdJtWlp/cwLTe
-        GT+1eM+P/R1wFx79woFof2wJjB3Y9vYfQmzpdcIaIU83pKIZREcTNlzD+0rQbxJwujSJKNBgvz9IV
-        LfVVZ6NxKM9RyPIIiCojd62gd1v+4J2V/GBk5FOPvpYUHzl3whUUNTdAOcHZTcjTpPdM/mz61drdu
-        oo61DWBQRp82BvcQCC0MBkBHPF41qM8CnNL0XyGaV4JF23Vez0fIIQIxizHvdYj+Y5W2IPqa2Beyi
-        zcX6IUhMf3KUcXS+1oP8DCrEk6svsMb7I5V++fYKN5uW4u74Lcyxrw/VVZ73r6dddBMWyTsKxrZL5
-        l/KTyAEg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgDTb-0001Mk-E0; Wed, 26 Jun 2019 19:21:03 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A49CC209CEDA7; Wed, 26 Jun 2019 21:21:00 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 21:21:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Raslan, KarimAllah" <karahmed@amazon.de>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kernellwp@gmail.com" <kernellwp@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
-Subject: Re: cputime takes cstate into consideration
-Message-ID: <20190626192100.GP3419@hirez.programming.kicks-ass.net>
-References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com>
- <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de>
- <20190626145413.GE6753@char.us.oracle.com>
- <20190626161608.GM3419@hirez.programming.kicks-ass.net>
- <20190626183016.GA16439@char.us.oracle.com>
- <alpine.DEB.2.21.1906262038040.32342@nanos.tec.linutronix.de>
- <1561575336.25880.7.camel@amazon.de>
+        Wed, 26 Jun 2019 15:22:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726320AbfFZTWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 15:22:40 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0AB20663;
+        Wed, 26 Jun 2019 19:22:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561576959;
+        bh=VtNAJvPAlN7MdrrgP7iDPLLlHySWmZPh02eLT8C8OTY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=x8YmlYDE47jCCCq0hOxKbUZmUuPD58o4abgh3o9iA4aP25U9NrIjpFUKom/d5om8I
+         FXOrzZZtoucm5hyJF86iFs4b/vcijipZYFkM34wLkQEoBgj9rD31MKgOH6tC1tvX9z
+         nkKAzDyAE7kFAeZD5XpTLPIXeSPqOdgp89H/ZtEc=
+Date:   Wed, 26 Jun 2019 20:22:34 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
+Subject: Re: [PATCH V4 1/5] iio: adc: ad7124: Remove input number limitation
+Message-ID: <20190626202234.7c4cd0da@archlinux>
+In-Reply-To: <20190625081128.22190-1-mircea.caprioru@analog.com>
+References: <20190625081128.22190-1-mircea.caprioru@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1561575336.25880.7.camel@amazon.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 06:55:36PM +0000, Raslan, KarimAllah wrote:
+On Tue, 25 Jun 2019 11:11:24 +0300
+Mircea Caprioru <mircea.caprioru@analog.com> wrote:
 
-> If the host is completely in no_full_hz mode and the pCPU is dedicated to a 
-> single vCPU/task (and the guest is 100% CPU bound and never exits), you would 
-> still be ticking in the host once every second for housekeeping, right? Would 
-> not updating the mwait-time once a second be enough here?
+> The driver limits the user to use only 4/8 differential inputs, but this
+> device has the option to use pseudo-differential channels. This will
+> increase the number of channels to be equal with the number of inputs so 8
+> channels for ad7124-4 and 16 for ad7124-8.
+> 
+> This patch removes the check between channel nodes and num_inputs value.
+> 
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-People are trying very hard to get rid of that remnant tick. Lets not
-add dependencies to it.
+Thanks,
 
-IMO this is a really stupid issue, 100% time is correct if the guest
-does idle in pinned vcpu mode.
+Jonathan
+
+> ---
+> 
+> Changelog v2:
+> - nothing changed here
+> 
+> Changelog v3:
+> - nothing changed here
+> 
+> Changelog v4:
+> - nothing changed here
+> 
+>  drivers/iio/adc/ad7124.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+> index 659ef37d5fe8..810234db9c0d 100644
+> --- a/drivers/iio/adc/ad7124.c
+> +++ b/drivers/iio/adc/ad7124.c
+> @@ -462,13 +462,6 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+>  		if (ret)
+>  			goto err;
+>  
+> -		if (ain[0] >= st->chip_info->num_inputs ||
+> -		    ain[1] >= st->chip_info->num_inputs) {
+> -			dev_err(indio_dev->dev.parent,
+> -				"Input pin number out of range.\n");
+> -			ret = -EINVAL;
+> -			goto err;
+> -		}
+>  		st->channel_config[channel].ain = AD7124_CHANNEL_AINP(ain[0]) |
+>  						  AD7124_CHANNEL_AINM(ain[1]);
+>  		st->channel_config[channel].bipolar =
+
