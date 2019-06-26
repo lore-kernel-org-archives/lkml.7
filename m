@@ -2,104 +2,96 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A8AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D8AC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E742084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="FfPhjsae"
+	by mail.kernel.org (Postfix) with ESMTP id 426DB2084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561565660;
+	bh=evdGKyD5k1ccTowkp8GnBdRSislkNYG2obtcT6+5mYw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mg0liKbVxNq35bIpDBRrIF+q9PKmgvxJD9m5SN8Jyy6faBFm7YsEYpATpRHSKIaE9
+	 HBYxkyYIXXh87FfO/1MLmCkL+VaDg2A5UM/BkMmOvp85mEjtSP9p5+M1UOur0S1R5g
+	 EDg8mflrOhQWgEIBYZTaU1XFxI7ejW2BZxBsu3gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFZQNp (ORCPT
+        id S1726596AbfFZQOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:13:45 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:43215 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfFZQNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:13:44 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 45Yp2p5mdrzJb;
-        Wed, 26 Jun 2019 18:12:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1561565556; bh=n5zWYxICS2xoE95InVjEnZLwmYctSBGSJ8mrMXN7MT0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FfPhjsaevimtQ2UpqFsl9LwLXUYXcpAP17KKTqiAP1CWBql6MTg3vBZ/R4qLNQOBZ
-         sjBwmnjwNpdLDnEKyo94rfZBzQMDkX1weA/tsNPUBu3p8XWSd0ayBrx92HoRRzeHg2
-         rYwcexbv2wZitx++RU0UxqnooI1f0nv4QwNFfTw8/sR1HaTXUR8/aZaD1IRyH8SMD0
-         K1YLX0OW2WBSyH5qMKOBsrzpQpsig75bVJkSNgvuRa1/QQoxIGFFtK7tBYy85vCovq
-         SPrhqlCBpyM8ZKH2EVybAWFrXq0EaVXngTvNbDIgKAuR2V9p1CmKBM0FOPnrJGZiYM
-         0TDCBNmjPk3tw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.100.3 at mail
-Date:   Wed, 26 Jun 2019 18:13:38 +0200
-From:   mirq-linux@rere.qmqm.pl
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, sdf@google.com, jianbol@mellanox.com,
-        jiri@mellanox.com, willemb@google.com, sdf@fomichev.me,
-        jiri@resnulli.us, j.vosburgh@gmail.com, vfalico@gmail.com,
-        andy@greyhouse.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] bonding: Always enable vlan tx offload
-Message-ID: <20190626161337.GA18953@qmqm.qmqm.pl>
-References: <20190624135007.GA17673@nanopsycho>
- <20190626080844.20796-1-yuehaibing@huawei.com>
+        Wed, 26 Jun 2019 12:14:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57896 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZQOS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:14:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xgArw+nVtTXG7oezfdfD4Z1XiVxNfU8kA8v4SVH+Er8=; b=H8pU6ksMjxPS9r4Rpfv5NA8Hz
+        +YS3Oa+ujur3g18XgsDxJQe7f0Mom3EwR5DPIW1GpwAsW1jzd2koULTevDvSOhS7aq+XgZ8HxwiEd
+        TBJx1lvgP3P1uks1zEwTL8j7Hk4nAcViKpVzEblKnZXK/C+HKQtdfxbKWHZsRXvpw3hQ3QguTYSzj
+        JBRdRCxyzdLJaecnl2YkSxGuJsNkXk4L6tW9lObvi87S5GEGoXU+4/ezOe6GXvTzXJGIAHftGd4GY
+        TIQerjgzoce7Z+9ZJOXftSSONKMRf1AWdCShlccCI1jecYU5SL21L+gMj2G/RJa69lKnhkG2NiOtd
+        dd95/mUQg==;
+Received: from [186.213.242.156] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgAYq-0004wb-Ov; Wed, 26 Jun 2019 16:14:16 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hgAYo-0008AF-RE; Wed, 26 Jun 2019 13:14:14 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm: fix a reference for a renamed file: fb/modedb.rst
+Date:   Wed, 26 Jun 2019 13:14:13 -0300
+Message-Id: <699d7618720e2808f9aa094a13ab2f3545c3c25c.1561565652.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190626080844.20796-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 04:08:44PM +0800, YueHaibing wrote:
-> We build vlan on top of bonding interface, which vlan offload
-> is off, bond mode is 802.3ad (LACP) and xmit_hash_policy is
-> BOND_XMIT_POLICY_ENCAP34.
-> 
-> Because vlan tx offload is off, vlan tci is cleared and skb push
-> the vlan header in validate_xmit_vlan() while sending from vlan
-> devices. Then in bond_xmit_hash, __skb_flow_dissect() fails to
-> get information from protocol headers encapsulated within vlan,
-> because 'nhoff' is points to IP header, so bond hashing is based
-> on layer 2 info, which fails to distribute packets across slaves.
-> 
-> This patch always enable bonding's vlan tx offload, pass the vlan
-> packets to the slave devices with vlan tci, let them to handle
-> vlan implementation.
-[...]
-> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-> index 407f4095a37a..799fc38c5c34 100644
-> --- a/drivers/net/bonding/bond_main.c
-> +++ b/drivers/net/bonding/bond_main.c
-> @@ -4320,12 +4320,12 @@ void bond_setup(struct net_device *bond_dev)
->  	bond_dev->features |= NETIF_F_NETNS_LOCAL;
->  
->  	bond_dev->hw_features = BOND_VLAN_FEATURES |
-> -				NETIF_F_HW_VLAN_CTAG_TX |
->  				NETIF_F_HW_VLAN_CTAG_RX |
->  				NETIF_F_HW_VLAN_CTAG_FILTER;
->  
->  	bond_dev->hw_features |= NETIF_F_GSO_ENCAP_ALL | NETIF_F_GSO_UDP_L4;
->  	bond_dev->features |= bond_dev->hw_features;
-> +	bond_dev->features |= NETIF_F_HW_VLAN_CTAG_TX | NETIF_F_HW_VLAN_STAG_TX;
->  }
->  
->  /* Destroy a bonding device.
-> 
+Due to two patches being applied about the same time, the
+reference for modedb.rst file got wrong:
 
-I can see that bonding driver uses dev_queue_xmit() to pass packets to
-slave links, but I can't see where in the path it does software fallback
-for devices without HW VLAN tagging. Generally drivers that don't ever
-do VLAN offload also ignore vlan_tci presence. Am I missing something
-here?
+	Documentation/fb/modedb.txt is now Documentation/fb/modedb.rst.
 
-Best Regards,
-Micha³ Miros³aw
+Fixes: 1bf4e09227c3 ("drm/modes: Allow to specify rotation and reflection on the commandline")
+Fixes: ab42b818954c ("docs: fb: convert docs to ReST and rename to *.rst")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ drivers/gpu/drm/drm_modes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+index 57e6408288c8..4645af681ef8 100644
+--- a/drivers/gpu/drm/drm_modes.c
++++ b/drivers/gpu/drm/drm_modes.c
+@@ -1680,7 +1680,7 @@ static int drm_mode_parse_cmdline_options(char *str, size_t len,
+  *
+  * Additionals options can be provided following the mode, using a comma to
+  * separate each option. Valid options can be found in
+- * Documentation/fb/modedb.txt.
++ * Documentation/fb/modedb.rst.
+  *
+  * The intermediate drm_cmdline_mode structure is required to store additional
+  * options from the command line modline like the force-enable/disable flag.
+-- 
+2.21.0
+
