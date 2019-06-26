@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93289C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CEDC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68969214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E78321726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520694;
-	bh=Roon0/jMaTnBleL4j5XbLMY74c60CUOy22Ep9TVTNYY=;
+	s=default; t=1561520701;
+	bh=rg2X3Dz7v8hDfBOjeKAWERZJmuKoBfoNg9SUmhhyzo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NG/D5Z7ZrLn9+DEsmIiN+p3WxKg8yqvokFzvStxMb2JjkkkDVG4lRmTCgQ2SV8+IA
-	 2IVGzRAPo815wu8DbTjrcqAcub3YKZE0AH/Hh53C6LA4K/lgR+uILxthyCKClqWsia
-	 iziFd++HReK4lFJQro5+SPvY3tYsG7QbOcG1LsHA=
+	b=tAQXvpvPt3syHaLtxzAFxdCFeK6Ckug5myXVFxa6KOl2pmhmFcVE6hEmret1K/oYz
+	 Fb78IgWq69GVXdlrZigAW6HsK0O4ItYotHTMWZD2tt2cl3hMvvUjR05T2eWcuwyCCg
+	 uGSdr15W/qlcMXhlYhBqMlf5SNCPUlx2M6d6ix+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfFZDox (ORCPT
+        id S1727246AbfFZDo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbfFZDom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:44:42 -0400
+        id S1727195AbfFZDot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:44:49 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-98.mobile.att.net [107.77.172.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19C9B205ED;
-        Wed, 26 Jun 2019 03:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33CAC20659;
+        Wed, 26 Jun 2019 03:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520681;
-        bh=Roon0/jMaTnBleL4j5XbLMY74c60CUOy22Ep9TVTNYY=;
+        s=default; t=1561520688;
+        bh=rg2X3Dz7v8hDfBOjeKAWERZJmuKoBfoNg9SUmhhyzo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XwS0tSg/plJq94vBAqVFR0NQpnK0WkImMp4dC7q29/uuhAfooKc9JilgMyF7z3zZz
-         BpOA/btCn+/97s/94mPDB7dWihVcXJP3AxP+2krM3t23+n9/WAgtyrXL/aPCO0oheR
-         fHPAa4Qa5f52nSeTD0a5lzo+aTTOIikRhs35Pdv8=
+        b=vCbPz6WHoa3FLjaRNGDUaztVRIAul/QEKdncdn9zxa3pf/M/3pnImFBflO5sFJPLF
+         rhFQLSNdbDu5rxNcRZBemr2Me96WWTls2myB2PD8Y9spTjhH68x+Kvc3zp9d9QYQ9y
+         vcev348FzvwHbDExx3cczlNryRi6jpmK+WlOqqEE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Pasternak <vadimp@mellanox.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 27/34] platform/mellanox: mlxreg-hotplug: Add devm_free_irq call to remove flow
-Date:   Tue, 25 Jun 2019 23:43:28 -0400
-Message-Id: <20190626034335.23767-27-sashal@kernel.org>
+Cc:     Joel Savitz <jsavitz@redhat.com>, Waiman Long <longman@redhat.com>,
+        Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/34] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
+Date:   Tue, 25 Jun 2019 23:43:30 -0400
+Message-Id: <20190626034335.23767-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034335.23767-1-sashal@kernel.org>
 References: <20190626034335.23767-1-sashal@kernel.org>
@@ -60,91 +61,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Pasternak <vadimp@mellanox.com>
+From: Joel Savitz <jsavitz@redhat.com>
 
-[ Upstream commit 8c2eb7b6468ad4aa5600aed01aa0715f921a3f8b ]
+[ Upstream commit d477f8c202d1f0d4791ab1263ca7657bbe5cf79e ]
 
-Add devm_free_irq() call to mlxreg-hotplug remove() for clean release
-of devices irq resource. Fix debugobjects warning triggered by rmmod
-It prevents of use-after-free memory, related to
-mlxreg_hotplug_work_handler.
+In the case that a process is constrained by taskset(1) (i.e.
+sched_setaffinity(2)) to a subset of available cpus, and all of those are
+subsequently offlined, the scheduler will set tsk->cpus_allowed to
+the current value of task_cs(tsk)->effective_cpus.
 
-Issue has been reported as debugobjects warning triggered by
-'rmmod mlxtreg-hotplug' flow, while running kernel with
-CONFIG_DEBUG_OBJECTS* options.
+This is done via a call to do_set_cpus_allowed() in the context of
+cpuset_cpus_allowed_fallback() made by the scheduler when this case is
+detected. This is the only call made to cpuset_cpus_allowed_fallback()
+in the latest mainline kernel.
 
-[ 2489.623551] ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler+0x0/0x7f0 [mlxreg_hotplug]
-[ 2489.637097] WARNING: CPU: 5 PID: 3924 at lib/debugobjects.c:328 debug_print_object+0xfe/0x180
-[ 2489.637165] RIP: 0010:debug_print_object+0xfe/0x180
-?
-[ 2489.637214] Call Trace:
-[ 2489.637225]  __debug_check_no_obj_freed+0x25e/0x320
-[ 2489.637231]  kfree+0x82/0x110
-[ 2489.637238]  release_nodes+0x33c/0x4e0
-[ 2489.637242]  ? devres_remove_group+0x1b0/0x1b0
-[ 2489.637247]  device_release_driver_internal+0x146/0x270
-[ 2489.637251]  driver_detach+0x73/0xe0
-[ 2489.637254]  bus_remove_driver+0xa1/0x170
-[ 2489.637261]  __x64_sys_delete_module+0x29e/0x320
-[ 2489.637265]  ? __ia32_sys_delete_module+0x320/0x320
-[ 2489.637268]  ? blkcg_exit_queue+0x20/0x20
-[ 2489.637273]  ? task_work_run+0x7d/0x100
-[ 2489.637278]  ? exit_to_usermode_loop+0x5b/0xf0
-[ 2489.637281]  do_syscall_64+0x73/0x160
-[ 2489.637287]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 2489.637290] RIP: 0033:0x7f95c3596fd7
+However, this is not sane behavior.
 
-The difference in release flow with and with no devm_free_irq is listed
-below:
+I will demonstrate this on a system running the latest upstream kernel
+with the following initial configuration:
 
-bus: 'platform': remove driver mlxreg-hotplug
- mlxreg_hotplug_remove(start)
-					-> devm_free_irq (with new code)
- mlxreg_hotplug_remove (end)
- release_nodes (start)
-  mlxreg-hotplug: DEVRES REL devm_hwmon_release (8 bytes)
-  device: 'hwmon3': device_unregister
-  PM: Removing info for No Bus:hwmon3
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (88 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (6 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (5 bytes)
-  mlxreg-hotplug: DEVRES REL devm_irq_release (16 bytes) (no new code)
-  mlxreg-hotplug: DEVRES REL devm_kzalloc_release (1376 bytes)
-   ------------[ cut here ]------------ (no new code):
-   ODEBUG: free active (active state 0) object type: work_struct hint: mlxreg_hotplug_work_handler
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	ffffffff,fffffff
+	Cpus_allowed_list:	0-63
 
- release_nodes(end)
-driver: 'mlxreg-hotplug': driver_release
+(Where cpus 32-63 are provided via smt.)
 
-Fixes: 1f976f6978bf ("platform/x86: Move Mellanox platform hotplug driver to platform/mellanox")
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+If we limit our current shell process to cpu2 only and then offline it
+and reonline it:
+
+	# taskset -p 4 $$
+	pid 2272's current affinity mask: ffffffffffffffff
+	pid 2272's new affinity mask: 4
+
+	# echo off > /sys/devices/system/cpu/cpu2/online
+	# dmesg | tail -3
+	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
+	[ 2195.872700] IRQ 114: no longer affine to CPU2
+	[ 2195.879128] smpboot: CPU 2 is now offline
+
+	# echo on > /sys/devices/system/cpu/cpu2/online
+	# dmesg | tail -1
+	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
+
+We see that our current process now has an affinity mask containing
+every cpu available on the system _except_ the one we originally
+constrained it to:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:   ffffffff,fffffffb
+	Cpus_allowed_list:      0-1,3-63
+
+This is not sane behavior, as the scheduler can now not only place the
+process on previously forbidden cpus, it can't even schedule it on
+the cpu it was originally constrained to!
+
+Other cases result in even more exotic affinity masks. Take for instance
+a process with an affinity mask containing only cpus provided by smt at
+the moment that smt is toggled, in a configuration such as the following:
+
+	# taskset -p f000000000 $$
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	000000f0,00000000
+	Cpus_allowed_list:	36-39
+
+A double toggle of smt results in the following behavior:
+
+	# echo off > /sys/devices/system/cpu/smt/control
+	# echo on > /sys/devices/system/cpu/smt/control
+	# grep -i cpus /proc/$$/status
+	Cpus_allowed:	ffffff00,ffffffff
+	Cpus_allowed_list:	0-31,40-63
+
+This is even less sane than the previous case, as the new affinity mask
+excludes all smt-provided cpus with ids less than those that were
+previously in the affinity mask, as well as those that were actually in
+the mask.
+
+With this patch applied, both of these cases end in the following state:
+
+	# grep -i cpu /proc/$$/status
+	Cpus_allowed:	ffffffff,ffffffff
+	Cpus_allowed_list:	0-63
+
+The original policy is discarded. Though not ideal, it is the simplest way
+to restore sanity to this fallback case without reinventing the cpuset
+wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
+for the previous affinity mask to be restored in this fallback case can use
+that mechanism instead.
+
+This patch modifies scheduler behavior by instead resetting the mask to
+task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
+mode. I tested the cases above on both modes.
+
+Note that the scheduler uses this fallback mechanism if and only if
+_every_ other valid avenue has been traveled, and it is the last resort
+before calling BUG().
+
+Suggested-by: Waiman Long <longman@redhat.com>
+Suggested-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+Acked-by: Phil Auld <pauld@redhat.com>
+Acked-by: Waiman Long <longman@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/cgroup/cpuset.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index eca16d00e310..d52c821b8584 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -673,6 +673,7 @@ static int mlxreg_hotplug_remove(struct platform_device *pdev)
- 
- 	/* Clean interrupts setup. */
- 	mlxreg_hotplug_unset_irq(priv);
-+	devm_free_irq(&pdev->dev, priv->irq, priv);
- 
- 	return 0;
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 266f10cb7222..ff956ccbb6df 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -2432,10 +2432,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
+ 	spin_unlock_irqrestore(&callback_lock, flags);
  }
+ 
++/**
++ * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
++ * @tsk: pointer to task_struct with which the scheduler is struggling
++ *
++ * Description: In the case that the scheduler cannot find an allowed cpu in
++ * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
++ * mode however, this value is the same as task_cs(tsk)->effective_cpus,
++ * which will not contain a sane cpumask during cases such as cpu hotplugging.
++ * This is the absolute last resort for the scheduler and it is only used if
++ * _every_ other avenue has been traveled.
++ **/
++
+ void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+ {
+ 	rcu_read_lock();
+-	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
++	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
++		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
+ 	rcu_read_unlock();
+ 
+ 	/*
 -- 
 2.20.1
 
