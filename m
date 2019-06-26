@@ -2,96 +2,127 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351C4C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1154CC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDDA21726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBFC121726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 23:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iq4jfqas"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfFZXeA (ORCPT
+        id S1726663AbfFZXfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 19:34:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:40775 "EHLO mga18.intel.com"
+        Wed, 26 Jun 2019 19:35:12 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49343 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbfFZXd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 19:33:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 16:33:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
-   d="scan'208";a="188839403"
-Received: from mwsinger-mobl3.ger.corp.intel.com ([10.252.48.211])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Jun 2019 16:33:55 -0700
-Message-ID: <4bb41de0cd2b0bf89a20dd55576acf15594ae8de.camel@linux.intel.com>
-Subject: Re: [PATCH v7 2/2] fTPM: add documentation for ftpm driver
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>, peterhuewe@gmx.de, jgg@ziepe.ca
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com, tee-dev@lists.linaro.org,
-        ilias.apalodimas@linaro.org, sumit.garg@linaro.org,
-        rdunlap@infradead.org
-Date:   Thu, 27 Jun 2019 02:34:06 +0300
-In-Reply-To: <20190625201341.15865-3-sashal@kernel.org>
-References: <20190625201341.15865-1-sashal@kernel.org>
-         <20190625201341.15865-3-sashal@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        id S1726399AbfFZXfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 19:35:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45YzsT2l4pz9sBZ;
+        Thu, 27 Jun 2019 09:35:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561592109;
+        bh=qMfcxqk4G2kzYq2wlabyoCO9Jbk0YAFRUFR1ilLG5kA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iq4jfqas37jNNL/akHubkPa0aPi6FwKRzK8q7n8gxV3ZPpkh6qrsL+4ChQ0VfOP/Y
+         ajwOvWE1ba6AE+uYOop9BuovurAwPWZWVIwtKzQnnnpaJkMItu3L7mcLQ2jHrCWSg8
+         K3nV6X+VhgNx6sr0GTztrboXt38ne9CEHV2t1lLjBPqxhvkpQElHSanC6zXQbnlk7/
+         biAUiK2ERQSfBS7MNoAZBwfiJntVOwuTg/vLiGzdhb4SUSHrf/f3O9mC99OH94lAi6
+         5442hZwLEy4556XF7m3pFfKybtNZdDZHtBq0gWLVgkB+KO9yWUaHdvSP7tk3rWJT1D
+         p84Kk+7jvOQoQ==
+Date:   Thu, 27 Jun 2019 09:35:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: linux-next: manual merge of the arm64 tree with the arm64-fixes
+ tree
+Message-ID: <20190627093503.094106d9@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/EHexR=Ls15yx5V+tV1u47RH"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-25 at 16:13 -0400, Sasha Levin wrote:
-> This patch adds basic documentation to describe the new fTPM driver.
-> 
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  Documentation/security/tpm/index.rst        |  1 +
->  Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
-> 
-> diff --git a/Documentation/security/tpm/index.rst
-> b/Documentation/security/tpm/index.rst
-> index af77a7bbb070..15783668644f 100644
-> --- a/Documentation/security/tpm/index.rst
-> +++ b/Documentation/security/tpm/index.rst
-> @@ -4,4 +4,5 @@ Trusted Platform Module documentation
->  
->  .. toctree::
->  
-> +   tpm_ftpm_tee
->     tpm_vtpm_proxy
-> diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst
-> b/Documentation/security/tpm/tpm_ftpm_tee.rst
-> new file mode 100644
-> index 000000000000..48de0dcec0f6
-> --- /dev/null
-> +++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
-> @@ -0,0 +1,31 @@
-> +=============================================
-> +Firmware TPM Driver
-> +=============================================
-> +
-> +| Authors:
-> +| Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> +| Sasha Levin <sashal@kernel.org>
+--Sig_/EHexR=Ls15yx5V+tV1u47RH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The way I see it this thing should not exist here at all but the
-first patch should have co-developed-by in addition to
-signed-off-by from you. Otherwise looks good. The list of authors
-is againt something that Git does better than humans.
+Hi all,
 
-/Jarkko
+Today's linux-next merge of the arm64 tree got a conflict in:
 
+  arch/arm64/kernel/module.c
+
+between commit:
+
+  6f496a555d93 ("arm64: kaslr: keep modules inside module region when KASAN=
+ is enabled")
+
+from the arm64-fixes tree and commit:
+
+  7dfac3c5f40e ("arm64: module: create module allocations without exec perm=
+issions")
+
+from the arm64 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/kernel/module.c
+index 71530e080ecc,5b5936b7868c..000000000000
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@@ -29,12 -39,9 +29,12 @@@ void *module_alloc(unsigned long size
+  	if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
+  		gfp_mask |=3D __GFP_NOWARN;
+ =20
+ +	if (IS_ENABLED(CONFIG_KASAN))
+ +		/* don't exceed the static module region - see below */
+ +		module_alloc_end =3D MODULES_END;
+ +
+  	p =3D __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
+- 				module_alloc_end, gfp_mask, PAGE_KERNEL_EXEC, 0,
+ -				module_alloc_base + MODULES_VSIZE,
+ -				gfp_mask, PAGE_KERNEL, 0,
+++				module_alloc_end, gfp_mask, PAGE_KERNEL, 0,
+  				NUMA_NO_NODE, __builtin_return_address(0));
+ =20
+  	if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
+
+--Sig_/EHexR=Ls15yx5V+tV1u47RH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0UASgACgkQAVBC80lX
+0GzTxwf+OqovGorYRLpMze4h0oyLKXzv79/eFCgNoZJ/HyGszyMKkJb52BWi/juA
+Mph+lfAgue+VIp0/p8MiTDp882FnfVoi/SBpB4sgQiSrMb6602l60sVl++ZQs9S6
+/efkX042yTD3JwS+7LVl1Zm5Zg1+q3QM0W7RdK1yWVkKOR7aJFndnbQST2npjrna
+dGup4YzRT/TtFEd1CdJJJIwFPbE2eBn2lA4TkWCj/RGy7PwGnneV+qOAf0+l1AG7
+uEbQR4MSUDANHQR/nGKheh3dq0JLqSa9fsVSE9U4JVgwt3GKkmLJ572rC7VJd/IQ
+tWpnv+OMLNQ9BsHl6xsnEKL3D5NsOQ==
+=x+n7
+-----END PGP SIGNATURE-----
+
+--Sig_/EHexR=Ls15yx5V+tV1u47RH--
