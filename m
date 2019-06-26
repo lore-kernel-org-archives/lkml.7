@@ -2,92 +2,100 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B9AC48BD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F6BC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034C4216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Zj1J+AJK"
+	by mail.kernel.org (Postfix) with ESMTP id 976AD2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561557005;
+	bh=LsFayJEQLjTF6JJGMCu7ArGwS/IzubA7urCZ774L2Ug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bO3VBIz1YDdggVcfSz2U3idgIe6oDen6zGwPR60ajgPD3O0ZE+1Z+6UDaRbFQHuCR
+	 INYlHHJdIS6Yad9zBB/LYW1UEZVIhXN2jTj/gwa2VD387ndzsKj54qx/8TyLmY/I/3
+	 fkppZLkkRryD56m9yEyKuJPe2vn7YnF4LDz0TixQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfFZNs0 (ORCPT
+        id S1727724AbfFZNuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:48:26 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:51158 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727874AbfFZNry (ORCPT
+        Wed, 26 Jun 2019 09:50:04 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43208 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfFZNuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:47:54 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BF812C0C4A;
-        Wed, 26 Jun 2019 13:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561556874; bh=4l6pBzfPGy6jNgo8xtyf0X61O+IJMXBzqsk/z/+IUew=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=Zj1J+AJKWfWOI+1LRv2EQEHbEshppTRlKdOZ89eHBdYxhmgNckV7h9H10LH2ZQezf
-         4nse/NG9Ez0DgGGdOvPoYFeXWTm5bTPGxbYzdY1AkOjMEvlry14OwVla1WLnRc+Jf1
-         U6uKybGwR44MRHLAnRi2oXdZCgLLWpb8Xc+n0qMBTD6g/uSQ8AFyZUE/FdtNSm6/ZB
-         Rwoh4h55v4BWSGHfpVLNalfiJAWabOUaFAyom/WpLbh1fMdp2Nqzl6Bi+rtcAk0aqQ
-         u2+RSj6//lmKBxAkqBMWWD2a/AlvPT0AmHeo3dWzY2A1h9+CnnNfv51QY7jWRWnzZ0
-         IAHZv0oaPeSRA==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id E8449A0065;
-        Wed, 26 Jun 2019 13:47:51 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id B893E3B55D;
-        Wed, 26 Jun 2019 15:47:51 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 02/10] net: stmmac: Do not try to enable PHY EEE if MAC does not support it
-Date:   Wed, 26 Jun 2019 15:47:36 +0200
-Message-Id: <bbcb80e32a9d3d78581b47b5835ed7df095ac6fb.1561556555.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1561556555.git.joabreu@synopsys.com>
-References: <cover.1561556555.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1561556555.git.joabreu@synopsys.com>
-References: <cover.1561556555.git.joabreu@synopsys.com>
+        Wed, 26 Jun 2019 09:50:04 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m14so1648743qka.10
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V7w6w+dfv0biqzUUE5ewrpDw9Ee41HXfc9CN96OAGX4=;
+        b=JzCa9uKAvPQuqpfMqHF5HWHDsl6QmWzvmcjJ2YSvYbg0uFwQ36TQs/5LC9hUHNQgWf
+         SKA25T4g4TUmSDUhmYDGkSIVn1nsYeryl6hOYCNavuGkTHjznxcy/8GXn5fcZF1lcrKo
+         tI8iFzwzAbFsWvQqnOgb1BWBHOrgcdUYhc+BwzvWYj/29fjX3956+K/aYPRO3oV4X0Hh
+         mkRgC52gXjaceBCfX0MStw9jeTzhu+IU2866gFenUBvZTYuVBMXusmPp6vpIF8Fg8gbH
+         +uyX+3SeN7Mm603/UQR4HY26ISO3wD/uGi1woSneZSs28KKDwQzmVTabKs6XgRRlPAPm
+         XM7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V7w6w+dfv0biqzUUE5ewrpDw9Ee41HXfc9CN96OAGX4=;
+        b=GgXkxHqjElzsMIX5eQguazLlPLRP6Yyww8Lb5GXkjdtUCG3HyKMGmbIjWmO3qlL18e
+         T7kJYuzZSBT9MD4Cq0GwDjZb0S9A1r6a1P3pTcHbcTmxKWs/+ai32K4iYLrSao16UrTy
+         Zb6RqrQKf6jw+ESKTqPhGMcDNdkYGnYPyH326zqnN8w5bjkgOwuqH1ETOH4EU/MKtN1N
+         4CeaI1gx4If1QbrI3TtPbMN2+PahPhrNzgkoZkYJi4N1T8audxqUIFU0NfBBCR/BkRjW
+         XknhuAgbelgdJxeHh06RD4OLmTRUt/A2mUtcLp0UFxTEaF0J7sNyTO/RWxel8txaC8au
+         wABA==
+X-Gm-Message-State: APjAAAWNqfW5ncDpX4KH+Qt6BT0JhLBxCtlNkfdBGkmYP+I2flGz7SQ5
+        hBDZ4U/uPVOHa7C7yj0/jV8=
+X-Google-Smtp-Source: APXvYqyP+2O1WiPSQrXK2geunwBg+Sltr+2NPgnwpLtV1XhHq9vyJhLtHbePOThD6wMhbn/e5VzHFg==
+X-Received: by 2002:a37:ccb:: with SMTP id 194mr3626080qkm.363.1561557002549;
+        Wed, 26 Jun 2019 06:50:02 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::953f])
+        by smtp.gmail.com with ESMTPSA id h185sm9025825qkd.11.2019.06.26.06.50.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 06:50:00 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 06:49:57 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Lai Jiangshan <jiangshanlai@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/6] workqueue: convert to raw_spinlock_t
+Message-ID: <20190626134957.GT657710@devbig004.ftw2.facebook.com>
+References: <20190613145027.27753-1-bigeasy@linutronix.de>
+ <20190626071719.psyftqdop4ny3zxd@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626071719.psyftqdop4ny3zxd@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not enable EEE feature in the PHY if MAC does not support it.
+On Wed, Jun 26, 2019 at 09:17:19AM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-06-13 16:50:21 [+0200], To linux-kernel@vger.kernel.org wrote:
+> > Hi,
+> > 
+> > the workqueue code has been reworked in -RT to use raw_spinlock_t based
+> > locking. This change allows to schedule worker from preempt_disable()ed
+> > or IRQ disabled section on -RT. This is the last patch. The previous
+> > patches are prerequisites or tiny cleanup (like patch #1 and #2).
+> 
+> a gentle *ping*
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I don't now what to make of the series.  AFAICS, there's no benefit to
+mainline.  What am I missing?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index f4593d2d9d20..fab65f129207 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -893,7 +893,7 @@ static void stmmac_mac_link_up(struct phylink_config *config,
- 	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
- 
- 	stmmac_mac_set(priv, priv->ioaddr, true);
--	if (phy) {
-+	if (phy && priv->dma_cap.eee) {
- 		priv->eee_active = phy_init_eee(phy, 1) >= 0;
- 		priv->eee_enabled = stmmac_eee_init(priv);
- 		stmmac_set_eee_pls(priv, priv->hw, true);
+Thanks.
+
 -- 
-2.7.4
-
+tejun
