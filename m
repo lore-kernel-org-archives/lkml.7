@@ -2,148 +2,145 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C82C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B295FC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CA021738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F16208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ROItScjC";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Xs121MI7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TPOVRXIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfFZWOP (ORCPT
+        id S1726503AbfFZWOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:14:15 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:29468 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726239AbfFZWOP (ORCPT
+        Wed, 26 Jun 2019 18:14:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34322 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfFZWOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:14:15 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QMDqjn022472;
-        Wed, 26 Jun 2019 15:13:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=HfFgzxXqVyLtfFZteDNh7PLwoUIO4UJBoqT7rpRp8qE=;
- b=ROItScjC462FhsbaXQY/PPH+8Hk2eap8MHDmHKG8Sz4nEZYLUj0F7EYeQlEgZXCBbRE0
- Y4vuaPIkhLY1nlOeyKnSKrOQbj6FdpdVDhcTblNFzkSI3Tp/2BqYjvNywIEohcX2U9Wq
- j2oAIx7WjZM6hXfr8SkViiWL3+YJ/DAEChE= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2tca1vsu4v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 26 Jun 2019 15:13:54 -0700
-Received: from ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) by
- ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Jun 2019 15:13:53 -0700
-Received: from ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) by
- ash-exopmbx101.TheFacebook.com (2620:10d:c0a8:82::b) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Jun 2019 15:13:53 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 26 Jun 2019 15:13:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HfFgzxXqVyLtfFZteDNh7PLwoUIO4UJBoqT7rpRp8qE=;
- b=Xs121MI7hED3rcUfcV7PA0kfJxoQTuv+hCR3tco0w/g/9OUPV5K+jMHbwyo6XI2lg/xxD/dcWOAt9CnvX2Ns8c0lrTQ0o/zGD4Y+bs30/K7jjvZSUjJZUgbev78T/7+07L6EgQ2byIfmBSvcK8Z5aLPNxQOZ25GICp3rCm6ND0U=
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
- BN8PR15MB3330.namprd15.prod.outlook.com (20.179.74.225) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Wed, 26 Jun 2019 22:13:51 +0000
-Received: from BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::e594:155f:a43:92ad]) by BN8PR15MB2626.namprd15.prod.outlook.com
- ([fe80::e594:155f:a43:92ad%6]) with mapi id 15.20.2008.018; Wed, 26 Jun 2019
- 22:13:51 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Alexei Starovoitov <ast@kernel.org>
-CC:     Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Networking <netdev@vger.kernel.org>,
-        "Linux Next Mailing List" <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the bpf tree
-Thread-Topic: linux-next: Fixes tag needs some work in the bpf tree
-Thread-Index: AQHVLGtWobJf9y3bFk6A9OxwhHLb36augAKA
-Date:   Wed, 26 Jun 2019 22:13:51 +0000
-Message-ID: <20190626221347.GA17762@tower.DHCP.thefacebook.com>
-References: <20190627080521.5df8ccfc@canb.auug.org.au>
-In-Reply-To: <20190627080521.5df8ccfc@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO1PR15CA0044.namprd15.prod.outlook.com
- (2603:10b6:101:1f::12) To BN8PR15MB2626.namprd15.prod.outlook.com
- (2603:10b6:408:c7::28)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:8b85]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 72111cdd-56f4-47ab-6326-08d6fa8391b7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB3330;
-x-ms-traffictypediagnostic: BN8PR15MB3330:
-x-microsoft-antispam-prvs: <BN8PR15MB3330F7124CA0A416279C41C6BEE20@BN8PR15MB3330.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:489;
-x-forefront-prvs: 00808B16F3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(396003)(376002)(136003)(366004)(189003)(199004)(53754006)(486006)(6506007)(478600001)(66556008)(66476007)(66446008)(476003)(66946007)(73956011)(64756008)(2906002)(6246003)(386003)(81166006)(102836004)(68736007)(446003)(81156014)(11346002)(8936002)(86362001)(256004)(6916009)(7736002)(305945005)(186003)(6116002)(6436002)(54906003)(33656002)(52116002)(8676002)(14454004)(229853002)(4326008)(1076003)(6486002)(316002)(9686003)(4744005)(6512007)(25786009)(53936002)(46003)(99286004)(71190400001)(71200400001)(5660300002)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3330;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: i2/n4erNij+37YbD9ewcJg7S4Z6e6rpagu2X2LYaysxj/AQ3p7wtmT+Sz1V9r87QULXH7m8riSYcbbkxggNBWR8NqbtD6dpCW55yqGxXbS/3q5oYmuBcCU3kgthxdzajycr/iSytDBaiP9tED7zbs7Wrg3IWkyTTe64V9hZ02VSmuurGa+liO0Lnmzv91IS0b8tAQm6IBupTc9FPLon8w21SanI/1SS2QsltxHhCX4rR3vCI56mBPDZn+8b7phKCMMmxdzopABMZccTOEYhT4bMftrdLOBJ93UH+CTs3eZdOiOImxTCn1fXfOAniirLIjcsPbEoHY/cygTa62U9QfvSs9fc+N8iDQGoLSwDWvt8md9DpZnEAbkTk4Rq7UlUYTDrLd0q0ktq+5UH1ojdx8QWCenSLksAjEhxlV1IQNe4=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <851EF497B88AB4479B0ABD8A4CF51205@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 26 Jun 2019 18:14:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c85so153521pfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 15:14:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gR5pPMtypASmBCpf8U2BP93BLiVmDxma1kH5nmUB+Vg=;
+        b=TPOVRXIzUIdhLwumU7BgEgz/fAAiIKuSWPZsO5KDyLPcM2+LtFMAxHFGX1ti1KkBKF
+         Tg9MM7XfRmD6/ZzldWeTX1yajjcGXIUBFt7yvPxuPHMoagFwAsiBUg7vsl/XGzBresYF
+         JJ+UMqbQy0xftZXHFucm6I+WUuNNqClmkX04Zn/ZP2GInLzyWoDe5rVcTl2gpz+UyjrC
+         GFpDx0cJXGlZRR3+b5LOVzPwN9X8e6+9LohbbOP4shOFtYp6NjhllqxIOpjxztT0m7Cq
+         oIwZrBGXdTtvnaKSMifi4Ue/WdZKANspk+DXRC8sVknGC/i9+OZvrZ8/+cJzM1Qcbk7g
+         6BBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gR5pPMtypASmBCpf8U2BP93BLiVmDxma1kH5nmUB+Vg=;
+        b=b2d9z17e6O8WOSO/ngg3d/SsyctVhYZR3/sGuhLExzsi7j3hTENPxocRL5XZZSZxoC
+         NB7xHDSoVbFhBlvV4+59gIHkSTmSDDFeWhLDwr4SMgprf+g+pm+N4z7XqTxcYylWmSKB
+         j+kaINHYCV8A7C4NYAHhh03GfCc8VzOevBtJccozvsm0z60UqUKF0VnQqeTCOg5joODG
+         OYT8bTc7V44vzfpagJNNHQpI3lRrU5mcP/Bp2Ke1xcQPtaPzgpA6vNR22bb/QIkIH3TH
+         NVAqIygEFm2RZSlJX7LBWVcWsIZDI1SuqObwZcFehgIfcAy5Isg2WRSqqacum0H9ReOM
+         zFMg==
+X-Gm-Message-State: APjAAAXIGJhYKGDgc5TQHifRXacIYVl5oopHWmPzi5AxzA3iKJLeFxwB
+        y8a/n15YqxYnmLiIadJxiWBeXPYODGelt+Y2XvYttQ==
+X-Google-Smtp-Source: APXvYqxTV+5oE0qDKRwdsgR+f6XC2P4UoL0jtUvPojqJAxiyaEX5C/tl6m4ROgIGi06SifrjEPA48hgyrc/0W8RjC2E=
+X-Received: by 2002:a17:90a:bf02:: with SMTP id c2mr1648954pjs.73.1561587256569;
+ Wed, 26 Jun 2019 15:14:16 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72111cdd-56f4-47ab-6326-08d6fa8391b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 22:13:51.4217
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3330
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=808 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906260254
-X-FB-Internal: deliver
+References: <20190624161913.GA32270@embeddedor> <20190624193123.GI3436@hirez.programming.kicks-ass.net>
+ <b00fc090d83ac6bd41a5db866b02d425d9ab20e4.camel@perches.com>
+ <20190624203737.GL3436@hirez.programming.kicks-ass.net> <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
+ <20190625071846.GN3436@hirez.programming.kicks-ass.net> <CANiq72=zzZ+Cx8uM+5UW7HeB9XtbXRhXmC2y2tz5EzPX77gHMw@mail.gmail.com>
+ <CAKwvOdn5j8Hkc_jrLMbhg-4jbNya+agtMJi=c9o01RPCno1Q+w@mail.gmail.com> <20190626084927.GI3419@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190626084927.GI3419@hirez.programming.kicks-ass.net>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 26 Jun 2019 15:14:05 -0700
+Message-ID: <CAKwvOdkp7qnwLGY2=TOx=FQa1k2hEkdi1PO+9GfZkTQEUh49Rg@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Shawn Landden <shawn@git.icu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Chandler Carruth <chandlerc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 08:05:21AM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> In commit
->=20
->   12771345a467 ("bpf: fix cgroup bpf release synchronization")
->=20
-> Fixes tag
->=20
->   Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
->=20
-> has these problem(s):
->=20
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
->=20
-> Please don't split Fixes tags across more than one line.
+On Wed, Jun 26, 2019 at 1:49 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Jun 25, 2019 at 11:15:57AM -0700, Nick Desaulniers wrote:
+>
+> > Unreleased versions of Clang built from source can;
+>
+> I've bad experiences with using unreleased compilers; life is too short.
 
-Oops, sorry.
+Yes; but before release is when they need the help the most in order
+for testing to find regressions.
 
-Alexei, can you fix this in place?
-Or should I send an updated version?
+>
+> > We're currently planning multiple output constraint support w/ asm
+> > goto, and have recently implemented things like
+> > __GCC_ASM_FLAG_OUTPUTS__.
+>
+> That's good to hear.
+>
+> > If there's other features that we should
+> > start implementing, please let us know.
+>
+> If you've got any ideas on how to make this:
+>
+>   https://lkml.kernel.org/r/20190621120923.GT3463@hirez.programming.kicks-ass.net
+>
+> work, that'd be nice. Basically I wanted the asm goto to emit a 2 or 5
+> byte JMP/NOP depending on the displacement size. We can trivially get
+> JMP right by using:
+>
+>         jmp \l_yes
+>
+> and letting the assembler sort it, but getting the NOP right has so far
+> eluded me:
+>
+> .if \l_yes - (. + 2) < 127
+>         .byte 0x66, 0x90
+> .else
+>         .byte STATIC_KEY_INIT_NOP
+> .endif
+>
+> doesn't work. We can ofcourse unconditionally emit the JMP and then
+> rewrite the binary afterward, and replace the emitted jumps with the
+> right size NOP, but that's a bit yuck.
+>
+> Once it emits the variable size instruction consistently, we can update
+> the patching side to use the same condition to select the new
+> instruction (and fix objtool).
 
-Thanks.
+Not sure; the assembler directives and their requirements aren't
+something I'm too familiar with.
+
+-- 
+Thanks,
+~Nick Desaulniers
