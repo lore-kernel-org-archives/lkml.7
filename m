@@ -2,138 +2,123 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE34EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FA2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14B920659
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C271A20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LDThWHcQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxNdJnYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfFZKnj (ORCPT
+        id S1726984AbfFZKpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:43:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58792 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfFZKnj (ORCPT
+        Wed, 26 Jun 2019 06:45:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34435 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfFZKp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:43:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hW9JInVx6g/28QTS3QViHaTyJ87vpNU0Olana9v+OAE=; b=LDThWHcQVkL4dQjq1wGMb17LH
-        l7G/bcYxqYscnYMxtYKac1lAuA3dxcdaqKULLg/CjN+zBvjlWtTERyC8/KBemrJ0tiuP0RVKru7to
-        t3rEHetxPmT5eG65UTweM7ZULHnX1uAdFIIE+Pyjza7bNqf6r9FsUn7Jx1MB3FyDrJp6xX0XeJ/1+
-        3zn0RBQhdYdsnrN8NerfgF6p60WVLDTiF4HiSfOZZmS8yrqRMeINUlC+U3lUMAJtMhf2B5DlHLVAH
-        wV5GvZWWnR29l0/lKJDUG/35iVFRGl+GtoPWUS4BU559OtJ7iCuLjCffw2htlVbuGmTMRgpwSfSKb
-        xKTrOkKyQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hg5Od-0003bx-40; Wed, 26 Jun 2019 10:43:23 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 732B5209CEDA9; Wed, 26 Jun 2019 12:43:21 +0200 (CEST)
-Date:   Wed, 26 Jun 2019 12:43:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shawn Landden <shawn@git.icu>,
-        clang-built-linux@googlegroups.com,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
-Message-ID: <20190626104321.GC3463@hirez.programming.kicks-ass.net>
-References: <20190624203737.GL3436@hirez.programming.kicks-ass.net>
- <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
- <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
- <20190625071846.GN3436@hirez.programming.kicks-ass.net>
- <201906251009.BCB7438@keescook>
- <20190625180525.GA119831@archlinux-epyc>
- <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
- <20190625202746.GA83499@archlinux-epyc>
- <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
- <20190626092432.GJ3419@hirez.programming.kicks-ass.net>
+        Wed, 26 Jun 2019 06:45:29 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so2188852wrl.1;
+        Wed, 26 Jun 2019 03:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VzYlELuHWLmeH4BA1vZ96Wr04Fx9TdVtK5+LAe1TDoo=;
+        b=YxNdJnYg5o45T2xFRTMgh6IVz9JrQ1IqPtnyb+jZI2xV3F6oxyzMqO57ql40LVDFkF
+         mh9z/tE8u6rmRNEkasxKxoc/blmYSh5ws+YmefUYtvMIKUWcLnWOVfcm5tR12QhkhqKC
+         mK6GuXCccLXrDeRP5VAQq1ChuHNSE+g9yAoLmdD4uFTRbDkxDjyY0dDivso3ZufFm+RK
+         fi4XLOzuFl6zRJuwo0On7W9muSxHiZvPk8kAnLkBEkSpaNKk6F9fCVuXJSfG0a9MIRLy
+         P8Js/pYf8yRlSII3Dsa5HVY3yo5fLbRueW5cGVxahtalSjgRRo1VIITniv18UrxW98Eb
+         Yepg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VzYlELuHWLmeH4BA1vZ96Wr04Fx9TdVtK5+LAe1TDoo=;
+        b=BBnZ+nXAThxwU8IB1jdg3RfV1qQaHTclzXeT0OfglN6jV3vDeQqWsRHlWo6X7lYRPk
+         z0o7oIewcX7sLj5+X4/d8Y+4YvNzVeARxxxZd9ojnVP/ztHTmWD8vYpiGlF41QybzRtQ
+         CbANBkOzotcetj7AiTo05Kr1gBFwZN3954LLMXwJhzPgTZ4u7Ibb24vpjAHye2kP2GV9
+         vPLJvBq+j1PTYQiG+Bc0YJpA+TQFlLer+HZx7A4235ssrCIALdWCWnNYGyesmdaOUHha
+         3eMPsk7asXl/CuStPUPfhviBBi9koBRO9NX8Xthlwnj48tk/kPiQMvnzNus35raVPkQj
+         352Q==
+X-Gm-Message-State: APjAAAWKbGa0BU7C7p+aNYe+/5obfjj9qtbWEeh6MiSmHGLBTVO2Qy/K
+        SwvS2RLGkiGtpZdDnphzcvfDsbYNQR0=
+X-Google-Smtp-Source: APXvYqzqqpLcrchSB3MEKgFES/AtInHoOSvqEjOeF1kQWjyiXW0QTsJ0T+bgy7SBStUaJozeF1ixTg==
+X-Received: by 2002:adf:9003:: with SMTP id h3mr3334720wrh.172.1561545927716;
+        Wed, 26 Jun 2019 03:45:27 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id z5sm1646318wma.36.2019.06.26.03.45.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 03:45:27 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 12:45:25 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: stmmac: Fix possible deadlock when disabling
+ EEE support
+Message-ID: <20190626104525.GH6362@ulmo>
+References: <20190626102322.18821-1-jonathanh@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="it/zdz3K1bH9Y8/E"
 Content-Disposition: inline
-In-Reply-To: <20190626092432.GJ3419@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190626102322.18821-1-jonathanh@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:24:32AM +0200, Peter Zijlstra wrote:
-> That is, would something like this:
-> 
-> diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
-> index 06c3cc22a058..1761b1e76ddc 100644
-> --- a/arch/x86/include/asm/jump_label.h
-> +++ b/arch/x86/include/asm/jump_label.h
-> @@ -32,7 +32,7 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
->  		: :  "i" (key), "i" (branch) : : l_yes);
->  
->  	return false;
-> -l_yes:
-> +l_yes: __attribute__((cold));
->  	return true;
->  }
->  
-> @@ -49,7 +49,7 @@ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
->  		: :  "i" (key), "i" (branch) : : l_yes);
->  
->  	return false;
-> -l_yes:
-> +l_yes: __attribute__((hot));
->  	return true;
->  }
->  
-> Help LLVM?
 
-No, that's broken. What we do is the likely() and unlikely() hints in
-static_branch_{,un}likely():
+--it/zdz3K1bH9Y8/E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#define static_branch_likely(x)							\
-({										\
-	bool branch;								\
-	if (__builtin_types_compatible_p(typeof(*x), struct static_key_true))	\
-		branch = !arch_static_branch(&(x)->key, true);			\
-	else if (__builtin_types_compatible_p(typeof(*x), struct static_key_false)) \
-		branch = !arch_static_branch_jump(&(x)->key, true);		\
-	else									\
-		branch = ____wrong_branch_error();				\
-	likely(branch);								\
-})
+On Wed, Jun 26, 2019 at 11:23:21AM +0100, Jon Hunter wrote:
+> When stmmac_eee_init() is called to disable EEE support, then the timer
+> for EEE support is stopped and we return from the function. Prior to
+> stopping the timer, a mutex was acquired but in this case it is never
+> released and so could cause a deadlock. Fix this by releasing the mutex
+> prior to returning from stmmax_eee_init() when stopping the EEE timer.
+>=20
+> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib l=
+ogic")
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-#define static_branch_unlikely(x)						\
-({										\
-	bool branch;								\
-	if (__builtin_types_compatible_p(typeof(*x), struct static_key_true))	\
-		branch = arch_static_branch_jump(&(x)->key, false);		\
-	else if (__builtin_types_compatible_p(typeof(*x), struct static_key_false)) \
-		branch = arch_static_branch(&(x)->key, false);			\
-	else									\
-		branch = ____wrong_branch_error();				\
-	unlikely(branch);							\
-})
+Tested-by: Thierry Reding <treding@nvidia.com>
 
-That should convey out-of-line vs in-line 'hint'. And clearly that's
-broken for LLVM.
+--it/zdz3K1bH9Y8/E
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TTMUACgkQ3SOs138+
+s6GggQ//S7aRh+7qKUq7BOqNvXA0odDDLtnvYxmihsOI3CtmAEMzA55QyQT18bCn
+rXIv7tzANYDZDpnXJHT7lksGRDGXWzmXB1ehc0isKGNIirBYmPt58jUdN9gI7dlA
+kf0ivngQUba49jZ45S4zbg+S2bTVe4Xljqx/Z3IUiyHW7vcs5cNTbOozmD1MgY6D
+BrBV+TsgIBgfYOcdP8gFlvYDa9GjQKfTQMNkm+3niSyxZBLbCGm2hyObe2acxOmU
+O/mJ1h+2vailfzxqViZxB3+kqf0EIWt2efwaDr75Bmyc9NXvWVYzKr8c2teyOODa
+9de95vb61PPZrufuoEjpMgEV5aAtDVQVC/zVwcMJF8o4Qc+v5sBR4erhMjsIVctB
+QmgxEVcUdfo6MxOw+sa9qJsCvRsLuAdxflpvro7UBLaOthWSh3SaIf0IgSx+mqpK
+1x3jlY/vQZ3vMw/6BoLb+3sgnZNMjh1sSYFKZCNVdDqd6l+q/E/Jw7p/hx8txRN+
+uiAGlbe6V8Rib9rtvHsE/oIcWR8eMa7s7hRgudRMKHJUVA9Q6B8BX9OA79hR6QXK
+Uw1pLJaSoHlyOxY5uJMGgMRMSsn3LkY+Cgc2COu5ILcNtjtO7HrRpXm/TkFARTow
+klV31kVW6VEkXJVSasGzev4TAKU99GEDPqEyDJYWiyeCbhfJgsM=
+=VDy+
+-----END PGP SIGNATURE-----
+
+--it/zdz3K1bH9Y8/E--
