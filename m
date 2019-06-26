@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D289C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D033C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F7A208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6268A208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:06:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hZFkA//D"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQwE7NU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfFZFGu (ORCPT
+        id S1726590AbfFZFGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 01:06:50 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45466 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfFZFGs (ORCPT
+        Wed, 26 Jun 2019 01:06:54 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43864 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfFZFGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 01:06:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi6so709630plb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 22:06:48 -0700 (PDT)
+        Wed, 26 Jun 2019 01:06:51 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so711621plb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 22:06:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Fr132i4NOwwkZ0nQOvkdNyG2SrvzvLzQB1yU26SI4s0=;
-        b=hZFkA//DidyxzfiIni3hgxCy98Rh1YTXfmE4Lzbw0Uo7JnNfCPTM7t70dWOkAic4GR
-         FjpMfBzkvBtc+B7cCHSJl1wXbkddZRmT8EGh+Lc+W6AuYLHafOhkNDco/i3bXEwQwH04
-         ZXExF4I+ZFAZKKeeKnQcj/AhOk3/wd/63E56dO9F6qf7g9Zomnyt49H2+tjQJAQs9oar
-         bImpoWNW4R9nAF5blWn0nO+Kv2B2XjrkzWhbBjcL5RLAcSnfb8N72puiMs5bvatVokMV
-         7MS3he27x8OWbNip+cd1UbabCs3PWvpGPqQ9VEzn/UbyHis58/GZJkww//6qxLktmRve
-         aAKA==
+        bh=Xzo/mnAvVEkpnq/buLdSuv4HV/H6/z86Y20R9WnPjE4=;
+        b=eQwE7NU+oCp9KQLtu9if6s1naRyX6V47OLHvSUOnQMJ57wE+SdMi2eKkLSlOb1qbh5
+         8LPJLx3BspfBQgsO4BgJ2IAotpJk7MPyWQiK5nw6qDnPpCv/smYkWpuyi9dDIwgBS8/M
+         D6AiPX8T8EQKfPoZwuHWUQLIN+peIPHkz0+eHbltgRjgCiuGV+OSWwobVagioOE9IKi/
+         j2KLd+qBcB9t36RKX+2Mzqrw2LcZx6/XOYdrdViJk1IxBlsDrFg8C/4oX7T7YgqYeO2B
+         zaYR3DLn5Y6/83Prbprq79lVnywZ75NHOvSHzOc3UX0YFm+YGx0MRfF6fi0YypiHyu5k
+         17sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Fr132i4NOwwkZ0nQOvkdNyG2SrvzvLzQB1yU26SI4s0=;
-        b=Md7UnOc5lowdLBxmyzYtcGjVoEFfEa73jy8Z5kN9UaI06cRNOTzw173XKWOcCdIUSK
-         78weyHpzwSrT7Q0VlSj6Jk09WQH/FZtIXXzQiPo0devbDCpkd9CNMZUVZiuAhRqFY87Q
-         kT7R8kVHcIDnjZrZyyGEJskOqs1O22Vpaj/IFCI/Qec2LAYZllcJ4SRa/S36hCpauSa9
-         Ya1I4mQjo5oDcVIpi/vjPk+ilriYxUihX6IWNJtGmmOnybuCdJdW4DwCsO0sIcf0JAjo
-         E+bzP9tL5x137eAeu+Gbju+/Uc8TjN8B1evgFAV05+HPR0vXVR1g9TeZNzsPOMbPFHG0
-         DQLA==
-X-Gm-Message-State: APjAAAWD8mfpfKBLDCP8oNd1zkzNIFwdocpTsZFY8vUNj1tsjkGKcEJa
-        rCiSVVKJXZlCFutNNcxvKEr0otNdI+w=
-X-Google-Smtp-Source: APXvYqxwDn2w30UEEbHfo9d5Uzbuk5koe1PV0ZeorOsjfxGSxBQF6UFAZ36zfH17CohSkr1GuCXd7g==
-X-Received: by 2002:a17:902:b187:: with SMTP id s7mr2928225plr.309.1561525607817;
-        Tue, 25 Jun 2019 22:06:47 -0700 (PDT)
+        bh=Xzo/mnAvVEkpnq/buLdSuv4HV/H6/z86Y20R9WnPjE4=;
+        b=J1M1WVExQL2XQLbWuTUfnW1YgHbfvofNEuyffIwGXvvncjwuy1BUcXxBI+faZl/u5e
+         lLnc1nKl1JzEI0iPYCUL4kz+dIFqhygtGfkH4D2SQVd8EuRiZGl/cV2K7vVkFFFhTNej
+         4EJtWqbJocIimlsE8MaXH7iHoKEjwgiodMct1VvrebhAbs5/dWbDIN/3mARzw6ALqcji
+         DMVeLp61iea0T2DNsQFttzuAGpIMlXytjF/6vWkRO3gZYTLdt6GBtF/UYK/VaidFB81Y
+         PPSwE5pRFpbbvChQQO5cP8pWtEHADQj8O/IzSTphtZKfCwbFxKNAIvM8UWkyPc43LokF
+         Gu/g==
+X-Gm-Message-State: APjAAAWlkqNPSdzlD34tYEOGH5WUKB+ktEhAOH3fwwL3IncNJRfRzjjC
+        i6xPo2ICL2CRHcNfHD6YCwZ3IQ==
+X-Google-Smtp-Source: APXvYqzlP7Bt0TpK2sgaNGz2joalNPwHdeVOqqkSnKMMtWSLq9pJcJtSk7/ZeY5yXVukzdZR+tGFug==
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr2854591pld.119.1561525610441;
+        Tue, 25 Jun 2019 22:06:50 -0700 (PDT)
 Received: from localhost ([122.172.211.128])
-        by smtp.gmail.com with ESMTPSA id z2sm15276614pgg.58.2019.06.25.22.06.46
+        by smtp.gmail.com with ESMTPSA id d6sm18462347pgf.55.2019.06.25.22.06.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 22:06:47 -0700 (PDT)
+        Tue, 25 Jun 2019 22:06:49 -0700 (PDT)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
@@ -66,9 +66,9 @@ Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         quentin.perret@linaro.org, chris.redpath@arm.com,
         steven.sistare@oracle.com, subhra.mazumdar@oracle.com,
         songliubraving@fb.com
-Subject: [PATCH V3 1/2] sched: Start tracking SCHED_IDLE tasks count in cfs_rq
-Date:   Wed, 26 Jun 2019 10:36:29 +0530
-Message-Id: <0d3cdc427fc68808ad5bccc40e86ed0bf9da8bb4.1561523542.git.viresh.kumar@linaro.org>
+Subject: [PATCH V3 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU isn't found
+Date:   Wed, 26 Jun 2019 10:36:30 +0530
+Message-Id: <eeafa25fdeb6f6edd5b2da716bc8f0ba7708cbcf.1561523542.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 In-Reply-To: <cover.1561523542.git.viresh.kumar@linaro.org>
 References: <cover.1561523542.git.viresh.kumar@linaro.org>
@@ -79,130 +79,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Track how many tasks are present with SCHED_IDLE policy in each cfs_rq.
-This will be used by later commits.
+We try to find an idle CPU to run the next task, but in case we don't
+find an idle CPU it is better to pick a CPU which will run the task the
+soonest, for performance reason.
+
+A CPU which isn't idle but has only SCHED_IDLE activity queued on it
+should be a good target based on this criteria as any normal fair task
+will most likely preempt the currently running SCHED_IDLE task
+immediately. In fact, choosing a SCHED_IDLE CPU over a fully idle one
+shall give better results as it should be able to run the task sooner
+than an idle CPU (which requires to be woken up from an idle state).
+
+This patch updates both fast and slow paths with this optimization.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- kernel/sched/fair.c  | 14 ++++++++++++--
- kernel/sched/sched.h |  2 ++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 43 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 036be95a87e9..1277adc3e7ed 100644
+index 1277adc3e7ed..2e0527fd468c 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -4500,7 +4500,7 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
- 	struct rq *rq = rq_of(cfs_rq);
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
- 	struct sched_entity *se;
--	long task_delta, dequeue = 1;
-+	long task_delta, idle_task_delta, dequeue = 1;
- 	bool empty;
+@@ -5376,6 +5376,15 @@ static struct {
  
- 	se = cfs_rq->tg->se[cpu_of(rq_of(cfs_rq))];
-@@ -4511,6 +4511,7 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
- 	rcu_read_unlock();
+ #endif /* CONFIG_NO_HZ_COMMON */
  
- 	task_delta = cfs_rq->h_nr_running;
-+	idle_task_delta = cfs_rq->idle_h_nr_running;
- 	for_each_sched_entity(se) {
- 		struct cfs_rq *qcfs_rq = cfs_rq_of(se);
- 		/* throttled entity or throttle-on-deactivate */
-@@ -4520,6 +4521,7 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
- 		if (dequeue)
- 			dequeue_entity(qcfs_rq, se, DEQUEUE_SLEEP);
- 		qcfs_rq->h_nr_running -= task_delta;
-+		qcfs_rq->idle_h_nr_running -= idle_task_delta;
- 
- 		if (qcfs_rq->load.weight)
- 			dequeue = 0;
-@@ -4559,7 +4561,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
- 	struct sched_entity *se;
- 	int enqueue = 1;
--	long task_delta;
-+	long task_delta, idle_task_delta;
- 
- 	se = cfs_rq->tg->se[cpu_of(rq)];
- 
-@@ -4579,6 +4581,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 		return;
- 
- 	task_delta = cfs_rq->h_nr_running;
-+	idle_task_delta = cfs_rq->idle_h_nr_running;
- 	for_each_sched_entity(se) {
- 		if (se->on_rq)
- 			enqueue = 0;
-@@ -4587,6 +4590,7 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 		if (enqueue)
- 			enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
- 		cfs_rq->h_nr_running += task_delta;
-+		cfs_rq->idle_h_nr_running += idle_task_delta;
- 
- 		if (cfs_rq_throttled(cfs_rq))
- 			break;
-@@ -5200,6 +5204,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
++/* CPU only has SCHED_IDLE tasks enqueued */
++static int sched_idle_cpu(int cpu)
++{
++	struct rq *rq = cpu_rq(cpu);
++
++	return unlikely(rq->nr_running == rq->cfs.idle_h_nr_running &&
++			rq->nr_running);
++}
++
+ static unsigned long cpu_runnable_load(struct rq *rq)
  {
- 	struct cfs_rq *cfs_rq;
- 	struct sched_entity *se = &p->se;
-+	int idle_h_nr_running = task_has_idle_policy(p);
+ 	return cfs_rq_runnable_load_avg(&rq->cfs);
+@@ -5698,7 +5707,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+ 	unsigned int min_exit_latency = UINT_MAX;
+ 	u64 latest_idle_timestamp = 0;
+ 	int least_loaded_cpu = this_cpu;
+-	int shallowest_idle_cpu = -1;
++	int shallowest_idle_cpu = -1, si_cpu = -1;
+ 	int i;
+ 
+ 	/* Check if we have any choice: */
+@@ -5729,7 +5738,12 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+ 				latest_idle_timestamp = rq->idle_stamp;
+ 				shallowest_idle_cpu = i;
+ 			}
+-		} else if (shallowest_idle_cpu == -1) {
++		} else if (shallowest_idle_cpu == -1 && si_cpu == -1) {
++			if (sched_idle_cpu(i)) {
++				si_cpu = i;
++				continue;
++			}
++
+ 			load = cpu_runnable_load(cpu_rq(i));
+ 			if (load < min_load) {
+ 				min_load = load;
+@@ -5738,7 +5752,11 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+ 		}
+ 	}
+ 
+-	return shallowest_idle_cpu != -1 ? shallowest_idle_cpu : least_loaded_cpu;
++	if (shallowest_idle_cpu != -1)
++		return shallowest_idle_cpu;
++	if (si_cpu != -1)
++		return si_cpu;
++	return least_loaded_cpu;
+ }
+ 
+ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p,
+@@ -5891,7 +5909,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+  */
+ static int select_idle_smt(struct task_struct *p, int target)
+ {
+-	int cpu;
++	int cpu, si_cpu = -1;
+ 
+ 	if (!static_branch_likely(&sched_smt_present))
+ 		return -1;
+@@ -5901,9 +5919,11 @@ static int select_idle_smt(struct task_struct *p, int target)
+ 			continue;
+ 		if (available_idle_cpu(cpu))
+ 			return cpu;
++		if (si_cpu == -1 && sched_idle_cpu(cpu))
++			si_cpu = cpu;
+ 	}
+ 
+-	return -1;
++	return si_cpu;
+ }
+ 
+ #else /* CONFIG_SCHED_SMT */
+@@ -5931,7 +5951,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 	u64 avg_cost, avg_idle;
+ 	u64 time, cost;
+ 	s64 delta;
+-	int cpu, nr = INT_MAX;
++	int cpu, nr = INT_MAX, si_cpu = -1;
+ 	int this = smp_processor_id();
+ 
+ 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
+@@ -5960,11 +5980,13 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 
+ 	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
+ 		if (!--nr)
+-			return -1;
++			return si_cpu;
+ 		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+ 			continue;
+ 		if (available_idle_cpu(cpu))
+ 			break;
++		if (si_cpu == -1 && sched_idle_cpu(cpu))
++			si_cpu = cpu;
+ 	}
+ 
+ 	time = cpu_clock(this) - time;
+@@ -5983,13 +6005,14 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 	struct sched_domain *sd;
+ 	int i, recent_used_cpu;
+ 
+-	if (available_idle_cpu(target))
++	if (available_idle_cpu(target) || sched_idle_cpu(target))
+ 		return target;
  
  	/*
- 	 * The code below (indirectly) updates schedutil which looks at
-@@ -5232,6 +5237,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		if (cfs_rq_throttled(cfs_rq))
- 			break;
- 		cfs_rq->h_nr_running++;
-+		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 	 * If the previous CPU is cache affine and idle, don't be stupid:
+ 	 */
+-	if (prev != target && cpus_share_cache(prev, target) && available_idle_cpu(prev))
++	if (prev != target && cpus_share_cache(prev, target) &&
++	    (available_idle_cpu(prev) || sched_idle_cpu(prev)))
+ 		return prev;
  
- 		flags = ENQUEUE_WAKEUP;
- 	}
-@@ -5239,6 +5245,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
- 		cfs_rq->h_nr_running++;
-+		cfs_rq->idle_h_nr_running += idle_h_nr_running;
- 
- 		if (cfs_rq_throttled(cfs_rq))
- 			break;
-@@ -5300,6 +5307,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	struct cfs_rq *cfs_rq;
- 	struct sched_entity *se = &p->se;
- 	int task_sleep = flags & DEQUEUE_SLEEP;
-+	int idle_h_nr_running = task_has_idle_policy(p);
- 
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
-@@ -5314,6 +5322,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 		if (cfs_rq_throttled(cfs_rq))
- 			break;
- 		cfs_rq->h_nr_running--;
-+		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
- 
- 		/* Don't dequeue parent if it has other entities besides us */
- 		if (cfs_rq->load.weight) {
-@@ -5333,6 +5342,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
- 		cfs_rq->h_nr_running--;
-+		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
- 
- 		if (cfs_rq_throttled(cfs_rq))
- 			break;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 802b1f3405f2..1f95411f5e61 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -484,6 +484,8 @@ struct cfs_rq {
- 	unsigned long		runnable_weight;
- 	unsigned int		nr_running;
- 	unsigned int		h_nr_running;
-+	/* h_nr_running for SCHED_IDLE tasks */
-+	unsigned int		idle_h_nr_running;
- 
- 	u64			exec_clock;
- 	u64			min_vruntime;
+ 	/* Check a recently used CPU as a potential idle candidate: */
+@@ -5997,7 +6020,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+ 	if (recent_used_cpu != prev &&
+ 	    recent_used_cpu != target &&
+ 	    cpus_share_cache(recent_used_cpu, target) &&
+-	    available_idle_cpu(recent_used_cpu) &&
++	    (available_idle_cpu(recent_used_cpu) || sched_idle_cpu(recent_used_cpu)) &&
+ 	    cpumask_test_cpu(p->recent_used_cpu, p->cpus_ptr)) {
+ 		/*
+ 		 * Replace recent_used_cpu with prev as it is a potential
 -- 
 2.21.0.rc0.269.g1a574e7a288b
 
