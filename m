@@ -2,248 +2,228 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCE3C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B7FC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488532177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639C0214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O6yRr7s+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfFZWjf (ORCPT
+        id S1726289AbfFZWl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:39:35 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10648 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbfFZWjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:39:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 15:39:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
-   d="scan'208";a="313574975"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.251.133.109])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2019 15:38:59 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     dvhart@infradead.org, andy@infradead.org,
-        andriy.shevchenko@intel.com, corbet@lwn.net
-Cc:     rjw@rjwysocki.net, alan@linux.intel.com, lenb@kernel.org,
-        prarit@redhat.com, darcari@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 03/10] platform/x86: ISST: Store per CPU information
-Date:   Wed, 26 Jun 2019 15:38:44 -0700
-Message-Id: <20190626223851.19138-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
-References: <20190626223851.19138-1-srinivas.pandruvada@linux.intel.com>
+        Wed, 26 Jun 2019 18:41:26 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49300 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfFZWlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:41:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0fyCz6BoVMUF953ZsY4aaLX746Qn19gzpDaSd18S768=; b=O6yRr7s++12EXNsWgSVD2+UbK
+        dHxXaA35j5X+O8CZIl4FFoMVPyKHlztcGTbrJVJh+JmSzSlZrl0Nct9ge9lZTVRwUcwPreOthLyKK
+        dg/b+3RdIDwHxdcs3OT8gRLaG4bYFjxa8eOdbcqkLxHDBkYs0BQYP3tTWDBCy7DHjTc8xELiJTEiv
+        TCvb+JgWtTqmFDWhZIUjL21+tSsLLCidFpsDOKXdPF0gQZRbDt1vXLW4JPHYLvltvMwjuEXhvyyaR
+        ZtRSn0/yIIqM7vbjvxT23B53UP8a+yYrASEr/quCh+B7+a/N8AAv/eV2zAV18VLi7r22xg//zEmdm
+        F5yQvcjPg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgGbF-0002vB-Vo; Wed, 26 Jun 2019 22:41:10 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0BF6098198F; Thu, 27 Jun 2019 00:40:35 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 00:40:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
+ implementation
+Message-ID: <20190626224034.GK2490@worktop.programming.kicks-ass.net>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+ <20190607162349.18199-2-john.ogness@linutronix.de>
+ <20190618114747.GQ3436@hirez.programming.kicks-ass.net>
+ <87k1df28x4.fsf@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k1df28x4.fsf@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two per CPU data needs to be stored and cached to avoid repeated
-MSR readings for accessing them later:
+On Fri, Jun 21, 2019 at 12:23:19AM +0200, John Ogness wrote:
+> Hi Peter,
+> 
+> This is a long response, but we are getting into some fine details about
+> the memory barriers (as well as battling my communication skill level).
 
-- Physical to logical CPU conversion
-The PUNIT uses a different CPU numbering scheme which is not APIC id based.
-So we need to establish relationship between PUNIT CPU number and Linux
-logical CPU numbering which is based on APIC id. There is an MSR 0x53
-(MSR_THREAD_ID), which gets physical CPU number for the local CPU where it
-is read. Also the CPU mask in some messages will inform which CPUs needs
-to be online/offline for a TDP level. During TDP switch if user offlined
-some CPUs, then the physical CPU mask can't be converted as we can't
-read MSR on an offlined CPU to go to a lower TDP level by onlining more
-CPUs. So the mapping needs to be established at the boot up time.
+So I'm going to reply piecewise to  this... so not such long emails, but
+more of them.
 
-- Bus number corresponding to a CPU
-A group of CPUs are in a control of a PUNIT. The PUNIT device is exported
-as PCI device. To do operation on a PUNIT for a CPU, we need to find out
-to which PCI device it is related to. This is done by reading MSR 0x128
-(MSR_CPU_BUS_NUMBER).
+> On 2019-06-18, Peter Zijlstra <peterz@infradead.org> wrote:
+> >> +static void add_descr_list(struct prb_reserved_entry *e)
+> >> +{
+> >> +	struct printk_ringbuffer *rb = e->rb;
+> >> +	struct prb_list *l = &rb->descr_list;
+> >> +	struct prb_descr *d = e->descr;
+> >> +	struct prb_descr *newest_d;
+> >> +	unsigned long newest_id;
+> >> +
+> >> +	/* set as newest */
+> >> +	do {
+> >> +		/* MB5: synchronize add descr */
+> >> +		newest_id = smp_load_acquire(&l->newest);
+> >> +		newest_d = TO_DESCR(rb, newest_id);
+> >> +
+> >> +		if (newest_id == EOL)
+> >> +			WRITE_ONCE(d->seq, 1);
+> >> +		else
+> >> +			WRITE_ONCE(d->seq, READ_ONCE(newest_d->seq) + 1);
+> >> +		/*
+> >> +		 * MB5: synchronize add descr
+> >> +		 *
+> >> +		 * In particular: next written before cmpxchg
+> >> +		 */
+> >> +	} while (cmpxchg_release(&l->newest, newest_id, e->id) != newest_id);
+> >
+> > What does this pair with? I find ->newest usage in:
+> 
+> It is pairing with the smp_load_acquire() at the beginning of this loop
+> (also labeled MB5) that is running simultaneously on another CPU. I am
+> avoiding a possible situation that a new descriptor is added but the
+> store of "next" from the previous descriptor is not yet visible and thus
+> the cmpxchg following will fail, which is not allowed. (Note that "next"
+> is set to EOL shortly before this function is called.)
+> 
+> The litmus test for this is:
+> 
+> P0(int *newest, int *d_next)
+> {
+>         // set descr->next to EOL (terminates list)
+>         WRITE_ONCE(*d_next, 1);
+> 
+>         // set descr as newest
+>         smp_store_release(*newest, 1);
+> }
+> 
+> P1(int *newest, int *d_next)
+> {
+>         int local_newest;
+>         int local_next;
+> 
+>         // get newest descriptor
+>         local_newest = smp_load_acquire(*newest);
+> 
+>         // a new descriptor is set as the newest
+>         // (not relevant here)
+> 
+>         // read descr->next of previous newest
+>         // (must be EOL!)
+>         local_next = READ_ONCE(*d_next);
+> }
+> 
+> exists (1:local_newest=1 /\ 1:local_next=0)
 
-So during CPU online stages the above MSRs are read and stored. Later
-this stored information is used to process IOCTLs request from the user
-space.
+I'm having trouble connecting your P1's READ_ONCE() to the actual code.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../intel_speed_select_if/isst_if_common.c    | 114 +++++++++++++++++-
- .../intel_speed_select_if/isst_if_common.h    |   1 +
- 2 files changed, 114 insertions(+), 1 deletion(-)
+You say that is in the same function, but I cannot find a LOAD there
+that would care about the ACQUIRE.
 
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-index ab2bb4862dc8..0e16cbf685d0 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-@@ -7,14 +7,22 @@
-  * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-  */
- 
-+#include <linux/cpufeature.h>
-+#include <linux/cpuhotplug.h>
- #include <linux/fs.h>
- #include <linux/miscdevice.h>
- #include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/sched/signal.h>
-+#include <linux/slab.h>
- #include <linux/uaccess.h>
- #include <uapi/linux/isst_if.h>
- 
- #include "isst_if_common.h"
- 
-+#define MSR_THREAD_ID_INFO	0x53
-+#define MSR_CPU_BUS_NUMBER	0x128
-+
- static struct isst_if_cmd_cb punit_callbacks[ISST_IF_DEV_MAX];
- 
- static int isst_if_get_platform_info(void __user *argp)
-@@ -33,6 +41,99 @@ static int isst_if_get_platform_info(void __user *argp)
- 	return 0;
- }
- 
-+
-+struct isst_if_cpu_info {
-+	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
-+	int bus_info[2];
-+	int punit_cpu_id;
-+};
-+
-+static struct isst_if_cpu_info *isst_cpu_info;
-+
-+/**
-+ * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
-+ * @cpu: Logical CPU number.
-+ * @bus_number: The bus number assigned by the hardware.
-+ * @dev: The device number assigned by the hardware.
-+ * @fn: The function number assigned by the hardware.
-+ *
-+ * Using cached bus information, find out the PCI device for a bus number,
-+ * device and function.
-+ *
-+ * Return: Return pci_dev pointer or NULL.
-+ */
-+struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
-+{
-+	int bus_number;
-+
-+	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
-+	    cpu >= num_possible_cpus())
-+		return NULL;
-+
-+	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
-+	if (bus_number < 0)
-+		return NULL;
-+
-+	return pci_get_domain_bus_and_slot(0, bus_number, PCI_DEVFN(dev, fn));
-+}
-+EXPORT_SYMBOL_GPL(isst_if_get_pci_dev);
-+
-+static int isst_if_cpu_online(unsigned int cpu)
-+{
-+	u64 data;
-+	int ret;
-+
-+	ret = rdmsrl_safe(MSR_CPU_BUS_NUMBER, &data);
-+	if (ret) {
-+		/* This is not a fatal error on MSR mailbox only I/F */
-+		isst_cpu_info[cpu].bus_info[0] = -1;
-+		isst_cpu_info[cpu].bus_info[1] = -1;
-+	} else {
-+		isst_cpu_info[cpu].bus_info[0] = data & 0xff;
-+		isst_cpu_info[cpu].bus_info[1] = (data >> 8) & 0xff;
-+	}
-+
-+	ret = rdmsrl_safe(MSR_THREAD_ID_INFO, &data);
-+	if (ret) {
-+		isst_cpu_info[cpu].punit_cpu_id = -1;
-+		return ret;
-+	}
-+	isst_cpu_info[cpu].punit_cpu_id = data;
-+
-+	return 0;
-+}
-+
-+static int isst_if_online_id;
-+
-+static int isst_if_cpu_info_init(void)
-+{
-+	int ret;
-+
-+	isst_cpu_info = kcalloc(num_possible_cpus(),
-+				sizeof(*isst_cpu_info),
-+				GFP_KERNEL);
-+	if (!isst_cpu_info)
-+		return -ENOMEM;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-+				"platform/x86/isst-if:online",
-+				isst_if_cpu_online, NULL);
-+	if (ret < 0) {
-+		kfree(isst_cpu_info);
-+		return ret;
-+	}
-+
-+	isst_if_online_id = ret;
-+
-+	return 0;
-+}
-+
-+static void isst_if_cpu_info_exit(void)
-+{
-+	cpuhp_remove_state(isst_if_online_id);
-+	kfree(isst_cpu_info);
-+};
-+
- static long isst_if_def_ioctl(struct file *file, unsigned int cmd,
- 			      unsigned long arg)
- {
-@@ -145,9 +246,18 @@ int isst_if_cdev_register(int device_type, struct isst_if_cmd_cb *cb)
- 		return -EAGAIN;
- 	}
- 	if (!misc_usage_count) {
-+		int ret;
-+
- 		misc_device_ret = misc_register(&isst_if_char_driver);
- 		if (misc_device_ret)
- 			goto unlock_exit;
-+
-+		ret = isst_if_cpu_info_init();
-+		if (ret) {
-+			misc_deregister(&isst_if_char_driver);
-+			misc_device_ret = ret;
-+			goto unlock_exit;
-+		}
- 	}
- 	memcpy(&punit_callbacks[device_type], cb, sizeof(*cb));
- 	punit_callbacks[device_type].registered = 1;
-@@ -173,8 +283,10 @@ void isst_if_cdev_unregister(int device_type)
- 	mutex_lock(&punit_misc_dev_lock);
- 	misc_usage_count--;
- 	punit_callbacks[device_type].registered = 0;
--	if (!misc_usage_count && !misc_device_ret)
-+	if (!misc_usage_count && !misc_device_ret) {
- 		misc_deregister(&isst_if_char_driver);
-+		isst_if_cpu_info_exit();
-+	}
- 	mutex_unlock(&punit_misc_dev_lock);
- }
- EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-index 11f339226fb4..dade77c58b22 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-@@ -57,4 +57,5 @@ struct isst_if_cmd_cb {
- /* Internal interface functions */
- int isst_if_cdev_register(int type, struct isst_if_cmd_cb *cb);
- void isst_if_cdev_unregister(int type);
-+struct pci_dev *isst_if_get_pci_dev(int cpu, int bus, int dev, int fn);
- #endif
--- 
-2.17.2
+Afaict prb_list is a list head not a list node (calling it just _list is
+confusing at best).
 
+You have a single linked list going from the tail to the head, while
+adding to the head and removing from the tail. And that sounds like a
+FIFO queue:
+
+	struct lqueue_head {
+		struct lqueue_node *head, *tail;
+	};
+
+	struct lqueue_node {
+		struct lqueue_node *next;
+	};
+
+	void lqueue_push(struct lqueue_head *h, struct lqueue_node *n)
+	{
+		struct lqueue_node *prev;
+
+		n->next = NULL;
+		/*
+		 * xchg() implies RELEASE; and thereby ensures @n is
+		 * complete before getting published.
+		 */
+		prev = xchg(&h->head, n);
+		/*
+		 * xchg() implies ACQUIRE; and thereby ensures @tail is
+		 * written after @head, see lqueue_pop()'s smp_rmb().
+		 */
+		if (prev)
+			WRITE_ONCE(prev->next, n);
+		else
+			WRITE_ONCE(h->tail, n);
+	}
+
+	struct lqueue_node *lqueue_pop(struct lqueue_head *h)
+	{
+		struct lqueue_node *head, *tail, *next;
+
+		do {
+			tail = READ_ONCE(h->tail);
+			/* If the list is empty, nothing to remove. */
+			if (!tail)
+				return NULL;
+
+			/*
+			 * If we see @tail, we must then also see @head.
+			 * Pairs with the xchg() in lqueue_push(),
+			 * ensure no false positive on the singleton
+			 * test below.
+			 */
+			smp_rmb();
+			head = READ_ONCE(h->head);
+
+			/* If there is but one item; fail to remove. */
+			if (head == tail)
+				return NULL;
+
+			next = smp_cond_load_relaxed(&tail->next, VAL);
+
+		} while (cmpxchg(h->tail, tail, next) != tail);
+
+		return tail;
+	}
+
+Now, you appear to be using desc_ids instead of pointers, but since
+you're not using the actual wrap value; I don't see the benefit of using
+those IDs over straight pointers.
+
+That is, unless I've overlooked some subtle ABA issue, but then, your
+code doesn't seem to mention that, and I think we're good because if we
+re-use an entry, it can never get back in the same location, since we
+never allow an empty list (might also be fixable, haven't tought too
+hard on this).
+
+That said, the above has cmpxchg() vs WRITE_ONCE() and is therefore not
+safe on a number of our architectures. We can either not care about
+performance and use xchg() for the ->tail store, or use atomic_long_t
+and suffer ugly casting.
+
+But the above is, IMO, a more useful and readable abstraction. Let me
+continue in another email (probably tomorrow).
