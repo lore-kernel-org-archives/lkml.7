@@ -2,149 +2,152 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27DDC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6969CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4EED216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400CE216C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 19:04:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IcVVxpUg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oQTNqSlB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="clB/q5G7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfFZTC2 (ORCPT
+        id S1726565AbfFZTEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 15:02:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34276 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbfFZTC1 (ORCPT
+        Wed, 26 Jun 2019 15:04:07 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13879 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfFZTEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 15:02:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 04EE2611D1; Wed, 26 Jun 2019 19:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561575746;
-        bh=ssCLH2DoKTlXWGV9yiNUwpiNQxntMU7hy1HNqKFxCCg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IcVVxpUgpLgqP/+0mEHeUqYXovFSKQStMg2jAbz0yVjJOFb3AbG9rVchvEvQ3Pn5M
-         2nETwgXMFXuDOnCgrecuHG4VYGd0jyvRELr7sjEpTA9y7nOETgHRd5QXDd8zqOwB1p
-         M00B3YidJkFCFlWnAwnMWG1SdAyNpejpk4YS0BFI=
-Received: from [192.168.1.100] (unknown [157.45.87.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02D37611C3;
-        Wed, 26 Jun 2019 19:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561575743;
-        bh=ssCLH2DoKTlXWGV9yiNUwpiNQxntMU7hy1HNqKFxCCg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=oQTNqSlBgSWSEUG6XfeB1st98U6hzR/AGOTiQ15o5PkdK1RlhOT1Dp8Ogl/L8ITFh
-         5oOTx3dBfanB5UeBvQMs40Wb4khZ/Qc7d0xpXDHFT35O+l6/V6qT7S+TfGXhgGrVtc
-         tv7kxa597Do8x+Un4bBvHmHuyhhwxCD/RZSqFlt8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02D37611C3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCHv3 1/1] coresight: Do not default to CPU0 for missing CPU
- phandle
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-References: <cover.1561346998.git.saiprakash.ranjan@codeaurora.org>
- <635466ab6a27781966bb083e93d2ca2729473ced.1561346998.git.saiprakash.ranjan@codeaurora.org>
- <CANLsYky6D5EsCL2vOa4hHaqTQRXbN+TT0pSzFrykDL_fHEkiBQ@mail.gmail.com>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <68fea180-c3a4-b7d9-09b6-1d3ddbc89f9d@codeaurora.org>
-Date:   Thu, 27 Jun 2019 00:32:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 26 Jun 2019 15:04:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d13c1a30001>; Wed, 26 Jun 2019 12:04:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Jun 2019 12:04:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Jun 2019 12:04:05 -0700
+Received: from [10.24.71.21] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
+ 2019 19:04:03 +0000
+Subject: Re: [PATCH] mdev: Send uevents around parent device registration
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <156155924767.11505.11457229921502145577.stgit@gimli.home>
+ <1ea5c171-cd42-1c10-966e-1b82a27351d9@nvidia.com>
+ <20190626120551.788fa5ed@x1.home>
+X-Nvconfidentiality: public
+From:   Kirti Wankhede <kwankhede@nvidia.com>
+Message-ID: <a6c2ec9e-b949-4346-13bc-4d7f9c35ea8b@nvidia.com>
+Date:   Thu, 27 Jun 2019 00:33:59 +0530
 MIME-Version: 1.0
-In-Reply-To: <CANLsYky6D5EsCL2vOa4hHaqTQRXbN+TT0pSzFrykDL_fHEkiBQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190626120551.788fa5ed@x1.home>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561575843; bh=jZA/XDQ4US9Ng8Ww5WujClRmd4XFP4iAZ65KheJ7Nh4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=clB/q5G7SbjTlRjSpGBni2WC8guLbfo2PMHjtJcTu6thvaVpKoIDJq1vi21LLfisR
+         IqjYoxJnEuuIrGkJOlfxLPAnsNbnLZmTlsmPpwbvJgZf374V4ZZKBQwzpKaAcvfmYy
+         5JBpeHnt2RDuby3m0SPKrewFS83fzjzAC+vfpygO3+loJdiZ8TBNkuxbZzmDUCn/yW
+         lSolvAYARHTFQt/OwD1hyBPFahD7giYcsjq7hW+hBg+2whM47nvHhToCYDvzLMYDIE
+         pdxSF2cDLwKCvYjVyDLXaKtHWvDBybWyBxeneiYQXlL71BSpmpYyFy1ZNVZfaWPmHl
+         17+htJ5JXZ1ZA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
 
-On 6/26/2019 11:11 PM, Mathieu Poirier wrote:
-> Hi Sai,
+
+On 6/26/2019 11:35 PM, Alex Williamson wrote:
+> On Wed, 26 Jun 2019 23:23:00 +0530
+> Kirti Wankhede <kwankhede@nvidia.com> wrote:
 > 
-> On Sun, 23 Jun 2019 at 21:36, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
->> index 3c5ceda8db24..4990da2c13e9 100644
->> --- a/drivers/hwtracing/coresight/coresight-platform.c
->> +++ b/drivers/hwtracing/coresight/coresight-platform.c
->> @@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
->>          struct device_node *dn;
+>> On 6/26/2019 7:57 PM, Alex Williamson wrote:
+>>> This allows udev to trigger rules when a parent device is registered
+>>> or unregistered from mdev.
+>>>
+>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>>> ---
+>>>  drivers/vfio/mdev/mdev_core.c |   10 ++++++++--
+>>>  1 file changed, 8 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>>> index ae23151442cb..ecec2a3b13cb 100644
+>>> --- a/drivers/vfio/mdev/mdev_core.c
+>>> +++ b/drivers/vfio/mdev/mdev_core.c
+>>> @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>>>  {
+>>>  	int ret;
+>>>  	struct mdev_parent *parent;
+>>> +	char *env_string = "MDEV_STATE=registered";
+>>> +	char *envp[] = { env_string, NULL };
+>>>  
+>>>  	/* check for mandatory ops */
+>>>  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
+>>> @@ -196,7 +198,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
+>>>  	list_add(&parent->next, &parent_list);
+>>>  	mutex_unlock(&parent_list_lock);
+>>>  
+>>> -	dev_info(dev, "MDEV: Registered\n");
+>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+>>> +  
 >>
->>          if (!dev->of_node)
->> -               return 0;
->> +               return -ENODEV;
->> +
->>          dn = of_parse_phandle(dev->of_node, "cpu", 0);
->> -       /* Affinity defaults to CPU0 */
->>          if (!dn)
->> -               return 0;
->> +               return -ENODEV;
->> +
->>          cpu = of_cpu_node_to_id(dn);
->>          of_node_put(dn);
->>
->> -       /* Affinity to CPU0 if no cpu nodes are found */
->> -       return (cpu < 0) ? 0 : cpu;
->> +       return cpu;
->>   }
+>> Its good to have udev event, but don't remove debug print from dmesg.
+>> Same for unregister.
 > 
-> Function of_coresight_get_cpu() needs to return -ENODEV rather than 0
-> when !CONFIG_OF
-> 
->>
->>   /*
->> @@ -734,14 +734,14 @@ static int acpi_coresight_get_cpu(struct device *dev)
->>          struct acpi_device *adev = ACPI_COMPANION(dev);
->>
->>          if (!adev)
->> -               return 0;
->> +               return -ENODEV;
->>          status = acpi_get_parent(adev->handle, &cpu_handle);
->>          if (ACPI_FAILURE(status))
->> -               return 0;
->> +               return -ENODEV;
->>
->>          cpu = acpi_handle_to_logical_cpuid(cpu_handle);
->>          if (cpu >= nr_cpu_ids)
->> -               return 0;
->> +               return -ENODEV;
->>          return cpu;
->>   }
->>
-> 
-> Same as above, but for !CONFIG_ACPI
+> Who consumes these?  They seem noisy.  Thanks,
 > 
 
-Have fixed and resent, thanks Mathieu.
+I don't think its noisy, its more of logging purpose. This is seen in
+kernel log only when physical device is registered to mdev.
 
--Sai
+Thanks,
+Kirti
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+> Alex
+> 
+>>>  	return 0;
+>>>  
+>>>  add_dev_err:
+>>> @@ -220,6 +223,8 @@ EXPORT_SYMBOL(mdev_register_device);
+>>>  void mdev_unregister_device(struct device *dev)
+>>>  {
+>>>  	struct mdev_parent *parent;
+>>> +	char *env_string = "MDEV_STATE=unregistered";
+>>> +	char *envp[] = { env_string, NULL };
+>>>  
+>>>  	mutex_lock(&parent_list_lock);
+>>>  	parent = __find_parent_device(dev);
+>>> @@ -228,7 +233,6 @@ void mdev_unregister_device(struct device *dev)
+>>>  		mutex_unlock(&parent_list_lock);
+>>>  		return;
+>>>  	}
+>>> -	dev_info(dev, "MDEV: Unregistering\n");
+>>>  
+>>>  	list_del(&parent->next);
+>>>  	mutex_unlock(&parent_list_lock);
+>>> @@ -243,6 +247,8 @@ void mdev_unregister_device(struct device *dev)
+>>>  	up_write(&parent->unreg_sem);
+>>>  
+>>>  	mdev_put_parent(parent);
+>>> +
+>>> +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
+>>>  }
+>>>  EXPORT_SYMBOL(mdev_unregister_device);
+>>>  
+>>>   
+> 
