@@ -2,142 +2,123 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3BAC4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FE1C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D25208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE02D208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFZIRF (ORCPT
+        id S1726872AbfFZIRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 04:17:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37334 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbfFZIRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 04:17:05 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5D326356C4;
-        Wed, 26 Jun 2019 08:17:00 +0000 (UTC)
-Received: from ovpn-117-198.ams2.redhat.com (ovpn-117-198.ams2.redhat.com [10.36.117.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 676346012E;
-        Wed, 26 Jun 2019 08:16:55 +0000 (UTC)
-Message-ID: <24fab1f43190f4994e47da4c2fa3fd622cd4e8ca.camel@redhat.com>
-Subject: Re: [PATCH net-next] net: ipvlan: forward ingress packet to slave's
- l2 in l3s mode
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>, davem@davemloft.net,
-        idosch@mellanox.com, daniel@iogearbox.net, petrm@mellanox.com,
-        jiri@mellanox.com, tglx@linutronix.de, linmiaohe@huawei.com
-Cc:     zhabin@linux.alibaba.com, caspar@linux.alibaba.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 26 Jun 2019 10:16:54 +0200
-In-Reply-To: <20190625064208.2256-1-zhiyuan2048@linux.alibaba.com>
-References: <20190625064208.2256-1-zhiyuan2048@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 26 Jun 2019 04:17:09 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33035 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725379AbfFZIRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:17:08 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id D7F66B43525032CA199F;
+        Wed, 26 Jun 2019 09:17:05 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 26 Jun
+ 2019 09:16:57 +0100
+Subject: Re: [PATCH v4 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Rob Landley <rob@landley.net>, <viro@zeniv.linux.org.uk>
+CC:     <linux-security-module@vger.kernel.org>,
+        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bug-cpio@gnu.org>,
+        <zohar@linux.vnet.ibm.com>, <silviu.vlasceanu@huawei.com>,
+        <dmitry.kasatkin@huawei.com>, <takondra@cisco.com>,
+        <kamensky@cisco.com>, <hpa@zytor.com>, <arnd@arndb.de>,
+        <james.w.mcmechan@gmail.com>, <niveditas98@gmail.com>
+References: <20190523121803.21638-1-roberto.sassu@huawei.com>
+ <cf9d08ca-74c7-c945-5bf9-7c3495907d1e@huawei.com>
+ <541e9ea1-024f-5c22-0b58-f8692e6c1eb1@landley.net>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <33cfb804-6a17-39f0-92b7-01d54e9c452d@huawei.com>
+Date:   Wed, 26 Jun 2019 10:15:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
+In-Reply-To: <541e9ea1-024f-5c22-0b58-f8692e6c1eb1@landley.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 26 Jun 2019 08:17:04 +0000 (UTC)
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, 2019-06-25 at 14:42 +0800, Zhiyuan Hou wrote:
-> In ipvlan l3s mode,  ingress packet is switched to slave interface and
-> delivers to l4 stack. This may cause two problems:
+On 6/3/2019 8:32 PM, Rob Landley wrote:
+> On 6/3/19 4:31 AM, Roberto Sassu wrote:
+>>> This patch set aims at solving the following use case: appraise files from
+>>> the initial ram disk. To do that, IMA checks the signature/hash from the
+>>> security.ima xattr. Unfortunately, this use case cannot be implemented
+>>> currently, as the CPIO format does not support xattrs.
+>>>
+>>> This proposal consists in including file metadata as additional files named
+>>> METADATA!!!, for each file added to the ram disk. The CPIO parser in the
+>>> kernel recognizes these special files from the file name, and calls the
+>>> appropriate parser to add metadata to the previously extracted file. It has
+>>> been proposed to use bit 17:16 of the file mode as a way to recognize files
+>>> with metadata, but both the kernel and the cpio tool declare the file mode
+>>> as unsigned short.
+>>
+>> Any opinion on this patch set?
+>>
+>> Thanks
+>>
+>> Roberto
 > 
->   1. When slave is in an ns different from master, the behavior of stack
->   in slave ns may cause confusion for users. For example, iptables, tc,
->   and other l2/l3 functions are not available for ingress packet.
+> Sorry, I've had the window open since you posted it but haven't gotten around to
+> it. I'll try to build it later today.
 > 
->   2. l3s mode is not used for tap device, and cannot support ipvtap. But
->   in VM or container based VM cases, tap device is a very common device.
-> 
-> In l3s mode's input nf_hook, this patch calles the skb_forward_dev() to
-> forward ingress packet to slave and uses nf_conntrack_confirm() to make
-> conntrack work with new mode.
-> 
-> Signed-off-by: Zha Bin <zhabin@linux.alibaba.com>
-> Signed-off-by: Zhiyuan Hou <zhiyuan2048@linux.alibaba.com>
-> ---
->  drivers/net/ipvlan/ipvlan.h     |  9 ++++++++-
->  drivers/net/ipvlan/ipvlan_l3s.c | 16 ++++++++++++++--
->  2 files changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ipvlan/ipvlan.h b/drivers/net/ipvlan/ipvlan.h
-> index 3837c897832e..48c814e24c3f 100644
-> --- a/drivers/net/ipvlan/ipvlan.h
-> +++ b/drivers/net/ipvlan/ipvlan.h
-> @@ -172,6 +172,14 @@ void ipvlan_link_delete(struct net_device *dev, struct list_head *head);
->  void ipvlan_link_setup(struct net_device *dev);
->  int ipvlan_link_register(struct rtnl_link_ops *ops);
->  #ifdef CONFIG_IPVLAN_L3S
-> +
-> +#include <net/netfilter/nf_conntrack_core.h>
-> +
-> +static inline int ipvlan_confirm_conntrack(struct sk_buff *skb)
-> +{
-> +	return nf_conntrack_confirm(skb);
-> +}
-> +
->  int ipvlan_l3s_register(struct ipvl_port *port);
->  void ipvlan_l3s_unregister(struct ipvl_port *port);
->  void ipvlan_migrate_l3s_hook(struct net *oldnet, struct net *newnet);
-> @@ -206,5 +214,4 @@ static inline bool netif_is_ipvlan_port(const struct net_device *dev)
->  {
->  	return rcu_access_pointer(dev->rx_handler) == ipvlan_handle_frame;
->  }
-> -
->  #endif /* __IPVLAN_H */
-> diff --git a/drivers/net/ipvlan/ipvlan_l3s.c b/drivers/net/ipvlan/ipvlan_l3s.c
-> index 943d26cbf39f..ed210002f593 100644
-> --- a/drivers/net/ipvlan/ipvlan_l3s.c
-> +++ b/drivers/net/ipvlan/ipvlan_l3s.c
-> @@ -95,14 +95,26 @@ static unsigned int ipvlan_nf_input(void *priv, struct sk_buff *skb,
->  {
->  	struct ipvl_addr *addr;
->  	unsigned int len;
-> +	int ret = NF_ACCEPT;
-> +	bool success;
->  
->  	addr = ipvlan_skb_to_addr(skb, skb->dev);
->  	if (!addr)
->  		goto out;
->  
-> -	skb->dev = addr->master->dev;
->  	len = skb->len + ETH_HLEN;
-> -	ipvlan_count_rx(addr->master, len, true, false);
-> +
-> +	ret = ipvlan_confirm_conntrack(skb);
-> +	if (ret != NF_ACCEPT) {
-> +		ipvlan_count_rx(addr->master, len, false, false);
-> +		goto out;
-> +	}
-> +
-> +	skb_push_rcsum(skb, ETH_HLEN);
-> +	success = dev_forward_skb(addr->master->dev, skb) == NET_RX_SUCCESS;
+> It does look interesting, and I have no objections to the basic approach. I
+> should be able to add support to toybox cpio over a weekend once I've got the
+> kernel doing it to test against.
 
-This looks weird to me: if I read the code correctly, the skb will
-traverse twice NF_INET_LOCAL_IN, once due to the l3s hooking and
-another one due to dev_forward_skb().
+Ok.
 
-Also, tc ingreess, etc will run after the first traversing of
-NF_INET_LOCAL_IN.
+Let me give some instructions so that people can test this patch set.
 
-All in all I think that if full l2 processing is required, a different
-mode or a different virtual device should be used.
+To add xattrs to the ram disk embedded in the kernel it is sufficient
+to set CONFIG_INITRAMFS_FILE_METADATA="xattr" and
+CONFIG_INITRAMFS_SOURCE="<file with xattr>" in the kernel configuration.
 
-Cheers,
+To add xattrs to the external ram disk, it is necessary to patch cpio:
 
-Paolo
+https://github.com/euleros/cpio/commit/531cabc88e9ecdc3231fad6e4856869baa9a91ef 
+(xattr-v1 branch)
 
+and dracut:
+
+https://github.com/euleros/dracut/commit/a2dee56ea80495c2c1871bc73186f7b00dc8bf3b 
+(digest-lists branch)
+
+The same modification can be done for mkinitramfs (add '-e xattr' to the
+cpio command line).
+
+To simplify the test, it would be sufficient to replace only the cpio
+binary and the dracut script with the modified versions. For dracut, the
+patch should be applied to the local dracut (after it has been renamed
+to dracut.sh).
+
+Then, run:
+
+dracut -e xattr -I <file with xattr> (add -f to overwrite the ram disk)
+
+Xattrs can be seen by stopping the boot process for example by adding
+rd.break to the kernel command line.
+
+Roberto
+
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
