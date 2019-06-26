@@ -2,89 +2,81 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8BCC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A666C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15822080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A84A2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561560373;
+	bh=SgyRfp9j7tfDF2c5zsUeeU2JMpNmn9znBEtJ6Ddu9QY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aZnOTudHUOb76dgp/HY/PjXp4GJl914CDzBLnVsuMpVBCCY9ziAxV0X6Ww+zsdoFY
+	 GqkoCgPMk5f2P3P8Z1M9LTuxeZE2gWqBLheXg34zq015I7MuGahMjj7JsrTpoWNco8
+	 Ka2mbOJUTnq20HkSgvCBvpcwnNL++GOIrVGeDgU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfFZOp1 (ORCPT
+        id S1728199AbfFZOqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:45:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48888 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbfFZOp1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:45:27 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hg9AE-00046N-A6; Wed, 26 Jun 2019 16:44:46 +0200
-Date:   Wed, 26 Jun 2019 16:44:45 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH 1/3] module: Fix livepatch/ftrace module text permissions
- race
-In-Reply-To: <20190626133721.ea2iuqqu4to2jpbv@pathway.suse.cz>
-Message-ID: <alpine.DEB.2.21.1906261643200.32342@nanos.tec.linutronix.de>
-References: <cover.1560474114.git.jpoimboe@redhat.com> <ab43d56ab909469ac5d2520c5d944ad6d4abd476.1560474114.git.jpoimboe@redhat.com> <20190614170408.1b1162dc@gandalf.local.home> <alpine.LSU.2.21.1906260908170.22069@pobox.suse.cz>
- <20190626133721.ea2iuqqu4to2jpbv@pathway.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 26 Jun 2019 10:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727139AbfFZOqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 10:46:11 -0400
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98AE821783;
+        Wed, 26 Jun 2019 14:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561560370;
+        bh=SgyRfp9j7tfDF2c5zsUeeU2JMpNmn9znBEtJ6Ddu9QY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SIY9hQ9fFwomEsBSURsShUDPM8BvOAH8wO4E5PXLrYtpdkkFLFL4w5AHqpYKu8OQ2
+         OoeUVh8DS/+qnGe0cZfRGU26VizBmkTD9xY4Mue9dLOG58xt/L2GJj4Z4vESrNfeR8
+         LG4/3+MXoaejOefk8OIPn8QpUeAQbbbsDoaYU7Q4=
+Received: by mail-qk1-f179.google.com with SMTP id p144so1824377qke.11;
+        Wed, 26 Jun 2019 07:46:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAUNxGyKdyPE/MnMxzfi8UVPAdyVDZ4v7OFTzjb9dpDsRa7dJ5UI
+        pUQcvm1JDRh3SQ5k6X0V+q5wnt7Zd9I6FDr5cQ==
+X-Google-Smtp-Source: APXvYqw5283L56Gc8KaJlBZugufdawjb75R3b1nrUhcsh0uoda7ucgzw0oPalXh8dy9pMWHJfV2n5NxWNW5JU9n1iCQ=
+X-Received: by 2002:a37:a48e:: with SMTP id n136mr4324838qke.223.1561560369873;
+ Wed, 26 Jun 2019 07:46:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1561389162-26291-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <1561389162-26291-1-git-send-email-stefan.popa@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 26 Jun 2019 08:45:58 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKW5qKYOXD8N=uCdoUxuw9iT+Lw-NhJuUuUPWj0dzdv-Q@mail.gmail.com>
+Message-ID: <CAL_JsqKW5qKYOXD8N=uCdoUxuw9iT+Lw-NhJuUuUPWj0dzdv-Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: iio: frequency: Add ADF4372 PLL documentation
+To:     Stefan Popa <stefan.popa@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019, Petr Mladek wrote:
-> On Wed 2019-06-26 10:22:45, Miroslav Benes wrote:
-> It is similar problem that has been solved by 2d1e38f56622b9bb5af8
-> ("kprobes: Cure hotplug lock ordering issues"). This commit solved
-> it by always taking cpu_hotplug_lock.rw_sem before text_mutex inside.
-> 
-> If we follow the lock ordering then ftrace has to take text_mutex
-> only when stop_machine() is not called or from code called via
-> stop_machine() parameter.
-> 
-> This is not easy with the current design. For example, arm calls
-> set_all_modules_text_rw() already in ftrace_arch_code_modify_prepare(),
-> see arch/arm/kernel/ftrace.c. And it is called:
-> 
->   + outside stop_machine() from ftrace_run_update_code()
->   + without stop_machine() from ftrace_module_enable()
-> 
-> A conservative solution for 5.2 release would be to move text_mutex
-> locking from the generic kernel/trace/ftrace.c into
-> arch/x86/kernel/ftrace.c:
-> 
->    ftrace_arch_code_modify_prepare()
->    ftrace_arch_code_modify_post_process()
-> 
-> It should be enough to fix the original problem because
-> x86 is the only architecture that calls set_all_modules_text_rw()
-> in ftrace path and supports livepatching at the same time.
+On Mon, Jun 24, 2019 at 9:40 AM Stefan Popa <stefan.popa@analog.com> wrote:
+>
+> Document support for ADF4372 SPI Wideband Synthesizer.
+>
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> ---
+>  Documentation/devicetree/bindings/iio/frequency/adf4371.yaml | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
-Looks correct, but I've paged out all the gory details vs. lock ordering in
-that area.
-
-Thanks,
-
-	tglx
+Reviewed-by: Rob Herring <robh@kernel.org>
