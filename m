@@ -2,132 +2,182 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34500C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410FCC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150CC2084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BC0216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Aj/ZWMrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfFZVSR (ORCPT
+        id S1726481AbfFZVSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:18:17 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:49938 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726239AbfFZVSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:18:17 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hgFIv-000310-0a; Wed, 26 Jun 2019 15:18:10 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190624072752.GA3954@lst.de>
- <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
- <20190625072008.GB30350@lst.de>
- <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
- <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
- <20190626202107.GA5850@ziepe.ca>
- <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
- <20190626210018.GB6392@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
-Date:   Wed, 26 Jun 2019 15:18:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190626210018.GB6392@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
+        Wed, 26 Jun 2019 17:18:44 -0400
+Received: from mail-eopbgr680068.outbound.protection.outlook.com ([40.107.68.68]:42251
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726223AbfFZVSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:18:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/zADyRKxG1rXeQLACDKl7XkRNXQhB7WYNfstazbgDZg=;
+ b=Aj/ZWMrBpAFwC6f3rbwn/tzOuduuum2Ge8NSYVHJ0w9jsJnFobE2pBMy2xuQl6avCj8Sh/Ohk/0m/TezBI+UoRVGRRkypr+auSNi3gXwt/7u0qiECo/E00Fc1sQ/G6Wqpjfou3fM/ehpPqdYa9tg00qp2XTUDyc//88oxeto5Is=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3257.namprd12.prod.outlook.com (20.179.105.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.13; Wed, 26 Jun 2019 21:18:01 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::9b0:ee82:ca4b:a4e7]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::9b0:ee82:ca4b:a4e7%6]) with mapi id 15.20.2008.018; Wed, 26 Jun 2019
+ 21:18:01 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Matt Fleming <matt@codeblueprint.co.uk>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] sched/topology: Improve load balancing on AMD EPYC
+Thread-Topic: [PATCH] sched/topology: Improve load balancing on AMD EPYC
+Thread-Index: AQHVG7eoxI4KuIDvfEiZt9H+t4SB36aNWbaAgAgVJQCAAU4pgIAKkNWAgAAeuwCAAimSgIAHY3AAgAOYOwA=
+Date:   Wed, 26 Jun 2019 21:18:01 +0000
+Message-ID: <989944bc-6c3a-43b5-4f95-0bdfcc6d6c29@amd.com>
+References: <20190605155922.17153-1-matt@codeblueprint.co.uk>
+ <20190605180035.GA3402@hirez.programming.kicks-ass.net>
+ <20190610212620.GA4772@codeblueprint.co.uk>
+ <18994abb-a2a8-47f4-9a35-515165c75942@amd.com>
+ <20190618104319.GB4772@codeblueprint.co.uk>
+ <20190618123318.GG3419@hirez.programming.kicks-ass.net>
+ <20190619213437.GA6909@codeblueprint.co.uk>
+ <20190624142420.GC2978@techsingularity.net>
+In-Reply-To: <20190624142420.GC2978@techsingularity.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
+x-originating-ip: [165.204.77.11]
+x-clientproxiedby: SN4PR0701CA0016.namprd07.prod.outlook.com
+ (2603:10b6:803:28::26) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 51c536ed-a2da-4298-f10e-08d6fa7bc523
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB3257;
+x-ms-traffictypediagnostic: DM6PR12MB3257:
+x-microsoft-antispam-prvs: <DM6PR12MB3257CD0FC320BF44FD981949F3E20@DM6PR12MB3257.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4303;
+x-forefront-prvs: 00808B16F3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(136003)(39860400002)(346002)(396003)(376002)(366004)(189003)(199004)(8676002)(14444005)(81166006)(81156014)(72206003)(71200400001)(31696002)(476003)(71190400001)(11346002)(256004)(229853002)(6436002)(68736007)(486006)(31686004)(2906002)(446003)(2616005)(478600001)(25786009)(7736002)(305945005)(36756003)(4326008)(26005)(99286004)(110136005)(386003)(6246003)(76176011)(102836004)(65826007)(6506007)(64126003)(3846002)(14454004)(73956011)(54906003)(66446008)(53546011)(66476007)(66556008)(6116002)(8936002)(6512007)(186003)(65956001)(66066001)(65806001)(53936002)(6486002)(86362001)(316002)(66946007)(5660300002)(58126008)(64756008)(52116002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3257;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5w6h1en8e5WJDIR0l9+WVG/rV2NDrWZgAIJkxEkQPHSKV72dBmdXSml7J55kY3tWxGPHG1DzZaOfTQTJ+14YJ/kCdiI6zYX+6zqGX4yQ9YjuVrOtDyQTR605m22Ah0C/YF6buzmX9MC3dixd4FyuJnmvauLJ025BYevkc1h/0q7rslEXDOKy2apl2mLFkOVBYzKztcAF5kqmZXJO2Q3KUvyj2BBy0EdsYwO3jA4/iTz1sPsLIfA+GTczV0T3I02cIpRzWpzuReIllsVe7zhpF9x/wJBicO9VJaCJv6QaG3x2HH4cUqoxO8JuYQiF4cmtGBqI0DXPzYGAGbgdYAJyeGCjaAc9oc1i/VQMqeapCYv2VCMw2EDPpor9KAqnO73Xq0pu3drhdYQu4p9oof2K/gzweViB2HleizhYgWaYoa4=
+Content-Type: text/plain; charset="iso-8859-15"
+Content-ID: <F09C500C804F564DA3E1CE086C6502D1@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51c536ed-a2da-4298-f10e-08d6fa7bc523
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2019 21:18:01.8090
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ssuthiku@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3257
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-06-26 3:00 p.m., Jason Gunthorpe wrote:
-> On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
->>
->>
->> On 2019-06-26 2:21 p.m., Jason Gunthorpe wrote:
->>> On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
->>>>> we have a hole behind len where we could store flag.  Preferably
->>>>> optionally based on a P2P or other magic memory types config
->>>>> option so that 32-bit systems with 32-bit phys_addr_t actually
->>>>> benefit from the smaller and better packing structure.
+On 6/24/19 9:24 AM, Mel Gorman wrote:
+> On Wed, Jun 19, 2019 at 10:34:37PM +0100, Matt Fleming wrote:
+>> On Tue, 18 Jun, at 02:33:18PM, Peter Zijlstra wrote:
+>>> On Tue, Jun 18, 2019 at 11:43:19AM +0100, Matt Fleming wrote:
+>>>> This works for me under all my tests. Thoughts?
 >>>>
->>>> That seems sensible. The one thing that's unclear though is how to get
->>>> the PCI Bus address when appropriate. Can we pass that in instead of the
->>>> phys_addr with an appropriate flag? Or will we need to pass the actual
->>>> physical address and then, at the map step, the driver has to some how
->>>> lookup the PCI device to figure out the bus offset?
+>>>> --->8---
+>>>>
+>>>> diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+>>>> index 80a405c2048a..4db4e9e7654b 100644
+>>>> --- a/arch/x86/kernel/cpu/amd.c
+>>>> +++ b/arch/x86/kernel/cpu/amd.c
+>>>> @@ -8,6 +8,7 @@
+>>>>   #include <linux/sched.h>
+>>>>   #include <linux/sched/clock.h>
+>>>>   #include <linux/random.h>
+>>>> +#include <linux/topology.h>
+>>>>   #include <asm/processor.h>
+>>>>   #include <asm/apic.h>
+>>>>   #include <asm/cacheinfo.h>
+>>>> @@ -824,6 +825,8 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
+>>>>   {
+>>>>   	set_cpu_cap(c, X86_FEATURE_ZEN);
+>>>>  =20
 >>>
->>> I agree with CH, if we go down this path it is a layering violation
->>> for the thing injecting bio's into the block stack to know what struct
->>> device they egress&dma map on just to be able to do the dma_map up
->>> front.
+>>> I'm thinking this deserves a comment. Traditionally the SLIT table held
+>>> relative memory latency. So where the identity is 10, 16 would indicate
+>>> 1.6 times local latency and 32 would be 3.2 times local.
+>>>
+>>> Now, even very early on BIOS monkeys went about their business and put
+>>> in random values in an attempt to 'tune' the system based on how
+>>> $random-os behaved, which is all sorts of fu^Wwrong.
+>>>
+>>> Now, I suppose my question is; is that 32 Zen puts in an actual relativ=
+e
+>>> memory latency metric, or a random value we somehow have to deal with.
+>>> And can we pretty please describe the whole sordid story behind this
+>>> 'tunable' somewhere?
 >>
->> Not sure I agree with this statement. The p2pdma code already *must*
->> know and access the pci_dev of the dma device ahead of when it submits
->> the IO to know if it's valid to allocate and use P2P memory at all.
-> 
-> I don't think we should make drives do that. What if it got CMB memory
-> on some other device?
-
-Huh? A driver submitting P2P requests finds appropriate memory to use
-based on the DMA device that will be doing the mapping. It *has* to. It
-doesn't necessarily have control over which P2P provider it might find
-(ie. it may get CMB memory from a random NVMe device), but it easily
-knows the NVMe device it got the CMB memory for. Look at the existing
-code in the nvme target.
-
->>> For instance we could use a small hash table of the upper phys addr
->>> bits, or an interval tree, to do the lookup.
+>> This is one for the AMD folks. I don't know if the memory latency
+>> really is 3.2 times or not, only that that's the value in all the Zen
+>> machines I have access to. Even this 2-socket one:
 >>
->> Yes, if we're going to take a hard stance on this. But using an interval
->> tree (or similar) is a lot more work for the CPU to figure out these
->> mappings that may not be strictly necessary if we could just pass better
->> information down from the submitting driver to the mapping driver.
-> 
-> Right, this is coming down to an optimization argument. I think there
-> are very few cases (Basically yours) where the caller will know this
-> info, so we need to support the other cases anyhow.
+>> node distances:
+>> node   0   1
+>>    0:  10  32
+>>    1:  32  10
+>>
+>> Tom, Suravee?
+>=20
+> Do not consider this an authorative response but based on what I know
+> of the physical topology, it is not unreasonable to use 32 in the SLIT
+> table. There is a small latency when accessing another die on the same
+> socket (details are generation specific). It's not quite a local access
+> but it's not as much as a traditional remote access either (hence 16 bein=
+g
+> the base unit for another die to hint that it's not quite local but not
+> quite remote either). 32 is based on accessing a die on a remote socket
+> based on the expected performance and latency of the interconnect.
+>=20
+> To the best of my knowledge, the magic numbers are reflective of the real
+> topology and not just a gamification of the numbers for a random OS. If
+> anything, the fact that there is a load balancing issue on Linux would
+> indicate that they were not picking random numbers for Linux at least :P
+>=20
 
-I disagree. I think it has to be a common pattern. A driver doing a P2P
-transaction *must* find some device to obtain memory from (or it may be
-itself)  and check if it is compatible with the device that's going to
-be mapping the memory or vice versa. So no matter what we do, a driver
-submitting P2P requests must have access to both the PCI device that's
-going to be mapping the memory and the device that's providing the memory.
+We use 16 to designate 1-hop latency (for different node within the same so=
+cket).
+For across-socket access, since the latency is greater, we set the latency =
+to 32
+(twice the latency of 1-hop) not aware of the RECLAIM_DISTANCE at the time.
 
-> I think with some simple caching this will become negligible for cases
-> you care about
+At this point, it might not be possible to change the SLIT values on
+existing platforms out in the field. So, introducing the AMD family17h
+quirk as Matt suggested would be a more feasible approach.
 
-Well *maybe* it will be negligible performance wise, but it's also a lot
-more complicated, code wise. Tree lookups will always be a lot more
-expensive than just checking a flag.
+Going forward, we will make sure that this would not exceed the standard
+RECLAIM_DISTANCE (30).
 
-Logan
+Thanks,
+Suravee
