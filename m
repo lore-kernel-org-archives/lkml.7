@@ -2,118 +2,166 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BC9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B932EC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747C820665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AAF20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfFZVr4 (ORCPT
+        id S1726481AbfFZVsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:47:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50412 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZVr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:47:56 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgFlW-00088d-0n; Wed, 26 Jun 2019 23:47:42 +0200
-Date:   Wed, 26 Jun 2019 23:47:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org
-Subject: Re: [PATCH v9 09/17] x86/split_lock: Handle #AC exception for split
- lock
-In-Reply-To: <20190626203637.GC245468@romley-ivt3.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1906262338220.32342@nanos.tec.linutronix.de>
-References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com> <1560897679-228028-10-git-send-email-fenghua.yu@intel.com> <alpine.DEB.2.21.1906262209590.32342@nanos.tec.linutronix.de> <20190626203637.GC245468@romley-ivt3.sc.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 26 Jun 2019 17:48:25 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46974 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbfFZVsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:48:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 14:48:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
+   d="scan'208";a="183267604"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jun 2019 14:48:23 -0700
+Date:   Wed, 26 Jun 2019 14:48:23 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH 16/25] device-dax: use the dev_pagemap internal refcount
+Message-ID: <20190626214823.GD8399@iweiny-DESK2.sc.intel.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-17-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626122724.13313-17-hch@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019, Fenghua Yu wrote:
-
-> On Wed, Jun 26, 2019 at 10:20:05PM +0200, Thomas Gleixner wrote:
-> > On Tue, 18 Jun 2019, Fenghua Yu wrote:
-> > > +
-> > > +static atomic_t split_lock_debug;
-> > > +
-> > > +void split_lock_disable(void)
-> > > +{
-> > > +	/* Disable split lock detection on this CPU */
-> > > +	this_cpu_and(msr_test_ctl_cached, ~MSR_TEST_CTL_SPLIT_LOCK_DETECT);
-> > > +	wrmsrl(MSR_TEST_CTL, this_cpu_read(msr_test_ctl_cached));
-> > > +
-> > > +	/*
-> > > +	 * Use the atomic variable split_lock_debug to ensure only the
-> > > +	 * first CPU hitting split lock issue prints one single complete
-> > > +	 * warning. This also solves the race if the split-lock #AC fault
-> > > +	 * is re-triggered by NMI of perf context interrupting one
-> > > +	 * split-lock warning execution while the original WARN_ONCE() is
-> > > +	 * executing.
-> > > +	 */
-> > > +	if (atomic_cmpxchg(&split_lock_debug, 0, 1) == 0) {
-> > > +		WARN_ONCE(1, "split lock operation detected\n");
-> > > +		atomic_set(&split_lock_debug, 0);
-> > 
-> > What's the purpose of this atomic_set()?
+On Wed, Jun 26, 2019 at 02:27:15PM +0200, Christoph Hellwig wrote:
+> The functionality is identical to the one currently open coded in
+> device-dax.
 > 
-> atomic_set() releases the split_lock_debug flag after WARN_ONCE() is done.
-> The same split_lock_debug flag will be used in sysfs write for atomic
-> operation as well, as proposed by Ingo in https://lkml.org/lkml/2019/4/25/48
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Your comment above lacks any useful information about that whole thing.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-> So that's why the flag needs to be cleared, right?
-
-Errm. No.
-
-CPU 0					CPU 1
-					
-hits AC					hits AC
-  if (atomic_cmpxchg() == success)	  if (atomic_cmpxchg() == success)
-  	warn()	       	  		     warn()
-
-So only one of the CPUs will win the cmpxchg race, set te variable to 1 and
-warn, the other and any subsequent AC on any other CPU will not warn
-either. So you don't need WARN_ONCE() at all. It's redundant and confusing
-along with the atomic_set().
-
-Whithout reading that link [1], what Ingo proposed was surely not the
-trainwreck which you decided to put into that debugfs thing.
-
-Thanks,
-
-	tglx
-
-[1] lkml.org sucks. We have https://lkml.kernel.org/r/$MESSAGEID for
-    that. That actually works.
+> ---
+>  drivers/dax/dax-private.h |  4 ----
+>  drivers/dax/device.c      | 43 ---------------------------------------
+>  2 files changed, 47 deletions(-)
+> 
+> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+> index b4177aafbbd1..c915889d1769 100644
+> --- a/drivers/dax/dax-private.h
+> +++ b/drivers/dax/dax-private.h
+> @@ -43,8 +43,6 @@ struct dax_region {
+>   * @target_node: effective numa node if dev_dax memory range is onlined
+>   * @dev - device core
+>   * @pgmap - pgmap for memmap setup / lifetime (driver owned)
+> - * @ref: pgmap reference count (driver owned)
+> - * @cmp: @ref final put completion (driver owned)
+>   */
+>  struct dev_dax {
+>  	struct dax_region *region;
+> @@ -52,8 +50,6 @@ struct dev_dax {
+>  	int target_node;
+>  	struct device dev;
+>  	struct dev_pagemap pgmap;
+> -	struct percpu_ref ref;
+> -	struct completion cmp;
+>  };
+>  
+>  static inline struct dev_dax *to_dev_dax(struct device *dev)
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index b5257038c188..1af823b2fe6b 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -14,36 +14,6 @@
+>  #include "dax-private.h"
+>  #include "bus.h"
+>  
+> -static struct dev_dax *ref_to_dev_dax(struct percpu_ref *ref)
+> -{
+> -	return container_of(ref, struct dev_dax, ref);
+> -}
+> -
+> -static void dev_dax_percpu_release(struct percpu_ref *ref)
+> -{
+> -	struct dev_dax *dev_dax = ref_to_dev_dax(ref);
+> -
+> -	dev_dbg(&dev_dax->dev, "%s\n", __func__);
+> -	complete(&dev_dax->cmp);
+> -}
+> -
+> -static void dev_dax_percpu_exit(struct dev_pagemap *pgmap)
+> -{
+> -	struct dev_dax *dev_dax = container_of(pgmap, struct dev_dax, pgmap);
+> -
+> -	dev_dbg(&dev_dax->dev, "%s\n", __func__);
+> -	wait_for_completion(&dev_dax->cmp);
+> -	percpu_ref_exit(pgmap->ref);
+> -}
+> -
+> -static void dev_dax_percpu_kill(struct dev_pagemap *pgmap)
+> -{
+> -	struct dev_dax *dev_dax = container_of(pgmap, struct dev_dax, pgmap);
+> -
+> -	dev_dbg(&dev_dax->dev, "%s\n", __func__);
+> -	percpu_ref_kill(pgmap->ref);
+> -}
+> -
+>  static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+>  		const char *func)
+>  {
+> @@ -441,11 +411,6 @@ static void dev_dax_kill(void *dev_dax)
+>  	kill_dev_dax(dev_dax);
+>  }
+>  
+> -static const struct dev_pagemap_ops dev_dax_pagemap_ops = {
+> -	.kill		= dev_dax_percpu_kill,
+> -	.cleanup	= dev_dax_percpu_exit,
+> -};
+> -
+>  int dev_dax_probe(struct device *dev)
+>  {
+>  	struct dev_dax *dev_dax = to_dev_dax(dev);
+> @@ -463,15 +428,7 @@ int dev_dax_probe(struct device *dev)
+>  		return -EBUSY;
+>  	}
+>  
+> -	init_completion(&dev_dax->cmp);
+> -	rc = percpu_ref_init(&dev_dax->ref, dev_dax_percpu_release, 0,
+> -			GFP_KERNEL);
+> -	if (rc)
+> -		return rc;
+> -
+> -	dev_dax->pgmap.ref = &dev_dax->ref;
+>  	dev_dax->pgmap.type = MEMORY_DEVICE_DEVDAX;
+> -	dev_dax->pgmap.ops = &dev_dax_pagemap_ops;
+>  	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
+>  	if (IS_ERR(addr))
+>  		return PTR_ERR(addr);
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Linux-nvdimm mailing list
+> Linux-nvdimm@lists.01.org
+> https://lists.01.org/mailman/listinfo/linux-nvdimm
