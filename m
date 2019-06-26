@@ -2,98 +2,151 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05737C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D7CC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB6EB205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:40:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jE10eCHU"
+	by mail.kernel.org (Postfix) with ESMTP id A5407205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfFZKj7 (ORCPT
+        id S1727084AbfFZKkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:39:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38876 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfFZKj7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:39:59 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g4so1222826plb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MQ9/uWGOCU6xhcJrjFrAp9D/DzotiwWryJhU2sg3dXk=;
-        b=jE10eCHUEAtvgZ94+vzcssYMO6mjwEBNyQyS+979T7V9H88qMRlbM80AALrr4PL7wH
-         rN819o1exHNmFlXu6lKk5huqMmX25BQjPANXDQP3CqO115DTSItqtIIM+GlhUvJeJM4r
-         Gh6hFKstZvm6Uq50/GjK9JmC/elmcYbePclzDX+j5AvGfUDAjt/8yL2eXwAx9St6tqQr
-         gfqWMtfSZEyYrgrjqG/Mru4BLY/83hPufoyrajO724AHU9zgMjmLkdqHYvumvHTCWNKd
-         vZZJwRPGkChzW6iHZvaqkeEqI88Ge6P5ak0ReP7ZL+iyU4Rt3SUsoqLxhC8HsenwNKu3
-         m3Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MQ9/uWGOCU6xhcJrjFrAp9D/DzotiwWryJhU2sg3dXk=;
-        b=NBvTV/SqN2uJCyuwC0AfgTpGh5A7kx3bF+zXpFLci8URsGCnRyxi6e+JzQUKhfhEhd
-         C4tXF1OvJS4VdVywWtRj/MWw5fcVztOpk1y6hjX+SY/nlEKMYr3HXw8cTRVxdteNl/tD
-         X/NrYO4c0aJj49cAVoZKcjuAU/w3qcCTyPDn0yKVL1mkDrOXpMjs1vl829DiGZHRuDA0
-         EosaBzfDG92zpkRSD1sHEU1uLk6XCQn4ookCPUl7OUetibT0kDqDq4KnNaiYKMmpCrSk
-         pXS33EDnZQiRHSdHBwxpM/eGwiq2Grz5hol5fOvTZeCgPFzQXTnlSKcjWzQMXoq86OIR
-         jbRQ==
-X-Gm-Message-State: APjAAAWsNx78Ld4KJ/EYiofevUhlvR2XHoZUPS3CwhWQZznVQl+ID6xj
-        LK2gBZhbsyNyXECikaMdXpw=
-X-Google-Smtp-Source: APXvYqwu8/FNRhg68Nb2ZF2ohaD+QcYRJVvaXt1TRS6mrgnz8RwmTp+ic/QQpLHJzCrhlbheGAJdFA==
-X-Received: by 2002:a17:902:246:: with SMTP id 64mr4519837plc.311.1561545598410;
-        Wed, 26 Jun 2019 03:39:58 -0700 (PDT)
-Received: from huyue2.ccdomain.com ([218.189.10.173])
-        by smtp.gmail.com with ESMTPSA id x7sm18584969pfa.125.2019.06.26.03.39.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 03:39:57 -0700 (PDT)
-From:   Yue Hu <zbestahu@gmail.com>
-To:     gaoxiang25@huawei.com, yuchao0@huawei.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, huyue2@yulong.com
-Subject: [PATCH RESEND] staging: erofs: remove unsupported ->datamode check in fill_inline_data()
-Date:   Wed, 26 Jun 2019 18:39:36 +0800
-Message-Id: <20190626103936.9064-1-zbestahu@gmail.com>
-X-Mailer: git-send-email 2.17.1.windows.2
+        Wed, 26 Jun 2019 06:40:31 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:54662 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbfFZKka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 06:40:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id DE6ACFB03;
+        Wed, 26 Jun 2019 12:40:28 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ERi-EqMGy_Mt; Wed, 26 Jun 2019 12:40:27 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 72BD248EAB; Wed, 26 Jun 2019 12:40:27 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 12:40:27 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <guido.gunther@puri.sm>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>
+Subject: Re: [PATCH 4/4] drm/panel: jh057n0090: Add regulator support
+Message-ID: <20190626104027.GA12710@bogon.m.sigxcpu.org>
+References: <cover.1561482165.git.agx@sigxcpu.org>
+ <b239f1db7a1f67988a9bd1ed62f6a1cf1dce944c.1561482165.git.agx@sigxcpu.org>
+ <20190625212419.GB20625@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190625212419.GB20625@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Hu <huyue2@yulong.com>
+Hi Sam,
+On Tue, Jun 25, 2019 at 11:24:19PM +0200, Sam Ravnborg wrote:
+> On Tue, Jun 25, 2019 at 07:05:19PM +0200, Guido Günther wrote:
+> > Allow to specify regulators for vcc and iovcc. According to the data
+> > sheet the panel wants vcc (2.8V) and iovcc (1.8V) and there's no startup
+> > dependency between the two.
+> s/jh057n0090/jh057n00900
+> 
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  .../drm/panel/panel-rocktech-jh057n00900.c    | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> > index b8a069055fbc..f8f6f087b9bc 100644
+> > --- a/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> > +++ b/drivers/gpu/drm/panel/panel-rocktech-jh057n00900.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/gpio/consumer.h>
+> >  #include <linux/media-bus-format.h>
+> >  #include <linux/module.h>
+> > +#include <linux/regulator/consumer.h>
+> >  #include <video/display_timing.h>
+> >  #include <video/mipi_display.h>
+> >  
+> > @@ -47,6 +48,8 @@ struct jh057n {
+> >  	struct drm_panel panel;
+> >  	struct gpio_desc *reset_gpio;
+> >  	struct backlight_device *backlight;
+> > +	struct regulator *vcc;
+> > +	struct regulator *iovcc;
+> >  	bool prepared;
+> >  
+> >  	struct dentry *debugfs;
+> > @@ -160,6 +163,8 @@ static int jh057n_unprepare(struct drm_panel *panel)
+> >  		return 0;
+> >  
+> >  	mipi_dsi_dcs_set_display_off(dsi);
+> > +	regulator_disable(ctx->iovcc);
+> > +	regulator_disable(ctx->vcc);
+> >  	ctx->prepared = false;
+> >  
+> >  	return 0;
+> > @@ -174,6 +179,13 @@ static int jh057n_prepare(struct drm_panel *panel)
+> >  		return 0;
+> >  
+> >  	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
+> > +	ret = regulator_enable(ctx->vcc);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +	ret = regulator_enable(ctx->iovcc);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> >  	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> >  	usleep_range(20, 40);
+> >  	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> > @@ -301,6 +313,13 @@ static int jh057n_probe(struct mipi_dsi_device *dsi)
+> >  	if (IS_ERR(ctx->backlight))
+> >  		return PTR_ERR(ctx->backlight);
+> >  
+> > +	ctx->vcc = devm_regulator_get(dev, "vcc");
+> > +	if (IS_ERR(ctx->vcc))
+> > +		return PTR_ERR(ctx->vcc);
+> > +	ctx->iovcc = devm_regulator_get(dev, "iovcc");
+> > +	if (IS_ERR(ctx->iovcc))
+> > +		return PTR_ERR(ctx->iovcc);
+> > +
+> Consider to write an error message.
+> The regulators are now mandatory, but they be missing in some device
+> trees. So it would be good to help them to understand why it fails.
 
-Already check if ->datamode is supported in read_inode(), no need to check
-again in the next fill_inline_data() only called by fill_inode().
+I've fixed this and your other comments in v2.
+> 
+> With this considered:
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-Signed-off-by: Yue Hu <huyue2@yulong.com>
-Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
----
- drivers/staging/erofs/inode.c | 2 --
- 1 file changed, 2 deletions(-)
+Thanks! I've not added this yet since I made two more changes:
 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index e51348f..d6e1e16 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -129,8 +129,6 @@ static int fill_inline_data(struct inode *inode, void *data,
- 	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
- 	const int mode = vi->datamode;
- 
--	DBG_BUGON(mode >= EROFS_INODE_LAYOUT_MAX);
--
- 	/* should be inode inline C */
- 	if (mode != EROFS_INODE_LAYOUT_INLINE)
- 		return 0;
--- 
-1.9.1
+- also print an error when regulator_enable() fails
+- disable vcc if enabling iovcc fails afterwards
 
+Hope this looks sane now.
+
+Cheers,
+ -- Guido
+
+> 
+> 	Sam
+> 
