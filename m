@@ -2,107 +2,304 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEF6C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4251AC48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E0F216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561585568;
-	bh=DRHwIYagcxSefxtxUmGepQRlcDBzbp7VVh0IXC49n8Y=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=dzsX3QWB1qhALVLOrci0/VnC8nwMIcpEWNjiyiCKqSwCUJE22i52EwL/17K/uxSsL
-	 eRt8CNN62vr1u0MvbLW10R36tx16WQaipEoEeCvDhMNtRE7uw8Tl5UwqHre1bl6CJg
-	 M+rEYamzSch8emDhCsIECmloWamD3VWBdkT99Yq8=
+	by mail.kernel.org (Postfix) with ESMTP id 0EA2620665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfFZVqE (ORCPT
+        id S1726422AbfFZVrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57170 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 17:47:51 -0400
+Received: from mga05.intel.com ([192.55.52.43]:34557 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfFZVqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:46:03 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0750C20665;
-        Wed, 26 Jun 2019 21:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561585562;
-        bh=DRHwIYagcxSefxtxUmGepQRlcDBzbp7VVh0IXC49n8Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=2UE+8Fn0BnnwdB5XkYfFOQT8enkZJtVG1YenOJ3+ZigNVe+qhyTdKpsJXa8nYNdEn
-         l/7U9IAwZG2JFXhpN3iHoieAPJkqsdQv8ZCkl7v+aTUZ+K0qF2r6AtYYVK3tGz4zfF
-         JufcidEUfCDSdO0ns3YoNaBIegjYlslQsRWiLY5U=
-Subject: Re: [PATCH 4.4 0/1] 4.4.184-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190626083604.894288021@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <7507a259-5b00-39bd-a76d-6b8b40ba1f82@kernel.org>
-Date:   Wed, 26 Jun 2019 15:46:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726223AbfFZVrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:47:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 14:47:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
+   d="scan'208";a="162409132"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga008.fm.intel.com with ESMTP; 26 Jun 2019 14:47:50 -0700
+Date:   Wed, 26 Jun 2019 14:47:50 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org
+Subject: Re: [PATCH 15/25] memremap: provide an optional internal refcount in
+ struct dev_pagemap
+Message-ID: <20190626214750.GC8399@iweiny-DESK2.sc.intel.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-16-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190626083604.894288021@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626122724.13313-16-hch@lst.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/26/19 2:45 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.184 release.
-> There are 1 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Jun 26, 2019 at 02:27:14PM +0200, Christoph Hellwig wrote:
+> Provide an internal refcounting logic if no ->ref field is provided
+> in the pagemap passed into devm_memremap_pages so that callers don't
+> have to reinvent it poorly.
 > 
-> Responses should be made by Fri 28 Jun 2019 08:35:42 AM UTC.
-> Anything received after that time might be too late.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/memremap.h          |  4 ++
+>  kernel/memremap.c                 | 64 ++++++++++++++++++++++++-------
+>  tools/testing/nvdimm/test/iomap.c | 58 ++++++++++++++++++++++------
+>  3 files changed, 101 insertions(+), 25 deletions(-)
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.184-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
-> Pseudo-Shortlog of commits:
-> 
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->      Linux 4.4.184-rc1
-> 
-> Eric Dumazet <edumazet@google.com>
->      tcp: refine memory limit test in tcp_fragment()
-> 
-> 
-> -------------
-> 
-> Diffstat:
-> 
->   Makefile              | 4 ++--
->   net/ipv4/tcp_output.c | 2 +-
->   2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> 
-> 
+> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+> index e25685b878e9..f8a5b2a19945 100644
+> --- a/include/linux/memremap.h
+> +++ b/include/linux/memremap.h
+> @@ -95,6 +95,8 @@ struct dev_pagemap_ops {
+>   * @altmap: pre-allocated/reserved memory for vmemmap allocations
+>   * @res: physical address range covered by @ref
+>   * @ref: reference count that pins the devm_memremap_pages() mapping
+> + * @internal_ref: internal reference if @ref is not provided by the caller
+> + * @done: completion for @internal_ref
+>   * @dev: host device of the mapping for debug
+>   * @data: private data pointer for page_free()
+>   * @type: memory type: see MEMORY_* in memory_hotplug.h
+> @@ -105,6 +107,8 @@ struct dev_pagemap {
+>  	struct vmem_altmap altmap;
+>  	struct resource res;
+>  	struct percpu_ref *ref;
+> +	struct percpu_ref internal_ref;
+> +	struct completion done;
+>  	struct device *dev;
+>  	enum memory_type type;
+>  	unsigned int flags;
+> diff --git a/kernel/memremap.c b/kernel/memremap.c
+> index eee490e7d7e1..bea6f887adad 100644
+> --- a/kernel/memremap.c
+> +++ b/kernel/memremap.c
+> @@ -29,7 +29,7 @@ static void devmap_managed_enable_put(void *data)
+>  
+>  static int devmap_managed_enable_get(struct device *dev, struct dev_pagemap *pgmap)
+>  {
+> -	if (!pgmap->ops->page_free) {
+> +	if (!pgmap->ops || !pgmap->ops->page_free) {
+>  		WARN(1, "Missing page_free method\n");
+>  		return -EINVAL;
+>  	}
+> @@ -75,6 +75,24 @@ static unsigned long pfn_next(unsigned long pfn)
+>  #define for_each_device_pfn(pfn, map) \
+>  	for (pfn = pfn_first(map); pfn < pfn_end(map); pfn = pfn_next(pfn))
+>  
+> +static void dev_pagemap_kill(struct dev_pagemap *pgmap)
+> +{
+> +	if (pgmap->ops && pgmap->ops->kill)
+> +		pgmap->ops->kill(pgmap);
+> +	else
+> +		percpu_ref_kill(pgmap->ref);
+> +}
+> +
+> +static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+> +{
+> +	if (pgmap->ops && pgmap->ops->cleanup) {
+> +		pgmap->ops->cleanup(pgmap);
+> +	} else {
+> +		wait_for_completion(&pgmap->done);
+> +		percpu_ref_exit(pgmap->ref);
+> +	}
+> +}
+> +
+>  static void devm_memremap_pages_release(void *data)
+>  {
+>  	struct dev_pagemap *pgmap = data;
+> @@ -84,10 +102,10 @@ static void devm_memremap_pages_release(void *data)
+>  	unsigned long pfn;
+>  	int nid;
+>  
+> -	pgmap->ops->kill(pgmap);
+> +	dev_pagemap_kill(pgmap);
+>  	for_each_device_pfn(pfn, pgmap)
+>  		put_page(pfn_to_page(pfn));
+> -	pgmap->ops->cleanup(pgmap);
+> +	dev_pagemap_cleanup(pgmap);
+>  
+>  	/* pages are dead and unused, undo the arch mapping */
+>  	align_start = res->start & ~(SECTION_SIZE - 1);
+> @@ -114,20 +132,29 @@ static void devm_memremap_pages_release(void *data)
+>  		      "%s: failed to free all reserved pages\n", __func__);
+>  }
+>  
+> +static void dev_pagemap_percpu_release(struct percpu_ref *ref)
+> +{
+> +	struct dev_pagemap *pgmap =
+> +		container_of(ref, struct dev_pagemap, internal_ref);
+> +
+> +	complete(&pgmap->done);
+> +}
+> +
+>  /**
+>   * devm_memremap_pages - remap and provide memmap backing for the given resource
+>   * @dev: hosting device for @res
+>   * @pgmap: pointer to a struct dev_pagemap
+>   *
+>   * Notes:
+> - * 1/ At a minimum the res, ref and type and ops members of @pgmap must be
+> - *    initialized by the caller before passing it to this function
+> + * 1/ At a minimum the res and type members of @pgmap must be initialized
+> + *    by the caller before passing it to this function
+>   *
+>   * 2/ The altmap field may optionally be initialized, in which case
+>   *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
+>   *
+> - * 3/ pgmap->ref must be 'live' on entry and will be killed and reaped
+> - *    at devm_memremap_pages_release() time, or if this routine fails.
+> + * 3/ The ref field may optionally be provided, in which pgmap->ref must be
+> + *    'live' on entry and will be killed and reaped at
+> + *    devm_memremap_pages_release() time, or if this routine fails.
+>   *
+>   * 4/ res is expected to be a host memory range that could feasibly be
+>   *    treated as a "System RAM" range, i.e. not a device mmio range, but
+> @@ -175,10 +202,21 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  		break;
+>  	}
+>  
+> -	if (!pgmap->ref || !pgmap->ops || !pgmap->ops->kill ||
+> -	    !pgmap->ops->cleanup) {
+> -		WARN(1, "Missing reference count teardown definition\n");
+> -		return ERR_PTR(-EINVAL);
+> +	if (!pgmap->ref) {
+> +		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
+> +			return ERR_PTR(-EINVAL);
+> +
+> +		init_completion(&pgmap->done);
+> +		error = percpu_ref_init(&pgmap->internal_ref,
+> +				dev_pagemap_percpu_release, 0, GFP_KERNEL);
+> +		if (error)
+> +			return ERR_PTR(error);
+> +		pgmap->ref = &pgmap->internal_ref;
+> +	} else {
+> +		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
+> +			WARN(1, "Missing reference count teardown definition\n");
+> +			return ERR_PTR(-EINVAL);
+> +		}
 
-Compiled and booted on my test system. No dmesg regressions.
+After this series are there any users who continue to supply their own
+reference object and these callbacks?
 
-thanks,
--- Shuah
+As it stands:
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+>  	}
+>  
+>  	if (need_devmap_managed) {
+> @@ -296,8 +334,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>   err_pfn_remap:
+>  	pgmap_array_delete(res);
+>   err_array:
+> -	pgmap->ops->kill(pgmap);
+> -	pgmap->ops->cleanup(pgmap);
+> +	dev_pagemap_kill(pgmap);
+> +	dev_pagemap_cleanup(pgmap);
+>  	return ERR_PTR(error);
+>  }
+>  EXPORT_SYMBOL_GPL(devm_memremap_pages);
+> diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/iomap.c
+> index 82f901569e06..cd040b5abffe 100644
+> --- a/tools/testing/nvdimm/test/iomap.c
+> +++ b/tools/testing/nvdimm/test/iomap.c
+> @@ -100,26 +100,60 @@ static void nfit_test_kill(void *_pgmap)
+>  {
+>  	struct dev_pagemap *pgmap = _pgmap;
+>  
+> -	WARN_ON(!pgmap || !pgmap->ref || !pgmap->ops || !pgmap->ops->kill ||
+> -		!pgmap->ops->cleanup);
+> -	pgmap->ops->kill(pgmap);
+> -	pgmap->ops->cleanup(pgmap);
+> +	WARN_ON(!pgmap || !pgmap->ref);
+> +
+> +	if (pgmap->ops && pgmap->ops->kill)
+> +		pgmap->ops->kill(pgmap);
+> +	else
+> +		percpu_ref_kill(pgmap->ref);
+> +
+> +	if (pgmap->ops && pgmap->ops->cleanup) {
+> +		pgmap->ops->cleanup(pgmap);
+> +	} else {
+> +		wait_for_completion(&pgmap->done);
+> +		percpu_ref_exit(pgmap->ref);
+> +	}
+> +}
+> +
+> +static void dev_pagemap_percpu_release(struct percpu_ref *ref)
+> +{
+> +	struct dev_pagemap *pgmap =
+> +		container_of(ref, struct dev_pagemap, internal_ref);
+> +
+> +	complete(&pgmap->done);
+>  }
+>  
+>  void *__wrap_devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+>  {
+> +	int error;
+>  	resource_size_t offset = pgmap->res.start;
+>  	struct nfit_test_resource *nfit_res = get_nfit_res(offset);
+>  
+> -	if (nfit_res) {
+> -		int rc;
+> -
+> -		rc = devm_add_action_or_reset(dev, nfit_test_kill, pgmap);
+> -		if (rc)
+> -			return ERR_PTR(rc);
+> -		return nfit_res->buf + offset - nfit_res->res.start;
+> +	if (!nfit_res)
+> +		return devm_memremap_pages(dev, pgmap);
+> +
+> +	pgmap->dev = dev;
+> +	if (!pgmap->ref) {
+> +		if (pgmap->ops && (pgmap->ops->kill || pgmap->ops->cleanup))
+> +			return ERR_PTR(-EINVAL);
+> +
+> +		init_completion(&pgmap->done);
+> +		error = percpu_ref_init(&pgmap->internal_ref,
+> +				dev_pagemap_percpu_release, 0, GFP_KERNEL);
+> +		if (error)
+> +			return ERR_PTR(error);
+> +		pgmap->ref = &pgmap->internal_ref;
+> +	} else {
+> +		if (!pgmap->ops || !pgmap->ops->kill || !pgmap->ops->cleanup) {
+> +			WARN(1, "Missing reference count teardown definition\n");
+> +			return ERR_PTR(-EINVAL);
+> +		}
+>  	}
+> -	return devm_memremap_pages(dev, pgmap);
+> +
+> +	error = devm_add_action_or_reset(dev, nfit_test_kill, pgmap);
+> +	if (error)
+> +		return ERR_PTR(error);
+> +	return nfit_res->buf + offset - nfit_res->res.start;
+>  }
+>  EXPORT_SYMBOL_GPL(__wrap_devm_memremap_pages);
+>  
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Linux-nvdimm mailing list
+> Linux-nvdimm@lists.01.org
+> https://lists.01.org/mailman/listinfo/linux-nvdimm
