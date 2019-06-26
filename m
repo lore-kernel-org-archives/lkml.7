@@ -6,149 +6,98 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405D5C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B1BC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142732086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FE3208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561521410;
-	bh=m/TvZtPmYzBwsHH7PDZA6nQYn+T03CeNEhiZVVnWsKY=;
+	s=default; t=1561521490;
+	bh=avFzZ4O2c+/K29+kDv53q6xh6xHapF0kzXoy3BP0j54=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wNLMvvu48Y8Q3Dszddgltjs8bBaOiLqYwx4Uzxnb353quO6A3S8PG84z054qecoEl
-	 qS8QFWoJlbi13xhEe1MvqySsGvU79xWohRXqnA146XEneAnT/DciMs8j7Xyn9+ub4r
-	 SrQKP72i2Y23/chFzQFkfRkYMT428XbCEeEOqKYU=
+	b=KzVK4T8ENd1YxIEqLdtRGCAI57+X33I3IF3oFHuLnHuPPzreWARXf+/M6i4Ye8Lc2
+	 8V7sCuGlWb7AVJnqN/ge/tABad0gM3BqtOTQ/TKMCQaxqiUyILz6hS1XxWgJEvbief
+	 agM1jhT+1kJFSwl+jgQS9zVhj2nrLawi8naWFjvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFZD4s (ORCPT
+        id S1726834AbfFZD6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:56:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42398 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfFZD4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:56:48 -0400
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        id S1726620AbfFZD6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:58:08 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9DEB2168B
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:56:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 017E0208CB
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 03:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561521407;
-        bh=m/TvZtPmYzBwsHH7PDZA6nQYn+T03CeNEhiZVVnWsKY=;
+        s=default; t=1561521488;
+        bh=avFzZ4O2c+/K29+kDv53q6xh6xHapF0kzXoy3BP0j54=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hqIVIEiOJwZdhDQAjpk4J8je2WINB7pB8kOy5+53nJpdRQoCFFAzS9UoK/oUJuVmj
-         d8/Hz60QbKRbQkFSxbFVYOQ5K4Bo0X3gnpSoCcNnR0066qL5c+udfr/f1We43mMJ3F
-         yCJMBQr1TP68VNycX8kFHUH1SXoG3VTxGF8xv3YU=
-Received: by mail-wr1-f43.google.com with SMTP id r16so897189wrl.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 20:56:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAXcHB+92U1esa1YTi/GyeO2CJuBqdg+jvfZUS2FM5vg+B1aWqml
-        wKIRaXeuOTxyo32LW5t//lvHfUqVAlzYaA3hNOo7/Q==
-X-Google-Smtp-Source: APXvYqzBKxXRyJ7+G7lM4wmtqaiyQkbPGzCk4bXMoyeBgLmv7h+moXJc4QyB84kKQyi9VQBMgXJ4YdzUaq1onQW2rF8=
-X-Received: by 2002:adf:f606:: with SMTP id t6mr1202807wrp.265.1561521405326;
- Tue, 25 Jun 2019 20:56:45 -0700 (PDT)
+        b=z9RMt+T/gc0ZJyl8ZFG1PJLgqZxyyIgKqs/T3VSzIasR83pgQC5s3OFDqIT2S1dMk
+         8iCh8oB+uJK2IXVxjXGBM1rD8tnXhlaF170qAb9ImnvkSRTb0zM1NswqZb+UCD9/m0
+         sEe2COBWenM/+LWPhgRBiqS80tW7iPxyNIY6+Cys=
+Received: by mail-wm1-f44.google.com with SMTP id g135so531491wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 20:58:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAWTGEoZgcCgxWCjoZe7OLXnT5N2Ho4Ufglt5bRejuy6TCVYs0rS
+        8kRj73Zn7LY2Lo0l1tqHO36Ctt+zwMu5xRkUEeJxIg==
+X-Google-Smtp-Source: APXvYqxW8KyNHGbrsqLX3wAjZrmO6i7qfo2PeSj40E/NfFtWyBAQxsOTIpZkKpXr/3lBP3MynIAMaAzMcSQC90OFjk4=
+X-Received: by 2002:a7b:c450:: with SMTP id l16mr879120wmi.0.1561521486613;
+ Tue, 25 Jun 2019 20:58:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-7-namit@vmware.com>
- <cb28f2b4-92f0-f075-648e-dddfdbdd2e3c@intel.com> <401C4384-98A1-4C27-8F71-4848F4B4A440@vmware.com>
- <CALCETrWcUWw8ep-n6RaOeojnL924xOM7g7eb9g=3DRwOHQAgnA@mail.gmail.com> <35755C67-E8EB-48C3-8343-BB9ABEB4E32C@vmware.com>
-In-Reply-To: <35755C67-E8EB-48C3-8343-BB9ABEB4E32C@vmware.com>
+References: <20190613064813.8102-1-namit@vmware.com> <20190613064813.8102-9-namit@vmware.com>
+ <aa90347f-d1da-6bd7-dbf0-786f157eb370@intel.com>
+In-Reply-To: <aa90347f-d1da-6bd7-dbf0-786f157eb370@intel.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 25 Jun 2019 20:56:34 -0700
-X-Gmail-Original-Message-ID: <CALCETrUPKj1rRn1bKDYkwZ8cv1navBne72kTCtGHjnhTM0cOVw@mail.gmail.com>
-Message-ID: <CALCETrUPKj1rRn1bKDYkwZ8cv1navBne72kTCtGHjnhTM0cOVw@mail.gmail.com>
-Subject: Re: [PATCH 6/9] KVM: x86: Provide paravirtualized flush_tlb_multi()
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
+Date:   Tue, 25 Jun 2019 20:57:54 -0700
+X-Gmail-Original-Message-ID: <CALCETrVM8GafRLTzbE-3CFjRxhorMeB=s2LYWNuH0nZn8YO2Yw@mail.gmail.com>
+Message-ID: <CALCETrVM8GafRLTzbE-3CFjRxhorMeB=s2LYWNuH0nZn8YO2Yw@mail.gmail.com>
+Subject: Re: [PATCH 8/9] x86/tlb: Privatize cpu_tlbstate
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Nadav Amit <namit@vmware.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 8:41 PM Nadav Amit <namit@vmware.com> wrote:
+On Tue, Jun 25, 2019 at 2:52 PM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> > On Jun 25, 2019, at 8:35 PM, Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > On Tue, Jun 25, 2019 at 7:39 PM Nadav Amit <namit@vmware.com> wrote:
-> >>> On Jun 25, 2019, at 2:40 PM, Dave Hansen <dave.hansen@intel.com> wrot=
-e:
-> >>>
-> >>> On 6/12/19 11:48 PM, Nadav Amit wrote:
-> >>>> Support the new interface of flush_tlb_multi, which also flushes the
-> >>>> local CPU's TLB, instead of flush_tlb_others that does not. This
-> >>>> interface is more performant since it parallelize remote and local T=
-LB
-> >>>> flushes.
-> >>>>
-> >>>> The actual implementation of flush_tlb_multi() is almost identical t=
-o
-> >>>> that of flush_tlb_others().
-> >>>
-> >>> This confused me a bit.  I thought we didn't support paravirtualized
-> >>> flush_tlb_multi() from reading earlier in the series.
-> >>>
-> >>> But, it seems like that might be Xen-only and doesn't apply to KVM an=
-d
-> >>> paravirtualized KVM has no problem supporting flush_tlb_multi().  Is
-> >>> that right?  It might be good to include some of that background in t=
-he
-> >>> changelog to set the context.
-> >>
-> >> I=E2=80=99ll try to improve the change-logs a bit. There is no inheren=
-t reason for
-> >> PV TLB-flushers not to implement their own flush_tlb_multi(). It is le=
-ft
-> >> for future work, and here are some reasons:
-> >>
-> >> 1. Hyper-V/Xen TLB-flushing code is not very simple
-> >> 2. I don=E2=80=99t have a proper setup
-> >> 3. I am lazy
-> >
-> > In the long run, I think that we're going to want a way for one CPU to
-> > do a remote flush and then, with appropriate locking, update the
-> > tlb_gen fields for the remote CPU.  Getting this right may be a bit
-> > nontrivial.
+> On 6/12/19 11:48 PM, Nadav Amit wrote:
+> > cpu_tlbstate is mostly private and only the variable is_lazy is shared.
+> > This causes some false-sharing when TLB flushes are performed.
 >
-> What do you mean by =E2=80=9Cdo a remote flush=E2=80=9D?
+> Presumably, all CPUs doing TLB flushes read 'is_lazy'.  Because of this,
+> when we write to it we have to do the cache coherency dance to get rid
+> of all the CPUs that might have a read-only copy.
 >
+> I would have *thought* that we only do writes when we enter or exist
+> lazy mode.  That's partially true.  We do write in enter_lazy_tlb(), but
+> we also *unconditionally* write in switch_mm_irqs_off().  That seems
+> like it might be responsible for a chunk (or even a vast majority) of
+> the cacheline bounces.
+>
+> Is there anything preventing us from turning the switch_mm_irqs_off()
+> write into:
+>
+>         if (was_lazy)
+>                 this_cpu_write(cpu_tlbstate.is_lazy, false);
+>
+> ?
+>
+> I think this patch is probably still a good general idea, but I just
+> wonder if reducing the writes is a better way to reduce bounces.
 
-I mean a PV-assisted flush on a CPU other than the CPU that started
-it.  If you look at flush_tlb_func_common(), it's doing some work that
-is rather fancier than just flushing the TLB.  By replacing it with
-just a pure flush on Xen or Hyper-V, we're losing the potential CR3
-switch and this bit:
+Good catch!  I'm usually pretty good about this for
+test_and_set()-style things, but I totally missed this obvious
+unnecessary write when I did this.  I hereby apologize for all the
+cycles I wasted :)
 
-        /* Both paths above update our state to mm_tlb_gen. */
-        this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_ge=
-n);
-
-Skipping the former can hurt idle performance, although we should
-consider just disabling all the lazy optimizations on systems with PV
-flush.  (And I've asked Intel to help us out here in future hardware.
-I have no idea what the result of asking will be.)  Skipping the
-cpu_tlbstate write means that we will do unnecessary flushes in the
-future, and that's not doing us any favors.
-
-In principle, we should be able to do something like:
-
-flush_tlb_multi(...);
-for(each CPU that got flushed) {
-  spin_lock(something appropriate?);
-  per_cpu_write(cpu, cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, f->new_tlb_=
-gen);
-  spin_unlock(...);
-}
-
-with the caveat that it's more complicated than this if the flush is a
-partial flush, and that we'll want to check that the ctx_id still
-matches, etc.
-
-Does this make sense?
+--Andy
