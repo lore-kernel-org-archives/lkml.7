@@ -3,129 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E57C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C16C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45BE216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E830F216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfFZS1z (ORCPT
+        id S1726437AbfFZSb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:27:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58425 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZS1y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:27:54 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hgCe7-00050T-T2; Wed, 26 Jun 2019 18:27:51 +0000
-To:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: re: media: staging/imx: Improve pipeline searching (bug report)
-Message-ID: <9b6d7f0e-f191-e5d5-e20b-9244800678fe@canonical.com>
-Date:   Wed, 26 Jun 2019 19:27:51 +0100
+        Wed, 26 Jun 2019 14:31:29 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:48362 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbfFZSb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:31:29 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgChR-0000jK-UL; Wed, 26 Jun 2019 12:31:19 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190624072752.GA3954@lst.de>
+ <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com>
+ <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+Date:   Wed, 26 Jun 2019 12:31:08 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190626065708.GB24531@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Static analysis with Coverity on Linux next has found a potential issue
-with the following commit:
-
-commit 3ef46bc97ca2c918b7657a08220c7340a9bb07a2
-Author: Steve Longerbeam <slongerbeam@gmail.com>
-Date:   Fri May 10 17:50:11 2019 -0400
-
-    media: staging/imx: Improve pipeline searching
 
 
-The issue is in drivers/staging/media/imx/imx-media-utils.c in function
-find_pipeline_entity:
+On 2019-06-26 12:57 a.m., Christoph Hellwig wrote:
+> On Tue, Jun 25, 2019 at 01:54:21PM -0600, Logan Gunthorpe wrote:
+>> Well whether it's dma_addr_t, phys_addr_t, pfn_t the result isn't all
+>> that different. You still need roughly the same 'if' hooks for any
+>> backed memory that isn't in the linear mapping and you can't get a
+>> kernel mapping for directly.
+>>
+>> It wouldn't be too hard to do a similar patch set that uses something
+>> like phys_addr_t instead and have a request and queue flag for support
+>> of non-mappable memory. But you'll end up with very similar 'if' hooks
+>> and we'd have to clean up all bio-using drivers that access the struct
+>> pages directly.
+> 
+> We'll need to clean that mess up anyway, and I've been chugging
+> along doing some of that.  A lot still assume no highmem, so we need
+> to convert them over to something that kmaps anyway.  If we get
+> the abstraction right that will actually help converting over to
+> a better reprsentation.
+> 
+>> Though, we'd also still have the problem of how to recognize when the
+>> address points to P2PDMA and needs to be translated to the bus offset.
+>> The map-first inversion was what helped here because the driver
+>> submitting the requests had all the information. Though it could be
+>> another request flag and indicating non-mappable memory could be a flag
+>> group like REQ_NOMERGE_FLAGS -- REQ_NOMAP_FLAGS.
+> 
+> The assumes the request all has the same memory, which is a simplifing
+> assuption.  My idea was that if had our new bio_vec like this:
+> 
+> struct bio_vec {
+> 	phys_addr_t		paddr; // 64-bit on 64-bit systems
+> 	unsigned long		len;
+> };
+> 
+> we have a hole behind len where we could store flag.  Preferably
+> optionally based on a P2P or other magic memory types config
+> option so that 32-bit systems with 32-bit phys_addr_t actually
+> benefit from the smaller and better packing structure.
 
-        struct media_pad *pad = NULL;
+That seems sensible. The one thing that's unclear though is how to get
+the PCI Bus address when appropriate. Can we pass that in instead of the
+phys_addr with an appropriate flag? Or will we need to pass the actual
+physical address and then, at the map step, the driver has to some how
+lookup the PCI device to figure out the bus offset?
 
-pad is assigned a NULL
+>> If you think any of the above ideas sound workable I'd be happy to try
+>> to code up another prototype.
+> 
+> Іt sounds workable.  To some of the first steps are cleanups independent
+> of how the bio_vec is eventually going to look like.  That is making
+> the DMA-API internals work on the phys_addr_t, which also unifies the
+> map_resource implementation with map_page.  I plan to do that relatively
+> soon.  The next is sorting out access to bios data by virtual address.
+> All these need nice kmapping helper that avoid too much open coding.
+> I was going to look into that next, mostly to kill the block layer
+> bounce buffering code.  Similar things will also be needed at the
+> scatterlist level I think.  After that we need to more audits of
+> how bv_page is still used.  something like a bv_phys() helper that
+> does "page_to_phys(bv->bv_page) + bv->bv_offset" might come in handy
+> for example.
 
-        struct video_device *vfd;
-        struct v4l2_subdev *sd;
+Ok, I should be able to help with that. When I have a chance I'll try to
+look at the bv_phys() helper.
 
-        if (grp_id && is_media_entity_v4l2_subdev(start)) {
-                sd = media_entity_to_v4l2_subdev(start);
-                if (sd->grp_id & grp_id)
-                        return &sd->entity;
-        } else if (buftype && is_media_entity_v4l2_video_device(start)) {
-                vfd = media_entity_to_video_device(pad->entity);
-
-..and above the null pad is being dereferenced causing a kernel oops.
-
-                if (buftype == vfd->queue->type)
-                        return &vfd->entity;
-        }
-
-
-Colin
+Logan
