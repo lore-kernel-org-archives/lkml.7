@@ -2,315 +2,248 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB59C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F003C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8882086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83B12086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:00:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="EAlTFutW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CWsYS3aA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfFZJ64 (ORCPT
+        id S1726948AbfFZKA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:58:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37029 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbfFZJ6y (ORCPT
+        Wed, 26 Jun 2019 06:00:28 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59323 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbfFZKA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:58:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v14so1984280wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tjBuCo45aFxoqpSrVx4ZG9vODgjxwNAjmtTCo5fxvkQ=;
-        b=EAlTFutWxgWZ7+ncUu0zZwKoW3CWhWO7sd8A25Kfpjs9OhPCDdH4gfXet83NxIUWF6
-         UPmejX3OgZl0Gw2kR28ajfZdW9g8xoZOHReDNu99OPvSzhDNuwu2X7Nas7tu7wHEELq6
-         COJLaoIMWCa2CdwV9+2cA92YhWbKQQkburyGohrfIw/w4CsOSxGYn92M76RlEazUdssC
-         KR8xbaJn70TnYUQRMExeoLuMASdcuA6/8QYdE5fMGqetfnQIdMhXVdRu7Sawvrrw59nK
-         uFWsTD41k418zySz4Mar86G1JGq+ol5DMw2jDbW0jRgnIcZZGNdroHJRdZKpD4bbqOr7
-         Amrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tjBuCo45aFxoqpSrVx4ZG9vODgjxwNAjmtTCo5fxvkQ=;
-        b=Is15C2HijLOsFYQYGaCCYpb/mc6a9ekTuspMQuuqXr0BQ6orqHTOF4ZnpsG6Je0Shw
-         2qnGfe9Ay+pz77R/2vXtDxC5qszW7o4iGcsLTxaeypZjQqhW9dhj8k33FIlTpsx9uSQS
-         RGh9/+KZfn95Y5wjkpzSJ9jDEFhAa67v1Kn+Rr+TmqzuOiLakss40MckkccKvO3lNI6K
-         gEqJ0dTv4Gf+plxBMyDCQQ1H3BqHr99SDKGhQAO00d15OoTbmkbqkRpxRWpAj1c08iWz
-         hfUIewhAtrifCUf/D6bRs0Pi62jL2xD4VJiLTd4mt3v7Uey+2Kpt0PpZrY6F8JPOv/RO
-         wxvg==
-X-Gm-Message-State: APjAAAVa7eLvmLWGIW2nxM9uw9tgr2AO1W7JgWiqj/lEYeglI8PFQMUn
-        ooVBjFHJg7hQImAC7y5RbCB6Vw==
-X-Google-Smtp-Source: APXvYqxxoJNHZqY3PaivUes61P8pElYQOnvhlerzfEETE9SnONfm0bSHyXlTDQIv1MKSwBoZBlUitg==
-X-Received: by 2002:adf:dd51:: with SMTP id u17mr2821336wrm.218.1561543131204;
-        Wed, 26 Jun 2019 02:58:51 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id w2sm15971588wrr.31.2019.06.26.02.58.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 02:58:50 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 11:58:49 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, raven@themaw.net, mszeredi@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/25] vfs: syscall: Add fsinfo() to query filesystem
- information [ver #14]
-Message-ID: <20190626095848.fwcepme3cpwdluwz@brauner.io>
-References: <20190625082822.l4pz33dwzvotboe4@brauner.io>
- <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
- <156138533403.25627.4606280739806094239.stgit@warthog.procyon.org.uk>
- <7560.1561542552@warthog.procyon.org.uk>
+        Wed, 26 Jun 2019 06:00:28 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190626100026euoutp027bdd2148ff6453199e1d8f8fd42e18ed~rt0qFEMh01032210322euoutp02B
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:00:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190626100026euoutp027bdd2148ff6453199e1d8f8fd42e18ed~rt0qFEMh01032210322euoutp02B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561543226;
+        bh=NXk7oMxfNi8v62zBDMwYKSvviDEB9B4rrPkjTqeXUZw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=CWsYS3aAPDeWoNyU7ZOeIvyjY4NqPOu/K+zES5OHlZ6iP/xJxOU9HmUkjObwzUfVk
+         FtzktVrHHE5nhtugcV/RbVG5R/6oyauuLXXNBXNaVv4paLVB7TfDfbwhey0FnX+7St
+         OolL3Q36fGNv8y2eSoO3NriUQsUxcQf5HNzSiMhg=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190626100025eucas1p1a1f3de16455e64a44e48c23f0841ed7a~rt0pYMulO2493024930eucas1p1J;
+        Wed, 26 Jun 2019 10:00:25 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 03.42.04298.932431D5; Wed, 26
+        Jun 2019 11:00:25 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190626100025eucas1p1b18062e095d4bc44017721646d475d23~rt0or6Bkz1345913459eucas1p1h;
+        Wed, 26 Jun 2019 10:00:25 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190626100024eusmtrp2ff0747e5e34d7789be0f9a3e80301a27~rt0odrHTJ0845208452eusmtrp23;
+        Wed, 26 Jun 2019 10:00:24 +0000 (GMT)
+X-AuditID: cbfec7f2-f13ff700000010ca-77-5d134239b2b7
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 47.31.04140.832431D5; Wed, 26
+        Jun 2019 11:00:24 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190626100023eusmtip1e80c72d0809655698352fc2900193d45~rt0ncfrhv0183901839eusmtip1a;
+        Wed, 26 Jun 2019 10:00:23 +0000 (GMT)
+Subject: Re: [PATCH v2 1/2] drm/bridge/synopsys: dw-hdmi: Handle audio for
+ more clock rates
+From:   Andrzej Hajda <a.hajda@samsung.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Dylan Reid <dgreid@chromium.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>
+Message-ID: <fe8bb0f7-5ef1-4750-8b1a-f05c0f3469e0@samsung.com>
+Date:   Wed, 26 Jun 2019 12:00:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7560.1561542552@warthog.procyon.org.uk>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <a94d9554-fc93-a2d0-9a30-9604db8c123e@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcRzH+z6/7nGcHkfddxJzq7WayNbWU0ll/fH80aota0rSlWeIQ/eg
+        0OYyTOykVObH6I+TH2OJHG41OubHOB1iYkZSw9w07ghD7h6W/16f7/vz/n4/78++JCqew53J
+        8KhYVhEli5QSQkzTvtJ7/LSfY9CJlNcHaVVvF0KrNB8QuqRzhKD1774Q9DfzPEHPTbah9ODy
+        DEp3zQ1i9LMXagE9oC0i6IWJTZSemGkGtC47kC5fqQf0WI0eXNjLzA+nCZjiqiSmUNmHMYUZ
+        +TjTmdOPMA1LEzgzntWBMHXqZEb9ZpBgWlS5GLNY63rN9pbQJ4SNDI9nFV6+d4Vh3XmTRMzn
+        Q49XDKNACYwumcCGhNRJ2DXzCskEQlJMlQO41DCL84UJQLO2keCLRQD/KMvQTEBaLbnLpMUt
+        psoALFvdz/cYAcx/Pk1YBEcqCOo7TaiFCeooXK/7bj132uLfyhnUYkCpIQyWtJoRiyCifGG6
+        udrKGHUYatP7rIZ9VAA0NdUCvscBduVPYRa2oc7DXM2AwMIo5QYbjEUozxI4MlWC8NnySZg2
+        6sfzJZj1VY3z7AhnOz4KeHaBm007/clwvDzVOhykMgCsr2lCeeEsbO3owy3p0a0E77Ve/PFF
+        2DNchfNLsYfDRgd+BHv4UpO3vSsRzEgX893ucFxfv32hBJYazEQOkBbsClawK0zBrjAF/999
+        C7BKIGHjOHkoy3lHsY88OZmci4sK9bwfLa8FW3+we6NjoRGY++/pAEUCqZ1I6SYOEuOyeC5B
+        rgOQRKVOolIZFSQWhcgSEllFdLAiLpLldOAAiUkloqQ9E4FiKlQWy0awbAyr2FER0sZZCYLP
+        rUr7Kk4ZdKF1xRU1DWvxt5+uxLa0f/p5Vc6MtkaMJpZm3+mJzHT8MZiuK5J4Ltnh1UcmbYVs
+        TmBziNZdI/BY+1UdeOWJyuNGS8r1inZJpavwTOtfqZPBTq9ipzt95P5go+Vh25hpqNoVqX+Q
+        d5PzXTIY/VNLA0zrXmZwWYpxYTLvY6iCk/0DvB5A1X8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42I5/e/4XV0LJ+FYg63b5S16z51ksujdtpHJ
+        Yv6JW2wWZ5cdZLO48vU9m8WbR0eYLa5+f8lscfLNVRaLzolL2C0u75rDZvHpwX9miwcv9zNa
+        HOqLtljxcyujxd0NZxkd+D3e32hl95i3ptpjdsNFFo/ZHTNZPU5MuMTksf3bA1aP+93HmTw2
+        L6n3WDLtKpvHgd7JLB6fN8kFcEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZ
+        Kunb2aSk5mSWpRbp2yXoZZye/oitYK9Kxc8LtxkbGN/KdDFycEgImEhM/s7RxcjFISSwlFHi
+        R9dB9i5GTqC4uMTu+W+ZIWxhiT/XuthAbCGB14wSa3+og9jCArESZ098AathE9CU+Lv5JliN
+        CJD9rOElM8hQZoEbLBLrJi1lg9hwgEniyO8+FpAqXgE7ibava5lAbBYBVYldbRfBukUFIiRm
+        72qAqhGUODnzCZjNKWAvMXnbZbDrmAXUJf7Mu8QMYctLbH87B8oWl7j1ZD7TBEahWUjaZyFp
+        mYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECY3/bsZ9bdjB2vQs+xCjAwajE
+        w9sgLxQrxJpYVlyZe4hRgoNZSYR3aaJArBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA9NS
+        Xkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGRoX1rseXcF3MWiX5
+        gvu4yz/HYH5NO+cpv2dbLglvD2h+/ctsQtOKdV/mnxZ7d6FXj1fE+F9Al8vNFatb7lZuWX1r
+        0vxE1+emcx6UuJo4/Gmcd7ZseVm7QvXKn573Jc5Lt8g915UX2dTxwMtoIZfeHM41aZ//MH96
+        qV6+53HH/2uOG0UmKr7uXafEUpyRaKjFXFScCABrNH79EwMAAA==
+X-CMS-MailID: 20190626100025eucas1p1b18062e095d4bc44017721646d475d23
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190619211151epcas3p4dbb163c034afa4063869c761b93e24b1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190619211151epcas3p4dbb163c034afa4063869c761b93e24b1
+References: <CGME20190619211151epcas3p4dbb163c034afa4063869c761b93e24b1@epcas3p4.samsung.com>
+        <20190619210718.134951-1-dianders@chromium.org>
+        <bec87373-48cc-0c55-9662-a74a7d2a47a0@samsung.com>
+        <CAD=FV=WJBkYfRznh6aAyvgKgHb8-AG0hMORdKA0BXCL89wG_7w@mail.gmail.com>
+        <a94d9554-fc93-a2d0-9a30-9604db8c123e@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 10:49:12AM +0100, David Howells wrote:
-> Christian Brauner <christian@brauner.io> wrote:
-> 
-> > > +	return sizeof(*p);
-> > 
-> > Hm, the discrepancy between the function signature returning int and
-> > the sizeof operator most likely being size_t is bothering me. It
-> > probably doesn't matter but maybe we can avoid that.
-> 
-> If sizeof(*p) exceeds 4096, the buffer is going to have been overrun by this
-> point anyway.
+On 26.06.2019 11:56, Andrzej Hajda wrote:
+> On 25.06.2019 18:26, Doug Anderson wrote:
+>> Hi,
+>>
+>>
+>> On Tue, Jun 25, 2019 at 9:07 AM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>> On 19.06.2019 23:07, Douglas Anderson wrote:
+>>>> Let's add some better support for HDMI audio to dw_hdmi.
+>>>> Specifically:
+>>>>
+>>>> 1. For 44.1 kHz audio the old code made the assumption that an N of
+>>>> 6272 was right most of the time.  That wasn't true and the new table
+>>>> should pick a more ideal value.
+>>> Why? I ask because it is against recommendation from HDMI specs.
+>> The place where it does matter (and why I originally did this work) is
+>> when you don't have auto-CTS.  In such a case you really need "N" and
+>> "CTS" to make the math work and both be integral.  This makes sure
+>> that you don't slowly accumulate offsets.  I'm hoping that this point
+>> should be non-controversial so I won't argue it more.
+>>
+>> I am an admitted non-expert, but I have a feeling that with Auto-CTS
+>> either the old number or the new numbers would produce pretty much the
+>> same experience.
+>
+> Because Auto-CTS mechanism will alternate between two or more CTS values
+> every frame, thus it will compensate non-rational clock relationship.
+>
+>
+>>   AKA: anyone using auto-CTS won't notice any change
+>> at all.  I guess the question is: with Auto-CTS should you pick the
+>> "ideal" 6272 or a value that allows CTS to be the closest to integral
+>> as possible.  By reading between the lines of the spec, I decided that
+>> it was slightly more important to allow for an integral CTS.  If
+>> achieving an integral CTS wasn't a goal then the spec wouldn't even
+>> have listed special cases for any of the clock rates.  We would just
+>> be using the ideal N and Auto-CTS and be done with it.  The whole
+>> point of the tables they list is to make CTS integral.
+>
+> Specification recommends many contradictory things without explicit
+> prioritization, at least I have not found it.
+>
+> So we should relay on our intuition.
+>
+> I guess that with auto-cts N we should follow recommendation - I guess
+> most sinks have been better tested with recommended values.
+>
+> So what with non-auto-cts case:
+>
+> 1. How many devices do not have auto-cts? how many alternative TMDS
+> clocks we have? Maybe it is theoretical problem.
+>
+> 2. Alternating CTS in software is possible, but quite
+> complicated/annoying, but at least it will follow recommendation :)
+>
+>
+> Regards
+>
+> Andrzej
+>
+>
+>>
+>>>> 2. The new table has values from the HDMI spec for 297 MHz and 594
+>>>> MHz.
+>>>>
+>>>> 3. There is now code to try to come up with a more idea N/CTS for
+>>>> clock rates that aren't in the table.  This code is a bit slow because
+>>>> it iterates over every possible value of N and picks the best one, but
+>>>> it should make a good fallback.
+>>>>
+>>>> NOTES:
+>>>> - The oddest part of this patch comes about because computing the
+>>>>   ideal N/CTS means knowing the _exact_ clock rate, not a rounded
+>>>>   version of it.  The drm framework makes this harder by rounding
+>>>>   rates to kHz, but even if it didn't there might be cases where the
+>>>>   ideal rate could only be calculated if we knew the real
+>>>>   (non-integral) rate.  This means that in cases where we know (or
+>>>>   believe) that the true rate is something other than the rate we are
+>>>>   told by drm.
+>>>> - This patch makes much less of a difference after the patch
+>>>>   ("drm/bridge: dw-hdmi: Use automatic CTS generation mode when using
+>>>>   non-AHB audio"), at least if you're using I2S audio.  The main goal
+>>>>   of picking a good N is to make it possible to get a nice integral
+>>>>   CTS value, but if CTS is automatic then that's much less critical.
+>>> As I said above HDMI recommendations are different from those from your
+>>> patch. Please elaborate why?
+>>>
+>>> Btw I've seen your old patches introducing recommended N/CTS calculation
+>>> helpers in HDMI framework, unfortunately abandoned due to lack of interest.
+>>>
+>>> Maybe resurrecting them would be a good idea, with assumption there will
+>>> be users :)
+>> I have old patches introducing this into the HDMI framework?  I don't
+>> remember them / can't find them.  Can you provide a pointer?
 
-Ok.
 
-> 
-> The function can't return size_t, though it could return ssize_t.  I could
-> switch it to return long or even store the result in fsinfo_kparams::usage and
-> return 0.
-> 
-> > > +	strlcpy(p->f_fs_name, path->dentry->d_sb->s_type->name,
-> > > +		sizeof(p->f_fs_name));
-> > 
-> > Truncation is acceptable or impossible I assume?
-> 
-> I'm hoping that file_system_type::name isn't going to exceed 15 chars plus
-> NUL.  If it does, it will be truncated.  I don't really want to add an
-> individual attribute just for the filesystem driver name.
-> 
-> > > +#define _gen(X, Y) FSINFO_ATTR_##X: return fsinfo_generic_##Y(path, params->buffer)
-> > 
-> > I'm really not sure that this helps readability in the switch below... :)
-> > 
-> > > +
-> > > +	switch (params->request) {
-> > > +	case _gen(STATFS,		statfs);
-> > > +	case _gen(IDS,			ids);
-> > > +	case _gen(LIMITS,		limits);
-> > > +	case _gen(SUPPORTS,		supports);
-> > > +	case _gen(CAPABILITIES,		capabilities);
-> > > +	case _gen(TIMESTAMP_INFO,	timestamp_info);
-> > > ...
-> 
-> I'm trying to avoid having to spend multiple lines per case and tabulation
-> makes things easier to read.  So
-> 
-> 	case FSINFO_ATTR_SUPPORTS:		return fsinfo_generic_supports(path, params->buffer);
-> 	case FSINFO_ATTR_CAPABILITIES:		return fsinfo_generic_capabilities(path, params->buffer);
-> 	case FSINFO_ATTR_TIMESTAMP_INFO:	return fsinfo_generic_timestamp_info(path, params->buffer);
-> 
-> is a bit on the long side per line, whereas:
-> 
-> 	case FSINFO_ATTR_SUPPORTS:
-> 		return fsinfo_generic_supports(path, params->buffer);
-> 	case FSINFO_ATTR_CAPABILITIES:
-> 		return fsinfo_generic_capabilities(path, params->buffer);
-> 	case FSINFO_ATTR_TIMESTAMP_INFO:
-> 		return fsinfo_generic_timestamp_info(path, params->buffer);
-> 
-> is less readable by interleaving two of the three columns.  (Note that _gen is
-> a actually third column as I introduce alternatives later).
-> 
-> > > +		if (ret <= (int)params->buf_size)
-> > 
-> > He, and this is where the return value discrepancy hits again. Just
-> > doesn't look nice tbh. :)
-> 
-> No.  That's dealing with signed/unsigned comparison.  It might be better if I
-> change this to:
-> 
-> 		if (IS_ERR_VALUE(ret))
-> 			return ret; /* Error */
-> 		if ((unsigned int)ret <= params->buf_size)
-> 			return ret; /* It fitted */
-> 
-> In any case, buf_size isn't permitted to be larger than INT_MAX due to a check
-> later in the loop.
-> 
-> > > +		kvfree(params->buffer);
-> > 
-> > That means callers should always memset fsinfo_kparams or this is an
-> > invalid free...
-> 
-> vfs_info() isn't a public function.  And, in any case, the caller *must*
-> provide a buffer here.
-> 
-> > > + * Return buffer information by requestable attribute.
-> > > + *
-> > > + * STRUCT indicates a fixed-size structure with only one instance.
-> > > ...
-> > I honestly have a hard time following the documentation here
-> 
-> How about:
-> 
->  * STRUCT	- a fixed-size structure with only one instance.
->  * STRUCT_N	- a sequence of STRUCTs, indexed by Nth
->  * STRUCT_NM	- a sequence of sequences of STRUCTs, indexed by Nth, Mth
->  * STRING	- a string with only one instance.
->  * STRING_N	- a sequence of STRING, indexed by Nth
->  * STRING_NM	- a sequence of sequences of STRING, indexed by Nth, Mth
->  * OPAQUE	- a blob that can be larger than 4K.
->  * STRUCT_ARRAY - an array of structs that can be larger than 4K
-> 
-> > and that monster table/macro thing below.  For example, STRUCT_NM
-> > corresponds to __FSINFO_NM or what?
-> 
-> STRUCT_NM -> .type = __FSINFO_STRUCT, .flags = __FSINFO_NM, .size = ...
-> 
-> If you think this is bad, you should try looking at the device ID tables used
-> by the drivers and the attribute tables;-)
-> 
-> I could spell out the flag and type in the macro defs (such as the body of
-> FSINFO_STRING(X,Y) for instance).  It would make it harder to compare macros
-> as it wouldn't then tabulate, though.
-> 
-> > And is this uapi as you're using this in your samples/test below?
-> 
-> Not exactly.  Each attribute is defined as being a certain type in the
-> documentation in the UAPI header, but this is not coded there.  The assumption
-> being that if you're using a particular attribute, you'll know what the type
-> of the attribute is and you'll structure your code appropriately.
-> 
-> The reason the sample code has this replicated is that it doesn't really
-> attempt to interpret the type per se.  It has a dumper for an individual
-> attribute value, but the table tells it whether there should be one of those,
-> N of those or N of M(0), M(1), M(2), ... of those so that it can report an
-> error if it doesn't see what it expects.
-> 
-> I could even cheaply provide a meta attribute that dumps the contents of the
-> table (just the type info, not the names).
-> 
-> > > ...
-> > > +	FSINFO_STRING		(NAME_ENCODING,		-),
-> > > +	FSINFO_STRING		(NAME_CODEPAGE,		-),
-> > > +};
-> > 
-> > Can I complain again that this is really annoying to parse.
-> 
-> Apparently you can;-)  What would you prefer?  This:
-> 
-> static const struct fsinfo_attr_info fsinfo_buffer_info[FSINFO_ATTR__NR] = {
-> 	[FSINFO_STATFS] = {
-> 		.type	= __FSINFO_STRUCT,
-> 		.size	= sizeof(struct fsinfo_statfs),
-> 	},
-> 	[FSINFO_SERVERS] = {
-> 		.type	= __FSINFO_STRUCT,
-> 		.flags	= __FSINFO_NM,
-> 		.size	= sizeof(struct fsinfo_server),
-> 	},
-> 	...
-> };	
-> 
-> That has 3-5 lines for each 1 in the current code and isn't a great deal more
-> readable.
+And forgot answer this:
 
-Really, I find this more readable because parsing structs and arrays of
-structs is probably still even more common for C programmers then
-deciphering nested macros. :) But I won't enforce my own pov. :)
+My mistake the patches were by Arnaud Pouliquen[1].
 
-> 
-> > if (copy_to_user()) and if (clear_user()) and not if (clear_user() != 0)
-> 
-> Better "if (copy_to_user() != 0)" since it's not a boolean return value in
-> either case.
-> 
-> > Nit: There's a bunch of name inconsistency for the arguments between the
-> > stub and the definition:
-> > 
-> > SYSCALL_DEFINE5(fsinfo,
-> > 		int, dfd, const char __user *, filename,
-> > 		struct fsinfo_params __user *, _params,
-> > 		void __user *, user_buffer, size_t, user_buf_size)
-> 
-> Yeah.  C just doesn't care.
-> 
-> I'll change filename to pathname throughout.  That's at least consistent with
-> various glibc manpages for other vfs syscalls.
-> 
-> _params I can change to params and params as-was to kparams.
-> 
-> But user_buffer and user_buf_size, I'll keep as I've named them such to avoid
-> confusion with kparams->buffer and kparams->scratch_buffer.  However, I
-> wouldn't want to call them that in the UAPI.
+[1]: https://patchwork.kernel.org/patch/8906791/
 
-Yep, it's really just that I prefer the naming to be consistent. :)
 
-> 
-> > Do we do SPDX that way? Or isn't this just supposed to be:
-> > // <spdxy stuff>
-> 
-> Look in, say, include/uapi/linux/stat.h or .../fs.h.
-> 
-> > > +	FSINFO_ATTR__NR
-> > 
-> > Nit/Bikeshed: FSINFO_ATTR_MAX? Seems more intuitive.
-> 
-> No.  That would imply a limit that it will never exceed.
-> 
-> > > +struct fsinfo_u128 {
-> > > +#if defined(__BYTE_ORDER) ? __BYTE_ORDER == __BIG_ENDIAN : defined(__BIG_ENDIAN)
-> > > +	__u64	hi;
-> > > +	__u64	lo;
-> > > +#elif defined(__BYTE_ORDER) ? __BYTE_ORDER == __LITTLE_ENDIAN : defined(__LITTLE_ENDIAN)
-> > > +	__u64	lo;
-> > > +	__u64	hi;
-> > > +#endif
-> > > +};
-> > 
-> > Hm, I know why you do this custom fsinfo_u128 thingy but for userspace
-> > that is going to be annoying to operate with, e.g. comparing the
-> > size/space of two filesystems etc.
-> 
-> We don't have a __u128 in the UAPI, and I'm reluctant to use __uint128_t.
-> 
-> Do you have a better suggestion?
-> 
-> > > +struct fsinfo_ids {
-> > > +	char	f_fs_name[15 + 1];	/* Filesystem name */
-> > 
-> > You should probably make this a macro so userspace can use it in fs-name
-> > length checks too.
-> 
-> The name length, you mean?  Well, you can use sizeof...
-> 
-> > > +	FSINFO_CAP__NR
-> > 
-> > Hm, again, maybe better to use FSINFO_CAP_MAX?
-> 
-> It's not a limit.
+Regards
 
-Well, in both cases it's giving the limit of currently supported
-attributes. Other places in the kernel do the same (netlink for
-example). Anyway, it probably doesn't matter that much.
+Andrzej
 
-Christian
+
+
+>>
+>> -Doug
+>>
+>>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
