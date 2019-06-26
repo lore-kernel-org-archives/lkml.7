@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92409C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AD1C48BDA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D29217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A11A21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfFZRvP (ORCPT
+        id S1726650AbfFZRvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:51:15 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49817 "EHLO mga01.intel.com"
+        Wed, 26 Jun 2019 13:51:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49814 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbfFZRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726519AbfFZRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 13:51:10 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:51:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
-   d="scan'208";a="337288588"
+   d="scan'208";a="337288591"
 Received: from rchatre-s.jf.intel.com ([10.54.70.76])
   by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 10:51:08 -0700
 From:   Reinette Chatre <reinette.chatre@intel.com>
@@ -34,9 +34,9 @@ To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
 Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
         linux-kernel@vger.kernel.org,
         Reinette Chatre <reinette.chatre@intel.com>
-Subject: [PATCH 03/10] x86/resctrl: Constrain C-states during pseudo-lock region init
-Date:   Wed, 26 Jun 2019 10:48:42 -0700
-Message-Id: <04ad4da021a81e182cc056a9608a2c731635ee1b.1561569068.git.reinette.chatre@intel.com>
+Subject: [PATCH 04/10] x86/resctrl: Set cache line size using new utility
+Date:   Wed, 26 Jun 2019 10:48:43 -0700
+Message-Id: <4f97fcb9c4bd36d5378b6bf3c67710dcf2b53be3.1561569068.git.reinette.chatre@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <cover.1561569068.git.reinette.chatre@intel.com>
 References: <cover.1561569068.git.reinette.chatre@intel.com>
@@ -47,152 +47,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CPUs associated with a pseudo-locked cache region are prevented
-from entering C6 and deeper C-states to ensure that the
-power savings associated with those C-states cannot impact
-the pseudo-locked region by forcing the pseudo-locked memory to
-be evicted.
+In preparation for support of pseudo-locked regions spanning two
+cache levels the cache line size computation is moved to a utility.
 
-When supporting pseudo-locked regions that span L2 and L3 cache
-levels it is not necessary to prevent all CPUs associated with both
-cache levels from entering deeper C-states. Instead, only the
-CPUs associated with the L2 cache need to be limited. This would
-potentially result in more power savings since another L2 cache
-that does not have a pseudo-locked region but share the L3 cache
-would be able to enter power savings.
-
-In preparation for limiting the C-states only where required the code to
-do so is moved to earlier in the pseudo-lock region initialization.
-Moving this code has the consequence that its actions need to be undone
-in more error paths. This is accommodated by moving the C-state cleanup
-code to the generic cleanup code (pseudo_lock_region_clear()) and
-ensuring that the C-state cleanup code can handle the case when C-states
-have not yet been constrained.
-
-Also in preparation for limiting the C-states only on required CPUs the
-function now accepts a parameter that specifies which CPUs should have
-their C-states constrained - at this time the parameter is still used
-for all CPUs associated with the pseudo-locked region.
+Setting of the cache line size is moved a few lines earlier, before
+the C-states are constrained, to reduce the amount of cleanup needed
+on failure.
 
 Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 30 ++++++++++++-----------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 42 +++++++++++++++++------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 604c0e3bcc83..519057b6741f 100644
+index 519057b6741f..3d73b08871cc 100644
 --- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
 +++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -175,6 +175,9 @@ static void pseudo_lock_cstates_relax(struct pseudo_lock_region *plr)
- {
- 	struct pseudo_lock_pm_req *pm_req, *next;
- 
-+	if (list_empty(&plr->pm_reqs))
-+		return;
-+
- 	list_for_each_entry_safe(pm_req, next, &plr->pm_reqs, list) {
- 		dev_pm_qos_remove_request(&pm_req->req);
- 		list_del(&pm_req->list);
-@@ -184,6 +187,8 @@ static void pseudo_lock_cstates_relax(struct pseudo_lock_region *plr)
- 
- /**
-  * pseudo_lock_cstates_constrain - Restrict cores from entering C6
-+ * @plr: pseudo-lock region requiring the C-states to be restricted
-+ * @cpu_mask: the CPUs that should have their C-states restricted
-  *
-  * To prevent the cache from being affected by power management entering
-  * C6 has to be avoided. This is accomplished by requesting a latency
-@@ -197,13 +202,14 @@ static void pseudo_lock_cstates_relax(struct pseudo_lock_region *plr)
-  * may be set to map to deeper sleep states. In this case the latency
-  * requirement needs to prevent entering C2 also.
-  */
--static int pseudo_lock_cstates_constrain(struct pseudo_lock_region *plr)
-+static int pseudo_lock_cstates_constrain(struct pseudo_lock_region *plr,
-+					 struct cpumask *cpu_mask)
- {
- 	struct pseudo_lock_pm_req *pm_req;
- 	int cpu;
- 	int ret;
- 
--	for_each_cpu(cpu, &plr->d->cpu_mask) {
-+	for_each_cpu(cpu, cpu_mask) {
- 		pm_req = kzalloc(sizeof(*pm_req), GFP_KERNEL);
- 		if (!pm_req) {
- 			rdt_last_cmd_puts("Failure to allocate memory for PM QoS\n");
-@@ -251,6 +257,7 @@ static void pseudo_lock_region_clear(struct pseudo_lock_region *plr)
- 		plr->d->plr = NULL;
- 	plr->d = NULL;
- 	plr->cbm = 0;
-+	pseudo_lock_cstates_relax(plr);
- 	plr->debugfs_dir = NULL;
+@@ -101,6 +101,30 @@ static u64 get_prefetch_disable_bits(void)
+ 	return 0;
  }
  
-@@ -292,6 +299,10 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
++/**
++ * get_cache_line_size - Determine the cache coherency line size
++ * @cpu: CPU with which cache is associated
++ * @level: Cache level
++ *
++ * Context: @cpu has to be online.
++ * Return: The cache coherency line size for cache level @level associated
++ * with CPU @cpu. Zero on failure.
++ */
++static unsigned int get_cache_line_size(unsigned int cpu, int level)
++{
++	struct cpu_cacheinfo *ci;
++	int i;
++
++	ci = get_cpu_cacheinfo(cpu);
++
++	for (i = 0; i < ci->num_leaves; i++) {
++		if (ci->info_list[i].level == level)
++			return ci->info_list[i].coherency_line_size;
++	}
++
++	return 0;
++}
++
+ /**
+  * pseudo_lock_minor_get - Obtain available minor number
+  * @minor: Pointer to where new minor number will be stored
+@@ -281,9 +305,7 @@ static void pseudo_lock_region_clear(struct pseudo_lock_region *plr)
+  */
+ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ {
+-	struct cpu_cacheinfo *ci;
+ 	int ret;
+-	int i;
+ 
+ 	/* Pick the first cpu we find that is associated with the cache. */
+ 	plr->cpu = cpumask_first(&plr->d->cpu_mask);
+@@ -295,7 +317,12 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ 		goto out_region;
+ 	}
+ 
+-	ci = get_cpu_cacheinfo(plr->cpu);
++	plr->line_size = get_cache_line_size(plr->cpu, plr->r->cache_level);
++	if (plr->line_size == 0) {
++		rdt_last_cmd_puts("Unable to determine cache line size\n");
++		ret = -1;
++		goto out_region;
++	}
  
  	plr->size = rdtgroup_cbm_to_size(plr->r, plr->d, plr->cbm);
  
-+	ret = pseudo_lock_cstates_constrain(plr, &plr->d->cpu_mask);
-+	if (ret < 0)
-+		goto out_region;
-+
- 	for (i = 0; i < ci->num_leaves; i++) {
- 		if (ci->info_list[i].level == plr->r->cache_level) {
- 			plr->line_size = ci->info_list[i].coherency_line_size;
-@@ -1284,12 +1295,6 @@ int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp)
+@@ -303,15 +330,8 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
  	if (ret < 0)
- 		return ret;
+ 		goto out_region;
  
--	ret = pseudo_lock_cstates_constrain(plr);
--	if (ret < 0) {
--		ret = -EINVAL;
--		goto out_region;
+-	for (i = 0; i < ci->num_leaves; i++) {
+-		if (ci->info_list[i].level == plr->r->cache_level) {
+-			plr->line_size = ci->info_list[i].coherency_line_size;
+-			return 0;
+-		}
 -	}
--
- 	plr->thread_done = 0;
++	return 0;
  
- 	thread = kthread_create_on_node(pseudo_lock_fn, rdtgrp,
-@@ -1298,7 +1303,7 @@ int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp)
- 	if (IS_ERR(thread)) {
- 		ret = PTR_ERR(thread);
- 		rdt_last_cmd_printf("Locking thread returned error %d\n", ret);
--		goto out_cstates;
-+		goto out_region;
- 	}
- 
- 	kthread_bind(thread, plr->cpu);
-@@ -1316,13 +1321,13 @@ int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp)
- 		 * empty pseudo-locking loop.
- 		 */
- 		rdt_last_cmd_puts("Locking thread interrupted\n");
--		goto out_cstates;
-+		goto out_region;
- 	}
- 
- 	ret = pseudo_lock_minor_get(&new_minor);
- 	if (ret < 0) {
- 		rdt_last_cmd_puts("Unable to obtain a new minor number\n");
--		goto out_cstates;
-+		goto out_region;
- 	}
- 
- 	/*
-@@ -1379,8 +1384,6 @@ int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp)
- out_debugfs:
- 	debugfs_remove_recursive(plr->debugfs_dir);
- 	pseudo_lock_minor_release(new_minor);
--out_cstates:
--	pseudo_lock_cstates_relax(plr);
+-	ret = -1;
+-	rdt_last_cmd_puts("Unable to determine cache line size\n");
  out_region:
  	pseudo_lock_region_clear(plr);
- out:
-@@ -1414,7 +1417,6 @@ void rdtgroup_pseudo_lock_remove(struct rdtgroup *rdtgrp)
- 		goto free;
- 	}
- 
--	pseudo_lock_cstates_relax(plr);
- 	debugfs_remove_recursive(rdtgrp->plr->debugfs_dir);
- 	device_destroy(pseudo_lock_class, MKDEV(pseudo_lock_major, plr->minor));
- 	pseudo_lock_minor_release(plr->minor);
+ 	return ret;
 -- 
 2.17.2
 
