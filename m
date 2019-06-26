@@ -2,219 +2,143 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9918C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC1BC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B89A20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E522120B7C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dhnixGsy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WyqM1jV2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfFZHxH (ORCPT
+        id S1726867AbfFZHxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:53:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40623 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfFZHxG (ORCPT
+        Wed, 26 Jun 2019 03:53:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33462 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfFZHxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:53:06 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so1583253otl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 00:53:06 -0700 (PDT)
+        Wed, 26 Jun 2019 03:53:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c14so993612plo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 00:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gK6sTyPGkQBsRICOrU/v96WJmqJIHrnWAm3pchdZ41g=;
-        b=dhnixGsyA2slTRiz9/IZXqyzJj+DNdLVG1xw0yaJZotw9dcpV5jLJAP5lOCnVQaycl
-         j14Xs78Ap7s+m7sNn+ZBOpLwEUsTo1zP8VjLSDWRxxQXbeo8lz8SaArHZJyMC6Uvo9gv
-         EmmGw0RuonOrOcm9M0DS3CBlhVro4tLFcehNk=
+         :cc;
+        bh=JHqsYYLzLAosbxbz1ZkSkQroLN+I/zt1AzacawmONrY=;
+        b=WyqM1jV2u/kxM67gNNChMCD/srWLt8UFxif+PHuGpzbgE3LpTJrt7rEbevH6EDg7EA
+         xF8tH7Jbh3PLlZYXRvyhQyTIN9G45hD9SE3+nPI4rxVnH9lZ6Wb6PT2UPR9Z7e8qw5Vo
+         j4hYPGbTDYxJLGb6+arVCfAloAtiPanpPW4Xadwr7qterJdRgNGgoWGT+JtgLvBc9l+M
+         DYSnM5SC1DrNcCapOU3OT8L/UFesJC+ezl51GMqT04qGxB9qB/8ifxdT+misqvwEisfJ
+         +/kivnaJfyaOnnN1uM1pke3PaHrKRWJDezKNt97NibKS5p1mAANOOVhiidQQgXRP+WeK
+         EcUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gK6sTyPGkQBsRICOrU/v96WJmqJIHrnWAm3pchdZ41g=;
-        b=hWEZJLCBsMzzskINv7M6RnQMuYTLVTK/7GUtUZxn37HsThENs0ZMXcWnZPsApMyZoK
-         w1zd0bIwmrvfxbM10/DxxegZIQL4a3ovCP+M5YAwvZSDn68/kLnJthFUz3eHs9inLfxw
-         jljem+YWyYisLCmMXFFyWqJzpxemduraOywUqQKokXVCdi4uDJQGHRjNs/evqGf8ISMP
-         NzMfaZgvKNavcW0Z41DB4ZLwYrIQwc6T3lJc1Rfq8q3iZwCdx8UMcCVfOjZyNi+xa0w0
-         gr2f6lsGN101rLnPujRgaDHERmIKI/9pzcZKRaVTNKeQX/QXxjA2qCEUVj5U9TAkBCBy
-         fZbg==
-X-Gm-Message-State: APjAAAWADAL2JGdPvz31DaXxdPEuIeFPt4cmCigWtPiG8R0iY/cAzR+z
-        YHq5dQjQmfsQPKr4Liw5Kb+7bYnKLszFFXY1dnnDJg==
-X-Google-Smtp-Source: APXvYqyUs3Td+S7saRzPYCnaOjLCKshI6la+7/TjmiLqpBi3SV2mdzqTgrEw6uzagAHcAMFWXHb9UganSr1nLrAuZHo=
-X-Received: by 2002:a9d:6e8d:: with SMTP id a13mr2161271otr.303.1561535585757;
- Wed, 26 Jun 2019 00:53:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=JHqsYYLzLAosbxbz1ZkSkQroLN+I/zt1AzacawmONrY=;
+        b=HL1uaiz2SYPPa26dogKXajbkDvUxo7J9fu5IwD8UpXSdGRcZBxvuBfRe5fPAZTovvw
+         2JmPpmkA+juhffTpsPDqHzPBQLyicAG9zu9qhqvW8UR37vHbd6aug7BkBpkel0H2alBJ
+         g77ZBYquh1og7dAJbtrEHKC19Oi/O5MAt43+qoixCI92wtiFHSkILhi7MLeSV5tmTySw
+         6Szcc8ZnCP1mICUEvHTlIuNBNFoI0Tc8He37UlyHOKj6J2SNn3oOjGoG6WZ+Q5L8EGpv
+         SahqNl5BEhf7Er6RIrLwx2KdXm4xlgXgHkSERR6amfpQ/Ia+M6oUqCfczhd4QAnNaOM5
+         Rbbw==
+X-Gm-Message-State: APjAAAXyPIiTcWgQzshvNge6UhC9v+IrBTrQCDwDMAB8xBjPp8r0hz7W
+        T+XQU+6YbQb2a8eC2Sx4wPbkqVUjN1ONNhub6IQYqg==
+X-Google-Smtp-Source: APXvYqx0OC49B+0u9fYvW2+xXIuYcGfgocchgfhlK03aaHz2u6I5PoagyCc52QVITc8deDrbZKlEXXtykOtZNEDzro4=
+X-Received: by 2002:a17:902:1004:: with SMTP id b4mr3862082pla.325.1561535609164;
+ Wed, 26 Jun 2019 00:53:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190619020750.swzerehjbvx6sbk2@smtp.gmail.com>
- <20190619074856.GJ12905@phenom.ffwll.local> <20190619075059.GK12905@phenom.ffwll.local>
- <20190626020005.vb5gmqcvkyzgcjee@smtp.gmail.com>
-In-Reply-To: <20190626020005.vb5gmqcvkyzgcjee@smtp.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 26 Jun 2019 09:52:54 +0200
-Message-ID: <CAKMK7uEd71XTeuZeu1Km8Vq1K1VJJbgANyaZNWm4v18Qh-OqVw@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH V4] drm/drm_vblank: Change EINVAL by the
- correct errno
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+References: <20190617082613.109131-1-brendanhiggins@google.com>
+ <20190617082613.109131-8-brendanhiggins@google.com> <20190625232249.GS19023@42.do-not-panic.com>
+In-Reply-To: <20190625232249.GS19023@42.do-not-panic.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 26 Jun 2019 00:53:18 -0700
+Message-ID: <CAFd5g46mnd=a0OqFCx0hOHX+DxW+5yA2LXH5Q0gEg8yUZK=4FA@mail.gmail.com>
+Subject: Re: [PATCH v5 07/18] kunit: test: add initial tests
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 4:00 AM Rodrigo Siqueira
-<rodrigosiqueiramelo@gmail.com> wrote:
+On Tue, Jun 25, 2019 at 4:22 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
 >
-> On 06/19, Daniel Vetter wrote:
-> > On Wed, Jun 19, 2019 at 09:48:56AM +0200, Daniel Vetter wrote:
-> > > On Tue, Jun 18, 2019 at 11:07:50PM -0300, Rodrigo Siqueira wrote:
-> > > > For historical reason, the function drm_wait_vblank_ioctl always re=
-turn
-> > > > -EINVAL if something gets wrong. This scenario limits the flexibili=
-ty
-> > > > for the userspace make detailed verification of the problem and tak=
-e
-> > > > some action. In particular, the validation of =E2=80=9Cif (!dev->ir=
-q_enabled)=E2=80=9D
-> > > > in the drm_wait_vblank_ioctl is responsible for checking if the dri=
-ver
-> > > > support vblank or not. If the driver does not support VBlank, the
-> > > > function drm_wait_vblank_ioctl returns EINVAL which does not repres=
-ent
-> > > > the real issue; this patch changes this behavior by return EOPNOTSU=
-PP.
-> > > > Additionally, some operations are unsupported by this function, and
-> > > > returns EINVAL; this patch also changes the return value to EOPNOTS=
-UPP
-> > > > in this case. Lastly, the function drm_wait_vblank_ioctl is invoked=
- by
-> > > > libdrm, which is used by many compositors; because of this, it is
-> > > > important to check if this change breaks any compositor. In this se=
-nse,
-> > > > the following projects were examined:
-> > > >
-> > > > * Drm-hwcomposer
-> > > > * Kwin
-> > > > * Sway
-> > > > * Wlroots
-> > > > * Wayland-core
-> > > > * Weston
-> > > > * Xorg (67 different drivers)
-> > > >
-> > > > For each repository the verification happened in three steps:
-> > > >
-> > > > * Update the main branch
-> > > > * Look for any occurrence "drmWaitVBlank" with the command:
-> > > >   git grep -n "drmWaitVBlank"
-> > > > * Look in the git history of the project with the command:
-> > > >   git log -SdrmWaitVBlank
-> > > >
-> > > > Finally, none of the above projects validate the use of EINVAL whic=
-h
-> > > > make safe, at least for these projects, to change the return values=
-.
-> > > >
-> > > > Change since V3:
-> > > >  - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
-> > > >
-> > > > Change since V2:
-> > > >  Daniel Vetter and Chris Wilson
-> > > >  - Replace ENOTTY by EOPNOTSUPP
-> > > >  - Return EINVAL if the parameters are wrong
-> > > >
-> > >
-> > > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > >
-> > > Apologies for the confusion on the last time around. btw if someone t=
-ells
-> > > you "r-b (or a-b) with these changes", then just apply the r-b/a-b ta=
-g
-> > > next time around. Otherwise people will re-review the same thing over=
- and
-> > > over again.
-> >
-> > btw when resending patches it's good practice to add anyone who comment=
-ed
-> > on it (or who commented on the igt test for the same patch and other wa=
-y
-> > round) onto the explicit Cc: list of the patch. That way it's easier fo=
-r
-> > them to follow the patch evolution and do a quick r-b once they're happ=
-y.
+> On Mon, Jun 17, 2019 at 01:26:02AM -0700, Brendan Higgins wrote:
+> > diff --git a/kunit/example-test.c b/kunit/example-test.c
+> > new file mode 100644
+> > index 0000000000000..f44b8ece488bb
+> > --- /dev/null
+> > +++ b/kunit/example-test.c
 >
-> Thanks for these valuable tips.
-> Do you think that is a good idea to resend this patch CC's everybody? Or
-> is it ok if I just apply it?
-
-Hm I thought I answered that on irc ... but just today I realized that
-we missed 2 ioctls. There's also drm_crtc_get_sequence_ioctl and
-drm_crtc_queue_sequence_ioctl which have the same dev->irq_enabled
-check and I think should be treated the same.
-
-Can you pls resend with those addressed too? Then you can also resend
-with the cc's all added.
--Daniel
-
+> <-- snip -->
 >
-> > If you don't do that then much bigger chances your patch gets ignored.
-> > -Daniel
-> > >
-> > > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > > > ---
-> > > >  drivers/gpu/drm/drm_vblank.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vbl=
-ank.c
-> > > > index 603ab105125d..bed233361614 100644
-> > > > --- a/drivers/gpu/drm/drm_vblank.c
-> > > > +++ b/drivers/gpu/drm/drm_vblank.c
-> > > > @@ -1582,7 +1582,7 @@ int drm_wait_vblank_ioctl(struct drm_device *=
-dev, void *data,
-> > > >   unsigned int flags, pipe, high_pipe;
-> > > >
-> > > >   if (!dev->irq_enabled)
-> > > > -         return -EINVAL;
-> > > > +         return -EOPNOTSUPP;
-> > > >
-> > > >   if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
-> > > >           return -EINVAL;
-> > > > --
-> > > > 2.21.0
-> > >
-> > > --
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
+> > +/*
+> > + * This defines a suite or grouping of tests.
+> > + *
+> > + * Test cases are defined as belonging to the suite by adding them to
+> > + * `kunit_cases`.
+> > + *
+> > + * Often it is desirable to run some function which will set up things which
+> > + * will be used by every test; this is accomplished with an `init` function
+> > + * which runs before each test case is invoked. Similarly, an `exit` function
+> > + * may be specified which runs after every test case and can be used to for
+> > + * cleanup. For clarity, running tests in a test module would behave as follows:
+> > + *
 >
-> --
-> Rodrigo Siqueira
-> https://siqueira.tech
-> _______________________________________________
-> Intel-gfx mailing list
-> Intel-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+> To be clear this is not the kernel module init, but rather the kunit
+> module init. I think using kmodule would make this clearer to a reader.
 
+Seems reasonable. Will fix in next revision.
 
-
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> > + * module.init(test);
+> > + * module.test_case[0](test);
+> > + * module.exit(test);
+> > + * module.init(test);
+> > + * module.test_case[1](test);
+> > + * module.exit(test);
+> > + * ...;
+> > + */
+>
+>   Luis
