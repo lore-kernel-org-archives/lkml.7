@@ -2,275 +2,139 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B7DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6641EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA40A2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:47:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="mHpyHkA6"
+	by mail.kernel.org (Postfix) with ESMTP id 435C42085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfFZNr4 (ORCPT
+        id S1727906AbfFZNrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:47:56 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:51170 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727877AbfFZNrz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 09:47:55 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+Received: from mx1.redhat.com ([209.132.183.28]:59124 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727282AbfFZNrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:47:53 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C529FC0C4C;
-        Wed, 26 Jun 2019 13:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561556874; bh=rG911znX68mS96Mnb+Bsgb87QH+FgiD2s1v+5BBTiVQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=mHpyHkA6DsJKWyH/XAfW1ff/DYtq5XEbpOS+rGPLUYTMbRyOk44QDGvMfgUiBLZP0
-         djTD0Jg0Pk8HPX1vVyJ6YNklY2QW/Et1WznKguVvZLhct8QhPartk4TuzjgTvyoIO2
-         EHl/Frz4iuBT5PztSL+ERR/JZSmIRLk0+bNWsNR980ikGkeSXubV3rBjUbIXsX/ACe
-         STKj8eIg72CKjAO5w1116G8rdpBivBdP1Z5cWd8xz4BO3jwBeAFkbv5ByiesDEZumx
-         JpLefH2Ol9zvb6FjNm/H7Hq0khcsMeyV2g+h7rY7ECn0KTzqpDqqScl9nOs0dxOx1z
-         /i17yLPM+S4PA==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 47C4DA006E;
+        by mx1.redhat.com (Postfix) with ESMTPS id D77CF8830F;
         Wed, 26 Jun 2019 13:47:52 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id EDCBA3B56B;
-        Wed, 26 Jun 2019 15:47:51 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 05/10] net: stmmac: Add the missing speeds that XGMAC supports
-Date:   Wed, 26 Jun 2019 15:47:39 +0200
-Message-Id: <3013e134caa4093e00b2bea4218f6942d9816080.1561556556.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1561556555.git.joabreu@synopsys.com>
-References: <cover.1561556555.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1561556555.git.joabreu@synopsys.com>
-References: <cover.1561556555.git.joabreu@synopsys.com>
+Received: from sandy.ghostprotocols.net (ovpn-112-10.phx2.redhat.com [10.3.112.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE2365C205;
+        Wed, 26 Jun 2019 13:47:50 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 6470211A; Wed, 26 Jun 2019 10:47:46 -0300 (BRT)
+Date:   Wed, 26 Jun 2019 10:47:46 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Masanari Iida <standby24x7@gmail.com>
+Cc:     ak@linux.intel.com, kan.liang@intel.com,
+        linux-kernel@vger.kernel.org, acme@kernel.org
+Subject: Re: [PATCH] perf vendor events intel: Fix typos in
+ floating-point.json
+Message-ID: <20190626134746.GA2227@redhat.com>
+References: <20190626110436.22563-1-standby24x7@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626110436.22563-1-standby24x7@gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 26 Jun 2019 13:47:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-XGMAC supports following speeds:
-	- 10G XGMII
-	- 5G XGMII
-	- 2.5G XGMII
-	- 2.5G GMII
-	- 1G GMII
-	- 100M MII
-	- 10M MII
+Em Wed, Jun 26, 2019 at 08:04:36PM +0900, Masanari Iida escreveu:
+> This patch fix some spelling typo in x86/*/floating-point.json
 
-Add them to the stmmac driver.
+These are auto-generated files, glad that you CCed your fixes to the
+Intel folks, hopefully they will in turn send it internally so that next
+time we get an update with the fixes, ok?
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h       |  6 +-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 10 ++-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 14 ++--
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 79 ++++++++++++++++++----
- 4 files changed, 86 insertions(+), 23 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 14d8f6d7cb9a..9e8f4dbdcc22 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -392,8 +392,12 @@ struct mac_link {
- 	u32 speed100;
- 	u32 speed1000;
- 	u32 speed2500;
--	u32 speed10000;
- 	u32 duplex;
-+	struct {
-+		u32 speed2500;
-+		u32 speed5000;
-+		u32 speed10000;
-+	} xgmii;
- };
+- Arnaldo
  
- struct mii_regs {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 50b41ecb0325..9077b54cbfac 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -15,10 +15,14 @@
- /* MAC Registers */
- #define XGMAC_TX_CONFIG			0x00000000
- #define XGMAC_CONFIG_SS_OFF		29
--#define XGMAC_CONFIG_SS_MASK		GENMASK(30, 29)
-+#define XGMAC_CONFIG_SS_MASK		GENMASK(31, 29)
- #define XGMAC_CONFIG_SS_10000		(0x0 << XGMAC_CONFIG_SS_OFF)
--#define XGMAC_CONFIG_SS_2500		(0x2 << XGMAC_CONFIG_SS_OFF)
--#define XGMAC_CONFIG_SS_1000		(0x3 << XGMAC_CONFIG_SS_OFF)
-+#define XGMAC_CONFIG_SS_2500_GMII	(0x2 << XGMAC_CONFIG_SS_OFF)
-+#define XGMAC_CONFIG_SS_1000_GMII	(0x3 << XGMAC_CONFIG_SS_OFF)
-+#define XGMAC_CONFIG_SS_100_MII		(0x4 << XGMAC_CONFIG_SS_OFF)
-+#define XGMAC_CONFIG_SS_5000		(0x5 << XGMAC_CONFIG_SS_OFF)
-+#define XGMAC_CONFIG_SS_2500		(0x6 << XGMAC_CONFIG_SS_OFF)
-+#define XGMAC_CONFIG_SS_10_MII		(0x7 << XGMAC_CONFIG_SS_OFF)
- #define XGMAC_CONFIG_SARC		GENMASK(22, 20)
- #define XGMAC_CONFIG_SARC_SHIFT		20
- #define XGMAC_CONFIG_JD			BIT(16)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index bfa7d6913fd4..0a32c96a7854 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -36,7 +36,7 @@ static void dwxgmac2_core_init(struct mac_device_info *hw,
- 
- 		switch (hw->ps) {
- 		case SPEED_10000:
--			tx |= hw->link.speed10000;
-+			tx |= hw->link.xgmii.speed10000;
- 			break;
- 		case SPEED_2500:
- 			tx |= hw->link.speed2500;
-@@ -381,11 +381,13 @@ int dwxgmac2_setup(struct stmmac_priv *priv)
- 		mac->mcast_bits_log2 = ilog2(mac->multicast_filter_bins);
- 
- 	mac->link.duplex = 0;
--	mac->link.speed10 = 0;
--	mac->link.speed100 = 0;
--	mac->link.speed1000 = XGMAC_CONFIG_SS_1000;
--	mac->link.speed2500 = XGMAC_CONFIG_SS_2500;
--	mac->link.speed10000 = XGMAC_CONFIG_SS_10000;
-+	mac->link.speed10 = XGMAC_CONFIG_SS_10_MII;
-+	mac->link.speed100 = XGMAC_CONFIG_SS_100_MII;
-+	mac->link.speed1000 = XGMAC_CONFIG_SS_1000_GMII;
-+	mac->link.speed2500 = XGMAC_CONFIG_SS_2500_GMII;
-+	mac->link.xgmii.speed2500 = XGMAC_CONFIG_SS_2500;
-+	mac->link.xgmii.speed5000 = XGMAC_CONFIG_SS_5000;
-+	mac->link.xgmii.speed10000 = XGMAC_CONFIG_SS_10000;
- 	mac->link.speed_mask = XGMAC_CONFIG_SS_MASK;
- 
- 	mac->mii.addr = XGMAC_MDIO_ADDR;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index dc57a2c0a630..1247066c371c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -802,14 +802,43 @@ static void stmmac_validate(struct phylink_config *config,
- 			    struct phylink_link_state *state)
- {
- 	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
-+	__ETHTOOL_DECLARE_LINK_MODE_MASK(mac_supported) = { 0, };
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
- 	int tx_cnt = priv->plat->tx_queues_to_use;
- 	int max_speed = priv->plat->max_speed;
- 
-+	phylink_set(mac_supported, 10baseT_Half);
-+	phylink_set(mac_supported, 10baseT_Full);
-+	phylink_set(mac_supported, 100baseT_Half);
-+	phylink_set(mac_supported, 100baseT_Full);
-+
-+	phylink_set(mac_supported, Autoneg);
-+	phylink_set(mac_supported, Pause);
-+	phylink_set(mac_supported, Asym_Pause);
-+	phylink_set_port_modes(mac_supported);
-+
-+	if (priv->plat->has_gmac ||
-+	    priv->plat->has_gmac4 ||
-+	    priv->plat->has_xgmac) {
-+		phylink_set(mac_supported, 1000baseT_Half);
-+		phylink_set(mac_supported, 1000baseT_Full);
-+		phylink_set(mac_supported, 1000baseKX_Full);
-+	}
-+
- 	/* Cut down 1G if asked to */
- 	if ((max_speed > 0) && (max_speed < 1000)) {
- 		phylink_set(mask, 1000baseT_Full);
- 		phylink_set(mask, 1000baseX_Full);
-+	} else if (priv->plat->has_xgmac) {
-+		phylink_set(mac_supported, 2500baseT_Full);
-+		phylink_set(mac_supported, 5000baseT_Full);
-+		phylink_set(mac_supported, 10000baseSR_Full);
-+		phylink_set(mac_supported, 10000baseLR_Full);
-+		phylink_set(mac_supported, 10000baseER_Full);
-+		phylink_set(mac_supported, 10000baseLRM_Full);
-+		phylink_set(mac_supported, 10000baseT_Full);
-+		phylink_set(mac_supported, 10000baseKX4_Full);
-+		phylink_set(mac_supported, 10000baseKR_Full);
- 	}
- 
- 	/* Half-Duplex can only work with single queue */
-@@ -819,7 +848,12 @@ static void stmmac_validate(struct phylink_config *config,
- 		phylink_set(mask, 1000baseT_Half);
- 	}
- 
--	bitmap_andnot(supported, supported, mask, __ETHTOOL_LINK_MODE_MASK_NBITS);
-+	bitmap_and(supported, supported, mac_supported,
-+		   __ETHTOOL_LINK_MODE_MASK_NBITS);
-+	bitmap_andnot(supported, supported, mask,
-+		      __ETHTOOL_LINK_MODE_MASK_NBITS);
-+	bitmap_and(state->advertising, state->advertising, mac_supported,
-+		   __ETHTOOL_LINK_MODE_MASK_NBITS);
- 	bitmap_andnot(state->advertising, state->advertising, mask,
- 		      __ETHTOOL_LINK_MODE_MASK_NBITS);
- }
-@@ -839,18 +873,37 @@ static void stmmac_mac_config(struct phylink_config *config, unsigned int mode,
- 	ctrl = readl(priv->ioaddr + MAC_CTRL_REG);
- 	ctrl &= ~priv->hw->link.speed_mask;
- 
--	switch (state->speed) {
--	case SPEED_1000:
--		ctrl |= priv->hw->link.speed1000;
--		break;
--	case SPEED_100:
--		ctrl |= priv->hw->link.speed100;
--		break;
--	case SPEED_10:
--		ctrl |= priv->hw->link.speed10;
--		break;
--	default:
--		return;
-+	if (state->interface == PHY_INTERFACE_MODE_USXGMII) {
-+		switch (state->speed) {
-+		case SPEED_10000:
-+			ctrl |= priv->hw->link.xgmii.speed10000;
-+			break;
-+		case SPEED_5000:
-+			ctrl |= priv->hw->link.xgmii.speed5000;
-+			break;
-+		case SPEED_2500:
-+			ctrl |= priv->hw->link.xgmii.speed2500;
-+			break;
-+		default:
-+			return;
-+		}
-+	} else {
-+		switch (state->speed) {
-+		case SPEED_2500:
-+			ctrl |= priv->hw->link.speed2500;
-+			break;
-+		case SPEED_1000:
-+			ctrl |= priv->hw->link.speed1000;
-+			break;
-+		case SPEED_100:
-+			ctrl |= priv->hw->link.speed100;
-+			break;
-+		case SPEED_10:
-+			ctrl |= priv->hw->link.speed10;
-+			break;
-+		default:
-+			return;
-+		}
- 	}
- 
- 	priv->speed = state->speed;
--- 
-2.7.4
-
+> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+> ---
+>  tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json    | 2 +-
+>  tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json    | 2 +-
+>  .../perf/pmu-events/arch/x86/westmereep-dp/floating-point.json  | 2 +-
+>  .../perf/pmu-events/arch/x86/westmereep-sp/floating-point.json  | 2 +-
+>  tools/perf/pmu-events/arch/x86/westmereex/floating-point.json   | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json b/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json
+> index 7d2f71a9dee3..6b9b9fe74f3b 100644
+> --- a/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json
+> +++ b/tools/perf/pmu-events/arch/x86/nehalemep/floating-point.json
+> @@ -15,7 +15,7 @@
+>          "UMask": "0x4",
+>          "EventName": "FP_ASSIST.INPUT",
+>          "SampleAfterValue": "20000",
+> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
+> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
+>      },
+>      {
+>          "PEBS": "1",
+> diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json b/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
+> index 7d2f71a9dee3..6b9b9fe74f3b 100644
+> --- a/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
+> +++ b/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
+> @@ -15,7 +15,7 @@
+>          "UMask": "0x4",
+>          "EventName": "FP_ASSIST.INPUT",
+>          "SampleAfterValue": "20000",
+> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
+> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
+>      },
+>      {
+>          "PEBS": "1",
+> diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> index 7d2f71a9dee3..6b9b9fe74f3b 100644
+> --- a/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> +++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/floating-point.json
+> @@ -15,7 +15,7 @@
+>          "UMask": "0x4",
+>          "EventName": "FP_ASSIST.INPUT",
+>          "SampleAfterValue": "20000",
+> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
+> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
+>      },
+>      {
+>          "PEBS": "1",
+> diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
+> index 7d2f71a9dee3..6b9b9fe74f3b 100644
+> --- a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
+> +++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
+> @@ -15,7 +15,7 @@
+>          "UMask": "0x4",
+>          "EventName": "FP_ASSIST.INPUT",
+>          "SampleAfterValue": "20000",
+> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
+> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
+>      },
+>      {
+>          "PEBS": "1",
+> diff --git a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
+> index 7d2f71a9dee3..6b9b9fe74f3b 100644
+> --- a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
+> +++ b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
+> @@ -15,7 +15,7 @@
+>          "UMask": "0x4",
+>          "EventName": "FP_ASSIST.INPUT",
+>          "SampleAfterValue": "20000",
+> -        "BriefDescription": "X87 Floating poiint assists for invalid input value (Precise Event)"
+> +        "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)"
+>      },
+>      {
+>          "PEBS": "1",
+> -- 
+> 2.22.0.214.g8dca754b1e87
