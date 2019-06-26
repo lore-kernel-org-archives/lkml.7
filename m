@@ -2,119 +2,143 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1538C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F4DC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C151E208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A13208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 05:49:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BguRsox6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfFZFtU (ORCPT
+        id S1726667AbfFZFtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 01:49:20 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38670 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbfFZFtU (ORCPT
+        Wed, 26 Jun 2019 01:49:36 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:37498 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbfFZFtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 01:49:20 -0400
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hg0o2-0007jK-Dn
-        for linux-kernel@vger.kernel.org; Wed, 26 Jun 2019 05:49:18 +0000
-Received: by mail-pl1-f200.google.com with SMTP id n1so753042plk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 22:49:18 -0700 (PDT)
+        Wed, 26 Jun 2019 01:49:36 -0400
+Received: by mail-yb1-f193.google.com with SMTP id p201so405133ybg.4;
+        Tue, 25 Jun 2019 22:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FLRyyUyuqTKbfuiIxj3YsbjK74R9lyj03vqxwLtsrQA=;
+        b=BguRsox6h/qJV4eeNuftnjwImpoOBaTMM+ZxODhqBau2qM0uqSm3DbQhxrF+09eatF
+         yEujr0vRThsycLh+ocSTu6M+2l1lDStjThzWGIWJo4joANPDqr6xxPJu1Fr27bl3Bf0u
+         511zsXeswlJWII9yjG7ewy+pdNUXdsEG6iquXU3Y+2VNZnKFjrqeNHvY+T+rJ9icGMZY
+         NDFbakjdcW2I2+1dCnNRYVtpmJ59RbX+mgG/Xqh9x8ORjMEpSyq+kDES+rsgILFih8Gt
+         srdVNSrwT+q/Alxpi4bhZ/gh8w39Pv1SqrViab0mgdxdm4SXQV7iqF658d3r5hKv/Cyq
+         dkVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=12ANf5jkxiue7axL1Y5xhLlkcaf3kHXDuZtfoS2gzUA=;
-        b=lgHd/8gQh1nWwigD2w2axGVyeBdtEJyEurwJXqLwEVAuqY9Bra35kwuYOGS1VjgXoR
-         6MoJwIDKxiaMtiU1t/yFhL2oXWsSKdsVk3hF8FiE4MHmZRXrTzcxVUNJhbfY1u+A/hZ1
-         DTv//8V6fM1SSosRTIXdpBB9kdAS+btgK/Kd21to7JtB+EU4NBBTkh4PagoFQRzlgwTy
-         UJJW5LKugO/9tx4xYNTygLDPfm5fUNePrX2DJ98LjGJ1V5nQ4M9fg468INmNt47PJnRp
-         cIgeVHyRgxrpBY5xtWuEgqQhmJXn8wnmjkcqQjOLsRwK0jcHp6ufTGnUzZytvuqKHP5o
-         hkJg==
-X-Gm-Message-State: APjAAAXeCDQeiLZqrohj61bZ+U/XCyYMehBw+sFw7fTBc6m5eTrmkowz
-        MrysqIRp/DfIHf/2i/0Xe7Ogk18uB5A+qycXPLl+euo7lqXvOy/0sIj11TWMgRzFgIcZwpKLyDm
-        h0MXQ+5Xa1Xz9mCJKGT9gK2xSDfxkeETQgAmXZeViNA==
-X-Received: by 2002:a17:902:9688:: with SMTP id n8mr3116872plp.227.1561528156893;
-        Tue, 25 Jun 2019 22:49:16 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwee9bWoCIWpnXOMY7SxZkgP4ELM68w+FNl6jhugNxsK+602xd1wI/6pPbktKeAaH3SPdhALQ==
-X-Received: by 2002:a17:902:9688:: with SMTP id n8mr3116854plp.227.1561528156633;
-        Tue, 25 Jun 2019 22:49:16 -0700 (PDT)
-Received: from [10.101.46.178] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id r15sm19728330pfh.121.2019.06.25.22.49.15
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FLRyyUyuqTKbfuiIxj3YsbjK74R9lyj03vqxwLtsrQA=;
+        b=tPy3vac01WcElU3QxOSC7nx7ndPxFQm7R/O1VIAgh6Y1M6Rddck94OE4Bg1ZjoMBst
+         B5jeHsw/BvhgUsymtJjiZz2zmoogItaip/zMqvcHfceFUzCeWdGaUuE/mZpCBOSVIfTN
+         5y+ackupt13E8O10XaEjLmWhw8PbGNcPVY2by4T8s+KcukaNunF0/L/UyUqlFI1DQMeI
+         MscadTjyBVUbEDYTbweKRXjeDvFiLEerQC3ukSiraSM5WUBQTLDBw5m+quzYOLWNIX/o
+         hhGpK9HzOYRYt2+ZWeO3LdAzBls6SI+3kzQ7bYY3AQzGTFyB2P60QNVICG1bAeFAX7V0
+         Q1TQ==
+X-Gm-Message-State: APjAAAUDH4sXG9J4LNIYYj+vuw4YmZFY61OM12Y3JZRL9cAetqXqESLN
+        McJZOVCY49Qr4knOn5oaEVY=
+X-Google-Smtp-Source: APXvYqxB5EKk0BXWRFX4VoMgn+lBpogZBtaCwNZ5pmK2sYGd/RHlDbpCU+tLYl3lG7Tt5x5yKBbEQQ==
+X-Received: by 2002:a25:1f09:: with SMTP id f9mr1507101ybf.184.1561528175767;
+        Tue, 25 Jun 2019 22:49:35 -0700 (PDT)
+Received: from [192.168.43.210] (mobile-166-172-58-106.mycingular.net. [166.172.58.106])
+        by smtp.gmail.com with ESMTPSA id 135sm1623784ywk.46.2019.06.25.22.49.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Jun 2019 22:49:16 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [Intel-wired-lan] Opportunistic S0ix blocked by e1000e when
- ethernet is in use
-From:   Kai Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <dfd57ef4-08bd-53cf-1f0a-86edc5bc0a67@intel.com>
-Date:   Wed, 26 Jun 2019 13:49:13 +0800
-Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <8C7BCE85-D027-4C0C-BD46-619FAD0E6AB8@canonical.com>
-References: <074E1145-A512-4835-9A6D-8FB6634DBD3C@canonical.com>
- <E2D5225B-D683-4895-AC4F-EE01C339262B@canonical.com>
- <95f88f45-fd6c-52e4-de8c-2db1b4c6c04e@intel.com>
- <E8C45269-819C-41E0-A3D3-AA98710DBA4C@canonical.com>
- <dfd57ef4-08bd-53cf-1f0a-86edc5bc0a67@intel.com>
-To:     "Neftin, Sasha" <sasha.neftin@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 25 Jun 2019 22:49:35 -0700 (PDT)
+Subject: Re: [RESEND PATCH v1 0/5] Solve postboot supplier cleanup and
+ optimize probe ordering
+To:     Sandeep Patil <sspatil@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+References: <20190604003218.241354-1-saravanak@google.com>
+ <20190624223707.GH203031@google.com> <20190625035313.GA13239@kroah.com>
+ <20190626043052.GF212690@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f9ddae55-91b3-27b2-0919-579f4d895e99@gmail.com>
+Date:   Tue, 25 Jun 2019 22:49:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190626043052.GF212690@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 6:25 PM, Neftin, Sasha <sasha.neftin@intel.com> wrote:
+On 6/25/19 9:30 PM, Sandeep Patil wrote:
+> On Tue, Jun 25, 2019 at 11:53:13AM +0800, Greg Kroah-Hartman wrote:
+>> On Mon, Jun 24, 2019 at 03:37:07PM -0700, Sandeep Patil wrote:
+>>> We are trying to make sure that all (most) drivers in an Aarch64 system can
+>>> be kernel modules for Android, like any other desktop system for
+>>> example. There are a number of problems we need to fix before that happens
+>>> ofcourse.
+>>
+>> I will argue that this is NOT an android-specific issue.  If the goal of
+>> creating an arm64 kernel that will "just work" for a wide range of
+>> hardware configurations without rebuilding is going to happen, we need
+>> to solve this problem with DT.  This goal was one of the original wishes
+>> of the arm64 development effort, let's not loose sight of it as
+>> obviously, this is not working properly just yet.
+> 
+> I believe the proposed solution in this patch series is just that. I am not
+> sure what the alternatives are. The alternative suggested was to reuse
 
-> On 6/24/2019 18:06, Kai-Heng Feng wrote:
->> at 19:56, Neftin, Sasha <sasha.neftin@intel.com> wrote:
-[Snipped]
-> Current HW have a limitation. Please, try follow workaround on your  
-> platform: echo 3 > /sys/kernel/debug/pmc_core/ltr_ignore
+Look at the responses from myself and from Rob to patch 0.  No one responded
+to our comments.
 
-Yes, this does the trick.
+-Frank
 
-On 4.15 based kernel I can see the SoC enters PC10 but SLP_S0 is not  
-asserted.
 
-On mainline kernel the SoC, PC10 is hit and SLP_S0 is asserted. Once SLP_S0  
-is asserted the SSH connection becomes really sluggish.
-
->> >> S0ix support is under discussion with our architecture. We will try
->>> enable S0ix in our e1000e OOT driver as first step.
->> Is it possible to add Dynamic LTR as an option so users and downstream  
->> distros can still benefit from it?
-> As I said before, this is not a stable solution. No guarantee that HW  
-> will work as properly.
-
-Can you describe the symptom of "HW will work as properly”? Is this the  
-sluggish connection I observed?
-
-Kai-Heng
-
->> Kai-Heng
->>>> Kai-Heng
->>>>> Kai-Heng
->>>> _______________________________________________
->>>> Intel-wired-lan mailing list
->>>> Intel-wired-lan@osuosl.org
->>>> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
->>>
->>> Thanks
->>> Sasha
-
+> pre-existing dt-bindings for dependency based probe re-ordering and resolution.
+> 
+> However, it seems we had no way to *really* check if these dependencies are
+> the real. So, a device may or may not actually depend on the other device for
+> probe / initialization when the dependency is mentioned in it's dt node. From
+> DT's point of view, there is no way to tell this ..
+> 
+> I don't know how this is handled in x86. With DT, I don't see how we can do
+> this unless DT dependencies are _really_ tied with runtime dependencies (The
+> cycles would have been apparent if that was the case.
+> 
+> Honestly, the "depends-on" property suggested here just piles on to the
+> existing state. So, it is somewhat doubling the exiting bindings. It says,
+> you must use depends-on property to define probe / initialization dependency.
+> The existing bindings like 'clock', 'interrupt', '*-supply' do not enforce
+> that right now, so you will have device nodes that have these bindings right
+> now but don't necessarily need them for successful probe for example.
+> 
+>>
+>> It just seems that Android is the first one to actually try and
+>> implement that goal :)
+> 
+> I guess :)
+> 
+> - ssp
+> 
+>>
+>> thanks,
+>>
+>> greg k-h
+> 
 
