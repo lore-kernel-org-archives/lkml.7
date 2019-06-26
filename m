@@ -2,55 +2,55 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D5BC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F647C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4EA216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD3520665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f3nz/c44"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GUYO+D7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfFZWxJ (ORCPT
+        id S1726606AbfFZWxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:53:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39838 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfFZWxI (ORCPT
+        Wed, 26 Jun 2019 18:53:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39034 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfFZWxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 18:53:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QMmotN100217;
-        Wed, 26 Jun 2019 22:52:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=Hr9zrauEoxTgJRtfOsjDwjRXBC+R8YyRKtKA9BE3nsY=;
- b=f3nz/c4405CBB873NZXddM+6lqJC+Hmhfi6xf1or1cwZc+svmT9KO8AiigUWJvH8N5qU
- YhOwVFHD2tPMbXcLiol0DdCR9PKNU+BLi+ummnCYB2kPHpGVhRNo5LtGSVgdP8TfMOt/
- BEgh0w6pHK8pOTHmoqKC/7Y3ueD2MIxTc+iqPbkStJZ0VHn7pwO2J6qjdJIYSn/qUxP+
- 0f9V8QQuYmO/7w6TSZ8sSbiw1EFGCfrJvvc3DifgPVNada3UF6wi/+/nrjsRdbfy1tvL
- 0M11lcUIdrPHifqaTfu/4KA1X2DmOHeQwyAVp3EwzR7JQzFfEWYrtzUJvmpDTwRePj5r Xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brtd1ab-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 22:52:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QMpXkx012606;
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QMosGV107404;
         Wed, 26 Jun 2019 22:52:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2t9accxudm-1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
+ bh=IHmeBBARvTJvyxGE8gRA9Eyc7FSvzrhRzBOaOgYx4D8=;
+ b=GUYO+D7hnI/gTC/AYf612nFTeZ/iN1H28+Zg2rNpIsrN/Ej0iRnGWdPU9uIabcWX/uKK
+ notj+4mu67QKbhyFA9E5EZtyD746ZKIzqVI8D7QD5ptr4S6e7lw37cfQQp+FJgQ7n8re
+ vuQ+/AwYQVXPAGbyLgPJFtb+bi1zlo1u83uk+CAhpMZuySPpl99dMQHT55SLX0ujn9z9
+ uWbSevQw4dgNNJDlCS451L1QJyXZorGdDyoyeM07eQzcHDrJHFcWaZDTHPuaJepmeGDW
+ DBypqS0FyC3UI3kpVWMEORziJ0X0iQ/1U5rua/tuPHmWT1zbzzbuZUvydra7loDW5oJB fg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2t9cyqmwag-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 22:52:28 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QMpxnN075815;
+        Wed, 26 Jun 2019 22:52:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t99f4q9x8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Wed, 26 Jun 2019 22:52:28 +0000
 Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QMqPeD024166;
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5QMqQBd015901;
         Wed, 26 Jun 2019 22:52:26 GMT
 Received: from smazumda-Precision-T1600.us.oracle.com (/10.132.91.175)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 15:52:24 -0700
+        with ESMTP ; Wed, 26 Jun 2019 15:52:26 -0700
 From:   subhra mazumdar <subhra.mazumdar@oracle.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
@@ -58,19 +58,21 @@ Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
         daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
         viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
         mgorman@techsingularity.net
-Subject: [RFC PATCH 0/3] Scheduler Soft Affinity
-Date:   Wed, 26 Jun 2019 15:47:15 -0700
-Message-Id: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
+Subject: [RFC PATCH 2/3] sched: change scheduler to give preference to soft affinity CPUs
+Date:   Wed, 26 Jun 2019 15:47:17 -0700
+Message-Id: <20190626224718.21973-3-subhra.mazumdar@oracle.com>
 X-Mailer: git-send-email 2.9.3
+In-Reply-To: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
+References: <20190626224718.21973-1-subhra.mazumdar@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=769
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1906260261
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=822 adultscore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1906260262
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,160 +80,299 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When multiple instances of workloads are consolidated in same host it is
-good practice to partition them for best performance. For e.g give a NUMA
-node parition to each instance. Currently Linux kernel provides two
-interfaces to hard parition: sched_setaffinity system call or cpuset.cpus
-cgroup. But this doesn't allow one instance to burst out of its partition
-and use available CPUs from other partitions when they are idle. Running
-all instances free range without any affinity, on the other hand, suffers
-from cache coherence overhead across sockets (NUMA nodes) when all
-instances are busy.
+The soft affinity CPUs present in the cpumask cpus_preferred is used by the
+scheduler in two levels of search. First is in determining wake affine
+which choses the LLC domain and secondly while searching for idle CPUs in
+LLC domain. In the first level it uses cpus_preferred to prune out the
+search space. In the second level it first searches the cpus_preferred and
+then cpus_allowed. Using affinity_unequal flag it breaks early to avoid
+any overhead in the scheduler fast path when soft affinity is not used.
+This only changes the wake up path of the scheduler, the idle balancing
+is unchanged; together they achieve the "softness" of scheduling.
 
-To achieve the best of both worlds, one potential way is to use AutoNUMA
-balancer which migrates memory and threads to align them on same NUMA node
-when all instances are busy. But it doesn't work if memory is spread across
-NUMA nodes, has high reaction time due to periodic scanning mechanism and
-can't handle sub-NUMA levels. Some motivational experiments were done with
-2 DB instances running on a 2 socket x86 Intel system with 22 cores per
-socket. 'numactl -m' was used to bind the memory of each instance to one
-NUMA node, the idea was to have AutoNUMA migrate only threads as memory is
-pinned. But AutoNUMA ON vs OFF didn't make any difference in performance.
-Also it was found that AutoNUMA still migrated pages across NUMA nodes, so
-numactl only controls the initial allocation of memory and AutoNUMA is free
-to migrate them later. Following are the vmstats for different number of
-users running TPC-C in each DB instance with numactl and AutoNUMA ON. With
-AutnoNUMA OFF the page migrations were of course zero.
+Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+---
+ kernel/sched/fair.c | 137 ++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 100 insertions(+), 37 deletions(-)
 
-users (2x16)            
-numa_hint_faults        1672485
-numa_hint_faults_local  1158283
-numa_pages_migrated     373670
-    
-users (2x24)            
-numa_hint_faults        2267425
-numa_hint_faults_local  1548501
-numa_pages_migrated     586473
-    
-    
-users (2x32)            
-numa_hint_faults        1916625
-numa_hint_faults_local  1499772
-numa_pages_migrated     229581
-
-Given the above drawbacks, the most logical way to achieve the desired
-behavior is via the task scheduler. A new interface is added, a new system
-call sched_setaffinity2 in this case, to specify the set of soft affinity
-CPUs. It takes an extra paremeter to specify hard or soft affinity, where
-hard behaves same as existing sched_setaffinity. I am open to using other
-interfaces like cgroup or anything else I might not have considered. Also
-this patchset only allows it for CFS class threads as for RT class the
-preferential search latency may not be tolerated. But nothing in theory
-stops us from implementing soft affinity for RT class too. Finally it
-also adds new scheduler tunables to tune the "softness" of soft affinity
-as different workload may have different optimal points. This is done
-using two tunables sched_allowed and sched_preferred, where if the ratio
-of CPU utilization of the prefrred set and allowed set crosses the ratio
-sched_allowed:sched_preferred, scheduler will use the entire allowed set
-instead of the preferred set in the first level of search in
-select_task_rq_fair. The default value is 100:1.
-
-Following are the performance results of running 2 and 1 instance(s) of
-Hackbench and Oracle DB on 2 socket Intel x86 system with 22 cores per
-socket with the default tunable settings. For 2 instance case DB shows
-substantial improvement over no affinity but Hackbench shows negligible
-improvement. For 1 instance case DB performance is close to no affinity,
-but Hackbench has significant regression. Hard affinity numbers are also
-added for comparison. The load in each Hackbench and DB instance is varied
-by varying the number of groups and users respectively. %gain is w.r.t
-no affinity.
-
-(100:1)
-Hackbench   %gain with soft affinity        %gain with hard affinity
-2*4	    1.12			    1.3
-2*8	    1.67			    1.35
-2*16	    1.3				    1.12
-2*32        0.31			    0.61
-1*4	    -18				    -58
-1*8	    -24				    -59
-1*16	    -33				    -72
-1*32	    -38				    -83
-
-DB	    %gain with soft affinity	    %gain with hard affinity
-2*16	    4.26			    4.1
-2*24	    5.43			    7.17
-2*32	    6.31			    6.22
-1*16	    -0.02			    0.62
-1*24	    0.12			    -26.1
-1*32	    -1.48			    -8.65
-
-The experiments were repeated with sched_allowed:sched_preferred set to
-5:4 to have "softer" soft affinity. Following numbers show it preserves the
-(negligible) improvement for 2 instance Hackbench case but reduces the
-regression for 1 instance significantly. For DB this setting doesn't work
-well as the improvements for 2 instance case goes away. This also shows
-different workloads have different optimal setting.
-
-(5:4)
-Hackbench   %gain with soft affinity
-2*4	    1.43
-2*8	    1.36
-2*16	    1.01
-2*32	    1.45
-1*4	    -2.55
-1*8	    -5.06
-1*16	    -8
-1*32	    -7.32
-                                                                           
-DB          %gain with soft affinity
-2*16	    0.46
-2*24	    3.68
-2*32	    -3.34
-1*16	    0.08
-1*24	    1.6
-1*32	    -1.29
-
-Finally I measured the overhead of soft affinity when it is NOT used by
-comparing it with baseline kernel in case of no affinity and hard affinity
-with Hackbench. The following is the improvement of soft affinity kernel
-w.r.t baseline, but really numbers are in noise margin. This shows soft
-affinity has no overhead when not used.
-
-Hackbench   %diff of no affinity	%diff of hard affinity
-2*4	    0.11			0.31
-2*8	    0.13			0.55
-2*16	    0.61			0.90
-2*32	    0.86			1.01
-1*4	    0.48			0.43
-1*8	    0.45			0.33
-1*16	    0.61			0.64
-1*32	    0.11			0.63
-
-A final set of experiments were done (numbers not shown) having the memory
-of each DB instance spread evenly across both NUMA nodes. This showed
-similar improvements with soft affinity for 2 instance case, thus proving
-the improvement is due to saving LLC coherence overhead.
-
-subhra mazumdar (3):
-  sched: Introduce new interface for scheduler soft affinity
-  sched: change scheduler to give preference to soft affinity CPUs
-  sched: introduce tunables to control soft affinity
-
- arch/x86/entry/syscalls/syscall_64.tbl |   1 +
- include/linux/sched.h                  |   5 +-
- include/linux/sched/sysctl.h           |   2 +
- include/linux/syscalls.h               |   3 +
- include/uapi/asm-generic/unistd.h      |   4 +-
- include/uapi/linux/sched.h             |   3 +
- init/init_task.c                       |   2 +
- kernel/compat.c                        |   2 +-
- kernel/rcu/tree_plugin.h               |   3 +-
- kernel/sched/core.c                    | 167 ++++++++++++++++++++++++++++-----
- kernel/sched/fair.c                    | 154 ++++++++++++++++++++++--------
- kernel/sched/sched.h                   |   2 +
- kernel/sysctl.c                        |  14 +++
- 13 files changed, 297 insertions(+), 65 deletions(-)
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index f35930f..53aa7f2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5807,7 +5807,7 @@ static unsigned long capacity_spare_without(int cpu, struct task_struct *p)
+  */
+ static struct sched_group *
+ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+-		  int this_cpu, int sd_flag)
++		  int this_cpu, int sd_flag, struct cpumask *cpus)
+ {
+ 	struct sched_group *idlest = NULL, *group = sd->groups;
+ 	struct sched_group *most_spare_sg = NULL;
+@@ -5831,7 +5831,7 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+ 
+ 		/* Skip over this group if it has no CPUs allowed */
+ 		if (!cpumask_intersects(sched_group_span(group),
+-					&p->cpus_allowed))
++					cpus))
+ 			continue;
+ 
+ 		local_group = cpumask_test_cpu(this_cpu,
+@@ -5949,7 +5949,8 @@ find_idlest_group(struct sched_domain *sd, struct task_struct *p,
+  * find_idlest_group_cpu - find the idlest CPU among the CPUs in the group.
+  */
+ static int
+-find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this_cpu)
++find_idlest_group_cpu(struct sched_group *group, struct task_struct *p,
++		      int this_cpu, struct cpumask *cpus)
+ {
+ 	unsigned long load, min_load = ULONG_MAX;
+ 	unsigned int min_exit_latency = UINT_MAX;
+@@ -5963,7 +5964,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+ 		return cpumask_first(sched_group_span(group));
+ 
+ 	/* Traverse only the allowed CPUs */
+-	for_each_cpu_and(i, sched_group_span(group), &p->cpus_allowed) {
++	for_each_cpu_and(i, sched_group_span(group), cpus) {
+ 		if (available_idle_cpu(i)) {
+ 			struct rq *rq = cpu_rq(i);
+ 			struct cpuidle_state *idle = idle_get_state(rq);
+@@ -5999,7 +6000,8 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+ }
+ 
+ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p,
+-				  int cpu, int prev_cpu, int sd_flag)
++				  int cpu, int prev_cpu, int sd_flag,
++				  struct cpumask *cpus)
+ {
+ 	int new_cpu = cpu;
+ 
+@@ -6023,13 +6025,14 @@ static inline int find_idlest_cpu(struct sched_domain *sd, struct task_struct *p
+ 			continue;
+ 		}
+ 
+-		group = find_idlest_group(sd, p, cpu, sd_flag);
++		group = find_idlest_group(sd, p, cpu, sd_flag, cpus);
++
+ 		if (!group) {
+ 			sd = sd->child;
+ 			continue;
+ 		}
+ 
+-		new_cpu = find_idlest_group_cpu(group, p, cpu);
++		new_cpu = find_idlest_group_cpu(group, p, cpu, cpus);
+ 		if (new_cpu == cpu) {
+ 			/* Now try balancing at a lower domain level of 'cpu': */
+ 			sd = sd->child;
+@@ -6104,6 +6107,27 @@ void __update_idle_core(struct rq *rq)
+ 	rcu_read_unlock();
+ }
+ 
++static inline int
++scan_cpu_mask_for_idle_cores(struct cpumask *cpus, int target)
++{
++	int core, cpu;
++
++	for_each_cpu_wrap(core, cpus, target) {
++		bool idle = true;
++
++		for_each_cpu(cpu, cpu_smt_mask(core)) {
++			cpumask_clear_cpu(cpu, cpus);
++			if (!idle_cpu(cpu))
++				idle = false;
++		}
++
++		if (idle)
++			return core;
++	}
++
++	return -1;
++}
++
+ /*
+  * Scan the entire LLC domain for idle cores; this dynamically switches off if
+  * there are no idle cores left in the system; tracked through
+@@ -6112,7 +6136,7 @@ void __update_idle_core(struct rq *rq)
+ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+ 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+-	int core, cpu;
++	int core;
+ 
+ 	if (!static_branch_likely(&sched_smt_present))
+ 		return -1;
+@@ -6120,21 +6144,22 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+ 	if (!test_idle_cores(target, false))
+ 		return -1;
+ 
+-	cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
++	cpumask_and(cpus, sched_domain_span(sd), &p->cpus_preferred);
++	core = scan_cpu_mask_for_idle_cores(cpus, target);
+ 
+-	for_each_cpu_wrap(core, cpus, target) {
+-		bool idle = true;
++	if (core >= 0)
++		return core;
+ 
+-		for_each_cpu(cpu, cpu_smt_mask(core)) {
+-			__cpumask_clear_cpu(cpu, cpus);
+-			if (!available_idle_cpu(cpu))
+-				idle = false;
+-		}
++	if (!p->affinity_unequal)
++		goto out;
+ 
+-		if (idle)
+-			return core;
+-	}
++	cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
++	cpumask_andnot(cpus, cpus, &p->cpus_preferred);
++	core = scan_cpu_mask_for_idle_cores(cpus, target);
+ 
++	if (core >= 0)
++		return core;
++out:
+ 	/*
+ 	 * Failed to find an idle core; stop looking for one.
+ 	 */
+@@ -6143,24 +6168,40 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+ 	return -1;
+ }
+ 
++static inline int
++scan_cpu_mask_for_idle_smt(struct cpumask *cpus, int target)
++{
++	int cpu;
++
++	for_each_cpu(cpu, cpu_smt_mask(target)) {
++		if (!cpumask_test_cpu(cpu, cpus))
++			continue;
++		if (idle_cpu(cpu))
++			return cpu;
++	}
++
++	return -1;
++}
++
+ /*
+  * Scan the local SMT mask for idle CPUs.
+  */
+ static int select_idle_smt(struct task_struct *p, int target)
+ {
++	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+ 	int cpu;
+ 
+ 	if (!static_branch_likely(&sched_smt_present))
+ 		return -1;
+ 
+-	for_each_cpu(cpu, cpu_smt_mask(target)) {
+-		if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
+-			continue;
+-		if (available_idle_cpu(cpu))
+-			return cpu;
+-	}
++	cpu = scan_cpu_mask_for_idle_smt(&p->cpus_preferred, target);
+ 
+-	return -1;
++	if (cpu >= 0 || !p->affinity_unequal)
++		return cpu;
++
++	cpumask_andnot(cpus, &p->cpus_allowed, &p->cpus_preferred);
++
++	return scan_cpu_mask_for_idle_smt(cpus, target);
+ }
+ 
+ #else /* CONFIG_SCHED_SMT */
+@@ -6177,6 +6218,24 @@ static inline int select_idle_smt(struct task_struct *p, int target)
+ 
+ #endif /* CONFIG_SCHED_SMT */
+ 
++static inline int
++scan_cpu_mask_for_idle_cpu(struct cpumask *cpus, int target,
++			   struct sched_domain *sd, int *nr)
++{
++	int cpu;
++
++	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
++		if (!--(*nr))
++			return -1;
++		if (!cpumask_test_cpu(cpu, cpus))
++			continue;
++		if (available_idle_cpu(cpu))
++			break;
++	}
++
++	return cpu;
++}
++
+ /*
+  * Scan the LLC domain for idle CPUs; this is dynamically regulated by
+  * comparing the average scan cost (tracked in sd->avg_scan_cost) against the
+@@ -6185,10 +6244,11 @@ static inline int select_idle_smt(struct task_struct *p, int target)
+ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int target)
+ {
+ 	struct sched_domain *this_sd;
++	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
+ 	u64 avg_cost, avg_idle;
+ 	u64 time, cost;
+ 	s64 delta;
+-	int cpu, nr = INT_MAX;
++	int cpu, nr = INT_MAX, nr_begin;
+ 
+ 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
+ 	if (!this_sd)
+@@ -6212,16 +6272,18 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+ 			nr = 4;
+ 	}
+ 
++	nr_begin = nr;
+ 	time = local_clock();
+ 
+-	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
+-		if (!--nr)
+-			return -1;
+-		if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
+-			continue;
+-		if (available_idle_cpu(cpu))
+-			break;
+-	}
++	cpu = scan_cpu_mask_for_idle_cpu(&p->cpus_preferred, target, sd, &nr);
++
++	if (!nr || !p->affinity_unequal || cpu != target || nr >= nr_begin - 1)
++		goto out;
++
++	cpumask_andnot(cpus, &p->cpus_allowed, &p->cpus_preferred);
++
++	cpu = scan_cpu_mask_for_idle_cpu(cpus, target, sd, &nr);
++out:
+ 
+ 	time = local_clock() - time;
+ 	cost = this_sd->avg_scan_cost;
+@@ -6677,6 +6739,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
+ 	int new_cpu = prev_cpu;
+ 	int want_affine = 0;
+ 	int sync = (wake_flags & WF_SYNC) && !(current->flags & PF_EXITING);
++	struct cpumask *cpus = &p->cpus_preferred;
+ 
+ 	if (sd_flag & SD_BALANCE_WAKE) {
+ 		record_wakee(p);
+@@ -6689,7 +6752,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
+ 		}
+ 
+ 		want_affine = !wake_wide(p) && !wake_cap(p, cpu, prev_cpu) &&
+-			      cpumask_test_cpu(cpu, &p->cpus_allowed);
++			      cpumask_test_cpu(cpu, cpus);
+ 	}
+ 
+ 	rcu_read_lock();
+@@ -6718,7 +6781,7 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int sd_flag, int wake_f
+ 
+ 	if (unlikely(sd)) {
+ 		/* Slow path */
+-		new_cpu = find_idlest_cpu(sd, p, cpu, prev_cpu, sd_flag);
++		new_cpu = find_idlest_cpu(sd, p, cpu, prev_cpu, sd_flag, cpus);
+ 	} else if (sd_flag & SD_BALANCE_WAKE) { /* XXX always ? */
+ 		/* Fast path */
+ 
 -- 
 2.9.3
 
