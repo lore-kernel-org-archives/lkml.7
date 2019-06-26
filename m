@@ -2,69 +2,93 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E33C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7BDC48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A2E208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBB7208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561579494;
+	bh=X/TJG4C67uj+QUKHwisoqZfc5Kvj94fNEcC3CN0WB94=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qKu8FfVwGNYHW/fyIcKsKjiQeXOQdmmrtFoNOKpWak3LHf8JSWsMpCqlG9FCSVr5/
+	 NQiMqwQrfuXdZAAx8FiZ7e4E0792IKxGJB/gJW/RcCFKVoQT8VOjbfV62JDCIkAbZ5
+	 nuXkqX/nL8BDFEmf2qHppISFBOs9dE+s1Ah3KKjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfFZUDu (ORCPT
+        id S1726437AbfFZUEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:03:50 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40778 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbfFZUDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:03:49 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DA22C14DB71D4;
-        Wed, 26 Jun 2019 13:03:48 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 13:03:48 -0700 (PDT)
-Message-Id: <20190626.130348.743645536748522991.davem@davemloft.net>
-To:     skhan@linuxfoundation.org
-Cc:     gnomes@lxorguk.ukuu.org.uk, puranjay12@gmail.com,
-        bjorn@helgaas.com, stephen@networkplumber.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] net: fddi: skfp: Use PCI generic definitions
- instead of private duplicates
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <5f04f52d-8911-4db9-4321-00334d357d54@linuxfoundation.org>
-References: <20190621094607.15011-1-puranjay12@gmail.com>
-        <20190621162024.53620dd9@alans-desktop>
-        <5f04f52d-8911-4db9-4321-00334d357d54@linuxfoundation.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Jun 2019 13:03:49 -0700 (PDT)
+        Wed, 26 Jun 2019 16:04:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfFZUEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:04:53 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E78421726;
+        Wed, 26 Jun 2019 20:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561579492;
+        bh=X/TJG4C67uj+QUKHwisoqZfc5Kvj94fNEcC3CN0WB94=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=l8Gsoh/SJBlaAxZJZN8+Aw1gi526kwtkbhRGPFAL/rPI9VcVGHSg0XyKNs0662pkE
+         UVTvGUkCenYwtnIbZ7hEwwLm3hWhoBxY08KOUrW8ggIJx/pH+TzpvswxO2JPFlJaKw
+         BL8S9x2dlOQcyuIPOj8O0YupH5/Xim22p9lVtOPU=
+Received: by mail-qk1-f170.google.com with SMTP id c11so2755109qkk.8;
+        Wed, 26 Jun 2019 13:04:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAUb+25L+upX1s4ads9MHz8e0O4eRgTD4EzHZuz4BE0qutU0mHOJ
+        U0xA+D0clGrFV+dnoVxPlxo2oDv8ChCzUg3zgQ==
+X-Google-Smtp-Source: APXvYqx9Wqp3U8SYJhFU7onUuLcS2mEmyi7gNYeK7pL8Fg15uhD2NucDRkOOFa4EDWtQPKvRvcevUInPbBwLEdWt56Y=
+X-Received: by 2002:ae9:ebd1:: with SMTP id b200mr5743819qkg.152.1561579491498;
+ Wed, 26 Jun 2019 13:04:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <1561389236-26464-1-git-send-email-stefan.popa@analog.com> <20190626204820.513fb866@archlinux>
+In-Reply-To: <20190626204820.513fb866@archlinux>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 26 Jun 2019 14:04:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLmXi6Uy9W0tXX87tHuV99H05_+yc98mRUmX_JA0bG=4Q@mail.gmail.com>
+Message-ID: <CAL_JsqLmXi6Uy9W0tXX87tHuV99H05_+yc98mRUmX_JA0bG=4Q@mail.gmail.com>
+Subject: Re: [PATCH 4/4] iio: frequency: adf4371: Add support for output stage mute
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Stefan Popa <stefan.popa@analog.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
-Date: Fri, 21 Jun 2019 10:36:02 -0600
+On Wed, Jun 26, 2019 at 1:48 PM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Mon, 24 Jun 2019 18:13:56 +0300
+> Stefan Popa <stefan.popa@analog.com> wrote:
+>
+> > Another feature of the ADF4371/ADF4372 is that the supply current to the
+> > RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
+> > as measured by the digital lock detect circuitry. The mute to lock
+> > detect bit (MUTE_LD) in REG25 enables this function.
+> >
+> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> Bit of fuzz on this due to me ignoring patch 1 for now.
+>
+> Rob probably missed the binding as it was buried inside a patch that wasn't
+> clearly labelled and it is unlike him to review part of the bindings in
+> a series.
 
-> Stephen Hemminger is suggesting removal as well. Makes sense to me.
- ...
-> What would you recommend the next steps are? Would like driver
-> removed?
+I wrote my reply this morning, but then got distracted with why the
+meta-schema didn't catch the problem of missing a type definition. Now
+it will once I commit it and fix the other cases that we already have.
 
-If you hadn't proposed the cleanups nobody would have said to remove
-this driver.  Really if someone wants to go through the tree and
-send removal patches for seemingly really unused drivers, that is
-a separate piece of work unrelated to your cleanup.
-
-While something still is in the tree we should clean it up from
-stuff like this.
-
-Therefore, I'll be applying v5 of your changes, thanks.
+Rob
