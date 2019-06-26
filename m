@@ -2,150 +2,690 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6902FC48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B73C48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A14220645
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1581A215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eu9mcvU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfFZCdO convert rfc822-to-8bit (ORCPT
+        id S1726658AbfFZCd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:33:14 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60725 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfFZCdM (ORCPT
+        Tue, 25 Jun 2019 22:33:26 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57888 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfFZCdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:33:12 -0400
-Received: from mail-wr1-f70.google.com ([209.85.221.70])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <chia-lin.kao@canonical.com>)
-        id 1hfxkE-0005K5-HK
-        for linux-kernel@vger.kernel.org; Wed, 26 Jun 2019 02:33:10 +0000
-Received: by mail-wr1-f70.google.com with SMTP id q2so313184wrr.18
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 19:33:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2/ZHlWC5YNQjm9JD+S58TuCvob2sXAmvXNIrsp942FI=;
-        b=nG137xtXjIimb0EBhtX6YKdM5vPMgdCu6V/uM1odjZHbLJHuTjWpTl9YtwKOp76p7s
-         XnYqhvwpx+53nasISHjdJNO/RYH+ftuwozaR3N2D26D5oY/g/aU3KRdxoDPzuLH9naX6
-         5ZHanCs0OZZfJa1PUnNRzF+Z20PWQCGjQkwpp0yEoKvPwQ5CwWLxopD2l5PTUWNISDYQ
-         fjNItycHex3DDwp0DCJ70hyKs2Jlt7Wee75Xt98lhBDPKU0dEm9V9KEHM0hzUYddmK6a
-         enr/pCdf2matAKL6Lzi8MHERuNQzrPaBc8x8QR/FrZnLvZ0RwYxEexhk0LkmWcHDvtIu
-         5tYw==
-X-Gm-Message-State: APjAAAX9qrCrr69x74fVffSa+qEccvmTcSk2VpKtzuW3JQ0dGw1yOUWZ
-        JcHwPsXJ3GKuSqI8n1DnGp+XpX7h3YutoVXMQvIvjvJ/iqwrlvk77xAP88D1QiTs7O+wtjiD0bv
-        Ez0Qkthda8rwK/fQiSJufPkmaaJhuHEc4WKlMe6EabyaF4AX8JMpFGs+WlQ==
-X-Received: by 2002:a1c:9d86:: with SMTP id g128mr621727wme.51.1561516390048;
-        Tue, 25 Jun 2019 19:33:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxI/DpGooLHNgpl6l5PwE9OiC7DQxK+YjjCY08iIvhMTHxZHOv0G3aEyMV2InGX1Z6lhWeJMIMmgVZGb2QR9R0=
-X-Received: by 2002:a1c:9d86:: with SMTP id g128mr621691wme.51.1561516389693;
- Tue, 25 Jun 2019 19:33:09 -0700 (PDT)
+        Tue, 25 Jun 2019 22:33:22 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2Udd5118335;
+        Wed, 26 Jun 2019 02:32:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=Hy170Mcpaf/HVSd11wjv77IxbdHlO6fASmGwJEwN8ZI=;
+ b=eu9mcvU9MsnsBG8vwpPWTvIBk741b/x1iE+Fr5DOWZeabQtVCdxfpyJ0LYUJ4k7QYhqq
+ v+POZsu8xlhieOZe+faTa+ARx/9ToBWICEQrgzcE5hwuQoIbjZuYnq+aEUdRyBC2NpXj
+ vq/NJjL5jM9fFY/ZxUyJXNqQ1U3cvfzhH/Fr0Xra1DMwdfHMZEdfVMgs3OCYgQIuNK2l
+ BQ/mvSAbuPm96L+9Z/dvg5G85Uirlo7OJKzGJDpIp9Dfw67F6vzT8EFF+uP4Dqi4B3Cu
+ FxW2UhDXdMZFRChibjAsLmpvk5jWUyhPn7FZ0OfrZ49cTgtoK0x6hQne/mFVRAVP2g/A rA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t9brt7mhn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 02:32:20 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2VVVX077420;
+        Wed, 26 Jun 2019 02:32:20 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2tat7cjnmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Jun 2019 02:32:20 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5Q2WJT6079292;
+        Wed, 26 Jun 2019 02:32:19 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2tat7cjnm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Jun 2019 02:32:19 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5Q2WD0l020014;
+        Wed, 26 Jun 2019 02:32:13 GMT
+Received: from localhost (/10.159.230.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Jun 2019 19:32:12 -0700
+Subject: [PATCH 1/5] vfs: create a generic checking and prep function for
+ FS_IOC_SETFLAGS
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        darrick.wong@oracle.com, shaggy@kernel.org,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, hch@infradead.org,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk
+Cc:     cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        linux-btrfs@vger.kernel.org
+Date:   Tue, 25 Jun 2019 19:32:10 -0700
+Message-ID: <156151633004.2283456.4175543089138173586.stgit@magnolia>
+In-Reply-To: <156151632209.2283456.3592379873620132456.stgit@magnolia>
+References: <156151632209.2283456.3592379873620132456.stgit@magnolia>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20190625083051.30332-1-acelan.kao@canonical.com> <a3469010-829c-16dc-be83-6fe9b3021530@linux.intel.com>
-In-Reply-To: <a3469010-829c-16dc-be83-6fe9b3021530@linux.intel.com>
-From:   AceLan Kao <acelan.kao@canonical.com>
-Date:   Wed, 26 Jun 2019 10:32:57 +0800
-Message-ID: <CAFv23QnaKMs9bjS9ry_L4K7wskUqNR2AsgDG-v+fah2XO7EpKw@mail.gmail.com>
-Subject: Re: [PATCH] i2c: designware: Add disable runtime pm quirk
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906260027
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding I2C_HID_QUIRK_NO_RUNTIME_PM quirk doesn't help on this issue.
-Actually, Goodix touchpad already has that PM quirk in the list for other issue.
-        { I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
-               I2C_HID_QUIRK_NO_RUNTIME_PM },
-I also modify the code as you suggested, but no luck.
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-It's not Goodix takes time to wakeup, it's designware I2C controller.
-Designware doesn't do anything wrong here, it's Goodix set the interrupt timeout
-that leads to the issue, so we have to prevent designware from runtime
-suspended.
+Create a generic function to check incoming FS_IOC_SETFLAGS flag values
+and later prepare the inode for updates so that we can standardize the
+implementations that follow ext4's flag values.
 
-Jarkko Nikula <jarkko.nikula@linux.intel.com> 於 2019年6月25日 週二 下午9:38寫道：
->
-> On 6/25/19 11:30 AM, AceLan Kao wrote:
-> > Dell machines come with goodix touchpad IC suffer from the double click
-> > issue if the Designware I2C adapter enters runtime suspend.
-> >
-> > It's because the goodix re-assert the interrupt if host doesn't read the
-> > data within 100ms and designware takes a longer time to wake up from
-> > runtime suspend. In the case, it got a second interrupt during
-> > resuming, so it thinks it's a double click.
-> >
-> > There is no simple way to fix this, it's a firmware issue and goodix
-> > agrees to fix this in their firmware on next release, but this issue
-> > still affects the machines that don't come with an updated firmware. So,
-> > add a quirk to mark those machines and avoid the designware from
-> > entering runtime suspend.
-> >
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-> >
-> > Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
-> > ---
-> >   drivers/i2c/busses/i2c-designware-master.c | 30 ++++++++++++++++++++--
-> >   1 file changed, 28 insertions(+), 2 deletions(-)
-> >
-> I think better place to have this fixed is in
-> drivers/hid/i2c-hid/i2c-hid-core.c by forcing the adapter device active
-> when communicating with such touchpad.
->
-> In that way only bus where touchpad is connected stays active, not all
-> and makes sure issue is handled also if that touchpad is ever connected
-> to any other I2C adapter than Designware.
->
-> I did something similar in the commit 72bfcee11cf8 ("i2c: Prevent
-> runtime suspend of adapter when Host Notify is required"). Not exactly
-> same issue but similar idea.
->
-> By looking at i2c-hid-core.c I saw a few i2c-hid devices have
-> I2C_HID_QUIRK_NO_RUNTIME_PM. Could you test how does this Goodix behave
-> if only i2c-hid device runtime PM is prevented not I2C adapter?
->
-> A very quick test would be to comment out those lines below:
->
-> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c
-> b/drivers/hid/i2c-hid/i2c-hid-core.c
-> index 90164fed08d3..bd3e6570c45e 100644
-> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
-> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-> @@ -1156,8 +1156,8 @@ static int i2c_hid_probe(struct i2c_client *client,
->                 goto err_mem_free;
->         }
->
-> -       if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> -               pm_runtime_put(&client->dev);
-> +//     if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> +//             pm_runtime_put(&client->dev);
->
->         return 0;
->
-> @@ -1183,8 +1183,8 @@ static int i2c_hid_remove(struct i2c_client *client)
->         struct i2c_hid *ihid = i2c_get_clientdata(client);
->         struct hid_device *hid;
->
-> -       if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> -               pm_runtime_get_sync(&client->dev);
-> +//     if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
-> +//             pm_runtime_get_sync(&client->dev);
->         pm_runtime_disable(&client->dev);
->         pm_runtime_set_suspended(&client->dev);
->         pm_runtime_put_noidle(&client->dev);
->
-> --
-> Jarkko
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: David Sterba <dsterba@suse.com>
+---
+ fs/btrfs/ioctl.c    |   13 +++++--------
+ fs/efivarfs/file.c  |   26 +++++++++++++++++---------
+ fs/ext2/ioctl.c     |   16 ++++------------
+ fs/ext4/ioctl.c     |   13 +++----------
+ fs/f2fs/file.c      |    7 ++++---
+ fs/gfs2/file.c      |   42 +++++++++++++++++++++++++++++-------------
+ fs/hfsplus/ioctl.c  |   21 ++++++++++++---------
+ fs/inode.c          |   24 ++++++++++++++++++++++++
+ fs/jfs/ioctl.c      |   22 +++++++---------------
+ fs/nilfs2/ioctl.c   |    9 ++-------
+ fs/ocfs2/ioctl.c    |   13 +++----------
+ fs/orangefs/file.c  |   35 ++++++++++++++++++++++++++---------
+ fs/reiserfs/ioctl.c |   10 ++++------
+ fs/ubifs/ioctl.c    |   13 +++----------
+ include/linux/fs.h  |    3 +++
+ 15 files changed, 146 insertions(+), 121 deletions(-)
+
+
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 6dafa857bbb9..d3d9b4abb09b 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -187,7 +187,7 @@ static int btrfs_ioctl_setflags(struct file *file, void __user *arg)
+ 	struct btrfs_inode *binode = BTRFS_I(inode);
+ 	struct btrfs_root *root = binode->root;
+ 	struct btrfs_trans_handle *trans;
+-	unsigned int fsflags;
++	unsigned int fsflags, old_fsflags;
+ 	int ret;
+ 	const char *comp = NULL;
+ 	u32 binode_flags = binode->flags;
+@@ -212,13 +212,10 @@ static int btrfs_ioctl_setflags(struct file *file, void __user *arg)
+ 	inode_lock(inode);
+ 
+ 	fsflags = btrfs_mask_fsflags_for_type(inode, fsflags);
+-	if ((fsflags ^ btrfs_inode_flags_to_fsflags(binode->flags)) &
+-	    (FS_APPEND_FL | FS_IMMUTABLE_FL)) {
+-		if (!capable(CAP_LINUX_IMMUTABLE)) {
+-			ret = -EPERM;
+-			goto out_unlock;
+-		}
+-	}
++	old_fsflags = btrfs_inode_flags_to_fsflags(binode->flags);
++	ret = vfs_ioc_setflags_prepare(inode, old_fsflags, fsflags);
++	if (ret)
++		goto out_unlock;
+ 
+ 	if (fsflags & FS_SYNC_FL)
+ 		binode_flags |= BTRFS_INODE_SYNC;
+diff --git a/fs/efivarfs/file.c b/fs/efivarfs/file.c
+index 8e568428c88b..a3cc10b1bfe1 100644
+--- a/fs/efivarfs/file.c
++++ b/fs/efivarfs/file.c
+@@ -110,16 +110,22 @@ static ssize_t efivarfs_file_read(struct file *file, char __user *userbuf,
+ 	return size;
+ }
+ 
+-static int
+-efivarfs_ioc_getxflags(struct file *file, void __user *arg)
++static inline unsigned int efivarfs_getflags(struct inode *inode)
+ {
+-	struct inode *inode = file->f_mapping->host;
+ 	unsigned int i_flags;
+ 	unsigned int flags = 0;
+ 
+ 	i_flags = inode->i_flags;
+ 	if (i_flags & S_IMMUTABLE)
+ 		flags |= FS_IMMUTABLE_FL;
++	return flags;
++}
++
++static int
++efivarfs_ioc_getxflags(struct file *file, void __user *arg)
++{
++	struct inode *inode = file->f_mapping->host;
++	unsigned int flags = efivarfs_getflags(inode);
+ 
+ 	if (copy_to_user(arg, &flags, sizeof(flags)))
+ 		return -EFAULT;
+@@ -132,6 +138,7 @@ efivarfs_ioc_setxflags(struct file *file, void __user *arg)
+ 	struct inode *inode = file->f_mapping->host;
+ 	unsigned int flags;
+ 	unsigned int i_flags = 0;
++	unsigned int oldflags = efivarfs_getflags(inode);
+ 	int error;
+ 
+ 	if (!inode_owner_or_capable(inode))
+@@ -143,9 +150,6 @@ efivarfs_ioc_setxflags(struct file *file, void __user *arg)
+ 	if (flags & ~FS_IMMUTABLE_FL)
+ 		return -EOPNOTSUPP;
+ 
+-	if (!capable(CAP_LINUX_IMMUTABLE))
+-		return -EPERM;
+-
+ 	if (flags & FS_IMMUTABLE_FL)
+ 		i_flags |= S_IMMUTABLE;
+ 
+@@ -155,12 +159,16 @@ efivarfs_ioc_setxflags(struct file *file, void __user *arg)
+ 		return error;
+ 
+ 	inode_lock(inode);
++
++	error = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++	if (error)
++		goto out;
++
+ 	inode_set_flags(inode, i_flags, S_IMMUTABLE);
++out:
+ 	inode_unlock(inode);
+-
+ 	mnt_drop_write_file(file);
+-
+-	return 0;
++	return error;
+ }
+ 
+ static long
+diff --git a/fs/ext2/ioctl.c b/fs/ext2/ioctl.c
+index 0367c0039e68..1b853fb0b163 100644
+--- a/fs/ext2/ioctl.c
++++ b/fs/ext2/ioctl.c
+@@ -60,18 +60,10 @@ long ext2_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		}
+ 		oldflags = ei->i_flags;
+ 
+-		/*
+-		 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+-		 * the relevant capability.
+-		 *
+-		 * This test looks nicer. Thanks to Pauline Middelink
+-		 */
+-		if ((flags ^ oldflags) & (EXT2_APPEND_FL | EXT2_IMMUTABLE_FL)) {
+-			if (!capable(CAP_LINUX_IMMUTABLE)) {
+-				inode_unlock(inode);
+-				ret = -EPERM;
+-				goto setflags_out;
+-			}
++		ret = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++		if (ret) {
++			inode_unlock(inode);
++			goto setflags_out;
+ 		}
+ 
+ 		flags = flags & EXT2_FL_USER_MODIFIABLE;
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index e486e49b31ed..272b6e44191b 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -289,16 +289,9 @@ static int ext4_ioctl_setflags(struct inode *inode,
+ 	/* The JOURNAL_DATA flag is modifiable only by root */
+ 	jflag = flags & EXT4_JOURNAL_DATA_FL;
+ 
+-	/*
+-	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+-	 * the relevant capability.
+-	 *
+-	 * This test looks nicer. Thanks to Pauline Middelink
+-	 */
+-	if ((flags ^ oldflags) & (EXT4_APPEND_FL | EXT4_IMMUTABLE_FL)) {
+-		if (!capable(CAP_LINUX_IMMUTABLE))
+-			goto flags_out;
+-	}
++	err = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++	if (err)
++		goto flags_out;
+ 
+ 	/*
+ 	 * The JOURNAL_DATA flag can only be changed by
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 45b45f37d347..845ae6f43ebc 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1670,6 +1670,7 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+ {
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 	unsigned int oldflags;
++	int err;
+ 
+ 	/* Is it quota file? Do not allow user to mess with it */
+ 	if (IS_NOQUOTA(inode))
+@@ -1679,9 +1680,9 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+ 
+ 	oldflags = fi->i_flags;
+ 
+-	if ((flags ^ oldflags) & (F2FS_APPEND_FL | F2FS_IMMUTABLE_FL))
+-		if (!capable(CAP_LINUX_IMMUTABLE))
+-			return -EPERM;
++	err = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++	if (err)
++		return err;
+ 
+ 	flags = flags & F2FS_FL_USER_MODIFIABLE;
+ 	flags |= oldflags & ~F2FS_FL_USER_MODIFIABLE;
+diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
+index d174b1f8fd08..1cb0c3afd3dc 100644
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -136,27 +136,36 @@ static struct {
+ 	{FS_JOURNAL_DATA_FL, GFS2_DIF_JDATA | GFS2_DIF_INHERIT_JDATA},
+ };
+ 
++static inline u32 gfs2_gfsflags_to_fsflags(struct inode *inode, u32 gfsflags)
++{
++	int i;
++	u32 fsflags = 0;
++
++	if (S_ISDIR(inode->i_mode))
++		gfsflags &= ~GFS2_DIF_JDATA;
++	else
++		gfsflags &= ~GFS2_DIF_INHERIT_JDATA;
++
++	for (i = 0; i < ARRAY_SIZE(fsflag_gfs2flag); i++)
++		if (gfsflags & fsflag_gfs2flag[i].gfsflag)
++			fsflags |= fsflag_gfs2flag[i].fsflag;
++	return fsflags;
++}
++
+ static int gfs2_get_flags(struct file *filp, u32 __user *ptr)
+ {
+ 	struct inode *inode = file_inode(filp);
+ 	struct gfs2_inode *ip = GFS2_I(inode);
+ 	struct gfs2_holder gh;
+-	int i, error;
+-	u32 gfsflags, fsflags = 0;
++	int error;
++	u32 fsflags;
+ 
+ 	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
+ 	error = gfs2_glock_nq(&gh);
+ 	if (error)
+ 		goto out_uninit;
+ 
+-	gfsflags = ip->i_diskflags;
+-	if (S_ISDIR(inode->i_mode))
+-		gfsflags &= ~GFS2_DIF_JDATA;
+-	else
+-		gfsflags &= ~GFS2_DIF_INHERIT_JDATA;
+-	for (i = 0; i < ARRAY_SIZE(fsflag_gfs2flag); i++)
+-		if (gfsflags & fsflag_gfs2flag[i].gfsflag)
+-			fsflags |= fsflag_gfs2flag[i].fsflag;
++	fsflags = gfs2_gfsflags_to_fsflags(inode, ip->i_diskflags);
+ 
+ 	if (put_user(fsflags, ptr))
+ 		error = -EFAULT;
+@@ -200,9 +209,11 @@ void gfs2_set_inode_flags(struct inode *inode)
+  * @filp: file pointer
+  * @reqflags: The flags to set
+  * @mask: Indicates which flags are valid
++ * @fsflags: The FS_* inode flags passed in
+  *
+  */
+-static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask)
++static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask,
++			     const u32 fsflags)
+ {
+ 	struct inode *inode = file_inode(filp);
+ 	struct gfs2_inode *ip = GFS2_I(inode);
+@@ -210,7 +221,7 @@ static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask)
+ 	struct buffer_head *bh;
+ 	struct gfs2_holder gh;
+ 	int error;
+-	u32 new_flags, flags;
++	u32 new_flags, flags, oldflags;
+ 
+ 	error = mnt_want_write_file(filp);
+ 	if (error)
+@@ -220,6 +231,11 @@ static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask)
+ 	if (error)
+ 		goto out_drop_write;
+ 
++	oldflags = gfs2_gfsflags_to_fsflags(inode, ip->i_diskflags);
++	error = vfs_ioc_setflags_prepare(inode, oldflags, fsflags);
++	if (error)
++		goto out;
++
+ 	error = -EACCES;
+ 	if (!inode_owner_or_capable(inode))
+ 		goto out;
+@@ -308,7 +324,7 @@ static int gfs2_set_flags(struct file *filp, u32 __user *ptr)
+ 		mask &= ~(GFS2_DIF_TOPDIR | GFS2_DIF_INHERIT_JDATA);
+ 	}
+ 
+-	return do_gfs2_set_flags(filp, gfsflags, mask);
++	return do_gfs2_set_flags(filp, gfsflags, mask, fsflags);
+ }
+ 
+ static int gfs2_getlabel(struct file *filp, char __user *label)
+diff --git a/fs/hfsplus/ioctl.c b/fs/hfsplus/ioctl.c
+index 5e6502ef7415..ce15b9496b77 100644
+--- a/fs/hfsplus/ioctl.c
++++ b/fs/hfsplus/ioctl.c
+@@ -57,9 +57,8 @@ static int hfsplus_ioctl_bless(struct file *file, int __user *user_flags)
+ 	return 0;
+ }
+ 
+-static int hfsplus_ioctl_getflags(struct file *file, int __user *user_flags)
++static inline unsigned int hfsplus_getflags(struct inode *inode)
+ {
+-	struct inode *inode = file_inode(file);
+ 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
+ 	unsigned int flags = 0;
+ 
+@@ -69,6 +68,13 @@ static int hfsplus_ioctl_getflags(struct file *file, int __user *user_flags)
+ 		flags |= FS_APPEND_FL;
+ 	if (hip->userflags & HFSPLUS_FLG_NODUMP)
+ 		flags |= FS_NODUMP_FL;
++	return flags;
++}
++
++static int hfsplus_ioctl_getflags(struct file *file, int __user *user_flags)
++{
++	struct inode *inode = file_inode(file);
++	unsigned int flags = hfsplus_getflags(inode);
+ 
+ 	return put_user(flags, user_flags);
+ }
+@@ -78,6 +84,7 @@ static int hfsplus_ioctl_setflags(struct file *file, int __user *user_flags)
+ 	struct inode *inode = file_inode(file);
+ 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
+ 	unsigned int flags, new_fl = 0;
++	unsigned int oldflags = hfsplus_getflags(inode);
+ 	int err = 0;
+ 
+ 	err = mnt_want_write_file(file);
+@@ -96,13 +103,9 @@ static int hfsplus_ioctl_setflags(struct file *file, int __user *user_flags)
+ 
+ 	inode_lock(inode);
+ 
+-	if ((flags & (FS_IMMUTABLE_FL|FS_APPEND_FL)) ||
+-	    inode->i_flags & (S_IMMUTABLE|S_APPEND)) {
+-		if (!capable(CAP_LINUX_IMMUTABLE)) {
+-			err = -EPERM;
+-			goto out_unlock_inode;
+-		}
+-	}
++	err = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++	if (err)
++		goto out_unlock_inode;
+ 
+ 	/* don't silently ignore unsupported ext2 flags */
+ 	if (flags & ~(FS_IMMUTABLE_FL|FS_APPEND_FL|FS_NODUMP_FL)) {
+diff --git a/fs/inode.c b/fs/inode.c
+index 4348cfb14562..9cd1b6501e97 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -2190,3 +2190,27 @@ struct timespec64 current_time(struct inode *inode)
+ 	return timespec64_trunc(now, inode->i_sb->s_time_gran);
+ }
+ EXPORT_SYMBOL(current_time);
++
++/*
++ * Generic function to check FS_IOC_SETFLAGS values and reject any invalid
++ * configurations.
++ *
++ * Note: the caller should be holding i_mutex, or else be sure that they have
++ * exclusive access to the inode structure.
++ */
++int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
++			     unsigned int flags)
++{
++	/*
++	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
++	 * the relevant capability.
++	 *
++	 * This test looks nicer. Thanks to Pauline Middelink
++	 */
++	if ((flags ^ oldflags) & (FS_APPEND_FL | FS_IMMUTABLE_FL) &&
++	    !capable(CAP_LINUX_IMMUTABLE))
++		return -EPERM;
++
++	return 0;
++}
++EXPORT_SYMBOL(vfs_ioc_setflags_prepare);
+diff --git a/fs/jfs/ioctl.c b/fs/jfs/ioctl.c
+index ba34dae8bd9f..10ee0ecca1a8 100644
+--- a/fs/jfs/ioctl.c
++++ b/fs/jfs/ioctl.c
+@@ -98,24 +98,16 @@ long jfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		/* Lock against other parallel changes of flags */
+ 		inode_lock(inode);
+ 
+-		oldflags = jfs_inode->mode2;
+-
+-		/*
+-		 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+-		 * the relevant capability.
+-		 */
+-		if ((oldflags & JFS_IMMUTABLE_FL) ||
+-			((flags ^ oldflags) &
+-			(JFS_APPEND_FL | JFS_IMMUTABLE_FL))) {
+-			if (!capable(CAP_LINUX_IMMUTABLE)) {
+-				inode_unlock(inode);
+-				err = -EPERM;
+-				goto setflags_out;
+-			}
++		oldflags = jfs_map_ext2(jfs_inode->mode2 & JFS_FL_USER_VISIBLE,
++					0);
++		err = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++		if (err) {
++			inode_unlock(inode);
++			goto setflags_out;
+ 		}
+ 
+ 		flags = flags & JFS_FL_USER_MODIFIABLE;
+-		flags |= oldflags & ~JFS_FL_USER_MODIFIABLE;
++		flags |= jfs_inode->mode2 & ~JFS_FL_USER_MODIFIABLE;
+ 		jfs_inode->mode2 = flags;
+ 
+ 		jfs_set_inode_flags(inode);
+diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
+index 9b96d79eea6c..91b9dac6b2cc 100644
+--- a/fs/nilfs2/ioctl.c
++++ b/fs/nilfs2/ioctl.c
+@@ -148,13 +148,8 @@ static int nilfs_ioctl_setflags(struct inode *inode, struct file *filp,
+ 
+ 	oldflags = NILFS_I(inode)->i_flags;
+ 
+-	/*
+-	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by the
+-	 * relevant capability.
+-	 */
+-	ret = -EPERM;
+-	if (((flags ^ oldflags) & (FS_APPEND_FL | FS_IMMUTABLE_FL)) &&
+-	    !capable(CAP_LINUX_IMMUTABLE))
++	ret = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++	if (ret)
+ 		goto out;
+ 
+ 	ret = nilfs_transaction_begin(inode->i_sb, &ti, 0);
+diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+index 994726ada857..d6f7b299eb23 100644
+--- a/fs/ocfs2/ioctl.c
++++ b/fs/ocfs2/ioctl.c
+@@ -106,16 +106,9 @@ static int ocfs2_set_inode_attr(struct inode *inode, unsigned flags,
+ 	flags = flags & mask;
+ 	flags |= oldflags & ~mask;
+ 
+-	/*
+-	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+-	 * the relevant capability.
+-	 */
+-	status = -EPERM;
+-	if ((oldflags & OCFS2_IMMUTABLE_FL) || ((flags ^ oldflags) &
+-		(OCFS2_APPEND_FL | OCFS2_IMMUTABLE_FL))) {
+-		if (!capable(CAP_LINUX_IMMUTABLE))
+-			goto bail_unlock;
+-	}
++	status = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++	if (status)
++		goto bail_unlock;
+ 
+ 	handle = ocfs2_start_trans(osb, OCFS2_INODE_UPDATE_CREDITS);
+ 	if (IS_ERR(handle)) {
+diff --git a/fs/orangefs/file.c b/fs/orangefs/file.c
+index a35c17017210..5b1dd00e8eca 100644
+--- a/fs/orangefs/file.c
++++ b/fs/orangefs/file.c
+@@ -357,11 +357,28 @@ static ssize_t orangefs_file_write_iter(struct kiocb *iocb,
+ 	return ret;
+ }
+ 
++static int orangefs_getflags(struct inode *inode, unsigned long *uval)
++{
++	__u64 val = 0;
++	int ret;
++
++	ret = orangefs_inode_getxattr(inode,
++				      "user.pvfs2.meta_hint",
++				      &val, sizeof(val));
++	if (ret < 0 && ret != -ENODATA)
++		return ret;
++	else if (ret == -ENODATA)
++		val = 0;
++	uval = val;
++	return 0;
++}
++
+ /*
+  * Perform a miscellaneous operation on a file.
+  */
+ static long orangefs_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ {
++	struct inode *inode = file_ioctl(file);
+ 	int ret = -ENOTTY;
+ 	__u64 val = 0;
+ 	unsigned long uval;
+@@ -375,15 +392,9 @@ static long orangefs_ioctl(struct file *file, unsigned int cmd, unsigned long ar
+ 	 * and append flags
+ 	 */
+ 	if (cmd == FS_IOC_GETFLAGS) {
+-		val = 0;
+-		ret = orangefs_inode_getxattr(file_inode(file),
+-					      "user.pvfs2.meta_hint",
+-					      &val, sizeof(val));
+-		if (ret < 0 && ret != -ENODATA)
++		ret = orangefs_getflags(inode, &uval);
++		if (ret)
+ 			return ret;
+-		else if (ret == -ENODATA)
+-			val = 0;
+-		uval = val;
+ 		gossip_debug(GOSSIP_FILE_DEBUG,
+ 			     "orangefs_ioctl: FS_IOC_GETFLAGS: %llu\n",
+ 			     (unsigned long long)uval);
+@@ -404,11 +415,17 @@ static long orangefs_ioctl(struct file *file, unsigned int cmd, unsigned long ar
+ 			gossip_err("orangefs_ioctl: the FS_IOC_SETFLAGS only supports setting one of FS_IMMUTABLE_FL|FS_APPEND_FL|FS_NOATIME_FL\n");
+ 			return -EINVAL;
+ 		}
++		ret = orangefs_getflags(inode, &old_uval);
++		if (ret)
++			return ret;
++		ret = vfs_ioc_setflags_prepare(inode, old_uval, uval);
++		if (ret)
++			return ret;
+ 		val = uval;
+ 		gossip_debug(GOSSIP_FILE_DEBUG,
+ 			     "orangefs_ioctl: FS_IOC_SETFLAGS: %llu\n",
+ 			     (unsigned long long)val);
+-		ret = orangefs_inode_setxattr(file_inode(file),
++		ret = orangefs_inode_setxattr(inode,
+ 					      "user.pvfs2.meta_hint",
+ 					      &val, sizeof(val), 0);
+ 	}
+diff --git a/fs/reiserfs/ioctl.c b/fs/reiserfs/ioctl.c
+index acbbaf7a0bb2..45e1a5d11af3 100644
+--- a/fs/reiserfs/ioctl.c
++++ b/fs/reiserfs/ioctl.c
+@@ -74,13 +74,11 @@ long reiserfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 				err = -EPERM;
+ 				goto setflags_out;
+ 			}
+-			if (((flags ^ REISERFS_I(inode)->
+-			      i_attrs) & (REISERFS_IMMUTABLE_FL |
+-					  REISERFS_APPEND_FL))
+-			    && !capable(CAP_LINUX_IMMUTABLE)) {
+-				err = -EPERM;
++			err = vfs_ioc_setflags_prepare(inode,
++						     REISERFS_I(inode)->i_attrs,
++						     flags);
++			if (err)
+ 				goto setflags_out;
+-			}
+ 			if ((flags & REISERFS_NOTAIL_FL) &&
+ 			    S_ISREG(inode->i_mode)) {
+ 				int result;
+diff --git a/fs/ubifs/ioctl.c b/fs/ubifs/ioctl.c
+index 4f1a397fda69..034ad14710d1 100644
+--- a/fs/ubifs/ioctl.c
++++ b/fs/ubifs/ioctl.c
+@@ -107,18 +107,11 @@ static int setflags(struct inode *inode, int flags)
+ 	if (err)
+ 		return err;
+ 
+-	/*
+-	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+-	 * the relevant capability.
+-	 */
+ 	mutex_lock(&ui->ui_mutex);
+ 	oldflags = ubifs2ioctl(ui->flags);
+-	if ((flags ^ oldflags) & (FS_APPEND_FL | FS_IMMUTABLE_FL)) {
+-		if (!capable(CAP_LINUX_IMMUTABLE)) {
+-			err = -EPERM;
+-			goto out_unlock;
+-		}
+-	}
++	err = vfs_ioc_setflags_prepare(inode, oldflags, flags);
++	if (err)
++		goto out_unlock;
+ 
+ 	ui->flags = ioctl2ubifs(flags);
+ 	ubifs_set_inode_flags(inode);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 79ffa2958bd8..3f74066d3f44 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3555,4 +3555,7 @@ static inline struct sock *io_uring_get_socket(struct file *file)
+ }
+ #endif
+ 
++int vfs_ioc_setflags_prepare(struct inode *inode, unsigned int oldflags,
++			     unsigned int flags);
++
+ #endif /* _LINUX_FS_H */
+
