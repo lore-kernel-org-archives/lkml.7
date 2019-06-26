@@ -2,115 +2,150 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F409C48BD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6902FC48BD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B5720645
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fhD2ePrR"
+	by mail.kernel.org (Postfix) with ESMTP id 4A14220645
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 02:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfFZCdK (ORCPT
+        id S1726561AbfFZCdO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 22:33:10 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57720 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfFZCdJ (ORCPT
+        Tue, 25 Jun 2019 22:33:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60725 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfFZCdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 22:33:09 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2T27N116704;
-        Wed, 26 Jun 2019 02:32:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=cAdDQjLmw3paRsCYayAMtBFRH59fRNc4vYLBHuqjsSA=;
- b=fhD2ePrRwz/tNVnG2b1N2SxWwBCi3qxAJ9ScLeOvuVkLhycNeHtLXg/o3eL41275woj8
- ae1pnoc9gndxX+yPAgYKkLzMLpobHgcGQ7u78YZOh1Ap4HyoVxmhrN6K2mnHKlN0MyOd
- OhBevmeNR6hVZ8huHdvp8I/MYGLascpA2Nj3UglocjM5tT8AyX8aGLlXg9ilLp8JGPs/
- BuVhOxq4datwVQrCjXZzkXwLRSy9DeWUHsvP4OQepO7T/089VH31yaMyMT5TpZ60nQhL
- 1SkoakCcrrCOOp8D6xl2gCyf9HGardzMlnRRr/ecDAzrAgD4E1/UxtQCn7f5gt8MOlS/ Pw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brt7mhc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 02:32:14 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5Q2VdiA148291;
-        Wed, 26 Jun 2019 02:32:13 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2t9acceh35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Jun 2019 02:32:13 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5Q2WDPn149893;
-        Wed, 26 Jun 2019 02:32:13 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t9acceh32-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 02:32:13 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5Q2W500019982;
-        Wed, 26 Jun 2019 02:32:05 GMT
-Received: from localhost (/10.159.230.235)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Jun 2019 19:32:04 -0700
-Subject: [PATCH v3 0/5] vfs: clean up SETFLAGS and FSSETXATTR option
- processing
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        darrick.wong@oracle.com, shaggy@kernel.org,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, hch@infradead.org,
-        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk
-Cc:     cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, reiserfs-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Date:   Tue, 25 Jun 2019 19:32:02 -0700
-Message-ID: <156151632209.2283456.3592379873620132456.stgit@magnolia>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 25 Jun 2019 22:33:12 -0400
+Received: from mail-wr1-f70.google.com ([209.85.221.70])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <chia-lin.kao@canonical.com>)
+        id 1hfxkE-0005K5-HK
+        for linux-kernel@vger.kernel.org; Wed, 26 Jun 2019 02:33:10 +0000
+Received: by mail-wr1-f70.google.com with SMTP id q2so313184wrr.18
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 19:33:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2/ZHlWC5YNQjm9JD+S58TuCvob2sXAmvXNIrsp942FI=;
+        b=nG137xtXjIimb0EBhtX6YKdM5vPMgdCu6V/uM1odjZHbLJHuTjWpTl9YtwKOp76p7s
+         XnYqhvwpx+53nasISHjdJNO/RYH+ftuwozaR3N2D26D5oY/g/aU3KRdxoDPzuLH9naX6
+         5ZHanCs0OZZfJa1PUnNRzF+Z20PWQCGjQkwpp0yEoKvPwQ5CwWLxopD2l5PTUWNISDYQ
+         fjNItycHex3DDwp0DCJ70hyKs2Jlt7Wee75Xt98lhBDPKU0dEm9V9KEHM0hzUYddmK6a
+         enr/pCdf2matAKL6Lzi8MHERuNQzrPaBc8x8QR/FrZnLvZ0RwYxEexhk0LkmWcHDvtIu
+         5tYw==
+X-Gm-Message-State: APjAAAX9qrCrr69x74fVffSa+qEccvmTcSk2VpKtzuW3JQ0dGw1yOUWZ
+        JcHwPsXJ3GKuSqI8n1DnGp+XpX7h3YutoVXMQvIvjvJ/iqwrlvk77xAP88D1QiTs7O+wtjiD0bv
+        Ez0Qkthda8rwK/fQiSJufPkmaaJhuHEc4WKlMe6EabyaF4AX8JMpFGs+WlQ==
+X-Received: by 2002:a1c:9d86:: with SMTP id g128mr621727wme.51.1561516390048;
+        Tue, 25 Jun 2019 19:33:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxI/DpGooLHNgpl6l5PwE9OiC7DQxK+YjjCY08iIvhMTHxZHOv0G3aEyMV2InGX1Z6lhWeJMIMmgVZGb2QR9R0=
+X-Received: by 2002:a1c:9d86:: with SMTP id g128mr621691wme.51.1561516389693;
+ Tue, 25 Jun 2019 19:33:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=863 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906260027
+References: <20190625083051.30332-1-acelan.kao@canonical.com> <a3469010-829c-16dc-be83-6fe9b3021530@linux.intel.com>
+In-Reply-To: <a3469010-829c-16dc-be83-6fe9b3021530@linux.intel.com>
+From:   AceLan Kao <acelan.kao@canonical.com>
+Date:   Wed, 26 Jun 2019 10:32:57 +0800
+Message-ID: <CAFv23QnaKMs9bjS9ry_L4K7wskUqNR2AsgDG-v+fah2XO7EpKw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: designware: Add disable runtime pm quirk
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Adding I2C_HID_QUIRK_NO_RUNTIME_PM quirk doesn't help on this issue.
+Actually, Goodix touchpad already has that PM quirk in the list for other issue.
+        { I2C_VENDOR_ID_GOODIX, I2C_DEVICE_ID_GOODIX_01F0,
+               I2C_HID_QUIRK_NO_RUNTIME_PM },
+I also modify the code as you suggested, but no luck.
 
-The FS_IOC_SETFLAGS and FS_IOC_FSSETXATTR ioctls were promoted from ext4
-and XFS, respectively, into the VFS.  However, we didn't promote any of
-the parameter checking code from those filesystems, which lead to a mess
-where each filesystem open-codes whatever parameter checks they want and
-the behavior across filesystems is no longer consistent.
+It's not Goodix takes time to wakeup, it's designware I2C controller.
+Designware doesn't do anything wrong here, it's Goodix set the interrupt timeout
+that leads to the issue, so we have to prevent designware from runtime
+suspended.
 
-Therefore, create some generic checking functions in the VFS and remove
-all the open-coded pieces in each filesystem.  This preserves the
-current behavior where a filesystem can choose to ignore fields it
-doesn't understand.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This has been lightly tested with fstests.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=file-ioctl-cleanups
+Jarkko Nikula <jarkko.nikula@linux.intel.com> 於 2019年6月25日 週二 下午9:38寫道：
+>
+> On 6/25/19 11:30 AM, AceLan Kao wrote:
+> > Dell machines come with goodix touchpad IC suffer from the double click
+> > issue if the Designware I2C adapter enters runtime suspend.
+> >
+> > It's because the goodix re-assert the interrupt if host doesn't read the
+> > data within 100ms and designware takes a longer time to wake up from
+> > runtime suspend. In the case, it got a second interrupt during
+> > resuming, so it thinks it's a double click.
+> >
+> > There is no simple way to fix this, it's a firmware issue and goodix
+> > agrees to fix this in their firmware on next release, but this issue
+> > still affects the machines that don't come with an updated firmware. So,
+> > add a quirk to mark those machines and avoid the designware from
+> > entering runtime suspend.
+> >
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+> >
+> > Signed-off-by: AceLan Kao <acelan.kao@canonical.com>
+> > ---
+> >   drivers/i2c/busses/i2c-designware-master.c | 30 ++++++++++++++++++++--
+> >   1 file changed, 28 insertions(+), 2 deletions(-)
+> >
+> I think better place to have this fixed is in
+> drivers/hid/i2c-hid/i2c-hid-core.c by forcing the adapter device active
+> when communicating with such touchpad.
+>
+> In that way only bus where touchpad is connected stays active, not all
+> and makes sure issue is handled also if that touchpad is ever connected
+> to any other I2C adapter than Designware.
+>
+> I did something similar in the commit 72bfcee11cf8 ("i2c: Prevent
+> runtime suspend of adapter when Host Notify is required"). Not exactly
+> same issue but similar idea.
+>
+> By looking at i2c-hid-core.c I saw a few i2c-hid devices have
+> I2C_HID_QUIRK_NO_RUNTIME_PM. Could you test how does this Goodix behave
+> if only i2c-hid device runtime PM is prevented not I2C adapter?
+>
+> A very quick test would be to comment out those lines below:
+>
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c
+> b/drivers/hid/i2c-hid/i2c-hid-core.c
+> index 90164fed08d3..bd3e6570c45e 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -1156,8 +1156,8 @@ static int i2c_hid_probe(struct i2c_client *client,
+>                 goto err_mem_free;
+>         }
+>
+> -       if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
+> -               pm_runtime_put(&client->dev);
+> +//     if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
+> +//             pm_runtime_put(&client->dev);
+>
+>         return 0;
+>
+> @@ -1183,8 +1183,8 @@ static int i2c_hid_remove(struct i2c_client *client)
+>         struct i2c_hid *ihid = i2c_get_clientdata(client);
+>         struct hid_device *hid;
+>
+> -       if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
+> -               pm_runtime_get_sync(&client->dev);
+> +//     if (!(ihid->quirks & I2C_HID_QUIRK_NO_RUNTIME_PM))
+> +//             pm_runtime_get_sync(&client->dev);
+>         pm_runtime_disable(&client->dev);
+>         pm_runtime_set_suspended(&client->dev);
+>         pm_runtime_put_noidle(&client->dev);
+>
+> --
+> Jarkko
