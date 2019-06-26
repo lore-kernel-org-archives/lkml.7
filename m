@@ -2,106 +2,100 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE98C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA20BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7369C2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1699208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 11:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561548237;
+	bh=7ietyuIcaBatOPYfddSSylJ4sxAZ+ZLKOiAKxLzp6es=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y6WO/tXEiTKPowkLyQ01UW/VRub1blsP6aZrnRTGugoRKT8k0mBY4HF85RpPOMKz8
+	 VsjiqKyeSWU/n9NoGKNpf0ndjs3iWNK3tqWTGNmPF8o8F6mx5HOkKTrLJQlpADe8ka
+	 NpffI/R2wLPRiSXs1+JYQxaKugrYEM9XhGL42fR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfFZLXe (ORCPT
+        id S1727312AbfFZLX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 07:23:34 -0400
-Received: from mail.thorsis.com ([92.198.35.195]:32845 "EHLO mail.thorsis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbfFZLXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 07:23:34 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id 6FEDEE59;
-        Wed, 26 Jun 2019 13:23:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id P9tVkmwBsPg7; Wed, 26 Jun 2019 13:23:39 +0200 (CEST)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id 7A8291DA3; Wed, 26 Jun 2019 13:23:39 +0200 (CEST)
-From:   Alexander Dahl <ada@thorsis.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Thomas Pfahl <tpf@thorsis.com>
-Subject: net: never suspend the ethernet PHY on certain boards?
-Date:   Wed, 26 Jun 2019 13:23:24 +0200
-Message-ID: <4693980.Yko7hG0E1C@ada>
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 26 Jun 2019 07:23:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38082 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFZLXz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 07:23:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7ietyuIcaBatOPYfddSSylJ4sxAZ+ZLKOiAKxLzp6es=; b=F05n5gh9dgVKij6KvK7Jni2sH
+        EpeOadTX2njYnxIy/4tL586k+XHd3PAuDNzyWFoNrkPfQvszMo0pMX+orsIoIjRWPWlE/GXoEMRms
+        keb34VYGi2rDr7DuZVl17wH4XqywWKeNJooQcH8gstxaCL4pTEz6TqN/a/JIGYp8xZWUI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hg61U-0007me-6n; Wed, 26 Jun 2019 11:23:32 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id B4DFD440046; Wed, 26 Jun 2019 12:23:31 +0100 (BST)
+Date:   Wed, 26 Jun 2019 12:23:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        lars@metafoo.de, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com
+Subject: Re: [PATCH 2/2] ASoC: codecs: ad193x: Reset DAC Control 1 register
+ at probe
+Message-ID: <20190626112331.GB5316@sirena.org.uk>
+References: <20190626104947.26547-1-codrin.ciubotariu@microchip.com>
+ <20190626104947.26547-2-codrin.ciubotariu@microchip.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0LPhsWsL1Ga+XLL0"
+Content-Disposition: inline
+In-Reply-To: <20190626104947.26547-2-codrin.ciubotariu@microchip.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hei hei,
 
-tl;dr: is there a way to prevent an ethernet PHY to ever power down, preferred 
-with some dt configuration, not with a hack e.g. patching out suspend 
-functions?
+--0LPhsWsL1Ga+XLL0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-With the bugfix 0da70f808029476001109b6cb076737bc04cea2e ("net: macb: do not 
-disable MDIO bus at open/close time", came with kernel v4.19, was backported 
-to v4.18.7) a problem arises for us, which was masked before for ages, with a 
-special combination of SoC, ethernet PHY and other chips on the same board, 
-and the linux drivers for that.
+On Wed, Jun 26, 2019 at 01:49:47PM +0300, Codrin Ciubotariu wrote:
+> Since the ad193x codecs have no software reset, we have to reinitialize the
+> registers after a hardware reset. For example, if we change the
+> device-tree between these resets, changing the audio format of the DAI link
+> from DSP_A with 8 TDM channels to I2S 2 channels, DAC Control 1 register
+> will remain configured for 8 channels. This patch resets this register at
+> probe to its default value.
 
-The boards use either a at91sam9g20 or a sama5d27 SoC, both using cadence/macb 
-as ethernet driver. Both boards have a smsc LAN8720A ethernet phy attached. 
-The RMII clock is generated by the PHY, which uses a 25 MHz crystal for that. 
-This clock line is of course fed into the SoC/MAC, but also used (you might 
-say hijacked) by other chips on the board which depend on that clock being 
-_always_ on (at least after initial init on boot). The hardware can not be 
-changed, we speak of several hundred boards already sold in the last years. 
-O:-)
+Would it not be more robust/complete to have a set of register defaults
+and write the whole lot out rather than individually going through and
+adding writes for specific registers as needed?
 
-Symptom is: when calling `ip link set down dev eth0` that clock goes off, the 
-other (not soc nor phy) chips depending on that clock, freeze.
+--0LPhsWsL1Ga+XLL0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I could bisect this behaviour change on a vanilla kernel to the commit 
-mentioned above (actually to the backport commit v4.18.7-4-g716fc5ce90cf, 
-because I bisected from v4.17.19 to v4.18.20).
+-----BEGIN PGP SIGNATURE-----
 
-What I tracked down so far: macb_close() before the bugfix reset the MPE bit 
-in the MAC Network Control Register, which probably prevents the MAC to send 
-MDIO telegrams to the PHY? After the bugfix, that bit is not cleared anymore 
-(to allow still talking to other PHYs on the same MDIO bus, we don't have that 
-case). I assume communicating with the PHY is still possible then.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0TVbIACgkQJNaLcl1U
+h9B5dQf/cxYmztEqqJW7n7EhRXlsxlPo8LHdNVs1D7b4aSBNJZTPs4ydlpRlCQga
+MQ7cYmznzzNCJSNwIBi/ra/arsQWHoyM1gHaQH01vhjaEoMYgm3Tbtn2IDR16tR4
+sU1ffhFgQmve2BD6q5fRVYdZldcvJuBkY8fnYO5BktFrQXil/YiQXudVjAiP0/tW
+tZMoigVLniRxERF9FwQ5XWzVeW8Pa6/tSZ1xAs+MyXNdvXa9jrL1Wrwze6S/i12U
+yT0QVxnVBhOBZfgH1bGHO8V3Al2lAn6P1n9uHfvl63HeZgnPp6qfScLVkXLzCpO1
+hb2duf3THhcgLRM+qZA88qsgyyRW4w==
+=ZAHw
+-----END PGP SIGNATURE-----
 
-macb_close() also calls phy_stop() which sets the state of the phy driver 
-state machine to PHY_HALTED, with the next run of that state machine 
-phy_suspend() is called.
-
-The smsc phy driver has no special suspend/resume functions, but uses 
-genphy_suspend(), that one sets BMCR_PDOWN in MII_BMCR register of that 
-(standard compliant) PHY. I suspect after that the PHY powers down and the 
-clock goes off.
-
-I assume before that bugfix, this power down bit could not be set, because the 
-MDIO interface in the MAC had been disabled, so the PHY stayed on. (However 
-there's a possible race because in macb_close() the phy_stop() is called 
-before macb_reset_hw(), right?)
-
-So far, these are mostly assumptions. I did not use gdb on the drivers or a 
-logic analyzer on the MDIO lines. I could do to prove, however.
-
-What I could do:
-
-1) Revert that change on my tree, which would mean reverting a generic bugfix
-2) Patch smsc phy driver to not suspend anymore
-3) Invent some new way to prevent suspend on a configuration basis (dt?)
-4) Anything I did not think of yet
-
-I know 1) or 2) are hacks without a chance to make it to mainline. What would 
-be your suggestions for 3) and 4)?
-
-Greets
-Alex
-
+--0LPhsWsL1Ga+XLL0--
