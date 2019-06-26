@@ -2,104 +2,154 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2347BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673CDC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A092086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561562504;
-	bh=2C45GR8QcNUlXUagChm3h55vqnTJi2n65xAwHFBqPMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mVLUZjMHwVfdD4ufzohLdv3JlHY4YmVNioqXRoKgOeetwx5uIruIk15LWnT/NJCkI
-	 I8W8TfOIESgAQn7zTHZMz+Kcxk9cd6fIVewP4WCiPdKUOfoJGBimcDgZfkd9DqAWBD
-	 mEUU7ccmoY0AXDtLmWDwGW42xC10LzQ4lXB3eBzs=
+	by mail.kernel.org (Postfix) with ESMTP id 4C5D4205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfFZPVm (ORCPT
+        id S1728327AbfFZPWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:21:42 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45603 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbfFZPVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:21:42 -0400
-Received: by mail-qk1-f195.google.com with SMTP id s22so1943624qkj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 08:21:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AqcyecsyR72Z800wF2DqV9Cha6bDH1l5BuA6pDWNwYs=;
-        b=KfrqTafq5djpR60pvGLE24kaqVkohaB+1Fpu1qAbV1Z3UJnWWZHWEBXkU6CphviNT1
-         omXIPfZ9zFPf4yGSgg17P5BQXYGiGGP+jB0FpgTBSR6f7jLWzuXvQnaH2UHQJ+jSUDQg
-         FENMBf5dbkbQn1mv8JdGHmZlZR/hQfBJ25Vcc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=AqcyecsyR72Z800wF2DqV9Cha6bDH1l5BuA6pDWNwYs=;
-        b=FsZX5Q9awe5SIgHwpZwe9as/z45dr8HCOoQDvefn8ztjfzqQmlF1w8nVzXiNKDylSF
-         JEZJLMmDzBTTjROKCvKfQrt7IUsoFCrrTrAdXziQaY710Ri+9Z9Mj6YSZDsOHdtNGtuQ
-         i147AaXIxWKxBE8ihpIqIQ9pNEBJtyvSK5feVTHi6SRjJhRa1aW7tvFDCmeZGmPP146j
-         TSd83U8PZl+D8CBocfvStuk7mRgDq4LrSVypZRSQhKtuLTAvYGGSgC87ivRQvkWmEKYe
-         N629QSu5X6jIo1t8bs03g5TjCCw4dvmyw4Fy/Tc4XHHFgnH2djMzM2noCUnSJLOaxNwl
-         uFKA==
-X-Gm-Message-State: APjAAAWnz5STRNfo7d6H0NyrIZepyfdWSJt8M7alqIyrfOOr6PJ5ufvt
-        qdt+HN4ie1vUejB8JzFllUcm7LGRvE8=
-X-Google-Smtp-Source: APXvYqxzZ8iLSdr4K35JOc9DwvkixONaa8VxxhxUgn2Hu9TD/fRdCOA0eE8w19uDwLbWTvyFi2KN5A==
-X-Received: by 2002:a05:620a:1292:: with SMTP id w18mr4442657qki.416.1561562501107;
-        Wed, 26 Jun 2019 08:21:41 -0700 (PDT)
-Received: from chatter.i7.local (192-0-228-88.cpe.teksavvy.com. [192.0.228.88])
-        by smtp.gmail.com with ESMTPSA id k33sm8995923qte.69.2019.06.26.08.21.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 08:21:40 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 11:21:38 -0400
-From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@iki.fi>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: On Nitrokey Pro's ECC support
-Message-ID: <20190626152138.GA28688@chatter.i7.local>
-Mail-Followup-To: Jonathan Corbet <corbet@lwn.net>,
-        Jarkko Sakkinen <jarkko.sakkinen@iki.fi>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <c9c1e7f83a55bc5fb621e2e4e1dab90c5b3aac01.camel@iki.fi>
- <20190626082541.2cd5897c@lwn.net>
+        Wed, 26 Jun 2019 11:22:18 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:19115 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725958AbfFZPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 11:22:17 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CED06C1ABC82D47A8304;
+        Wed, 26 Jun 2019 23:22:13 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 26 Jun 2019
+ 23:22:06 +0800
+Subject: Re: [GIT PULL] Hisilicon fixes for v5.2
+To:     Olof Johansson <olof@lixom.net>, Wei Xu <xuwei5@hisilicon.com>
+References: <b89ef8f0-d102-7f78-f373-cbcc7faddee3@hisilicon.com>
+ <20190625112148.ckj7sgdgvyeel7vy@localhost>
+ <CAOesGMj+aNkOT1YVHTSBLkOfEujk7uer3R1AmE-sa1TwCijbBg@mail.gmail.com>
+ <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+CC:     ARM-SoC Maintainers <arm@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Linuxarm <linuxarm@huawei.com>,
+        "xuwei (O)" <xuwei5@huawei.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zhangyi ac <zhangyi.ac@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
+        <jinying@hisilicon.com>, huangdaode <huangdaode@hisilicon.com>,
+        Tangkunshan <tangkunshan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <2e59728e-25fa-cc15-3c63-3566dc2ae69f@huawei.com>
+Date:   Wed, 26 Jun 2019 16:21:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190626082541.2cd5897c@lwn.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <7e215bd7-daab-b6cf-8d0f-9513bd7c4f6d@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 08:25:41AM -0600, Jonathan Corbet wrote:
->On Wed, 26 Jun 2019 17:11:46 +0300
->Jarkko Sakkinen <jarkko.sakkinen@iki.fi> wrote:
->
->> I was getting myself a smartcard stick and looked for options from [1].
->> The documentation says that Nitrokey Pro does not support ECC while it
->> actually does [2]. I was already canceling my order when Jan Suhr, the
->> CEO of that company, kindly pointed out to me this.
+On 25/06/2019 14:31, John Garry wrote:
+> On 25/06/2019 14:03, Olof Johansson wrote:
+>>>> are available in the Git repository at:
+>>>> > >
+>>>> > >   git://github.com/hisilicon/linux-hisi.git tags/hisi-fixes-for-5.2
+>>>> > >
+>>>> > > for you to fetch changes up to
+>>>> 07c811af1c00d7b4212eac86900b023b6405a954:
+>>>> > >
+>>>> > >   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set
+>>>> at registration (2019-06-25 09:40:42 +0100)
+>>>> > >
+>>>> > > ----------------------------------------------------------------
+>>>> > > Hisilicon fixes for v5.2-rc
+>>>> > >
+>>>> > > - fixed RCU usage in logical PIO
+>>>> > > - Added a function to unregister a logical PIO range in logical PIO
+>>>> > >   to support the fixes in the hisi-lpc driver
+>>>> > > - fixed and optimized hisi-lpc driver to avoid potential
+>>>> use-after-free
+>>>> > >   and driver unbind crash
+>>> >
+>>> > Merged to fixes, thanks.
 >>
->> [1] https://www.kernel.org/doc/html/latest/process/maintainer-pgp-guide.html
->> [2] https://shop.nitrokey.com/shop/product/nitrokey-pro-2-3
+>> This broke arm64 allmodconfig:
+>>
+>>        arm64.allmodconfig:
+>> drivers/bus/hisi_lpc.c:656:3: error: implicit declaration of function
+>> 'hisi_lpc_acpi_remove'; did you mean 'hisi_lpc_acpi_probe'?
+>> [-Werror=implicit-function-declaration]
+
+As an aside, I find it a little strange that arm64 allmodconfig does not 
+have CONFIG_ACPI set. It used to have it set, and this patch stopped that:
+
+5bcd44083a082f314032969cd6db1eb8275ac77a is the first bad commit
+commit 5bcd44083a082f314032969cd6db1eb8275ac77a
+Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date:   Mon Jul 23 10:57:29 2018 +0900
+
+     drivers: acpi: add dependency of EFI for arm64
+
+     As Ard suggested, CONFIG_ACPI && !CONFIG_EFI doesn't make sense on 
+arm64,
+     while CONFIG_ACPI and CONFIG_CPU_BIG_ENDIAN doesn't make sense either.
+
+     As CONFIG_EFI already has a dependency of !CONFIG_CPU_BIG_ENDIAN, it is
+     good enough to add a dependency of CONFIG_EFI to avoid any useless
+     combination of configuration.
+
+     This bug, reported by Will, will be revealed when my patch series,
+     "arm64: kexec,kdump: fix boot failures on acpi-only system," is applied
+     and the kernel is built under allmodconfig.
+
+     Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+     Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+     Signed-off-by: Will Deacon <will.deacon@arm.com>
+
+That patch stopped many configs being set for allmodconfig.
+
+With this change, CONFIG_EFI is not set. I think that this is because 
+CONFIG_CPU_BIG_ENDIAN is set for arm64 allmodconfig.
+
+Any opinion on this? Could we change CONFIG_CPU_BIG_ENDIAN to be unset 
+for arm64?
+
+>>
+>>
 >
->Maybe Konstantin (copied) might be willing to supply an update to the
->document to reflect this?
+> Uhhh, that's my fault - I didn't provide a stub for !ACPI. Sorry. I'll
+> send a fixed v3 series.
+>
+>>
+>> Please build and test your branches before you send pull requests, Wei.
+>>
+>> I've dropped the branch again; please re-submit when fixed. I think
+>> it's probably 5.3 material now.
+>>
+>
+> Thanks,
+> John
+>
+>>
+>> -Olof
+>>
+>> .
+>>
+>
 
-Hello:
 
-I just sent a patch with updates that reflect ECC capabilities in newer 
-devices.
-
-Best,
--K
