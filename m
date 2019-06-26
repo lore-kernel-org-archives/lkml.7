@@ -2,134 +2,85 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17EAC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD35AC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A63782085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A907217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 15:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Mr0csDp/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iqa/5AWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbfFZPhN (ORCPT
+        id S1728220AbfFZPic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 11:37:13 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38166 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfFZPhM (ORCPT
+        Wed, 26 Jun 2019 11:38:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45322 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfFZPic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 11:37:12 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QFXoje151326;
-        Wed, 26 Jun 2019 15:35:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=9G5PiDG0S7gskQAEA+1rG18NFPpT+WoUOG9H+94vGJo=;
- b=Mr0csDp/6gFDwuuR4WcTjSwEQhZRUvDp0wq3YeKCIR/ppK1h93X/GLwv9+Y3cvXAo/We
- nBBPCWspqpkQf8Ya9/6yEHadZ9h5/AK9JEwgQLT2OJ63YoS19u03moZ7UXD928KK75Tw
- IYGgl4G6FFtMYGPdEh6jhDWXC8Gi+dRHPoIK4U9EU9fQhY9zQayETLpTGjqGl7XpA008
- xvtm1tvTyzmAnCbVLIgcaAr+22UL4c7SemsbRVUkLI8sB/S8GoHCuFEiRRnlmAb3SWPf
- RtSXc0WG3A/565vb1OMt7fUapvm0eYSNFeeM5VPPlY8RA+hUmYz247kCS97awaKxof1X 1A== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brtb5ka-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 15:35:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5QFZWnl185666;
-        Wed, 26 Jun 2019 15:35:48 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2t9accs0fq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Jun 2019 15:35:48 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5QFZlgQ186348;
-        Wed, 26 Jun 2019 15:35:47 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2t9accs0fn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 15:35:47 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5QFZjvI031893;
-        Wed, 26 Jun 2019 15:35:45 GMT
-Received: from localhost (/10.159.137.246)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 08:35:45 -0700
-Date:   Wed, 26 Jun 2019 08:35:42 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
-        hch@infradead.org, clm@fb.com, adilger.kernel@dilger.ca,
-        jk@ozlabs.org, jack@suse.com, dsterba@suse.com, jaegeuk@kernel.org,
-        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 2/5] vfs: create a generic checking function for
- FS_IOC_FSSETXATTR
-Message-ID: <20190626153542.GE5171@magnolia>
-References: <156151632209.2283456.3592379873620132456.stgit@magnolia>
- <156151633829.2283456.834142172527987802.stgit@magnolia>
- <20190626041133.GB32272@ZenIV.linux.org.uk>
+        Wed, 26 Jun 2019 11:38:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+/or7RUo8RlGi5/xsF/irgqT3ptx8jRXk2ETY+C794o=; b=iqa/5AWMRhPrM653o+fAvvzP/
+        3Lu11i5qtEA4ol0XFXBypacKt3hMduvti/cE2K/yNgiQ4JRON9meWX+Po+pL5yBo6NP8FgwZSYEFc
+        Mdj4WQn2vH6kw8etGhdrkBZHybPguu7XHlfgj+JQix/X/BYr1OfCIztMkG8B2KcHQ05PMK0WbemnH
+        v50nvf7jL5fZ2lPZYTnNbtdWlaY7trB2NndBDzJ9Nf+Dm5tLjPQUoHrmoaAT8wTKYmzbFSOO+uUbZ
+        F2Bz/idD0WyKulTxAegisbOggsq6y/MYuNqTHpvvgnVktWlVD18xTtxTQlhbkT6gRspskDQF9ZtLw
+        6G1KTOdiw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgA0D-0006Qo-QY; Wed, 26 Jun 2019 15:38:29 +0000
+Date:   Wed, 26 Jun 2019 08:38:29 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, anshuman.khandual@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
+Message-ID: <20190626153829.GA22138@infradead.org>
+References: <cover.1558547956.git.robin.murphy@arm.com>
+ <20190626073533.GA24199@infradead.org>
+ <20190626123139.GB20635@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626041133.GB32272@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9299 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906260182
+In-Reply-To: <20190626123139.GB20635@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 05:11:33AM +0100, Al Viro wrote:
-> On Tue, Jun 25, 2019 at 07:32:18PM -0700, Darrick J. Wong wrote:
-> > --- a/fs/btrfs/ioctl.c
-> > +++ b/fs/btrfs/ioctl.c
-> > @@ -373,10 +373,9 @@ static int check_xflags(unsigned int flags)
-> >  static int btrfs_ioctl_fsgetxattr(struct file *file, void __user *arg)
-> >  {
-> >  	struct btrfs_inode *binode = BTRFS_I(file_inode(file));
-> > -	struct fsxattr fa;
-> > -
-> > -	memset(&fa, 0, sizeof(fa));
-> > -	fa.fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags);
-> > +	struct fsxattr fa = {
-> > +		.fsx_xflags = btrfs_inode_flags_to_xflags(binode->flags),
-> > +	};
+On Wed, Jun 26, 2019 at 01:31:40PM +0100, Mark Rutland wrote:
+> On Wed, Jun 26, 2019 at 12:35:33AM -0700, Christoph Hellwig wrote:
+> > Robin, Andrew:
 > 
-> Umm...  Sure, there's no padding, but still - you are going to copy that thing
-> to userland...  How about
+> As a heads-up, Robin is currently on holiday, so this is all down to
+> Andrew's preference.
 > 
-> static inline void simple_fill_fsxattr(struct fsxattr *fa, unsigned xflags)
-> {
-> 	memset(fa, 0, sizeof(*fa));
-> 	fa->fsx_xflags = xflags;
-> }
+> > I have a series for the hmm tree, which touches the section size
+> > bits, and remove device public memory support.
+> > 
+> > It might be best if we include this series in the hmm tree as well
+> > to avoid conflicts.  Is it ok to include the rebase version of at least
+> > the cleanup part (which looks like it is not required for the actual
+> > arm64 support) in the hmm tree to avoid conflicts?
 > 
-> and let the compiler optimize the crap out?
+> Per the cover letter, the arm64 patch has a build dependency on the
+> others, so that might require a stable brnach for the common prefix.
 
-The v2 series used to do that, but Christoph complained that having a
-helper for a two-line memset and initialization was silly[1] so now we
-have this version.
-
-I don't mind reinstating it as a static inline helper, but I'd like some
-input from any of the btrfs developers (or you, Al) about which form is
-preferred.
-
---D
-
-[1] https://lkml.org/lkml/2019/6/25/533
+I guess we'll just have to live with the merge errors then, as the
+mm tree is a patch series and thus can't easily use a stable base
+tree.  That is unlike Andrew wants to pull in the hmm tree as a prep
+patch for the series.
