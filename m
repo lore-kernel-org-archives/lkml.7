@@ -2,681 +2,213 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7A7C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0774BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541B72086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEF9205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 09:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mpA7e48X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDgg39YE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfFZJ6s (ORCPT
+        id S1726977AbfFZJ6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 05:58:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46519 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfFZJ6r (ORCPT
+        Wed, 26 Jun 2019 05:58:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50843 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbfFZJ6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:58:47 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so1506475ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 02:58:46 -0700 (PDT)
+        Wed, 26 Jun 2019 05:58:49 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c66so1431836wmf.0;
+        Wed, 26 Jun 2019 02:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PBNpa0fe2lxiY3oi4Yz97EGdJS/d5sgIDQQHO7FmfTA=;
-        b=mpA7e48X0kGmTm3SqWODh2AldqmI9ON5GZZDMgX88qKXh7+Zh6JmvYSO52wYCEMRk8
-         A2QSiiA+GeS+mND14bUi+upQs5qbkjKdZccB7AOiQ6tgFbqDf+6mdVGOD2VJuXY7gYeN
-         /zz6InGlg2xdTIpcd7xrMjq3mllZLXrHUdiyttPKu53akQ+iozXgFMeTzjMIOtRUD4mO
-         BdqO7FRCjjh+6elVPjSfn41Zj4+A9CFfCuGOpELQwy7e+5uhzrNu8jAzP0vl5wzCsron
-         /PSzq2KW4X3MhH9z6BO/v5u5rjqu+IOaXrba8KigQgO4+Z1L1qJK/AdA2XMJXTEWEolF
-         MJLQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aZ/7nxuWyF4ZUl2CqjmctPnbH8K3jsESHhf+wgkM5qA=;
+        b=CDgg39YEWJpx2FRGHNkWzn9a6zNGoUw09/FYa5+bfOKHpCRDku0dy2qA5M4f4fBSL4
+         ClFkMQCXz7ZoS153C4Fj68KczSqxJFKdA9Th6Ns+8SxFfEYuZ/aQQaXpClgsoygufeiO
+         0xg5IQAVfN6lIixcCN1vfV3a+x0hL62SA8iC+r6Xk3T66tfLqJsyEFRCOJ+xHtwcJskX
+         80jC62/NSUkV1qhNfpq8+bNLlxFKhJSVJGjRPLspuQOU2hC3j75dccThDJGA4Gk53Yh9
+         FdWqKP6FUNY8ukQoyNx3+aGYsAZ9MNSHS/ELbDMa/mVRWQdCOfA9T8YAbA1gAO6vlHhl
+         +p6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=PBNpa0fe2lxiY3oi4Yz97EGdJS/d5sgIDQQHO7FmfTA=;
-        b=GY+k7ZI4kkRunczWyTVnNffAtRxp277sSRgwWgcERiZEATaXCjp9Ipql3m4/718YoI
-         IAjem8wINdYq8MI96Zs45qMR9iDvQa4IWhlI4NCuDxkEW5XSFgISwNkRiiRWeqSbuad6
-         m7KwbzfF8OfVVxlICFQRRUEVZeB/bLovNZ1QfEp4XTGawHfFGK4Cg/WXP5ykdF3cnbsm
-         ewLtbTnquPiSnPbLINa3WGi//ZUnYt1Ca+MPNPuptjPE04IKRiITQiLB+KndLTs2O+I1
-         pXHNfQw6s6atrNrnCQ841ch1mQixaNqf+RVIHOQABJHSC2MK3H1MfcnV03wUJghTFNil
-         zrWA==
-X-Gm-Message-State: APjAAAVI8MXAvxWhkVR3Z5rvBlo8UlVNqL3epf+5dUwn0YbK8640e56f
-        A3iqoT69nMvXwGbwR+f+7LTAtw==
-X-Google-Smtp-Source: APXvYqzNFxfVX9de86L2UgFlGfdLdsNudfKlSAPxlO8JRkFe2MYug9gl6HUyXx7EFq3ektf6gSJ+0w==
-X-Received: by 2002:a2e:5c88:: with SMTP id q130mr2398685ljb.176.1561543125048;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aZ/7nxuWyF4ZUl2CqjmctPnbH8K3jsESHhf+wgkM5qA=;
+        b=Wuu/fOUUm3BdWeJ45g+uyR9nwOQddMBXP/5buUiD0kWvKvCe3fJt3AawDkxRl8owA2
+         6wElksoy2hLQi9Skv27m6ISJArlQsKTwOxbDogv0eTh9/p1O6OlIPIPiaFTqzfl0YsKc
+         EFIXGFT8TSiIB2lpwdmoG+YlMkvIDYKPvHz4KPlc/J0JS40a09xgjxsZvWiFiaC/JYSG
+         CWWFbDqTd8Z7fbOZLPP0IsXVwbJEn17/w+E3Zd54YPOwe7SbO1SVLSUbxBJ6QiqPnfku
+         APAxj52y0OUwkqSZBvek9Pw8/JDTeA8YwY1jHonLwcPNuvjy9AT3rw8j0qwiDn1G81mM
+         g7bg==
+X-Gm-Message-State: APjAAAWn0ih/k5amc4WEcY0tBQYwhvffVrGzMKji+stwisjst+eYd2Dg
+        yL7TU9XDD+bf4tmgfQniDpY=
+X-Google-Smtp-Source: APXvYqxpADgvHeAMQy31SKVTn0YPx5Afl1rct9+YwAAUniseVINEQHv2KOaVu/Z6OQY1C75pyR2P0w==
+X-Received: by 2002:a1c:dc46:: with SMTP id t67mr1956191wmg.159.1561543126566;
+        Wed, 26 Jun 2019 02:58:46 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id 128sm2413396wme.12.2019.06.26.02.58.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
         Wed, 26 Jun 2019 02:58:45 -0700 (PDT)
-Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id z83sm2732080ljb.73.2019.06.26.02.58.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Jun 2019 02:58:44 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 12:58:42 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH v4 net-next 06/11] net: ethernet: ti: introduce cpsw
- switchdev based driver part 1 - dual-emac
-Message-ID: <20190626095839.GE6485@khorivan>
-Mail-Followup-To: Grygorii Strashko <grygorii.strashko@ti.com>,
-        netdev@vger.kernel.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-References: <20190621181314.20778-1-grygorii.strashko@ti.com>
- <20190621181314.20778-7-grygorii.strashko@ti.com>
+Date:   Wed, 26 Jun 2019 11:58:44 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        od@zcrc.me, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] backlight: pwm_bl: Set pin to sleep state when powered
+ down
+Message-ID: <20190626095844.GA6362@ulmo>
+References: <20190522163428.7078-1-paul@crapouillou.net>
+ <5b0f8bb3-e7b0-52c1-1f2f-9709992b76fc@linaro.org>
+ <20190621135608.GB11839@ulmo>
+ <20190624112844.fmwbfpdxjkst3u7r@holly.lan>
+ <20190625093839.GB1516@ulmo>
+ <20190626085827.fija4kfzb5uhwosi@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
 Content-Disposition: inline
-In-Reply-To: <20190621181314.20778-7-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190626085827.fija4kfzb5uhwosi@pengutronix.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Grygorii
 
-Too much code, but I've tried pass thru.
-Probably expectation the devlink to be reviewed, but several
-common replies that should be reflected in non RFC v.
+--gBBFr7Ir9EOA20Yy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 21, 2019 at 09:13:09PM +0300, Grygorii Strashko wrote:
->From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
->
->Part 1:
-> Introduce basic CPSW dual_mac driver (cpsw_new.c) which is operating in
->dual-emac mode by default, thus working as 2 individual network interfaces.
->Main differences from legacy CPSW driver are:
->
-> - optimized promiscuous mode: The P0_UNI_FLOOD (both ports) is enabled in
->addition to ALLMULTI (current port) instead of ALE_BYPASS. So, Ports in
->promiscuous mode will keep possibility of mcast and vlan filtering, which
->is provides significant benefits when ports are joined to the same bridge,
->but without enabling "switch" mode, or to different bridges.
-> - learning disabled on ports as it make not too much sense for
->   segregated ports - no forwarding in HW.
-> - enabled basic support for devlink.
->
->	devlink dev show
->		platform/48484000.ethernet_switch
->
->	devlink dev param show
->	 platform/48484000.ethernet_switch:
->	name ale_bypass type driver-specific
->	 values:
->		cmode runtime value false
->
-> - "ale_bypass" devlink driver parameter allows to enable
->ALE_CONTROL(4).BYPASS mode for debug purposes.
-> - updated DT bindings.
->
->Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
->Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->---
-> drivers/net/ethernet/ti/Kconfig     |   19 +-
-> drivers/net/ethernet/ti/Makefile    |    2 +
-> drivers/net/ethernet/ti/cpsw_new.c  | 1555 +++++++++++++++++++++++++++
-> drivers/net/ethernet/ti/cpsw_priv.c |    8 +-
-> drivers/net/ethernet/ti/cpsw_priv.h |   12 +-
-> 5 files changed, 1591 insertions(+), 5 deletions(-)
-> create mode 100644 drivers/net/ethernet/ti/cpsw_new.c
->
+On Wed, Jun 26, 2019 at 10:58:27AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Tue, Jun 25, 2019 at 11:38:39AM +0200, Thierry Reding wrote:
+> > On Mon, Jun 24, 2019 at 12:28:44PM +0100, Daniel Thompson wrote:
+> > > [...] although given pwm-backlight is essentially a wrapper driver
+> > > round a PWM I wondered why the pinctrl was on the backlight node
+> > > (rather than the PWM node).
+> >=20
+> > I agree with this. We're defining the pin control state for the PWM pin,
+> > so in my opinion it should be the PWM driver that controls it.
+> >=20
+> > One reason why I think this is important is if we ever end up with a
+> > device that requires pins from two different controllers to be
+> > configured at runtime, then how would we model that? Since pin control
+> > states cannot be aggregated, so you'd have to have multiple "default"
+> > states, each for the pins that they control.
+>=20
+> I thought you can do:
+>=20
+> 	pinctrl-names =3D "default";
+> 	pinctrl-0 =3D <&pinctrl_in_first_pincontroller>, <&pinctrl_in_another_co=
+ntroller>;
+>=20
+> if two (or more) controllers are involved.
 
-[...]
+You're right. Both the bindings say that this can be done and the code
+is also there to parse multiple states per pinctrl-* entry.
 
->+
->+static void cpsw_rx_handler(void *token, int len, int status)
->+{
->+	struct sk_buff *skb = token;
->+	struct cpsw_common *cpsw;
->+	struct net_device *ndev;
->+	struct sk_buff *new_skb;
->+	struct cpsw_priv *priv;
->+	struct cpdma_chan *ch;
->+	int ret = 0, port;
->+
->+	ndev = skb->dev;
->+	cpsw = ndev_to_cpsw(ndev);
->+
->+	port = CPDMA_RX_SOURCE_PORT(status);
->+	if (port) {
->+		ndev = cpsw->slaves[--port].ndev;
->+		skb->dev = ndev;
->+	}
->+
->+	if (unlikely(status < 0) || unlikely(!netif_running(ndev))) {
->+		/* In dual emac mode check for all interfaces */
->+		if (cpsw->usage_count && status >= 0) {
->+			/* The packet received is for the interface which
->+			 * is already down and the other interface is up
->+			 * and running, instead of freeing which results
->+			 * in reducing of the number of rx descriptor in
->+			 * DMA engine, requeue skb back to cpdma.
->+			 */
->+			new_skb = skb;
->+			goto requeue;
->+		}
->+
->+		/* the interface is going down, skbs are purged */
->+		dev_kfree_skb_any(skb);
->+		return;
->+	}
->+
->+	priv = netdev_priv(ndev);
->+
->+	new_skb = netdev_alloc_skb_ip_align(ndev, cpsw->rx_packet_max);
->+	if (new_skb) {
->+		skb_copy_queue_mapping(new_skb, skb);
->+		skb_put(skb, len);
->+		if (status & CPDMA_RX_VLAN_ENCAP)
->+			cpsw_rx_vlan_encap(skb);
->+		if (priv->rx_ts_enabled)
->+			cpts_rx_timestamp(cpsw->cpts, skb);
->+		skb->protocol = eth_type_trans(skb, ndev);
->+		netif_receive_skb(skb);
->+		ndev->stats.rx_bytes += len;
->+		ndev->stats.rx_packets++;
->+		/* CPDMA stores skb in internal CPPI RAM (SRAM) which belongs
->+		 * to DEV MMIO space. Kmemleak does not scan IO memory and so
->+		 * reports memory leaks.
->+		 * see commit 254a49d5139a ('drivers: net: cpsw: fix kmemleak
->+		 * false-positive reports for sk buffers') for details.
->+		 */
->+		kmemleak_not_leak(new_skb);
->+	} else {
->+		ndev->stats.rx_dropped++;
->+		new_skb = skb;
->+	}
->+
->+requeue:
+> > On the other hand if we associate the pin control states with each of
+> > the resources that need those states, then when those resources are
+> > controlled, they will automatically know how to deal with the states.
+> > The top-level device (i.e. backlight) doesn't need to concern itself
+> > with those details.
+>=20
+> So the options are:
+>=20
+>  a) put "active" and "inactive" pinctrls into the pwm-node, and nothing
+>     related to the involved PWM pins in the consumer
+>=20
+>  b) put the PWM pin config in the consumer's "default" pinctrl (and
+>     maybe leave it out int "init" if you want smooth taking over).
 
-----
->+	if (netif_dormant(ndev)) {
->+		dev_kfree_skb_any(new_skb);
->+		return;
->+	}
----
+You can't put it into the "default" state because that state is applied
+before the consumer driver's ->probe().
 
-drop above, no need any more
+>=20
+> (Or maybe use "enabled" and "disabled" in a) to match the pwm_states
+> .enabled?)
 
->+
->+	ch = cpsw->rxv[skb_get_queue_mapping(new_skb)].ch;
->+	ret = cpdma_chan_submit(ch, new_skb, new_skb->data,
->+				skb_tailroom(new_skb), 0);
->+	if (WARN_ON(ret < 0))
->+		dev_kfree_skb_any(new_skb);
+Yeah, I think this is what we'll need to do in order to implement the
+explicit behaviour that we need here.
 
-Here were a little changes last time, looks like:
+> The advantages I see in b) over a) are:
+>=20
+>  - "default" and "init" are a known pinctrl concept that most people
+>    should have understood.
 
-	ret = cpdma_chan_submit(ch, new_skb, new_skb->data,
-				skb_tailroom(new_skb), 0);
-	if (ret < 0) {
-		WARN_ON(ret == -ENOMEM);
-		dev_kfree_skb_any(new_skb);
-	}
+The problem is that they won't work in this case. The "init" state will
+be applied before the consumer driver's ->probe() if it exists. If it
+doesn't then "default" will be applied instead. Both cases are not
+something that we want if we want to take over the existing
+configuration.
 
->+}
->+
+>  - You have all pinctrl config for the backlight in a single place.
 
-[...]
+Depending on your point of view this could be considered a disadvantage.
 
->+
->+static void cpsw_init_host_port(struct cpsw_priv *priv)
->+{
->+	struct cpsw_common *cpsw = priv->cpsw;
->+	u32 control_reg;
->+
->+	/* soft reset the controller and initialize ale */
->+	soft_reset("cpsw", &cpsw->regs->soft_reset);
->+	cpsw_ale_start(cpsw->ale);
->+
->+	/* switch to vlan unaware mode */
->+	cpsw_ale_control_set(cpsw->ale, HOST_PORT_NUM, ALE_VLAN_AWARE,
->+			     CPSW_ALE_VLAN_AWARE);
->+	control_reg = readl(&cpsw->regs->control);
->+	control_reg |= CPSW_VLAN_AWARE | CPSW_RX_VLAN_ENCAP;
->+	writel(control_reg, &cpsw->regs->control);
->+
->+	/* setup host port priority mapping */
->+	writel_relaxed(CPDMA_TX_PRIORITY_MAP,
->+		       &cpsw->host_port_regs->cpdma_tx_pri_map);
->+	writel_relaxed(0, &cpsw->host_port_regs->cpdma_rx_chan_map);
+>  - none of the involved driver must explicitly handle pinctrl stuff
 
-----
->+
->+	/* disable priority elevation */
->+	writel_relaxed(0, &cpsw->regs->ptype);
->+
->+	/* enable statistics collection only on all ports */
->+	writel_relaxed(0x7, &cpsw->regs->stat_port_en);
->+
->+	/* Enable internal fifo flow control */
->+	writel(0x7, &cpsw->regs->flow_control);
----
+Like I said, none of the automatic state handling is flexible enough for
+this situation. Also, my understanding is that even if you use the
+standard pinctrl state names ("default" and "idle") you still need to
+explicitly select them at the right time. "default" will always be
+applied before the consumer driver's ->probe(), but if you want to go to
+the "idle" state you have to make that explicit. Now, there are helpers
+to simplify this a bit, but you still need to implement suspend/resume
+callbacks (or however you want to deal with it) that call these helpers.
 
-Would be nice to do the same in old driver.
-I mean moving it from ndo_open
-Also were thoughts about this.
+In the case of PWM I think what we want is to select an "active" and
+"idle" state on enable and disable, respectively. I suppose we could add
+some infrastructure to help with this, such as perhaps scanning the
+device tree for per-PWM pin control states at PWM chip registration time
+and then adding helpers to select these states at the driver's
+discretion. I don't think we can add generic code to do this because the
+exact time when the pin control state needs to be applied may vary from
+one PWM controller to another.
 
->+
->+	cpsw_init_host_port_dual_mac(priv);
->+
->+	cpsw_ale_control_set(cpsw->ale, HOST_PORT_NUM,
->+			     ALE_PORT_STATE, ALE_PORT_STATE_FORWARD);
->+}
->+
+> You presume that b) being commonly done is a sign of "our device trees
+> and kernel subsystems still maturing". But maybe it's only that the
+> capabilities provided by pinctrl subsystem without extra effort is good
+> enough?
 
-[...]
+Like I pointed out above, I don't think that's the case. But I don't
+want to overcomplicate things, so if you can prove that it can be done
+with the existing pinctrl helpers, I'd be happy to be proven wrong.
 
->+
->+static int cpsw_ndo_open(struct net_device *ndev)
->+{
->+	struct cpsw_priv *priv = netdev_priv(ndev);
->+	struct cpsw_common *cpsw = priv->cpsw;
->+	int ret;
->+
->+	cpsw_info(priv, ifdown, "starting ndev\n");
->+	ret = pm_runtime_get_sync(cpsw->dev);
->+	if (ret < 0) {
->+		pm_runtime_put_noidle(cpsw->dev);
->+		return ret;
->+	}
->+
->+	netif_carrier_off(ndev);
->+
->+	/* Notify the stack of the actual queue counts. */
->+	ret = netif_set_real_num_tx_queues(ndev, cpsw->tx_ch_num);
->+	if (ret) {
->+		dev_err(priv->dev, "cannot set real number of tx queues\n");
->+		goto err_cleanup;
->+	}
->+
->+	ret = netif_set_real_num_rx_queues(ndev, cpsw->rx_ch_num);
->+	if (ret) {
->+		dev_err(priv->dev, "cannot set real number of rx queues\n");
->+		goto err_cleanup;
->+	}
->+
->+	/* Initialize host and slave ports */
->+	if (!cpsw->usage_count)
->+		cpsw_init_host_port(priv);
->+	cpsw_slave_open(&cpsw->slaves[priv->emac_port - 1], priv);
->+
->+	/* initialize shared resources for every ndev */
->+	if (!cpsw->usage_count) {
->+		ret = cpsw_fill_rx_channels(priv);
->+		if (ret < 0)
->+			goto err_cleanup;
->+
->+		if (cpts_register(cpsw->cpts))
->+			dev_err(priv->dev, "error registering cpts device\n");
->+
->+		napi_enable(&cpsw->napi_rx);
->+		napi_enable(&cpsw->napi_tx);
->+
->+		if (cpsw->tx_irq_disabled) {
->+			cpsw->tx_irq_disabled = false;
->+			enable_irq(cpsw->irqs_table[1]);
->+		}
->+
->+		if (cpsw->rx_irq_disabled) {
->+			cpsw->rx_irq_disabled = false;
->+			enable_irq(cpsw->irqs_table[0]);
->+		}
->+	}
->+
->+	cpsw_restore(priv);
->+
->+	/* Enable Interrupt pacing if configured */
->+	if (cpsw->coal_intvl != 0) {
->+		struct ethtool_coalesce coal;
->+
->+		coal.rx_coalesce_usecs = cpsw->coal_intvl;
->+		cpsw_set_coalesce(ndev, &coal);
->+	}
->+
->+	cpdma_ctlr_start(cpsw->dma);
->+	cpsw_intr_enable(cpsw);
->+	cpsw->usage_count++;
->+
->+	return 0;
->+
->+err_cleanup:
->+	cpdma_ctlr_stop(cpsw->dma);
-Here were a little changes also:
-Now looks like:
-	if (!cpsw->usage_count) {
-		cpdma_ctlr_stop(cpsw->dma)
-	}
+Thierry
 
+--gBBFr7Ir9EOA20Yy
+Content-Type: application/pgp-signature; name="signature.asc"
 
->+	cpsw_slave_stop(&cpsw->slaves[priv->emac_port - 1], priv);
->+	pm_runtime_put_sync(cpsw->dev);
->+	netif_carrier_off(priv->ndev);
->+	return ret;
->+}
->+
+-----BEGIN PGP SIGNATURE-----
 
-[...]
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0TQdEACgkQ3SOs138+
+s6Ex3RAAjClObHbY4caZt7PjHEVLwZp9p0uGXYE7ZemSo5DwnYe5KNVqX+Kez3jS
+JDE/DK7UMkD1Xwf6HuYsZ1u/pwHE0Af7FE+TeM16T26zvPS2K1bSjytshBIXcLkp
+kgfWKEQMgNF11bUZ03aFz833Po0sK+2LFzjhNCugRi1owXQ0910iefni03Jmna4g
+4ZHqaQx7oetefd22xPHgpgHR43WN3qG/Ykz2gn2yxE/RLaojTiv+QC3B3/s6pCmL
+SrlbkuqGJSUehGRJhVmxBC5CkQaJjV4L3JVysKl6Svf6e1RBZOeoiyS6eGv7xR7/
+th556XLjVZggDCMurtRwEppxjZPVhi0ohl9sCD4kHpF35ZgQ5A/ZEvH/IjU5xFdW
+Cros48qyEq4TlKqzUpYpJ2m7cpq0CCv+EGdGo51eHICBIvjvT1cy/DftCc13x2z4
+16ButDJ+3xc75gVjHfVtIyH6g5jSrV0pYlOE1mC1FUj9uOPS+yqo0U5Q8l9ElzI/
+VpHIhLU6jw2iOPVhrOFoJ2gIr86+cuwXqxAK3Rf7ccmI4P3DQeKK1S2ci+uY/SHe
+IOlQT3ITZUjZKA57iQQIMc+Stb1SICEFcZFtybT6/jmmootTjgUnARLbmnPsE5QI
+g4TArRprq3PzZQvmANv9QnWsLgTlum6hlul3j0gspYFDX4iyjes=
+=b0SN
+-----END PGP SIGNATURE-----
 
->+
->+static netdev_tx_t cpsw_ndo_start_xmit(struct sk_buff *skb,
->+				       struct net_device *ndev)
->+{
->+	struct cpsw_priv *priv = netdev_priv(ndev);
->+	struct cpsw_common *cpsw = priv->cpsw;
->+	struct cpts *cpts = cpsw->cpts;
->+	struct netdev_queue *txq;
->+	struct cpdma_chan *txch;
->+	int ret, q_idx;
->+
->+	if (skb_padto(skb, CPSW_MIN_PACKET_SIZE)) {
->+		cpsw_err(priv, tx_err, "packet pad failed\n");
->+		ndev->stats.tx_dropped++;
->+		return NET_XMIT_DROP;
->+	}
->+
->+	if (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP &&
->+	    priv->tx_ts_enabled && cpts_can_timestamp(cpts, skb))
->+		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
->+
->+	q_idx = skb_get_queue_mapping(skb);
->+	if (q_idx >= cpsw->tx_ch_num)
->+		q_idx = q_idx % cpsw->tx_ch_num;
->+
->+	txch = cpsw->txv[q_idx].ch;
->+	txq = netdev_get_tx_queue(ndev, q_idx);
->+	skb_tx_timestamp(skb);
->+	ret = cpdma_chan_submit(txch, skb, skb->data, skb->len,
->+				priv->emac_port);
-------------
-
->+	if (unlikely(ret != 0)) {
->+		cpsw_err(priv, tx_err, "desc submit failed\n");
->+		goto fail;
->+	}
->+
->+	/* If there is no more tx desc left free then we need to
->+	 * tell the kernel to stop sending us tx frames.
->+	 */
->+	if (unlikely(!cpdma_check_free_tx_desc(txch))) {
->+		netif_tx_stop_queue(txq);
->+
->+		/* Barrier, so that stop_queue visible to other cpus */
->+		smp_mb__after_atomic();
->+
->+		if (cpdma_check_free_tx_desc(txch))
->+			netif_tx_wake_queue(txq);
->+	}
->+
->+	return NETDEV_TX_OK;
->+fail:
->+	ndev->stats.tx_dropped++;
->+	netif_tx_stop_queue(txq);
->+
->+	/* Barrier, so that stop_queue visible to other cpus */
->+	smp_mb__after_atomic();
->+
->+	if (cpdma_check_free_tx_desc(txch))
->+		netif_tx_wake_queue(txq);
->+
->+	return NETDEV_TX_BUSY;
->+}
--------------
-
-I have a proposition, here were no reason lastly, but now maybe
-it can be optimized a little. Smth like, replace above on:
-
-	if (unlikely(ret != 0)) {
-		cpsw_err(priv, tx_err, "desc submit failed\n");
-		ndev->stats.tx_dropped++;
-		ret = NETDEV_TX_BUSY;
-		goto fail
-	}
-
-	ret = NETDEV_TX_OK;
-
-	/* If there is no more tx desc left free then we need to
-	 * tell the kernel to stop sending us tx frames.
-	 */
-	if (unlikely(cpdma_check_free_tx_desc(txch)))
-		return ret;
-
-fail:
-	netif_tx_stop_queue(txq);
-
-	/* Barrier, so that stop_queue visible to other cpus */
-	smp_mb__after_atomic();
-
-	if (cpdma_check_free_tx_desc(txch))
-		netif_tx_wake_queue(txq);
-
-	return ret;
-
-Result: minus 6 lines and less dupes.
-
->+
->+
-
-[...]
-
->+static int cpsw_probe(struct platform_device *pdev)
->+{
->+	const struct soc_device_attribute *soc;
->+	struct device *dev = &pdev->dev;
->+	struct resource *ss_res;
->+	struct cpsw_common *cpsw;
->+	struct gpio_descs *mode;
->+	void __iomem *ss_regs;
->+	int ret = 0, ch;
->+	struct clk *clk;
->+	int irq;
->+
->+	cpsw = devm_kzalloc(dev, sizeof(struct cpsw_common), GFP_KERNEL);
->+	if (!cpsw)
->+		return -ENOMEM;
->+
->+	cpsw_slave_index = cpsw_slave_index_priv;
->+
->+	cpsw->dev = dev;
->+
->+	cpsw->slaves = devm_kcalloc(dev,
->+				    CPSW_SLAVE_PORTS_NUM,
->+				    sizeof(struct cpsw_slave),
->+				    GFP_KERNEL);
->+	if (!cpsw->slaves)
->+		return -ENOMEM;
->+
->+	mode = devm_gpiod_get_array_optional(dev, "mode", GPIOD_OUT_LOW);
->+	if (IS_ERR(mode)) {
->+		ret = PTR_ERR(mode);
->+		dev_err(dev, "gpio request failed, ret %d\n", ret);
->+		return ret;
->+	}
->+
->+	clk = devm_clk_get(dev, "fck");
->+	if (IS_ERR(clk)) {
->+		ret = PTR_ERR(clk);
->+		dev_err(dev, "fck is not found %d\n", ret);
->+		return ret;
->+	}
->+	cpsw->bus_freq_mhz = clk_get_rate(clk) / 1000000;
->+
->+	ss_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->+	ss_regs = devm_ioremap_resource(dev, ss_res);
->+	if (IS_ERR(ss_regs)) {
->+		ret = PTR_ERR(ss_regs);
->+		return ret;
->+	}
->+	cpsw->regs = ss_regs;
->+
->+	irq = platform_get_irq_byname(pdev, "rx");
->+	if (irq < 0)
->+		return irq;
->+	cpsw->irqs_table[0] = irq;
->+
->+	irq = platform_get_irq_byname(pdev, "tx");
->+	if (irq < 0)
->+		return irq;
->+	cpsw->irqs_table[1] = irq;
->+
->+	platform_set_drvdata(pdev, cpsw);
-set cpsw, but below ndev
-
->+	/* This may be required here for child devices. */
->+	pm_runtime_enable(dev);
->+
->+	/* Need to enable clocks with runtime PM api to access module
->+	 * registers
->+	 */
->+	ret = pm_runtime_get_sync(dev);
->+	if (ret < 0) {
->+		pm_runtime_put_noidle(dev);
->+		pm_runtime_disable(dev);
->+		return ret;
->+	}
->+
->+	ret = cpsw_probe_dt(cpsw);
->+	if (ret)
->+		goto clean_dt_ret;
->+
->+	soc = soc_device_match(cpsw_soc_devices);
->+	if (soc)
->+		cpsw->quirk_irq = 1;
->+
->+	cpsw->rx_packet_max = rx_packet_max;
->+	cpsw->descs_pool_size = descs_pool_size;
->+
->+	ret = cpsw_init_common(cpsw, ss_regs, ale_ageout,
->+			       (u32 __force)ss_res->start + CPSW2_BD_OFFSET,
->+			       descs_pool_size);
->+	if (ret)
->+		goto clean_dt_ret;
->+
->+	cpsw->wr_regs = cpsw->version == CPSW_VERSION_1 ?
->+			ss_regs + CPSW1_WR_OFFSET :
->+			ss_regs + CPSW2_WR_OFFSET;
->+
->+	ch = cpsw->quirk_irq ? 0 : 7;
->+	cpsw->txv[0].ch = cpdma_chan_create(cpsw->dma, ch, cpsw_tx_handler, 0);
->+	if (IS_ERR(cpsw->txv[0].ch)) {
->+		dev_err(dev, "error initializing tx dma channel\n");
->+		ret = PTR_ERR(cpsw->txv[0].ch);
->+		goto clean_cpts;
->+	}
->+
->+	cpsw->rxv[0].ch = cpdma_chan_create(cpsw->dma, 0, cpsw_rx_handler, 1);
->+	if (IS_ERR(cpsw->rxv[0].ch)) {
->+		dev_err(dev, "error initializing rx dma channel\n");
->+		ret = PTR_ERR(cpsw->rxv[0].ch);
->+		goto clean_cpts;
->+	}
->+	cpsw_split_res(cpsw);
->+
->+	/* setup netdevs */
->+	ret = cpsw_create_ports(cpsw);
->+	if (ret)
->+		goto clean_unregister_netdev;
->+
->+	/* Grab RX and TX IRQs. Note that we also have RX_THRESHOLD and
->+	 * MISC IRQs which are always kept disabled with this driver so
->+	 * we will not request them.
->+	 *
->+	 * If anyone wants to implement support for those, make sure to
->+	 * first request and append them to irqs_table array.
->+	 */
->+
->+	ret = devm_request_irq(dev, cpsw->irqs_table[0], cpsw_rx_interrupt,
->+			       0, dev_name(dev), cpsw);
->+	if (ret < 0) {
->+		dev_err(dev, "error attaching irq (%d)\n", ret);
->+		goto clean_unregister_netdev;
->+	}
->+
->+	ret = devm_request_irq(dev, cpsw->irqs_table[1], cpsw_tx_interrupt,
->+			       0, dev_name(dev), cpsw);
->+	if (ret < 0) {
->+		dev_err(dev, "error attaching irq (%d)\n", ret);
->+		goto clean_unregister_netdev;
->+	}
->+
->+	ret = cpsw_register_devlink(cpsw);
->+	if (ret)
->+		goto clean_unregister_netdev;
->+
->+	dev_notice(dev, "initialized (regs %pa, pool size %d) hw_ver:%08X %d.%d (%d)\n",
->+		   &ss_res->start, descs_pool_size,
->+		   cpsw->version, CPSW_MAJOR_VERSION(cpsw->version),
->+		   CPSW_MINOR_VERSION(cpsw->version),
->+		   CPSW_RTL_VERSION(cpsw->version));
->+
->+	pm_runtime_put(dev);
->+
->+	return 0;
->+
->+clean_unregister_netdev:
->+	cpsw_unregister_ports(cpsw);
->+clean_cpts:
->+	cpts_release(cpsw->cpts);
->+	cpdma_ctlr_destroy(cpsw->dma);
->+clean_dt_ret:
->+	cpsw_remove_dt(cpsw);
->+	pm_runtime_put_sync(dev);
->+	pm_runtime_disable(dev);
->+	return ret;
->+}
->+
->+static int cpsw_remove(struct platform_device *pdev)
->+{
->+	struct net_device *ndev = platform_get_drvdata(pdev);
-now it's cpsw, as in probe?
-
->+	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
->+	int ret;
->+
->+	ret = pm_runtime_get_sync(&pdev->dev);
->+	if (ret < 0) {
->+		pm_runtime_put_noidle(&pdev->dev);
->+		return ret;
->+	}
->+
->+	cpsw_unregister_devlink(cpsw);
->+	cpsw_unregister_ports(cpsw);
->+
->+	cpts_release(cpsw->cpts);
->+	cpdma_ctlr_destroy(cpsw->dma);
->+	cpsw_remove_dt(cpsw);
->+	pm_runtime_put_sync(&pdev->dev);
->+	pm_runtime_disable(&pdev->dev);
->+	return 0;
->+}
->+
-
-[...]
-
--- 
-Regards,
-Ivan Khoronzhuk
+--gBBFr7Ir9EOA20Yy--
