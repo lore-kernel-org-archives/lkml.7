@@ -2,137 +2,108 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44BBC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A4EC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1E421726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561571518;
-	bh=Sca4Z3OaKtXYUI/5YyPbiGGtd0DSIOE2gztWP1tFwRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T0VTAm4lkA0S6HE+Hg3FJpTGL3+AiyEiPFYWYAq24mwVEtdzdY0DOvflS06RzDFiI
-	 BJ8rH/ySsXzz9qy5zqhWvwQ8Fqox29lQ4VHpZOB3T+QwAWHhoBx0VV2/sDUi/svRb4
-	 QVYp+i1M85ebdYHc68I3EoN6MKS95eGW6TP+MAoQ=
+	by mail.kernel.org (Postfix) with ESMTP id A22CD216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDlX7aiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfFZRv5 (ORCPT
+        id S1726830AbfFZRwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfFZRvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:51:55 -0400
-Received: from localhost (c-67-164-175-55.hsd1.co.comcast.net [67.164.175.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B046B216FD;
-        Wed, 26 Jun 2019 17:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561571514;
-        bh=Sca4Z3OaKtXYUI/5YyPbiGGtd0DSIOE2gztWP1tFwRg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LZnYzW45b3DGtb+CSPIw9lW7eg1jZASAqQPgdDRKfJ/J8WWC8+6IG/TKWE9KqQEdV
-         1qvhJ3wa+JEDaYDwsmK2m9ViNBpE+a6nXrW7LmK++vw19GHOw3SzLOY98opv9FCoEH
-         8lOrIL5bqyp5EksDA0XqzgVxiLhcPXvGcyMNLcNo=
-Date:   Wed, 26 Jun 2019 12:51:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCHv2 2/2] PCI: layerscape: EP and RC drivers are compiled
- separately
-Message-ID: <20190626175153.GC103694@google.com>
-References: <20190626111139.32878-1-xiaowei.bao@nxp.com>
- <20190626111139.32878-2-xiaowei.bao@nxp.com>
+        Wed, 26 Jun 2019 13:52:01 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40042 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfFZRv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:51:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w10so1551483pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 10:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=PYRuyD1HElut26s/f7k9wlmyAWeFCl38SzC1C9BI8tY=;
+        b=XDlX7aiZwQokBsiCMdvUOmEJQsIlxeCrOI3mc84lr5R7kBNv78OIPHppyWoDe5UeNH
+         QGAj8tK1u83UflPF+m0lb+fllt8uoyjJhH1wQi218pbhA1yZMinKQjkB4S3O5xksopTG
+         ts9als020BCHH6PJmv5n88nInO2k+zonOtT4BxxwdVE3mUCqBWV7rKjA5Rt1K4W6ANYu
+         s7I8Suz73D05eUsDH6sQN9+k/6S9yjHlerk5gCLWKy0CAnbU5E1jd9bdUgUtUdEUMEaD
+         E8rD4vUuwZrvESBgAwV5b+aYt1BMHx/4vYJd8TVsrAcLZBVdBHEwZ62DinJDao4tNWn5
+         jkVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=PYRuyD1HElut26s/f7k9wlmyAWeFCl38SzC1C9BI8tY=;
+        b=bitQjjOb+WY2BqDKUh5XBGnkNQI1FBMMHvluP6d5pEpns5A+fb9OguU5w7re7BBzE9
+         T26rooaecWfqGvtIlwlVAsOo17N+GBlg49gdgKihZGhLgYlaAAXnTxVcizaovaFg8gzS
+         hO7iahMk08O4SRoUMex5qj71TjGINM66UfuGSjh3qV7jD7Qi47qbKUDuWOZu8NoCLgeT
+         FhADEnjl3VACvVju20KsUOaeURJkXtovd4vV9yZEEddXkx8fVksYB9rzGRJXcQrghLKh
+         d6pFrZnKINKxokH5OJJid2QkYJY9y0ZzUWFNQpHUi89CFGGb04zUETiJPlr84VK2bT41
+         c4GQ==
+X-Gm-Message-State: APjAAAXAakwN+1gbrh/eXpu7fz9iY7LXyb9oV/DaY0NWGQ3MBNvRfGTf
+        FF1dzyhC0x7b2vb9BLZHZC4=
+X-Google-Smtp-Source: APXvYqwTJk2prCUh4y+T1TfDWS6E+syxqfxVUP1FpSbpCkIQJbYVwja7RnF65f4XO2fpa2hhxlGJCw==
+X-Received: by 2002:a63:1723:: with SMTP id x35mr4053469pgl.233.1561571519161;
+        Wed, 26 Jun 2019 10:51:59 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id s9sm2465026pjp.7.2019.06.26.10.51.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 10:51:58 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 23:21:55 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: hal: rtl8723b_rf6052: collect return
+ status directly
+Message-ID: <20190626175155.GA9162@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626111139.32878-2-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you post another revision for any reason, please change the subject
-so it's worded as a command and mentions the new config options, e.g.,
+Remove variable rtStatus and return phy_RF6052_Config_ParaFile function
+directly
 
-  PCI: layerscape: Add CONFIG_PCI_LAYERSCAPE_EP to build EP/RC separately
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-On Wed, Jun 26, 2019 at 07:11:39PM +0800, Xiaowei Bao wrote:
-> Compile the EP and RC drivers separately with different configuration
-> options, this looks clearer.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - No change.
-> 
->  drivers/pci/controller/dwc/Kconfig  |   20 ++++++++++++++++++--
->  drivers/pci/controller/dwc/Makefile |    3 ++-
->  2 files changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index a6ce1ee..a41ccf5 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -131,13 +131,29 @@ config PCI_KEYSTONE_EP
->  	  DesignWare core functions to implement the driver.
->  
->  config PCI_LAYERSCAPE
-> -	bool "Freescale Layerscape PCIe controller"
-> +	bool "Freescale Layerscape PCIe controller - Host mode"
->  	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select MFD_SYSCON
->  	select PCIE_DW_HOST
->  	help
-> -	  Say Y here if you want PCIe controller support on Layerscape SoCs.
-> +	  Say Y here if you want to enable PCIe controller support on Layerscape
-> +	  SoCs to work in Host mode.
-> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-> +	  determines which PCIe controller works in EP mode and which PCIe
-> +	  controller works in RC mode.
-> +
-> +config PCI_LAYERSCAPE_EP
-> +	bool "Freescale Layerscape PCIe controller - Endpoint mode"
-> +	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	  Say Y here if you want to enable PCIe controller support on Layerscape
-> +	  SoCs to work in Endpoint mode.
-> +	  This controller can work either as EP or RC. The RCW[HOST_AGT_PEX]
-> +	  determines which PCIe controller works in EP mode and which PCIe
-> +	  controller works in RC mode.
->  
->  config PCI_HISI
->  	depends on OF && (ARM64 || COMPILE_TEST)
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index b085dfd..824fde7 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -8,7 +8,8 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
->  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
->  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
->  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
-> -obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
-> +obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-> +obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
->  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
->  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
->  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-> -- 
-> 1.7.1
-> 
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
+index c205345..d0ffe0a 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
+@@ -194,7 +194,6 @@ static int phy_RF6052_Config_ParaFile(struct adapter *Adapter)
+ int PHY_RF6052_Config8723B(struct adapter *Adapter)
+ {
+ 	struct hal_com_data *pHalData = GET_HAL_DATA(Adapter);
+-	int rtStatus = _SUCCESS;
+ 
+ 	/*  */
+ 	/*  Initialize general global value */
+@@ -208,8 +207,7 @@ int PHY_RF6052_Config8723B(struct adapter *Adapter)
+ 	/*  */
+ 	/*  Config BB and RF */
+ 	/*  */
+-	rtStatus = phy_RF6052_Config_ParaFile(Adapter);
+-	return rtStatus;
++	return phy_RF6052_Config_ParaFile(Adapter);
+ 
+ }
+ 
+-- 
+2.7.4
+
