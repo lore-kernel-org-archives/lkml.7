@@ -2,177 +2,183 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13A6C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A085C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9A221479
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD8F20883
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEfuWP65"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEllaoY4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfFZBg0 (ORCPT
+        id S1726658AbfFZBg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:36:26 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42871 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfFZBgY (ORCPT
+        Tue, 25 Jun 2019 21:36:56 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:33101 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbfFZBgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:36:24 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s15so640140qtk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 18:36:23 -0700 (PDT)
+        Tue, 25 Jun 2019 21:36:55 -0400
+Received: by mail-yw1-f65.google.com with SMTP id v15so281098ywv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 18:36:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z5NrdX7NWwAoR74sTDNwhmRnjPJuMOFlYOfia6fSoF0=;
-        b=AEfuWP65YYdqezhUt9Nl1emQyjaECK5qQwk7hrbZkP9cB8u9dyggDWOVgkQXMVEXlM
-         i4Gb7BFWNZcCoTnlzijHQ0Bu7OagWa9qJH55mozGBqrfw6Uo3nOS6SikMx9mKy2OtFNp
-         GMXsPpGvML02cMESF1OGC1ruB1sosAsriTZQv2/wXhGx+QjUsNGd1neSDKMa4BvsKxFk
-         1j+q+w5HnMc+PqnHVDpmvw1p6ul83sF0/gMzkVTQ6IZMrN257C5bDNSfEW0ZHy4fGELX
-         NthS+POR7/9jtHo5OnTmhRpbqyys0Cl+RoS4IpXLscaWKk/RfOmlpxWquli5yxMXSKA1
-         Yl3w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HTYwKuXPT5ALk6Fdrn6IzuSHliH6LA0lPjX35sqNWXk=;
+        b=LEllaoY4m3xHWsTf7N+j4EKZmEHnZurpJaQ4DfOFpDq5VCrh/Gz2Ay+qnaw+/VsjPx
+         NdSVVQpJr40BZE6Igeny8QytRZGs2Q/pWaDuYl3MfRlk2BCtw4EoH94czkdBkZEkG2U2
+         pEpjPktRmpofIUWGYnET5+J9dWWu1Nr5Z5HkvrveWaTFPl4wzPfG8fKjVuQDtov0ywD4
+         yJc4bdyE/f1Z5EZXXaOuPkm/TbXG//FaJ9D1n/wYXeX9UeS6Nl8vpsriv+kRzCGIiI80
+         v6GAgaz0IchTKo6kTwjApTZ4Ga/8zRr/MuhlYpouM1wn78rpueWlK4a5wddrIlqHdaUd
+         cyhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z5NrdX7NWwAoR74sTDNwhmRnjPJuMOFlYOfia6fSoF0=;
-        b=jQOwJ9iVxgckSSXw07mGuRnT9QMEbRLBhUNABShDHn7DX1W6IWjdatZo/OImjImyLX
-         Xe3y5rxKzcTt7guZ5ohgmGJip6faacxTZP9M/XFqeQ4s2/F1mAU4kZOojuQDp5T7puCl
-         io+uY+4AEjVqRsI0MtfcIdyyxm6octXxaTsUbtpRwvXdnmChJfTV+CCYdA+8Hl3atiS8
-         DHtkDzu+nxiy45hi2pDg/UpWd03gJBTqSiINsIATge1z7S0K3+xOWRnEWVMheTdrPNHp
-         0ELABWALv8MvuJ4M2EjgLqsnrcgYHLutK8WN8fdY7hx8Pay5VCzl9TE7ZYQ5RUmYszKc
-         nxag==
-X-Gm-Message-State: APjAAAUqnFpQog/NOYsz5BAHcn3nj5AdXuOS3kiCi3zqZ5zLsRc0H7hp
-        iVmXPFuAcHqpGCdWT1PgXJA=
-X-Google-Smtp-Source: APXvYqwGsxCL242iIdEU4rNVTpJKxMlXP+fmKwcNueML+N/BprK0zHQHzHQ6gOhAYyCUgth2h/NuJQ==
-X-Received: by 2002:ac8:17e6:: with SMTP id r35mr1292524qtk.215.1561512983200;
-        Tue, 25 Jun 2019 18:36:23 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id c5sm8641883qkb.41.2019.06.25.18.36.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 18:36:22 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 22:36:18 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 1/5] drm/vkms: Avoid assigning 0 for possible_crtc
-Message-ID: <d67849c62a8d8ace1a0af455998b588798a4c45f.1561491964.git.rodrigosiqueiramelo@gmail.com>
-References: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HTYwKuXPT5ALk6Fdrn6IzuSHliH6LA0lPjX35sqNWXk=;
+        b=Wabm3byHJwuHcinHCHwI0xfzDDiaZtAVlrRbayellD4dd0XLcrwZzLLze3ntqSR9s+
+         iAqsRPvN3qE3nV4aPK/vWDkjzExDjuwa5S6z21Tckb3B5mxRGKNkcIIt7vIgohRLLPF2
+         UK2cvSvOf5PAoqmPncCgmmFajGaZMs+l0SmAxt1NXaQhZLSPKtT6Owhm61FA8YFWxZuV
+         esDjw/Suo5kxQc6b6sgBNwnWbF2ximQVWzIV7x45rytDehCT8Qtem9b3ddaKiNBu3F9w
+         v8Wys1FP92Kn/pUXq45vIi/9n+ve9C5SshYJLz+qVnSqOeLwi8cZgibh1ECX90iYA0PN
+         cE9g==
+X-Gm-Message-State: APjAAAWL/bpdKfSqKbNFKUQaSL45+M6tWceD0sYofs5AACkN2EpM7CRT
+        Vfsk9LC8Wh369jH4r54dPBQqSTt7
+X-Google-Smtp-Source: APXvYqzcm6swzp0IYJF3ADzu8h3DeJi2IwePyKEaSDTA32P+JoZfnt+dHEL9kEFHmPE+5JHhJKc5Fg==
+X-Received: by 2002:a81:25d1:: with SMTP id l200mr1064233ywl.11.1561513014015;
+        Tue, 25 Jun 2019 18:36:54 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id g64sm2572434ywg.11.2019.06.25.18.36.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 18:36:53 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id j15so366048ybh.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 18:36:52 -0700 (PDT)
+X-Received: by 2002:a25:21c2:: with SMTP id h185mr1028553ybh.125.1561513012633;
+ Tue, 25 Jun 2019 18:36:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org> <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 25 Jun 2019 21:36:15 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSff=+zqxxmCv3+bNxraigNgx_1Wm5Kn2FM7TTSZV4dnOg@mail.gmail.com>
+Message-ID: <CA+FuTSff=+zqxxmCv3+bNxraigNgx_1Wm5Kn2FM7TTSZV4dnOg@mail.gmail.com>
+Subject: Re: [PATCH v4 net-next 1/4] net: core: page_pool: add user cnt
+ preventing pool deletion
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     David Miller <davem@davemloft.net>, grygorii.strashko@ti.com,
+        hawk@kernel.org, brouer@redhat.com, saeedm@mellanox.com,
+        leon@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        ilias.apalodimas@linaro.org,
+        Network Development <netdev@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        jakub.kicinski@netronome.com,
+        John Fastabend <john.fastabend@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When vkms invoke drm_universal_plane_init(), it sets 0 for
-possible_crtcs parameter which means that planes can't be attached to
-any CRTC. It currently works due to some safeguard in the drm_crtc file;
-however, it is possible to identify the problem by trying to append a
-second connector. This patch fixes this issue by modifying
-vkms_plane_init() to accept an index parameter which makes the code a
-little bit more flexible and avoid set zero to possible_crtcs.
+On Tue, Jun 25, 2019 at 2:00 PM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> Add user counter allowing to delete pool only when no users.
+> It doesn't prevent pool from flush, only prevents freeing the
+> pool instance. Helps when no need to delete the pool and now
+> it's user responsibility to free it by calling page_pool_free()
+> while destroying procedure. It also makes to use page_pool_free()
+> explicitly, not fully hidden in xdp unreg, which looks more
+> correct after page pool "create" routine.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
 
-Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
----
- drivers/gpu/drm/vkms/vkms_drv.c    | 2 +-
- drivers/gpu/drm/vkms/vkms_drv.h    | 4 ++--
- drivers/gpu/drm/vkms/vkms_output.c | 6 +++---
- drivers/gpu/drm/vkms/vkms_plane.c  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+> diff --git a/include/net/page_pool.h b/include/net/page_pool.h
+> index f07c518ef8a5..1ec838e9927e 100644
+> --- a/include/net/page_pool.h
+> +++ b/include/net/page_pool.h
+> @@ -101,6 +101,7 @@ struct page_pool {
+>         struct ptr_ring ring;
+>
+>         atomic_t pages_state_release_cnt;
+> +       atomic_t user_cnt;
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
-index cc53ef88a331..966b3d653189 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.c
-+++ b/drivers/gpu/drm/vkms/vkms_drv.c
-@@ -127,7 +127,7 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
- 	dev->mode_config.preferred_depth = 24;
- 	dev->mode_config.helper_private = &vkms_mode_config_helpers;
- 
--	return vkms_output_init(vkmsdev);
-+	return vkms_output_init(vkmsdev, 0);
- }
- 
- static int __init vkms_init(void)
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index 12b4db7ac641..e2d1aa089dec 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -115,10 +115,10 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
- 			       int *max_error, ktime_t *vblank_time,
- 			       bool in_vblank_irq);
- 
--int vkms_output_init(struct vkms_device *vkmsdev);
-+int vkms_output_init(struct vkms_device *vkmsdev, int index);
- 
- struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
--				  enum drm_plane_type type);
-+				  enum drm_plane_type type, int index);
- 
- /* Gem stuff */
- struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
-diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-index 56fb5c2a2315..fb1941a6522c 100644
---- a/drivers/gpu/drm/vkms/vkms_output.c
-+++ b/drivers/gpu/drm/vkms/vkms_output.c
-@@ -35,7 +35,7 @@ static const struct drm_connector_helper_funcs vkms_conn_helper_funcs = {
- 	.get_modes    = vkms_conn_get_modes,
- };
- 
--int vkms_output_init(struct vkms_device *vkmsdev)
-+int vkms_output_init(struct vkms_device *vkmsdev, int index)
- {
- 	struct vkms_output *output = &vkmsdev->output;
- 	struct drm_device *dev = &vkmsdev->drm;
-@@ -45,12 +45,12 @@ int vkms_output_init(struct vkms_device *vkmsdev)
- 	struct drm_plane *primary, *cursor = NULL;
- 	int ret;
- 
--	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
-+	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY, index);
- 	if (IS_ERR(primary))
- 		return PTR_ERR(primary);
- 
- 	if (enable_cursor) {
--		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
-+		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR, index);
- 		if (IS_ERR(cursor)) {
- 			ret = PTR_ERR(cursor);
- 			goto err_cursor;
-diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 0fceb6258422..18c630cfc485 100644
---- a/drivers/gpu/drm/vkms/vkms_plane.c
-+++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -176,7 +176,7 @@ static const struct drm_plane_helper_funcs vkms_primary_helper_funcs = {
- };
- 
- struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
--				  enum drm_plane_type type)
-+				  enum drm_plane_type type, int index)
- {
- 	struct drm_device *dev = &vkmsdev->drm;
- 	const struct drm_plane_helper_funcs *funcs;
-@@ -198,7 +198,7 @@ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
- 		funcs = &vkms_primary_helper_funcs;
- 	}
- 
--	ret = drm_universal_plane_init(dev, plane, 0,
-+	ret = drm_universal_plane_init(dev, plane, 1 << index,
- 				       &vkms_plane_funcs,
- 				       formats, nformats,
- 				       NULL, type, NULL);
--- 
-2.21.0
+refcount_t?
+
+>  };
+>
+>  struct page *page_pool_alloc_pages(struct page_pool *pool, gfp_t gfp);
+> @@ -183,6 +184,12 @@ static inline dma_addr_t page_pool_get_dma_addr(struct page *page)
+>         return page->dma_addr;
+>  }
+>
+> +/* used to prevent pool from deallocation */
+> +static inline void page_pool_get(struct page_pool *pool)
+> +{
+> +       atomic_inc(&pool->user_cnt);
+> +}
+> +
+>  static inline bool is_page_pool_compiled_in(void)
+>  {
+>  #ifdef CONFIG_PAGE_POOL
+> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> index b366f59885c1..169b0e3c870e 100644
+> --- a/net/core/page_pool.c
+> +++ b/net/core/page_pool.c
+> @@ -48,6 +48,7 @@ static int page_pool_init(struct page_pool *pool,
+>                 return -ENOMEM;
+>
+>         atomic_set(&pool->pages_state_release_cnt, 0);
+> +       atomic_set(&pool->user_cnt, 0);
+>
+>         if (pool->p.flags & PP_FLAG_DMA_MAP)
+>                 get_device(pool->p.dev);
+> @@ -70,6 +71,8 @@ struct page_pool *page_pool_create(const struct page_pool_params *params)
+>                 kfree(pool);
+>                 return ERR_PTR(err);
+>         }
+> +
+> +       page_pool_get(pool);
+>         return pool;
+>  }
+>  EXPORT_SYMBOL(page_pool_create);
+> @@ -356,6 +359,10 @@ static void __warn_in_flight(struct page_pool *pool)
+>
+>  void __page_pool_free(struct page_pool *pool)
+>  {
+> +       /* free only if no users */
+> +       if (!atomic_dec_and_test(&pool->user_cnt))
+> +               return;
+> +
+>         WARN(pool->alloc.count, "API usage violation");
+>         WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
+>
+> diff --git a/net/core/xdp.c b/net/core/xdp.c
+> index 829377cc83db..04bdcd784d2e 100644
+> --- a/net/core/xdp.c
+> +++ b/net/core/xdp.c
+> @@ -372,6 +372,9 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+>
+>         mutex_unlock(&mem_id_lock);
+>
+> +       if (type == MEM_TYPE_PAGE_POOL)
+> +               page_pool_get(xdp_alloc->page_pool);
+> +
+
+need an analogous page_pool_put in xdp_rxq_info_unreg_mem_model? mlx5
+does not use that inverse function, but intel drivers do.
+
+>         trace_mem_connect(xdp_alloc, xdp_rxq);
+>         return 0;
+>  err:
+> --
+> 2.17.1
+>
