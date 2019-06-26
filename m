@@ -2,114 +2,90 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630D4C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F7EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328222085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3EE2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJQiVPJf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IkmKMN4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfFZVQT (ORCPT
+        id S1726441AbfFZVQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:16:19 -0400
-Received: from mail-qt1-f169.google.com ([209.85.160.169]:41407 "EHLO
-        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726223AbfFZVQS (ORCPT
+        Wed, 26 Jun 2019 17:16:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48554 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726223AbfFZVQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:16:18 -0400
-Received: by mail-qt1-f169.google.com with SMTP id d17so161583qtj.8;
-        Wed, 26 Jun 2019 14:16:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=4ZRMYDD6VXYHJ3yMoR9yk/ycrqO0+R7vuu/Js8ejT6o=;
-        b=bJQiVPJfaBNatgfnUw2XBVrpAdFC6MjIm0gbTy2KAEKrru7C2oC48pdBWgg9nExLb/
-         7qLhF/204uVK2JCY4Fd5bMaikbxLNaXl7fkTuDmsxL6r66Igx9fGORB5m+6q09u+CSBz
-         VB5bPHLNjsLlqIObmx3Lry+fM2Y6/ahifqXepf8/oLGLYiMc1WCy0lCszmjToc/C4GJY
-         KQPVksHOmGYmXbNMoCy7yzYkCUEt3eyZYPsfuasQ8QaJr3KtfCor66AjT6KJF4XUsofh
-         r5luqweMaeJVYGrmDzIKBxerpkV8QQUYfEWHXfd1oZ/5gOMmKC/1zLcYWTVcDMoTgRgn
-         zW+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=4ZRMYDD6VXYHJ3yMoR9yk/ycrqO0+R7vuu/Js8ejT6o=;
-        b=pVWc1Ld9/gme8C5V2XIb2C2F2MzbvarC2nOlbRlqI5QKCg3q9O0VDsCZGZWFcF4wnv
-         6tqYB8VL5R5tSKFe9cZGwieAHvQ6ikpl8EmXHB2yAeIhIWXdCSxqzbgmM8GtLlpwjMbh
-         JqykVtlFLFbTPxEJ5ZWVcrUzcP0oKVQ/Binju7IjomYFNHX7+TrFLPBUF8xzxxV0KH3H
-         9rKE2upW7MJvSX77rvyeJSDtHD8I6Tpn085wPxEdRRdfLF3ijYN0o2xE6b4pMUTQawC9
-         kL7wiWcCwshaVOuG857o3MbwBOGRy1h+wkU+2P/vQC+Jtj3s7z7T5m3EPYqZvTc380pN
-         hIrg==
-X-Gm-Message-State: APjAAAUGNdv9wXgG91qsdsHhjC/+8ruiAy35VA4cmy59LjTjqy448wb2
-        WCI8S91p41pyN8bFgID7FFI=
-X-Google-Smtp-Source: APXvYqwoqguGGXI4TpQM3iac73FV4MOcZ4DOAi594SuTbNqrfAuxV0KxH6IJL43f21pUqpg/4v+hnw==
-X-Received: by 2002:a05:6214:10c5:: with SMTP id r5mr5250487qvs.224.1561583777110;
-        Wed, 26 Jun 2019 14:16:17 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.159.13.12])
-        by smtp.gmail.com with ESMTPSA id d17sm6488qtp.84.2019.06.26.14.16.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 14:16:16 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3E0C141153; Wed, 26 Jun 2019 18:16:13 -0300 (-03)
-Date:   Wed, 26 Jun 2019 18:16:13 -0300
-To:     dwarves@vger.kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Jan Engelhardt <jengelh@inai.de>,
-        Domenico Andreoli <cavok@debian.org>,
-        Matthias Schwarzott <zzam@gentoo.org>,
-        David Seifert <soap@gentoo.org>,
-        Pavel Borzenkov <pavel.borzenkov@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Wieelard <mjw@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: ANNOUNCE: pahole v1.14 (Bug fixes)
-Message-ID: <20190626211613.GE3902@kernel.org>
+        Wed, 26 Jun 2019 17:16:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gvmyRW50uYuz0LuvATyGPI0uW8SQvuUBVNqYusKK+Z8=; b=IkmKMN4B7L6D5gS8CGrtJk7BZ
+        fxgCWW7+kGMiO8AO+KdV6K5MZALERUxDLgH7Rquq/DoacO59k4sClrSHn88mILg7iihclmh7KYCU4
+        rKJfzSFTpVnjKVqXKgSsEtZT+xkxahDHYaKHjuSfQXuuO39KuFLNA2AVZ9/0FAXOIDRFPrxnrNDV+
+        FU/OEqUxR+P0mKZJk7LtDVKGlvsNic4+8aZ4xRAcBm9A5bpsq/G46sP5LE0K7Hgd8/+MjE6+45f78
+        5aIXfQKIj/FNJPCUf4Az1CbLgMQkGIzMkAhKem/pmHOt+lFzbGppJMjiWVX5sAP61Rs1R8FrqMDOX
+        l/xRueJZQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgFH8-00026c-3W; Wed, 26 Jun 2019 21:16:18 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EE44498198F; Wed, 26 Jun 2019 23:16:10 +0200 (CEST)
+Date:   Wed, 26 Jun 2019 23:16:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
+ implementation
+Message-ID: <20190626211610.GY7905@worktop.programming.kicks-ass.net>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+ <20190607162349.18199-2-john.ogness@linutronix.de>
+ <20190621140516.h36g4in26pe3rmly@pathway.suse.cz>
+ <87d0j31iyc.fsf@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <87d0j31iyc.fsf@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
- 
-	The v1.14 release of pahole and its friends is out, available at
-the usual places:
- 
-Main git repo:
- 
-   git://git.kernel.org/pub/scm/devel/pahole/pahole.git
+On Mon, Jun 24, 2019 at 10:33:15AM +0200, John Ogness wrote:
+> Here are the writer-relevant memory barriers and their associated
+> variables:
+> 
+> MB1: data_list.oldest
+> MB2: data_list.newest
+> MB3: data_block.id
+> MB4: descr.data_next
+> MB5: descr_list.newest
+> MB6: descr.next
 
-Mirror git repo:
- 
-   https://github.com/acmel/dwarves.git
- 
-tarball + gpg signature:
- 
-   https://fedorapeople.org/~acme/dwarves/dwarves-1.14.tar.xz
-   https://fedorapeople.org/~acme/dwarves/dwarves-1.14.tar.bz2
-   https://fedorapeople.org/~acme/dwarves/dwarves-1.14.tar.sign
- 
-Just some bugfixes, notably:
+I think this is the fundamental divergence in parlance.
 
-3ed9a67967cf fprintf: Avoid null dereference with NULL configs
-568dae4bd498 printf: Fixup printing "const" early with "const void"
-68f261d8dfff fprintf: Fix recursively printing named structs in --expand_types
+You seem to associate a barrier with a (single) variable, where normally
+a barrier is between two (or more) variables.
 
-Best Regards,
+As you wrote in that other email (I'm stlil going through all that);
+your MB5 isn't desc_list.newest, but rather between desc_list.newest and
+descr.next.
 
-- Arnaldo
+Remember, the topic is called 'memory ordering', and you cannot order
+singles.
