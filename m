@@ -2,102 +2,131 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5A7C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C8AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F762086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FE12086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:10:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ksFc/o6T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfFZUJK (ORCPT
+        id S1726484AbfFZUKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:09:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50267 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726271AbfFZUJJ (ORCPT
+        Wed, 26 Jun 2019 16:10:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38659 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfFZUKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:09:09 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgEE4-0005om-0V; Wed, 26 Jun 2019 22:09:04 +0200
-Date:   Wed, 26 Jun 2019 22:09:03 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     "Raslan, KarimAllah" <karahmed@amazon.de>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kernellwp@gmail.com" <kernellwp@gmail.com>,
-        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
-Subject: Re: cputime takes cstate into consideration
-In-Reply-To: <20190626200126.GQ3419@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.DEB.2.21.1906262206160.32342@nanos.tec.linutronix.de>
-References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com> <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de> <20190626145413.GE6753@char.us.oracle.com> <20190626161608.GM3419@hirez.programming.kicks-ass.net>
- <20190626183016.GA16439@char.us.oracle.com> <alpine.DEB.2.21.1906262038040.32342@nanos.tec.linutronix.de> <1561575336.25880.7.camel@amazon.de> <20190626192100.GP3419@hirez.programming.kicks-ass.net> <1561577254.25880.15.camel@amazon.de>
- <20190626200126.GQ3419@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 26 Jun 2019 16:10:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y15so60963pfn.5;
+        Wed, 26 Jun 2019 13:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fr7i/ENp7aGYYEF02skQlZfDr8p6MJ5Q3iZjfvmtRP4=;
+        b=ksFc/o6T+8+Qstfi+VZY39IJmvUmwK0Cbp/zhCtIQ5URgsW1CXdEXIR0rWsZ/5NNJX
+         iEJphcITi+swWG55ImBd2UMi5R1BL9NYQ+GaI/vDvUSfgSmKPmaHEXIGM5XCcVySc+m/
+         louqizTFTFaWODzkwtsSSa5DXpjUMmwMcR3BgWhDchBghzB39Ynr6FymVJ79kDAntlW/
+         Bk3dIu3+k+uf81+Whsa9Se9z97qlbwuMUo5AxORE7mO0KFDxWz1Z4fodVbDRnTGfFkKA
+         4IxPTcHI1wI1BFjuiWcUFn2JNend7VniCds6894A7VbSLGNWZ6xkwhQm0HnwcouPhr4X
+         lGMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fr7i/ENp7aGYYEF02skQlZfDr8p6MJ5Q3iZjfvmtRP4=;
+        b=Y5p8jme7grFtQ5f26pvSsi0CESKz4UuXqpNSernz42fFyrCnwyfw/GevUtx3ZXROn5
+         BVzxgRbrFI0MIb4Sp1saEPYp/CZacC7NMY6Y79/bp5ODJS1cijY3CaI5ltKIDw0SuqqS
+         qDwBnyO4kpNCiMufaVKbZ0e7TdvOklaBb3DA3SlER+3xSlzs6swS30L+3fi8Oi+Ja7er
+         Y0xc9JZco+TdszkcVvldqwXzIzDk8zxS5RfQGRBc04cLPOzBfBtPm5mRxCkBgPK9GSeS
+         yksS2NCSo7loxibE4WRrDWKkwsnC433KwW0OorqiztGtAI+MvJOXJBR+diItIGdLrpnZ
+         svsg==
+X-Gm-Message-State: APjAAAWKjyAI6f4qEV81izhoi1ytmoLAzWTXUl38rRIrxlrgpRuZ6G1f
+        r0+AhxTpOdka659jW1rkp48=
+X-Google-Smtp-Source: APXvYqy+8INAblpkK4j8kdIICVT4WVXnbuGleyKIkOyO4NQmLhPWsTX94aJyxQR0X1SfCpecwrZ5qg==
+X-Received: by 2002:a65:5144:: with SMTP id g4mr4658877pgq.116.1561579843302;
+        Wed, 26 Jun 2019 13:10:43 -0700 (PDT)
+Received: from localhost ([123.213.206.190])
+        by smtp.gmail.com with ESMTPSA id y12sm5054pgi.10.2019.06.26.13.10.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 13:10:42 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 05:10:39 +0900
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Minwoo Im <minwoo.im.dev@gmail.com>
+Subject: Re: [PATCH][next] nvme-trace: fix spelling mistake "spcecific" ->
+ "specific"
+Message-ID: <20190626201039.GA4934@minwooim-desktop>
+References: <20190626124323.5925-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1806125090-1561579744=:32342"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190626124323.5925-1-colin.king@canonical.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1806125090-1561579744=:32342
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 26 Jun 2019, Peter Zijlstra wrote:
-> On Wed, Jun 26, 2019 at 07:27:35PM +0000, Raslan, KarimAllah wrote:
-> > On Wed, 2019-06-26 at 21:21 +0200, Peter Zijlstra wrote:
-> > > On Wed, Jun 26, 2019 at 06:55:36PM +0000, Raslan, KarimAllah wrote:
-> > > 
-> > > > 
-> > > > If the host is completely in no_full_hz mode and the pCPU is dedicated to a 
-> > > > single vCPU/task (and the guest is 100% CPU bound and never exits), you would 
-> > > > still be ticking in the host once every second for housekeeping, right? Would 
-> > > > not updating the mwait-time once a second be enough here?
-> > > 
-> > > People are trying very hard to get rid of that remnant tick. Lets not
-> > > add dependencies to it.
-> > > 
-> > > IMO this is a really stupid issue, 100% time is correct if the guest
-> > > does idle in pinned vcpu mode.
-> > 
-> > One use case for proper accounting (obviously for a slightly relaxed definition 
-> > or *proper*) is *external* monitoring of CPU utilization for scaling group
-> > (i.e. more VMs will be launched when you reach a certain CPU utilization).
-> > These external monitoring tools needs to account CPU utilization properly.
+On 19-06-26 13:43:23, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> That's utter nonsense; what's the point of exposing mwait to guests if
-> you're not doing vcpu pinning. For overloaded guests mwait makes no
-> sense what so ever.
+> There are two spelling mistakes in trace_seq_printf messages, fix these.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/nvme/host/trace.c   | 2 +-
+>  drivers/nvme/target/trace.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/trace.c b/drivers/nvme/host/trace.c
+> index f01ad0fd60bb..6980ab827233 100644
+> --- a/drivers/nvme/host/trace.c
+> +++ b/drivers/nvme/host/trace.c
+> @@ -178,7 +178,7 @@ static const char *nvme_trace_fabrics_common(struct trace_seq *p, u8 *spc)
+>  {
+>  	const char *ret = trace_seq_buffer_ptr(p);
+>  
+> -	trace_seq_printf(p, "spcecific=%*ph", 24, spc);
+> +	trace_seq_printf(p, "specific=%*ph", 24, spc);
+>  	trace_seq_putc(p, 0);
+>  	return ret;
+>  }
+> diff --git a/drivers/nvme/target/trace.c b/drivers/nvme/target/trace.c
+> index cdcdd14c6408..6af11d493271 100644
+> --- a/drivers/nvme/target/trace.c
+> +++ b/drivers/nvme/target/trace.c
+> @@ -146,7 +146,7 @@ static const char *nvmet_trace_fabrics_common(struct trace_seq *p, u8 *spc)
+>  {
+>  	const char *ret = trace_seq_buffer_ptr(p);
+>  
+> -	trace_seq_printf(p, "spcecific=%*ph", 24, spc);
+> +	trace_seq_printf(p, "specific=%*ph", 24, spc);
+>  	trace_seq_putc(p, 0);
+>  	return ret;
+>  }
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> Linux-nvme mailing list
+> Linux-nvme@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-nvme
 
-I think you misunderstood. The guests are pinned. What they can do today is
-monitor the guests utilization time through mwait/vmexit. If that goes over
-a certain threshold they can automatically launch more VMs to spread the
-load.
+*facepalm*..
 
-With MWAIT in the guest this is gone...
+Thanks for fixing this, Colin!
 
-Thanks,
-
-	tglx
-
---8323329-1806125090-1561579744=:32342--
+Reviewed-by: Minwoo Im <minwoo.im.dev@gmail.com>
