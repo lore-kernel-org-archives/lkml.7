@@ -2,95 +2,113 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3F5C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D491EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B7721738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6EF921738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 22:26:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="XQNDqrzb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfFZW0O convert rfc822-to-8bit (ORCPT
+        id S1726623AbfFZW0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 18:26:14 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2978 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbfFZW0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 18:26:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 15:26:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
-   d="scan'208";a="164503997"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga003.jf.intel.com with ESMTP; 26 Jun 2019 15:26:13 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 26 Jun 2019 15:26:12 -0700
-Received: from orsmsx104.amr.corp.intel.com ([169.254.4.70]) by
- ORSMSX111.amr.corp.intel.com ([169.254.12.236]) with mapi id 14.03.0439.000;
- Wed, 26 Jun 2019 15:26:12 -0700
-From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
-To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Intel-wired-lan] [PATCH][net-next] iavf: fix dereference of
- null rx_buffer pointer
-Thread-Topic: [Intel-wired-lan] [PATCH][net-next] iavf: fix dereference of
- null rx_buffer pointer
-Thread-Index: AQHVJqupVXnzcA+L3kOQDxvwkDnUOqaujuOg
-Date:   Wed, 26 Jun 2019 22:26:11 +0000
-Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D3FB501@ORSMSX104.amr.corp.intel.com>
-References: <20190619143044.10259-1-colin.king@canonical.com>
-In-Reply-To: <20190619143044.10259-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGIxZTkyNjktNzU5OS00Y2QxLTgzZWMtOTg0ZTczNjMzMzlmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicTZrSGFqK1VITGdcL2VaZjhwS2pJaHo1WTF3aFRLQSt6VGVJMTFtMHhaaGpuXC8xQTR6WGk1UXFLeERVV0hrMzBMIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 26 Jun 2019 18:26:50 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41224 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfFZW0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 18:26:49 -0400
+Received: by mail-oi1-f195.google.com with SMTP id g7so47999oia.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 15:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DwzTuPrM5y/zYXjPFzke4laOtSF8hSFyaDatsrv6uos=;
+        b=XQNDqrzbXYaPBBsJx63e5kskO3z/7Uwv/QEJ8JEt7xCZjGxh81eoh0HK597FB/HXkl
+         j6btL1dKeedIUYIgtsOftSrRmAXmaZfKOpwDSiELWVtzazJhfu+Uo7qclfvQhhYuXNlR
+         y9TPDFBs7ZlHWlusDpRjFJgGnd/YC6IKeNNPXp952G7yqVoxqNHgjaRrp/qFAAM77xvw
+         zA2kpSYd4hR92yB2+1i77CvASSAFudf2iFenBnL/yuVmoSu5yyVBMveC3Xo/kWws5RqP
+         ozPqwCLs4ZwHkNFd7Xouks3u9uNTw8qn3NBapKd/S1OJRLwV657bHPVneIohdvKFBN5D
+         2KoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DwzTuPrM5y/zYXjPFzke4laOtSF8hSFyaDatsrv6uos=;
+        b=mI7CmTLMqPkV2GctRBDDlDcqgcw3Go6Cfvxs8oCf1gadqchfEbDYIlWq5pZzhQqgPS
+         40KwVzp751tX4toyccuaNZhU+dv1NOOFKLCrePQ6Jc5lHwXb6+pE8u7/v38XdWeKsDJQ
+         XfdnRgsR0O3GPfyhb/JW5C30wbwQb+U/O4qhon3frqirIkSb3LHPLZr2eAIrc9yTjPBC
+         fLRyNZxddZIxamLjA1I5j49t11ekdkVo1vm1RfZjrVwnhaWSUeXUuWVqt36zlvSs0549
+         Kn4hLa9/7S4f56Sv4JZGrSEaIyA4uyWfxVpQm9P5zpItnPfIbSzgumJM6mkqLR5dokW+
+         m7Pw==
+X-Gm-Message-State: APjAAAVblbt96/PBd/ZcI6HYSK5b8IkqAy9ny55d8yQtgg//zKDDowlf
+        yrAKiwX6n02iaOSJ+Vpsl+Sfj0i+rzoLDpYnVUgefQ==
+X-Google-Smtp-Source: APXvYqwVbboprpve6aSs3UTcDULdV2BbqjcfOMsVOLoe2TEN5WQ/H3YulIEecdnhlgNAw9WuySv9NLl8DqyAqSpJv/I=
+X-Received: by 2002:aca:50c6:: with SMTP id e189mr415988oib.63.1561588008912;
+ Wed, 26 Jun 2019 15:26:48 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190626005449.225796-1-trong@android.com> <20190626011221.GB22454@kroah.com>
+ <CANA+-vBoabFTD=fMz+0d5Sbe9rPwnxcuxJxaMCT3KAwXYHSD7w@mail.gmail.com> <20190626014633.GA22610@kroah.com>
+In-Reply-To: <20190626014633.GA22610@kroah.com>
+From:   Tri Vo <trong@android.com>
+Date:   Wed, 26 Jun 2019 15:26:38 -0700
+Message-ID: <CANA+-vDOBrgUB5s2Y3stw4NhwMopwdVZq_WcgBSwNrWpNV=T9g@mail.gmail.com>
+Subject: Re: [PATCH] PM / wakeup: show wakeup sources stats in sysfs
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
-> Behalf Of Colin King
-> Sent: Wednesday, June 19, 2019 7:31 AM
-> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
-> <davem@davemloft.net>; intel-wired-lan@lists.osuosl.org;
-> netdev@vger.kernel.org
-> Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [Intel-wired-lan] [PATCH][net-next] iavf: fix dereference of null
-> rx_buffer pointer
-> 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> A recent commit efa14c3985828d ("iavf: allow null RX descriptors") added a
-> null pointer sanity check on rx_buffer, however, rx_buffer is being
-> dereferenced before that check, which implies a null pointer dereference
-> bug can potentially occur.  Fix this by only dereferencing rx_buffer until after
-> the null pointer check.
-> 
-> Addresses-Coverity: ("Dereference before null check")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/ethernet/intel/iavf/iavf_txrx.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+On Tue, Jun 25, 2019 at 6:48 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jun 25, 2019 at 06:33:08PM -0700, Tri Vo wrote:
+> > On Tue, Jun 25, 2019 at 6:12 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > +static ssize_t wakeup_source_count_show(struct wakeup_source *ws,
+> > > > +                                     struct wakeup_source_attribute *attr,
+> > > > +                                     char *buf)
+> > > > +{
+> > > > +     unsigned long flags;
+> > > > +     unsigned long var;
+> > > > +
+> > > > +     spin_lock_irqsave(&ws->lock, flags);
+> > > > +     if (strcmp(attr->attr.name, "active_count") == 0)
+> > > > +             var = ws->active_count;
+> > > > +     else if (strcmp(attr->attr.name, "event_count") == 0)
+> > > > +             var = ws->event_count;
+> > > > +     else if (strcmp(attr->attr.name, "wakeup_count") == 0)
+> > > > +             var = ws->wakeup_count;
+> > > > +     else
+> > > > +             var = ws->expire_count;
+> > > > +     spin_unlock_irqrestore(&ws->lock, flags);
+> > > > +
+> > > > +     return sprintf(buf, "%lu\n", var);
+> > > > +}
+> > >
+> > > Why is this lock always needed to be grabbed?  You are just reading a
+> > > value, who cares if it changes inbetween reading it and returning the
+> > > buffer string as it can change at that point in time anyway?
+> >
+> > Right, we don't care if the value changes in between us reading and
+> > printing it. However, IIUC not grabbing this lock results in a data
+> > race, which is undefined behavior.
+>
+> A data race where?  Writing to the value?  How can that happen?  All you
+> are doing is incrementing this variable elsewhere, what is the worst
+> that can happen?
 
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-
-
+Ok, I'll remove the locks.
