@@ -2,63 +2,101 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC63FC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D8C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14732085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7980E2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfFZHOL (ORCPT
+        id S1726872AbfFZHQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:14:11 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:32786 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726077AbfFZHOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:14:11 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7383ED8A4FDEEF3C92B8;
-        Wed, 26 Jun 2019 15:14:07 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Jun
- 2019 15:13:54 +0800
-Subject: Re: [PATCH RESEND] staging: erofs: return the error value if
- fill_inline_data() fails
-To:     Yue Hu <zbestahu@gmail.com>, <gaoxiang25@huawei.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-erofs@lists.ozlabs.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <huyue2@yulong.com>
-References: <20190626033038.9456-1-zbestahu@gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <96f12ad4-e9dc-a688-2c26-2dd285b7b795@huawei.com>
-Date:   Wed, 26 Jun 2019 15:13:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 26 Jun 2019 03:16:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45239 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfFZHQV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 03:16:21 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hg2A8-0006V9-Lf; Wed, 26 Jun 2019 09:16:12 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+        <20190607162349.18199-2-john.ogness@linutronix.de>
+        <20190618045117.GA7419@jagdpanzerIV> <87imt2bl0k.fsf@linutronix.de>
+        <20190625064543.GA19050@jagdpanzerIV>
+        <20190625071500.GB19050@jagdpanzerIV> <875zoujbq4.fsf@linutronix.de>
+        <20190625090620.wufhvdxxiryumdra@pathway.suse.cz>
+        <20190625100322.GD532@jagdpanzerIV> <87woh9hnxg.fsf@linutronix.de>
+        <20190626020837.GA25178@jagdpanzerIV>
+Date:   Wed, 26 Jun 2019 09:16:11 +0200
+In-Reply-To: <20190626020837.GA25178@jagdpanzerIV> (Sergey Senozhatsky's
+        message of "Wed, 26 Jun 2019 11:08:37 +0900")
+Message-ID: <87mui43jgk.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190626033038.9456-1-zbestahu@gmail.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/26 11:30, Yue Hu wrote:
-> From: Yue Hu <huyue2@yulong.com>
-> 
-> We should consider the error returned by fill_inline_data() when filling
-> last page in fill_inode(). If not getting inode will be successful even
-> though last page is bad. That is illogical. Also change -EAGAIN to 0 in
-> fill_inline_data() to stand for successful filling.
-> 
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
+On 2019-06-26, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+> [..]
+>> > CPU0								CPU1
+>> > printk(...)
+>> >  sz = vscprintf(NULL, "Comm %s\n", current->comm);
+>> > 								ia64_mca_modify_comm()
+>> > 								  snprintf(comm, sizeof(comm), "%s %d", current->comm, previous_current->pid);
+>> > 								  memcpy(current->comm, comm, sizeof(current->comm));
+>> >  if ((buf = prb_reserve(... sz))) {
+>> >    vscnprintf(buf, "Comm %s\n", current->comm);
+>> > 				^^^^^^^^^^^^^^ ->comm has changed.
+>> > 					       Nothing critical, we
+>> > 					       should not corrupt
+>> > 					       anything, but we will
+>> > 					       truncate ->comm if its
+>> > 					       new size is larger than
+>> > 					       what it used to be when
+>> > 					       we did vscprintf(NULL).
+>> >    prb_commit(...);
+>> >  }
+>
+> [..]
+>> In my v1 rfc series, I avoided this issue by having a separate dedicated
+>> ringbuffer (rb_sprintf) that was used to allocate a temporary max-size
+>> (2KB) buffer for sprinting to. Then _that_ was used for the real
+>> ringbuffer input (strlen, prb_reserve, memcpy, prb_commit). That would
+>> still be the approach of my choice.
+>
+> In other words per-CPU buffering, AKA printk_safe ;)
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Actually, no. I made use of a printk_ringbuffer (which is global). It
+was used for temporary memory allocation for sprintf, but the result was
+immediately written into the printk buffer from the same context. In
+contrast, printk_safe triggers a different context to handle the
+insertion.
 
-Thanks,
+It is still my intention to eliminate the buffering component of
+printk_safe.
+
+After we get a lockless ringbuffer that we are happy with, my next
+series to integrate the buffer into printk will again use the sprint_rb
+solution to avoid the issue discussed in this thread. Perhaps it would
+be best to continue this discussion after I've posted that series.
+
+John Ogness
