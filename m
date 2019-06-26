@@ -2,62 +2,102 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1307DC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5A7C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6262216C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F762086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfFZUHa (ORCPT
+        id S1726396AbfFZUJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:07:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40872 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbfFZUHa (ORCPT
+        Wed, 26 Jun 2019 16:09:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50267 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726271AbfFZUJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:07:30 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7FA4E14DB8366;
-        Wed, 26 Jun 2019 13:07:29 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 13:07:29 -0700 (PDT)
-Message-Id: <20190626.130729.2125111135503705774.davem@davemloft.net>
-To:     puranjay12@gmail.com
-Cc:     skhan@linuxfoundation.org, bjorn@helgaas.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] net: ethernet: atheros: atlx: Remove unused and
- private PCI definitions
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190621163921.26188-4-puranjay12@gmail.com>
-References: <20190621163921.26188-1-puranjay12@gmail.com>
-        <20190621163921.26188-4-puranjay12@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Jun 2019 13:07:29 -0700 (PDT)
+        Wed, 26 Jun 2019 16:09:09 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgEE4-0005om-0V; Wed, 26 Jun 2019 22:09:04 +0200
+Date:   Wed, 26 Jun 2019 22:09:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     "Raslan, KarimAllah" <karahmed@amazon.de>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kernellwp@gmail.com" <kernellwp@gmail.com>,
+        "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "mtosatti@redhat.com" <mtosatti@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "ankur.a.arora@oracle.com" <ankur.a.arora@oracle.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>
+Subject: Re: cputime takes cstate into consideration
+In-Reply-To: <20190626200126.GQ3419@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1906262206160.32342@nanos.tec.linutronix.de>
+References: <CANRm+Cyge6viybs63pt7W-cRdntx+wfyOq5EWE2qmEQ71SzMHg@mail.gmail.com> <alpine.DEB.2.21.1906261211410.32342@nanos.tec.linutronix.de> <20190626145413.GE6753@char.us.oracle.com> <20190626161608.GM3419@hirez.programming.kicks-ass.net>
+ <20190626183016.GA16439@char.us.oracle.com> <alpine.DEB.2.21.1906262038040.32342@nanos.tec.linutronix.de> <1561575336.25880.7.camel@amazon.de> <20190626192100.GP3419@hirez.programming.kicks-ass.net> <1561577254.25880.15.camel@amazon.de>
+ <20190626200126.GQ3419@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-1806125090-1561579744=:32342"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Puranjay Mohan <puranjay12@gmail.com>
-Date: Fri, 21 Jun 2019 22:09:21 +0530
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Remove unused private PCI definitions from skfbi.h because generic PCI
-> symbols are already included from pci_regs.h.
+--8323329-1806125090-1561579744=:32342
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+
+On Wed, 26 Jun 2019, Peter Zijlstra wrote:
+> On Wed, Jun 26, 2019 at 07:27:35PM +0000, Raslan, KarimAllah wrote:
+> > On Wed, 2019-06-26 at 21:21 +0200, Peter Zijlstra wrote:
+> > > On Wed, Jun 26, 2019 at 06:55:36PM +0000, Raslan, KarimAllah wrote:
+> > > 
+> > > > 
+> > > > If the host is completely in no_full_hz mode and the pCPU is dedicated to a 
+> > > > single vCPU/task (and the guest is 100% CPU bound and never exits), you would 
+> > > > still be ticking in the host once every second for housekeeping, right? Would 
+> > > > not updating the mwait-time once a second be enough here?
+> > > 
+> > > People are trying very hard to get rid of that remnant tick. Lets not
+> > > add dependencies to it.
+> > > 
+> > > IMO this is a really stupid issue, 100% time is correct if the guest
+> > > does idle in pinned vcpu mode.
+> > 
+> > One use case for proper accounting (obviously for a slightly relaxed definition 
+> > or *proper*) is *external* monitoring of CPU utilization for scaling group
+> > (i.e. more VMs will be launched when you reach a certain CPU utilization).
+> > These external monitoring tools needs to account CPU utilization properly.
 > 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> That's utter nonsense; what's the point of exposing mwait to guests if
+> you're not doing vcpu pinning. For overloaded guests mwait makes no
+> sense what so ever.
 
-Please also handle the PCI register bit value define duplications as well,
-as pointed out by Bjorn.
+I think you misunderstood. The guests are pinned. What they can do today is
+monitor the guests utilization time through mwait/vmexit. If that goes over
+a certain threshold they can automatically launch more VMs to spread the
+load.
 
-Thanks.
+With MWAIT in the guest this is gone...
+
+Thanks,
+
+	tglx
+
+--8323329-1806125090-1561579744=:32342--
