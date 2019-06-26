@@ -2,224 +2,172 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BBAC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BB6C48BD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2142021743
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B140208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561572008;
-	bh=Yw+WNhu2uTH/tNxCYEnMhsKWbJMHkoSnvT9yxad1CYc=;
+	s=default; t=1561572023;
+	bh=2PbofuwurM+ISBZum6zAmb0DbBhn5nmO6RtvICX+oNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZV0U2kgeytipFZcO8+EEOSNZNdgxtO0ur1u+UVWXf7U3ry6iawTHhQt/Uyz7MyLaq
-	 Vk7Dg+vHItg7wKOxDaXza4OJMX2yXvbMb5JmtvwPVSknqM0tFT0/GoyF+aLthcZh8A
-	 pqTpyKQMs8cWZZQxkbBHfw66joD7+4EMi37xrWRg=
+	b=1pF5jJ6jzBkwvubGWC63ryx1bywjPCv+Cyr0GSZx8RbhqKR8Jt0jz5omWw74nUX+R
+	 bRnNH6/fK2PRKT2EKprkAqxMNWfiiI4KA8eY4Rnwi115uULoIMDTzxW2UGHq9Wkvp9
+	 /wUslLidGeJbgbRl+qY/nN0HHbPb9ILAxGLWyN40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfFZSAG (ORCPT
+        id S1726563AbfFZSAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:00:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50616 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 14:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfFZSAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:00:06 -0400
+        id S1726042AbfFZSAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:00:21 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23AF208E3;
-        Wed, 26 Jun 2019 18:00:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F091421743;
+        Wed, 26 Jun 2019 18:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561572005;
-        bh=Yw+WNhu2uTH/tNxCYEnMhsKWbJMHkoSnvT9yxad1CYc=;
+        s=default; t=1561572020;
+        bh=2PbofuwurM+ISBZum6zAmb0DbBhn5nmO6RtvICX+oNk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KBxCyhHD2cBAcSN2qEvsVo8wqPUOEcC/iX1A4kip5UJ/ExQik0trzTbSNlmE5QGfS
-         ER9ioo+a/BMpevKUIClKM4Z178VZbr2b4CIJmITUu93R/WpWzbAKGvhHpk3p+6yidG
-         jAx3yTXQMazq94naq2uX+Ea4dO32EIGsaHVXDOxQ=
-Date:   Wed, 26 Jun 2019 18:59:59 +0100
+        b=VNMCqAjmSm9l09A4yBzOXHlXjlBaOnorMK7lzF3w2kmIHYW3h8tdm4clg87l5WOCJ
+         1T7oVm4JjXy56Xqx0xrwMCEQiOk1QjWupMdgAkM2oPV4tkK48k4Xbh5AilQT9fsAii
+         M9MfdEALYkf/x2XzNUCr9dDJdYgoMOWaJ5iFRSso=
+Date:   Wed, 26 Jun 2019 19:00:13 +0100
 From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     will.deacon@arm.com, joro@8bytes.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, robin.murphy@arm.com,
-        jacob.jun.pan@linux.intel.com, iommu@lists.linux-foundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, eric.auger@redhat.com
-Subject: Re: [PATCH 6/8] iommu/arm-smmu-v3: Support auxiliary domains
-Message-ID: <20190626175959.ubxvb2qn4taclact@willie-the-truck>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-7-jean-philippe.brucker@arm.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Will Deacon <will.deacon@arm.com>, shuah <shuah@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Fernandes <joelaf@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Chris Lameter <cl@linux.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        rostedt <rostedt@goodmis.org>, Ben Maurer <bmaurer@fb.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>
+Subject: Re: [RFC PATCH 1/1] Revert "rseq/selftests: arm: use udf instruction
+ for RSEQ_SIG"
+Message-ID: <20190626180012.q6deohrtzwpbhqky@willie-the-truck>
+References: <20190617152304.23371-1-mathieu.desnoyers@efficios.com>
+ <20190624172429.GA11133@fuggles.cambridge.arm.com>
+ <1620037196.377.1561400426591.JavaMail.zimbra@efficios.com>
+ <20190625091507.GA13263@fuggles.cambridge.arm.com>
+ <795143697.722.1561471732756.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610184714.6786-7-jean-philippe.brucker@arm.com>
+In-Reply-To: <795143697.722.1561471732756.JavaMail.zimbra@efficios.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean-Philippe,
-
-On Mon, Jun 10, 2019 at 07:47:12PM +0100, Jean-Philippe Brucker wrote:
-> In commit a3a195929d40 ("iommu: Add APIs for multiple domains per
-> device"), the IOMMU API gained the concept of auxiliary domains (AUXD),
-> which allows to control the PASID-tagged address spaces of a device. With
-> AUXD the PASID address space are not shared with the CPU, but are instead
-> modified with iommu_map() and iommu_unmap() calls on auxiliary domains.
+On Tue, Jun 25, 2019 at 10:08:52AM -0400, Mathieu Desnoyers wrote:
+> ----- On Jun 25, 2019, at 5:15 AM, Will Deacon will.deacon@arm.com wrote:
+> > On Mon, Jun 24, 2019 at 02:20:26PM -0400, Mathieu Desnoyers wrote:
+> >> ----- On Jun 24, 2019, at 1:24 PM, Will Deacon will.deacon@arm.com wrote:
+> >> > On Mon, Jun 17, 2019 at 05:23:04PM +0200, Mathieu Desnoyers wrote:
+> >> >> -#define RSEQ_SIG_CODE	0xe7f5def3
+> >> >> -
+> >> >> -#ifndef __ASSEMBLER__
+> >> >> -
+> >> >> -#define RSEQ_SIG_DATA							\
+> >> >> -	({								\
+> >> >> -		int sig;						\
+> >> >> -		asm volatile ("b 2f\n\t"				\
+> >> >> -			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
+> >> >> -			      "2:\n\t"					\
+> >> >> -			      "ldr %[sig], 1b\n\t"			\
+> >> >> -			      : [sig] "=r" (sig));			\
+> >> >> -		sig;							\
+> >> >> -	})
+> >> >> -
+> >> >> -#define RSEQ_SIG	RSEQ_SIG_DATA
+> >> >> -
+> >> >> -#endif
+> >> >> +#define RSEQ_SIG	0x53053053
+> >> > 
+> >> > I don't get why you're reverting back to this old signature value, when the
+> >> > one we came up with will work well when interpreted as an instruction in the
+> >> > *vast* majority of scenarios that people care about (A32/T32 little-endian).
+> >> > I think you might be under-estimating just how dead things like BE32 really
+> >> > are.
+> >> 
+> >> My issue is that the current .instr approach is broken for programs or functions
+> >> built in Thumb mode, and I received no feedback on the solutions I proposed for
+> >> those issues, which led me to propose a patch reverting to a simple .word.
+> > 
+> > I understand why you're moving from .inst to .word, but I don't understand
+> > why that necessitates a change in the value. Why not .word 0xe7f5def3 ? You
+> > could also flip the bytes around in case of big-endian, which would keep the
+> > instruction coding clean for BE8.
 > 
-> Add auxiliary domain support to the SMMUv3 driver. Device drivers allocate
-> an unmanaged IOMMU domain with iommu_domain_alloc(), and attach it to the
-> device with iommu_aux_attach_domain().
-
-[...]
-
+> As long as we state and document that this should not be expected to generate
+> valid instructions on big endian prior to ARMv6, I'm OK with that approach, e.g.:
 > 
-> The AUXD API is fairly permissive, and allows to attach an IOMMU domain in
-> both normal and auxiliary mode at the same time - one device can be
-> attached to the domain normally, and another device can be attached
-> through one of its PASIDs. To avoid excessive complexity in the SMMU
-> implementation we pose some restrictions on supported AUXD usage:
-> 
-> * A domain is either in auxiliary mode or normal mode. And that state is
->   sticky. Once detached the domain has to be re-attached in the same mode.
-> 
-> * An auxiliary domain can have a single parent domain. Two devices can be
->   attached to the same auxiliary domain only if they are attached to the
->   same parent domain.
-> 
-> In practice these shouldn't be problematic, since we have the same kind of
-> restriction on normal domains and users have been able to cope so far: at
-> the moment a domain cannot be attached to two devices behind different
-> SMMUs. When VFIO puts two such devices in the same container, it simply
-> falls back to allocating two separate IOMMU domains.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
->  drivers/iommu/Kconfig       |   1 +
->  drivers/iommu/arm-smmu-v3.c | 276 +++++++++++++++++++++++++++++++++---
->  2 files changed, 260 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 9b45f70549a7..d326fef3d3a6 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -393,6 +393,7 @@ config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
->  config ARM_SMMU_V3
->  	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
->  	depends on ARM64
-> +	select IOASID
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select GENERIC_MSI_IRQ_DOMAIN
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 326b71793336..633d829f246f 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -19,6 +19,7 @@
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
->  #include <linux/io-pgtable.h>
-> +#include <linux/ioasid.h>
->  #include <linux/iommu.h>
->  #include <linux/iopoll.h>
->  #include <linux/init.h>
-> @@ -641,6 +642,7 @@ struct arm_smmu_master {
->  	unsigned int			num_sids;
->  	unsigned int			ssid_bits;
->  	bool				ats_enabled		:1;
-> +	bool				auxd_enabled		:1;
->  };
->  
->  /* SMMU private data for an IOMMU domain */
-> @@ -666,8 +668,14 @@ struct arm_smmu_domain {
->  
->  	struct iommu_domain		domain;
->  
-> +	/* Unused in aux domains */
->  	struct list_head		devices;
->  	spinlock_t			devices_lock;
-> +
-> +	/* Auxiliary domain stuff */
-> +	struct arm_smmu_domain		*parent;
-> +	ioasid_t			ssid;
-> +	unsigned long			aux_nr_devs;
+> /*
+>  * - ARM little endian
+>  *
+>  * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
+>  * value 0x5de3. This traps if user-space reaches this instruction by mistake,
+>  * and the uncommon operand ensures the kernel does not move the instruction
+>  * pointer to attacker-controlled code on rseq abort.
+>  *
+>  * The instruction pattern in the A32 instruction set is:
+>  *
+>  * e7f5def3    udf    #24035    ; 0x5de3
+>  *
+>  * This translates to the following instruction pattern in the T16 instruction
+>  * set:
+>  *
+>  * little endian:
+>  * def3        udf    #243      ; 0xf3
+>  * e7f5        b.n    <7f5>
+>  *
+>  * - ARMv6+ big endian:
 
-Maybe use a union to avoid comments about what is used/unused?
+Maybe mention "(BE8)" here...
 
-> +static void arm_smmu_aux_detach_dev(struct iommu_domain *domain, struct device *dev)
-> +{
-> +	struct iommu_domain *parent_domain;
-> +	struct arm_smmu_domain *parent_smmu_domain;
-> +	struct arm_smmu_master *master = dev_to_master(dev);
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +
-> +	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
-> +		return;
-> +
-> +	parent_domain = iommu_get_domain_for_dev(dev);
-> +	if (!parent_domain)
-> +		return;
-> +	parent_smmu_domain = to_smmu_domain(parent_domain);
-> +
-> +	mutex_lock(&smmu_domain->init_mutex);
-> +	if (!smmu_domain->aux_nr_devs)
-> +		goto out_unlock;
-> +
-> +	if (!--smmu_domain->aux_nr_devs) {
-> +		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
-> +					NULL);
-> +		/*
-> +		 * TLB doesn't need invalidation since accesses from the device
-> +		 * can't use this domain's ASID once the CD is clear.
-> +		 *
-> +		 * Sadly that doesn't apply to ATCs, which are PASID tagged.
-> +		 * Invalidate all other devices as well, because even though
-> +		 * they weren't 'officially' attached to the auxiliary domain,
-> +		 * they could have formed ATC entries.
-> +		 */
-> +		arm_smmu_atc_inv_domain(smmu_domain, 0, 0);
+>  *
+>  * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
+>  * code and big-endian data. The data value of the signature needs to have its
+>  * byte order reversed to generate the trap instruction:
+>  *
+>  * Data: 0xf3def5e7
+>  *
+>  * Translates to this A32 instruction pattern:
+>  *
+>  * e7f5def3    udf    #24035    ; 0x5de3
+>  *
+>  * Translates to this T16 instruction pattern:
+>  *
+>  * def3        udf    #243      ; 0xf3
+>  * e7f5        b.n    <7f5>
+>  *
+>  * - Prior to ARMv6 big endian:
 
-I've been struggling to understand the locking here, since both
-arm_smmu_write_ctx_desc and arm_smmu_atc_inv_domain take and release the
-devices_lock for the domain. Is there not a problem with devices coming and
-going in-between the two calls?
+... and "(BE32)" here.
 
-> +	} else {
-> +		struct arm_smmu_cmdq_ent cmd;
-> +
-> +		/* Invalidate only this device's ATC */
-> +		if (master->ats_enabled) {
-> +			arm_smmu_atc_inv_to_cmd(smmu_domain->ssid, 0, 0, &cmd);
-> +			arm_smmu_atc_inv_master(master, &cmd);
-> +		}
-> +	}
-> +out_unlock:
-> +	mutex_unlock(&smmu_domain->init_mutex);
-> +}
-> +
-> +static int arm_smmu_aux_get_pasid(struct iommu_domain *domain, struct device *dev)
-> +{
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +
-> +	return smmu_domain->ssid ?: -EINVAL;
-> +}
-> +
->  static struct iommu_ops arm_smmu_ops = {
->  	.capable		= arm_smmu_capable,
->  	.domain_alloc		= arm_smmu_domain_alloc,
-> @@ -2539,6 +2772,13 @@ static struct iommu_ops arm_smmu_ops = {
->  	.of_xlate		= arm_smmu_of_xlate,
->  	.get_resv_regions	= arm_smmu_get_resv_regions,
->  	.put_resv_regions	= arm_smmu_put_resv_regions,
-> +	.dev_has_feat		= arm_smmu_dev_has_feature,
-> +	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
-> +	.dev_enable_feat	= arm_smmu_dev_enable_feature,
-> +	.dev_disable_feat	= arm_smmu_dev_disable_feature,
-
-Why can't we use the existing ->capable and ->dev_{get,set}_attr callbacks
-for this?
+With that, this looks fine to me.
 
 Will
