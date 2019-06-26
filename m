@@ -2,118 +2,114 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A818C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89A3C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4B121726
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9453C217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfFZRuR (ORCPT
+        id S1726506AbfFZRvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:50:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28116 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726223AbfFZRuR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:50:17 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5QHgM3u022896;
-        Wed, 26 Jun 2019 13:49:58 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tcb7jnq41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Jun 2019 13:49:58 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5QHdmme011574;
-        Wed, 26 Jun 2019 17:49:57 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01wdc.us.ibm.com with ESMTP id 2t9by70tak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Jun 2019 17:49:57 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5QHnvj354395304
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jun 2019 17:49:57 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28EBBB205F;
-        Wed, 26 Jun 2019 17:49:57 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1621CB2065;
-        Wed, 26 Jun 2019 17:49:57 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Jun 2019 17:49:57 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 6D20D16C2F90; Wed, 26 Jun 2019 10:49:58 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 10:49:58 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux@arm.linux.org.uk, dietmar.eggemann@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH arm] Use common outgoing-CPU-notification code
-Message-ID: <20190626174958.GH26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190611192410.GA27930@linux.ibm.com>
- <20190617115809.GA3767@lakrids.cambridge.arm.com>
- <20190617130657.GL26519@linux.ibm.com>
- <20190626164159.GI20635@lakrids.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626164159.GI20635@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-26_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906260208
+        Wed, 26 Jun 2019 13:51:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49814 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726223AbfFZRvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:51:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:51:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
+   d="scan'208";a="337288581"
+Received: from rchatre-s.jf.intel.com ([10.54.70.76])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 10:51:07 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>
+Subject: [PATCH 00/10] x86/CPU and x86/resctrl: Support pseudo-lock regions spanning L2 and L3 cache
+Date:   Wed, 26 Jun 2019 10:48:39 -0700
+Message-Id: <cover.1561569068.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 05:42:00PM +0100, Mark Rutland wrote:
-> On Mon, Jun 17, 2019 at 06:06:57AM -0700, Paul E. McKenney wrote:
-> > On Mon, Jun 17, 2019 at 12:58:19PM +0100, Mark Rutland wrote:
-> > > On Tue, Jun 11, 2019 at 12:24:10PM -0700, Paul E. McKenney wrote:
-> > > > This commit removes the open-coded CPU-offline notification with new
-> > > > common code.  In particular, this change avoids calling scheduler code
-> > > > using RCU from an offline CPU that RCU is ignoring.  This is a minimal
-> > > > change.  A more intrusive change might invoke the cpu_check_up_prepare()
-> > > > and cpu_set_state_online() functions at CPU-online time, which would
-> > > > allow onlining throw an error if the CPU did not go offline properly.
-> > > > 
-> > > > Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> > > > Cc: linux-arm-kernel@lists.infradead.org
-> > > > Cc: Russell King <linux@arm.linux.org.uk>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> > > 
-> > > FWIW:
-> > > 
-> > > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> > > 
-> > > On the assumption that Russell is ok with this, I think this should be
-> > > dropped into the ARM patch system [1].
-> > > 
-> > > Paul, are you familiar with that, or would you prefer that someone else
-> > > submits the patch there? I can do so if you'd like.
-> > 
-> > I never have used this system, so please do drop it in there!  Let me
-> > know when you have done so, and I will then drop it from -rcu.
-> 
-> After testing that multi_v7_defconfig built, I've just submitted this as
-> 8872/1:
-> 
->   https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=8872/1
+Dear Maintainers,
 
-Very good, thank you!  I will drop this from my -rcu tree.
+Cache pseudo-locking involves preloading a region of physical memory into a
+reserved portion of cache that no task or CPU can subsequently fill into and
+from that point on will only serve cache hits. At this time it is only
+possible to create cache pseudo-locked regions in either L2 or L3 cache,
+supporting systems that support either L2 Cache Allocation Technology (CAT)
+or L3 CAT because CAT is the mechanism used to manage reservations of cache
+portions.
 
-							Thanx, Paul
+This series introduces support for cache pseudo-locked regions that can span
+L2 and L3 cache in preparation for systems that may support CAT on L2 and
+L3 cache. Only systems with L3 inclusive cache is supported at this time
+because if the L3 cache is not inclusive then pseudo-locked memory within
+the L3 cache would be evicted when migrated to L2. Because of this
+constraint the first patch in this series introduces support in cacheinfo.c
+for resctrl to discover if the L3 cache is inclusive. All other patches in
+this series are to the resctrl subsystem.
+
+In support of cache pseudo-locked regions spanning L2 and L3 cache the term
+"cache pseudo-lock portion" is introduced. Each portion of a cache
+pseudo-locked region spans one level of cache and a cache pseudo-locked
+region can be made up of one or two cache pseudo-lock portions.
+
+On systems supporting L2 and L3 CAT where L3 cache is inclusive it is
+possible to create two types of pseudo-locked regions:
+1) A pseudo-locked region spanning just L3 cache, consisting out of a
+single pseudo-locked portion.
+2) A pseudo-locked region spanning L2 and L3 cache, consisting out of two
+pseudo-locked portions.
+
+In an L3 inclusive cache system a L2 pseudo-locked portion is required to
+be matched with an L3 pseudo-locked portion to prevent a cache line from
+being evicted from L2 when it is evicted from L3.
+
+Patches 2 to 8 to the resctrl subsystem are preparing for the new feature
+and should result in no functional change, but some comments do refer to
+the new feature. Support for pseudo-locked regions spanning L2 and L3 cache
+is introduced in patches 9 and 10.
+
+Your feedback will be greatly appreciated.
+
+Regards,
+
+Reinette
+
+Reinette Chatre (10):
+  x86/CPU: Expose if cache is inclusive of lower level caches
+  x86/resctrl: Remove unnecessary size compute
+  x86/resctrl: Constrain C-states during pseudo-lock region init
+  x86/resctrl: Set cache line size using new utility
+  x86/resctrl: Associate pseudo-locked region's cache instance by id
+  x86/resctrl: Introduce utility to return pseudo-locked cache portion
+  x86/resctrl: Remove unnecessary pointer to pseudo-locked region
+  x86/resctrl: Support pseudo-lock regions spanning resources
+  x86/resctrl: Pseudo-lock portions of multiple resources
+  x86/resctrl: Only pseudo-lock L3 cache when inclusive
+
+ arch/x86/kernel/cpu/cacheinfo.c           |  42 +-
+ arch/x86/kernel/cpu/resctrl/core.c        |   7 -
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  37 +-
+ arch/x86/kernel/cpu/resctrl/internal.h    |  39 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 444 +++++++++++++++++++---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    |  61 ++-
+ include/linux/cacheinfo.h                 |   4 +
+ 7 files changed, 512 insertions(+), 122 deletions(-)
+
+-- 
+2.17.2
+
