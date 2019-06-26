@@ -7,52 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46193C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAB9C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B362205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F66205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520999;
-	bh=d1+WP5N9McYnrs0TI4Boiqy40Gwh4H9/yG46Qc8deqM=;
+	s=default; t=1561521003;
+	bh=hj9KGbkr4AqICPcOaWd8LGYkgMnOsDSZM4G15WuTWFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUM7yv611x0R9nR5OYvKuoQmu6GCrAQ5exig11xQWQbkJBQ7qdSMKh/zonO24WiTG
-	 srHhBCmeyIZe+La5c/VirEyh0ggk6zugPyYZ5Ecu+zSyi4r4K1NFB7yMBzVGCud9AO
-	 MHscN/cb/N1hOj9wurWm6C8zioxwE02V5dFm5APY=
+	b=jfMwZFjleNyJo9uM3jAoOjDv/rSA9qJzztq4yc5jmoDcZS/QYe7fsnSxze+nWqpgT
+	 hsveFgDU3jZLAS9xlQJ6OX5bECTZP8+wKiQJmmx46JicPeD0CtDjzq5MnEqCt1apbX
+	 XJ0D3NsXdDEfARO1daZ8lB33ffvHq/ifvmbKaORM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfFZDt5 (ORCPT
+        id S1727296AbfFZDnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54552 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbfFZDnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:43:22 -0400
+        id S1727259AbfFZDnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:43:10 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0AE5205ED;
-        Wed, 26 Jun 2019 03:43:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E48216E3;
+        Wed, 26 Jun 2019 03:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520601;
-        bh=d1+WP5N9McYnrs0TI4Boiqy40Gwh4H9/yG46Qc8deqM=;
+        s=default; t=1561520590;
+        bh=hj9KGbkr4AqICPcOaWd8LGYkgMnOsDSZM4G15WuTWFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGZxK0IOaJfeGa5/cSdz/f2gI0S2nEtobBSg0reAmrdxbY3h93libLk2Ok8znyK/i
-         +LXSbnJHi4UfJPyM2aQ57BFzUX/RPY1wEoSD5eGeFqcThO3pAFj4n6NqY69FCTtAle
-         cybtqBbF7Ag/82ONOUdLuvVG4UwKhSy3pq/K2CF8=
+        b=Sqk8UGj8DD5xuGjgD4umAgMMSndgQUyJy9qyT7SNjLu6r5o0/Q/r7zgzKMy8ex+IR
+         dcJdDTuBo95Fhbq9Q2EP5X3XWTw4PDEYYTsCnOazcfAXnlUp7db5DVWLtnYNpF7ftm
+         y+H4AHeQJKytzX33p0zC0rB+Er+5EMMLnHIUSNSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 45/51] arm64: tlbflush: Ensure start/end of address range are aligned to stride
-Date:   Tue, 25 Jun 2019 23:41:01 -0400
-Message-Id: <20190626034117.23247-45-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Jo=C3=A3o=20Paulo=20Rechi=20Vita?= <jprvita@endlessm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 40/51] platform/x86: asus-wmi: Only Tell EC the OS will handle display hotkeys from asus_nb_wmi
+Date:   Tue, 25 Jun 2019 23:40:56 -0400
+Message-Id: <20190626034117.23247-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034117.23247-1-sashal@kernel.org>
 References: <20190626034117.23247-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,45 +63,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 01d57485fcdb9f9101a10a18e32d5f8b023cab86 ]
+[ Upstream commit 401fee8195d401b2b94dee57383f627050724d5b ]
 
-Since commit 3d65b6bbc01e ("arm64: tlbi: Set MAX_TLBI_OPS to
-PTRS_PER_PTE"), we resort to per-ASID invalidation when attempting to
-perform more than PTRS_PER_PTE invalidation instructions in a single
-call to __flush_tlb_range(). Whilst this is beneficial, the mmu_gather
-code does not ensure that the end address of the range is rounded-up
-to the stride when freeing intermediate page tables in pXX_free_tlb(),
-which defeats our range checking.
+Commit 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will
+handle the display off hotkey") causes the backlight to be permanently off
+on various EeePC laptop models using the eeepc-wmi driver (Asus EeePC
+1015BX, Asus EeePC 1025C).
 
-Align the bounds passed into __flush_tlb_range().
+The asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL) call added
+by that commit is made conditional in this commit and only enabled in
+the quirk_entry structs in the asus-nb-wmi driver fixing the broken
+display / backlight on various EeePC laptop models.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Reported-by: Hanjun Guo <guohanjun@huawei.com>
-Tested-by: Hanjun Guo <guohanjun@huawei.com>
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Cc: João Paulo Rechi Vita <jprvita@endlessm.com>
+Fixes: 78f3ac76d9e5 ("platform/x86: asus-wmi: Tell the EC the OS will handle the display off hotkey")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/tlbflush.h | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 8 ++++++++
+ drivers/platform/x86/asus-wmi.c    | 2 +-
+ drivers/platform/x86/asus-wmi.h    | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 3a1870228946..dff8f9ea5754 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -195,6 +195,9 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 	unsigned long asid = ASID(vma->vm_mm);
- 	unsigned long addr;
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index b6f2ff95c3ed..59f3a37a44d7 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -78,10 +78,12 @@ static bool asus_q500a_i8042_filter(unsigned char data, unsigned char str,
  
-+	start = round_down(start, stride);
-+	end = round_up(end, stride);
-+
- 	if ((end - start) >= (MAX_TLBI_OPS * stride)) {
- 		flush_tlb_mm(vma->vm_mm);
- 		return;
+ static struct quirk_entry quirk_asus_unknown = {
+ 	.wapf = 0,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_q500a = {
+ 	.i8042_filter = asus_q500a_i8042_filter,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ /*
+@@ -92,26 +94,32 @@ static struct quirk_entry quirk_asus_q500a = {
+ static struct quirk_entry quirk_asus_x55u = {
+ 	.wapf = 4,
+ 	.wmi_backlight_power = true,
++	.wmi_backlight_set_devstate = true,
+ 	.no_display_toggle = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_wapf4 = {
+ 	.wapf = 4,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_x200ca = {
+ 	.wapf = 2,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_ux303ub = {
+ 	.wmi_backlight_native = true,
++	.wmi_backlight_set_devstate = true,
+ };
+ 
+ static struct quirk_entry quirk_asus_x550lb = {
++	.wmi_backlight_set_devstate = true,
+ 	.xusb2pr = 0x01D9,
+ };
+ 
+ static struct quirk_entry quirk_asus_forceals = {
++	.wmi_backlight_set_devstate = true,
+ 	.wmi_force_als_set = true,
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index ee1fa93708ec..a66e99500c12 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2131,7 +2131,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		err = asus_wmi_backlight_init(asus);
+ 		if (err && err != -ENODEV)
+ 			goto fail_backlight;
+-	} else
++	} else if (asus->driver->quirks->wmi_backlight_set_devstate)
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+ 
+ 	status = wmi_install_notify_handler(asus->driver->event_guid,
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 6c1311f4b04d..57a79bddb286 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -44,6 +44,7 @@ struct quirk_entry {
+ 	bool store_backlight_power;
+ 	bool wmi_backlight_power;
+ 	bool wmi_backlight_native;
++	bool wmi_backlight_set_devstate;
+ 	bool wmi_force_als_set;
+ 	int wapf;
+ 	/*
 -- 
 2.20.1
 
