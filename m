@@ -2,129 +2,200 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10346C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8801C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E678121670
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78979204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 13:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HWPsJsqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfFZNj5 convert rfc822-to-8bit (ORCPT
+        id S1727974AbfFZNkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 09:39:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48128 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbfFZNj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 09:39:56 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 575C63086204;
-        Wed, 26 Jun 2019 13:39:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E299160852;
-        Wed, 26 Jun 2019 13:39:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, iwienand@redhat.com,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [GIT PULL] AFS fixes
+        Wed, 26 Jun 2019 09:40:15 -0400
+Received: from mail-io1-f46.google.com ([209.85.166.46]:36435 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbfFZNkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 09:40:14 -0400
+Received: by mail-io1-f46.google.com with SMTP id h6so3420076ioh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 06:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zDJSWg5ZqCsJ5yHhPmNw6IFc7LwjzWq3duTJsoKkrKM=;
+        b=HWPsJsqfLG0lhlY5cTRO5i5rf2tPrlezgfS7G1vF7LxmSrDtBQdmVYrAtOGRqfLWl8
+         S79IvdIlvjOCcP3hoyDP4u0z0EMI86Ym56gezgYA705FegRzCrJ1JPUQ0gzx56zETgGM
+         VnNvjp8PV0wqlW4N+OERnQ2sLv9lHlq9prCpGvofFJWw3Jli5lTiFb9S8dNw26TKFoWh
+         JdxSNAc3ShF1yHw14WmEVVnKXUQSE3aRfCIJAgnEQUmd6MM6ewyJzpick7VJpleM/XYu
+         RIWAAvVBIaaE1IPkfyQXMa52aSk91qmYrzt7BdUhYu036D9TA81RUtzNPrn7R3uoM6fh
+         qm6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zDJSWg5ZqCsJ5yHhPmNw6IFc7LwjzWq3duTJsoKkrKM=;
+        b=DgJr8ej8VwK2sSwp39p2O8LK8DFTuVvOqR6lmPbCfJobVWl5nphN8YDkz50MXbaxo8
+         M0aSyZ5aTcAoSv39Gk/52CqE3uOgsYrB0SbcPQPmbwsN+s7h47HcfOrORC1c8ZqQDHHo
+         Fpjr8pCR0YexlSmJgWr7juWicz+z6PbIibAgCaQEy4st8LBGUcV/o9Xq01bVjmcmkM/r
+         elHgE0U0QnD48Vvfmq407dKqSvP6Hc76/pYH4OdXwHQ8CcdgRUB93ViY2BSHBjViHkIU
+         Zy4QZiewf79j+FWNEbq07xMYuUWRdV55DH7fA9oH7H5HZOVRoiu2N9U6xOOJX/prJvMG
+         Yalg==
+X-Gm-Message-State: APjAAAXUMBM+YYXaIctYOB4k7XHck11dYD3U8LEqQtRteSlPdcbkSxnI
+        H59avlD1TLnswXl+0y6PEVKZuA==
+X-Google-Smtp-Source: APXvYqyAGoIdJtF+Kp7+t7ui+rJKvjc5uZZhl3pY0W2IovmJ/5T+Oj0Z/PL/QiTfYvTtoBWtOpTWaQ==
+X-Received: by 2002:a02:b10b:: with SMTP id r11mr4770745jah.140.1561556413496;
+        Wed, 26 Jun 2019 06:40:13 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id h19sm22846256iol.65.2019.06.26.06.40.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 06:40:13 -0700 (PDT)
+Subject: Re: WWAN Controller Framework (was IPA [PATCH v2 00/17])
+To:     Johannes Berg <johannes@sipsolutions.net>, davem@davemloft.net,
+        arnd@arndb.de, bjorn.andersson@linaro.org,
+        ilias.apalodimas@linaro.org, Dan Williams <dcbw@redhat.com>
+Cc:     evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
+        cpratapa@codeaurora.org, syadagir@codeaurora.org,
+        subashab@codeaurora.org, abhishek.esse@gmail.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+References: <20190531035348.7194-1-elder@linaro.org>
+ <23ff4cce-1fee-98ab-3608-1fd09c2d97f1@linaro.org>
+ <6dae9d1c-ceae-7e88-fe61-f4cda82820ea@linaro.org>
+ <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <25bb0936-686c-101b-c5a4-474ed37536aa@linaro.org>
+Date:   Wed, 26 Jun 2019 08:40:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <11570.1561556393.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 26 Jun 2019 14:39:53 +0100
-Message-ID: <11571.1561556393@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 26 Jun 2019 13:39:56 +0000 (UTC)
+In-Reply-To: <f1243295f088b70d48e4b832a28f79c0cd84ca1c.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 6/25/19 9:34 AM, Johannes Berg wrote:
+> On Mon, 2019-06-24 at 12:06 -0500, Alex Elder wrote:
+> 
+>>> OK I want to try to organize a little more concisely some of the
+>>> discussion on this, because there is a very large amount of volume
+>>> to date and I think we need to try to narrow the focus back down
+>>> again.
+> 
+> Sounds good to me!
 
-Could you pull this please?
+. . .
 
-There are four patches:
+>>> - A WWAN unit shall implement a *WWAN control function*, used to
+>>>   manage the use of other WWAN functions, as well as the WWAN unit
+>>>   itself.
+> 
+> I think here we need to be more careful. I don't know how you want to
+> call it, but we actually have multiple levels of control here.
 
- (1) Fix the printing of the "vnode modified" warning to exclude checks on
-     files for which we don't have a callback promise from the server (and
-     so don't expect the server to tell us when it changes).
+I completely agree with you.  From what I understand there exists
+a control channel (or even more than one?) that serves a very
+specific purpose in modem management.  The main reason I mention
+the WWAN control function is that someone (maybe you) indicated
+that a control channel automatically gets created.
 
-     Without this, for every file or directory for which we still have an
-     in-core inode that gets changed on the server, we may get a message
-     logged when we next look at it.  This can happen in bulk if, for
-     instance, someone does "vos release" to update a R/O volume from a R/W
-     volume and a whole set of files are all changed together.
+But I agree, we need to be careful to avoid confusion here.
 
-     We only really want to log a message if the file changed and the
-     server didn't tell us about it or we failed to track the state
-     internally.
+> You have
+>  * hardware control, to control how you actually use the (multiple or
+>    not) physical communication channel(s) to the WWAN unit
+>  * this is partially exposed to userspace via the WWAN netlink family or
+>    something like that, so userspace can create new netdevs to tx/rx
+>    with the "data function" and to the network; note that it could be
+>    one or multiple
+>  * WWAN control, which is typically userspace communicating with the
+>    WWAN control function in the WWAN unit, but this can take different
+>    forms (as I mentioned earlier, e.g. AT commands, MBIM, QMI)
+> 
+>>> - The AP communicates with a WWAN function using a WWAN protocol.
+> 
+> Right, that's just device specific (IPA vs. Intel vs. ...)
+> 
+>>> - A WWAN physical channel can be *multiplexed*, in which case it
+>>>   carries the data for one or more *WWAN logical channels*.
+> 
+> This ... depends a bit on how you exactly define a physical channel
+> here. Is that, to you, the PCIe/USB link? In that case, yes, obviously
+> you have only one physical channel for each WWAN unit.
 
- (2) Fix accidental corruption of either afs_vlserver struct objects or the
-     the following memory locations (which could hold anything).  The issue
-     is caused by a union that points to two different structs in struct
-     afs_call (to save space in the struct).  The call cleanup code assumes
-     that it can simply call the cleanup for one of those structs if not
-     NULL - when it might be actually pointing to the other struct.
+I think that was what I was trying to capture.  There exists
+one or more "physical" communication paths between the AP
+and WWAN unit/modem.  And while one path *could* carry just
+one type of traffic, it could also carry multiple logical
+channels of traffic by multiplexing.
 
-     This means that every Volume Location RPC op is going to corrupt
-     something.
+> However, I'd probably see this slightly differently, because e.g. the
+> Intel modem has multiple DMA engines, and so you actually have multiple
+> DMA rings to talk to the WWAN unit, and I'd have called each DMA ring a
+> physical channel. And then, you just have a 1:1 from physical to logical
+> channel since it doesn't actually carry a multiplexing protocol.
 
- (3) Fix an uninitialised spinlock.  This isn't too bad, it just causes a
-     one-off warning if lockdep is enabled when "vos release" is called,
-     but the spinlock still behaves correctly.
+Understood.
 
- (4) Fix the setting of i_block in the inode.  This causes du, for example,
-     to produce incorrect results, but otherwise should not be dangerous to
-     the kernel.
+. . .
 
-The in-kernel AFS client has been undergoing testing on opendev.org on one
-of their mirror machines.  They are using AFS to hold data that is then
-served via apache, and Ian Wienand had reported seeing oopses, spontaneous
-machine reboots and updates to volumes going missing.  This patch series
-appears to have fixed the problem, very probably due to patch (2), but it's
-not 100% certain.
+> I only disagree slightly on the control planes (there are multiple, and
+> multiple options for the "Control function" one), and on the whole
+> notion of physical link/logical link/multiplexing which is device
+> specific.
+> 
+>>> And if I understand it right, the purpose of the generic framework
+>>> being discussed is to define a common mechanism for managing (i.e.,
+>>> discovering, creating, destroying, querying, configuring, enabling,
+>>> disabling, etc.) WWAN units and the functions they implement, along
+>>> with the communication and logical channels used to communicate with
+>>> them.
+> 
+> Well, some subset of that matrix, the framework won't actually destroy
+> WWAN units I hope ;-)
 
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
-Tested-by: Marc Dionne <marc.dionne@auristor.com>
-Tested-by: Ian Wienand <iwienand@redhat.com>
+Hardware self-destruct would be an optional behavior.
 
----
-The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> But yes. I'd probably captured it in layers, and say that we have a
+> 
+> WWAN framework layer
+>  - discover, query, configure WWAN units
+>  - enable, disable channels to the functions inside the WWAN units
+> 
+> WWAN device driver
+>  - implement (partial) API offered by WWAN framework layer to allow
+>    these things
+>    (sometimes may not allow creating more control or data channels for
+>    example, and fixed function channels are precreated, but then can
+>    still discover data about the device and configure the channels
+>  - implement the device-specific protocols etc. necessary to achieve
+>    this
+> 
+> Userspace
+>  - uses control function channel (e.g. TTY) to talk directly to the WWAN
+>    unit's control function
+>  - uses WWAN framework APIs to create/configure/... (other) function
+>    channels
+>    (it may be necessary to create a control channel even, before being
+>    able to use it, since different options (AT/MBIM/QMI) may be there
+>  - configures netdevs (data function channels) after their creation
 
-  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+I don't think I have any argument with this.  I'm going to try to
+put together something that goes beyond what I wrote in this message,
+to try to capture what I think we agree on in a sort of loose design
+document.
 
-are available in the Git repository at:
+Thanks Johannes.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20190620
-
-for you to fetch changes up to 2cd42d19cffa0ec3dfb57b1b3e1a07a9bf4ed80a:
-
-  afs: Fix setting of i_blocks (2019-06-20 18:12:02 +0100)
-
-----------------------------------------------------------------
-AFS fixes
-
-----------------------------------------------------------------
-David Howells (4):
-      afs: Fix over zealous "vnode modified" warnings
-      afs: Fix vlserver record corruption
-      afs: Fix uninitialised spinlock afs_volume::cb_break_lock
-      afs: Fix setting of i_blocks
-
- fs/afs/callback.c |  4 ++--
- fs/afs/inode.c    | 31 +++++++++++++++++++------------
- fs/afs/internal.h |  8 +++-----
- fs/afs/volume.c   |  1 +
- 4 files changed, 25 insertions(+), 19 deletions(-)
+					-Alex
