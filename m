@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BE3C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD73DC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318B320665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2DE20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 21:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfFZVhf (ORCPT
+        id S1726407AbfFZVhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 17:37:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:41430 "EHLO foss.arm.com"
+        Wed, 26 Jun 2019 17:37:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:41466 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726223AbfFZVhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 17:37:33 -0400
+        id S1726223AbfFZVhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 17:37:35 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37E27D6E;
-        Wed, 26 Jun 2019 14:37:33 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E853142F;
+        Wed, 26 Jun 2019 14:37:35 -0700 (PDT)
 Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.30.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2587D3F246;
-        Wed, 26 Jun 2019 14:37:33 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 563073F246;
+        Wed, 26 Jun 2019 14:37:35 -0700 (PDT)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -32,9 +32,9 @@ Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         lenb@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com,
         sudeep.holla@arm.com, Jeremy Linton <jeremy.linton@arm.com>,
         Hanjun Gou <gouhanjun@huawei.com>
-Subject: [PATCH v5 1/4] ACPI/PPTT: Modify node flag detection to find last IDENTICAL
-Date:   Wed, 26 Jun 2019 16:37:15 -0500
-Message-Id: <20190626213718.39423-2-jeremy.linton@arm.com>
+Subject: [PATCH v5 4/4] perf: arm_spe: Enable ACPI/Platform automatic module loading
+Date:   Wed, 26 Jun 2019 16:37:18 -0500
+Message-Id: <20190626213718.39423-5-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190626213718.39423-1-jeremy.linton@arm.com>
 References: <20190626213718.39423-1-jeremy.linton@arm.com>
@@ -45,84 +45,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACPI specification implies that the IDENTICAL flag should be
-set on all non leaf nodes where the children are identical.
-This means that we need to be searching for the last node with
-the identical flag set rather than the first one.
-
-Since this flag is also dependent on the table revision, we
-need to add a bit of extra code to verify the table revision,
-and the next node's state in the traversal. Since we want to
-avoid function pointers here, lets just special case
-the IDENTICAL flag.
+Lets add the MODULE_TABLE and platform id_table entries so that
+the SPE driver can attach to the ACPI platform device created by
+the core pmu code.
 
 Tested-by: Hanjun Gou <gouhanjun@huawei.com>
 Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 ---
- drivers/acpi/pptt.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+ drivers/perf/arm_spe_pmu.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-index b72e6afaa8fb..05344413f199 100644
---- a/drivers/acpi/pptt.c
-+++ b/drivers/acpi/pptt.c
-@@ -432,17 +432,40 @@ static void cache_setup_acpi_cpu(struct acpi_table_header *table,
- 	}
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 49b490925255..4e4984a55cd1 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -27,6 +27,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/perf_event.h>
++#include <linux/perf/arm_pmu.h>
+ #include <linux/platform_device.h>
+ #include <linux/printk.h>
+ #include <linux/slab.h>
+@@ -1157,7 +1158,13 @@ static const struct of_device_id arm_spe_pmu_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, arm_spe_pmu_of_match);
+ 
+-static int arm_spe_pmu_device_dt_probe(struct platform_device *pdev)
++static const struct platform_device_id arm_spe_match[] = {
++	{ ARMV8_SPE_PDEV_NAME, 0},
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, arm_spe_match);
++
++static int arm_spe_pmu_device_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+ 	struct arm_spe_pmu *spe_pmu;
+@@ -1217,11 +1224,12 @@ static int arm_spe_pmu_device_remove(struct platform_device *pdev)
  }
  
-+static bool flag_identical(struct acpi_table_header *table_hdr,
-+			   struct acpi_pptt_processor *cpu)
-+{
-+	struct acpi_pptt_processor *next;
-+
-+	/* heterogeneous machines must use PPTT revision > 1 */
-+	if (table_hdr->revision < 2)
-+		return false;
-+
-+	/* Locate the last node in the tree with IDENTICAL set */
-+	if (cpu->flags & ACPI_PPTT_ACPI_IDENTICAL) {
-+		next = fetch_pptt_node(table_hdr, cpu->parent);
-+		if (!(next && next->flags & ACPI_PPTT_ACPI_IDENTICAL))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /* Passing level values greater than this will result in search termination */
- #define PPTT_ABORT_PACKAGE 0xFF
+ static struct platform_driver arm_spe_pmu_driver = {
++	.id_table = arm_spe_match,
+ 	.driver	= {
+ 		.name		= DRVNAME,
+ 		.of_match_table	= of_match_ptr(arm_spe_pmu_of_match),
+ 	},
+-	.probe	= arm_spe_pmu_device_dt_probe,
++	.probe	= arm_spe_pmu_device_probe,
+ 	.remove	= arm_spe_pmu_device_remove,
+ };
  
--static struct acpi_pptt_processor *acpi_find_processor_package_id(struct acpi_table_header *table_hdr,
--								  struct acpi_pptt_processor *cpu,
--								  int level, int flag)
-+static struct acpi_pptt_processor *acpi_find_processor_tag(struct acpi_table_header *table_hdr,
-+							   struct acpi_pptt_processor *cpu,
-+							   int level, int flag)
- {
- 	struct acpi_pptt_processor *prev_node;
- 
- 	while (cpu && level) {
--		if (cpu->flags & flag)
-+		/* special case the identical flag to find last identical */
-+		if (flag == ACPI_PPTT_ACPI_IDENTICAL) {
-+			if (flag_identical(table_hdr, cpu))
-+				break;
-+		} else if (cpu->flags & flag)
- 			break;
- 		pr_debug("level %d\n", level);
- 		prev_node = fetch_pptt_node(table_hdr, cpu->parent);
-@@ -480,8 +503,8 @@ static int topology_get_acpi_cpu_tag(struct acpi_table_header *table,
- 
- 	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
- 	if (cpu_node) {
--		cpu_node = acpi_find_processor_package_id(table, cpu_node,
--							  level, flag);
-+		cpu_node = acpi_find_processor_tag(table, cpu_node,
-+						   level, flag);
- 		/*
- 		 * As per specification if the processor structure represents
- 		 * an actual processor, then ACPI processor ID must be valid.
 -- 
 2.21.0
 
