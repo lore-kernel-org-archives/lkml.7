@@ -2,108 +2,96 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC7EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF541C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF76A20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE52920663
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:23:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QgNbpMdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfFZKWw (ORCPT
+        id S1727028AbfFZKXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:22:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:58072 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfFZKWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:22:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61DE4360;
-        Wed, 26 Jun 2019 03:22:51 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42AB43F718;
-        Wed, 26 Jun 2019 03:22:51 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 083BF682573; Wed, 26 Jun 2019 11:22:50 +0100 (BST)
-Date:   Wed, 26 Jun 2019 11:22:49 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org, Wen He <wen.he_1@nxp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 55/90] drm/arm/mali-dp: Add a loop around the second
- set CVAL and try 5 times
-Message-ID: <20190626102249.GQ17204@e110455-lin.cambridge.arm.com>
-References: <20190624092313.788773607@linuxfoundation.org>
- <20190624092317.745033085@linuxfoundation.org>
- <20190626075619.GB32248@amd>
+        Wed, 26 Jun 2019 06:23:42 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7143 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfFZKXm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 06:23:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1347af0011>; Wed, 26 Jun 2019 03:23:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Jun 2019 03:23:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Jun 2019 03:23:41 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
+ 2019 10:23:40 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Jun
+ 2019 10:23:39 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 26 Jun 2019 10:23:39 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.21.132.148]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d1347aa0001>; Wed, 26 Jun 2019 03:23:40 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 1/2] net: stmmac: Fix possible deadlock when disabling EEE support
+Date:   Wed, 26 Jun 2019 11:23:21 +0100
+Message-ID: <20190626102322.18821-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190626075619.GB32248@amd>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561544623; bh=XV4Kw+o6xd8IYqvSK/9uERa+dJc4XymhGYNfc+d+goU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=QgNbpMdWNBdmAFB65WGi5i9RqkIFGw4WozzpNghEsZe1f6z222Lmh7NHFPob4tc24
+         2bz2UfTUfaHxPQixd3zqEW4tX5YMMYdfG5v0wrPoJ+IgLqHwYkXOg4CRYoI/5/49cs
+         BU1UpHhAE5YEtwB+47eX39nfXGCsbTmhZcg+abYxkzqkKmQJDbsYVIIAcsb6YTUylh
+         ILbRIZk89eRzgNOWGNJYi2RLwqptqFYjV26p1ZSJ4IOk3l8qEdrhRBb79KAw78L84W
+         R4ZrXmKugOogIkXVdfGf23TK59/A65HmL7wPxHrG+IwjT9tLbqo6LuxPBZxRo/ENTR
+         fHWXqDjlnlo/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 09:56:19AM +0200, Pavel Machek wrote:
-> 
-> On Mon 2019-06-24 17:56:45, Greg Kroah-Hartman wrote:
-> > [ Upstream commit 6a88e0c14813d00f8520d0e16cd4136c6cf8b4d4 ]
-> > 
-> > This patch trying to fix monitor freeze issue caused by drm error
-> > 'flip_done timed out' on LS1028A platform. this set try is make a loop
-> > around the second setting CVAL and try like 5 times before giveing up.
-> 
-> 
-> > @@ -204,8 +205,18 @@ static void malidp_atomic_commit_hw_done(struct drm_atomic_state *state)
-> >  			drm_crtc_vblank_get(&malidp->crtc);
-> >  
-> >  		/* only set config_valid if the CRTC is enabled */
-> > -		if (malidp_set_and_wait_config_valid(drm) < 0)
-> > +		if (malidp_set_and_wait_config_valid(drm) < 0) {
-> > +			/*
-> > +			 * make a loop around the second CVAL setting and
-> > +			 * try 5 times before giving up.
-> > +			 */
-> > +			while (loop--) {
-> > +				if (!malidp_set_and_wait_config_valid(drm))
-> > +					break;
-> > +			}
-> >  			DRM_DEBUG_DRIVER("timed out waiting for updated configuration\n");
-> > +		}
-> > +
-> 
-> We'll still get the debug message even if
-> malidp_set_and_wait_config_valid() suceeded. That does not sound
-> right.
-> 									Pavel
+When stmmac_eee_init() is called to disable EEE support, then the timer
+for EEE support is stopped and we return from the function. Prior to
+stopping the timer, a mutex was acquired but in this case it is never
+released and so could cause a deadlock. Fix this by releasing the mutex
+prior to returning from stmmax_eee_init() when stopping the EEE timer.
 
-It does, because the first malidp_set_and_wait_config_valid() has timed out, which
-is not the expected behaviour at all. LS1028A has some quirks that require this
-loop in order to get it out of some stalled state, but any other implementation
-of the IP should not have this issue.
+Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hope this clarifies things.
-
-Best regards,
-Liviu
-
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b628c697cee9..6c6c6ec3c781 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -402,6 +402,7 @@ bool stmmac_eee_init(struct stmmac_priv *priv)
+ 		netdev_dbg(priv->dev, "disable EEE\n");
+ 		del_timer_sync(&priv->eee_ctrl_timer);
+ 		stmmac_set_eee_timer(priv, priv->hw, 0, tx_lpi_timer);
++		mutex_unlock(&priv->lock);
+ 		return false;
+ 	}
+ 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+1.9.1
+
