@@ -2,122 +2,207 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C01C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292C5C48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A33216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561580019;
-	bh=0jQodpDRuAkFZgDiEgerdZvI7o/ZwZ0KSv4xKSQprD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=T0feCQXVixKb4eDIpRiYBLWbL1+DML5EysvOMEtANVebu5VpiKAMQDoWdDUfKNczt
-	 XcR+b9/2sqpexgq3IpYrKPMmELe+NBXpYQZVTcYa/lV1DqKCyCR9Kwnlk9CVfCToSX
-	 I76xQyRLwKgEQjLpE1PpJdsB+WVWfUqc74JnKSLk=
+	by mail.kernel.org (Postfix) with ESMTP id EC8862086D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 20:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfFZUNi (ORCPT
+        id S1726469AbfFZUPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 16:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 16:15:15 -0400
+Received: from smtp.220.in.ua ([89.184.67.205]:46763 "EHLO smtp.220.in.ua"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726227AbfFZUNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 16:13:37 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726239AbfFZUPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 16:15:15 -0400
+X-Greylist: delayed 464 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jun 2019 16:15:13 EDT
+Received: from [192.168.202.100] (unknown [95.67.115.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8EA32086D;
-        Wed, 26 Jun 2019 20:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561580016;
-        bh=0jQodpDRuAkFZgDiEgerdZvI7o/ZwZ0KSv4xKSQprD8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tiV3ftktTDsuAQeR2z4Vu6D7XRs6u+SF4+yX/FgFVai8l8bUkuTUjNKxRN+hTBvVu
-         aNhjRw7hskTBnc6xC++D5aSsmyL4+HvgvW4E7J1VEXO4x13+P8xYWfipHsMIrwoQ0S
-         hdTU5lJgCY0k6PYgyysagmt1viul5eTn+QvL1jao=
-Date:   Wed, 26 Jun 2019 21:13:31 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Stefan Popa <stefan.popa@analog.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] iio: frequency: adf4371: Add support for output
- stage mute
-Message-ID: <20190626211331.6e335fe8@archlinux>
-In-Reply-To: <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
-References: <1561389236-26464-1-git-send-email-stefan.popa@analog.com>
-        <CAL_JsqL-Pxef5oNAx5-crGxL9Q0Ph5gx2Z=KejLSq_jdgVUvbQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by smtp.220.in.ua (Postfix) with ESMTPSA id 8D4961A20EE3;
+        Wed, 26 Jun 2019 23:07:27 +0300 (EEST)
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, dtor@google.com, linux@roeck-us.net,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+ <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+From:   Oleh Kravchenko <oleg@kaa.org.ua>
+Openpgp: preference=signencrypt
+Autocrypt: addr=oleg@kaa.org.ua; prefer-encrypt=mutual; keydata=
+ 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
+ WVdfrwbus0lVCELNSvCIW2IktSytUxjQfmjBMw==
+Message-ID: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+Date:   Wed, 26 Jun 2019 23:07:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 13:59:49 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J
+Content-Type: multipart/mixed; boundary="LBr20YCteCuborVTrf1GiddCODPSBF69k";
+ protected-headers="v1"
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+ linux-leds@vger.kernel.org, pavel@ucw.cz, dmurphy@ti.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ robh@kernel.org, dtor@google.com, linux@roeck-us.net,
+ Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Simon Shields <simon@lineageos.org>
+Message-ID: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+ <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+In-Reply-To: <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
 
-> On Mon, Jun 24, 2019 at 9:14 AM Stefan Popa <stefan.popa@analog.com> wrote:
-> >
-> > Another feature of the ADF4371/ADF4372 is that the supply current to the
-> > RF8P and RF8N output stage can shut down until the ADF4371 achieves lock
-> > as measured by the digital lock detect circuitry. The mute to lock
-> > detect bit (MUTE_LD) in REG25 enables this function.
-> >
-> > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> > ---
-> >  .../devicetree/bindings/iio/frequency/adf4371.yaml          |  6 ++++++  
-> 
-> If you resend and in the future, please split bindings to separate patch.
-> 
-> >  drivers/iio/frequency/adf4371.c                             | 13 +++++++++++++
-> >  2 files changed, 19 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > index a268a9d..6db8742 100644
-> > --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
-> > @@ -32,6 +32,12 @@ properties:
-> >      items:
-> >        - clkin
-> >
-> > +  adi,mute-till-lock-en:
-> > +    description:
-> > +      If this property is present, then the supply current to RF8P and RF8N
-> > +      output stage will shut down until the ADF4371/ADF4372 achieves lock as
-> > +      measured by the digital lock detect circuitry.  
-> 
-> You need to define the type:
-> 
-> type: boolean
-> 
-> Maybe Jonathan will fix up.
-Doh. I should have caught that.
+--LBr20YCteCuborVTrf1GiddCODPSBF69k
+Content-Type: text/plain; charset=utf-8
+Content-Language: uk-UA
+Content-Transfer-Encoding: quoted-printable
 
-Fixed up with
-type: boolean
+Hello Jacek,
+so after this patch will be merged.
 
-Hopefully I did it right
+There will be a way to define custom function name by DeviceTree?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=testing&id=6e68162fcc94ec81c1656e15e6e1893fee0c309a
+26.06.19 22:05, Jacek Anaszewski =D0=BF=D0=B8=D1=88=D0=B5:
+> Gentle reminder.
+>=20
+> Pavel, Dan - any conclusions?
+>=20
+> This patch is the main part of the proposed changes,
+> so it would be good to spot any remaining issues.
+>=20
+> What needs a consensus is also a new
+> Documentation/leds/led-functions.txt file I introduce
+> in the patch 26/26.
+>=20
+> Best regards,
+> Jacek Anaszewski
 
-Thanks Rob!
+--=20
+Best regards,
+Oleh Kravchenko
 
-Jonathan
 
-> 
-> Rob
 
+--LBr20YCteCuborVTrf1GiddCODPSBF69k--
+
+--d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEC/TM5t+2NenFhW0Q0xNJm20pl4wFAl0T0HcACgkQ0xNJm20p
+l4zlVw/+OPDiiXs0MqGGwsZoTDMJFF/PG0Dh8o2htgeleIMR8nIzt4sgTUlIfNQR
+f7o0Rcl1WmVOS3tC4MVlB/iwqlWliILs/+PT/cEgdHjaVUJnlqLQW5tLBbKdOyv9
+Hjb5AaSJpkbMLfPHU8FzsVe8W8LA5n3fWPw/I/PZNMNeRyWfey5rf1NnENde5R1/
+1oYoX0AFA6mCvwLkcOqGVWXnPJRFi5botDkUqJ/TgWovoCejdNa6RpfoFAarvmso
+IafiZbKkLZkdDo97yCk0YO6DAyJzpRfuXm66o4QKUsDJ97nK7cqn1dV32NgugxMA
+n71QDPklGROEqt0vsCICsuICPiA+gsuSVugY76isADLS4e4/5ozdSdgZGB8xeJUq
+EFFoa3OLrb/uKjLdvYfITz4TiCVt+ID6z6n6mGljqthS7Q/N8dj/hObp7gBZsnXm
+A6tymz6Px1l6sziiRjZh6GB4whX15idudReP4pCDOy9rZEYX+ymXGgA+lyAUoNVU
+dOWtR9uK6sdn5wboWlw8pXxgENuropBE5Va7ZplNbzdY1RuCFP1kG6xMLjhhjv3J
+gakQcJRlcHnOPx2bS8JLuHq4nJniAZpaH3DB2e3AIlIzNDrK/mtFFL5p6uVTyxzC
+HZSer1I6XoIbCckSJp+IiGeJNSSh4zppozAvC2tv3re+O65ttsc=
+=AHkY
+-----END PGP SIGNATURE-----
+
+--d0yCGDtABOsUsagkAYEPZkKFIhs6JAL1J--
