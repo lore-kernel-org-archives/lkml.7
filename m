@@ -2,106 +2,170 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442E9C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05737C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B8802133F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifNVdZNF"
+	by mail.kernel.org (Postfix) with ESMTP id CCF8E2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 08:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfFZH7P (ORCPT
+        id S1726678AbfFZIDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:59:15 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44396 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfFZH7P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:59:15 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t7so976423plr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 00:59:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m4ccwwpO5oRzKymdnY/55sXpZJv1GlqtCN/M5c5AvmY=;
-        b=ifNVdZNFnY/2v4zh/dDKfkaBnMcIoW/YPwoxRXpDgBPjIpbAtY9RULlxulJ0n8osIW
-         oikinqGd5ACHyhyJfm8gEuflttq5znCoqv/p9W9o3DxtDKiY/dP6y0QK32QnOFT1ly8W
-         OcslnNnxHhZ5fimkjloj72FgwhbwVoVMRBnmB3Dfowpb+y5KghzISjOl/m7LRcPNmTHa
-         Sp4glE1irTzNlJ7dDmLNmoSbPP8ehBwblXYBdax57+UceVwebOuP7G6weJfhcJLCPFdb
-         BCGvhc1R6AjuxfCzusrGdYXVQMx46iZqUGeUdt7S88Ci2Dbu5+rvzOl4dNhoau1g+3PO
-         GULQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m4ccwwpO5oRzKymdnY/55sXpZJv1GlqtCN/M5c5AvmY=;
-        b=Fdf/XMeH4pQjMZXMboZh4zXwEX6yRmSUpQH+1NwBhgbLn+5k1evdKZrVfUwOtSTNNK
-         MXb4LinGW+Fi5KH+Ds5S+bYETvC+Pjsz06FTv2BLckX4NKOS73+zZ8jMGx/ECyx27202
-         WTZqgWlsFlK278pTviyKWIBcW3VOxpRXsXFRMLd/9cDmt1v1AlTTdCQtAWj4fs57hgdF
-         ki7wXZ6P2FIbJt2uAK91SVyA6NwRYhPoVjHS59JyOEyvypSdEHOwluPzzU7CmAzpMjcP
-         b1rTud8XalCvaaw+32OrtVXFIi0I5k14Rl7ckaxwvWp093iLSkmRQ2jBEcgXsLh6hYXr
-         JwUQ==
-X-Gm-Message-State: APjAAAVWDPsQpGKzHk5g1gCK7A7rACajQWypmuXvHB+7OgD3/alMKeEO
-        gL5UiR2DmXw1tRdMV7Fc1lI=
-X-Google-Smtp-Source: APXvYqwb0Kc9S0n5E7F36S1KdjVeYBGXxGk/mESd3n76+oCdkdana+gh3ApUne4sMUzL5pIyTnPR5Q==
-X-Received: by 2002:a17:902:5ac4:: with SMTP id g4mr3986808plm.80.1561535954603;
-        Wed, 26 Jun 2019 00:59:14 -0700 (PDT)
-Received: from localhost ([175.223.45.10])
-        by smtp.gmail.com with ESMTPSA id k22sm19500304pfg.77.2019.06.26.00.59.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 00:59:13 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 16:59:10 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
- implementation
-Message-ID: <20190626075910.GA2936@jagdpanzerIV>
-References: <87imt2bl0k.fsf@linutronix.de>
- <20190625064543.GA19050@jagdpanzerIV>
- <20190625071500.GB19050@jagdpanzerIV>
- <875zoujbq4.fsf@linutronix.de>
- <20190625090620.wufhvdxxiryumdra@pathway.suse.cz>
- <20190625100322.GD532@jagdpanzerIV>
- <87woh9hnxg.fsf@linutronix.de>
- <20190626020837.GA25178@jagdpanzerIV>
- <87mui43jgk.fsf@linutronix.de>
- <20190626074718.n7fmxugeul3lyyq6@pathway.suse.cz>
+        Wed, 26 Jun 2019 04:03:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53806 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726242AbfFZIDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 04:03:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 16173AE20;
+        Wed, 26 Jun 2019 08:03:07 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 10:03:03 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        dan.j.williams@intel.com, pasha.tatashin@soleen.com,
+        Jonathan.Cameron@huawei.com, anshuman.khandual@arm.com,
+        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Allocate memmap from hotadded memory
+Message-ID: <20190626080249.GA30863@linux>
+References: <20190625075227.15193-1-osalvador@suse.de>
+ <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626074718.n7fmxugeul3lyyq6@pathway.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <2ebfbd36-11bd-9576-e373-2964c458185b@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (06/26/19 09:47), Petr Mladek wrote:
-[..]
-> If the data might change under the hood then we have bigger
-> problems. For example, there might be a race when the trailing
-> "\0" has not been written yet.
+On Tue, Jun 25, 2019 at 10:25:48AM +0200, David Hildenbrand wrote:
+> > [Coverletter]
+> > 
+> > This is another step to make memory hotplug more usable. The primary
+> > goal of this patchset is to reduce memory overhead of the hot-added
+> > memory (at least for SPARSEMEM_VMEMMAP memory model). The current way we use
+> > to populate memmap (struct page array) has two main drawbacks:
 
-Current printk would not handle such cases. I'm only talking about
-transition from one consistent state to another, when
-	sprintf(NULL, ptr) == A && sprintf(buf, ptr) != A
-Wether it's a corner case or not is entirely unclear to me but I
-probably would not call it "an impossible scenario".
+First off, thanks for looking into this :-)
 
-	-ss
+> 
+> Mental note: How will it be handled if a caller specifies "Allocate
+> memmap from hotadded memory", but we are running under SPARSEMEM where
+> we can't do this.
+
+In add_memory_resource(), we have a call to mhp_check_correct_flags(), which is
+in charge of checking if the flags passed are compliant with our configuration
+among other things.
+It also checks if both flags were passed (_MEMBLOCK|_DEVICE).
+
+If a) any of the flags were specified and we are not on CONFIG_SPARSEMEM_VMEMMAP,
+b) the flags are colliding with each other or c) the flags just do not make sense,
+we print out a warning and drop the flags to 0, so we just ignore them.
+
+I just realized that I can adjust the check even more (something for the next
+version).
+
+But to answer your question, flags are ignored under !CONFIG_SPARSEMEM_VMEMMAP.
+
+> 
+> > 
+> > a) it consumes an additional memory until the hotadded memory itself is
+> >    onlined and
+> > b) memmap might end up on a different numa node which is especially true
+> >    for movable_node configuration.
+> > 
+> > a) it is a problem especially for memory hotplug based memory "ballooning"
+> >    solutions when the delay between physical memory hotplug and the
+> >    onlining can lead to OOM and that led to introduction of hacks like auto
+> >    onlining (see 31bc3858ea3e ("memory-hotplug: add automatic onlining
+> >    policy for the newly added memory")).
+> > 
+> > b) can have performance drawbacks.
+> > 
+> > Another minor case is that I have seen hot-add operations failing on archs
+> > because they were running out of order-x pages.
+> > E.g On powerpc, in certain configurations, we use order-8 pages,
+> > and given 64KB base pagesize, that is 16MB.
+> > If we run out of those, we just fail the operation and we cannot add
+> > more memory.
+> 
+> At least for SPARSEMEM, we fallback to vmalloc() to work around this
+> issue. I haven't looked into the populate_section_memmap() internals
+> yet. Can you point me at the code that performs this allocation?
+
+Yes, on SPARSEMEM we first try to allocate the pages physical configuous, and
+then fallback to vmalloc.
+This is because on CONFIG_SPARSEMEM memory model, the translations pfn_to_page/
+page_to_pfn do not expect the memory to be contiguous.
+
+But that is not the case on CONFIG_SPARSEMEM_VMEMMAP.
+We do expect the memory to be physical contigous there, that is why a simply
+pfn_to_page/page_to_pfn is a matter of adding/substracting vmemmap/pfn.
+
+Powerpc code is at:
+
+https://elixir.bootlin.com/linux/v5.2-rc6/source/arch/powerpc/mm/init_64.c#L175
+
+
+
+> So, assuming we add_memory(1GB, MHP_MEMMAP_DEVICE) and then
+> remove_memory(128MB) of the added memory, this will work?
+
+No, MHP_MEMMAP_DEVICE is meant to be used when hot-adding and hot-removing work
+in the same granularity.
+This is because all memmap pages will be stored at the beginning of the memory
+range.
+Allowing hot-removing in a different granularity on MHP_MEMMAP_DEVICE would imply
+a lot of extra work.
+For example, we would have to parse the vmemmap-head of the hot-removed range,
+and punch a hole in there to clear the vmemmap pages, and then be very carefull
+when deleting those pagetables.
+
+So I followed Michal's advice, and I decided to let the caller specify if he
+either wants to allocate per memory block or per hot-added range(device).
+Where per memory block, allows us to do:
+
+add_memory(1GB, MHP_MEMMAP_MEMBLOCK)
+remove_memory(128MB)
+
+
+> add_memory(8GB, MHP_MEMMAP_DEVICE)
+> 
+> For 8GB, we will need exactly 128MB of memmap if I did the math right.
+> So exactly one section. This section will still be marked as being
+> online (although not pages on it are actually online)?
+
+Yap, 8GB will fill the first section with vmemmap pages.
+It will be marked as online, yes.
+This is not to diverge too much from what we have right now, and starting
+treat some sections different than others.
+E.g: Early sections that are used for memmap pages on early boot stage.
+
+> > 
+> > What we do is that since when we hot-remove a memory-range, sections are being
+> > removed sequentially, we wait until we hit the last section, and then we free
+> > the hole range to vmemmap_free backwards.
+> > We know that it is the last section because in every pass we
+> > decrease head->_refcount, and when it reaches 0, we got our last section.
+> > 
+> > We also have to be careful about those pages during online and offline
+> > operations. They are simply skipped, so online will keep them
+> > reserved and so unusable for any other purpose and offline ignores them
+> > so they do not block the offline operation.
+> 
+> I assume that they will still be dumped normally by user space. (as they
+> are described by a "memory resource" and not PG_Offline)
+
+They are PG_Reserved.
+Anyway, you mean by crash-tool?
+
+
+-- 
+Oscar Salvador
+SUSE L3
