@@ -2,175 +2,97 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14533C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3335CC4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FFC20B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561535932;
-	bh=c5rNobk+Z4eiaYXfyunG8IXEEYMZmjH/Kc17YFLXH08=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBGfD09U+i+MW+vdCMEoqbAGJ3YnqNaPhzoocV1Ch+URbfhGbbjETI9I6NdMYLAmt
-	 z2mgFxrhSC3VvbZjD3Yz3xi+KyJaKpDAp3Rzk/tpAvJ7lMK3fg61u2qLo9x8L8gj+T
-	 NMWnKE9G7JPKlfoUufPkl8CmqekT+OMrUqW/Bfs0=
+	by mail.kernel.org (Postfix) with ESMTP id 146472133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 07:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfFZH6v (ORCPT
+        id S1727026AbfFZH7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 03:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfFZH6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 03:58:49 -0400
-Received: from localhost.localdomain (unknown [106.201.40.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB5B1215EA;
-        Wed, 26 Jun 2019 07:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561535928;
-        bh=c5rNobk+Z4eiaYXfyunG8IXEEYMZmjH/Kc17YFLXH08=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m4PG2ujgZoOoxAtGbU69aug2c/14Ek0pQg7CgBaQmPzfEHZXhyoW8Q6vvqCvukSg3
-         XjDnO7ar9sJdiY9Vhzto0gvWgueTcycDHPZJc+dtBV6wBKJnOgxtL26LvcNuTOSKf8
-         XTUdqMLKGhoIKJCiHOfTF9BBigbLvPrTQ4aQiazs=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH v4 4/4] usb: xhci: allow multiple firmware versions
-Date:   Wed, 26 Jun 2019 13:25:09 +0530
-Message-Id: <20190626075509.20445-5-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190626075509.20445-1-vkoul@kernel.org>
-References: <20190626075509.20445-1-vkoul@kernel.org>
-MIME-Version: 1.0
+        Wed, 26 Jun 2019 03:59:01 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40418 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfFZH7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 03:59:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id p184so911184pfp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 00:59:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=CD4j+26j4vYI/MfiMmLCViJItM6FC7GHNSI9G/XS8i0=;
+        b=J+cxGE3zBGabj5xBckDAE7eRLBsoIaR+3KVe8FyBtjiT8megEz2x/bEn1JmE4nwyVI
+         aJdejm4cM7pFhcDUoEMEDPZ1Klmlpu15J71PmwX9WRXgu0z9ts6SD65tle6lzvP0WTea
+         C2DWYZQYGnMb+YXTa2M1Rn49itM2QbRo6fLjRlohp8UaMHPh4AAktjUPH//nnA86mqZD
+         WHDwoQRg2b90Al2GmX8INuR6dptrddtO1ub8B56HxODoZTXg+0TTZYfWUkKHX7ud7N7F
+         1+1u5iRAKcAPpxHbAN24uBRSVlH8cpFye9Xf9Kar8zohUVE8u7K02kiGlMaWbWpqi57j
+         GGvg==
+X-Gm-Message-State: APjAAAXvseCvypf+oVUs8yIM9JsfcU3ieqWeEgfcNZMVkpJB9Nw/h8eS
+        Ea0bGCRWcW9SKtSi0LT/etSt5DhHMEe/IuUf
+X-Google-Smtp-Source: APXvYqwn8kngp/HSSbBwmxPoLWNRdCfA+H3iCix/JVQZEda0wHy33yb36kbHr9Scb1i6pm+ak+U1/Q==
+X-Received: by 2002:a17:90a:ad89:: with SMTP id s9mr3129805pjq.41.1561535939224;
+        Wed, 26 Jun 2019 00:58:59 -0700 (PDT)
+Received: from localhost (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id r1sm20866207pfq.100.2019.06.26.00.58.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 00:58:58 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 00:58:58 -0700 (PDT)
+X-Google-Original-Date: Wed, 26 Jun 2019 00:33:23 PDT (-0700)
+Subject:     Re: [PATCH] RISC-V: defconfig: enable MMC & SPI for RISC-V
+In-Reply-To: <20190625225636.9288-1-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        aou@eecs.berkeley.edu, Alistair Francis <Alistair.Francis@wdc.com>,
+        anup@brainfault.org, linux-riscv@lists.infradead.org,
+        Olof Johansson <olof@lixom.net>, tglx@linutronix.de
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-2f9be7ae-da01-4cf8-b3b9-8a7b193acd9b@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow multiple firmware file versions in table and load them in
-increasing order as we find them in the file system.
+On Tue, 25 Jun 2019 15:56:36 PDT (-0700), Atish Patra wrote:
+> Currently, riscv upstream defconfig doesn't let you boot
+> through userspace if rootfs is on the SD card.
+>
+> Let's enable MMC & SPI drivers as well so that one can boot
+> to the user space using default config in upstream kernel.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/configs/defconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 4f02967e55de..04944fb4fa7a 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -69,6 +69,7 @@ CONFIG_VIRTIO_MMIO=y
+>  CONFIG_CLK_SIFIVE=y
+>  CONFIG_CLK_SIFIVE_FU540_PRCI=y
+>  CONFIG_SIFIVE_PLIC=y
+> +CONFIG_SPI_SIFIVE=y
+>  CONFIG_EXT4_FS=y
+>  CONFIG_EXT4_FS_POSIX_ACL=y
+>  CONFIG_AUTOFS4_FS=y
+> @@ -84,4 +85,8 @@ CONFIG_ROOT_NFS=y
+>  CONFIG_CRYPTO_USER_API_HASH=y
+>  CONFIG_CRYPTO_DEV_VIRTIO=y
+>  CONFIG_PRINTK_TIME=y
+> +CONFIG_SPI=y
+> +CONFIG_MMC_SPI=y
+> +CONFIG_MMC=y
+> +CONFIG_DEVTMPFS_MOUNT=y
+>  # CONFIG_RCU_TRACE is not set
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Christian Lamparter <chunkeey@googlemail.com>
-Tested-by: Christian Lamparter <chunkeey@gmail.com>
----
- drivers/usb/host/xhci-pci.c | 47 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 996068ead731..c0341e9f37f7 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -336,13 +336,20 @@ static const struct renesas_fw_entry {
- 	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
- 	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
- 	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-+	 *
-+	 *  Entry expected_version should be kept in increasing order for a
-+	 *  chip, so that driver will pick first version and if that fails
-+	 *  then next one will be picked
- 	 */
- 	{ "K2013080.mem", 0x0014, 0x02, 0x2013 },
-+	{ "K2026090.mem", 0x0014, 0x03, 0x2026 },
- 	{ "K2013080.mem", 0x0014, 0x03, 0x2013 },
-+	{ "K2026090.mem", 0x0015, 0x02, 0x2026 },
- 	{ "K2013080.mem", 0x0015, 0x02, 0x2013 },
- };
- 
- MODULE_FIRMWARE("K2013080.mem");
-+MODULE_FIRMWARE("K2026090.mem");
- 
- static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
- {
-@@ -363,6 +370,24 @@ static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
- 	return NULL;
- }
- 
-+static const struct
-+renesas_fw_entry *renesas_get_next_entry(struct pci_dev *dev,
-+					 const struct renesas_fw_entry *entry)
-+{
-+	const struct renesas_fw_entry *next_entry;
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(renesas_fw_table); i++) {
-+		next_entry = &renesas_fw_table[i];
-+		if (next_entry->device == dev->device &&
-+		    next_entry->revision == dev->revision &&
-+		    next_entry->expected_version < entry->expected_version)
-+			return next_entry;
-+	}
-+
-+	return NULL;
-+}
-+
- static int renesas_fw_download_image(struct pci_dev *dev,
- 				     const u32 *fw,
- 				     size_t step)
-@@ -705,6 +730,7 @@ struct renesas_fw_ctx {
- 	struct pci_dev *pdev;
- 	const struct pci_device_id *id;
- 	bool resume;
-+	const struct renesas_fw_entry *entry;
- };
- 
- static int xhci_pci_probe(struct pci_dev *pdev,
-@@ -964,13 +990,29 @@ static void renesas_fw_callback(const struct firmware *fw,
- 	struct renesas_fw_ctx *ctx = context;
- 	struct pci_dev *pdev = ctx->pdev;
- 	struct device *parent = pdev->dev.parent;
-+	const struct renesas_fw_entry *next_entry;
- 	bool rom;
- 	int err;
- 
- 	if (!fw) {
- 		dev_err(&pdev->dev, "firmware failed to load\n");
--
--		goto cleanup;
-+		/*
-+		 * we didn't find firmware, check if we have another
-+		 * entry for this device
-+		 */
-+		next_entry = renesas_get_next_entry(ctx->pdev, ctx->entry);
-+		if (next_entry) {
-+			ctx->entry = next_entry;
-+			dev_dbg(&pdev->dev, "Found next entry, requesting: %s\n",
-+				next_entry->firmware_name);
-+			request_firmware_nowait(THIS_MODULE, 1,
-+						next_entry->firmware_name,
-+						&pdev->dev, GFP_KERNEL,
-+						ctx, renesas_fw_callback);
-+			return;
-+		} else {
-+			goto cleanup;
-+		}
- 	}
- 
- 	err = renesas_fw_verify(pdev, fw->data, fw->size);
-@@ -1068,6 +1110,7 @@ static int renesas_fw_download_to_hw(struct pci_dev *pdev,
- 	ctx->pdev = pdev;
- 	ctx->resume = do_resume;
- 	ctx->id = id;
-+	ctx->entry = entry;
- 
- 	pci_dev_get(pdev);
- 	err = request_firmware_nowait(THIS_MODULE, 1, entry->firmware_name,
--- 
-2.20.1
-
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
