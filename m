@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E41C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7B4C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A24C208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6872D2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520758;
-	bh=DZe5PTe4zle8QnQQX1FE+nwEIWNj8Vl0WiZFq6FsARA=;
+	s=default; t=1561520764;
+	bh=YMxhF3xZpLjkpgDDYAqBSMQStGwzFgN9urEAb/LeJeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkbNMh5wJ/7pjRkT/coBujKTv+A1wh2JXGv01g/24dsOoJX1lDDpIAbx2CwwwQqrU
-	 o23eUUwEOxCZuyiPNyDLU//mas5WZovPiiBWiTHuHc65rx1e3WzSnMcOo5peQu3vA7
-	 7DY88TNBIu/AcsPlEwC5VmfVKtWjRZPbRBGTGOg4=
+	b=B/o1rOumCAt+VoaGPrUKDx/xpnqGdyplsACjsn8s+0KrmC7OuGvJMPgw8zxGAuOBi
+	 wJ8DSamfIply+DpGeqrLdrJpnp4zFdNeg1FfXmQUKyN5HBhJyWEFq/esPA0U+mxI4Y
+	 5yG/pQIpT2Mulc67Wyb6C0JECfUbkS9Htd1G6YVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbfFZDp5 (ORCPT
+        id S1727885AbfFZDqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:45:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:46:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727405AbfFZDpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:45:53 -0400
+        id S1727457AbfFZDqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:46:00 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64AC0214DA;
-        Wed, 26 Jun 2019 03:45:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44F4E21738;
+        Wed, 26 Jun 2019 03:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520751;
-        bh=DZe5PTe4zle8QnQQX1FE+nwEIWNj8Vl0WiZFq6FsARA=;
+        s=default; t=1561520759;
+        bh=YMxhF3xZpLjkpgDDYAqBSMQStGwzFgN9urEAb/LeJeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2MA7T/TcTQhzg+T96feYRF92qTjg/aOK00uNpVNNfUgUHL2PhIpqfskWH5Jh0Mhl
-         IpRjVrsPyGPnx6py4/rZfKGpLWt/udSgz3RJFTocGWDrONRAEGMOzHSUbOo3bHhIn+
-         xGdPCZxhOtsLWw7V+gA1JJo2iR4pFlqe7+wLf2fE=
+        b=HOLECe4j2AJVDprEinjdRawbOIQ+0UduJcpIKA/NLAgskBVEIO2iVwsiYs+GVBGAK
+         OLz1EyV6KaJHb+9ihmBX5eOxZfgsmNLa2vfn0gPqoQS6pCDpWHLTcMpL88honMwDRT
+         Tksopat7Xr3tyfssDfcDObkpLCJjVSSeqmFs8MrA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Savitz <jsavitz@redhat.com>, Waiman Long <longman@redhat.com>,
-        Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/21] cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-Date:   Tue, 25 Jun 2019 23:45:02 -0400
-Message-Id: <20190626034506.24125-17-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Jessica Yu <jeyu@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>, live-patching@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 20/21] module: Fix livepatch/ftrace module text permissions race
+Date:   Tue, 25 Jun 2019 23:45:05 -0400
+Message-Id: <20190626034506.24125-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034506.24125-1-sashal@kernel.org>
 References: <20190626034506.24125-1-sashal@kernel.org>
@@ -61,143 +62,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Savitz <jsavitz@redhat.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit d477f8c202d1f0d4791ab1263ca7657bbe5cf79e ]
+[ Upstream commit 9f255b632bf12c4dd7fc31caee89aa991ef75176 ]
 
-In the case that a process is constrained by taskset(1) (i.e.
-sched_setaffinity(2)) to a subset of available cpus, and all of those are
-subsequently offlined, the scheduler will set tsk->cpus_allowed to
-the current value of task_cs(tsk)->effective_cpus.
+It's possible for livepatch and ftrace to be toggling a module's text
+permissions at the same time, resulting in the following panic:
 
-This is done via a call to do_set_cpus_allowed() in the context of
-cpuset_cpus_allowed_fallback() made by the scheduler when this case is
-detected. This is the only call made to cpuset_cpus_allowed_fallback()
-in the latest mainline kernel.
+  BUG: unable to handle page fault for address: ffffffffc005b1d9
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0003) - permissions violation
+  PGD 3ea0c067 P4D 3ea0c067 PUD 3ea0e067 PMD 3cc13067 PTE 3b8a1061
+  Oops: 0003 [#1] PREEMPT SMP PTI
+  CPU: 1 PID: 453 Comm: insmod Tainted: G           O  K   5.2.0-rc1-a188339ca5 #1
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-20181126_142135-anatol 04/01/2014
+  RIP: 0010:apply_relocate_add+0xbe/0x14c
+  Code: fa 0b 74 21 48 83 fa 18 74 38 48 83 fa 0a 75 40 eb 08 48 83 38 00 74 33 eb 53 83 38 00 75 4e 89 08 89 c8 eb 0a 83 38 00 75 43 <89> 08 48 63 c1 48 39 c8 74 2e eb 48 83 38 00 75 32 48 29 c1 89 08
+  RSP: 0018:ffffb223c00dbb10 EFLAGS: 00010246
+  RAX: ffffffffc005b1d9 RBX: 0000000000000000 RCX: ffffffff8b200060
+  RDX: 000000000000000b RSI: 0000004b0000000b RDI: ffff96bdfcd33000
+  RBP: ffffb223c00dbb38 R08: ffffffffc005d040 R09: ffffffffc005c1f0
+  R10: ffff96bdfcd33c40 R11: ffff96bdfcd33b80 R12: 0000000000000018
+  R13: ffffffffc005c1f0 R14: ffffffffc005e708 R15: ffffffff8b2fbc74
+  FS:  00007f5f447beba8(0000) GS:ffff96bdff900000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffffffffc005b1d9 CR3: 000000003cedc002 CR4: 0000000000360ea0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   klp_init_object_loaded+0x10f/0x219
+   ? preempt_latency_start+0x21/0x57
+   klp_enable_patch+0x662/0x809
+   ? virt_to_head_page+0x3a/0x3c
+   ? kfree+0x8c/0x126
+   patch_init+0x2ed/0x1000 [livepatch_test02]
+   ? 0xffffffffc0060000
+   do_one_initcall+0x9f/0x1c5
+   ? kmem_cache_alloc_trace+0xc4/0xd4
+   ? do_init_module+0x27/0x210
+   do_init_module+0x5f/0x210
+   load_module+0x1c41/0x2290
+   ? fsnotify_path+0x3b/0x42
+   ? strstarts+0x2b/0x2b
+   ? kernel_read+0x58/0x65
+   __do_sys_finit_module+0x9f/0xc3
+   ? __do_sys_finit_module+0x9f/0xc3
+   __x64_sys_finit_module+0x1a/0x1c
+   do_syscall_64+0x52/0x61
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-However, this is not sane behavior.
+The above panic occurs when loading two modules at the same time with
+ftrace enabled, where at least one of the modules is a livepatch module:
 
-I will demonstrate this on a system running the latest upstream kernel
-with the following initial configuration:
+CPU0					CPU1
+klp_enable_patch()
+  klp_init_object_loaded()
+    module_disable_ro()
+    					ftrace_module_enable()
+					  ftrace_arch_code_modify_post_process()
+				    	    set_all_modules_text_ro()
+      klp_write_object_relocations()
+        apply_relocate_add()
+	  *patches read-only code* - BOOM
 
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	ffffffff,fffffff
-	Cpus_allowed_list:	0-63
+A similar race exists when toggling ftrace while loading a livepatch
+module.
 
-(Where cpus 32-63 are provided via smt.)
+Fix it by ensuring that the livepatch and ftrace code patching
+operations -- and their respective permissions changes -- are protected
+by the text_mutex.
 
-If we limit our current shell process to cpu2 only and then offline it
-and reonline it:
+Link: http://lkml.kernel.org/r/ab43d56ab909469ac5d2520c5d944ad6d4abd476.1560474114.git.jpoimboe@redhat.com
 
-	# taskset -p 4 $$
-	pid 2272's current affinity mask: ffffffffffffffff
-	pid 2272's new affinity mask: 4
-
-	# echo off > /sys/devices/system/cpu/cpu2/online
-	# dmesg | tail -3
-	[ 2195.866089] process 2272 (bash) no longer affine to cpu2
-	[ 2195.872700] IRQ 114: no longer affine to CPU2
-	[ 2195.879128] smpboot: CPU 2 is now offline
-
-	# echo on > /sys/devices/system/cpu/cpu2/online
-	# dmesg | tail -1
-	[ 2617.043572] smpboot: Booting Node 0 Processor 2 APIC 0x4
-
-We see that our current process now has an affinity mask containing
-every cpu available on the system _except_ the one we originally
-constrained it to:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:   ffffffff,fffffffb
-	Cpus_allowed_list:      0-1,3-63
-
-This is not sane behavior, as the scheduler can now not only place the
-process on previously forbidden cpus, it can't even schedule it on
-the cpu it was originally constrained to!
-
-Other cases result in even more exotic affinity masks. Take for instance
-a process with an affinity mask containing only cpus provided by smt at
-the moment that smt is toggled, in a configuration such as the following:
-
-	# taskset -p f000000000 $$
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	000000f0,00000000
-	Cpus_allowed_list:	36-39
-
-A double toggle of smt results in the following behavior:
-
-	# echo off > /sys/devices/system/cpu/smt/control
-	# echo on > /sys/devices/system/cpu/smt/control
-	# grep -i cpus /proc/$$/status
-	Cpus_allowed:	ffffff00,ffffffff
-	Cpus_allowed_list:	0-31,40-63
-
-This is even less sane than the previous case, as the new affinity mask
-excludes all smt-provided cpus with ids less than those that were
-previously in the affinity mask, as well as those that were actually in
-the mask.
-
-With this patch applied, both of these cases end in the following state:
-
-	# grep -i cpu /proc/$$/status
-	Cpus_allowed:	ffffffff,ffffffff
-	Cpus_allowed_list:	0-63
-
-The original policy is discarded. Though not ideal, it is the simplest way
-to restore sanity to this fallback case without reinventing the cpuset
-wheel that rolls down the kernel just fine in cgroup v2. A user who wishes
-for the previous affinity mask to be restored in this fallback case can use
-that mechanism instead.
-
-This patch modifies scheduler behavior by instead resetting the mask to
-task_cs(tsk)->cpus_allowed by default, and cpu_possible mask in legacy
-mode. I tested the cases above on both modes.
-
-Note that the scheduler uses this fallback mechanism if and only if
-_every_ other valid avenue has been traveled, and it is the last resort
-before calling BUG().
-
-Suggested-by: Waiman Long <longman@redhat.com>
-Suggested-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Joel Savitz <jsavitz@redhat.com>
-Acked-by: Phil Auld <pauld@redhat.com>
-Acked-by: Waiman Long <longman@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Johannes Erdfelt <johannes@erdfelt.com>
+Fixes: 444d13ff10fb ("modules: add ro_after_init support")
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/cpuset.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ kernel/livepatch/core.c |  6 ++++++
+ kernel/trace/ftrace.c   | 10 +++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 4657e2924ecb..0a0e1aa11f5e 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -2436,10 +2436,23 @@ void cpuset_cpus_allowed(struct task_struct *tsk, struct cpumask *pmask)
- 	spin_unlock_irqrestore(&callback_lock, flags);
- }
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 7c51f065b212..88754e9790f9 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -30,6 +30,7 @@
+ #include <linux/elf.h>
+ #include <linux/moduleloader.h>
+ #include <linux/completion.h>
++#include <linux/memory.h>
+ #include <asm/cacheflush.h>
+ #include "core.h"
+ #include "patch.h"
+@@ -635,16 +636,21 @@ static int klp_init_object_loaded(struct klp_patch *patch,
+ 	struct klp_func *func;
+ 	int ret;
  
-+/**
-+ * cpuset_cpus_allowed_fallback - final fallback before complete catastrophe.
-+ * @tsk: pointer to task_struct with which the scheduler is struggling
-+ *
-+ * Description: In the case that the scheduler cannot find an allowed cpu in
-+ * tsk->cpus_allowed, we fall back to task_cs(tsk)->cpus_allowed. In legacy
-+ * mode however, this value is the same as task_cs(tsk)->effective_cpus,
-+ * which will not contain a sane cpumask during cases such as cpu hotplugging.
-+ * This is the absolute last resort for the scheduler and it is only used if
-+ * _every_ other avenue has been traveled.
-+ **/
++	mutex_lock(&text_mutex);
 +
- void cpuset_cpus_allowed_fallback(struct task_struct *tsk)
+ 	module_disable_ro(patch->mod);
+ 	ret = klp_write_object_relocations(patch->mod, obj);
+ 	if (ret) {
+ 		module_enable_ro(patch->mod, true);
++		mutex_unlock(&text_mutex);
+ 		return ret;
+ 	}
+ 
+ 	arch_klp_init_object_loaded(patch, obj);
+ 	module_enable_ro(patch->mod, true);
+ 
++	mutex_unlock(&text_mutex);
++
+ 	klp_for_each_func(obj, func) {
+ 		ret = klp_find_object_symbol(obj->name, func->old_name,
+ 					     func->old_sympos,
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 3e92852c8b23..4e4b88047fcc 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -34,6 +34,7 @@
+ #include <linux/hash.h>
+ #include <linux/rcupdate.h>
+ #include <linux/kprobes.h>
++#include <linux/memory.h>
+ 
+ #include <trace/events/sched.h>
+ 
+@@ -2692,10 +2693,12 @@ static void ftrace_run_update_code(int command)
  {
- 	rcu_read_lock();
--	do_set_cpus_allowed(tsk, task_cs(tsk)->effective_cpus);
-+	do_set_cpus_allowed(tsk, is_in_v2_mode() ?
-+		task_cs(tsk)->cpus_allowed : cpu_possible_mask);
- 	rcu_read_unlock();
+ 	int ret;
+ 
++	mutex_lock(&text_mutex);
++
+ 	ret = ftrace_arch_code_modify_prepare();
+ 	FTRACE_WARN_ON(ret);
+ 	if (ret)
+-		return;
++		goto out_unlock;
  
  	/*
+ 	 * By default we use stop_machine() to modify the code.
+@@ -2707,6 +2710,9 @@ static void ftrace_run_update_code(int command)
+ 
+ 	ret = ftrace_arch_code_modify_post_process();
+ 	FTRACE_WARN_ON(ret);
++
++out_unlock:
++	mutex_unlock(&text_mutex);
+ }
+ 
+ static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
+@@ -5791,6 +5797,7 @@ void ftrace_module_enable(struct module *mod)
+ 	struct ftrace_page *pg;
+ 
+ 	mutex_lock(&ftrace_lock);
++	mutex_lock(&text_mutex);
+ 
+ 	if (ftrace_disabled)
+ 		goto out_unlock;
+@@ -5851,6 +5858,7 @@ void ftrace_module_enable(struct module *mod)
+ 		ftrace_arch_code_modify_post_process();
+ 
+  out_unlock:
++	mutex_unlock(&text_mutex);
+ 	mutex_unlock(&ftrace_lock);
+ 
+ 	process_cached_mods(mod->name);
 -- 
 2.20.1
 
