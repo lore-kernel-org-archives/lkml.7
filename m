@@ -2,92 +2,111 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D9DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DEBC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE062177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUZqc5/E"
+	by mail.kernel.org (Postfix) with ESMTP id 2C772214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 17:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfFZRgR (ORCPT
+        id S1726434AbfFZRir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 13:36:17 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35986 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfFZRgP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 13:36:15 -0400
-Received: by mail-pf1-f195.google.com with SMTP id r7so1725727pfl.3;
-        Wed, 26 Jun 2019 10:36:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X321/IDP/t2tBpgQipnU54rMZLTeSk+Sj8cGzkHPfpE=;
-        b=TUZqc5/E4M0gtB5pR9iNHep6wX+2rOU3fXqKT1LQAdl63/Tfj3eqGbEGmGW50zdMiq
-         kYpkfHbLg8UcL5fzZ6sOGOtzQA5Dh4XERuL3F5mhTaKFLijwlfFb/ak9UylZD2yPRJ/O
-         1gP498EFjiN70EKvNLlEqP7mohM+c5IzaJh52HET8mBdUQcA81xUbG8YT4aYFGc9NoVv
-         mp9jMt0RsQQFBitUo835acHisfmCF8e1GL3pL8ZUu4CjMFt2LRNPK9OH/kUZDe6Ddfdi
-         jgj8Zt9QrngWRb85vfeW5Y0JZ4EXveXRcesEAQPZmFxKBKZ/WEuKxa9ZkbB58a/wRNEg
-         02lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X321/IDP/t2tBpgQipnU54rMZLTeSk+Sj8cGzkHPfpE=;
-        b=nM53p4wBwE0bLQZIJUOoFtTQ+YM1eAMHRBei477lPB80ATEU1x75rTI/XvoyhU6+WG
-         Zxis7sHW8Wck1HLE/gX5lHNyIge+ldUmwJGwelnKlpJ/5k/aixch3Br35MH3e62P93d1
-         bC8RvZhgMcGwuA3Juym4VimDJbeWHePGIjVFPKYHRQtwquZNuN059zdXouq2BcpN2uXy
-         5nMtRkriIOPKy5ozrbfnc5AXnvNTFtFGgZOuiYdw9cuafoTB0yl9rX/pTpannk+5hhZZ
-         qv2C06DPccfo4CtBAH7psoyfYSD3Zrx5BCVsLBwmIWDC/PTe6UmkZ9a4Wxyf5TwCb7yf
-         A7yg==
-X-Gm-Message-State: APjAAAWOrD7RVvdd3RH2ZOIgxXdH78L3h2mRJAl/hknrxjEA0Mk6hIH1
-        mg0DT5lKtefyMy0QH5IxqLvKYm6x
-X-Google-Smtp-Source: APXvYqxNlLUbRHLcrdpse8TlvXdR6DmIZxoofU6OpZ2Ow/xy5cUSuBHFV/U8K23BexWPQlpKnmGdFA==
-X-Received: by 2002:a17:90a:a008:: with SMTP id q8mr267573pjp.114.1561570574715;
-        Wed, 26 Jun 2019 10:36:14 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c83sm2430022pfb.111.2019.06.26.10.36.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Jun 2019 10:36:14 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 10:36:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.14 0/1] 4.14.131-stable review
-Message-ID: <20190626173613.GB2530@roeck-us.net>
-References: <20190626083606.248422423@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626083606.248422423@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 26 Jun 2019 13:38:47 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18810 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbfFZRir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 13:38:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 10:38:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,420,1557212400"; 
+   d="scan'208";a="183217012"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jun 2019 10:38:46 -0700
+Message-ID: <9f7787e255ef859a39ea87e70132a50572f4db65.camel@intel.com>
+Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>
+Date:   Wed, 26 Jun 2019 10:30:24 -0700
+In-Reply-To: <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
+References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+         <20190502111003.GO3567@e103592.cambridge.arm.com>
+         <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 04:45:20PM +0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.131 release.
-> There are 1 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 2019-06-26 at 10:14 -0700, Andy Lutomirski wrote:
+> On Thu, May 2, 2019 at 4:10 AM Dave Martin <Dave.Martin@arm.com> wrote:
+> > 
+> > On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
+> > > An ELF file's .note.gnu.property indicates features the executable file
+> > > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> > > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> > > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+> > > 
+[...]
 > 
-> Responses should be made by Fri 28 Jun 2019 08:35:42 AM UTC.
-> Anything received after that time might be too late.
+> Where did PT_GNU_PROPERTY come from?  Are there actual docs for it?
+> Can someone here tell us what the actual semantics of this new ELF
+> thingy are?  From some searching, it seems like it's kind of an ELF
+> note but kind of not.  An actual description would be fantastic.
 > 
+> Also, I don't think there's any actual requirement that the upstream
+> kernel recognize existing CET-enabled RHEL 8 binaries as being
+> CET-enabled.  I tend to think that RHEL 8 jumped the gun here.  While
+> the upstream kernel should make some reasonble effort to make sure
+> that RHEL 8 binaries will continue to run, I don't see why we need to
+> go out of our way to keep the full set of mitigations available for
+> binaries that were developed against a non-upstream kernel.
+> 
+> In fact, if we handle the legacy bitmap differently from RHEL 8, we
+> may *have* to make sure that we don't recognize existing RHEL 8
+> binaries as CET-enabled.
 
-Build results:
-	total: 172 pass: 172 fail: 0
-Qemu test results:
-	total: 346 pass: 346 fail: 0
+We have worked out the issue.  Linux will look at only PT_GNU_PROPERTY, which is
+a shortcut pointing directly to .note.gnu.property.  I have an updated patch,
+and will send it out (although it is not yet perfect).
 
-Guenter
+The Linux gABI extension draft is here: https://github.com/hjl-tools/linux-abi/w
+iki/linux-abi-draft.pdf.
+
+Yu-cheng
+
