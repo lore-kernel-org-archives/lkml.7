@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CB6C4646B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D41C4646B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E340F214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0419821726
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 03:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561520738;
-	bh=ywdTsVc0ESYBwzx2K3xpyuKQdGrdsXhzRoC1Z7wkvAg=;
+	s=default; t=1561520745;
+	bh=C3zi08s20JmYLL3On5dYiTzg8ooHLpcru/M2e+YwZEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gV6+bEHcQbDl9Z39wmgX88WZ+cpG4/9EUvaYJkQ5TwL1fIjMmFbl31otvYAD/vX7W
-	 gf6VYGXToQKGIKVqM17d8K4MHFOBaQff8MYYUcXVhpSmLynW0cxk8OxQPJvHhFEto3
-	 cNG02IircLvqR8rA1bCXe0L3UoKjiOKty/IvgcEo=
+	b=tqR68C46CL4q+EgPVSt7W/wTKc+3FImcpp5w7x2IzToY2saUVtYGHGmz34/oc/QBQ
+	 1kP7H+FS+SxscA+JSW+z23F2kLOdfOXSR6q7z3Ap8QCYAKxhxSqwaZCars+ZDYZIhS
+	 zNcCnn8BP8e1N7ulBYfv9abauVvvh3Nuj1c0tOQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfFZDpf (ORCPT
+        id S1727368AbfFZDpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 23:45:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57220 "EHLO mail.kernel.org"
+        Tue, 25 Jun 2019 23:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727787AbfFZDpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 23:45:32 -0400
+        id S1727797AbfFZDpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Jun 2019 23:45:40 -0400
 Received: from sasha-vm.mshome.net (mobile-107-77-172-74.mobile.att.net [107.77.172.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6DBC20659;
-        Wed, 26 Jun 2019 03:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D125205ED;
+        Wed, 26 Jun 2019 03:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561520731;
-        bh=ywdTsVc0ESYBwzx2K3xpyuKQdGrdsXhzRoC1Z7wkvAg=;
+        s=default; t=1561520739;
+        bh=C3zi08s20JmYLL3On5dYiTzg8ooHLpcru/M2e+YwZEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IPeJzyhWzkfybDJ3jowBtb6kf6doGoHYyi+UUIFyOtNPrOqzGDwwu+D4L0lhl2arQ
-         5a4qEG8SXMUARd6zslzftxLNLIUn6/fZdpW2W+0o44JKIn6UH7sFlEdir3IJHuSKkg
-         N+CS1ow0SOasSKCN5VQWATpMo+wbN00aiY4/YDMc=
+        b=GMedVp4ISYzweJ6cOyjiNJJQsCXv5D8RmUhjqhAOGnh1egn/2DgNuK7/OtujNG5LO
+         Eyxkm1U6/EiravzdcUkY4BDbvnI2w8cCrZn31tf9V75VszvbXImHtO5SM9EyhwJ6uZ
+         ryY8/OXOXZO/MyhePRveY8c1ZFDEBPbLfEYU4Avk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcus Cooper <codekipper@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 10/21] ASoC: sun4i-i2s: Fix sun8i tx channel offset mask
-Date:   Tue, 25 Jun 2019 23:44:55 -0400
-Message-Id: <20190626034506.24125-10-sashal@kernel.org>
+Cc:     Young Xiao <92siuyang@gmail.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 12/21] usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
+Date:   Tue, 25 Jun 2019 23:44:57 -0400
+Message-Id: <20190626034506.24125-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190626034506.24125-1-sashal@kernel.org>
 References: <20190626034506.24125-1-sashal@kernel.org>
@@ -60,35 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Cooper <codekipper@gmail.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit 7e46169a5f35762f335898a75d1b8a242f2ae0f5 ]
+[ Upstream commit 62fd0e0a24abeebe2c19fce49dd5716d9b62042d ]
 
-Although not causing any noticeable issues, the mask for the
-channel offset is covering too many bits.
+There is no deallocation of fusb300->ep[i] elements, allocated at
+fusb300_probe.
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The patch adds deallocation of fusb300->ep array elements.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/fusb300_udc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index b4af5ce78ecb..a10913f8293f 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -110,7 +110,7 @@
+diff --git a/drivers/usb/gadget/udc/fusb300_udc.c b/drivers/usb/gadget/udc/fusb300_udc.c
+index e0c1b0099265..089f39de6897 100644
+--- a/drivers/usb/gadget/udc/fusb300_udc.c
++++ b/drivers/usb/gadget/udc/fusb300_udc.c
+@@ -1345,12 +1345,15 @@ static const struct usb_gadget_ops fusb300_gadget_ops = {
+ static int fusb300_remove(struct platform_device *pdev)
+ {
+ 	struct fusb300 *fusb300 = platform_get_drvdata(pdev);
++	int i;
  
- #define SUN8I_I2S_TX_CHAN_MAP_REG	0x44
- #define SUN8I_I2S_TX_CHAN_SEL_REG	0x34
--#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 11)
-+#define SUN8I_I2S_TX_CHAN_OFFSET_MASK		GENMASK(13, 12)
- #define SUN8I_I2S_TX_CHAN_OFFSET(offset)	(offset << 12)
- #define SUN8I_I2S_TX_CHAN_EN_MASK		GENMASK(11, 4)
- #define SUN8I_I2S_TX_CHAN_EN(num_chan)		(((1 << num_chan) - 1) << 4)
+ 	usb_del_gadget_udc(&fusb300->gadget);
+ 	iounmap(fusb300->reg);
+ 	free_irq(platform_get_irq(pdev, 0), fusb300);
+ 
+ 	fusb300_free_request(&fusb300->ep[0]->ep, fusb300->ep0_req);
++	for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
++		kfree(fusb300->ep[i]);
+ 	kfree(fusb300);
+ 
+ 	return 0;
+@@ -1494,6 +1497,8 @@ static int fusb300_probe(struct platform_device *pdev)
+ 		if (fusb300->ep0_req)
+ 			fusb300_free_request(&fusb300->ep[0]->ep,
+ 				fusb300->ep0_req);
++		for (i = 0; i < FUSB300_MAX_NUM_EP; i++)
++			kfree(fusb300->ep[i]);
+ 		kfree(fusb300);
+ 	}
+ 	if (reg)
 -- 
 2.20.1
 
