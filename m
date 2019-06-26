@@ -2,115 +2,112 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AE4C48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3045EC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CC3205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561560535;
-	bh=Q0fkJnt5Wk/wU807scvnJI4s4UA4UjwWKB0s0wc3Xm0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ulyR6uRx1W8hQpwjitWwWtbwicpCsaJyLMIlSZnmMPjoUta3qQdAK8oXloBGIHtjn
-	 T2hd3fU5nAkiYLdMCtXkdG0e3cKje3407CKDfnvtTwPDlbJweH+RSSN1Cfbpdf5FwX
-	 za6/BkYXkTIBnfrg4QM7AYLY/uSpmjX3z5kjH0yQ=
+	by mail.kernel.org (Postfix) with ESMTP id 06080205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s6HgvJ8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbfFZOsx (ORCPT
+        id S1728290AbfFZOtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:48:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728520AbfFZOsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:48:51 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A227A205C9;
-        Wed, 26 Jun 2019 14:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561560530;
-        bh=Q0fkJnt5Wk/wU807scvnJI4s4UA4UjwWKB0s0wc3Xm0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FVyyJTKAehLp05zG/pwe9Aa0/ZSb6jmhAh7fYWRrQXRe15i7Nde+lWOqOrHb21zCS
-         I5b5iC0ODpC6vtRvyZwwNJHkjG6b2B82I8tgZ7I8FFj5w751IN+kgPwk5zvzxXWuut
-         Ad9RXJbltpQ3GJ3YyUAXj1PB4wW1p/znSA1zDdnw=
-Date:   Wed, 26 Jun 2019 15:48:45 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        robh+dt <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
- wait-for-safe logic
-Message-ID: <20190626144844.key3n6ueb6skgkp4@willie-the-truck>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-4-vivek.gautam@codeaurora.org>
- <20190614040520.GK22737@tuxbook-pro>
- <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
- <20190618175218.GH4270@fuggles.cambridge.arm.com>
- <CAFp+6iEynLa=Jt_-oAwt4zmzxzhEXtWNCmghz6rFzcpQVGwrMg@mail.gmail.com>
- <20190624170348.7dncuc5qezqeyvq2@willie-the-truck>
- <CAFp+6iF0TQtAy2JFXk6zjX5GpjeLFesqPZV6ezbDXmc85yvMEA@mail.gmail.com>
- <20190625133924.fqq3y7p3i3fqem5p@willie-the-truck>
- <CAFp+6iH-KzX7x1j8AAuKJcOP6v=fyP-yLvaeeE_Ly3oueu_ngg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iH-KzX7x1j8AAuKJcOP6v=fyP-yLvaeeE_Ly3oueu_ngg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Wed, 26 Jun 2019 10:49:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55331 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728261AbfFZOr3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 10:47:29 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so2400260wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=8oLgj+UEWnuH/nXzCuT6g/iWSmzVogRXnWTAEILdbE8=;
+        b=s6HgvJ8pz1mFKEtN0S8Kx9pkvKR2hjJZQySOrYD5K1+chU0fVGduV7GZMyF3sPX+XP
+         645jKICzuF/sRqjhGHXYBtile4u0wJRoXk0iR/C/BjVuJ9Yos7KEMttePh5RkgUEUFZY
+         BFWYme23UHytrWrv8RdBL+HhqsGiG7Dg03CXJ7PlKyPswGdl5CQph53Ws44hO8ARRW6U
+         6p9rWDsKFXwbHlMiTUnBK0wuZ0MLTHmPNuup5VGhaMWNqd2BCaTsMVA6NnM9zBumwNTY
+         /N1p+SPM916dXvzl/I8xgVmELNbCNs3Ip8Plv4gBgFS1poaeG7CoOsIQjoWGZaHiADUQ
+         t4kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=8oLgj+UEWnuH/nXzCuT6g/iWSmzVogRXnWTAEILdbE8=;
+        b=QtGvEmnBmgDzYyDmJcEn3auGEcS+5v2UEQEXBwL/BykK64vJhR8whbc/5be87qlL+U
+         48+U7XtBkHsT6A49XJNlR0cQA0Iwod5fkBP/ri3yN/OD9dPMgcGVZdtug7eOc160nknO
+         bIpMQr3rHa6w0L/2e58IUbRsYXUG8IFn1Xscl7Puy3l5JEfghDC0H6E3/tUfYboW0yVv
+         RQHrBmojR9TzjdpIZGD4ppRqI8HCTzOu6NNcHq8e5burE5Hn0i6bfvmU7CVG6uR5L1Pz
+         AKevWa7DxVfx4TUPkgD5s3SWwQioLBdLdH1d+5EiYW4H2aPhBJikRCQ7jxSq0rfOOeln
+         GERw==
+X-Gm-Message-State: APjAAAV8rZKXYkPytsJ339b5q0FchR70VyRddftLEwkIq302LI85Z+dW
+        u2r6lElsI89k10rjUv4gcuDxAz0BEpQ=
+X-Google-Smtp-Source: APXvYqykht4NS8VD1sBSEX2C9Z71CZayXXzjnTsjQySD6gnTuNYoC0X1KZLlRi3p0hL5bCwStcKRLw==
+X-Received: by 2002:a1c:cb4d:: with SMTP id b74mr3154779wmg.43.1561560446690;
+        Wed, 26 Jun 2019 07:47:26 -0700 (PDT)
+Received: from mai.imgcgcw.net (26.92.130.77.rev.sfr.net. [77.130.92.26])
+        by smtp.gmail.com with ESMTPSA id h84sm2718557wmf.43.2019.06.26.07.47.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 07:47:26 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT)
+Subject: [PATCH 09/25] clocksource/drivers/tegra: Release all IRQ's on request_irq() error
+Date:   Wed, 26 Jun 2019 16:46:35 +0200
+Message-Id: <20190626144651.16742-9-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190626144651.16742-1-daniel.lezcano@linaro.org>
+References: <adba7d03-e9bd-9542-60bc-0f2d4874a40e@linaro.org>
+ <20190626144651.16742-1-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 12:03:02PM +0530, Vivek Gautam wrote:
-> On Tue, Jun 25, 2019 at 7:09 PM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Tue, Jun 25, 2019 at 12:34:56PM +0530, Vivek Gautam wrote:
-> > > On Mon, Jun 24, 2019 at 10:33 PM Will Deacon <will@kernel.org> wrote:
-> > > > Instead, I think this needs to be part of a separate file that is maintained
-> > > > by you, which follows on from the work that Krishna is doing for nvidia
-> > > > built on top of Robin's prototype patches:
-> > > >
-> > > > http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
-> > >
-> > > Looking at this branch quickly, it seem there can be separate implementation
-> > > level configuration file that can be added.
-> > > But will this also handle separate page table ops when required in future.
-> >
-> > Nothing's set in stone, but having the implementation-specific code
-> > constrain the page-table format (especially wrt quirks) sounds reasonable to
-> > me. I'm currently waiting for Krishna to respin the nvidia changes [1] on
-> > top of this so that we can see how well the abstractions are holding up.
-> 
-> Sure. Would you want me to try Robin's branch and take out the qualcomm
-> related stuff to its own implementation? Or, would you like me to respin this
-> series so that you can take it in to enable SDM845 boards such as, MTP
-> and dragonboard to have a sane build - debian, etc. so people benefit
-> out of it.
+From: Dmitry Osipenko <digetx@gmail.com>
 
-I can't take this series without Acks on the firmware calling changes, and I
-plan to send my 5.3 patches to Joerg at the end of the week so they get some
-time in -next. In which case, I think it may be worth you having a play with
-the branch above so we can get a better idea of any additional smmu_impl hooks
-you may need.
+Release all requested IRQ's on the request error to properly clean up
+allocated resources.
 
-> Qualcomm stuff is lying in qcom-smmu and arm-smmu and may take some
-> time to stub out the implementation related details.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/clocksource/timer-tegra20.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Not sure I follow you here. Are you talking about qcom_iommu.c?
+diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
+index 276b55f6ada0..e2ef6b8211a5 100644
+--- a/drivers/clocksource/timer-tegra20.c
++++ b/drivers/clocksource/timer-tegra20.c
+@@ -284,7 +284,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20)
+ 			pr_err("%s: can't map IRQ for CPU%d\n",
+ 			       __func__, cpu);
+ 			ret = -EINVAL;
+-			goto out;
++			goto out_irq;
+ 		}
+ 
+ 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
+@@ -294,7 +294,8 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20)
+ 		if (ret) {
+ 			pr_err("%s: cannot setup irq %d for CPU%d\n",
+ 				__func__, cpu_to->clkevt.irq, cpu);
+-			ret = -EINVAL;
++			irq_dispose_mapping(cpu_to->clkevt.irq);
++			cpu_to->clkevt.irq = 0;
+ 			goto out_irq;
+ 		}
+ 	}
+-- 
+2.17.1
 
-Will
