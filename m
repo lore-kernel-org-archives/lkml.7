@@ -2,100 +2,65 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C91C48BD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44535C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A56262086D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561543402;
-	bh=FPvFLLA8MN96j+d5H7n9B6cwEZmrNu7OG+BAlemz/vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aK6RSVsqiuV+lx5HQJPbHzwo7M95b7JfMUqFwBsfGToYT+KkCGmyWbADakZ1nA0ha
-	 3F/tW+KMTrXEktO+sXKbPh1GXoCwDTetUcUQrkQY7TuwNR+Sj0rqgttxqlI5M6bfpW
-	 dnV3KzU4sNRsVD/zoOH2gXA+pP+6yOTKO+ySsXrw=
+	by mail.kernel.org (Postfix) with ESMTP id 26C21205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 10:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfFZKDV (ORCPT
+        id S1727078AbfFZKD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 06:03:21 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43726 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfFZKDV (ORCPT
+        Wed, 26 Jun 2019 06:03:56 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:38880 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725379AbfFZKD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 06:03:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FPvFLLA8MN96j+d5H7n9B6cwEZmrNu7OG+BAlemz/vk=; b=MICod8o9GgkWFisGDFFD8cz9L
-        tg0CH2i4aL9bBCTAO6fHGqe+SpksMZsoh1GF02yXjWoTHuumfxdBbJcJyTYuT4B2oH81jNBVrCb6C
-        EkdS2AHhEl1wPPmxFBxwrjKNA0EyxyTtFzSztjFHXtQ4/MpHpRIgCGHswRt7vuSDwUkek=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hg4lp-0007jO-9L; Wed, 26 Jun 2019 10:03:17 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 323A3440046; Wed, 26 Jun 2019 11:03:16 +0100 (BST)
-Date:   Wed, 26 Jun 2019 11:03:15 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.1 07/51] ASoC: soc-dpm: fixup DAI active
- unbalance
-Message-ID: <20190626100315.GS5316@sirena.org.uk>
-References: <20190626034117.23247-1-sashal@kernel.org>
- <20190626034117.23247-7-sashal@kernel.org>
+        Wed, 26 Jun 2019 06:03:56 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 5AF2D634C7F;
+        Wed, 26 Jun 2019 13:03:47 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1hg4mI-0000QF-ND; Wed, 26 Jun 2019 13:03:46 +0300
+Date:   Wed, 26 Jun 2019 13:03:46 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Eugen.Hristev@microchip.com
+Cc:     hverkuil@xs4all.nl, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] media: atmel: atmel-isc: fix and cleanup
+ potential bugs
+Message-ID: <20190626100346.4spzeuhkgkrscmdx@valkosipuli.retiisi.org.uk>
+References: <1560340575-21021-1-git-send-email-eugen.hristev@microchip.com>
+ <1560340575-21021-3-git-send-email-eugen.hristev@microchip.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cAMdxM7kFS4+ma4H"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190626034117.23247-7-sashal@kernel.org>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1560340575-21021-3-git-send-email-eugen.hristev@microchip.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 12, 2019 at 12:00:35PM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Fixed issues that can lead to potential bugs.
+> Cleanup order in the driver
+> Taking into consideration std control creation can fail
+> mutex_destroy call
+> changing controller_formats with const specifier
+> some cosmetic cleanups
+> 
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 
---cAMdxM7kFS4+ma4H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-On Tue, Jun 25, 2019 at 11:40:23PM -0400, Sasha Levin wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->=20
-> [ Upstream commit f7c4842abfa1a219554a3ffd8c317e8fdd979bec ]
->=20
-> snd_soc_dai_link_event() is updating snd_soc_dai :: active,
-> but it is unbalance.
-> It counts up if it has startup callback.
-
-Are you *sure* this doesn't have dependencies?
-
---cAMdxM7kFS4+ma4H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0TQuAACgkQJNaLcl1U
-h9AGaQf/ca5ttDVtH3yylwRgoWhhXfiZhmDr7wPKNubOOkK95zHodT6b1dJI9/pp
-AngHuYrXElP7chx17dGANkzHif+y8u2YGSJ9TEWkwnE7OnyQc0XGIw0ItQpmCCjA
-SsAW/Q0QVuZfDTaEePsu85j0u3bX4prb3TlDudopWqRajpyOYG/PSKSwrHTlf7aa
-dj+5j16e5Lp/J0VuLd+scZg5drtudGF6VIEAXlwXmZmrnZjJxABVCo7/qfqpHY49
-jJurqN8wxytqeAk9LkFDywdl+K57IYa8LOqiMSUodgjt4CxxzTn7P3+uFfq2Pgyk
-INd476XUzgj/QRKDSP/wpjIL7eZfYw==
-=awWS
------END PGP SIGNATURE-----
-
---cAMdxM7kFS4+ma4H--
+-- 
+Sakari Ailus
