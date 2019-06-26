@@ -2,130 +2,108 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85114C48BD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1E6C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF9920883
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28CB2133F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 01:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xwx6E+6q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/zWkhFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfFZBfl (ORCPT
+        id S1726636AbfFZBfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Jun 2019 21:35:41 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36396 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfFZBfi (ORCPT
+        Tue, 25 Jun 2019 21:35:11 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43032 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726544AbfFZBfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Jun 2019 21:35:38 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p15so677419qtl.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Jun 2019 18:35:38 -0700 (PDT)
+        Tue, 25 Jun 2019 21:35:05 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j29so345356lfk.10;
+        Tue, 25 Jun 2019 18:35:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=0LRAWyCoMm6qSJUgjbP8auCw69o7m+ZLWJtl7bdpb+w=;
-        b=Xwx6E+6qHDSLrgkTZG71QymmraL414RSn1b4jzWwNp/EQoGWChZXZCJ56w78XccijD
-         1E+OOkSvvoDBM1ir+vgbxhq1ETv2ASxey+QcHAk0RffvDLUpCIiMwzBDcvl8aTWrspM9
-         XsG2jdiayltXMWwNwSfszrKu3xxh8g/1rb9sEJ658YI+L7cYh87PrcXSNwTT8FBCTQh0
-         jSpvEBID8+gwLbrQXSN0vNMY/mZg9v5On4L2zmP6Dojuz9QVukaYW9nzhWxNcmYSyX9u
-         KMQdnGm0JDSZRi1Aq5eGZ92rrFhJldEE9SjhMRf9na6KrjyWi0nw0bZg+A6eNEhBrwkL
-         U09A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dakuSXC8S+4d3ZwgTUxyU+C7IUHzNyF1kauoHOg6pX0=;
+        b=J/zWkhFq0bg3fNHcialc5pkUp7773LPu/FpnnieGQB3C/hU0HezN98HbZojxjS38fd
+         33LvhjnWMFRFOxlEITiia62qce/x96BVnzu+9XYNVOok+jdFuyyIQxE3kwP5sXRtpmH2
+         7c0k0yZZ1RN52w/zt9CAGZ/y1ZeHh5q8YDSub43ZKFDHEwZueFgHAfcbKrQoEFiev9GY
+         +lVJeVt9ni/lZLBaBQ6ipJe0WioEX/xbagpPQ8VaToKlYqEcmOwd071K5jVxuxVuOFzz
+         vgRgKobhmxwQXKsHMv+itlWnr7auFiHT142Z0ALxqxDb49f8YIhTcOHqInUZWFPh1kfN
+         6gTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=0LRAWyCoMm6qSJUgjbP8auCw69o7m+ZLWJtl7bdpb+w=;
-        b=o/e25BRC6FL1Obji4GYkqmfaPfpWktRWevuGwL/T49mw7FYp8B+gU+FDUN5meKXJUG
-         PCvndAbW9wbYMEQ8paD8LTDFG/jtR1E/uhqJy9Dw+qUhtVl+gaFhkc0iEV6dhTZ/ii+a
-         5aosRHtNlcenClZnGJhiqptoeb/ENi/gqUBB54NvYPxMIp4tR5N4jcG+kIR2eKsdj7uP
-         1pD5MwUI67/Z0JnKuKKTnKGC2mD/FD22tVM9pfgspV8q5EtkFNc/WBH77XC3QFods7PU
-         CofUH/kjSoa1sqqo7+7D4OTWzz+BoasWov4aFzfUd02CnHYc70lnsXUhIvp58Zp0M/6D
-         oSrg==
-X-Gm-Message-State: APjAAAVdbhV1ywwsRxjR0fJo4w+v5aVc5An3fa3PBpDN473yt8iS1n8q
-        cP2QEiXQYTAoMaaDrJLeMo0=
-X-Google-Smtp-Source: APXvYqxpXDznfBJclCVx7xXV0zdyxRpLK69Oa2CuicRUspRtYvD+5giOq5ZovANyg2wCLBplsqvwMQ==
-X-Received: by 2002:ac8:17a5:: with SMTP id o34mr1385680qtj.232.1561512937655;
-        Tue, 25 Jun 2019 18:35:37 -0700 (PDT)
-Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id 123sm7343770qkh.113.2019.06.25.18.35.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 25 Jun 2019 18:35:36 -0700 (PDT)
-Date:   Tue, 25 Jun 2019 22:35:30 -0300
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Simon Ser <contact@emersion.fr>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 0/5] drm/vkms: Introduces writeback support
-Message-ID: <cover.1561491964.git.rodrigosiqueiramelo@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dakuSXC8S+4d3ZwgTUxyU+C7IUHzNyF1kauoHOg6pX0=;
+        b=E3b5cB3AeCt/MmYdnh2Rm8ucixmaoXN6VpQaFezrzn1lswqKFYrYI+kP+sifqqiXTm
+         2y98Uql8Nx3dAbbsw1D7I/F4tVN6Q2ph8HyTf88LesBbOyy1/X6ngDu+uhvFnxAyBWGy
+         uFlb7ZOHMk/y0uhhlbNWdqQ8vpx8tz8vlwA4rxpizlLO2XzsNdDXsLsxoVCO8hzENnH1
+         w86vLAD3Xw/bMuShFF66STrIkgL8tZXKNqRybEDgQuv2ZWKiDl3Mz1N4uwVNVEkR4wBL
+         Eh6ey3/eKTqMpSNZNeIF2Ap9gufRZBsWC0rhYTmGfgpnhLBkbR1UXobtCspXcNPx+8qn
+         +NTQ==
+X-Gm-Message-State: APjAAAV6BClo6j6EC8/ioIcC49FIbgDxqrAoYJpBH175EQ/zxYuV+dkn
+        hX3m8JQDlcVx66WtKuLc9aE=
+X-Google-Smtp-Source: APXvYqwTA4+vjBE6dTRR+9PeAJurgBpFuRGPMd2Huei0KYA06uoksUuaOEXZRtyoYUJmWTBPFovrxw==
+X-Received: by 2002:ac2:5595:: with SMTP id v21mr885509lfg.54.1561512902954;
+        Tue, 25 Jun 2019 18:35:02 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id 199sm2549581ljf.44.2019.06.25.18.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Jun 2019 18:35:02 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 06/17] PM / devfreq: tegra30: Tuneup boosting thresholds
+Date:   Wed, 26 Jun 2019 04:32:40 +0300
+Message-Id: <20190626013252.30470-7-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190626013252.30470-1-digetx@gmail.com>
+References: <20190626013252.30470-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the V3 version of a series that introduces the writeback support
-to vkms. As a result of the previous review, this patchset can be seen
-in three parts: make vkms able to support multiple connector, pre-work
-for vkms, and the vkms implementation. Follows the details:
+Now that average-sustain coefficient / multiplier is gone, it won't hurt
+to re-tune the boosting thresholds to get a bit harder boosting for MCALL
+clients, resulting in a more reactive governing in a case of multimedia
+applications usage like 3d / video.
 
-* First part: The first patch of this series is a fix that enables vkms to
-accept new connectors, such as writeback connector.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/devfreq/tegra30-devfreq.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-* Second part: The second part of this patchset starts on patch 02 and
-finish on patch 04; basically it is a pre-work that aims to make vkms
-composer operations a little bit more generic. These patches update the
-CRC files and function to make it work as a composer; it also
-centralizes the vkms framebuffer operations. Additionally, these changes
-enable the composer to use the writeback framebuffer instead of creating
-a copy.
-
-* Third part: The final patch enables the support for writeback in vkms.
-
-With this patchset, vkms can successfully pass all the kms_writeback
-tests from IGT.
-
-Note: Most of the changes in the V3 was suggested by Daniel Vetter as
-can be seen at the link
-https://patchwork.freedesktop.org/patch/311844/?series=61738&rev=2
-
-Note: This patchset depends on Daniel's rework of CRC, see it at
-https://patchwork.freedesktop.org/series/61737/
-
-Rodrigo Siqueira (5):
-  drm/vkms: Avoid assigning 0 for possible_crtc
-  drm/vkms: Rename vkms_crc.c into vkms_composer.c
-  drm/vkms: Decouple crc operations from composer
-  drm/vkms: Compute CRC without change input data
-  drm/vkms: Add support for writeback
-
- drivers/gpu/drm/vkms/Makefile                 |   9 +-
- .../drm/vkms/{vkms_crc.c => vkms_composer.c}  | 174 ++++++++++--------
- drivers/gpu/drm/vkms/vkms_crtc.c              |  30 +--
- drivers/gpu/drm/vkms/vkms_drv.c               |  10 +-
- drivers/gpu/drm/vkms/vkms_drv.h               |  40 ++--
- drivers/gpu/drm/vkms/vkms_output.c            |  16 +-
- drivers/gpu/drm/vkms/vkms_plane.c             |  40 ++--
- drivers/gpu/drm/vkms/vkms_writeback.c         | 141 ++++++++++++++
- 8 files changed, 331 insertions(+), 129 deletions(-)
- rename drivers/gpu/drm/vkms/{vkms_crc.c => vkms_composer.c} (51%)
- create mode 100644 drivers/gpu/drm/vkms/vkms_writeback.c
-
+diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+index 30c5b3531d6f..9b172e2acd40 100644
+--- a/drivers/devfreq/tegra30-devfreq.c
++++ b/drivers/devfreq/tegra30-devfreq.c
+@@ -111,8 +111,8 @@ static struct tegra_devfreq_device_config actmon_device_configs[] = {
+ 		.irq_mask = 1 << 26,
+ 		.boost_up_coeff = 200,
+ 		.boost_down_coeff = 50,
+-		.boost_up_threshold = 60,
+-		.boost_down_threshold = 40,
++		.boost_up_threshold = 50,
++		.boost_down_threshold = 25,
+ 	},
+ 	{
+ 		/* MCCPU: memory accesses from the CPUs */
 -- 
-2.21.0
+2.22.0
 
-
--- 
-Rodrigo Siqueira
-https://siqueira.tech
