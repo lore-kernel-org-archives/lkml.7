@@ -2,120 +2,104 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FC8C48BD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A14C48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E454C208E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53224208E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 18:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561572409;
+	bh=2AI6vfXRA9shlQqJsOONaBOLJB2mY6s1tLqu+00O3F0=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=nX3fNLZFRhb518HM1Smql9rrKzncvt32MCG2nQmojq13+dk2c+vTbzLRk/CA6mbKH
+	 93B7yd3XA8ETYc0KerhZSPn/Id5zTqV4iFmwPWXMkJE7jooO6Si5ZYQ5tu7JkarhG6
+	 b494tJGjLvn2Z9veeZ+t7v8rQcNUMdixC/LnJTSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfFZSFy (ORCPT
+        id S1726519AbfFZSGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 14:05:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56782 "EHLO mx1.redhat.com"
+        Wed, 26 Jun 2019 14:06:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfFZSFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 14:05:53 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726359AbfFZSGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 14:06:47 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C87C8E224;
-        Wed, 26 Jun 2019 18:05:53 +0000 (UTC)
-Received: from x1.home (ovpn-117-35.phx2.redhat.com [10.3.117.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 512775D71B;
-        Wed, 26 Jun 2019 18:05:52 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 12:05:51 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Kirti Wankhede <kwankhede@nvidia.com>
-Cc:     <cohuck@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mdev: Send uevents around parent device registration
-Message-ID: <20190626120551.788fa5ed@x1.home>
-In-Reply-To: <1ea5c171-cd42-1c10-966e-1b82a27351d9@nvidia.com>
-References: <156155924767.11505.11457229921502145577.stgit@gimli.home>
-        <1ea5c171-cd42-1c10-966e-1b82a27351d9@nvidia.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CC94208E3;
+        Wed, 26 Jun 2019 18:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561572406;
+        bh=2AI6vfXRA9shlQqJsOONaBOLJB2mY6s1tLqu+00O3F0=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=Spp9kx2SEGbyBvjRg7Rp8spfvABoWi0hW76zUYOM3FD6kqNq++B2bm2kKQRidP1z0
+         qbLDeSCNP/lRY/2juCiLRkpXT4YSb6yqvqCgP6zTHA4HD4gWppy9wOI3qThityAkRa
+         01Dxm3PzcYD9reVtw4Q1xhoPmvwMf05PC91C/YSU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 26 Jun 2019 18:05:53 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2ceca0ca-8f8e-78a8-df39-67a763f28f30@baylibre.com>
+References: <20190620150013.13462-1-narmstrong@baylibre.com> <20190620150013.13462-6-narmstrong@baylibre.com> <20190625202702.B9A9B208CB@mail.kernel.org> <2ceca0ca-8f8e-78a8-df39-67a763f28f30@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>, jbrunet@baylibre.com,
+        khilman@baylibre.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC/RFT 05/14] soc: amlogic: meson-clk-measure: protect measure with a mutex
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com
+User-Agent: alot/0.8.1
+Date:   Wed, 26 Jun 2019 11:06:45 -0700
+Message-Id: <20190626180646.9CC94208E3@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 23:23:00 +0530
-Kirti Wankhede <kwankhede@nvidia.com> wrote:
+Quoting Neil Armstrong (2019-06-26 01:24:47)
+> On 25/06/2019 22:27, Stephen Boyd wrote:
+> > Quoting Neil Armstrong (2019-06-20 08:00:04)
+> >> In order to protect clock measuring when multiple process asks for
+> >> a mesure, protect the main measure function with mutexes.
 
-> On 6/26/2019 7:57 PM, Alex Williamson wrote:
-> > This allows udev to trigger rules when a parent device is registered
-> > or unregistered from mdev.
-> > 
-> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > ---
-> >  drivers/vfio/mdev/mdev_core.c |   10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> > index ae23151442cb..ecec2a3b13cb 100644
-> > --- a/drivers/vfio/mdev/mdev_core.c
-> > +++ b/drivers/vfio/mdev/mdev_core.c
-> > @@ -146,6 +146,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >  {
-> >  	int ret;
-> >  	struct mdev_parent *parent;
-> > +	char *env_string = "MDEV_STATE=registered";
-> > +	char *envp[] = { env_string, NULL };
-> >  
-> >  	/* check for mandatory ops */
-> >  	if (!ops || !ops->create || !ops->remove || !ops->supported_type_groups)
-> > @@ -196,7 +198,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
-> >  	list_add(&parent->next, &parent_list);
-> >  	mutex_unlock(&parent_list_lock);
-> >  
-> > -	dev_info(dev, "MDEV: Registered\n");
-> > +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-> > +  
-> 
-> Its good to have udev event, but don't remove debug print from dmesg.
-> Same for unregister.
+s/mesure/measure/
 
-Who consumes these?  They seem noisy.  Thanks,
+> >>
+> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> ---
+> >>  drivers/soc/amlogic/meson-clk-measure.c | 12 +++++++++++-
+> >>  1 file changed, 11 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/aml=
+ogic/meson-clk-measure.c
+> >> index 19d4cbc93a17..c470e24f1dfa 100644
+> >> --- a/drivers/soc/amlogic/meson-clk-measure.c
+> >> +++ b/drivers/soc/amlogic/meson-clk-measure.c
+> >> @@ -11,6 +11,8 @@
+> >>  #include <linux/debugfs.h>
+> >>  #include <linux/regmap.h>
+> >> =20
+> >> +static DEFINE_MUTEX(measure_lock);
+> >> +
+> >>  #define MSR_CLK_DUTY           0x0
+> >>  #define MSR_CLK_REG0           0x4
+> >>  #define MSR_CLK_REG1           0x8
+> >> @@ -360,6 +362,10 @@ static int meson_measure_id(struct meson_msr_id *=
+clk_msr_id,
+> >>         unsigned int val;
+> >>         int ret;
+> >> =20
+> >> +       ret =3D mutex_lock_interruptible(&measure_lock);
+> >=20
+> > Why interruptible?
+>=20
+>=20
+> I supposed _interruptible was needed since it's called from userspace via
+> debugfs, locking indefinitely isn't wanted, no ? or maybe I missed someth=
+ing...
+>=20
 
-Alex
-
-> >  	return 0;
-> >  
-> >  add_dev_err:
-> > @@ -220,6 +223,8 @@ EXPORT_SYMBOL(mdev_register_device);
-> >  void mdev_unregister_device(struct device *dev)
-> >  {
-> >  	struct mdev_parent *parent;
-> > +	char *env_string = "MDEV_STATE=unregistered";
-> > +	char *envp[] = { env_string, NULL };
-> >  
-> >  	mutex_lock(&parent_list_lock);
-> >  	parent = __find_parent_device(dev);
-> > @@ -228,7 +233,6 @@ void mdev_unregister_device(struct device *dev)
-> >  		mutex_unlock(&parent_list_lock);
-> >  		return;
-> >  	}
-> > -	dev_info(dev, "MDEV: Unregistering\n");
-> >  
-> >  	list_del(&parent->next);
-> >  	mutex_unlock(&parent_list_lock);
-> > @@ -243,6 +247,8 @@ void mdev_unregister_device(struct device *dev)
-> >  	up_write(&parent->unreg_sem);
-> >  
-> >  	mdev_put_parent(parent);
-> > +
-> > +	kobject_uevent_env(&dev->kobj, KOBJ_CHANGE, envp);
-> >  }
-> >  EXPORT_SYMBOL(mdev_unregister_device);
-> >  
-> >   
+Sounds plausible to me.
 
