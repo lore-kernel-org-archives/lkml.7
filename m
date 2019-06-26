@@ -2,279 +2,106 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF2DC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F56AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDFD2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14C2A21670
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 14:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fuw0xmzW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Obt/qbqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfFZO07 (ORCPT
+        id S1727741AbfFZO1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 10:26:59 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35000 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbfFZO06 (ORCPT
+        Wed, 26 Jun 2019 10:27:54 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:40862 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFZO1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 10:26:58 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w20so3680620edd.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:26:56 -0700 (PDT)
+        Wed, 26 Jun 2019 10:27:54 -0400
+Received: by mail-qk1-f201.google.com with SMTP id c1so2761266qkl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 07:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=+Sws+y+jIZZelBzcnrJJ0ZS8ppZIP3b1lsfL6ibj+Hg=;
-        b=fuw0xmzWVsvYQ7NHziWwmctpltE/r/OGyFMtcvpw9sv8qBO+YV33n0Mc7j6fQqiqfB
-         Ja3+Ej4QXaQx/e8rB+5pVFuvF3r+CMYb/7JrhhKN0WLIG5LsbzDOWiR//ynyAmk2sI5H
-         KiJKUjzIa6YTwpMxeeH8JoevX2edcOhSC//Cs=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=r4ItmzOajsz46SiEckz8j+X5GgZKewiKuJJu0la+VeE=;
+        b=Obt/qbqCs/bsHGPLzrNGMBKdEVVjbJIIBymqIDhJeO1ke0sGLX/925KyG2CxVcciHo
+         5uEUeJJRXcGvNUoB2idEYM2BOk9ugowXvoP4Nu/4ySo7CByG0YDh1DQtB3Anx71bi3Zq
+         xXWdUKPuJ620a7XPTZxFzOBN8B6Qzr8Hej2qFEE90En3bjM96NRZY6es1n/HnIHtnouh
+         zcVOwNBXhEi2oklJO7kGV2MJ83wm0KHwOaPSnkztN/1M30iNj7hOpa+5eagHwfzxRvDQ
+         dFzVHe8QVvyBrwypZO7fGM3vGURartVLGtOVDhDbfTKdKpqQlTdlZtpaAN2K6EBWE+nI
+         jDeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=+Sws+y+jIZZelBzcnrJJ0ZS8ppZIP3b1lsfL6ibj+Hg=;
-        b=MHDh6/gHAxXtjzgAkwNaggxZ6IrRx0o3/duSaXfajMqzTQpeZPBG1VXZT7/rVwJ0JF
-         wVP79qfNGutbT2XTzjAiVUgHMpJiLTzluARfwcuHjDAbXdJpcxtRVKxO3pApWU2KwQ2R
-         4wem5ATMTLqh1VSJImoFqi9sSwFvKKJ87l/Ol2KqK8o9O5dr3ysClxJEdWnkBGHslhdD
-         zWYgyl8uot6kHZZvmVp6f2bKQ2FdSWUgzJzvoHo9zdhfMRvYjCo2oWflJfFvDEP0IUov
-         2oS8vG/bQN8jrvOFqQfIqgk/WUgQpWOIXneuc80/naIFzjlrXVBWzMbnl5OBoPFkBBVw
-         AZGA==
-X-Gm-Message-State: APjAAAW9UfPk5EOCBZd919OwNY30IVK9yAH43+59tQpn9c5QqgVZHLvI
-        nzh1yfR2Y14UIKa7R6xg7WLA3w==
-X-Google-Smtp-Source: APXvYqyp08IXUCIUK4l7d2Jt1o6F4hinDBwuiLEx0381nHzALAYQWsl3wQcRoV43OyBk7eOaVJjQlw==
-X-Received: by 2002:a17:906:15d0:: with SMTP id l16mr4451217ejd.234.1561559215925;
-        Wed, 26 Jun 2019 07:26:55 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id j17sm6164900ede.60.2019.06.26.07.26.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 07:26:55 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 16:26:52 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>
-Subject: Re: [Intel-gfx] [PATCH V4] drm/drm_vblank: Change EINVAL by the
- correct errno
-Message-ID: <20190626142652.GL12905@phenom.ffwll.local>
-Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>
-References: <20190619020750.swzerehjbvx6sbk2@smtp.gmail.com>
- <20190619074856.GJ12905@phenom.ffwll.local>
- <20190619075059.GK12905@phenom.ffwll.local>
- <20190626020005.vb5gmqcvkyzgcjee@smtp.gmail.com>
- <CAKMK7uEd71XTeuZeu1Km8Vq1K1VJJbgANyaZNWm4v18Qh-OqVw@mail.gmail.com>
- <CADKXj+5+QHr1a0aiVZ1cSiPbtZhUAjmqiTmoQHGyEhodbcA2WQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADKXj+5+QHr1a0aiVZ1cSiPbtZhUAjmqiTmoQHGyEhodbcA2WQ@mail.gmail.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=r4ItmzOajsz46SiEckz8j+X5GgZKewiKuJJu0la+VeE=;
+        b=fTitGEjulwtfbjm8poAc/gEUGxXuzJ+O+pcKnOsBKa6w5hnae+A60Lz4mEi0zz1HM+
+         /pGwX13dLwqrNaVTNI6eYARavPyjRh6w6R4ccJyE2hkXVMv23cXUIdrrb9gfDbANGqFD
+         sIKuCsxTDoTcLVSvgiRZu7W6qXCneS8EdyX8klfNbZmkiDdWxxqgs5EdQ7KHVsy/mFkR
+         R/ieelGJXNa8eDvC54iMK6sfPjCu3SxWPiPtrkxnl/PzanfWvHn3TwcuBvZPWQhiiH5J
+         jKyVOiMFposD2cYYjT5wj5vsLPgY291ycZlqhnUOSK+C4GhSP5wJ0eDMnpR994Vvnx6j
+         m2uQ==
+X-Gm-Message-State: APjAAAUQV2OHBqr8hx9s5cCUpJGzVOPsCW/lsB9q4E3NcFQeibh0XUYe
+        bAx259ZKUwvVtGLpKrZ+XpCKjpSYrg==
+X-Google-Smtp-Source: APXvYqzr74PSeU2y6FOA03uUNS0dApgjOP/jRZUTpufkeZ++4HYMPmrj9Hcs4rnDGQJZ9/uHvmMAxYzh+w==
+X-Received: by 2002:ac8:29c9:: with SMTP id 9mr4065369qtt.196.1561559273101;
+ Wed, 26 Jun 2019 07:27:53 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 16:20:09 +0200
+Message-Id: <20190626142014.141844-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v3 0/5] mm/kasan: Add object validation in ksize()
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 10:37:11AM -0300, Rodrigo Siqueira wrote:
-> On Wed, Jun 26, 2019 at 4:53 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Wed, Jun 26, 2019 at 4:00 AM Rodrigo Siqueira
-> > <rodrigosiqueiramelo@gmail.com> wrote:
-> > >
-> > > On 06/19, Daniel Vetter wrote:
-> > > > On Wed, Jun 19, 2019 at 09:48:56AM +0200, Daniel Vetter wrote:
-> > > > > On Tue, Jun 18, 2019 at 11:07:50PM -0300, Rodrigo Siqueira wrote:
-> > > > > > For historical reason, the function drm_wait_vblank_ioctl always return
-> > > > > > -EINVAL if something gets wrong. This scenario limits the flexibility
-> > > > > > for the userspace make detailed verification of the problem and take
-> > > > > > some action. In particular, the validation of “if (!dev->irq_enabled)”
-> > > > > > in the drm_wait_vblank_ioctl is responsible for checking if the driver
-> > > > > > support vblank or not. If the driver does not support VBlank, the
-> > > > > > function drm_wait_vblank_ioctl returns EINVAL which does not represent
-> > > > > > the real issue; this patch changes this behavior by return EOPNOTSUPP.
-> > > > > > Additionally, some operations are unsupported by this function, and
-> > > > > > returns EINVAL; this patch also changes the return value to EOPNOTSUPP
-> > > > > > in this case. Lastly, the function drm_wait_vblank_ioctl is invoked by
-> > > > > > libdrm, which is used by many compositors; because of this, it is
-> > > > > > important to check if this change breaks any compositor. In this sense,
-> > > > > > the following projects were examined:
-> > > > > >
-> > > > > > * Drm-hwcomposer
-> > > > > > * Kwin
-> > > > > > * Sway
-> > > > > > * Wlroots
-> > > > > > * Wayland-core
-> > > > > > * Weston
-> > > > > > * Xorg (67 different drivers)
-> > > > > >
-> > > > > > For each repository the verification happened in three steps:
-> > > > > >
-> > > > > > * Update the main branch
-> > > > > > * Look for any occurrence "drmWaitVBlank" with the command:
-> > > > > >   git grep -n "drmWaitVBlank"
-> > > > > > * Look in the git history of the project with the command:
-> > > > > >   git log -SdrmWaitVBlank
-> > > > > >
-> > > > > > Finally, none of the above projects validate the use of EINVAL which
-> > > > > > make safe, at least for these projects, to change the return values.
-> > > > > >
-> > > > > > Change since V3:
-> > > > > >  - Return EINVAL for _DRM_VBLANK_SIGNAL (Daniel)
-> > > > > >
-> > > > > > Change since V2:
-> > > > > >  Daniel Vetter and Chris Wilson
-> > > > > >  - Replace ENOTTY by EOPNOTSUPP
-> > > > > >  - Return EINVAL if the parameters are wrong
-> > > > > >
-> > > > >
-> > > > > Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > > > >
-> > > > > Apologies for the confusion on the last time around. btw if someone tells
-> > > > > you "r-b (or a-b) with these changes", then just apply the r-b/a-b tag
-> > > > > next time around. Otherwise people will re-review the same thing over and
-> > > > > over again.
-> > > >
-> > > > btw when resending patches it's good practice to add anyone who commented
-> > > > on it (or who commented on the igt test for the same patch and other way
-> > > > round) onto the explicit Cc: list of the patch. That way it's easier for
-> > > > them to follow the patch evolution and do a quick r-b once they're happy.
-> > >
-> > > Thanks for these valuable tips.
-> > > Do you think that is a good idea to resend this patch CC's everybody? Or
-> > > is it ok if I just apply it?
-> >
-> > Hm I thought I answered that on irc ... but just today I realized that
-> > we missed 2 ioctls. There's also drm_crtc_get_sequence_ioctl and
-> > drm_crtc_queue_sequence_ioctl which have the same dev->irq_enabled
-> > check and I think should be treated the same.
-> 
-> Hi,
-> 
-> I reexamined all the composers described in the commit message (latest
-> versions) to check if any project use and validate the return value
-> from  drm_crtc_get_sequence_ioctl and drm_crtc_queue_sequence_ioctl. I
-> noticed that mesa and xserver use them. FWIU replace EINVAL by
-> EOPNOTSUPP is harmless for mesa project, however it is not the same
-> for xserver.
-> 
-> Take a look at line 189 and 238 of hw/xfree86/drivers/modesetting/vblank.c
-> 
-> * https://gitlab.freedesktop.org/xorg/xserver/blob/master/hw/xfree86/drivers/modesetting/vblank.c#L238
-> * https://gitlab.freedesktop.org/xorg/xserver/blob/master/hw/xfree86/drivers/modesetting/vblank.c#L189
-> 
-> A little bit below the above lines, you can see a validation like that:
-> 
->   if (ret != -1 || (errno != ENOTTY && errno != EINVAL))
-> 
-> In other words, if we change the EINVAL by EOPNOTSUPP
-> drm_crtc_[get|queue]_sequence_ioctl we could break xserver. I noticed
-> that Keith Packard introduced these ioctls to the kernel and also to
-> the xserver, I will prepare a new version and CC Keith. Should I do
-> another thing to notify xserver developers?
+This version addresses formatting in kasan-checks.h and splits
+introduction of __kasan_check and returning boolean into 2 patches.
 
-If you want cc: xorg-devel or so, but I think they all moved to gitlab and
-the m-l is pretty dead. Cc'ing Keith should be enough.
+Previous version:
+http://lkml.kernel.org/r/20190626122018.171606-1-elver@google.com
 
-I looked at the code and I think we're fine. Better than fine actually,
-because if dev->irq_enabled == false then we really shouldn't use vblank
-ioctl, no matter whether the new or old version.
+Marco Elver (5):
+  mm/kasan: Introduce __kasan_check_{read,write}
+  mm/kasan: Change kasan_check_{read,write} to return boolean
+  lib/test_kasan: Add test for double-kzfree detection
+  mm/slab: Refactor common ksize KASAN logic into slab_common.c
+  mm/kasan: Add object validation in ksize()
 
-So for drivers without vblank support, all that will happen is that we
-leave ->has_queue_sequence as false and then fail a bit later on with the
-legacy ioctl. Should be all harmless.
-
-Note that the idea behind filtering out EINVAL is that if you do a
-QueueSequence on a crtc that's currently off, then it'll fail with EINVAL.
-But the ioctl still works, hence why we want to accept that. Setting
-has_queue_sequence = TRUE for the case where there's actually no vblank
-might trigger a bug somewhere later on.
--Daniel
-
-> 
-> Thanks
-> 
-> > Can you pls resend with those addressed too? Then you can also resend
-> > with the cc's all added.
-> > -Daniel
-> >
-> > >
-> > > > If you don't do that then much bigger chances your patch gets ignored.
-> > > > -Daniel
-> > > > >
-> > > > > > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/gpu/drm/drm_vblank.c | 2 +-
-> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-> > > > > > index 603ab105125d..bed233361614 100644
-> > > > > > --- a/drivers/gpu/drm/drm_vblank.c
-> > > > > > +++ b/drivers/gpu/drm/drm_vblank.c
-> > > > > > @@ -1582,7 +1582,7 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, void *data,
-> > > > > >   unsigned int flags, pipe, high_pipe;
-> > > > > >
-> > > > > >   if (!dev->irq_enabled)
-> > > > > > -         return -EINVAL;
-> > > > > > +         return -EOPNOTSUPP;
-> > > > > >
-> > > > > >   if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
-> > > > > >           return -EINVAL;
-> > > > > > --
-> > > > > > 2.21.0
-> > > > >
-> > > > > --
-> > > > > Daniel Vetter
-> > > > > Software Engineer, Intel Corporation
-> > > > > http://blog.ffwll.ch
-> > > >
-> > > > --
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > http://blog.ffwll.ch
-> > >
-> > > --
-> > > Rodrigo Siqueira
-> > > https://siqueira.tech
-> > > _______________________________________________
-> > > Intel-gfx mailing list
-> > > Intel-gfx@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/intel-gfx
-> >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> 
-> 
-> 
-> -- 
-> 
-> Rodrigo Siqueira
-> https://siqueira.tech
+ include/linux/kasan-checks.h | 47 ++++++++++++++++++++++++++++++------
+ include/linux/kasan.h        |  7 ++++--
+ include/linux/slab.h         |  1 +
+ lib/test_kasan.c             | 17 +++++++++++++
+ mm/kasan/common.c            | 14 +++++------
+ mm/kasan/generic.c           | 13 +++++-----
+ mm/kasan/kasan.h             | 10 +++++++-
+ mm/kasan/tags.c              | 12 +++++----
+ mm/slab.c                    | 28 +++++----------------
+ mm/slab_common.c             | 45 ++++++++++++++++++++++++++++++++++
+ mm/slob.c                    |  4 +--
+ mm/slub.c                    | 14 ++---------
+ 12 files changed, 147 insertions(+), 65 deletions(-)
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.22.0.410.gd8fdbe21b5-goog
+
