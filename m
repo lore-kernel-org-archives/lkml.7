@@ -2,93 +2,61 @@ Return-Path: <SRS0=hRvo=UZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E17AC48BD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EDCC48BD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A0620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B47220665
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Jun 2019 16:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfFZQ4s (ORCPT
+        id S1726468AbfFZQ7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 12:56:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58104 "EHLO mx1.redhat.com"
+        Wed, 26 Jun 2019 12:59:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:37252 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfFZQ4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 12:56:48 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 286DE83F3C;
-        Wed, 26 Jun 2019 16:56:33 +0000 (UTC)
-Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C46A119C5B;
-        Wed, 26 Jun 2019 16:56:29 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] memcg: Add kmem.slabinfo to v2 for debugging purpose
-Date:   Wed, 26 Jun 2019 12:56:14 -0400
-Message-Id: <20190626165614.18586-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 26 Jun 2019 16:56:48 +0000 (UTC)
+        id S1726042AbfFZQ7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 12:59:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B6462B;
+        Wed, 26 Jun 2019 09:59:51 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A90673F706;
+        Wed, 26 Jun 2019 09:59:49 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 17:59:47 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     jinho lim <jordan.lim@samsung.com>
+Cc:     will.deacon@arm.com, mark.rutland@arm.com,
+        anshuman.khandual@arm.com, marc.zyngier@arm.com,
+        andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        seroto7@gmail.com, ebiederm@xmission.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] arm64: rename dump_instr as dump_kernel_instr
+Message-ID: <20190626165947.GF29672@arrakis.emea.arm.com>
+References: <CGME20190626115016epcas1p455530417de86ea2e72ce1b389ae57a75@epcas1p4.samsung.com>
+ <20190626115013.13044-1-jordan.lim@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626115013.13044-1-jordan.lim@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With memory cgroup v1, there is a kmem.slabinfo file that can be
-used to view what slabs are allocated to the memory cgroup. There
-is currently no such equivalent in memory cgroup v2. This file can
-be useful for debugging purpose.
+On Wed, Jun 26, 2019 at 08:50:13PM +0900, jinho lim wrote:
+> In traps.c, only __die calls dump_instr.
+> However, this function has sub-function as __dump_instr.
+> 
+> dump_kernel_instr can replace those functions.
+> By using aarch64_insn_read, it does not have to change fs to KERNEL_DS.
+> 
+> Signed-off-by: jinho lim <jordan.lim@samsung.com>
 
-This patch adds an equivalent kmem.slabinfo to v2 with the caveat that
-this file will only show up as ".__DEBUG__.memory.kmem.slabinfo" when the
-"cgroup_debug" parameter is specified in the kernel boot command line.
-This is to avoid cluttering the cgroup v2 interface with files that
-are seldom used by end users.
+Queued for 5.3. Thanks.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- mm/memcontrol.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ba9138a4a1de..236554a23f8f 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5812,6 +5812,22 @@ static struct cftype memory_files[] = {
- 		.seq_show = memory_oom_group_show,
- 		.write = memory_oom_group_write,
- 	},
-+#ifdef CONFIG_MEMCG_KMEM
-+	{
-+		/*
-+		 * This file is for debugging purpose only and will show
-+		 * up as ".__DEBUG__.memory.kmem.slabinfo" when the
-+		 * "cgroup_debug" parameter is specified in the kernel
-+		 * boot command line.
-+		 */
-+		.name = "kmem.slabinfo",
-+		.flags = CFTYPE_NOT_ON_ROOT | CFTYPE_DEBUG,
-+		.seq_start = memcg_slab_start,
-+		.seq_next = memcg_slab_next,
-+		.seq_stop = memcg_slab_stop,
-+		.seq_show = memcg_slab_show,
-+	},
-+#endif
- 	{ }	/* terminate */
- };
- 
 -- 
-2.18.1
-
+Catalin
