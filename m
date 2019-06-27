@@ -7,131 +7,101 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7E7C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EA8C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DD9217D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF5D2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595562;
-	bh=q4B6d/SeDsYoWgAiX90BwJqT/EmG4KhQIbokNggAbb8=;
+	s=default; t=1561595569;
+	bh=O5KTkT4vc0D4rJd7tdvjPusn+yjaygrsf6kjYXsCrz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q5/Q9ez34BdKUTzVI8skFls8OZpGfJLlhM16sGbIhspvNAWxqN7pCVhbyo8pdYBZ8
-	 jhQYpepOhrB2DRMpO36b0ViuI0oWp1JGdqY0rHHYXh5tEixPUPCc5Ly0w6TEHiqFKq
-	 ijVoEavc1LCglzLgfM1X8LQQXS90GenQXUDS2uYI=
+	b=h+apWALoyEtPRe2IRuEAb54mSY6bxyZJ4gUL9jYwsAd8K27xEmGhQvr0Ftxd4w3gj
+	 QMSY6sJVBpZj74AKYklsl92bpJDTwraKa1d/ED6dmPadzQVHoRvxxWUZ2JJSngRb+p
+	 CGMDEXc+/bLg/QV7EoBSgsS5U5DyTP8c2pQFCMMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfF0Acl (ORCPT
+        id S1727589AbfF0Acr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36390 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:32:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbfF0Aci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:32:38 -0400
+        id S1727554AbfF0Aco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:32:44 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69133217F9;
-        Thu, 27 Jun 2019 00:32:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6410A2083B;
+        Thu, 27 Jun 2019 00:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595557;
-        bh=q4B6d/SeDsYoWgAiX90BwJqT/EmG4KhQIbokNggAbb8=;
+        s=default; t=1561595563;
+        bh=O5KTkT4vc0D4rJd7tdvjPusn+yjaygrsf6kjYXsCrz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BlxJ2h/+GzttZiF96SOvKymsl612hnF3pYZqGyRzxjBU9YorbXbcCp5xlFQAOsTms
-         DRGGzzGwq7n9klGeqolh5hUjxoQbQGuEjLMx6ltefGvr6ydaItcGsJ/LMvI4+iJRQZ
-         fxNtc1WbK94htzeWn9aKNdtLr6aTEbuYajNZrncY=
+        b=MdbYfOk5VkuXywKtUovW4bzHivW1QFDxz5CUohxzc1E/FOuClD1r7M6cApOOqkd0P
+         8DQTLPiRx6LPGlgm24bjsvanfIs+A54omj9EDK6qpj+30rNvGPuCK/GkjkZboT3ozL
+         eVlcpKF2LpV/qje4XultTQF/xRlnHTpelGPGqj7s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugen Hristev <eugen.hristev@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+Cc:     Fabio Estevam <festevam@gmail.com>,
         Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 39/95] can: m_can: implement errata "Needless activation of MRAF irq"
-Date:   Wed, 26 Jun 2019 20:29:24 -0400
-Message-Id: <20190627003021.19867-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 41/95] can: flexcan: Remove unneeded registration message
+Date:   Wed, 26 Jun 2019 20:29:26 -0400
+Message-Id: <20190627003021.19867-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Fabio Estevam <festevam@gmail.com>
 
-[ Upstream commit 3e82f2f34c930a2a0a9e69fdc2de2f2f1388b442 ]
+[ Upstream commit eb503004a7e563d543c9cb869907156de7efe720 ]
 
-During frame reception while the MCAN is in Error Passive state and the
-Receive Error Counter has thevalue MCAN_ECR.REC = 127, it may happen
-that MCAN_IR.MRAF is set although there was no Message RAM access
-failure. If MCAN_IR.MRAF is enabled, an interrupt to the Host CPU is
-generated.
+Currently the following message is observed when the flexcan
+driver is probed:
 
-Work around:
-The Message RAM Access Failure interrupt routine needs to check whether
+flexcan 2090000.flexcan: device registered (reg_base=(ptrval), irq=23)
 
-    MCAN_ECR.RP = '1' and MCAN_ECR.REC = '127'.
+The reason for printing 'ptrval' is explained at
+Documentation/core-api/printk-formats.rst:
 
-In this case, reset MCAN_IR.MRAF. No further action is required.
-This affects versions older than 3.2.0
+"Pointers printed without a specifier extension (i.e unadorned %p) are
+hashed to prevent leaking information about the kernel memory layout. This
+has the added benefit of providing a unique identifier. On 64-bit machines
+the first 32 bits are zeroed. The kernel will print ``(ptrval)`` until it
+gathers enough entropy."
 
-Errata explained on Sama5d2 SoC which includes this hardware block:
-http://ww1.microchip.com/downloads/en/DeviceDoc/SAMA5D2-Family-Silicon-Errata-and-Data-Sheet-Clarification-DS80000803B.pdf
-chapter 6.2
+Instead of passing %pK, which can print the correct address, simply
+remove the entire message as it is not really that useful.
 
-Reproducibility: If 2 devices with m_can are connected back to back,
-configuring different bitrate on them will lead to interrupt storm on
-the receiving side, with error "Message RAM access failure occurred".
-Another way is to have a bad hardware connection. Bad wire connection
-can lead to this issue as well.
-
-This patch fixes the issue according to provided workaround.
-
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Reviewed-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/m_can/m_can.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/net/can/flexcan.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-index 9b449400376b..deb274a19ba0 100644
---- a/drivers/net/can/m_can/m_can.c
-+++ b/drivers/net/can/m_can/m_can.c
-@@ -822,6 +822,27 @@ static int m_can_poll(struct napi_struct *napi, int quota)
- 	if (!irqstatus)
- 		goto end;
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 1c66fb2ad76b..05e5609f87f8 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -1583,9 +1583,6 @@ static int flexcan_probe(struct platform_device *pdev)
+ 			dev_dbg(&pdev->dev, "failed to setup stop-mode\n");
+ 	}
  
-+	/* Errata workaround for issue "Needless activation of MRAF irq"
-+	 * During frame reception while the MCAN is in Error Passive state
-+	 * and the Receive Error Counter has the value MCAN_ECR.REC = 127,
-+	 * it may happen that MCAN_IR.MRAF is set although there was no
-+	 * Message RAM access failure.
-+	 * If MCAN_IR.MRAF is enabled, an interrupt to the Host CPU is generated
-+	 * The Message RAM Access Failure interrupt routine needs to check
-+	 * whether MCAN_ECR.RP = ’1’ and MCAN_ECR.REC = 127.
-+	 * In this case, reset MCAN_IR.MRAF. No further action is required.
-+	 */
-+	if ((priv->version <= 31) && (irqstatus & IR_MRAF) &&
-+	    (m_can_read(priv, M_CAN_ECR) & ECR_RP)) {
-+		struct can_berr_counter bec;
-+
-+		__m_can_get_berr_counter(dev, &bec);
-+		if (bec.rxerr == 127) {
-+			m_can_write(priv, M_CAN_IR, IR_MRAF);
-+			irqstatus &= ~IR_MRAF;
-+		}
-+	}
-+
- 	psr = m_can_read(priv, M_CAN_PSR);
- 	if (irqstatus & IR_ERR_STATE)
- 		work_done += m_can_handle_state_errors(dev, psr);
+-	dev_info(&pdev->dev, "device registered (reg_base=%p, irq=%d)\n",
+-		 priv->regs, dev->irq);
+-
+ 	return 0;
+ 
+  failed_register:
 -- 
 2.20.1
 
