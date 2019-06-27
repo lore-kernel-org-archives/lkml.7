@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3061C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3660C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA89A208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5A4214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596435;
-	bh=8pwM7VI4kWmWnickxe40KpU86OVmTEuR9qmIxbEyugY=;
+	s=default; t=1561596451;
+	bh=IC2S7997n6SUWPquy8Pvcq/JtfLi0QlfBLlHtyJ5Cik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xr20e1ihhLpmxfGrT3DeuLVKODV9c5kpXeOkl9u83FlgQndN79KxpKlePzWIGjTIT
-	 9uI+DNTEkaRP+cZHunlek0uNLNmjlAUNbCJQILC+vs3nnksvSNOoYLm3p3NUQQIqkz
-	 86hUoM1V7jrMU84KQTO7oqgTrgmXiiJvY8UP3ZD4=
+	b=Sn3U3dNHDJF5JNbDbHm4yfO9R1DuzAan2wnc8FF2wKNTyGPASbPzp6XUKquJvp6t8
+	 ujYEIkUxvFEVwzHZ4L8Fefc47AuWn35buqvyJt1f91xBqaVADtDgkuG/9LBPvcLvqd
+	 26K00gjX61FL/4Th07epftOk8AvY10QVKX56ZKB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfF0ArO (ORCPT
+        id S1728957AbfF0Ara (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:47:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43554 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbfF0AjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:39:19 -0400
+        id S1726862AbfF0AjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:39:04 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A5521852;
-        Thu, 27 Jun 2019 00:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 552C0217F9;
+        Thu, 27 Jun 2019 00:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595958;
-        bh=8pwM7VI4kWmWnickxe40KpU86OVmTEuR9qmIxbEyugY=;
+        s=default; t=1561595943;
+        bh=IC2S7997n6SUWPquy8Pvcq/JtfLi0QlfBLlHtyJ5Cik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zgiFaVyiYocnaDEBu2y16o4l3w8OaQaS3nTQh+C41h7HIQ46ibBOBR7hCrB9ldlxP
-         Egek1To73RW4L4ZgcbLAfTHzSIJEHC3YXBMNidONPm0IRQmNTjb6UfmgeDLWb64LFm
-         aXhj1JtZBgQpr45cdCezBMICGNGTioO/qRKdCObs=
+        b=eodeiXpVgXjAo+mmhDfpM1RgjJ0LSFA5IMuN3xVVNytCRcVudd1jSsr4Zd7nj2rw1
+         Wz9fxOP5Y8ibzdSh5146dxkk1gk6P1TmBavcimBjoZDsU+JKPYa7OTfDTP4MupOPbh
+         jbWXrXygiHdsWgwDlSdxyurtC63Hl+yraChFB+ok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 59/60] NFS4: Only set creation opendata if O_CREAT
-Date:   Wed, 26 Jun 2019 20:36:14 -0400
-Message-Id: <20190627003616.20767-59-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 53/60] drm: return -EFAULT if copy_to_user() fails
+Date:   Wed, 26 Jun 2019 20:36:08 -0400
+Message-Id: <20190627003616.20767-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -60,74 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Coddington <bcodding@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 909105199a682cb09c500acd443d34b182846c9c ]
+[ Upstream commit 74b67efa8d7b4f90137f0ab9a80dd319da050350 ]
 
-We can end up in nfs4_opendata_alloc during task exit, in which case
-current->fs has already been cleaned up.  This leads to a crash in
-current_umask().
+The copy_from_user() function returns the number of bytes remaining
+to be copied but we want to return a negative error code.  Otherwise
+the callers treat it as a successful copy.
 
-Fix this by only setting creation opendata if we are actually doing an open
-with O_CREAT.  We can drop the check for NULL nfs4_open_createattrs, since
-O_CREAT will never be set for the recovery path.
-
-Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190618131843.GA29463@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4proc.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/drm_bufs.c  | 5 ++++-
+ drivers/gpu/drm/drm_ioc32.c | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 53cf8599a46e..1de855e0ae61 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1243,10 +1243,20 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
- 	atomic_inc(&sp->so_count);
- 	p->o_arg.open_flags = flags;
- 	p->o_arg.fmode = fmode & (FMODE_READ|FMODE_WRITE);
--	p->o_arg.umask = current_umask();
- 	p->o_arg.claim = nfs4_map_atomic_open_claim(server, claim);
- 	p->o_arg.share_access = nfs4_map_atomic_open_share(server,
- 			fmode, flags);
-+	if (flags & O_CREAT) {
-+		p->o_arg.umask = current_umask();
-+		p->o_arg.label = nfs4_label_copy(p->a_label, label);
-+		if (c->sattr != NULL && c->sattr->ia_valid != 0) {
-+			p->o_arg.u.attrs = &p->attrs;
-+			memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
+diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
+index e2f775d1c112..21bec4548092 100644
+--- a/drivers/gpu/drm/drm_bufs.c
++++ b/drivers/gpu/drm/drm_bufs.c
+@@ -1321,7 +1321,10 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
+ 				 .size = from->buf_size,
+ 				 .low_mark = from->low_mark,
+ 				 .high_mark = from->high_mark};
+-	return copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags));
 +
-+			memcpy(p->o_arg.u.verifier.data, c->verf,
-+					sizeof(p->o_arg.u.verifier.data));
-+		}
-+	}
- 	/* don't put an ACCESS op in OPEN compound if O_EXCL, because ACCESS
- 	 * will return permission denied for all bits until close */
- 	if (!(flags & O_EXCL)) {
-@@ -1270,7 +1280,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
- 	p->o_arg.server = server;
- 	p->o_arg.bitmask = nfs4_bitmask(server, label);
- 	p->o_arg.open_bitmap = &nfs4_fattr_bitmap[0];
--	p->o_arg.label = nfs4_label_copy(p->a_label, label);
- 	switch (p->o_arg.claim) {
- 	case NFS4_OPEN_CLAIM_NULL:
- 	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
-@@ -1283,13 +1292,6 @@ static struct nfs4_opendata *nfs4_opendata_alloc(struct dentry *dentry,
- 	case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
- 		p->o_arg.fh = NFS_FH(d_inode(dentry));
- 	}
--	if (c != NULL && c->sattr != NULL && c->sattr->ia_valid != 0) {
--		p->o_arg.u.attrs = &p->attrs;
--		memcpy(&p->attrs, c->sattr, sizeof(p->attrs));
--
--		memcpy(p->o_arg.u.verifier.data, c->verf,
--				sizeof(p->o_arg.u.verifier.data));
--	}
- 	p->c_arg.fh = &p->o_res.fh;
- 	p->c_arg.stateid = &p->o_res.stateid;
- 	p->c_arg.seqid = p->o_arg.seqid;
++	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
++		return -EFAULT;
++	return 0;
+ }
+ 
+ int drm_legacy_infobufs(struct drm_device *dev, void *data,
+diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
+index 67b1fca39aa6..138680b37c70 100644
+--- a/drivers/gpu/drm/drm_ioc32.c
++++ b/drivers/gpu/drm/drm_ioc32.c
+@@ -372,7 +372,10 @@ static int copy_one_buf32(void *data, int count, struct drm_buf_entry *from)
+ 			      .size = from->buf_size,
+ 			      .low_mark = from->low_mark,
+ 			      .high_mark = from->high_mark};
+-	return copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags));
++
++	if (copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags)))
++		return -EFAULT;
++	return 0;
+ }
+ 
+ static int drm_legacy_infobufs32(struct drm_device *dev, void *data,
 -- 
 2.20.1
 
