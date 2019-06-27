@@ -2,100 +2,131 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DC2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A0CC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AED020828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FNVHYVFA"
+	by mail.kernel.org (Postfix) with ESMTP id 36205208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561631252;
+	bh=dI0kBr+SLvATNvxr645YEW44/eVW59NGalSpB0Dn5ls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JtrrwUn7sTVL5X18bSoBMj8ETLW4BRhfIzzMQc4d7dVdJJnltRfyhhX0rMiolAlA6
+	 qa60gKPb0VXNLvvoVxDxtMGxDogioTnooHBehpt16D+qkwimVtDMzrx+F2fyYSPvqr
+	 UMoKefuFHAsAMOZ8ktklYQn5cPy9gVOPtEw+0H6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfF0K1N (ORCPT
+        id S1726640AbfF0K1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:27:13 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47394 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfF0K1M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:27:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5RAQvPC015217;
-        Thu, 27 Jun 2019 05:26:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561631217;
-        bh=QyQZ1LuzFa7iQdI9xKG1JGokv1FyrU+3emS36t/clzQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FNVHYVFA3B5uIOP3tqDJMRSvCsxt3XNUwKYHvFDkEdqNkdc919jOpf9i2Gafv+0d7
-         DLH1tjlSxLJFEYZai8BxeGh5uZDzhsyEud5BYPFm9ACTocNbN/QaIM1eXnVXHisrpX
-         JFMb7/+PPElFf1FM+UJuNNT0C4nhKTUF28hmGkhU=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5RAQv1A025865
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Jun 2019 05:26:57 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
- Jun 2019 05:26:56 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 27 Jun 2019 05:26:56 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5RAQs6p055909;
-        Thu, 27 Jun 2019 05:26:54 -0500
-Subject: Re: [PATCH v6 00/15] tc358767 driver improvements
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        <dri-devel@lists.freedesktop.org>
-CC:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>
-References: <20190619052716.16831-1-andrew.smirnov@gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <a3fdbb02-586b-66d3-1857-1ed6d90d2537@ti.com>
-Date:   Thu, 27 Jun 2019 13:26:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 27 Jun 2019 06:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbfF0K1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:27:30 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B78B20828;
+        Thu, 27 Jun 2019 10:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561631249;
+        bh=dI0kBr+SLvATNvxr645YEW44/eVW59NGalSpB0Dn5ls=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1rqIUjononn+K4NHBL3fy90iZW1bSd5CokZzMxiIOQZKSlwIu+F4uBsCufiV8lLO3
+         VW+HU66VkQ9zOzIWmhff5Muq/WyhDGo0C3fqsnMqO8aBXGob0ZfxWdn75U9A+KJQS+
+         NHKy6D28h23yl9pRhyiwVgDBL9DoKJtXnEdoMTzo=
+Date:   Thu, 27 Jun 2019 11:27:25 +0100
+From:   Will Deacon <will@kernel.org>
+To:     "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        "indou.takao@fujitsu.com" <indou.takao@fujitsu.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 0/2] arm64: Introduce boot parameter to disable TLB flush
+ instruction within the same inner shareable domain
+Message-ID: <20190627102724.vif6zh6zfqktpmjx@willie-the-truck>
+References: <20190617143255.10462-1-indou.takao@jp.fujitsu.com>
+ <20190617170328.GJ30800@fuggles.cambridge.arm.com>
+ <e8fe8faa-72ef-8185-1a9d-dc1bbe0ae15d@jp.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <20190619052716.16831-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8fe8faa-72ef-8185-1a9d-dc1bbe0ae15d@jp.fujitsu.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2019 08:27, Andrey Smirnov wrote:
-> Everyone:
+On Mon, Jun 24, 2019 at 10:34:02AM +0000, qi.fuli@fujitsu.com wrote:
+> On 6/18/19 2:03 AM, Will Deacon wrote:
+> > On Mon, Jun 17, 2019 at 11:32:53PM +0900, Takao Indoh wrote:
+> >> From: Takao Indoh <indou.takao@fujitsu.com>
+> >>
+> >> I found a performance issue related on the implementation of Linux's TLB
+> >> flush for arm64.
+> >>
+> >> When I run a single-threaded test program on moderate environment, it
+> >> usually takes 39ms to finish its work. However, when I put a small
+> >> apprication, which just calls mprotest() continuously, on one of sibling
+> >> cores and run it simultaneously, the test program slows down significantly.
+> >> It becomes 49ms(125%) on ThunderX2. I also detected the same problem on
+> >> ThunderX1 and Fujitsu A64FX.
+> > This is a problem for any applications that share hardware resources with
+> > each other, so I don't think it's something we should be too concerned about
+> > addressing unless there is a practical DoS scenario, which there doesn't
+> > appear to be in this case. It may be that the real answer is "don't call
+> > mprotect() in a loop".
+> I think there has been a misunderstanding, please let me explain.
+> This application is just an example using for reproducing the 
+> performance issue we found.
+> Our original purpose is reducing OS jitter by this series.
+> The OS jitter on massively parallel processing systems have been known 
+> and studied for many years.
+> The 2.5% OS jitter can result in over a factor of 20 slowdown for the 
+> same application [1].
+
+I think it's worth pointing out that the system in question was neither
+ARM-based nor running Linux, so I'd be cautious in applying the conclusions
+of that paper directly to our TLB invalidation code. Furthermore, the noise
+being generated in their experiments uses a timer interrupt, which has a
+/vastly/ different profile to a DVM message in terms of both system impact
+and frequency.
+
+> Though it may be an extreme example, reducing the OS jitter has been an 
+> issue in HPC environment.
 > 
-> This series contains various improvements (at least in my mind) and
-> fixes that I made to tc358767 while working with the code of the
-> driver. Hopefuly each patch is self explanatory.
+> [1] Ferreira, Kurt B., Patrick Bridges, and Ron Brightwell. 
+> "Characterizing application sensitivity to OS interference using 
+> kernel-level noise injection." Proceedings of the 2008 ACM/IEEE 
+> conference on Supercomputing. IEEE Press, 2008.
 > 
-> Feedback is welcome!
+> >> I suppose the root cause of this issue is the implementation of Linux's TLB
+> >> flush for arm64, especially use of TLBI-is instruction which is a broadcast
+> >> to all processor core on the system. In case of the above situation,
+> >> TLBI-is is called by mprotect().
+> > On the flip side, Linux is providing the hardware with enough information
+> > not to broadcast to cores for which the remote TLBs don't have entries
+> > allocated for the ASID being invalidated. I would say that the root cause
+> > of the issue is that this filtering is not taking place.
+> 
+> Do you mean that the filter should be implemented in hardware?
 
-I think this looks fine, so:
+Yes. If you're building a large system and you care about "jitter", then
+you either need to partition it in such a way that sources of noise are
+contained, or you need to introduce filters to limit their scope. Rewriting
+the low-level memory-management parts of the operating system is a red
+herring and imposes a needless burden on everybody else without solving
+the real problem, which is that contended use of shared resources doesn't
+scale.
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-
-Unfortunately I don't have my DP equipment for the time being, so I'm 
-not able to test this on our board. I'm fine with merging, as the 
-previous series worked ok after reverting the single regression (which 
-is fixed in this series).
-
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Will
