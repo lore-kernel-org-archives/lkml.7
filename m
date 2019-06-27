@@ -2,146 +2,180 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB484C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1858C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FCD2133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oaokw1Uc"
+	by mail.kernel.org (Postfix) with ESMTP id 95E602146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfF0QfH (ORCPT
+        id S1726511AbfF0QhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:35:07 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46606 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbfF0QfH (ORCPT
+        Thu, 27 Jun 2019 12:37:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39668 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfF0QhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:35:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 81so1484612pfy.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZS7BdZWWEVunG3KiycDjtP4eG/sAThYBJpiImcoQqZ0=;
-        b=oaokw1UcFtYPz8TD2pHWC6HI4frjVJ+O5tteS3wu6S4/GzjN4GvNNRS+aKkZjmj7OI
-         eEAuxc5ILO8p31iSYnoXxTnamWmV6gRNiF+WbQvr4rwQqcTHhthPs/jCPgfC4N29DAxS
-         SsQcL+Vf65kCJ1KHXT/8LTEgEpFYOuR9LdJBo8CAPx6ARSU3pOSA7fRF/5BAenTuqNCs
-         pU0mWPPel5CxEFVsW53CEEK+pRqcM2XLYyT9DEOtu5FHYYY9v4l0HR8NJbdp1XUhSCD3
-         WgDOed5jc3x9JUv8vnt79gq4aBEWoSZFjuDPL6G9oVFKdm5Uwq5audmeAnA3TSd6/34+
-         qFjA==
+        Thu, 27 Jun 2019 12:37:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id y13so3200899iol.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:37:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZS7BdZWWEVunG3KiycDjtP4eG/sAThYBJpiImcoQqZ0=;
-        b=VTCyX5b75iMW9ZBhuy2TWINmG8TwMtMziFcRZLz3NAiw/jXpAn6AFcTEBYKTH9MZGj
-         VfK3ym9z9jhMYWEoRYG05itanSX2Jxe1tCqskXSQILcIxIozRstNHCVbDHOXHEIr/ehF
-         DRfhYB5Fn8/MXRRjrb4DjqaqNs5vopkFTrPb36In62MARnEUCrdJ0hPXVXCttpVKB3Tz
-         UwlirQavZPT8SQeIsUg/R1T/hjtd3KlJhBL/6ndqVHKZtVAiIqfWcV6z3l2YD/r6TKk1
-         gWRY9GUEsKXRuLMIS5QLYoMjASWPxxqsUnoCifW28GxAFsHV5t/NHxX0P2YzZD3Y2rDM
-         ddNg==
-X-Gm-Message-State: APjAAAUXMUcDS97p8gLu2+Jg3i7u2sH+qFkXJ+UUJGt4ss1BfBaFI4Iy
-        s6E0fFBZ6NGThO2CkVC6KI/tyy9FkvcPgg==
-X-Google-Smtp-Source: APXvYqy+pAhnrewVnvuOOpMWBscCwyZYHx3WfUVSpPmsFIWqKBek6M66YwQ29AAOj6DKzWLrCwE3Kw==
-X-Received: by 2002:a63:4105:: with SMTP id o5mr4754738pga.308.1561653306202;
-        Thu, 27 Jun 2019 09:35:06 -0700 (PDT)
-Received: from ziepe.ca ([12.199.206.50])
-        by smtp.gmail.com with ESMTPSA id a15sm2263271pgw.3.2019.06.27.09.35.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 09:35:05 -0700 (PDT)
-Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hgXMW-0001GB-LS; Thu, 27 Jun 2019 13:35:04 -0300
-Date:   Thu, 27 Jun 2019 13:35:04 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-Message-ID: <20190627163504.GB9568@ziepe.ca>
-References: <20190625170115.GA9746@lst.de>
- <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
- <20190626065708.GB24531@lst.de>
- <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
- <20190626202107.GA5850@ziepe.ca>
- <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
- <20190626210018.GB6392@ziepe.ca>
- <c25d3333-dcd5-3313-089b-7fbbd6fbd876@deltatee.com>
- <20190627063223.GA7736@ziepe.ca>
- <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0gbawlg+5nxGY4BTH06fjIa4wIW7pEalqj9wAN0JBD8=;
+        b=jwvoYiGMdCXLkjRgcTvHNxKfiCl2laVxevLf7TjKJmh+QGijoKvkGBkdpDjpvYi7fb
+         bTRkqU/45eX1Xgh167BVN7JPdblrr988m5mfLGgmzTCcTPcLyHJs5oWEogftitqXclOb
+         M+h4vE1kk5s+hoyFuwfjg+ygakz4/jizdC1YI2+DmhirgqpPjfFAvRiduugSkQIf5QLv
+         p2t4aG9MV+geQM+rCZ+8Pl7zf84bEfoT3QtL3mIJUvohWDHdojI9X0RWa8hZeqvMietE
+         L98cEHkklO7FK7j7ckfVmiJd6+Oq00EoJbhQHdh21DLkZJi5V1pv7tssIXTnNn+1qrf1
+         JRMw==
+X-Gm-Message-State: APjAAAViSyxSAQYzXghlVnvv3bLYQ428leAnk57aacdEr0G3J3ZyNInD
+        GArUDfGPg7DJp7IibkZCUb1AJ8nZQQAw+HGq9B3HSl36M+hU
+X-Google-Smtp-Source: APXvYqys4Ct1w0+UN6MEsxgCYkRAcYG/Kw7D7YdZ+rgbYg+n/HSuR9A8VdDjRKI3hW+upt3CSXKHfvdiVMmnRBewb3HygnUF58R3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6afe4027-26c8-df4e-65ce-49df07dec54d@deltatee.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a6b:b257:: with SMTP id b84mr5963036iof.137.1561653425042;
+ Thu, 27 Jun 2019 09:37:05 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 09:37:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a97a15058c50c52e@google.com>
+Subject: KMSAN: uninit-value in aesti_encrypt
+From:   syzbot <syzbot+6f50c99e8f6194bf363f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, glider@google.com,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:09:41AM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-06-27 12:32 a.m., Jason Gunthorpe wrote:
-> > On Wed, Jun 26, 2019 at 03:18:07PM -0600, Logan Gunthorpe wrote:
-> >>> I don't think we should make drives do that. What if it got CMB memory
-> >>> on some other device?
-> >>
-> >> Huh? A driver submitting P2P requests finds appropriate memory to use
-> >> based on the DMA device that will be doing the mapping. It *has* to. It
-> >> doesn't necessarily have control over which P2P provider it might find
-> >> (ie. it may get CMB memory from a random NVMe device), but it easily
-> >> knows the NVMe device it got the CMB memory for. Look at the existing
-> >> code in the nvme target.
-> > 
-> > No, this all thinking about things from the CMB perspective. With CMB
-> > you don't care about the BAR location because it is just a temporary
-> > buffer. That is a unique use model.
-> > 
-> > Every other case has data residing in BAR memory that can really only
-> > reside in that one place (ie on a GPU/FPGA DRAM or something). When an IO
-> > against that is run it should succeed, even if that means bounce
-> > buffering the IO - as the user has really asked for this transfer to
-> > happen.
-> > 
-> > We certainly don't get to generally pick where the data resides before
-> > starting the IO, that luxury is only for CMB.
-> 
-> I disagree. If we we're going to implement a "bounce" we'd probably want
-> to do it in two DMA requests.
+Hello,
 
-How do you mean?
+syzbot found the following crash on:
 
-> So the GPU/FPGA driver would first decide whether it can do it P2P
-> directly and, if it can't, would want to submit a DMA request copy
-> the data to host memory and then submit an IO normally to the data's
-> final destination.
+HEAD commit:    3351e2b9 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=135d0c06a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=40511ad0c5945201
+dashboard link: https://syzkaller.appspot.com/bug?extid=6f50c99e8f6194bf363f
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1534241aa00000
 
-I don't think a GPU/FPGA driver will be involved, this would enter the
-block layer through the O_DIRECT path or something generic.. This the
-general flow I was suggesting to Dan earlier
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6f50c99e8f6194bf363f@syzkaller.appspotmail.com
 
-> I think it would be a larger layering violation to have the NVMe driver
-> (for example) memcpy data off a GPU's bar during a dma_map step to
-> support this bouncing. And it's even crazier to expect a DMA transfer to
-> be setup in the map step.
+==================================================================
+BUG: KMSAN: uninit-value in subshift crypto/aes_ti.c:148 [inline]
+BUG: KMSAN: uninit-value in aesti_encrypt+0x1238/0x1bc0 crypto/aes_ti.c:292
+CPU: 1 PID: 11187 Comm: syz-executor.2 Not tainted 5.2.0-rc4+ #5
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan.c:611
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:304
+  subshift crypto/aes_ti.c:148 [inline]
+  aesti_encrypt+0x1238/0x1bc0 crypto/aes_ti.c:292
+  crypto_cipher_encrypt_one include/linux/crypto.h:1753 [inline]
+  crypto_cbcmac_digest_update+0x3cf/0x550 crypto/ccm.c:871
+  crypto_shash_update crypto/shash.c:107 [inline]
+  shash_ahash_finup+0x659/0xb20 crypto/shash.c:276
+  shash_async_finup+0xbb/0x110 crypto/shash.c:291
+  crypto_ahash_op+0x1cd/0x6e0 crypto/ahash.c:368
+  crypto_ahash_finup+0x8c/0xb0 crypto/ahash.c:393
+  crypto_ccm_auth+0x14b2/0x1570 crypto/ccm.c:230
+  crypto_ccm_encrypt+0x272/0x8d0 crypto/ccm.c:309
+  crypto_aead_encrypt include/crypto/aead.h:331 [inline]
+  tls_do_encryption net/tls/tls_sw.c:521 [inline]
+  tls_push_record+0x341a/0x4f70 net/tls/tls_sw.c:730
+  bpf_exec_tx_verdict+0x1454/0x1c90 net/tls/tls_sw.c:770
+  tls_sw_sendmsg+0x15bd/0x2740 net/tls/tls_sw.c:1033
+  inet_sendmsg+0x48e/0x750 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:646 [inline]
+  sock_sendmsg net/socket.c:665 [inline]
+  __sys_sendto+0x905/0xb90 net/socket.c:1958
+  __do_sys_sendto net/socket.c:1970 [inline]
+  __se_sys_sendto+0x107/0x130 net/socket.c:1966
+  __x64_sys_sendto+0x6e/0x90 net/socket.c:1966
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:302
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x4592c9
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f01788fdc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 00000000004592c9
+RDX: ffffffffffffff7f RSI: 00000000200005c0 RDI: 0000000000000003
+RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f01788fe6d4
+R13: 00000000004c707f R14: 00000000004dc260 R15: 00000000ffffffff
 
-Why? Don't we already expect the DMA mapper to handle bouncing for
-lots of cases, how is this case different? This is the best place to
-place it to make it shared.
+Uninit was stored to memory at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:201 [inline]
+  kmsan_save_stack mm/kmsan/kmsan.c:213 [inline]
+  kmsan_internal_chain_origin+0xcc/0x150 mm/kmsan/kmsan.c:414
+  __msan_chain_origin+0x6b/0xe0 mm/kmsan/kmsan_instr.c:200
+  __crypto_xor+0x1e8/0x1470 crypto/algapi.c:1019
+  crypto_xor include/crypto/algapi.h:214 [inline]
+  crypto_cbcmac_digest_update+0x2ba/0x550 crypto/ccm.c:865
+  crypto_shash_update crypto/shash.c:107 [inline]
+  shash_ahash_finup+0x659/0xb20 crypto/shash.c:276
+  shash_async_finup+0xbb/0x110 crypto/shash.c:291
+  crypto_ahash_op+0x1cd/0x6e0 crypto/ahash.c:368
+  crypto_ahash_finup+0x8c/0xb0 crypto/ahash.c:393
+  crypto_ccm_auth+0x14b2/0x1570 crypto/ccm.c:230
+  crypto_ccm_encrypt+0x272/0x8d0 crypto/ccm.c:309
+  crypto_aead_encrypt include/crypto/aead.h:331 [inline]
+  tls_do_encryption net/tls/tls_sw.c:521 [inline]
+  tls_push_record+0x341a/0x4f70 net/tls/tls_sw.c:730
+  bpf_exec_tx_verdict+0x1454/0x1c90 net/tls/tls_sw.c:770
+  tls_sw_sendmsg+0x15bd/0x2740 net/tls/tls_sw.c:1033
+  inet_sendmsg+0x48e/0x750 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:646 [inline]
+  sock_sendmsg net/socket.c:665 [inline]
+  __sys_sendto+0x905/0xb90 net/socket.c:1958
+  __do_sys_sendto net/socket.c:1970 [inline]
+  __se_sys_sendto+0x107/0x130 net/socket.c:1966
+  __x64_sys_sendto+0x6e/0x90 net/socket.c:1966
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:302
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
 
-Jason
+Uninit was created at:
+  kmsan_save_stack_with_flags+0x37/0x70 mm/kmsan/kmsan.c:201
+  kmsan_internal_alloc_meta_for_pages+0x123/0x510 mm/kmsan/kmsan_hooks.c:102
+  kmsan_alloc_page+0x7a/0xf0 mm/kmsan/kmsan_hooks.c:246
+  __alloc_pages_nodemask+0x144d/0x6020 mm/page_alloc.c:4700
+  alloc_pages_current+0x6a0/0x9b0 mm/mempolicy.c:2132
+  alloc_pages include/linux/gfp.h:511 [inline]
+  skb_page_frag_refill+0x15e/0x560 net/core/sock.c:2349
+  sk_page_frag_refill+0xa4/0x330 net/core/sock.c:2369
+  sk_msg_alloc+0x203/0x1050 net/core/skmsg.c:37
+  tls_alloc_encrypted_msg net/tls/tls_sw.c:284 [inline]
+  tls_sw_sendmsg+0xb6a/0x2740 net/tls/tls_sw.c:953
+  inet_sendmsg+0x48e/0x750 net/ipv4/af_inet.c:798
+  sock_sendmsg_nosec net/socket.c:646 [inline]
+  sock_sendmsg net/socket.c:665 [inline]
+  __sys_sendto+0x905/0xb90 net/socket.c:1958
+  __do_sys_sendto net/socket.c:1970 [inline]
+  __se_sys_sendto+0x107/0x130 net/socket.c:1966
+  __x64_sys_sendto+0x6e/0x90 net/socket.c:1966
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:302
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
