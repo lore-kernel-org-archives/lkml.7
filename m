@@ -2,141 +2,118 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4564FC5B577
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C65AC5B577
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220C520B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BDF2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561678466;
+	bh=DhbXS/lRJ0YKCR7QiNLqZ6ehzZ/Unb45HFzo6/0VNuQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qdWl26dog/EHplAEgJuts18tSZf2/tCIdR9OwiJ0EAC9xUC/1EvVD4qhkl2/c+jly
+	 cvkQN/2L5MPFhpoTieF0NQKci6UPwbTA2ApWnxHZ05yr1S9kMK2DSHijFdyjPv5da4
+	 eSoB2kE3TwtRATSFbZ6pLbJoGk06/h/M2Hlhr7rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfF0X2C (ORCPT
+        id S1726646AbfF0XeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:28:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37166 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726647AbfF0X2B (ORCPT
+        Thu, 27 Jun 2019 19:34:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33740 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726574AbfF0XeY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:28:01 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RNQb1N033352
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:28:00 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td6e32861-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:28:00 -0400
-Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Fri, 28 Jun 2019 00:27:59 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 00:27:56 +0100
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RNRtVU57475570
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 23:27:55 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63B0FBE056;
-        Thu, 27 Jun 2019 23:27:55 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C498BE051;
-        Thu, 27 Jun 2019 23:27:53 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.218.134])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 27 Jun 2019 23:27:53 +0000 (GMT)
-References: <20190624062331.388-1-prsriva02@gmail.com> <20190624062331.388-3-prsriva02@gmail.com> <87ftnyk5e0.fsf@morokweng.localdomain> <1561648111.4101.135.camel@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, roberto.sassu@huawei.com,
-        vgoyal@redhat.com
-Subject: Re: [PATCH V10 2/3] IMA: Define a new template field buf
-In-reply-to: <1561648111.4101.135.camel@linux.ibm.com>
-Date:   Thu, 27 Jun 2019 20:27:47 -0300
+        Thu, 27 Jun 2019 19:34:24 -0400
+Received: by mail-io1-f67.google.com with SMTP id u13so8654550iop.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:34:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l89hBvZrEHLPxhxyxMlfDGOIe5uXPNhT8ICPgxlxf2E=;
+        b=LaEBtdw97EYwVjhQ2He+QVwcePOM+u4DJj74JjBzsoEmaYokSHAj68OTsYT1baTKfn
+         0CpDvbNi+OFuNBVzKms0fRzzPcUbOQPoKyCTOXBKfdq9EjiNpTBFupVWEeGRNzo40xcq
+         BQTtO2ZMq69zkSGlhefUHt3X8816bflaE3pSQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l89hBvZrEHLPxhxyxMlfDGOIe5uXPNhT8ICPgxlxf2E=;
+        b=jMIuG16hvGKORE3yaiEAMOsXhtJi4l+65knW543gP602VCWEQLLcPZA1L2oT8KypZ5
+         AgqdmEfoFL30nFHkEwD/S0C5iaWVA/0uGjgx/1GkFHnhRZ9e1A51z/D4mUSyFbH4EzsZ
+         u3ZI0Fg1CFRPSU6d3kTXgI3iO7wZSUn7Ajh3roCJYe8AX0MPUIqn1sNBo4AR4hlx0iRg
+         EqxWzviQZozPN2LXZX3MvGLT1QTQGalJh1bpGRmydS0Q1pdq09PXRtPeEUobsgKi7dbK
+         wY0US9nAfdkrWx90DmTgjZz9l0AIjv6NmhrJs3mDsCfNaEbcKmaG3lPruptzHKQfED4J
+         EClQ==
+X-Gm-Message-State: APjAAAXh163mk+YzVaSKcnrVk1atLhu2T/ksDzOZeL75T5HWNk1wCj+d
+        scZ5YuoKuhlIv99IyqaRoGYMHw==
+X-Google-Smtp-Source: APXvYqwj4rkWd8isFJNVQVTJ3enNTztWl/NXzCy6FgXuC6/2rhi87XUFdhvu6dzltHCuykaP0MNqJA==
+X-Received: by 2002:a5d:885a:: with SMTP id t26mr3561199ios.218.1561678463873;
+        Thu, 27 Jun 2019 16:34:23 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id i23sm538506ioj.24.2019.06.27.16.34.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 16:34:23 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org, allison@lohutok.net, gregkh@linuxfoundation.org,
+        alexios.zavras@intel.com, tglx@linutronix.de
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: timestamping: Fix SIOCGSTAMP undeclared build failure
+Date:   Thu, 27 Jun 2019 17:34:21 -0600
+Message-Id: <20190627233421.30340-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19062723-8235-0000-0000-00000EB00450
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011343; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224213; UDB=6.00644313; IPR=6.01005402;
- MB=3.00027497; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 23:27:58
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062723-8236-0000-0000-0000463029CB
-Message-Id: <878stmr4lo.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270272
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add missing linux/sockios.h include to fix the following SIOCGSTAMP
+undeclared build error. In addition, remove the local defines for
+SIOCGSTAMPNS and SIOCSHWTSTAMP and pick them up from linux/sockios.h.
 
-Mimi Zohar <zohar@linux.ibm.com> writes:
+timestamping.c:249:19: error: SIOCGSTAMP undeclared
+   if (ioctl(sock, SIOCGSTAMP, &tv))
 
-> On Mon, 2019-06-24 at 19:03 -0300, Thiago Jung Bauermann wrote:
->> Hello Prakhar,
->> 
->> Prakhar Srivastava <prsriva02@gmail.com> writes:
->> 
->> > diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
->> > index 00dd5a434689..a01a17e5c581 100644
->> > --- a/security/integrity/ima/ima_template.c
->> > +++ b/security/integrity/ima/ima_template.c
->> > @@ -26,6 +26,7 @@ static struct ima_template_desc builtin_templates[] = {
->> >  	{.name = IMA_TEMPLATE_IMA_NAME, .fmt = IMA_TEMPLATE_IMA_FMT},
->> >  	{.name = "ima-ng", .fmt = "d-ng|n-ng"},
->> >  	{.name = "ima-sig", .fmt = "d-ng|n-ng|sig"},
->> > +	{.name = "ima-buf", .fmt = "d-ng|n-ng|buf"},
->> >  	{.name = "", .fmt = ""},	/* placeholder for a custom format */
->> >  };
->> >
->> > @@ -43,6 +44,8 @@ static const struct ima_template_field supported_fields[] = {
->> >  	 .field_show = ima_show_template_string},
->> >  	{.field_id = "sig", .field_init = ima_eventsig_init,
->> >  	 .field_show = ima_show_template_sig},
->> > +	{.field_id = "buf", .field_init = ima_eventbuf_init,
->> > +	 .field_show = ima_show_template_buf},
->> >  };
->> >  #define MAX_TEMPLATE_NAME_LEN 15
->> 
->> Currently, MAX_TEMPLATE_NAME_LEN is the length of a template that
->> contains all valid fields. It may make sense to increase it since
->> there's a new field being added.
->> 
->> I suggest using a sizeof() to show where the number comes from (and
->> which can be visually shown to be correct):
->> 
->> #define MAX_TEMPLATE_NAME_LEN sizeof("d|n|d-ng|n-ng|sig|buf")
->> 
->> The sizeof() is calculated at compile time.
->
-> MAX_TEMPLATE_NAME_LEN is used when restoring measurements carried over
-> from a kexec.  'd' and 'd-ng' should not both be defined in the
-> template description, nor should 'n' and 'n-ng'.
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ .../selftests/networking/timestamping/timestamping.c     | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-Ah, makes sense. Thanks for that information. 
-
-> Even without the
-> duplication, the MAX_TEPLATE_NAME_LEN is greater than the current 15.
->
-> Thiago, could you address this as a separate patch?
-
-Yes, I just sent a patch.
-
+diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
+index 0fbed67bf4f6..aca3491174a1 100644
+--- a/tools/testing/selftests/networking/timestamping/timestamping.c
++++ b/tools/testing/selftests/networking/timestamping/timestamping.c
+@@ -32,6 +32,7 @@
+ #include <asm/types.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/errqueue.h>
++#include <linux/sockios.h>
+ 
+ #ifndef SO_TIMESTAMPING
+ # define SO_TIMESTAMPING         37
+@@ -42,14 +43,6 @@
+ # define SO_TIMESTAMPNS 35
+ #endif
+ 
+-#ifndef SIOCGSTAMPNS
+-# define SIOCGSTAMPNS 0x8907
+-#endif
+-
+-#ifndef SIOCSHWTSTAMP
+-# define SIOCSHWTSTAMP 0x89b0
+-#endif
+-
+ static void usage(const char *error)
+ {
+ 	if (error)
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.17.1
 
