@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005FCC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02C7C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D8620B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D3820815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:50:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PqFDaURQ"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HI1kDQRn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfF0XuJ (ORCPT
+        id S1726875AbfF0Xul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:50:09 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39221 "EHLO
+        Thu, 27 Jun 2019 19:50:41 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43905 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfF0XuJ (ORCPT
+        with ESMTP id S1726563AbfF0Xul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:50:09 -0400
+        Thu, 27 Jun 2019 19:50:41 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNkpEl503019
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNoP3i503618
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 16:46:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNkpEl503019
+        Thu, 27 Jun 2019 16:50:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNoP3i503618
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561679213;
-        bh=xU0Hg5ZNYgEEbybxxMs12dKLCgHm0S9z86kkddPXLdg=;
+        s=2019061801; t=1561679426;
+        bh=0NqLkfcISBhc/k5BDMm3VpbTkboYyzQJ3BBzqvL3SVk=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=PqFDaURQ9Hyc5AdDMPrNcSVQQ/AbM7R1MI+pgCAOkX/EeStt4s12YeynDLJs5/188
-         9i+M/f8xkNY3LZmshiF9HncP0xTXbr2+l/+04WYtar39UQuJtUimUMLt7yUQKveht9
-         32avslPygldkgW+jlQ+5BLAP2DwinkAc7RTcu2eNfhGhoqaV7p5z0UPAF8+xgA/eXr
-         YEIXIugFgsg9tGn8X3Ph3XNk6KeGkjadGyJt7Lh+l2sUD7aubnuSaYsMJmzSJjOIEt
-         wcH8jmmSiejHvPAZFicjB/iUFUbKYAy4sH8AayepmJMa+kVlMCRwpEqSigCy2c59AN
-         miYXYRL7hjdsg==
+        b=HI1kDQRnK/dHZuK6SVNENkzHEjGwca5xRFeOXoB5/cfH9RciIDPKhre9A9YimYgap
+         LKPUNbor2FOFVwENP3x3t/zQmBLcdp6UOBBITl/zjvD8ObMmikWA8CiKdKoulZYpsb
+         Da73DlkeEml02Ug5DhONZ+09jHChNIrbg3pvUiahn0zvELsr4KdrMA0+Xg6RlM0rfE
+         enrVNHXQQnzrwq+abjTO+nlPifI7gHRusG0aTKTHzImZd3IXW2xZC9nh1HAKzio9ub
+         lwggUPnTEHgqAsdaJyiZ44QOpt/bDyqPDNiK5IvxuBCh9XLTrLr9Vi9hMe6HTIpyfH
+         vH8RAQQtHejdg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNko3q503016;
-        Thu, 27 Jun 2019 16:46:50 -0700
-Date:   Thu, 27 Jun 2019 16:46:50 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNoPdn503615;
+        Thu, 27 Jun 2019 16:50:25 -0700
+Date:   Thu, 27 Jun 2019 16:50:25 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-2460d5878ad69c178f9ff1cc3eee9f09b017e15f@git.kernel.org>
-Cc:     hpa@zytor.com, tglx@linutronix.de, andi.kleen@intel.com,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        ricardo.neri-calderon@linux.intel.com, mingo@kernel.org,
-        ravi.v.shankar@intel.com, Suravee.Suthikulpanit@amd.com,
-        peterz@infradead.org, eranian@google.com
-Reply-To: andi.kleen@intel.com, ravi.v.shankar@intel.com,
-          Suravee.Suthikulpanit@amd.com, peterz@infradead.org,
-          hpa@zytor.com, mingo@kernel.org, tglx@linutronix.de,
-          ricardo.neri-calderon@linux.intel.com, eranian@google.com,
-          ashok.raj@intel.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20190623132435.821728550@linutronix.de>
-References: <20190623132435.821728550@linutronix.de>
+Message-ID: <tip-45e0a415634600e608188480bc355b20344f9e3f@git.kernel.org>
+Cc:     andi.kleen@intel.com, ricardo.neri-calderon@linux.intel.com,
+        eranian@google.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        ravi.v.shankar@intel.com, tglx@linutronix.de,
+        Suravee.Suthikulpanit@amd.com, peterz@infradead.org,
+        ashok.raj@intel.com, hpa@zytor.com
+Reply-To: hpa@zytor.com, ashok.raj@intel.com, peterz@infradead.org,
+          tglx@linutronix.de, Suravee.Suthikulpanit@amd.com,
+          andi.kleen@intel.com, ravi.v.shankar@intel.com,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          eranian@google.com, ricardo.neri-calderon@linux.intel.com
+In-Reply-To: <20190623132436.277510163@linutronix.de>
+References: <20190623132436.277510163@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/timers] x86/hpet: Use cached channel data
-Git-Commit-ID: 2460d5878ad69c178f9ff1cc3eee9f09b017e15f
+Subject: [tip:x86/timers] x86/hpet: Use cached info instead of extra flags
+Git-Commit-ID: 45e0a415634600e608188480bc355b20344f9e3f
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,17 +73,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2460d5878ad69c178f9ff1cc3eee9f09b017e15f
-Gitweb:     https://git.kernel.org/tip/2460d5878ad69c178f9ff1cc3eee9f09b017e15f
+Commit-ID:  45e0a415634600e608188480bc355b20344f9e3f
+Gitweb:     https://git.kernel.org/tip/45e0a415634600e608188480bc355b20344f9e3f
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 23 Jun 2019 15:23:59 +0200
+AuthorDate: Sun, 23 Jun 2019 15:24:04 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:57:22 +0200
+CommitDate: Fri, 28 Jun 2019 00:57:25 +0200
 
-x86/hpet: Use cached channel data
+x86/hpet: Use cached info instead of extra flags
 
-Instead of rereading the HPET registers over and over use the information
-which was cached in hpet_enable().
+Now that HPET clockevent support is integrated into the channel data, reuse
+the cached boot configuration instead of copying the same information into
+a flags field.
+
+This also allows to consolidate the reservation code into one place, which
+can now solely depend on the mode information.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
@@ -94,153 +98,193 @@ Cc: Andi Kleen <andi.kleen@intel.com>
 Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Link: https://lkml.kernel.org/r/20190623132435.821728550@linutronix.de
+Link: https://lkml.kernel.org/r/20190623132436.277510163@linutronix.de
 
 ---
- arch/x86/kernel/hpet.c | 41 ++++++++++++++++-------------------------
- 1 file changed, 16 insertions(+), 25 deletions(-)
+ arch/x86/kernel/hpet.c | 76 +++++++++++++++-----------------------------------
+ 1 file changed, 23 insertions(+), 53 deletions(-)
 
 diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index 59a81d7fd05b..8711f1fdef8f 100644
+index 7f76f07138a6..985a2246d20c 100644
 --- a/arch/x86/kernel/hpet.c
 +++ b/arch/x86/kernel/hpet.c
-@@ -24,6 +24,7 @@ struct hpet_dev {
- 
- struct hpet_channel {
+@@ -25,8 +25,8 @@ struct hpet_channel {
  	unsigned int			num;
-+	unsigned int			irq;
+ 	unsigned int			cpu;
+ 	unsigned int			irq;
++	unsigned int			in_use;
+ 	enum hpet_mode			mode;
+-	unsigned int			flags;
  	unsigned int			boot_cfg;
+ 	char				name[10];
  };
+@@ -40,12 +40,6 @@ struct hpet_base {
  
-@@ -52,7 +53,6 @@ u8					hpet_blockid; /* OS timer block num */
- bool					hpet_msi_disable;
+ #define HPET_MASK			CLOCKSOURCE_MASK(32)
  
- #ifdef CONFIG_PCI_MSI
--static unsigned int			hpet_num_timers;
- static struct hpet_dev			*hpet_devs;
- static DEFINE_PER_CPU(struct hpet_dev *, cpu_hpet_dev);
- static struct irq_domain		*hpet_domain;
-@@ -189,19 +189,15 @@ do {								\
- 
- static void hpet_reserve_msi_timers(struct hpet_data *hd);
- 
--static void __init hpet_reserve_platform_timers(unsigned int id)
-+static void __init hpet_reserve_platform_timers(void)
- {
--	struct hpet __iomem *hpet = hpet_virt_address;
--	struct hpet_timer __iomem *timer = &hpet->hpet_timers[2];
--	unsigned int nrtimers, i;
- 	struct hpet_data hd;
+-#define HPET_DEV_USED_BIT		2
+-#define HPET_DEV_USED			(1 << HPET_DEV_USED_BIT)
+-#define HPET_DEV_VALID			0x8
+-#define HPET_DEV_FSB_CAP		0x1000
+-#define HPET_DEV_PERI_CAP		0x2000
 -
--	nrtimers = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
-+	unsigned int i;
+ #define HPET_MIN_CYCLES			128
+ #define HPET_MIN_PROG_DELTA		(HPET_MIN_CYCLES + (HPET_MIN_CYCLES >> 1))
  
- 	memset(&hd, 0, sizeof(hd));
+@@ -62,6 +56,7 @@ static struct irq_domain		*hpet_domain;
+ #endif
+ 
+ static void __iomem			*hpet_virt_address;
++
+ static struct hpet_base			hpet_base;
+ 
+ static bool				hpet_legacy_int_enabled;
+@@ -190,8 +185,6 @@ do {								\
+  */
+ #ifdef CONFIG_HPET
+ 
+-static void hpet_reserve_msi_timers(struct hpet_data *hd);
+-
+ static void __init hpet_reserve_platform_timers(void)
+ {
+ 	struct hpet_data hd;
+@@ -201,11 +194,6 @@ static void __init hpet_reserve_platform_timers(void)
  	hd.hd_phys_address	= hpet_address;
--	hd.hd_address		= hpet;
--	hd.hd_nirqs		= nrtimers;
-+	hd.hd_address		= hpet_virt_address;
-+	hd.hd_nirqs		= hpet_base.nr_channels;
- 	hpet_reserve_timer(&hd, 0);
+ 	hd.hd_address		= hpet_virt_address;
+ 	hd.hd_nirqs		= hpet_base.nr_channels;
+-	hpet_reserve_timer(&hd, 0);
+-
+-#ifdef CONFIG_HPET_EMULATE_RTC
+-	hpet_reserve_timer(&hd, 1);
+-#endif
  
- #ifdef CONFIG_HPET_EMULATE_RTC
-@@ -216,10 +212,8 @@ static void __init hpet_reserve_platform_timers(unsigned int id)
+ 	/*
+ 	 * NOTE that hd_irq[] reflects IOAPIC input pins (LEGACY_8254
+@@ -215,13 +203,25 @@ static void __init hpet_reserve_platform_timers(void)
  	hd.hd_irq[0] = HPET_LEGACY_8254;
  	hd.hd_irq[1] = HPET_LEGACY_RTC;
  
--	for (i = 2; i < nrtimers; timer++, i++) {
--		hd.hd_irq[i] = (readl(&timer->hpet_config) &
--			Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
--	}
-+	for (i = 2; i < hpet_base.nr_channels; i++)
-+		hd.hd_irq[i] = hpet_base.channels[i].irq;
+-	for (i = 2; i < hpet_base.nr_channels; i++)
+-		hd.hd_irq[i] = hpet_base.channels[i].irq;
++	for (i = 0; i < hpet_base.nr_channels; i++) {
++		struct hpet_channel *hc = hpet_base.channels + i;
  
- 	hpet_reserve_msi_timers(&hd);
+-	hpet_reserve_msi_timers(&hd);
++		if (i >= 2)
++			hd.hd_irq[i] = hc->irq;
  
-@@ -227,7 +221,7 @@ static void __init hpet_reserve_platform_timers(unsigned int id)
+-	hpet_alloc(&hd);
++		switch (hc->mode) {
++		case HPET_MODE_UNUSED:
++		case HPET_MODE_DEVICE:
++			hc->mode = HPET_MODE_DEVICE;
++			break;
++		case HPET_MODE_CLOCKEVT:
++		case HPET_MODE_LEGACY:
++			hpet_reserve_timer(&hd, hc->num);
++			break;
++		}
++	}
  
++	hpet_alloc(&hd);
  }
- #else
--static void hpet_reserve_platform_timers(unsigned int id) { }
-+static inline void hpet_reserve_platform_timers(void) { }
- #endif
  
- /* Common HPET functions */
-@@ -569,7 +563,7 @@ static struct hpet_dev *hpet_get_unused_timer(void)
- 	if (!hpet_devs)
- 		return NULL;
+ static void __init hpet_select_device_channel(void)
+@@ -543,13 +543,11 @@ static int hpet_setup_irq(struct hpet_channel *hc)
+ 	return 0;
+ }
  
--	for (i = 0; i < hpet_num_timers; i++) {
-+	for (i = 0; i < hpet_base.nr_channels; i++) {
- 		struct hpet_dev *hdev = &hpet_devs[i];
- 
- 		if (!(hdev->flags & HPET_DEV_VALID))
-@@ -612,7 +606,6 @@ static int hpet_cpuhp_dead(unsigned int cpu)
- 
- static void __init hpet_msi_capability_lookup(unsigned int start_timer)
++/* Invoked from the hotplug callback on @cpu */
+ static void init_one_hpet_msi_clockevent(struct hpet_channel *hc, int cpu)
  {
--	unsigned int id;
- 	unsigned int num_timers;
- 	unsigned int num_timers_used = 0;
- 	int i, irq;
-@@ -622,10 +615,8 @@ static void __init hpet_msi_capability_lookup(unsigned int start_timer)
+ 	struct clock_event_device *evt = &hc->evt;
  
- 	if (boot_cpu_has(X86_FEATURE_ARAT))
- 		return;
--	id = hpet_readl(HPET_ID);
- 
--	num_timers = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT);
--	num_timers++; /* Value read out starts from 0 */
-+	num_timers = hpet_base.nr_channels;
- 	hpet_print_config();
- 
- 	hpet_domain = hpet_create_irq_domain(hpet_blockid);
-@@ -636,11 +627,9 @@ static void __init hpet_msi_capability_lookup(unsigned int start_timer)
- 	if (!hpet_devs)
- 		return;
- 
--	hpet_num_timers = num_timers;
+-	if (!(hc->flags & HPET_DEV_VALID))
+-		return;
 -
- 	for (i = start_timer; i < num_timers - RESERVE_TIMERS; i++) {
- 		struct hpet_dev *hdev = &hpet_devs[num_timers_used];
--		unsigned int cfg = hpet_readl(HPET_Tn_CFG(i));
-+		unsigned int cfg = hpet_base.channels[i].boot_cfg;
+ 	hc->cpu = cpu;
+ 	per_cpu(cpu_hpet_channel, cpu) = hc;
+ 	evt->name = hc->name;
+@@ -558,7 +556,7 @@ static void init_one_hpet_msi_clockevent(struct hpet_channel *hc, int cpu)
  
- 		/* Only consider HPET timer with MSI support */
- 		if (!(cfg & HPET_TN_FSB_CAP))
-@@ -676,7 +665,7 @@ static void __init hpet_reserve_msi_timers(struct hpet_data *hd)
- 	if (!hpet_devs)
- 		return;
+ 	evt->rating = 110;
+ 	evt->features = CLOCK_EVT_FEAT_ONESHOT;
+-	if (hc->flags & HPET_DEV_PERI_CAP) {
++	if (hc->boot_cfg & HPET_TN_PERIODIC) {
+ 		evt->features |= CLOCK_EVT_FEAT_PERIODIC;
+ 		evt->set_state_periodic = hpet_msi_set_periodic;
+ 	}
+@@ -580,11 +578,9 @@ static struct hpet_channel *hpet_get_unused_clockevent(void)
+ 	for (i = 0; i < hpet_base.nr_channels; i++) {
+ 		struct hpet_channel *hc = hpet_base.channels + i;
  
--	for (i = 0; i < hpet_num_timers; i++) {
-+	for (i = 0; i < hpet_base.nr_channels; i++) {
- 		struct hpet_dev *hdev = &hpet_devs[i];
+-		if (!(hc->flags & HPET_DEV_VALID))
+-			continue;
+-		if (test_and_set_bit(HPET_DEV_USED_BIT,
+-			(unsigned long *)&hc->flags))
++		if (hc->mode != HPET_MODE_CLOCKEVT || hc->in_use)
+ 			continue;
++		hc->in_use = 1;
+ 		return hc;
+ 	}
+ 	return NULL;
+@@ -606,7 +602,7 @@ static int hpet_cpuhp_dead(unsigned int cpu)
+ 	if (!hc)
+ 		return 0;
+ 	free_irq(hc->irq, hc);
+-	hc->flags &= ~HPET_DEV_USED;
++	hc->in_use = 0;
+ 	per_cpu(cpu_hpet_channel, cpu) = NULL;
+ 	return 0;
+ }
+@@ -638,9 +634,6 @@ static void __init hpet_select_clockevents(void)
+ 		if (!(hc->boot_cfg & HPET_TN_FSB_CAP))
+ 			continue;
  
- 		if (!(hdev->flags & HPET_DEV_VALID))
-@@ -869,7 +858,7 @@ static bool __init hpet_counting(void)
-  */
- int __init hpet_enable(void)
- {
--	u32 hpet_period, cfg, id;
-+	u32 hpet_period, cfg, id, irq;
- 	unsigned int i, channels;
- 	struct hpet_channel *hc;
- 	u64 freq;
-@@ -940,6 +929,8 @@ int __init hpet_enable(void)
+-		hc->flags = 0;
+-		if (hc->boot_cfg & HPET_TN_PERIODIC_CAP)
+-			hc->flags |= HPET_DEV_PERI_CAP;
+ 		sprintf(hc->name, "hpet%d", i);
  
- 		cfg = hpet_readl(HPET_Tn_CFG(i));
- 		hc->boot_cfg = cfg;
-+		irq = (cfg & Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
-+		hc->irq = irq;
+ 		irq = hpet_assign_irq(hpet_domain, hc, hc->num);
+@@ -648,8 +641,6 @@ static void __init hpet_select_clockevents(void)
+ 			continue;
  
- 		cfg &= ~(HPET_TN_ENABLE | HPET_TN_LEVEL | HPET_TN_FSB);
- 		hpet_writel(cfg, HPET_Tn_CFG(i));
-@@ -993,7 +984,7 @@ static __init int hpet_late_init(void)
- 	else
- 		hpet_msi_capability_lookup(0);
+ 		hc->irq = irq;
+-		hc->flags |= HPET_DEV_FSB_CAP;
+-		hc->flags |= HPET_DEV_VALID;
+ 		hc->mode = HPET_MODE_CLOCKEVT;
  
--	hpet_reserve_platform_timers(hpet_readl(HPET_ID));
-+	hpet_reserve_platform_timers();
- 	hpet_print_config();
+ 		if (++hpet_base.nr_clockevents == num_possible_cpus())
+@@ -660,31 +651,10 @@ static void __init hpet_select_clockevents(void)
+ 		hpet_base.nr_channels, hpet_base.nr_clockevents);
+ }
  
- 	if (hpet_msi_disable)
+-#ifdef CONFIG_HPET
+-static void __init hpet_reserve_msi_timers(struct hpet_data *hd)
+-{
+-	int i;
+-
+-	for (i = 0; i < hpet_base.nr_channels; i++) {
+-		struct hpet_channel *hc = hpet_base.channels + i;
+-
+-		if (!(hc->flags & HPET_DEV_VALID))
+-			continue;
+-
+-		hd->hd_irq[hc->num] = hc->irq;
+-		hpet_reserve_timer(hd, hc->num);
+-	}
+-}
+-#endif
+-
+ #else
+ 
+ static inline void hpet_select_clockevents(void) { }
+ 
+-#ifdef CONFIG_HPET
+-static inline void hpet_reserve_msi_timers(struct hpet_data *hd) { }
+-#endif
+-
+ #define hpet_cpuhp_online	NULL
+ #define hpet_cpuhp_dead		NULL
+ 
