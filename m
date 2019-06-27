@@ -2,57 +2,57 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C0FC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27339C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AC52085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E307320828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ECH6SNWj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qOv2ErHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfF0HRq (ORCPT
+        id S1726549AbfF0HRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:17:46 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:54067 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfF0HRp (ORCPT
+        Thu, 27 Jun 2019 03:17:50 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47715 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfF0HRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:17:45 -0400
+        Thu, 27 Jun 2019 03:17:48 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190627071743euoutp01767c799760e6176670aefb2c6776a6bf~r-P3sEGhW0194001940euoutp01I;
-        Thu, 27 Jun 2019 07:17:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190627071743euoutp01767c799760e6176670aefb2c6776a6bf~r-P3sEGhW0194001940euoutp01I
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190627071746euoutp023d0db8c3480bbdf75390a32f2578c13d~r-P6a_c1b2044920449euoutp02A;
+        Thu, 27 Jun 2019 07:17:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190627071746euoutp023d0db8c3480bbdf75390a32f2578c13d~r-P6a_c1b2044920449euoutp02A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561619863;
-        bh=woNvy7Ycl8cbbe+akgfSqQo82Q1t5lHP+Qm81s+Tx3U=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ECH6SNWjfGO/EqJBX6Nt5V52zwLzc6ouCRjy7coIFuoBk578D36tfXzp9mPAvXRzO
-         bNZewskx/96d6SYJXUcnubDGRD/whT8jLcd4FJJnl/gsXEvroxg/7gms+T+lsedA7Q
-         wAnWEnOT58ekoTsROOxs6jHTKt0PPo/n3waL6j/Y=
+        s=mail20170921; t=1561619866;
+        bh=ijdorqqTkcn1o5m8sGtGI6GyhJS7V9aRwUoQkFw7p7U=;
+        h=From:To:Cc:Subject:Date:In-reply-to:References:From;
+        b=qOv2ErHzIekbzYxR/pZ3xlmMWP5Ld5MDBIOylDL9LAnFPV09aZmXU0OKaOokpx4f1
+         Z+NAqu20suNXBfOnOanu1lW5ZTmQNEjkslEUys8hHbNe601tqiCzx+wFkZWU8SlDkQ
+         ub3ZBu99Ok2QuHE+uKLTYSxo3rTvLCMaDLiGr/OA=
 Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190627071742eucas1p2a0a028bf8693fc8f0ab94f4587a68ea4~r-P3I1j-O0427404274eucas1p2d;
-        Thu, 27 Jun 2019 07:17:42 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 82.96.04377.69D641D5; Thu, 27
-        Jun 2019 08:17:42 +0100 (BST)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190627071741eucas1p1af1430c91f636c5766a76f7ef93019da~r-P2ZbuEE1386213862eucas1p1y;
-        Thu, 27 Jun 2019 07:17:41 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-ae-5d146d960f0a
+        20190627071745eucas1p1559f45320f6ea101c65ce9487dba63f9~r-P6EfmdH2386123861eucas1p1v;
+        Thu, 27 Jun 2019 07:17:45 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 95.96.04377.99D641D5; Thu, 27
+        Jun 2019 08:17:45 +0100 (BST)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190627071745eucas1p1fa1b9d46e67b131522f49d73ac12d8ed~r-P5dDztj2388423884eucas1p1w;
+        Thu, 27 Jun 2019 07:17:45 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-bb-5d146d999ce4
 Received: from eusync4.samsung.com ( [203.254.199.214]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A7.F3.04140.59D641D5; Thu, 27
-        Jun 2019 08:17:41 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id CA.9A.04146.99D641D5; Thu, 27
+        Jun 2019 08:17:45 +0100 (BST)
 Received: from AMDC2765.DIGITAL.local ([106.120.51.73]) by
         eusync4.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
         (built May  5 2014)) with ESMTPA id <0PTQ00HYSXLCML00@eusync4.samsung.com>;
-        Thu, 27 Jun 2019 08:17:41 +0100 (BST)
+        Thu, 27 Jun 2019 08:17:45 +0100 (BST)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -64,281 +64,216 @@ Cc:     linux-kernel@vger.kernel.org,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Jochen Sprickerhof <jochen@sprickerhof.de>,
         Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH 0/3] Fix USB3.0 DRD PHY calibration issues (DWC3/XHCI) on
- Exynos542x SoCs
-Date:   Thu, 27 Jun 2019 09:17:23 +0200
-Message-id: <20190627071726.30467-1-m.szyprowski@samsung.com>
+Subject: [PATCH 2/3] usb: dwc3: exynos: Use Exynos specific XHCI-plat driver
+ variant
+Date:   Thu, 27 Jun 2019 09:17:25 +0200
+Message-id: <20190627071726.30467-3-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsWy7djPc7rTckViDVreSlhsnLGe1eJY2xN2
+In-reply-to: <20190627071726.30467-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsWy7djPc7ozc0ViDfacV7PYOGM9q8Wxtifs
+        Fs2L17NZLP17j9Hi/PkN7BaXd81hs5hxfh+TxaJlrcwW6zbeYrdYe+QuUN2mKawO3B47Z91l
+        91i85yWTx6ZVnWwe++euYffo27KK0WPDln8sHp83yQWwR3HZpKTmZJalFunbJXBlzPqyh7Hg
+        rnbFrNbNTA2MO1W6GDk5JARMJPavecrexcjFISSwglHi0aE7bBDOZ0aJD/Na2GGq/l9ZzQJi
+        CwksY5S4d7wMoug/o0THxhdMIAk2AUOJrrddbCC2iICDxJKlEJOYBf4zSUy/cYIVJCEsECYx
+        82gD2FQWAVWJby+ngk3lFbCV6D2whBVim7zE6g0HmEFsTgE7iaPTJoPdJyGwhk1i2bkzzBBF
+        LhJvp/9khLBlJDo7DjJBFDUzSjw8txaqo4dR4nLTDKgqa4nDxy+CrWAW4JOYtG060CQOoDiv
+        REebEESJh8SO0zuZIf6cyChxfq3uBEaJBYwMqxjFU0uLc9NTi43yUsv1ihNzi0vz0vWS83M3
+        MQLj9PS/4192MO76k3SIUYCDUYmHl2GPcKwQa2JZcWXuIUYJDmYlEd78MJFYId6UxMqq1KL8
+        +KLSnNTiQ4zSHCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJMHJxSDYzRvHd2yCYv6jqwmyvg2YaI
+        Jq3Glam8s27ZyuftZ8iOe8T67u9z1jndfoECx1aLLXxWFpBiJpDpFFkyYfNE0TDzSWcaPGc7
+        XfxjXyzx68DTT7N1N/hsjfMVZNqk0jN/yrnKpvj/Udzlkxa7dRw78tN5SmgXY+Tehd+8rYPa
+        r3wLlffe1rTlBJsSS3FGoqEWc1FxIgCy+3ohzwIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCLMWRmVeSWpSXmKPExsVy+t/xa7ozc0ViDVqXs1tsnLGe1eJY2xN2
         i+bF69kslv69x2hx/vwGdovLu+awWcw4v4/JYtGyVmaLdRtvsVusPXIXqG7TFFYHbo+ds+6y
-        eyze85LJY9OqTjaP/XPXsHv0bVnF6LFhyz8Wj8+b5ALYo7hsUlJzMstSi/TtErgybly9yVLQ
-        lVixcVcLYwPjfL8uRk4OCQETiYNPFjF2MXJxCAmsYJRYvOIYG4TzmVHi94pdQA4HWNWyzniI
-        +DJGic51N9khnP+MEpfmrGQCGcUmYCjR9baLDcQWEXCQWLL0DtgkZoH/TBLTb5xgBUkIC0RL
-        9Bz5ygJiswioShx9dZARZAOvgK3EvUZOiJPkJVZvOMAM0ishMIdN4uCJViaIK1wkvh2DOltG
-        4vLkbhaImmZGiYfn1rJDOD2MEpebZjBCVFlLHD5+EWwxswCfxKRt05khBvFKdLQJQZR4SOxv
-        mQJWIiQQK9F/7xPbBEbxBYwMqxjFU0uLc9NTi43yUsv1ihNzi0vz0vWS83M3MQJj8fS/4192
-        MO76k3SIUYCDUYmHl2GPcKwQa2JZcWXuIUYJDmYlEd78MJFYId6UxMqq1KL8+KLSnNTiQ4zS
-        HCxK4rzVDA+ihQTSE0tSs1NTC1KLYLJMHJxSDYwsFjnK//V1N/FtrpvXubl+oTfrx7h8udV3
-        RbbPOnLW9F83Z5baU7XPGxgfRT4PjrqWHWzQaSt67JTU7LdSgXc4BaNTmRQ07uyRU93GcJNT
-        sOhv/K930wKvqzYJTSiYcGj3zaPhNUoL7vvIrTib4dfqEr1vS///W9PtX3zx2HD9Ufhxqx2X
-        9mQqsRRnJBpqMRcVJwIAcb9fZ8ECAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphluLIzCtJLcpLzFFi42I5/e/4Nd2puSKxBjcWq1psnLGe1eJY2xN2
-        i+bF69kslv69x2hx/vwGdovLu+awWcw4v4/JYtGyVmaLdRtvsVusPXIXqG7TFFYHbo+ds+6y
-        eyze85LJY9OqTjaP/XPXsHv0bVnF6LFhyz8Wj8+b5ALYo7hsUlJzMstSi/TtErgybly9yVLQ
-        lVixcVcLYwPjfL8uRg4OCQETiWWd8V2MXBxCAksYJZ7vmc0E4TQySfzvOM7axcjJwSZgKNH1
-        tosNxBYRcJBYsvQOG0gRs0Ajs8TvHWfBioQFoiV6jnxlAbFZBFQljr46yAiygVfAVuJeIydI
-        WEJAXmL1hgPMExi5FjAyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAgMo23Hfm7Zwdj1LvgQ
-        owAHoxIP74qdwrFCrIllxZW5hxglOJiVRHjzw0RihXhTEiurUovy44tKc1KLDzFKc7AoifN2
-        CByMERJITyxJzU5NLUgtgskycXBKNTC27ig+eXLihicqnY4Ri47+SHgv4ymg07j94aE7Jfzs
-        58rn8Lgcvr77Z2LR3ePrK373FJqFCnHP25TXN4s7+7fxsVtOi6bGrbyn8r3h4htNXYaW+9Mn
-        1ye1nDm4h899zoXrcjNvX674lPLJNOHm5fo8988djgFRB95mBd5bLXX46xbdvkcvpsYzKrEU
-        ZyQaajEXFScCAIfy3D0fAgAA
-X-CMS-MailID: 20190627071741eucas1p1af1430c91f636c5766a76f7ef93019da
+        eyze85LJY9OqTjaP/XPXsHv0bVnF6LFhyz8Wj8+b5ALYo7hsUlJzMstSi/TtErgyZn3Zw1hw
+        V7tiVutmpgbGnSpdjJwcEgImEv+vrGYBsYUEljBKzN9ZAWE3Mkm8/CMIYrMJGEp0ve1iA7FF
+        BBwkliy9A2RzcTALNDJL/N5xlhUkISwQJjHzaAM7iM0ioCrx7eVUsKG8ArYSvQeWsEIsk5dY
+        veEAM4jNKWAncXTaZHaIZbYSV9vXs09g5FnAyLCKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMj
+        MOy2Hfu5eQfjpY3BhxgFOBiVeHhX7BSOFWJNLCuuzD3EKMHBrCTCmx8mEivEm5JYWZValB9f
+        VJqTWnyIUZqDRUmct0PgYIyQQHpiSWp2ampBahFMlomDU6qBMWfLblMZ47meaZnhL763mZ7d
+        XRl6bv8r5+D9HDM7n76+7X0rJ3rymU+zrH5dW9oTsNniyZQ10XpPxawXvlRd5baoujf/z7Lf
+        zUwCP97GOMs+PTnvIHvK8U0/LnBu3fPmfRen1i0x14/SgY6xriEf3oZJm5e8P+wn/3VJo0im
+        ZKga455JuUEMEUosxRmJhlrMRcWJAIazBdE3AgAA
+X-CMS-MailID: 20190627071745eucas1p1fa1b9d46e67b131522f49d73ac12d8ed
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20190627071741eucas1p1af1430c91f636c5766a76f7ef93019da
-References: <CGME20190627071741eucas1p1af1430c91f636c5766a76f7ef93019da@eucas1p1.samsung.com>
+X-CMS-RootMailID: 20190627071745eucas1p1fa1b9d46e67b131522f49d73ac12d8ed
+References: <20190627071726.30467-1-m.szyprowski@samsung.com>
+        <CGME20190627071745eucas1p1fa1b9d46e67b131522f49d73ac12d8ed@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear All,
+Exynos5 SoCs needs to calibrate USB3.0 DRD PHY after every XHCI HCD
+reset. This patch adds support for instantiating Exynos5-specific variant
+of XHCI-plat driver, which handles the required USB3.0 DRD PHY
+calibration.
 
-Commit d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for
-exynos5420/5800") added support for Exynos5 USB3.0 DRD PHY calibration,
-what enabled proper Super-Speed enumeration of USB3.0 devices connected
-to various Exynos5 SoCs. After some time it turned out that the mentioned
-patch worked a bit by pure luck and covered only one use case (fresh
-boot with all drivers compiled into the kernel).
-
-If drivers were compiled as modules, due to timing issue, it worked only
-if XHCI-plat driver was loaded before the DWC3 driver:
-https://patchwork.kernel.org/patch/10773947/
-
-Also during the system suspend/resume cycle the calibration was not
-performed at the proper time and resulted in switching USB 3.0 devices to
-USB 2.0 high-speed compatibility mode.
-
-This patch addresses all those issues. Exynos5 USB3.0 DRD PHY calibration
-is moved to the Exynos5 specific variant of the XHCI-plat driver, which
-takes care of proper PHY calibration after XHCI core reset. This fixes
-all known use cases (XHCI driver compiled as module and loaded on demand
-as well as during system suspend/resume cycle).
-
-Here are the logs taken on Exynos5422-based Odroid HC1 board (with USB3.0
-RTL8153 LAN and USB3.0 JMicron SATA-USB bridge):
-
-Vanilla Linux next-20190620:
------>8-----------------------------------------------------------------
-root@target:~# lsusb -t
-/:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
-/:  Bus 05.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=uas, 5000M
-/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=exynos-ohci/3p, 12M
-/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=exynos-ehci/3p, 480M
-root@target:~# time rtcwake -s 10 -m mem
-rtcwake: wakeup from "mem" using /dev/rtc0 at Tue Jan  1 01:03:40 2019
-[   31.372801] PM: suspend entry (deep)
-[   31.376555] Filesystems sync: 0.001 seconds
-[   31.396437] Freezing user space processes ... (elapsed 0.006 seconds) done.
-[   31.408300] OOM killer disabled.
-[   31.411329] Freezing remaining freezable tasks ... (elapsed 0.002 seconds) done.
-[   31.419336] printk: Suspending console(s) (use no_console_suspend to debug)
-[   31.508432] sd 0:0:0:0: [sda] Synchronizing SCSI cache
-[   31.586243] wake enabled for irq 145
-[   31.748908] samsung-pinctrl 13400000.pinctrl: Setting external wakeup interrupt mask: 0xffffffef
-[   31.758671] Disabling non-boot CPUs ...
-[   31.772117] IRQ 51: no longer affine to CPU1
-[   31.782147] IRQ 52: no longer affine to CPU2
-[   31.789290] IRQ 53: no longer affine to CPU3
-[   31.792439] IRQ 54: no longer affine to CPU4
-[   31.794942] IRQ 55: no longer affine to CPU5
-[   31.797365] IRQ 56: no longer affine to CPU6
-[   31.801387] IRQ 57: no longer affine to CPU7
-[   31.811149] Enabling non-boot CPUs ...
-[   31.815607] CPU1 is up
-[   31.818790] CPU2 is up
-[   31.821709] CPU3 is up
-[   31.826095] CPU4 is up
-[   31.828672] CPU5 is up
-[   31.831215] CPU6 is up
-[   31.834158] CPU7 is up
-[   31.859900] s3c2410-wdt 101d0000.watchdog: watchdog disabled
-[   31.860158] usb usb1: root hub lost power or was reset
-[   31.931175] usb usb2: root hub lost power or was reset
-[   31.940717] wake disabled for irq 145
-[   31.949146] usb usb3: root hub lost power or was reset
-[   31.949235] usb usb4: root hub lost power or was reset
-[   31.949329] s3c-rtc 101e0000.rtc: rtc disabled, re-enabling
-[   31.950751] usb usb5: root hub lost power or was reset
-[   31.950773] usb usb6: root hub lost power or was reset
-[   36.201351] OOM killer enabled.
-[   36.204381] Restarting tasks ...
-[   36.206110] usb 4-1: USB disconnect, device number 2
-[   36.206529] usb 6-1: USB disconnect, device number 2
-[   36.210588] done.
-[   36.220679] PM: suspend exit
-
-real    0m15.613s
-user    0m0.000s
-sys     0m0.329s
-[   36.237525] sd 0:0:0:0: [sda] Synchronizing SCSI cache
-[   36.254403] mmc_host mmc0: Bus speed (slot 0) = 50000000Hz (slot req 400000Hz, actual 396825HZ div = 63)
-root@target:~# [   36.341609] mmc_host mmc0: Bus speed (slot 0) = 200000000Hz (slot req 200000000Hz, actual 200000000HZ div = 0)
-[   36.597244] usb 5-1: new high-speed USB device number 3 using xhci-hcd
-[   36.837573] sd 0:0:0:0: [sda] Synchronize Cache(10) failed: Result: hostbyte=0x07 driverbyte=0x00
-[   37.099089] usb 5-1: New USB device found, idVendor=0bda, idProduct=8153, bcdDevice=30.00
-[   37.105793] usb 5-1: New USB device strings: Mfr=1, Product=2, SerialNumber=6
-[   37.112962] usb 5-1: Product: USB 10/100/1000 LAN
-[   37.117629] usb 5-1: Manufacturer: Realtek
-[   37.121645] usb 5-1: SerialNumber: 000001000000
-[   37.373152] usb 5-1: reset high-speed USB device number 3 using xhci-hcd
-[   37.407459] usb usb3-port1: Cannot enable. Maybe the USB cable is bad?
-[   37.664128] r8152 5-1:1.0 eth0: v1.09.9
-[   38.437326] usb 3-1: new high-speed USB device number 3 using xhci-hcd
-[   38.628713] usb 3-1: New USB device found, idVendor=152d, idProduct=0578, bcdDevice= 1.05
-[   38.635470] usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-[   38.642803] usb 3-1: Product: USB to SATA bridge
-[   38.647321] usb 3-1: Manufacturer: JMicron
-[   38.651232] usb 3-1: SerialNumber: DB00000000013B
-[   38.678606] scsi host0: uas
-[   38.687425] scsi 0:0:0:0: Direct-Access     JMicron                   0105 PQ: 0 ANSI: 6
-[   38.704216] sd 0:0:0:0: Attached scsi generic sg0 type 0
-[   38.710333] sd 0:0:0:0: [sda] 1953525168 512-byte logical blocks: (1.00 TB/932 GiB)
-[   38.716641] sd 0:0:0:0: [sda] 4096-byte physical blocks
-[   38.723383] sd 0:0:0:0: [sda] Write Protect is off
-[   38.730019] sd 0:0:0:0: [sda] Disabling FUA
-[   38.732737] sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[   38.743524] sd 0:0:0:0: [sda] Optimal transfer size 33553920 bytes not a multiple of physical block size (4096 bytes)
-[   38.855590]  sda: sda1 sda2 sda3 sda4 < sda5 sda6 >
-[   38.887585] sd 0:0:0:0: [sda] Attached SCSI disk
-[   40.968358] usb usb6-port1: Cannot enable. Maybe the USB cable is bad?
-[   45.288065] usb usb6-port1: Cannot enable. Maybe the USB cable is bad?
-
-root@target:~# lsusb -t
-/:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-/:  Bus 05.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-    |__ Port 1: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 480M
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-    |__ Port 1: Dev 3, If 0, Class=Mass Storage, Driver=uas, 480M
-/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=exynos-ohci/3p, 12M
-/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=exynos-ehci/3p, 480M
-root@target:~#
------>8-----------------------------------------------------------------
-
-
-Linux next-20190620 with this patchset applied:
------>8-----------------------------------------------------------------
-root@target:~# lsusb -t
-/:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
-/:  Bus 05.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=uas, 5000M
-/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=exynos-ohci/3p, 12M
-/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=exynos-ehci/3p, 480M
-root@target:~# time rtcwake -s 10 -m mem
-rtcwake: wakeup from "mem" using /dev/rtc0 at Tue Jan  1 01:08:06 2019
-[   33.057518] PM: suspend entry (deep)
-[   33.068116] Filesystems sync: 0.007 seconds
-[   33.100867] Freezing user space processes ... (elapsed 0.004 seconds) done.
-[   33.110697] OOM killer disabled.
-[   33.113758] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
-[   33.121699] printk: Suspending console(s) (use no_console_suspend to debug)
-[   33.206799] sd 0:0:0:0: [sda] Synchronizing SCSI cache
-[   33.284135] wake enabled for irq 145
-[   33.447955] samsung-pinctrl 13400000.pinctrl: Setting external wakeup interrupt mask: 0xffffffef
-[   33.459351] Disabling non-boot CPUs ...
-[   33.469730] IRQ 51: no longer affine to CPU1
-[   33.478596] IRQ 52: no longer affine to CPU2
-[   33.484306] IRQ 53: no longer affine to CPU3
-[   33.487255] IRQ 54: no longer affine to CPU4
-[   33.490071] IRQ 55: no longer affine to CPU5
-[   33.492706] IRQ 56: no longer affine to CPU6
-[   33.496822] IRQ 57: no longer affine to CPU7
-[   33.503482] Enabling non-boot CPUs ...
-[   33.508159] CPU1 is up
-[   33.511114] CPU2 is up
-[   33.514131] CPU3 is up
-[   33.518772] CPU4 is up
-[   33.521219] CPU5 is up
-[   33.523782] CPU6 is up
-[   33.526860] CPU7 is up
-[   33.551393] s3c2410-wdt 101d0000.watchdog: watchdog disabled
-[   33.551651] usb usb1: root hub lost power or was reset
-[   33.619193] usb usb2: root hub lost power or was reset
-[   33.628517] wake disabled for irq 145
-[   33.636675] usb usb3: root hub lost power or was reset
-[   33.636768] usb usb4: root hub lost power or was reset
-[   33.636883] s3c-rtc 101e0000.rtc: rtc disabled, re-enabling
-[   33.636915] usb usb5: root hub lost power or was reset
-[   33.636931] usb usb6: root hub lost power or was reset
-[   37.556700] usb 4-1: reset SuperSpeed Gen 1 USB device number 2 using xhci-hcd
-[   37.890524] OOM killer enabled.
-[   37.893600] Restarting tasks ...
-[   37.895049] usb 6-1: USB disconnect, device number 2
-[   37.897862] done.
-[   37.904761] PM: suspend exit
-
-real    0m14.651s
-user    0m0.000s
-sys     0m0.360s
-[   37.931922] mmc_host mmc0: Bus speed (slot 0) = 50000000Hz (slot req 400000Hz, actual 396825HZ div = 63)
-root@target:~# [   38.025326] mmc_host mmc0: Bus speed (slot 0) = 200000000Hz (slot req 200000000Hz, actual 200000000HZ div = 0)
-[   38.895675] usb 6-1: new SuperSpeed Gen 1 USB device number 3 using xhci-hcd
-[   38.929327] usb 6-1: New USB device found, idVendor=0bda, idProduct=8153, bcdDevice=30.00
-[   38.936156] usb 6-1: New USB device strings: Mfr=1, Product=2, SerialNumber=6
-[   38.943157] usb 6-1: Product: USB 10/100/1000 LAN
-[   38.947944] usb 6-1: Manufacturer: Realtek
-[   38.951891] usb 6-1: SerialNumber: 000001000000
-[   39.215806] usb 6-1: reset SuperSpeed Gen 1 USB device number 3 using xhci-hcd
-[   39.351893] r8152 6-1:1.0 eth0: v1.09.9
-
-root@target:~# lsusb -t
-/:  Bus 06.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-    |__ Port 1: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
-/:  Bus 05.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-/:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 5000M
-    |__ Port 1: Dev 2, If 0, Class=Mass Storage, Driver=uas, 5000M
-/:  Bus 03.Port 1: Dev 1, Class=root_hub, Driver=xhci-hcd/1p, 480M
-/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=exynos-ohci/3p, 12M
-/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=exynos-ehci/3p, 480M
-root@target:~#
------>8-----------------------------------------------------------------
-
-
-Best regards
-Marek Szyprowski
-Samsung R&D Institute Poland
-
-
-Patch summary:
-
-Marek Szyprowski (3):
-  usb: host: xhci-plat: Add support for Exynos5/DWC3 specific variant
-  usb: dwc3: exynos: Use Exynos specific XHCI-plat driver variant
-  usb: dwc3: Remove generic PHY calibrate() calls
-
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
  drivers/usb/dwc3/Kconfig       |  1 +
- drivers/usb/dwc3/core.c        |  3 +-
+ drivers/usb/dwc3/core.c        |  1 +
  drivers/usb/dwc3/core.h        |  1 +
  drivers/usb/dwc3/dwc3-exynos.c | 64 +++++++++++++++++++++++-----------
  drivers/usb/dwc3/host.c        |  2 +-
- drivers/usb/host/Kconfig       |  8 +++++
- drivers/usb/host/Makefile      |  3 ++
- drivers/usb/host/xhci-exynos.c | 51 +++++++++++++++++++++++++++
- drivers/usb/host/xhci-exynos.h | 26 ++++++++++++++
- drivers/usb/host/xhci-plat.c   | 38 +++++++++++++++++++-
- drivers/usb/host/xhci-plat.h   |  2 ++
- 11 files changed, 174 insertions(+), 25 deletions(-)
- create mode 100644 drivers/usb/host/xhci-exynos.c
- create mode 100644 drivers/usb/host/xhci-exynos.h
+ 5 files changed, 47 insertions(+), 22 deletions(-)
 
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 89abc6078703..badf86dfb027 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -67,6 +67,7 @@ config USB_DWC3_OMAP
+ config USB_DWC3_EXYNOS
+ 	tristate "Samsung Exynos Platform"
+ 	depends on (ARCH_EXYNOS || COMPILE_TEST) && OF
++	select USB_XHCI_EXYNOS if USB_XHCI_PLATFORM
+ 	default USB_DWC3
+ 	help
+ 	  Recent Exynos5 SoCs ship with one DesignWare Core USB3 IP inside,
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index c9bb93a2c81e..baa029ceede9 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1303,6 +1303,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 				    &dwc->hsphy_interface);
+ 	device_property_read_u32(dev, "snps,quirk-frame-length-adjustment",
+ 				 &dwc->fladj);
++	device_property_read_string(dev, "snps,xhci_variant", &dwc->hcd_name);
+ 
+ 	dwc->dis_metastability_quirk = device_property_read_bool(dev,
+ 				"snps,dis_metastability_quirk");
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 3dd783b889cb..1b8f5f5814a4 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -1176,6 +1176,7 @@ struct dwc3 {
+ 	u8			tx_max_burst_prd;
+ 
+ 	const char		*hsphy_interface;
++	const char		*hcd_name;
+ 
+ 	unsigned		connected:1;
+ 	unsigned		delayed_status:1;
+diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+index c1e9ea621f41..4e847073e85e 100644
+--- a/drivers/usb/dwc3/dwc3-exynos.c
++++ b/drivers/usb/dwc3/dwc3-exynos.c
+@@ -13,6 +13,7 @@
+ #include <linux/slab.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
++#include <linux/dma-mapping.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/regulator/consumer.h>
+@@ -35,22 +36,20 @@ struct dwc3_exynos {
+ 
+ 	struct regulator	*vdd33;
+ 	struct regulator	*vdd10;
++	struct platform_device	*dwc3;
+ };
+ 
+-static int dwc3_exynos_remove_child(struct device *dev, void *unused)
+-{
+-	struct platform_device *pdev = to_platform_device(dev);
+-
+-	platform_device_unregister(pdev);
+-
+-	return 0;
+-}
++static const struct property_entry dwc3_exynos_properties[] = {
++	PROPERTY_ENTRY_STRING("snps,xhci_variant", "exynos5-dwc3-xhci"),
++	{}
++};
+ 
+ static int dwc3_exynos_probe(struct platform_device *pdev)
+ {
+ 	struct dwc3_exynos	*exynos;
+ 	struct device		*dev = &pdev->dev;
+-	struct device_node	*node = dev->of_node;
++	struct device_node	*node = dev->of_node, *child;
++	struct platform_device	*dwc3;
+ 	const struct dwc3_exynos_driverdata *driver_data;
+ 	int			i, ret;
+ 
+@@ -109,21 +108,43 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+ 		goto vdd10_err;
+ 	}
+ 
+-	if (node) {
+-		ret = of_platform_populate(node, NULL, NULL, dev);
+-		if (ret) {
+-			dev_err(dev, "failed to add dwc3 core\n");
+-			goto populate_err;
+-		}
+-	} else {
+-		dev_err(dev, "no device node, failed to add dwc3 core\n");
+-		ret = -ENODEV;
+-		goto populate_err;
++	child = of_get_next_child(node, NULL);
++	if (!child) {
++		dev_err(dev, "Failed to find DWC3 core device node\n");
++		goto dwc3_child_err;
++	}
++
++	dwc3 = of_device_alloc(child, NULL, dev);
++	if (!dwc3) {
++		dev_err(dev, "Failed to allocate DWC3 core device\n");
++		goto dwc3_alloc_err;
++	}
++
++	dwc3->dev.coherent_dma_mask = DMA_BIT_MASK(32);
++	dwc3->dev.dma_mask = &dwc3->dev.coherent_dma_mask;
++	dwc3->dev.bus = &platform_bus_type;
++
++	ret = platform_device_add_properties(dwc3, dwc3_exynos_properties);
++	if (ret < 0) {
++		dev_err(dev, "Failed to add properties to DWC3 device\n");
++		goto dwc3_props_err;
++	}
++
++	ret = of_device_add(dwc3);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register DWC3 core device\n");
++		goto dwc3_props_err;
+ 	}
++	exynos->dwc3 = dwc3;
++	of_node_put(child);
+ 
+ 	return 0;
+ 
+-populate_err:
++dwc3_props_err:
++	platform_device_put(dwc3);
++dwc3_alloc_err:
++	of_node_put(child);
++dwc3_child_err:
+ 	regulator_disable(exynos->vdd10);
+ vdd10_err:
+ 	regulator_disable(exynos->vdd33);
+@@ -142,7 +163,8 @@ static int dwc3_exynos_remove(struct platform_device *pdev)
+ 	struct dwc3_exynos	*exynos = platform_get_drvdata(pdev);
+ 	int i;
+ 
+-	device_for_each_child(&pdev->dev, NULL, dwc3_exynos_remove_child);
++	of_device_unregister(exynos->dwc3);
++	platform_device_put(exynos->dwc3);
+ 
+ 	for (i = exynos->num_clks - 1; i >= 0; i--)
+ 		clk_disable_unprepare(exynos->clks[i]);
+diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+index f55947294f7c..b526d0c78c3b 100644
+--- a/drivers/usb/dwc3/host.c
++++ b/drivers/usb/dwc3/host.c
+@@ -71,7 +71,7 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	dwc->xhci_resources[1].flags = res->flags;
+ 	dwc->xhci_resources[1].name = res->name;
+ 
+-	xhci = platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
++	xhci = platform_device_alloc(dwc->hcd_name, PLATFORM_DEVID_AUTO);
+ 	if (!xhci) {
+ 		dev_err(dwc->dev, "couldn't allocate xHCI device\n");
+ 		return -ENOMEM;
 -- 
 2.17.1
 
