@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72916C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 286FBC48BDC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B40208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C16D21738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfF0KlM (ORCPT
+        id S1726882AbfF0KlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:41:12 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45170 "EHLO
+        Thu, 27 Jun 2019 06:41:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45102 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfF0KlH (ORCPT
+        with ESMTP id S1726563AbfF0KlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:41:07 -0400
+        Thu, 27 Jun 2019 06:41:03 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 74BEC289A20
+        with ESMTPSA id 2210F2899F2
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -44,11 +44,10 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Mark Brown <broonie@kernel.org>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v4 11/11] arm/arm64: defconfig: Update configs to use the new CROS_EC options
-Date:   Thu, 27 Jun 2019 12:40:39 +0200
-Message-Id: <20190627104039.26285-12-enric.balletbo@collabora.com>
+        Collabora kernel ML <kernel@collabora.com>
+Subject: [PATCH v4 10/11] mfd: cros_ec: Use mfd_add_hotplug_devices() helper
+Date:   Thu, 27 Jun 2019 12:40:38 +0200
+Message-Id: <20190627104039.26285-11-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627104039.26285-1-enric.balletbo@collabora.com>
 References: <20190627104039.26285-1-enric.balletbo@collabora.com>
@@ -59,101 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently we refactored the CrOS EC drivers moving part of the code from
-the MFD subsystem to the platform chrome subsystem. During this change
-we needed to rename some config options, so, update the defconfigs
-accordingly.
+Use mfd_add_hotplug_devices() helper to register the subdevices.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Gwendal Grignou <gwendal@chromium.org>
 ---
 
 Changes in v4: None
-Changes in v3: None
+Changes in v3:
+- Add a new patch to use mfd_add_hoplug_devices to register subdevices
+
 Changes in v2: None
 
- arch/arm/configs/exynos_defconfig   | 4 +++-
- arch/arm/configs/multi_v7_defconfig | 6 ++++--
- arch/arm/configs/pxa_defconfig      | 4 +++-
- arch/arm64/configs/defconfig        | 6 ++++--
- 4 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/mfd/cros_ec_dev.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index c95c54284da2..03448fba569f 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -154,7 +154,9 @@ CONFIG_CPU_THERMAL=y
- CONFIG_THERMAL_EMULATION=y
- CONFIG_WATCHDOG=y
- CONFIG_S3C2410_WATCHDOG=y
--CONFIG_MFD_CROS_EC=y
-+CONFIG_MFD_CROS_EC_DEV=y
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=y
- CONFIG_CROS_EC_I2C=y
- CONFIG_CROS_EC_SPI=y
- CONFIG_MFD_MAX14577=y
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 6b748f214eae..9fe783abf3c5 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -510,10 +510,12 @@ CONFIG_MFD_BCM590XX=y
- CONFIG_MFD_AC100=y
- CONFIG_MFD_AXP20X_I2C=y
- CONFIG_MFD_AXP20X_RSB=y
--CONFIG_MFD_CROS_EC=m
-+CONFIG_MFD_CROS_EC_DEV=m
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=m
- CONFIG_CROS_EC_I2C=m
- CONFIG_CROS_EC_SPI=m
--CONFIG_MFD_CROS_EC_CHARDEV=m
-+CONFIG_CROS_EC_CHARDEV=m
- CONFIG_MFD_DA9063=m
- CONFIG_MFD_MAX14577=y
- CONFIG_MFD_MAX77686=y
-diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-index 07ebbdce3645..e335b986cf70 100644
---- a/arch/arm/configs/pxa_defconfig
-+++ b/arch/arm/configs/pxa_defconfig
-@@ -394,7 +394,9 @@ CONFIG_SA1100_WATCHDOG=m
- CONFIG_MFD_AS3711=y
- CONFIG_MFD_BCM590XX=m
- CONFIG_MFD_AXP20X=y
--CONFIG_MFD_CROS_EC=m
-+CONFIG_MFD_CROS_EC_DEV=m
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=m
- CONFIG_CROS_EC_I2C=m
- CONFIG_CROS_EC_SPI=m
- CONFIG_MFD_ASIC3=y
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4d583514258c..b5bba5f04082 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -430,8 +430,7 @@ CONFIG_MFD_ALTERA_SYSMGR=y
- CONFIG_MFD_BD9571MWV=y
- CONFIG_MFD_AXP20X_I2C=y
- CONFIG_MFD_AXP20X_RSB=y
--CONFIG_MFD_CROS_EC=y
--CONFIG_MFD_CROS_EC_CHARDEV=m
-+CONFIG_MFD_CROS_EC_DEV=y
- CONFIG_MFD_EXYNOS_LPASS=m
- CONFIG_MFD_HI6421_PMIC=y
- CONFIG_MFD_HI655X_PMIC=y
-@@ -631,8 +630,11 @@ CONFIG_VIRTIO_BALLOON=y
- CONFIG_VIRTIO_MMIO=y
- CONFIG_XEN_GNTDEV=y
- CONFIG_XEN_GRANT_DEV_ALLOC=y
-+CONFIG_CHROME_PLATFORMS=y
-+CONFIG_CROS_EC=y
- CONFIG_CROS_EC_I2C=y
- CONFIG_CROS_EC_SPI=y
-+CONFIG_CROS_EC_CHARDEV=m
- CONFIG_COMMON_CLK_RK808=y
- CONFIG_COMMON_CLK_SCPI=y
- CONFIG_COMMON_CLK_CS2000_CP=y
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 73f186b9fda8..fd6edecaccb6 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -340,10 +340,8 @@ static void cros_ec_accel_legacy_register(struct cros_ec_dev *ec)
+ 	 * Register 2 accelerometers, we will fail in the IIO driver if there
+ 	 * are no sensors.
+ 	 */
+-	ret = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-			      cros_ec_accel_legacy_cells,
+-			      ARRAY_SIZE(cros_ec_accel_legacy_cells),
+-			      NULL, 0, NULL);
++	ret = mfd_add_hotplug_devices(ec->dev, cros_ec_accel_legacy_cells,
++				      ARRAY_SIZE(cros_ec_accel_legacy_cells));
+ 	if (ret)
+ 		dev_err(ec_dev->dev, "failed to add EC sensors\n");
+ }
+@@ -429,10 +427,8 @@ static int ec_device_probe(struct platform_device *pdev)
+ 	 * The following subdevices cannot be detected by sending the
+ 	 * EC_FEATURE_GET_CMD to the Embedded Controller device.
+ 	 */
+-	retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-				 cros_ec_platform_cells,
+-				 ARRAY_SIZE(cros_ec_platform_cells),
+-				 NULL, 0, NULL);
++	retval = mfd_add_hotplug_devices(ec->dev, cros_ec_platform_cells,
++					 ARRAY_SIZE(cros_ec_platform_cells));
+ 	if (retval)
+ 		dev_warn(ec->dev,
+ 			 "failed to add cros-ec platform devices: %d\n",
+@@ -441,10 +437,8 @@ static int ec_device_probe(struct platform_device *pdev)
+ 	/* Check whether this EC instance has a VBC NVRAM */
+ 	node = ec->ec_dev->dev->of_node;
+ 	if (of_property_read_bool(node, "google,has-vbc-nvram")) {
+-		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-					 cros_ec_vbc_cells,
+-					 ARRAY_SIZE(cros_ec_vbc_cells),
+-					 NULL, 0, NULL);
++		retval = mfd_add_hotplug_devices(ec->dev, cros_ec_vbc_cells,
++						ARRAY_SIZE(cros_ec_vbc_cells));
+ 		if (retval)
+ 			dev_warn(ec->dev, "failed to add VBC devices: %d\n",
+ 				 retval);
 -- 
 2.20.1
 
