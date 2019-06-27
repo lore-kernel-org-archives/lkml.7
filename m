@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5806EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B326AC48BDA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302812082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1ED20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596809;
-	bh=8uBScBdl8XMNzEQIBDNipy741zQgpj506xIZOhko9jU=;
+	s=default; t=1561596843;
+	bh=USMiDlK7H+yjx2U+GMP0w+qgryIory1Gzbd3k1HhKrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nwlY1wH9pqBPUOgLCRVDW+Kamm/7UzHjYRt+pk+gUsTApI7yr3w2eOPxCK9WTJHBj
-	 s7ctyJ4ud4drttVOA6m8W5Oz3bjimcdvvgjANPeV6VeeCp4ND/30UP7MkZEhtpGcwh
-	 Fcbg+WzY8u9TjtnYnRbNijUQzbKtPr3FkcpVZdC4=
+	b=SSkCxoPuXhkfCkZEZO/S5wzM8xln1hK0nZ5W5C1lsD1kNXGdipXSCdOAegpomBVir
+	 2RFxbQ+6g+4Xe/o5Gavb+XlAbus6UCx2lVdVrNEexNZJfW32TwOxYFrs44JXUFWqo8
+	 w3PdtPdb47psQH821ilX5ixXzLFtVsQpU32uduBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfF0Acp (ORCPT
+        id S1727363AbfF0AcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36450 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:32:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727544AbfF0Acl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:32:41 -0400
+        id S1727335AbfF0AcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:32:00 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43807216E3;
-        Thu, 27 Jun 2019 00:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6ECD2083B;
+        Thu, 27 Jun 2019 00:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595560;
-        bh=8uBScBdl8XMNzEQIBDNipy741zQgpj506xIZOhko9jU=;
+        s=default; t=1561595519;
+        bh=USMiDlK7H+yjx2U+GMP0w+qgryIory1Gzbd3k1HhKrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xurDpMpmIutr1dnfwHDIO8EOa0IjO8e5qAoSplIr4TbsXERu+s4C1EoOQMXofSO6K
-         V+ng99cP2fwqeigZwMoFq/639CYoqk7SDOVVrt3bT/fP3kmauZ1Lw3Mp7rzjjfD6A5
-         nejxeuV9wkiCgweCphTQENnrd/XNKMItOvSdESF4=
+        b=Y3iJBDQ3pcJC03QlJdrw34EM4TsV6sFr5A+CZk+fuUb4BQOEQ5BgUiTKG/EHrPVRq
+         sTHOCXO6mvq4OC5rFmmwbOw7gJhkHkvEbSRR84UIh8O2ZRVO+CJzFPTHsmCsyqyy0J
+         UaWJMC3PlgV2waH6XmMLA0xkfIUjDCy15iSfou2M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 40/95] can: af_can: Fix error path of can_init()
-Date:   Wed, 26 Jun 2019 20:29:25 -0400
-Message-Id: <20190627003021.19867-40-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 28/95] iwlwifi: Fix double-free problems in iwl_req_fw_callback()
+Date:   Wed, 26 Jun 2019 20:29:13 -0400
+Message-Id: <20190627003021.19867-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -61,70 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit c5a3aed1cd3152429348ee1fe5cdcca65fe901ce ]
+[ Upstream commit a8627176b0de7ba3f4524f641ddff4abf23ae4e4 ]
 
-This patch add error path for can_init() to avoid possible crash if some
-error occurs.
+In the error handling code of iwl_req_fw_callback(), iwl_dealloc_ucode()
+is called to free data. In iwl_drv_stop(), iwl_dealloc_ucode() is called
+again, which can cause double-free problems.
 
-Fixes: 0d66548a10cb ("[CAN]: Add PF_CAN core module")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+To fix this bug, the call to iwl_dealloc_ucode() in
+iwl_req_fw_callback() is deleted.
+
+This bug is found by a runtime fuzzing tool named FIZZER written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/af_can.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/can/af_can.c b/net/can/af_can.c
-index 1684ba5b51eb..80d0ec599439 100644
---- a/net/can/af_can.c
-+++ b/net/can/af_can.c
-@@ -958,6 +958,8 @@ static struct pernet_operations can_pernet_ops __read_mostly = {
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 689a65b11cc3..4fd1737d768b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1579,7 +1579,6 @@ static void iwl_req_fw_callback(const struct firmware *ucode_raw, void *context)
+ 	goto free;
  
- static __init int can_init(void)
- {
-+	int err;
-+
- 	/* check for correct padding to be able to use the structs similarly */
- 	BUILD_BUG_ON(offsetof(struct can_frame, can_dlc) !=
- 		     offsetof(struct canfd_frame, len) ||
-@@ -971,15 +973,31 @@ static __init int can_init(void)
- 	if (!rcv_cache)
- 		return -ENOMEM;
- 
--	register_pernet_subsys(&can_pernet_ops);
-+	err = register_pernet_subsys(&can_pernet_ops);
-+	if (err)
-+		goto out_pernet;
- 
- 	/* protocol register */
--	sock_register(&can_family_ops);
--	register_netdevice_notifier(&can_netdev_notifier);
-+	err = sock_register(&can_family_ops);
-+	if (err)
-+		goto out_sock;
-+	err = register_netdevice_notifier(&can_netdev_notifier);
-+	if (err)
-+		goto out_notifier;
-+
- 	dev_add_pack(&can_packet);
- 	dev_add_pack(&canfd_packet);
- 
- 	return 0;
-+
-+out_notifier:
-+	sock_unregister(PF_CAN);
-+out_sock:
-+	unregister_pernet_subsys(&can_pernet_ops);
-+out_pernet:
-+	kmem_cache_destroy(rcv_cache);
-+
-+	return err;
- }
- 
- static __exit void can_exit(void)
+  out_free_fw:
+-	iwl_dealloc_ucode(drv);
+ 	release_firmware(ucode_raw);
+  out_unbind:
+ 	complete(&drv->request_firmware_complete);
 -- 
 2.20.1
 
