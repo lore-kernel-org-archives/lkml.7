@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560E1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F24C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21F582083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F6D21738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595521;
-	bh=ZA9VrjagleecdpQ2Yn/1Dmj0Ua5l12GIiKFBWyy0Ugc=;
+	s=default; t=1561595528;
+	bh=KdG4ys/EbdwGWGorWXkNHp73Xx5QtYhHJc3V328rR0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fPuQllNxXo8CqSj4wEfmYZtlDqTIbo7GsOXQe9LEiI6TeqYiyavWhCmXo3x045L3h
-	 /7SYFRrUg/AAQPT16VMHrr/q6USpRp7o19qko5Bjk9nP9F08WSByUTU44Mnr7aG/Xd
-	 gdfNNdL2VUc64DhH0nk+NUCDex76XH7fwFeBAvgw=
+	b=aeLGpWEQQTUR8YxBORRrOYdxpRqgSFfmdz37PZGukHvepplQPGJcdDCmddFCxT+lv
+	 78IZvT92RqfTAAp9kNJWqkLNosaNjye2rR7rvpCS9Srk3aZrsjHA8QgGpPpcgXIdrf
+	 O9mkzv0Wh3j518xVXJf/i3jNNct0d7u3prabkhw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfF0AcA (ORCPT
+        id S1727384AbfF0AcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:32:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbfF0Ab5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:31:57 -0400
+        id S1727358AbfF0AcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:32:05 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86504217D7;
-        Thu, 27 Jun 2019 00:31:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BDF42083B;
+        Thu, 27 Jun 2019 00:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595516;
-        bh=ZA9VrjagleecdpQ2Yn/1Dmj0Ua5l12GIiKFBWyy0Ugc=;
+        s=default; t=1561595524;
+        bh=KdG4ys/EbdwGWGorWXkNHp73Xx5QtYhHJc3V328rR0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgYcjRRPBI7QU9TosWs0LY33fAGORrODKfoZt0qiw15WW87P5G1FzFA5i7MeAxmbg
-         cbCk81Ibv1HpjD55wzcQIqKvakqPAJhhg7uoJb+oFV/EhWsRH5UJOaVl6VWKLp12l3
-         cIUFbdWX0GYT1i3V+SDRxIVVz9zcZUgkJ3guKzqg=
+        b=fFI43Isv7FKdohQyCaepzVXuiAcEw3XGY5FSjcdqf1uie2c3Ok6DDLTM9SXcMo0Z3
+         VpdjWX7keLe7DfRM3O1zFetNrBdOPSW4QfyQomhO/D4/Jjm9kDOjome8s5PnU7TwCR
+         CS8Cvpkja1jv4HqDqMS3Txv3+46fhogbzFel8NVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Chen <matt.chen@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 27/95] iwlwifi: fix AX201 killer sku loading firmware issue
-Date:   Wed, 26 Jun 2019 20:29:12 -0400
-Message-Id: <20190627003021.19867-27-sashal@kernel.org>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Craig Gallek <kraig@google.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 30/95] bpf: udp: ipv6: Avoid running reuseport's bpf_prog from __udp6_lib_err
+Date:   Wed, 26 Jun 2019 20:29:15 -0400
+Message-Id: <20190627003021.19867-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -61,46 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Chen <matt.chen@intel.com>
+From: Martin KaFai Lau <kafai@fb.com>
 
-[ Upstream commit b17dc0632a17fbfe66b34ee7c24e1cc10cfc503e ]
+[ Upstream commit 4ac30c4b3659efac031818c418beb51e630d512d ]
 
-When try to bring up the AX201 2 killer sku, we
-run into:
-[81261.392463] iwlwifi 0000:01:00.0: loaded firmware version 46.8c20f243.0 op_mode iwlmvm
-[81261.407407] iwlwifi 0000:01:00.0: Detected Intel(R) Dual Band Wireless AX 22000, REV=0x340
-[81262.424778] iwlwifi 0000:01:00.0: Collecting data: trigger 16 fired.
-[81262.673359] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
-[81262.673365] iwlwifi 0000:01:00.0: Status: 0x00000000, count: -906373681
-[81262.673368] iwlwifi 0000:01:00.0: Loaded firmware version: 46.8c20f243.0
-[81262.673371] iwlwifi 0000:01:00.0: 0x507C015D | ADVANCED_SYSASSERT
+__udp6_lib_err() may be called when handling icmpv6 message. For example,
+the icmpv6 toobig(type=2).  __udp6_lib_lookup() is then called
+which may call reuseport_select_sock().  reuseport_select_sock() will
+call into a bpf_prog (if there is one).
 
-Fix this issue by adding 2 more cfg to avoid modifying the
-original cfg configuration.
+reuseport_select_sock() is expecting the skb->data pointing to the
+transport header (udphdr in this case).  For example, run_bpf_filter()
+is pulling the transport header.
 
-Signed-off-by: Matt Chen <matt.chen@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+However, in the __udp6_lib_err() path, the skb->data is pointing to the
+ipv6hdr instead of the udphdr.
+
+One option is to pull and push the ipv6hdr in __udp6_lib_err().
+Instead of doing this, this patch follows how the original
+commit 538950a1b752 ("soreuseport: setsockopt SO_ATTACH_REUSEPORT_[CE]BPF")
+was done in IPv4, which has passed a NULL skb pointer to
+reuseport_select_sock().
+
+Fixes: 538950a1b752 ("soreuseport: setsockopt SO_ATTACH_REUSEPORT_[CE]BPF")
+Cc: Craig Gallek <kraig@google.com>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Craig Gallek <kraig@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv6/udp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 2a03d34afa3b..80695584e406 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3585,7 +3585,9 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 		}
- 	} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
- 		   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
--		   (trans->cfg != &iwl_ax200_cfg_cc ||
-+		   ((trans->cfg != &iwl_ax200_cfg_cc &&
-+		    trans->cfg != &killer1650x_2ax_cfg &&
-+		    trans->cfg != &killer1650w_2ax_cfg) ||
- 		    trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0)) {
- 		u32 hw_status;
+diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
+index 622eeaf5732b..767583c12bf2 100644
+--- a/net/ipv6/udp.c
++++ b/net/ipv6/udp.c
+@@ -516,7 +516,7 @@ int __udp6_lib_err(struct sk_buff *skb, struct inet6_skb_parm *opt,
+ 	struct net *net = dev_net(skb->dev);
  
+ 	sk = __udp6_lib_lookup(net, daddr, uh->dest, saddr, uh->source,
+-			       inet6_iif(skb), inet6_sdif(skb), udptable, skb);
++			       inet6_iif(skb), inet6_sdif(skb), udptable, NULL);
+ 	if (!sk) {
+ 		/* No socket for error: try tunnels before discarding */
+ 		sk = ERR_PTR(-ENOENT);
 -- 
 2.20.1
 
