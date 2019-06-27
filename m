@@ -2,172 +2,247 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B820FC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB6AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC46208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A484208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561651176;
+	bh=6I1XeQYTI0C1wMGld5jxi9JRDkwAl77nalnVGAoFaB8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=M0K6YBGdrw8eUUdnIpD1Y5xgUy8QP6yg1u3G4jnu5v9ZhIxmAE3a7jjh4b6g1/LTw
+	 D7A97nv0n1b+ZlUkUbz/M05bh7vywe6+z2qmqRrVqCo9vDyIDlPoDeyZJAZY0qy5TL
+	 SZHOxelXMRQSAHs7wR5Af1022Cm+CxR/BGbMBT4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfF0P7I (ORCPT
+        id S1726553AbfF0P7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:59:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52828 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbfF0P7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:59:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 87A68AD12;
-        Thu, 27 Jun 2019 15:59:06 +0000 (UTC)
-Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org
-References: <20190627122348.5833-1-kraxel@redhat.com>
- <20190627122348.5833-2-kraxel@redhat.com>
- <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
- <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
- <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
- IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
- AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
- 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
- hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
- YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
- 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
- tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
- R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
- E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
- kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
- 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
- 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
- A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
- NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
- VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
- iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
- VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
- iNx9uqqx
-Message-ID: <41363906-ba15-3940-7b63-c8ae42fe49ff@suse.de>
-Date:   Thu, 27 Jun 2019 17:59:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 27 Jun 2019 11:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbfF0P7e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:59:34 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A930B20B1F;
+        Thu, 27 Jun 2019 15:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561651173;
+        bh=6I1XeQYTI0C1wMGld5jxi9JRDkwAl77nalnVGAoFaB8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=naLqvh+/V/HXw4uIQt+Z2lkT1VuzEXQ8DJYVS4X4TD6X9WBD/TMU6OAEYadqmvD9E
+         yuGwmK5fDXJUMfoxjSl+9Fh3LxBd4Ux9VASITevouRkDvskc4QLhx+7ZNQl5vyT3V8
+         krzLsLTfcgDuSdr8unKrIovW4GVngXT/aXoTu+V0=
+Received: by mail-qk1-f171.google.com with SMTP id s22so2139353qkj.12;
+        Thu, 27 Jun 2019 08:59:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAXN7MdgtpGtiQADHtOsN/rp7e+sfcU/ItiAXmPhggn6O0xH52Iv
+        Z2xWPIBX9Uq0Aj8f6rqb80W3np53w5IYvhvcPA==
+X-Google-Smtp-Source: APXvYqwvJgTQl2n0zLxQeOWaalSbg7gL6HRT3Pd5h2iUsSva2hKv2qKwqOpLuA6YSMsxDf/NTgJhGFoVKL9qu4r4f3g=
+X-Received: by 2002:a37:6357:: with SMTP id x84mr4002969qkb.393.1561651172855;
+ Thu, 27 Jun 2019 08:59:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3"
+References: <20190614081650.11880-1-daniel.baluta@nxp.com> <20190614081650.11880-3-daniel.baluta@nxp.com>
+ <CAL_JsqJKgMB1PNA33gmFju4AQTc2WaSBoOGQExVaGd9LZRmk_g@mail.gmail.com>
+ <CAEnQRZBNA4ndSL1vMStHemYkzt9TxqjgdWWjqFwnBFQ+ha+egA@mail.gmail.com>
+ <CAL_JsqJQRbuWKgON+ukZ3GRwyq8SvTZ=PRGwMhQjAxKPSP-Fkw@mail.gmail.com> <CAEnQRZCjp9dUt0JTjhN0CnV0+Xzc+q1EHCnJn_TNOQoUWZBTsg@mail.gmail.com>
+In-Reply-To: <CAEnQRZCjp9dUt0JTjhN0CnV0+Xzc+q1EHCnJn_TNOQoUWZBTsg@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 27 Jun 2019 09:59:21 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+rWn+vVfBGdAB23Xu0RaFV1HwSdBbfj9F4M3W1EUo9_A@mail.gmail.com>
+Message-ID: <CAL_Jsq+rWn+vVfBGdAB23Xu0RaFV1HwSdBbfj9F4M3W1EUo9_A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: Add DSP IPC binding support
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3
-Content-Type: multipart/mixed; boundary="CyfwPLyugCmmiD1QOF0mNPbhTPLbJPTRI";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie
- <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
- open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org
-Message-ID: <41363906-ba15-3940-7b63-c8ae42fe49ff@suse.de>
-Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
-References: <20190627122348.5833-1-kraxel@redhat.com>
- <20190627122348.5833-2-kraxel@redhat.com>
- <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
- <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
- <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
-In-Reply-To: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
+On Thu, Jun 27, 2019 at 1:40 AM Daniel Baluta <daniel.baluta@gmail.com> wro=
+te:
+>
+> <snip>
+>
+> > > > > +  mboxes:
+> > > > > +    description:
+> > > > > +      List of phandle of 2 MU channels for TXDB, 2 MU channels f=
+or RXDB
+> > > > > +      (see mailbox/fsl,mu.txt)
+> > > > > +    maxItems: 1
+> > > >
+> > > > Should be 4?
+> > >
+> > > Actually is just a list with 1 item. I think is the terminology:
+> > >
+> > > You can have an example here of the mboxes defined for SCU.
+> > > https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/fre=
+escale/imx8qxp.dtsi#L123
+> >
+> > mboxes =3D <&lsio_mu1 0 0
+> > &lsio_mu1 0 1
+> > &lsio_mu1 0 2
+> > &lsio_mu1 0 3
+> > &lsio_mu1 1 0
+> > &lsio_mu1 1 1
+> > &lsio_mu1 1 2
+> > &lsio_mu1 1 3
+> > &lsio_mu1 3 3>;
+> >
+> > Logically, this is 9 entries and each entry is 3 cells ( or phandle
+> > plus 2 cells). More below...
+>
+> Ok..
+>
+> >
+> > > > > +
+> > > > > +  mbox-names
+> >
+> > Also, missing a ':' here. This won't build. Make sure you build this
+> > (make dt_binding_check). See
+> > Documentation/devicetree/writing-schemas.md.
+> >
+> Fixed in v2. Awesome!
+>
+> I thought that Documentation/devicetree/bindings/dsp/fsl,dsp_ipc.yaml
+> is purely decorative and used as an example. But it's actually the schema=
+ for
+> the newly yaml dts, right?
 
---CyfwPLyugCmmiD1QOF0mNPbhTPLbJPTRI
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Yes, that's the point. Enforcing that dts files contain what the
+binding docs say.
 
+>
+> Used make dt_binding_check everything looks OK now.
+>
+> > > > > +    description:
+> > > > > +      Mailboxes names
+> > > > > +    allOf:
+> > > > > +      - $ref: "/schemas/types.yaml#/definitions/string"
+> > > >
+> > > > No need for this, '*-names' already has a defined type.
+> > > So, should I remove the above two lines ?
+> >
+> > Actually, all 4. There's no need to describe what 'mbox-names' is.
+> >
+> > > > > +      - enum: [ "txdb0", "txdb1", "rxdb0", "rxdb1" ]
+> > > >
+> > > > Should be an 'items' list with 4 entries?
+> > >
+> > > Let me better read the yaml spec. But "items" list indeed sounds bett=
+er.
+> >
+> > What you should end up with is:
+> >
+> > items:
+> >   - const: txdb0
+> >   - const: txdb1
+> >   - const: rxdb0
+> >   - const: rxdb1
+> >
+> > This is saying you have 4 strings in the listed order. The enum you
+> > had would be a single string of one of the 4 values.
+> >
+> I see! Thanks.
+>
+> > > > > +required:
+> > > > > +  - compatible
+> > > > > +  - mboxes
+> > > > > +  - mbox-names
+> > > >
+> > > > This seems incomplete. How does one boot the DSP? Load firmware? No
+> > > > resources that Linux has to manage. Shared memory?
+> > >
+> > > This is only the IPC mailboxes used by DSP to communicate with Linux.=
+ The
+> > > loading of the firmware, the resources needed to be managed by Linux,=
+ etc
+> > > are part of the DSP node.
+> >
+> > You should just add the mailboxes to the DSP node then. I suppose you
+> > didn't because you want 2 drivers? If so, that's the OS's problem and
+> > not part of DT. A Linux driver can instantiate devices for other
+> > drivers.
+>
+> Yes, I want the DSP IPC driver to be separated. And then the SOF Linux
+> driver that needs
+> to communicate with DSP just gets a handle to DSP IPC driver and does
+> the communication.
+>
+> dts relevant nodes look like this now:
+>
+> =C2=BB       dsp_ipc: dsp_ipc {
+> =C2=BB       =C2=BB       compatible =3D "fsl,imx8qxp-dsp";
+> =C2=BB       =C2=BB       mbox-names =3D "txdb0", "txdb1",
+> =C2=BB       =C2=BB       =C2=BB            "rxdb0", "rxdb1";
+> =C2=BB       =C2=BB       mboxes =3D <&lsio_mu13 2 0>,
+> =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 2 1>,
+> =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 0>,
+> =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 1>;
+> =C2=BB       };
+>
+> =C2=BB       adma_dsp: dsp@596e8000 {
+> =C2=BB       =C2=BB       compatible =3D "fsl,imx8qxp-sof-dsp";
+> =C2=BB       =C2=BB       reg =3D <0x596e8000 0x88000>;
+> =C2=BB       =C2=BB       reserved-region =3D <&dsp_reserved>;
+> =C2=BB       =C2=BB       ipc =3D <&dsp_ipc>;
+> =C2=BB       };
+>
+> Your suggeston would be to have something like this:
+>
+> =C2=BB       adma_dsp: dsp@596e8000 {
+> =C2=BB       =C2=BB       compatible =3D "fsl,imx8qxp-sof-dsp";
+> =C2=BB       =C2=BB       reg =3D <0x596e8000 0x88000>;
+> =C2=BB       =C2=BB       reserved-region =3D <&dsp_reserved>;
+> =C2=BB                mbox-names =3D "txdb0", "txdb1",
+> =C2=BB       =C2=BB       =C2=BB            "rxdb0", "rxdb1";
+> =C2=BB       =C2=BB       mboxes =3D <&lsio_mu13 2 0>,
+> =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 2 1>,
+> =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 0>,
+> =C2=BB       =C2=BB       =C2=BB        <&lsio_mu13 3 1>;
+> =C2=BB       };
+>
+> Not sure exactly how to instantiate IPC DSP driver then.
 
+DT is not the only way to instantiate drivers. A driver can create a
+platform device itself which will then instantiate a 2nd driver.
 
-Am 27.06.19 um 17:54 schrieb Thomas Zimmermann:
-> Hi
->=20
-> Am 27.06.19 um 17:16 schrieb Gerd Hoffmann:
->>   Hi,
->>
->>>  1) Introduce a default_placement field in struct drm_gem_vram_helper=
+Presumably the DSP needs to be booted, resources enabled, and firmware
+loaded before IPC will work. The DSP driver controlling the lifetime
+of the IPC driver is the right way to manage the dependencies.
 
->>> where this flag can be configured. I'd favor this option.
->>
->>>  2) Introduce a separate callback function for pinning to vram. The
->>> driver would have to set the correct function pointers.
->>
->>>  3) Pin the fb console buffer manually from within the bochs driver.
->>
->> Hmm.  Before calling drm_fbdev_generic_setup() the bo doesn't exist ye=
-t
->> and when the function returns it is already vmapped and pinned I think=
-=2E
->>
->> So (3) isn't easily doable.  (1) looks best to me.
->=20
-> For my patches, it's OK to have to BO pinned to VRAM by default. As the=
+>
+> I already have prepared v2 with most of your feedback incorporated,
+> but not this latest
+> change with moving mboxes inside dsp driver.
+>
+> More than that I have followed the model of SCFW IPC and having to
+> different approach
+> for similar IPC mechanism is a little bit confusing.
 
-> BO will be unmapped most of the time, I can change this flag at any tim=
-e.
+SC is system controller? Maybe I missed it, but I don't think system
+controllers usually have 2 nodes. You only have the communications
+interface exposed as the SC provides services to Linux and Linux
+doesn't manage the SC resources.
 
-So, yeah, option 1 ...
-
-> Best regards
-> Thomas
->=20
->> cheers,
->>   Gerd
->>
->=20
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
-GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG N=C3=BCrnberg)
-
-
---CyfwPLyugCmmiD1QOF0mNPbhTPLbJPTRI--
-
---v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0U58kACgkQaA3BHVML
-eiM5lQf/RsyluzB6xEkjK6Yzi9qC1XEdmXeUMT+OdUI1bSiMmt+ruoWk0u63rBca
-HdrX5C939GADLVoVPG7bzxXHWwQ0yidOaRjVQ1OraFg+QlH6hRc7WIX54Z+GxZb0
-TlVYQCtmfSKIqfA9ksJNvqbKvCpfqJQPjfWkG7hDAN5UWILPRzY9Vf7YJUBUDKHs
-n27LxKwD0AV9hgAct1mhdVgfVECgQYR8GcNdZH0uT3HdLCU6/W7GENtrBYgJKlvT
-1aIh4OplSJNgx6DyNEYXp5wXbYEpYq6y7/Xn569+xH5mclL3kMAaRTBPyJ15bdtQ
-J50K4JrCIGaZzUopBIJ3TfltKu0pIg==
-=HSpn
------END PGP SIGNATURE-----
-
---v5mvHfWoBSW6q2OhJ1KOU2WDnpIPSFgU3--
+Rob
