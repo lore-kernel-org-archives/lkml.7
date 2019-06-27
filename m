@@ -2,111 +2,130 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FE5C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976E5C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27BF20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672D320828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQ8xRApR"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EVCXij4l";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="ctMtitg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfF0HxV (ORCPT
+        id S1726497AbfF0HyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:53:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41522 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfF0HxU (ORCPT
+        Thu, 27 Jun 2019 03:54:22 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:58774 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725787AbfF0HyW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:53:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c2so1326099wrm.8;
-        Thu, 27 Jun 2019 00:53:19 -0700 (PDT)
+        Thu, 27 Jun 2019 03:54:22 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 68E25C00B1;
+        Thu, 27 Jun 2019 07:54:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561622061; bh=e6e2VhfxTqjfagQbFWP/4/+TtGDJvZ5Z6cJYZFfpW8g=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=EVCXij4l+Kw8xQZQJzzMcp0aVNIFtcEvIA1kq/uEf9uaJde0zlzxtICOKDhODxM24
+         kH8xr1T1nUXGfZDHxVvtUg/N+XV6Dl9G8xKUOsZtAtr7YZtnBP6uhmlP1iQAZ0vUdn
+         4j7/iMwS8dhf4rWA1hKVScVZEExJkdurrUvYc2KuCeOWvrypVTT8qLjkZcTEajPy1F
+         C6bzuZ5QMB8BIaMHQhwdmy0YUDFCFSGSZihKrTVZOoNmMh9c5icIOgR+Jp9Y1LCH1f
+         o5NDCmjcXl4NjhB/TwJ5pPWnRuMfXUvjXBv4qZ0sHh0rwzvsIwi/3DeQQFmrlcM55/
+         PzyjR+3xCUcPw==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id C3751A0098;
+        Thu, 27 Jun 2019 07:54:17 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 27 Jun 2019 00:54:16 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 27 Jun 2019 00:54:16 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VLH1G/xrhuaSchHrCbt7xaDv1QIvzTYbR4ToRYC3nAM=;
-        b=DQ8xRApRETpcFLzwK5rKCkAIi+vGxhFXPqVccou4Utrk8ApA7v96BExWn4/4acmFTQ
-         7JuIWLycnRdxpKBEw4E7Ed5LJdsEg0k/iarcMDU97r1D1iDJyS6b68ZDqElHLTODU4CP
-         e5jy5tQh782Rg1vjJrL2cQws5X+PBSmLoRsstne1qNeLEnFMHPTDijWauAAYENgROGOF
-         hpagsUuFd35IOtOX2v5hyqv5zpspQHvLbuZ6qphGuAuKMQfaRoi66x6rRKjwCVgM5prd
-         IvWfkLry+1GEnQL4Hx47zZVAeLGm3VCCdcYi1Vu3CqMQYJCYoYfzoJtS2neYH/yWK/Fw
-         jkQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VLH1G/xrhuaSchHrCbt7xaDv1QIvzTYbR4ToRYC3nAM=;
-        b=pCkPLDUVNKq7kKBJlmjVXFDyy2lhEs3gwSz4O+2iFnOi/SvIOK6oXUcCRies2qA/Hf
-         tclO7FvS5Fud5htsN0apGrH8xpjFgk2l6upZB8GqZ3Vz2TOILJ6XB9Kb+fxP0PN46/ZH
-         dbBat34buQQR9OF6TVjPjUrURfnhByEIZgiF2r3EmOithcVbhzqc9chwUiErAVRSZxZL
-         Q7Tcqa88Y0ovAyTDOYEzaYsHFE918hPIEbT54JYNw21y0ThFhRcI6SzG/PR24/etDb6+
-         MofDnLW6WJ1kfQUvuqMzHEHFflI2pS6HGxR/MbUXoqk/4dvQ+CEnPPEeAu7+BQADsEA2
-         BiiA==
-X-Gm-Message-State: APjAAAUzL1pEoYlLFF1QwIyqTgxgD2iJWQGvZp32K7w29v7WJDLHi8T9
-        02dn0vs3Fu0ifb431PPcoQCIDVsRFP8VIQIHOzA=
-X-Google-Smtp-Source: APXvYqyOMmxDqyz32IcJEYNiHUT1bm+99KTVYSEbMt7gw2e5jIgFT+aQ4ioTQhLLt++vcs1+vGuDkNmZklIp8DN0OCo=
-X-Received: by 2002:a5d:6389:: with SMTP id p9mr2039270wru.297.1561621998678;
- Thu, 27 Jun 2019 00:53:18 -0700 (PDT)
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e6e2VhfxTqjfagQbFWP/4/+TtGDJvZ5Z6cJYZFfpW8g=;
+ b=ctMtitg+sIuo0F9vgJANGK74W7iXmzZXeMCXswaIRD+H3xTEaRcrnXMKW7UjJUPmLGKJ76Gb/yO0hbXyB6veVT9sT6Df29YpbpQs1a5oEfkKjFbkQpK0h5aqtJGs3TopxS0owYNig10rTY2fwGRlmDxwk/znGVyCDv4ymthabEw=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3154.namprd12.prod.outlook.com (20.178.223.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 07:54:14 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c922:4285:22a6:6e]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c922:4285:22a6:6e%5]) with mapi id 15.20.2008.017; Thu, 27 Jun 2019
+ 07:54:14 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: RE: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
+ everything else fails
+Thread-Topic: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
+ everything else fails
+Thread-Index: AQHVLCXCrx1niaeCs0CBNlrs4Af9k6auOg4AgADniCA=
+Date:   Thu, 27 Jun 2019 07:54:14 +0000
+Message-ID: <BN8PR12MB3266A8396ACA97484A5E0CE7D3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1561556555.git.joabreu@synopsys.com>
+ <c7d1dbac1940853c22db8215ed60181b2abe3050.1561556556.git.joabreu@synopsys.com>
+ <20190626200128.GH27733@lunn.ch>
+In-Reply-To: <20190626200128.GH27733@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7c87a89e-03ee-4a77-d368-08d6fad4a647
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR12MB3154;
+x-ms-traffictypediagnostic: BN8PR12MB3154:
+x-microsoft-antispam-prvs: <BN8PR12MB315449D5F2AE02B6C4818A26D3FD0@BN8PR12MB3154.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39850400004)(396003)(346002)(366004)(136003)(199004)(189003)(6636002)(81156014)(5660300002)(52536014)(6116002)(478600001)(66556008)(64756008)(66066001)(66446008)(3846002)(486006)(256004)(71190400001)(71200400001)(6246003)(25786009)(9686003)(8676002)(55016002)(81166006)(8936002)(11346002)(446003)(476003)(6506007)(74316002)(2906002)(99286004)(14454004)(102836004)(26005)(76176011)(4326008)(76116006)(66946007)(73956011)(66476007)(186003)(86362001)(4744005)(53936002)(7736002)(7696005)(229853002)(305945005)(316002)(54906003)(33656002)(6436002)(68736007)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3154;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wGRSFiiR0wxpKjB5C/t1gDp0Xp/XovthilGPsjmEumIWfc8lts4ZbiOp84h3gNBM3axDaL2y+ld6ddv/CihlB3BGlxWh6mgNjgV/Xd52XO40h9n1a17fptLMogJtem/ZswB7mZTOwYWFlEL9MskMku9c4wkH9m6TjyVKOTmAY2hCSt/Rc4VmO86oi9NULyHT5p+lLl+sWbv8bn4c+eqVR+NPr8ARuFkrWUtYcy45nrCYF9lGrlU5ZufWQXQS5xEBTlDA5tA6FvYku86DIjBVnTovvU8pcTj6Myn43T929lBOUvfEVpVh0Q5Nme8oY771X4PtQxNd7+V3aqHlpcLQ3xjJ7FOwri9mSVr5yoNteQeUM43q1LpcXDqvPSJqPIwfBAgyt44YndhnXIKi8Iqme2BezizVwyfgHtB6JF1nb/E=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190522011504.19342-1-zhang.chunyan@linaro.org>
- <20190522011504.19342-2-zhang.chunyan@linaro.org> <20190626181637.CFA6321726@mail.kernel.org>
-In-Reply-To: <20190626181637.CFA6321726@mail.kernel.org>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Thu, 27 Jun 2019 15:52:42 +0800
-Message-ID: <CAAfSe-v6F-8F5YtunuHVmZVrGh5vAAFbkYLP1kThqoJd04BmBw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] clk: sprd: Switch from of_iomap() to devm_ioremap_resource()
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Chunyan Zhang <zhang.chunyan@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c87a89e-03ee-4a77-d368-08d6fad4a647
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 07:54:14.8400
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3154
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 at 02:16, Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Chunyan Zhang (2019-05-21 18:15:01)
-> > devm_ioremap_resources() automatically requests resources and devm_ wrappers
-> > do better error handling and unmapping of the I/O region when needed,
-> > that would make drivers more clean and simple.
-> >
-> > Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->
-> Applied to clk-next
->
-> > diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
-> > index e038b0447206..9ce690999eaa 100644
-> > --- a/drivers/clk/sprd/common.c
-> > +++ b/drivers/clk/sprd/common.c
-> > @@ -50,7 +51,11 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
-> >                         return PTR_ERR(regmap);
-> >                 }
-> >         } else {
-> > -               base = of_iomap(node, 0);
-> > +               res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +               base = devm_ioremap_resource(&pdev->dev, res);
-> > +               if (IS_ERR(base))
->
-> There's also devm_platform_ioremap_resource() if you want to save even
-> more lines!
+From: Andrew Lunn <andrew@lunn.ch>
 
-Yes indeed, thanks for the information.
-Considering this patch was queued to your tree, I decide to use this
-more integrated function later :)
+> On Wed, Jun 26, 2019 at 03:47:44PM +0200, Jose Abreu wrote:
+> > On PCI based setups that are connected to C45 PHY we won't have DT
+> > bindings specifying what's the correct PHY type.
+>=20
+> You can associate a DT node to a PCI device. The driver does not have
+> to do anything special, the PCI core code does all the work.
+>=20
+> As an example look at imx6q-zii-rdu2.dts, node &pcie, which has an
+> intel i210 on the pcie bus, and we need a handle to it.
 
-Cheers,
-Chunyan
-
->
-> > +                       return PTR_ERR(base);
-> > +
+That's for ARM but I'm using X86_64 which only has ACPI :/
