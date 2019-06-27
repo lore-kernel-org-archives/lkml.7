@@ -2,106 +2,129 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91189C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54D3C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F6C20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="F1tWzUYq"
+	by mail.kernel.org (Postfix) with ESMTP id 97122208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfF0Ono (ORCPT
+        id S1726813AbfF0Or6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:43:44 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37094 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbfF0Onn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:43:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=tx6dF92XYQvz4YacD0VR8WVxRaiNwFBa+2vW1h35TBI=; b=F1tWzUYqbyKtgS6PIeqs3RaAq/
-        Q/TGgUztRsGKuL0McSm5Sa5oRGuSsC4zkZiof69ujvLInt7txfhqHyQMgsCNYEpP2QJ55mxWB00u1
-        Or12BnnWm+Wc1RVkI9tqCCGVTE71TW+kWZqjxrHv1a9z9piOaW82mLB96XZnBk3/+9JM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hgVch-0000Yx-16; Thu, 27 Jun 2019 16:43:39 +0200
-Date:   Thu, 27 Jun 2019 16:43:39 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     jacmet@sunsite.dk, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] net: dm9600: false link status
-Message-ID: <20190627144339.GG31189@lunn.ch>
-References: <20190627132137.GB29016@Red>
+        Thu, 27 Jun 2019 10:47:58 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:54717 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfF0Or6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:47:58 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
+   d="scan'208";a="37606820"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jun 2019 07:47:57 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Jun 2019 07:47:56 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Thu, 27 Jun 2019 07:47:52 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>
+CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v5 0/4] add slow clock support for SAM9X60
+Date:   Thu, 27 Jun 2019 17:47:17 +0300
+Message-ID: <1561646841-7663-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627132137.GB29016@Red>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 03:21:37PM +0200, Corentin Labbe wrote:
-> Hello
-> 
-> I own an USB dongle which is a "Davicom DM96xx USB 10/100 Ethernet".
-> According to the CHIP_ID, it is a DM9620.
-> 
-> Since I needed for bringing network to uboot for a board, I have started to create its uboot's driver.
-> My uboot driver is based on the dm9600 Linux driver.
-> 
-> The dongle was working but very very slowy (24Kib/s).
-> After some debug i found that the main problem was that it always link to 10Mbit/s Half-duplex. (according to the MAC registers)
-> 
-> For checking the status of the dongle I have plugged it on a Linux box which give me:
-> dm9601 6-2:1.0 enp0s29f0u2: link up, 100Mbps, full-duplex, lpa 0xFFFF
-> 
-> But in fact the Linux driver is tricked.
-> 
-> I have added debug of MDIO write/read and got:
-> [157550.926974] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x00, val=0x8000
+Hi,
 
-Writing the reset bit. Ideally you should read back the register and
-wait for this bit to clear. Try adding this, and see if this helps, or
-you get 0xffff.
+This series add slow clock support for SAM9X60. Apart from previous IPs, this
+one uses different offsets in control register for different functionalities.
+The series adapt current driver to work for all IPs using per IP
+configurations initialized at probe.
 
-> [157550.931962] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x04, val=0x05e1
+Stephen,
 
-Advertisement control register.  
+I send a new version of this since I'm not seeing the patches on clk-next
+and I though you may had issues with the previous version of this series.
 
-> [157550.951967] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
+Thank you,
+Claudiu Beznea
 
-And now things are bad. In theory, the power down bit is set, and some
-PHYs don't respond properly when powered down. However, it is unclear
-how it got into this state. Did the reset kill it, or setting the
-advertisement? Or is the PHY simply not responding at all. The MDIO
-data lines have a pull up, so if the device does not respond, reads
-give 0xffff.
+Changes in v5:
+- get rid of Content-Transfer-Encoding: base64
+- collect Ack-by tag
 
-Maybe also check register 0, bit 7, EXT_PHY. Is it 0, indicating the
-internal PHY should be used?
+Changes in v4:
+- remove macros which were used to access IP specific bits for control
+  register
+- collect Acked-by, Reviewed-by tags
 
-You could also try reading PHY registers 2 and 3 and see if you can
-get a valid looking PHY ID. Maybe try that before hitting the reset
-bit?
+Changes in v3:
+- add patch 1/1 that remove bypass code in the code specific to SAMA5D4
+  (there is no bypass support on SAMA5D4)
+- adapt review comments
+- register clock with of_clk_hw_onecell_get to emphasize that this IP has
+  2 output clocks MD_SLKC and TD_SLCK (I considered not necessary to
+  introduce new constants to be shared b/w driver and DT bindings; if
+  you consider otherwise, let me know)
+- adapt dt-binding patch with clock-cells changes (thus didn't introduced
+  Reviewed-by tag)
+- renamed struct clk_slow_offsets to struct clk_slow_bits and the
+  corresponding instances of it
 
-> So it exsists two problem:
-> - Linux saying 100Mbps, full-duplex even if it is false.
+Changes in v2:
+- split patch 1/1 from v1 in 2 patches: one adding register bit offsets
+  support (patch 1/3 from this series), one adding support for SAM9X60
+  (patch 2/3 from this series)
+- fix compatible string from "microchip,at91sam9x60-sckc" to
+  "microchip,sam9x60-sckc"
 
-The driver is using the old mii code, not a phy driver. So i cannot
-help too much with linux. But if you can get the MDIO bus working
-reliably, it should be possible to move this over to phylib. The
-internal PHY appears to have all the standard registers, so the
-generic PHY driver has a good chance of working.
+Claudiu Beznea (4):
+  clk: at91: sckc: sama5d4 has no bypass support
+  clk: at91: sckc: add support to specify registers bit offsets
+  dt-bindings: clk: at91: add bindings for SAM9X60's slow clock
+    controller
+  clk: at91: sckc: add support for SAM9X60
 
-     Andrew
+ .../devicetree/bindings/clock/at91-clock.txt       |   7 +-
+ drivers/clk/at91/sckc.c                            | 173 ++++++++++++++++-----
+ 2 files changed, 139 insertions(+), 41 deletions(-)
+
+-- 
+2.7.4
+
