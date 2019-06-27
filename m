@@ -2,224 +2,118 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C361C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B843C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3628E21852
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="bltSty7+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sL4w0Ivw"
+	by mail.kernel.org (Postfix) with ESMTP id 0288921852
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561595934;
+	bh=E8TsNWqqX7qcM4nyVjmHw2lrxq2b78X7JmRXlJJM+Zc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e/Y3GsIKneXrls+Syht+eg24ubId/l9Q29Y+XrtKRBgP7ze2MbmVUg26QNUquv7Da
+	 +lELwn+ApCM3PF86xl6GRS4Z282pZaOT5eQw5tUKWqoXDU2WVogQvRTIXXFxMyzbBP
+	 yYHLAs51k1Lt04KY4dEp2EtZnDG6gBvKSljG7jWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfF0Aiq (ORCPT
+        id S1728968AbfF0Aiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:38:46 -0400
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:38397 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728920AbfF0Aio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:38:44 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 2B4A473A;
-        Wed, 26 Jun 2019 20:38:43 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 26 Jun 2019 20:38:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        ihe2qn6NE+dbP+hWMlfokm/JcFPS71JobWB9K4KtgEg=; b=bltSty7+CDPS15nf
-        c8/dLStnwJjH2NiKy4QOWUFT9A+sNuK5buS60w06U6GqBAfGaMmkdD3SSj13Qdh1
-        xyZ3IOYHsDCqVaHdu2QBIZyJUkvUR2+BrUA3B5ItPLCbBd5HQv12Gns89LPaSSNL
-        c1ByuK51IU+sLMl5Z6dYFu8OkkRsf3NTje+rokUV9sNmufP7+tu3XfQkuXxfW3TK
-        5VMg3VvcOQSc/Dvx7pFTBSS6H7TqSt8c1NL2jyHCFSag3Q55stGp8SSebqCJ8L2S
-        vY/bQRdtLbp4C/CoJ9DVrXE+kz1UkS8W9cXItauqCXTDrzLU5ufdNIHDBHGg2Zlb
-        fhJPFA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=ihe2qn6NE+dbP+hWMlfokm/JcFPS71JobWB9K4Ktg
-        Eg=; b=sL4w0IvwD3VR2WqVm1ezJJA78jXzqiLfGDSowz5eLKjBPWNo04mKaBYUZ
-        G4/puI0sbPxvRBELpDERrk6jctUQ/iVpmMF+2NMhnKPYJdvBbyHtQ+U+NryO9LQO
-        Tn6Pwjagdh82EEsxP0Q0wS0uihzuXNVwOtOWdle9xQAJySft2JJCin3fzBd1Y+Sj
-        qQF5PajEfs5yKbbQXlHu0NZSWoXAE95HeqH+ORH44pU3Bg3OrWIu9S1y4Zqa1eb6
-        XSLCGt952x9kxw8U5c09Jwv/1jotNWVd2yvPWOAaqZRkABWgwuRPHDs/lJEt3kJ7
-        QE8Ly5pf64Exvef/mZecRXAVByP5w==
-X-ME-Sender: <xms:EhAUXVi4U1pTNKiEm_sd60PRZJ6YABwrGoedFA7B7P1Jsh_ap1oiQw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejgdefkecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
-    dujeefrdehfeenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgif
-    rdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:EhAUXelumfsj5Io6oWJaTY0o0N2iPJsck6zWKm2a8lOdgYROj6aXuQ>
-    <xmx:EhAUXQ-ArL1oaer84lmWcy7HoO8HQH6APgq9sYRffXPFPlM9sa2RCQ>
-    <xmx:EhAUXW8wyKQIDL3k079GsD-vQmIkR2FLWJ4-gbWPNXfn6J29PRwwfw>
-    <xmx:EhAUXaqScpSfHZTVBudsytkn_PQCgvLyX0pFnhFPAPTNz2DQ_2hfxg>
-Received: from pluto.themaw.net (unknown [118.208.173.53])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B76EC380083;
-        Wed, 26 Jun 2019 20:38:41 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by pluto.themaw.net (Postfix) with ESMTP id 4415D1C0064;
-        Thu, 27 Jun 2019 08:38:37 +0800 (AWST)
-Message-ID: <c9f8a840e7555648bc79a34512dbbbdb834e6ba3.camel@themaw.net>
-Subject: Re: [PATCH 00/25] VFS: Introduce filesystem information query
- syscall [ver #14]
-From:   Ian Kent <raven@themaw.net>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
-        mszeredi@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 27 Jun 2019 08:38:37 +0800
-In-Reply-To: <20190626104704.dwjd4urpsmuheirc@brauner.io>
-References: <156138532485.25627.7459410522109581052.stgit@warthog.procyon.org.uk>
-         <20190626100525.irdehd24jowz5f75@brauner.io>
-         <cf0361c2d1fc09ad0097f0da1e981b97ad39ab07.camel@themaw.net>
-         <20190626104704.dwjd4urpsmuheirc@brauner.io>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 26 Jun 2019 20:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728942AbfF0Ait (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:38:49 -0400
+Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B210C21871;
+        Thu, 27 Jun 2019 00:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561595928;
+        bh=E8TsNWqqX7qcM4nyVjmHw2lrxq2b78X7JmRXlJJM+Zc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NQ0XV6u2e1vv5pNQptmhxZEOQw5GMADwc/DqX6cuPtsXCyb6m0WwLCPJwbrXxKt+S
+         v3paOg8oUzeJqJJ+d3eKVPZpVuCAUSghQH6EP6UHSANs3yxeD98ZRQ4W16QcF7MDqX
+         bDoX0rEJ2A7veVBhn6Nv82itkLYObfuzeIkeisYM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Reinhard Speyerer <rspmn@arcor.de>,
+        Daniele Palmas <dnlplm@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 48/60] qmi_wwan: extend permitted QMAP mux_id value range
+Date:   Wed, 26 Jun 2019 20:36:03 -0400
+Message-Id: <20190627003616.20767-48-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
+References: <20190627003616.20767-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 12:47 +0200, Christian Brauner wrote:
-> On Wed, Jun 26, 2019 at 06:42:51PM +0800, Ian Kent wrote:
-> > On Wed, 2019-06-26 at 12:05 +0200, Christian Brauner wrote:
-> > > On Mon, Jun 24, 2019 at 03:08:45PM +0100, David Howells wrote:
-> > > > Hi Al,
-> > > > 
-> > > > Here are a set of patches that adds a syscall, fsinfo(), that allows
-> > > > attributes of a filesystem/superblock to be queried.  Attribute values
-> > > > are
-> > > > of four basic types:
-> > > > 
-> > > >  (1) Version dependent-length structure (size defined by type).
-> > > > 
-> > > >  (2) Variable-length string (up to PAGE_SIZE).
-> > > > 
-> > > >  (3) Array of fixed-length structures (up to INT_MAX size).
-> > > > 
-> > > >  (4) Opaque blob (up to INT_MAX size).
-> > > > 
-> > > > Attributes can have multiple values in up to two dimensions and all the
-> > > > values of a particular attribute must have the same type.
-> > > > 
-> > > > Note that the attribute values *are* allowed to vary between dentries
-> > > > within a single superblock, depending on the specific dentry that you're
-> > > > looking at.
-> > > > 
-> > > > I've tried to make the interface as light as possible, so integer/enum
-> > > > attribute selector rather than string and the core does all the
-> > > > allocation
-> > > > and extensibility support work rather than leaving that to the
-> > > > filesystems.
-> > > > That means that for the first two attribute types, sb->s_op->fsinfo()
-> > > > may
-> > > > assume that the provided buffer is always present and always big enough.
-> > > > 
-> > > > Further, this removes the possibility of the filesystem gaining access
-> > > > to
-> > > > the
-> > > > userspace buffer.
-> > > > 
-> > > > 
-> > > > fsinfo() allows a variety of information to be retrieved about a
-> > > > filesystem
-> > > > and the mount topology:
-> > > > 
-> > > >  (1) General superblock attributes:
-> > > > 
-> > > >       - The amount of space/free space in a filesystem (as statfs()).
-> > > >       - Filesystem identifiers (UUID, volume label, device numbers, ...)
-> > > >       - The limits on a filesystem's capabilities
-> > > >       - Information on supported statx fields and attributes and IOC
-> > > > flags.
-> > > >       - A variety single-bit flags indicating supported capabilities.
-> > > >       - Timestamp resolution and range.
-> > > >       - Sources (as per mount(2), but fsconfig() allows multiple
-> > > > sources).
-> > > >       - In-filesystem filename format information.
-> > > >       - Filesystem parameters ("mount -o xxx"-type things).
-> > > >       - LSM parameters (again "mount -o xxx"-type things).
-> > > > 
-> > > >  (2) Filesystem-specific superblock attributes:
-> > > > 
-> > > >       - Server names and addresses.
-> > > >       - Cell name.
-> > > > 
-> > > >  (3) Filesystem configuration metadata attributes:
-> > > > 
-> > > >       - Filesystem parameter type descriptions.
-> > > >       - Name -> parameter mappings.
-> > > >       - Simple enumeration name -> value mappings.
-> > > > 
-> > > >  (4) Mount topology:
-> > > > 
-> > > >       - General information about a mount object.
-> > > >       - Mount device name(s).
-> > > >       - Children of a mount object and their relative paths.
-> > > > 
-> > > >  (5) Information about what the fsinfo() syscall itself supports,
-> > > > including
-> > > >      the number of attibutes supported and the number of capability bits
-> > > >      supported.
-> > > 
-> > > Phew, this patchset is a lot. It's good of course but can we please cut
-> > > some of the more advanced features such as querying by mount id,
-> > > submounts etc. pp. for now?
-> > 
-> > Did you mean the "vfs: Allow fsinfo() to look up a mount object by ID"
-> > patch?
-> > 
-> > We would need to be very careful what was dropped.
-> 
-> Not dropped as in never implement but rather defer it by one merge
-> window to give us a) more time to review and settle the interface while
-> b) not stalling the overall patch.
+From: Reinhard Speyerer <rspmn@arcor.de>
 
-Sure, and I'm not saying something like what you recommend shouldn't
-be done.
+[ Upstream commit 36815b416fa48766ac5a98e4b2dc3ebc5887222e ]
 
-I'm working on user space mount table improvements that I want to
-get done ahead of the merge.
+Permit mux_id values up to 254 to be used in qmimux_register_device()
+for compatibility with ip(8) and the rmnet driver.
 
-Well, I would be but there's still mount-api conversions that need
-to be done so that fsinfo() patches don't end up with endless merge
-conflicts. The fsinfo() super block method will result in changes
-in the same area as the mount-api changes.
+Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
+Cc: Daniele Palmas <dnlplm@gmail.com>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/ABI/testing/sysfs-class-net-qmi | 4 ++--
+ drivers/net/usb/qmi_wwan.c                    | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-The mount-api changes are proving to be a bit of a challenge.
-
-Anyway, the plan is to use the mount table handling improvements to
-try and
-locate bugs and missing or not quite right functionality.
-
-> 
-> > For example, I've found that the patch above is pretty much essential
-> > for fsinfo() to be useful from user space.
-> 
-> Yeah, but that interface is not clearly defined yet as can be seen from
-> the commit message and that's what's bothering me most.
-
-Yeah, but updating my cloned branch hasn't been difficult.
-
-There's a certain amount of functionality that I'd like to see
-retained for when I get back to the user space development.
-
-Using the notifications changes are something I'm not likely
-to get to for quite some time so breaking those out into a
-separate branch (like they were not so long ago) would be
-more sensible IMHO.
-
-There may be some other bits that David can identify too.
-
-Ian
+diff --git a/Documentation/ABI/testing/sysfs-class-net-qmi b/Documentation/ABI/testing/sysfs-class-net-qmi
+index 7122d6264c49..c310db4ccbc2 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-qmi
++++ b/Documentation/ABI/testing/sysfs-class-net-qmi
+@@ -29,7 +29,7 @@ Contact:	Bjørn Mork <bjorn@mork.no>
+ Description:
+ 		Unsigned integer.
+ 
+-		Write a number ranging from 1 to 127 to add a qmap mux
++		Write a number ranging from 1 to 254 to add a qmap mux
+ 		based network device, supported by recent Qualcomm based
+ 		modems.
+ 
+@@ -46,5 +46,5 @@ Contact:	Bjørn Mork <bjorn@mork.no>
+ Description:
+ 		Unsigned integer.
+ 
+-		Write a number ranging from 1 to 127 to delete a previously
++		Write a number ranging from 1 to 254 to delete a previously
+ 		created qmap mux based network device.
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 4165113c435a..2f8e957a0496 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -363,8 +363,8 @@ static ssize_t add_mux_store(struct device *d,  struct device_attribute *attr, c
+ 	if (kstrtou8(buf, 0, &mux_id))
+ 		return -EINVAL;
+ 
+-	/* mux_id [1 - 0x7f] range empirically found */
+-	if (mux_id < 1 || mux_id > 0x7f)
++	/* mux_id [1 - 254] for compatibility with ip(8) and the rmnet driver */
++	if (mux_id < 1 || mux_id > 254)
+ 		return -EINVAL;
+ 
+ 	if (!rtnl_trylock())
+-- 
+2.20.1
 
