@@ -2,213 +2,179 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC41C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA85EC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A59F2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BE52064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfF0IOC (ORCPT
+        id S1726498AbfF0IRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:14:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47820 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbfF0IOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:14:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C91FABC7;
-        Thu, 27 Jun 2019 08:13:59 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH] ftrace: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()
-Date:   Thu, 27 Jun 2019 10:13:34 +0200
-Message-Id: <20190627081334.12793-1-pmladek@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Thu, 27 Jun 2019 04:17:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:46096 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfF0IRG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 04:17:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id s83so1737013iod.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 01:17:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=VuXIC8tjNDuCVmmGPrtEeKuF98440ya/Wk/74x0ugyM=;
+        b=h/03yfLaNYJVJP+APmKN4cjnsB5nDtaUJcACQY31ejE0ApQALXB3Xseh5HsB5Pht00
+         rwFSwRLaRTwHDtVHGtWTO29MdAUnbMGZBH2NYfjVA8ICaFWOakvNC8JaX4AYsPz9eCb5
+         01wvIQcd+CeVCH+TYh2h7VQqY+lG3cf8eNS4k5MnRwCHR4C6ibNm7ynXlWt6MhRQeyT1
+         6mlCagbrmLyPNkJvy1P6wHeh5vEBvPuSyQwThskX4LHqFgrYpNjh9k8EWh8jfrv0Yc3h
+         yGA4BbuQT4xzues688o+IggHkxaktpeQuMdR7poyo0OoFILvsKvXXqJrw+tYT7vSOTjY
+         3N3A==
+X-Gm-Message-State: APjAAAXyc0Z+omV2lhycmM7VGDt3Jf13mzOuGAmsVuUdaIpvlEzj3Pse
+        tvWvLBXi4LTuzVfCWMH6whIIlh6UD1CGj0UG646WLiWB2Qou
+X-Google-Smtp-Source: APXvYqx1Pnmkl1otcLTMDrcx9gDvgdezl75gB6MoowgjWuCpY3TtRKtWiSHU4FhMMavN0tc5QkXsbxyzt6mtm/C9Vs1dphnc0qJR
+MIME-Version: 1.0
+X-Received: by 2002:a02:16c5:: with SMTP id a188mr3184472jaa.86.1561623425654;
+ Thu, 27 Jun 2019 01:17:05 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 01:17:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008f288c058c49c986@google.com>
+Subject: memory leak in ip_mc_add_src (2)
+From:   syzbot <syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text
-permissions race") causes a possible deadlock between register_kprobe()
-and ftrace_run_update_code() when ftrace is using stop_machine().
+Hello,
 
-The existing dependency chain (in reverse order) is:
+syzbot found the following crash on:
 
--> #1 (text_mutex){+.+.}:
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       __mutex_lock+0x88/0x908
-       mutex_lock_nested+0x32/0x40
-       register_kprobe+0x254/0x658
-       init_kprobes+0x11a/0x168
-       do_one_initcall+0x70/0x318
-       kernel_init_freeable+0x456/0x508
-       kernel_init+0x22/0x150
-       ret_from_fork+0x30/0x34
-       kernel_thread_starter+0x0/0xc
+HEAD commit:    249155c2 Merge branch 'parisc-5.2-4' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=122594ada00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1db8bd6825f9661c
+dashboard link: https://syzkaller.appspot.com/bug?extid=6ca1abd0db68b5173a4f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15dc46eea00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ee5aada00000
 
--> #0 (cpu_hotplug_lock.rw_sem){++++}:
-       check_prev_add+0x90c/0xde0
-       validate_chain.isra.21+0xb32/0xd70
-       __lock_acquire+0x4b8/0x928
-       lock_acquire+0x102/0x230
-       cpus_read_lock+0x62/0xd0
-       stop_machine+0x2e/0x60
-       arch_ftrace_update_code+0x2e/0x40
-       ftrace_run_update_code+0x40/0xa0
-       ftrace_startup+0xb2/0x168
-       register_ftrace_function+0x64/0x88
-       klp_patch_object+0x1a2/0x290
-       klp_enable_patch+0x554/0x980
-       do_one_initcall+0x70/0x318
-       do_init_module+0x6e/0x250
-       load_module+0x1782/0x1990
-       __s390x_sys_finit_module+0xaa/0xf0
-       system_call+0xd8/0x2d0
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com
 
- Possible unsafe locking scenario:
+executing program
+executing program
+executing program
+executing program
+BUG: memory leak
+unreferenced object 0xffff88811450f140 (size 64):
+   comm "softirq", pid 0, jiffies 4294942448 (age 32.070s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000c7bad083>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
+     [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
+     [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
+     [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
+     [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
+     [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930  
+net/ipv4/ip_sockglue.c:959
+     [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
+     [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
+     [<000000009383a786>] sock_common_setsockopt+0x38/0x50  
+net/core/sock.c:3126
+     [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+     [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
+     [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
+     [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+     [<00000000420d395e>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(text_mutex);
-                               lock(cpu_hotplug_lock.rw_sem);
-                               lock(text_mutex);
-  lock(cpu_hotplug_lock.rw_sem);
+BUG: memory leak
+unreferenced object 0xffff88810ec5ab40 (size 64):
+   comm "softirq", pid 0, jiffies 4294943651 (age 20.040s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000c7bad083>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
+     [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
+     [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
+     [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
+     [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
+     [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930  
+net/ipv4/ip_sockglue.c:959
+     [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
+     [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
+     [<000000009383a786>] sock_common_setsockopt+0x38/0x50  
+net/core/sock.c:3126
+     [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+     [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
+     [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
+     [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+     [<00000000420d395e>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-It is similar problem that has been solved by the commit 2d1e38f56622b9b
-("kprobes: Cure hotplug lock ordering issues"). Many locks are involved.
-To be on the safe side, text_mutex must become a low level lock taken
-after cpu_hotplug_lock.rw_sem.
+BUG: memory leak
+unreferenced object 0xffff888112a6e080 (size 64):
+   comm "softirq", pid 0, jiffies 4294944252 (age 14.030s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
+     00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+   backtrace:
+     [<00000000c7bad083>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
+     [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
+     [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
+     [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
+     [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
+     [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930  
+net/ipv4/ip_sockglue.c:959
+     [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
+     [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
+     [<000000009383a786>] sock_common_setsockopt+0x38/0x50  
+net/core/sock.c:3126
+     [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
+     [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
+     [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
+     [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
+     [<00000000420d395e>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-This can't be achieved easily with the current ftrace design.
-For example, arm calls set_all_modules_text_rw() already in
-ftrace_arch_code_modify_prepare(), see arch/arm/kernel/ftrace.c.
-This functions is called:
 
-  + outside stop_machine() from ftrace_run_update_code()
-  + without stop_machine() from ftrace_module_enable()
 
-Fortunately, the problematic fix is needed only on x86_64. It is
-the only architecture that calls set_all_modules_text_rw()
-in ftrace path and supports livepatching at the same time.
-
-Therefore it is enough to move text_mutex handling from the generic
-kernel/trace/ftrace.c into arch/x86/kernel/ftrace.c:
-
-   ftrace_arch_code_modify_prepare()
-   ftrace_arch_code_modify_post_process()
-
-This patch basically reverts the ftrace part of the problematic
-commit 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module
-text permissions race"). And provides x86_64 specific-fix.
-
-Some refactoring of the ftrace code will be needed when livepatching
-is implemented for arm or nds32. These architectures call
-set_all_modules_text_rw() and use stop_machine() at the same time.
-
-Fixes: 9f255b632bf12c4dd7 ("module: Fix livepatch/ftrace module text permissions race")
-Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- arch/x86/kernel/ftrace.c |  3 +++
- kernel/trace/ftrace.c    | 10 +---------
- 2 files changed, 4 insertions(+), 9 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 0927bb158ffc..33786044d5ac 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -22,6 +22,7 @@
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/memory.h>
- 
- #include <trace/syscall.h>
- 
-@@ -35,6 +36,7 @@
- 
- int ftrace_arch_code_modify_prepare(void)
- {
-+	mutex_lock(&text_mutex);
- 	set_kernel_text_rw();
- 	set_all_modules_text_rw();
- 	return 0;
-@@ -44,6 +46,7 @@ int ftrace_arch_code_modify_post_process(void)
- {
- 	set_all_modules_text_ro();
- 	set_kernel_text_ro();
-+	mutex_unlock(&text_mutex);
- 	return 0;
- }
- 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 38277af44f5c..d3034a4a3fcc 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -34,7 +34,6 @@
- #include <linux/hash.h>
- #include <linux/rcupdate.h>
- #include <linux/kprobes.h>
--#include <linux/memory.h>
- 
- #include <trace/events/sched.h>
- 
-@@ -2611,12 +2610,10 @@ static void ftrace_run_update_code(int command)
- {
- 	int ret;
- 
--	mutex_lock(&text_mutex);
--
- 	ret = ftrace_arch_code_modify_prepare();
- 	FTRACE_WARN_ON(ret);
- 	if (ret)
--		goto out_unlock;
-+		return ret;
- 
- 	/*
- 	 * By default we use stop_machine() to modify the code.
-@@ -2628,9 +2625,6 @@ static void ftrace_run_update_code(int command)
- 
- 	ret = ftrace_arch_code_modify_post_process();
- 	FTRACE_WARN_ON(ret);
--
--out_unlock:
--	mutex_unlock(&text_mutex);
- }
- 
- static void ftrace_run_modify_code(struct ftrace_ops *ops, int command,
-@@ -5784,7 +5778,6 @@ void ftrace_module_enable(struct module *mod)
- 	struct ftrace_page *pg;
- 
- 	mutex_lock(&ftrace_lock);
--	mutex_lock(&text_mutex);
- 
- 	if (ftrace_disabled)
- 		goto out_unlock;
-@@ -5846,7 +5839,6 @@ void ftrace_module_enable(struct module *mod)
- 		ftrace_arch_code_modify_post_process();
- 
-  out_unlock:
--	mutex_unlock(&text_mutex);
- 	mutex_unlock(&ftrace_lock);
- 
- 	process_cached_mods(mod->name);
--- 
-2.16.4
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
