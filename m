@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D819AC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630D7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A379920659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DA421850
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595683;
-	bh=79Xn3PW+I8deRgiV9VQMSZ4xnqeZqmJBnCnIfu2/UxA=;
+	s=default; t=1561595687;
+	bh=O0ULjoFzCNvZzXuW9GRqTXu/TYfN84Zp6g+9mIEnPNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=obFU9oF3nZTeq6nh/bdRn2+TOHi38VtOqYqLatkqcoQJcKSatchr+yF6bL+Y9XlbO
-	 V7ddnoMGL7FiCUL6Usmt80q2RRMF69w6Oakg5CxvxBc1cBpiFoPBjK67bXDJYRfdav
-	 uKEvQMj9cxCTzzB15Debl+4Fia3b5pkHWCpFqufE=
+	b=bZC5IBTACP0aaPt6Sx2fbKx7AJltuyTsy0e3/JtKyQW/0ugSrUzb1a9sGbD/MlaF0
+	 Y+gkbgiwYQe888mCercGqqbo+j2i5ZISMH8AfYnL5gEQhkfR+OSptIeuqLPoqhwP9f
+	 7vieIkilu/l627t+nFjW/QJmrcW85Dc4wgbxCLBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfF0Ael (ORCPT
+        id S1728126AbfF0Aep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:34:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38900 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:34:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbfF0Aej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:34:39 -0400
+        id S1728113AbfF0Aem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:34:42 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ADA820659;
-        Thu, 27 Jun 2019 00:34:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EDD92184B;
+        Thu, 27 Jun 2019 00:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595678;
-        bh=79Xn3PW+I8deRgiV9VQMSZ4xnqeZqmJBnCnIfu2/UxA=;
+        s=default; t=1561595681;
+        bh=O0ULjoFzCNvZzXuW9GRqTXu/TYfN84Zp6g+9mIEnPNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WpggHoyECWUKOYw2owiA8Jz0rP9TxLQHv1bvors6grnzRcOyW7RQSJo4+8pC+QpXJ
-         u6cl/agkpIxhXYNZqwvLqoe2G3yEBjwZFW/Nf/PmEf3LJ5cINN8kqJwxIu+v02r4Ck
-         HI4/YwLvxFuxWIMl2YULtkgpe84rWfHfJkMBM1Ek=
+        b=uQ+veMiCv2CNdGUElw8IUrjpKyELQByVsj50ff3eAOo/XhZl0mDywPKnsWW1gs+cH
+         xfPzFnziegwHU8JPyHOJyC5I5HwOQ9QmXmB0K0Mxt/rXwLKTrRVXeXVwGhAPZcb0Fv
+         HX4OUGED34OjsfIHs8LkiA4Swg9vvHnfgGkl1EF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 76/95] mmc: core: complete HS400 before checking status
-Date:   Wed, 26 Jun 2019 20:30:01 -0400
-Message-Id: <20190627003021.19867-76-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 77/95] block: fix page leak when merging to same page
+Date:   Wed, 26 Jun 2019 20:30:02 -0400
+Message-Id: <20190627003021.19867-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -60,46 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit b0e370b95a3b231d0fb5d1958cce85ef57196fe6 ]
+[ Upstream commit 4569180495600ac59f5cd27f67242a6cb51254f3 ]
 
-We don't have a reproducible error case, yet our BSP team suggested that
-the mmc_switch_status() command in mmc_select_hs400() should come after
-the callback into the driver completing HS400 setup. It makes sense to
-me because we want the status of a fully setup HS400, so it will
-increase the reliability of the mmc_switch_status() command.
+When multiple iovecs reference the same page, each get_user_page call
+will add a reference to the page.  But once we've created the bio that
+information gets lost and only a single reference will be dropped after
+I/O completion.  Use the same_page information returned from
+__bio_try_merge_page to drop additional references to pages that were
+already present in the bio.
 
-Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Fixes: ba6c7ac3a2f4 ("mmc: core: more fine-grained hooks for HS400 tuning")
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Based on a patch from Ming Lei.
+
+Link: https://lkml.org/lkml/2019/4/23/64
+Fixes: 576ed913 ("block: use bio_add_page in bio_iov_iter_get_pages")
+Reported-by: David Gibson <david@gibson.dropbear.id.au>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/mmc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ block/bio.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index 3e786ba204c3..671bfcceea6a 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -1212,13 +1212,13 @@ static int mmc_select_hs400(struct mmc_card *card)
- 	mmc_set_timing(host, MMC_TIMING_MMC_HS400);
- 	mmc_set_bus_speed(card);
+diff --git a/block/bio.c b/block/bio.c
+index a3c80a6c1fe5..80a25c245109 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -884,6 +884,7 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ 	unsigned short entries_left = bio->bi_max_vecs - bio->bi_vcnt;
+ 	struct bio_vec *bv = bio->bi_io_vec + bio->bi_vcnt;
+ 	struct page **pages = (struct page **)bv;
++	bool same_page = false;
+ 	ssize_t size, left;
+ 	unsigned len, i;
+ 	size_t offset;
+@@ -904,8 +905,15 @@ static int __bio_iov_iter_get_pages(struct bio *bio, struct iov_iter *iter)
+ 		struct page *page = pages[i];
  
-+	if (host->ops->hs400_complete)
-+		host->ops->hs400_complete(host);
+ 		len = min_t(size_t, PAGE_SIZE - offset, left);
+-		if (WARN_ON_ONCE(bio_add_page(bio, page, len, offset) != len))
+-			return -EINVAL;
 +
- 	err = mmc_switch_status(card);
- 	if (err)
- 		goto out_err;
++		if (__bio_try_merge_page(bio, page, len, offset, &same_page)) {
++			if (same_page)
++				put_page(page);
++		} else {
++			if (WARN_ON_ONCE(bio_full(bio)))
++                                return -EINVAL;
++			__bio_add_page(bio, page, len, offset);
++		}
+ 		offset = 0;
+ 	}
  
--	if (host->ops->hs400_complete)
--		host->ops->hs400_complete(host);
--
- 	return 0;
- 
- out_err:
 -- 
 2.20.1
 
