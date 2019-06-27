@@ -2,94 +2,62 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9087AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BCBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593A921726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561594355;
-	bh=Osk+WBlid/WqtKaFRPzG0N2NFL3AjvaggN3s5qEAK0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DQ9DLa8qTfquNe3tjFYjM1MTJx8eoTfVzGWxZ3BpncpdS6x2zzgoiOd+bfr9nFVXd
-	 uzgfJ3JhmnRocGT5spD2JMuGWbMcZpMf2fhDpsciAzhThkYfRgt5kupORLM1LhjYX4
-	 axw186Sqj6Ndx7Sl1g19ELbMqTwrKlE1gIBXTcMc=
+	by mail.kernel.org (Postfix) with ESMTP id E5340216C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfF0AMe (ORCPT
+        id S1726707AbfF0AUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:12:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:20:05 -0400
+Received: from mga09.intel.com ([134.134.136.24]:9750 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbfF0AMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:12:33 -0400
-Received: from localhost (unknown [116.247.127.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0DB216E3;
-        Thu, 27 Jun 2019 00:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561594352;
-        bh=Osk+WBlid/WqtKaFRPzG0N2NFL3AjvaggN3s5qEAK0k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c8nVkfrYBLnr3Op6Kwmiifi2LKPP4yRdhElZEIT1vlVVvsbnoDJ2jIJs9XK6fkOrO
-         aFpDfsTNm4tFe5DrMP5ZQVzOQkc0YMVWuYafp5+x37ZaOxxBR0OM0C6LUbfqcSvEdp
-         nq8za9NVGNuuXPzn8ZI9cqSxi6Jc545NK+fMsngM=
-Date:   Thu, 27 Jun 2019 08:12:25 +0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.14 0/1] 4.14.131-stable review
-Message-ID: <20190627001225.GF527@kroah.com>
-References: <20190626083606.248422423@linuxfoundation.org>
- <CA+G9fYuaw+eZsGn=cOUWObmf4ZupjBd4U=w34s9k730O+dZjwg@mail.gmail.com>
+        id S1726385AbfF0AUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:20:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 17:20:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
+   d="scan'208";a="156052147"
+Received: from mwsinger-mobl3.ger.corp.intel.com ([10.252.48.211])
+  by orsmga008.jf.intel.com with ESMTP; 26 Jun 2019 17:19:58 -0700
+Message-ID: <1b3c1718d46c20d2b4c7d8fd4fc08482dd4b0c95.camel@linux.intel.com>
+Subject: Re: [PATCH v1 0/2] char: tpm: add new driver for tpm i2c ptp
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Oshri Alkoby <oshrialkoby85@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com,
+        tomer.maimon@nuvoton.com
+Date:   Thu, 27 Jun 2019 03:20:10 +0300
+In-Reply-To: <20190625223503.367710-1-oshrialkoby85@gmail.com>
+References: <20190625223503.367710-1-oshrialkoby85@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuaw+eZsGn=cOUWObmf4ZupjBd4U=w34s9k730O+dZjwg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 08:15:07PM +0530, Naresh Kamboju wrote:
-> On Wed, 26 Jun 2019 at 14:15, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 4.14.131 release.
-> > There are 1 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri 28 Jun 2019 08:35:42 AM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.131-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On Wed, 2019-06-26 at 01:35 +0300, Oshri Alkoby wrote:
+> This patch set adds support for TPM devices that implement the I2C
+> interface defined by TCG PTP specification.
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> The driver was tested on Raspberry-Pie 3, using Nuvoton NPCT75X TPM.
 
-Great, thanks for testing all of these and letting me know.
+Where is the link to teh spec?
 
-greg k-h
+/Jarkko
+
