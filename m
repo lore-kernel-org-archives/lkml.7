@@ -2,213 +2,181 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3F0C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8323C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6722064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:10:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzM9c5Pe"
+	by mail.kernel.org (Postfix) with ESMTP id B651E2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfF0SKS (ORCPT
+        id S1726640AbfF0SLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:10:18 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54781 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfF0SKS (ORCPT
+        Thu, 27 Jun 2019 14:11:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726498AbfF0SLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:10:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g135so6619182wme.4;
-        Thu, 27 Jun 2019 11:10:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c+0ZQ9Od+086D/9fGWPHqSpaGVLYjvBvrTlk4zSHV/Q=;
-        b=GzM9c5PeEFBSo8uapQ/yfFJMpfD3DoQYdIQryDht0CtNDQxWdcmt2ILkKRYTLMo25m
-         YNNT6I0hysDhkC0jOkHLCSfhwEEwc/7lrXi1dyRkw6c7TcaZEDvQixRvnOVXoYCD1MR+
-         Yjh+Wy9FLHU7IwOVnUlR2vPBpqVzN+4H4Eb8cd4BsiQrwRm4hRBCRFN3pS2awLHXFTsD
-         ouO+kX0KsZ+Dtm79OekfZlEvYoUSnfrjKj8wmqOIlyMxNmemVSM2yQ2nMM6aqFzY8gBn
-         RcASzY8DWfZ142+deLM8OQGE1sFEOBSRXTqWuSQwOiEA8qYtYVvdnhiP3gWlUcgum2vC
-         yxKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=c+0ZQ9Od+086D/9fGWPHqSpaGVLYjvBvrTlk4zSHV/Q=;
-        b=f0sQbhMeBoIHScwPQ/HTnYeBVt00o0+FmXMSST4JrLoosXXAN+pL7Gos6yJYxpusxf
-         T8ke6N76NGp84/XXVta9/ts/dUDIiV9w47Xs9M6R9GTqiwo4Py2DvxI9LjVCbxodNoxS
-         XwjF8BDC+6oJ+ZGHmKKrxRjedLObmLS89fE+zlM9NJ+WyQaH1Z+BqpBdSJUyILGVV0RP
-         ToRpIELfFjcYRrpxRU+YmTNxT+zh6XQW7NalfWza45lJzzxpNpGAzGQ1+s98hOfRv3mA
-         S29K74I1u52+VScu4Ws7ACyEMqEDXFzN6RvtJ4Z5iPxMFShvF3C/jKC5dye9YWeYQ+4a
-         ZbWA==
-X-Gm-Message-State: APjAAAWCdVXVjamXUDxwDH+c8pLu3J2A5Ig0skEE/v3duUIuObBOHArP
-        lrl17W7zg/ntJfSG5mtHlWY=
-X-Google-Smtp-Source: APXvYqwKje19Mf3kwwP4DXyn4gPXouc6Ky887LFnCqTQk2/9HnAefzFvuqUqRU6vycHsxmv59+cJQQ==
-X-Received: by 2002:a7b:c8d4:: with SMTP id f20mr4314069wml.90.1561659015084;
-        Thu, 27 Jun 2019 11:10:15 -0700 (PDT)
-Received: from [10.67.50.91] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id c1sm5012340wrh.1.2019.06.27.11.10.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 11:10:14 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Peng Fan <peng.fan@nxp.com>, Jassi Brar <jassisinghbrar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ", Sascha Hauer" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-3-peng.fan@nxp.com>
- <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
- <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
- <AM0PR04MB44814D3BD59033ECDDE3094C88E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
- <20190626170919.GC13572@e107155-lin>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <02f505e2-132c-477a-1e6b-6a060ef3f404@gmail.com>
-Date:   Thu, 27 Jun 2019 11:10:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 27 Jun 2019 14:11:17 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RI74Hu126637
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:11:16 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2td2fh13xp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:11:15 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 27 Jun 2019 19:11:15 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Jun 2019 19:11:11 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RIBALb42402090
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 18:11:10 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4805AB2071;
+        Thu, 27 Jun 2019 18:11:10 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24866B2068;
+        Thu, 27 Jun 2019 18:11:10 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 18:11:10 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 286E716C1C01; Thu, 27 Jun 2019 11:11:12 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 11:11:12 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Reply-To: paulmck@linux.ibm.com
+References: <20190626135447.y24mvfuid5fifwjc@linutronix.de>
+ <20190626162558.GY26519@linux.ibm.com>
+ <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home>
+ <20190627153031.GA249127@google.com>
+ <CAEXW_YT5LgdP_9SrachU4ZrhV9a7o_DM8eBfgxj=n7yRRyS-TQ@mail.gmail.com>
+ <20190627154011.vbje64x6auaknhx4@linutronix.de>
+ <CAEXW_YTvkSTqwi_jOE2Pr+uD-GC4Xv0CtBEL9YO7=LvJcM3FBQ@mail.gmail.com>
+ <CAEXW_YTmx3wFKuiLyrQO6uSPYAL179EPa6N3WO7qZahccCs-pg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190626170919.GC13572@e107155-lin>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YTmx3wFKuiLyrQO6uSPYAL179EPa6N3WO7qZahccCs-pg@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062718-0052-0000-0000-000003D70729
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011342; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01224108; UDB=6.00644250; IPR=6.01005296;
+ MB=3.00027492; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 18:11:14
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062718-0053-0000-0000-0000617B9650
+Message-Id: <20190627181112.GY26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/26/19 10:09 AM, Sudeep Holla wrote:
-> On Wed, Jun 26, 2019 at 09:44:06AM -0700, Florian Fainelli wrote:
->> On 6/26/19 6:31 AM, Peng Fan wrote:
->>>>> The firmware driver might not have func-id, such as SCMI/SCPI.
->>>>> So add an optional func-id to let smc mailbox driver could
->>>>> use smc SiP func id.
->>>>>
->>>> There is no end to conforming to protocols. Controller drivers should
->>>> be written having no particular client in mind.
->>>
->>> If the func-id needs be passed from user, then the chan_id suggested
->>> by Sudeep should also be passed from user, not in mailbox driver.
->>>
->>> Jassi, so from your point, arm_smc_send_data just send a0 - a6
->>> to firmware, right?
->>>
->>> Sudeep, Andre, Florian,
->>>
->>> What's your suggestion? SCMI not support, do you have
->>> plan to add smc transport in SCMI?
->>
->> On the platforms that I work with, we have taken the liberty of
->> implementing SCMI in our monitor firmware because the other MCU we use
->> for dynamic voltage and frequency scaling did not have enough memory to
->> support that and we still had the ability to make that firmware be
->> trusted enough we could give it power management responsibilities. I
->> would certainly feel more comfortable if the SCMI specification was
->> amended to indicate that the Agent could be such a software entity,
->> still residing on the same host CPU as the Platform(s), but if not,
->> that's fine.
->>
+On Thu, Jun 27, 2019 at 01:46:27PM -0400, Joel Fernandes wrote:
+> On Thu, Jun 27, 2019 at 1:43 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > On Thu, Jun 27, 2019 at 11:40 AM Sebastian Andrzej Siewior
+> > <bigeasy@linutronix.de> wrote:
+> > >
+> > > On 2019-06-27 11:37:10 [-0400], Joel Fernandes wrote:
+> > > > Sebastian it would be nice if possible to trace where the
+> > > > t->rcu_read_unlock_special is set for this scenario of calling
+> > > > rcu_read_unlock_special, to give a clear idea about whether it was
+> > > > really because of an IPI. I guess we could also add additional RCU
+> > > > debug fields to task_struct (just for debugging) to see where there
+> > > > unlock_special is set.
+> > > >
+> > > > Is there a test to reproduce this, or do I just boot an intel x86_64
+> > > > machine with "threadirqs" and run into it?
+> > >
+> > > Do you want to send me a patch or should I send you my kvm image which
+> > > triggers the bug on boot?
+> >
+> > I could reproduce this as well just booting Linus tree with threadirqs
+> > command line and running rcutorture. In 15 seconds or so it locks
+> > up... gdb backtrace shows the recursive lock:
 > 
-> That's completely legal and there's nothing in the specification that
-> prohibits. I understand it's not explicitly not mentioned and I have
-> been trying to get such things clarified. But since it's main focus
-> is on the message protocol, the clarity on transport mechanism is very
-> thin and there's hesitation to add more details under the impression
-> that it may restrict the usage.
-> 
-> But as I mentioned, I understand what you need there :)
-> 
->> This has lead us to implement a mailbox driver that uses a proprietary
->> SMC call for the P2A path ("tx" channel) and the return being done via
->> either that same SMC or through SGI. You can take a look at it in our
->> downstream tree here actually:
->>
->> https://github.com/Broadcom/stblinux-4.9/blob/master/linux/drivers/mailbox/brcmstb-mailbox.c
->>
-> 
-> Just curious, I see it's fast call and why do you still depend on
-> interrupt to indicate completion of the message. Will the return from
-> SMC not suffice ? Sorry if I am missing something obvious.
+> Sorry that got badly wrapped, so I pasted it here:
+> https://hastebin.com/ajivofomik.shell
 
-It is currently used for synchronous delayed responses where the SMC
-call returns early, but the operation is carried out asynchronously by
-e.g: the MCU that does voltage scaling a few milliseconds later. We'd
-rather not block the caller for too long and that's where it stems from.
--- 
-Florian
+Which rcutorture scenario would that be?  TREE03 is thus far refusing
+to fail for me when run this way:
 
+$ tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --trust-make --configs "TREE03" --bootargs "threadirqs"
+
+If it had failed, I would have tried the patch shown below.  I know that
+Sebastian has some concerns about the bug happening anyway, but we have
+to start somewhere!  ;-)
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 82c925df1d92..be7bafc2c0a0 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -624,25 +624,16 @@ static void rcu_read_unlock_special(struct task_struct *t)
+ 		      (rdp->grpmask & rnp->expmask) ||
+ 		      tick_nohz_full_cpu(rdp->cpu);
+ 		// Need to defer quiescent state until everything is enabled.
+-		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
+-		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
+-			// Using softirq, safe to awaken, and we get
+-			// no help from enabling irqs, unlike bh/preempt.
+-			raise_softirq_irqoff(RCU_SOFTIRQ);
+-		} else {
+-			// Enabling BH or preempt does reschedule, so...
+-			// Also if no expediting or NO_HZ_FULL, slow is OK.
+-			set_tsk_need_resched(current);
+-			set_preempt_need_resched();
+-			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+-			    !rdp->defer_qs_iw_pending && exp) {
+-				// Get scheduler to re-evaluate and call hooks.
+-				// If !IRQ_WORK, FQS scan will eventually IPI.
+-				init_irq_work(&rdp->defer_qs_iw,
+-					      rcu_preempt_deferred_qs_handler);
+-				rdp->defer_qs_iw_pending = true;
+-				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+-			}
++		set_tsk_need_resched(current);
++		set_preempt_need_resched();
++		if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
++		    !rdp->defer_qs_iw_pending && exp) {
++			// Get scheduler to re-evaluate and call hooks.
++			// If !IRQ_WORK, FQS scan will eventually IPI.
++			init_irq_work(&rdp->defer_qs_iw,
++				      rcu_preempt_deferred_qs_handler);
++			rdp->defer_qs_iw_pending = true;
++			irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+ 		}
+ 		t->rcu_read_unlock_special.b.deferred_qs = true;
+ 		local_irq_restore(flags);
 
