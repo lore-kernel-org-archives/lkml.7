@@ -2,84 +2,159 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21F2C004E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C084C004E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A64F6208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09EE720644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lcXiMKYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfF0URj (ORCPT
+        id S1726601AbfF0USM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 16:17:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37256 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbfF0URj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:17:39 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E579F308A9E2;
-        Thu, 27 Jun 2019 20:17:31 +0000 (UTC)
-Received: from ovpn-116-138.phx2.redhat.com (ovpn-116-138.phx2.redhat.com [10.3.116.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 675255D71B;
-        Thu, 27 Jun 2019 20:17:28 +0000 (UTC)
-Message-ID: <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-From:   Scott Wood <swood@redhat.com>
-To:     paulmck@linux.ibm.com, Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 27 Jun 2019 16:18:12 -0400
+Received: from mail-pf1-f182.google.com ([209.85.210.182]:39710 "EHLO
+        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfF0USM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 16:18:12 -0400
+Received: by mail-pf1-f182.google.com with SMTP id j2so1772539pfe.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 13:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=S0lkRqMuPGYVFDWL/aCSm9jlU++otPFj3p6mx8+rEfU=;
+        b=lcXiMKYy7faHTeobky/d/atpZ34DqKNpFa5w/YRy+2wzQioqbugwenqZuVgZ9qqR01
+         UtG5m7TVMIqxtREqc5LGU4ZmDErwg5uU2i84zvYNkhkHDZAk+rLoNYmWmg5ck5XTfrZg
+         gVOXUB5HmN4D3RGUkQlXsDx/3R4bbn6aD5bQBEFjLCg3OEeCBIoSspKUuRYfM28xmWPJ
+         8T+l6ZNKDOi4kXlQ4R2GAqLCiwJ7/afzkXcTcL9pH/ky4e2bNYtTG7gwqliOVTUchuiw
+         EBZmXYBiY0Pb2+UdhnPMkeCrdvB4yCOtqjrUKvZ9puwRPT49A39ia0hPl9Ik6SHMh5b1
+         Nl4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=S0lkRqMuPGYVFDWL/aCSm9jlU++otPFj3p6mx8+rEfU=;
+        b=NSgVRBcE/JzM2tU4k2tXpkl4v1dq+bVl8UsjL4ihLSjqIKalDHpPlVW/YE7YktkAcT
+         bOhu7tV7AIwxeD677m/c944gBKNXT4oqUVWErnsmyKepwpk0eqb6G6nUEK1UWi0G9cZ6
+         DrNKTGf27G9amEeh+l6RB5c3m6YouZ2vflbei0+QeZMW899l3sF7Faw0jurlfWj61p83
+         IWCVMfwWLsEwyuQXQ0AYZ24I8C6seRar246IMYc8414Szn1FLWExppE/mCCg+TvF3Fkc
+         LlTqQGQNj/NrfQ2rYeJxWbG/TCqrN+wqvQI0x6RKtpT2Bw/ksc+6ioBExBkNkRx5rUGa
+         /n8Q==
+X-Gm-Message-State: APjAAAX+ZLaOJwqQT5FIyySI6XVyjnuGNvYOsL5hIO/U7ZoIcMVwvpLh
+        40+UBaMfxD1KmpERdtFydGFbJQ==
+X-Google-Smtp-Source: APXvYqz4AyDMwOD9smVbccYFLy+DFv7kGRObLxqzYEhKkrb1XeOnl/OR5abLy2zGkUpCVl6omu+cQA==
+X-Received: by 2002:a17:90a:26e4:: with SMTP id m91mr8314065pje.93.1561666690816;
+        Thu, 27 Jun 2019 13:18:10 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id m10sm12524pgq.67.2019.06.27.13.18.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 13:18:09 -0700 (PDT)
+From:   bsegall@google.com
+To:     Dave Chiluk <chiluk+linux@indeed.com>
+Cc:     Phil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
         Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Thu, 27 Jun 2019 15:17:27 -0500
-In-Reply-To: <20190627184107.GA26519@linux.ibm.com>
-References: <20190626135447.y24mvfuid5fifwjc@linutronix.de>
-         <20190626162558.GY26519@linux.ibm.com> <20190627142436.GD215968@google.com>
-         <20190627103455.01014276@gandalf.local.home>
-         <20190627153031.GA249127@google.com> <20190627155506.GU26519@linux.ibm.com>
-         <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
-         <20190627173831.GW26519@linux.ibm.com> <20190627181638.GA209455@google.com>
-         <20190627184107.GA26519@linux.ibm.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Kyle Anderson <kwa@yelp.com>,
+        Gabriel Munos <gmunoz@netflix.com>,
+        John Hammond <jhammond@indeed.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: Re: [PATCH v4 1/1] sched/fair: Return all runtime when cfs_b has very little remaining.
+References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
+        <1561391404-14450-1-git-send-email-chiluk+linux@indeed.com>
+        <1561391404-14450-2-git-send-email-chiluk+linux@indeed.com>
+        <xm26tvcex50s.fsf@bsegall-linux.svl.corp.google.com>
+        <CAC=E7cUxcNkc7T7AXCr3PO6rqqxrk269JW3SDnXG-LtO-6-BVQ@mail.gmail.com>
+Date:   Thu, 27 Jun 2019 13:18:08 -0700
+In-Reply-To: <CAC=E7cUxcNkc7T7AXCr3PO6rqqxrk269JW3SDnXG-LtO-6-BVQ@mail.gmail.com>
+        (Dave Chiluk's message of "Wed, 26 Jun 2019 17:10:04 -0500")
+Message-ID: <xm26pnmywznj.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 27 Jun 2019 20:17:38 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
-> On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
-> > 
-> > I think the fix should be to prevent the wake-up not based on whether we
-> > are
-> > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
-> > from
-> > a scheduler path (if we can detect that)
-> 
-> Or just don't do the wakeup at all, if it comes to that.  I don't know
-> of any way to determine whether rcu_read_unlock() is being called from
-> the scheduler, but it has been some time since I asked Peter Zijlstra
-> about that.
-> 
-> Of course, unconditionally refusing to do the wakeup might not be happy
-> thing for NO_HZ_FULL kernels that don't implement IRQ work.
+Dave Chiluk <chiluk+linux@indeed.com> writes:
 
-Couldn't smp_send_reschedule() be used instead?
+> On Mon, Jun 24, 2019 at 10:33:07AM -0700, bsegall@google.com wrote:
+>> This still has a similar cost as reducing min_cfs_rq_runtime to 0 - we
+>> now take a tg-global lock on every group se dequeue. Setting min=0 means
+>> that we have to take it on both enqueue and dequeue, while baseline
+>> means we take it once per min_cfs_rq_runtime in the worst case.
+> Yep, it's only slightly better than simply setting min_cfs_rq_runtime=0.
+> There's definitely a tradeoff of having to grab the lock every time.
+>
+> The other non-obvious benefit to this is that when the application
+> starts hitting throttling the entire application starts hitting
+> throttling closer to simultaneously.  Previously, threads that don't do
+> much could continue sipping on their 1ms of min_cfs_rq_runtime, while
+> main threads were throttled.  With this the application would more or
+> less halt within 5ms of full quota usage.
+>
+>> In addition how much this helps is very dependent on the exact pattern
+>> of sleep/wake - you can still strand all but 15ms of runtime with a
+>> pretty reasonable pattern.
+>
+> I thought this change would have an upper bound stranded time of:
+> NUMCPUs * min_cfs_rq_runtime - 3 * sched_cfs_bandwidth_slice().
+> From the stranding of 1ms on each queue minues the amount that we'd
+> return when we forcibly hit the 3 x bandwidth slice Am I missing
+> something here? Additionally that's worst case, and would require that
+> threads be scheduled on distinct cpus mostly sequentially, and then
+> never run again.
 
--Scott
+Yeah, to be exact it's that. It's just that this is only relevant at all
+when NUMCPUs*min_cfs_rq_runtime is at least a significant fraction of
+quota, and when "scheduled on distinct cpus, and then never run again"
+happens. How sequential it needs to be depends on the threads vs num
+cpus.
 
 
+>
+>> If the cost of taking this global lock across all cpus without a
+>> ratelimit was somehow not a problem, I'd much prefer to just set
+>> min_cfs_rq_runtime = 0. (Assuming it is, I definitely prefer the "lie
+>> and sorta have 2x period 2x runtime" solution of removing expiration)
+>
+> Can I take this as an technical ack of the v3 patchset?  Do you have any
+> other comments for that patchset you'd like to see corrected before it
+> gets integrated?  If you are indeed good with that patchset, I'll clean
+> up the comment and Documentation text and re-submit as a v5 patchset. I
+>
+> actually like that patchset best as well, for all the reasons already
+> discussed.  Especially the one where it's been running like this for 5
+> years prior to 512ac999.
+>
+> Also given my new-found understanding of min_cfs_rq_runtime, doesn't
+> this mean that if we don't expire runtime we could potentially have a
+> worst case of 1ms * NUMCPUs of extra runtime instead of 2x runtime?
+> This is because min_cfs_rq_runtime could theoretically live on a per-cpu
+> indefinitely?  Still this is actually much smaller than I previously had
+> feared.  Also it still holds that average runtime is still bounded by
+> runtime/period on average.
+
+Yeah, I think I was misremembering or thinking only about one example or
+something. Meanwhile I'm thinking this is potentially /worse/ than just
+2x runtime per 2x period, though obviously it depends on cpus vs quota.
+
+
+One thing I'm trying now is if we made the slack timer go and collect
+all the min_cfs_rq_runtime left behind, which would provide something
+similar to the min=0 case for fixing not only this but other cases of
+stranding bandwidth, but also some level of rate limiting.
+
+
+
+>
+> Thanks
