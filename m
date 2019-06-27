@@ -2,167 +2,151 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B149FC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E29C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92900208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:18:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gecuNsfA"
+	by mail.kernel.org (Postfix) with ESMTP id 0619F208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfF0TSm (ORCPT
+        id S1726574AbfF0TT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 15:18:42 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46438 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0TSl (ORCPT
+        Thu, 27 Jun 2019 15:19:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34538 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726384AbfF0TT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 15:18:41 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d4so8109281edr.13;
-        Thu, 27 Jun 2019 12:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V9/DvrSm1tuMxgh9gCPc5feOBQeRzRI5OCgy1Wf79Gk=;
-        b=gecuNsfA+4DkKar9EsBNVwySmvxGtn5QjxCfGe0pL3C8P5PP1Xy2qhhhZDcoqqpsMt
-         o6a5PIeN7eNQMIhzmvUeQoUvUM6ihzgxXWIq70u7fu9iVoHK0FzMDxAxRgwfjJ4Y/0Np
-         eAncgvXBOQ0xmiVv1lecus3bfWyVdHk5VwzGFxCT2/GbeqlKb/P18E1rbb80hy5diF/H
-         4YdJAru4bKV8H2mbVgheU4JQmdx7/dddyh73C9Mp5lr4a6BOUu8eCcrxqeIzo0SKJiFZ
-         5sPJgJAVAr2Bwv73DAJQk97UYRN7q89boMhZV+hgUVehyd/t4CV8IjUq7W/y3RK4iS23
-         l2yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V9/DvrSm1tuMxgh9gCPc5feOBQeRzRI5OCgy1Wf79Gk=;
-        b=TP+oXsWK9wC0B3f6/oM6FMEKVdaf7abZmk6PpmmArXpRLFar6AygTpJfa2GlzqUZ8+
-         am2lC4cQwvPp9OvFT/jpek6JwQ5UwKbPEi+BoyCwOsXvAHWo9CJWlmOHzvjVjN+DMLXf
-         3K6xbQldBZi9gIsUR3nYIG7HBXY4mPPwqbHQDIW6Hc/fXK0RHWPnYcqqjWkfEkxz2fUK
-         Ul4N+qpehdDaPo0BVjWgurzS7pExxQk3Oe3tR2ArDctMUNIv1gEX44B1Cad+Pq/EQkpT
-         vxlxBA0iewrIHuAfYnyWUXg66rUNNYYyg/ocX+EJ4ClwrfMPUr+fK3GeqZrx5Jq43fdP
-         VJsQ==
-X-Gm-Message-State: APjAAAWkrxL/xlwj60944GO6mM6IlJ1MUYSybiMYMjLICpOBr22PiR7G
-        cLj078D7b8Q9eigZMr4OZwHZ7ob2F4c87g==
-X-Google-Smtp-Source: APXvYqzo3o22jNRP11IR4sgG0M1LkCQD4a9v4DkJtwgfurt3ukcs5ifOVNN2Vcr8awUGY9pHnFRL3A==
-X-Received: by 2002:a50:a56d:: with SMTP id z42mr6430929edb.241.1561663119763;
-        Thu, 27 Jun 2019 12:18:39 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id bs5sm575800ejb.10.2019.06.27.12.18.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 12:18:39 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 12:18:37 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2] PCI: rpaphp: Avoid a sometimes-uninitialized warning
-Message-ID: <20190627191837.GA111331@archlinux-epyc>
-References: <20190603174323.48251-1-natechancellor@gmail.com>
- <20190603221157.58502-1-natechancellor@gmail.com>
+        Thu, 27 Jun 2019 15:19:57 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RJHSXo191564
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:19:55 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2td0ks12pc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:19:55 -0400
+Received: from localhost
+        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Thu, 27 Jun 2019 20:19:54 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Jun 2019 20:19:50 +0100
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RJJnLr61145392
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 19:19:50 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB5A9136053;
+        Thu, 27 Jun 2019 19:19:49 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B900213604F;
+        Thu, 27 Jun 2019 19:19:48 +0000 (GMT)
+Received: from [9.85.237.135] (unknown [9.85.237.135])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 19:19:48 +0000 (GMT)
+Subject: Re: [PATCH v3 1/8] dt-bindings: soc: Add Aspeed XDMA engine binding
+ documentation
+To:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, Joel Stanley <joel@jms.id.au>
+References: <1559153408-31190-1-git-send-email-eajames@linux.ibm.com>
+ <1559153408-31190-2-git-send-email-eajames@linux.ibm.com>
+ <58b74556-cbf0-4da2-9392-4c4ac40ad760@www.fastmail.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Date:   Thu, 27 Jun 2019 14:19:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603221157.58502-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <58b74556-cbf0-4da2-9392-4c4ac40ad760@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19062719-0012-0000-0000-00001749ABD0
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011342; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01224131; UDB=6.00644264; IPR=6.01005319;
+ MB=3.00027493; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 19:19:53
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062719-0013-0000-0000-000057DB5727
+Message-Id: <c8d80e9a-6fa9-aa57-3b5f-e20b20dd0f66@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 03:11:58PM -0700, Nathan Chancellor wrote:
-> When building with -Wsometimes-uninitialized, clang warns:
-> 
-> drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
-> used uninitialized whenever 'for' loop exits because its condition is
-> false [-Wsometimes-uninitialized]
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
-> here
->         if (fndit)
->             ^~~~~
-> drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
-> it is always true
->         for (j = 0; j < entries; j++) {
->                     ^~~~~~~~~~~
-> drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
-> 'fndit' to silence this warning
->         int j, fndit;
->                     ^
->                      = 0
-> 
-> fndit is only used to gate a sprintf call, which can be moved into the
-> loop to simplify the code and eliminate the local variable, which will
-> fix this warning.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/504
-> Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
-> 
-> v1 -> v2:
-> 
-> * Eliminate fndit altogether by shuffling the sprintf call into the for
->   loop and changing the if conditional, as suggested by Nick.
-> 
->  drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> index bcd5d357ca23..c3899ee1db99 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
->  	struct of_drc_info drc;
->  	const __be32 *value;
->  	char cell_drc_name[MAX_DRC_NAME_LEN];
-> -	int j, fndit;
-> +	int j;
->  
->  	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
->  	if (info == NULL)
-> @@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
->  
->  		/* Should now know end of current entry */
->  
-> -		if (my_index > drc.last_drc_index)
-> -			continue;
-> -
-> -		fndit = 1;
-> -		break;
-> +		/* Found it */
-> +		if (my_index <= drc.last_drc_index) {
-> +			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
-> +				my_index);
-> +			break;
-> +		}
->  	}
-> -	/* Found it */
-> -
-> -	if (fndit)
-> -		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
-> -			my_index);
->  
->  	if (((drc_name == NULL) ||
->  	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
-> -- 
-> 2.22.0.rc3
-> 
 
-Gentle ping, can someone pick this up?
+On 5/30/19 12:30 AM, Andrew Jeffery wrote:
+>
+> On Thu, 30 May 2019, at 03:40, Eddie James wrote:
+>> Document the bindings.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   .../devicetree/bindings/soc/aspeed/xdma.txt        | 23 ++++++++++++++++++++++
+>>   1 file changed, 23 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>> b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>> new file mode 100644
+>> index 0000000..85e82ea
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
+>> @@ -0,0 +1,23 @@
+>> +* Device tree bindings for the Aspeed XDMA Engine
+>> +
+>> +The XDMA Engine embedded in the AST2500 SOC can perform automatic DMA
+>> +operations over PCI between the AST2500 (acting as a BMC) and a host
+>> processor.
+>> +
+>> +Required properties:
+>> +
+>> + - compatible		"aspeed,ast2500-xdma"
+>> + - reg			contains the offset and length of the memory region
+>> +			assigned to the XDMA registers
+>> + - resets		reset specifier for the syscon reset associated with
+>> +			the XDMA engine
+>> + - interrupts		the interrupt associated with the XDMA engine on this
+>> +			platform
+> The indentation is quite distracting. If you rev the series can you fix it?
 
-Cheers,
-Nathan
+
+I think the diff is throwing it off; it all lines up when applied.
+
+Thanks,
+
+Eddie
+
+
+>
+> Otherwise,
+>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+>
+>> +
+>> +Example:
+>> +
+>> +    xdma@1e6e7000 {
+>> +        compatible = "aspeed,ast2500-xdma";
+>> +        reg = <0x1e6e7000 0x100>;
+>> +        resets = <&syscon ASPEED_RESET_XDMA>;
+>> +        interrupts = <6>;
+>> +    };
+>> -- 
+>> 1.8.3.1
+>>
+>>
+
