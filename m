@@ -3,107 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4A7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D706FC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD0821841
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561606554;
-	bh=VbXYrl8hV0yD1BgA3FSNiW43CpbVpvSODNnRganJGDE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SYwcUFeFA36yMKm4OElADXdoRuqYAs945t35GzKxVhXfx+4VFC0r4WczjEDT7LAXj
-	 GTqHQsAdBYOkb5uLdKiJ1o6jV50c9InvSYIfqaEWG9q+mGaw2mPe1AnN9i0+t+HxUu
-	 o5MjEwju0wWinKzBChLqiF6tqu2sB89p3nBQ9IzE=
+	by mail.kernel.org (Postfix) with ESMTP id 9C8B920828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="km8f7oZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfF0Dfx (ORCPT
+        id S1726892AbfF0Dhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726462AbfF0Dfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:35:52 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C898C216E3;
-        Thu, 27 Jun 2019 03:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561606552;
-        bh=VbXYrl8hV0yD1BgA3FSNiW43CpbVpvSODNnRganJGDE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qJNVSV/gh5CVGeGNXpkcW2nF9iUxd1Sdk2X1TV3BnRqByggZqSGbDMq/6dRMBaEd6
-         X2eUMCkVnjulZ29brgN5QAbJUKPSXyQbRJD2zzaU60IjlrKzh1AKlvGVn63QYi9OzC
-         IK+TVy8Lf1kt5G+0QGXbfgv6unH4vFb+A9uGD3oE=
-Date:   Wed, 26 Jun 2019 20:35:51 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v3 0/4] Devmap cleanups + arm64 support
-Message-Id: <20190626203551.4612e12be27be3458801703b@linux-foundation.org>
-In-Reply-To: <20190626154532.GA3088@mellanox.com>
-References: <cover.1558547956.git.robin.murphy@arm.com>
-        <20190626073533.GA24199@infradead.org>
-        <20190626123139.GB20635@lakrids.cambridge.arm.com>
-        <20190626153829.GA22138@infradead.org>
-        <20190626154532.GA3088@mellanox.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Jun 2019 23:37:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38718 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfF0Dhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:37:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R3Y2ko095743;
+        Thu, 27 Jun 2019 03:37:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=nxMs4h/6RcJBUFEIvJBgo9aJwQP29EP3zQ4e3KQb5VQ=;
+ b=km8f7oZ3aB83RO1CQMYX9+GN0qW7qia7dHvNVe4nfJyyfLWh9C5Bied10WW3/OO+5til
+ TYwF7HZIykSG2G3TwRj+uxcB3ax6AJbPjMzrkY+F1e/PJQUGq1bR1MLat/XtGHlC5TrO
+ Oz2hdJg6q59SaLFIwVuAz9ZkBaMTd6BoPKCJr/uBMog7tNBRytXODuuUb/kRcyy4ZeNo
+ /KJLVkvQFDM5VGmzUd0YihQdwqFWFvnFNCshcL9NScArhrJtQFOscHUbbpyjTkLxBUuf
+ TKOXw5G7YFOiHRQaKjqr18yg+VaOIncP1wPsbJtH7Jo7BmhKFFooD0ygRXPZ0GE3KPrm og== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t9cyqnm13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 03:37:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R3bZbq099738;
+        Thu, 27 Jun 2019 03:37:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2t9acd15hk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 03:37:36 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5R3bZwH019756;
+        Thu, 27 Jun 2019 03:37:36 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Jun 2019 20:37:34 -0700
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, stefanha@redhat.com
+Subject: Re: [PATCH 0/2] scsi: add support for request batching
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+        <746ad64a-4047-1597-a0d4-f14f3529cc19@redhat.com>
+Date:   Wed, 26 Jun 2019 23:37:32 -0400
+In-Reply-To: <746ad64a-4047-1597-a0d4-f14f3529cc19@redhat.com> (Paolo
+        Bonzini's message of "Wed, 26 Jun 2019 15:51:32 +0200")
+Message-ID: <yq1lfxnk8ar.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=808
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906270039
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=874 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906270039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 15:45:47 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-> On Wed, Jun 26, 2019 at 08:38:29AM -0700, Christoph Hellwig wrote:
-> > On Wed, Jun 26, 2019 at 01:31:40PM +0100, Mark Rutland wrote:
-> > > On Wed, Jun 26, 2019 at 12:35:33AM -0700, Christoph Hellwig wrote:
-> > > > Robin, Andrew:
-> > > 
-> > > As a heads-up, Robin is currently on holiday, so this is all down to
-> > > Andrew's preference.
-> > > 
-> > > > I have a series for the hmm tree, which touches the section size
-> > > > bits, and remove device public memory support.
-> > > > 
-> > > > It might be best if we include this series in the hmm tree as well
-> > > > to avoid conflicts.  Is it ok to include the rebase version of at least
-> > > > the cleanup part (which looks like it is not required for the actual
-> > > > arm64 support) in the hmm tree to avoid conflicts?
-> > > 
-> > > Per the cover letter, the arm64 patch has a build dependency on the
-> > > others, so that might require a stable brnach for the common prefix.
-> > 
-> > I guess we'll just have to live with the merge errors then, as the
-> > mm tree is a patch series and thus can't easily use a stable base
-> > tree.  That is unlike Andrew wants to pull in the hmm tree as a prep
-> > patch for the series.
-> 
-> It looks like the first three patches apply cleanly to hmm.git ..
-> 
-> So what we can do is base this 4 patch series off rc6 and pull the
-> first 3 into hmm and the full 4 into arm.git. We use this workflow often
-> with rdma and netdev.
-> 
-> Let me know and I can help orchestate this.
+Paolo,
 
-Well.  Whatever works.  In this situation I'd stage the patches after
-linux-next and would merge them up after the prereq patches have been
-merged into mainline.  Easy.
+> Ping?  Are there any more objections?
 
+It's a core change so we'll need some more reviews. I suggest you
+resubmit.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
