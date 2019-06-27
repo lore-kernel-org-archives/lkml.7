@@ -2,118 +2,106 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CE2C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99137C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DB4208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A868208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="y2XCS2jv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBdX4Lpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfF0WOH (ORCPT
+        id S1726823AbfF0WOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:14:07 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:44759 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfF0WOG (ORCPT
+        Thu, 27 Jun 2019 18:14:39 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44839 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbfF0WOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:14:06 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RMDAoA472374
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 15:13:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RMDAoA472374
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561673591;
-        bh=oNQW3R0Fq1NiXUpePESWOXF0yCeNhTbXhZSMVXdz8tQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=y2XCS2jvCKiQNHlwVKe5dqb3OTgDqs9KY+hVzZnPmh4mVzsHSeD4xYsVSIcqJkBp1
-         KxWoX82FRud2RH/hS0zTiQL8sYJdr8yp8O23xWWpza+65fIX8fiXXUKBdMpaACUtIn
-         brRmeOTVUzmXcfYTRgeqCtoPOKTi11OdyNEXAMlHMaPa8ltVgw2glK6j0Vc2olsP1V
-         cXTeZc2S+6W9GDwMnGqLcuyxTz2tgldtH20K+ekzx4vx3sRHXfUdiOnPAPF9uWRcJF
-         7yRT1PpOTb/hGzn5o9hOb4ELwIEsRoU1aeSiam8f32gALbrpZhRjNH4bPsqeGjza0o
-         HyD51RpVPFNeA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RMD9a3472369;
-        Thu, 27 Jun 2019 15:13:09 -0700
-Date:   Thu, 27 Jun 2019 15:13:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andy Lutomirski <tipbot@zytor.com>
-Message-ID: <tip-d974ffcfb7447db5f29a4b662a3eaf99a4e1109e@git.kernel.org>
-Cc:     bp@alien8.de, fweimer@redhat.com, jannh@google.com, hpa@zytor.com,
-        kernel-hardening@lists.openwall.com, mingo@kernel.org,
-        luto@kernel.org, tglx@linutronix.de, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org
-Reply-To: bp@alien8.de, fweimer@redhat.com, jannh@google.com,
-          mingo@kernel.org, luto@kernel.org, hpa@zytor.com,
-          kernel-hardening@lists.openwall.com, tglx@linutronix.de,
-          keescook@chromium.org, peterz@infradead.org,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <d77c7105eb4c57c1a95a95b6a5b8ba194a18e764.1561610354.git.luto@kernel.org>
-References: <d77c7105eb4c57c1a95a95b6a5b8ba194a18e764.1561610354.git.luto@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/entry] Documentation/admin: Remove the vsyscall=native
- documentation
-Git-Commit-ID: d974ffcfb7447db5f29a4b662a3eaf99a4e1109e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 27 Jun 2019 18:14:38 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n2so1621641pgp.11;
+        Thu, 27 Jun 2019 15:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NZXRbshkIzDoSjsEe6DOCALRS5cAnDLBAFY0PCjxxcU=;
+        b=cBdX4LpeL+5vcJzIjdWukBMVOC25dcs8gOFk8FaXLeZh4mPQ1IqFwisSjMlNNNaHZZ
+         vyULpV6qOd2TK95gmTBDrlWV40A+36b0wKcUNdXPqrYsHR5eOSVDTXeapan3VLKFTClX
+         OZxaSnKCMbx/0JiYw40Sqp2SFmJjzz+1SJlbWTe3eeVKiOD05lMcOfTRF183iEoeZuaa
+         +JcwA0nz5Vgd/nycUDCVEnFKH27S7GrEP4p9YLv2OF0s6KhhNf7tDC1jhm8ApnuYNIej
+         lo5Lx/SGn7UeDl3q2IOxeyIl4y721mVaKAin81Ne7L2+M4K8z3ex1FcNzNVUCnfS773j
+         33jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NZXRbshkIzDoSjsEe6DOCALRS5cAnDLBAFY0PCjxxcU=;
+        b=X3tuDAXatyxYKTO3EGV7+CrqbTViU3siTc0szAs01Sniy4l1mq2UU4CKhmvLqn3zne
+         d/yKci752zX7AbOGXZqasT5QJMI2WslkLzpmW4uraN0IXzyhq2xE0HGDR1hx47Y1d658
+         N38mrTKGOkX/PQ66Kw7qWyYVAQMj/8SD9wToiapDbBKQ//ohYPux0tsHgfpXCy03OJZ9
+         BouHdWer6JN1LRaGZlENT6DDLjVm7xUtsAdEYWkjRcfz9xMruyQKq0MCSlYya13+fKIC
+         q/+XuUPcgXvKNnoaeJW34YMKBHv5V5q1nmMbRd/PVK1GdAgC5ZwrJuPYdq2qThYvkwMo
+         BM/w==
+X-Gm-Message-State: APjAAAXLhE6OUA1MB9B+PNyDYggtJ0B6QVmDclckMv5lEY5qJ5TVrL2q
+        j46r4FDl+NnVljASSCOC0CM=
+X-Google-Smtp-Source: APXvYqzgUPfbteOtdizfNvJDkNBveWB5fGZbGGCcUfGxHAzouvZj2SyT/6FKfztouZ9ftzAfbsE4oQ==
+X-Received: by 2002:a63:e156:: with SMTP id h22mr5909967pgk.370.1561673678002;
+        Thu, 27 Jun 2019 15:14:38 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:305a])
+        by smtp.gmail.com with ESMTPSA id j2sm81162pfn.135.2019.06.27.15.14.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 15:14:37 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 15:14:36 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next v2 0/6]  bpf: add BPF_MAP_DUMP command to
+Message-ID: <20190627221434.tz2fscw2cjvrqiop@ast-mbp.dhcp.thefacebook.com>
+References: <20190627202417.33370-1-brianvv@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190627202417.33370-1-brianvv@google.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d974ffcfb7447db5f29a4b662a3eaf99a4e1109e
-Gitweb:     https://git.kernel.org/tip/d974ffcfb7447db5f29a4b662a3eaf99a4e1109e
-Author:     Andy Lutomirski <luto@kernel.org>
-AuthorDate: Wed, 26 Jun 2019 21:45:02 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:04:38 +0200
+On Thu, Jun 27, 2019 at 01:24:11PM -0700, Brian Vazquez wrote:
+> This introduces a new command to retrieve a variable number of entries
+> from a bpf map.
+> 
+> This new command can be executed from the existing BPF syscall as
+> follows:
+> 
+> err =  bpf(BPF_MAP_DUMP, union bpf_attr *attr, u32 size)
+> using attr->dump.map_fd, attr->dump.prev_key, attr->dump.buf,
+> attr->dump.buf_len
+> returns zero or negative error, and populates buf and buf_len on
+> succees
+> 
+> This implementation is wrapping the existing bpf methods:
+> map_get_next_key and map_lookup_elem
+> the results show that even with a 1-elem_size buffer, it runs ~40 faster
+> than the current implementation, improvements of ~85% are reported when
+> the buffer size is increased, although, after the buffer size is around
+> 5% of the total number of entries there's no huge difference in
+> increasing
+> it.
 
-Documentation/admin: Remove the vsyscall=native documentation
+was it with kpti and retpoline mitigations?
 
-The vsyscall=native feature is gone -- remove the docs.
-
-Fixes: 076ca272a14c ("x86/vsyscall/64: Drop "native" vsyscalls")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: stable@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/d77c7105eb4c57c1a95a95b6a5b8ba194a18e764.1561610354.git.luto@kernel.org
-
----
- Documentation/admin-guide/kernel-parameters.txt | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 138f6664b2e2..0082d1e56999 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5102,12 +5102,6 @@
- 			emulate     [default] Vsyscalls turn into traps and are
- 			            emulated reasonably safely.
- 
--			native      Vsyscalls are native syscall instructions.
--			            This is a little bit faster than trapping
--			            and makes a few dynamic recompilers work
--			            better than they would in emulation mode.
--			            It also makes exploits much easier to write.
--
- 			none        Vsyscalls don't work at all.  This makes
- 			            them quite hard to use for exploits but
- 			            might break your system.
