@@ -2,82 +2,100 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EF6C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1AAC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DB220659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEFE2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfF0Q7B (ORCPT
+        id S1726622AbfF0Q7L convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:59:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59668 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF0Q7A (ORCPT
+        Thu, 27 Jun 2019 12:59:11 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58161 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfF0Q7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:59:00 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hgXjZ-000846-Sc; Thu, 27 Jun 2019 16:58:53 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, xen-devel@lists.xenproject.org,
-        alsa-devel@alsa-project.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: xen-front: fix unintention integer overflow on left shifts
-Date:   Thu, 27 Jun 2019 17:58:53 +0100
-Message-Id: <20190627165853.21864-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Jun 2019 12:59:11 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5789AFF813;
+        Thu, 27 Jun 2019 16:59:04 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 18:59:01 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     <richard@nod.at>, <dwmw2@infradead.org>,
+        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
+        <vigneshr@ti.com>, <bbrezillon@kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: Re: [PATCH] mtd: rawnand: stm32_fmc2: increase DMA completion
+ timeouts
+Message-ID: <20190627185901.6247a77c@xps13>
+In-Reply-To: <1561128480-14531-1-git-send-email-christophe.kerello@st.com>
+References: <1561128480-14531-1-git-send-email-christophe.kerello@st.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Christophe,
 
-Shifting the integer value 1 is evaluated using 32-bit
-arithmetic and then used in an expression that expects a 64-bit
-value, so there is potentially an integer overflow. Fix this
-by using the BIT_ULL macro to perform the shift.
+Christophe Kerello <christophe.kerello@st.com> wrote on Fri, 21 Jun
+2019 16:48:00 +0200:
 
-Addresses-Coverity: ("Unintentional integer overflow")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- sound/xen/xen_snd_front_alsa.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> When the system is overloaded, DMA data transfer completion occurs after
+> 100ms. Increase the timeouts to let it the time to complete.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-diff --git a/sound/xen/xen_snd_front_alsa.c b/sound/xen/xen_snd_front_alsa.c
-index b14ab512c2ce..e01631959ed8 100644
---- a/sound/xen/xen_snd_front_alsa.c
-+++ b/sound/xen/xen_snd_front_alsa.c
-@@ -196,7 +196,7 @@ static u64 to_sndif_formats_mask(u64 alsa_formats)
- 	mask = 0;
- 	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
- 		if (pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa) & alsa_formats)
--			mask |= 1 << ALSA_SNDIF_FORMATS[i].sndif;
-+			mask |= BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif);
- 
- 	return mask;
- }
-@@ -208,7 +208,7 @@ static u64 to_alsa_formats_mask(u64 sndif_formats)
- 
- 	mask = 0;
- 	for (i = 0; i < ARRAY_SIZE(ALSA_SNDIF_FORMATS); i++)
--		if (1 << ALSA_SNDIF_FORMATS[i].sndif & sndif_formats)
-+		if (BIT_ULL(ALSA_SNDIF_FORMATS[i].sndif) & sndif_formats)
- 			mask |= pcm_format_to_bits(ALSA_SNDIF_FORMATS[i].alsa);
- 
- 	return mask;
--- 
-2.20.1
+The first SoB should be the author's. Either Amelie is the author and
+you should use 'git commit --amend --author=..." or she is not and
+should be dropped (unless she sends the patch which is yours, and in
+this case her name should appear second).
 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+>  drivers/mtd/nand/raw/stm32_fmc2_nand.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/stm32_fmc2_nand.c b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> index 4aabea2..c7f7c6f 100644
+> --- a/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> +++ b/drivers/mtd/nand/raw/stm32_fmc2_nand.c
+> @@ -981,7 +981,7 @@ static int stm32_fmc2_xfer(struct nand_chip *chip, const u8 *buf,
+>  
+>  	/* Wait DMA data transfer completion */
+>  	if (!wait_for_completion_timeout(&fmc2->dma_data_complete,
+> -					 msecs_to_jiffies(100))) {
+> +					 msecs_to_jiffies(500))) {
+>  		dev_err(fmc2->dev, "data DMA timeout\n");
+>  		dmaengine_terminate_all(dma_ch);
+>  		ret = -ETIMEDOUT;
+> @@ -990,7 +990,7 @@ static int stm32_fmc2_xfer(struct nand_chip *chip, const u8 *buf,
+>  	/* Wait DMA ECC transfer completion */
+>  	if (!write_data && !raw) {
+>  		if (!wait_for_completion_timeout(&fmc2->dma_ecc_complete,
+> -						 msecs_to_jiffies(100))) {
+> +						 msecs_to_jiffies(500))) {
+
+IIRC I already asked you this but could you please make a define and at
+the same time make it 1000 ms, I don't see the point in being close
+to the maximum latency. If this is reached, your transfer was
+screwed already, there is no performance impact here.
+
+Sorry for the late notice but I will close the nand/next branch
+tomorrow, so I'll queue your v2 only if I receive it soon enough :)
+
+Thanks,
+Miquèl
