@@ -2,62 +2,51 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC77C5B576
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9596C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123852146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561677915;
-	bh=kNW9UJec5ndIC20H3O0Fi4cKff5mPU8oiMT2u9UKNAc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pIPz4cSu6oJBZDcmiE4Obzhs9TApTKyF1bRX1mNhQ3fNzbDjK+25fIlX8g+HY6K4o
-	 jD9/wAe/xkizIk/U6NZvHtOvroWjf/uIL+Vezh8VPCIcymXw2s92vJbXN0H5kBD9kz
-	 sNVNSqPsUEfzaxpzAre2EmBKUuaIqXZq+z+kqs4Y=
+	by mail.kernel.org (Postfix) with ESMTP id BBA0C2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfF0XZN (ORCPT
+        id S1726690AbfF0XZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:25:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48196 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 19:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbfF0XZN (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:25:13 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        id S1726566AbfF0XZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:25:16 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F5120B7C;
-        Thu, 27 Jun 2019 23:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561677912;
-        bh=kNW9UJec5ndIC20H3O0Fi4cKff5mPU8oiMT2u9UKNAc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vMJvFxPKezf+akCGBbS2o82bRQ7sHszgHAXZOe3/FHVG9GsJ/sIbmXcG2uVbE1HLh
-         CNlsy5NMinvlRYEnkynhONCRaUAGWckCTwiZYlA5C2v43HxFd6ruuGrLMZ1f4QOR47
-         oGngagpjO/hSp5S+6GDLPxYyDwe5gdN2ByAsgjso=
-Date:   Thu, 27 Jun 2019 16:25:11 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv5] mm/gup: speed up check_and_migrate_cma_pages() on
- huge page
-Message-Id: <20190627162511.1cf10f5b04538c955c329408@linux-foundation.org>
-In-Reply-To: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
-References: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 940992147A;
+        Thu, 27 Jun 2019 23:25:14 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 19:25:13 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH] ftrace: Remove possible deadlock between
+ register_kprobe() and ftrace_run_update_code()
+Message-ID: <20190627192513.31abac73@gandalf.local.home>
+In-Reply-To: <20190627231952.nqkbtcculvo2ddif@treble>
+References: <20190627081334.12793-1-pmladek@suse.com>
+        <20190627224729.tshtq4bhzhneq24w@treble>
+        <20190627190457.703a486e@gandalf.local.home>
+        <alpine.DEB.2.21.1906280106360.32342@nanos.tec.linutronix.de>
+        <20190627231952.nqkbtcculvo2ddif@treble>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,33 +54,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 13:15:45 +0800 Pingfan Liu <kernelfans@gmail.com> wrote:
+On Thu, 27 Jun 2019 18:19:52 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-> Both hugetlb and thp locate on the same migration type of pageblock, since
-> they are allocated from a free_list[]. Based on this fact, it is enough to
-> check on a single subpage to decide the migration type of the whole huge
-> page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
-> similar on other archs.
+> /me dodges frozen shark
 > 
-> Furthermore, when executing isolate_huge_page(), it avoid taking global
-> hugetlb_lock many times, and meanless remove/add to the local link list
-> cma_page_list.
->
+> You are right of course.  My brain has apparently already shut off for
+> the day.
 
-Thanks, looks good to me.  Have any timing measurements been taken?
- 
-> ...
->
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1336,25 +1336,30 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
->  					struct vm_area_struct **vmas,
->  					unsigned int gup_flags)
->  {
-> -	long i;
-> +	long i, step;
+And I agreed with your miscalculation. I guess I should have looked
+deeper into it. Or have less faith in you ;-)
 
-I'll make these variables unsigned long - to match nr_pages and because
-we have no need for them to be negative.
+> 
+> Maybe a comment or two would help though.
 
-> ...
+Agreed, this is fragile. I'll just add a patch on top of it with some
+comments and pull this in today.
+
+-- Steve
