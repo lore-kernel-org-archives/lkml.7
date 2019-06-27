@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_03_06,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9B3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9435C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766E9214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B16B208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 20 May 2019 18:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfETSc0 (ORCPT
+        id S1727266AbfETSTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 20 May 2019 14:32:26 -0400
-Received: from westpalmbeachmassagegroup.com ([45.35.221.60]:45665 "EHLO
+        Mon, 20 May 2019 14:19:40 -0400
+Received: from westpalmbeachmassagegroup.com ([45.35.221.60]:47467 "EHLO
         wolfgangdigital.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726088AbfETScZ (ORCPT
+        with ESMTP id S1727189AbfETSTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 20 May 2019 14:32:25 -0400
+        Mon, 20 May 2019 14:19:39 -0400
 To:     linux-kernel@vger.kernel.org
-Subject: Print your logo
-Message-ID: <f8eb35ee93162a55f9528c083a09d781@esquire.com>
-Date:   Mon, 20 May 2019 17:02:20 +0200
+Subject: Print your logo on USB drive
+Message-ID: <2eb053747a25e3162cba8a75e76b7c9e@esquire.com>
+Date:   Mon, 20 May 2019 15:50:53 +0200
 From:   "Heather" <heather@usblogo.space>
 Reply-To: flashdrive@aliyun.com
 MIME-Version: 1.0
