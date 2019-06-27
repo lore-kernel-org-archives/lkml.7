@@ -2,131 +2,99 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ED2C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5525BC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B88E2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:21:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en28+nAK"
+	by mail.kernel.org (Postfix) with ESMTP id 288FF2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfF0NVm (ORCPT
+        id S1726811AbfF0NWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:21:42 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:46414 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfF0NVm (ORCPT
+        Thu, 27 Jun 2019 09:22:14 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:51571 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfF0NWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:21:42 -0400
-Received: by mail-wr1-f45.google.com with SMTP id n4so2525223wrw.13;
-        Thu, 27 Jun 2019 06:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=oA5GMdnGrxF6sTzzRcKYXpIVUL/ec5EzcBXgMsfLGhA=;
-        b=en28+nAK8m6rZ3ZTvk3LC0DPGjptazamkjHHl1rH5uXYhTNzshicqWF/MxlyQbCGJy
-         wLuU0DGTApf9VNNPze75OixM7kRciu2fpb0vhYmy2Qq0CBAOPb0e3EI+cV+xrurrGXHw
-         iJoKglsPEo/6pRu3GO3DRVtQSbU/1zlHfqC1MI86vbuySlVzM6qCnnxsbqiuHhGMHBZM
-         0Z2uQxO4DI9vj8fnrTnkqG8z40Zz78NmesPA9e8cPBS2YS/rdZSQVsg+YWOmHHh8Gd+w
-         uSRHJa9BgPGfPAadm4ccZc3zSKMSCriq+sWFz8/sPtW6YfLFC3KvkDEa3WNDPYknY2nq
-         60tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=oA5GMdnGrxF6sTzzRcKYXpIVUL/ec5EzcBXgMsfLGhA=;
-        b=jiy/F09TtQLKTIT/w5xqwB1KDoVEO+tWexwQiHQAQdKykyiiRYcihIza+a/+Fgq6U/
-         k/EVOEDcaEs9F+XQbo75Jl4a+0D0x1RuCkzbK1xua13q6sY8VgrDHjYImo87Vg6ZXxz8
-         SYnVnyw9YQ1wyvqgni7UbocthBItVa/DA0A3JtW+xkjFL0XQnNEWDhGXcQjVl5HOKfnx
-         i+MTkt0+Z7qTQyf/ZtdbxJu4m1CgWogcS+a1q9zRdQjKez2FdKuF+KSg6ON2eNveWcWs
-         HQNLC9UzZuZ9bS22esXcPX2BHMv2tDFC+kKSre8auufwUH09YYRnUMQyNEFwZZ/YwOpT
-         63cg==
-X-Gm-Message-State: APjAAAXl2jcVUKw00yd8B+K6IhckV+l6/Qc8zxuB86Htv7GzwuTKJM5k
-        hsA2GJxLU8vRz6wvzJzzgKsOgRzB
-X-Google-Smtp-Source: APXvYqz8Px8uNRXsni/Sj397utzkvUuRY9u81z04/43rRNRo8t9A9KODuzgnmA0SgLx39801L+DiTA==
-X-Received: by 2002:a5d:4090:: with SMTP id o16mr3463732wrp.292.1561641700045;
-        Thu, 27 Jun 2019 06:21:40 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id y4sm3712762wrn.68.2019.06.27.06.21.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 06:21:39 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 15:21:37 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     jacmet@sunsite.dk, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [BUG] net: dm9600: false link status
-Message-ID: <20190627132137.GB29016@Red>
+        Thu, 27 Jun 2019 09:22:14 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id BD3BD1C0011;
+        Thu, 27 Jun 2019 13:22:00 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 15:22:00 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Eugen.Hristev@microchip.com, peda@axentia.se, robh+dt@kernel.org,
+        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
+        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91:
+ add binding for enable-ana-filt)
+Message-ID: <20190627132200.GK3692@piout.net>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+ <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
+ <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
+ <20190625093156.GF5690@piout.net>
+ <20190625095533.GC1688@kunai>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190625095533.GC1688@kunai>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On 25/06/2019 11:55:33+0200, Wolfram Sang wrote:
+> On Tue, Jun 25, 2019 at 11:31:56AM +0200, Alexandre Belloni wrote:
+> > On 25/06/2019 09:14:13+0000, Eugen.Hristev@microchip.com wrote:
+> > > > Perhaps
+> > > > 
+> > > > 	microchip,digital-filter;
+> > > > 	microchip,analog-filter;
+> > > > 
+> > > > ?
+> > > 
+> > > Hi Peter,
+> > > 
+> > > Thanks for reviewing. The name of the property does not matter much to 
+> > > me, and we have properties prefixed with vendor, and some are not.
+> > > 
+> > > @Alexandre Belloni: which name you think it's best ?
+> > > 
+> > 
+> > I'm not sure, it depends on whether Wolfram thinks it is generic enough
+> > to be used without a vendor prefix.
+> 
+> I could imagine that we design a generic property for filters. The ones
+> above make me wonder, though, because they are bool. I'd think you can
+> configure the filters in some way, too?
+> 
 
-I own an USB dongle which is a "Davicom DM96xx USB 10/100 Ethernet".
-According to the CHIP_ID, it is a DM9620.
+Apart from enabling the filter there is indeed one configuration
+setting, the maximum pulse width of spikes to be suppressed by the input
+filter.
 
-Since I needed for bringing network to uboot for a board, I have started to create its uboot's driver.
-My uboot driver is based on the dm9600 Linux driver.
+> I never used such filtering, so I am unaware of the parameters needed /
+> suitable. Quick grepping through I2C master drivers reveals that
+> i2c-stm32f7.c also handles filters, but only with default values. Maybe
+> DT configuration would be benefitial to that driver, too?
+> 
+> Adding some people to CC.
+> 
 
-The dongle was working but very very slowy (24Kib/s).
-After some debug i found that the main problem was that it always link to 10Mbit/s Half-duplex. (according to the MAC registers)
 
-For checking the status of the dongle I have plugged it on a Linux box which give me:
-dm9601 6-2:1.0 enp0s29f0u2: link up, 100Mbps, full-duplex, lpa 0xFFFF
 
-But in fact the Linux driver is tricked.
-
-I have added debug of MDIO write/read and got:
-[157550.926974] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x00, val=0x8000
-[157550.931962] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x04, val=0x05e1
-[157550.951967] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
-[157550.951971] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x00, val=0xffff
-[157567.781989] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157567.796985] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157567.811989] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
-[157567.826974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
-[157567.841972] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
-[157567.856974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157567.871990] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
-[157567.886974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
-[157567.906010] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157567.920986] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157567.935975] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
-[157567.950974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
-[157567.965974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
-[157567.980970] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157567.995973] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
-[157568.010971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
-[157568.025973] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157568.040969] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157568.055971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
-[157568.070970] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
-[157568.085971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
-[157568.100971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
-[157568.115973] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
-[157568.130970] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
-
-So the problem is the same than in my uboot driver, the PHY always return 0xFFFF.
-
-I have tried lots of hack but fail to bring the PHY up.
-
-So it exsists two problem:
-- Linux saying 100Mbps, full-duplex even if it is false.
-- the PHY which seems in bad state.
-
-For further information, the PHY is the internal one.
-On the dongle, only the davicom chip is present (along with some resistors/capacitors and a quartz), so I think of the absence of an external PHY.
-
-Regards
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
