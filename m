@@ -2,82 +2,94 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3AFC48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC153C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860EA20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A44320663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561647187;
+	bh=6Co4gnxUMai42qDJsp0Q24htBwjWxYRNNjf+lhxjgLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ld/Kij0hRjJqQ45GomgAOJrQhzEvQg7CPGeBpTbfaHwKB9ko03pdh/6ikaYeeyeoK
+	 yEZo03DZpTObcRKdF87BMN1xo0i2kfByHPnlzCaKXi8JBn+qvnlikxGFkUY6Mct7X8
+	 L7TIodXsSUiiZ7RJEU2OhX9tDSB/3GQhxqy8fNro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfF0Ovl convert rfc822-to-8bit (ORCPT
+        id S1726816AbfF0OxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:51:41 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:35525 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfF0Ovl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:51:41 -0400
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 305CC240019;
-        Thu, 27 Jun 2019 14:51:37 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 16:51:37 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: linux-next: manual merge of the nand tree with Linus' tree
-Message-ID: <20190627165129.3b2c1264@xps13>
-In-Reply-To: <20190604105418.58da18b2@canb.auug.org.au>
-References: <20190604105418.58da18b2@canb.auug.org.au>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 27 Jun 2019 10:53:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37520 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfF0OxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:53:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6C4A8AFBC;
+        Thu, 27 Jun 2019 14:53:04 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 16:53:02 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 1/5] mm: introduce MADV_COLD
+Message-ID: <20190627145302.GC5303@dhcp22.suse.cz>
+References: <20190627115405.255259-1-minchan@kernel.org>
+ <20190627115405.255259-2-minchan@kernel.org>
+ <343599f9-3d99-b74f-1732-368e584fa5ef@intel.com>
+ <20190627140203.GB5303@dhcp22.suse.cz>
+ <d9341eb3-08eb-3c2b-9786-00b8a4f59953@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d9341eb3-08eb-3c2b-9786-00b8a4f59953@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Thu 27-06-19 07:36:50, Dave Hansen wrote:
+[...]
+> For MADV_COLD, if we defined it like this, I think we could use it for
+> both purposes (demotion and LRU movement):
+> 
+> 	Pages in the specified regions will be treated as less-recently-
+> 	accessed compared to pages in the system with similar access
+> 	frequencies.  In contrast to MADV_DONTNEED, the contents of the
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote on Tue, 4 Jun 2019
-10:54:18 +1000:
+you meant s@MADV_DONTNEED@MADV_FREE@ I suppose
 
-> Hi all,
+> 	region are preserved.
 > 
-> Today's linux-next merge of the nand tree got a conflict in:
-> 
->   Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> 
-> between commit:
-> 
->   a5f2246fb913 ("dt: bindings: mtd: replace references to nand.txt with nand-controller.yaml")
-> 
-> from Linus' tree and commit:
-> 
->   33cc5bd0b87a ("dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional")
-> 
-> from the nand tree.
-> 
-> I fixed it up (the latter included the changes from the former, so I
-> just used that) and can carry the fix as necessary. This is now fixed
-> as far as linux-next is concerned, but any non trivial conflicts should
-> be mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
-> 
+> It would be nice not to talk about reclaim at all since we're not
+> promising reclaim per se.
 
-Can you please share the fix? I might want to include it in the final
-PR.
+Well, I guess this is just an implementation detail. MADV_FREE is really
+only about aging. It is up to the kernel what to do during the reclaim
+and the advice doesn't and shouldn't make any difference here.
 
-
-Thanks,
-Miquèl
+Now MADV_PAGEOUT would be more tricky in that direction because it
+defines an immediate action to page out the range. I do understand your
+argument about NUMA unaware applications which might want to get
+something like MADV_DEMOTE which would move a page to a secondary memory
+(whatever that is) but I think this is asking for its own madvise.
+MADV_PAGEOUT has a quite simple semnatic - move to the backing storage -
+and I would rather not make it more complex.
+-- 
+Michal Hocko
+SUSE Labs
