@@ -2,180 +2,124 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DB0C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA31C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1966B217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FBC921852
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561607834;
+	bh=/ADTO1E4aEzzEHDIMo3CfYNwAeZmCkOo4BbM1VeAIWE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SeAeF+QFkfrKAbD2MCY02OKgDRQH4Fv2Vxc1/KEL7i4n0zyLGsdrU4sh54rmKyDoZ
+	 +9ozMVPn9rY5oRB5/wuV9XoSQ6+9efMrWty7R6fx2gePB/kw+Vbqd53mwPammNCioS
+	 K781kuHjKZCWYlcfSQ4um/2g17rC2ZJKNJiGMNgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfF0D4a (ORCPT
+        id S1727109AbfF0D5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:56:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41768 "EHLO mx1.redhat.com"
+        Wed, 26 Jun 2019 23:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbfF0D43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:56:29 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726640AbfF0D5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:57:13 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A9DFA81F35;
-        Thu, 27 Jun 2019 03:56:28 +0000 (UTC)
-Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 601D460856;
-        Thu, 27 Jun 2019 03:56:26 +0000 (UTC)
-Date:   Wed, 26 Jun 2019 22:56:23 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v3 2/4] objtool: Add support for C jump tables
-Message-ID: <20190627035623.owkbrxa7dx7suv4a@treble>
-References: <cover.1561595111.git.jpoimboe@redhat.com>
- <426541f62dad525078ee732c09bc206289e994aa.1561595111.git.jpoimboe@redhat.com>
- <CAADnVQ+veayfD70Xsu8UnNrLdRW6rh9jxPb=OGoiYT-O=_zW=A@mail.gmail.com>
- <20190627024700.q4rkcbhmrna6ev4y@treble>
- <CAADnVQJRs9NdHgGiAZfzCLb=eWAPD03-+uf3fisLZrKZUSSoyg@mail.gmail.com>
- <20190627034447.gl5tusbhkbr6dadc@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190627034447.gl5tusbhkbr6dadc@treble>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 27 Jun 2019 03:56:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCE9C21841;
+        Thu, 27 Jun 2019 03:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561607832;
+        bh=/ADTO1E4aEzzEHDIMo3CfYNwAeZmCkOo4BbM1VeAIWE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2UONyGGMTtlEsb/66mZHRuM9LWiMvATVylVUq0a4E0J3dMQcf4r1Q4+fAPrLrcnUf
+         ZrADGVLjSa8IAAONkU1uxWYm3XwMo09Neg7Q9TmaCjtjIKSPXCGTqqxd0FN+hqnwbT
+         6AOYBpnTaoEbPcHcmpEl/vWs2hKlCkAbcabdv438=
+Date:   Wed, 26 Jun 2019 20:57:11 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, <osalvador@suse.de>,
+        <khandual@linux.vnet.ibm.com>, <mhocko@suse.com>,
+        <mgorman@techsingularity.net>, <aarcange@redhat.com>,
+        <rcampbell@nvidia.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/mempolicy: Fix an incorrect rebind node in
+ mpol_rebind_nodemask
+Message-Id: <20190626205711.379c61b9cdfb9f43ae71c844@linux-foundation.org>
+In-Reply-To: <5CEBECF9.2060500@huawei.com>
+References: <1558768043-23184-1-git-send-email-zhongjiang@huawei.com>
+        <20190525112851.ee196bcbbc33bf9e0d869236@linux-foundation.org>
+        <2ff829ea-1d74-9d4b-8501-e9c2ebdc36ef@suse.cz>
+        <5CEBECF9.2060500@huawei.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 10:44:47PM -0500, Josh Poimboeuf wrote:
-> > > How about the following approach instead?  This is the only other way I
-> > > can think of to annotate a jump table so that objtool can distinguish
-> > > it:
-> > >
-> > > #define __annotate_jump_table __section(".jump_table.rodata")
-> > >
-> > > Then bpf would just need the following:
-> > >
-> > > -       static const void *jumptable[256] = {
-> > > +       static const void __annotate_jump_table *jumptable[256] = {
-> > >
-> > > This would be less magical and fragile than my original approach.
-> > >
-> > > I think the jump table would still be placed with all the other rodata,
-> > > like before, because the vmlinux linker script recognizes the section
-> > > ".rodata" suffix and bundles them all together.
-> > 
-> > I like it if that works :)
-> > Definitely cleaner.
-> > May be a bit more linker script magic would be necessary,
-> > but hopefully not.
-> > And no need to rely on gcc style of mangling static vars.
+On Mon, 27 May 2019 21:58:17 +0800 zhong jiang <zhongjiang@huawei.com> wrote:
 
-The last patch was based weird, this one's based on upstream.  Will test
-tomorrow.
+> On 2019/5/27 20:23, Vlastimil Babka wrote:
+> > On 5/25/19 8:28 PM, Andrew Morton wrote:
+> >> (Cc Vlastimil)
+> > Oh dear, 2 years and I forgot all the details about how this works.
+> >
+> >> On Sat, 25 May 2019 15:07:23 +0800 zhong jiang <zhongjiang@huawei.com> wrote:
+> >>
+> >>> We bind an different node to different vma, Unluckily,
+> >>> it will bind different vma to same node by checking the /proc/pid/numa_maps.   
+> >>> Commit 213980c0f23b ("mm, mempolicy: simplify rebinding mempolicies when updating cpusets")
+> >>> has introduced the issue.  when we change memory policy by seting cpuset.mems,
+> >>> A process will rebind the specified policy more than one times. 
+> >>> if the cpuset_mems_allowed is not equal to user specified nodes. hence the issue will trigger.
+> >>> Maybe result in the out of memory which allocating memory from same node.
+> > I have a hard time understanding what the problem is. Could you please
+> > write it as a (pseudo) reproducer? I.e. an example of the process/admin
+> > mempolicy/cpuset actions that have some wrong observed results vs the
+> > correct expected result.
+> Sorry, I havn't an testcase to reproduce the issue. At first, It was disappeared by
+> my colleague to configure the xml to start an vm.  To his suprise, The bind mempolicy
+> doesn't work.
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 8aaf7cd026b0..84212bcb5015 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -116,9 +116,14 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- 	".pushsection .discard.unreachable\n\t"				\
- 	".long 999b - .\n\t"						\
- 	".popsection\n\t"
-+
-+/* Annotate a C jump table to enable objtool to follow the code flow */
-+#define __annotate_jump_table __section(".jump_table.rodata")
-+
- #else
- #define annotate_reachable()
- #define annotate_unreachable()
-+#define __annotate_jump_table
- #endif
- 
- #ifndef ASM_UNREACHABLE
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 080e2bb644cc..e67977e22967 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- {
- #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
- #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
--	static const void *jumptable[256] = {
-+	static const void __annotate_jump_table *jumptable[256] = {
- 		[0 ... 255] = &&default_label,
- 		/* Now overwrite non-defaults ... */
- 		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
-@@ -1558,7 +1558,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
- 		BUG_ON(1);
- 		return 0;
- }
--STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
- 
- #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
- #define DEFINE_BPF_PROG_RUN(stack_size) \
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..6ade2b32f484 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -18,6 +18,8 @@
- 
- #define FAKE_JUMP_OFFSET -1
- 
-+#define C_JUMP_TABLE_SECTION ".jump_table.rodata"
-+
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -1035,9 +1037,15 @@ static struct rela *find_switch_table(struct objtool_file *file,
- 
- 		/*
- 		 * Make sure the .rodata address isn't associated with a
--		 * symbol.  gcc jump tables are anonymous data.
-+		 * symbol.  GCC jump tables are anonymous data.
-+		 *
-+		 * Also support C jump tables which are in the same format as
-+		 * switch jump tables.  For objtool to recognize them, they
-+		 * need to be placed in the C_JUMP_TABLE_SECTION section.  They
-+		 * have symbols associated with them.
- 		 */
--		if (find_symbol_containing(rodata_sec, table_offset))
-+		if (find_symbol_containing(rodata_sec, table_offset) &&
-+		    strcmp(rodata_sec->name, C_JUMP_TABLE_SECTION))
- 			continue;
- 
- 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
-@@ -1277,13 +1285,18 @@ static void mark_rodata(struct objtool_file *file)
- 	bool found = false;
- 
- 	/*
--	 * This searches for the .rodata section or multiple .rodata.func_name
--	 * sections if -fdata-sections is being used. The .str.1.1 and .str.1.8
--	 * rodata sections are ignored as they don't contain jump tables.
-+	 * Search for the following rodata sections, each of which can
-+	 * potentially contain jump tables:
-+	 *
-+	 * - .rodata: can contain GCC switch tables
-+	 * - .rodata.<func>: same, if -fdata-sections is being used
-+	 * - .jump_table.rodata: contains C annotated jump tables
-+	 *
-+	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
- 	 */
- 	for_each_sec(file, sec) {
--		if (!strncmp(sec->name, ".rodata", 7) &&
--		    !strstr(sec->name, ".str1.")) {
-+		if ((!strncmp(sec->name, ".rodata", 7) && !strstr(sec->name, ".str1.")) ||
-+		    !strcmp(sec->name, C_JUMP_TABLE_SECTION)) {
- 			sec->rodata = true;
- 			found = true;
- 		}
+So... what do we do with this patch?
+
+> Thanks,
+> zhong jiang
+> >>> --- a/mm/mempolicy.c
+> >>> +++ b/mm/mempolicy.c
+> >>> @@ -345,7 +345,7 @@ static void mpol_rebind_nodemask(struct mempolicy *pol, const nodemask_t *nodes)
+> >>>  	else {
+> >>>  		nodes_remap(tmp, pol->v.nodes,pol->w.cpuset_mems_allowed,
+> >>>  								*nodes);
+> >>> -		pol->w.cpuset_mems_allowed = tmp;
+> >>> +		pol->w.cpuset_mems_allowed = *nodes;
+> > Looks like a mechanical error on my side when removing the code for
+> > step1+step2 rebinding. Before my commit there was
+> >
+> > pol->w.cpuset_mems_allowed = step ? tmp : *nodes;
+> >
+> > Since 'step' was removed and thus 0, I should have used *nodes indeed.
+> > Thanks for catching that.
+
+Was that an ack?
+
+> >>>  	}
+> >>>  
+> >>>  	if (nodes_empty(tmp))
+> >> hm, I'm not surprised the code broke.  What the heck is going on in
+> >> there?  It used to have a perfunctory comment, but Vlastimil deleted
+> >> it.
+> > Yeah the comment was specific for the case that was being removed.
+> >
+> >> Could someone please propose a comment for the above code block
+> >> explaining why we're doing what we do?
+> > I'll have to relearn this first...
+> >
+> >
+> 
