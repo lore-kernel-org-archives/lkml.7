@@ -2,104 +2,113 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2F4C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4E5C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9F7208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="CzGrhDeb"
+	by mail.kernel.org (Postfix) with ESMTP id 34D5E208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561674535;
+	bh=6gDuV+DVL5Bbj1QRS6t+kNeAHKtQQVMNQqIxE+766Lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qa3mWDndCuibEvdiEe+gAWTjLHInvopasYQzhvrFpdxplyAsAnu/1odSSXyZQMqyR
+	 NTdMZV0SO7ypzEglCMtdEIqvCggQQ5nSGC26+AfzSFH6cZNpxTGRQqZJASJX8id6oz
+	 CIDZuzrEU+OG7wUTHT5/iTfj1hrzDxeoqJzhRvoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfF0W17 (ORCPT
+        id S1726741AbfF0W2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:27:59 -0400
-Received: from one.firstfloor.org ([193.170.194.197]:49284 "EHLO
-        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF0W16 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:27:58 -0400
-X-Greylist: delayed 446 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Jun 2019 18:27:57 EDT
-Received: from firstfloor.org (c-71-238-43-142.hsd1.or.comcast.net [71.238.43.142])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 27 Jun 2019 18:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbfF0W2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 18:28:53 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by one.firstfloor.org (Postfix) with ESMTPSA id 1CBCF86712;
-        Fri, 28 Jun 2019 00:20:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
-        s=mail; t=1561674026;
-        bh=XoR8yTCqfAt67Rp1x+70ueZjQuZxGxj6NraAHdT9T4c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CzGrhDebeLcx+ftjos04x7Yk3/Mn/0Fgyw6VOBTCXxuDhUq3EBbeTMOO7DjHbmq0v
-         B29hTrYmSipwXDgDlV/NMlWfpHIO11cAlGADaRWyZ7+UxIeXcbjPzrgiTWLHgZSSiR
-         EFZ0F/YAZ3XqLYgRuvc7k5uiHPRt2WASw4OzJjBQ=
-Received: by firstfloor.org (Postfix, from userid 1000)
-        id 4DB7FA0B2E; Thu, 27 Jun 2019 15:20:22 -0700 (PDT)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH] perf tools: Fix bison warnings for pure parser
-Date:   Thu, 27 Jun 2019 15:20:21 -0700
-Message-Id: <20190627222021.14980-1-andi@firstfloor.org>
-X-Mailer: git-send-email 2.21.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 542FE2063F;
+        Thu, 27 Jun 2019 22:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561674532;
+        bh=6gDuV+DVL5Bbj1QRS6t+kNeAHKtQQVMNQqIxE+766Lk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Owhjj5MUM+bk7m39E3qMZJQshMRs1inLMvVheIBkFQTyF1mnp8ZzEOlEORXuaAObe
+         AiLVAMrJZMh39QZV0FMyLxhbhwTS09aSMZuyntRYJwA8vHGiH5h1bGgws0e2EAdF66
+         r1e6HA5Vs/cItxOEJOsnHPmiikj34gPmTPz2Ji3A=
+Date:   Thu, 27 Jun 2019 18:28:51 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@kernel.org,
+        bp@alien8.de, hpa@zytor.com, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, peterz@infradead.org,
+        srinivas.eeda@oracle.com, Waiman Long <longman@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH v2 6/7] locking/spinlocks, paravirt, hyperv: Correct the
+ hv_nopvspin case
+Message-ID: <20190627222851.GC11506@sasha-vm>
+References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1561377779-28036-7-git-send-email-zhenzhong.duan@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1561377779-28036-7-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+On Mon, Jun 24, 2019 at 08:02:58PM +0800, Zhenzhong Duan wrote:
+>With the boot parameter "hv_nopvspin" specified a Hyperv guest should
+>not make use of paravirt spinlocks, but behave as if running on bare
+>metal. This is not true, however, as the qspinlock code will fall back
+>to a test-and-set scheme when it is detecting a hypervisor.
+>
+>In order to avoid this disable the virt_spin_lock_key.
+>
+>Same change for XEN is already in Commit e6fd28eb3522
+>("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
+>
+>Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>Cc: Waiman Long <longman@redhat.com>
+>Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+>Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+>Cc: Haiyang Zhang <haiyangz@microsoft.com>
+>Cc: Stephen Hemminger <sthemmin@microsoft.com>
+>Cc: Sasha Levin <sashal@kernel.org>
+>Cc: Thomas Gleixner <tglx@linutronix.de>
+>Cc: Ingo Molnar <mingo@redhat.com>
+>Cc: Borislav Petkov <bp@alien8.de>
+>Cc: linux-hyperv@vger.kernel.org
+>---
+> arch/x86/hyperv/hv_spinlock.c | 3 +++
+> 1 file changed, 3 insertions(+)
+>
+>diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+>index 07f21a0..d90b4b0 100644
+>--- a/arch/x86/hyperv/hv_spinlock.c
+>+++ b/arch/x86/hyperv/hv_spinlock.c
+>@@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
+>
+> void __init hv_init_spinlocks(void)
+> {
+>+	if (unlikely(!hv_pvspin))
+>+		static_branch_disable(&virt_spin_lock_key);
 
-bison 3.4.1 complains during a perf build:
+This should be combined in the conditional under it, which already
+attempts to disable PV spinlocks, note how hv_pvspin is checked there.
+hc_pvspin isn't the only reason we would disable PV spinlocks on hyperv.
 
-util/parse-events.y:1.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
-    1 | %pure-parser
-      | ^~~~~~~~~~~~
-  CC       /home/andi/lsrc/obj-perf/ui/browsers/map.o
-util/parse-events.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+Also, there's no need for the unlikely() here, it's only getting called
+once...
 
-util/expr.y:13.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
-   13 | %pure-parser
-      | ^~~~~~~~~~~~
-util/expr.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
-
-Change the declarations to %define api.pure
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/util/expr.y         | 2 +-
- tools/perf/util/parse-events.y | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 432b8560cf51..803c0929c205 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -10,7 +10,7 @@
- #define MAXIDLEN 256
- %}
- 
--%pure-parser
-+%define api.pure
- %parse-param { double *final_val }
- %parse-param { struct parse_ctx *ctx }
- %parse-param { const char **pp }
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 6ad8d4914969..4eb10c27c30f 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -1,4 +1,4 @@
--%pure-parser
-+%define api.pure
- %parse-param {void *_parse_state}
- %parse-param {void *scanner}
- %lex-param {void* scanner}
--- 
-2.21.0
-
+--
+Thanks,
+Sasha
