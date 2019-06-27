@@ -2,65 +2,62 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F29EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95D5C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA6F2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45462080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfF0MKd (ORCPT
+        id S1726883AbfF0MMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 08:10:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43944 "EHLO mx1.redhat.com"
+        Thu, 27 Jun 2019 08:12:02 -0400
+Received: from muru.com ([72.249.23.125]:53730 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbfF0MKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 08:10:32 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AE5DFC18B2E5;
-        Thu, 27 Jun 2019 12:10:20 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 404FB1975F;
-        Thu, 27 Jun 2019 12:10:17 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id CC5DA11AAF; Thu, 27 Jun 2019 14:10:16 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 14:10:16 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Thomas Zimmermann <tzimmermann@suse.de>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/2] drm/vram: store dumb bo dimensions.
-Message-ID: <20190627121016.fddmd6rxq7vpl7ev@sirius.home.kraxel.org>
-References: <20190626065551.12956-1-kraxel@redhat.com>
- <20190626065551.12956-2-kraxel@redhat.com>
- <a5663141-ebee-db14-30cc-f0b3f90fe6bb@suse.de>
+        id S1726465AbfF0MMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 08:12:01 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 4CED2805C;
+        Thu, 27 Jun 2019 12:12:24 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 05:11:58 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, Roger Quadros <rogerq@ti.com>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] bus: ti-sysc: Simplify cleanup upon failures in
+ sysc_probe()
+Message-ID: <20190627121158.GJ5447@atomide.com>
+References: <20190625233315.22301-1-s-anna@ti.com>
+ <20190625233315.22301-6-s-anna@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a5663141-ebee-db14-30cc-f0b3f90fe6bb@suse.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 27 Jun 2019 12:10:32 +0000 (UTC)
+In-Reply-To: <20190625233315.22301-6-s-anna@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+Hi,
 
-> For the Gnome issue, a fix would be to program the display HW's line
-> pitch to the correct value.
+* Suman Anna <s-anna@ti.com> [190625 23:33]:
+> The clocks are not yet parsed and prepared until after a successful
+> sysc_get_clocks(), so there is no need to unprepare the clocks upon
+> any failure of any of the prior functions in sysc_probe(). The current
+> code path would have been a no-op because of the clock validity checks
+> within sysc_unprepare(), but let's just simplify the cleanup path by
+> returning the error directly.
+> 
+> While at this, also fix the cleanup path for a sysc_init_resets()
+> failure which is executed after the clocks are prepared.
 
-Yes, and drm_framebuffer actually has the pitches,
-so no need for this patch indeed.
+Sounds like this should get queued separately as a fix for v5.3-rc
+cycle, probably got broken with the recent ti-sysc init order changes.
 
-cheers,
-  Gerd
+Regards,
 
+Tony
