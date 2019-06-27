@@ -2,83 +2,103 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3E5C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73093C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C802064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5219320B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:22:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FWiVkKJK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bz9ZvbKk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EZDHDrlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfF0SVc (ORCPT
+        id S1726841AbfF0SWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:21:32 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:46306 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfF0SV0 (ORCPT
+        Thu, 27 Jun 2019 14:22:07 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43574 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfF0SWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:21:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1561659685; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EMTPz/E0Re9ZEDNi6A5HiGlO3zDC+PQxFDkb/cLcYIA=;
-        b=FWiVkKJKVlCD9C4SuMljhAEFNZ3ed4WkettXKTs3mgvlVmcUH7Ec9RnU8ATnFJiC6cWZt7
-        ueoUze9d2nkIl1kmFHgKbk+zvWTmZA4/R3+9+aiabjtu7Bjw/mN7U5PY1y5MQDtUd7aZMx
-        0QYJr6gEps52Z46YbvmNzHEHfgOteEU=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/3] DRM: ingenic: Add support for panels with 8-bit serial bus
-Date:   Thu, 27 Jun 2019 20:21:14 +0200
-Message-Id: <20190627182114.27299-3-paul@crapouillou.net>
-In-Reply-To: <20190627182114.27299-1-paul@crapouillou.net>
-References: <20190627182114.27299-1-paul@crapouillou.net>
+        Thu, 27 Jun 2019 14:22:06 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 37A1060A0A; Thu, 27 Jun 2019 18:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561659726;
+        bh=L4rcvZr/+aW0fXo6jf8y6SY/AYN6T06PMSeRbTAx/RQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=bz9ZvbKk+19cPUYMoVAHtGANzVgSuBRp/ozL/ndHQM3D8RVuuxcyw0hTF86WXXS6h
+         9++uVXYO49wWWrosmRXwMNfFrXvbdoXXQFNHytkfUTh7AqWIurHlJvAFBxGMSl+gX4
+         iwuMbPOmm7qrzRH2MOeyYiNBi5yJumE/Ks0JAHMk=
+Received: from [192.168.1.100] (unknown [157.45.87.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9AB56021C;
+        Thu, 27 Jun 2019 18:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561659725;
+        bh=L4rcvZr/+aW0fXo6jf8y6SY/AYN6T06PMSeRbTAx/RQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EZDHDrlLSCTmFKqx3BjfzxaFmF3ZfvGKnPZ5oWdKl9PIvqN5VaMsgsaMgh86g7I3E
+         rmbmn62Xl/6Z7nbfE7QJri2QUjRtXObt411a6Tv3fJOospRRPIYZFancWErn1IpP6R
+         4EcuZvfI5z8eOvnDDh7F44ysWsqGuVtl6bbrle7g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9AB56021C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [RESEND PATCHv4 1/1] coresight: Do not default to CPU0 for
+ missing CPU phandle
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+References: <cover.1561610498.git.saiprakash.ranjan@codeaurora.org>
+ <0a20cf9eb34b14a191381af98af1694bbc222734.1561610498.git.saiprakash.ranjan@codeaurora.org>
+ <CANLsYkyaeroow1dRaffy5pxSCH7ocb9=EMeZeSjgpjDWXu18vg@mail.gmail.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <0e33a1f2-f535-91e3-635d-dc8852833a0b@codeaurora.org>
+Date:   Thu, 27 Jun 2019 23:51:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANLsYkyaeroow1dRaffy5pxSCH7ocb9=EMeZeSjgpjDWXu18vg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the LCD panels with a serial 8-bit bus, where the color
-components of each 24-bit pixel are sent sequentially.
+On 6/27/2019 10:54 PM, Mathieu Poirier wrote:
+> 
+> I want to apply your code to my tree but it isn't easy for me to do
+> so.  Did you notice the checkpatch.pl warning about the DT bindings
+> being in a separate patch?  In this case it is not a new binding but
+> following the process gives the DT maintainers the opportunity to at
+> least look at your patch.  Because the changes are trivial they may
+> decide to ignore it but that choice it theirs to make.
+> 
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/gpu/drm/ingenic/ingenic-drm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Hmm, git log on coresight dt-bindings showed some examples like
+this where bindings were updated in the same patch.
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index da966f3dc1f7..ce1fae3a78a9 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -426,6 +426,9 @@ static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
- 			case MEDIA_BUS_FMT_RGB888_1X24:
- 				cfg |= JZ_LCD_CFG_MODE_GENERIC_24BIT;
- 				break;
-+			case MEDIA_BUS_FMT_RGB888_3X8:
-+				cfg |= JZ_LCD_CFG_MODE_8BIT_SERIAL;
-+				break;
- 			default:
- 				break;
- 			}
-@@ -451,6 +454,7 @@ static int ingenic_drm_encoder_atomic_check(struct drm_encoder *encoder,
- 	case MEDIA_BUS_FMT_RGB565_1X16:
- 	case MEDIA_BUS_FMT_RGB666_1X18:
- 	case MEDIA_BUS_FMT_RGB888_1X24:
-+	case MEDIA_BUS_FMT_RGB888_3X8:
- 		return 0;
- 	default:
- 		return -EINVAL;
+Anyways, I have separated out the patch now and resent v5.
+
+Thanks,
+Sai
+
 -- 
-2.21.0.593.g511ec345e18
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
