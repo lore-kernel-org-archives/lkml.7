@@ -2,91 +2,82 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C10BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3AFC48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB18A20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860EA20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfF0OvU (ORCPT
+        id S1726942AbfF0Ovl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:51:20 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:33743 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbfF0OvU (ORCPT
+        Thu, 27 Jun 2019 10:51:41 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:35525 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfF0Ovl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:51:20 -0400
-X-Originating-IP: 86.250.200.211
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 7C33440016;
-        Thu, 27 Jun 2019 14:51:16 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 16:51:16 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: nvmem: Add YAML schemas for the generic
- NVMEM bindings
-Message-ID: <20190627145116.piof4sokhlt3n3fu@flea>
-References: <20190627080959.4488-1-srinivas.kandagatla@linaro.org>
- <CAL_Jsq+er-MZY-Vuez3B48fb05AH9UzNZck=BK6xHutuXdfDTQ@mail.gmail.com>
- <6775b9b9-b712-0b37-fa4c-ace9527f5fc9@linaro.org>
+        Thu, 27 Jun 2019 10:51:41 -0400
+Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 305CC240019;
+        Thu, 27 Jun 2019 14:51:37 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 16:51:37 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: linux-next: manual merge of the nand tree with Linus' tree
+Message-ID: <20190627165129.3b2c1264@xps13>
+In-Reply-To: <20190604105418.58da18b2@canb.auug.org.au>
+References: <20190604105418.58da18b2@canb.auug.org.au>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uv4o3fvyylrkncxn"
-Content-Disposition: inline
-In-Reply-To: <6775b9b9-b712-0b37-fa4c-ace9527f5fc9@linaro.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stephen,
 
---uv4o3fvyylrkncxn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Stephen Rothwell <sfr@canb.auug.org.au> wrote on Tue, 4 Jun 2019
+10:54:18 +1000:
 
-Hi,
+> Hi all,
+> 
+> Today's linux-next merge of the nand tree got a conflict in:
+> 
+>   Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+> 
+> between commit:
+> 
+>   a5f2246fb913 ("dt: bindings: mtd: replace references to nand.txt with nand-controller.yaml")
+> 
+> from Linus' tree and commit:
+> 
+>   33cc5bd0b87a ("dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional")
+> 
+> from the nand tree.
+> 
+> I fixed it up (the latter included the changes from the former, so I
+> just used that) and can carry the fix as necessary. This is now fixed
+> as far as linux-next is concerned, but any non trivial conflicts should
+> be mentioned to your upstream maintainer when your tree is submitted for
+> merging.  You may also want to consider cooperating with the maintainer
+> of the conflicting tree to minimise any particularly complex conflicts.
+> 
 
-On Thu, Jun 27, 2019 at 02:58:24PM +0100, Srinivas Kandagatla wrote:
-> On 27/06/2019 14:55, Rob Herring wrote:
-> > But you didn't update the license to (GPL-2.0 OR BSD-2-Clause). See below.
->
-> I did forward what Maxime has sent me.
->
-> Maxime, are you okay if I do that changes to this patch and resend?
+Can you please share the fix? I might want to include it in the final
+PR.
 
-Sorry, Rob mentionned that it was a question for Linaro, and I just
-forgot this question entirely.
 
-You're the primary author here, so I guess you should be the one
-telling me whether it's ok :)
-
-On my side, I'm fine with this, but this isn't relevant.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---uv4o3fvyylrkncxn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXRTX5AAKCRDj7w1vZxhR
-xcsPAQCgb58LNKYcJJiWmLuyOSMr1WBMyxBygUIjvnLoRjIcEwD/ZCb4wZ4sKY+o
-75/Xj6Hj/El4vu62keZEHd50pUp9yAY=
-=YEyU
------END PGP SIGNATURE-----
-
---uv4o3fvyylrkncxn--
+Thanks,
+Miquèl
