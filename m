@@ -2,218 +2,117 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E548C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0E3C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05112086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF9F2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:24:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nENRI+O/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfF0LWn (ORCPT
+        id S1726647AbfF0LYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:22:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55508 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfF0LWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:22:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 04:22:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="183427733"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Jun 2019 04:22:38 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH v2 2/4] kbuild: do not create wrappers for header-test-y
-In-Reply-To: <20190627014617.600-3-yamada.masahiro@socionext.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190627014617.600-1-yamada.masahiro@socionext.com> <20190627014617.600-3-yamada.masahiro@socionext.com>
-Date:   Thu, 27 Jun 2019 14:25:25 +0300
-Message-ID: <875zorqnh6.fsf@intel.com>
+        Thu, 27 Jun 2019 07:24:03 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41333 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfF0LYD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:24:03 -0400
+Received: by mail-lf1-f67.google.com with SMTP id 136so1306080lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 04:24:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F4KskJ1NAl/aeAMSSANWZVmj0vaROvOll7pDHlQvKrE=;
+        b=nENRI+O/Sos7OKNBFX4fcuIjQJRwvWzpnQUI823OhuXy+g5L/2I06M0BvsD+EPBkBU
+         jnMzz/8KF3lE8zGW4CZDHMmVSPuFkrs5D4b92ModrlnG7TNh9x/cgwb45aONOdqKlEec
+         qS39kC+nzP1BDmIUzDeRmazx/dGoP61W2XHfSAtWn3ha5bU5t+BZA1+MNUIR4nBz4tOl
+         NAX57XZMuQsMyPqhE+DroIbq+/20QvpPbo+0VMKO0XfCbCXNeQGCCgQ1pIrfPwdKeTta
+         XzBI5e2tKYh0r3WdeMUnXmSkKv+DdJ5WiGWdmeTlnDcanzuEXZ+F1JSocegrhnetAmjw
+         IkyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F4KskJ1NAl/aeAMSSANWZVmj0vaROvOll7pDHlQvKrE=;
+        b=m3w7ow8YJlwdCLTgoWR4H0xtTpX1ilf+65A66oG1RysTZvTt/DwJG9TBBB4J4sWROQ
+         IkcXxgCom5H6MGBF/njuAYkhYi4JI2TGj2qtPwPGmIDEU2U2RmQN6nO9vouEuJSPOEYH
+         M+lC1wQKOKWp+vfHx45idtv6DnBdva5OPERs3DJcr/zzq87KGs8Bfx7WaHOhI+kQIcLC
+         hu+I9AnFpMcvC2XM1bTC/4SKqfFKXpDyiHkOcXtLtLKGSo3EcwfuWEHmkjk6Pnt8UPQX
+         Jx1iwfH/pvq/ACE/jkCIQrLiuX3gLs5sdxPIcJtS4yiXi0wvPRlLh2F7eJQjUsLCflcL
+         FMuw==
+X-Gm-Message-State: APjAAAUiC6Y/7zCHlGeL8qboJ6YIokEVZvKh4u91cS7nvAcxBNlCLMVX
+        CtzPEmcpjUtQp3vEAfBvgyWwb3TzRFN46IGCx7uuSw==
+X-Google-Smtp-Source: APXvYqyeGnTnUh82XE5crL0FuoMFaSxBuAjA0pp9mZU9u9i/T+re4EBzmrybXpa77YjcTHZpDZQGFRLaagUdWo7XHdQ=
+X-Received: by 2002:a19:6a01:: with SMTP id u1mr1788889lfu.141.1561634640859;
+ Thu, 27 Jun 2019 04:24:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190626035445.236406-1-drinkcat@chromium.org>
+In-Reply-To: <20190626035445.236406-1-drinkcat@chromium.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 27 Jun 2019 12:23:49 +0100
+Message-ID: <CACRpkdaK1A2eS5_5Fg40hTV3bwRNvRmqfWidVMpNkxFkzVEVmw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> header-test-y does not work with headers in sub-directories.
->
-> For example, you can write a Makefile, like this:
->
-> include/linux/Kbuild:
->
->   header-test-y += mtd/nand.h
->
-> This entry creates a wrapper include/linux/mtd/nand.hdrtest.c with
-> the following content:
->
->   #include "mtd/nand.h"
->
-> To make this work, we need to add $(srctree)/include/linux to the
-> header search path. It would be tedious to add ccflags-y.
->
-> We could change the *.hdrtest.c rule to wrap:
->
->   #include "nand.h"
->
-> This works for in-tree build since #include "..." searches in the
-> relative path from the header with this directive. For O=... build,
-> we need to add $(srctree)/include/linux/mtd to the header search path,
-> which will be even more tedious.
->
-> After all, I thought it would be handier to compile headers directly
-> without creating wrappers.
->
-> I added a new build rule to compile %.h into %.h.s
->
-> I chose %.h.s instead of %.h.o because it was a little bit faster.
-> Also, for GCC, an empty assembly is smaller than an empty object.
->
-> I wrote the build rule:
->
->   $(CC) $(c_flags) -S -o $@ -x c /dev/null -include $<
->
-> instead of:
->
->   $(CC) $(c_flags) -S -o $@ -x c $<
->
-> Both work fine with GCC, but the latter is not good for Clang.
->
-> This comes down to the difference in the -Wunused-function policy.
-> GCC does not warn about unused 'static inline' functions at all.
-> Clang does not warn about the ones in included headers, but does
-> about the ones in the source. So, we should handle headers as
-> headers, not as source files.
->
-> In fact, this has been hidden since commit abb2ea7dfd82 ("compiler,
-> clang: suppress warning for unused static inline functions"), but we
-> should not rely on that.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
-> Changes in v2:
->   - New patch
->
->  .gitignore                         |  1 -
->  Documentation/dontdiff             |  1 -
->  Documentation/kbuild/makefiles.txt |  3 +--
->  Makefile                           |  1 -
->  scripts/Makefile.build             | 10 +++++-----
->  scripts/Makefile.lib               |  2 +-
->  6 files changed, 7 insertions(+), 11 deletions(-)
->
-> diff --git a/.gitignore b/.gitignore
-> index 4bb60f0fa23b..7587ef56b92d 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -22,7 +22,6 @@
->  *.elf
->  *.gcno
->  *.gz
-> -*.hdrtest.c
->  *.i
->  *.ko
->  *.lex.c
-> diff --git a/Documentation/dontdiff b/Documentation/dontdiff
-> index 554dfe4883d2..5eba889ea84d 100644
-> --- a/Documentation/dontdiff
-> +++ b/Documentation/dontdiff
-> @@ -19,7 +19,6 @@
->  *.grep
->  *.grp
->  *.gz
-> -*.hdrtest.c
->  *.html
->  *.i
->  *.jpeg
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index ca4b24ec0399..5080fec34609 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -1023,8 +1023,7 @@ When kbuild executes, the following steps are followed (roughly):
->  	header-test-y specifies headers (*.h) in the current directory that
->  	should be compile tested to ensure they are self-contained,
->  	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
-> -	this autogenerates dummy sources to include the headers, and builds them
-> -	as part of extra-y.
-> +	this builds them as part of extra-y.
->  
->  --- 6.7 Commands useful for building a boot image
->  
-> diff --git a/Makefile b/Makefile
-> index f23516980796..7f293b0431fe 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1648,7 +1648,6 @@ clean: $(clean-dirs)
->  		-o -name '*.dwo' -o -name '*.lst' \
->  		-o -name '*.su'  \
->  		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
-> -		-o -name '*.hdrtest.c' \
->  		-o -name '*.lex.c' -o -name '*.tab.[ch]' \
->  		-o -name '*.asn1.[ch]' \
->  		-o -name '*.symtypes' -o -name 'modules.order' \
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index ee0319560513..776842b7e6a3 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -294,14 +294,14 @@ quiet_cmd_cc_lst_c = MKLST   $@
->  $(obj)/%.lst: $(src)/%.c FORCE
->  	$(call if_changed_dep,cc_lst_c)
->  
-> -# Dummy C sources for header test (header-test-y target)
-> +# header test (header-test-y target)
->  # ---------------------------------------------------------------------------
->  
-> -quiet_cmd_header_test = HDRTEST $@
-> -      cmd_header_test = echo "\#include \"$*.h\"" > $@
-> +quiet_cmd_cc_s_h = CC      $@
-> +      cmd_cc_s_h = $(CC) $(c_flags) -S -o $@ -x c /dev/null -include $<
+On Wed, Jun 26, 2019 at 4:54 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-I think I'd prefer HDRTEST or something more informative than just CC in
-the quiet cmd to distinguish this from the usual build lines. Especially
-now that the file name is also just .h.s.
+> During suspend/resume, mtk_eint_mask may be called while
+> wake_mask is active. For example, this happens if a wake-source
+> with an active interrupt handler wakes the system:
+> irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+> that it can be handled later on in the resume flow.
+>
+> However, this may happen before mtk_eint_do_resume is called:
+> in this case, wake_mask is loaded, and cur_mask is restored
+> from an older copy, re-enabling the interrupt, and causing
+> an interrupt storm (especially for level interrupts).
+>
+> Step by step, for a line that has both wake and interrupt enabled:
+>  1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
+>     enabled at hardware level)
+>  2. System suspends, resumes due to that line (at this stage EINT_EN
+>     == wake_mask)
+>  3. irq_pm_check_wakeup is called, and disables the interrupt =>
+>     EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
+>  4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
+>     it reenables EINT_EN[irq] = 1 => interrupt storm as the driver
+>     is not yet ready to handle the interrupt.
+>
+> This patch fixes the issue in step 3, by recording all mask/unmask
+> changes in cur_mask. This also avoids the need to read the current
+> mask in eint_do_suspend, and we can remove mtk_eint_chip_read_mask
+> function.
+>
+> The interrupt will be re-enabled properly later on, sometimes after
+> mtk_eint_do_resume, when the driver is ready to handle it.
+>
+> Fixes: 58a5e1b64b ("pinctrl: mediatek: Implement wake handler and suspend resume")
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> Acked-by: Sean Wang <sean.wang@kernel.org>
 
-Other than that, good job getting rid of the intermediate file. I
-couldn't figure it out when I did the original.
+Patch applied after extending the has for Fixes: to 12 digits.
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-Tested-by: Jani Nikula <jani.nikula@intel.com>
-
->  
-> -$(obj)/%.hdrtest.c:
-> -	$(call cmd,header_test)
-> +$(obj)/%.h.s: $(src)/%.h FORCE
-> +	$(call if_changed_dep,cc_s_h)
->  
->  # Compile assembler sources (.S)
->  # ---------------------------------------------------------------------------
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 3e630fcaffd1..55ae1ec65342 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -67,7 +67,7 @@ extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
->  endif
->  
->  # Test self-contained headers
-> -extra-$(CONFIG_HEADER_TEST) += $(patsubst %.h,%.hdrtest.o,$(header-test-y))
-> +extra-$(CONFIG_HEADER_TEST) += $(addsuffix .s, $(header-test-y))
->  
->  # Add subdir path
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Yours,
+Linus Walleij
