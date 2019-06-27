@@ -2,250 +2,199 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052ACC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96999C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF47F21738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M7oR9SbN"
+	by mail.kernel.org (Postfix) with ESMTP id 6D3D220659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfF0RyO (ORCPT
+        id S1726652AbfF0RzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:54:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38532 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0RyN (ORCPT
+        Thu, 27 Jun 2019 13:55:18 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:38694 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfF0RzS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:54:13 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so3278565ljg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=81ufU1Y4KPPaNBIXIxjLeNCQp/WRZPN4IE3DhlmLXmM=;
-        b=M7oR9SbNJynybjmKaRKDMS8RIKmKAAbvhNdDceNxtkYguSlv1y/h62U8kdg3QkCh+d
-         Gn0Z5Uh/EJm2ESh0TKaL99vJqYIASsMpFFBdUDyI2j/HUpafC47/1u9+pFhzC4Mndelc
-         xcn0sXyXdPoYGlDPTBWf+lVufhIQxSYNUrZgw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=81ufU1Y4KPPaNBIXIxjLeNCQp/WRZPN4IE3DhlmLXmM=;
-        b=lPZ30r3SRvvM1DyqQoUc1XvW01k7DJb+miVwhvtK4f+SvQtBc3S06xf9hgQo+TKNYb
-         UnQmZl8O86SDp1YLBvOmS6sRq8TDlgZWTpUJNwl+tNmHyYhbvzdcKlMx0RTOGA/hLPRj
-         YFuSfZxC7FmRRF+xvHGr7ER42EywEyvek+B0LMwWvSBRiQHW7LLiZGJyUaYT1DvrPAYR
-         pFkYJF4xQDB5z2m1vyYsqUG7mmQMOjn5De+ja8qVR7chBxY8pROAbYxGv4zl6M3uZ/yB
-         pMCXWCDRt0lR8A2Xq0QY4msXhsrYjBuUaNR2fAyRDw8y8DaBRf6WATdLj1dG/I8OBIjz
-         SASA==
-X-Gm-Message-State: APjAAAV8tNYeRmLDgE+nWLz9OhhHQxeesCLJCMOifZaXCWsGEAVG70ny
-        A+tN1hRFNDcpjtvhtyEsneeLDpAR8lo=
-X-Google-Smtp-Source: APXvYqzNB+CvfHxdZGBxB/vcd7K5gGO3fOg9snUwBACVkrSAyRzxdi7wUItVNyOjT2Qg9uowLxxOKA==
-X-Received: by 2002:a2e:4a1a:: with SMTP id x26mr3005579lja.207.1561658050900;
-        Thu, 27 Jun 2019 10:54:10 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id 20sm535912ljf.21.2019.06.27.10.54.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:54:09 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id y198so2184181lfa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:54:09 -0700 (PDT)
-X-Received: by 2002:a19:3f16:: with SMTP id m22mr2676505lfa.104.1561658048754;
- Thu, 27 Jun 2019 10:54:08 -0700 (PDT)
+        Thu, 27 Jun 2019 13:55:18 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id D834F67A649;
+        Thu, 27 Jun 2019 19:55:13 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 27 Jun
+ 2019 19:55:13 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Thu, 27 Jun 2019 19:55:13 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Jeff Kletsky <lede@allycomm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+CC:     Jeff Kletsky <git-commits@allycomm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Subject: Re: [PATCH v2] mtd: spinand: Add initial support for Paragon PN26G0xA
+Thread-Topic: [PATCH v2] mtd: spinand: Add initial support for Paragon
+ PN26G0xA
+Thread-Index: AQHVJfhz1ShSN5acYE2KqnOsUXxJMqavtXcA
+Date:   Thu, 27 Jun 2019 17:55:13 +0000
+Message-ID: <43edc5c1-8460-da12-15e7-f8db4bce9688@kontron.de>
+References: <20190618170805.7187-1-lede@allycomm.com>
+In-Reply-To: <20190618170805.7187-1-lede@allycomm.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4EF1664FA243F34BAE9B82190EB96EDB@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190617215234.260982-1-evgreen@chromium.org> <20190625130515.GJ21119@dell>
- <e9e6e090-7c9b-ff5c-7389-702f9deb6712@collabora.com> <CAE=gft5TCcWGz_i3AaqexNWx6XvwcxNqTcXqrGn_4bFaMQFtjA@mail.gmail.com>
- <1be4bbbe-783c-ea91-8283-624ee66be00c@collabora.com>
-In-Reply-To: <1be4bbbe-783c-ea91-8283-624ee66be00c@collabora.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 27 Jun 2019 10:53:32 -0700
-X-Gmail-Original-Message-ID: <CAE=gft5ahY7ji4+zRxyOWwKavjc-ejXJwgbcbC=W39fe+rRAWw@mail.gmail.com>
-Message-ID: <CAE=gft5ahY7ji4+zRxyOWwKavjc-ejXJwgbcbC=W39fe+rRAWw@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: Expose resume result via debugfs
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: D834F67A649.A1317
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: computersforpeace@gmail.com, dwmw2@infradead.org,
+        git-commits@allycomm.com, lede@allycomm.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 9:42 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Evan,
->
-> On 27/6/19 18:07, Evan Green wrote:
-> > On Wed, Jun 26, 2019 at 1:55 PM Enric Balletbo i Serra
-> > <enric.balletbo@collabora.com> wrote:
-> >>
-> >> Hi Evan,
-> >>
-> >> Two few comments and I think I'm fine with it.
-> >>
-> >> On 25/6/19 15:05, Lee Jones wrote:
-> >>> On Mon, 17 Jun 2019, Evan Green wrote:
-> >>>
-> >>>> For ECs that support it, the EC returns the number of slp_s0
-> >>>> transitions and whether or not there was a timeout in the resume
-> >>>> response. Expose the last resume result to usermode via debugfs so
-> >>>> that usermode can detect and report S0ix timeouts.
-> >>>>
-> >>>> Signed-off-by: Evan Green <evgreen@chromium.org>
-> >>>
-> >>> This still needs a platform/chrome Ack.
-> >>>
-> >>>> ---
-> >>>>
-> >>>> Changes in v2:
-> >>>>  - Moved from sysfs to debugfs (Enric)
-> >>>>  - Added documentation (Enric)
-> >>>>
-> >>>>
-> >>>> ---
-> >>>>  Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
-> >>>>  drivers/mfd/cros_ec.c                     |  6 +++++-
-> >>>>  drivers/platform/chrome/cros_ec_debugfs.c |  7 +++++++
-> >>>>  include/linux/mfd/cros_ec.h               |  1 +
-> >>>>  4 files changed, 35 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
-> >>>> index 573a82d23c89..008b31422079 100644
-> >>>> --- a/Documentation/ABI/testing/debugfs-cros-ec
-> >>>> +++ b/Documentation/ABI/testing/debugfs-cros-ec
-> >>>> @@ -32,3 +32,25 @@ Description:
-> >>>>              is used for synchronizing the AP host time with the EC
-> >>>>              log. An error is returned if the command is not supported
-> >>>>              by the EC or there is a communication problem.
-> >>>> +
-> >>>> +What:               /sys/kernel/debug/cros_ec/last_resume_result
-> >>
-> >> Thinking about it, as other the other interfaces, I'd do
-> >>
-> >> s/cros_ec/<cros-ec-device>/
-> >>
-> >> I know that for now only cros_ec supports that, but we don't know what will
-> >> happen in the future, specially now that the number of cros devices is incrementing.
-> >
-> > See my comment below, I suppose the fate of these two comments are
-> > tied together.
-> >
-> >>
-> >>>> +Date:               June 2019
-> >>>> +KernelVersion:      5.3
-> >>>> +Description:
-> >>>> +            Some ECs have a feature where they will track transitions to
-> >>>> +            the (Intel) processor's SLP_S0 line, in order to detect cases
-> >>>> +            where a system failed to go into S0ix. When the system resumes,
-> >>>> +            an EC with this feature will return a summary of SLP_S0
-> >>>> +            transitions that occurred. The last_resume_result file returns
-> >>>> +            the most recent response from the AP's resume message to the EC.
-> >>>> +
-> >>>> +            The bottom 31 bits contain a count of the number of SLP_S0
-> >>>> +            transitions that occurred since the suspend message was
-> >>>> +            received. Bit 31 is set if the EC attempted to wake the
-> >>>> +            system due to a timeout when watching for SLP_S0 transitions.
-> >>>> +            Callers can use this to detect a wake from the EC due to
-> >>>> +            S0ix timeouts. The result will be zero if no suspend
-> >>>> +            transitions have been attempted, or the EC does not support
-> >>>> +            this feature.
-> >>>> +
-> >>>> +            Output will be in the format: "0x%08x\n".
-> >>>> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-> >>>> index 5d5c41ac3845..2a9ac5213893 100644
-> >>>> --- a/drivers/mfd/cros_ec.c
-> >>>> +++ b/drivers/mfd/cros_ec.c
-> >>>> @@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
-> >>>>
-> >>>>      /* For now, report failure to transition to S0ix with a warning. */
-> >>>>      if (ret >= 0 && ec_dev->host_sleep_v1 &&
-> >>>> -        (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
-> >>>> +        (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
-> >>>> +            ec_dev->last_resume_result =
-> >>>> +                    buf.u.resp1.resume_response.sleep_transitions;
-> >>>> +
-> >>>>              WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
-> >>>>                        EC_HOST_RESUME_SLEEP_TIMEOUT,
-> >>>>                        "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
-> >>>>                        buf.u.resp1.resume_response.sleep_transitions &
-> >>>>                        EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
-> >>>> +    }
-> >>>>
-> >>>>      return ret;
-> >>>>  }
-> >>>> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-> >>>> index cd3fb9c22a44..663bebf699bf 100644
-> >>>> --- a/drivers/platform/chrome/cros_ec_debugfs.c
-> >>>> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
-> >>>> @@ -447,6 +447,13 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
-> >>>>      debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
-> >>>>                          &cros_ec_uptime_fops);
-> >>>>
-> >>>> +    if (!strcmp(ec->class_dev.kobj.name, CROS_EC_DEV_NAME)) {
-> >>
-> >> For debugfs I don't care having the file exposed even is not supported, anyway
-> >> there are some CROS_EC_DEV_NAME that won't support it, so just make this simple
-> >> and create the file always.
-> >
-> > Aw, really? This file is very specific to system suspend/resume. My
-> > original patch had it everywhere, but I was finding it very ugly that
-> > this was showing up on things like the fingerprint device. I can
-> > change it if you think it's better to have it everywhere, but it also
-> > seems like an easy change to make in the future if this file is for
-> > some reason needed on other EC types.
-> >
->
-> I'd think different if it was a sysfs property but it's a debugfs.
->
-> Right now we have:
->
-> #define CROS_EC_DEV_NAME        "cros_ec"
-> #define CROS_EC_DEV_FP_NAME     "cros_fp"
-> #define CROS_EC_DEV_ISH_NAME    "cros_ish"
-> #define CROS_EC_DEV_PD_NAME     "cros_pd"
-> #define CROS_EC_DEV_SCP_NAME    "cros_scp"
-> #define CROS_EC_DEV_TP_NAME     "cros_tp"
->
-> Is really the named cros_ec the only that has this feature? What about cros_scp
-> (is not supposed to run the same base code as cros_ec)? And cros_ish ?
->
-> And all the named cros_ec devices have this feature? Maybe is supported by
-> Nocturne but not Veyron? Wouldn't be exposed also on those cros_ec that doesn't
-> support it?
->
-> And don't have the answer to all these questions, hence my concerns.
->
-> As per your documentation
->
->  +                ...           The result will be zero if no suspend
->  +            transitions have been attempted, or the EC does not support
->  +            this feature.
->
-> I can accept if _all_ the CROS_EC_DEV_NAMEs and _only_ the CROS_EC_DEV_NAME
-> supports it, is that the case?
->
-> But if you are anyway exposing this on CROS_EC_DEV_NAMEs that doesn't support it
-> why not just expose to all and skip a future bunch of code to filter, it is
-> clear what a 0 means and at the end it's just a debugfs file.
-
-Yes, my patch was attempting to expose it for all "cros_ec" devices,
-even if the EC didn't support that feature. I was hoping to avoid
-polluting other devices like cros_fp and cros_pd, but I think you may
-be correct about cros_scp. That's something that will act as the
-system EC but is named differently because it can send IPIs as well?
-Weird, but ok.
-
-Ok, I'll add this debugfs file to all EC devices.
--Evan
+T24gMTguMDYuMTkgMTk6MDgsIEplZmYgS2xldHNreSB3cm90ZToNCj4gRnJvbTogSmVmZiBLbGV0
+c2t5IDxnaXQtY29tbWl0c0BhbGx5Y29tbS5jb20+DQo+IA0KPiBBZGQgaW5pdGlhbCBzdXBwb3J0
+IGZvciBQYXJhZ29uIFRlY2hub2xvZ3kNCj4gUE4yNkcwMUF4eHh4eCBhbmQgUE4yNkcwMkF4eHh4
+eCBTUEkgTkFORA0KPiANCj4gRGF0YXNoZWV0cyBhdmFpbGFibGUgYXQNCj4gaHR0cDovL3d3dy54
+dHh0ZWNoLmNvbS91cGZpbGUvMjAxNjA4MjUxNzI3NDU5MC5wZGYNCj4gaHR0cDovL3d3dy54dHh0
+ZWNoLmNvbS91cGZpbGUvMjAxNjA4MjUxNzI4MjMyOS5wZGYNCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IEplZmYgS2xldHNreSA8Z2l0LWNvbW1pdHNAYWxseWNvbW0uY29tPg0KDQpSZXZpZXdlZC1ieTog
+RnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPg0KDQo+IC0tLQ0K
+PiAgIGRyaXZlcnMvbXRkL25hbmQvc3BpL01ha2VmaWxlICB8ICAgMiArLQ0KPiAgIGRyaXZlcnMv
+bXRkL25hbmQvc3BpL2NvcmUuYyAgICB8ICAgMSArDQo+ICAgZHJpdmVycy9tdGQvbmFuZC9zcGkv
+cGFyYWdvbi5jIHwgMTQ3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgIGlu
+Y2x1ZGUvbGludXgvbXRkL3NwaW5hbmQuaCAgICB8ICAgMSArDQo+ICAgNCBmaWxlcyBjaGFuZ2Vk
+LCAxNTAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL210ZC9uYW5kL3NwaS9wYXJhZ29uLmMNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL210ZC9uYW5kL3NwaS9NYWtlZmlsZSBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL01ha2VmaWxl
+DQo+IGluZGV4IDc1MzEyNTA4MjY0MC4uOTY2MmI5YzFkNWE5IDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL210ZC9uYW5kL3NwaS9NYWtlZmlsZQ0KPiArKysgYi9kcml2ZXJzL210ZC9uYW5kL3NwaS9N
+YWtlZmlsZQ0KPiBAQCAtMSwzICsxLDMgQEANCj4gICAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
+OiBHUEwtMi4wDQo+IC1zcGluYW5kLW9ianMgOj0gY29yZS5vIGdpZ2FkZXZpY2UubyBtYWNyb25p
+eC5vIG1pY3Jvbi5vIHRvc2hpYmEubyB3aW5ib25kLm8NCj4gK3NwaW5hbmQtb2JqcyA6PSBjb3Jl
+Lm8gZ2lnYWRldmljZS5vIG1hY3Jvbml4Lm8gbWljcm9uLm8gcGFyYWdvbi5vIHRvc2hpYmEubyB3
+aW5ib25kLm8NCj4gICBvYmotJChDT05GSUdfTVREX1NQSV9OQU5EKSArPSBzcGluYW5kLm8NCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYyBiL2RyaXZlcnMvbXRkL25h
+bmQvc3BpL2NvcmUuYw0KPiBpbmRleCA1NTZiZmRiMzQ0NTUuLmYwZjM1MjhhYWI4ZiAxMDA2NDQN
+Cj4gLS0tIGEvZHJpdmVycy9tdGQvbmFuZC9zcGkvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvbXRk
+L25hbmQvc3BpL2NvcmUuYw0KPiBAQCAtNzU3LDYgKzc1Nyw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgKnNwaW5hbmRfbWFudWZhY3R1cmVyc1tdID0gew0KPiAg
+IAkmZ2lnYWRldmljZV9zcGluYW5kX21hbnVmYWN0dXJlciwNCj4gICAJJm1hY3Jvbml4X3NwaW5h
+bmRfbWFudWZhY3R1cmVyLA0KPiAgIAkmbWljcm9uX3NwaW5hbmRfbWFudWZhY3R1cmVyLA0KPiAr
+CSZwYXJhZ29uX3NwaW5hbmRfbWFudWZhY3R1cmVyLA0KPiAgIAkmdG9zaGliYV9zcGluYW5kX21h
+bnVmYWN0dXJlciwNCj4gICAJJndpbmJvbmRfc3BpbmFuZF9tYW51ZmFjdHVyZXIsDQo+ICAgfTsN
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL25hbmQvc3BpL3BhcmFnb24uYyBiL2RyaXZlcnMv
+bXRkL25hbmQvc3BpL3BhcmFnb24uYw0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAw
+MDAwMDAwMDAwMDAuLjUyMzA3NjgxY2JkMA0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL2RyaXZl
+cnMvbXRkL25hbmQvc3BpL3BhcmFnb24uYw0KPiBAQCAtMCwwICsxLDE0NyBAQA0KPiArLy8gU1BE
+WC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gKy8qDQo+ICsgKiBDb3B5cmlnaHQgKEMp
+IDIwMTkgSmVmZiBLbGV0c2t5DQo+ICsgKg0KPiArICogQXV0aG9yOiBKZWZmIEtsZXRza3kgPGdp
+dC1jb21taXRzQGFsbHljb21tLmNvbT4NCj4gKyAqLw0KPiArDQo+ICsjaW5jbHVkZSA8bGludXgv
+ZGV2aWNlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+ICsjaW5jbHVkZSA8bGlu
+dXgvbXRkL3NwaW5hbmQuaD4NCj4gKw0KPiArDQo+ICsjZGVmaW5lIFNQSU5BTkRfTUZSX1BBUkFH
+T04JMHhhMQ0KPiArDQo+ICsNCj4gKyNkZWZpbmUgUE4yNkcwWEFfU1RBVFVTX0VDQ19CSVRNQVNL
+CQkoMyA8PCA0KQ0KPiArDQo+ICsjZGVmaW5lIFBOMjZHMFhBX1NUQVRVU19FQ0NfTk9ORV9ERVRF
+Q1RFRAkoMCA8PCA0KQ0KPiArI2RlZmluZSBQTjI2RzBYQV9TVEFUVVNfRUNDXzFfN19DT1JSRUNU
+RUQJKDEgPDwgNCkNCj4gKyNkZWZpbmUgUE4yNkcwWEFfU1RBVFVTX0VDQ19FUlJPUkVECQkoMiA8
+PCA0KQ0KPiArI2RlZmluZSBQTjI2RzBYQV9TVEFUVVNfRUNDXzhfQ09SUkVDVEVECQkoMyA8PCA0
+KQ0KPiArDQo+ICsNCj4gK3N0YXRpYyBTUElOQU5EX09QX1ZBUklBTlRTKHJlYWRfY2FjaGVfdmFy
+aWFudHMsDQo+ICsJCVNQSU5BTkRfUEFHRV9SRUFEX0ZST01fQ0FDSEVfUVVBRElPX09QKDAsIDIs
+IE5VTEwsIDApLA0KPiArCQlTUElOQU5EX1BBR0VfUkVBRF9GUk9NX0NBQ0hFX1g0X09QKDAsIDEs
+IE5VTEwsIDApLA0KPiArCQlTUElOQU5EX1BBR0VfUkVBRF9GUk9NX0NBQ0hFX0RVQUxJT19PUCgw
+LCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9YMl9PUCgw
+LCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9PUCh0cnVl
+LCAwLCAxLCBOVUxMLCAwKSwNCj4gKwkJU1BJTkFORF9QQUdFX1JFQURfRlJPTV9DQUNIRV9PUChm
+YWxzZSwgMCwgMSwgTlVMTCwgMCkpOw0KPiArDQo+ICtzdGF0aWMgU1BJTkFORF9PUF9WQVJJQU5U
+Uyh3cml0ZV9jYWNoZV92YXJpYW50cywNCj4gKwkJU1BJTkFORF9QUk9HX0xPQURfWDQodHJ1ZSwg
+MCwgTlVMTCwgMCksDQo+ICsJCVNQSU5BTkRfUFJPR19MT0FEKHRydWUsIDAsIE5VTEwsIDApKTsN
+Cj4gKw0KPiArc3RhdGljIFNQSU5BTkRfT1BfVkFSSUFOVFModXBkYXRlX2NhY2hlX3ZhcmlhbnRz
+LA0KPiArCQlTUElOQU5EX1BST0dfTE9BRF9YNChmYWxzZSwgMCwgTlVMTCwgMCksDQo+ICsJCVNQ
+SU5BTkRfUFJPR19MT0FEKGZhbHNlLCAwLCBOVUxMLCAwKSk7DQo+ICsNCj4gKw0KPiArc3RhdGlj
+IGludCBwbjI2ZzB4YV9vb2JsYXlvdXRfZWNjKHN0cnVjdCBtdGRfaW5mbyAqbXRkLCBpbnQgc2Vj
+dGlvbiwNCj4gKwkJCQkgICBzdHJ1Y3QgbXRkX29vYl9yZWdpb24gKnJlZ2lvbikNCj4gK3sNCj4g
+KwlpZiAoc2VjdGlvbiA+IDMpDQo+ICsJCXJldHVybiAtRVJBTkdFOw0KPiArDQo+ICsJcmVnaW9u
+LT5vZmZzZXQgPSA2ICsgKDE1ICogc2VjdGlvbik7IC8qIDQgQkJNICsgMiB1c2VyIGJ5dGVzICov
+DQo+ICsJcmVnaW9uLT5sZW5ndGggPSAxMzsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiAr
+DQo+ICtzdGF0aWMgaW50IHBuMjZnMHhhX29vYmxheW91dF9mcmVlKHN0cnVjdCBtdGRfaW5mbyAq
+bXRkLCBpbnQgc2VjdGlvbiwNCj4gKwkJCQkgICBzdHJ1Y3QgbXRkX29vYl9yZWdpb24gKnJlZ2lv
+bikNCj4gK3sNCj4gKwlpZiAoc2VjdGlvbiA+IDQpDQo+ICsJCXJldHVybiAtRVJBTkdFOw0KPiAr
+DQo+ICsJaWYgKHNlY3Rpb24gPT0gNCkgew0KPiArCQlyZWdpb24tPm9mZnNldCA9IDY0Ow0KPiAr
+CQlyZWdpb24tPmxlbmd0aCA9IDY0Ow0KPiArCX0gZWxzZSB7DQo+ICsJCXJlZ2lvbi0+b2Zmc2V0
+ID0gNCArICgxNSAqIHNlY3Rpb24pOw0KPiArCQlyZWdpb24tPmxlbmd0aCA9IDI7DQo+ICsJfQ0K
+PiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgcG4yNmcweGFfZWNj
+X2dldF9zdGF0dXMoc3RydWN0IHNwaW5hbmRfZGV2aWNlICpzcGluYW5kLA0KPiArCQkJCSAgIHU4
+IHN0YXR1cykNCj4gK3sNCj4gKwlzd2l0Y2ggKHN0YXR1cyAmIFBOMjZHMFhBX1NUQVRVU19FQ0Nf
+QklUTUFTSykgew0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ19OT05FX0RFVEVDVEVEOg0K
+PiArCQlyZXR1cm4gMDsNCj4gKw0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ18xXzdfQ09S
+UkVDVEVEOg0KPiArCQlyZXR1cm4gNzsJLyogUmV0dXJuIHVwcGVyIGxpbWl0IGJ5IGNvbnZlbnRp
+b24gKi8NCj4gKw0KPiArCWNhc2UgUE4yNkcwWEFfU1RBVFVTX0VDQ184X0NPUlJFQ1RFRDoNCj4g
+KwkJcmV0dXJuIDg7DQo+ICsNCj4gKwljYXNlIFBOMjZHMFhBX1NUQVRVU19FQ0NfRVJST1JFRDoN
+Cj4gKwkJcmV0dXJuIC1FQkFETVNHOw0KPiArDQo+ICsJZGVmYXVsdDoNCj4gKwkJYnJlYWs7DQo+
+ICsJfQ0KPiArDQo+ICsJcmV0dXJuIC1FSU5WQUw7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBjb25z
+dCBzdHJ1Y3QgbXRkX29vYmxheW91dF9vcHMgcG4yNmcweGFfb29ibGF5b3V0ID0gew0KPiArCS5l
+Y2MgPSBwbjI2ZzB4YV9vb2JsYXlvdXRfZWNjLA0KPiArCS5mcmVlID0gcG4yNmcweGFfb29ibGF5
+b3V0X2ZyZWUsDQo+ICt9Ow0KPiArDQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpbmFu
+ZF9pbmZvIHBhcmFnb25fc3BpbmFuZF90YWJsZVtdID0gew0KPiArCVNQSU5BTkRfSU5GTygiUE4y
+NkcwMUEiLCAweGUxLA0KPiArCQkgICAgIE5BTkRfTUVNT1JHKDEsIDIwNDgsIDEyOCwgNjQsIDEw
+MjQsIDIxLCAxLCAxLCAxKSwNCj4gKwkJICAgICBOQU5EX0VDQ1JFUSg4LCA1MTIpLA0KPiArCQkg
+ICAgIFNQSU5BTkRfSU5GT19PUF9WQVJJQU5UUygmcmVhZF9jYWNoZV92YXJpYW50cywNCj4gKwkJ
+CQkJICAgICAgJndyaXRlX2NhY2hlX3ZhcmlhbnRzLA0KPiArCQkJCQkgICAgICAmdXBkYXRlX2Nh
+Y2hlX3ZhcmlhbnRzKSwNCj4gKwkJICAgICAwLA0KPiArCQkgICAgIFNQSU5BTkRfRUNDSU5GTygm
+cG4yNmcweGFfb29ibGF5b3V0LA0KPiArCQkJCSAgICAgcG4yNmcweGFfZWNjX2dldF9zdGF0dXMp
+KSwNCj4gKwlTUElOQU5EX0lORk8oIlBOMjZHMDJBIiwgMHhlMiwNCj4gKwkJICAgICBOQU5EX01F
+TU9SRygxLCAyMDQ4LCAxMjgsIDY0LCAyMDQ4LCA0MSwgMSwgMSwgMSksDQo+ICsJCSAgICAgTkFO
+RF9FQ0NSRVEoOCwgNTEyKSwNCj4gKwkJICAgICBTUElOQU5EX0lORk9fT1BfVkFSSUFOVFMoJnJl
+YWRfY2FjaGVfdmFyaWFudHMsDQo+ICsJCQkJCSAgICAgICZ3cml0ZV9jYWNoZV92YXJpYW50cywN
+Cj4gKwkJCQkJICAgICAgJnVwZGF0ZV9jYWNoZV92YXJpYW50cyksDQo+ICsJCSAgICAgMCwNCj4g
+KwkJICAgICBTUElOQU5EX0VDQ0lORk8oJnBuMjZnMHhhX29vYmxheW91dCwNCj4gKwkJCQkgICAg
+IHBuMjZnMHhhX2VjY19nZXRfc3RhdHVzKSksDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgaW50IHBh
+cmFnb25fc3BpbmFuZF9kZXRlY3Qoc3RydWN0IHNwaW5hbmRfZGV2aWNlICpzcGluYW5kKQ0KPiAr
+ew0KPiArCXU4ICppZCA9IHNwaW5hbmQtPmlkLmRhdGE7DQo+ICsJaW50IHJldDsNCj4gKw0KPiAr
+CS8qIFJlYWQgSUQgcmV0dXJucyBbMF1bTUlEXVtESURdICovDQo+ICsNCj4gKwlpZiAoaWRbMV0g
+IT0gU1BJTkFORF9NRlJfUEFSQUdPTikNCj4gKwkJcmV0dXJuIDA7DQo+ICsNCj4gKwlyZXQgPSBz
+cGluYW5kX21hdGNoX2FuZF9pbml0KHNwaW5hbmQsIHBhcmFnb25fc3BpbmFuZF90YWJsZSwNCj4g
+KwkJCQkgICAgIEFSUkFZX1NJWkUocGFyYWdvbl9zcGluYW5kX3RhYmxlKSwNCj4gKwkJCQkgICAg
+IGlkWzJdKTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJcmV0dXJu
+IDE7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVy
+ZXJfb3BzIHBhcmFnb25fc3BpbmFuZF9tYW51Zl9vcHMgPSB7DQo+ICsJLmRldGVjdCA9IHBhcmFn
+b25fc3BpbmFuZF9kZXRlY3QsDQo+ICt9Ow0KPiArDQo+ICtjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9t
+YW51ZmFjdHVyZXIgcGFyYWdvbl9zcGluYW5kX21hbnVmYWN0dXJlciA9IHsNCj4gKwkuaWQgPSBT
+UElOQU5EX01GUl9QQVJBR09OLA0KPiArCS5uYW1lID0gIlBhcmFnb24iLA0KPiArCS5vcHMgPSAm
+cGFyYWdvbl9zcGluYW5kX21hbnVmX29wcywNCj4gK307DQo+IGRpZmYgLS1naXQgYS9pbmNsdWRl
+L2xpbnV4L210ZC9zcGluYW5kLmggYi9pbmNsdWRlL2xpbnV4L210ZC9zcGluYW5kLmgNCj4gaW5k
+ZXggZmJjMDQyM2JiNGFlLi40ZWE1NThiZDNjNDYgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGlu
+dXgvbXRkL3NwaW5hbmQuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L210ZC9zcGluYW5kLmgNCj4g
+QEAgLTIyNyw2ICsyMjcsNyBAQCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgew0KPiAgIGV4
+dGVybiBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgZ2lnYWRldmljZV9zcGluYW5k
+X21hbnVmYWN0dXJlcjsNCj4gICBleHRlcm4gY29uc3Qgc3RydWN0IHNwaW5hbmRfbWFudWZhY3R1
+cmVyIG1hY3Jvbml4X3NwaW5hbmRfbWFudWZhY3R1cmVyOw0KPiAgIGV4dGVybiBjb25zdCBzdHJ1
+Y3Qgc3BpbmFuZF9tYW51ZmFjdHVyZXIgbWljcm9uX3NwaW5hbmRfbWFudWZhY3R1cmVyOw0KPiAr
+ZXh0ZXJuIGNvbnN0IHN0cnVjdCBzcGluYW5kX21hbnVmYWN0dXJlciBwYXJhZ29uX3NwaW5hbmRf
+bWFudWZhY3R1cmVyOw0KPiAgIGV4dGVybiBjb25zdCBzdHJ1Y3Qgc3BpbmFuZF9tYW51ZmFjdHVy
+ZXIgdG9zaGliYV9zcGluYW5kX21hbnVmYWN0dXJlcjsNCj4gICBleHRlcm4gY29uc3Qgc3RydWN0
+IHNwaW5hbmRfbWFudWZhY3R1cmVyIHdpbmJvbmRfc3BpbmFuZF9tYW51ZmFjdHVyZXI7DQo+ICAg
+DQo+IA==
