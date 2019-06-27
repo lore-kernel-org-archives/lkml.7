@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A601C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B244AC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36FA420644
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831A820644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsj5Mqv5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f+UKG+O4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfF0RnP (ORCPT
+        id S1727103AbfF0Rn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:43:15 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39457 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfF0RnN (ORCPT
+        Thu, 27 Jun 2019 13:43:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34104 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfF0Rn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:43:13 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b7so1676316pls.6;
-        Thu, 27 Jun 2019 10:43:12 -0700 (PDT)
+        Thu, 27 Jun 2019 13:43:26 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p10so1355614pgn.1;
+        Thu, 27 Jun 2019 10:43:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=AxIMu4BJ+ITDn4HqQxvZfXnYWuXpvemPdfghlXEyazU=;
-        b=gsj5Mqv5FWgw2C8ZSbqPk4d3GPDt6a75jDCmFUt0ohXVM0ntKg46pDsV5+kfDd9Ntn
-         1H5qWukGYQd+BQLzJkqij2QH29ZPTGjXw9Kqghol5YjjZQW0Q+joWN6WFrRUyQyCbEUN
-         O/4NJ7XR4kb+564XUAt0q+MHqHjOMyMdANVXTQzg+/am43cgpNirltYbrH0hfYuDlusI
-         o3+tAJovmDfLVeaftXXCHCAH1HBCc7x+Fw2vnTEUhayojJSnwXlP/xSLn6JrOykz7Omp
-         25G6M8Zwffl33Hn5bF50Rc6oLrXeLw6cV01HxPAH0WR3EbNIAqZA6q6c8jwAhQAv2DuO
-         NAqA==
+        bh=5yXtCY8+SUxwVe8KOeKy/jAD6fDiQgSV/PqCOT/7qso=;
+        b=f+UKG+O4/Rxj5mwHBxO2vSuKFB5Jbwqy+gAXw/tRLQ24V4c+1nRp1pK3GVV8/kunBr
+         XBbE5+y+3ugm94S4HF3cyhnfzYHwKHn63wAThdv/cn/wTWK4fcWFCnjXLSWBFP76S7AQ
+         v5gpeCj2430jpnMH7ycFJOgnQJUFpmGhIF2T/TP2M7YecU28G7McurxHyyqflnaBzlSP
+         D4RBfB5FRfJ6+RLAbK49cbdE3kFhh+Xjrq0SUQbUMONGJBb6BlPpdoAsyfMyw3UUzbmh
+         tZRzbjrHm5IUwz31ebloD3Jkmge6him6jrNznLJSskqmCM5Dm3CwYDqkN2N8kqPK+5+J
+         uhMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AxIMu4BJ+ITDn4HqQxvZfXnYWuXpvemPdfghlXEyazU=;
-        b=BYo/oVwXez3qwe2QqnVzIwUzlsln4cIMJY1yPNUVKcjCXSpSXPKfot3sK356EcHvXe
-         v2GDDJMDjKq/o8eY7vznSDAEtEX1kxVS65bfveQCdp0JsREnbayoHVHORrNuM9tQ5CW9
-         I22xte6ECIhC5BEL+TkECutII3uRLTsE7hGq639ZjpJnGaSjxPXuF/pTxqrXEyytvo1h
-         Qul3SiXMxvBQO5iYYQKxVUwoayIz+tVH4eDgihnKRdp1x4OkjKPr3bJY/YuUbK3p4UcN
-         MkmxJSxbieNDpKiIlfvDFsDqciEwJ9FKW23+R21pz3Bxruxpnh6Y9Q9OsfKoWEWfQHwP
-         vdOw==
-X-Gm-Message-State: APjAAAUodaUAmo4EkufBSjnzfjPEJrx7VF426G8fblRHSUqCpM5we42X
-        QOr3yEGTmmM7YyBESbQQ8Yc=
-X-Google-Smtp-Source: APXvYqzNcFy5ilWx3mzo+KyhctxCrbf7SIbTOd01OLd8mmkxsuA3dBHq+4kMjsNAcZRLB7aYDxob6A==
-X-Received: by 2002:a17:902:20c8:: with SMTP id v8mr6040367plg.284.1561657392653;
-        Thu, 27 Jun 2019 10:43:12 -0700 (PDT)
+        bh=5yXtCY8+SUxwVe8KOeKy/jAD6fDiQgSV/PqCOT/7qso=;
+        b=lOVO4LhXKBcjefWlNapLdV/H6J0Uug/mvyw8UmyiKrIFtW8yuQUNabkpbpWJfki+HB
+         9N9V/7sLY374bVFFzsxEOGVCv/NHQy+RUoKAxiMolUsmYI3dBUQKE6+ww2g02uopG41s
+         7tKXishjSzCdSsq99EF10sTnMKg+9HCC4jRklE7Ah3ZHhbfaD6q2Q3FHiMT+Bu+oeqj6
+         1khMPuu1DuNAv50hvm4tuCL4nrxYtd4bMPzbrWV9m+xXnAT5VGSR5ly74B9hZV8+7C3j
+         rHkn2XIJE7RkMXWft7oSlycHVQPRVin3UVyz1WU12gTrAUpJ6alMYM+fJD2SRtqTpiq8
+         06Bw==
+X-Gm-Message-State: APjAAAXgEMm+XUrolSUXynNpIoHR6aRSGYqywtHyD8BAZEF60cBQOrff
+        Rv79TPJNzyxhLH30d8eRslY=
+X-Google-Smtp-Source: APXvYqwXKxyNpqDNq5O1I8zhK3VRQ+kC4YusxJsOH6nHnsvGEoCXhd8/wGlKIzp3uyjhYIZxoAqZ+w==
+X-Received: by 2002:a63:4518:: with SMTP id s24mr4953313pga.123.1561657405805;
+        Thu, 27 Jun 2019 10:43:25 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id k6sm3490852pfi.12.2019.06.27.10.43.10
+        by smtp.googlemail.com with ESMTPSA id y17sm3056052pfe.148.2019.06.27.10.43.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:43:12 -0700 (PDT)
+        Thu, 27 Jun 2019 10:43:25 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        qla2xxx-upstream@qlogic.com,
+        QLogic-Storage-Upstream@cavium.com,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 54/87] scsi: qla2xxx: replace vmalloc and memset with vzalloc
-Date:   Fri, 28 Jun 2019 01:43:04 +0800
-Message-Id: <20190627174304.4936-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 55/87] scsi: qedf: replace vmalloc and memset with vzalloc
+Date:   Fri, 28 Jun 2019 01:43:15 +0800
+Message-Id: <20190627174315.5042-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,48 +75,26 @@ vmalloc + memset(0) -> vzalloc
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/scsi/qla2xxx/qla_attr.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/scsi/qedf/qedf_dbg.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index 8d560c562e9c..dabd139fdaeb 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -382,7 +382,7 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		ha->optrom_region_size = size;
+diff --git a/drivers/scsi/qedf/qedf_dbg.c b/drivers/scsi/qedf/qedf_dbg.c
+index e0387e495261..0d2aed82882a 100644
+--- a/drivers/scsi/qedf/qedf_dbg.c
++++ b/drivers/scsi/qedf/qedf_dbg.c
+@@ -106,11 +106,10 @@ qedf_dbg_info(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
+ int
+ qedf_alloc_grc_dump_buf(u8 **buf, uint32_t len)
+ {
+-		*buf = vmalloc(len);
++		*buf = vzalloc(len);
+ 		if (!(*buf))
+ 			return -ENOMEM;
  
- 		ha->optrom_state = QLA_SREADING;
--		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-+		ha->optrom_buffer = vzalloc(ha->optrom_region_size);
- 		if (ha->optrom_buffer == NULL) {
- 			ql_log(ql_log_warn, vha, 0x7062,
- 			    "Unable to allocate memory for optrom retrieval "
-@@ -404,7 +404,6 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		    "Reading flash region -- 0x%x/0x%x.\n",
- 		    ha->optrom_region_start, ha->optrom_region_size);
+-		memset(*buf, 0, len);
+ 		return 0;
+ }
  
--		memset(ha->optrom_buffer, 0, ha->optrom_region_size);
- 		ha->isp_ops->read_optrom(vha, ha->optrom_buffer,
- 		    ha->optrom_region_start, ha->optrom_region_size);
- 		break;
-@@ -457,7 +456,7 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		ha->optrom_region_size = size;
- 
- 		ha->optrom_state = QLA_SWRITING;
--		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-+		ha->optrom_buffer = vzalloc(ha->optrom_region_size);
- 		if (ha->optrom_buffer == NULL) {
- 			ql_log(ql_log_warn, vha, 0x7066,
- 			    "Unable to allocate memory for optrom update "
-@@ -471,8 +470,6 @@ qla2x00_sysfs_write_optrom_ctl(struct file *filp, struct kobject *kobj,
- 		ql_dbg(ql_dbg_user, vha, 0x7067,
- 		    "Staging flash region write -- 0x%x/0x%x.\n",
- 		    ha->optrom_region_start, ha->optrom_region_size);
--
--		memset(ha->optrom_buffer, 0, ha->optrom_region_size);
- 		break;
- 	case 3:
- 		if (ha->optrom_state != QLA_SWRITING) {
 -- 
 2.11.0
 
