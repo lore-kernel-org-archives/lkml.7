@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBD7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E560C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E74E6217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AEEC217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595753;
-	bh=ffipq4PLWCLGIasi6+ngkJmbXXy5sUL79DtV3ZtnifA=;
+	s=default; t=1561595762;
+	bh=MaahXnyARCpSqTqZKK3+2eRQFI2JNLvBpvQs9TF9XrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HS6aAYGboQgE4v5RGK3ZgdlhMzs5YCX+q3gZl/pTTXzOWLVmI5yYntll83t6TPOh/
-	 znLwhFU2AgfeM8eLELen3nQII5loq8h775bbkNXW3wY3D5xN0dzGUDOBm3ekHlol28
-	 EK71blcr14veJqwfgmWxkzJSGTfdcr9x76QvBZww=
+	b=SgJ0SdfqYvg6+aRvzuZzlVwCk2Nw3MngVOOvwu+8RILV0uiowX656u9Ii8JGnWJ+E
+	 Me88503672Cq4uBBIurE4H8ex9VVyQxClM6rj0Gq61HTEWepbIiUZCv+ki7NkWOAgA
+	 FlaFTdUZ9oToMjFaUJ7updD+5VR2+hZTy3Zo8nOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfF0AfO (ORCPT
+        id S1727883AbfF0AgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:36:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727467AbfF0AfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:35:11 -0400
+        id S1728204AbfF0AfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:35:05 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A871217F4;
-        Thu, 27 Jun 2019 00:35:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 504D5217F4;
+        Thu, 27 Jun 2019 00:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595710;
-        bh=ffipq4PLWCLGIasi6+ngkJmbXXy5sUL79DtV3ZtnifA=;
+        s=default; t=1561595704;
+        bh=MaahXnyARCpSqTqZKK3+2eRQFI2JNLvBpvQs9TF9XrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AJ+s275fGjK5lcbJmchjM0WQAenOQYd50QjG+PSXh6lEWBXL49gWxcEO+2fcMg/mU
-         rmKsWInJAZGhE1FGfKzxWu8Kovr7ZI3LRfDCfeKZ94m05Q1NZjGZKgFSbsOdG92D+Q
-         GPCH87bU5q4Eb7dBmthMxQoPBi5oRvTQeBRNie3s=
+        b=Y56CiZJCWaMEdXbiRC+aB35iVVDh0Dv2A/E8eoQHVEZuRr1MmhJCqfJ2Z0RP/qJEF
+         7aacdskvkS4Vt6yzC5XfaabQgXcm9kUT5BhCLQvWL8CIklGmOspoXrecVAsg5SXfKk
+         Rtw/RpZ0eEpRJ+bA/oC4WNAj2bGHs8xfh357wyYE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nilesh Javali <njavali@marvell.com>, Lee Duncan <lduncan@suse.com>,
-        Chris Leech <cleech@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 88/95] scsi: qedi: Check targetname while finding boot target information
-Date:   Wed, 26 Jun 2019 20:30:13 -0400
-Message-Id: <20190627003021.19867-88-sashal@kernel.org>
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 86/95] ip6_tunnel: allow not to count pkts on tstats by passing dev as NULL
+Date:   Wed, 26 Jun 2019 20:30:11 -0400
+Message-Id: <20190627003021.19867-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -60,70 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilesh Javali <njavali@marvell.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 1ac3549ed58cdfdaf43bbf31ac260e2381cc0dae ]
+[ Upstream commit 6f6a8622057c92408930c31698394fae1557b188 ]
 
-The kernel panic was observed during iSCSI discovery via offload with below
-call trace,
+A similar fix to Patch "ip_tunnel: allow not to count pkts on tstats by
+setting skb's dev to NULL" is also needed by ip6_tunnel.
 
-[ 2115.646901] BUG: unable to handle kernel NULL pointer dereference at (null)
-[ 2115.646909] IP: [<ffffffffacf7f0cc>] strncmp+0xc/0x60
-[ 2115.646927] PGD 0
-[ 2115.646932] Oops: 0000 [#1] SMP
-[ 2115.647107] CPU: 24 PID: 264 Comm: kworker/24:1 Kdump: loaded Tainted: G
-               OE  ------------   3.10.0-957.el7.x86_64 #1
-[ 2115.647133] Workqueue: slowpath-13:00. qed_slowpath_task [qed]
-[ 2115.647135] task: ffff8d66af80b0c0 ti: ffff8d66afb80000 task.ti: ffff8d66afb80000
-[ 2115.647136] RIP: 0010:[<ffffffffacf7f0cc>]  [<ffffffffacf7f0cc>] strncmp+0xc/0x60
-[ 2115.647141] RSP: 0018:ffff8d66afb83c68  EFLAGS: 00010206
-[ 2115.647143] RAX: 0000000000000001 RBX: 0000000000000007 RCX: 000000000000000a
-[ 2115.647144] RDX: 0000000000000100 RSI: 0000000000000000 RDI: ffff8d632b3ba040
-[ 2115.647145] RBP: ffff8d66afb83c68 R08: 0000000000000000 R09: 000000000000ffff
-[ 2115.647147] R10: 0000000000000007 R11: 0000000000000800 R12: ffff8d66a30007a0
-[ 2115.647148] R13: ffff8d66747a3c10 R14: ffff8d632b3ba000 R15: ffff8d66747a32f8
-[ 2115.647149] FS:  0000000000000000(0000) GS:ffff8d66aff00000(0000) knlGS:0000000000000000
-[ 2115.647151] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 2115.647152] CR2: 0000000000000000 CR3: 0000000509610000 CR4: 00000000007607e0
-[ 2115.647153] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 2115.647154] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 2115.647155] PKRU: 00000000
-[ 2115.647157] Call Trace:
-[ 2115.647165]  [<ffffffffc0634cc5>] qedi_get_protocol_tlv_data+0x2c5/0x510 [qedi]
-[ 2115.647184]  [<ffffffffc05968f5>] ? qed_mfw_process_tlv_req+0x245/0xbe0 [qed]
-[ 2115.647195]  [<ffffffffc05496cb>] qed_mfw_fill_tlv_data+0x4b/0xb0 [qed]
-[ 2115.647206]  [<ffffffffc0596911>] qed_mfw_process_tlv_req+0x261/0xbe0 [qed]
-[ 2115.647215]  [<ffffffffacce0e8e>] ? dequeue_task_fair+0x41e/0x660
-[ 2115.647221]  [<ffffffffacc2a59e>] ? __switch_to+0xce/0x580
-[ 2115.647230]  [<ffffffffc0546013>] qed_slowpath_task+0xa3/0x160 [qed]
-[ 2115.647278] RIP  [<ffffffffacf7f0cc>] strncmp+0xc/0x60
-
-Fix kernel panic by validating the session targetname before providing TLV
-data and confirming the presence of boot targets.
-
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Reviewed-by: Chris Leech <cleech@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/net/ip6_tunnel.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_main.c b/drivers/scsi/qedi/qedi_main.c
-index e5db9a9954dc..a6ff7be0210a 100644
---- a/drivers/scsi/qedi/qedi_main.c
-+++ b/drivers/scsi/qedi/qedi_main.c
-@@ -990,6 +990,9 @@ static int qedi_find_boot_info(struct qedi_ctx *qedi,
- 		if (!iscsi_is_session_online(cls_sess))
- 			continue;
- 
-+		if (!sess->targetname)
-+			continue;
+diff --git a/include/net/ip6_tunnel.h b/include/net/ip6_tunnel.h
+index 69b4bcf880c9..028eaea1c854 100644
+--- a/include/net/ip6_tunnel.h
++++ b/include/net/ip6_tunnel.h
+@@ -158,9 +158,12 @@ static inline void ip6tunnel_xmit(struct sock *sk, struct sk_buff *skb,
+ 	memset(skb->cb, 0, sizeof(struct inet6_skb_parm));
+ 	pkt_len = skb->len - skb_inner_network_offset(skb);
+ 	err = ip6_local_out(dev_net(skb_dst(skb)->dev), sk, skb);
+-	if (unlikely(net_xmit_eval(err)))
+-		pkt_len = -1;
+-	iptunnel_xmit_stats(dev, pkt_len);
 +
- 		if (pri_ctrl_flags) {
- 			if (!strcmp(pri_tgt->iscsi_name, sess->targetname) &&
- 			    !strcmp(pri_tgt->ip_addr, ep_ip_addr)) {
++	if (dev) {
++		if (unlikely(net_xmit_eval(err)))
++			pkt_len = -1;
++		iptunnel_xmit_stats(dev, pkt_len);
++	}
+ }
+ #endif
+ #endif
 -- 
 2.20.1
 
