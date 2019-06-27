@@ -2,103 +2,129 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3DEC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73723C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5802D2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08767205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="epltGH4R";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="q5Bp8r6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfF0Nc0 (ORCPT
+        id S1726690AbfF0NeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:32:26 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53331 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfF0NcZ (ORCPT
+        Thu, 27 Jun 2019 09:34:08 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:47368 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726431AbfF0NeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:32:25 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hgUVU-0004av-RA; Thu, 27 Jun 2019 13:32:08 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ASoC: topology: fix memory leaks on sm, se and sbe
-Date:   Thu, 27 Jun 2019 14:32:08 +0100
-Message-Id: <20190627133208.9550-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Jun 2019 09:34:08 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 234ADC0AF9;
+        Thu, 27 Jun 2019 13:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561642447; bh=CvUvd+BwvFXn36qikg39gOxbIOlHyYMYLATw7osbcGc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=epltGH4RnYMkL+UJTtumeugXlHPkB+h6JhBH242A2u280bCtMRWlcGlgcOaX3R8Dn
+         jNruu+CNe+6z+m1p4+LexNyrc/+QQGOfa9+z+3/csOdBUHGfHqTt2P96QIu+spiAZP
+         Ch0dC/yH8CNTZphK67UgKM9P80+FPupgj2h5FMcfmjH0kEKZX2C0YRuuFRAePn3G0Y
+         ZJWAt+Pv0//GdMii/87l/6TEitr+PADUDxsK5OKPN9v4w1dT45btZyKSMwmMLcXamO
+         rxUtFPIRzDWoVEIryobfCJtOzO5XBXll9CyniE4nCoJfNokXKv5m3HTSQZ5+RsKEP7
+         uivdM17WLUaUg==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 69E5FA0093;
+        Thu, 27 Jun 2019 13:34:03 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 27 Jun 2019 06:34:03 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 27 Jun 2019 06:34:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CvUvd+BwvFXn36qikg39gOxbIOlHyYMYLATw7osbcGc=;
+ b=q5Bp8r6Cr+a96mkhmYRxa59S9/SHQl+QFJNI5heZ6WEnznkSPkzpOedKbXJirNi4MRsOXy6s0QkSukb1gk2M27H/6juraTYBMUUqZHwNoKASDqyQM+8WlZIYizizbrjaIhg5LMZJBYvLaQkGbdj2rbIA5ky/jGMiBPewVze6Bt0=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
+ BN8PR12MB3107.namprd12.prod.outlook.com (20.178.210.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 13:34:01 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c922:4285:22a6:6e]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c922:4285:22a6:6e%5]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
+ 13:34:01 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: RE: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
+ everything else fails
+Thread-Topic: [PATCH net-next 10/10] net: stmmac: Try to get C45 PHY if
+ everything else fails
+Thread-Index: AQHVLCXCrx1niaeCs0CBNlrs4Af9k6auOg4AgADniCCAAF0vAIAAAOYg
+Date:   Thu, 27 Jun 2019 13:33:59 +0000
+Message-ID: <BN8PR12MB32666DADBD1DD315026E9A2BD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <cover.1561556555.git.joabreu@synopsys.com>
+ <c7d1dbac1940853c22db8215ed60181b2abe3050.1561556556.git.joabreu@synopsys.com>
+ <20190626200128.GH27733@lunn.ch>
+ <BN8PR12MB3266A8396ACA97484A5E0CE7D3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
+ <20190627132340.GC31189@lunn.ch>
+In-Reply-To: <20190627132340.GC31189@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 30677112-0130-4eee-6d09-08d6fb041db2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR12MB3107;
+x-ms-traffictypediagnostic: BN8PR12MB3107:
+x-microsoft-antispam-prvs: <BN8PR12MB310759607AE8A4933E3222ACD3FD0@BN8PR12MB3107.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(376002)(396003)(346002)(366004)(189003)(199004)(102836004)(6506007)(446003)(26005)(52536014)(68736007)(256004)(99286004)(476003)(14454004)(11346002)(186003)(486006)(76176011)(7696005)(305945005)(71200400001)(8936002)(71190400001)(8676002)(81156014)(81166006)(6636002)(7736002)(5660300002)(55016002)(86362001)(74316002)(6116002)(6246003)(4744005)(2906002)(53936002)(3846002)(9686003)(229853002)(4326008)(110136005)(54906003)(66066001)(316002)(66476007)(66556008)(76116006)(73956011)(66946007)(6436002)(66446008)(25786009)(64756008)(33656002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3107;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Rn8mO7ZmyjEXQawMsLWySETkQOwhSg5Nyz/DhtTjRPGW+0M679lQrNG9l09eGfAIMcRPRSj9+fTFbcWqQoKaPf/nsrfwXiNPi8WyV8G+t+LNo7zxOO1vItf5k1NqGHHgtEwZviyEHBtxQ7VtXQpDZ/z15j4SWTlgM+cnn87igtb8i9fvwHCeYlQw8eRKV49kx6drsom7zm+CO3vrQH9Arkr3d/tzgjKR9Ifhx9VNSGaigBIwZJ4SQoDAs6XuIoBfVTwdJ7bh4L2sZxKmgR1a2AsLbzxOpaGcZV/egPxaxGbLpdkxae8C/9xGXHR8AD4zGXCJUD96anNirABs5hB7dNjZUGxvYRJzcbgZzO+uaQqOGoDpsV905Ts4TAWg75nm8yjeoFmgGjywerePQ7X/oZyc4phlSqTrizDUSebbpQk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30677112-0130-4eee-6d09-08d6fb041db2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 13:34:00.5593
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3107
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Andrew Lunn <andrew@lunn.ch>
 
-Currently when a kstrdup fails the error exit paths don't free
-the allocations for sm, se and sbe.  This can be fixed by assigning
-kc[i].private_value to these before doing the ksrtdup so that the error
-exit path will be able to free these objects.
+> There have been some drivers gaining patches for ACPI. That is
+> probably the better long term solution, ask ACPI where is the PHY and
+> what MDIO protocol to use to talk to it.
 
-Addresses-Coverity: ("Resource leak")
-Fixes: 9f90af3a9952 ("ASoC: topology: Consolidate and fix asoc_tplg_dapm_widget_*_create flow")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- sound/soc/soc-topology.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Hmmm, I'm not sure this is going to work that way ...
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index fc1f1d6f9e92..dc463f1a9e24 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -1326,10 +1326,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dmixer_create(
- 		dev_dbg(tplg->dev, " adding DAPM widget mixer control %s at %d\n",
- 			mc->hdr.name, i);
- 
-+		kc[i].private_value = (long)sm;
- 		kc[i].name = kstrdup(mc->hdr.name, GFP_KERNEL);
- 		if (kc[i].name == NULL)
- 			goto err_sm;
--		kc[i].private_value = (long)sm;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 		kc[i].access = mc->hdr.access;
- 
-@@ -1412,10 +1412,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_denum_create(
- 		dev_dbg(tplg->dev, " adding DAPM widget enum control %s\n",
- 			ec->hdr.name);
- 
-+		kc[i].private_value = (long)se;
- 		kc[i].name = kstrdup(ec->hdr.name, GFP_KERNEL);
- 		if (kc[i].name == NULL)
- 			goto err_se;
--		kc[i].private_value = (long)se;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 		kc[i].access = ec->hdr.access;
- 
-@@ -1524,10 +1524,10 @@ static struct snd_kcontrol_new *soc_tplg_dapm_widget_dbytes_create(
- 			"ASoC: adding bytes kcontrol %s with access 0x%x\n",
- 			be->hdr.name, be->hdr.access);
- 
-+		kc[i].private_value = (long)sbe;
- 		kc[i].name = kstrdup(be->hdr.name, GFP_KERNEL);
- 		if (kc[i].name == NULL)
- 			goto err_sbe;
--		kc[i].private_value = (long)sbe;
- 		kc[i].iface = SNDRV_CTL_ELEM_IFACE_MIXER;
- 		kc[i].access = be->hdr.access;
- 
--- 
-2.20.1
-
+My setup is a PCI EP which is hot-pluggable and as far as I know ACPI=20
+has only static content (????)
