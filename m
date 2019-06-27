@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BFAC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3873C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E59216E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE332083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595484;
-	bh=izG3SCuNQy/aSYFelT4kpyUT0lPwO5iH4uBJMSPnCdU=;
+	s=default; t=1561595487;
+	bh=IVgFt8rK3b1MZCmGZ5RcOq/MjbjXoMgW/pq9jSmSysA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MrwF2kJEy4hORWJCpqd+DtA5raJPtvjwcmNVCFA6PHko/8jc+3sHWLUPg7cRBFJtq
-	 +9NsYAvUhR14gktMFiJrJwSoSiQ2YBpuxJvuHLoFIDUd+tHz6H7OBoENKlk/y4Wlme
-	 3Zz84bsE6ye8MikmeKwk/3DhK9kl5hxuNiuHqaRc=
+	b=w56tvHxKCzcN8UKh3z3LqqfM5/xACF7ExkJsTDOxZPzq6Uzl3vyCR4HtJ+A1qwWlW
+	 WEaFwMse611x7FLaCLeE6p63XjqmCZtvSFj+2m000GHOI/+KO9k/qT8zwguDXxD10X
+	 RU3RKMWUF8Ito3BHIAxNMoepxae2rPykdvGk9BW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfF0AbX (ORCPT
+        id S1727167AbfF0Ab0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34602 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727094AbfF0AbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:31:16 -0400
+        id S1727114AbfF0AbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:31:21 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B21B1216E3;
-        Thu, 27 Jun 2019 00:31:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7990E2083B;
+        Thu, 27 Jun 2019 00:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595475;
-        bh=izG3SCuNQy/aSYFelT4kpyUT0lPwO5iH4uBJMSPnCdU=;
+        s=default; t=1561595480;
+        bh=IVgFt8rK3b1MZCmGZ5RcOq/MjbjXoMgW/pq9jSmSysA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m7V7HEbC8hcb1yw94wUpZQBl9RLsW5GUT0uvmBBVt4jGhqhS5Yo5FfripmYgJq7xC
-         5iZElix+p+XAgK1NMCgUo0qb5eErDKy8iw2bJ1X14kpEH4ggqAj7NUSzOXpW+R4h0J
-         98OFsYZatjdg3xnYx/MlQLdOx6yov2/Nt29MrIY0=
+        b=udrw3l06bRp+L8hBG/9eKEsspRi7AtglZU7pS4b/KSth6DlMN1aYoB0K33QWsR1O6
+         f/p5VBJypz0Lg4kWVZIM8IwijC7Ahb/rvSwO2a4Ek0rkM2rHuHjLzQ2qFsWJM+nEKO
+         LQ9zn0OVPrSs2v6M+vy04OobgOxqZZ7RNHCkulkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 17/95] iio: imu: st_lsm6dsx: fix PM support for st_lsm6dsx i2c controller
-Date:   Wed, 26 Jun 2019 20:29:02 -0400
-Message-Id: <20190627003021.19867-17-sashal@kernel.org>
+Cc:     Thomas Pedersen <thomas@eero.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 19/95] mac80211: mesh: fix RCU warning
+Date:   Wed, 26 Jun 2019 20:29:04 -0400
+Message-Id: <20190627003021.19867-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -59,99 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Thomas Pedersen <thomas@eero.com>
 
-[ Upstream commit bce0d57db388cdb1c1931d0aa7d31c77b590e0f0 ]
+[ Upstream commit 551842446ed695641a00782cd118cbb064a416a1 ]
 
-Properly suspend/resume i2c slaves connected to st_lsm6dsx master
-controller if the CPU goes in suspended state
+ifmsh->csa is an RCU-protected pointer. The writer context
+in ieee80211_mesh_finish_csa() is already mutually
+exclusive with wdev->sdata.mtx, but the RCU checker did
+not know this. Use rcu_dereference_protected() to avoid a
+warning.
 
-Fixes: c91c1c844ebd ("imu: st_lsm6dsx: add i2c embedded controller support")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+fixes the following warning:
+
+[   12.519089] =============================
+[   12.520042] WARNING: suspicious RCU usage
+[   12.520652] 5.1.0-rc7-wt+ #16 Tainted: G        W
+[   12.521409] -----------------------------
+[   12.521972] net/mac80211/mesh.c:1223 suspicious rcu_dereference_check() usage!
+[   12.522928] other info that might help us debug this:
+[   12.523984] rcu_scheduler_active = 2, debug_locks = 1
+[   12.524855] 5 locks held by kworker/u8:2/152:
+[   12.525438]  #0: 00000000057be08c ((wq_completion)phy0){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.526607]  #1: 0000000059c6b07a ((work_completion)(&sdata->csa_finalize_work)){+.+.}, at: process_one_work+0x1a2/0x620
+[   12.528001]  #2: 00000000f184ba7d (&wdev->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x2f/0x90
+[   12.529116]  #3: 00000000831a1f54 (&local->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x47/0x90
+[   12.530233]  #4: 00000000fd06f988 (&local->chanctx_mtx){+.+.}, at: ieee80211_csa_finalize_work+0x51/0x90
+
+Signed-off-by: Thomas Pedersen <thomas@eero.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  2 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 25 +++++++++++++-------
- 2 files changed, 19 insertions(+), 8 deletions(-)
+ net/mac80211/mesh.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index d1d8d07a0714..83425b7b580c 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -265,6 +265,7 @@ struct st_lsm6dsx_sensor {
-  * @conf_lock: Mutex to prevent concurrent FIFO configuration update.
-  * @page_lock: Mutex to prevent concurrent memory page configuration.
-  * @fifo_mode: FIFO operating mode supported by the device.
-+ * @suspend_mask: Suspended sensor bitmask.
-  * @enable_mask: Enabled sensor bitmask.
-  * @ts_sip: Total number of timestamp samples in a given pattern.
-  * @sip: Total number of samples (acc/gyro/ts) in a given pattern.
-@@ -282,6 +283,7 @@ struct st_lsm6dsx_hw {
- 	struct mutex page_lock;
+diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
+index 766e5e5bab8a..d5aba5029cb0 100644
+--- a/net/mac80211/mesh.c
++++ b/net/mac80211/mesh.c
+@@ -1220,7 +1220,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
+ 	ifmsh->chsw_ttl = 0;
  
- 	enum st_lsm6dsx_fifo_mode fifo_mode;
-+	u8 suspend_mask;
- 	u8 enable_mask;
- 	u8 ts_sip;
- 	u8 sip;
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 12e29dda9b98..96986d84e418 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -1023,8 +1023,6 @@ static int __maybe_unused st_lsm6dsx_suspend(struct device *dev)
- {
- 	struct st_lsm6dsx_hw *hw = dev_get_drvdata(dev);
- 	struct st_lsm6dsx_sensor *sensor;
--	const struct st_lsm6dsx_reg *reg;
--	unsigned int data;
- 	int i, err = 0;
+ 	/* Remove the CSA and MCSP elements from the beacon */
+-	tmp_csa_settings = rcu_dereference(ifmsh->csa);
++	tmp_csa_settings = rcu_dereference_protected(ifmsh->csa,
++					    lockdep_is_held(&sdata->wdev.mtx));
+ 	RCU_INIT_POINTER(ifmsh->csa, NULL);
+ 	if (tmp_csa_settings)
+ 		kfree_rcu(tmp_csa_settings, rcu_head);
+@@ -1242,6 +1243,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
+ 	struct mesh_csa_settings *tmp_csa_settings;
+ 	int ret = 0;
  
- 	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
-@@ -1035,12 +1033,16 @@ static int __maybe_unused st_lsm6dsx_suspend(struct device *dev)
- 		if (!(hw->enable_mask & BIT(sensor->id)))
- 			continue;
- 
--		reg = &st_lsm6dsx_odr_table[sensor->id].reg;
--		data = ST_LSM6DSX_SHIFT_VAL(0, reg->mask);
--		err = st_lsm6dsx_update_bits_locked(hw, reg->addr, reg->mask,
--						    data);
-+		if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
-+		    sensor->id == ST_LSM6DSX_ID_EXT1 ||
-+		    sensor->id == ST_LSM6DSX_ID_EXT2)
-+			err = st_lsm6dsx_shub_set_enable(sensor, false);
-+		else
-+			err = st_lsm6dsx_sensor_set_enable(sensor, false);
- 		if (err < 0)
- 			return err;
++	lockdep_assert_held(&sdata->wdev.mtx);
 +
-+		hw->suspend_mask |= BIT(sensor->id);
- 	}
- 
- 	if (hw->fifo_mode != ST_LSM6DSX_FIFO_BYPASS)
-@@ -1060,12 +1062,19 @@ static int __maybe_unused st_lsm6dsx_resume(struct device *dev)
- 			continue;
- 
- 		sensor = iio_priv(hw->iio_devs[i]);
--		if (!(hw->enable_mask & BIT(sensor->id)))
-+		if (!(hw->suspend_mask & BIT(sensor->id)))
- 			continue;
- 
--		err = st_lsm6dsx_set_odr(sensor, sensor->odr);
-+		if (sensor->id == ST_LSM6DSX_ID_EXT0 ||
-+		    sensor->id == ST_LSM6DSX_ID_EXT1 ||
-+		    sensor->id == ST_LSM6DSX_ID_EXT2)
-+			err = st_lsm6dsx_shub_set_enable(sensor, true);
-+		else
-+			err = st_lsm6dsx_sensor_set_enable(sensor, true);
- 		if (err < 0)
- 			return err;
-+
-+		hw->suspend_mask &= ~BIT(sensor->id);
- 	}
- 
- 	if (hw->enable_mask)
+ 	tmp_csa_settings = kmalloc(sizeof(*tmp_csa_settings),
+ 				   GFP_ATOMIC);
+ 	if (!tmp_csa_settings)
 -- 
 2.20.1
 
