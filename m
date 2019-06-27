@@ -2,98 +2,117 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F76C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC9BC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38AF020B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3C92075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Opin+Qyd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6Yl/Mhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfF0T7v (ORCPT
+        id S1726531AbfF0UGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 15:59:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41422 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0T7v (ORCPT
+        Thu, 27 Jun 2019 16:06:36 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41895 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0UGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 15:59:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1zaJPISJ/EM3luyF1vz7G/5Xji346kDTt6heztPdAbM=; b=Opin+Qydyf8b8u+uTC3Ub0SNO
-        bNiTRXwZJKK3vmcNgV3Q+9ZsiLEpy0Z/TptTzlqTB/at+xjh5msPBhEbfBZw2ume9YxOvHLAyj+mR
-        vneJqGV8dfXGHd2fo6u2nzXrMquEyTDAhcs/rjOCT1tNz10efzK73Zc+asQMhIG2/TKghMpiHcCEt
-        jQMbY9H3RIcg2UIxJBohct5anRwA9gw7fz+Rq2giBj3pqDhWPfqxDk3f6ts7XQjV6A5U21Aq3bcfP
-        eqUCt08yZKTPer3mQ6Bg+Sly5ULCt7EJx5YiuALhtj6Cg2It6s4hByBpQujCnvyeNIeuWALavj14k
-        pspOiFNAg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgaYe-0007ij-P9; Thu, 27 Jun 2019 19:59:48 +0000
-Date:   Thu, 27 Jun 2019 12:59:48 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-Message-ID: <20190627195948.GB4286@bombadil.infradead.org>
-References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190627123415.GA4286@bombadil.infradead.org>
- <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
- <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
- <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
- <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
+        Thu, 27 Jun 2019 16:06:36 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d17so3866453qtj.8;
+        Thu, 27 Jun 2019 13:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=s+ZWn/RCRJ3CsjrQtB3J8Syz+Z54G249wMsbVlPVU5Q=;
+        b=N6Yl/Mhye5YzFjWqZiW8CQI03B/gz8aFoEQcUjO5cf3txvJBGsFNSU3EAwUlww2pKf
+         rN7pcwAZoFZypLULgib8YuFzqXFVsSd0DuesHBIvHQCRzAU7m+ghVYBV4jLsNKLfMbbG
+         +PHd0Z5xwtYgrK6RTJzlS049lW2melX3+8BG4xXdYZYKYIrVukTnSrm9PYnCXp3Xa0O1
+         Hg1nzZg4Je3lPQkxX3aHOMA19K6KncMyMKT0T9iFECw9oG6dJ3/Q0VBF4E0Hi5A7Bl3d
+         O/VwI1dHEPIdZjLpJvMU3v9NzYgqH0HMyTa16d0JQtxbfHDm1MV70Vxl5jW989Syjf9i
+         BuPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s+ZWn/RCRJ3CsjrQtB3J8Syz+Z54G249wMsbVlPVU5Q=;
+        b=RIP7Ax8/hMhxVXzwGgpv4Gd60sNunMvlwF93P5yABBqYhp0JXpB2LaH9puLqcVk+vB
+         qpox8Tcmw9x66vc2xFGzCBzJq1HHiFKHZW12W2hl+lqrGKFfkG0JtTTuswLmGrGUGr5k
+         zKaD4vXsColWcJ0a+p/cPVXH1wrH4X3NK26brLFDzDHfW6vmnAtTH5Xqqest7gcyYeG5
+         HPVLCRHDW4X8Qx2VKMgskTNEeY+Y1gJDM3ORAkP2eQulMKjP2PCo3V/bYlpxp/zgGx6u
+         MdJ9SFTBBMs64gdjaS8fnlO/dAZJKhBel+suuQjvUXQHfMQu3kXOsK0byWwR1xqI2d76
+         PnzQ==
+X-Gm-Message-State: APjAAAX5Po1Dvv4hrEk7foAcJxTHjnztvLr5uCj45K+X7WaHFy6Wor1N
+        FePnMft9VYt4Gv/WwgqQPox1TdGTR+E=
+X-Google-Smtp-Source: APXvYqzGB8WazRbgEhe3RfAs7LKvFr/dr1BJUpIop6eQJcUCYNXP+TZwedgFix67cRVLinUpIDiqBQ==
+X-Received: by 2002:ad4:5405:: with SMTP id f5mr2478523qvt.242.1561665994589;
+        Thu, 27 Jun 2019 13:06:34 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c0a8:11c1::103b? ([2620:10d:c091:480::e001])
+        by smtp.gmail.com with ESMTPSA id u26sm41319qkk.52.2019.06.27.13.06.33
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 13:06:33 -0700 (PDT)
+From:   Jes Sorensen <jes.sorensen@gmail.com>
+X-Google-Original-From: Jes Sorensen <Jes.Sorensen@gmail.com>
+Subject: Re: [PATCH 80/87] net: hippi: remove memset after
+ pci_alloc_consistent
+To:     Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190627174452.5677-1-huangfq.daxian@gmail.com>
+Message-ID: <518f3f6a-9d1b-11f8-e900-fcdc9e140110@gmail.com>
+Date:   Thu, 27 Jun 2019 16:06:32 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190627174452.5677-1-huangfq.daxian@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:09:29PM -0700, Dan Williams wrote:
-> > This bug feels like we failed to unlock, or unlocked the wrong entry
-> > and this hunk in the bisected commit looks suspect to me. Why do we
-> > still need to drop the lock now that the radix_tree_preload() calls
-> > are gone?
+On 6/27/19 1:44 PM, Fuqian Huang wrote:
+> pci_alloc_consistent calls dma_alloc_coherent directly.
+> In commit af7ddd8a627c
+> ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
+> dma_alloc_coherent has already zeroed the memory.
+> So memset is not needed.
 > 
-> Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
-> wonder why we don't restart the lookup like the old implementation.
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+> ---
+>  drivers/net/hippi/rrunner.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-We have the entry locked:
+Acked-by: Jes Sorensen <Jes.Sorensen@gmail.com>
 
-                /*
-                 * Make sure 'entry' remains valid while we drop
-                 * the i_pages lock.
-                 */
-                dax_lock_entry(xas, entry);
+> diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
+> index 7b9350dbebdd..2a6ec5394966 100644
+> --- a/drivers/net/hippi/rrunner.c
+> +++ b/drivers/net/hippi/rrunner.c
+> @@ -1196,7 +1196,6 @@ static int rr_open(struct net_device *dev)
+>  		goto error;
+>  	}
+>  	rrpriv->rx_ctrl_dma = dma_addr;
+> -	memset(rrpriv->rx_ctrl, 0, 256*sizeof(struct ring_ctrl));
+>  
+>  	rrpriv->info = pci_alloc_consistent(pdev, sizeof(struct rr_info),
+>  					    &dma_addr);
+> @@ -1205,7 +1204,6 @@ static int rr_open(struct net_device *dev)
+>  		goto error;
+>  	}
+>  	rrpriv->info_dma = dma_addr;
+> -	memset(rrpriv->info, 0, sizeof(struct rr_info));
+>  	wmb();
+>  
+>  	spin_lock_irqsave(&rrpriv->lock, flags);
+> 
 
-                /*
-                 * Besides huge zero pages the only other thing that gets
-                 * downgraded are empty entries which don't need to be
-                 * unmapped.
-                 */
-                if (dax_is_zero_entry(entry)) {
-                        xas_unlock_irq(xas);
-                        unmap_mapping_pages(mapping,
-                                        xas->xa_index & ~PG_PMD_COLOUR,
-                                        PG_PMD_NR, false);
-                        xas_reset(xas);
-                        xas_lock_irq(xas);
-                }
-
-If something can remove a locked entry, then that would seem like the
-real bug.  Might be worth inserting a lookup there to make sure that it
-hasn't happened, I suppose?
