@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B389DC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23231C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 804B8214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A1621852
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595908;
-	bh=YQHShSlqS7BC96IHn2F3eM9jawqX04lfhmqMHMWWv/w=;
+	s=default; t=1561595914;
+	bh=81fKMQ38NzH5NV0slQ0JXYq4ISNqREsR0ilrtEiT4l8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hsd9SzjIPv8O0RlfnYRtpL6e0lMBpba8aFzQMa4+e5Kb80F0fBSkOknkuQyBDR8No
-	 niDDMxY59PJY4nfpa6Y0fsNiKycgYXl7ruoQal8qdAD+6hP/Pi5eK15bmZzP/On57W
-	 iLq/8fWXdemY2E9IA06D2PJW0ohguqXrk3KIVOzY=
+	b=AduyjJUkOQiHZZzgijuQOHVTy0VazastpKUaDqquNg/nTu4fho/W+h3doCl6PSjWV
+	 NNqXYPZ0Psxqg/qr9rQ7huB8lR1dmPOWgbsCwGNpLlmdgitSwMIhiT3ul0mZ8DAbkP
+	 n+4AEsoMvtBbz29BgfB89goh6tmJcAoekVYaPndo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfF0Ai1 (ORCPT
+        id S1728857AbfF0Aic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42708 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbfF0AiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:38:24 -0400
+        id S1728842AbfF0Aia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:38:30 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10D37205ED;
-        Thu, 27 Jun 2019 00:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AC40205ED;
+        Thu, 27 Jun 2019 00:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595903;
-        bh=YQHShSlqS7BC96IHn2F3eM9jawqX04lfhmqMHMWWv/w=;
+        s=default; t=1561595909;
+        bh=81fKMQ38NzH5NV0slQ0JXYq4ISNqREsR0ilrtEiT4l8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nAyHzpk4YYS/J+FZ6JMFAwGWX3ZCXB2o2Oxn+2mGEycqhvmkTfI7HB8rJBJUquvaV
-         E+uYPplWbICPUSfMLJMXiffgg15tAx+KZoGVlPfCG8KBn9KPW4N09MfTFT9Ww/sg6c
-         goT8l/cVAua2CO5LEGqevJxSwOXkJvaL8YSPf+fU=
+        b=WH23sIzp9t6gB3qc/EvsryvkHkCA9mfthBM84hCsUnseq8OnxhesyVSYfp7SVqEEu
+         6iu670RZvr2vYRa09Ct0fCyanLV4JMsfx+vw4brdm5IRZV8JS1JO3zV1E+TIKZ4pSg
+         GtreY8eKNeFKbSODnw/bs93CiqbFJfUlsI2cMMSc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yibo Zhao <yiboz@codeaurora.org>,
-        Zhi Chen <zhichen@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 40/60] mac80211: only warn once on chanctx_conf being NULL
-Date:   Wed, 26 Jun 2019 20:35:55 -0400
-Message-Id: <20190627003616.20767-40-sashal@kernel.org>
+Cc:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 42/60] bpf, devmap: Fix premature entry free on destroying map
+Date:   Wed, 26 Jun 2019 20:35:57 -0400
+Message-Id: <20190627003616.20767-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -61,49 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yibo Zhao <yiboz@codeaurora.org>
+From: Toshiaki Makita <toshiaki.makita1@gmail.com>
 
-[ Upstream commit 563572340173865a9a356e6bb02579e6998a876d ]
+[ Upstream commit d4dd153d551634683fccf8881f606fa9f3dfa1ef ]
 
-In multiple SSID cases, it takes time to prepare every AP interface
-to be ready in initializing phase. If a sta already knows everything it
-needs to join one of the APs and sends authentication to the AP which
-is not fully prepared at this point of time, AP's channel context
-could be NULL. As a result, warning message occurs.
+dev_map_free() waits for flush_needed bitmap to be empty in order to
+ensure all flush operations have completed before freeing its entries.
+However the corresponding clear_bit() was called before using the
+entries, so the entries could be used after free.
 
-Even worse, if the AP is under attack via tools such as MDK3 and massive
-authentication requests are received in a very short time, console will
-be hung due to kernel warning messages.
+All access to the entries needs to be done before clearing the bit.
+It seems commit a5e2da6e9787 ("bpf: netdev is never null in
+__dev_map_flush") accidentally changed the clear_bit() and memory access
+order.
 
-WARN_ON_ONCE() could be a better way for indicating warning messages
-without duplicate messages to flood the console.
+Note that the problem happens only in __dev_map_flush(), not in
+dev_map_flush_old(). dev_map_flush_old() is called only after nulling
+out the corresponding netdev_map entry, so dev_map_free() never frees
+the entry thus no such race happens there.
 
-Johannes: We still need to address the underlying problem, but we
-          don't really have a good handle on it yet. Suppress the
-          worst side-effects for now.
-
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Yibo Zhao <yiboz@codeaurora.org>
-[johannes: add note, change subject]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: a5e2da6e9787 ("bpf: netdev is never null in __dev_map_flush")
+Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/ieee80211_i.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/devmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
-index 172aeae21ae9..6ea64cadad00 100644
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -1410,7 +1410,7 @@ ieee80211_get_sband(struct ieee80211_sub_if_data *sdata)
- 	rcu_read_lock();
- 	chanctx_conf = rcu_dereference(sdata->vif.chanctx_conf);
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index 2faad033715f..99353ac28cd4 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -291,10 +291,10 @@ void __dev_map_flush(struct bpf_map *map)
+ 		if (unlikely(!dev))
+ 			continue;
  
--	if (WARN_ON(!chanctx_conf)) {
-+	if (WARN_ON_ONCE(!chanctx_conf)) {
- 		rcu_read_unlock();
- 		return NULL;
+-		__clear_bit(bit, bitmap);
+-
+ 		bq = this_cpu_ptr(dev->bulkq);
+ 		bq_xmit_all(dev, bq, XDP_XMIT_FLUSH, true);
++
++		__clear_bit(bit, bitmap);
  	}
+ }
+ 
 -- 
 2.20.1
 
