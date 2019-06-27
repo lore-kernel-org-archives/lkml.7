@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5557DC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BFCC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BA52084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE42F2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596585;
-	bh=AafG6cRuwxpvCdS6Wf4BRQiMVawMZtGxMY3gtzWeo40=;
+	s=default; t=1561596601;
+	bh=XhgUEw50j3ASgiDFxtgMwIkcVr0dG28b+ZCnpZRiwNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aPvW9hLrL3scNFHaNHrDbmFxEHFZMR2n/iXrrmFtA5uKRmzD9XyGrjXDhSMZI9+0v
-	 6gkWkCbRqh90yH7vA4KzSX6vquTsZUiBgT1/yOjDMTvCezOf6CaUVSvhNiS+2HWP9Q
-	 u5yqs0dnKWuSXcVlgmwuMvsuNWbbFf6gn/B63XMY=
+	b=Dp20ZzxBGLUf+ZgnmNST+Lj8kYMXCnu3Mh0vWwV81p70Nmt5H3xUvLyqj3b4aJq2w
+	 iawd836O5f1OJQTZLhCU2vPpNubVMz6O9M/Bcyn6iJYCbD5DLWd28Q/GzSg4YB/bHs
+	 EbOLYuTml7iMwnK721NHCx4DI1mBrHWSgvhvuXSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfF0AhH (ORCPT
+        id S1728421AbfF0Agw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:37:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41668 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727168AbfF0AhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:37:05 -0400
+        id S1728398AbfF0Ags (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:36:48 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D09217F9;
-        Thu, 27 Jun 2019 00:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E2BA2186A;
+        Thu, 27 Jun 2019 00:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595824;
-        bh=AafG6cRuwxpvCdS6Wf4BRQiMVawMZtGxMY3gtzWeo40=;
+        s=default; t=1561595807;
+        bh=XhgUEw50j3ASgiDFxtgMwIkcVr0dG28b+ZCnpZRiwNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l+74+XUp9mNFU0GD+QAckDJHM3bX+lYBxURHUBNs0GxJxSa3APScDWUwlHXcKMJSL
-         cssA+xDBILyAjKd87D15cM3fPt1Ou+Yzhi7MV06sg8IOl+0DwJpJHFyDBay8fqxzZv
-         7uM3Ebxux+WzDHiPPZilTE/LUpt+gHAS5JNxmP+w=
+        b=krpJ4U+Cn4xg5S++RC8WEHy9tEKbhpXRbuLHjwaFYpJJPp/YH9256Po+Kd6DFCQ/R
+         Wrju+zIKxpHlLG5nYtmi7xQw628Yw4nAq80sUjYhmrkAl5821EmbadP2GoH+3tDqkG
+         CwXSF7/zdTGxVIKBloNk8M1+dYwCGPRuVRxGN3+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, huangwen <huangwen@venustech.com.cn>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/60] mwifiex: Fix heap overflow in mwifiex_uap_parse_tail_ies()
-Date:   Wed, 26 Jun 2019 20:35:31 -0400
-Message-Id: <20190627003616.20767-16-sashal@kernel.org>
+Cc:     Crt Mori <cmo@melexis.com>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/60] iio: temperature: mlx90632 Relax the compatibility check
+Date:   Wed, 26 Jun 2019 20:35:25 -0400
+Message-Id: <20190627003616.20767-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -60,124 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Crt Mori <cmo@melexis.com>
 
-[ Upstream commit 69ae4f6aac1578575126319d3f55550e7e440449 ]
+[ Upstream commit 389fc70b60f534d679aea9a3f05146040ce20d77 ]
 
-A few places in mwifiex_uap_parse_tail_ies() perform memcpy()
-unconditionally, which may lead to either buffer overflow or read over
-boundary.
+Register EE_VERSION contains mixture of calibration information and DSP
+version. So far, because calibrations were definite, the driver
+compatibility depended on whole contents, but in the newer production
+process the calibration part changes. Because of that, value in EE_VERSION
+will be changed and to avoid that calibration value is same as DSP version
+the MSB in calibration part was fixed to 1.
+That means existing calibrations (medical and consumer) will now have
+hex values (bits 8 to 15) of 83 and 84 respectively. Driver compatibility
+should be based only on DSP version part of the EE_VERSION (bits 0 to 7)
+register.
 
-This patch addresses the issues by checking the read size and the
-destination size at each place more properly.  Along with the fixes,
-the patch cleans up the code slightly by introducing a temporary
-variable for the token size, and unifies the error path with the
-standard goto statement.
-
-Reported-by: huangwen <huangwen@venustech.com.cn>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Crt Mori <cmo@melexis.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/ie.c | 47 +++++++++++++++--------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+ drivers/iio/temperature/mlx90632.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/ie.c b/drivers/net/wireless/marvell/mwifiex/ie.c
-index 75cbd609d606..801a2d7b020a 100644
---- a/drivers/net/wireless/marvell/mwifiex/ie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/ie.c
-@@ -329,6 +329,8 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
- 	struct ieee80211_vendor_ie *vendorhdr;
- 	u16 gen_idx = MWIFIEX_AUTO_IDX_MASK, ie_len = 0;
- 	int left_len, parsed_len = 0;
-+	unsigned int token_len;
-+	int err = 0;
- 
- 	if (!info->tail || !info->tail_len)
- 		return 0;
-@@ -344,6 +346,12 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
- 	 */
- 	while (left_len > sizeof(struct ieee_types_header)) {
- 		hdr = (void *)(info->tail + parsed_len);
-+		token_len = hdr->len + sizeof(struct ieee_types_header);
-+		if (token_len > left_len) {
-+			err = -EINVAL;
-+			goto out;
-+		}
-+
- 		switch (hdr->element_id) {
- 		case WLAN_EID_SSID:
- 		case WLAN_EID_SUPP_RATES:
-@@ -361,16 +369,19 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
- 			if (cfg80211_find_vendor_ie(WLAN_OUI_MICROSOFT,
- 						    WLAN_OUI_TYPE_MICROSOFT_WMM,
- 						    (const u8 *)hdr,
--						    hdr->len + sizeof(struct ieee_types_header)))
-+						    token_len))
- 				break;
- 		default:
--			memcpy(gen_ie->ie_buffer + ie_len, hdr,
--			       hdr->len + sizeof(struct ieee_types_header));
--			ie_len += hdr->len + sizeof(struct ieee_types_header);
-+			if (ie_len + token_len > IEEE_MAX_IE_SIZE) {
-+				err = -EINVAL;
-+				goto out;
-+			}
-+			memcpy(gen_ie->ie_buffer + ie_len, hdr, token_len);
-+			ie_len += token_len;
- 			break;
- 		}
--		left_len -= hdr->len + sizeof(struct ieee_types_header);
--		parsed_len += hdr->len + sizeof(struct ieee_types_header);
-+		left_len -= token_len;
-+		parsed_len += token_len;
+diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
+index 9851311aa3fd..ebff17f194b2 100644
+--- a/drivers/iio/temperature/mlx90632.c
++++ b/drivers/iio/temperature/mlx90632.c
+@@ -81,6 +81,8 @@
+ /* Magic constants */
+ #define MLX90632_ID_MEDICAL	0x0105 /* EEPROM DSPv5 Medical device id */
+ #define MLX90632_ID_CONSUMER	0x0205 /* EEPROM DSPv5 Consumer device id */
++#define MLX90632_DSP_VERSION	5 /* DSP version */
++#define MLX90632_DSP_MASK	GENMASK(7, 0) /* DSP version in EE_VERSION */
+ #define MLX90632_RESET_CMD	0x0006 /* Reset sensor (address or global) */
+ #define MLX90632_REF_12		12LL /**< ResCtrlRef value of Ch 1 or Ch 2 */
+ #define MLX90632_REF_3		12LL /**< ResCtrlRef value of Channel 3 */
+@@ -666,10 +668,13 @@ static int mlx90632_probe(struct i2c_client *client,
+ 	} else if (read == MLX90632_ID_CONSUMER) {
+ 		dev_dbg(&client->dev,
+ 			"Detected Consumer EEPROM calibration %x\n", read);
++	} else if ((read & MLX90632_DSP_MASK) == MLX90632_DSP_VERSION) {
++		dev_dbg(&client->dev,
++			"Detected Unknown EEPROM calibration %x\n", read);	
+ 	} else {
+ 		dev_err(&client->dev,
+-			"EEPROM version mismatch %x (expected %x or %x)\n",
+-			read, MLX90632_ID_CONSUMER, MLX90632_ID_MEDICAL);
++			"Wrong DSP version %x (expected %x)\n",
++			read, MLX90632_DSP_VERSION);
+ 		return -EPROTONOSUPPORT;
  	}
  
- 	/* parse only WPA vendor IE from tail, WMM IE is configured by
-@@ -380,15 +391,17 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
- 						    WLAN_OUI_TYPE_MICROSOFT_WPA,
- 						    info->tail, info->tail_len);
- 	if (vendorhdr) {
--		memcpy(gen_ie->ie_buffer + ie_len, vendorhdr,
--		       vendorhdr->len + sizeof(struct ieee_types_header));
--		ie_len += vendorhdr->len + sizeof(struct ieee_types_header);
-+		token_len = vendorhdr->len + sizeof(struct ieee_types_header);
-+		if (ie_len + token_len > IEEE_MAX_IE_SIZE) {
-+			err = -EINVAL;
-+			goto out;
-+		}
-+		memcpy(gen_ie->ie_buffer + ie_len, vendorhdr, token_len);
-+		ie_len += token_len;
- 	}
- 
--	if (!ie_len) {
--		kfree(gen_ie);
--		return 0;
--	}
-+	if (!ie_len)
-+		goto out;
- 
- 	gen_ie->ie_index = cpu_to_le16(gen_idx);
- 	gen_ie->mgmt_subtype_mask = cpu_to_le16(MGMT_MASK_BEACON |
-@@ -398,13 +411,15 @@ static int mwifiex_uap_parse_tail_ies(struct mwifiex_private *priv,
- 
- 	if (mwifiex_update_uap_custom_ie(priv, gen_ie, &gen_idx, NULL, NULL,
- 					 NULL, NULL)) {
--		kfree(gen_ie);
--		return -1;
-+		err = -EINVAL;
-+		goto out;
- 	}
- 
- 	priv->gen_idx = gen_idx;
-+
-+ out:
- 	kfree(gen_ie);
--	return 0;
-+	return err;
- }
- 
- /* This function parses different IEs-head & tail IEs, beacon IEs,
 -- 
 2.20.1
 
