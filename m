@@ -2,91 +2,78 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC4AC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B2FC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A542F208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED262086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfF0N3F (ORCPT
+        id S1726876AbfF0N3O convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 09:29:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35082 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbfF0N3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:29:05 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726370AbfF0N3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 09:29:14 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CF132083B;
-        Thu, 27 Jun 2019 13:29:03 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 09:29:02 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/7] x86/ftrace: Fix use of flags in
- ftrace_replace_code()
-Message-ID: <20190627092902.253971d2@gandalf.local.home>
-In-Reply-To: <abc56ad177f370ec423edcfc538d35b418c1808e.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-        <abc56ad177f370ec423edcfc538d35b418c1808e.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id F3C5A83F3C;
+        Thu, 27 Jun 2019 13:29:08 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 113C2600CC;
+        Thu, 27 Jun 2019 13:29:05 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <1561640534.4101.124.camel@linux.ibm.com>
+References: <1561640534.4101.124.camel@linux.ibm.com> <20190626231617.1e858da3@canb.auug.org.au> <ee503bc1-a588-81f5-47e0-1762f590662f@infradead.org>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     dhowells@redhat.com, Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Subject: Re: linux-next: Tree for Jun 26 (security/integrity/ima/)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Date:   Thu, 27 Jun 2019 14:29:05 +0100
+Message-ID: <9446.1561642145@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 27 Jun 2019 13:29:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 16:53:50 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+Mimi Zohar <zohar@linux.ibm.com> wrote:
 
-> In commit a0572f687fb3c ("ftrace: Allow ftrace_replace_code() to be
-> schedulable), the generic ftrace_replace_code() function was modified to
-> accept a flags argument in place of a single 'enable' flag. However, the
-> x86 version of this function was not updated. Fix the same.
+> >   CC      security/integrity/ima/ima_fs.o
+> > In file included from ../security/integrity/ima/ima.h:25:0,
+> >                  from ../security/integrity/ima/ima_fs.c:26:
+> > ../security/integrity/ima/../integrity.h:170:18: warning: ‘struct key_acl’ declared inside parameter list [enabled by default]
+> >            struct key_acl *acl)
+> >                   ^
+> > ../security/integrity/ima/../integrity.h:170:18: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
 > 
-> Fixes: a0572f687fb3c ("ftrace: Allow ftrace_replace_code() to be schedulable")
+> David, CONFIG_INTEGRITY_SIGNATURE is dependent on KEYS being enabled,
+> but the stub functions are not.  There's now a dependency on
+> key_acl().
 
-I don't mind this change, but it's not a bug, and I'm not sure it
-should have the fixes tag. The reason being, the
-FTRACE_MODIFY_ENABLE_FL is only set when ftrace is called by with the
-command flag FTRACE_MAY_SLEEP, which is never done on x86.
+I added a forward declaration for struct key_acl into
+security/integrity/integrity.h as you can see here:
 
-That said, I'm fine with the change as it makes it more robust, but by
-adding the fixes tag, you're going to get this into all the stable
-code, and I'm not sure that's really necessary.
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/diff/security/integrity/integrity.h?h=keys-acl&id=75ce113a1d56880e5abd37fa664ea9af399d2bcd
 
--- Steve
+which might not have made it into linux-next before you used it.
 
-
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
->  arch/x86/kernel/ftrace.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 0927bb158ffc..f34005a17051 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -573,8 +573,9 @@ static void run_sync(void)
->  		local_irq_disable();
->  }
->  
-> -void ftrace_replace_code(int enable)
-> +void ftrace_replace_code(int mod_flags)
->  {
-> +	int enable = mod_flags & FTRACE_MODIFY_ENABLE_FL;
->  	struct ftrace_rec_iter *iter;
->  	struct dyn_ftrace *rec;
->  	const char *report = "adding breakpoints";
-
+David
