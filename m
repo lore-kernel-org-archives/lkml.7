@@ -2,106 +2,63 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E92C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2F7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAB02182B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:27:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="4R5vNhuy"
+	by mail.kernel.org (Postfix) with ESMTP id 63ED92182B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfF0C1P (ORCPT
+        id S1727135AbfF0C25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 22:27:15 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53010 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfF0C1P (ORCPT
+        Wed, 26 Jun 2019 22:28:57 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45630 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfF0C24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:27:15 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R2OJCr158484;
-        Thu, 27 Jun 2019 02:27:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=wTJmtSmsKZEwIH7KReMQGmLwFMGAH0weuV2WcidpqCI=;
- b=4R5vNhuy3qrtDpQ/trcm6kBkzz2g5W/b7NUGmRp8OzyZk8dBJCRT9EHIrX5/5RJ8tr1A
- weSIeBS9TvK6iathXYhQxUZ4GZXyZRGY7Dh/HveNReVm6tFvy8up5jXGL7BANcNl4OXM
- ZE98hYNKMztuWAl4D1y73yX7wPEgEQxP1FrrGtCqEOxamNbPE7twbO53c5UCJHnURx8U
- s/XMYYn2D/V/oS71pq8Jo1ImbfgxRkVKiBUS3W1yF3ytM+7RAT7xgtmcrYdT1rWf2DHq
- 34vJA1LfrzqjQtIKh21zNU1jvU4SBlWF4IOTnUV6dRr6rpYTkJxVrTTjv/nNWkvfm81G 4A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2t9c9pwh19-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 02:26:59 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R2PSuV097622;
-        Thu, 27 Jun 2019 02:26:59 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2tat7d4p47-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 02:26:59 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5R2QumM032359;
-        Thu, 27 Jun 2019 02:26:56 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 19:26:56 -0700
-To:     "Bean Huo \(beanhuo\)" <beanhuo@micron.com>
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Evan Green <evgreen@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi\@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] scsi: ufs: typo fixes and improvement
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <BN7PR08MB5684A44F56972BCE0972B28EDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
-Date:   Wed, 26 Jun 2019 22:26:53 -0400
-In-Reply-To: <BN7PR08MB5684A44F56972BCE0972B28EDBE10@BN7PR08MB5684.namprd08.prod.outlook.com>
-        (Bean Huo's message of "Sun, 23 Jun 2019 17:37:56 +0000")
-Message-ID: <yq1k1d7lq4y.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=945
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270027
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=990 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270027
+        Wed, 26 Jun 2019 22:28:56 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8E26414DE6387;
+        Wed, 26 Jun 2019 19:28:53 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 19:28:29 -0700 (PDT)
+Message-Id: <20190626.192829.1694521513812984310.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     sdf@google.com, jianbol@mellanox.com, jiri@mellanox.com,
+        mirq-linux@rere.qmqm.pl, willemb@google.com, sdf@fomichev.me,
+        jiri@resnulli.us, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2] flow_dissector: Fix vlan header offset in
+ __skb_flow_dissect
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190624034913.40328-1-yuehaibing@huawei.com>
+References: <20190622.161955.2030310177158651781.davem@davemloft.net>
+        <20190624034913.40328-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Jun 2019 19:28:53 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Mon, 24 Jun 2019 11:49:13 +0800
 
-Bean,
+> @@ -998,6 +998,9 @@ bool __skb_flow_dissect(const struct net *net,
+>  		    skb && skb_vlan_tag_present(skb)) {
+>  			proto = skb->protocol;
+>  		} else {
+> +			if (dissector_vlan == FLOW_DISSECTOR_KEY_MAX)
+> +				nhoff -= sizeof(*vlan);
+> +
 
-> This series patch is to fix several typos and fix one issue of twice
-> completing ufs-bsg job in case of UPIU/DME command failed.
->
-> Changed since v1:
->     - split v1 patch
->     - add fixes tag
->     - delete needless blank line
-
-Applied to 5.3/scsi-queue. Mostly by hand. Please use git send-email to
-post patches. Thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+But this is wrong when we are being called via eth_get_headlen(), in
+that case nhoff will be sizeof(struct ethhdr).
