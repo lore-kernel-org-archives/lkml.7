@@ -2,131 +2,93 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 342F6C004E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F776C004E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C4E20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CE02075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:37:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkX3/j7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfF0UgS (ORCPT
+        id S1726550AbfF0Uha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 16:36:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35438 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726445AbfF0UgS (ORCPT
+        Thu, 27 Jun 2019 16:37:30 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:39061 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726443AbfF0Uh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:36:18 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RKVh1Q008540
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:36:17 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td4sv8fvw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:36:17 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 27 Jun 2019 21:36:16 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Jun 2019 21:36:11 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RKaAig35717430
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 20:36:10 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5EFA9B205F;
-        Thu, 27 Jun 2019 20:36:10 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4109AB2065;
-        Thu, 27 Jun 2019 20:36:10 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 20:36:10 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 664E416C5D5C; Thu, 27 Jun 2019 13:36:12 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 13:36:12 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Reply-To: paulmck@linux.ibm.com
-References: <20190626162558.GY26519@linux.ibm.com>
- <20190627142436.GD215968@google.com>
- <20190627103455.01014276@gandalf.local.home>
- <20190627153031.GA249127@google.com>
- <20190627155506.GU26519@linux.ibm.com>
- <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
- <20190627173831.GW26519@linux.ibm.com>
- <20190627181638.GA209455@google.com>
- <20190627184107.GA26519@linux.ibm.com>
- <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
+        Thu, 27 Jun 2019 16:37:29 -0400
+Received: by mail-yb1-f195.google.com with SMTP id k4so2259736ybo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 13:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9nVOtlju8csIcNRRNwvhU29isQ3Rt4IPNLGyKSCvv90=;
+        b=gkX3/j7eA/9Dj6rOAXXvFLWl4m4E+rlkxxmn+g/fKNORNs1hO6b8z1g8OwGu/JGEfn
+         buOFuAB4ltgph5dqxxu2zCyygo9C3C1bhWaALqEyy8xYxfRQNeyhuGVEeopJSXCGMNDw
+         7f4ld/9jEGn1F3TSYnIdlNypUjmtsk2V/yBzgcGX9htotPephx45YpG5Q5gwIxSbl98V
+         kAzDXC8tariAgUcmYO2HvzQ1UKNLmSwHqdK26R++vTbGlUK0NWDBpMG+eTQ07E/8+0QR
+         0FNU8m3XuvAkTeL4NCOZkcW06+0L4mrrtFU8dGufBw7VzNqIEFaFMxG0gpmSSNbA+0Ax
+         sOyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9nVOtlju8csIcNRRNwvhU29isQ3Rt4IPNLGyKSCvv90=;
+        b=tSemAe2YAXborojtyigHSiUPSQ9ENSZ99+/aZKPybg7f5QUCJJG0hfLrQIR/UP7yV4
+         5PXzRWNEXvHVwbSqh9Z4OnOtaKlRj08p8blwQ9n1ktj5T/SZ9n03RGCZTQ1dC0irE8M5
+         V3+Y89jUfiokwj7/AOv29QgSRiPuPnL0Bnq9D2dK7TkdfSr9c7d7laDc59mtMRZ/Wyfx
+         9IuFhPRKhPOTglbsu2k72Yfbt1Wl20dHz/bfxVW5S/tIpVBA+dooSK/+BMf9yJaCJbVQ
+         NInqixY8JpKIZcRzyiRzwe/CIXge/UOB2X4koPRxBxsgswSYUNH0ylxqlL6RnNRb3erh
+         wSiA==
+X-Gm-Message-State: APjAAAWG009ZX8/IqYZVD3zM6sE44CWYxzPcJFf2sDBGeM8PpkkcJFy2
+        F+ed/TUG3RJlDzaVXMClverSC1ORsFeI0Vd9uZ8=
+X-Google-Smtp-Source: APXvYqxnZwKL8uAKFwqU1Al3NryHFgkeA2TGfrZeraalix6k1RfRY5XylEBxf580X2ZkhSDVbbQOmYYNQD9ZdNWnuKc=
+X-Received: by 2002:a25:7397:: with SMTP id o145mr218166ybc.329.1561667848946;
+ Thu, 27 Jun 2019 13:37:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062720-0052-0000-0000-000003D71592
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011342; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224156; UDB=6.00644279; IPR=6.01005345;
- MB=3.00027495; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 20:36:14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062720-0053-0000-0000-0000617BF024
-Message-Id: <20190627203612.GD26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=926 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270236
+References: <20190627070052.8647-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190627070052.8647-1-yamada.masahiro@socionext.com>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Thu, 27 Jun 2019 13:37:17 -0700
+Message-ID: <CAMo8BfJe6va+=oB_VWG5F0xWFQv+Qbx5DXdjJbO2XLNh5rs3=g@mail.gmail.com>
+Subject: Re: [PATCH] xtensa: remove unneeded BITS_PER_LONG define
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
-> On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
-> > > 
-> > > I think the fix should be to prevent the wake-up not based on whether we
-> > > are
-> > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
-> > > from
-> > > a scheduler path (if we can detect that)
-> > 
-> > Or just don't do the wakeup at all, if it comes to that.  I don't know
-> > of any way to determine whether rcu_read_unlock() is being called from
-> > the scheduler, but it has been some time since I asked Peter Zijlstra
-> > about that.
-> > 
-> > Of course, unconditionally refusing to do the wakeup might not be happy
-> > thing for NO_HZ_FULL kernels that don't implement IRQ work.
-> 
-> Couldn't smp_send_reschedule() be used instead?
+Hi Yamada-san,
 
-Good point.  If current -rcu doesn't fix things for Sebastian's case,
-that would be well worth looking at.  But there must be some reason
-why Peter Zijlstra didn't suggest it when he instead suggested using
-the IRQ work approach.
+On Thu, Jun 27, 2019 at 12:01 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Xtensa does not define CONFIG_64BIT. The generic definition in
+> include/asm-generic/bitsperlong.h should work.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  arch/xtensa/include/asm/types.h | 8 --------
+>  1 file changed, 8 deletions(-)
 
-Peter, thoughts?
+After this change the file arch/xtensa/include/asm/types.h is effectively
+empty, only including uapi/asm/types.h. Maybe it should be dropped
+altogether?
 
-							Thanx, Paul
-
+-- 
+Thanks.
+-- Max
