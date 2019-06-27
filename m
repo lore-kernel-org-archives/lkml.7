@@ -2,134 +2,168 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F219AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD1C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D505E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9C62083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:25:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfF0LZb (ORCPT
+        id S1726891AbfF0LZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:25:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:52192 "EHLO foss.arm.com"
+        Thu, 27 Jun 2019 07:25:44 -0400
+Received: from mga01.intel.com ([192.55.52.88]:50450 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbfF0LZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:25:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09DE22B;
-        Thu, 27 Jun 2019 04:25:29 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 725E73F718;
-        Thu, 27 Jun 2019 04:25:27 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 12:25:22 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        bhelgaas@google.com, Jisheng.Zhang@synaptics.com,
-        thierry.reding@gmail.com, kishon@ti.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V9 1/3] PCI: dwc: Add API support to de-initialize host
-Message-ID: <20190627112522.GA3782@e121166-lin.cambridge.arm.com>
-References: <20190625092238.13207-1-vidyas@nvidia.com>
+        id S1726375AbfF0LZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:25:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 04:25:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
+   d="scan'208";a="183428308"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Jun 2019 04:25:40 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH v2 3/4] kbuild: support header-test-pattern-y
+In-Reply-To: <20190627014617.600-4-yamada.masahiro@socionext.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190627014617.600-1-yamada.masahiro@socionext.com> <20190627014617.600-4-yamada.masahiro@socionext.com>
+Date:   Thu, 27 Jun 2019 14:28:26 +0300
+Message-ID: <871rzfqnc5.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625092238.13207-1-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 02:52:36PM +0530, Vidya Sagar wrote:
-> Add an API to group all the tasks to be done to de-initialize host which
-> can then be called by any DesignWare core based driver implementations
-> while adding .remove() support in their respective drivers.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+On Thu, 27 Jun 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> In my view, most of headers can be self-contained. So, it would be
+> tedious to add every header to header-test-y explicitly. We usually
+> end up with "all headers with some exceptions".
+>
+> There are two types in exceptions:
+>
+> [1] headers that are never compiled as standalone units
+>
+>   For examples, include/linux/compiler-gcc.h is not intended to be
+>   included directly. We should always exclude such ones.
+>
+> [2] headers that are conditionally compiled as standalone units
+>
+>   Some headers can be compiled only for particular architectures.
+>   For example, include/linux/arm-cci.h can be compiled only for
+>   arm/arm64 because it requires <asm/arm-cci.h> to exist.
+>   Clang can compile include/soc/nps/mtm.h only for arc because
+>   it contains an arch-specific register in inline assembler.
+>
+> For [2], we can write Makefile like this:
+>
+>   header-test-$(CONFIG_ARM) += linux/arm-cci.h
+>
+> The new syntax header-test-pattern-y will be useful to specify
+> "the rest".
+>
+> The typical usage is like this:
+>
+>   header-test-pattern-y += */*.h
+>
+> This adds all the headers in sub-directories to the test coverage,
+> but headers added to header-test- are excluded. In this regards,
+> header-test-pattern-y behaves like a weaker variant of header-test-y.
+>
+> Caveat:
+> The patterns in header-test-pattern-y are prefixed with $(srctree)/$(src)/
+> but not $(objtree)/$(obj)/. Stale generated patterns are often left over.
+> For example, you will have ones when you traverse the git history for
+> 'git bisect' without cleaning. If a wildcard is used for generated
+> headers, it may match to stale headers.
+>
+> If you really want to compile-test generated headers, I recommend to
+> add them to header-test-y explicitly. One pitfall is $(srctree)/$(src)/
+> and $(objtree)/$(obj)/ point to the same directory for in-tree building.
+> So, header-test-pattern-y should be used with care. It can potentially
+> match to generated headers, which may be stale and fail to compile.
+>
+> Caveat2:
+> You could use wildcard for header-test-. For example,
+>
+>   header-test- += asm-generic/%
+>
+> ... will exclude headers in asm-generic directory. Unfortunately, the
+> wildcard character is '%' instead of '*' because this is evaluated by
+> $(filter-out ...) whereas header-test-pattern-y is evaluated by
+> $(wildcard ...). This is a kludge, but seems useful in some places...
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+Awesome! This will let us get rid of our local $(wildcard) hacks.
+
+Tested-by: Jani Nikula <jani.nikula@intel.com>
+
 > ---
-> Changes from v8:
-> * None
-> 
-> Changes from v7:
-> * None
-> 
-> Changes from v6:
-> * None
-> 
-> Changes from v5:
-> * None
-> 
-> Changes from v4:
-> * None
-> 
-> Changes from v3:
-> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
->   dw_pcie_free_msi() API to mimic init path
-> 
-> Changes from v2:
-> * Rebased on top of linux-next top of the tree branch
-> 
-> Changes from v1:
-> * s/Designware/DesignWare
-> 
->  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
->  2 files changed, 13 insertions(+)
-
-I have applied the series in pci/dwc for v5.3, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 77db32529319..d069e4290180 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  	return ret;
->  }
+>
+> Changes in v2:
+>   - New patch
+>
+>  Documentation/kbuild/makefiles.txt | 10 ++++++++++
+>  scripts/Makefile.lib               | 10 ++++++++++
+>  2 files changed, 20 insertions(+)
+>
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 5080fec34609..b817e6cefb77 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -1025,6 +1025,16 @@ When kbuild executes, the following steps are followed (roughly):
+>  	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
+>  	this builds them as part of extra-y.
 >  
-> +void dw_pcie_host_deinit(struct pcie_port *pp)
-> +{
-> +	pci_stop_root_bus(pp->root_bus);
-> +	pci_remove_root_bus(pp->root_bus);
-> +	if (pci_msi_enabled() && !pp->ops->msi_host_init)
-> +		dw_pcie_free_msi(pp);
-> +}
+> +    header-test-pattern-y
 > +
->  static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
->  				     u32 devfn, int where, int size, u32 *val,
->  				     bool write)
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index b8993f2b78df..14762e262758 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -351,6 +351,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
->  void dw_pcie_free_msi(struct pcie_port *pp);
->  void dw_pcie_setup_rc(struct pcie_port *pp);
->  int dw_pcie_host_init(struct pcie_port *pp);
-> +void dw_pcie_host_deinit(struct pcie_port *pp);
->  int dw_pcie_allocate_domains(struct pcie_port *pp);
->  #else
->  static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
-> @@ -375,6 +376,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
->  	return 0;
->  }
+> +	This works as a weaker version of header-test-y, and accepts wildcard
+> +	patterns. The typical usage is:
+> +
+> +		  header-test-pattern-y += *.h
+> +
+> +	This specifies all the files that matches to '*.h' in the current
+> +	directory, but the files in 'header-test-' are excluded.
+> +
+>  --- 6.7 Commands useful for building a boot image
 >  
-> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
-> +{
-> +}
+>  	Kbuild provides a few macros that are useful when building a
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 55ae1ec65342..54444933bbab 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -67,6 +67,16 @@ extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
+>  endif
+>  
+>  # Test self-contained headers
 > +
->  static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
->  {
->  	return 0;
-> -- 
-> 2.17.1
-> 
+> +# Wildcard searches in $(srctree)/$(src)/, but not in $(objtree)/$(obj)/.
+> +# Stale generated headers are often left over, so wildcard matching should
+> +# be avoided. Please notice $(srctree)/$(src)/ and $(objtree)/$(obj) point
+> +# to the same location for in-tree building.
+> +header-test-y	+= $(filter-out $(header-test-), \
+> +		$(patsubst $(srctree)/$(src)/%, %, \
+> +		$(wildcard $(addprefix $(srctree)/$(src)/, \
+> +		$(header-test-pattern-y)))))
+> +
+>  extra-$(CONFIG_HEADER_TEST) += $(addsuffix .s, $(header-test-y))
+>  
+>  # Add subdir path
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
