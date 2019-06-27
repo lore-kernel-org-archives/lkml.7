@@ -2,156 +2,225 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B645BC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E2C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953ED208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:09:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="wAbpdlca"
+	by mail.kernel.org (Postfix) with ESMTP id E020620B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfF0TJm (ORCPT
+        id S1726525AbfF0TPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 15:09:42 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44893 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfF0TJm (ORCPT
+        Thu, 27 Jun 2019 15:15:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37638 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726384AbfF0TPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 15:09:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id b7so3389719otl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 12:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k2KHjr7/uOoaKaN4FsCUsVIyjGeXFM36sAU3ENM4gTM=;
-        b=wAbpdlca0EKsW2yHrf1ZVTqFB6YWxEM4ES195/wgZcpY3cOJrxzeIJXnnmzdOAxz5n
-         7NEjWWNzxHB/GfA813AFGs+mOTPVOfu82N10BWQ2ff9/S4YCWvxZa4TvUNV3LcZGlqsX
-         puYd+CFwlzBsCPIazhqtANoKStwdYRP+TL4Aq2KhuPFnsw5m6FnGzXxcE8x3s6gSbxaB
-         ennqoalEoM4TieY3eez/YB1tk7AlWnuVhKg6dVWRCawMcFrSHQw8gXhIbV3/NfwsSLuS
-         /StfrAwHqwGiz65dBPAn+Dc7zVYjfLsezG4OqeezWBlBVfflFYAmxUIFM/Koy2nutC4Y
-         SlKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k2KHjr7/uOoaKaN4FsCUsVIyjGeXFM36sAU3ENM4gTM=;
-        b=tRk/cRTSpuUfZRuFnxn0M+LaEFPCyBhYRWi85nnqFFKG2oKynpFeBxSFe/k7zHys1M
-         QU3k45OcJlVXaI6266z9dQFashZyaJ310Rn6M2S26EnSQfkT1DXePhGGEgIgudHcOTpR
-         /4ubamsVfZF0qzxWfsxpyHEZtYSivWN/qE39rSsBvzFvvKz/fs8GzCkKUkR84iaEuKbn
-         lEx7ez8y+vO4RihLPJix75MBzl9evz9phBx0JFtSqoL9JM2ChVg+mXY0y94nbXFfyKX5
-         KNYzJ5LhCKgB9i5XTxT6NvI3G6k3m/cZuUCVFt0Az1Pfcoq/v6iIOGq0NCsGAZbuV51U
-         k2ow==
-X-Gm-Message-State: APjAAAUyFQd4D1clynUrIJTTfYRy6pfdpDxT2QURrKLPtZpbyup3i/rE
-        lVe7okqi3wqoMf7gVsWC2Jw5c3xAbMTe8t9JOwf20w==
-X-Google-Smtp-Source: APXvYqyQaV78N1NKvHOprivbHVskTw7cU6XD8QQY4fOrTvmKxWRIrLO/qw63cE8epeZB528rOFvCfifD5y2EysgIdLs=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr4605518oto.207.1561662581151;
- Thu, 27 Jun 2019 12:09:41 -0700 (PDT)
+        Thu, 27 Jun 2019 15:15:15 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RJD81v066933;
+        Thu, 27 Jun 2019 15:14:23 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2td0frhqwg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jun 2019 15:14:22 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5RJDgqJ071610;
+        Thu, 27 Jun 2019 15:14:22 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2td0frhqvd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jun 2019 15:14:21 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5RJ9ewe020392;
+        Thu, 27 Jun 2019 19:14:20 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2t9by78e4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jun 2019 19:14:20 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RJEKpr54788544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 19:14:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D77CB205F;
+        Thu, 27 Jun 2019 19:14:20 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F3BE8B2064;
+        Thu, 27 Jun 2019 19:14:19 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 19:14:19 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 12B2016C5D5C; Thu, 27 Jun 2019 12:14:22 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 12:14:22 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190627191421.GB26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home>
+ <20190627153031.GA249127@google.com>
+ <CAEXW_YT5LgdP_9SrachU4ZrhV9a7o_DM8eBfgxj=n7yRRyS-TQ@mail.gmail.com>
+ <20190627154011.vbje64x6auaknhx4@linutronix.de>
+ <CAEXW_YTvkSTqwi_jOE2Pr+uD-GC4Xv0CtBEL9YO7=LvJcM3FBQ@mail.gmail.com>
+ <CAEXW_YTmx3wFKuiLyrQO6uSPYAL179EPa6N3WO7qZahccCs-pg@mail.gmail.com>
+ <20190627181112.GY26519@linux.ibm.com>
+ <20190627182722.GA216610@google.com>
+ <20190627185103.GA8956@google.com>
 MIME-Version: 1.0
-References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
- <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com> <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
-In-Reply-To: <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 27 Jun 2019 12:09:29 -0700
-Message-ID: <CAPcyv4gwd1_VHk_MfHeNSxyH+N1=aatj9WkKXqYNPkSXe4bFDg@mail.gmail.com>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627185103.GA8956@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270219
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:58 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Thu, Jun 27, 2019 at 11:29 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Thu, Jun 27, 2019 at 9:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Thu, Jun 27, 2019 at 5:34 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > >
-> > > > On Wed, Jun 26, 2019 at 05:15:45PM -0700, Dan Williams wrote:
-> > > > > Ever since the conversion of DAX to the Xarray a RocksDB benchmark has
-> > > > > been encountering intermittent lockups. The backtraces always include
-> > > > > the filesystem-DAX PMD path, multi-order entries have been a source of
-> > > > > bugs in the past, and disabling the PMD path allows a test that fails in
-> > > > > minutes to run for an hour.
-> > > >
-> > > > On May 4th, I asked you:
-> > > >
-> > > > Since this is provoked by a fatal signal, it must have something to do
-> > > > with a killable or interruptible sleep.  There's only one of those in the
-> > > > DAX code; fatal_signal_pending() in dax_iomap_actor().  Does rocksdb do
-> > > > I/O with write() or through a writable mmap()?  I'd like to know before
-> > > > I chase too far down this fault tree analysis.
-> > >
-> > > RocksDB in this case is using write() for writes and mmap() for reads.
-> >
-> > It's not clear to me that a fatal signal is a component of the failure
-> > as much as it's the way to detect that the benchmark has indeed locked
-> > up.
->
-> Even though db_bench is run with the mmap_read=1 option:
->
->   cmd="${rocksdb_dir}/db_bench $params_r --benchmarks=readwhilewriting \
->        --use_existing_db=1 \
->         --mmap_read=1 \
->        --num=$num_keys \
->        --threads=$num_read_threads \
->
-> When the lockup occurs there are db_bench processes in the write fault path:
->
-> [ 1666.635212] db_bench        D    0  2492   2435 0x00000000
-> [ 1666.641339] Call Trace:
-> [ 1666.644072]  ? __schedule+0x24f/0x680
-> [ 1666.648162]  ? __switch_to_asm+0x34/0x70
-> [ 1666.652545]  schedule+0x29/0x90
-> [ 1666.656054]  get_unlocked_entry+0xcd/0x120
-> [ 1666.660629]  ? dax_iomap_actor+0x270/0x270
-> [ 1666.665206]  grab_mapping_entry+0x14f/0x230
-> [ 1666.669878]  dax_iomap_pmd_fault.isra.42+0x14d/0x950
-> [ 1666.675425]  ? futex_wait+0x122/0x230
-> [ 1666.679518]  ext4_dax_huge_fault+0x16f/0x1f0
-> [ 1666.684288]  __handle_mm_fault+0x411/0x1350
-> [ 1666.688961]  ? do_futex+0xca/0xbb0
-> [ 1666.692760]  ? __switch_to_asm+0x34/0x70
-> [ 1666.697144]  handle_mm_fault+0xbe/0x1e0
-> [ 1666.701429]  __do_page_fault+0x249/0x4f0
-> [ 1666.705811]  do_page_fault+0x32/0x110
-> [ 1666.709903]  ? page_fault+0x8/0x30
-> [ 1666.713702]  page_fault+0x1e/0x30
->
-> ...where __handle_mm_fault+0x411 is in wp_huge_pmd():
->
-> (gdb) li *(__handle_mm_fault+0x411)
-> 0xffffffff812713d1 is in __handle_mm_fault (mm/memory.c:3800).
-> 3795    static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf,
-> pmd_t orig_pmd)
-> 3796    {
-> 3797            if (vma_is_anonymous(vmf->vma))
-> 3798                    return do_huge_pmd_wp_page(vmf, orig_pmd);
-> 3799            if (vmf->vma->vm_ops->huge_fault)
-> 3800                    return vmf->vma->vm_ops->huge_fault(vmf, PE_SIZE_PMD);
-> 3801
-> 3802            /* COW handled on pte level: split pmd */
-> 3803            VM_BUG_ON_VMA(vmf->vma->vm_flags & VM_SHARED, vmf->vma);
-> 3804            __split_huge_pmd(vmf->vma, vmf->pmd, vmf->address, false, NULL);
->
-> This bug feels like we failed to unlock, or unlocked the wrong entry
-> and this hunk in the bisected commit looks suspect to me. Why do we
-> still need to drop the lock now that the radix_tree_preload() calls
-> are gone?
+On Thu, Jun 27, 2019 at 02:51:03PM -0400, Joel Fernandes wrote:
+> On Thu, Jun 27, 2019 at 02:27:22PM -0400, Joel Fernandes wrote:
+> > On Thu, Jun 27, 2019 at 11:11:12AM -0700, Paul E. McKenney wrote:
+> > > On Thu, Jun 27, 2019 at 01:46:27PM -0400, Joel Fernandes wrote:
+> > > > On Thu, Jun 27, 2019 at 1:43 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > > > >
+> > > > > On Thu, Jun 27, 2019 at 11:40 AM Sebastian Andrzej Siewior
+> > > > > <bigeasy@linutronix.de> wrote:
+> > > > > >
+> > > > > > On 2019-06-27 11:37:10 [-0400], Joel Fernandes wrote:
+> > > > > > > Sebastian it would be nice if possible to trace where the
+> > > > > > > t->rcu_read_unlock_special is set for this scenario of calling
+> > > > > > > rcu_read_unlock_special, to give a clear idea about whether it was
+> > > > > > > really because of an IPI. I guess we could also add additional RCU
+> > > > > > > debug fields to task_struct (just for debugging) to see where there
+> > > > > > > unlock_special is set.
+> > > > > > >
+> > > > > > > Is there a test to reproduce this, or do I just boot an intel x86_64
+> > > > > > > machine with "threadirqs" and run into it?
+> > > > > >
+> > > > > > Do you want to send me a patch or should I send you my kvm image which
+> > > > > > triggers the bug on boot?
+> > > > >
+> > > > > I could reproduce this as well just booting Linus tree with threadirqs
+> > > > > command line and running rcutorture. In 15 seconds or so it locks
+> > > > > up... gdb backtrace shows the recursive lock:
+> > > > 
+> > > > Sorry that got badly wrapped, so I pasted it here:
+> > > > https://hastebin.com/ajivofomik.shell
+> > > 
+> > > Which rcutorture scenario would that be?  TREE03 is thus far refusing
+> > > to fail for me when run this way:
+> > > 
+> > > $ tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --trust-make --configs "TREE03" --bootargs "threadirqs"
+> > 
+> > I built x86_64_defconfig with CONFIG_PREEMPT enabled, then I ran it with
+> > following boot params:
+> > rcutorture.shutdown_secs=60 rcutorture.n_barrier_cbs=4 rcutree.kthread_prio=2
+> > 
+> > and also "threadirqs"
+> > 
+> > This was not a TREE config, but just my simple RCU test using qemu.
+> 
+> Ah, it seems that the issue is reproducible in Linus tree only (which matches
+> the initial diff Sebastian posted). It cannot be reproduced with your /dev
+> branch. So perhaps the in_irq() check indeed works.
+> 
+> Looking further, in_irq() does also set the HARDIRQ_MASK in the preempt_count
+> courtesy of:
+> #define __irq_enter()                                   \
+>         do {                                            \
+>                 account_irq_enter_time(current);        \
+>                 preempt_count_add(HARDIRQ_OFFSET);      \
+>                 trace_hardirq_enter();
+> 
+> I dumped the stack at this point as well even with "threadirqs" just to
+> double confirm that is the case.
+> 
+> So probably, the in_irq() check is sufficient. However I am still a bit
+> nervous about this issue manifesting in other paths of the scheduler
+> that don't execute from an interrupt handler, but still would have RCU
+> reader sections with spinlocks held - I am not sure if this is possible
+> though but it does make me nervous.
 
-Nevermind, unmapp_mapping_pages() takes a sleeping lock, but then I
-wonder why we don't restart the lookup like the old implementation.
+I have gotten back to this -rcu commit:
+
+385b599e8c04 ("rcu: Allow rcu_read_unlock_special() to raise_softirq() if in_irq()")
+
+It works there, and that will be part of my pull request later today.
+I am continuing an informal manual bisection.  ;-)
+
+							Thanx, Paul
+
+> Thanks!
+> 
+> > 
+> > 
+> > I will try this diff and let you know.
+> > 
+> > > If it had failed, I would have tried the patch shown below.  I know that
+> > > Sebastian has some concerns about the bug happening anyway, but we have
+> > > to start somewhere!  ;-)
+> > > 
+> > > ------------------------------------------------------------------------
+> > > 
+> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > index 82c925df1d92..be7bafc2c0a0 100644
+> > > --- a/kernel/rcu/tree_plugin.h
+> > > +++ b/kernel/rcu/tree_plugin.h
+> > > @@ -624,25 +624,16 @@ static void rcu_read_unlock_special(struct task_struct *t)
+> > >  		      (rdp->grpmask & rnp->expmask) ||
+> > >  		      tick_nohz_full_cpu(rdp->cpu);
+> > >  		// Need to defer quiescent state until everything is enabled.
+> > > -		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
+> > > -		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
+> > > -			// Using softirq, safe to awaken, and we get
+> > > -			// no help from enabling irqs, unlike bh/preempt.
+> > > -			raise_softirq_irqoff(RCU_SOFTIRQ);
+> > > -		} else {
+> > > -			// Enabling BH or preempt does reschedule, so...
+> > > -			// Also if no expediting or NO_HZ_FULL, slow is OK.
+> > > -			set_tsk_need_resched(current);
+> > > -			set_preempt_need_resched();
+> > > -			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+> > > -			    !rdp->defer_qs_iw_pending && exp) {
+> > > -				// Get scheduler to re-evaluate and call hooks.
+> > > -				// If !IRQ_WORK, FQS scan will eventually IPI.
+> > > -				init_irq_work(&rdp->defer_qs_iw,
+> > > -					      rcu_preempt_deferred_qs_handler);
+> > > -				rdp->defer_qs_iw_pending = true;
+> > > -				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+> > > -			}
+> > > +		set_tsk_need_resched(current);
+> > > +		set_preempt_need_resched();
+> > > +		if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
+> > > +		    !rdp->defer_qs_iw_pending && exp) {
+> > > +			// Get scheduler to re-evaluate and call hooks.
+> > > +			// If !IRQ_WORK, FQS scan will eventually IPI.
+> > > +			init_irq_work(&rdp->defer_qs_iw,
+> > > +				      rcu_preempt_deferred_qs_handler);
+> > > +			rdp->defer_qs_iw_pending = true;
+> > > +			irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+> > 
+> > Nice to see the code here got simplified ;-)
+> > 
