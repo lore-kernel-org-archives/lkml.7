@@ -2,85 +2,144 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6884C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D455CC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F2C2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57E52082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596747;
-	bh=xXYNxkrdAJoh7I8KtJoyAJXR98LmJC9kPZlCwSw0jQI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NNB24dyPt7svCxWtPgdieHu2mg4VPpOod2ZroKz9rsjf27IJN7cNNIGtwicVfvfZR
-	 u3uIaAGwqZ0NftJidkMi5Xh/OZe5z5o5D0dQudTGZxHfJPCVdf3cwMAfIxDDunHtwp
-	 LUANfvwUIdauU6XXye/7TnLkrCit3EmFbEZnzg4k=
+	s=default; t=1561596755;
+	bh=E7PzcVy8LhBy4PCslOZhLM5aHxfMwUVr1qRxT1NRg9A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TVtTUCnkSAuX80xF/YRdEbbHi6FW93MlKjPjS9aJhpoPHkJs5jydo0byzFKivwCs4
+	 XK/N5gBcQ0z4BziYtT5GazIa64u1LdV7AijrcD8adqRxzpxqGRx8drMKxFwmWKdof+
+	 3ay3+o5APbmZfJWRFbHlmtCTC3XS8LbwcFLEKjsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfF0Adb (ORCPT
+        id S1727801AbfF0Awe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfF0AdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:33:22 -0400
-Received: from localhost (unknown [116.247.127.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727749AbfF0AdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:33:23 -0400
+Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75CCC217D9;
+        by mail.kernel.org (Postfix) with ESMTPSA id AD26C2184C;
         Thu, 27 Jun 2019 00:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595601;
-        bh=xXYNxkrdAJoh7I8KtJoyAJXR98LmJC9kPZlCwSw0jQI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NvE5XP6B1HTMBdlSrh3BpLKO+41NWESyuVfa+YDuXpZVCwYT6u+QJiQLJ7xWfOOTc
-         uH6Dy+3C88zhpJzWfwaqiBj5jL7oCa+Nxdn04aY0rPmS3gaUh5ecYejyQ23VS/RY4N
-         aux+2VJfCB2PkQ6rPRce6ts9Euw+Y8onPTeGQ9JY=
-Date:   Thu, 27 Jun 2019 08:33:13 +0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 4.14.131
-Message-ID: <20190627003313.GB10859@kroah.com>
-References: <20190627003306.GA10859@kroah.com>
+        s=default; t=1561595603;
+        bh=E7PzcVy8LhBy4PCslOZhLM5aHxfMwUVr1qRxT1NRg9A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C4pkbUmnRrDBsRheWXAsgd4gC817f0hL5VtQreh1ftm9qz2AyP0ptIgybDNaUhyX7
+         gaJeyNcFjSBzBXdX6P2ZfDTFzYMbVr1wwdLsMYY+3xynDE2NuN/My5X8NOmSzG3DAf
+         8rxLTEG3q4kakX5BuPi/zVmcMOM8koSFJWq1zG8U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 53/95] Input: imx_keypad - make sure keyboard can always wake up system
+Date:   Wed, 26 Jun 2019 20:29:38 -0400
+Message-Id: <20190627003021.19867-53-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
+References: <20190627003021.19867-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627003306.GA10859@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-diff --git a/Makefile b/Makefile
-index 9d0715c300b1..275343cf27f7 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 4
- PATCHLEVEL = 14
--SUBLEVEL = 130
-+SUBLEVEL = 131
- EXTRAVERSION =
- NAME = Petit Gorille
+From: Anson Huang <anson.huang@nxp.com>
+
+[ Upstream commit ce9a53eb3dbca89e7ad86673d94ab886e9bea704 ]
+
+There are several scenarios that keyboard can NOT wake up system
+from suspend, e.g., if a keyboard is depressed between system
+device suspend phase and device noirq suspend phase, the keyboard
+ISR will be called and both keyboard depress and release interrupts
+will be disabled, then keyboard will no longer be able to wake up
+system. Another scenario would be, if a keyboard is kept depressed,
+and then system goes into suspend, the expected behavior would be
+when keyboard is released, system will be waked up, but current
+implementation can NOT achieve that, because both depress and release
+interrupts are disabled in ISR, and the event check is still in
+progress.
+
+To fix these issues, need to make sure keyboard's depress or release
+interrupt is enabled after noirq device suspend phase, this patch
+moves the suspend/resume callback to noirq suspend/resume phase, and
+enable the corresponding interrupt according to current keyboard status.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/keyboard/imx_keypad.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/input/keyboard/imx_keypad.c b/drivers/input/keyboard/imx_keypad.c
+index 539cb670de41..ae9c51cc85f9 100644
+--- a/drivers/input/keyboard/imx_keypad.c
++++ b/drivers/input/keyboard/imx_keypad.c
+@@ -526,11 +526,12 @@ static int imx_keypad_probe(struct platform_device *pdev)
+ 	return 0;
+ }
  
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index a8772e11dc1c..a5960b9b6741 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1274,7 +1274,7 @@ int tcp_fragment(struct sock *sk, struct sk_buff *skb, u32 len,
- 	if (nsize < 0)
- 		nsize = 0;
+-static int __maybe_unused imx_kbd_suspend(struct device *dev)
++static int __maybe_unused imx_kbd_noirq_suspend(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+ 	struct input_dev *input_dev = kbd->input_dev;
++	unsigned short reg_val = readw(kbd->mmio_base + KPSR);
  
--	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
-+	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf + 0x20000)) {
- 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
- 		return -ENOMEM;
- 	}
+ 	/* imx kbd can wake up system even clock is disabled */
+ 	mutex_lock(&input_dev->mutex);
+@@ -540,13 +541,20 @@ static int __maybe_unused imx_kbd_suspend(struct device *dev)
+ 
+ 	mutex_unlock(&input_dev->mutex);
+ 
+-	if (device_may_wakeup(&pdev->dev))
++	if (device_may_wakeup(&pdev->dev)) {
++		if (reg_val & KBD_STAT_KPKD)
++			reg_val |= KBD_STAT_KRIE;
++		if (reg_val & KBD_STAT_KPKR)
++			reg_val |= KBD_STAT_KDIE;
++		writew(reg_val, kbd->mmio_base + KPSR);
++
+ 		enable_irq_wake(kbd->irq);
++	}
+ 
+ 	return 0;
+ }
+ 
+-static int __maybe_unused imx_kbd_resume(struct device *dev)
++static int __maybe_unused imx_kbd_noirq_resume(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct imx_keypad *kbd = platform_get_drvdata(pdev);
+@@ -570,7 +578,9 @@ static int __maybe_unused imx_kbd_resume(struct device *dev)
+ 	return ret;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(imx_kbd_pm_ops, imx_kbd_suspend, imx_kbd_resume);
++static const struct dev_pm_ops imx_kbd_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(imx_kbd_noirq_suspend, imx_kbd_noirq_resume)
++};
+ 
+ static struct platform_driver imx_keypad_driver = {
+ 	.driver		= {
+-- 
+2.20.1
+
