@@ -2,173 +2,138 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B4C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F726C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F859208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70AB52083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:24:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="WESFCbhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfF0LYf (ORCPT
+        id S1726867AbfF0LYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:24:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726816AbfF0LYa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:24:30 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RBMnXJ085959
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 07:24:29 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tcunubfqn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 07:24:29 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 27 Jun 2019 12:24:27 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Jun 2019 12:24:23 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RBOMYd51314740
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 11:24:22 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7CCA6A405B;
-        Thu, 27 Jun 2019 11:24:22 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7ED1CA4062;
-        Thu, 27 Jun 2019 11:24:20 +0000 (GMT)
-Received: from naverao1-tp.ibmuc.com (unknown [9.85.73.27])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 11:24:20 +0000 (GMT)
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 7/7] powerpc/kprobes: Allow probing on any ftrace address
-Date:   Thu, 27 Jun 2019 16:53:55 +0530
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
+        Thu, 27 Jun 2019 07:24:43 -0400
+Received: from mail-eopbgr760139.outbound.protection.outlook.com ([40.107.76.139]:43207
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726816AbfF0LYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:24:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=T+3Bw3wjKsLg3qLrIG4eesjlCc4Blmokld2SZtxf43wbnGTzjLP6j0gIKcOkJvdSz2A1fdzUJdCvu87RS2WkUryJdxjilwY3sTG3IlVRAKQ75UB+nEnQ9U+eJ10CGTKiq8MeY/HSnhtxN+Ufr8dP+vPJlKmEZZJGSpwLHMrllRQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gVdvPTvGgec/4z9jJCgGfdguG3KPfoiVEmfURUy1VwQ=;
+ b=ftAhQFquyA3+xrircDifLvrN9y1zycmgG3G1GwfvM0aJDBUciXuERC+geBgcxNLcnhDlTZ7/D6jkt/GK+qCxvhe3FMBesnOzC8IviX2qtOcETfbgyOYe1RjXkrkXcmAaajkH7vbs7h/BXMq24zJSpBs+8wi3KgGjdjUY7Ch2kE4=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector1-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gVdvPTvGgec/4z9jJCgGfdguG3KPfoiVEmfURUy1VwQ=;
+ b=WESFCbhyaUeFY+HOSWtIQsqH8YLZH9U2uLfG1X42K+EtMGq+x+Tbg63v8IfAOapbT+ANfmKpamxdUoHggAe/TAQxyQCJFmPS6qcv8JW+zUuVDshUU6feA9O440gb9iWZKeAVcnH6hAb3BDaic7MFOyYvsxlzn308JX4/YuDy7J4=
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
+ MN2PR04MB5839.namprd04.prod.outlook.com (20.179.22.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.17; Thu, 27 Jun 2019 11:24:39 +0000
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::397b:3922:4027:f635]) by MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::397b:3922:4027:f635%3]) with mapi id 15.20.2032.016; Thu, 27 Jun 2019
+ 11:24:39 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sjoerd.simons@collabora.co.uk" <sjoerd.simons@collabora.co.uk>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: Re: [PATCH] Adjust analogix chip driver location
+Thread-Topic: [PATCH] Adjust analogix chip driver location
+Thread-Index: AQHVLAwnWdhoUTbW6kumQO1/091b5g==
+Date:   Thu, 27 Jun 2019 11:24:39 +0000
+Message-ID: <20190627112430.GA4197@xin-VirtualBox>
+References: <20190626104430.GA11770@xin-VirtualBox>
+ <20190626122317.GC30972@kroah.com>
+In-Reply-To: <20190626122317.GC30972@kroah.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR02CA0179.apcprd02.prod.outlook.com
+ (2603:1096:201:21::15) To MN2PR04MB5886.namprd04.prod.outlook.com
+ (2603:10b6:208:a3::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 851cd163-83d2-4bb1-c354-08d6faf20acc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR04MB5839;
+x-ms-traffictypediagnostic: MN2PR04MB5839:
+x-microsoft-antispam-prvs: <MN2PR04MB58398E866F68ED4FB40F61A0C7FD0@MN2PR04MB5839.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(346002)(366004)(39850400004)(376002)(136003)(189003)(199004)(305945005)(6916009)(66446008)(107886003)(5660300002)(3846002)(6116002)(256004)(2351001)(14444005)(66066001)(5640700003)(33716001)(6246003)(478600001)(1076003)(33656002)(53936002)(71200400001)(71190400001)(86362001)(52116002)(76176011)(25786009)(11346002)(6506007)(229853002)(4326008)(6486002)(476003)(26005)(486006)(64756008)(66476007)(446003)(66556008)(6436002)(54906003)(7736002)(186003)(2906002)(68736007)(81156014)(8936002)(386003)(81166006)(316002)(1730700003)(6512007)(9686003)(99286004)(66946007)(73956011)(14454004)(102836004)(8676002)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5839;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VD4jp2iIVVHS0qYnZpRWJHubvSKV3ujXMA5kTO/XDSFsJKRBDyHHxx+2GssY2nd4QjlHnIB7KYX69M4uY98oHWdCb+geYwkulhn1oBvoaZ5L5x9IUO8u7on540t7c8+nuHcheFOOhN91qUbD3OLpyIdcx3RauhYsAyD095nA3bEtD8Mk8f+SEIkT5hdTBBeTfqTZ8ZDC+6gOnviweeXOvWxrmIihNlh/qZ8V1jgYYO6cuQkRG9J3mhIhCCjdtO7p6C8UdymX85AFeIEjbFdKtkKIJSd04uHm3peM+FIr5Qtltt7IDSfayvEbUSFq3gdKd55DcGYaj8Pnh863F9pNPVhAb3aSU5INI08jJ6ej3dLAKENhFzbxTM9W98Ig+T30saxXLzfO6jmIc0ErJof5DEUizrxzV0jR47Eh+j22/V4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <23DDEA1C4E97CA499C817164357FB5E7@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062711-0020-0000-0000-0000034DDFCC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062711-0021-0000-0000-000021A15A29
-Message-Id: <da4200e511f4863b153b0721f3913a75aa3bf80d.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=1 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=1
- clxscore=1015 lowpriorityscore=0 mlxscore=1 impostorscore=0
- mlxlogscore=223 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270133
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 851cd163-83d2-4bb1-c354-08d6faf20acc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 11:24:39.5611
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xji@analogixsemi.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5839
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With KPROBES_ON_FTRACE, kprobe is allowed to be inserted on instructions
-that branch to _mcount (referred to as ftrace location). With
--mprofile-kernel, we now include the preceding 'mflr r0' as being part
-of the ftrace location.
+On Wed, Jun 26, 2019 at 08:23:17PM +0800, gregkh@linuxfoundation.org wrote:
+> On Wed, Jun 26, 2019 at 10:44:38AM +0000, Xin Ji wrote:
+> > Move analogix chip ANX78XX bridge driver into "analogix" directory.
+> >=20
+> > Signed-off-by: Xin Ji <xji@analogixsemi.com>
+> > ---
+> >  drivers/gpu/drm/bridge/Kconfig                     |   10 -
+> >  drivers/gpu/drm/bridge/Makefile                    |    3 +-
+> >  drivers/gpu/drm/bridge/analogix-anx78xx.c          | 1485 ------------=
+--------
+> >  drivers/gpu/drm/bridge/analogix-anx78xx.h          |  710 ----------
+> >  drivers/gpu/drm/bridge/analogix/Kconfig            |   10 +
+> >  drivers/gpu/drm/bridge/analogix/Makefile           |    2 +
+> >  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c | 1485 ++++++++++++=
+++++++++
+> >  drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h |  710 ++++++++++
+> >  8 files changed, 2208 insertions(+), 2207 deletions(-)
+> >  delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.c
+> >  delete mode 100644 drivers/gpu/drm/bridge/analogix-anx78xx.h
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.c
+> >  create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx78xx.h
+>=20
+> 'git format-patch -M' is usually a lot better to use when moving files
+> around, as it shows you only any changes in the files, not a huge
+> delete/add cycle.
+>=20
+> thanks,
+>=20
+> greg k-h
 
-However, by default, probing on an instruction that is not actually the
-branch to _mcount() is prohibited, as that is considered to not be at an
-instruction boundary. This is not the case on powerpc, so allow the same
-by overriding arch_check_ftrace_location()
+Thanks, I'll submit new version.
 
-In addition, we update kprobe_ftrace_handler() to detect this scenarios
-and to pass the proper nip to the pre and post probe handlers.
-
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/kprobes-ftrace.c | 32 +++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
-index 972cb28174b2..23c840748183 100644
---- a/arch/powerpc/kernel/kprobes-ftrace.c
-+++ b/arch/powerpc/kernel/kprobes-ftrace.c
-@@ -12,15 +12,35 @@
- #include <linux/preempt.h>
- #include <linux/ftrace.h>
- 
-+/*
-+ * With -mprofile-kernel, we patch two instructions -- the branch to _mcount
-+ * as well as the preceding 'mflr r0'. Both these instructions are claimed
-+ * by ftrace and we should allow probing on either instruction.
-+ */
-+int arch_check_ftrace_location(struct kprobe *p)
-+{
-+	if (ftrace_location((unsigned long)p->addr))
-+		p->flags |= KPROBE_FLAG_FTRACE;
-+	return 0;
-+}
-+
- /* Ftrace callback handler for kprobes */
- void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
- 			   struct ftrace_ops *ops, struct pt_regs *regs)
- {
- 	struct kprobe *p;
-+	int mflr_kprobe = 0;
- 	struct kprobe_ctlblk *kcb;
- 
- 	p = get_kprobe((kprobe_opcode_t *)nip);
--	if (unlikely(!p) || kprobe_disabled(p))
-+	if (!p) {
-+		p = get_kprobe((kprobe_opcode_t *)(nip - MCOUNT_INSN_SIZE));
-+		if (unlikely(!p))
-+			return;
-+		mflr_kprobe = 1;
-+	}
-+
-+	if (kprobe_disabled(p))
- 		return;
- 
- 	kcb = get_kprobe_ctlblk();
-@@ -33,6 +53,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
- 		 */
- 		regs->nip -= MCOUNT_INSN_SIZE;
- 
-+		if (mflr_kprobe)
-+			regs->nip -= MCOUNT_INSN_SIZE;
-+
- 		__this_cpu_write(current_kprobe, p);
- 		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
- 		if (!p->pre_handler || !p->pre_handler(p, regs)) {
-@@ -45,6 +68,8 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
- 				kcb->kprobe_status = KPROBE_HIT_SSDONE;
- 				p->post_handler(p, regs, 0);
- 			}
-+			if (mflr_kprobe)
-+				regs->nip += MCOUNT_INSN_SIZE;
- 		}
- 		/*
- 		 * If pre_handler returns !0, it changes regs->nip. We have to
-@@ -57,6 +82,11 @@ NOKPROBE_SYMBOL(kprobe_ftrace_handler);
- 
- int arch_prepare_kprobe_ftrace(struct kprobe *p)
- {
-+	if ((unsigned long)p->addr & 0x03) {
-+		pr_err("Attempt to register kprobe at an unaligned address\n");
-+		return -EILSEQ;
-+	}
-+
- 	p->ainsn.insn = NULL;
- 	p->ainsn.boostable = -1;
- 	return 0;
--- 
-2.22.0
-
+Xin
