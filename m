@@ -2,164 +2,124 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A90C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28346C48BE7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8FB205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:23:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xilmx0Vo"
+	by mail.kernel.org (Postfix) with ESMTP id 0AE2E20644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561659837;
+	bh=fWIzpDW0+Wg+5wTx85ZaYjTGVBeQJ9z2XRONfWJCNns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LJ0OAIe7GnhVbg1Gajd0c2ijNFz1Ze6u1sBUmSH3/B55WRjGmgCAF9LCNfgTiFMDK
+	 Cj6RVeGKB3Jz4stDBfUHFSIJrW9Uz+7ezyHxuQ8CGL7vlIJqohlnjH5Nzm0JJy8R2o
+	 QijzCTt3D0oAnx+eBr2iCoC5DRhCjVQENImbkBrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfF0SXl (ORCPT
+        id S1726966AbfF0SX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:23:41 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48560 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfF0SXk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:23:40 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RIA7rA019301;
-        Thu, 27 Jun 2019 18:23:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=0G6Y8m5n5DfJQPYFH33nWqg2UCy4HW55ipBD/Rtat5M=;
- b=Xilmx0Vox9z6yWX6MHNl5wonE71OK7Ov/XTfsykPivZ29kYudcH6a72ZMAaFQ6gjUx9i
- mVDJ8Jx2darKIcFVwEqEs/xAm9tPdVT1TOYHjYK0r6sofcj7FQeZ9lIYil0mBVf6oDqp
- t9V/of3+k4zx5i3i2YoTNGUKMr8/rOD2WkJtOkC9F402FVQihLwSo5VlpQjgAsB+Nwu2
- KcXh5r9EPgagzmB+JbJiw59nBL2Ha5FiPft03j85I8fukLgRqWDlSMs/C3Qb1jNeID87
- oJQyTkLgXxT0528p4rJuQqo763BLvpzvRZqZ9l36ScBbcfRY4N+FUnZmvXcQv/QF2WTw Lg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2t9cyqssgw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:23:19 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RIMUTH180896;
-        Thu, 27 Jun 2019 18:23:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2tat7dhq0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:23:19 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RINHKR014156;
-        Thu, 27 Jun 2019 18:23:17 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 11:23:17 -0700
-Date:   Thu, 27 Jun 2019 11:23:09 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
-Message-ID: <20190627182309.GP5171@magnolia>
-References: <20190627104836.25446-1-hch@lst.de>
- <20190627104836.25446-8-hch@lst.de>
+        Thu, 27 Jun 2019 14:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbfF0SXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:23:55 -0400
+Received: from earth.universe (unknown [185.62.205.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F566205F4;
+        Thu, 27 Jun 2019 18:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561659834;
+        bh=fWIzpDW0+Wg+5wTx85ZaYjTGVBeQJ9z2XRONfWJCNns=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iFbS+UwBaYIBWqY8qMXUv4cnT55vJ4sgPwlTOApwHeqWpcFJ0eGZAxMWS4OyxNu5H
+         I13AlimxaulvJTGPVfAXdgaSeYzbGybY8eK8ELjedo7E7fSG4TquRJRnqahaXmUQdB
+         QVgFLAJ65+e1+X4CjHHuLkSUUh/57XGpoTunhl18=
+Received: by earth.universe (Postfix, from userid 1000)
+        id A716D3C08D5; Thu, 27 Jun 2019 20:23:51 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 20:23:51 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] reset: qcom-pon: Add support for gen2 pon
+Message-ID: <20190627182351.hkzfg2xtrdeijb4v@earth.universe>
+References: <20190614231451.45998-1-john.stultz@linaro.org>
+ <20190614231451.45998-2-john.stultz@linaro.org>
+ <20190616185637.GE31088@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="krkyqiyijqfvwquy"
 Content-Disposition: inline
-In-Reply-To: <20190627104836.25446-8-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270209
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270208
+In-Reply-To: <20190616185637.GE31088@tuxbook-pro>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
-> There is no real problem merging ioends that go beyond i_size into an
-> ioend that doesn't.  We just need to move the append transaction to the
-> base ioend.  Also use the opportunity to use a real error code instead
-> of the magic 1 to cancel the transactions, and write a comment
-> explaining the scheme.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Reading through this patch, I have a feeling it fixes the crash that
-Zorro has been seeing occasionally with generic/475...
+--krkyqiyijqfvwquy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Hi,
 
---D
+On Sun, Jun 16, 2019 at 11:56:37AM -0700, Bjorn Andersson wrote:
+> On Fri 14 Jun 16:14 PDT 2019, John Stultz wrote:
+>=20
+> > Add support for gen2 pon register so "reboot bootloader" can
+> > work on pixel3 and db845.
+> >=20
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: David Brown <david.brown@linaro.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Amit Pundir <amit.pundir@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> > Cc: linux-arm-msm@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> >=20
+>=20
+> Sebastian, please take the first two patches through your tree and we'll
+> pick the dts patch through arm-soc.
 
-> ---
->  fs/xfs/xfs_aops.c | 28 +++++++++++++++++++++-------
->  1 file changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 8b3070a40245..4ef8343c3759 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -314,11 +314,28 @@ xfs_ioend_can_merge(
->  		return false;
->  	if (ioend->io_offset + ioend->io_size != next->io_offset)
->  		return false;
-> -	if (xfs_ioend_is_append(ioend) != xfs_ioend_is_append(next))
-> -		return false;
->  	return true;
->  }
->  
-> +/*
-> + * If the to be merged ioend has a preallocated transaction for file
-> + * size updates we need to ensure the ioend it is merged into also
-> + * has one.  If it already has one we can simply cancel the transaction
-> + * as it is guaranteed to be clean.
-> + */
-> +static void
-> +xfs_ioend_merge_append_transactions(
-> +	struct xfs_ioend	*ioend,
-> +	struct xfs_ioend	*next)
-> +{
-> +	if (!ioend->io_append_trans) {
-> +		ioend->io_append_trans = next->io_append_trans;
-> +		next->io_append_trans = NULL;
-> +	} else {
-> +		xfs_setfilesize_ioend(next, -ECANCELED);
-> +	}
-> +}
-> +
->  /* Try to merge adjacent completions. */
->  STATIC void
->  xfs_ioend_try_merge(
-> @@ -327,7 +344,6 @@ xfs_ioend_try_merge(
->  {
->  	struct xfs_ioend	*next_ioend;
->  	int			ioend_error;
-> -	int			error;
->  
->  	if (list_empty(more_ioends))
->  		return;
-> @@ -341,10 +357,8 @@ xfs_ioend_try_merge(
->  			break;
->  		list_move_tail(&next_ioend->io_list, &ioend->io_list);
->  		ioend->io_size += next_ioend->io_size;
-> -		if (ioend->io_append_trans) {
-> -			error = xfs_setfilesize_ioend(next_ioend, 1);
-> -			ASSERT(error == 1);
-> -		}
-> +		if (next_ioend->io_append_trans)
-> +			xfs_ioend_merge_append_transactions(ioend, next_ioend);
->  	}
->  }
->  
-> -- 
-> 2.20.1
-> 
+Done.
+
+-- Sebastian
+
+--krkyqiyijqfvwquy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0VCbQACgkQ2O7X88g7
++ppyNg/7BfW4RlYs2Mbp6/IMpbcPouG/tAxSmwpbNSiZs8NA9y87/m0/E0+cqaaC
+mvkLsfFXmt1cug4z7wskcBPe8ipUnwONkzA/ZttNhIJKIT7mU/VR7kaV7kmdzfXd
+j1jtJknW5MuxJoC6/Xv78lBOZd1cStlY2xrAxInbPmaos9xS83sY853XgOgGOOR4
+yrn5fS1Utsf6Ws5fU/eXZnkoOYbc6OmSRh8uJhnTzTTkSS4TJCSmgv7P72bA5vPv
+3rXWjyA7Oqwv1k5qiuMldNRctQPMN7k6/ZfWuqbZJ71c6BoiD/2fVTus1rCq1Np8
+qO49NDOXAlIk9vKMN0j5jsLHFjU2FG2cuEPp3+vkRXq/7716c2AICosKilw01tf5
+/jg/u7+QqhCYxyj0AQlBo80rituoKOA0nOcMCIyS4bvEQFVOpPR9PJoL4Nh0tzwS
+zTs9iiOSby5lFsKFV9i8UsEMlxwotmHUu+ffolsfi3V6941fVTbFgAllLN5Gl6sl
+f3px93C0UMbyn3d3bz2+jLwMaU6yVObQZ4uH7VhR/8II583A2ZHP1kgY7K/PmJWx
+H672IKsoNpRnns242WUqvAVP6BiGBw+Dv5cvwzKFHSA6iBeFqdP3HSby4i1Xrj8O
+idypzibFCOeQlTypDrbhhc3TCQr6lRBuGm5hCGflZFHTduXotKQ=
+=8aBk
+-----END PGP SIGNATURE-----
+
+--krkyqiyijqfvwquy--
