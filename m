@@ -2,136 +2,89 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD78C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C69C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31FC2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A835E204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:38:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lwil+HeS";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nbJM51t6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfF0Lgq (ORCPT
+        id S1726678AbfF0LiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:36:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:32844 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726429AbfF0Lgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:36:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 04:36:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="183430789"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Jun 2019 04:36:37 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-riscv@lists.infradead.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Compile-test UAPI and kernel headers
-In-Reply-To: <20190627014617.600-1-yamada.masahiro@socionext.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190627014617.600-1-yamada.masahiro@socionext.com>
-Date:   Thu, 27 Jun 2019 14:39:24 +0300
-Message-ID: <87y31np89f.fsf@intel.com>
+        Thu, 27 Jun 2019 07:38:18 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41828 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfF0LiS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:38:18 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8D32E6085C; Thu, 27 Jun 2019 11:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561635497;
+        bh=4hOE5ZThruSSEEWDMxq0Dt5OhPpzapnURhse53Dk5WQ=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=lwil+HeSAfxdGvKxmoaw6YeXNX2Q6NsLoqoEDS2MzGNzNbTjbxtsj5ZSKe071yz8+
+         hyf1zP2isDURMIa6B6KhpnJdWBdqoJI5vJYGkmrDnNZvBXxn9Xq90CG+oNS+NLgya4
+         IM0mZAdpURaPL2Vh6j2KJaA1mMAVEpRmnxmRFGOY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D560602F8;
+        Thu, 27 Jun 2019 11:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561635496;
+        bh=4hOE5ZThruSSEEWDMxq0Dt5OhPpzapnURhse53Dk5WQ=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=nbJM51t6Tkkmm0S+B5u4FYHEfiaoABBMPuYY4uR2R7uqpVDXOdrr0Tp50RYv1K9Wq
+         W6QKiDH7waGw/3JhH8TaOkNXVPzfTHhAguI8BNznqvS6DAox6ihC4kcqsg0mz2VDfM
+         a2a1iDrEdiP3KKigYv8nZO561Vzt7TWeF0LrkYHE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D560602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/4] b43legacy: remove b43legacy_dma_set_mask
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190625102932.32257-2-hch@lst.de>
+References: <20190625102932.32257-2-hch@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        b43-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190627113817.8D32E6085C@smtp.codeaurora.org>
+Date:   Thu, 27 Jun 2019 11:38:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> 1/4: reworked v2.
->
-> 2/4: fix a flaw I noticed when I was working on this series
->
-> 3/4: maybe useful for 4/4 and in some other places
->
-> 4/4: v2. compile as many headers as possible.
->
->
-> Changes in v2:
->  - Add CONFIG_CPU_{BIG,LITTLE}_ENDIAN guard to avoid build error
->  - Use 'header-test-' instead of 'no-header-test'
->  - Avoid weird 'find' warning when cleaning
->   - New patch
->   - New patch
->   - Add everything to test coverage, and exclude broken ones
->   - Rename 'Makefile' to 'Kbuild'
->   - Add CONFIG_KERNEL_HEADER_TEST option
->
-> Masahiro Yamada (4):
->   kbuild: compile-test UAPI headers to ensure they are self-contained
->   kbuild: do not create wrappers for header-test-y
->   kbuild: support header-test-pattern-y
->   kbuild: compile-test kernel headers to ensure they are self-contained
+Christoph Hellwig <hch@lst.de> wrote:
 
-[responding here because I didn't receive the actual patch]
+> These days drivers are not required to fallback to smaller DMA masks,
+> but can just set the largest mask they support, removing the need for
+> this trial and error logic.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
 
-This looks like it's doing what it's supposed to, but I ran into a bunch
-of build fails with CONFIG_OF=n. Sent a fix to one [1], but stopped at
-the next. Looks like you'll have to exclude more. And I'm pretty sure
-we'll uncover more configurations where this will fail.
+4 patches applied to wireless-drivers-next.git, thanks.
 
-But I do applaud the goal, and I'm committed to making all include/drm
-headers self-contained. I wouldn't block this based on the issues, it's
-pretty much the only way to expose them and get them fixed/excluded, and
-it's behind a config knob after all.
-
-With the caveat that I didn't finish the build, but OTOH tested the
-rainy day scenario and had the patch find issues it's meant to find:
-
-Tested-by: Jani Nikula <jani.nikula@intel.com>
-
-
-[1] http://patchwork.freedesktop.org/patch/msgid/20190627110103.7539-1-jani.nikula@intel.com
-
->
->  .gitignore                         |    1 -
->  Documentation/dontdiff             |    1 -
->  Documentation/kbuild/makefiles.txt |   13 +-
->  Makefile                           |    4 +-
->  include/Kbuild                     | 1134 ++++++++++++++++++++++++++++
->  init/Kconfig                       |   22 +
->  scripts/Makefile.build             |   10 +-
->  scripts/Makefile.lib               |   12 +-
->  scripts/cc-system-headers.sh       |    8 +
->  usr/.gitignore                     |    1 -
->  usr/Makefile                       |    2 +
->  usr/include/.gitignore             |    3 +
->  usr/include/Makefile               |  133 ++++
->  13 files changed, 1331 insertions(+), 13 deletions(-)
->  create mode 100644 include/Kbuild
->  create mode 100755 scripts/cc-system-headers.sh
->  create mode 100644 usr/include/.gitignore
->  create mode 100644 usr/include/Makefile
+258989000849 b43legacy: remove b43legacy_dma_set_mask
+80372782e4cb b43legacy: simplify engine type / DMA mask selection
+c897523febae b43: remove b43_dma_set_mask
+288aa4ee7acf b43: simplify engine type / DMA mask selection
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+https://patchwork.kernel.org/patch/11015245/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
