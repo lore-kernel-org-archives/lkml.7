@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF15C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1980DC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A65208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0CC208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:42:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="PdI4qVcS"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lvOAti9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfF0XmY (ORCPT
+        id S1726789AbfF0Xmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:42:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41283 "EHLO
+        Thu, 27 Jun 2019 19:42:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42765 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfF0XmX (ORCPT
+        with ESMTP id S1726506AbfF0Xmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:42:23 -0400
+        Thu, 27 Jun 2019 19:42:49 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNf8ko500462
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNgWIe500839
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 16:41:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNf8ko500462
+        Thu, 27 Jun 2019 16:42:32 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNgWIe500839
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561678869;
-        bh=dTCZ0RhpJ37DtuMuCJHn0EhkoVHA7MY7k1ZLzWcJ9yE=;
+        s=2019061801; t=1561678953;
+        bh=BE1HEW3k5GX/FfdMHnPQTGObh2G/blSZMM7So1yWJqM=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=PdI4qVcSV7bDN7J5Lfp1q0LnAbZLxrlnIHdWBCUvimTbqhGLUMtJtMQkwq2efo+Bx
-         g0dtsBv54A4KCBndYSl/j63O3P9q6n6MvY4mWoaFC6iLFT5/YquGj/ka4uW/xurpdT
-         gOA6FahpF3EYAX91iVXse4R6h+mmNz/cWCX4sGhc6gB+nc4XlW1QaxfYeBp1y6J8dq
-         giuhhdN8KmtD4k+VfUtluz389zlAAgTzmHW2GLOkzFHLKR/Dnt0w7TQUq0SBq0scF8
-         2E3vj1PZ93CWVm0Db9/erxlvhkPihplHi8vo5pSMWKq0+7nuhieDhC9NHGpz4734o1
-         oK/sZAchjxqBg==
+        b=lvOAti9itUPOjptlTazjEoW+vhe4v6PKgFDZU2W+KvMa0ac9Xz4jkBs7w/HAEv62S
+         ul0xplv/BfEEsXGDZCyOgkJxX8qBQMfOPd7u8j7Xvl1nX1SrTvqNMIZI6jXEnZvSSG
+         cHnKkfheTP5NxWrrGWYio2Uh6sSrETWEQ+L9o3+YeTJcLeyZFDneEHTCoysg+Ds6bj
+         JtzA3zsSz1bHXpDY7umu4UHnDRLuzm9UtFWLcnK+Ia/2Uk2LMnhC2F4TEXZ0SN5XNq
+         QZd/DqJd9xANRzMvt3YjQ9jurS4+bRry2gRz9MZVT2J9c2CV+lITny+ObmUzSLBVcC
+         Lf1xYR9N/Dcsg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNf7Xc500459;
-        Thu, 27 Jun 2019 16:41:07 -0700
-Date:   Thu, 27 Jun 2019 16:41:07 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNgUwv500833;
+        Thu, 27 Jun 2019 16:42:30 -0700
+Date:   Thu, 27 Jun 2019 16:42:30 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-3222daf970f30133cc4c639cbecdc29c4ae91b2b@git.kernel.org>
-Cc:     ricardo.neri-calderon@linux.intel.com, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, Suravee.Suthikulpanit@amd.com,
-        hpa@zytor.com, andi.kleen@intel.com, peterz@infradead.org,
-        eranian@google.com, ravi.v.shankar@intel.com, mingo@kernel.org,
-        ashok.raj@intel.com
-Reply-To: andi.kleen@intel.com, eranian@google.com, peterz@infradead.org,
-          ashok.raj@intel.com, ravi.v.shankar@intel.com, mingo@kernel.org,
-          ricardo.neri-calderon@linux.intel.com, tglx@linutronix.de,
-          Suravee.Suthikulpanit@amd.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190623132435.058540608@linutronix.de>
-References: <20190623132435.058540608@linutronix.de>
+Message-ID: <tip-3535aa12f7f26fc755514b13aee8fac15741267e@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, eranian@google.com, ravi.v.shankar@intel.com,
+        ricardo.neri-calderon@linux.intel.com,
+        Suravee.Suthikulpanit@amd.com, andi.kleen@intel.com, hpa@zytor.com,
+        ashok.raj@intel.com, tglx@linutronix.de
+Reply-To: linux-kernel@vger.kernel.org, hpa@zytor.com, ashok.raj@intel.com,
+          mingo@kernel.org, Suravee.Suthikulpanit@amd.com,
+          andi.kleen@intel.com, ricardo.neri-calderon@linux.intel.com,
+          ravi.v.shankar@intel.com, eranian@google.com, tglx@linutronix.de,
+          peterz@infradead.org
+In-Reply-To: <20190623132435.241032433@linutronix.de>
+References: <20190623132435.241032433@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/timers] x86/hpet: Separate counter check out of
- clocksource register code
-Git-Commit-ID: 3222daf970f30133cc4c639cbecdc29c4ae91b2b
+Subject: [tip:x86/timers] x86/hpet: Decapitalize and rename EVT_TO_HPET_DEV
+Git-Commit-ID: 3535aa12f7f26fc755514b13aee8fac15741267e
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,21 +73,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3222daf970f30133cc4c639cbecdc29c4ae91b2b
-Gitweb:     https://git.kernel.org/tip/3222daf970f30133cc4c639cbecdc29c4ae91b2b
+Commit-ID:  3535aa12f7f26fc755514b13aee8fac15741267e
+Gitweb:     https://git.kernel.org/tip/3535aa12f7f26fc755514b13aee8fac15741267e
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 23 Jun 2019 15:23:51 +0200
+AuthorDate: Sun, 23 Jun 2019 15:23:53 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:57:18 +0200
+CommitDate: Fri, 28 Jun 2019 00:57:19 +0200
 
-x86/hpet: Separate counter check out of clocksource register code
+x86/hpet: Decapitalize and rename EVT_TO_HPET_DEV
 
-The init code checks whether the HPET counter works late in the init
-function when the clocksource is registered. That should happen right with
-the other sanity checks.
-
-Split it into a separate validation function and move it to the other
-sanity checks.
+It's a function not a macro and the upcoming changes use channel for the
+individual hpet timer units to allow a step by step refactoring approach.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
@@ -99,106 +94,79 @@ Cc: Andi Kleen <andi.kleen@intel.com>
 Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Link: https://lkml.kernel.org/r/20190623132435.058540608@linutronix.de
+Link: https://lkml.kernel.org/r/20190623132435.241032433@linutronix.de
 
 ---
- arch/x86/kernel/hpet.c | 65 ++++++++++++++++++++++++--------------------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ arch/x86/kernel/hpet.c | 27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
 diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index 71533f53fa1d..8c57dbf15e3b 100644
+index 74756c0a3a10..4cf93294bacc 100644
 --- a/arch/x86/kernel/hpet.c
 +++ b/arch/x86/kernel/hpet.c
-@@ -809,38 +809,6 @@ static struct clocksource clocksource_hpet = {
- 	.resume		= hpet_resume_counter,
- };
+@@ -69,9 +69,10 @@ static bool				hpet_verbose;
  
--static int __init hpet_clocksource_register(void)
--{
--	u64 start, now;
--	u64 t1;
--
--	/* Start the counter */
--	hpet_restart_counter();
--
--	/* Verify whether hpet counter works */
--	t1 = hpet_readl(HPET_COUNTER);
--	start = rdtsc();
--
--	/*
--	 * We don't know the TSC frequency yet, but waiting for
--	 * 200000 TSC cycles is safe:
--	 * 4 GHz == 50us
--	 * 1 GHz == 200us
--	 */
--	do {
--		rep_nop();
--		now = rdtsc();
--	} while ((now - start) < 200000UL);
--
--	if (t1 == hpet_readl(HPET_COUNTER)) {
--		pr_warn("Counter not counting. HPET disabled\n");
--		return -ENODEV;
--	}
--
--	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
--	return 0;
--}
--
- /*
-  * AMD SB700 based systems with spread spectrum enabled use a SMM based
-  * HPET emulation to provide proper frequency setting.
-@@ -869,6 +837,32 @@ static bool __init hpet_cfg_working(void)
- 	return false;
+ static struct clock_event_device	hpet_clockevent;
+ 
+-static inline struct hpet_dev *EVT_TO_HPET_DEV(struct clock_event_device *evtdev)
++static inline
++struct hpet_dev *clockevent_to_channel(struct clock_event_device *evt)
+ {
+-	return container_of(evtdev, struct hpet_dev, evt);
++	return container_of(evt, struct hpet_dev, evt);
  }
  
-+static bool __init hpet_counting(void)
-+{
-+	u64 start, now, t1;
-+
-+	hpet_restart_counter();
-+
-+	t1 = hpet_readl(HPET_COUNTER);
-+	start = rdtsc();
-+
-+	/*
-+	 * We don't know the TSC frequency yet, but waiting for
-+	 * 200000 TSC cycles is safe:
-+	 * 4 GHz == 50us
-+	 * 1 GHz == 200us
-+	 */
-+	do {
-+		rep_nop();
-+		now = rdtsc();
-+	} while ((now - start) < 200000UL);
-+
-+	if (t1 == hpet_readl(HPET_COUNTER)) {
-+		pr_warn("Counter not counting. HPET disabled\n");
-+		return false;
-+	}
-+	return true;
-+}
+ inline unsigned int hpet_readl(unsigned int a)
+@@ -458,28 +459,22 @@ void hpet_msi_write(struct hpet_dev *hdev, struct msi_msg *msg)
  
- /**
-  * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
-@@ -890,6 +884,10 @@ int __init hpet_enable(void)
- 	if (!hpet_cfg_working())
- 		goto out_nohpet;
+ static int hpet_msi_shutdown(struct clock_event_device *evt)
+ {
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-
+-	return hpet_shutdown(evt, hdev->num);
++	return hpet_shutdown(evt, clockevent_to_channel(evt)->num);
+ }
  
-+	/* Validate that the counter is counting */
-+	if (!hpet_counting())
-+		goto out_nohpet;
-+
- 	/*
- 	 * Read the period and check for a sane value:
- 	 */
-@@ -948,8 +946,7 @@ int __init hpet_enable(void)
- 	}
- 	hpet_print_config();
+ static int hpet_msi_set_oneshot(struct clock_event_device *evt)
+ {
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-
+-	return hpet_set_oneshot(evt, hdev->num);
++	return hpet_set_oneshot(evt, clockevent_to_channel(evt)->num);
+ }
  
--	if (hpet_clocksource_register())
--		goto out_nohpet;
-+	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
+ static int hpet_msi_set_periodic(struct clock_event_device *evt)
+ {
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-
+-	return hpet_set_periodic(evt, hdev->num);
++	return hpet_set_periodic(evt, clockevent_to_channel(evt)->num);
+ }
  
- 	if (id & HPET_ID_LEGSUP) {
- 		hpet_legacy_clockevent_register();
+ static int hpet_msi_resume(struct clock_event_device *evt)
+ {
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
++	struct hpet_dev *hdev = clockevent_to_channel(evt);
+ 	struct irq_data *data = irq_get_irq_data(hdev->irq);
+ 	struct msi_msg msg;
+ 
+@@ -491,16 +486,14 @@ static int hpet_msi_resume(struct clock_event_device *evt)
+ }
+ 
+ static int hpet_msi_next_event(unsigned long delta,
+-				struct clock_event_device *evt)
++			       struct clock_event_device *evt)
+ {
+-	struct hpet_dev *hdev = EVT_TO_HPET_DEV(evt);
+-
+-	return hpet_next_event(delta, hdev->num);
++	return hpet_next_event(delta, clockevent_to_channel(evt)->num);
+ }
+ 
+ static irqreturn_t hpet_interrupt_handler(int irq, void *data)
+ {
+-	struct hpet_dev *dev = (struct hpet_dev *)data;
++	struct hpet_dev *dev = data;
+ 	struct clock_event_device *hevt = &dev->evt;
+ 
+ 	if (!hevt->event_handler) {
