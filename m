@@ -2,138 +2,65 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7D1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABFDC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E33120663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596901;
-	bh=twBwnosR6QbQtSbolAgpDnfbS9aPjP6N+mM0O1dqyMY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcgG6vh43jBdj90xBski7DHUeOdy0w+Rg/bWPgh+fKXMj1UrnuY1TQyEEnDBjlwjg
-	 rJXwIiEt8lg6jy6/zjUKaU5cSZKii5sbLOtX+RYU1sgN/tDz4MJTMaZwcQ6/wv0Ihl
-	 OWB25PKm5a4nolMKb6heLlgHipHjLCeXb/d94ECs=
+	by mail.kernel.org (Postfix) with ESMTP id 6C31120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbfF0Ay7 (ORCPT
+        id S1726942AbfF0A4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbfF0Aa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:30:58 -0400
-Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD310217D8;
-        Thu, 27 Jun 2019 00:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595457;
-        bh=twBwnosR6QbQtSbolAgpDnfbS9aPjP6N+mM0O1dqyMY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tR2axxBCCwWOhn/ZNsqegTxVCy83jwPU34pV36pDKs+OvoyF/jaFtwZtXsxT1o8nJ
-         h1XvuE29+2Riaqv1vsvuRnx7fCC+9fbnAD/juVo5qHJ5GOrng7Cr2xBvSwkhkW00m3
-         tY3CZ1GR7FgiTh1iHDtzpx16WsHOhMvMt5IR2F90=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 11/95] bpf, riscv: clear target register high 32-bits for and/or/xor on ALU32
-Date:   Wed, 26 Jun 2019 20:28:56 -0400
-Message-Id: <20190627003021.19867-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
-References: <20190627003021.19867-1-sashal@kernel.org>
+        Wed, 26 Jun 2019 20:56:31 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:34356 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfF0A4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:56:30 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgIiC-0002Xh-Fu; Thu, 27 Jun 2019 00:56:28 +0000
+Date:   Thu, 27 Jun 2019 01:56:28 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tj@kernel.org
+Subject: Re: misuse of fget_raw() in perf_event_get()
+Message-ID: <20190627005628.GP17978@ZenIV.linux.org.uk>
+References: <20190413210242.GP2217@ZenIV.linux.org.uk>
+ <20190415044158.5goa2je57j63kwaz@ast-mbp.dhcp.thefacebook.com>
+ <20190415090406.GJ2490@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415090406.GJ2490@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@gmail.com>
+On Mon, Apr 15, 2019 at 11:04:06AM +0200, Peter Zijlstra wrote:
+> On Sun, Apr 14, 2019 at 09:42:00PM -0700, Alexei Starovoitov wrote:
+> > On Sat, Apr 13, 2019 at 10:02:42PM +0100, Al Viro wrote:
+> > > 	What's the point of using fget_raw(), if you do
+> > > _not_ accept O_PATH descriptors?  That should be fget()...
+> > 
+> > I think you're talking about commit e03e7ee34fdd ("perf/bpf: Convert perf_event_array to use struct file")
+> > I don't really remember why we went with this instead of fget().
+> > There was a bunch of back and forth back then with Peter.
+> 
+> That was mostly on what refcount to use, you wanted to use the event
+> refcount, and I suggested using the file refcount.
+> 
+> If you look at:
+> 
+>   lkml.kernel.org/r/20160126161637.GF6357@twins.programming.kicks-ass.net
+> 
+> I too wondered about the fget_raw() at the time, whatever Al wants
+> though, I never quite remember how that file stuff works :/
 
-[ Upstream commit fe121ee531d1362810bfd30f38a1b88b1d3d376c ]
-
-When using 32-bit subregisters (ALU32), the RISC-V JIT would not clear
-the high 32-bits of the target register and therefore generate
-incorrect code.
-
-E.g., in the following code:
-
-  $ cat test.c
-  unsigned int f(unsigned long long a,
-  	       unsigned int b)
-  {
-  	return (unsigned int)a & b;
-  }
-
-  $ clang-9 -target bpf -O2 -emit-llvm -S test.c -o - | \
-  	llc-9 -mattr=+alu32 -mcpu=v3
-  	.text
-  	.file	"test.c"
-  	.globl	f
-  	.p2align	3
-  	.type	f,@function
-  f:
-  	r0 = r1
-  	w0 &= w2
-  	exit
-  .Lfunc_end0:
-  	.size	f, .Lfunc_end0-f
-
-The JIT would not clear the high 32-bits of r0 after the
-and-operation, which in this case might give an incorrect return
-value.
-
-After this patch, that is not the case, and the upper 32-bits are
-cleared.
-
-Reported-by: Jiong Wang <jiong.wang@netronome.com>
-Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
-Signed-off-by: Björn Töpel <bjorn.topel@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/riscv/net/bpf_jit_comp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
-index 80b12aa5e10d..e5c8d675bd6e 100644
---- a/arch/riscv/net/bpf_jit_comp.c
-+++ b/arch/riscv/net/bpf_jit_comp.c
-@@ -759,14 +759,20 @@ static int emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
- 	case BPF_ALU | BPF_AND | BPF_X:
- 	case BPF_ALU64 | BPF_AND | BPF_X:
- 		emit(rv_and(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_OR | BPF_X:
- 	case BPF_ALU64 | BPF_OR | BPF_X:
- 		emit(rv_or(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_XOR | BPF_X:
- 	case BPF_ALU64 | BPF_XOR | BPF_X:
- 		emit(rv_xor(rd, rd, rs), ctx);
-+		if (!is64)
-+			emit_zext_32(rd, ctx);
- 		break;
- 	case BPF_ALU | BPF_MUL | BPF_X:
- 	case BPF_ALU64 | BPF_MUL | BPF_X:
--- 
-2.20.1
-
+Anyway, fget() it becomes...
