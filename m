@@ -2,276 +2,177 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370E5C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83B9C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFD4217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70367216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:00:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ppk1SxM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfF0CAo (ORCPT
+        id S1727126AbfF0CAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 22:00:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32083 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbfF0CAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:00:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 19:00:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
-   d="scan'208";a="337421637"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 19:00:39 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 15/22] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1560087862-57608-16-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <1cffc7c7-b71b-767a-a35f-d6063dc64b2b@linux.intel.com>
-Date:   Thu, 27 Jun 2019 09:53:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <1560087862-57608-16-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 26 Jun 2019 22:00:55 -0400
+Received: from mail-eopbgr20086.outbound.protection.outlook.com ([40.107.2.86]:46656
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726756AbfF0CAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 22:00:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kh3ndaU6ZdNCZItesSx6DlqtV91F1OIGNRLIRiX0xkQ=;
+ b=ppk1SxM4RNEJg1Zi6qUhe0a75sr/lHpbBkq/LYdg3hB19blnajA4dnqQLpiyn6yJ5+nEO+YRHorPE+w7oZivwe0MuRJjT4OZ9m9/Z/qrsJrwvf78Hgat/EHJbH5JbX7+jMl5Cfpn+WV6d9sYfhpeah1viZBvro9lS4aJpvzRpN8=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3235.eurprd04.prod.outlook.com (10.167.171.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 02:00:48 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::85dc:ed8:2a0d:4afe]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::85dc:ed8:2a0d:4afe%6]) with mapi id 15.20.2008.017; Thu, 27 Jun 2019
+ 02:00:48 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "pombredanne@nexb.com" <pombredanne@nexb.com>,
+        "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [EXT] Re: [PATCHv2 2/2] PCI: layerscape: EP and RC drivers are
+ compiled separately
+Thread-Topic: [EXT] Re: [PATCHv2 2/2] PCI: layerscape: EP and RC drivers are
+ compiled separately
+Thread-Index: AQHVLBE4IA2SIKwZ+ECco9RDrpxLQ6auN4qAgACIFLA=
+Date:   Thu, 27 Jun 2019 02:00:47 +0000
+Message-ID: <AM5PR04MB329928579BA98A3429A0B412F5FD0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190626111139.32878-1-xiaowei.bao@nxp.com>
+ <20190626111139.32878-2-xiaowei.bao@nxp.com>
+ <20190626175153.GC103694@google.com>
+In-Reply-To: <20190626175153.GC103694@google.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5e0d3ea3-f2c2-446a-1633-08d6faa34611
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3235;
+x-ms-traffictypediagnostic: AM5PR04MB3235:
+x-microsoft-antispam-prvs: <AM5PR04MB3235064E9A862F8C7F73A344F5FD0@AM5PR04MB3235.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(366004)(346002)(13464003)(189003)(199004)(76176011)(486006)(186003)(14454004)(26005)(7696005)(478600001)(102836004)(44832011)(66066001)(53546011)(6506007)(99286004)(74316002)(68736007)(5660300002)(81166006)(8676002)(81156014)(8936002)(7736002)(4326008)(6916009)(7416002)(25786009)(305945005)(256004)(33656002)(52536014)(76116006)(3846002)(66946007)(66476007)(73956011)(229853002)(54906003)(66446008)(66556008)(64756008)(53936002)(6116002)(6436002)(9686003)(316002)(71200400001)(71190400001)(2906002)(6246003)(446003)(86362001)(11346002)(55016002)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3235;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1rAeelWrgHa/SmKdfvoE68z5ijxT48W0Ug6kYTk25Us0MErOx/jXpJiYiuak57kwipvyGCOSEGfj1Hcc2F1vLJT5goz1Qm2ocSkzdgl9cVjWBGPTrZ+54ki1Gd2gHA9FepgGyZH5lnEoTJbfMex25+JiiB6f61JjeoTX+B9T6U+pGVN8gmuqFZW5CydSx00jNv6O1KaFV+FftKXeaiqtgxyrSDeTif80md8u2oKJeOYu0W5zYp9e6bWuvqgmY8ZTXlxROMwqGjuw8OeDkAO9W7vxGDH84Qs2732OF87PcMJ7635fnwGpVwIzRb+kJeiaOpQD61GOVNfGat05Jlim7uvQLDljZovIb3XU9VozptH3qDlqtY+ANJZpyy3iq6HMGdEkbQmz2xrh522glKO7OOsI+yFEqYR7BA30C5SUZi8=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e0d3ea3-f2c2-446a-1633-08d6faa34611
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 02:00:47.9363
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xiaowei.bao@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3235
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-On 6/9/19 9:44 PM, Jacob Pan wrote:
-> Make use of generic IOASID code to manage PASID allocation,
-> free, and lookup. Replace Intel specific code.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   drivers/iommu/intel-iommu.c | 11 +++++------
->   drivers/iommu/intel-pasid.c | 36 ------------------------------------
->   drivers/iommu/intel-svm.c   | 37 +++++++++++++++++++++----------------
->   3 files changed, 26 insertions(+), 58 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 5b84994..39b63fe 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5167,7 +5167,7 @@ static void auxiliary_unlink_device(struct dmar_domain *domain,
->   	domain->auxd_refcnt--;
->   
->   	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -		intel_pasid_free_id(domain->default_pasid);
-> +		ioasid_free(domain->default_pasid);
->   }
->   
->   static int aux_domain_add_dev(struct dmar_domain *domain,
-> @@ -5185,10 +5185,9 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
->   	if (domain->default_pasid <= 0) {
->   		int pasid;
->   
-> -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
-> -					     pci_max_pasids(to_pci_dev(dev)),
-> -					     GFP_KERNEL);
-> -		if (pasid <= 0) {
-> +		pasid = ioasid_alloc(NULL, PASID_MIN, pci_max_pasids(to_pci_dev(dev)) - 1,
-> +				domain);
-> +		if (pasid == INVALID_IOASID) {
->   			pr_err("Can't allocate default pasid\n");
->   			return -ENODEV;
->   		}
-> @@ -5224,7 +5223,7 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
->   	spin_unlock(&iommu->lock);
->   	spin_unlock_irqrestore(&device_domain_lock, flags);
->   	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -		intel_pasid_free_id(domain->default_pasid);
-> +		ioasid_free(domain->default_pasid);
->   
->   	return ret;
->   }
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index 69fddd3..1e25539 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -26,42 +26,6 @@
->    */
->   static DEFINE_SPINLOCK(pasid_lock);
->   u32 intel_pasid_max_id = PASID_MAX;
-> -static DEFINE_IDR(pasid_idr);
-> -
-> -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
-> -{
-> -	int ret, min, max;
-> -
-> -	min = max_t(int, start, PASID_MIN);
-> -	max = min_t(int, end, intel_pasid_max_id);
-> -
-> -	WARN_ON(in_interrupt());
-> -	idr_preload(gfp);
-> -	spin_lock(&pasid_lock);
-> -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
-> -	spin_unlock(&pasid_lock);
-> -	idr_preload_end();
-> -
-> -	return ret;
-> -}
-> -
-> -void intel_pasid_free_id(int pasid)
-> -{
-> -	spin_lock(&pasid_lock);
-> -	idr_remove(&pasid_idr, pasid);
-> -	spin_unlock(&pasid_lock);
-> -}
-> -
-> -void *intel_pasid_lookup_id(int pasid)
-> -{
-> -	void *p;
-> -
-> -	spin_lock(&pasid_lock);
-> -	p = idr_find(&pasid_idr, pasid);
-> -	spin_unlock(&pasid_lock);
-> -
-> -	return p;
-> -}
->   
->   int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid)
->   {
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 8f87304..9cbcc1f 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -25,6 +25,7 @@
->   #include <linux/dmar.h>
->   #include <linux/interrupt.h>
->   #include <linux/mm_types.h>
-> +#include <linux/ioasid.h>
->   #include <asm/page.h>
->   
->   #include "intel-pasid.h"
-> @@ -332,16 +333,15 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->   		if (pasid_max > intel_pasid_max_id)
->   			pasid_max = intel_pasid_max_id;
->   
-> -		/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
-> -		ret = intel_pasid_alloc_id(svm,
-> -					   !!cap_caching_mode(iommu->cap),
-> -					   pasid_max - 1, GFP_KERNEL);
-> -		if (ret < 0) {
-> +		/* Do not use PASID 0, reserved for RID to PASID */
-> +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
-> +					pasid_max - 1, svm);
-> +		if (svm->pasid == INVALID_IOASID) {
->   			kfree(svm);
->   			kfree(sdev);
-> +			ret = ENOSPC;
->   			goto out;
->   		}
-> -		svm->pasid = ret;
->   		svm->notifier.ops = &intel_mmuops;
->   		svm->mm = mm;
->   		svm->flags = flags;
-> @@ -351,7 +351,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->   		if (mm) {
->   			ret = mmu_notifier_register(&svm->notifier, mm);
->   			if (ret) {
-> -				intel_pasid_free_id(svm->pasid);
-> +				ioasid_free(svm->pasid);
->   				kfree(svm);
->   				kfree(sdev);
->   				goto out;
-> @@ -367,7 +367,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->   		if (ret) {
->   			if (mm)
->   				mmu_notifier_unregister(&svm->notifier, mm);
-> -			intel_pasid_free_id(svm->pasid);
-> +			ioasid_free(svm->pasid);
->   			kfree(svm);
->   			kfree(sdev);
->   			goto out;
-> @@ -400,7 +400,12 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
->   	if (!iommu)
->   		goto out;
->   
-> -	svm = intel_pasid_lookup_id(pasid);
-> +	svm = ioasid_find(NULL, pasid, NULL);
-> +	if (IS_ERR(svm)) {
-> +		ret = PTR_ERR(svm);
-> +		goto out;
-> +	}
-> +
->   	if (!svm)
->   		goto out;
->   
-
-How about using IS_ERR_OR_NULL() here?
-
-> @@ -422,7 +427,7 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
->   				kfree_rcu(sdev, rcu);
->   
->   				if (list_empty(&svm->devs)) {
-> -					intel_pasid_free_id(svm->pasid);
-> +					ioasid_free(svm->pasid);
->   					if (svm->mm)
->   						mmu_notifier_unregister(&svm->notifier, svm->mm);
->   
-> @@ -457,10 +462,11 @@ int intel_svm_is_pasid_valid(struct device *dev, int pasid)
->   	if (!iommu)
->   		goto out;
->   
-> -	svm = intel_pasid_lookup_id(pasid);
-> -	if (!svm)
-> +	svm = ioasid_find(NULL, pasid, NULL);
-> +	if (IS_ERR(svm)) {
-
-Same here.
-
-> +		ret = PTR_ERR(svm);
->   		goto out;
-> -
-> +	}
->   	/* init_mm is used in this case */
->   	if (!svm->mm)
->   		ret = 1;
-> @@ -567,13 +573,12 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->   
->   		if (!svm || svm->pasid != req->pasid) {
->   			rcu_read_lock();
-> -			svm = intel_pasid_lookup_id(req->pasid);
-> +			svm = ioasid_find(NULL, req->pasid, NULL);
->   			/* It *can't* go away, because the driver is not permitted
->   			 * to unbind the mm while any page faults are outstanding.
->   			 * So we only need RCU to protect the internal idr code. */
->   			rcu_read_unlock();
-> -
-> -			if (!svm) {
-> +			if (IS_ERR(svm) || !svm) {
-
-Ditto.
-
->   				pr_err("%s: Page request for invalid PASID %d: %08llx %08llx\n",
->   				       iommu->name, req->pasid, ((unsigned long long *)req)[0],
->   				       ((unsigned long long *)req)[1]);
-> 
-
-Best regards,
-Baolu
+SGkgQmpvcm4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmpvcm4g
+SGVsZ2FhcyA8aGVsZ2Fhc0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE5xOo21MIyN8jVIDE6NTIN
+Cj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBr
+ZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVv
+DQo+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJh
+bGlzaUBhcm0uY29tOw0KPiBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9y
+ZzsgTS5oLiBMaWFuDQo+IDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5n
+a2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZw0KPiA8cm95LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0
+QGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5A
+cm9jay1jaGlwcy5jb207DQo+IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4cHBjLWRldkBsaXN0cy5vemxh
+YnMub3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0h2MiAyLzJdIFBDSTogbGF5ZXJzY2Fw
+ZTogRVAgYW5kIFJDIGRyaXZlcnMgYXJlDQo+IGNvbXBpbGVkIHNlcGFyYXRlbHkNCj4gDQo+IENh
+dXRpb246IEVYVCBFbWFpbA0KPiANCj4gSWYgeW91IHBvc3QgYW5vdGhlciByZXZpc2lvbiBmb3Ig
+YW55IHJlYXNvbiwgcGxlYXNlIGNoYW5nZSB0aGUgc3ViamVjdCBzbyBpdCdzDQo+IHdvcmRlZCBh
+cyBhIGNvbW1hbmQgYW5kIG1lbnRpb25zIHRoZSBuZXcgY29uZmlnIG9wdGlvbnMsIGUuZy4sDQo+
+IA0KPiAgIFBDSTogbGF5ZXJzY2FwZTogQWRkIENPTkZJR19QQ0lfTEFZRVJTQ0FQRV9FUCB0byBi
+dWlsZCBFUC9SQw0KPiBzZXBhcmF0ZWx5DQpbWGlhb3dlaSBCYW9dIE9LLCB0aGFua3MsIHRoaXMg
+c3ViamVjdCBsb29rcyB3ZWxsLg0KPiANCj4gT24gV2VkLCBKdW4gMjYsIDIwMTkgYXQgMDc6MTE6
+MzlQTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gQ29tcGlsZSB0aGUgRVAgYW5kIFJD
+IGRyaXZlcnMgc2VwYXJhdGVseSB3aXRoIGRpZmZlcmVudCBjb25maWd1cmF0aW9uDQo+ID4gb3B0
+aW9ucywgdGhpcyBsb29rcyBjbGVhcmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dl
+aSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gdjI6DQo+ID4gIC0gTm8g
+Y2hhbmdlLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL0tjb25maWcgIHwg
+ICAyMCArKysrKysrKysrKysrKysrKystLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
+Yy9NYWtlZmlsZSB8ICAgIDMgKystDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjAgaW5zZXJ0aW9u
+cygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9j
+b250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9L
+Y29uZmlnDQo+ID4gaW5kZXggYTZjZTFlZS4uYTQxY2NmNSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
+ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvS2NvbmZpZw0KPiA+IEBAIC0xMzEsMTMgKzEzMSwyOSBAQCBjb25maWcgUENJ
+X0tFWVNUT05FX0VQDQo+ID4gICAgICAgICBEZXNpZ25XYXJlIGNvcmUgZnVuY3Rpb25zIHRvIGlt
+cGxlbWVudCB0aGUgZHJpdmVyLg0KPiA+DQo+ID4gIGNvbmZpZyBQQ0lfTEFZRVJTQ0FQRQ0KPiA+
+IC0gICAgIGJvb2wgIkZyZWVzY2FsZSBMYXllcnNjYXBlIFBDSWUgY29udHJvbGxlciINCj4gPiAr
+ICAgICBib29sICJGcmVlc2NhbGUgTGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgLSBIb3N0IG1v
+ZGUiDQo+ID4gICAgICAgZGVwZW5kcyBvbiBPRiAmJiAoQVJNIHx8IEFSQ0hfTEFZRVJTQ0FQRSB8
+fCBDT01QSUxFX1RFU1QpDQo+ID4gICAgICAgZGVwZW5kcyBvbiBQQ0lfTVNJX0lSUV9ET01BSU4N
+Cj4gPiAgICAgICBzZWxlY3QgTUZEX1NZU0NPTg0KPiA+ICAgICAgIHNlbGVjdCBQQ0lFX0RXX0hP
+U1QNCj4gPiAgICAgICBoZWxwDQo+ID4gLSAgICAgICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IFBD
+SWUgY29udHJvbGxlciBzdXBwb3J0IG9uIExheWVyc2NhcGUgU29Dcy4NCj4gPiArICAgICAgIFNh
+eSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIFBDSWUgY29udHJvbGxlciBzdXBwb3J0IG9u
+DQo+IExheWVyc2NhcGUNCj4gPiArICAgICAgIFNvQ3MgdG8gd29yayBpbiBIb3N0IG1vZGUuDQo+
+ID4gKyAgICAgICBUaGlzIGNvbnRyb2xsZXIgY2FuIHdvcmsgZWl0aGVyIGFzIEVQIG9yIFJDLiBU
+aGUNCj4gUkNXW0hPU1RfQUdUX1BFWF0NCj4gPiArICAgICAgIGRldGVybWluZXMgd2hpY2ggUENJ
+ZSBjb250cm9sbGVyIHdvcmtzIGluIEVQIG1vZGUgYW5kIHdoaWNoDQo+IFBDSWUNCj4gPiArICAg
+ICAgIGNvbnRyb2xsZXIgd29ya3MgaW4gUkMgbW9kZS4NCj4gPiArDQo+ID4gK2NvbmZpZyBQQ0lf
+TEFZRVJTQ0FQRV9FUA0KPiA+ICsgICAgIGJvb2wgIkZyZWVzY2FsZSBMYXllcnNjYXBlIFBDSWUg
+Y29udHJvbGxlciAtIEVuZHBvaW50IG1vZGUiDQo+ID4gKyAgICAgZGVwZW5kcyBvbiBPRiAmJiAo
+QVJNIHx8IEFSQ0hfTEFZRVJTQ0FQRSB8fCBDT01QSUxFX1RFU1QpDQo+ID4gKyAgICAgZGVwZW5k
+cyBvbiBQQ0lfRU5EUE9JTlQNCj4gPiArICAgICBzZWxlY3QgUENJRV9EV19FUA0KPiA+ICsgICAg
+IGhlbHANCj4gPiArICAgICAgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIFBDSWUg
+Y29udHJvbGxlciBzdXBwb3J0IG9uDQo+IExheWVyc2NhcGUNCj4gPiArICAgICAgIFNvQ3MgdG8g
+d29yayBpbiBFbmRwb2ludCBtb2RlLg0KPiA+ICsgICAgICAgVGhpcyBjb250cm9sbGVyIGNhbiB3
+b3JrIGVpdGhlciBhcyBFUCBvciBSQy4gVGhlDQo+IFJDV1tIT1NUX0FHVF9QRVhdDQo+ID4gKyAg
+ICAgICBkZXRlcm1pbmVzIHdoaWNoIFBDSWUgY29udHJvbGxlciB3b3JrcyBpbiBFUCBtb2RlIGFu
+ZCB3aGljaA0KPiBQQ0llDQo+ID4gKyAgICAgICBjb250cm9sbGVyIHdvcmtzIGluIFJDIG1vZGUu
+DQo+ID4NCj4gPiAgY29uZmlnIFBDSV9ISVNJDQo+ID4gICAgICAgZGVwZW5kcyBvbiBPRiAmJiAo
+QVJNNjQgfHwgQ09NUElMRV9URVNUKSBkaWZmIC0tZ2l0DQo+ID4gYS9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL2R3Yy9NYWtlZmlsZQ0KPiA+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvTWFr
+ZWZpbGUNCj4gPiBpbmRleCBiMDg1ZGZkLi44MjRmZGU3IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvTWFrZWZpbGUNCj4gPiBAQCAtOCw3ICs4LDggQEAgb2JqLSQoQ09ORklHX1BD
+SV9FWFlOT1MpICs9IHBjaS1leHlub3Mubw0KPiA+ICBvYmotJChDT05GSUdfUENJX0lNWDYpICs9
+IHBjaS1pbXg2Lm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfU1BFQVIxM1hYKSArPSBwY2llLXNw
+ZWFyMTN4eC5vDQo+ID4gIG9iai0kKENPTkZJR19QQ0lfS0VZU1RPTkUpICs9IHBjaS1rZXlzdG9u
+ZS5vDQo+ID4gLW9iai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRSkgKz0gcGNpLWxheWVyc2NhcGUu
+byBwY2ktbGF5ZXJzY2FwZS1lcC5vDQo+ID4gK29iai0kKENPTkZJR19QQ0lfTEFZRVJTQ0FQRSkg
+Kz0gcGNpLWxheWVyc2NhcGUubw0KPiA+ICtvYmotJChDT05GSUdfUENJX0xBWUVSU0NBUEVfRVAp
+ICs9IHBjaS1sYXllcnNjYXBlLWVwLm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfUUNPTSkgKz0g
+cGNpZS1xY29tLm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfQVJNQURBXzhLKSArPSBwY2llLWFy
+bWFkYThrLm8NCj4gPiAgb2JqLSQoQ09ORklHX1BDSUVfQVJUUEVDNikgKz0gcGNpZS1hcnRwZWM2
+Lm8NCj4gPiAtLQ0KPiA+IDEuNy4xDQo+ID4NCg==
