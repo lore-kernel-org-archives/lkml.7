@@ -2,76 +2,91 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD27C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7376C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C171F20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB91820828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:25:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KYDVFWWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfF0VYq (ORCPT
+        id S1726604AbfF0VZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:24:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59877 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0VYq (ORCPT
+        Thu, 27 Jun 2019 17:25:03 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:39299 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0VZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:24:46 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgbso-0000cE-Bn; Thu, 27 Jun 2019 23:24:42 +0200
-Date:   Thu, 27 Jun 2019 23:24:41 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>
-Subject: Re: [PATCH RESEND] Revert "x86/paravirt: Set up the virt_spin_lock_key
- after static keys get initialized"
-In-Reply-To: <1561539429-29436-1-git-send-email-zhenzhong.duan@oracle.com>
-Message-ID: <alpine.DEB.2.21.1906272322481.32342@nanos.tec.linutronix.de>
-References: <1561539429-29436-1-git-send-email-zhenzhong.duan@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 27 Jun 2019 17:25:03 -0400
+Received: by mail-pl1-f201.google.com with SMTP id r7so2146332plo.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=AUBiLRDaXXYQTlEQK9JZKaKPdCgCLgKOBXPW4l+cusM=;
+        b=KYDVFWWvM8MWZ0JwZmErFvJH1/TehqnC1DnjZ9EfpIkjBrTZAWl5M2xhK0E9bA8oXC
+         ej7Ckld7Whq1DExbE4I35pOSwM9pyBvwCP6QcaKo9S2S4AlX6Wir+KRnmVGANCqE3v++
+         ncbAzl0FBqlbo4m7npGp9pled4MHDPNqJ/1lEHpeKNDGqSO3yHvtmYNDUrY2bk144Flt
+         vSuTxw+rbcyla70jnz1nGPwQc77RGAPbjfR5DgV9eSiONauVuyFsjvVttIr/zT8ZnLwC
+         /nhqnoCprsj72GXJHOsmycyG/JxpOxkS3+wPf3q7+xMOq0YYl4349VDM16W/suizXEx2
+         bxvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=AUBiLRDaXXYQTlEQK9JZKaKPdCgCLgKOBXPW4l+cusM=;
+        b=GXj0CxRf5SRq/toBcNWoEWGTCRJKeMAOqUIAuFriJ8ToNLJIl6ADPmAM+6H3cuq9TD
+         glc29VfmVRRfXcY4ujmsNTYLmxJJ9xzvGpSqMTu+pK3Fn1wTBkj+N5vSem6u4h49V8e9
+         B8rfWskP8yq6iMra7lOHfPpFKjPCWWpT4DyJ908anlFjtt6ljeBogWH0sx1wWfimw+RS
+         C6CB0NNldGu0qxWZ+yq8A4+2pi070UddR/ucXlGSzlXj/XmmYZwy+sDzc7d9VjokgW0D
+         r7jCJtHKPohEr52sZjXfz5Zn0c3rBdO1DVonGYL8XiQPgtKs4DWqAYuMfw5hikYUytSY
+         Dl6g==
+X-Gm-Message-State: APjAAAWGzzZMxoGNjSEzFdi0ogA7EGTMZz0E0XOW97vdHmjinOVcgkdO
+        CEQyH/UBDuL87pwjs1xp+G1g8GHTMnhf8HXpRqY=
+X-Google-Smtp-Source: APXvYqzoev0vXG5DK28jTKa5bDx5Z8oqnqEKW+QOzF1ZIBhuXc8DvyTZzsAVOZ0nhgQnM9CBTiaoDpxGk4vCDebsV2I=
+X-Received: by 2002:a63:1322:: with SMTP id i34mr5930362pgl.424.1561670701984;
+ Thu, 27 Jun 2019 14:25:01 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 14:24:46 -0700
+Message-Id: <20190627212447.217059-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH] .gitignore: ignore *.rej files
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     yamada.masahiro@socionext.com
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Rob Herring <robh@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019, Zhenzhong Duan wrote:
+Such as those produced by the `patch` utility. We already ignore *.orig
+files, and there are currently no *.rej files in the tree at this time.
 
-> This reverts commit ca5d376e17072c1b60c3fee66f3be58ef018952d.
-> 
-> Commit 8990cac6e5ea ("x86/jump_label: Initialize static branching
-> early") adds jump_label_init() call in setup_arch() to make static
-> keys initialized early, so we could use the original simpler code
-> again.
-> 
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-Boris,
+diff --git a/.gitignore b/.gitignore
+index 7587ef56b92d..f97430cb2efd 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -119,6 +119,7 @@ GTAGS
+ ID
+ 
+ *.orig
++*.rej
+ *~
+ \#*#
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-want you to pick that up or should I?
-
-In case you take it:
-
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
