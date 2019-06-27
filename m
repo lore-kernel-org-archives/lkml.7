@@ -2,28 +2,27 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5D5C48BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302A5C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB25A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063202083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfF0Kl1 (ORCPT
+        id S1726757AbfF0Kku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:41:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44980 "EHLO
+        Thu, 27 Jun 2019 06:40:50 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44914 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfF0Kk4 (ORCPT
+        with ESMTP id S1726416AbfF0Kkt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:40:56 -0400
+        Thu, 27 Jun 2019 06:40:49 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 1A4E2284FAF
+        with ESMTPSA id 4462F284FAF
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -44,15 +43,11 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Mark Brown <broonie@kernel.org>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v4 05/11] mfd / platform: cros_ec: Rename config to a better name
-Date:   Thu, 27 Jun 2019 12:40:33 +0200
-Message-Id: <20190627104039.26285-6-enric.balletbo@collabora.com>
+        Collabora kernel ML <kernel@collabora.com>
+Subject: [PATCH v4 00/11] Move part of cros-ec out of MFD subsystem
+Date:   Thu, 27 Jun 2019 12:40:28 +0200
+Message-Id: <20190627104039.26285-1-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627104039.26285-1-enric.balletbo@collabora.com>
-References: <20190627104039.26285-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,126 +55,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cros-ec-dev is a multifunction device that now doesn't implement any
-chardev communication interface. MFD_CROS_EC_CHARDEV doesn't look
-a good name to describe that device and can cause confusion. Hence
-rename it to CROS_EC_DEV.
+Hi,
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Gwendal Grignou <gwendal@chromium.org>
----
+This is another attempt to clean up a bit more the cros-ec driver
+to have a better separation on what is part of the MFD subsystem and
+what is part of platform/chrome.
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+It'd be really nice have some reviews, acks and tested on different
+platforms from the chromiumos people before merge all this patchset,
+as this moves a lot of code.
 
- drivers/mfd/Kconfig             | 16 ++++++++++------
- drivers/mfd/Makefile            |  2 +-
- drivers/platform/chrome/Kconfig | 20 ++++++++++----------
- 3 files changed, 21 insertions(+), 17 deletions(-)
+The major changes introduced by this patchset are:
+1. Move the core driver to platform/chrome, as is not really related
+   to an MFD device driver.
+2. Create a new misc chardev driver to replace the chardev bits from
+   cros-ec-dev (MFD)
+3. Added some convenience structs on cros-ec-dev (MFD) to easy add
+   more subdrivers avoiding to add more boiler plate.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 2e4e7ec1236e..6fa019b6d681 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -210,14 +210,18 @@ config MFD_AXP20X_RSB
- 	  components like regulators or the PEK (Power Enable Key) under the
- 	  corresponding menus.
- 
--config MFD_CROS_EC_CHARDEV
--	tristate "Chrome OS Embedded Controller userspace device interface"
-+config MFD_CROS_EC_DEV
-+	tristate "ChromeOS Embedded Controller multifunction device"
-+	select MFD_CORE
- 	depends on CROS_EC
--	---help---
--	  This driver adds support to talk with the ChromeOS EC from userspace.
-+	default CROS_EC
-+	help
-+	  Select this to get support for ChromeOS Embedded Controller
-+	  sub-devices. This driver will instantiate additional drivers such
-+	  as RTC, USBPD, etc. but you have to select the individual drivers.
- 
--	  If you have a supported Chromebook, choose Y or M here.
--	  The module will be called cros_ec_dev.
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called cros-ec-dev.
- 
- config MFD_MADERA
- 	tristate "Cirrus Logic Madera codecs"
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 209a92b98fa2..49e4e75307af 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
- obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
- obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
- obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
--obj-$(CONFIG_MFD_CROS_EC_CHARDEV) += cros_ec_dev.o
-+obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
- obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
- 
- obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 221e709358c0..dd30fe14222d 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -135,8 +135,8 @@ config CROS_KBD_LED_BACKLIGHT
- 
- config CROS_EC_CHARDEV
- 	tristate "ChromeOS EC miscdevice"
--	depends on MFD_CROS_EC_CHARDEV
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This driver adds file operations support to talk with the
- 	  ChromeOS EC from userspace via a character device.
-@@ -146,8 +146,8 @@ config CROS_EC_CHARDEV
- 
- config CROS_EC_LIGHTBAR
- 	tristate "Chromebook Pixel's lightbar support"
--	depends on MFD_CROS_EC_CHARDEV
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes the Chromebook Pixel's lightbar to
- 	  userspace.
-@@ -157,8 +157,8 @@ config CROS_EC_LIGHTBAR
- 
- config CROS_EC_VBC
- 	tristate "ChromeOS EC vboot context support"
--	depends on MFD_CROS_EC_CHARDEV && OF
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV && OF
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes the ChromeOS EC vboot context nvram to
- 	  userspace.
-@@ -168,8 +168,8 @@ config CROS_EC_VBC
- 
- config CROS_EC_DEBUGFS
- 	tristate "Export ChromeOS EC internals in DebugFS"
--	depends on MFD_CROS_EC_CHARDEV && DEBUG_FS
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV && DEBUG_FS
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes the ChromeOS EC device internals to
- 	  userspace.
-@@ -179,8 +179,8 @@ config CROS_EC_DEBUGFS
- 
- config CROS_EC_SYSFS
- 	tristate "ChromeOS EC control and information through sysfs"
--	depends on MFD_CROS_EC_CHARDEV && SYSFS
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV && SYSFS
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes some sysfs attributes to control and get
- 	  information from ChromeOS EC.
+Once applied we have moved all the code to platform/chrome except
+the cros-ec-dev driver, which is the one that instantiates the different
+subdrivers as cells of the MFD driver.
+
+I tested the following patches on Veyron, Kevin, Samus, Peach Pi and
+Peach Pit without noticing any problem, but they would need more
+tests.
+
+Waiting for your feedback,
+  Enric
+
+Changes in v4:
+- Rebase against on top of for-mfd-next to avoid conflicts.
+
+Changes in v3:
+- Collect more acks an tested-by
+- Fix 'linux/mfd/cros_ec.h' is not exported (reported by lkp)
+- Use mfd_add_hotplug_devices helper (Gwendal)
+- Add a new patch to use mfd_add_hoplug_devices to register subdevices
+
+Changes in v2:
+- Collect acks received.
+- Remove '[PATCH 07/10] mfd: cros_ec: Update with SPDX Licence identifier
+  and fix description' to avoid conflicts with some tree-wide patches
+  that actually updates the Licence identifier.
+- Add '[PATCH 10/10] arm/arm64: defconfig: Update configs to use the new
+  CROS_EC options' to update the defconfigs after change some config
+  symbols.
+- Remove the list, and the lock, as are not needed (Greg Kroah-Hartman)
+- Remove dev_info in probe, anyway we will see the chardev or not if the
+  probe fails (Greg Kroah-Hartman)
+
+Enric Balletbo i Serra (11):
+  mfd / platform: cros_ec: Handle chained ECs as platform devices
+  mfd / platform: cros_ec: Move cros-ec core driver out from MFD
+  mfd / platform: cros_ec: Miscellaneous character device to talk with
+    the EC
+  mfd: cros_ec: Switch to use the new cros-ec-chardev driver
+  mfd / platform: cros_ec: Rename config to a better name
+  mfd / platform: cros_ec: Reorganize platform and mfd includes
+  mfd: cros_ec: Use kzalloc and cros_ec_cmd_xfer_status helper
+  mfd: cros_ec: Add convenience struct to define dedicated CrOS EC MCUs
+  mfd: cros_ec: Add convenience struct to define autodetectable CrOS EC
+    subdevices
+  mfd: cros_ec: Use mfd_add_hotplug_devices() helper
+  arm/arm64: defconfig: Update configs to use the new CROS_EC options
+
+ Documentation/ioctl/ioctl-number.txt          |   2 +-
+ arch/arm/configs/exynos_defconfig             |   4 +-
+ arch/arm/configs/multi_v7_defconfig           |   6 +-
+ arch/arm/configs/pxa_defconfig                |   4 +-
+ arch/arm64/configs/defconfig                  |   6 +-
+ drivers/extcon/Kconfig                        |   2 +-
+ drivers/extcon/extcon-usbc-cros-ec.c          |   3 +-
+ drivers/hid/Kconfig                           |   2 +-
+ drivers/hid/hid-google-hammer.c               |   4 +-
+ drivers/i2c/busses/Kconfig                    |   2 +-
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c       |   4 +-
+ drivers/iio/accel/cros_ec_accel_legacy.c      |   3 +-
+ drivers/iio/common/cros_ec_sensors/Kconfig    |   2 +-
+ .../common/cros_ec_sensors/cros_ec_sensors.c  |   3 +-
+ .../cros_ec_sensors/cros_ec_sensors_core.c    |   3 +-
+ drivers/iio/light/cros_ec_light_prox.c        |   3 +-
+ drivers/iio/pressure/cros_ec_baro.c           |   3 +-
+ drivers/input/keyboard/Kconfig                |   2 +-
+ drivers/input/keyboard/cros_ec_keyb.c         |   4 +-
+ drivers/media/platform/Kconfig                |   3 +-
+ .../media/platform/cros-ec-cec/cros-ec-cec.c  |   5 +-
+ drivers/mfd/Kconfig                           |  26 +-
+ drivers/mfd/Makefile                          |   4 +-
+ drivers/mfd/cros_ec_dev.c                     | 461 +++++-------------
+ drivers/platform/chrome/Kconfig               |  48 +-
+ drivers/platform/chrome/Makefile              |   2 +
+ drivers/{mfd => platform/chrome}/cros_ec.c    |  64 +--
+ drivers/platform/chrome/cros_ec_chardev.c     | 254 ++++++++++
+ drivers/platform/chrome/cros_ec_debugfs.c     |   3 +-
+ drivers/platform/chrome/cros_ec_i2c.c         |  12 +-
+ drivers/platform/chrome/cros_ec_lightbar.c    |   3 +-
+ drivers/platform/chrome/cros_ec_lpc.c         |   7 +-
+ drivers/platform/chrome/cros_ec_lpc_reg.c     |   4 +-
+ drivers/platform/chrome/cros_ec_proto.c       |   3 +-
+ drivers/platform/chrome/cros_ec_rpmsg.c       |   6 +-
+ drivers/platform/chrome/cros_ec_spi.c         |  12 +-
+ drivers/platform/chrome/cros_ec_sysfs.c       |   3 +-
+ drivers/platform/chrome/cros_ec_trace.c       |   2 +-
+ drivers/platform/chrome/cros_ec_trace.h       |   4 +-
+ drivers/platform/chrome/cros_ec_vbc.c         |   3 +-
+ drivers/platform/chrome/cros_usbpd_logger.c   |   5 +-
+ drivers/power/supply/Kconfig                  |   2 +-
+ drivers/power/supply/cros_usbpd-charger.c     |   5 +-
+ drivers/pwm/Kconfig                           |   2 +-
+ drivers/pwm/pwm-cros-ec.c                     |   4 +-
+ drivers/rtc/Kconfig                           |   2 +-
+ drivers/rtc/rtc-cros-ec.c                     |   3 +-
+ .../linux/iio/common/cros_ec_sensors_core.h   |   3 +-
+ include/linux/mfd/cros_ec.h                   | 291 -----------
+ .../{mfd => platform_data}/cros_ec_commands.h |   0
+ include/linux/platform_data/cros_ec_proto.h   | 316 ++++++++++++
+ .../uapi/linux/cros_ec_chardev.h              |  21 +-
+ sound/soc/codecs/Kconfig                      |   4 +-
+ sound/soc/codecs/cros_ec_codec.c              |   4 +-
+ sound/soc/qcom/Kconfig                        |   2 +-
+ 55 files changed, 896 insertions(+), 759 deletions(-)
+ rename drivers/{mfd => platform/chrome}/cros_ec.c (85%)
+ create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
+ rename include/linux/{mfd => platform_data}/cros_ec_commands.h (100%)
+ create mode 100644 include/linux/platform_data/cros_ec_proto.h
+ rename drivers/mfd/cros_ec_dev.h => include/uapi/linux/cros_ec_chardev.h (50%)
+
 -- 
 2.20.1
 
