@@ -2,102 +2,114 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E57C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC34EC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3397A2063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AAA2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:07:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DCf6AIsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfF0HFc (ORCPT
+        id S1726480AbfF0HHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:05:32 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33285 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfF0HFb (ORCPT
+        Thu, 27 Jun 2019 03:07:21 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:65381 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfF0HHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:05:31 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hgOTI-0007Bx-DH; Thu, 27 Jun 2019 09:05:28 +0200
-Message-ID: <1561619128.4216.3.camel@pengutronix.de>
-Subject: Re: [PATCH] reset: Add driver for dispmix reset
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Fancy Fang <chen.fang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Cc:     "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Date:   Thu, 27 Jun 2019 09:05:28 +0200
-In-Reply-To: <AM6PR04MB49369AD1DE69A51B38471608F3E20@AM6PR04MB4936.eurprd04.prod.outlook.com>
-References: <20190625055557.7507-1-chen.fang@nxp.com>
-         <1561474623.5559.4.camel@pengutronix.de>
-         <AM6PR04MB49369AD1DE69A51B38471608F3E20@AM6PR04MB4936.eurprd04.prod.outlook.com>
+        Thu, 27 Jun 2019 03:07:20 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x5R778ra019578
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:07:08 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5R778ra019578
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561619228;
+        bh=gj7s9w7UjXz0QHPHPCGEcB7DjBVPqUTYuZyU7sdAJGw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DCf6AIsRzYlp5t1zwsJPkD6eGEu5QWqqV/2eaydEHdB15Wg8YhM883tol3tJU+a2M
+         lYJpBrRLro0MO5aKXO9saaQHvF8WJ8YoJxlD7R4Yiq3xPX3bEtgMGzpawIClNyDgoO
+         QnZdjfD0eiSXx9hqTNffy/Q8bjJbDK2NSGfPY47AE0fFlk6qP+NchGA/2SmgTbky1t
+         xVftm4d5SfI8cCvOADNu6IyxC46BVTflQxaYo8817ZVoW9azbu1jtt+2Ij2vaggPwk
+         10Am7HZ7CiWvTvOpaEH96Rg7j/7aHqjNPSCVNqNYm5Szc0Ato0iwBTREBUQ14kgwAy
+         DnmNRgW9t8Kjg==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id o2so446781uae.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 00:07:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAUzW9OtB08VtBjZIdYPRPsjhIzsR4I9NqhD9VjFbkZvf39yJAm5
+        bW34D3owarFE4+ijaa0orMFk+z9z77rD8MWG3SY=
+X-Google-Smtp-Source: APXvYqx824GHdql4BE5NM/JzpgGc4JoQsrkCC8hqQAOm3UzXYSdRRi1zarQ28eOqavgTIxG4QWRhxiFU9drmOTEF+WY=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr880005ual.109.1561619227668;
+ Thu, 27 Jun 2019 00:07:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190618030926.30616-1-yamada.masahiro@socionext.com> <1318390798.95477.1560838785550.JavaMail.zimbra@nod.at>
+In-Reply-To: <1318390798.95477.1560838785550.JavaMail.zimbra@nod.at>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 27 Jun 2019 16:06:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARA62uqi8rkDeJ=zjA6vnruTAH2VGOBd4=sQMhF+FHMLA@mail.gmail.com>
+Message-ID: <CAK7LNARA62uqi8rkDeJ=zjA6vnruTAH2VGOBd4=sQMhF+FHMLA@mail.gmail.com>
+Subject: Re: [PATCH v2] jffs2: remove C++ style comments from uapi header
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-26 at 06:46 +0000, Fancy Fang wrote:
-[...]
-> > The same goes for the clock soft enable bits on i.MX8MM. If those 
-> > bits actually control clock gates, they should not be described as 
-> > reset controls in the device tree.
+On Tue, Jun 18, 2019 at 3:20 PM Richard Weinberger <richard@nod.at> wrote:
 >
-> [FF] Make sense. The functions provided by the "dispmix reset" is more
-> likely to be a combination of a clock gating module and a reset
-> control than a standard reset controller. The reason why I choose
-> reset framework to implement this device is that: First, this module
-> is named as "dispmix reset" in the dispmix's design spec, so it gives
-> me the first impression that it should be acted as a reset controller.
-> And I'll check this with the IC designer.
-
-Thank you.
-
-> Second, the "dispmix reset" is separated from the CCM LPCG module
-> which is used as the only clock controller device for the whole
-> platform. So the CCM clock driver seems cannot cover this device.
-> Last, the "dispmix reset" is shared by all the submodules in the
-> dispmix, so I abstract this device to be a reset controller driver to
-> simplify the 'reset' logic for all the submodules drivers.
-
-Agreed on both points.
-
-> If using clock framework to cover this device, another driver needs to
-> be implemented. I'll take a close look at it to see if this can
-> happen.
-
-Yes, if my assumptions are correct, it would be good if this could be
-rewritten as a combined clock and reset driver. There are quite a few
-examples for this in drivers/clk already.
-
-[...]
-> > Is there any reason not to just use straight readl/writel besides 
-> > the automatic clock handling?
+> ----- Urspr=C3=BCngliche Mail -----
+> > Von: "Masahiro Yamada" <yamada.masahiro@socionext.com>
+> > An: "linux-mtd" <linux-mtd@lists.infradead.org>
+> > CC: "Boris Brezillon" <bbrezillon@kernel.org>, "Miquel Raynal" <miquel.=
+raynal@bootlin.com>, "Brian Norris"
+> > <computersforpeace@gmail.com>, "Vignesh Raghavendra" <vigneshr@ti.com>,=
+ "Marek Vasut" <marek.vasut@gmail.com>,
+> > "Masahiro Yamada" <yamada.masahiro@socionext.com>, "richard" <richard@n=
+od.at>, "David Woodhouse" <dwmw2@infradead.org>,
+> > "linux-kernel" <linux-kernel@vger.kernel.org>
+> > Gesendet: Dienstag, 18. Juni 2019 05:09:26
+> > Betreff: [PATCH v2] jffs2: remove C++ style comments from uapi header
 >
-> [FF] Use regmap is for simplifying the register modifications since
-> the register has no SET or CLR shadow, so when set or clear one bit,
-> the register needs to be read-and-modify. And besides, the register
-> access requires disp-apb clock open, and regmap can handle this
-> properly.
+> > Linux kernel tolerates C++ style comments these days. Actually, the
+> > SPDX License tags for .c files start with //.
+> >
+> > On the other hand, uapi headers are written in more strict C, where
+> > the C++ comment style is forbidden.
+> >
+> > I simply dropped these lines instead of fixing the comment style.
+> >
+> > This code has been always commented out since it was added around
+> > Linux 2.4.9 (i.e. commented out for more than 17 years).
+> >
+> > 'Maybe later...' will never happen.
+>
+> :-)
+>
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Acked-by: Richard Weinberger <richard@nod.at>
+>
+> Thanks,
+> //richard
 
-Ok, this makes sense to me.
 
-regards
-Philipp
+Will this be picked up for v5.3-rc1 ?
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
