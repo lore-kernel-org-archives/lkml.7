@@ -2,127 +2,129 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E79C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C19C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA43520659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:18:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="J2dMlcNP"
+	by mail.kernel.org (Postfix) with ESMTP id E84912133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:22:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561652565;
+	bh=XANE2VhVUGz0tCaYce+E3tgK+iSMPwffhn6oVDGjCZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X02+9bDSp5ggWjmB6WWLqr1HKIh8OSeYTeito/+RK437weOgmsV7XkWWn9hI7CXVW
+	 CGuuYOieYwmbo97bo+DiwwObz3ZjQB4ShM7mXW2GKas30MhwMD1oE1NxF/8YW+htIH
+	 X0wjDakBb9gVX+UAjev6WQ2iO2Pg0ANudIY/Qy6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfF0QS0 (ORCPT
+        id S1726525AbfF0QWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:18:26 -0400
-Received: from mail-eopbgr30050.outbound.protection.outlook.com ([40.107.3.50]:65462
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726464AbfF0QSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:18:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=LBJCwUQhZNZ7JO6Lm19Nly1Wj8bCpXKqTCKdgBXsd6H55hzx7W1wAb6hUJJrD5FqcHqpTPQWmGOjeeJB8iX/pkbU1eeUm2bF+4gSiCpHD3NQDYjzq9HHS7zfgVocvCuAlQZQxkhvFkyt3jKqK1xJXCcqBX6vSIItewtdUWpzMPc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UQKJZidBThddtQhWQZohKcjkCp3iYRBt7c0S6siQ09M=;
- b=UtnblwRey3svlmUCbu+2ebcVAuSz5M+zsn+H8ORaEAtxvjgk96dUT6WBtbwkfbuiBC3bcUK96/X+QfQh7GO/4zgdibmsu0eYLFCKZzvsQlth1qResb22s9dFROK5zbAkTX5ZOcpgmeXJbziLc3phdsi3SLaNm0i00WScr2FO9xE=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UQKJZidBThddtQhWQZohKcjkCp3iYRBt7c0S6siQ09M=;
- b=J2dMlcNPZlD5N3vpQW1JjZMZcMPSA86ZsmMs/EA5ArN364tGhM/lbJBxFeL8QjH9sUmtmFktOVRL7mywOKEaFOcd259xase/Xs5EwItur4p4WBEUMAcCj0JbdS9MN5foY/pEt0x+MnDGkFVMwyd7bcVx8mwkr8hnhSOMGkaySa4=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5886.eurprd05.prod.outlook.com (20.178.125.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Thu, 27 Jun 2019 16:18:22 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Thu, 27 Jun 2019
- 16:18:22 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Thu, 27 Jun 2019 12:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfF0QWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:22:43 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B7A32080C;
+        Thu, 27 Jun 2019 16:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561652562;
+        bh=XANE2VhVUGz0tCaYce+E3tgK+iSMPwffhn6oVDGjCZw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LVg0EcdyXbOBXgTkd2XcOQaBxPyrPhiaqbNwgyqfwF/QwNgvl6UCKJ50T0o/RjiC4
+         sDeBKd+ZeEM/5/qPs4soGGqNMWpA0kr7j5WkTng2+O1OeDYYMcO0fMrlHY7/x17Kli
+         kVFw/fJcFWHDzB35wrdWFUO0CZj8yp0b4LBvKvtA=
+Date:   Thu, 27 Jun 2019 17:22:37 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Ganapatrao Kulkarni <gkulkarni@marvell.com>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH 03/25] mm: remove hmm_devmem_add_resource
-Thread-Topic: [PATCH 03/25] mm: remove hmm_devmem_add_resource
-Thread-Index: AQHVLBqRvJE5RWoAFEuwP/I4qHQ7paavr6GA
-Date:   Thu, 27 Jun 2019 16:18:22 +0000
-Message-ID: <20190627161813.GB9499@mellanox.com>
-References: <20190626122724.13313-1-hch@lst.de>
- <20190626122724.13313-4-hch@lst.de>
-In-Reply-To: <20190626122724.13313-4-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR02CA0011.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::24) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.199.206.50]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c526e6d-f839-4214-2861-08d6fb1b12e9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5886;
-x-ms-traffictypediagnostic: VI1PR05MB5886:
-x-microsoft-antispam-prvs: <VI1PR05MB5886C35E617535FD2443239DCFFD0@VI1PR05MB5886.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(396003)(376002)(39860400002)(199004)(189003)(6436002)(66556008)(81166006)(99286004)(2616005)(3846002)(8936002)(6512007)(33656002)(6246003)(68736007)(4326008)(102836004)(53936002)(4744005)(8676002)(6486002)(73956011)(86362001)(81156014)(66946007)(478600001)(5660300002)(36756003)(54906003)(1076003)(186003)(66446008)(25786009)(66066001)(316002)(229853002)(71190400001)(76176011)(6116002)(26005)(66476007)(476003)(2906002)(7736002)(446003)(386003)(52116002)(14454004)(6916009)(256004)(305945005)(486006)(64756008)(11346002)(6506007)(7416002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5886;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MPZH6fxej22oS7mLYEZmxFyn20waja4eRFeHmir8gtV1hjF9WJIgHwtjY4C36d2npItR/CWyxfgPjCQ+e19S8i/WruQpqNIHjrH8CZ+IYxP/SAf5mBH7mWcVbuKjO5vst38yOem1FSeiQc+UM2HMfjmCGzZa1IsRZcLs0/bJZFvSDMd7v8/irZB5vT9QtJv1uBJ3h7xdhz/QMy1Uw26YL0jRvCcMQ/atQgGDIJsmelkfWdS/PbSyMm+AYLLH079WJ+KZtdpsYfSGGYocok7klunoms3nZiojM8Wl2c8TBBunzsbCb3Y4kJbM5C/sD1C0N8RqfQHigF8REGgBv/QvoepFXUnYnPM6uoUomO356Lzf/kFxS5R31l4fpw9RbxA78tBT/LQENWHD6dP3CjqH5nHlGfE0H/4aTEuIRyx7Vjo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <0E26856B4495E64E8EFED3F814341B4B@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Will.Deacon@arm.com" <Will.Deacon@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "jnair@caviumnetworks.com" <jnair@caviumnetworks.com>,
+        "Robert.Richter@cavium.com" <Robert.Richter@cavium.com>,
+        "Jan.Glauber@cavium.com" <Jan.Glauber@cavium.com>,
+        "gklkml16@gmail.com" <gklkml16@gmail.com>
+Subject: Re: [PATCH 1/2] Documentation: perf: Update documentation for
+ ThunderX2 PMU uncore driver
+Message-ID: <20190627162236.y3wb5sle6yjbwtzm@willie-the-truck>
+References: <1560534144-13896-1-git-send-email-gkulkarni@marvell.com>
+ <1560534144-13896-2-git-send-email-gkulkarni@marvell.com>
+ <20190627100118.nfveq4oktomqybtx@willie-the-truck>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c526e6d-f839-4214-2861-08d6fb1b12e9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 16:18:22.2670
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5886
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627100118.nfveq4oktomqybtx@willie-the-truck>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 02:27:02PM +0200, Christoph Hellwig wrote:
-> This function has never been used since it was first added to the kernel
-> more than a year and a half ago, and if we ever grow a consumer of the
-> MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
-> directly.
->=20
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
->  include/linux/hmm.h |  3 ---
->  mm/hmm.c            | 50 ---------------------------------------------
->  2 files changed, 53 deletions(-)
+On Thu, Jun 27, 2019 at 11:01:18AM +0100, Will Deacon wrote:
+> On Fri, Jun 14, 2019 at 05:42:45PM +0000, Ganapatrao Kulkarni wrote:
+> > From: Ganapatrao Kulkarni <ganapatrao.kulkarni@marvell.com>
+> > 
+> > Add documentation for Cavium Coherent Processor Interconnect (CCPI2) PMU.
+> > 
+> > Signed-off-by: Ganapatrao Kulkarni <gkulkarni@marvell.com>
+> > ---
+> >  Documentation/perf/thunderx2-pmu.txt | 20 +++++++++++---------
+> >  1 file changed, 11 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/Documentation/perf/thunderx2-pmu.txt b/Documentation/perf/thunderx2-pmu.txt
+> > index dffc57143736..62243230abc3 100644
+> > --- a/Documentation/perf/thunderx2-pmu.txt
+> > +++ b/Documentation/perf/thunderx2-pmu.txt
+> > @@ -2,24 +2,26 @@ Cavium ThunderX2 SoC Performance Monitoring Unit (PMU UNCORE)
+> >  =============================================================
+> >  
+> >  The ThunderX2 SoC PMU consists of independent, system-wide, per-socket
+> > -PMUs such as the Level 3 Cache (L3C) and DDR4 Memory Controller (DMC).
+> > +PMUs such as the Level 3 Cache (L3C), DDR4 Memory Controller (DMC) and
+> > +Cavium Coherent Processor Interconnect (CCPI2).
+> >  
+> >  The DMC has 8 interleaved channels and the L3C has 16 interleaved tiles.
+> >  Events are counted for the default channel (i.e. channel 0) and prorated
+> >  to the total number of channels/tiles.
+> >  
+> > -The DMC and L3C support up to 4 counters. Counters are independently
+> > -programmable and can be started and stopped individually. Each counter
+> > -can be set to a different event. Counters are 32-bit and do not support
+> > -an overflow interrupt; they are read every 2 seconds.
+> > +The DMC, L3C support up to 4 counters and CCPI2 support up to 8 counters.
+> 
+> The DMC and L3C support up to 4 counters, while the CCPI2 supports up to 8
+> counters.
+> 
+> > +Counters are independently programmable and can be started and stopped
+> > +individually. Each counter can be set to a different event. DMC and L3C
+> > +Counters are 32-bit and do not support an overflow interrupt; they are read
+> 
+> Counters -> counters
+> 
+> > +every 2 seconds. CCPI2 counters are 64-bit.
+> 
+> Assuming CCPI2 also doesn't support an overflow interrupt, I'd reword these
+> two sentences as:
+> 
+>   None of the counters support an overflow interrupt and therefore sampling
+>   events are unsupported. The DMC and L3C counters are 32-bit and read every
+>   2 seconds. The CCPI2 counters are 64-bit and assumed not to overflow in
+>   normal operation.
 
-This should be squashed to the new earlier patch?
+Mark reminded me that these are system PMUs and therefore sampling is
+unsupported irrespective of the presence of an overflow interrupt, so you
+can drop that part from the text.
 
-Jason
+Sorry for the confusion,
+
+Will
