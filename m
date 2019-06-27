@@ -2,73 +2,52 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D0DC48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5CBC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F80521726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cZPNq+RC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XjGF5xsz"
+	by mail.kernel.org (Postfix) with ESMTP id 9F906218A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561610714;
+	bh=I8RajpbaAK+4wyrZn0EPAIrA0weDhNAvvH0B13QKyUA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QlgKo2MWZGhuDXnmWWQycp1XllmhPHbzPYRcJknq4MH/vaPAUQmvaHmd8SH2Feg0F
+	 BnHCgyl3MgTRynR5P6ekg6oypAI5q4H5/C1M+k8nklzAq0OvfM9MUmqAGL9jbGDlvV
+	 yfqvahTLrXDdlKS+w1WngMCa6WiJLOp0q8KA+ssg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfF0EpH (ORCPT
+        id S1727169AbfF0EpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 00:45:07 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41640 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfF0EpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 00:45:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2B6E760767; Thu, 27 Jun 2019 04:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561610705;
-        bh=YS6o769+NUXJLCLSg99xSxR1Jeof3nDcPuh33f70AFc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZPNq+RCBv8XaY4er9sSYa4wK/CsKnmkt1jBm3TBET6QkcMwgCvumhLhLF/Gq2yU8
-         g83z3rvNquEojpE0HC0Zzk8DfGtqRXT4JUk54NPV0DvyryNmG/74nWsCbaEyYusRNs
-         tfbgBm7obHc0Wx94Eesn+5EdzbNmdBkr1V9Ye7l0=
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 27 Jun 2019 00:45:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfF0EpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 00:45:12 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D3ED60ADE;
-        Thu, 27 Jun 2019 04:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561610703;
-        bh=YS6o769+NUXJLCLSg99xSxR1Jeof3nDcPuh33f70AFc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjGF5xszH+AjtNIA603kW8HPS4l/wXdvy6UIVTYNa3F8tLFpOSgRRwSMdZwMPkAy2
-         w62FKofse5h8zJD5ahRc09ED+rIHds+NZ9NYVfyeruvUCVBI/bRWTHlOTmXpgDNq6z
-         QsJX6YmvaUOTQxI9zY2gN3gSLaSIL33giSHQ8iGw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D3ED60ADE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [RESEND PATCHv4 1/1] coresight: Do not default to CPU0 for missing CPU phandle
-Date:   Thu, 27 Jun 2019 10:14:42 +0530
-Message-Id: <0a20cf9eb34b14a191381af98af1694bbc222734.1561610498.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1561610498.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1561610498.git.saiprakash.ranjan@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B4421726;
+        Thu, 27 Jun 2019 04:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561610711;
+        bh=I8RajpbaAK+4wyrZn0EPAIrA0weDhNAvvH0B13QKyUA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wfhQDHKUvjUML7fCCCmdSXt+UDqj9FwwR1gZVAW3p+8nvTsUklt0aecCbDXfRI4Ry
+         kVjXeo3pFcraqZnYFumADELrOC3R0s6a+MYAg5i9G6Y3N8syJmM9fPacvJK8BD0jlH
+         BkwLFIgQ2bksfLaItLrxhyvXWbK9BTTzC+/7uxE0=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v2 0/8] vsyscall xonly mode
+Date:   Wed, 26 Jun 2019 21:45:01 -0700
+Message-Id: <cover.1561610354.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,172 +55,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Coresight platform support assumes that a missing "cpu" phandle
-defaults to CPU0. This could be problematic and unnecessarily binds
-components to CPU0, where they may not be. Let us make the DT binding
-rules a bit stricter by not defaulting to CPU0 for missing "cpu"
-affinity information.
+Hi all-
 
-Also in coresight etm and cpu-debug drivers, abort the probe
-for such cases.
+This adds a new "xonly" mode for vsyscalls and makes it the default.
+xonly is a bit more secure -- Kees knows about an exploit that relied on
+read access to the vsyscall page.  It's also nicer from a paging
+perspective, as it doesn't require user access to any of the kernel
+address space as far as the CPU is concerned.  This would, for example,
+allow a much simpler implementation of per-process vsyscall disabling.
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- .../bindings/arm/coresight-cpu-debug.txt      |  4 ++--
- .../devicetree/bindings/arm/coresight.txt     |  8 +++++---
- .../hwtracing/coresight/coresight-cpu-debug.c |  3 +++
- drivers/hwtracing/coresight/coresight-etm3x.c |  3 +++
- drivers/hwtracing/coresight/coresight-etm4x.c |  3 +++
- .../hwtracing/coresight/coresight-platform.c  | 20 +++++++++----------
- 6 files changed, 26 insertions(+), 15 deletions(-)
+I will follow up with two non-x86 changes that are related but have
+no dependencies.
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-index 298291211ea4..f1de3247c1b7 100644
---- a/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-@@ -26,8 +26,8 @@ Required properties:
- 		processor core is clocked by the internal CPU clock, so it
- 		is enabled with CPU clock by default.
- 
--- cpu : the CPU phandle the debug module is affined to. When omitted
--	the module is considered to belong to CPU0.
-+- cpu : the CPU phandle the debug module is affined to. Do not assume it
-+        to default to CPU0 if omitted.
- 
- Optional properties:
- 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index 8a88ddebc1a2..fcc3bacfd8bc 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -59,6 +59,11 @@ its hardware characteristcs.
- 
- 	* port or ports: see "Graph bindings for Coresight" below.
- 
-+* Additional required property for Embedded Trace Macrocell (version 3.x and
-+  version 4.x):
-+	* cpu: the cpu phandle this ETM/PTM is affined to. Do not
-+	  assume it to default to CPU0 if omitted.
-+
- * Additional required properties for System Trace Macrocells (STM):
- 	* reg: along with the physical base address and length of the register
- 	  set as described above, another entry is required to describe the
-@@ -87,9 +92,6 @@ its hardware characteristcs.
- 	* arm,cp14: must be present if the system accesses ETM/PTM management
- 	  registers via co-processor 14.
- 
--	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
--	  source is considered to belong to CPU0.
--
- * Optional property for TMC:
- 
- 	* arm,buffer-size: size of contiguous buffer space for TMC ETR
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index 07a1367c733f..58bfd6319f65 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
- 		return -ENOMEM;
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	if (per_cpu(debug_drvdata, drvdata->cpu)) {
- 		dev_err(dev, "CPU%d drvdata has already been initialized\n",
- 			drvdata->cpu);
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-index 225c2982e4fe..e2cb6873c3f2 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-@@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 	}
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 7fe266194ab5..7bcac8896fc1 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 	spin_lock_init(&drvdata->spinlock);
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu < 0)
-+		return drvdata->cpu;
-+
- 	desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 3c5ceda8db24..cf580ffbc27c 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
- 	struct device_node *dn;
- 
- 	if (!dev->of_node)
--		return 0;
-+		return -ENODEV;
-+
- 	dn = of_parse_phandle(dev->of_node, "cpu", 0);
--	/* Affinity defaults to CPU0 */
- 	if (!dn)
--		return 0;
-+		return -ENODEV;
-+
- 	cpu = of_cpu_node_to_id(dn);
- 	of_node_put(dn);
- 
--	/* Affinity to CPU0 if no cpu nodes are found */
--	return (cpu < 0) ? 0 : cpu;
-+	return cpu;
- }
- 
- /*
-@@ -310,7 +310,7 @@ of_get_coresight_platform_data(struct device *dev,
- 
- static inline int of_coresight_get_cpu(struct device *dev)
- {
--	return 0;
-+	return -ENODEV;
- }
- #endif
- 
-@@ -734,14 +734,14 @@ static int acpi_coresight_get_cpu(struct device *dev)
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
- 
- 	if (!adev)
--		return 0;
-+		return -ENODEV;
- 	status = acpi_get_parent(adev->handle, &cpu_handle);
- 	if (ACPI_FAILURE(status))
--		return 0;
-+		return -ENODEV;
- 
- 	cpu = acpi_handle_to_logical_cpuid(cpu_handle);
- 	if (cpu >= nr_cpu_ids)
--		return 0;
-+		return -ENODEV;
- 	return cpu;
- }
- 
-@@ -769,7 +769,7 @@ acpi_get_coresight_platform_data(struct device *dev,
- 
- static inline int acpi_coresight_get_cpu(struct device *dev)
- {
--	return 0;
-+	return -ENODEV;
- }
- #endif
- 
+Changes from v1:
+ - Minor cleanups (Kees)
+ - Add a searchable message when a vsyscall read is denied (Kees)
+ - The test case is vastly improved
+ - Get rid of the extra gate vma object
+ - Add the __ro_after_init patch
+
+Andy Lutomirski (8):
+  x86/vsyscall: Remove the vsyscall=native documentation
+  x86/vsyscall: Add a new vsyscall=xonly mode
+  x86/vsyscall: Show something useful on a read fault
+  x86/vsyscall: Document odd SIGSEGV error code for vsyscalls
+  selftests/x86/vsyscall: Verify that vsyscall=none blocks execution
+  x86/vsyscall: Change the default vsyscall mode to xonly
+  x86/vsyscall: Add __ro_after_init to global variables
+  selftests/x86: Add a test for process_vm_readv() on the vsyscall page
+
+ .../admin-guide/kernel-parameters.txt         |  11 +-
+ arch/x86/Kconfig                              |  35 +++--
+ arch/x86/entry/vsyscall/vsyscall_64.c         |  37 +++++-
+ arch/x86/include/asm/vsyscall.h               |   6 +-
+ arch/x86/mm/fault.c                           |  18 ++-
+ tools/testing/selftests/x86/test_vsyscall.c   | 120 ++++++++++++++----
+ 6 files changed, 174 insertions(+), 53 deletions(-)
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.21.0
 
