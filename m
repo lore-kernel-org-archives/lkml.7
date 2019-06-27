@@ -2,79 +2,92 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB02EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2B2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA4D2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4312084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:30:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n8itDAK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfF0M3i (ORCPT
+        id S1726930AbfF0Mam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 08:29:38 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:60120 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfF0M3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 08:29:37 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 30FF42001CC;
-        Thu, 27 Jun 2019 14:29:36 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 229A220010D;
-        Thu, 27 Jun 2019 14:29:36 +0200 (CEST)
-Received: from fsr-ub1864-103.ea.freescale.net (fsr-ub1864-103.ea.freescale.net [10.171.82.17])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 83C95205DB;
-        Thu, 27 Jun 2019 14:29:35 +0200 (CEST)
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-To:     jaswinder.singh@linaro.org, jassisinghbrar@gmail.com
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        shengjiu.wang@nxp.com, o.rempel@pengutronix.de,
-        daniel.baluta@gmail.com, Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [RESEND PATCH v2] mailbox: imx: Clear GIEn bit at shutdown
-Date:   Thu, 27 Jun 2019 15:29:27 +0300
-Message-Id: <20190627122927.9041-1-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 27 Jun 2019 08:30:42 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52838 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfF0Mal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 08:30:41 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RCOK1m031962;
+        Thu, 27 Jun 2019 12:30:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=ipk8d5AQ/zqe9jL5wZSKQYUV3pOPXWHuiuA2nj7XOY8=;
+ b=n8itDAK18wwSXLo4BzgEMFFBDuG9OQsmUhltNoZycuwPKS7JEuWwU0aXjBdqlsYKgXeH
+ dcgkVqIiBE6ODSLiPNQXRk3rIKgtV46NaQ8AhQpzC/fRadCppaRrcjbtbuwh1wRLXYom
+ SnxPjdpQXYSR6kVHq27LHetl1q9Ps7GVT1LS3hxA8r8WvXZgNRlz/V6zCNug2UceGzkS
+ uEmBwTe9MLpXlM58WfLodm6iPrBVKHtL7D6zMYvQwHZAvQwZTOKVS1YECgdUET9X/gVl
+ w9l8bnNqVHX393ogPgNwjEZ6wwhIL6PoaR+S48FUziqk0+HqTO1wkqQyZpEr3tal3vti 3w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2t9c9q00y6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 12:30:18 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RCTViM163917;
+        Thu, 27 Jun 2019 12:30:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2tat7dbggj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 12:30:17 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5RCUFHQ016380;
+        Thu, 27 Jun 2019 12:30:15 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Jun 2019 05:30:14 -0700
+Date:   Thu, 27 Jun 2019 15:30:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lukas Schneider <lukas.s.schneider@fau.de>
+Cc:     mchehab@kernel.org, gregkh@linuxfoundation.org,
+        hverkuil-cisco@xs4all.nl, st5pub@yandex.ru,
+        gabrielfanelli61@gmail.com, code@wizofe.uk,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Jannik Moritz <jannik.moritz@fau.de>,
+        linux-kernel@i4.cs.fau.de
+Subject: Re: [PATCH] media: bcm2048: Macros with complex values should be
+ enclosed in parentheses
+Message-ID: <20190627123006.GC19015@kadam>
+References: <20190627121515.32029-1-lukas.s.schneider@fau.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627121515.32029-1-lukas.s.schneider@fau.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=850
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906270147
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=902 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906270147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GIEn is enabled at startup for RX doorbell mailboxes so
-we need to clear the bit at shutdown in order to avoid
-leaving the interrupt line enabled.
+This breaks the build.  :(
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-Changes since v1:
- - separate patch from inital series of creating DSP IPC driver
- - add Oleksij reviewed-by
- - include Jassi's linaro email
-
- drivers/mailbox/imx-mailbox.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 25be8bb5e371..9f74dee1a58c 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -217,8 +217,8 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
- 	if (cp->type == IMX_MU_TYPE_TXDB)
- 		tasklet_kill(&cp->txdb_tasklet);
- 
--	imx_mu_xcr_rmw(priv, 0,
--		   IMX_MU_xCR_TIEn(cp->idx) | IMX_MU_xCR_RIEn(cp->idx));
-+	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx) |
-+		       IMX_MU_xCR_RIEn(cp->idx) | IMX_MU_xCR_GIEn(cp->idx));
- 
- 	free_irq(priv->irq, chan);
- }
--- 
-2.17.1
+regards,
+dan carpenter
 
