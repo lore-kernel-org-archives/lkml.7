@@ -2,171 +2,107 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ECFC5B576
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325B0C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C534214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:25:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561670736;
-	bh=EjvaGRxvgjTVVJC4JpEbCUSHMRIJVfuSFx7KyUNts0U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aDiM9NZS7+n2KBt2R1P63cXgZ+UBHRIxveoJlFG/S4chtlZGz4pEZnfANyMvBWRkS
-	 3aC5+4dNStpCyXaHyQqGhHHWSTGz7y/x2249d5TveEglCjQd/Pz31kLm2NEus1kGkd
-	 y+gT5JSqU4m5VV5wHHb/Lou/lDAWYZyrh/Z9EXPY=
+	by mail.kernel.org (Postfix) with ESMTP id 00ABF208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:30:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HHIbNAl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfF0VZf (ORCPT
+        id S1726523AbfF0VaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:25:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45877 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0VZe (ORCPT
+        Thu, 27 Jun 2019 17:30:19 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36177 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfF0VaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:25:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so1833563pfq.12;
-        Thu, 27 Jun 2019 14:25:34 -0700 (PDT)
+        Thu, 27 Jun 2019 17:30:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k8so1973769plt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l3YW+2jcLgYN4oaHRnnDv11W/CoBacLZ8zMmJkEioDc=;
+        b=HHIbNAl2DMs1IW6sciIhs6PFHnrTCBjgCkjuj06Oo0rz7KROq+01ZEgs3EYfCyWt9g
+         X/fOp37LHF3JlyHWre/fn05fWjbJ+DoE+W8AGoNZ/FLVyYFSwD3xRbSzphAvXyus91nC
+         ZAte9fqAIHU303twh6upCBqPVo0LL6sWpZklezw/L/+AysyP8a6XojjW6NPUBwIPDg2/
+         26cx/z1HcStpgO4xq2HuKcVsTmA/vrfVz4yHnaApiXWr8j6I0Ix9Z1yGXMiJT+yc14dN
+         SqAyl2meWSIQU1nFR2GIjLS0O8pnZFp+eKLZFRQvHd0PAL0Jk3BzNjBnKFADnOOatin4
+         kzrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mcIz0jVRYTUruhG/KoFDVf1SI7yQGass2g5eWReCXuc=;
-        b=VUJkDMW4orOAYGtS10zzEXJxw8ya6LPyOH+uVOe08eu3/htXvrF2KgN7VCGI0l+UIx
-         Df4SGisiSNDCCslaFtc5naTwJlmcmEdvcY0plVod19ep4gxYne3uWUDx/qKQSp6iA0Fz
-         1wt1Tc7b1Rlqww1BlY0RXbAf+F8hLTKvdfa0KcahNiptvCUcTpGdfrut3yLoDrbiH5EH
-         XLoLfuXnAw+GQJ/KNRchsvrcEckmHOA7SK0W0ss7vYQ3Zq5nRrLG47Zq1ROGZuOzye19
-         b0vVfM/iYzCmDvsdfN3ph//Iu3lchMpUrxwpcRTs36daAEZ64zb97P36gQ+F1bIwXju0
-         fWew==
-X-Gm-Message-State: APjAAAXwhYpBsmt+To12Go9gGVr34GZ72G8XD/GuhA1rDwhKGmLFo6vg
-        jup2vx3eVl5X6AUhGhCvNCA=
-X-Google-Smtp-Source: APXvYqyGsCu1nPJ5bWmdfsOj/NIWWCfOB1DP91SvS5iulJBr8pRy1i6aED362EmiH8cSwbKJ5LuQ2w==
-X-Received: by 2002:a65:538d:: with SMTP id x13mr5857316pgq.190.1561670733735;
-        Thu, 27 Jun 2019 14:25:33 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id a25sm41703pfn.1.2019.06.27.14.25.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 14:25:32 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DF854403ED; Thu, 27 Jun 2019 21:25:31 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 21:25:31 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Waiman Long <longman@redhat.com>,
-        Masami Hiramatsu <mhiramat@redhat.com>,
-        Masoud Asgharifard Sharbiani <masouds@google.com>
-Cc:     Roman Gushchin <guro@fb.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
-Message-ID: <20190627212531.GF19023@42.do-not-panic.com>
-References: <20190624174219.25513-1-longman@redhat.com>
- <20190624174219.25513-3-longman@redhat.com>
- <20190626201900.GC24698@tower.DHCP.thefacebook.com>
- <063752b2-4f1a-d198-36e7-3e642d4fcf19@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l3YW+2jcLgYN4oaHRnnDv11W/CoBacLZ8zMmJkEioDc=;
+        b=Vz4lPEyEbjB2m3FgnYb6rGYa7Q3uUJvjPOXHHxqIUQqg3m/dMi6WjJBkjWBsnw7Rh4
+         mog5OVNZtLvIun1FHchOGAas1O13ZemfN/OuTZYSrcTg7mp8NS8z1/wAyZqjWZBMOfmG
+         KRQV4/TcQFAYZYx56+4ibk+tg0Z3mUrY9bDev1Xz+7Vb9QmJ3zZx7TfSu1cN5tyMrnef
+         UIz86UNHI+/oE3uypzkBUMuuoV7EiqGV/ebxKViHVCYbS8VvuCZ9dBKm7NvUQs1Eyg6u
+         bDyHLPCBUnVTXci8IC90Er58xALx0tieVRjj5AQgsc0sCAnm1URIok7e3PVz5rNcZ7xv
+         fvcA==
+X-Gm-Message-State: APjAAAW9hCNy5kahQymdn2rR7kiXLYMI2HZijIhvIjdKOGjtwMrtoojy
+        Lh8ANXmfvO7K4Sfq+0jEoNMwjgCf9jTC7AS62XVUQRBXmeE=
+X-Google-Smtp-Source: APXvYqyUPXnMqtFiZgEBNqGmZ1gbO1OGNJO0ge+IQZz6/jmXf6xraTK3+4sqd1/0kiqwzcG31BNkPRvjuAuBYiOV/sg=
+X-Received: by 2002:a17:902:4aa3:: with SMTP id x32mr6831689pld.119.1561671017667;
+ Thu, 27 Jun 2019 14:30:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <063752b2-4f1a-d198-36e7-3e642d4fcf19@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190627191448.110756-1-natechancellor@gmail.com>
+In-Reply-To: <20190627191448.110756-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 27 Jun 2019 14:30:06 -0700
+Message-ID: <CAKwvOdkmacZ0Pu+KcmHb+-e4x0DZs1=FfAKHSo-2xf9LWtknAQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Add ability to test Clang's integrated assembler
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Dmitry Golovin <dima@golovin.in>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 04:57:50PM -0400, Waiman Long wrote:
-> On 6/26/19 4:19 PM, Roman Gushchin wrote:
-> >>  
-> >> +#ifdef CONFIG_MEMCG_KMEM
-> >> +static void kmem_cache_shrink_memcg(struct mem_cgroup *memcg,
-> >> +				    void __maybe_unused *arg)
-> >> +{
-> >> +	struct kmem_cache *s;
-> >> +
-> >> +	if (memcg == root_mem_cgroup)
-> >> +		return;
-> >> +	mutex_lock(&slab_mutex);
-> >> +	list_for_each_entry(s, &memcg->kmem_caches,
-> >> +			    memcg_params.kmem_caches_node) {
-> >> +		kmem_cache_shrink(s);
-> >> +	}
-> >> +	mutex_unlock(&slab_mutex);
-> >> +	cond_resched();
-> >> +}
-> > A couple of questions:
-> > 1) how about skipping already offlined kmem_caches? They are already shrunk,
-> >    so you probably won't get much out of them. Or isn't it true?
-> 
-> I have been thinking about that. This patch is based on the linux tree
-> and so don't have an easy to find out if the kmem caches have been
-> shrinked. Rebasing this on top of linux-next, I can use the
-> SLAB_DEACTIVATED flag as a marker for skipping the shrink.
-> 
-> With all the latest patches, I am still seeing 121 out of a total of 726
-> memcg kmem caches (1/6) that are deactivated caches after system bootup
-> one of the test systems. My system is still using cgroup v1 and so the
-> number may be different in a v2 setup. The next step is probably to
-> figure out why those deactivated caches are still there.
-> 
-> > 2) what's your long-term vision here? do you think that we need to shrink
-> >    kmem_caches periodically, depending on memory pressure? how a user
-> >    will use this new sysctl?
-> Shrinking the kmem caches under extreme memory pressure can be one way
-> to free up extra pages, but the effect will probably be temporary.
-> > What's the problem you're trying to solve in general?
-> 
-> At least for the slub allocator, shrinking the caches allow the number
-> of active objects reported in slabinfo to be more accurate. In addition,
-> this allow to know the real slab memory consumption. I have been working
-> on a BZ about continuous memory leaks with a container based workloads.
+On Thu, Jun 27, 2019 at 12:15 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> There are some people interested in experimenting with Clang's
+> integrated assembler. To make it easy to do so without source
+> modification, allow the user to specify 'AS=clang' as part of the
+> make command to avoid adding '-no-integrated-as' to the {A,C}FLAGS.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/577
+> Suggested-by: Dmitry Golovin <dima@golovin.in>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Makefile b/Makefile
+> index 5102b2bbd224..d77481129339 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -527,7 +527,9 @@ endif
+>  ifneq ($(GCC_TOOLCHAIN),)
+>  CLANG_FLAGS    += --gcc-toolchain=$(GCC_TOOLCHAIN)
+>  endif
+> +ifeq ($(shell $(AS) --version 2>&1 | head -n 1 | grep clang),)
+>  CLANG_FLAGS    += -no-integrated-as
+> +endif
 
-So.. this is still a work around?
-
-> The ability to shrink caches allow us to get a more accurate memory
-> consumption picture. Another alternative is to turn on slub_debug which
-> will then disables all the per-cpu slabs.
-
-So this is a debugging mechanism?
-
-> Anyway, I think this can be useful to others that is why I posted the patch.
-
-Since this is debug stuff, please add this to /proc/sys/debug/ instead.
-That would reflect the intention, and would avoid the concern that folks
-in production would use these things.
-
-Since we only have 2 users of /proc/sys/debug/ I am now wondering if
-would be best to add a new sysctl debug taint flag. This way bug
-reports with these stupid knobs can got to /dev/null inbox for bug
-reports.
-
-Masami, /proc/sys/debug/kprobes-optimization is debug. Would you be OK
-to add the taint for it too?
-
-Masoud, /proc/sys/debug/exception-trace seems to actually be enabled
-by default, and its goal seems to be to enable disabling it. So I
-don't think it would make sense to taint there.
-
-So.. maybe we need something /proc/sys/taints/ or
-/proc/sys/debug/taints/ so its *very* clear this is by no way ever
-expected to be used in production.
-
-May even be good to long term add a symlink for vm/drop_caches there
-as well?
-
-  Luis
+This is a nice suggestion and solution.  Thanks Dima and Nathan.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+-- 
+Thanks,
+~Nick Desaulniers
