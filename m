@@ -7,109 +7,120 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7F1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02ADC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A2920B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9C8214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfF0IBk (ORCPT
+        id S1726635AbfF0IBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:01:40 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:57889 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726101AbfF0IBi (ORCPT
+        Thu, 27 Jun 2019 04:01:43 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:51769 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726524AbfF0IBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:01:38 -0400
-X-UUID: 1854cc0e78d043c5841c57b9d9beb845-20190627
-X-UUID: 1854cc0e78d043c5841c57b9d9beb845-20190627
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Thu, 27 Jun 2019 04:01:41 -0400
+X-UUID: bc444a135eeb4985afb7210d356ef3b4-20190627
+X-UUID: bc444a135eeb4985afb7210d356ef3b4-20190627
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1741848921; Thu, 27 Jun 2019 16:01:32 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 27 Jun
- 2019 16:01:30 +0800
+        with ESMTP id 836457811; Thu, 27 Jun 2019 16:01:25 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 27 Jun
+ 2019 16:01:23 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Thu, 27 Jun 2019 16:01:28 +0800
+ 15.0.1395.4 via Frontend Transport; Thu, 27 Jun 2019 16:01:22 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Ian Campbell <ijc+devicetree@hellion.org.uk>,
         <linux-pwm@vger.kernel.org>, David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>
+        Matthias Brugger <matthias.bgg@gmail.com>
 CC:     Jitao Shi <jitao.shi@mediatek.com>,
         Thierry Reding <treding@nvidia.com>,
         Ajay Kumar <ajaykumar.rs@samsung.com>,
         Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
         Sean Paul <seanpaul@chromium.org>,
-        "Vincent Palatin" <vpalatin@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
         Andy Yan <andy.yan@rock-chips.com>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Russell King <rmk+kernel@arm.linux.org.uk>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dri-devel@lists.freedesktop.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <srv_heupstream@mediatek.com>,
-        "Sascha Hauer" <kernel@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v5 7/7] drm: mediatek: adjust dsi and mipi_tx probe sequence
-Date:   Thu, 27 Jun 2019 16:01:15 +0800
-Message-ID: <20190627080116.40264-8-jitao.shi@mediatek.com>
+Subject: [v5 3/7] drm/mediatek: add dsi reg commit disable control
+Date:   Thu, 27 Jun 2019 16:01:11 +0800
+Message-ID: <20190627080116.40264-4-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190627080116.40264-1-jitao.shi@mediatek.com>
 References: <20190627080116.40264-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24720.003
-X-TM-AS-Result: No-5.013200-8.000000-10
-X-TMASE-MatchedRID: jDDvEWr+SwHYi2pRKW3Q1vqifdI85BZh3WFaxVW7M2hwkdIrVt8X1WMg
-        VHfStGn65UUUZCVUbO+bHAuQ1dUnuWJZXQNDzktSGjzBgnFZvQ4zAx8HYox0h0YlGywuH9uc+rE
-        c9YP7ZaPi8zVgXoAltmHJPdY2OmlS0C1sQRfQzEHEQdG7H66TyH4gKq42LRYk9Tu3ibJR6eVOyv
-        c/Wa4OW6RXKfY/AJJQK/xHXrr321p+3BndfXUhXQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--5.013200-8.000000
-X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24720.003
-X-TM-SNTS-SMTP: FEDE5F3E307DE948241EF76F11C72F417CD4B7A4639B3C4CB141BA5B401DE9052000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mtk_mipi_tx is the phy of mtk_dsi.
-mtk_dsi get the phy(mtk_mipi_tx) in probe().
+New DSI IP has shadow register and working reg. The register
+values are writen to shadow register. And then trigger with
+commit reg, the register values will be moved working register.
 
-So,  mtk_mipi_tx init should be ahead of mtk_dsi. Or mtk_dsi will
-defer to wait mtk_mipi_tx probe done.
+This fucntion is defualt on. But this driver doesn't use this
+function. So add the disable control.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 57ce4708ef1b..fc809a61fab9 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -640,8 +640,8 @@ static struct platform_driver * const mtk_drm_drivers[] = {
- 	&mtk_disp_rdma_driver,
- 	&mtk_dpi_driver,
- 	&mtk_drm_platform_driver,
--	&mtk_dsi_driver,
- 	&mtk_mipi_tx_driver,
-+	&mtk_dsi_driver,
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index bd37d823c762..6b6550926db6 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -131,6 +131,10 @@
+ #define VM_CMD_EN			BIT(0)
+ #define TS_VFP_EN			BIT(5)
+ 
++#define DSI_SHADOW_DEBUG	0x190U
++#define FORCE_COMMIT			BIT(0)
++#define BYPASS_SHADOW			BIT(1)
++
+ #define CONFIG				(0xff << 0)
+ #define SHORT_PACKET			0
+ #define LONG_PACKET			2
+@@ -157,6 +161,7 @@ struct phy;
+ 
+ struct mtk_dsi_driver_data {
+ 	const u32 reg_cmdq_off;
++	bool has_shadow_ctl;
  };
  
- static int __init mtk_drm_init(void)
+ struct mtk_dsi {
+@@ -594,6 +599,11 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+ 	}
+ 
+ 	mtk_dsi_enable(dsi);
++
++	if (dsi->driver_data->has_shadow_ctl)
++		writel(FORCE_COMMIT | BYPASS_SHADOW,
++		       dsi->regs + DSI_SHADOW_DEBUG);
++
+ 	mtk_dsi_reset_engine(dsi);
+ 	mtk_dsi_phy_timconfig(dsi);
+ 
 -- 
 2.21.0
 
