@@ -2,203 +2,131 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57815C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ED2C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AAFE2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B88E2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en28+nAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfF0NVg (ORCPT
+        id S1726750AbfF0NVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:21:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37794 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfF0NVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:21:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 06:21:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="167427271"
-Received: from luyang-mobl.ccr.corp.intel.com ([10.249.174.5])
-  by orsmga006.jf.intel.com with ESMTP; 27 Jun 2019 06:21:33 -0700
-Message-ID: <1561641692.2096.3.camel@intel.com>
-Subject: Re: [PATCH 1/2] thermal/drivers/core: Add init section table for
- self-encapsulation
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        amit.kucheria@linaro.org
-Date:   Thu, 27 Jun 2019 21:21:32 +0800
-In-Reply-To: <b6bbd5f4-a86a-d649-e3c0-2156f7975291@linaro.org>
-References: <20190612201325.1150-1-daniel.lezcano@linaro.org>
-         <b6bbd5f4-a86a-d649-e3c0-2156f7975291@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Jun 2019 09:21:42 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:46414 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfF0NVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 09:21:42 -0400
+Received: by mail-wr1-f45.google.com with SMTP id n4so2525223wrw.13;
+        Thu, 27 Jun 2019 06:21:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=oA5GMdnGrxF6sTzzRcKYXpIVUL/ec5EzcBXgMsfLGhA=;
+        b=en28+nAK8m6rZ3ZTvk3LC0DPGjptazamkjHHl1rH5uXYhTNzshicqWF/MxlyQbCGJy
+         wLuU0DGTApf9VNNPze75OixM7kRciu2fpb0vhYmy2Qq0CBAOPb0e3EI+cV+xrurrGXHw
+         iJoKglsPEo/6pRu3GO3DRVtQSbU/1zlHfqC1MI86vbuySlVzM6qCnnxsbqiuHhGMHBZM
+         0Z2uQxO4DI9vj8fnrTnkqG8z40Zz78NmesPA9e8cPBS2YS/rdZSQVsg+YWOmHHh8Gd+w
+         uSRHJa9BgPGfPAadm4ccZc3zSKMSCriq+sWFz8/sPtW6YfLFC3KvkDEa3WNDPYknY2nq
+         60tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=oA5GMdnGrxF6sTzzRcKYXpIVUL/ec5EzcBXgMsfLGhA=;
+        b=jiy/F09TtQLKTIT/w5xqwB1KDoVEO+tWexwQiHQAQdKykyiiRYcihIza+a/+Fgq6U/
+         k/EVOEDcaEs9F+XQbo75Jl4a+0D0x1RuCkzbK1xua13q6sY8VgrDHjYImo87Vg6ZXxz8
+         SYnVnyw9YQ1wyvqgni7UbocthBItVa/DA0A3JtW+xkjFL0XQnNEWDhGXcQjVl5HOKfnx
+         i+MTkt0+Z7qTQyf/ZtdbxJu4m1CgWogcS+a1q9zRdQjKez2FdKuF+KSg6ON2eNveWcWs
+         HQNLC9UzZuZ9bS22esXcPX2BHMv2tDFC+kKSre8auufwUH09YYRnUMQyNEFwZZ/YwOpT
+         63cg==
+X-Gm-Message-State: APjAAAXl2jcVUKw00yd8B+K6IhckV+l6/Qc8zxuB86Htv7GzwuTKJM5k
+        hsA2GJxLU8vRz6wvzJzzgKsOgRzB
+X-Google-Smtp-Source: APXvYqz8Px8uNRXsni/Sj397utzkvUuRY9u81z04/43rRNRo8t9A9KODuzgnmA0SgLx39801L+DiTA==
+X-Received: by 2002:a5d:4090:: with SMTP id o16mr3463732wrp.292.1561641700045;
+        Thu, 27 Jun 2019 06:21:40 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id y4sm3712762wrn.68.2019.06.27.06.21.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 06:21:39 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 15:21:37 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     jacmet@sunsite.dk, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [BUG] net: dm9600: false link status
+Message-ID: <20190627132137.GB29016@Red>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 一, 2019-06-24 at 09:32 +0200, Daniel Lezcano wrote:
-> Any chance this patch gets merged for v5.4?
-> 
-> Thanks
->   -- Daniel
-> 
+Hello
 
-have you run compile test for the patch?
-I got the following errors when compiling.
+I own an USB dongle which is a "Davicom DM96xx USB 10/100 Ethernet".
+According to the CHIP_ID, it is a DM9620.
 
-In file included from drivers/thermal/fair_share.c:16:0:
-drivers/thermal/thermal_core.h:23:3: error: expected identifier or ‘(’
-before ‘static’
-  (static typeof(name) *__thermal_table_entry_##name \
-   ^
-drivers/thermal/thermal_core.h:26:40: note: in expansion of macro
-‘THERMAL_TABLE_ENTRY’
- #define THERMAL_GOVERNOR_DECLARE(name) THERMAL_TABLE_ENTRY(governor,
-name)
-                                        ^
-drivers/thermal/fair_share.c:120:1: note: in expansion of macro
-‘THERMAL_GOVERNOR_DECLARE’
- THERMAL_GOVERNOR_DECLARE(thermal_gov_fair_share);
- ^
-drivers/thermal/fair_share.c:116:32: warning: ‘thermal_gov_fair_share’
-defined but not used [-Wunused-variable]
- static struct thermal_governor thermal_gov_fair_share = {
-                                ^
-make[2]: *** [drivers/thermal/fair_share.o] Error 1
-make[2]: *** Waiting for unfinished jobs....
-In file included from drivers/thermal/gov_bang_bang.c:14:0:
-drivers/thermal/thermal_core.h:23:3: error: expected identifier or ‘(’
-before ‘static’
-  (static typeof(name) *__thermal_table_entry_##name \
-   ^
-drivers/thermal/thermal_core.h:26:40: note: in expansion of macro
-‘THERMAL_TABLE_ENTRY’
- #define THERMAL_GOVERNOR_DECLARE(name) THERMAL_TABLE_ENTRY(governor,
-name)
-                                        ^
-drivers/thermal/gov_bang_bang.c:119:1: note: in expansion of macro
-‘THERMAL_GOVERNOR_DECLARE’
- THERMAL_GOVERNOR_DECLARE(thermal_gov_bang_bang);
- ^
-drivers/thermal/gov_bang_bang.c:115:32: warning:
-‘thermal_gov_bang_bang’ defined but not used [-Wunused-variable]
- static struct thermal_governor thermal_gov_bang_bang = {
-                                ^
-make[2]: *** [drivers/thermal/gov_bang_bang.o] Error 1
-make[1]: *** [drivers/thermal] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [drivers] Error 2
+Since I needed for bringing network to uboot for a board, I have started to create its uboot's driver.
+My uboot driver is based on the dm9600 Linux driver.
 
-Fix the problem by removing the round brackets
-of THERMAL_TABLE_ENTRY(), and applied.
+The dongle was working but very very slowy (24Kib/s).
+After some debug i found that the main problem was that it always link to 10Mbit/s Half-duplex. (according to the MAC registers)
 
-thanks,
-rui
-> On 12/06/2019 22:13, Daniel Lezcano wrote:
-> > 
-> > Currently the governors are declared in their respective files but
-> > they
-> > export their [un]register functions which in turn call the
-> > [un]register
-> > governors core's functions. That implies a cyclic dependency which
-> > is
-> > not desirable. There is a way to self-encapsulate the governors by
-> > letting
-> > them to declare themselves in a __init section table.
-> > 
-> > Define the table in the asm generic linker description like the
-> > other
-> > tables and provide the specific macros to deal with.
-> > 
-> > Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > ---
-> >  drivers/thermal/thermal_core.h    | 15 +++++++++++++++
-> >  include/asm-generic/vmlinux.lds.h | 11 +++++++++++
-> >  2 files changed, 26 insertions(+)
-> > 
-> > diff --git a/drivers/thermal/thermal_core.h
-> > b/drivers/thermal/thermal_core.h
-> > index 0df190ed82a7..be901e84aa65 100644
-> > --- a/drivers/thermal/thermal_core.h
-> > +++ b/drivers/thermal/thermal_core.h
-> > @@ -15,6 +15,21 @@
-> >  /* Initial state of a cooling device during binding */
-> >  #define THERMAL_NO_TARGET -1UL
-> >  
-> > +/* Init section thermal table */
-> > +extern struct thermal_governor *__governor_thermal_table[];
-> > +extern struct thermal_governor *__governor_thermal_table_end[];
-> > +
-> > +#define THERMAL_TABLE_ENTRY(table, name)			\
-> > +	(static typeof(name) *__thermal_table_entry_##name	
-> > \
-> > +	__used __section(__##table##_thermal_table) = &name)
-> > +
-> > +#define THERMAL_GOVERNOR_DECLARE(name)	THERMAL_TABLE_ENTRY(
-> > governor, name)
-> > +
-> > +#define for_each_governor_table(__governor)		\
-> > +	for (__governor = __governor_thermal_table;	\
-> > +	     __governor < __governor_thermal_table_end;	\
-> > +	     __governor++)
-> > +
-> >  /*
-> >   * This structure is used to describe the behavior of
-> >   * a certain cooling device on a certain trip point
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-
-> > generic/vmlinux.lds.h
-> > index f8f6f04c4453..8312fdc2b2fa 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -239,6 +239,16 @@
-> >  #define ACPI_PROBE_TABLE(name)
-> >  #endif
-> >  
-> > +#ifdef CONFIG_THERMAL
-> > +#define THERMAL_TABLE(name)					
-> > 	\
-> > +	. = ALIGN(8);						
-> > 	\
-> > +	__##name##_thermal_table = .;				
-> > 	\
-> > +	KEEP(*(__##name##_thermal_table))				
-> > \
-> > +	__##name##_thermal_table_end = .;
-> > +#else
-> > +#define THERMAL_TABLE(name)
-> > +#endif
-> > +
-> >  #define KERNEL_DTB()						
-> > 	\
-> >  	STRUCT_ALIGN();						
-> > 	\
-> >  	__dtb_start = .;						
-> > \
-> > @@ -609,6 +619,7 @@
-> >  	IRQCHIP_OF_MATCH_TABLE()					
-> > \
-> >  	ACPI_PROBE_TABLE(irqchip)					
-> > \
-> >  	ACPI_PROBE_TABLE(timer)					
-> > 	\
-> > +	THERMAL_TABLE(governor)					
-> > 	\
-> >  	EARLYCON_TABLE()						
-> > \
-> >  	LSM_TABLE()
-> >  
-> > 
-> 
+For checking the status of the dongle I have plugged it on a Linux box which give me:
+dm9601 6-2:1.0 enp0s29f0u2: link up, 100Mbps, full-duplex, lpa 0xFFFF
+
+But in fact the Linux driver is tricked.
+
+I have added debug of MDIO write/read and got:
+[157550.926974] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x00, val=0x8000
+[157550.931962] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x04, val=0x05e1
+[157550.951967] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
+[157550.951971] dm9601 6-2:1.0 (unnamed net_device) (uninitialized): dm9601_mdio_write() phy_id=0x00, loc=0x00, val=0xffff
+[157567.781989] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157567.796985] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157567.811989] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
+[157567.826974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
+[157567.841972] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
+[157567.856974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157567.871990] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
+[157567.886974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
+[157567.906010] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157567.920986] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157567.935975] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
+[157567.950974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
+[157567.965974] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
+[157567.980970] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157567.995973] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
+[157568.010971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
+[157568.025973] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157568.040969] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157568.055971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
+[157568.070970] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
+[157568.085971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x00, returns=0xffff
+[157568.100971] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x01, returns=0xffff
+[157568.115973] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x04, returns=0xffff
+[157568.130970] dm9601 6-2:1.0 enp0s29f0u2: dm9601_mdio_read() phy_id=0x00, loc=0x05, returns=0xffff
+
+So the problem is the same than in my uboot driver, the PHY always return 0xFFFF.
+
+I have tried lots of hack but fail to bring the PHY up.
+
+So it exsists two problem:
+- Linux saying 100Mbps, full-duplex even if it is false.
+- the PHY which seems in bad state.
+
+For further information, the PHY is the internal one.
+On the dongle, only the davicom chip is present (along with some resistors/capacitors and a quartz), so I think of the absence of an external PHY.
+
+Regards
