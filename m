@@ -2,115 +2,115 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D34AC5B577
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF38AC5B576
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1536120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V0o8aHJf"
+	by mail.kernel.org (Postfix) with ESMTP id AE8832133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfF0XT0 (ORCPT
+        id S1726697AbfF0XUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:19:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41422 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbfF0XT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:19:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q4so215592pgj.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dcwak1hKcOO0mZc8QWnsef5QeqS9i+/5PrOgW4qPWe4=;
-        b=V0o8aHJfjwOLLXWKXP3+WZKZnMDY82FMmJkgq0sDhZVWNm4fMt7ft/7CI8w2RhN1gE
-         pet1zc7HZPwwC46ruxmBJxG31Uxo4rqRXMvyBNJ7BL6vupG/+RR/XqonKVcu8XmndUsZ
-         mrOjv4xKgtwPp+30mLd6CKFQnk2gkxQhwgZF9267Vc89Ky2UtPQUv3vHQ693Fjx8uo1y
-         G/4kMRCoseOn7VDRhFU+As3DtNFMgfhDEwZvhDLdstfNiopMAu0nC5KvYZdKmTZO/iwr
-         mq3anUEZ2WRnCt6lijuvZVj7k1rpzFC6L9UpNySovsc6Vb20Bm67vtHpiaviGanbCTIM
-         z0jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dcwak1hKcOO0mZc8QWnsef5QeqS9i+/5PrOgW4qPWe4=;
-        b=Kcv4k/0TY+eaDln6SAgc4TVCSiLY90BEZCJETraaN7GIdm4sl/H78boyLZbBMzOaGn
-         rBy3o28F6aN6FTFKGibKGISV+AmrT9BeG/qTSnsi0KFo8cHb45Go4pxXnjK63Ov7J0Zj
-         eDPBpJZQchHJlrDUHxwI15MZRFQlIrTfOPQPijU3uMqC8Imqc0cHuWZBhdKvkzcVr3aL
-         TGJrJ7fMuoz+0EtVcCWpD484DLIWUNvz8ZGyr57b2hqqkJLPXtLsGNuVMdDqXe8quKcA
-         BA1qfG5BCfTcVU4QmPIokG2qOEwwTTlh89Okgf3oJR2ESJ//sWZgeZRf8dALtZmVcDIA
-         jnlg==
-X-Gm-Message-State: APjAAAUFZM7ZlymZyFR3y8WXs2VVPPmfBVHzyu+PfjNw5QO6e1kVz0di
-        P8IpEoyqhvHQG3czqJD05fnW6ZbPIfg8GAbpo0rUdw==
-X-Google-Smtp-Source: APXvYqxXobXDpd+FCzeYvr0ctf8iVulxIMamSVsKM6neTWNkLJrveZQ1qWxH9dhc27nmWu++mJTS/QMP+QbhGt1A1EI=
-X-Received: by 2002:a63:78ca:: with SMTP id t193mr6150985pgc.10.1561677565201;
- Thu, 27 Jun 2019 16:19:25 -0700 (PDT)
+        Thu, 27 Jun 2019 19:20:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52218 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbfF0XUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:20:04 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4C48A58E33;
+        Thu, 27 Jun 2019 23:20:04 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 92C581001B17;
+        Thu, 27 Jun 2019 23:19:55 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 18:19:52 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Miroslav Benes <mbenes@suse.cz>, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Ingo Molnar <mingo@kernel.org>, mhiramat@kernel.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH] ftrace: Remove possible deadlock between
+ register_kprobe() and ftrace_run_update_code()
+Message-ID: <20190627231952.nqkbtcculvo2ddif@treble>
+References: <20190627081334.12793-1-pmladek@suse.com>
+ <20190627224729.tshtq4bhzhneq24w@treble>
+ <20190627190457.703a486e@gandalf.local.home>
+ <alpine.DEB.2.21.1906280106360.32342@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20190627220642.78575-1-nhuck@google.com>
-In-Reply-To: <20190627220642.78575-1-nhuck@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 27 Jun 2019 16:19:14 -0700
-Message-ID: <CAKwvOdmaPgdDyhE1uws9DpynS97pUj6BOzS9g0XRWB7YshR_Ow@mail.gmail.com>
-Subject: Re: [PATCH] clk: qoriq: Fix -Wunused-const-variable
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        yogeshnarayan.gaur@nxp.com, oss@buserror.net,
-        linux-clk@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906280106360.32342@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 27 Jun 2019 23:20:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 3:06 PM 'Nathan Huckleberry' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> drivers/clk/clk-qoriq.c:138:38: warning: unused variable
-> 'p5020_cmux_grp1' [-Wunused-const-variable] static const struct
-> clockgen_muxinfo p5020_cmux_grp1
->
-> drivers/clk/clk-qoriq.c:146:38: warning: unused variable
-> 'p5020_cmux_grp2' [-Wunused-const-variable] static const struct
-> clockgen_muxinfo p5020_cmux_grp2
->
-> In the definition of the p5020 chip, the p2041 chip's info was used
-> instead.  The p5020 and p2041 chips have different info. This is most
-> likely a typo.
+On Fri, Jun 28, 2019 at 01:09:08AM +0200, Thomas Gleixner wrote:
+> On Thu, 27 Jun 2019, Steven Rostedt wrote:
+> > On Thu, 27 Jun 2019 17:47:29 -0500
+> > > Releasing the lock in a separate function seems a bit surprising and
+> > > fragile, would it be possible to do something like this instead?
+> > > 
+> > > diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> > > index b38c388d1087..89ea1af6fd13 100644
+> > > --- a/arch/x86/kernel/ftrace.c
+> > > +++ b/arch/x86/kernel/ftrace.c
+> > > @@ -37,15 +37,21 @@
+> > >  int ftrace_arch_code_modify_prepare(void)
+> > >  {
+> > >  	mutex_lock(&text_mutex);
+> > > +
+> > >  	set_kernel_text_rw();
+> > >  	set_all_modules_text_rw();
+> > > +
+> > > +	mutex_unlock(&text_mutex);
+> > >  	return 0;
+> > >  }
+> > >  
+> > >  int ftrace_arch_code_modify_post_process(void)
+> > >  {
+> > > +	mutex_lock(&text_mutex);
+> > > +
+> > >  	set_all_modules_text_ro();
+> > >  	set_kernel_text_ro();
+> > > +
+> > >  	mutex_unlock(&text_mutex);
+> > >  	return 0;
+> > >  }
+> > 
+> > I agree with Josh on this. As the original bug was the race between
+> > ftrace and live patching / modules changing the text from ro to rw and
+> > vice versa. Just protecting the update to the text permissions is more
+> > robust, and should be more self documenting when we need to handle
+> > other architectures for this.
+> 
+> How is that supposed to work?
+> 
+>     ftrace  	     	
+> 	prepare()
+> 	 setrw()
+> 			setro()
+> 	patch <- FAIL
 
-oops! Further, the definitions of p5020_cmux_grp1/p5020_cmux_grp2 are
-subtly different than p2041_cmux_grp1/p2041_cmux_grp2.  Definitely
-looks copy+pasta related; I agree with your assessment.  (Also, it's
-interesting to see this sparse array initializer syntax).  Thanks for
-the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+/me dodges frozen shark
 
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/525
-> Cc: clang-built-linux@googlegroups.com
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> ---
->  drivers/clk/clk-qoriq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-> index 4739a47ec8bd..0f8870527940 100644
-> --- a/drivers/clk/clk-qoriq.c
-> +++ b/drivers/clk/clk-qoriq.c
-> @@ -678,7 +678,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
->                 .guts_compat = "fsl,qoriq-device-config-1.0",
->                 .init_periph = p5020_init_periph,
->                 .cmux_groups = {
-> -                       &p2041_cmux_grp1, &p2041_cmux_grp2
-> +                       &p5020_cmux_grp1, &p5020_cmux_grp2
+You are right of course.  My brain has apparently already shut off for
+the day.
+
+Maybe a comment or two would help though.
 
 -- 
-Thanks,
-~Nick Desaulniers
+Josh
