@@ -2,97 +2,203 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300D5C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F991C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3F0205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:44:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="suTzBU5N"
+	by mail.kernel.org (Postfix) with ESMTP id 2CAFD205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:46:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfF0Ho6 (ORCPT
+        id S1726455AbfF0HqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:44:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39673 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfF0Ho6 (ORCPT
+        Thu, 27 Jun 2019 03:46:18 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:42561 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726059AbfF0HqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:44:58 -0400
-Received: by mail-wr1-f67.google.com with SMTP id x4so1311722wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 00:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fRhMiuM9D6lNqKr68YbS2wqBEbQrlCyklKLmB7I52L8=;
-        b=suTzBU5N6EkJIWq35Uka0kDQWuiTo+/EbommBMOxKid8dyF8atsySar5l1rISdF5JR
-         f1dVxxzOTVLOYT+9jr8Xo4LjspHImaKHMTyB3tKX9Ce0ynQZXuq4dQog6CKBQ/FuWkpu
-         fmX6UACWyV2k/iUc8MJXIX85prldCEDIXbgyUmFj/d8ufh7+mS+4TlexuAmELOZvsWNB
-         ahXwnfENQVhhSDaHIK9wn3UvyzUJjSN7R43zgCAiY0yxvErWtGnj5UyBLocx58h6VXlI
-         D70lvpUjxbHGtZuvXXGW0463m8XLAQZTViUjJOVU6cYzkKVa690fn0vm+sL1mmaW1hqq
-         7pPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fRhMiuM9D6lNqKr68YbS2wqBEbQrlCyklKLmB7I52L8=;
-        b=aIyfxQJiH14dbZRfRfhSRe93jaE770sVgHkQxxIiDtXNVpSs0f2+xJQbj5vLgjW0t0
-         wIIbC2s49UJXm3Ba4X0njIuMnupk9Me+riyLEJPwubciohwlN3Z+osF6o7t3HxtCO5S9
-         /C6whSX4wL11tsy9AzLbhcpijFRAqGouklek7ammWwNrc+T9ud6nt9hhUk4LGjwEj7mT
-         KE1JTuCSve1+aVuZUR4Y3pEgY1NBBV1QoCle9y/1xxqA+q6c+4+z6iS2mGqn/d2+gWSL
-         LsyuDro+5s+7hDzZjEitc8s90W5CBgGy5itC2CwBBxRnEiK3bnEdGJhU/4lTdqVXLfjp
-         xyow==
-X-Gm-Message-State: APjAAAUsWcAn+5vPTrxHNcbXzSKb5i4QAhVZFff3bONbyhau5QFyPtY3
-        FDuZ//shQfCwY/htUpuU4CE4wQ==
-X-Google-Smtp-Source: APXvYqy00J8Sq1s22y/DIkO4hpql2w3C4VePv+24bHNULGhow+wfUwNhXVnqYGuPu8qdzdLk1r7p7w==
-X-Received: by 2002:adf:ea92:: with SMTP id s18mr1831696wrm.257.1561621496090;
-        Thu, 27 Jun 2019 00:44:56 -0700 (PDT)
-Received: from localhost (ip-89-176-222-26.net.upcbroadband.cz. [89.176.222.26])
-        by smtp.gmail.com with ESMTPSA id g10sm1487752wrw.60.2019.06.27.00.44.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 00:44:55 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 09:44:55 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     David Miller <davem@davemloft.net>
-Cc:     yuehaibing@huawei.com, sdf@google.com, jianbol@mellanox.com,
-        jiri@mellanox.com, mirq-linux@rere.qmqm.pl, willemb@google.com,
-        sdf@fomichev.me, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2] flow_dissector: Fix vlan header offset in
- __skb_flow_dissect
-Message-ID: <20190627074455.GE2424@nanopsycho>
-References: <20190622.161955.2030310177158651781.davem@davemloft.net>
- <20190624034913.40328-1-yuehaibing@huawei.com>
- <20190626.192829.1694521513812984310.davem@davemloft.net>
+        Thu, 27 Jun 2019 03:46:18 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id gP6ihdi1JF85OgP6lhnC3c; Thu, 27 Jun 2019 09:46:16 +0200
+Subject: Re: [Linux-kernel-mentees] [PATCH v4 RESEND] Media: Radio: Change
+ devm_k*alloc to k*alloc
+To:     Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20190622010438.GA10125@luke-XPS-13>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a573b294-a6e6-be8c-d5ec-1080166773d7@xs4all.nl>
+Date:   Thu, 27 Jun 2019 09:46:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626.192829.1694521513812984310.davem@davemloft.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190622010438.GA10125@luke-XPS-13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfH/BHMZiytsX8ZZmsaoJpkZqGXJfr/oG9F/51zmWhayYKT/X2vNqPqJBQwEJATluHP8UqtaeQ6fTKP7E40GwU1OGXpvAZrdWcOL7zYLLNzQaKWA70dRl
+ cAIl+6jSBRsWbrDBA0fwp8zhXPW4FAX/NT1eI1Ur6/5alUbbIAvrQ8Drun2422gy66EsVmLmorZgjmNEZsnhFy2qTOEL8qyZ3GB3OUEnvvsyFZ2kgBjsgRan
+ 7WH/KPkyevLORYHB0CBJXrtxzSLgz92wEl20tPJLJzkLcWIYeijqzob2cCStuhhc5JBGqsHay6xzL1QTE4ZWcMcPQ/NbyUYgxdnjghWBssKpilawMA/ej1Ic
+ MUkM8V/n
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thu, Jun 27, 2019 at 04:28:29AM CEST, davem@davemloft.net wrote:
->From: YueHaibing <yuehaibing@huawei.com>
->Date: Mon, 24 Jun 2019 11:49:13 +0800
->
->> @@ -998,6 +998,9 @@ bool __skb_flow_dissect(const struct net *net,
->>  		    skb && skb_vlan_tag_present(skb)) {
->>  			proto = skb->protocol;
->>  		} else {
->> +			if (dissector_vlan == FLOW_DISSECTOR_KEY_MAX)
->> +				nhoff -= sizeof(*vlan);
->> +
->
->But this is wrong when we are being called via eth_get_headlen(), in
->that case nhoff will be sizeof(struct ethhdr).
+Hi Luke,
 
-This patch was replaced by:
-[PATCH] bonding: Always enable vlan tx offload
-http://patchwork.ozlabs.org/patch/1122886/
+On 6/22/19 3:04 AM, Luke Nowakowski-Krijger wrote:
+> Change devm_k*alloc to k*alloc to manually allocate memory 
+> 
+> The manual allocation and freeing of memory is necessary because when
+> the USB radio is disconnected, the memory associated with devm_k*alloc
+> is freed. Meaning if we still have unresolved references to the radio
+> device, then we get use-after-free errors. 
+> 
+> This patch fixes this by manually allocating memory, and freeing it in 
+> the v4l2.release callback that gets called when the last radio device
+> exits. 
+> 
+> Reported-and-tested-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+> Signed-off-by: Luke Nowakowski-Krijger <lnowakow@eng.ucsd.edu>
+
+I've tested this patch with my raremono (I must be the last person on earth
+to 1) have one, and 2) run it under linux!) and it works!
+
+I'm accepting this patch, but I made some small changes, so for future reference:
+
+1) The subject should have the driver name as prefix, so:
+
+   media: radio-raremono: change devm_k*alloc to k*alloc
+
+   That way reviewers can see based on the prefix who should review the patch.
+   Radio driver are my responsibility, so that would be me.
+
+2) Always run 'checkpatch.pl --strict'. It reported some minor issues:
+
+CHECK: Please don't use multiple blank lines
+#17: FILE: drivers/media/radio/radio-raremono.c:280:
++
++
+
+CHECK: Prefer kzalloc(sizeof(*radio)...) over kzalloc(sizeof(struct raremono_device)...)
+#30: FILE: drivers/media/radio/radio-raremono.c:305:
++       radio = kzalloc(sizeof(struct raremono_device), GFP_KERNEL);
+
+
+I've fixed these issues, but next time remember to run checkpatch before submitting
+the patch.
+
+Regards,
+
+	Hans
+
+> ---
+> Changes in RESEND: 
+> + Added reported-and-tested-by tag
+> + Further updated description
+> - Removed whitespace in patch description
+> Changes in v4:
+> - Removed whitespace to fix checkpatch.pl errors
+> Changes in v3:
+> + Update release method in v2 for v4l2.release callback 
+> + Assign v4l2.release callback to release method
+> - Remove vdev.release callback used in v2
+> Changes in v2:
+> + Create raremono_device_release method
+> + Assign vdev.release to release method
+> + Added gotos for better memory cleanup
+> - Removed incorrect kfrees in usb_release in v1
+> Changes in v1: 
+> + Added k*allocs to raremono_device struct, and buffs
+> + Added kfrees on error conditions in usb_probe
+> + Added kfrees in usb_release
+> - Removed devm_k*allocs
+> 
+>  drivers/media/radio/radio-raremono.c | 31 +++++++++++++++++++++-------
+>  1 file changed, 24 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/media/radio/radio-raremono.c b/drivers/media/radio/radio-raremono.c
+> index 5e782b3c2fa9..a5b12372eccb 100644
+> --- a/drivers/media/radio/radio-raremono.c
+> +++ b/drivers/media/radio/radio-raremono.c
+> @@ -271,6 +271,15 @@ static int vidioc_g_frequency(struct file *file, void *priv,
+>  	return 0;
+>  }
+>  
+> +static void raremono_device_release(struct v4l2_device *v4l2_dev)
+> +{
+> +	struct raremono_device *radio = to_raremono_dev(v4l2_dev);
+> +
+> +	kfree(radio->buffer);
+> +	kfree(radio);
+> +}
+> +
+> +
+>  /* File system interface */
+>  static const struct v4l2_file_operations usb_raremono_fops = {
+>  	.owner		= THIS_MODULE,
+> @@ -295,12 +304,14 @@ static int usb_raremono_probe(struct usb_interface *intf,
+>  	struct raremono_device *radio;
+>  	int retval = 0;
+>  
+> -	radio = devm_kzalloc(&intf->dev, sizeof(struct raremono_device), GFP_KERNEL);
+> -	if (radio)
+> -		radio->buffer = devm_kmalloc(&intf->dev, BUFFER_LENGTH, GFP_KERNEL);
+> -
+> -	if (!radio || !radio->buffer)
+> +	radio = kzalloc(sizeof(struct raremono_device), GFP_KERNEL);
+> +	if (!radio)
+> +		return -ENOMEM;
+> +	radio->buffer = kmalloc(BUFFER_LENGTH, GFP_KERNEL);
+> +	if (!radio->buffer) {
+> +		kfree(radio);
+>  		return -ENOMEM;
+> +	}
+>  
+>  	radio->usbdev = interface_to_usbdev(intf);
+>  	radio->intf = intf;
+> @@ -324,7 +335,8 @@ static int usb_raremono_probe(struct usb_interface *intf,
+>  	if (retval != 3 ||
+>  	    (get_unaligned_be16(&radio->buffer[1]) & 0xfff) == 0x0242) {
+>  		dev_info(&intf->dev, "this is not Thanko's Raremono.\n");
+> -		return -ENODEV;
+> +		retval = -ENODEV;
+> +		goto free_mem;
+>  	}
+>  
+>  	dev_info(&intf->dev, "Thanko's Raremono connected: (%04X:%04X)\n",
+> @@ -333,7 +345,7 @@ static int usb_raremono_probe(struct usb_interface *intf,
+>  	retval = v4l2_device_register(&intf->dev, &radio->v4l2_dev);
+>  	if (retval < 0) {
+>  		dev_err(&intf->dev, "couldn't register v4l2_device\n");
+> -		return retval;
+> +		goto free_mem;
+>  	}
+>  
+>  	mutex_init(&radio->lock);
+> @@ -345,6 +357,7 @@ static int usb_raremono_probe(struct usb_interface *intf,
+>  	radio->vdev.ioctl_ops = &usb_raremono_ioctl_ops;
+>  	radio->vdev.lock = &radio->lock;
+>  	radio->vdev.release = video_device_release_empty;
+> +	radio->v4l2_dev.release = raremono_device_release;
+>  
+>  	usb_set_intfdata(intf, &radio->v4l2_dev);
+>  
+> @@ -360,6 +373,10 @@ static int usb_raremono_probe(struct usb_interface *intf,
+>  	}
+>  	dev_err(&intf->dev, "could not register video device\n");
+>  	v4l2_device_unregister(&radio->v4l2_dev);
+> +
+> +free_mem:
+> +	kfree(radio->buffer);
+> +	kfree(radio);
+>  	return retval;
+>  }
+>  
+> 
+
