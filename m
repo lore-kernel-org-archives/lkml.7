@@ -2,90 +2,76 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00529C5B576
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD27C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD96D20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C171F20828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfF0VWP convert rfc822-to-8bit (ORCPT
+        id S1726564AbfF0VYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:22:15 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:33121 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbfF0VWP (ORCPT
+        Thu, 27 Jun 2019 17:24:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59877 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0VYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:22:15 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 20E32200006;
-        Thu, 27 Jun 2019 21:22:12 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 23:22:07 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: linux-next: manual merge of the nand tree with Linus' tree
-Message-ID: <20190627232207.6af24e5e@xps13>
-In-Reply-To: <20190627165129.3b2c1264@xps13>
-References: <20190604105418.58da18b2@canb.auug.org.au>
-        <20190627165129.3b2c1264@xps13>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 27 Jun 2019 17:24:46 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgbso-0000cE-Bn; Thu, 27 Jun 2019 23:24:42 +0200
+Date:   Thu, 27 Jun 2019 23:24:41 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+cc:     linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Dou Liyang <douly.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH RESEND] Revert "x86/paravirt: Set up the virt_spin_lock_key
+ after static keys get initialized"
+In-Reply-To: <1561539429-29436-1-git-send-email-zhenzhong.duan@oracle.com>
+Message-ID: <alpine.DEB.2.21.1906272322481.32342@nanos.tec.linutronix.de>
+References: <1561539429-29436-1-git-send-email-zhenzhong.duan@oracle.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Wed, 26 Jun 2019, Zhenzhong Duan wrote:
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 27 Jun 2019
-16:51:37 +0200:
+> This reverts commit ca5d376e17072c1b60c3fee66f3be58ef018952d.
+> 
+> Commit 8990cac6e5ea ("x86/jump_label: Initialize static branching
+> early") adds jump_label_init() call in setup_arch() to make static
+> keys initialized early, so we could use the original simpler code
+> again.
+> 
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-> Hi Stephen,
-> 
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote on Tue, 4 Jun 2019
-> 10:54:18 +1000:
-> 
-> > Hi all,
-> > 
-> > Today's linux-next merge of the nand tree got a conflict in:
-> > 
-> >   Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> > 
-> > between commit:
-> > 
-> >   a5f2246fb913 ("dt: bindings: mtd: replace references to nand.txt with nand-controller.yaml")
-> > 
-> > from Linus' tree and commit:
-> > 
-> >   33cc5bd0b87a ("dt-bindings: mtd: brcmnand: Make nand-ecc-strength and nand-ecc-step-size optional")
-> > 
-> > from the nand tree.
-> > 
-> > I fixed it up (the latter included the changes from the former, so I
-> > just used that) and can carry the fix as necessary. This is now fixed
-> > as far as linux-next is concerned, but any non trivial conflicts should
-> > be mentioned to your upstream maintainer when your tree is submitted for
-> > merging.  You may also want to consider cooperating with the maintainer
-> > of the conflicting tree to minimise any particularly complex conflicts.
-> >   
-> 
-> Can you please share the fix? I might want to include it in the final
-> PR.
-> 
+Boris,
 
-Actually I decided to rebase my branch to avoid all conflicts, no
-need for the fix, thanks.
+want you to pick that up or should I?
 
-Miquèl
+In case you take it:
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
