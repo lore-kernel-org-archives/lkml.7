@@ -2,296 +2,408 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21469C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F05C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFEA2183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:57:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="IOKcT5Z+"
+	by mail.kernel.org (Postfix) with ESMTP id 605222183F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfF0C5g (ORCPT
+        id S1727071AbfF0C5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 22:57:36 -0400
-Received: from mail-eopbgr40042.outbound.protection.outlook.com ([40.107.4.42]:17063
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726658AbfF0C5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:57:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=tOhWnQGUggjc0NrH4Cynrk2iUY0ZDWTRFqnALJYxpFLExukBn7AUkzvdoma8a+MIBJk1PRK/7Jw3cjGtqqi54F88ZcjcrQSbI6VMPGYuq5GQ+UXkaJM9/KwickEqbfqQh2JsC4wu0qKX5r0TaR1Y01gTqrCtAHe/EevYEDXX21U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zawpGzvPwLkyLIFLktx3aKwjXRoW8HmGzbuvKkpuV44=;
- b=AUGNoVdJSFIVYPuF9n0xg1tNKKHQ0QMxxpRG8zhCb71Yy1R3mLlhlbWtbHD1HKa+svkHGtADBP5rpfy/YL+dmWpurTyoD7UJulc9XDXISX+rIbsxPWUgWL6GaTh9KYMOCUfB66kkewbgiHQhLb8L4+xw6ZENoQ92oHBQo9d/qjM=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zawpGzvPwLkyLIFLktx3aKwjXRoW8HmGzbuvKkpuV44=;
- b=IOKcT5Z+7nKMn95QGXZ7kUlbuDxs9jl0IBpd4QUwwSMP8+yHGT9jykNynjEfjNS/DCERVWQkmGo9mCX8npniY0h7KcrgyF3g+Bq6/p2r+Gk6FVTgMeYQdcs23cgxP18U9hbVf2hDAXUq7NgAWvHB1vp+roMLfj0430MnF+FPeng=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB5279.eurprd08.prod.outlook.com (20.179.31.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Thu, 27 Jun 2019 02:57:28 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::81b4:f737:4690:8605]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::81b4:f737:4690:8605%2]) with mapi id 15.20.2008.014; Thu, 27 Jun 2019
- 02:57:28 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Adds register dump support for gcu, lup and
- dou
-Thread-Topic: [PATCH] drm/komeda: Adds register dump support for gcu, lup and
- dou
-Thread-Index: AQHVLJQNtdiaLQx0v0eTPMMNOHuPOw==
-Date:   Thu, 27 Jun 2019 02:57:27 +0000
-Message-ID: <20190627025720.GA18620@james-ThinkStation-P300>
-References: <1561544365-23862-1-git-send-email-lowry.li@arm.com>
-In-Reply-To: <1561544365-23862-1-git-send-email-lowry.li@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.9.4 (2018-02-28)
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK0PR01CA0009.apcprd01.prod.exchangelabs.com
- (2603:1096:203:92::21) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ef777917-b4e8-499c-635b-08d6faab2f54
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5279;
-x-ms-traffictypediagnostic: VE1PR08MB5279:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB5279CF3B81AB9248B44F8C15B3FD0@VE1PR08MB5279.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2276;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(376002)(39860400002)(396003)(366004)(136003)(346002)(199004)(189003)(6636002)(11346002)(66946007)(476003)(386003)(81156014)(66476007)(68736007)(76176011)(186003)(5660300002)(71200400001)(52116002)(6246003)(6436002)(256004)(1076003)(6506007)(54906003)(3846002)(25786009)(6116002)(71190400001)(2906002)(66066001)(33716001)(305945005)(55236004)(446003)(64756008)(99286004)(8936002)(102836004)(229853002)(14454004)(26005)(6862004)(6512007)(73956011)(486006)(7736002)(86362001)(66556008)(4326008)(6486002)(316002)(9686003)(53936002)(8676002)(58126008)(33656002)(478600001)(81166006)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5279;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Bav2U7IPysDsgyWkyojKVhAiZ9yFHC82qJ+7BDoFoXpq8k+7i+6tibcqKG6hl1jpOICHg+Gu5thpx+N0ACtz9+m3O8r2tSv0umYfxdfu/RFEhmLDjpY4Qa+C+WTVJBfwAx2PB6Q0bwFKJVrnnE9LmxNx1bCI8e8WF8IhUNsgZmkyRuVjxf8LnNpLRSdQ2mLrGaE5l4b66R71BBMY4H9IzxX6NJ0AhkyFf3YqRLPXmJDnj56l5A5vH2s/AnW5X/nkL+HOPeNt/ZxDihi5VFlLd3sE25GODSpxfoA+mz2bgBOknU5yFeHII83OuTn48XaJno0ii3WOmG6d7UfZMeZDFFOsRgTHVjXpBWqek2v2fesv/zeL//ifMW0Y53b2yLVTLUW37GiOkLo+SKbqNt9v/UVME0jiBkjROa4p0BuXkJ8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5E8DE44315EBD4419F7920547458EBA1@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 26 Jun 2019 22:57:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49212 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726658AbfF0C5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 22:57:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 19:57:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
+   d="scan'208";a="337433095"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2019 19:57:39 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 20/22] iommu/vt-d: Add bind guest PASID support
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1560087862-57608-21-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <f183139b-b5a8-f6b5-58e6-f93e01f7be6a@linux.intel.com>
+Date:   Thu, 27 Jun 2019 10:50:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef777917-b4e8-499c-635b-08d6faab2f54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 02:57:28.4191
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5279
+In-Reply-To: <1560087862-57608-21-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 06:20:09PM +0800, Lowry Li (Arm Technology China) w=
-rote:
-> Adds to support register dump on lpu and dou of pipeline and gcu on D71
->=20
-> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+Hi Jacob and Yi,
+
+On 6/9/19 9:44 PM, Jacob Pan wrote:
+> When supporting guest SVA with emulated IOMMU, the guest PASID
+> table is shadowed in VMM. Updates to guest vIOMMU PASID table
+> will result in PASID cache flush which will be passed down to
+> the host as bind guest PASID calls.
+> 
+> For the SL page tables, it will be harvested from device's
+> default domain (request w/o PASID), or aux domain in case of
+> mediated device.
+> 
+>      .-------------.  .---------------------------.
+>      |   vIOMMU    |  | Guest process CR3, FL only|
+>      |             |  '---------------------------'
+>      .----------------/
+>      | PASID Entry |--- PASID cache flush -
+>      '-------------'                       |
+>      |             |                       V
+>      |             |                CR3 in GPA
+>      '-------------'
+> Guest
+> ------| Shadow |--------------------------|--------
+>        v        v                          v
+> Host
+>      .-------------.  .----------------------.
+>      |   pIOMMU    |  | Bind FL for GVA-GPA  |
+>      |             |  '----------------------'
+>      .----------------/  |
+>      | PASID Entry |     V (Nested xlate)
+>      '----------------\.------------------------------.
+>      |             |   |SL for GPA-HPA, default domain|
+>      |             |   '------------------------------'
+>      '-------------'
+> Where:
+>   - FL = First level/stage one page tables
+>   - SL = Second level/stage two page tables
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
 > ---
->  .../gpu/drm/arm/display/komeda/d71/d71_component.c | 86 ++++++++++++++++=
-+++++-
->  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c   | 23 +++---
->  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.h   |  2 +
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.c    |  2 +
->  4 files changed, 101 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c b/dri=
-vers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> index ecec6ce..ed3f273 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_component.c
-> @@ -1253,6 +1253,90 @@ int d71_probe_block(struct d71_dev *d71,
->  	return err;
->  }
-> =20
-> +static void d71_gcu_dump(struct d71_dev *d71, struct seq_file *sf)
+>   drivers/iommu/intel-iommu.c |   4 +
+>   drivers/iommu/intel-svm.c   | 187 ++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/intel-iommu.h |  13 ++-
+>   include/linux/intel-svm.h   |  17 ++++
+>   4 files changed, 219 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 7cfa0eb..3b4d712 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5782,6 +5782,10 @@ const struct iommu_ops intel_iommu_ops = {
+>   	.dev_enable_feat	= intel_iommu_dev_enable_feat,
+>   	.dev_disable_feat	= intel_iommu_dev_disable_feat,
+>   	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> +	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+> +	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+> +#endif
+>   };
+>   
+>   static void quirk_iommu_g4x_gfx(struct pci_dev *dev)
+> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> index 66d98e1..f06a82f 100644
+> --- a/drivers/iommu/intel-svm.c
+> +++ b/drivers/iommu/intel-svm.c
+> @@ -229,6 +229,193 @@ static LIST_HEAD(global_svm_list);
+>   	list_for_each_entry(sdev, &svm->devs, list)	\
+>   	if (dev == sdev->dev)				\
+>   
+> +int intel_svm_bind_gpasid(struct iommu_domain *domain,
+> +			struct device *dev,
+> +			struct gpasid_bind_data *data)
 > +{
-> +	u32 v[5];
+> +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> +	struct intel_svm_dev *sdev;
+> +	struct intel_svm *svm = NULL;
+> +	struct dmar_domain *ddomain;
+> +	int ret = 0;
 > +
-> +	seq_printf(sf, "\n------ GCU ------\n");
+> +	if (WARN_ON(!iommu) || !data)
+> +		return -EINVAL;
 > +
-> +	get_values_from_reg(d71->gcu_addr, 0, 3, v);
-> +	seq_printf(sf, "GLB_ARCH_ID:\t\t0x%X\n", v[0]);
-> +	seq_printf(sf, "GLB_CORE_ID:\t\t0x%X\n", v[1]);
-> +	seq_printf(sf, "GLB_CORE_INFO:\t\t0x%X\n", v[2]);
+> +	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+> +		data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> +		return -EINVAL;
 > +
-> +	get_values_from_reg(d71->gcu_addr, 0x10, 1, v);
-> +	seq_printf(sf, "GLB_IRQ_STATUS:\t\t0x%X\n", v[0]);
+> +	if (dev_is_pci(dev)) {
+> +		/* VT-d supports devices with full 20 bit PASIDs only */
+> +		if (pci_max_pasids(to_pci_dev(dev)) != PASID_MAX)
+> +			return -EINVAL;
+> +	}
 > +
-> +	get_values_from_reg(d71->gcu_addr, 0xA0, 5, v);
-> +	seq_printf(sf, "GCU_IRQ_RAW_STATUS:\t0x%X\n", v[0]);
-> +	seq_printf(sf, "GCU_IRQ_CLEAR:\t\t0x%X\n", v[1]);
-> +	seq_printf(sf, "GCU_IRQ_MASK:\t\t0x%X\n", v[2]);
-> +	seq_printf(sf, "GCU_IRQ_STATUS:\t\t0x%X\n", v[3]);
-> +	seq_printf(sf, "GCU_STATUS:\t\t0x%X\n", v[4]);
+> +	/*
+> +	 * We only check host PASID range, we have no knowledge to check
+> +	 * guest PASID range nor do we use the guest PASID.
+> +	 */
+> +	if (data->hpasid <= 0 || data->hpasid >= PASID_MAX)
+> +		return -EINVAL;
 > +
-> +	get_values_from_reg(d71->gcu_addr, 0xD0, 3, v);
-> +	seq_printf(sf, "GCU_CONTROL:\t\t0x%X\n", v[0]);
-> +	seq_printf(sf, "GCU_CONFIG_VALID0:\t0x%X\n", v[1]);
-> +	seq_printf(sf, "GCU_CONFIG_VALID1:\t0x%X\n", v[2]);
-> +}
+> +	ddomain = to_dmar_domain(domain);
+> +	/* REVISIT:
+> +	 * Sanity check adddress width and paging mode support
+> +	 * width matching in two dimensions:
+> +	 * 1. paging mode CPU <= IOMMU
+> +	 * 2. address width Guest <= Host.
+> +	 */
+> +	mutex_lock(&pasid_mutex);
+> +	svm = ioasid_find(NULL, data->hpasid, NULL);
+> +	if (IS_ERR(svm)) {
+> +		ret = PTR_ERR(svm);
+> +		goto out;
+> +	}
+> +	if (svm) {
+> +		/*
+> +		 * If we found svm for the PASID, there must be at
+> +		 * least one device bond, otherwise svm should be freed.
+> +		 */
+> +		BUG_ON(list_empty(&svm->devs));
 > +
-> +static void d71_lpu_dump(struct d71_pipeline *pipe, struct seq_file *sf)
-> +{
-> +	u32 v[6];
-> +
-> +	seq_printf(sf, "\n------ LPU%d ------\n", pipe->base.id);
-> +
-> +	dump_block_header(sf, pipe->lpu_addr);
-> +
-> +	get_values_from_reg(pipe->lpu_addr, 0xA0, 6, v);
-> +	seq_printf(sf, "LPU_IRQ_RAW_STATUS:\t0x%X\n", v[0]);
-> +	seq_printf(sf, "LPU_IRQ_CLEAR:\t\t0x%X\n", v[1]);
-> +	seq_printf(sf, "LPU_IRQ_MASK:\t\t0x%X\n", v[2]);
-> +	seq_printf(sf, "LPU_IRQ_STATUS:\t\t0x%X\n", v[3]);
-> +	seq_printf(sf, "LPU_STATUS:\t\t0x%X\n", v[4]);
-> +	seq_printf(sf, "LPU_TBU_STATUS:\t\t0x%X\n", v[5]);
-> +
-> +	get_values_from_reg(pipe->lpu_addr, 0xC0, 1, v);
-> +	seq_printf(sf, "LPU_INFO:\t\t0x%X\n", v[0]);
-> +
-> +	get_values_from_reg(pipe->lpu_addr, 0xD0, 3, v);
-> +	seq_printf(sf, "LPU_RAXI_CONTROL:\t0x%X\n", v[0]);
-> +	seq_printf(sf, "LPU_WAXI_CONTROL:\t0x%X\n", v[1]);
-> +	seq_printf(sf, "LPU_TBU_CONTROL:\t0x%X\n", v[2]);
-> +}
-> +
-> +static void d71_dou_dump(struct d71_pipeline *pipe, struct seq_file *sf)
-> +{
-> +	u32 v[5];
-> +
-> +	seq_printf(sf, "\n------ DOU%d ------\n", pipe->base.id);
-> +
-> +	dump_block_header(sf, pipe->dou_addr);
-> +
-> +	get_values_from_reg(pipe->dou_addr, 0xA0, 5, v);
-> +	seq_printf(sf, "DOU_IRQ_RAW_STATUS:\t0x%X\n", v[0]);
-> +	seq_printf(sf, "DOU_IRQ_CLEAR:\t\t0x%X\n", v[1]);
-> +	seq_printf(sf, "DOU_IRQ_MASK:\t\t0x%X\n", v[2]);
-> +	seq_printf(sf, "DOU_IRQ_STATUS:\t\t0x%X\n", v[3]);
-> +	seq_printf(sf, "DOU_STATUS:\t\t0x%X\n", v[4]);
-> +}
-> +
-> +static void d71_pipeline_dump(struct komeda_pipeline *pipe, struct seq_f=
-ile *sf)
-> +{
-> +	struct d71_pipeline *d71_pipe =3D to_d71_pipeline(pipe);
-> +
-> +	d71_lpu_dump(d71_pipe, sf);
-> +	d71_dou_dump(d71_pipe, sf);
-> +}
-> +
->  const struct komeda_pipeline_funcs d71_pipeline_funcs =3D {
-> -	.downscaling_clk_check =3D d71_downscaling_clk_check,
-> +	.downscaling_clk_check	=3D d71_downscaling_clk_check,
-> +	.dump_register		=3D d71_pipeline_dump,
->  };
-> +
-> +void d71_dump(struct komeda_dev *mdev, struct seq_file *sf)
-> +{
-> +	struct d71_dev *d71 =3D mdev->chip_data;
-> +
-> +	d71_gcu_dump(d71, sf);
-> +}
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers/g=
-pu/drm/arm/display/komeda/d71/d71_dev.c
-> index caaa2b2..7e7c9e9 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> @@ -561,17 +561,18 @@ static int d71_disconnect_iommu(struct komeda_dev *=
-mdev)
->  }
-> =20
->  static const struct komeda_dev_funcs d71_chip_funcs =3D {
-> -	.init_format_table =3D d71_init_fmt_tbl,
-> -	.enum_resources	=3D d71_enum_resources,
-> -	.cleanup	=3D d71_cleanup,
-> -	.irq_handler	=3D d71_irq_handler,
-> -	.enable_irq	=3D d71_enable_irq,
-> -	.disable_irq	=3D d71_disable_irq,
-> -	.on_off_vblank	=3D d71_on_off_vblank,
-> -	.change_opmode	=3D d71_change_opmode,
-> -	.flush		=3D d71_flush,
-> -	.connect_iommu	=3D d71_connect_iommu,
-> -	.disconnect_iommu =3D d71_disconnect_iommu,
-> +	.init_format_table	=3D d71_init_fmt_tbl,
-> +	.enum_resources		=3D d71_enum_resources,
-> +	.cleanup		=3D d71_cleanup,
-> +	.irq_handler		=3D d71_irq_handler,
-> +	.enable_irq		=3D d71_enable_irq,
-> +	.disable_irq		=3D d71_disable_irq,
-> +	.on_off_vblank		=3D d71_on_off_vblank,
-> +	.change_opmode		=3D d71_change_opmode,
-> +	.flush			=3D d71_flush,
-> +	.connect_iommu		=3D d71_connect_iommu,
-> +	.disconnect_iommu	=3D d71_disconnect_iommu,
-> +	.dump_register		=3D d71_dump,
->  };
-> =20
->  const struct komeda_dev_funcs *
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.h b/drivers/g=
-pu/drm/arm/display/komeda/d71/d71_dev.h
-> index 84f1878..c7357c2 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.h
-> @@ -49,4 +49,6 @@ int d71_probe_block(struct d71_dev *d71,
->  		    struct block_header *blk, u32 __iomem *reg);
->  void d71_read_block_header(u32 __iomem *reg, struct block_header *blk);
-> =20
-> +void d71_dump(struct komeda_dev *mdev, struct seq_file *sf);
-> +
->  #endif /* !_D71_DEV_H_ */
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gp=
-u/drm/arm/display/komeda/komeda_dev.c
-> index 4218d6e..85b8604 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> @@ -23,6 +23,8 @@ static int komeda_register_show(struct seq_file *sf, vo=
-id *x)
->  	struct komeda_dev *mdev =3D sf->private;
->  	int i;
-> =20
-> +	seq_printf(sf, "\n=3D=3D=3D=3D=3D=3D Komeda register dump =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D\n");
-> +
->  	if (mdev->funcs->dump_register)
->  		mdev->funcs->dump_register(mdev, sf);
-> =20
-> --=20
-> 1.9.1
->=20
+> +		for_each_svm_dev() {
+> +			/* In case of multiple sub-devices of the same pdev assigned, we should
+> +			 * allow multiple bind calls with the same PASID and pdev.
+> +			 */
+> +			sdev->users++;
+> +			goto out;
+> +		}
+> +	} else {
+> +		/* We come here when PASID has never been bond to a device. */
+> +		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
+> +		if (!svm) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+> +		/* REVISIT: upper layer/VFIO can track host process that bind the PASID.
+> +		 * ioasid_set = mm might be sufficient for vfio to check pasid VMM
+> +		 * ownership.
+> +		 */
+> +		svm->mm = get_task_mm(current);
+> +		svm->pasid = data->hpasid;
+> +		if (data->flags & IOMMU_SVA_GPASID_VAL) {
+> +			svm->gpasid = data->gpasid;
+> +			svm->flags &= SVM_FLAG_GUEST_PASID;
 
-Looks good to me.
+I am guessing that you want to set this flag bit, so it should be
 
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
-m>
+			svm->flags |= SVM_FLAG_GUEST_PASID;
+
+> +		}
+> +		refcount_set(&svm->refs, 0);
+> +		ioasid_set_data(data->hpasid, svm);
+> +		INIT_LIST_HEAD_RCU(&svm->devs);
+> +		INIT_LIST_HEAD(&svm->list);
+> +
+> +		mmput(svm->mm);
+> +	}
+> +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
+> +	if (!sdev) {
+> +		ret = -ENOMEM;
+> +		goto out;
+
+I think you need to clean up svm if its device list is empty here, as
+you said above:
+
+  +	if (svm) {
+  +		/*
+  +		 * If we found svm for the PASID, there must be at
+  +		 * least one device bond, otherwise svm should be freed.
+  +		 */
+  +		BUG_ON(list_empty(&svm->devs));
+  +
+
+> +	}
+> +	sdev->dev = dev;
+> +	sdev->users = 1;
+> +
+> +	/* Set up device context entry for PASID if not enabled already */
+> +	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable PASID capability\n");
+> +		kfree(sdev);
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * For guest bind, we need to set up PASID table entry as follows:
+> +	 * - FLPM matches guest paging mode
+> +	 * - turn on nested mode
+> +	 * - SL guest address width matching
+> +	 */
+> +	ret = intel_pasid_setup_nested(iommu,
+> +				dev,
+> +				(pgd_t *)data->gpgd,
+> +				data->hpasid,
+> +				data->flags,
+> +				ddomain,
+> +				data->addr_width);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to set up PASID %llu in nested mode, Err %d\n",
+> +			data->hpasid, ret);
+> +		kfree(sdev);
+> +		goto out;
+> +	}
+> +	svm->flags |= SVM_FLAG_GUEST_MODE;
+> +
+> +	init_rcu_head(&sdev->rcu);
+> +	refcount_inc(&svm->refs);
+> +	list_add_rcu(&sdev->list, &svm->devs);
+> + out:
+> +	mutex_unlock(&pasid_mutex);
+> +	return ret;
+> +}
+> +
+> +int intel_svm_unbind_gpasid(struct device *dev, int pasid)
+> +{
+> +	struct intel_svm_dev *sdev;
+> +	struct intel_iommu *iommu;
+> +	struct intel_svm *svm;
+> +	int ret = -EINVAL;
+> +
+> +	mutex_lock(&pasid_mutex);
+> +	iommu = intel_svm_device_to_iommu(dev);
+> +	if (!iommu)
+> +		goto out;
+> +
+> +	svm = ioasid_find(NULL, pasid, NULL);
+> +	if (IS_ERR(svm)) {
+> +		ret = PTR_ERR(svm);
+> +		goto out;
+> +	}
+> +
+> +	if (!svm)
+> +		goto out;
+> +
+> +	for_each_svm_dev() {
+> +		ret = 0;
+> +		sdev->users--;
+> +		if (!sdev->users) {
+> +			list_del_rcu(&sdev->list);
+> +			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
+> +			/* TODO: Drain in flight PRQ for the PASID since it
+> +			 * may get reused soon, we don't want to
+> +			 * confuse with its previous live.
+> +			 * intel_svm_drain_prq(dev, pasid);
+> +			 */
+> +			kfree_rcu(sdev, rcu);
+> +
+> +			if (list_empty(&svm->devs)) {
+> +				list_del(&svm->list);
+> +				kfree(svm);
+> +				/*
+> +				 * We do not free PASID here until explicit call
+> +				 * from VFIO to free. The PASID life cycle
+> +				 * management is largely tied to VFIO management
+> +				 * of assigned device life cycles. In case of
+> +				 * guest exit without a explicit free PASID call,
+> +				 * the responsibility lies in VFIO layer to free
+> +				 * the PASIDs allocated for the guest.
+> +				 * For security reasons, VFIO has to track the
+> +				 * PASID ownership per guest anyway to ensure
+> +				 * that PASID allocated by one guest cannot be
+> +				 * used by another.
+> +				 */
+> +				ioasid_set_data(pasid, NULL);
+> +			}
+> +		}
+> +		break;
+> +	}
+> + out:
+> +	mutex_unlock(&pasid_mutex);
+> +
+> +	return ret;
+> +}
+> +
+>   int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_ops *ops)
+>   {
+>   	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index b75f17d..94d3a9a 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -677,7 +677,9 @@ int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev);
+>   int intel_svm_init(struct intel_iommu *iommu);
+>   extern int intel_svm_enable_prq(struct intel_iommu *iommu);
+>   extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+> -
+> +extern int intel_svm_bind_gpasid(struct iommu_domain *domain,
+> +		struct device *dev, struct gpasid_bind_data *data);
+> +extern int intel_svm_unbind_gpasid(struct device *dev, int pasid);
+>   struct svm_dev_ops;
+>   
+>   struct intel_svm_dev {
+> @@ -693,12 +695,19 @@ struct intel_svm_dev {
+>   
+>   struct intel_svm {
+>   	struct mmu_notifier notifier;
+> -	struct mm_struct *mm;
+> +	union {
+> +		struct mm_struct *mm;
+> +		u64 gcr3;
+
+I didn't see gcr3 being used anywhere? Anything I missed?
+
+> +	};
+>   	struct intel_iommu *iommu;
+>   	int flags;
+>   	int pasid;
+> +	int gpasid; /* Guest PASID in case of vSVA bind with non-identity host
+> +		     * to guest PASID mapping.
+> +		     */
+>   	struct list_head devs;
+>   	struct list_head list;
+> +	refcount_t refs; /* Number of devices sharing this PASID */
+>   };
+>   
+>   extern struct intel_iommu *intel_svm_device_to_iommu(struct device *dev);
+> diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
+> index e3f7631..577d5df 100644
+> --- a/include/linux/intel-svm.h
+> +++ b/include/linux/intel-svm.h
+> @@ -52,6 +52,23 @@ struct svm_dev_ops {
+>    * do such IOTLB flushes automatically.
+>    */
+>   #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
+> +/*
+> + * The SVM_FLAG_GUEST_MODE flag is used when a guest process bind to a device.
+> + * In this case the mm_struct is in the guest kernel or userspace, its life
+> + * cycle is managed by VMM and VFIO layer. For IOMMU driver, this API provides
+> + * means to bind/unbind guest CR3 with PASIDs allocated for a device.
+> + */
+> +#define SVM_FLAG_GUEST_MODE	(1<<2)
+> +/*
+> + * The SVM_FLAG_GUEST_PASID flag is used when a guest has its own PASID space,
+> + * which requires guest and host PASID translation at both directions. We keep
+> + * track of guest PASID in order to provide lookup service to device drivers.
+> + * One such example is a physical function (PF) driver that supports mediated
+> + * device (mdev) assignment. Guest programming of mdev configuration space can
+> + * only be done with guest PASID, therefore PF driver needs to find the matching
+> + * host PASID to program the real hardware.
+> + */
+> +#define SVM_FLAG_GUEST_PASID	(1<<3)
+>   
+>   #ifdef CONFIG_INTEL_IOMMU_SVM
+>   
+> 
+
+Best regards,
+Baolu
