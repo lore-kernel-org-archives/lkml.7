@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FDBC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806DEC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83D820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A5D20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596871;
-	bh=AHobH1/9iKwPcpIwDFnixvX3zbiA/aLX5C1BflQFJsU=;
+	s=default; t=1561596882;
+	bh=wju1VQaqHnm5zBJ1TvSZIaWmUjFeiL7flKoyuWh5R7Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Upak6ue2NZIMzhAGBapHOJ4g685uBKZyEkjwvAAB6C/doyhgjohr66iKKprGs1ov0
-	 Y8ouELI7MLr+IzOl+cIpyeCFMHsKwbFRbVqKjPK7lqw3c67X3/9TGl7g7oKk0lvffN
-	 +0Eps8dkq2XRWxZO6dP4w8CqGbmJ1f7bS4d8qM1I=
+	b=GcqbVFrENkJoTUxvmfEWRNb8lzJo7yyXfZRSj0fCmENssT8dydqb2DlnjELUmWOL1
+	 JLGH/XxyyLzwxWIMNUMMCkrz0tylQ8IOKebfG/ORDLr4yl1fyzUPUY7Ootr6UoT4w8
+	 AcIuxERKBiafUgnP25vMUHb1347gRiBTlhR24MoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfF0Aba (ORCPT
+        id S1727119AbfF0AbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:31:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfF0AbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:31:23 -0400
+        id S1726795AbfF0AbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:31:18 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE160216E3;
-        Thu, 27 Jun 2019 00:31:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17BCE21738;
+        Thu, 27 Jun 2019 00:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595482;
-        bh=AHobH1/9iKwPcpIwDFnixvX3zbiA/aLX5C1BflQFJsU=;
+        s=default; t=1561595477;
+        bh=wju1VQaqHnm5zBJ1TvSZIaWmUjFeiL7flKoyuWh5R7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lWzg0Mc7CXx0BuzzCeLjALtbylp7J05X6gTS8UnlogcarF3rf4xbMq93zQsDrkeat
-         2w2vfR4+2ByMLYKx6TyQCYxXG51fFqbIJ+iQdvj2LK9PMdQuywVLDlCtdagVPnsHGn
-         CXIAHERTPmh3I39U/vzX4VF5VoY/mieG5ooKQA7Q=
+        b=mxyZeqIUBTK85TGTDbpOcd5mWhIda1Pv1Jct6jYsOCYL8NsO7WyCPccJV7Of3mEGf
+         lTnJDVnn+J2bvyh2azaM9NoUtPjawujuE0/yOOAaBCA0xXx1L9z2XbkzO0YlJ2Tjno
+         fzUCiEC2BRroE6iFLz+iJ1bNcfCEegjRE8YAm4pI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 20/95] mac80211: free peer keys before vif down in mesh
-Date:   Wed, 26 Jun 2019 20:29:05 -0400
-Message-Id: <20190627003021.19867-20-sashal@kernel.org>
+Cc:     Crt Mori <cmo@melexis.com>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 18/95] iio: temperature: mlx90632 Relax the compatibility check
+Date:   Wed, 26 Jun 2019 20:29:03 -0400
+Message-Id: <20190627003021.19867-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -60,32 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
+From: Crt Mori <cmo@melexis.com>
 
-[ Upstream commit 0112fa557c3bb3a002bc85760dc3761d737264d3 ]
+[ Upstream commit 389fc70b60f534d679aea9a3f05146040ce20d77 ]
 
-freeing peer keys after vif down is resulting in peer key uninstall
-to fail due to interface lookup failure. so fix that.
+Register EE_VERSION contains mixture of calibration information and DSP
+version. So far, because calibrations were definite, the driver
+compatibility depended on whole contents, but in the newer production
+process the calibration part changes. Because of that, value in EE_VERSION
+will be changed and to avoid that calibration value is same as DSP version
+the MSB in calibration part was fixed to 1.
+That means existing calibrations (medical and consumer) will now have
+hex values (bits 8 to 15) of 83 and 84 respectively. Driver compatibility
+should be based only on DSP version part of the EE_VERSION (bits 0 to 7)
+register.
 
-Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Crt Mori <cmo@melexis.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/temperature/mlx90632.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index d5aba5029cb0..fe44f0d98de0 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -929,6 +929,7 @@ void ieee80211_stop_mesh(struct ieee80211_sub_if_data *sdata)
+diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
+index be03be719efe..eaca6ba06864 100644
+--- a/drivers/iio/temperature/mlx90632.c
++++ b/drivers/iio/temperature/mlx90632.c
+@@ -81,6 +81,8 @@
+ /* Magic constants */
+ #define MLX90632_ID_MEDICAL	0x0105 /* EEPROM DSPv5 Medical device id */
+ #define MLX90632_ID_CONSUMER	0x0205 /* EEPROM DSPv5 Consumer device id */
++#define MLX90632_DSP_VERSION	5 /* DSP version */
++#define MLX90632_DSP_MASK	GENMASK(7, 0) /* DSP version in EE_VERSION */
+ #define MLX90632_RESET_CMD	0x0006 /* Reset sensor (address or global) */
+ #define MLX90632_REF_12		12LL /**< ResCtrlRef value of Ch 1 or Ch 2 */
+ #define MLX90632_REF_3		12LL /**< ResCtrlRef value of Channel 3 */
+@@ -667,10 +669,13 @@ static int mlx90632_probe(struct i2c_client *client,
+ 	} else if (read == MLX90632_ID_CONSUMER) {
+ 		dev_dbg(&client->dev,
+ 			"Detected Consumer EEPROM calibration %x\n", read);
++	} else if ((read & MLX90632_DSP_MASK) == MLX90632_DSP_VERSION) {
++		dev_dbg(&client->dev,
++			"Detected Unknown EEPROM calibration %x\n", read);	
+ 	} else {
+ 		dev_err(&client->dev,
+-			"EEPROM version mismatch %x (expected %x or %x)\n",
+-			read, MLX90632_ID_CONSUMER, MLX90632_ID_MEDICAL);
++			"Wrong DSP version %x (expected %x)\n",
++			read, MLX90632_DSP_VERSION);
+ 		return -EPROTONOSUPPORT;
+ 	}
  
- 	/* flush STAs and mpaths on this iface */
- 	sta_info_flush(sdata);
-+	ieee80211_free_keys(sdata, true);
- 	mesh_path_flush_by_iface(sdata);
- 
- 	/* stop the beacon */
 -- 
 2.20.1
 
