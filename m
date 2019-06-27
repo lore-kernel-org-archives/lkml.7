@@ -7,61 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55B2C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CF6C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CF5208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B6420644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="e3R8zpyy"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Wgmd4fN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfF0Xry (ORCPT
+        id S1726718AbfF0XsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:47:54 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:47863 "EHLO
+        Thu, 27 Jun 2019 19:48:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46079 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfF0Xry (ORCPT
+        with ESMTP id S1726567AbfF0XsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:47:54 -0400
+        Thu, 27 Jun 2019 19:48:19 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNlZsV503085
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNi3GJ501016
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 16:47:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNlZsV503085
+        Thu, 27 Jun 2019 16:44:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNi3GJ501016
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561679256;
-        bh=dHC6ig0/remYSbb17ANAbzepvA3ymaeJEI2Ue7UCDc8=;
+        s=2019061801; t=1561679044;
+        bh=ztcfVep4YgUzQuTwJAXyiT7pO61v+JVCeg5o0z8InNM=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=e3R8zpyyl8tZZnK3tY7mIdvSaGtolUGKVr0PNKqlUtG550YGfkluyx3btLCFpNred
-         axcgu/gd6oa3GjVsKfkSwZF3mNJ8AKcKwzjDiVU7V4UsKC0GaDRQ70j2JwNzPHRRlj
-         U5/HILVHjvHmw4o08dN0bvsZxz8MpiG/mvQl3To8GIGxlPxi3IDDmfWcpe2f8Aq/SU
-         HAjWV4eSxB/fuUFA8xxyaScKT9F1bbBknO2QZrm+UacwxXOF9O7MNxKwA4nzS558qu
-         15SLq1dj+2cM36cuVXExwd6s982jqfL4qeKFhVx3ZX8JuwnfRZyoXcrZNHGbT6mnOo
-         8/GCNzjKivHBA==
+        b=Wgmd4fN2RSJLtKYXy7VeX3nDJNT0v+tGbDYguzaKrs3sFn1/01Rtl9gK+/VosQv4B
+         znCErsklAzn/25qNs4nqDbwnMR8YOhRXFpkeJ+1YYFVtmq2o+Nnm2Mv4l/x0w1XBDi
+         qXct4pRtyh1KMuOaKJKOpWi4F0k718dmsEsF8XtX77HJ7DgaBQhPgke3sCHNsMseuD
+         5aea1Ynhaoep/yKftItAPYzC9kYjHVI7Ig7BTEUn7bUWLo78EQ5U8ius/fih/76zcm
+         3mjIpYxSFQq+B/9oyHpSOUSpShlu6OglKJk8PAZb5FncARalhYznYKjgkERFccLJbu
+         pYQD9LlY42rHQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNlZ9Z503082;
-        Thu, 27 Jun 2019 16:47:35 -0700
-Date:   Thu, 27 Jun 2019 16:47:35 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNi2Ti500991;
+        Thu, 27 Jun 2019 16:44:02 -0700
+Date:   Thu, 27 Jun 2019 16:44:02 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-9e16e4933e48819a259b8967e72e5765349953b1@git.kernel.org>
-Cc:     ricardo.neri-calderon@linux.intel.com,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ashok.raj@intel.com, hpa@zytor.com, mingo@kernel.org,
-        ravi.v.shankar@intel.com, eranian@google.com, andi.kleen@intel.com,
-        tglx@linutronix.de, Suravee.Suthikulpanit@amd.com
-Reply-To: peterz@infradead.org, ashok.raj@intel.com,
-          linux-kernel@vger.kernel.org,
-          ricardo.neri-calderon@linux.intel.com,
-          Suravee.Suthikulpanit@amd.com, andi.kleen@intel.com,
-          tglx@linutronix.de, eranian@google.com, ravi.v.shankar@intel.com,
-          mingo@kernel.org, hpa@zytor.com
-In-Reply-To: <20190623132435.911652981@linutronix.de>
-References: <20190623132435.911652981@linutronix.de>
+From:   tip-bot for Ingo Molnar <tipbot@zytor.com>
+Message-ID: <tip-3fe50c34dc1fa8ae2c24ec202b9decbbef72921d@git.kernel.org>
+Cc:     eranian@google.com, Suravee.Suthikulpanit@amd.com,
+        linux-kernel@vger.kernel.org,
+        ricardo.neri-calderon@linux.intel.com, mingo@kernel.org,
+        andi.kleen@intel.com, hpa@zytor.com, ashok.raj@intel.com,
+        tglx@linutronix.de, peterz@infradead.org, ravi.v.shankar@intel.com
+Reply-To: tglx@linutronix.de, hpa@zytor.com, ashok.raj@intel.com,
+          andi.kleen@intel.com, mingo@kernel.org, ravi.v.shankar@intel.com,
+          peterz@infradead.org, linux-kernel@vger.kernel.org,
+          eranian@google.com, Suravee.Suthikulpanit@amd.com,
+          ricardo.neri-calderon@linux.intel.com
+In-Reply-To: <20190623132435.454138339@linutronix.de>
+References: <20190623132435.454138339@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/timers] x86/hpet: Add mode information to struct
- hpet_channel
-Git-Commit-ID: 9e16e4933e48819a259b8967e72e5765349953b1
+Subject: [tip:x86/timers] x86/hpet: Make naming consistent
+Git-Commit-ID: 3fe50c34dc1fa8ae2c24ec202b9decbbef72921d
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -75,26 +73,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9e16e4933e48819a259b8967e72e5765349953b1
-Gitweb:     https://git.kernel.org/tip/9e16e4933e48819a259b8967e72e5765349953b1
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 23 Jun 2019 15:24:00 +0200
+Commit-ID:  3fe50c34dc1fa8ae2c24ec202b9decbbef72921d
+Gitweb:     https://git.kernel.org/tip/3fe50c34dc1fa8ae2c24ec202b9decbbef72921d
+Author:     Ingo Molnar <mingo@kernel.org>
+AuthorDate: Sun, 23 Jun 2019 15:23:55 +0200
 Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:57:23 +0200
+CommitDate: Fri, 28 Jun 2019 00:57:20 +0200
 
-x86/hpet: Add mode information to struct hpet_channel
+x86/hpet: Make naming consistent
 
-The usage of the individual HPET channels is not tracked in a central
-place. The information is scattered in different data structures. Also the
-HPET reservation in the HPET character device is split out into several
-places which makes the code hard to follow.
+Use 'evt' for clockevents pointers and capitalize HPET in comments.
 
-Assigning a mode to the channel allows to consolidate the reservation code
-and paves the way for further simplifications.
-
-As a first step set the mode of the legacy channels when the HPET is in
-legacy mode.
-
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -104,41 +94,94 @@ Cc: Andi Kleen <andi.kleen@intel.com>
 Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Link: https://lkml.kernel.org/r/20190623132435.911652981@linutronix.de
+Link: https://lkml.kernel.org/r/20190623132435.454138339@linutronix.de
 
 ---
- arch/x86/kernel/hpet.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/x86/kernel/hpet.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index 8711f1fdef8f..3a8ec363d569 100644
+index 96daae404b29..823e8d32182a 100644
 --- a/arch/x86/kernel/hpet.c
 +++ b/arch/x86/kernel/hpet.c
-@@ -22,9 +22,17 @@ struct hpet_dev {
- 	char				name[10];
- };
+@@ -121,7 +121,7 @@ static inline int is_hpet_capable(void)
+ }
  
-+enum hpet_mode {
-+	HPET_MODE_UNUSED,
-+	HPET_MODE_LEGACY,
-+	HPET_MODE_CLOCKEVT,
-+	HPET_MODE_DEVICE,
-+};
-+
- struct hpet_channel {
- 	unsigned int			num;
- 	unsigned int			irq;
-+	enum hpet_mode			mode;
- 	unsigned int			boot_cfg;
- };
+ /**
+- * is_hpet_enabled - check whether the hpet timer interrupt is enabled
++ * is_hpet_enabled - Check whether the legacy HPET timer interrupt is enabled
+  */
+ int is_hpet_enabled(void)
+ {
+@@ -164,7 +164,7 @@ do {								\
+ } while (0)
  
-@@ -947,6 +955,9 @@ int __init hpet_enable(void)
+ /*
+- * When the hpet driver (/dev/hpet) is enabled, we need to reserve
++ * When the HPET driver (/dev/hpet) is enabled, we need to reserve
+  * timer 0 and timer 1 in case of RTC emulation.
+  */
+ #ifdef CONFIG_HPET
+@@ -212,7 +212,7 @@ static void __init hpet_reserve_platform_timers(unsigned int id)
+ static void hpet_reserve_platform_timers(unsigned int id) { }
+ #endif
  
- 	if (id & HPET_ID_LEGSUP) {
- 		hpet_legacy_clockevent_register();
-+		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
-+		if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
-+			hpet_base.channels[1].mode = HPET_MODE_LEGACY;
- 		return 1;
+-/* Common hpet functions */
++/* Common HPET functions */
+ static void hpet_stop_counter(void)
+ {
+ 	u32 cfg = hpet_readl(HPET_CFG);
+@@ -266,7 +266,7 @@ static void hpet_legacy_clockevent_register(void)
+ 	hpet_enable_legacy_int();
+ 
+ 	/*
+-	 * Start hpet with the boot cpu mask and make it
++	 * Start HPET with the boot cpu mask and make it
+ 	 * global after the IO_APIC has been initialized.
+ 	 */
+ 	hpet_clockevent.cpumask = cpumask_of(boot_cpu_data.cpu_index);
+@@ -399,7 +399,7 @@ static int hpet_legacy_next_event(unsigned long delta,
+ }
+ 
+ /*
+- * The hpet clock event device
++ * The HPET clock event device
+  */
+ static struct clock_event_device hpet_clockevent = {
+ 	.name			= "hpet",
+@@ -484,14 +484,14 @@ static int hpet_msi_next_event(unsigned long delta,
+ static irqreturn_t hpet_interrupt_handler(int irq, void *data)
+ {
+ 	struct hpet_dev *dev = data;
+-	struct clock_event_device *hevt = &dev->evt;
++	struct clock_event_device *evt = &dev->evt;
+ 
+-	if (!hevt->event_handler) {
++	if (!evt->event_handler) {
+ 		pr_info("Spurious interrupt HPET timer %d\n", dev->num);
+ 		return IRQ_HANDLED;
  	}
- 	return 0;
+ 
+-	hevt->event_handler(hevt);
++	evt->event_handler(evt);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -703,7 +703,7 @@ static inline void hpet_reserve_msi_timers(struct hpet_data *hd) { }
+  * with its associated locking overhead. And we also need 64-bit atomic
+  * read.
+  *
+- * The lock and the hpet value are stored together and can be read in a
++ * The lock and the HPET value are stored together and can be read in a
+  * single atomic 64-bit read. It is explicitly assumed that arch_spinlock_t
+  * is 32 bits in size.
+  */
+@@ -1053,7 +1053,7 @@ static unsigned long hpet_pie_limit;
+ static rtc_irq_handler irq_handler;
+ 
+ /*
+- * Check that the hpet counter c1 is ahead of the c2
++ * Check that the HPET counter c1 is ahead of the c2
+  */
+ static inline int hpet_cnt_ahead(u32 c1, u32 c2)
+ {
