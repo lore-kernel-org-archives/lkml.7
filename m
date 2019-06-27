@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3660C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2AFC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5A4214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BD220815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596451;
-	bh=IC2S7997n6SUWPquy8Pvcq/JtfLi0QlfBLlHtyJ5Cik=;
+	s=default; t=1561596465;
+	bh=OaJ8YQFmVlqIGTvmOIj3W8cEQP2IORmxLmRcS7NdN1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sn3U3dNHDJF5JNbDbHm4yfO9R1DuzAan2wnc8FF2wKNTyGPASbPzp6XUKquJvp6t8
-	 ujYEIkUxvFEVwzHZ4L8Fefc47AuWn35buqvyJt1f91xBqaVADtDgkuG/9LBPvcLvqd
-	 26K00gjX61FL/4Th07epftOk8AvY10QVKX56ZKB0=
+	b=EfdCRC4edfEQXOHoOl7oxPxPrl25/QW6WgyoAQi6ip5zp0W2HTfgF4yA4tpvLClE2
+	 INjNHBTl24ikXNA/ElqzeK4GMcXLCBota6o9Eoj1fdRCHytrnfL6up7RUsC9kZIb2c
+	 Mew8U0m+cn/z/r4Acm+Fv9JAwcHZFcXxTqBP4QG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfF0Ara (ORCPT
+        id S1728950AbfF0Ait (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:47:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726862AbfF0AjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:39:04 -0400
+        id S1728902AbfF0Aiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:38:46 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 552C0217F9;
-        Thu, 27 Jun 2019 00:39:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7289221852;
+        Thu, 27 Jun 2019 00:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595943;
-        bh=IC2S7997n6SUWPquy8Pvcq/JtfLi0QlfBLlHtyJ5Cik=;
+        s=default; t=1561595925;
+        bh=OaJ8YQFmVlqIGTvmOIj3W8cEQP2IORmxLmRcS7NdN1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eodeiXpVgXjAo+mmhDfpM1RgjJ0LSFA5IMuN3xVVNytCRcVudd1jSsr4Zd7nj2rw1
-         Wz9fxOP5Y8ibzdSh5146dxkk1gk6P1TmBavcimBjoZDsU+JKPYa7OTfDTP4MupOPbh
-         jbWXrXygiHdsWgwDlSdxyurtC63Hl+yraChFB+ok=
+        b=f2cju8i6xXCk6FxKFqWupVm5jr207S+/tptHbzJE95W2ENQDpRD/NQJ6aki1h1slf
+         Ipe7H9Ho/HnADPKpew2AvzXOxnaxKpbqZwrFFBzbcwJiQ5NAqqtdn+MV1z6Q1hF7qu
+         6HLaDIwE6kaxhTZexHcKLVf3M5pATDQk9on3lCOM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 53/60] drm: return -EFAULT if copy_to_user() fails
-Date:   Wed, 26 Jun 2019 20:36:08 -0400
-Message-Id: <20190627003616.20767-53-sashal@kernel.org>
+Cc:     Reinhard Speyerer <rspmn@arcor.de>,
+        Daniele Palmas <dnlplm@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 47/60] qmi_wwan: avoid RCU stalls on device disconnect when in QMAP mode
+Date:   Wed, 26 Jun 2019 20:36:02 -0400
+Message-Id: <20190627003616.20767-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -60,55 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Reinhard Speyerer <rspmn@arcor.de>
 
-[ Upstream commit 74b67efa8d7b4f90137f0ab9a80dd319da050350 ]
+[ Upstream commit a8fdde1cb830e560208af42b6c10750137f53eb3 ]
 
-The copy_from_user() function returns the number of bytes remaining
-to be copied but we want to return a negative error code.  Otherwise
-the callers treat it as a successful copy.
+Switch qmimux_unregister_device() and qmi_wwan_disconnect() to
+use unregister_netdevice_queue() and unregister_netdevice_many()
+instead of unregister_netdevice(). This avoids RCU stalls which
+have been observed on device disconnect in certain setups otherwise.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618131843.GA29463@mwanda
+Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
+Cc: Daniele Palmas <dnlplm@gmail.com>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_bufs.c  | 5 ++++-
- drivers/gpu/drm/drm_ioc32.c | 5 ++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
-index e2f775d1c112..21bec4548092 100644
---- a/drivers/gpu/drm/drm_bufs.c
-+++ b/drivers/gpu/drm/drm_bufs.c
-@@ -1321,7 +1321,10 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
- 				 .size = from->buf_size,
- 				 .low_mark = from->low_mark,
- 				 .high_mark = from->high_mark};
--	return copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags));
-+
-+	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
-+		return -EFAULT;
-+	return 0;
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index fd3d078a1923..4165113c435a 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -247,13 +247,14 @@ static int qmimux_register_device(struct net_device *real_dev, u8 mux_id)
+ 	return err;
  }
  
- int drm_legacy_infobufs(struct drm_device *dev, void *data,
-diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
-index 67b1fca39aa6..138680b37c70 100644
---- a/drivers/gpu/drm/drm_ioc32.c
-+++ b/drivers/gpu/drm/drm_ioc32.c
-@@ -372,7 +372,10 @@ static int copy_one_buf32(void *data, int count, struct drm_buf_entry *from)
- 			      .size = from->buf_size,
- 			      .low_mark = from->low_mark,
- 			      .high_mark = from->high_mark};
--	return copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags));
-+
-+	if (copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags)))
-+		return -EFAULT;
-+	return 0;
- }
+-static void qmimux_unregister_device(struct net_device *dev)
++static void qmimux_unregister_device(struct net_device *dev,
++				     struct list_head *head)
+ {
+ 	struct qmimux_priv *priv = netdev_priv(dev);
+ 	struct net_device *real_dev = priv->real_dev;
  
- static int drm_legacy_infobufs32(struct drm_device *dev, void *data,
+ 	netdev_upper_dev_unlink(real_dev, dev);
+-	unregister_netdevice(dev);
++	unregister_netdevice_queue(dev, head);
+ 
+ 	/* Get rid of the reference to real_dev */
+ 	dev_put(real_dev);
+@@ -424,7 +425,7 @@ static ssize_t del_mux_store(struct device *d,  struct device_attribute *attr, c
+ 		ret = -EINVAL;
+ 		goto err;
+ 	}
+-	qmimux_unregister_device(del_dev);
++	qmimux_unregister_device(del_dev, NULL);
+ 
+ 	if (!qmimux_has_slaves(dev))
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
+@@ -1434,6 +1435,7 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 	struct qmi_wwan_state *info;
+ 	struct list_head *iter;
+ 	struct net_device *ldev;
++	LIST_HEAD(list);
+ 
+ 	/* called twice if separate control and data intf */
+ 	if (!dev)
+@@ -1446,8 +1448,9 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 		}
+ 		rcu_read_lock();
+ 		netdev_for_each_upper_dev_rcu(dev->net, ldev, iter)
+-			qmimux_unregister_device(ldev);
++			qmimux_unregister_device(ldev, &list);
+ 		rcu_read_unlock();
++		unregister_netdevice_many(&list);
+ 		rtnl_unlock();
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
+ 	}
 -- 
 2.20.1
 
