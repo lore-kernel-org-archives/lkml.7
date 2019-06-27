@@ -2,321 +2,268 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97EDC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD804C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B812075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561660677;
-	bh=WtgVWv3h3e6GjUeYM72+oOL3QStDuHufllKTBP4Cqjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PdC3VUEQah73uKSWUA+unN5e8sAk8Ww8I589ERf/h2NwYqVFwyxs3SzKEGHC/xnS4
-	 d0ZaNl+epTqWIrLyrYlta31nN96Wb61W8Gzs3A76mjnjOG53IjwPB2Z/6rdf22etZR
-	 pQBN8eOiwKwkp8KKtY6JSVW6pSkLZPMx6kxPUUDs=
+	by mail.kernel.org (Postfix) with ESMTP id AD7532064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="UDng4QJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfF0Sh4 (ORCPT
+        id S1726513AbfF0Sl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:37:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfF0Sh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:37:56 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93EC22064A;
-        Thu, 27 Jun 2019 18:37:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561660675;
-        bh=WtgVWv3h3e6GjUeYM72+oOL3QStDuHufllKTBP4Cqjw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GblNFDB4+qPQZ2cNTxdiAQ8mhnWmjEhqcOFBbvX5LW7NPvYajqpwl6iBWf6XGGn9Y
-         UEQt+CsfWcbMOSS+teKpMqLOs+HpsGVS23yuUohkkradaXvMtrDPoTDzejSw39uBK7
-         VjRf4ciUwyl90j95mp7yV/jNna4htgYcUsDgXqHc=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 4ED403C08D5; Thu, 27 Jun 2019 20:37:52 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 20:37:52 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Benson Leung <bleung@google.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Sameer Nanda <snanda@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Adam.Thomson.Opensource@diasemi.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 1/2] power: supply: add input power and voltage limit
- properties
-Message-ID: <20190627183752.4amfttcvd7bswom6@earth.universe>
-References: <20190507095248.17915-1-enric.balletbo@collabora.com>
- <20190523195438.GA110498@google.com>
- <CAFqH_52mdHKGN6gA3HuRJrcBvG1GpE+LzAyLgJD_xeZAiHruFw@mail.gmail.com>
+        Thu, 27 Jun 2019 14:41:29 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34687 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0Sl3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:41:29 -0400
+Received: by mail-qk1-f195.google.com with SMTP id t8so2652847qkt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zp2l4O4LWB1oYN3F7c8FUspudG1FPkSVquIdBgKKNr8=;
+        b=UDng4QJMv1LWzYnKCztVQrCNsQ7Xm4otaD1vwxegRokBDPjtcWCzhLj1b0tPvoH+5G
+         e/wZZXygpBylg98sPuyuv5mbBgHjHPIhEGIY/4sXfGrI6hEsUakCdci1fKEcwYL664EC
+         Ltd0eFTtccFg22S/AnCRO2+x3kM7m3mE76PbjYGJA3XX88l8d1RfTL8naCRYhwRRt0hN
+         kyZi2ZsrwRjkdf7keArGTkmIEQdAUv5kF+i4bxZDaZkTJbnUfBtuvb8kgZ4DSAN0ClWA
+         9uUXZkU+VDLLI8Wljm/1SQ0dpnn2hWHmINCPPoWh84Ec+rb3cevpyvhRbTvWyf7P5pkm
+         ioRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zp2l4O4LWB1oYN3F7c8FUspudG1FPkSVquIdBgKKNr8=;
+        b=gxp6BK5bbqJ9Zp+L/f8qJEuTfcKDw9pI75dgS/TjBs9VeCr/unHDLsWcQDwLZTsmJA
+         ZJfcI5Diof8beSe2I4l1h2v08xldOt5BTafVxX5g3eebVbnJj7RMde37NUY3I2C08xDP
+         WNqp9dm7ZyIMHVX5WTUrccJVu3gAg3FA1BQ2k617h2Hemn8Nrwz2CvQriu9dRcPKnmUj
+         aAD26ozG4fkZu2xsAiKuQx9TMKC9V64vwR1bjLRlZ4RyhR6VUSH048eSTJvrsjjzkztJ
+         FDPVZWLZPPTp+urq4eYsMe3NSQqAKr4MSbIImXpO1owfynarNQaHqqkPZdnCtysVv3X/
+         zBhQ==
+X-Gm-Message-State: APjAAAWRRvTCQ/SG8DITX34y6kGiFEvWD7d60PE//+FEb4ttes65bj/G
+        9jWxA5IUFAir8wgR/kPLmpGrOQ==
+X-Google-Smtp-Source: APXvYqzuAHF37eGCzmzOTvKs0gfWaevOeNG3BEuhoGjpmd7NajpcCkq1aEtP0oryKkwjtmcGiGqZAA==
+X-Received: by 2002:a05:620a:13b9:: with SMTP id m25mr5020959qki.246.1561660885669;
+        Thu, 27 Jun 2019 11:41:25 -0700 (PDT)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id t29sm1418301qtt.42.2019.06.27.11.41.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 11:41:24 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 14:41:23 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Kuo-Hsin Yang <vovoy@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Sonny Rao <sonnyrao@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: vmscan: fix not scanning anonymous pages when
+ detecting file refaults
+Message-ID: <20190627184123.GA11181@cmpxchg.org>
+References: <20190619080835.GA68312@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e4ghregrusiggzmz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFqH_52mdHKGN6gA3HuRJrcBvG1GpE+LzAyLgJD_xeZAiHruFw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190619080835.GA68312@google.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 19, 2019 at 04:08:35PM +0800, Kuo-Hsin Yang wrote:
+> When file refaults are detected and there are many inactive file pages,
+> the system never reclaim anonymous pages, the file pages are dropped
+> aggressively when there are still a lot of cold anonymous pages and
+> system thrashes. This issue impacts the performance of applications with
+> large executable, e.g. chrome.
+> 
+> When file refaults are detected. inactive_list_is_low() may return
+> different values depends on the actual_reclaim parameter, the following
+> 2 conditions could be satisfied at the same time.
+> 
+> 1) inactive_list_is_low() returns false in get_scan_count() to trigger
+>    scanning file lists only.
+> 2) inactive_list_is_low() returns true in shrink_list() to allow
+>    scanning active file list.
+> 
+> In that case vmscan would only scan file lists, and as active file list
+> is also scanned, inactive_list_is_low() may keep returning false in
+> get_scan_count() until file cache is very low.
+> 
+> Before commit 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in
+> cache workingset transition"), inactive_list_is_low() never returns
+> different value in get_scan_count() and shrink_list() in one
+> shrink_node_memcg() run. The original design should be that when
+> inactive_list_is_low() returns false for file lists, vmscan only scan
+> inactive file list. As only inactive file list is scanned,
+> inactive_list_is_low() would soon return true.
+> 
+> This patch makes the return value of inactive_list_is_low() independent
+> of actual_reclaim.
+> 
+> The problem can be reproduced by the following test program.
+> 
+> ---8<---
+> void fallocate_file(const char *filename, off_t size)
+> {
+> 	struct stat st;
+> 	int fd;
+> 
+> 	if (!stat(filename, &st) && st.st_size >= size)
+> 		return;
+> 
+> 	fd = open(filename, O_WRONLY | O_CREAT, 0600);
+> 	if (fd < 0) {
+> 		perror("create file");
+> 		exit(1);
+> 	}
+> 	if (posix_fallocate(fd, 0, size)) {
+> 		perror("fallocate");
+> 		exit(1);
+> 	}
+> 	close(fd);
+> }
+> 
+> long *alloc_anon(long size)
+> {
+> 	long *start = malloc(size);
+> 	memset(start, 1, size);
+> 	return start;
+> }
+> 
+> long access_file(const char *filename, long size, long rounds)
+> {
+> 	int fd, i;
+> 	volatile char *start1, *end1, *start2;
+> 	const int page_size = getpagesize();
+> 	long sum = 0;
+> 
+> 	fd = open(filename, O_RDONLY);
+> 	if (fd == -1) {
+> 		perror("open");
+> 		exit(1);
+> 	}
+> 
+> 	/*
+> 	 * Some applications, e.g. chrome, use a lot of executable file
+> 	 * pages, map some of the pages with PROT_EXEC flag to simulate
+> 	 * the behavior.
+> 	 */
+> 	start1 = mmap(NULL, size / 2, PROT_READ | PROT_EXEC, MAP_SHARED,
+> 		      fd, 0);
+> 	if (start1 == MAP_FAILED) {
+> 		perror("mmap");
+> 		exit(1);
+> 	}
+> 	end1 = start1 + size / 2;
+> 
+> 	start2 = mmap(NULL, size / 2, PROT_READ, MAP_SHARED, fd, size / 2);
+> 	if (start2 == MAP_FAILED) {
+> 		perror("mmap");
+> 		exit(1);
+> 	}
+> 
+> 	for (i = 0; i < rounds; ++i) {
+> 		struct timeval before, after;
+> 		volatile char *ptr1 = start1, *ptr2 = start2;
+> 		gettimeofday(&before, NULL);
+> 		for (; ptr1 < end1; ptr1 += page_size, ptr2 += page_size)
+> 			sum += *ptr1 + *ptr2;
+> 		gettimeofday(&after, NULL);
+> 		printf("File access time, round %d: %f (sec)\n", i,
+> 		       (after.tv_sec - before.tv_sec) +
+> 		       (after.tv_usec - before.tv_usec) / 1000000.0);
+> 	}
+> 	return sum;
+> }
+> 
+> int main(int argc, char *argv[])
+> {
+> 	const long MB = 1024 * 1024;
+> 	long anon_mb, file_mb, file_rounds;
+> 	const char filename[] = "large";
+> 	long *ret1;
+> 	long ret2;
+> 
+> 	if (argc != 4) {
+> 		printf("usage: thrash ANON_MB FILE_MB FILE_ROUNDS\n");
+> 		exit(0);
+> 	}
+> 	anon_mb = atoi(argv[1]);
+> 	file_mb = atoi(argv[2]);
+> 	file_rounds = atoi(argv[3]);
+> 
+> 	fallocate_file(filename, file_mb * MB);
+> 	printf("Allocate %ld MB anonymous pages\n", anon_mb);
+> 	ret1 = alloc_anon(anon_mb * MB);
+> 	printf("Access %ld MB file pages\n", file_mb);
+> 	ret2 = access_file(filename, file_mb * MB, file_rounds);
+> 	printf("Print result to prevent optimization: %ld\n",
+> 	       *ret1 + ret2);
+> 	return 0;
+> }
+> ---8<---
+> 
+> Running the test program on 2GB RAM VM with kernel 5.2.0-rc5, the
+> program fills ram with 2048 MB memory, access a 200 MB file for 10
+> times. Without this patch, the file cache is dropped aggresively and
+> every access to the file is from disk.
+> 
+>   $ ./thrash 2048 200 10
+>   Allocate 2048 MB anonymous pages
+>   Access 200 MB file pages
+>   File access time, round 0: 2.489316 (sec)
+>   File access time, round 1: 2.581277 (sec)
+>   File access time, round 2: 2.487624 (sec)
+>   File access time, round 3: 2.449100 (sec)
+>   File access time, round 4: 2.420423 (sec)
+>   File access time, round 5: 2.343411 (sec)
+>   File access time, round 6: 2.454833 (sec)
+>   File access time, round 7: 2.483398 (sec)
+>   File access time, round 8: 2.572701 (sec)
+>   File access time, round 9: 2.493014 (sec)
+> 
+> With this patch, these file pages can be cached.
+> 
+>   $ ./thrash 2048 200 10
+>   Allocate 2048 MB anonymous pages
+>   Access 200 MB file pages
+>   File access time, round 0: 2.475189 (sec)
+>   File access time, round 1: 2.440777 (sec)
+>   File access time, round 2: 2.411671 (sec)
+>   File access time, round 3: 1.955267 (sec)
+>   File access time, round 4: 0.029924 (sec)
+>   File access time, round 5: 0.000808 (sec)
+>   File access time, round 6: 0.000771 (sec)
+>   File access time, round 7: 0.000746 (sec)
+>   File access time, round 8: 0.000738 (sec)
+>   File access time, round 9: 0.000747 (sec)
+> 
+> Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
+> Signed-off-by: Kuo-Hsin Yang <vovoy@chromium.org>
 
---e4ghregrusiggzmz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Hi,
+Your change makes sense - we should indeed not force cache trimming
+only while the page cache is experiencing refaults.
 
-I just queued both patches. Thanks for the detailed description and
-documentation.
+I can't say I fully understand the changelog, though. The problem of
+forcing cache trimming while there is enough page cache is older than
+the commit you refer to. It could be argued that this commit is
+incomplete - it could have added refault detection not just to
+inactive:active file balancing, but also the file:anon balancing; but
+it didn't *cause* this problem.
 
--- Sebastian
+Shouldn't this be
 
-On Tue, Jun 25, 2019 at 12:04:13PM +0200, Enric Balletbo Serra wrote:
-> Hi Sebastian, Pavel,
->=20
-> Missatge de Benson Leung <bleung@google.com> del dia dj., 23 de maig
-> 2019 a les 21:55:
-> >
-> > Hi Enric,
-> >
-> > On Tue, May 07, 2019 at 11:52:47AM +0200, Enric Balletbo i Serra wrote:
-> > > For thermal management strategy you might be interested on limit the
-> > > input power for a power supply. We already have current limit but
-> > > basically what we probably want is to limit power. So, introduce the
-> > > input_power_limit property.
-> > >
-> > > Although the common use case is limit the input power, in some
-> > > specific cases it is the voltage that is problematic (i.e some regula=
-tors
-> > > have different efficiencies at higher voltage resulting in more heat).
-> > > So introduce also the input_voltage_limit property.
-> > >
-> > > This happens in one Chromebook and is used on the Pixel C's thermal
-> > > management strategy to effectively limit the input power to 5V 3A when
-> > > the screen is on. When the screen is on, the display, the CPU, and th=
-e GPU
-> > > all contribute more heat to the system than while the screen is off, =
-and
-> > > we made a tradeoff to throttle the charger in order to give more of t=
-he
-> > > thermal budget to those other components.
-> > >
-> > > So there's nothing fundamentally broken about the hardware that would
-> > > cause the Pixel C to malfunction if we were charging at 9V or 12V ins=
-tead
-> > > of 5V when the screen is on, i.e. if userspace doesn't change this.
-> > >
-> > > What would happen is that you wouldn't meet Google's skin temperature
-> > > targets on the system if the charger was allowed to run at 9V or 12V =
-with
-> > > the screen on.
-> > >
-> > > For folks hacking on Pixel Cs (which is now outside of Google's offic=
-ial
-> > > support window for Android) and customizing their own kernel and user=
-space
-> > > this would be acceptable, but we wanted to expose this feature in the
-> > > power supply properties because the feature does exist in the Emedded
-> > > Controller firmware of the Pixel C and all of Google's Chromebooks wi=
-th
-> > > USB-C made since 2015 in case someone running an up to date kernel wa=
-nted
-> > > to limit the charging power for thermal or other reasons.
-> > >
-> > > This patch exposes a new property, similar to input current limit, to
-> > > re-configure the maximum voltage from the external supply at runtime
-> > > based on system-level knowledge or user input.
-> > >
-> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > > Reviewed-by: Guenter Roeck <groeck@chromium.org>
-> > > Acked-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> >
-> > Reviewed-by: Benson Leung <bleung@chromium.org>
-> >
->=20
-> We're close to the merge window so I'm wondering if there are more
-> concerns on this patchset?
->=20
-> Thanks,
-> ~ Enric
->=20
-> > > ---
-> > >
-> > > Changes in v4:
-> > > - Add also input_power_limit.
-> > >
-> > > Changes in v3:
-> > > - Improve commit log and documentation with Benson comments.
-> > >
-> > > Changes in v2:
-> > > - Document the new property in ABI/testing/sysfs-class-power.
-> > > - Add the Reviewed-by Guenter Roeck tag.
-> > >
-> > >  Documentation/ABI/testing/sysfs-class-power | 32 +++++++++++++++++++=
-++
-> > >  Documentation/power/power_supply_class.txt  |  4 +++
-> > >  drivers/power/supply/power_supply_sysfs.c   |  2 ++
-> > >  include/linux/power_supply.h                |  2 ++
-> > >  4 files changed, 40 insertions(+)
-> > >
-> > > diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentat=
-ion/ABI/testing/sysfs-class-power
-> > > index 5e23e22dce1b..962a27a1daf8 100644
-> > > --- a/Documentation/ABI/testing/sysfs-class-power
-> > > +++ b/Documentation/ABI/testing/sysfs-class-power
-> > > @@ -331,10 +331,42 @@ Description:
-> > >               supply. Normally this is configured based on the type of
-> > >               connection made (e.g. A configured SDP should output a =
-maximum
-> > >               of 500mA so the input current limit is set to the same =
-value).
-> > > +             Use preferably input_power_limit, and for problems that=
- can be
-> > > +             solved using power limit use input_current_limit.
-> > >
-> > >               Access: Read, Write
-> > >               Valid values: Represented in microamps
-> > >
-> > > +What:                /sys/class/power_supply/<supply_name>/input_vol=
-tage_limit
-> > > +Date:                May 2019
-> > > +Contact:     linux-pm@vger.kernel.org
-> > > +Description:
-> > > +             This entry configures the incoming VBUS voltage limit c=
-urrently
-> > > +             set in the supply. Normally this is configured based on
-> > > +             system-level knowledge or user input (e.g. This is part=
- of the
-> > > +             Pixel C's thermal management strategy to effectively li=
-mit the
-> > > +             input power to 5V when the screen is on to meet Google'=
-s skin
-> > > +             temperature targets). Note that this feature should not=
- be
-> > > +             used for safety critical things.
-> > > +             Use preferably input_power_limit, and for problems that=
- can be
-> > > +             solved using power limit use input_voltage_limit.
-> > > +
-> > > +             Access: Read, Write
-> > > +             Valid values: Represented in microvolts
-> > > +
-> > > +What:                /sys/class/power_supply/<supply_name>/input_pow=
-er_limit
-> > > +Date:                May 2019
-> > > +Contact:     linux-pm@vger.kernel.org
-> > > +Description:
-> > > +             This entry configures the incoming power limit currentl=
-y set
-> > > +             in the supply. Normally this is configured based on
-> > > +             system-level knowledge or user input. Use preferably th=
-is
-> > > +             feature to limit the incoming power and use current/vol=
-tage
-> > > +             limit only for problems that can be solved using power =
-limit.
-> > > +
-> > > +             Access: Read, Write
-> > > +             Valid values: Represented in microwatts
-> > > +
-> > >  What:                /sys/class/power_supply/<supply_name>/online,
-> > >  Date:                May 2007
-> > >  Contact:     linux-pm@vger.kernel.org
-> > > diff --git a/Documentation/power/power_supply_class.txt b/Documentati=
-on/power/power_supply_class.txt
-> > > index 300d37896e51..1e3c705111db 100644
-> > > --- a/Documentation/power/power_supply_class.txt
-> > > +++ b/Documentation/power/power_supply_class.txt
-> > > @@ -137,6 +137,10 @@ power supply object.
-> > >
-> > >  INPUT_CURRENT_LIMIT - input current limit programmed by charger. Ind=
-icates
-> > >  the current drawn from a charging source.
-> > > +INPUT_VOLTAGE_LIMIT - input voltage limit programmed by charger. Ind=
-icates
-> > > +the voltage limit from a charging source.
-> > > +INPUT_POWER_LIMIT - input power limit programmed by charger. Indicat=
-es
-> > > +the power limit from a charging source.
-> > >
-> > >  CHARGE_CONTROL_LIMIT - current charge control limit setting
-> > >  CHARGE_CONTROL_LIMIT_MAX - maximum charge control limit setting
-> > > diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/powe=
-r/supply/power_supply_sysfs.c
-> > > index 5358a80d854f..860db617d241 100644
-> > > --- a/drivers/power/supply/power_supply_sysfs.c
-> > > +++ b/drivers/power/supply/power_supply_sysfs.c
-> > > @@ -275,6 +275,8 @@ static struct device_attribute power_supply_attrs=
-[] =3D {
-> > >       POWER_SUPPLY_ATTR(charge_control_limit),
-> > >       POWER_SUPPLY_ATTR(charge_control_limit_max),
-> > >       POWER_SUPPLY_ATTR(input_current_limit),
-> > > +     POWER_SUPPLY_ATTR(input_voltage_limit),
-> > > +     POWER_SUPPLY_ATTR(input_power_limit),
-> > >       POWER_SUPPLY_ATTR(energy_full_design),
-> > >       POWER_SUPPLY_ATTR(energy_empty_design),
-> > >       POWER_SUPPLY_ATTR(energy_full),
-> > > diff --git a/include/linux/power_supply.h b/include/linux/power_suppl=
-y.h
-> > > index 2f9c201a54d1..ba135a5d8996 100644
-> > > --- a/include/linux/power_supply.h
-> > > +++ b/include/linux/power_supply.h
-> > > @@ -122,6 +122,8 @@ enum power_supply_property {
-> > >       POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT,
-> > >       POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
-> > >       POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-> > > +     POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
-> > > +     POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
-> > >       POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
-> > >       POWER_SUPPLY_PROP_ENERGY_EMPTY_DESIGN,
-> > >       POWER_SUPPLY_PROP_ENERGY_FULL,
-> > > --
-> > > 2.20.1
-> > >
-> >
-> > --
-> > Benson Leung
-> > Staff Software Engineer
-> > Chrome OS Kernel
-> > Google Inc.
-> > bleung@google.com
-> > Chromium OS Project
-> > bleung@chromium.org
+Fixes: e9868505987a ("mm,vmscan: only evict file pages when we have plenty")
+Fixes: 7c5bd705d8f9 ("mm: memcg: only evict file pages when we have plenty")
 
---e4ghregrusiggzmz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0VDQAACgkQ2O7X88g7
-+pqkhhAAlWCKoKEY+olvQ7v5gHO3kZB0Z5j8HEgtWE7KbkzVR0RmMq+dm0w7jOcu
-VNn9iYY/buXIRP/ey66XuQ8nYS/b9FGFsoxDsm7UVG9ps/7LTpgvhpIiN3hR5Aue
-BvwkIbBrE4lJSEtwuKKskOMP4+tUh6SLxVIuWkYBi3j9iW8+TquKLzIk/VLDqLlF
-jK+RlynXef5Ge+RNa8yAt0kz0GaRyDGIZf67FPQIvJ7qL/bjlsyJ21Bstq9wZqdf
-Ny06XGiY4nerdJelxnPIbLZrcZx9M4mb+LJSmJJ1ZNE2ofTduPv3FT5zMI4vq8+K
-/8aoKnp3DbpoQ/ubreqWAYpG1e/5Hs7kn1B3rDOXilOB4f96470f+ydDPzQ9aKuh
-SYxWkVEFoi2RcfsaLkYSC2JLTrHJG3n0IGEAxfdiV2Zd5orSlVfoz59EJR75EUAc
-nazikzvj62E2VHsUt3VvNpi1Gz2ojNhMqr2j4DJckvALujtORB38D65WfRlXbvej
-tJ0GLs3ItHnwe961+GWQOC/V/Wyon821hvigrlRhJHh17VZCWEFL3WnAuw51NejF
-F8VrrYbqkVNWCBTBEcjQ8L5RGz/uofBxg8g6mtHv7l+fSagk7KhVFO3N3Bm5FfJn
-5rjIYw3/kID8EK7U82sMnG+QsR4TRJ8hqOeTtUXbZZV95rNmKHo=
-=Cf/l
------END PGP SIGNATURE-----
-
---e4ghregrusiggzmz--
+instead?
