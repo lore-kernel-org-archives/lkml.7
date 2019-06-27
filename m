@@ -2,103 +2,69 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73093C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE76C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5219320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:22:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bz9ZvbKk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EZDHDrlL"
+	by mail.kernel.org (Postfix) with ESMTP id 5015020B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:22:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561659759;
+	bh=n60tYciFZ/rJjYb/1k+C2pWN3/F6CRA6F5z90rAb65k=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=pDiT7KG+v6hrKnfA0Bfkd3I5JtLGpJl70ghJoD+/4B7BaIBZftkXTGNNQoy1cbzfT
+	 M+lNyfqxBfoWKxM8jenUrD7dvMOWNxuj/BRGfvJWwNOy5/NSNKJulDwEzJlnPcXCRq
+	 J/P7QXH+n5g9jtRxHOUm3cc1H9LINt3uNKoeHFjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfF0SWH (ORCPT
+        id S1726846AbfF0SWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:22:07 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43574 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfF0SWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:22:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 37A1060A0A; Thu, 27 Jun 2019 18:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561659726;
-        bh=L4rcvZr/+aW0fXo6jf8y6SY/AYN6T06PMSeRbTAx/RQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=bz9ZvbKk+19cPUYMoVAHtGANzVgSuBRp/ozL/ndHQM3D8RVuuxcyw0hTF86WXXS6h
-         9++uVXYO49wWWrosmRXwMNfFrXvbdoXXQFNHytkfUTh7AqWIurHlJvAFBxGMSl+gX4
-         iwuMbPOmm7qrzRH2MOeyYiNBi5yJumE/Ks0JAHMk=
-Received: from [192.168.1.100] (unknown [157.45.87.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 27 Jun 2019 14:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726508AbfF0SWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:22:37 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9AB56021C;
-        Thu, 27 Jun 2019 18:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561659725;
-        bh=L4rcvZr/+aW0fXo6jf8y6SY/AYN6T06PMSeRbTAx/RQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EZDHDrlLSCTmFKqx3BjfzxaFmF3ZfvGKnPZ5oWdKl9PIvqN5VaMsgsaMgh86g7I3E
-         rmbmn62Xl/6Z7nbfE7QJri2QUjRtXObt411a6Tv3fJOospRRPIYZFancWErn1IpP6R
-         4EcuZvfI5z8eOvnDDh7F44ysWsqGuVtl6bbrle7g=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9AB56021C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [RESEND PATCHv4 1/1] coresight: Do not default to CPU0 for
- missing CPU phandle
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-References: <cover.1561610498.git.saiprakash.ranjan@codeaurora.org>
- <0a20cf9eb34b14a191381af98af1694bbc222734.1561610498.git.saiprakash.ranjan@codeaurora.org>
- <CANLsYkyaeroow1dRaffy5pxSCH7ocb9=EMeZeSjgpjDWXu18vg@mail.gmail.com>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <0e33a1f2-f535-91e3-635d-dc8852833a0b@codeaurora.org>
-Date:   Thu, 27 Jun 2019 23:51:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id D274720644;
+        Thu, 27 Jun 2019 18:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561659756;
+        bh=n60tYciFZ/rJjYb/1k+C2pWN3/F6CRA6F5z90rAb65k=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=E8nmK2zzxL74/hvLttnn9Mj59gGHrsvRd9F1cHH0d6FnOpmhYMCeYa8/78C+bywPP
+         4diOqXEYmZTrmTIWQUHKBWVGxgONk3IKatkCs/SjO0mPPtXWuB1jUbGzEVnVEOAZlQ
+         XEdJNT2JdveWMHAK98k838m2Vp5+UVt3vcfFqdPQ=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkyaeroow1dRaffy5pxSCH7ocb9=EMeZeSjgpjDWXu18vg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1561650825-11213-2-git-send-email-claudiu.beznea@microchip.com>
+References: <1561650825-11213-1-git-send-email-claudiu.beznea@microchip.com> <1561650825-11213-2-git-send-email-claudiu.beznea@microchip.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        mturquette@baylibre.com, nicolas.ferre@microchip.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 1/7] clk: at91: sckc: add support to free slow oscillator
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 27 Jun 2019 11:22:35 -0700
+Message-Id: <20190627182236.D274720644@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/2019 10:54 PM, Mathieu Poirier wrote:
-> 
-> I want to apply your code to my tree but it isn't easy for me to do
-> so.  Did you notice the checkpatch.pl warning about the DT bindings
-> being in a separate patch?  In this case it is not a new binding but
-> following the process gives the DT maintainers the opportunity to at
-> least look at your patch.  Because the changes are trivial they may
-> decide to ignore it but that choice it theirs to make.
-> 
+Quoting Claudiu Beznea (2019-06-27 08:53:39)
+> Add support to free slow oscillator resources.
+>=20
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
 
-Hmm, git log on coresight dt-bindings showed some examples like
-this where bindings were updated in the same patch.
+Applied to clk-next
 
-Anyways, I have separated out the patch now and resent v5.
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
