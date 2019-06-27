@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851D9C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F94C5B576
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B34120B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC66216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgtVOsBZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbcIlFLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfF0VN0 (ORCPT
+        id S1726734AbfF0VMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:13:26 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38881 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbfF0VMk (ORCPT
+        Thu, 27 Jun 2019 17:12:38 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35711 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbfF0VMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:12:40 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so3810374ljg.5;
-        Thu, 27 Jun 2019 14:12:38 -0700 (PDT)
+        Thu, 27 Jun 2019 17:12:36 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a25so2539303lfg.2;
+        Thu, 27 Jun 2019 14:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=A/wvZWRvPJt4kWryTQr1tyDplrxh8gTwF3cbwz+VuPI=;
-        b=mgtVOsBZl5cwqumrIrxMW6w5E1Bi4rVjPCzLrN0LJbkZ/rbe92kghNjglVxs4p2Vkh
-         F0xujlaTpXgdNbd72B1lIxyoFXMkwf1/J8e2bRdBQS0zSd191b1qPdf7sD/MeG+N8ubL
-         esEnFtgridGEtTmhMbj2Pu5QwUWPw4t/ddyKYlvNobVhPefLcH1sU+Bpjj/KtowaPJEY
-         UqxYGIJY386zWu2fWcKT3KQ+w0B2UwMJEjVSCc0SODUbHmaPtb6DisiZaVW/2vHk0sNc
-         Jj+Fwenq1eUxt65uf8op/Gz+CwYXNjfTBJXN0Lyk6FrPu0q33+m65opB0k5q0XRG/OZ0
-         RzcQ==
+        bh=gPGZMg3THPRwEyEU9V0LFA6+Mg8FLrRJcaRFxlEddPc=;
+        b=AbcIlFLxF83sgdsecFJfq5OrfnFOfuUZjYQVtN6cdpcIKPOLrlvfQxZ3tTttFRy3v4
+         d/iiy+nq7Y757DcUHytUOn0owQ9Z5j4dla1NBjbVsGHOoygeQSdknSXvGALf6pIIrGh9
+         wTV8M9nOqYssdgOtWcR3RehHp/YdvoDsBLUQVWE/jNB7XVccX+u1qsYCmr9YuH0meuty
+         a+Nl7yJ+gwZ+d97OtOBfCYKALsOOhs5QyhWC0kCUDqf0VFu6lmXEQzkEViAI62IBr0GX
+         s2jqkUoHar9w/bPHTGjjyfPb2PqKiaQcZjihObvJp6aPUY6Lvui+Tr0lJjkOun846oz9
+         gd+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=A/wvZWRvPJt4kWryTQr1tyDplrxh8gTwF3cbwz+VuPI=;
-        b=UCt29rzUvnQBcyVBSnUvUAboc+zrMdfppKb8OcJOECj23UYStMWQaCwaJI/LD9i9Tk
-         3Szb7EsYMiSAJOBygYtGBDOcMn1Vz8ZZ4YSoDfEdnTXGztKLdzQQz9TegR7w54Fbqa9D
-         WPffUXgXnwi6qV5AYVo5vuJA7UOvw9KwBAKjkFpjIad0iXBEmtCdjfjgXvJjTn/VVL4b
-         Stmu1NDOhoTJ9uwxtl+Qj4jUYH7JkauOevpWD0mYaelEl0eImzgR0g4vj0Q8scc2FGpz
-         0Vzlrd4RPokVf3ysQaR4g86tB8RF+DXECAoeSun7+1bvWEBOI3f79PKdy24ytGa5BmJF
-         thtw==
-X-Gm-Message-State: APjAAAU25BYaKds6Wka8SY5TjgoexEwYYug31tRuPKo6LDhjh6a+2sGL
-        XeohWWw5wmyesfYwh/X/IT4=
-X-Google-Smtp-Source: APXvYqwEF0ay5gYXN5NBBL/TKVwQWVFsCQKRGebiHF2ydGGo66JBoBTRwnx0d820rE4UzlJDGVte7g==
-X-Received: by 2002:a2e:8515:: with SMTP id j21mr3951641lji.233.1561669958102;
-        Thu, 27 Jun 2019 14:12:38 -0700 (PDT)
+        bh=gPGZMg3THPRwEyEU9V0LFA6+Mg8FLrRJcaRFxlEddPc=;
+        b=Y8ypl4dgWPB88sNFI++LaLQO+c/cbbN0QKJMw0IRv/UkFQ33+VhmVL70MnwNkBU6l5
+         zUdKPJxtTPr9v7FaXGRedQgvOvSUsqQWjLdf96918QpnkLb5MpaIEbWLdbj3hYPFHekr
+         EPldqjWDUBe0yFKuGkMRFhbeWpSdTkhTCzyDSPIMt3NypwHv0bIAtbO9k1n99gNN+i20
+         kJtghcOUzfvjA7qoQBYbjSVIURswpD7hdB4Rph0aOZ/ONTTgcooUgB/f6kmiASKvYA0m
+         JHJ1svnt4bRkS2+4P9i5kecovhGpX3g9XLMIXQWn+NClQ8j16BUSbWtyP3l+D/u1T5zL
+         +/bA==
+X-Gm-Message-State: APjAAAW7uDNsh20HHduCQ0HVenrvbilQL35gnnTNaDimt8JFs5PbGVwj
+        J0doLbIQ940CtmwU97VWm7Q=
+X-Google-Smtp-Source: APXvYqyENrPadNnLAdInbiVF8JxIReLWwYRI7wvhvdNEfCQ1QgaLzr1TOieaPCloTfSnY0iGoOBpFg==
+X-Received: by 2002:ac2:5609:: with SMTP id v9mr3022478lfd.27.1561669953780;
+        Thu, 27 Jun 2019 14:12:33 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id p29sm30485ljp.87.2019.06.27.14.12.37
+        by smtp.gmail.com with ESMTPSA id p29sm30485ljp.87.2019.06.27.14.12.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 14:12:37 -0700 (PDT)
+        Thu, 27 Jun 2019 14:12:33 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 14/22] PM / devfreq: tegra30: Ensure that target freq won't overflow
-Date:   Fri, 28 Jun 2019 00:11:07 +0300
-Message-Id: <20190627211115.21138-15-digetx@gmail.com>
+Subject: [PATCH v3 10/22] PM / devfreq: tegra30: Don't enable consecutive-down interrupt on startup
+Date:   Fri, 28 Jun 2019 00:11:03 +0300
+Message-Id: <20190627211115.21138-11-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190627211115.21138-1-digetx@gmail.com>
 References: <20190627211115.21138-1-digetx@gmail.com>
@@ -79,26 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Potentially very high boosting could cause an integer overflow for a
-highly clocked memory after conversion to MHz.
+The consecutive-down event tells that we should perform frequency
+de-boosting, but boosting is in a reset state on start and hence the
+event won't do anything useful for us and it will be just a dummy
+interrupt request.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/devfreq/tegra30-devfreq.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index d3e117d827d2..f86593ab3008 100644
+index cca2fc15bafe..65f0363dbf1b 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -459,6 +459,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
- {	unsigned long target_freq;
+@@ -557,7 +557,6 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+ 		<< ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_NUM_SHIFT;
+ 	val |= ACTMON_DEV_CTRL_AVG_ABOVE_WMARK_EN;
+ 	val |= ACTMON_DEV_CTRL_AVG_BELOW_WMARK_EN;
+-	val |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
+ 	val |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+ 	val |= ACTMON_DEV_CTRL_ENB;
  
- 	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD + dev->boost_freq;
-+	target_freq = min(target_freq, ULONG_MAX / KHZ);
- 	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
- 
- 	return target_freq;
 -- 
 2.22.0
 
