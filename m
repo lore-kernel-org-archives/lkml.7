@@ -2,177 +2,144 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA5EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FD7C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D384216E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6751216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 02:50:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="gO9JdY7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfF0CuI convert rfc822-to-8bit (ORCPT
+        id S1726982AbfF0Cuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 22:50:08 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:45858 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfF0CuH (ORCPT
+        Wed, 26 Jun 2019 22:50:40 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42711 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfF0Cuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 22:50:07 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0B20814DE884A;
-        Wed, 26 Jun 2019 19:50:07 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 19:50:06 -0700 (PDT)
-Message-Id: <20190626.195006.2073691861982062351.davem@davemloft.net>
-To:     torvalds@linux-foundation.org
-CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT] Networking
-From:   David Miller <davem@davemloft.net>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Jun 2019 19:50:07 -0700 (PDT)
+        Wed, 26 Jun 2019 22:50:40 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t28so658987lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 19:50:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=BTKCxnhTazrPesoHKDV4p8sRapqVbrsGw9bOncK6AZU=;
+        b=gO9JdY7D9q0BkzIBQI9C0ktBuctOyqDjPah6J+45Rj43WFfPDhuCyeicU4enOUY7dm
+         VuIyQqJxWnIaqzMkznyd2uO7XSahMortHR8YUaG7dOv+zCmmJ1Y5eauotob7cR/Fhb5L
+         jFqiM8NrmAZAiUMZPgccGP9QABRsB2l3TGnhyfYqVFeObOsabYQoXlipLoE+C17oT6JQ
+         4zvPZFUI4RneAwmz1DI/eqPpfh20xre5+hOY/hCX4s1JxzqgMEXwfBIZ6HSG2js3uXB6
+         dLDFyLYu+Q5PLs40TzONI8rcJRjDLyJ5Iz7buRXtJbYjJcEzM+R2CEUAvHQKrpwPA0hj
+         auyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=BTKCxnhTazrPesoHKDV4p8sRapqVbrsGw9bOncK6AZU=;
+        b=E74gYjT8xKyjPWdNT3wSCYZpTwRt5raX/ReokjCYNK/Us6JdnjPl9XfQp/VkrQQjdq
+         wKscgh4Fxt4E3tR6ijGLZr/FTbpDsgERklIE8QeDWHuR/UUAj12dOK8kSJVM4yBcuZET
+         biGHN14M4mMO9METT56pA/eKRp38piU2qyHpmZJUjxy8Z0YymZZ6hJ6ZiuWMeY9loiq2
+         mRR+TZiGlqH9XrwJ7TxwmHsxgDm4KWglpgn/XVNWT/vF+pHVMUdgBGdIKuXHkpvi/UIo
+         M0dEucyWJQtxAGLbIb8gJ0HGVtQRixnDcY5wLs4h4NFTv0ZGK5dXsBg2aEm73/st30CC
+         SlTA==
+X-Gm-Message-State: APjAAAVW3y9NB7ZVJ9b1uUTgmYblw+elaMKtAffaCJe96ObmgsCZwvwY
+        hOug9BrlT1tUHWLOzsqNFlp5Zg==
+X-Google-Smtp-Source: APXvYqwhLURgl+MsgWvofjbyRiAKbfjz5hDylTAkGa/+UG0J4j7UGT0bxctq8zcKUe2fAy2VfDC4bg==
+X-Received: by 2002:a2e:9198:: with SMTP id f24mr914481ljg.221.1561603838424;
+        Wed, 26 Jun 2019 19:50:38 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id g68sm111896ljg.47.2019.06.26.19.50.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 19:50:37 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 19:45:08 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org
+Cc:     olof@lixom.net, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [GIT PULL] ARM: SoC fixes
+Message-ID: <20190627024508.x5opgsq4tjk32m6j@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus, Greg,
 
-1) Fix ppp_mppe crypto soft dependencies, from Takashi Iawi.
+The following changes since commit cd3967bee004bcbd142403698d658166fa618c9e:
 
-2) Fix TX completion to be finite, from Sergej Benilov.
+  soc: ixp4xx: npe: Fix an IS_ERR() vs NULL check in probe (2019-06-18 06:47:59 -0700)
 
-3) Use register_pernet_device to avoid a dst leak in tipc, from Xin
-   Long.
+are available in the git repository at:
 
-4) Double free of TX cleanup in Dirk van der Merwe.
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
 
-5) Memory leak in packet_set_ring(), from Eric Dumazet.
+for you to fetch changes up to e73f65930f8880fafaccf2cc1e5c44272e9523ec:
 
-6) Out of bounds read in qmi_wwan, from Bjørn Mork.
-
-7) Fix iif used in mcast/bcast looped back packets, from Stephen
-   Suryaputra.
-
-8) Fix neighbour resolution on raw ipv6 sockets, from Nicolas Dichtel.
-
-Please pull, thanks a lot!
-
-The following changes since commit c356dc4b540edd6c02b409dd8cf3208ba2804c38:
-
-  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net (2019-06-21 22:23:35 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net 
-
-for you to fetch changes up to 89ed5b519004a7706f50b70f611edbd3aaacff2c:
-
-  af_packet: Block execution of tasks waiting for transmit to complete in AF_PACKET (2019-06-26 19:38:29 -0700)
+  Merge tag 'imx-fixes-5.2-3' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/fixes (2019-06-25 04:20:08 -0700)
 
 ----------------------------------------------------------------
-Antoine Tenart (1):
-      net: macb: do not copy the mac address if NULL
+ARM: SoC fixes
 
-Bjørn Mork (1):
-      qmi_wwan: Fix out-of-bounds read
+A smaller batch of fixes, nothing that stands out as risky or scary.
 
-David S. Miller (2):
-      Merge branch 'smc-fixes'
-      Merge branch 'ipv6-fix-neighbour-resolution-with-raw-socket'
+Mostly DTS tweaks for a few issues:
+ - GPU fixlets for Meson
+ - CPU idle fix for LS1028A
+ - PWM interrupt fixes for i.MX6UL
 
-Dirk van der Merwe (1):
-      net/tls: fix page double free on TX cleanup
+Also, enable a driver (FSL_EDMA) on arm64 defconfig, and a warning and
+two MAINTAINER tweaks.
 
-Dmitry Bogdanov (1):
-      net: aquantia: fix vlans not working over bridged network
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      ARM: omap2: remove incorrect __init annotation
 
-Eiichi Tsukata (1):
-      net/ipv6: Fix misuse of proc_dointvec "skip_notify_on_dev_down"
+Florian Fainelli (2):
+      MAINTAINERS: BCM2835: Add internal Broadcom mailing list
+      MAINTAINERS: BCM53573: Add internal Broadcom mailing list
 
-Eric Dumazet (1):
-      net/packet: fix memory leak in packet_set_ring()
+Li Yang (1):
+      arm64: defconfig: Enable FSL_EDMA driver
 
-Huaping Zhou (1):
-      net/smc: hold conns_lock before calling smc_lgr_register_conn()
+Linus Walleij (2):
+      ARM: dts: Blank D-Link DIR-685 console
+      ARM: dts: gemini Fix up DNS-313 compatible string
 
-Marek Vasut (1):
-      net: dsa: microchip: Use gpiod_set_value_cansleep()
+Martin Blumenstingl (3):
+      ARM: dts: meson8: fix GPU interrupts and drop an undocumented property
+      ARM: dts: meson8b: drop undocumented property from the Mali GPU node
+      ARM: dts: meson8b: fix the operating voltage of the Mali GPU
 
-Neil Horman (1):
-      af_packet: Block execution of tasks waiting for transmit to complete in AF_PACKET
+Olof Johansson (5):
+      Merge tag 'imx-fixes-5.2-2' of git://git.kernel.org/.../shawnguo/linux into arm/fixes
+      Merge tag 'gemini-dts-v5.2' of git://git.kernel.org/.../linusw/linux-nomadik into arm/fixes
+      Merge tag 'arm-soc/for-5.3/maintainers' of https://github.com/Broadcom/stblinux into arm/fixes
+      Merge tag 'amlogic-fixes' of https://git.kernel.org/.../khilman/linux-amlogic into arm/fixes
+      Merge tag 'imx-fixes-5.2-3' of git://git.kernel.org/.../shawnguo/linux into arm/fixes
 
-Nicolas Dichtel (2):
-      ipv6: constify rt6_nexthop()
-      ipv6: fix neighbour resolution with raw socket
+Ran Wang (1):
+      arm64: dts: ls1028a: Fix CPU idle fail.
 
-Petr Oros (1):
-      be2net: fix link failure after ethtool offline test
+Sébastien Szymanski (1):
+      ARM: dts: imx6ul: fix PWM[1-4] interrupts
 
-Roland Hii (2):
-      net: stmmac: fixed new system time seconds value calculation
-      net: stmmac: set IC bit when transmitting frames with HW timestamp
-
-Sergej Benilov (1):
-      sis900: fix TX completion
-
-Stephen Suryaputra (2):
-      ipv4: Use return value of inet_iif() for __raw_v4_lookup in the while loop
-      ipv4: reset rt_iif for recirculated mcast/bcast out pkts
-
-Takashi Iwai (1):
-      ppp: mppe: Add softdep to arc4
-
-Xin Long (3):
-      tipc: change to use register_pernet_device
-      tipc: check msg->req data len in tipc_nl_compat_bearer_disable
-      sctp: change to hold sk after auth shkey is created successfully
-
-YueHaibing (4):
-      net/sched: cbs: Fix error path of cbs_module_init
-      bonding: Always enable vlan tx offload
-      net/smc: Fix error path in smc_init
-      team: Always enable vlan tx offload
-
- drivers/net/bonding/bond_main.c                           |  2 +-
- drivers/net/dsa/microchip/ksz_common.c                    |  6 +++---
- drivers/net/ethernet/aquantia/atlantic/aq_filters.c       | 10 ++++++++--
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c           |  1 +
- drivers/net/ethernet/aquantia/atlantic/aq_nic.h           |  1 +
- drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c | 19 +++++++++++++------
- drivers/net/ethernet/cadence/macb_main.c                  |  2 +-
- drivers/net/ethernet/emulex/benet/be_ethtool.c            | 28 ++++++++++++++++++++++------
- drivers/net/ethernet/sis/sis900.c                         | 16 ++++++++--------
- drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c     |  2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c         | 22 ++++++++++++++--------
- drivers/net/ppp/ppp_mppe.c                                |  1 +
- drivers/net/team/team.c                                   |  2 +-
- drivers/net/usb/qmi_wwan.c                                |  2 +-
- drivers/net/vrf.c                                         |  2 +-
- include/net/ip6_route.h                                   |  4 ++--
- include/net/route.h                                       |  1 +
- include/net/tls.h                                         | 15 ---------------
- net/bluetooth/6lowpan.c                                   |  4 ++--
- net/ipv4/ip_output.c                                      | 12 ++++++++++++
- net/ipv4/raw.c                                            |  2 +-
- net/ipv4/route.c                                          | 33 +++++++++++++++++++++++++++++++++
- net/ipv6/ip6_output.c                                     |  2 +-
- net/ipv6/route.c                                          |  5 +++--
- net/netfilter/nf_flow_table_ip.c                          |  2 +-
- net/packet/af_packet.c                                    | 23 +++++++++++++++++++----
- net/packet/internal.h                                     |  1 +
- net/sched/sch_cbs.c                                       |  9 +++++++--
- net/sctp/endpointola.c                                    |  8 ++++----
- net/smc/af_smc.c                                          |  5 ++++-
- net/smc/smc_core.c                                        |  3 +++
- net/tipc/core.c                                           | 12 ++++++------
- net/tipc/netlink_compat.c                                 | 18 +++++++++++++++---
- net/tls/tls_main.c                                        |  3 ++-
- 34 files changed, 194 insertions(+), 84 deletions(-)
+ MAINTAINERS                                    |  2 ++
+ arch/arm/boot/dts/gemini-dlink-dir-685.dts     |  2 +-
+ arch/arm/boot/dts/gemini-dlink-dns-313.dts     |  2 +-
+ arch/arm/boot/dts/imx6ul.dtsi                  |  8 ++++----
+ arch/arm/boot/dts/meson8.dtsi                  |  5 ++---
+ arch/arm/boot/dts/meson8b.dtsi                 | 11 +++++------
+ arch/arm/mach-omap2/prm3xxx.c                  |  2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 18 +++++++++---------
+ arch/arm64/configs/defconfig                   |  1 +
+ 9 files changed, 26 insertions(+), 25 deletions(-)
