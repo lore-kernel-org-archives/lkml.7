@@ -2,580 +2,185 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B893C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E68C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0692075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561660051;
-	bh=Tpb/DLnQ8C0e2yxhxaI2QTRSeo2WY4uDlzfbr/MJ9Ao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wYhANc4nDdJIRoPLZRHQauOZmUdQgQXtze6o/PLgaWlvp8Q8rpc2AF8L+BMBpv98S
-	 mi53eNr6zJ3yD7NDhVwGXQprwHxbdpaCevpp97clMYuhwApGXe/mI0kyOnxJ4s0FK3
-	 uc4x1uCm9DyPcdCFY1iXbG6DjgpMG4jVwZGpYYRw=
+	by mail.kernel.org (Postfix) with ESMTP id 3493820644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:28:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOUiaeSM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfF0S1a (ORCPT
+        id S1726603AbfF0S2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:27:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfF0S1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:27:30 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3787120644;
-        Thu, 27 Jun 2019 18:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561660048;
-        bh=Tpb/DLnQ8C0e2yxhxaI2QTRSeo2WY4uDlzfbr/MJ9Ao=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gHwG7YuqJAqey6Qnea4m24wtV4/P6oXIG1jtQVm/790hez1y/SkwNMSvk+hERz+Ef
-         6P0UdYsMt92rpAENehc18IjVHaGLBiGuo6eWpuClnUYkOKqChIu6JAgt0QhUkG581n
-         O715hQD3lhKpvzMfOqJ2xmYVlSVwDRTD6rdxqM0A=
-Received: by earth.universe (Postfix, from userid 1000)
-        id C54BA3C08D5; Thu, 27 Jun 2019 20:27:25 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 20:27:25 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Chris Healy <cphealy@gmail.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] power: supply: Add HWMON compatibility layer
-Message-ID: <20190627182725.v3mgmy35fxoogofe@earth.universe>
-References: <20190612084404.21685-1-andrew.smirnov@gmail.com>
- <20190612084404.21685-2-andrew.smirnov@gmail.com>
+        Thu, 27 Jun 2019 14:28:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33850 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0S2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:28:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k11so3671071wrl.1;
+        Thu, 27 Jun 2019 11:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n3FeZkk2qhuu9Ipg5nrSNAMoM6BH5jg4Go8yeGP/Jpg=;
+        b=vOUiaeSM7vMpz1aORHnDrLu+ZUGuJFa/+Cg1mf0VKhT3VSZql4UNQLxG0mITw0+RvD
+         ykM3tZTRnJeXMTwiRJ0VIEz4m9UXQDvCc4HDMjUqO/4fA1e/Fc4d3uBTWhq5DrXpzxLG
+         cJ0DVrAy0Pz1nuQsD/uubAMlPZmbdAeVXxhC6Ae0rixnMPofp0ovEFnpc8HlJyxO4nWZ
+         CEE3r0TdkseElP8HMfz5t9+PMxFWA/ahI4ZIkWIYi09PRi9z7kzQL2y9/LgWQnYiPbNx
+         kkSDoWNOu8J5oTt0DpaLKA0PrzJmbVanL4sJab5vNTpqJ5C8yIKxUXHMhY3+Qxoz8BeY
+         5hJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=n3FeZkk2qhuu9Ipg5nrSNAMoM6BH5jg4Go8yeGP/Jpg=;
+        b=db+BmpmHV7N4a1vgJ998xsKHPvBCsahgTqj6yJwGHQ58ywtWA3aPEXwalgswtPlWYU
+         JOnAGJRLd3uScLEk3LVkO9Qn7e6z2+39w8n4WO5SWTWEOGIStJ3mkUOx7rabmyZxjPEB
+         cMHExvcqG6VFFCtJxgbps30BeBUG0cNjImOpCJFV92vZNEWM8EFBO0H42x0xzyN91Q+I
+         Egooi/iffAwRCSKLazhliBWHgIPAt1hb/jbThXV1TB5m3LKv8jun9YZ0FQD3FGiMgCVs
+         exzAzrqhcC/Vh1eRVKf+XucYIiGvLBWVtw4v28uB5bP2Cjvsx0gSzanlUDABREIpm1tn
+         L/mw==
+X-Gm-Message-State: APjAAAWsYcmoUGFdGneRocCyEguJwWd6pH+jDgfU45SmFRmFiq1bnspB
+        Y/hE1Q5pvoWbCH2d06ZX6fs=
+X-Google-Smtp-Source: APXvYqyjRfx0NNwp34SADOf0wIG2crdVx3QyrIKktjczBxv+GcqBLXUmz4ufw2327+6MGstVgYyf9g==
+X-Received: by 2002:a5d:40c2:: with SMTP id b2mr2643773wrq.326.1561660090113;
+        Thu, 27 Jun 2019 11:28:10 -0700 (PDT)
+Received: from [192.168.1.17] (dkm129.neoplus.adsl.tpnet.pl. [83.24.16.129])
+        by smtp.gmail.com with ESMTPSA id r131sm4805793wmf.4.2019.06.27.11.28.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 11:28:09 -0700 (PDT)
+Subject: Re: [PATCH v5 05/26] leds: core: Add support for composing LED class
+ device names
+To:     Oleh Kravchenko <oleg@kaa.org.ua>, linux-leds@vger.kernel.org,
+        pavel@ucw.cz, dmurphy@ti.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, dtor@google.com, linux@roeck-us.net,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+References: <20190609190803.14815-1-jacek.anaszewski@gmail.com>
+ <20190609190803.14815-6-jacek.anaszewski@gmail.com>
+ <66811b33-c643-679e-344c-e293f03cc2fb@gmail.com>
+ <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFWjfaEBEADd66EQbd6yd8YjG0kbEDT2QIkx8C7BqMXR8AdmA1OMApbfSvEZFT1D/ECR
+ eWFBS8XtApKQx1xAs1j5z70k3zebk2eeNs5ahxi6vM4Qh89vBM46biSKeeX5fLcv7asmGb/a
+ FnHPAfQaKFyG/Bj9V+//ef67hpjJWR3s74C6LZCFLcbZM0z/wTH+baA5Jwcnqr4h/ygosvhP
+ X3gkRzJLSFYekmEv+WHieeKXLrJdsUPUvPJTZtvi3ELUxHNOZwX2oRJStWpmL2QGMwPokRNQ
+ 29GvnueQdQrIl2ylhul6TSrClMrKZqOajDFng7TLgvNfyVZE8WQwmrkTrdzBLfu3kScjE14Q
+ Volq8OtQpTsw5570D4plVKh2ahlhrwXdneSot0STk9Dh1grEB/Jfw8dknvqkdjALUrrM45eF
+ FM4FSMxIlNV8WxueHDss9vXRbCUxzGw37Ck9JWYo0EpcpcvwPf33yntYCbnt+RQRjv7vy3w5
+ osVwRR4hpbL/fWt1AnZ+RvbP4kYSptOCPQ+Pp1tCw16BOaPjtlqSTcrlD2fo2IbaB5D21SUa
+ IsdZ/XkD+V2S9jCrN1yyK2iKgxtDoUkWiqlfRgH2Ep1tZtb4NLF/S0oCr7rNLO7WbqLZQh1q
+ ShfZR16h7YW//1/NFwnyCVaG1CP/L/io719dPWgEd/sVSKT2TwARAQABtC1KYWNlayBBbmFz
+ emV3c2tpIDxqYWNlay5hbmFzemV3c2tpQGdtYWlsLmNvbT6JAj4EEwEIACgCGwMHCwkIBwMC
+ AQYVCAIJCgsDFgIBAh4BAheABQJVo39tBQkJZgNMAAoJEL1qUBy3i3wmxLQQAK8QEQ0JqZEv
+ 5hrxiwT+Qtkx1TULYriK9sYcY9zbi18YxbKB0C4Znh5iP5o7k26WnPGLM+w4qWvTAkHjuAI7
+ aBrvb4nGRvE5s14PQ9IHgL7iL3zAAHT1azIZng9dUCCSontB+vQZu1x/Un0lVlVCvsvO7QVt
+ hAZUlT3iucNMO0jpCiS3raZkNfab8M+JWP/iplaV0Kn+O7LX3A/RdLmx5ZhuT+zvyHwl2c3K
+ T56UHaQnjkuHB2Ytk8HtOjNXGNYnm4nLx3ok3jEN1nWDRV/DeiPn8zz4Zebsp686OH9vvX/0
+ R4dk2YEjUCY/S7CbJxXzUnLjboUAGmtTVOu/uJ7y11iS9XEoJ09HEzijQwWctJXLojcTXCFw
+ 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
+ eGGiEQ==
+Message-ID: <7b038be0-274d-54f7-46f4-3dbe346169b8@gmail.com>
+Date:   Thu, 27 Jun 2019 20:28:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sxucwlb3kkc42yoi"
-Content-Disposition: inline
-In-Reply-To: <20190612084404.21685-2-andrew.smirnov@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <b65ba5ea-4b79-8245-bddb-3ecf1424892f@kaa.org.ua>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Oleh,
 
---sxucwlb3kkc42yoi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 6/26/19 10:07 PM, Oleh Kravchenko wrote:
+> Hello Jacek,
+> so after this patch will be merged.
+> 
+> There will be a way to define custom function name by DeviceTree?
 
-Hi,
+Yes. We standardize LED functions just to avoid spreading many similarly
+looking function names with the same semantics.
 
-On Wed, Jun 12, 2019 at 01:44:04AM -0700, Andrey Smirnov wrote:
-> Add code implementing HWMON adapter/compatibility layer to allow
-> expositing various sensors present on power supply devices via HWMON
-> subsystem. This is done in order to allow userspace to use single
-> ABI/library(libsensors) to access/manipulate all of the sensors of the
-> system.
->=20
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Tested-by: Chris Healy <cphealy@gmail.com>
-> ---
+We don't enforce using new function definitions in any way.
+It is possible to assign whatever you want to the DT label property
+(however now deprecated) or to the new DT function property.
 
-Thanks, queued.
+It will be however preferable to use standard LED_FUNCTION definitions
+for new mainline bindings and dts files. Of course, as documentation
+states, it will be possible to propose new ones if none of existing
+fit for given application. This is only an initial set.
 
--- Sebastian
+> 26.06.19 22:05, Jacek Anaszewski пише:
+>> Gentle reminder.
+>>
+>> Pavel, Dan - any conclusions?
+>>
+>> This patch is the main part of the proposed changes,
+>> so it would be good to spot any remaining issues.
+>>
+>> What needs a consensus is also a new
+>> Documentation/leds/led-functions.txt file I introduce
+>> in the patch 26/26.
+>>
+>> Best regards,
+>> Jacek Anaszewski
+> 
 
->  drivers/power/supply/Kconfig              |  14 +
->  drivers/power/supply/Makefile             |   1 +
->  drivers/power/supply/power_supply_core.c  |   7 +
->  drivers/power/supply/power_supply_hwmon.c | 355 ++++++++++++++++++++++
->  include/linux/power_supply.h              |  13 +
->  5 files changed, 390 insertions(+)
->  create mode 100644 drivers/power/supply/power_supply_hwmon.c
->=20
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index c614c8a196f3..0550cedb53c9 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -14,6 +14,20 @@ config POWER_SUPPLY_DEBUG
->  	  Say Y here to enable debugging messages for power supply class
->  	  and drivers.
-> =20
-> +config POWER_SUPPLY_HWMON
-> +	bool
-> +	prompt "Expose power supply sensors as hwmon device"
-> +	depends on HWMON=3Dy || HWMON=3DPOWER_SUPPLY
-> +	default y
-> +	help
-> +	  This options enables API that allows sensors found on a
-> +	  power supply device (current, voltage, temperature) to be
-> +	  exposed as a hwmon device.
-> +
-> +	  Say 'Y' here if you want power supplies to
-> +	  have hwmon sysfs interface too.
-> +
-> +
->  config PDA_POWER
->  	tristate "Generic PDA/phone power driver"
->  	depends on !S390
-> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> index c56803a9e4fe..0a87cfe49b21 100644
-> --- a/drivers/power/supply/Makefile
-> +++ b/drivers/power/supply/Makefile
-> @@ -6,6 +6,7 @@ power_supply-$(CONFIG_SYSFS)		+=3D power_supply_sysfs.o
->  power_supply-$(CONFIG_LEDS_TRIGGERS)	+=3D power_supply_leds.o
-> =20
->  obj-$(CONFIG_POWER_SUPPLY)	+=3D power_supply.o
-> +obj-$(CONFIG_POWER_SUPPLY_HWMON) +=3D power_supply_hwmon.o
->  obj-$(CONFIG_GENERIC_ADC_BATTERY)	+=3D generic-adc-battery.o
-> =20
->  obj-$(CONFIG_PDA_POWER)		+=3D pda_power.o
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
-ply/power_supply_core.c
-> index c917a8b43b2b..67e78538bb9c 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -1062,6 +1062,10 @@ __power_supply_register(struct device *parent,
->  	if (rc)
->  		goto create_triggers_failed;
-> =20
-> +	rc =3D power_supply_add_hwmon_sysfs(psy);
-> +	if (rc)
-> +		goto add_hwmon_sysfs_failed;
-> +
->  	/*
->  	 * Update use_cnt after any uevents (most notably from device_add()).
->  	 * We are here still during driver's probe but
-> @@ -1080,6 +1084,8 @@ __power_supply_register(struct device *parent,
-> =20
->  	return psy;
-> =20
-> +add_hwmon_sysfs_failed:
-> +	power_supply_remove_triggers(psy);
->  create_triggers_failed:
->  	psy_unregister_cooler(psy);
->  register_cooler_failed:
-> @@ -1232,6 +1238,7 @@ void power_supply_unregister(struct power_supply *p=
-sy)
->  	cancel_work_sync(&psy->changed_work);
->  	cancel_delayed_work_sync(&psy->deferred_register_work);
->  	sysfs_remove_link(&psy->dev.kobj, "powers");
-> +	power_supply_remove_hwmon_sysfs(psy);
->  	power_supply_remove_triggers(psy);
->  	psy_unregister_cooler(psy);
->  	psy_unregister_thermal(psy);
-> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/su=
-pply/power_supply_hwmon.c
-> new file mode 100644
-> index 000000000000..51fe60440d12
-> --- /dev/null
-> +++ b/drivers/power/supply/power_supply_hwmon.c
-> @@ -0,0 +1,355 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + *  power_supply_hwmon.c - power supply hwmon support.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/slab.h>
-> +
-> +struct power_supply_hwmon {
-> +	struct power_supply *psy;
-> +	unsigned long *props;
-> +};
-> +
-> +static int power_supply_hwmon_in_to_property(u32 attr)
-> +{
-> +	switch (attr) {
-> +	case hwmon_in_average:
-> +		return POWER_SUPPLY_PROP_VOLTAGE_AVG;
-> +	case hwmon_in_min:
-> +		return POWER_SUPPLY_PROP_VOLTAGE_MIN;
-> +	case hwmon_in_max:
-> +		return POWER_SUPPLY_PROP_VOLTAGE_MAX;
-> +	case hwmon_in_input:
-> +		return POWER_SUPPLY_PROP_VOLTAGE_NOW;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int power_supply_hwmon_curr_to_property(u32 attr)
-> +{
-> +	switch (attr) {
-> +	case hwmon_curr_average:
-> +		return POWER_SUPPLY_PROP_CURRENT_AVG;
-> +	case hwmon_curr_max:
-> +		return POWER_SUPPLY_PROP_CURRENT_MAX;
-> +	case hwmon_curr_input:
-> +		return POWER_SUPPLY_PROP_CURRENT_NOW;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
-> +{
-> +	if (channel) {
-> +		switch (attr) {
-> +		case hwmon_temp_input:
-> +			return POWER_SUPPLY_PROP_TEMP_AMBIENT;
-> +		case hwmon_temp_min_alarm:
-> +			return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN;
-> +		case hwmon_temp_max_alarm:
-> +			return POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX;
-> +		default:
-> +			break;
-> +		}
-> +	} else {
-> +		switch (attr) {
-> +		case hwmon_temp_input:
-> +			return POWER_SUPPLY_PROP_TEMP;
-> +		case hwmon_temp_max:
-> +			return POWER_SUPPLY_PROP_TEMP_MAX;
-> +		case hwmon_temp_min:
-> +			return POWER_SUPPLY_PROP_TEMP_MIN;
-> +		case hwmon_temp_min_alarm:
-> +			return POWER_SUPPLY_PROP_TEMP_ALERT_MIN;
-> +		case hwmon_temp_max_alarm:
-> +			return POWER_SUPPLY_PROP_TEMP_ALERT_MAX;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int
-> +power_supply_hwmon_to_property(enum hwmon_sensor_types type,
-> +			       u32 attr, int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_in:
-> +		return power_supply_hwmon_in_to_property(attr);
-> +	case hwmon_curr:
-> +		return power_supply_hwmon_curr_to_property(attr);
-> +	case hwmon_temp:
-> +		return power_supply_hwmon_temp_to_property(attr, channel);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static bool power_supply_hwmon_is_a_label(enum hwmon_sensor_types type,
-> +					   u32 attr)
-> +{
-> +	return type =3D=3D hwmon_temp && attr =3D=3D hwmon_temp_label;
-> +}
-> +
-> +static bool power_supply_hwmon_is_writable(enum hwmon_sensor_types type,
-> +					   u32 attr)
-> +{
-> +	switch (type) {
-> +	case hwmon_in:
-> +		return attr =3D=3D hwmon_in_min ||
-> +		       attr =3D=3D hwmon_in_max;
-> +	case hwmon_curr:
-> +		return attr =3D=3D hwmon_curr_max;
-> +	case hwmon_temp:
-> +		return attr =3D=3D hwmon_temp_max ||
-> +		       attr =3D=3D hwmon_temp_min ||
-> +		       attr =3D=3D hwmon_temp_min_alarm ||
-> +		       attr =3D=3D hwmon_temp_max_alarm;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static umode_t power_supply_hwmon_is_visible(const void *data,
-> +					     enum hwmon_sensor_types type,
-> +					     u32 attr, int channel)
-> +{
-> +	const struct power_supply_hwmon *psyhw =3D data;
-> +	int prop;
-> +
-> +
-> +	if (power_supply_hwmon_is_a_label(type, attr))
-> +		return 0444;
-> +
-> +	prop =3D power_supply_hwmon_to_property(type, attr, channel);
-> +	if (prop < 0 || !test_bit(prop, psyhw->props))
-> +		return 0;
-> +
-> +	if (power_supply_property_is_writeable(psyhw->psy, prop) > 0 &&
-> +	    power_supply_hwmon_is_writable(type, attr))
-> +		return 0644;
-> +
-> +	return 0444;
-> +}
-> +
-> +static int power_supply_hwmon_read_string(struct device *dev,
-> +					  enum hwmon_sensor_types type,
-> +					  u32 attr, int channel,
-> +					  const char **str)
-> +{
-> +	*str =3D channel ? "temp" : "temp ambient";
-> +	return 0;
-> +}
-> +
-> +static int
-> +power_supply_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			u32 attr, int channel, long *val)
-> +{
-> +	struct power_supply_hwmon *psyhw =3D dev_get_drvdata(dev);
-> +	struct power_supply *psy =3D psyhw->psy;
-> +	union power_supply_propval pspval;
-> +	int ret, prop;
-> +
-> +	prop =3D power_supply_hwmon_to_property(type, attr, channel);
-> +	if (prop < 0)
-> +		return prop;
-> +
-> +	ret  =3D power_supply_get_property(psy, prop, &pspval);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (type) {
-> +	/*
-> +	 * Both voltage and current is reported in units of
-> +	 * microvolts/microamps, so we need to adjust it to
-> +	 * milliamps(volts)
-> +	 */
-> +	case hwmon_curr:
-> +	case hwmon_in:
-> +		pspval.intval =3D DIV_ROUND_CLOSEST(pspval.intval, 1000);
-> +		break;
-> +	/*
-> +	 * Temp needs to be converted from 1/10 C to milli-C
-> +	 */
-> +	case hwmon_temp:
-> +		if (check_mul_overflow(pspval.intval, 100,
-> +				       &pspval.intval))
-> +			return -EOVERFLOW;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	*val =3D pspval.intval;
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +power_supply_hwmon_write(struct device *dev, enum hwmon_sensor_types typ=
-e,
-> +			 u32 attr, int channel, long val)
-> +{
-> +	struct power_supply_hwmon *psyhw =3D dev_get_drvdata(dev);
-> +	struct power_supply *psy =3D psyhw->psy;
-> +	union power_supply_propval pspval;
-> +	int prop;
-> +
-> +	prop =3D power_supply_hwmon_to_property(type, attr, channel);
-> +	if (prop < 0)
-> +		return prop;
-> +
-> +	pspval.intval =3D val;
-> +
-> +	switch (type) {
-> +	/*
-> +	 * Both voltage and current is reported in units of
-> +	 * microvolts/microamps, so we need to adjust it to
-> +	 * milliamps(volts)
-> +	 */
-> +	case hwmon_curr:
-> +	case hwmon_in:
-> +		if (check_mul_overflow(pspval.intval, 1000,
-> +				       &pspval.intval))
-> +			return -EOVERFLOW;
-> +		break;
-> +	/*
-> +	 * Temp needs to be converted from 1/10 C to milli-C
-> +	 */
-> +	case hwmon_temp:
-> +		pspval.intval =3D DIV_ROUND_CLOSEST(pspval.intval, 100);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return power_supply_set_property(psy, prop, &pspval);
-> +}
-> +
-> +static const struct hwmon_ops power_supply_hwmon_ops =3D {
-> +	.is_visible	=3D power_supply_hwmon_is_visible,
-> +	.read		=3D power_supply_hwmon_read,
-> +	.write		=3D power_supply_hwmon_write,
-> +	.read_string	=3D power_supply_hwmon_read_string,
-> +};
-> +
-> +static const struct hwmon_channel_info *power_supply_hwmon_info[] =3D {
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_LABEL     |
-> +			   HWMON_T_INPUT     |
-> +			   HWMON_T_MAX       |
-> +			   HWMON_T_MIN       |
-> +			   HWMON_T_MIN_ALARM |
-> +			   HWMON_T_MIN_ALARM,
-> +
-> +			   HWMON_T_LABEL     |
-> +			   HWMON_T_INPUT     |
-> +			   HWMON_T_MIN_ALARM |
-> +			   HWMON_T_LABEL     |
-> +			   HWMON_T_MAX_ALARM),
-> +
-> +	HWMON_CHANNEL_INFO(curr,
-> +			   HWMON_C_AVERAGE |
-> +			   HWMON_C_MAX     |
-> +			   HWMON_C_INPUT),
-> +
-> +	HWMON_CHANNEL_INFO(in,
-> +			   HWMON_I_AVERAGE |
-> +			   HWMON_I_MIN     |
-> +			   HWMON_I_MAX     |
-> +			   HWMON_I_INPUT),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info power_supply_hwmon_chip_info =3D {
-> +	.ops =3D &power_supply_hwmon_ops,
-> +	.info =3D power_supply_hwmon_info,
-> +};
-> +
-> +static void power_supply_hwmon_bitmap_free(void *data)
-> +{
-> +	bitmap_free(data);
-> +}
-> +
-> +int power_supply_add_hwmon_sysfs(struct power_supply *psy)
-> +{
-> +	const struct power_supply_desc *desc =3D psy->desc;
-> +	struct power_supply_hwmon *psyhw;
-> +	struct device *dev =3D &psy->dev;
-> +	struct device *hwmon;
-> +	int ret, i;
-> +
-> +	if (!devres_open_group(dev, power_supply_add_hwmon_sysfs,
-> +			       GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	psyhw =3D devm_kzalloc(dev, sizeof(*psyhw), GFP_KERNEL);
-> +	if (!psyhw) {
-> +		ret =3D -ENOMEM;
-> +		goto error;
-> +	}
-> +
-> +	psyhw->psy =3D psy;
-> +	psyhw->props =3D bitmap_zalloc(POWER_SUPPLY_PROP_TIME_TO_FULL_AVG + 1,
-> +				     GFP_KERNEL);
-> +	if (!psyhw->props) {
-> +		ret =3D -ENOMEM;
-> +		goto error;
-> +	}
-> +
-> +	ret =3D devm_add_action(dev, power_supply_hwmon_bitmap_free,
-> +			      psyhw->props);
-> +	if (ret)
-> +		goto error;
-> +
-> +	for (i =3D 0; i < desc->num_properties; i++) {
-> +		const enum power_supply_property prop =3D desc->properties[i];
-> +
-> +		switch (prop) {
-> +		case POWER_SUPPLY_PROP_CURRENT_AVG:
-> +		case POWER_SUPPLY_PROP_CURRENT_MAX:
-> +		case POWER_SUPPLY_PROP_CURRENT_NOW:
-> +		case POWER_SUPPLY_PROP_TEMP:
-> +		case POWER_SUPPLY_PROP_TEMP_MAX:
-> +		case POWER_SUPPLY_PROP_TEMP_MIN:
-> +		case POWER_SUPPLY_PROP_TEMP_ALERT_MIN:
-> +		case POWER_SUPPLY_PROP_TEMP_ALERT_MAX:
-> +		case POWER_SUPPLY_PROP_TEMP_AMBIENT:
-> +		case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MIN:
-> +		case POWER_SUPPLY_PROP_TEMP_AMBIENT_ALERT_MAX:
-> +		case POWER_SUPPLY_PROP_VOLTAGE_AVG:
-> +		case POWER_SUPPLY_PROP_VOLTAGE_MIN:
-> +		case POWER_SUPPLY_PROP_VOLTAGE_MAX:
-> +		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> +			set_bit(prop, psyhw->props);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	hwmon =3D devm_hwmon_device_register_with_info(dev, psy->desc->name,
-> +						psyhw,
-> +						&power_supply_hwmon_chip_info,
-> +						NULL);
-> +	ret =3D PTR_ERR_OR_ZERO(hwmon);
-> +	if (ret)
-> +		goto error;
-> +
-> +	devres_close_group(dev, power_supply_add_hwmon_sysfs);
-> +	return 0;
-> +error:
-> +	devres_release_group(dev, NULL);
-> +	return ret;
-> +}
-> +
-> +void power_supply_remove_hwmon_sysfs(struct power_supply *psy)
-> +{
-> +	devres_release_group(&psy->dev, power_supply_add_hwmon_sysfs);
-> +}
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index bdab14c7ca4d..f850d4110935 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -475,4 +475,17 @@ static inline bool power_supply_is_watt_property(enu=
-m power_supply_property psp)
->  	return 0;
->  }
-> =20
-> +#ifdef CONFIG_POWER_SUPPLY_HWMON
-> +int power_supply_add_hwmon_sysfs(struct power_supply *psy);
-> +void power_supply_remove_hwmon_sysfs(struct power_supply *psy);
-> +#else
-> +static inline int power_supply_add_hwmon_sysfs(struct power_supply *psy)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline
-> +void power_supply_remove_hwmon_sysfs(struct power_supply *psy) {}
-> +#endif
-> +
->  #endif /* __LINUX_POWER_SUPPLY_H__ */
-> --=20
-> 2.21.0
->=20
-
---sxucwlb3kkc42yoi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl0VCo0ACgkQ2O7X88g7
-+pp0cQ//QvMJZwidClEwt1HmP3LlZDraLKAo37xYUCcD8d2Zh00dVFNMJY3Utqps
-nlbX6hS2gpuD+fZ9akMRmM5F121xf6xuydhosTi4xtjEgkJqE+uIEjAZK/s7MISU
-+Yx1Y8uAG0eWWdfgPMeNPL0UMixPxeqq+0VQhsAec7a4k4CPbR07mwTJqGXD5ggJ
-ewjLSb2yrb9yh2NXWPIZ4BzUE0R6vRA9X0loovSAtSTsEDnEiY1Bv22LpForQnUE
-I2vzny1qn03x7Sc+MKynHA0Gw16UqkiXLsK5w3GKAmu5kAuqQqa++lCsCMBswO94
-GfRZNd7WEbw0H0TZXYmB9kdEK9eZOwaHWkPuMDtzhV7CpDpfPtntP7jQE5zgZJno
-lubbnZr5bK51XnQAzDH1DKkdvwuiseU/Xhrgx9XI1rWS05wyuZ4yWEIVT7SoObcS
-LohGZdLc9y8DM2xVEw75NuB/N+eSfCLZLuvO7+EMIXNwbplge6amqipqrm7xkPLu
-p1n79zknek7A5of+fZMBjWAfblkN1dfuE4GzX/GbrLlLxTzdsoMzfRdT0ub5Z/nh
-BD4+Ly94KLT1agftjWid27B6J25QvQ2N/NZilfl15ZiEkQCBL2TpKvcmE+9KpmvE
-PNy5t1CmSfzfHYcWM3k1K9s/5Uq0VYxMjHHUm00eHN4NhtiXNs0=
-=ercd
------END PGP SIGNATURE-----
-
---sxucwlb3kkc42yoi--
+-- 
+Best regards,
+Jacek Anaszewski
