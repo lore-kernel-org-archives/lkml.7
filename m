@@ -2,69 +2,111 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C96C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26DAC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457CF20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561658789;
-	bh=3ity6AqO6NgzvyZi3EMjzA8TE7SWdEMp1Cbj45RUIWI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yRhbTzx2zE4AlmnAvTkz3klRrOeKvHSyjhhT16i5c+ILPv6rT45d9N3kdxeV31TI6
-	 Xxba1Bxj+4nxtIhpkntslrnNhJWKkzQrd7s+eCamAo1NMFhdKMdxODqzFc8KBrVl5J
-	 FcVujuJBbggUj4u2zmcjdHWbgVdKXZ/2H6qfR8lI=
+	by mail.kernel.org (Postfix) with ESMTP id CA3BE2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfF0SG2 (ORCPT
+        id S1726711AbfF0SIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:06:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42042 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 14:08:09 -0400
+Received: from namei.org ([65.99.196.166]:49158 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbfF0SG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:06:27 -0400
-Received: from localhost (unknown [88.128.81.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D276208E3;
-        Thu, 27 Jun 2019 18:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561658786;
-        bh=3ity6AqO6NgzvyZi3EMjzA8TE7SWdEMp1Cbj45RUIWI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wQMVG3vKug5/Wa1kPLk8S/EsbKRxWYwoWYkyzuVPJ7c8BeYSy8ZpjPLvIXqdyN41e
-         x1Sjs3DXu6bYw5LLD5aNDJxqptlb8S73YLevihMLXm8AeSgu8Q6AKfOhlmza1wb1uZ
-         FW0PyPOG5luPWJxshtokYMNNv/ievTMB35syAHs4=
-Date:   Thu, 27 Jun 2019 20:06:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2] staging: rtl8723bs: hal: sdio_halinit: Remove set but
- unused varilable pHalData
-Message-ID: <20190627180623.GA13464@kroah.com>
-References: <20190627180302.GA3186@hari-Inspiron-1545>
+        id S1726519AbfF0SII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:08:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x5RI6c5Z018737;
+        Thu, 27 Jun 2019 18:06:38 GMT
+Date:   Fri, 28 Jun 2019 04:06:38 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        linux-security@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH V33 24/30] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+In-Reply-To: <bce70c8b-9efd-6362-d536-cfbbcf70b0b7@tycho.nsa.gov>
+Message-ID: <alpine.LRH.2.21.1906280332500.17363@namei.org>
+References: <20190621011941.186255-1-matthewgarrett@google.com> <20190621011941.186255-25-matthewgarrett@google.com> <CALCETrVUwQP7roLnW6kFG80Cc5U6X_T6AW+BTAftLccYGp8+Ow@mail.gmail.com> <alpine.LRH.2.21.1906270621080.28132@namei.org>
+ <6E53376F-01BB-4795-BC02-24F9CAE00001@amacapital.net> <bce70c8b-9efd-6362-d536-cfbbcf70b0b7@tycho.nsa.gov>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627180302.GA3186@hari-Inspiron-1545>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:33:02PM +0530, Hariprasad Kelam wrote:
-> Remove set but unsed variable pHalData in below functions
-> _InitOperationMode, SetHwReg8723BS.
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/hal/sdio_halinit.c | 5 -----
->  1 file changed, 5 deletions(-)
+On Thu, 27 Jun 2019, Stephen Smalley wrote:
 
-What changed in v2?
+> There are two scenarios where finer-grained distinctions make sense:
+> 
+> - Users may need to enable specific functionality that falls under the
+> umbrella of "confidentiality" or "integrity" lockdown.  Finer-grained lockdown
+> reasons free them from having to make an all-or-nothing choice between lost
+> functionality or no lockdown at all.
+
+Agreed. This will be used for more than just UEFI secure boot on desktops, 
+e.g. embedded systems using verified boot, where finer grained policy will 
+be needed for what are sometimes very specific use-cases (which may be 
+also covered by other mitigations).
+
+> This can be supported directly by the
+> lockdown module without any help from SELinux or other security modules; we
+> just need the ability to specify these finer-grained lockdown levels via the
+> boot parameters and securityfs nodes.
+
+If the lockdown LSM implements fine grained policy (rather than the simple 
+coarse grained policy), I'd suggest adding a new lockdown level of 
+'custom' which by default enables all hooks but allows selective 
+disablement via params/sysfs.
+
+This would be simpler than telling users to use a different lockdown LSM 
+for this.
+
+> - Different processes/programs may need to use different sets of functionality
+> restricted via lockdown confidentiality or integrity categories.  If we have
+> to allow all-or-none for the set of interfaces/functionality covered by the
+> generic confidentiality or integrity categories, then we'll end up having to
+> choose between lost functionality or overprivileged processes, neither of
+> which is optimal.
+> 
+> Is it truly the case that everything under the "confidentiality" category
+> poses the same level of risk to kernel confidentiality, and similarly for
+> everything under the "integrity" category?  If not, then being able to
+> distinguish them definitely has benefit.
+
+Good question. We can't know the answer to this unless we know how an 
+attacker might leverage access.
+
+The value here IMHO is more in allowing tradeoffs to be made by system 
+designers vs. disabling lockdown entirely.
+
+> I'm still not clear though on how/if this will compose with or be overridden
+> by other security modules.  We would need some means for another security
+> module to take over lockdown decisions once it has initialized (including
+> policy load), and to be able to access state that is currently private to the
+> lockdown module, like the level.
+
+Why not utilize stacking (restrictively), similarly to capabilities?
+
+
+-- 
+James Morris
+<jmorris@namei.org>
+
