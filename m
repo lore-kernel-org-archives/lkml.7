@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3873C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE332083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599DB2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595487;
-	bh=IVgFt8rK3b1MZCmGZ5RcOq/MjbjXoMgW/pq9jSmSysA=;
+	s=default; t=1561595494;
+	bh=wsAiZsdmA96sJRs3FWAGuz5i/noAL0FT81Il3kxC0Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w56tvHxKCzcN8UKh3z3LqqfM5/xACF7ExkJsTDOxZPzq6Uzl3vyCR4HtJ+A1qwWlW
-	 WEaFwMse611x7FLaCLeE6p63XjqmCZtvSFj+2m000GHOI/+KO9k/qT8zwguDXxD10X
-	 RU3RKMWUF8Ito3BHIAxNMoepxae2rPykdvGk9BW8=
+	b=lpVO0HldsL6cWW2xq498SQ910wIcxwVbY6iTYqOyxJ00kdG6XF/PFzXNEcfhtJ4Bj
+	 X49W0Qqf+QcRzKnKIYZoOeJT53rsfWZNhkN1O6MgbozJMKhmKaeDVen+TWD4Tik6X2
+	 t8FBs0TjnBa33p9jLHLeQFJsLME3ooKL6TLtzDLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfF0Ab0 (ORCPT
+        id S1727208AbfF0Abd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:31:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727114AbfF0AbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:31:21 -0400
+        id S1726760AbfF0Ab1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:31:27 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7990E2083B;
-        Thu, 27 Jun 2019 00:31:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34F5B2083B;
+        Thu, 27 Jun 2019 00:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595480;
-        bh=IVgFt8rK3b1MZCmGZ5RcOq/MjbjXoMgW/pq9jSmSysA=;
+        s=default; t=1561595486;
+        bh=wsAiZsdmA96sJRs3FWAGuz5i/noAL0FT81Il3kxC0Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=udrw3l06bRp+L8hBG/9eKEsspRi7AtglZU7pS4b/KSth6DlMN1aYoB0K33QWsR1O6
-         f/p5VBJypz0Lg4kWVZIM8IwijC7Ahb/rvSwO2a4Ek0rkM2rHuHjLzQ2qFsWJM+nEKO
-         LQ9zn0OVPrSs2v6M+vy04OobgOxqZZ7RNHCkulkk=
+        b=e0vMehm9PL3TQ3QNb/MHeLGDxPogK1whYIoZ2ggXrfhzHC56zhCNZIUTVyegbWr5L
+         ME9oME0zncuwykU+WFbcvkbJb+I47oSlzaFmpWTpwhLdIQ04dYEAVVxPi7V3JK/nKQ
+         vo9KB0vZS95pMt6XvpcjCsj80LWMtmZDjHXxz9+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Pedersen <thomas@eero.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 19/95] mac80211: mesh: fix RCU warning
-Date:   Wed, 26 Jun 2019 20:29:04 -0400
-Message-Id: <20190627003021.19867-19-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 21/95] ARM: dts: Drop bogus CLKSEL for timer12 on dra7
+Date:   Wed, 26 Jun 2019 20:29:06 -0400
+Message-Id: <20190627003021.19867-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -60,62 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Pedersen <thomas@eero.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 551842446ed695641a00782cd118cbb064a416a1 ]
+[ Upstream commit 34f61de87017aff3c8306280d196dddb1e168a88 ]
 
-ifmsh->csa is an RCU-protected pointer. The writer context
-in ieee80211_mesh_finish_csa() is already mutually
-exclusive with wdev->sdata.mtx, but the RCU checker did
-not know this. Use rcu_dereference_protected() to avoid a
-warning.
+There is no CLKSEL for timer12 on dra7 unlike for timer1. This
+causes issues on booting the device that Tomi noticed if
+DEBUG_SLAB is enabled and the clkctrl clock does not properly
+handle non-existing clock. Let's drop the bogus CLKSEL clock,
+the clkctrl clock handling gets fixed separately.
 
-fixes the following warning:
-
-[   12.519089] =============================
-[   12.520042] WARNING: suspicious RCU usage
-[   12.520652] 5.1.0-rc7-wt+ #16 Tainted: G        W
-[   12.521409] -----------------------------
-[   12.521972] net/mac80211/mesh.c:1223 suspicious rcu_dereference_check() usage!
-[   12.522928] other info that might help us debug this:
-[   12.523984] rcu_scheduler_active = 2, debug_locks = 1
-[   12.524855] 5 locks held by kworker/u8:2/152:
-[   12.525438]  #0: 00000000057be08c ((wq_completion)phy0){+.+.}, at: process_one_work+0x1a2/0x620
-[   12.526607]  #1: 0000000059c6b07a ((work_completion)(&sdata->csa_finalize_work)){+.+.}, at: process_one_work+0x1a2/0x620
-[   12.528001]  #2: 00000000f184ba7d (&wdev->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x2f/0x90
-[   12.529116]  #3: 00000000831a1f54 (&local->mtx){+.+.}, at: ieee80211_csa_finalize_work+0x47/0x90
-[   12.530233]  #4: 00000000fd06f988 (&local->chanctx_mtx){+.+.}, at: ieee80211_csa_finalize_work+0x51/0x90
-
-Signed-off-by: Thomas Pedersen <thomas@eero.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Fixes: 4ed0dfe3cf39 ("ARM: dts: dra7: Move l4 child devices to probe them with ti-sysc")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/dra7-l4.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index 766e5e5bab8a..d5aba5029cb0 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -1220,7 +1220,8 @@ int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
- 	ifmsh->chsw_ttl = 0;
- 
- 	/* Remove the CSA and MCSP elements from the beacon */
--	tmp_csa_settings = rcu_dereference(ifmsh->csa);
-+	tmp_csa_settings = rcu_dereference_protected(ifmsh->csa,
-+					    lockdep_is_held(&sdata->wdev.mtx));
- 	RCU_INIT_POINTER(ifmsh->csa, NULL);
- 	if (tmp_csa_settings)
- 		kfree_rcu(tmp_csa_settings, rcu_head);
-@@ -1242,6 +1243,8 @@ int ieee80211_mesh_csa_beacon(struct ieee80211_sub_if_data *sdata,
- 	struct mesh_csa_settings *tmp_csa_settings;
- 	int ret = 0;
- 
-+	lockdep_assert_held(&sdata->wdev.mtx);
-+
- 	tmp_csa_settings = kmalloc(sizeof(*tmp_csa_settings),
- 				   GFP_ATOMIC);
- 	if (!tmp_csa_settings)
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 73f5c050f586..17f0d8e93622 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -4450,8 +4450,6 @@
+ 			timer12: timer@0 {
+ 				compatible = "ti,omap5430-timer";
+ 				reg = <0x0 0x80>;
+-				clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER12_CLKCTRL 24>;
+-				clock-names = "fck";
+ 				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+ 				ti,timer-alwon;
+ 				ti,timer-secure;
 -- 
 2.20.1
 
