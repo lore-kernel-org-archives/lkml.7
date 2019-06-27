@@ -2,151 +2,97 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B642FC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82130C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB31205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5235C216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2Cyt6p7m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p73g0i/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfF0DNQ (ORCPT
+        id S1726640AbfF0DZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:13:16 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:45788 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfF0DNP (ORCPT
+        Wed, 26 Jun 2019 23:25:35 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39537 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfF0DZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:13:15 -0400
-X-Greylist: delayed 5032 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jun 2019 23:13:13 EDT
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x5R3D6gv018380;
-        Thu, 27 Jun 2019 12:13:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x5R3D6gv018380
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561605187;
-        bh=hUceC5AeeaszlwO9PeBwDuTy7hRVRhzHLJ1xX0slEKk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2Cyt6p7moE3aTxtO9LVZTLf8Js+TX6msHAzEQc2U3RWhpCafH3zcwX7L6dncx8NZj
-         ockSog0czJt3lhCqCbLzNffVlAwojPSytljO9BO73VA05KUuFrmauuPIzOxtzCJyCS
-         I5epEv29rqm491WP8MAtiIhEnlmhgxnbyjF+1EaPXAMrOVW0Tp8sy5BrWQ7xi5cIMS
-         +la8c2fFA7Qz6Gsxgjb0dJKJI56ggjDPZDYsmLm17g/FfJteYLT0I79YEcy9pHsNwi
-         0ZC+277O1XILPZP/vHnTygUbl9mom+Th9NKjBPsENXkyrtFEoxj3NwJvDj2HSBB8DY
-         94rFlEoEYBGdQ==
-X-Nifty-SrcIP: [209.85.221.176]
-Received: by mail-vk1-f176.google.com with SMTP id b69so201659vkb.3;
-        Wed, 26 Jun 2019 20:13:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAWehBNpZZcasJLpNHxpeuu1T3jlBEFOJDkkJYnr7g20LQEMniEj
-        sUmMF15RVz2uhGhAm0IpgSInchZE5juKTN3JMY0=
-X-Google-Smtp-Source: APXvYqyrO6AGMiLTE/NsWodSgUDnExRC/7L2ZBLMise97w6CNCIJwXhqUDD88sfQ76DyLQRs9XeF+xyViB4ZUlsc7PQ=
-X-Received: by 2002:a1f:4107:: with SMTP id o7mr526475vka.34.1561605185809;
- Wed, 26 Jun 2019 20:13:05 -0700 (PDT)
+        Wed, 26 Jun 2019 23:25:35 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r21so99567otq.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 20:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HjN3R4taWV9ZkzqtfFfYqtTJoGWa+sVZ87kMP8YXV64=;
+        b=p73g0i/lWc+fOBoO5RiaEgcznFDaujrFRpK8nrpjNqvGjrawC2EaPVvV4w+W4qMSNj
+         kPn5pFRhuvQUd9x2sgIAVHXF2eeTLxWFP/Q58yokH46HloqfSSpAeKShM5EbcaODu9M6
+         QznKz+hpJersSvp2oXpnu1SX3GtQQFR6urwFGAEDK4trHAPFepXs+Gg0ZVamM/NH5T11
+         6avK6vXC6QN0QSrYQ+Une0tiKfRAHPum6xt4rRhPYQzmiH1CKrAdACQCVRJFkhGJR76J
+         GshTMOVTzJFEPyZKt49AKANlEsI5xpd9uxfcHBqSRQ7LzU3VYAkPffH6bH40AxELynMj
+         DbrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HjN3R4taWV9ZkzqtfFfYqtTJoGWa+sVZ87kMP8YXV64=;
+        b=K+cVrzLf8pKOsG+DRae+teZ2HiesynZZmEm2yutvaaZf8oBM1LoJIkWKf5oke4x8km
+         4CctEk3oMOfMxkAyF8mJWfnPQxqAiepe5uf+pVlfjiz1UgzzWAIBgCXgc2PJE10tFQ6u
+         MuV27/BqiCHtiMk6u/mlB+EFSMFSaRoGxFh6G4IT3RSI0fkkXneoyptbcueZ2HNSrFlW
+         DR4GWfChJKj12FbXFIgDih69NZxBNMhuORIUoiAKKA/ZrzqcwFYJRhfm4LTZE/rpHqsw
+         ZjtvDMhehng8noLp/DtMXdvQ3wZitfaTaXH6QP4zkRVcZY9hG/VlYc7qpqJ9zICIGW4b
+         Ir5w==
+X-Gm-Message-State: APjAAAWdl6x+NPHdz/K9tonsduaMjTrdfQM8yLh22wyk1AuzWb/ai8Dx
+        adFlaz07PBxmrkT2A/agg/E=
+X-Google-Smtp-Source: APXvYqw8EnmlfwshdOVKyWDk3h/vd06XTuBwLqic2iEJQoYlW52eCytOnrZasY+djy59hIiS3GdOEw==
+X-Received: by 2002:a9d:6385:: with SMTP id w5mr1320187otk.227.1561605934166;
+        Wed, 26 Jun 2019 20:25:34 -0700 (PDT)
+Received: from rYz3n.attlocal.net ([2600:1700:210:3790::48])
+        by smtp.googlemail.com with ESMTPSA id y184sm417647oie.33.2019.06.26.20.25.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 26 Jun 2019 20:25:33 -0700 (PDT)
+From:   Jiunn Chang <c0d1n61at3@gmail.com>
+To:     skhan@linuxfoundation.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net
+Subject: [Linux-kernel-mentees][PATCH] ethtool: Fix undefined behavior in bit shift
+Date:   Wed, 26 Jun 2019 22:25:29 -0500
+Message-Id: <20190627032532.18374-1-c0d1n61at3@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190627014617.600-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190627014617.600-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 27 Jun 2019 12:12:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARr7mDaDdh0NxUjYHJCz7Gd9-gFdryWtT224U8KpJ9p3w@mail.gmail.com>
-Message-ID: <CAK7LNARr7mDaDdh0NxUjYHJCz7Gd9-gFdryWtT224U8KpJ9p3w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Compile-test UAPI and kernel headers
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, Tony Luck <tony.luck@intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-riscv@lists.infradead.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:49 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
->
-> 1/4: reworked v2.
->
-> 2/4: fix a flaw I noticed when I was working on this series
->
-> 3/4: maybe useful for 4/4 and in some other places
->
-> 4/4: v2. compile as many headers as possible.
->
+Shifting signed 32-bit value by 31 bits is undefined.  Changing most
+significant bit to unsigned.
 
+Signed-off-by: Jiunn Chang <c0d1n61at3@gmail.com>
+---
+ include/uapi/linux/ethtool.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you want to test this series,
-please check:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
- header-test-v2
-
-
-> Changes in v2:
->  - Add CONFIG_CPU_{BIG,LITTLE}_ENDIAN guard to avoid build error
->  - Use 'header-test-' instead of 'no-header-test'
->  - Avoid weird 'find' warning when cleaning
->   - New patch
->   - New patch
->   - Add everything to test coverage, and exclude broken ones
->   - Rename 'Makefile' to 'Kbuild'
->   - Add CONFIG_KERNEL_HEADER_TEST option
->
-> Masahiro Yamada (4):
->   kbuild: compile-test UAPI headers to ensure they are self-contained
->   kbuild: do not create wrappers for header-test-y
->   kbuild: support header-test-pattern-y
->   kbuild: compile-test kernel headers to ensure they are self-contained
->
->  .gitignore                         |    1 -
->  Documentation/dontdiff             |    1 -
->  Documentation/kbuild/makefiles.txt |   13 +-
->  Makefile                           |    4 +-
->  include/Kbuild                     | 1134 ++++++++++++++++++++++++++++
->  init/Kconfig                       |   22 +
->  scripts/Makefile.build             |   10 +-
->  scripts/Makefile.lib               |   12 +-
->  scripts/cc-system-headers.sh       |    8 +
->  usr/.gitignore                     |    1 -
->  usr/Makefile                       |    2 +
->  usr/include/.gitignore             |    3 +
->  usr/include/Makefile               |  133 ++++
->  13 files changed, 1331 insertions(+), 13 deletions(-)
->  create mode 100644 include/Kbuild
->  create mode 100755 scripts/cc-system-headers.sh
->  create mode 100644 usr/include/.gitignore
->  create mode 100644 usr/include/Makefile
->
-> --
-> 2.17.1
->
-
-
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index 3534ce157ae9..859b2e99c000 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -1691,7 +1691,7 @@ static inline int ethtool_validate_duplex(__u8 duplex)
+ #define	RXH_IP_DST	(1 << 5)
+ #define	RXH_L4_B_0_1	(1 << 6) /* src port in case of TCP/UDP/SCTP */
+ #define	RXH_L4_B_2_3	(1 << 7) /* dst port in case of TCP/UDP/SCTP */
+-#define	RXH_DISCARD	(1 << 31)
++#define	RXH_DISCARD	(1U << 31)
+ 
+ #define	RX_CLS_FLOW_DISC	0xffffffffffffffffULL
+ #define RX_CLS_FLOW_WAKE	0xfffffffffffffffeULL
 -- 
-Best Regards
-Masahiro Yamada
+2.22.0
+
