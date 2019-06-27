@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7152C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E67AC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE73F21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25BE0217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561610735;
-	bh=Gc0XYDh9VdKQArOdtCH+oMY6poNwXHQC/rBzPi9XHqw=;
+	s=default; t=1561610741;
+	bh=2LjnG9cl659T/Mb4Oo5zO5E1oC3kTmLxQ0BrquDnfMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hsfJnYigTPIadLR4i+R+3IcGY6P2JYeFUgJGxlRulmS3140mxSJmaK+3WsVBLmqVF
-	 6sHrEI4rqepFfcOrsys3XIs/dpXyJPxRHJecmFdsc//5rUaW+rl7Zbhj+Akefo6LfU
-	 dBmBocqqxwFzMDmRi3dWRq1YvbM45K8UVWo+1Q8g=
+	b=cmHSd1xwqqlir1U0KdF0zEtUkdln/D9ukRqAB4Kl0EEenhLPI+jUEDhzFLvQdDF8c
+	 y9BLfEfv6s5if4Gsl2vwE53nbD3gzwy1qxLa5z3gBnD+RQ0SrcqTaAlvLyHxMOihC9
+	 IySOTp78Xolak90xc34Y/F+q9SEoszMRLDLcONh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfF0Epe (ORCPT
+        id S1727326AbfF0Epk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 00:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56736 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 00:45:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbfF0EpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 00:45:16 -0400
+        id S1725385AbfF0EpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 00:45:14 -0400
 Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2800D21726;
-        Thu, 27 Jun 2019 04:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C08B621871;
+        Thu, 27 Jun 2019 04:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561610715;
-        bh=Gc0XYDh9VdKQArOdtCH+oMY6poNwXHQC/rBzPi9XHqw=;
+        s=default; t=1561610713;
+        bh=2LjnG9cl659T/Mb4Oo5zO5E1oC3kTmLxQ0BrquDnfMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N6a64TQ59feOIvylVr9sPUS67s4qSRseGzQ/sY+cEsZxvrZzfWbeUuzD577bkr3XX
-         h7ibBugOm+oHmrS0Z32G9lA5eXefgWLpovont/9fXq7GFqJzN4l2hmORhtmg1QcZGZ
-         g7JErp2BRraz4SqhdzxUk9VPWGcaI9MMsmugSp18=
+        b=pnRY3wzR8noX7uPCGnCyNytXU5ya5jr2DBT9tVXecewhcca7PLSVFwYODeL0V9dH6
+         s4mRkV7loR8QTm3F/xrLYpGQyx/cYZHfpU/zV6jEdhViGSBzZ6dFi0bQkBi87rJN3w
+         u9q6RSM8XBsEaFbK+3RCsrQ9oXo8He0WhKKgtnBU=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     x86@kernel.org
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Florian Weimer <fweimer@redhat.com>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 5/8] selftests/x86/vsyscall: Verify that vsyscall=none blocks execution
-Date:   Wed, 26 Jun 2019 21:45:06 -0700
-Message-Id: <b413397c804265f8865f3e70b14b09485ea7c314.1561610354.git.luto@kernel.org>
+        Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH v2 3/8] x86/vsyscall: Show something useful on a read fault
+Date:   Wed, 26 Jun 2019 21:45:04 -0700
+Message-Id: <8016afffe0eab497be32017ad7f6f7030dc3ba66.1561610354.git.luto@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561610354.git.luto@kernel.org>
 References: <cover.1561610354.git.luto@kernel.org>
@@ -63,210 +58,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If vsyscall=none accidentally still allowed vsyscalls, the test
-wouldn't fail.  Fix it.
-
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- tools/testing/selftests/x86/test_vsyscall.c | 76 ++++++++++++++-------
- 1 file changed, 52 insertions(+), 24 deletions(-)
+ arch/x86/entry/vsyscall/vsyscall_64.c | 19 ++++++++++++++++++-
+ arch/x86/include/asm/vsyscall.h       |  6 ++++--
+ arch/x86/mm/fault.c                   | 11 +++++------
+ 3 files changed, 27 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
-index 4c9a8d76dba0..34a1d35995ef 100644
---- a/tools/testing/selftests/x86/test_vsyscall.c
-+++ b/tools/testing/selftests/x86/test_vsyscall.c
-@@ -49,21 +49,21 @@ static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index fedd7628f3a6..9c58ab807aeb 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -117,7 +117,8 @@ static bool write_ok_or_segv(unsigned long ptr, size_t size)
+ 	}
  }
  
- /* vsyscalls and vDSO */
--bool should_read_vsyscall = false;
-+bool vsyscall_map_r = false, vsyscall_map_x = false;
+-bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
++bool emulate_vsyscall(unsigned long error_code,
++		      struct pt_regs *regs, unsigned long address)
+ {
+ 	struct task_struct *tsk;
+ 	unsigned long caller;
+@@ -126,6 +127,22 @@ bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
+ 	long ret;
+ 	unsigned long orig_dx;
  
- typedef long (*gtod_t)(struct timeval *tv, struct timezone *tz);
--gtod_t vgtod = (gtod_t)VSYS(0xffffffffff600000);
-+const gtod_t vgtod = (gtod_t)VSYS(0xffffffffff600000);
- gtod_t vdso_gtod;
- 
- typedef int (*vgettime_t)(clockid_t, struct timespec *);
- vgettime_t vdso_gettime;
- 
- typedef long (*time_func_t)(time_t *t);
--time_func_t vtime = (time_func_t)VSYS(0xffffffffff600400);
-+const time_func_t vtime = (time_func_t)VSYS(0xffffffffff600400);
- time_func_t vdso_time;
- 
- typedef long (*getcpu_t)(unsigned *, unsigned *, void *);
--getcpu_t vgetcpu = (getcpu_t)VSYS(0xffffffffff600800);
-+const getcpu_t vgetcpu = (getcpu_t)VSYS(0xffffffffff600800);
- getcpu_t vdso_getcpu;
- 
- static void init_vdso(void)
-@@ -107,7 +107,7 @@ static int init_vsys(void)
- 	maps = fopen("/proc/self/maps", "r");
- 	if (!maps) {
- 		printf("[WARN]\tCould not open /proc/self/maps -- assuming vsyscall is r-x\n");
--		should_read_vsyscall = true;
-+		vsyscall_map_r = true;
- 		return 0;
- 	}
- 
-@@ -133,12 +133,8 @@ static int init_vsys(void)
- 		}
- 
- 		printf("\tvsyscall permissions are %c-%c\n", r, x);
--		should_read_vsyscall = (r == 'r');
--		if (x != 'x') {
--			vgtod = NULL;
--			vtime = NULL;
--			vgetcpu = NULL;
--		}
-+		vsyscall_map_r = (r == 'r');
-+		vsyscall_map_x = (x == 'x');
- 
- 		found = true;
- 		break;
-@@ -148,10 +144,8 @@ static int init_vsys(void)
- 
- 	if (!found) {
- 		printf("\tno vsyscall map in /proc/self/maps\n");
--		should_read_vsyscall = false;
--		vgtod = NULL;
--		vtime = NULL;
--		vgetcpu = NULL;
-+		vsyscall_map_r = false;
-+		vsyscall_map_x = false;
- 	}
- 
- 	return nerrs;
-@@ -242,7 +236,7 @@ static int test_gtod(void)
- 		err(1, "syscall gettimeofday");
- 	if (vdso_gtod)
- 		ret_vdso = vdso_gtod(&tv_vdso, &tz_vdso);
--	if (vgtod)
-+	if (vsyscall_map_x)
- 		ret_vsys = vgtod(&tv_vsys, &tz_vsys);
- 	if (sys_gtod(&tv_sys2, &tz_sys) != 0)
- 		err(1, "syscall gettimeofday");
-@@ -256,7 +250,7 @@ static int test_gtod(void)
- 		}
- 	}
- 
--	if (vgtod) {
-+	if (vsyscall_map_x) {
- 		if (ret_vsys == 0) {
- 			nerrs += check_gtod(&tv_sys1, &tv_sys2, &tz_sys, "vsyscall", &tv_vsys, &tz_vsys);
- 		} else {
-@@ -277,7 +271,7 @@ static int test_time(void) {
- 	t_sys1 = sys_time(&t2_sys1);
- 	if (vdso_time)
- 		t_vdso = vdso_time(&t2_vdso);
--	if (vtime)
-+	if (vsyscall_map_x)
- 		t_vsys = vtime(&t2_vsys);
- 	t_sys2 = sys_time(&t2_sys2);
- 	if (t_sys1 < 0 || t_sys1 != t2_sys1 || t_sys2 < 0 || t_sys2 != t2_sys2) {
-@@ -298,7 +292,7 @@ static int test_time(void) {
- 		}
- 	}
- 
--	if (vtime) {
-+	if (vsyscall_map_x) {
- 		if (t_vsys < 0 || t_vsys != t2_vsys) {
- 			printf("[FAIL]\tvsyscall failed (ret:%ld output:%ld)\n", t_vsys, t2_vsys);
- 			nerrs++;
-@@ -334,7 +328,7 @@ static int test_getcpu(int cpu)
- 	ret_sys = sys_getcpu(&cpu_sys, &node_sys, 0);
- 	if (vdso_getcpu)
- 		ret_vdso = vdso_getcpu(&cpu_vdso, &node_vdso, 0);
--	if (vgetcpu)
-+	if (vsyscall_map_x)
- 		ret_vsys = vgetcpu(&cpu_vsys, &node_vsys, 0);
- 
- 	if (ret_sys == 0) {
-@@ -373,7 +367,7 @@ static int test_getcpu(int cpu)
- 		}
- 	}
- 
--	if (vgetcpu) {
-+	if (vsyscall_map_x) {
- 		if (ret_vsys) {
- 			printf("[FAIL]\tvsyscall getcpu() failed\n");
- 			nerrs++;
-@@ -414,10 +408,10 @@ static int test_vsys_r(void)
- 		can_read = false;
- 	}
- 
--	if (can_read && !should_read_vsyscall) {
-+	if (can_read && !vsyscall_map_r) {
- 		printf("[FAIL]\tWe have read access, but we shouldn't\n");
- 		return 1;
--	} else if (!can_read && should_read_vsyscall) {
-+	} else if (!can_read && vsyscall_map_r) {
- 		printf("[FAIL]\tWe don't have read access, but we should\n");
- 		return 1;
- 	} else if (can_read) {
-@@ -431,6 +425,39 @@ static int test_vsys_r(void)
- 	return 0;
++	/* Write faults or kernel-privilege faults never get fixed up. */
++	if ((error_code & (X86_PF_WRITE | X86_PF_USER)) != X86_PF_USER)
++		return false;
++
++	if (!(error_code & X86_PF_INSTR)) {
++		/* Failed vsyscall read */
++		if (vsyscall_mode == EMULATE)
++			return false;
++
++		/*
++		 * User code tried and failed to read the vsyscall page.
++		 */
++		warn_bad_vsyscall(KERN_INFO, regs, "vsyscall read attempt denied -- look up the vsyscall kernel parameter if you need a workaround");
++		return false;
++	}
++
+ 	/*
+ 	 * No point in checking CS -- the only way to get here is a user mode
+ 	 * trap to a high address, which means that we're in 64-bit user code.
+diff --git a/arch/x86/include/asm/vsyscall.h b/arch/x86/include/asm/vsyscall.h
+index b986b2ca688a..ab60a71a8dcb 100644
+--- a/arch/x86/include/asm/vsyscall.h
++++ b/arch/x86/include/asm/vsyscall.h
+@@ -13,10 +13,12 @@ extern void set_vsyscall_pgtable_user_bits(pgd_t *root);
+  * Called on instruction fetch fault in vsyscall page.
+  * Returns true if handled.
+  */
+-extern bool emulate_vsyscall(struct pt_regs *regs, unsigned long address);
++extern bool emulate_vsyscall(unsigned long error_code,
++			     struct pt_regs *regs, unsigned long address);
+ #else
+ static inline void map_vsyscall(void) {}
+-static inline bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
++static inline bool emulate_vsyscall(unsigned long error_code,
++				    struct pt_regs *regs, unsigned long address)
+ {
+ 	return false;
  }
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 46df4c6aae46..288a5462076f 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1369,16 +1369,15 @@ void do_user_addr_fault(struct pt_regs *regs,
  
-+static int test_vsys_x(void)
-+{
-+#ifdef __x86_64__
-+	if (vsyscall_map_x) {
-+		/* We already tested this adequately. */
-+		return 0;
-+	}
-+
-+	printf("[RUN]\tMake sure that vsyscalls really page fault\n");
-+
-+	bool can_exec;
-+	if (sigsetjmp(jmpbuf, 1) == 0) {
-+		vgtod(NULL, NULL);
-+		can_exec = true;
-+	} else {
-+		can_exec = false;
-+	}
-+
-+	if (can_exec) {
-+		printf("[FAIL]\tExecuting the vsyscall did not page fault\n");
-+		return 1;
-+	} else if (segv_err & (1 << 4)) { /* INSTR */
-+		printf("[OK]\tExecuting the vsyscall page failed: #PF(0x%lx)\n",
-+		       segv_err);
-+	} else {
-+		printf("[FAILT]\tExecution failed with the wrong error: #PF(0x%lx)\n",
-+		       segv_err);
-+		return 1;
-+	}
-+#endif
-+
-+	return 0;
-+}
- 
- #ifdef __x86_64__
- #define X86_EFLAGS_TF (1UL << 8)
-@@ -462,7 +489,7 @@ static int test_emulation(void)
- 	time_t tmp;
- 	bool is_native;
- 
--	if (!vtime)
-+	if (!vsyscall_map_x)
- 		return 0;
- 
- 	printf("[RUN]\tchecking that vsyscalls are emulated\n");
-@@ -504,6 +531,7 @@ int main(int argc, char **argv)
- 
- 	sethandler(SIGSEGV, sigsegv, 0);
- 	nerrs += test_vsys_r();
-+	nerrs += test_vsys_x();
- 
- #ifdef __x86_64__
- 	nerrs += test_emulation();
+ #ifdef CONFIG_X86_64
+ 	/*
+-	 * Instruction fetch faults in the vsyscall page might need
+-	 * emulation.  The vsyscall page is at a high address
+-	 * (>PAGE_OFFSET), but is considered to be part of the user
+-	 * address space.
++	 * Faults in the vsyscall page might need emulation.  The
++	 * vsyscall page is at a high address (>PAGE_OFFSET), but is
++	 * considered to be part of the user address space.
+ 	 *
+ 	 * The vsyscall page does not have a "real" VMA, so do this
+ 	 * emulation before we go searching for VMAs.
+ 	 */
+-	if ((hw_error_code & X86_PF_INSTR) && is_vsyscall_vaddr(address)) {
+-		if (emulate_vsyscall(regs, address))
++	if (is_vsyscall_vaddr(address)) {
++		if (emulate_vsyscall(hw_error_code, regs, address))
+ 			return;
+ 	}
+ #endif
 -- 
 2.21.0
 
