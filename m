@@ -6,98 +6,97 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C95C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6480C5B576
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6B72063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB4D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfF0WYe (ORCPT
+        id S1726690AbfF0W0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:24:34 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:38727 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726445AbfF0WYe (ORCPT
+        Thu, 27 Jun 2019 18:26:04 -0400
+Received: from www62.your-server.de ([213.133.104.62]:47700 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbfF0W0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:24:34 -0400
-Received: from dread.disaster.area (pa49-195-139-63.pa.nsw.optusnet.com.au [49.195.139.63])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 9603243C42B;
-        Fri, 28 Jun 2019 08:24:31 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hgcnc-0001na-29; Fri, 28 Jun 2019 08:23:24 +1000
-Date:   Fri, 28 Jun 2019 08:23:24 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/12] xfs: don't preallocate a transaction for file size
- updates
-Message-ID: <20190627222324.GH7777@dread.disaster.area>
-References: <20190624055253.31183-1-hch@lst.de>
- <20190624055253.31183-8-hch@lst.de>
- <20190624161720.GQ5387@magnolia>
- <20190624231523.GC7777@dread.disaster.area>
- <20190625102507.GA1986@lst.de>
+        Thu, 27 Jun 2019 18:26:04 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hgcq3-0005kW-R6; Fri, 28 Jun 2019 00:25:55 +0200
+Received: from [178.193.45.231] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hgcq3-000Rce-LN; Fri, 28 Jun 2019 00:25:55 +0200
+Subject: Re: linux-next: Fixes tag needs some work in the bpf tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Roman Gushchin <guro@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190627080521.5df8ccfc@canb.auug.org.au>
+ <20190626221347.GA17762@tower.DHCP.thefacebook.com>
+ <CAADnVQJiMH=jfuD0FGpr2JmzyQsMKHJ4pM1kfQ8jhSxrAe0XWg@mail.gmail.com>
+ <20190627114536.09c08f5d@canb.auug.org.au>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <134f90ff-13f8-b7c1-9693-2f2649245c38@iogearbox.net>
+Date:   Fri, 28 Jun 2019 00:25:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190625102507.GA1986@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=fNT+DnnR6FjB+3sUuX8HHA==:117 a=fNT+DnnR6FjB+3sUuX8HHA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=ae071pWMrU5jLcjm0hQA:9 a=wSn981L3eJwRu9Eu:21
-        a=hda4UQlomxu2gwLn:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20190627114536.09c08f5d@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25493/Thu Jun 27 10:06:16 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 12:25:07PM +0200, Christoph Hellwig wrote:
-> On Tue, Jun 25, 2019 at 09:15:23AM +1000, Dave Chinner wrote:
-> > > So, uh, how much of a hit do we take for having to allocate a
-> > > transaction for a file size extension?  Particularly since we can
-> > > combine those things now?
-> > 
-> > Unless we are out of log space, the transaction allocation and free
-> > should be largely uncontended and so it's just a small amount of CPU
-> > usage. i.e it's a slab allocation/free and then lockless space
-> > reservation/free. If we are out of log space, then we sleep waiting
-> > for space - the issue really comes down to where it is better to
-> > sleep in that case....
+On 06/27/2019 03:45 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I see the general point, but we'll still have the same issue with
-> unwritten extent conversion and cow completions, and I don't remember
-> seeing any issue in that regard.
+> On Wed, 26 Jun 2019 16:36:50 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>>
+>> On Wed, Jun 26, 2019 at 3:14 PM Roman Gushchin <guro@fb.com> wrote:
+>>>
+>>> On Thu, Jun 27, 2019 at 08:05:21AM +1000, Stephen Rothwell wrote:  
+>>>>
+>>>> In commit
+>>>>
+>>>>   12771345a467 ("bpf: fix cgroup bpf release synchronization")
+>>>>
+>>>> Fixes tag
+>>>>
+>>>>   Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
+>>>>
+>>>> has these problem(s):
+>>>>
+>>>>   - Subject has leading but no trailing parentheses
+>>>>   - Subject has leading but no trailing quotes
+>>>>
+>>>> Please don't split Fixes tags across more than one line.  
+>>>
+>>> Oops, sorry.
+>>>
+>>> Alexei, can you fix this in place?
+>>> Or should I send an updated version?  
+>>
+>> I cannot easily do it since -p and --signoff are incompatible flags.
+>> I need to use -p to preserve merge commits,
+>> but I also need to use --signoff to add my sob to all
+>> other commits that were committed by Daniel
+>> after your commit.
+>>
+>> Daniel, can you fix Roman's patch instead?
+>> you can do:
+>> git rebase -i -p  12771345a467^
+>> fix Roman's, add you sob only to that one
+>> and re-push the whole thing.
 
-These are realtively rare for small file workloads - I'm really
-talking about the effect of delalloc and how we've optimised
-allocation during writeback to merge small, cross-file writeback
-into much larger large physical IOs. Unwritten extents nor COW are
-used in these (common) cases, and if they are then the allocation
-patterns prevent the cross-file IO merging in the block layer and so
-we don't get the "hundred ioends for a hundred inodes from a single
-a physical IO completion" thundering heard problem....
-
-> And we'd hit exactly that case
-> with random writes to preallocated or COW files, i.e. the typical image
-> file workload.
-
-I do see a noticable amount of IO completion overhead in the host
-when hitting unwritten extents in VM image workloads. I'll see if I
-can track the number of kworkers we're stalling in under some of
-these workloads, but I think it's still largely bound by the request
-queue depth of the IO stack inside the VM because there is no IO
-merging in these cases.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+(Fixed in bpf-next.)
