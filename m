@@ -2,74 +2,232 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C093BC5B54D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99943C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6592075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4A8208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:02:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="skNHewgw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfF0WCs (ORCPT
+        id S1726730AbfF0WCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:02:48 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:41609 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfF0WCs (ORCPT
+        Thu, 27 Jun 2019 18:02:53 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46699 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfF0WCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:02:48 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 01f487f09d6342f2; Fri, 28 Jun 2019 00:02:46 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, len.brown@intel.com,
-        rafael.j.wysocki@intel.com, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/2] powercap/rapl: Add Ice Lake NNPI support to RAPL driver
-Date:   Fri, 28 Jun 2019 00:02:45 +0200
-Message-ID: <2359736.lHFMKXy7DL@kreacher>
-In-Reply-To: <20190614080523.13464-1-rajneesh.bhardwaj@linux.intel.com>
-References: <20190614080523.13464-1-rajneesh.bhardwaj@linux.intel.com>
+        Thu, 27 Jun 2019 18:02:52 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z15so2561734lfh.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xbbnXWKXuliO2NCc1GKxfyiq/MrUoansylKG3BGiB8o=;
+        b=skNHewgwM3928cMU3mhcyZ3kWO66KLPjH6Ty8Ai3Elkhe2r/kM1I+OtZXwNMEH2MM+
+         1cSOjNOe3MymhoU6/SqxWZCc81i+EhbG8N0qCAkR5Y9srAXg6QoHl/drVslq+D6MA9xc
+         bJorDAfBdBXmJ3P4Ualbzbk/s6ybNr5FrAWKyaMI9SqGpy/aYgc06YBnbvZ4J9SyGlIt
+         V3aVth6uQT7QNUscQPFgCFxn5PXAQD9lV6wbcgqYqKFwk8ECD4Ifz/lq1IDRkXBlEvVh
+         iW0fzBIa4QDChx2LFBcmsE7y0b8RkRFBrI63H9ioL/1UMynbj8Hv7sFZlDVJz+58Fk1V
+         V29Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=xbbnXWKXuliO2NCc1GKxfyiq/MrUoansylKG3BGiB8o=;
+        b=iswJj3k+hSegMACLdbTlqF5nPeRabfi2SF3ju1/OzePpJWEd0lTxch27hJKb3GjIL0
+         4s+FAAPrZ8GH8JjWPTvaeFDpKX2oSfcb7pyPaHwrC/ZuLf64J6YzfNrVQ9wc9PnH6yLN
+         s+dBjsn1JUZmrwbhUeq2l/iNv9BmZ1JM1M8hommieHbaTa2eSeXTugg0ADkvJ+3gRPpl
+         yz9lsseE3KsmIheiU1LPawAZZzUQTD13PqHCJ93VPVOurfIdqMGKHZRlM+J20WHDPNI2
+         sCTnI3ZuxU8BIt7rnlIH3TWc9EQ9i+CvBQDv/z85m3oldAWYCk3/l00nAnD9F5VCErB3
+         4dvA==
+X-Gm-Message-State: APjAAAV38zsYgVTsa0/2fwk8tl2KD5/VQUFFLR78EXGrv2Pl16wBPJIJ
+        anONChNjY4tL2E6uJrZ+3OoY7w==
+X-Google-Smtp-Source: APXvYqzZdcbD4SJLz/gtjo5rwBKiASsxtaTefT1ggkl9S07BUMU3dGPwkCq0gQLyROnWa7aFbWu+LA==
+X-Received: by 2002:ac2:514b:: with SMTP id q11mr3322299lfd.33.1561672970365;
+        Thu, 27 Jun 2019 15:02:50 -0700 (PDT)
+Received: from khorivan (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
+        by smtp.gmail.com with ESMTPSA id v86sm70673lje.74.2019.06.27.15.02.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Jun 2019 15:02:49 -0700 (PDT)
+Date:   Fri, 28 Jun 2019 01:02:47 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     davem@davemloft.net, grygorii.strashko@ti.com, saeedm@mellanox.com,
+        leon@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+Subject: Re: [PATCH v4 net-next 1/4] net: core: page_pool: add user cnt
+ preventing pool deletion
+Message-ID: <20190627220245.GA3269@khorivan>
+Mail-Followup-To: Jesper Dangaard Brouer <brouer@redhat.com>,
+        davem@davemloft.net, grygorii.strashko@ti.com, saeedm@mellanox.com,
+        leon@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, ilias.apalodimas@linaro.org,
+        netdev@vger.kernel.org, daniel@iogearbox.net,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com
+References: <20190625175948.24771-1-ivan.khoronzhuk@linaro.org>
+ <20190625175948.24771-2-ivan.khoronzhuk@linaro.org>
+ <20190627214317.237e5926@carbon>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190627214317.237e5926@carbon>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, June 14, 2019 10:05:23 AM CEST Rajneesh Bhardwaj wrote:
-> Enables support for ICL-NNPI, which is a neural network processor for deep
-> learning inference. From RAPL point of view it is same as Ice Lake Mobile
-> processor.
-> 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: linux-pm@vger.kernel.org
-> Link: https://lkml.org/lkml/2019/6/5/1034
-> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> ---
->  drivers/powercap/intel_rapl.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-> index 4347f15165f8..431c8c8bdf07 100644
-> --- a/drivers/powercap/intel_rapl.c
-> +++ b/drivers/powercap/intel_rapl.c
-> @@ -1157,6 +1157,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
->  	INTEL_CPU_FAM6(KABYLAKE_DESKTOP,	rapl_defaults_core),
->  	INTEL_CPU_FAM6(CANNONLAKE_MOBILE,	rapl_defaults_core),
->  	INTEL_CPU_FAM6(ICELAKE_MOBILE,		rapl_defaults_core),
-> +	INTEL_CPU_FAM6(ICELAKE_NNPI,		rapl_defaults_core),
->  
->  	INTEL_CPU_FAM6(ATOM_SILVERMONT,		rapl_defaults_byt),
->  	INTEL_CPU_FAM6(ATOM_AIRMONT,		rapl_defaults_cht),
-> 
+Hi Jesper, thanks you remember about it.
 
-It is in my queue, but I get build errors when I try to apply it.
+>
+>I don't think that "create" and "free" routines paring looks "more
+>correct" together.
+>
+>Maybe we can scale back your solution(?), via creating a page_pool_get()
+>and page_pool_put() API that can be used by your driver, to keep the
+>page_pool object after a xdp_rxq_info_unreg() call.  Then you can use
+>it for two xdp_rxq_info structs, and call page_pool_put() after you
+>have unregistered both.
+>
+>The API would basically be:
+>
+>diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+>index b366f59885c1..691ddacfb5a6 100644
+>--- a/net/core/page_pool.c
+>+++ b/net/core/page_pool.c
+>@@ -357,6 +357,10 @@ static void __warn_in_flight(struct page_pool *pool)
+> void __page_pool_free(struct page_pool *pool)
+> {
+>        WARN(pool->alloc.count, "API usage violation");
+>+
+>+       if (atomic_read(&pool->user_cnt) != 0)
+>+               return;
+>+
+>        WARN(!ptr_ring_empty(&pool->ring), "ptr_ring is not empty");
+>
+>        /* Can happen due to forced shutdown */
+>@@ -372,6 +376,19 @@ void __page_pool_free(struct page_pool *pool)
+> }
+> EXPORT_SYMBOL(__page_pool_free);
+>
+>+void page_pool_put(struct page_pool *pool)
+>+{
+>+       if (!atomic_dec_and_test(&pool->user_cnt))
+>+               __page_pool_free(pool);
+>+}
+>+EXPORT_SYMBOL(page_pool_put);
+>+
+>+void page_pool_get(struct page_pool *pool)
+>+{
+>+       atomic_inc(&pool->user_cnt);
+>+}
+>+EXPORT_SYMBOL(page_pool_get);
+>+
 
-I guess the definition of ICELAKE_NNPI is not there in the Linus' tree yet.
+I have another solution that doesn't touch page pool and adds modifications
+to xdp allocator. As for me it looks better and work wider, I don't need to
+think about this in the driver also.
+
+It's supposed allocator works as before, no any changes to mlx5 and
+page_pool API and its usage and seems like fits your requirements.
+It still supposes that allocator runs under same napi softirq but allows
+to reuse allocator.
+
+I have not verified yet, but looks like:
+
+diff --git a/include/net/xdp_priv.h b/include/net/xdp_priv.h
+index 6a8cba6ea79a..995b21da2f27 100644
+--- a/include/net/xdp_priv.h
++++ b/include/net/xdp_priv.h
+@@ -18,6 +18,7 @@ struct xdp_mem_allocator {
+ 	struct rcu_head rcu;
+ 	struct delayed_work defer_wq;
+ 	unsigned long defer_warn;
++	unsigned long refcnt;
+ };
+ 
+ #endif /* __LINUX_NET_XDP_PRIV_H__ */
+diff --git a/net/core/xdp.c b/net/core/xdp.c
+index f98ab6b98674..6239483e3793 100644
+--- a/net/core/xdp.c
++++ b/net/core/xdp.c
+@@ -98,6 +98,12 @@ static bool __mem_id_disconnect(int id, bool force)
+ 		WARN(1, "Request remove non-existing id(%d), driver bug?", id);
+ 		return true;
+ 	}
++
++	if (--xa->refcnt) {
++		mutex_unlock(&mem_id_lock);
++		return true;
++	}
++
+ 	xa->disconnect_cnt++;
+ 
+ 	/* Detects in-flight packet-pages for page_pool */
+@@ -312,6 +318,33 @@ static bool __is_supported_mem_type(enum xdp_mem_type type)
+ 	return true;
+ }
+ 
++static struct xdp_mem_allocator *xdp_allocator_get(void *allocator)
++{
++	struct xdp_mem_allocator *xae, *xa == NULL;
++	struct rhashtable_iter iter;
++
++	mutex_lock(&mem_id_lock);
++	rhashtable_walk_enter(mem_id_ht, &iter);
++	do {
++		rhashtable_walk_start(&iter);
++
++		while ((xae = rhashtable_walk_next(&iter)) && !IS_ERR(xae)) {
++			if (xae->allocator == allocator) {
++				xae->refcnt++;
++				xa = xae;
++				break;
++			}
++		}
++
++		rhashtable_walk_stop(&iter);
++
++	} while (xae == ERR_PTR(-EAGAIN));
++	rhashtable_walk_exit(&iter);
++	mutex_unlock(&mem_id_lock);
++
++	return xa;
++}
++
+ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 			       enum xdp_mem_type type, void *allocator)
+ {
+@@ -347,6 +380,9 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 		}
+ 	}
+ 
++	if (xdp_allocator_get(allocator))
++		return 0;
++
+ 	xdp_alloc = kzalloc(sizeof(*xdp_alloc), gfp);
+ 	if (!xdp_alloc)
+ 		return -ENOMEM;
+@@ -360,6 +396,7 @@ int xdp_rxq_info_reg_mem_model(struct xdp_rxq_info *xdp_rxq,
+ 	xdp_rxq->mem.id = id;
+ 	xdp_alloc->mem  = xdp_rxq->mem;
+ 	xdp_alloc->allocator = allocator;
++	xdp_alloc->refcnt = 1;
+ 
+ 	/* Insert allocator into ID lookup table */
+ 	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
 
 
-
+-- 
+Regards,
+Ivan Khoronzhuk
