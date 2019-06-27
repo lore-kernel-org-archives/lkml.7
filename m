@@ -2,102 +2,110 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DD7C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798A6C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963A02082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4756420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596762;
-	bh=4vNT1WqCDwINrAB1eZm2chVX+WwCgriDgpieN3a2FRs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RCnqDifYsxl1uq+LKC5JKoTkeTROcHg5iyXxkrRkDkfSZRHcQpGBMAFJKFZp0ii5r
-	 m9fnE0u3umJ0DmKqw6CyPp2woX3W4TvgorcgVieDrUC+onDFqypCvWaW+vsP7xMsYV
-	 yuQUncHxpoRFrIpRnA/QJdtg2MmlzUBHfi1wFtsQ=
+	s=default; t=1561596765;
+	bh=fTJuPthQ2s2US+KiLhkZmKtQNFKUEeqBq/zoEs7uY4E=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=pDboiMUsWDcZnHjClWBX2Isi+yioWXHWfzYwdKSC2hNyCqZ/VoW5mLWFsMGp9moQ0
+	 /dOtUK0sVeEY6zuDu1gtMe66owSZBeDXITxB8hX2pIoh5rmPEH48HM0HtzSHtkH4hP
+	 yUatkBhWvl2iO7mmhx4BJruYPbhPh0iGtYagWsBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfF0AdO (ORCPT
+        id S1727842AbfF0Awn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbfF0AdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:33:11 -0400
-Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727711AbfF0AdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:33:14 -0400
+Received: from localhost (unknown [116.247.127.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99EEB20815;
-        Thu, 27 Jun 2019 00:33:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D94C121738;
+        Thu, 27 Jun 2019 00:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595590;
-        bh=4vNT1WqCDwINrAB1eZm2chVX+WwCgriDgpieN3a2FRs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0xJ8lcrD6zJH0I9aORh72yJSuElla2fMWK3Z9x89ymsMxvasyFcLbI54j1JBuj0X
-         PaaXPtlznVC4cR4tn6fPMlxQ5mOLPiurbpPSFkNMU7GNtk9En8N9F0GXly9QBj5FLq
-         V83ZDlEQuB8t4qATgBpQN/NtszY1zIpZOYo23n5Y=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.1 49/95] RISC-V: defconfig: enable clocks, serial console
-Date:   Wed, 26 Jun 2019 20:29:34 -0400
-Message-Id: <20190627003021.19867-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
-References: <20190627003021.19867-1-sashal@kernel.org>
+        s=default; t=1561595593;
+        bh=fTJuPthQ2s2US+KiLhkZmKtQNFKUEeqBq/zoEs7uY4E=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NTkBDROXrubU4vvujZdeUc3SJO1y9fIvQq/ip6wYA51w9zIL+bY01tuLOWI80qjVE
+         jA0UlGgP5K123omPrvNfBXarqplkT5OKPiD2VsL1U2X3yziRW1rLurZqFxC4ncTYNB
+         ntfvRYz7l2vx2q05STeFLiO8g0ZsvTy+IMms6oog=
+Date:   Thu, 27 Jun 2019 08:33:06 +0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.14.131
+Message-ID: <20190627003306.GA10859@kroah.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hilman <khilman@baylibre.com>
 
-[ Upstream commit 3b025f2bc98973f181d926192b0ceb6ced0f86d2 ]
+--0OAP2g/MAC+5xKAE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Enable PRCI clock driver and serial console by default, so the default
-upstream defconfig is bootable to a serial console.
+I'm announcing the release of the 4.14.131 kernel.
 
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/riscv/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+All users of the 4.14 kernel series must upgrade.
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 2fd3461e50ab..4f02967e55de 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -49,6 +49,8 @@ CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
-+CONFIG_SERIAL_SIFIVE=y
-+CONFIG_SERIAL_SIFIVE_CONSOLE=y
- CONFIG_HVC_RISCV_SBI=y
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=y
-@@ -64,6 +66,8 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
- CONFIG_USB_STORAGE=y
- CONFIG_USB_UAS=y
- CONFIG_VIRTIO_MMIO=y
-+CONFIG_CLK_SIFIVE=y
-+CONFIG_CLK_SIFIVE_FU540_PRCI=y
- CONFIG_SIFIVE_PLIC=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
--- 
-2.20.1
+The updated 4.14.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.14.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
+thanks,
+
+greg k-h
+
+------------
+
+ Makefile              |    2 +-
+ net/ipv4/tcp_output.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Eric Dumazet (1):
+      tcp: refine memory limit test in tcp_fragment()
+
+Greg Kroah-Hartman (1):
+      Linux 4.14.131
+
+
+--0OAP2g/MAC+5xKAE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl0UDsIACgkQONu9yGCS
+aT7vPQ//T79ObYHkdMLGHE0qA/PTjvKftfKkDrbnvcVjtJOPcJpt3s+E5WK/2vwe
+pPVw8yXS0cVRlGhhl5rHvcg2MsObZo+l3Zi8xXqNpcUHyqk0h0ynNlpIYuzlVzZg
+0PH4144tl5X9MPx0wuHkYJnKkTi3Z8UL/qWlM5oNQHJwZmz1Gk5aZL1YhyR1s3A0
+QrRMbLHxasndv1foDoNKZd6Kpn9gfb6ofs7R+8o2ab6aZMzyYP3MyazCJFEuuFe3
+mzU6zzMafESCTcwm0k5IiyrHSxzbDKJqPfmklu3KAQbqYwPkIKxtUVOygdRghQg4
+NJEv9mRNXrkAgDC09hFVN3ZvuTa7+sD4pBv5t2CEylhjcyLLXC5UmMniQTsG/e0r
+/bdI/0MrnSThYsRLQLU5mFNiYf47jiJURM8qDrLrvWeH1YtM27h3rd6hLVsFIdud
+Arsyw5gIRj2Q0Q6oqJ8l0QX10ugYbQ8Gyjsb0NrwmWdZ+XEViZcBRFvc8U/2tGk7
+rnSbFdrjTxXx95EYFQeGznxOW9zOIlD43+4/vvFGHexPvgf6q5wOsBTZ1TTruJPA
+HBvogCL1ggnvUrlPQjGKCQXmDqi5DyJzDZ2Z1WZkG0FI55aLIKHqYIorm/RvITYT
+KNI5rBgy8hjlC4rlPRYxHj6w115mIrM3j0XfqgcyM9luyfhXWNA=
+=P+N6
+-----END PGP SIGNATURE-----
+
+--0OAP2g/MAC+5xKAE--
