@@ -2,134 +2,172 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15340C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70364C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D54FC20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="VvhBW6Wf";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="AxAnptVD"
+	by mail.kernel.org (Postfix) with ESMTP id 4947520828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfF0Hyu (ORCPT
+        id S1726463AbfF0H5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:54:50 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:58800 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725787AbfF0Hyu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:54:50 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B3131C01E6;
-        Thu, 27 Jun 2019 07:54:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561622089; bh=B7ne3IbXGZ/TKfJzqW2GtX1uN0dR02oaVMruRSk6E7E=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=VvhBW6WfHOO0UXn1/59+5dpUJESUH5YAPnNuIDXQRMBq6hUrQKMk1L7n7VtjWK4Ke
-         XSbxLq/AwNS48JIQQGIo/cQ7rfbVve2l0FM12vX/bm2zBDaTg/USOF3ZatFGE3womv
-         bESbXgjpxInntlIZvj/acteKMWU38szhfSGKGXOhPfCT9hjVwgsFf8UDBqfyzf+3qg
-         x8jLE+tkU2QGgXh0v0tTTRVDQTnm9a/n+9WU7b89lVKiL39if6lNbekYOzqNmcSsCv
-         hjEz6VXFJ9AqoAR35Pyk/CGyqeWMQ0T80/GmrgpmDrEp4m+VuMEhR752r6WqqTF2qJ
-         Cozzzw4NrNtOw==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id DE0F9A0067;
-        Thu, 27 Jun 2019 07:54:47 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 27 Jun 2019 00:54:47 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Thu, 27 Jun 2019 00:54:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nh5w54gthCZrzu7mT4aXxxGGVEuj7VNsVqsemS6cxQs=;
- b=AxAnptVDRnwl1TbRsT5+a7SfjO94/d6UTtq9EwXMXkml1kqrOl1bGExIzCu6rtU7PWDbwYX0NSHouOf5vtVsOKtVoV5GvihNfUIm5Z81q84u8Fu/wjWLz9qon0tbHjJVKW+kAxjR4flfmEwcoHrQVAlxGKAEtpHuGZTYowA/VNk=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.66.159) by
- BN8PR12MB3154.namprd12.prod.outlook.com (20.178.223.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Thu, 27 Jun 2019 07:54:45 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c922:4285:22a6:6e]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c922:4285:22a6:6e%5]) with mapi id 15.20.2008.017; Thu, 27 Jun 2019
- 07:54:45 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Andrew Lunn <andrew@lunn.ch>, Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: RE: [PATCH net-next 07/10] net: stmmac: Enable support for > 32 Bits
- addressing in XGMAC
-Thread-Topic: [PATCH net-next 07/10] net: stmmac: Enable support for > 32 Bits
- addressing in XGMAC
-Thread-Index: AQHVLCXEW9tZEUL+kU+32ccf84jBXKauPzSAgADjjFA=
-Date:   Thu, 27 Jun 2019 07:54:45 +0000
-Message-ID: <BN8PR12MB32669F715CFC897D72F193AFD3FD0@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <cover.1561556555.git.joabreu@synopsys.com>
- <64b73591f981b3a280ea61d21a0dc7362a25348a.1561556556.git.joabreu@synopsys.com>
- <20190626201953.GI27733@lunn.ch>
-In-Reply-To: <20190626201953.GI27733@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f96484a9-f187-4eb9-d5ad-08d6fad4b885
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR12MB3154;
-x-ms-traffictypediagnostic: BN8PR12MB3154:
-x-microsoft-antispam-prvs: <BN8PR12MB3154DEC0FDCC97DB3D189C40D3FD0@BN8PR12MB3154.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39850400004)(396003)(346002)(366004)(136003)(199004)(189003)(6636002)(81156014)(5660300002)(52536014)(6116002)(478600001)(66556008)(64756008)(66066001)(66446008)(3846002)(486006)(256004)(71190400001)(71200400001)(6246003)(25786009)(9686003)(8676002)(55016002)(81166006)(8936002)(11346002)(446003)(476003)(6506007)(74316002)(2906002)(99286004)(14454004)(102836004)(26005)(76176011)(4326008)(76116006)(66946007)(73956011)(66476007)(186003)(86362001)(4744005)(53936002)(7736002)(7696005)(229853002)(305945005)(316002)(54906003)(33656002)(6436002)(68736007)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3154;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RBQsxu9Ar5p9d7t+lkCp1ggJxJM0qzF+tkzP1N1i8i2OgzCZGkRYCtnbXPscxkwYec6Gs5Y4YBg8MJQ8wgWu79qzOGlITFhf5VI9ob2USZiqsAedqMVMup62NvUHrmf2+4FzeQPSI00zFdTOxjcVLSUQOITF2fR4edM7xxKTbjZ9PLC4OHuYIfIvxaHuUQs/buFcK84HyququGp6H+StVCt2LPpbGzBufYeZbzbamC0hWbc+nhWQ5IpcSVxetEU+g3M4uYqbxJ4OdxVzELF+e+H7PqTTOrJVnAOdNZIlDvyOuTxkL1o7qIf3ZF+2cLJf6BbsFK5K1+cmy91GSXcc+3HMMqM/s9W4PRbT+keVC8dMf3lPQ5uzfqEK3ul9EsmtiyjOWwdpJehkhIKmMHYCK40iAduJ5dgmyKDEk8cQNTw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 27 Jun 2019 03:57:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41330 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725954AbfF0H5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 03:57:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A467AAF42;
+        Thu, 27 Jun 2019 07:57:34 +0000 (UTC)
+Subject: Re: [PATCH 1/2] drm/vram: store dumb bo dimensions.
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+References: <20190626065551.12956-1-kraxel@redhat.com>
+ <20190626065551.12956-2-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <a5663141-ebee-db14-30cc-f0b3f90fe6bb@suse.de>
+Date:   Thu, 27 Jun 2019 09:57:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f96484a9-f187-4eb9-d5ad-08d6fad4b885
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 07:54:45.4703
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: joabreu@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3154
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20190626065551.12956-2-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="PNZhXJOw24KwAY0OqG7FiAQoGizuOrBiS"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--PNZhXJOw24KwAY0OqG7FiAQoGizuOrBiS
+Content-Type: multipart/mixed; boundary="i9KRYARTXh1fZn7QNWgDqOZhwcb3zjCkB";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>,
+ open list <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>,
+ Sean Paul <sean@poorly.run>
+Message-ID: <a5663141-ebee-db14-30cc-f0b3f90fe6bb@suse.de>
+Subject: Re: [PATCH 1/2] drm/vram: store dumb bo dimensions.
+References: <20190626065551.12956-1-kraxel@redhat.com>
+ <20190626065551.12956-2-kraxel@redhat.com>
+In-Reply-To: <20190626065551.12956-2-kraxel@redhat.com>
 
-> > +
-> > +	if (priv->dma_cap.addr64) {
-> > +		ret =3D dma_set_mask_and_coherent(device,
-> > +				DMA_BIT_MASK(priv->dma_cap.addr64));
-> > +		if (!ret)
-> > +			dev_info(priv->device, "Using %d bits DMA width\n",
-> > +				 priv->dma_cap.addr64);
-> > +	}
->=20
-> Hi Jose
->=20
-> If dma_set_mask_and_coherent() fails, i think you are supposed to fall
-> back to 32 bits. So you might want to clear priv->dma_cap.addr64.
+--i9KRYARTXh1fZn7QNWgDqOZhwcb3zjCkB
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, seems right. Thanks for pointing!
+Hi
+
+Am 26.06.19 um 08:55 schrieb Gerd Hoffmann:
+> Store width and height of the bo.  Needed in case userspace
+> sets up a framebuffer with fb->width !=3D bo->width..
+
+This seems like bug. I'd rather return an error to userspace if the BO
+is incompatible.
+
+For the Gnome issue, a fix would be to program the display HW's line
+pitch to the correct value.
+
+Best regards
+Thomas
+
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  include/drm/drm_gem_vram_helper.h     | 1 +
+>  drivers/gpu/drm/drm_gem_vram_helper.c | 2 ++
+>  2 files changed, 3 insertions(+)
+>=20
+> diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vr=
+am_helper.h
+> index 1a0ea18e7a74..3692dba167df 100644
+> --- a/include/drm/drm_gem_vram_helper.h
+> +++ b/include/drm/drm_gem_vram_helper.h
+> @@ -39,6 +39,7 @@ struct drm_gem_vram_object {
+>  	struct drm_gem_object gem;
+>  	struct ttm_buffer_object bo;
+>  	struct ttm_bo_kmap_obj kmap;
+> +	unsigned int width, height;
+> =20
+>  	/* Supported placements are %TTM_PL_VRAM and %TTM_PL_SYSTEM */
+>  	struct ttm_placement placement;
+> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/dr=
+m_gem_vram_helper.c
+> index 4de782ca26b2..c02bf7694117 100644
+> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> @@ -377,6 +377,8 @@ int drm_gem_vram_fill_create_dumb(struct drm_file *=
+file,
+>  	gbo =3D drm_gem_vram_create(dev, bdev, size, pg_align, interruptible)=
+;
+>  	if (IS_ERR(gbo))
+>  		return PTR_ERR(gbo);
+> +	gbo->width =3D args->width;
+> +	gbo->height =3D args->height;
+> =20
+>  	ret =3D drm_gem_handle_create(file, &gbo->gem, &handle);
+>  	if (ret)
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--i9KRYARTXh1fZn7QNWgDqOZhwcb3zjCkB--
+
+--PNZhXJOw24KwAY0OqG7FiAQoGizuOrBiS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0UdugACgkQaA3BHVML
+eiMtjQf8CxTl5L3xNbrgYeDJOsnk5yrqTOJWx3K9bYD9tX2RdJJvpBqOi4Zzn2VP
+P4xktt1sa4DBhoZZSc41IEe2n6Vfwlm9OrFuONMcJVaBV7DsUHeBXc5Z3QJ2xjZ2
+h98mh4VUHBFFWrn5Zezx6OMGAXigJYIInhk0x9GncUQP+239XaL7MnuffYWhC2ym
+OKOethtUOLU6RTe6x8gYs80fHZ4KDfo1rLPJfoIdj/oqmZby+0b+rzmBuGHcf1V7
+Zb8GQfZQfMCtR9pKrCxRgTr6vu4x4D1bMdYcuDQ2lflzgxU1PndFrgnF132OXRzN
+puGViOo9KBS53l+LSg8UK+9EcPfOjw==
+=dxqA
+-----END PGP SIGNATURE-----
+
+--PNZhXJOw24KwAY0OqG7FiAQoGizuOrBiS--
