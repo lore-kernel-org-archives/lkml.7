@@ -2,164 +2,106 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D487C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CAEC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F151204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9F120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=thinciit.onmicrosoft.com header.i=@thinciit.onmicrosoft.com header.b="iaICKttn"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b9smVVLU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfF0PSJ (ORCPT
+        id S1726734AbfF0PSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:18:09 -0400
-Received: from rfout2.hes.trendmicro.com ([54.67.111.2]:48254 "EHLO
-        rfout2.hes.trendmicro.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfF0PSJ (ORCPT
+        Thu, 27 Jun 2019 11:18:34 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42661 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfF0PSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:18:09 -0400
-Received: from 0.0.0.0_hes.trendmicro.com (unknown [10.64.14.197])
-        by rfout2.hes.trendmicro.com (Postfix) with ESMTPS id 6CFAA1116321
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:18:07 +0000 (UTC)
-Received: from 0.0.0.0_hes.trendmicro.com (unknown [10.64.10.30])
-        by rout1.hes.trendmicro.com (Postfix) with SMTP id 0CD9FEFC080;
-        Thu, 27 Jun 2019 15:18:07 +0000 (UTC)
-Received: from IND01-MA1-obe.outbound.protection.outlook.com (unknown [104.47.100.52])
-        by relay1.hes.trendmicro.com (TrendMicro Hosted Email Security) with ESMTPS id 678F4AFA018;
-        Thu, 27 Jun 2019 15:18:04 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=H9GT1ItdO636RMkqpwHFDYeMQxYbHfDsOlTRQmZN6KdoxlN1qti1zddwCFHfAJcjuFibmrKOwOaNzqgcLdsERhNEzJfiQES8UynvF6Oc2C4TgiQU+dLdf7UAQiZ67EF+RG3oJH8DFqgHEjPlu9ACV+kHTgmSDsZ95DDrbLbjCdQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tZY/k8UR77eYZU6JIYfLuzj484cpYuiXBWFLAl4Ce6I=;
- b=jgeuFBsK+kfgOyI0y+4kk+bDUfrlWXad1JNTYUpqEwIYr5yUaDGZxLv/fULeV8BzG8wreZ6/xdZnw3YDZHpN0SqW6T8Wwj/m8bgiHVCwJPFKDqSOQNMJ03vB7SvAs+aXN/WjBh5r5fi6VjKM+iq6nmvWu+OUCX4RN/viGfDGVKM=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=thinciit.onmicrosoft.com; s=selector2-thinciit-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tZY/k8UR77eYZU6JIYfLuzj484cpYuiXBWFLAl4Ce6I=;
- b=iaICKttnQsxBX4qnHZCiZi3n/e6VZAcZ5TCoKdR7Vga26AKzRnUe/mcW9euFGIPqTeHsHjaRMscnFlGgXf3PrOqFVDicUGBQZowwQWu0svaF+tlrF9oseA6yIn2iIX9ujZ9RmDbGJT7Nhiy7Fcj8GYO7IaVyFnkinknt9yVImu0=
-Received: from BMXPR01MB0759.INDPRD01.PROD.OUTLOOK.COM (10.174.217.139) by
- BMXPR01MB3030.INDPRD01.PROD.OUTLOOK.COM (52.133.134.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Thu, 27 Jun 2019 15:18:00 +0000
-Received: from BMXPR01MB0759.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::9bc:4b68:1344:f1ce]) by BMXPR01MB0759.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::9bc:4b68:1344:f1ce%7]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
- 15:18:00 +0000
-From:   Matt Redfearn <matt.redfearn@thinci.com>
-To:     Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Matthew Redfearn <matthew.redfearn@thinci.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v2] drm/bridge: adv7511: Attach to DSI host at probe time
-Thread-Topic: [PATCH v2] drm/bridge: adv7511: Attach to DSI host at probe time
-Thread-Index: AQHVLPuBf6e2UB9VrkOb0fCrDf7+Wg==
-Date:   Thu, 27 Jun 2019 15:18:00 +0000
-Message-ID: <20190627151740.2277-1-matt.redfearn@thinci.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0446.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:e::26) To BMXPR01MB0759.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:13::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=matthew.redfearn@thinci.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [87.242.198.86]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 07a2561c-f303-4854-261a-08d6fb12a425
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BMXPR01MB3030;
-x-ms-traffictypediagnostic: BMXPR01MB3030:
-x-microsoft-antispam-prvs: <BMXPR01MB303037C8A08D449DEC0B13ECF1FD0@BMXPR01MB3030.INDPRD01.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(136003)(346002)(376002)(396003)(366004)(189003)(199004)(66066001)(4326008)(71190400001)(71200400001)(25786009)(305945005)(186003)(54906003)(81166006)(8936002)(6506007)(66556008)(386003)(1076003)(64756008)(66476007)(8676002)(478600001)(68736007)(50226002)(81156014)(26005)(66446008)(52116002)(2616005)(486006)(476003)(5660300002)(73956011)(66946007)(6512007)(7736002)(53936002)(3846002)(110136005)(5024004)(36756003)(102836004)(14444005)(6116002)(6436002)(256004)(99286004)(2906002)(6486002)(316002)(7416002)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:BMXPR01MB3030;H:BMXPR01MB0759.INDPRD01.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: thinci.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: axy6Oh24s/HWfx1tjHD84Ge8x/lhsq/Si8VC+o1eLwLyXWW12pBPzjDJXDMsfVPD+SyWq4vK496ZNHQOqzoPeO/wDOhoIdKH2FkXIM8Ysllzy4gJcrPzHpVSMOQgzsiqCVo6xSJo6yTyrlV/dc8ojCZfJ2kFFT9J1KoAVudmzPQG0Xi0KdBqamPqT8a11u/QZPUEtjiPSSM+50LHG0IUwG9CNjALuryTk1NWhfUQLYVIEXg+yBNiJfkXkCYYlfsI9xAvdkL40+ZN34lXB0nKYxNp3Y+emdO9hNLM/V7xa336WLPTCyWaZWomZJUye1HkGbbDa3Iku7C05sI0ZibrI1aW/vDOlShogovYS9YXabuM3c9XHL61YnKFhc2zUa58PHX4CO5yFvQRnIRN5SXyhI02YZGuZhmh1WKCSb/K9K4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 27 Jun 2019 11:18:34 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RF4C4G329218
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 27 Jun 2019 08:04:13 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RF4C4G329218
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561647854;
+        bh=qZDlnFBhlDF/zaT3mrC23ago7pE8TfNPNyvEGaRJ6L8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=b9smVVLU5grNPXAseXCt5iqoaiIVLoTz28nBEoGkJzGyI1g8+yI6ZQA6OQIj4FBY5
+         Kd/a7DwmOUz9i1O1GObKA8noTizEKVskv1IkkySuKTNf0Vso2sP7ooRk1GOhlfF5rr
+         0a1V3Y7kp+U0lot/nsfncNVGGtU7km78cZ8uLaebFBGLkGlMnxVg9PBj77Q70ZC28t
+         LHGeXzF9O/UOo7CpaQHTBvuLTbU8UW8WhJbFDXAI/hIaVG6QjlMo2w5+G3wtR2B2Vm
+         jvz7Cu1YUV7Eq+k9wLvvebEAOf/lR+SNN918OAR1BXQwMzkeqXFXdyvCpQZJtf6BPL
+         FIlZVaOKJTA3w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RF4B1f329214;
+        Thu, 27 Jun 2019 08:04:11 -0700
+Date:   Thu, 27 Jun 2019 08:04:11 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Zhenzhong Duan <tipbot@zytor.com>
+Message-ID: <tip-d97ee99bf225d35a50ed8812c3d037b2ba7ad2ea@git.kernel.org>
+Cc:     mingo@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        jan.kiszka@siemens.com, zhenzhong.duan@oracle.com, hpa@zytor.com,
+        bp@alien8.de
+Reply-To: mingo@kernel.org, tglx@linutronix.de, jan.kiszka@siemens.com,
+          linux-kernel@vger.kernel.org, hpa@zytor.com,
+          zhenzhong.duan@oracle.com, bp@alien8.de
+In-Reply-To: <1561539289-29180-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1561539289-29180-1-git-send-email-zhenzhong.duan@oracle.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/platform] x86/jailhouse: Mark jailhouse_x2apic_available()
+ as __init
+Git-Commit-ID: d97ee99bf225d35a50ed8812c3d037b2ba7ad2ea
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: thinci.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07a2561c-f303-4854-261a-08d6fb12a425
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 15:18:00.3296
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: matthew.redfearn@thinci.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BMXPR01MB3030
-X-TMASE-Version: StarCloud-1.3-8.2.1013-24722.000
-X-TMASE-Result: 10--2.485800-4.000000
-X-TMASE-MatchedRID: zQoDEar/LDjabBVcqlDcF0OLK43kW8U2XGjQf7uckKtSMUnCl2ZytCAC
-        Ytpe6t5bLU30xMI04OOpQXNdjc3qgVdXhVJKmheRB89GKHo03nY5lSSSzBNFmPkuQv9PIVnNCuo
-        xZM5aA8MRsDs7NFENSPFzX2yG+axfgJawayKJkD8sWKt1qrD4oUtc8DbogbSE31GU/N5W5BB4pq
-        O87q5acOFHPH5lCktzviTqhu0vM00DB9NQYvNufm6HurDH4PpPc8WBPuRcugDJZP0jINAqUKPFj
-        JEFr+olUkOfGeXobzQ1NebtJxIilNLvsKjhs0ldC24oEZ6SpSmb4wHqRpnaDrT7TEI5CSZDM7Ky
-        rst+Onx+mRD0to5VPYTzHHaGd4K9M8+iDpAkUYPTpamMhVjlNOxKrs7JVGG2hkIeTok3OE3HJde
-        LBZpAwANZw39tzKOjg1QYrp1kjWz/pvgJGwohuvlyhYNumVjFZyMWcibO/JI=
-X-TM-Deliver-Signature: 54BDCC41FEC3250CB5E933A2685106EF
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SW4gY29udHJhc3QgdG8gYWxsIG9mIHRoZSBEU0kgcGFuZWwgZHJpdmVycyBpbiBkcml2ZXJzL2dw
-dS9kcm0vcGFuZWwNCndoaWNoIGF0dGFjaCB0byB0aGUgRFNJIGhvc3QgdmlhIG1pcGlfZHNpX2F0
-dGFjaCgpIGF0IHByb2JlIHRpbWUsIHRoZQ0KQURWNzUzMyBicmlkZ2UgZGV2aWNlIGRvZXMgbm90
-LiBJbnN0ZWFkIGl0IGRlZmVycyB0aGlzIHRvIHRoZSBwb2ludCB0aGF0DQp0aGUgdXBzdHJlYW0g
-ZGV2aWNlIGNvbm5lY3RzIHRvIGl0cyBicmlkZ2UgdmlhIGRybV9icmlkZ2VfYXR0YWNoKCkuDQpU
-aGUgZ2VuZXJpYyBTeW5vcHN5cyBNSVBJIERTSSBob3N0IGRyaXZlciBkb2VzIG5vdCByZWdpc3Rl
-ciBpdCdzIG93bg0KZHJtX2JyaWRnZSB1bnRpbCB0aGUgTUlQSSBEU0kgaGFzIGF0dGFjaGVkLiBC
-dXQgaXQgZG9lcyBub3QgY2FsbA0KZHJtX2JyaWRnZV9hdHRhY2goKSBvbiB0aGUgZG93bnN0cmVh
-bSBkZXZpY2UgdW50aWwgdGhlIHVwc3RyZWFtIGRldmljZQ0KaGFzIGF0dGFjaGVkLiBUaGlzIGxl
-YWRzIHRvIGEgY2hpY2tlbiBhbmQgdGhlIGVnZyBmYWlsdXJlIGFuZCB0aGUgRFJNDQpwaXBlbGlu
-ZSBkb2VzIG5vdCBjb21wbGV0ZS4NClNpbmNlIGFsbCBvdGhlciBtaXBpX2RzaV9kZXZpY2UgZHJp
-dmVycyBjYWxsIG1pcGlfZHNpX2F0dGFjaCgpIGluDQpwcm9iZSgpLCBtYWtlIHRoZSBhZHY3NTMz
-IG1pcGlfZHNpX2RldmljZSBkbyB0aGUgc2FtZS4gVGhpcyBlbnN1cmVzIHRoYXQNCnRoZSBTeW5v
-cHN5cyBNSVBJIERTSSBob3N0IHJlZ2lzdGVycyBpdCdzIGJyaWRnZSBzdWNoIHRoYXQgaXQgaXMN
-CmF2YWlsYWJsZSBmb3IgdGhlIHVwc3RyZWFtIGRldmljZSB0byBjb25uZWN0IHRvLg0KDQpTaWdu
-ZWQtb2ZmLWJ5OiBNYXR0IFJlZGZlYXJuIDxtYXR0LnJlZGZlYXJuQHRoaW5jaS5jb20+DQoNCi0t
-LQ0KDQpDaGFuZ2VzIGluIHYyOg0KQ2xlYW51cCBpZiBhZHY3NTMzX2F0dGFjaF9kc2kgZmFpbHMu
-DQoNCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMV9kcnYuYyB8IDEyICsr
-KysrKysrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25z
-KC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUx
-MV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3NTExX2Rydi5jDQpp
-bmRleCBlN2RkZDNlM2RiOS4uODA3ODI3YmQ5MTAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMV9kcnYuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9hZHY3NTExL2Fkdjc1MTFfZHJ2LmMNCkBAIC04NzQsOSArODc0LDYgQEAgc3RhdGljIGlu
-dCBhZHY3NTExX2JyaWRnZV9hdHRhY2goc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkNCiAJCQkJ
-ICZhZHY3NTExX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MpOw0KIAlkcm1fY29ubmVjdG9yX2F0dGFj
-aF9lbmNvZGVyKCZhZHYtPmNvbm5lY3RvciwgYnJpZGdlLT5lbmNvZGVyKTsNCiANCi0JaWYgKGFk
-di0+dHlwZSA9PSBBRFY3NTMzKQ0KLQkJcmV0ID0gYWR2NzUzM19hdHRhY2hfZHNpKGFkdik7DQot
-DQogCWlmIChhZHYtPmkyY19tYWluLT5pcnEpDQogCQlyZWdtYXBfd3JpdGUoYWR2LT5yZWdtYXAs
-IEFEVjc1MTFfUkVHX0lOVF9FTkFCTEUoMCksDQogCQkJICAgICBBRFY3NTExX0lOVDBfSFBEKTsN
-CkBAIC0xMjIyLDggKzEyMTksMTcgQEAgc3RhdGljIGludCBhZHY3NTExX3Byb2JlKHN0cnVjdCBp
-MmNfY2xpZW50ICppMmMsIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCiAJZHJtX2Jy
-aWRnZV9hZGQoJmFkdjc1MTEtPmJyaWRnZSk7DQogDQogCWFkdjc1MTFfYXVkaW9faW5pdChkZXYs
-IGFkdjc1MTEpOw0KKw0KKwlpZiAoYWR2NzUxMS0+dHlwZSA9PSBBRFY3NTMzKSB7DQorCQlyZXQg
-PSBhZHY3NTMzX2F0dGFjaF9kc2koYWR2NzUxMSk7DQorCQlpZiAocmV0KQ0KKwkJCWdvdG8gZXJy
-X3JlbW92ZV9icmlkZ2U7DQorCX0NCisNCiAJcmV0dXJuIDA7DQogDQorZXJyX3JlbW92ZV9icmlk
-Z2U6DQorCWRybV9icmlkZ2VfcmVtb3ZlKCZhZHY3NTExLT5icmlkZ2UpOw0KIGVycl91bnJlZ2lz
-dGVyX2NlYzoNCiAJaTJjX3VucmVnaXN0ZXJfZGV2aWNlKGFkdjc1MTEtPmkyY19jZWMpOw0KIAlp
-ZiAoYWR2NzUxMS0+Y2VjX2NsaykNCi0tIA0KMi4xNy4xDQoNCg==
+Commit-ID:  d97ee99bf225d35a50ed8812c3d037b2ba7ad2ea
+Gitweb:     https://git.kernel.org/tip/d97ee99bf225d35a50ed8812c3d037b2ba7ad2ea
+Author:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+AuthorDate: Wed, 26 Jun 2019 16:54:49 +0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 27 Jun 2019 16:59:19 +0200
+
+x86/jailhouse: Mark jailhouse_x2apic_available() as __init
+
+.. as it is only called at early bootup stage.
+
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: jailhouse-dev@googlegroups.com
+Link: https://lkml.kernel.org/r/1561539289-29180-1-git-send-email-zhenzhong.duan@oracle.com
+
+---
+ arch/x86/kernel/jailhouse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
+index 1b2ee55a2dfb..d96d56310d51 100644
+--- a/arch/x86/kernel/jailhouse.c
++++ b/arch/x86/kernel/jailhouse.c
+@@ -203,7 +203,7 @@ bool jailhouse_paravirt(void)
+ 	return jailhouse_cpuid_base() != 0;
+ }
+ 
+-static bool jailhouse_x2apic_available(void)
++static bool __init jailhouse_x2apic_available(void)
+ {
+ 	/*
+ 	 * The x2APIC is only available if the root cell enabled it. Jailhouse
