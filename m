@@ -8,71 +8,69 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40D3C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28BAC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B852C205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EE7205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PeqMnVa9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPdAlVeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfF0Rl4 (ORCPT
+        id S1727037AbfF0RmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:41:56 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37190 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfF0Rlz (ORCPT
+        Thu, 27 Jun 2019 13:42:07 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36319 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfF0RmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:41:55 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bh12so1674999plb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:41:55 -0700 (PDT)
+        Thu, 27 Jun 2019 13:42:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so1594428pfl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:42:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=2VYDCnCkjTc4D1Rc+1yi7URn+GvuL8YDs5hLnh987G4=;
-        b=PeqMnVa90eH6XmW4Pwsb1MXiobPzsonXWvpMiumT1y2ej23Ow+SoW62w2O/LDbeO1e
-         3h1DOn9wKWrO5nmTyyVmso448pE11L8us2+8iCzL/7A1aO3jxIxznGrXNdl46RhED/A+
-         j4pOnE2yggAaQFq2Yv6FiPvuNC1PrcGRl0tdgfpSMjSsvIVaaOIkA+7I4hyiLaI6Twsa
-         EKUj4NTKisERy29J50AR4MqEybp12UGPbYKAT1/hBLmbwlLZ0OXQt7MOk89G53T0OkR5
-         cPnJYlUlSPDxgkzaXmQMW6OwAjnUmqAUYW6aIhZmyLL7nKZ73H4RHzhfYYIc1BHA2z4r
-         tu6Q==
+        bh=gOS8Fn0ZCLcglF4xKeQZbhL/pfJXLmBVW/p/GaFW4vw=;
+        b=uPdAlVeEkWRPvyXaQHMcoUf1KiMZ8y3IchjzB4LpXvjA3PWopLM23mdCfvh8e6aT8f
+         moz685kVPURyD0QfGpQ15iLkhiJVnB6FTnopZaE9GQw1qfcX28961BFzoad6LmgcjMAK
+         iNPi65WQF2y1Dt8++ZIA3pavZhIs+52lbBKhOO6mnWezHhch/UrA36rmJJf3w2Sox7iG
+         FH5c/7rND1ZKv138gH03CluA5COl027kU9NwXSFzNau196IytFwuou1PeTSQWgB9vt90
+         jOupeT3ZMB/on6U8wr/LakCfP8gqj0haMByxgc/rBKy5VLN0WBXim3kJMGDgXFqRzcmL
+         f1Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2VYDCnCkjTc4D1Rc+1yi7URn+GvuL8YDs5hLnh987G4=;
-        b=JwXzYKMyyl4Yqg44a+8HIEfTgflqdk8bzXMwVLS1Je7YAMAWvW/1de3Nf1IkRkxivz
-         dcqvzeCLzY2CkY7uqUsGXntfaG5i6XMZW+wnUC4Dzu5YeK5wfM2AetSIyyLsFvqCe0lT
-         dMcoeXGwrXC0S3Fb77XsiwaMQKEEh12LyhTZzQC0NYLNeZ8MRnnjQrXC9F6lkgjvLftK
-         XpxWX8/L31jAQnVOMIeB/5rspXMgK6+rey7gTj9ytRRzIqHewEWl2A6O3cEapsVfDAj8
-         4Hq9t+CnS8ojLirH4IDGzN2iaZCv1jh8Kux8qVcZG7EJkHdZa4qVpmsP/y6Q80ujbWD9
-         BxvA==
-X-Gm-Message-State: APjAAAXb6XNH2N//SlBsmuc+xq9xY7tXwGc2mCQwSF9Mawb92Zrvfa56
-        prV5ZcRJpUXXKuoDM7rpOE8=
-X-Google-Smtp-Source: APXvYqzy/YIr9pHDGrFuSAuRUcPDT3AJwGJ65uBsd/zz3swNtVS7UMhIo+cnDoLJAxvfN4wspOSY3w==
-X-Received: by 2002:a17:902:2ec5:: with SMTP id r63mr5946757plb.21.1561657314951;
-        Thu, 27 Jun 2019 10:41:54 -0700 (PDT)
+        bh=gOS8Fn0ZCLcglF4xKeQZbhL/pfJXLmBVW/p/GaFW4vw=;
+        b=TIqxEfTBmBhQKf6ayC4ZiNXj4NzkSEvqyT1T/QtLk6GVVYDdA+5z0Moys9XgXOUFgq
+         SUUUpaXGfWgwdSJmPPJp3oOUsB5Bk06B4Qaz/ZGIx74ROV0JfE+7VnDmjEnrlXryNbU8
+         spX+8BBjC/uRniq6SiUErZJBi1v8bJRLw9b1Q9spJkW+Axhpbv/BBsSpQFLHK0Ve0ZZz
+         slKfnyEjdF5EMA7g5J7YYFiZA2nOLt4u5Bjmvkgyn7ibWRCha0lfv6knLnHO6MraK8AF
+         j66ACRYljpFg6YzjE2KgwW7476kyBti9dvtOffJ8MPDJoCJk6qiYMHmj4HajfEaYl2Gq
+         Uj/A==
+X-Gm-Message-State: APjAAAVBz9av0FBby6fKrL4qThTJIoxgubGAnwcyM4WDRD/clBc6Izwd
+        zO32TGRaxr46hXs94HZyWeM=
+X-Google-Smtp-Source: APXvYqxLjZc8YA2i5iuLsRCgktSmgA1fvawM8bInlAxJ54TjKSt49nAe7X0Ysj4Sjh/WVGT73i+7dg==
+X-Received: by 2002:a65:6241:: with SMTP id q1mr4853914pgv.24.1561657326093;
+        Thu, 27 Jun 2019 10:42:06 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id l44sm5656206pje.29.2019.06.27.10.41.51
+        by smtp.googlemail.com with ESMTPSA id cx22sm6124798pjb.25.2019.06.27.10.42.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:41:54 -0700 (PDT)
+        Thu, 27 Jun 2019 10:42:05 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Omer Efrat <omer.efrat@tandemg.com>,
-        Michael Straube <straube.linux@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
+        Murray McAllister <murray.mcallister@insomniasec.com>,
+        Kimberly Brown <kimbrownkd@gmail.com>,
+        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
         Mamta Shukla <mamtashukla555@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Wen Yang <wen.yang99@zte.com.cn>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 48/87] rtl8723bs: os_dep: replace rtw_malloc and memset with rtw_zmalloc
-Date:   Fri, 28 Jun 2019 01:41:44 +0800
-Message-Id: <20190627174147.4504-1-huangfq.daxian@gmail.com>
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 49/87] rtl8723bs: core: remove memset after rtw_zmalloc
+Date:   Fri, 28 Jun 2019 01:41:56 +0800
+Message-Id: <20190627174158.4560-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,99 +78,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rtw_malloc + memset(0) -> rtw_zmalloc
+rtw_zmalloc already zeros the memory.
+memset is unneeded.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c |  8 ++------
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c    | 12 +++---------
- 2 files changed, 5 insertions(+), 15 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_ap.c   | 2 --
+ drivers/staging/rtl8723bs/core/rtw_mlme.c | 2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index db553f2e4c0b..f8e0723f5d1f 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -1078,12 +1078,10 @@ static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev,
- 	DBG_871X("pairwise =%d\n", pairwise);
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index bc0230672457..dc1da5626ce1 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -1504,8 +1504,6 @@ static int rtw_ap_set_key(
+ 		goto exit;
+ 	}
  
- 	param_len = sizeof(struct ieee_param) + params->key_len;
--	param = rtw_malloc(param_len);
-+	param = rtw_zmalloc(param_len);
- 	if (param == NULL)
- 		return -1;
- 
--	memset(param, 0, param_len);
+-	memset(psetkeyparm, 0, sizeof(struct setkey_parm));
 -
- 	param->cmd = IEEE_CMD_SET_ENCRYPTION;
- 	memset(param->sta_addr, 0xff, ETH_ALEN);
+ 	psetkeyparm->keyid = (u8)keyid;
+ 	if (is_wep_enc(alg))
+ 		padapter->securitypriv.key_mask |= BIT(psetkeyparm->keyid);
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+index 5f78f1eaa7aa..3586da79af5a 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
+@@ -2229,7 +2229,6 @@ sint rtw_set_auth(struct adapter *adapter, struct security_priv *psecuritypriv)
+ 		goto exit;
+ 	}
  
-@@ -2167,15 +2165,13 @@ static int cfg80211_rtw_connect(struct wiphy *wiphy, struct net_device *ndev,
- 		{
- 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
- 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
--			pwep = rtw_malloc(wep_total_len);
-+			pwep = rtw_zmalloc(wep_total_len);
- 			if (pwep == NULL) {
- 				DBG_871X(" wpa_set_encryption: pwep allocate fail !!!\n");
- 				ret = -ENOMEM;
- 				goto exit;
- 			}
+-	memset(psetauthparm, 0, sizeof(struct setauth_parm));
+ 	psetauthparm->mode = (unsigned char)psecuritypriv->dot11AuthAlgrthm;
  
--			memset(pwep, 0, wep_total_len);
--
- 			pwep->KeyLength = wep_key_len;
- 			pwep->Length = wep_total_len;
+ 	pcmd->cmdcode = _SetAuth_CMD_;
+@@ -2262,7 +2261,6 @@ sint rtw_set_key(struct adapter *adapter, struct security_priv *psecuritypriv, s
+ 		res = _FAIL;
+ 		goto exit;
+ 	}
+-	memset(psetkeyparm, 0, sizeof(struct setkey_parm));
  
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-index e3d356952875..1491d420929c 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -478,14 +478,12 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
- 		if (wep_key_len > 0) {
- 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
- 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
--			pwep = rtw_malloc(wep_total_len);
-+			pwep = rtw_zmalloc(wep_total_len);
- 			if (pwep == NULL) {
- 				RT_TRACE(_module_rtl871x_ioctl_os_c, _drv_err_, (" wpa_set_encryption: pwep allocate fail !!!\n"));
- 				goto exit;
- 			}
- 
--			memset(pwep, 0, wep_total_len);
--
- 			pwep->KeyLength = wep_key_len;
- 			pwep->Length = wep_total_len;
- 
-@@ -2144,12 +2142,10 @@ static int rtw_wx_set_enc_ext(struct net_device *dev,
- 	int ret = 0;
- 
- 	param_len = sizeof(struct ieee_param) + pext->key_len;
--	param = rtw_malloc(param_len);
-+	param = rtw_zmalloc(param_len);
- 	if (param == NULL)
- 		return -1;
- 
--	memset(param, 0, param_len);
--
- 	param->cmd = IEEE_CMD_SET_ENCRYPTION;
- 	memset(param->sta_addr, 0xff, ETH_ALEN);
- 
-@@ -3522,14 +3518,12 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param,
- 		if (wep_key_len > 0) {
- 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
- 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
--			pwep = rtw_malloc(wep_total_len);
-+			pwep = rtw_zmalloc(wep_total_len);
- 			if (pwep == NULL) {
- 				DBG_871X(" r871x_set_encryption: pwep allocate fail !!!\n");
- 				goto exit;
- 			}
- 
--			memset(pwep, 0, wep_total_len);
--
- 			pwep->KeyLength = wep_key_len;
- 			pwep->Length = wep_total_len;
- 
+ 	if (psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) {
+ 		psetkeyparm->algorithm = (unsigned char)psecuritypriv->dot118021XGrpPrivacy;
 -- 
 2.11.0
 
