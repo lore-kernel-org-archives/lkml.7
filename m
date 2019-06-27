@@ -2,139 +2,228 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF48C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F1C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBEB2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788BC2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfF0OFF (ORCPT
+        id S1726794AbfF0OHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:05:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46194 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727074AbfF0OFA (ORCPT
+        Thu, 27 Jun 2019 10:07:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56131 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfF0OHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:05:00 -0400
-Received: from laptop.home (unknown [IPv6:2a01:cb19:8ad6:900:8ae7:f3be:9ccd:d8f9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: aragua)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id EA0452899E9;
-        Thu, 27 Jun 2019 15:04:58 +0100 (BST)
-From:   Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Cc:     kernel@collabora.com,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Nick Vaccaro <nvaccaro@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] iio: common: cros_ec_sensors: set default frequencies
-Date:   Thu, 27 Jun 2019 16:04:30 +0200
-Message-Id: <7d3972d1200065fe6e98a310e66f53a7ed12e281.1561642224.git.fabien.lahoudere@collabora.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <cover.1561642224.git.fabien.lahoudere@collabora.com>
-References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
+        Thu, 27 Jun 2019 10:07:02 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgV39-0005i9-N2; Thu, 27 Jun 2019 16:06:55 +0200
+Date:   Thu, 27 Jun 2019 16:06:54 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Daniel Drake <drake@endlessm.com>
+cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, bp@alien8.de,
+        hdegoede@redhat.com, david.e.box@linux.intel.com,
+        linux@endlessm.com, rafael.j.wysocki@intel.com, x86@kernel.org
+Subject: Re: No 8254 PIT & no HPET on new Intel N3350 platforms causes kernel
+ panic during early boot
+In-Reply-To: <20190627085419.27854-1-drake@endlessm.com>
+Message-ID: <alpine.DEB.2.21.1906271546010.32342@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1904031206440.1967@nanos.tec.linutronix.de> <20190627085419.27854-1-drake@endlessm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Version 3 of the EC protocol provides min and max frequencies for EC sensors.
-Default frequencies are provided for earlier protocol.
+Daniel,
 
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
-Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
----
- .../cros_ec_sensors/cros_ec_sensors_core.c    | 44 +++++++++++++++++++
- .../linux/iio/common/cros_ec_sensors_core.h   |  3 ++
- 2 files changed, 47 insertions(+)
+On Thu, 27 Jun 2019, Daniel Drake wrote:
+> Picking up this issue again after a break!
+> 
+> We made some progress last time on reducing PIT usage in the TSC
+> calibration code, but we still have the bigger issue to resolve:
+> IO-APIC code panicing when the PIT isn't ticking.
 
-diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-index 2e0f97448e64..72f56d54cccd 100644
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-@@ -50,6 +50,37 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
- 	return ret;
+Yeah. I was busy with other stuff and simply forgot.
+
+> Being more conservative, how about something like this?
+>  
+> +	/*
+> +	 * Record if the timer was in working state before we do any
+> +	 * IO-APIC setup.
+> +	 */
+> +	if (nr_legacy_irqs())
+> +		timer_was_working = timer_irq_works();
+
+Nah. That extra timer works thing is just another bandaid.
+
+What I had in mind is something like the below. That's on top of
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/apic
+
+Be warned. It's neither compiled nor tested, so keep a fire extinguisher
+handy. If it explodes you own the pieces.
+
+/me goes off to find icecream 
+
+Thanks,
+
+	tglx
+
+8<-----------------
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -173,6 +173,7 @@ extern void lapic_assign_system_vectors(
+ extern void lapic_assign_legacy_vector(unsigned int isairq, bool replace);
+ extern void lapic_online(void);
+ extern void lapic_offline(void);
++extern bool apic_needs_pit(void);
+ 
+ #else /* !CONFIG_X86_LOCAL_APIC */
+ static inline void lapic_shutdown(void) { }
+@@ -186,6 +187,7 @@ static inline void init_bsp_APIC(void) {
+ static inline void apic_intr_mode_init(void) { }
+ static inline void lapic_assign_system_vectors(void) { }
+ static inline void lapic_assign_legacy_vector(unsigned int i, bool r) { }
++static inline bool apic_needs_pit(void) { return true; }
+ #endif /* !CONFIG_X86_LOCAL_APIC */
+ 
+ #ifdef CONFIG_X86_X2APIC
+--- a/arch/x86/include/asm/time.h
++++ b/arch/x86/include/asm/time.h
+@@ -7,6 +7,7 @@
+ 
+ extern void hpet_time_init(void);
+ extern void time_init(void);
++extern bool pit_timer_init(void);
+ 
+ extern struct clock_event_device *global_clock_event;
+ 
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -820,6 +820,33 @@ static int __init lapic_init_clockevent(
+ 	return 0;
  }
  
-+static void get_default_min_max_freq(enum motionsensor_type type,
-+				     u32 *min_freq,
-+				     u32 *max_freq)
++bool __init apic_and_tsc_needs_pit(void)
 +{
-+	switch (type) {
-+	case MOTIONSENSE_TYPE_ACCEL:
-+	case MOTIONSENSE_TYPE_GYRO:
-+		*min_freq = 12500;
-+		*max_freq = 100000;
-+		break;
-+	case MOTIONSENSE_TYPE_MAG:
-+		*min_freq = 5000;
-+		*max_freq = 25000;
-+		break;
-+	case MOTIONSENSE_TYPE_PROX:
-+	case MOTIONSENSE_TYPE_LIGHT:
-+		*min_freq = 100;
-+		*max_freq = 50000;
-+		break;
-+	case MOTIONSENSE_TYPE_BARO:
-+		*min_freq = 250;
-+		*max_freq = 20000;
-+		break;
-+	case MOTIONSENSE_TYPE_ACTIVITY:
-+	default:
-+		*min_freq = 0;
-+		*max_freq = 0;
-+		break;
-+	}
++	/*
++	 * If the frequencies are not known, PIT is required for both TSC
++	 * and apic timer calibration.
++	 */
++	if (!tsc_khz || !cpu_khz)
++		return true;
++
++	/* Is there an APIC at all? */
++	if (!boot_cpu_has(X86_FEATURE_APIC))
++		return true;
++
++	/* Deadline timer is based on TSC so no further PIT action required */
++	if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
++		return false;
++
++	/* APIC timer disabled? */
++	if (disable_apic_timer)
++		return true;
++	/*
++	 * The APIC timer frequency is known already, no PIT calibration
++	 * required. If unknown, let the PIT be initialized.
++	 */
++	return lapic_timer_period == 0;
 +}
 +
- int cros_ec_sensors_core_init(struct platform_device *pdev,
- 			      struct iio_dev *indio_dev,
- 			      bool physical_device)
-@@ -100,6 +131,19 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
- 		}
- 		state->type = state->resp->info.type;
- 		state->loc = state->resp->info.location;
+ static int __init calibrate_APIC_clock(void)
+ {
+ 	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -58,6 +58,7 @@
+ #include <asm/acpi.h>
+ #include <asm/dma.h>
+ #include <asm/timer.h>
++#include <asm/time.h>
+ #include <asm/i8259.h>
+ #include <asm/setup.h>
+ #include <asm/irq_remapping.h>
+@@ -2083,6 +2084,9 @@ static inline void __init check_timer(vo
+ 	unsigned long flags;
+ 	int no_pin1 = 0;
+ 
++	if (!global_clock_event)
++		return;
 +
-+		/* Value to stop the device */
-+		state->frequencies[0] = 0;
-+		if (state->msg->version < 3) {
-+			get_default_min_max_freq(state->resp->info.type,
-+						 &state->frequencies[1],
-+						 &state->frequencies[2]);
-+		} else {
-+			state->frequencies[1] =
-+			    state->resp->info_3.min_frequency;
-+			state->frequencies[2] =
-+			    state->resp->info_3.max_frequency;
-+		}
- 	}
+ 	local_irq_save(flags);
  
- 	return 0;
-diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
-index 0c636b9fe8d7..94c87da22c04 100644
---- a/include/linux/iio/common/cros_ec_sensors_core.h
-+++ b/include/linux/iio/common/cros_ec_sensors_core.h
-@@ -70,6 +70,9 @@ struct cros_ec_sensors_core_state {
- 				    unsigned long scan_mask, s16 *data);
+ 	/*
+--- a/arch/x86/kernel/i8253.c
++++ b/arch/x86/kernel/i8253.c
+@@ -8,6 +8,7 @@
+ #include <linux/timex.h>
+ #include <linux/i8253.h>
  
- 	int curr_sampl_freq;
++#include <asm/apic.h>
+ #include <asm/hpet.h>
+ #include <asm/time.h>
+ #include <asm/smp.h>
+@@ -18,10 +19,32 @@
+  */
+ struct clock_event_device *global_clock_event;
+ 
+-void __init setup_pit_timer(void)
++/*
++ * Modern chipsets can disable the PIT clock which makes it unusable. It
++ * would be possible to enable the clock but the registers are chipset
++ * specific and not discoverable. Avoid the whack a mole game.
++ *
++ * These platforms have discoverable TSC/CPU frequencies but this also
++ * requires to know the local APIC timer frequency as it normally is
++ * calibrated against the PIT interrupt.
++ */
++static bool __init use_pit(void)
+ {
++	if (!IS_ENABLED(CONFIG_X86_TSC) || !boot_cpu_has(X86_FEATURE_TSC))
++		return true;
 +
-+	/* Disable, Min and Max Sampling Frequency in mHz */
-+	int frequencies[3];
- };
++	/* This also returns true when APIC is disabled */
++	return apic_needs_pit();
++}
++
++bool __init pit_timer_init(void)
++{
++	if (!use_pit())
++		return false;
++
+ 	clockevent_i8253_init(true);
+ 	global_clock_event = &i8253_clockevent;
++	return true;
+ }
  
- /**
--- 
-2.20.1
-
+ #ifndef CONFIG_X86_64
+--- a/arch/x86/kernel/time.c
++++ b/arch/x86/kernel/time.c
+@@ -82,8 +82,11 @@ static void __init setup_default_timer_i
+ /* Default timer init function */
+ void __init hpet_time_init(void)
+ {
+-	if (!hpet_enable())
+-		setup_pit_timer();
++	if (!hpet_enable()) {
++		if (!pit_timer_init())
++			return;
++	}
++
+ 	setup_default_timer_irq();
+ }
+ 
