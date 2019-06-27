@@ -2,112 +2,227 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C87C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 674D9C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FA32054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2512054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ITVHzzgh";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f7jJhVo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfF0Fzw (ORCPT
+        id S1726464AbfF0F4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 01:55:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:47165 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfF0Fzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 01:55:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Z8Jh17Szz9s4Y;
-        Thu, 27 Jun 2019 15:55:48 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] recordmcount: Fix spurious mcount entries on powerpc
-In-Reply-To: <20190626183801.31247-1-naveen.n.rao@linux.vnet.ibm.com>
-References: <20190626183801.31247-1-naveen.n.rao@linux.vnet.ibm.com>
-Date:   Thu, 27 Jun 2019 15:55:47 +1000
-Message-ID: <8736jvtvvg.fsf@concordia.ellerman.id.au>
+        Thu, 27 Jun 2019 01:56:11 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:45018 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfF0F4L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 01:56:11 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D59BA6019D; Thu, 27 Jun 2019 05:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561614969;
+        bh=NQmFaOvOVJfUDh5Dl+DU341nQ5fC4vPdyjSO6MXe63c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ITVHzzgh2L0K1yzwIy89XgnF7z73DhjoKe2/J5HVswHKBHxKP7Gi7brrxe2XUaWvb
+         vnBl2VT5BfAGwNMWhbCOyPqoz5CYSKgSiUBBY2C9htTHbUmgtYiErqvD9R48w3HbhM
+         uYutOKXhIPFyTKCOjo+MXnHcHXyaOy8p4zANVRdI=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 54D706019D;
+        Thu, 27 Jun 2019 05:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561614968;
+        bh=NQmFaOvOVJfUDh5Dl+DU341nQ5fC4vPdyjSO6MXe63c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f7jJhVo5WGvo+YvXasBsVAJl09bTSQ8O9ZdgEONJBZ6+MQj5oSCU8DMhPq/UfBetJ
+         FVMxTWqXkEo089NWutkXKkO0imULf09xHJprNL3nYa13i2n2Nm/E8dUinUlXfrlA3l
+         Fvxq7ZVaX5yayyMvasKVt3OnKJburFJxynpHrRaU=
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 27 Jun 2019 11:26:08 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
+        sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, rjw@rjwysocki.net
+Cc:     jcrouse@codeaurora.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] interconnect: Add of_icc_get_by_index() helper
+ function
+In-Reply-To: <e6469e3b-3653-d20b-b27d-242547a777df@codeaurora.org>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190423132823.7915-3-georgi.djakov@linaro.org>
+ <e6469e3b-3653-d20b-b27d-242547a777df@codeaurora.org>
+Message-ID: <199da2ca8a21b179e3e153623c69e8a0@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
-> The recent change enabling HAVE_C_RECORDMCOUNT on powerpc started
-> showing the following issue:
->
->   # modprobe kprobe_example
->    ftrace-powerpc: Not expected bl: opcode is 3c4c0001
->    WARNING: CPU: 0 PID: 227 at kernel/trace/ftrace.c:2001 ftrace_bug+0x90/0x318
->    Modules linked in:
->    CPU: 0 PID: 227 Comm: modprobe Not tainted 5.2.0-rc6-00678-g1c329100b942 #2
->    NIP:  c000000000264318 LR: c00000000025d694 CTR: c000000000f5cd30
->    REGS: c000000001f2b7b0 TRAP: 0700   Not tainted  (5.2.0-rc6-00678-g1c329100b942)
->    MSR:  900000010282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 28228222  XER: 00000000
->    CFAR: c0000000002642fc IRQMASK: 0
->    <snip>
->    NIP [c000000000264318] ftrace_bug+0x90/0x318
->    LR [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
->    Call Trace:
->    [c000000001f2ba40] [0000000000000004] 0x4 (unreliable)
->    [c000000001f2bad0] [c00000000025d694] ftrace_process_locs+0x4f4/0x5e0
->    [c000000001f2bb90] [c00000000020ff10] load_module+0x25b0/0x30c0
->    [c000000001f2bd00] [c000000000210cb0] sys_finit_module+0xc0/0x130
->    [c000000001f2be20] [c00000000000bda4] system_call+0x5c/0x70
->    Instruction dump:
->    419e0018 2f83ffff 419e00bc 2f83ffea 409e00cc 4800001c 0fe00000 3c62ff96
->    39000001 39400000 386386d0 480000c4 <0fe00000> 3ce20003 39000001 3c62ff96
->    ---[ end trace 4c438d5cebf78381 ]---
->    ftrace failed to modify
->    [<c0080000012a0008>] 0xc0080000012a0008
->     actual:   01:00:4c:3c
->    Initializing ftrace call sites
->    ftrace record flags: 2000000
->     (0)
->     expected tramp: c00000000006af4c
+Hey Georgi,
 
-Aha, thanks. I saw that on one of my text boxes but hadn't pinned it
-down to this commit.
+I heard there is a follow up discussion
+planned to finalize on the which approach
+to follow. If we do end up with your series,
+I found some fixes that you might want to
+use when you re-post.
 
-> Fixes: c7d64b560ce80 ("powerpc/ftrace: Enable C Version of recordmcount")
+On 2019-05-07 17:29, Sibi Sankar wrote:
+> Hey Georgi,
+> 
+> On 4/23/19 6:58 PM, Georgi Djakov wrote:
+>> This is the same as the traditional of_icc_get() function, but the
+>> difference is that it takes index as an argument, instead of name.
+>> 
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>   drivers/interconnect/core.c  | 45 
+>> ++++++++++++++++++++++++++++--------
+>>   include/linux/interconnect.h |  6 +++++
+>>   2 files changed, 41 insertions(+), 10 deletions(-)
+>> 
+>> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+>> index 871eb4bc4efc..a7c3c262c974 100644
+>> --- a/drivers/interconnect/core.c
+>> +++ b/drivers/interconnect/core.c
+>> @@ -295,9 +295,9 @@ static struct icc_node 
+>> *of_icc_get_from_provider(struct of_phandle_args *spec)
+>>   }
+>>     /**
+>> - * of_icc_get() - get a path handle from a DT node based on name
+>> + * of_icc_get_by_index() - get a path handle from a DT node based on 
+>> index
+>>    * @dev: device pointer for the consumer device
+>> - * @name: interconnect path name
+>> + * @idx: interconnect path index
+>>    *
+>>    * This function will search for a path between two endpoints and 
+>> return an
+>>    * icc_path handle on success. Use icc_put() to release constraints 
+>> when they
+>> @@ -309,13 +309,12 @@ static struct icc_node 
+>> *of_icc_get_from_provider(struct of_phandle_args *spec)
+>>    * Return: icc_path pointer on success or ERR_PTR() on error. NULL 
+>> is returned
+>>    * when the API is disabled or the "interconnects" DT property is 
+>> missing.
+>>    */
+>> -struct icc_path *of_icc_get(struct device *dev, const char *name)
+>> +struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
+>>   {
+>>   	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
+>>   	struct icc_node *src_node, *dst_node;
+>>   	struct device_node *np = NULL;
+>>   	struct of_phandle_args src_args, dst_args;
+>> -	int idx = 0;
+>>   	int ret;
+>>     	if (!dev || !dev->of_node)
+>> @@ -335,12 +334,6 @@ struct icc_path *of_icc_get(struct device *dev, 
+>> const char *name)
+>>   	 * lets support only global ids and extend this in the future if 
+>> needed
+>>   	 * without breaking DT compatibility.
+>>   	 */
+>> -	if (name) {
+>> -		idx = of_property_match_string(np, "interconnect-names", name);
+>> -		if (idx < 0)
+>> -			return ERR_PTR(idx);
+>> -	}
+>> -
+>>   	ret = of_parse_phandle_with_args(np, "interconnects",
+>>   					 "#interconnect-cells", idx * 2,
+>>   					 &src_args);
+>> @@ -383,6 +376,38 @@ struct icc_path *of_icc_get(struct device *dev, 
+>> const char *name)
+>>     	return path;
+>>   }
+>> +
+>> +/**
+>> + * of_icc_get() - get a path handle from a DT node based on name
+>> + * @dev: device pointer for the consumer device
+>> + * @name: interconnect path name
+>> + *
+>> + * This function will search for a path between two endpoints and 
+>> return an
+>> + * icc_path handle on success. Use icc_put() to release constraints 
+>> when they
+>> + * are not needed anymore.
+>> + * If the interconnect API is disabled, NULL is returned and the 
+>> consumer
+>> + * drivers will still build. Drivers are free to handle this 
+>> specifically,
+>> + * but they don't have to.
+>> + *
+>> + * Return: icc_path pointer on success or ERR_PTR() on error. NULL is 
+>> returned
+>> + * when the API is disabled or the "interconnects" DT property is 
+>> missing.
+>> + */
 
-That commit is the tip of my next, so I'll drop it for now and merge
-them in the other order so there's breakage.
+please change the description since it does not
+return NULL when the property is missing.
 
-Steve are you OK if I merge this via the powerpc tree? I'll reword the
-commit message so that it makes sense coming prior to the commit
-mentioned above.
+>> +struct icc_path *of_icc_get(struct device *dev, const char *name)
+>> +{
+>> +	int idx = 0;
+>> +
+>> +	if (!dev || !dev->of_node)
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	if (name) {
+>> +		idx = of_property_match_string(dev->of_node,
+>> +					       "interconnect-names", name);
+>> +		if (idx < 0)
+>> +			return ERR_PTR(idx);
+>> +	}
+>> +
+>> +	return of_icc_get_by_index(dev, idx);
+>> +}
+>>   EXPORT_SYMBOL_GPL(of_icc_get);
+>>     /**
+>> diff --git a/include/linux/interconnect.h 
+>> b/include/linux/interconnect.h
+>> index dc25864755ba..0e430b3b6519 100644
+>> --- a/include/linux/interconnect.h
+>> +++ b/include/linux/interconnect.h
+>> @@ -28,6 +28,7 @@ struct device;
+>>   struct icc_path *icc_get(struct device *dev, const int src_id,
+>>   			 const int dst_id);
+>>   struct icc_path *of_icc_get(struct device *dev, const char *name);
+>> +struct icc_path *of_icc_get_by_index(struct device *dev, int idx);
+>>   void icc_put(struct icc_path *path);
+>>   int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+>>   @@ -45,6 +46,11 @@ static inline struct icc_path *of_icc_get(struct 
+>> device *dev,
+>>   	return NULL;
+>>   }
+>>   +struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
+> 
+> This should be static inline instead
+> 
+>> +{
+>> +	return NULL;
+>> +}
+>> +
+>>   static inline void icc_put(struct icc_path *path)
+>>   {
+>>   }
+>> 
 
-cheers
-
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
->  scripts/recordmcount.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-> index 13c5e6c8829c..47fca2c69a73 100644
-> --- a/scripts/recordmcount.h
-> +++ b/scripts/recordmcount.h
-> @@ -325,7 +325,8 @@ static uint_t *sift_rel_mcount(uint_t *mlocp,
->  		if (!mcountsym)
->  			mcountsym = get_mcountsym(sym0, relp, str0);
->  
-> -		if (mcountsym == Elf_r_sym(relp) && !is_fake_mcount(relp)) {
-> +		if (mcountsym && mcountsym == Elf_r_sym(relp) &&
-> +				!is_fake_mcount(relp)) {
->  			uint_t const addend =
->  				_w(_w(relp->r_offset) - recval + mcount_adjust);
->  			mrelp->r_offset = _w(offbase
-> -- 
-> 2.22.0
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
