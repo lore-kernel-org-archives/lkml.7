@@ -2,227 +2,99 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674D9C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0A4C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2512054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1225C20989
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:59:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ITVHzzgh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f7jJhVo5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qX8ruqVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfF0F4L (ORCPT
+        id S1726484AbfF0F7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 01:56:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45018 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfF0F4L (ORCPT
+        Thu, 27 Jun 2019 01:59:05 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39364 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfF0F7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 01:56:11 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D59BA6019D; Thu, 27 Jun 2019 05:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561614969;
-        bh=NQmFaOvOVJfUDh5Dl+DU341nQ5fC4vPdyjSO6MXe63c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ITVHzzgh2L0K1yzwIy89XgnF7z73DhjoKe2/J5HVswHKBHxKP7Gi7brrxe2XUaWvb
-         vnBl2VT5BfAGwNMWhbCOyPqoz5CYSKgSiUBBY2C9htTHbUmgtYiErqvD9R48w3HbhM
-         uYutOKXhIPFyTKCOjo+MXnHcHXyaOy8p4zANVRdI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 54D706019D;
-        Thu, 27 Jun 2019 05:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561614968;
-        bh=NQmFaOvOVJfUDh5Dl+DU341nQ5fC4vPdyjSO6MXe63c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=f7jJhVo5WGvo+YvXasBsVAJl09bTSQ8O9ZdgEONJBZ6+MQj5oSCU8DMhPq/UfBetJ
-         FVMxTWqXkEo089NWutkXKkO0imULf09xHJprNL3nYa13i2n2Nm/E8dUinUlXfrlA3l
-         Fvxq7ZVaX5yayyMvasKVt3OnKJburFJxynpHrRaU=
+        Thu, 27 Jun 2019 01:59:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5R5wiw6071608;
+        Thu, 27 Jun 2019 00:58:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561615124;
+        bh=JpTyLfC5naSgajqi/FjcBNEx9ClOWA9kiWZADHuBcq4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qX8ruqVMYvwC4JFrEM1Gl5E6VxjVfOh1gsLjBjqm0fnn+8saHLS9sJ1rngUu4tSoy
+         aVyMRpk+cLuNkPBeN1ELkxif3n53RQUW87BxI+p9quYraObrYEBA2oUsPF6By62XVb
+         2A0XbZNGyCY6VttsMp3LI9AbH5GZwcPP8pV375Po=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5R5wi6D013628
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Jun 2019 00:58:44 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
+ Jun 2019 00:58:44 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 27 Jun 2019 00:58:44 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5R5wfEa086784;
+        Thu, 27 Jun 2019 00:58:42 -0500
+Subject: Re: linux-next: build warning after merge of the mfd tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <gustavo@embeddedor.com>, <keescook@chromium.org>
+References: <20190627151140.232a87e2@canb.auug.org.au>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <1b5aa183-6e33-ee15-4c65-5b4cdf7655af@ti.com>
+Date:   Thu, 27 Jun 2019 11:29:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190627151140.232a87e2@canb.auug.org.au>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 27 Jun 2019 11:26:08 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
-        sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, rjw@rjwysocki.net
-Cc:     jcrouse@codeaurora.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
-        evgreen@chromium.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] interconnect: Add of_icc_get_by_index() helper
- function
-In-Reply-To: <e6469e3b-3653-d20b-b27d-242547a777df@codeaurora.org>
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190423132823.7915-3-georgi.djakov@linaro.org>
- <e6469e3b-3653-d20b-b27d-242547a777df@codeaurora.org>
-Message-ID: <199da2ca8a21b179e3e153623c69e8a0@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Georgi,
 
-I heard there is a follow up discussion
-planned to finalize on the which approach
-to follow. If we do end up with your series,
-I found some fixes that you might want to
-use when you re-post.
 
-On 2019-05-07 17:29, Sibi Sankar wrote:
-> Hey Georgi,
+On 27/06/19 10:41 AM, Stephen Rothwell wrote:
+> Hi Lee,
 > 
-> On 4/23/19 6:58 PM, Georgi Djakov wrote:
->> This is the same as the traditional of_icc_get() function, but the
->> difference is that it takes index as an argument, instead of name.
->> 
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
->>   drivers/interconnect/core.c  | 45 
->> ++++++++++++++++++++++++++++--------
->>   include/linux/interconnect.h |  6 +++++
->>   2 files changed, 41 insertions(+), 10 deletions(-)
->> 
->> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
->> index 871eb4bc4efc..a7c3c262c974 100644
->> --- a/drivers/interconnect/core.c
->> +++ b/drivers/interconnect/core.c
->> @@ -295,9 +295,9 @@ static struct icc_node 
->> *of_icc_get_from_provider(struct of_phandle_args *spec)
->>   }
->>     /**
->> - * of_icc_get() - get a path handle from a DT node based on name
->> + * of_icc_get_by_index() - get a path handle from a DT node based on 
->> index
->>    * @dev: device pointer for the consumer device
->> - * @name: interconnect path name
->> + * @idx: interconnect path index
->>    *
->>    * This function will search for a path between two endpoints and 
->> return an
->>    * icc_path handle on success. Use icc_put() to release constraints 
->> when they
->> @@ -309,13 +309,12 @@ static struct icc_node 
->> *of_icc_get_from_provider(struct of_phandle_args *spec)
->>    * Return: icc_path pointer on success or ERR_PTR() on error. NULL 
->> is returned
->>    * when the API is disabled or the "interconnects" DT property is 
->> missing.
->>    */
->> -struct icc_path *of_icc_get(struct device *dev, const char *name)
->> +struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
->>   {
->>   	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
->>   	struct icc_node *src_node, *dst_node;
->>   	struct device_node *np = NULL;
->>   	struct of_phandle_args src_args, dst_args;
->> -	int idx = 0;
->>   	int ret;
->>     	if (!dev || !dev->of_node)
->> @@ -335,12 +334,6 @@ struct icc_path *of_icc_get(struct device *dev, 
->> const char *name)
->>   	 * lets support only global ids and extend this in the future if 
->> needed
->>   	 * without breaking DT compatibility.
->>   	 */
->> -	if (name) {
->> -		idx = of_property_match_string(np, "interconnect-names", name);
->> -		if (idx < 0)
->> -			return ERR_PTR(idx);
->> -	}
->> -
->>   	ret = of_parse_phandle_with_args(np, "interconnects",
->>   					 "#interconnect-cells", idx * 2,
->>   					 &src_args);
->> @@ -383,6 +376,38 @@ struct icc_path *of_icc_get(struct device *dev, 
->> const char *name)
->>     	return path;
->>   }
->> +
->> +/**
->> + * of_icc_get() - get a path handle from a DT node based on name
->> + * @dev: device pointer for the consumer device
->> + * @name: interconnect path name
->> + *
->> + * This function will search for a path between two endpoints and 
->> return an
->> + * icc_path handle on success. Use icc_put() to release constraints 
->> when they
->> + * are not needed anymore.
->> + * If the interconnect API is disabled, NULL is returned and the 
->> consumer
->> + * drivers will still build. Drivers are free to handle this 
->> specifically,
->> + * but they don't have to.
->> + *
->> + * Return: icc_path pointer on success or ERR_PTR() on error. NULL is 
->> returned
->> + * when the API is disabled or the "interconnects" DT property is 
->> missing.
->> + */
-
-please change the description since it does not
-return NULL when the property is missing.
-
->> +struct icc_path *of_icc_get(struct device *dev, const char *name)
->> +{
->> +	int idx = 0;
->> +
->> +	if (!dev || !dev->of_node)
->> +		return ERR_PTR(-ENODEV);
->> +
->> +	if (name) {
->> +		idx = of_property_match_string(dev->of_node,
->> +					       "interconnect-names", name);
->> +		if (idx < 0)
->> +			return ERR_PTR(idx);
->> +	}
->> +
->> +	return of_icc_get_by_index(dev, idx);
->> +}
->>   EXPORT_SYMBOL_GPL(of_icc_get);
->>     /**
->> diff --git a/include/linux/interconnect.h 
->> b/include/linux/interconnect.h
->> index dc25864755ba..0e430b3b6519 100644
->> --- a/include/linux/interconnect.h
->> +++ b/include/linux/interconnect.h
->> @@ -28,6 +28,7 @@ struct device;
->>   struct icc_path *icc_get(struct device *dev, const int src_id,
->>   			 const int dst_id);
->>   struct icc_path *of_icc_get(struct device *dev, const char *name);
->> +struct icc_path *of_icc_get_by_index(struct device *dev, int idx);
->>   void icc_put(struct icc_path *path);
->>   int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
->>   @@ -45,6 +46,11 @@ static inline struct icc_path *of_icc_get(struct 
->> device *dev,
->>   	return NULL;
->>   }
->>   +struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
+> After merging the mfd tree, today's linux-next build (x86_64 allmodconfig)
+> produced this warning:
 > 
-> This should be static inline instead
-> 
->> +{
->> +	return NULL;
->> +}
->> +
->>   static inline void icc_put(struct icc_path *path)
->>   {
->>   }
->> 
+> drivers/regulator/lp87565-regulator.c: In function 'lp87565_regulator_probe':
+> drivers/regulator/lp87565-regulator.c:182:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>     max_idx = LP87565_BUCK_3210;
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Missed adding a break here. Can i send a patch on top of linux-next?
+
+>     ~~~~~~~~^~~~~~~~~~~~~~~~~~~
+> drivers/regulator/lp87565-regulator.c:183:2: note: here
+>    default:
+>    ^~~~~~~
+> 
+> Introduced by commit
+> 
+>    7ee63bd74750 ("regulator: lp87565: Add 4-phase lp87561 regulator support")
+> 
+> I get these warnings because I am building with -Wimplicit-fallthrough
+> in attempt to catch new additions early.  The gcc warning can be turned
+> off by adding a /* fall through */ comment at the point the fall through
+> happens (assuming that the fall through is intentional).
+> 
