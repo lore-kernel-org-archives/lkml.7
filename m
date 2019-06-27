@@ -2,453 +2,94 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2943EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBA5C48BDB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A5220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F5C20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UWo6VtIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfF0PIX (ORCPT
+        id S1727047AbfF0PI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbfF0PIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:08:23 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FA2820659;
-        Thu, 27 Jun 2019 15:08:20 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 11:08:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] powerpc/ftrace: Additionally nop out the
- preceding mflr with -mprofile-kernel
-Message-ID: <20190627110819.4892780f@gandalf.local.home>
-In-Reply-To: <841386feda429a1f0d4b7442c3ede1ed91466f92.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-        <841386feda429a1f0d4b7442c3ede1ed91466f92.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 27 Jun 2019 11:08:26 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58904 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfF0PIY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:08:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4CZwDA7Pj4HoUqoimtFG6dWxz1lB8O8Y9IowCuyvjuo=; b=UWo6VtIXVEJUQFD02J/NXsl1wM
+        dksFvEed5QUKJoHfH5JDzfNzWNvVYRJdhlJedBY+a7xGjEJkkV1DyQzILnoLXCOtpAPk6gpxXhWCd
+        /bywSwc445dDB7Yc/btARPRov91Qe/os/xxO0dhqnmXVwRuCcpGUqyw/6D69aBX0almWfrGXonzbG
+        BnT/W9EyfkP9tx3HmuTk9NYes5OwqyUC2/yHlS3/t8E52Jn8sAGbRLwzMvPbCiQOaDJaNKuzO+yHj
+        oPp199PgJLgRw4Q/CzVPdgLpUs0iEmpT6q3e3sI09KgfkxXP4yFtVtlFqskFipbBHzLCf+0wa4WZk
+        8wVY9SDA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgW0a-00014f-Om; Thu, 27 Jun 2019 15:08:20 +0000
+Subject: Re: linux-next: Tree for Jun 26 (security/integrity/ima/)
+To:     David Howells <dhowells@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+References: <1561640534.4101.124.camel@linux.ibm.com>
+ <20190626231617.1e858da3@canb.auug.org.au>
+ <ee503bc1-a588-81f5-47e0-1762f590662f@infradead.org>
+ <9446.1561642145@warthog.procyon.org.uk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <596322b1-1c89-0538-5c26-cd132b03e3eb@infradead.org>
+Date:   Thu, 27 Jun 2019 08:08:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <9446.1561642145@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 16:53:52 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
-
-> With -mprofile-kernel, gcc emits 'mflr r0', followed by 'bl _mcount' to
-> enable function tracing and profiling. So far, with dynamic ftrace, we
-> used to only patch out the branch to _mcount(). However, mflr is
-> executed by the branch unit that can only execute one per cycle on
-> POWER9 and shared with branches, so it would be nice to avoid it where
-> possible.
+On 6/27/19 6:29 AM, David Howells wrote:
+> Mimi Zohar <zohar@linux.ibm.com> wrote:
 > 
-> We cannot simply nop out the mflr either. When enabling function
-> tracing, there can be a race if tracing is enabled when some thread was
-> interrupted after executing a nop'ed out mflr. In this case, the thread
-> would execute the now-patched-in branch to _mcount() without having
-> executed the preceding mflr.
+>>>   CC      security/integrity/ima/ima_fs.o
+>>> In file included from ../security/integrity/ima/ima.h:25:0,
+>>>                  from ../security/integrity/ima/ima_fs.c:26:
+>>> ../security/integrity/ima/../integrity.h:170:18: warning: ‘struct key_acl’ declared inside parameter list [enabled by default]
+>>>            struct key_acl *acl)
+>>>                   ^
+>>> ../security/integrity/ima/../integrity.h:170:18: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
+>>
+>> David, CONFIG_INTEGRITY_SIGNATURE is dependent on KEYS being enabled,
+>> but the stub functions are not.  There's now a dependency on
+>> key_acl().
 > 
-> To solve this, we now enable function tracing in 2 steps: patch in the
-> mflr instruction, use 'smp_call_function(isync);
-> synchronize_rcu_tasks()' to ensure all existing threads make progress,
-> and then patch in the branch to _mcount(). We override
-> ftrace_replace_code() with a powerpc64 variant for this purpose.
-
-You may want to explain that you do the reverse when patching it out.
-That is, patch out the "bl _mcount" into a nop and then patch out the
-"mflr r0". But interesting, I don't see a synchronize_rcu_tasks() call
-there.
-
-
+> I added a forward declaration for struct key_acl into
+> security/integrity/integrity.h as you can see here:
 > 
-> Suggested-by: Nicholas Piggin <npiggin@gmail.com>
-> Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/kernel/trace/ftrace.c | 258 ++++++++++++++++++++++++++---
->  1 file changed, 236 insertions(+), 22 deletions(-)
+> https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/diff/security/integrity/integrity.h?h=keys-acl&id=75ce113a1d56880e5abd37fa664ea9af399d2bcd
 > 
-> diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
-> index 517662a56bdc..86c2b50dcaa9 100644
-> --- a/arch/powerpc/kernel/trace/ftrace.c
-> +++ b/arch/powerpc/kernel/trace/ftrace.c
-> @@ -125,7 +125,7 @@ __ftrace_make_nop(struct module *mod,
->  {
->  	unsigned long entry, ptr, tramp;
->  	unsigned long ip = rec->ip;
-> -	unsigned int op, pop;
-> +	unsigned int op;
->  
->  	/* read where this goes */
->  	if (probe_kernel_read(&op, (void *)ip, sizeof(int))) {
-> @@ -160,8 +160,6 @@ __ftrace_make_nop(struct module *mod,
->  
->  #ifdef CONFIG_MPROFILE_KERNEL
->  	/* When using -mkernel_profile there is no load to jump over */
-> -	pop = PPC_INST_NOP;
-> -
->  	if (probe_kernel_read(&op, (void *)(ip - 4), 4)) {
->  		pr_err("Fetching instruction at %lx failed.\n", ip - 4);
->  		return -EFAULT;
-> @@ -169,26 +167,23 @@ __ftrace_make_nop(struct module *mod,
->  
->  	/* We expect either a mflr r0, or a std r0, LRSAVE(r1) */
->  	if (op != PPC_INST_MFLR && op != PPC_INST_STD_LR) {
-> -		pr_err("Unexpected instruction %08x around bl _mcount\n", op);
-> +		pr_err("Unexpected instruction %08x before bl _mcount\n", op);
->  		return -EINVAL;
->  	}
-> -#else
-> -	/*
-> -	 * Our original call site looks like:
-> -	 *
-> -	 * bl <tramp>
-> -	 * ld r2,XX(r1)
-> -	 *
-> -	 * Milton Miller pointed out that we can not simply nop the branch.
-> -	 * If a task was preempted when calling a trace function, the nops
-> -	 * will remove the way to restore the TOC in r2 and the r2 TOC will
-> -	 * get corrupted.
-> -	 *
-> -	 * Use a b +8 to jump over the load.
-> -	 */
->  
-> -	pop = PPC_INST_BRANCH | 8;	/* b +8 */
-> +	/* We should patch out the bl to _mcount first */
-> +	if (patch_instruction((unsigned int *)ip, PPC_INST_NOP)) {
-> +		pr_err("Patching NOP failed.\n");
-> +		return -EPERM;
-> +	}
->  
-> +	/* then, nop out the preceding 'mflr r0' as an optimization */
-> +	if (op == PPC_INST_MFLR &&
-> +		patch_instruction((unsigned int *)(ip - 4), PPC_INST_NOP)) {
-> +		pr_err("Patching NOP failed.\n");
-> +		return -EPERM;
-> +	}
-> +#else
->  	/*
->  	 * Check what is in the next instruction. We can see ld r2,40(r1), but
->  	 * on first pass after boot we will see mflr r0.
-> @@ -202,12 +197,25 @@ __ftrace_make_nop(struct module *mod,
->  		pr_err("Expected %08x found %08x\n", PPC_INST_LD_TOC, op);
->  		return -EINVAL;
->  	}
-> -#endif /* CONFIG_MPROFILE_KERNEL */
->  
-> -	if (patch_instruction((unsigned int *)ip, pop)) {
-> +	/*
-> +	 * Our original call site looks like:
-> +	 *
-> +	 * bl <tramp>
-> +	 * ld r2,XX(r1)
-> +	 *
-> +	 * Milton Miller pointed out that we can not simply nop the branch.
-> +	 * If a task was preempted when calling a trace function, the nops
-> +	 * will remove the way to restore the TOC in r2 and the r2 TOC will
-> +	 * get corrupted.
-> +	 *
-> +	 * Use a b +8 to jump over the load.
-> +	 */
-> +	if (patch_instruction((unsigned int *)ip, PPC_INST_BRANCH | 8)) {
->  		pr_err("Patching NOP failed.\n");
->  		return -EPERM;
->  	}
-> +#endif /* CONFIG_MPROFILE_KERNEL */
->  
->  	return 0;
->  }
-> @@ -421,6 +429,26 @@ static int __ftrace_make_nop_kernel(struct dyn_ftrace *rec, unsigned long addr)
->  		return -EPERM;
->  	}
->  
-> +#ifdef CONFIG_MPROFILE_KERNEL
+> which might not have made it into linux-next before you used it.
 
-I would think you need to break this up into two parts as well, with a
-synchronize_rcu_tasks() in between.
+No problem in linux-next 20190627.
 
-Imagine this scenario:
+Thanks.
 
-	<func>:
-	nop <-- interrupt comes here, and preempts the task
-	nop
-
-First change.
-
-	<func>:
-	mflr	r0
-	nop
-
-Second change.
-
-	<func>:
-	mflr	r0
-	bl	_mcount
-
-Task returns from interrupt
-
-	<func>:
-	mflr	r0
-	bl	_mcount <-- executes here
-
-It never did the mflr r0, because the last command that was executed
-was a nop before it was interrupted. And yes, it can be interrupted
-on a nop!
-
--- Steve
-
-
-> +	/* Nop out the preceding 'mflr r0' as an optimization */
-> +	if (probe_kernel_read(&op, (void *)(ip - 4), 4)) {
-> +		pr_err("Fetching instruction at %lx failed.\n", ip - 4);
-> +		return -EFAULT;
-> +	}
-> +
-> +	/* We expect either a mflr r0, or a std r0, LRSAVE(r1) */
-> +	if (op != PPC_INST_MFLR && op != PPC_INST_STD_LR) {
-> +		pr_err("Unexpected instruction %08x before bl _mcount\n", op);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (op == PPC_INST_MFLR &&
-> +		patch_instruction((unsigned int *)(ip - 4), PPC_INST_NOP)) {
-> +		pr_err("Patching NOP failed.\n");
-> +		return -EPERM;
-> +	}
-> +#endif
-> +
->  	return 0;
->  }
->  
-> @@ -429,6 +457,7 @@ int ftrace_make_nop(struct module *mod,
->  {
->  	unsigned long ip = rec->ip;
->  	unsigned int old, new;
-> +	int rc;
->  
->  	/*
->  	 * If the calling address is more that 24 bits away,
-> @@ -439,7 +468,34 @@ int ftrace_make_nop(struct module *mod,
->  		/* within range */
->  		old = ftrace_call_replace(ip, addr, 1);
->  		new = PPC_INST_NOP;
-> -		return ftrace_modify_code(ip, old, new);
-> +		rc = ftrace_modify_code(ip, old, new);
-> +#ifdef CONFIG_MPROFILE_KERNEL
-> +		if (rc)
-> +			return rc;
-> +
-> +		/*
-> +		 * For -mprofile-kernel, we patch out the preceding 'mflr r0'
-> +		 * instruction, as an optimization. It is important to nop out
-> +		 * the branch to _mcount() first, as a lone 'mflr r0' is
-> +		 * harmless.
-> +		 */
-> +		if (probe_kernel_read(&old, (void *)(ip - 4), 4)) {
-> +			pr_err("Fetching instruction at %lx failed.\n", ip - 4);
-> +			return -EFAULT;
-> +		}
-> +
-> +		/* We expect either a mflr r0, or a std r0, LRSAVE(r1) */
-> +		if (old != PPC_INST_MFLR && old != PPC_INST_STD_LR) {
-> +			pr_err("Unexpected instruction %08x before bl _mcount\n",
-> +					old);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (old == PPC_INST_MFLR)
-> +			rc = patch_instruction((unsigned int *)(ip - 4),
-> +					PPC_INST_NOP);
-> +#endif
-> +		return rc;
->  	} else if (core_kernel_text(ip))
->  		return __ftrace_make_nop_kernel(rec, addr);
->  
-> @@ -567,6 +623,37 @@ __ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->  		return -EINVAL;
->  	}
->  
-> +#ifdef CONFIG_MPROFILE_KERNEL
-> +	/*
-> +	 * We could end up here without having called __ftrace_make_call_prep()
-> +	 * if function tracing is enabled before a module is loaded.
-> +	 *
-> +	 * ftrace_module_enable() --> ftrace_replace_code_rec() -->
-> +	 *	ftrace_make_call() --> __ftrace_make_call()
-> +	 *
-> +	 * In this scenario, the previous instruction will be a NOP. It is
-> +	 * safe to patch it with a 'mflr r0' since we know for a fact that
-> +	 * this code is not yet being run.
-> +	 */
-> +	ip -= MCOUNT_INSN_SIZE;
-> +
-> +	/* read where this goes */
-> +	if (probe_kernel_read(op, ip, MCOUNT_INSN_SIZE))
-> +		return -EFAULT;
-> +
-> +	/*
-> +	 * nothing to do if this is using the older -mprofile-kernel
-> +	 * instruction sequence
-> +	 */
-> +	if (op[0] != PPC_INST_NOP)
-> +		return 0;
-> +
-> +	if (patch_instruction((unsigned int *)ip, PPC_INST_MFLR)) {
-> +		pr_err("Patching MFLR failed.\n");
-> +		return -EPERM;
-> +	}
-> +#endif
-> +
->  	return 0;
->  }
->  
-> @@ -863,6 +950,133 @@ void arch_ftrace_update_code(int command)
->  	ftrace_modify_all_code(command);
->  }
->  
-> +#ifdef CONFIG_MPROFILE_KERNEL
-> +/* Returns 1 if we patched in the mflr */
-> +static int __ftrace_make_call_prep(struct dyn_ftrace *rec)
-> +{
-> +	void *ip = (void *)rec->ip - MCOUNT_INSN_SIZE;
-> +	unsigned int op[2];
-> +
-> +	/* read where this goes */
-> +	if (probe_kernel_read(op, ip, sizeof(op)))
-> +		return -EFAULT;
-> +
-> +	if (op[1] != PPC_INST_NOP) {
-> +		pr_err("Unexpected call sequence at %p: %x %x\n",
-> +							ip, op[0], op[1]);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * nothing to do if this is using the older -mprofile-kernel
-> +	 * instruction sequence
-> +	 */
-> +	if (op[0] != PPC_INST_NOP)
-> +		return 0;
-> +
-> +	if (patch_instruction((unsigned int *)ip, PPC_INST_MFLR)) {
-> +		pr_err("Patching MFLR failed.\n");
-> +		return -EPERM;
-> +	}
-> +
-> +	return 1;
-> +}
-> +
-> +static void do_isync(void *info __maybe_unused)
-> +{
-> +	isync();
-> +}
-> +
-> +/*
-> + * When enabling function tracing for -mprofile-kernel that uses a
-> + * 2-instruction sequence of 'mflr r0, bl _mcount()', we use a 2 step process:
-> + * 1. Patch in the 'mflr r0' instruction
-> + * 1a. flush icache on all cpus, so that the updated instruction is seen
-> + * 1b. synchronize_rcu_tasks() to ensure that any cpus that had executed
-> + *     the earlier nop there make progress (and hence do not branch into
-> + *     ftrace without executing the preceding mflr)
-> + * 2. Patch in the branch to ftrace
-> + */
-> +void ftrace_replace_code(int mod_flags)
-> +{
-> +	int enable = mod_flags & FTRACE_MODIFY_ENABLE_FL;
-> +	int schedulable = mod_flags & FTRACE_MODIFY_MAY_SLEEP_FL;
-> +	int ret, failed, make_call = 0;
-> +	struct ftrace_rec_iter *iter;
-> +	struct dyn_ftrace *rec;
-> +
-> +	if (unlikely(!ftrace_enabled))
-> +		return;
-> +
-> +	for_ftrace_rec_iter(iter) {
-> +		rec = ftrace_rec_iter_record(iter);
-> +
-> +		if (rec->flags & FTRACE_FL_DISABLED)
-> +			continue;
-> +
-> +		failed = 0;
-> +		ret = ftrace_test_record(rec, enable);
-> +		if (ret == FTRACE_UPDATE_MAKE_CALL) {
-> +			failed = __ftrace_make_call_prep(rec);
-> +			if (failed < 0) {
-> +				ftrace_bug(failed, rec);
-> +				return;
-> +			} else if (failed == 1)
-> +				make_call++;
-> +		}
-> +
-> +		if (!failed) {
-> +			/* We can patch the record directly */
-> +			failed = ftrace_replace_code_rec(rec, enable);
-> +			if (failed) {
-> +				ftrace_bug(failed, rec);
-> +				return;
-> +			}
-> +		}
-> +
-> +		if (schedulable)
-> +			cond_resched();
-> +	}
-> +
-> +	if (!make_call)
-> +		/* No records needed patching a preceding mflr */
-> +		return;
-> +
-> +	/* Make sure all cpus see the new instruction */
-> +	smp_call_function(do_isync, NULL, 1);
-> +
-> +	/*
-> +	 * We also need to ensure that all cpus make progress:
-> +	 * - With !CONFIG_PREEMPT, we want to be sure that cpus return from
-> +	 *   any interrupts they may be handling, and make progress.
-> +	 * - With CONFIG_PREEMPT, we want to be additionally sure that there
-> +	 *   are no pre-empted tasks that have executed the earlier nop, and
-> +	 *   might end up executing the subsequently patched branch to ftrace.
-> +	 */
-> +	synchronize_rcu_tasks();
-> +
-> +	for_ftrace_rec_iter(iter) {
-> +		rec = ftrace_rec_iter_record(iter);
-> +
-> +		if (rec->flags & FTRACE_FL_DISABLED)
-> +			continue;
-> +
-> +		ret = ftrace_test_record(rec, enable);
-> +		if (ret == FTRACE_UPDATE_MAKE_CALL)
-> +			failed = ftrace_replace_code_rec(rec, enable);
-> +
-> +		if (failed) {
-> +			ftrace_bug(failed, rec);
-> +			return;
-> +		}
-> +
-> +		if (schedulable)
-> +			cond_resched();
-> +	}
-> +
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_PPC64
->  #define PACATOC offsetof(struct paca_struct, kernel_toc)
->  
-
+-- 
+~Randy
