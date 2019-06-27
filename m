@@ -2,193 +2,136 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2EAC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCB5C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2E02133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE51D2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:29:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="gFFEYLwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfF0Q1z (ORCPT
+        id S1726519AbfF0Q3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:27:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57424 "EHLO huawei.com"
+        Thu, 27 Jun 2019 12:29:49 -0400
+Received: from mail-eopbgr140071.outbound.protection.outlook.com ([40.107.14.71]:38118
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726315AbfF0Q1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:27:54 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9349457549DBE8AA1F6B;
-        Fri, 28 Jun 2019 00:27:48 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 28 Jun 2019
- 00:27:41 +0800
-Subject: Re: [PATCH v2 2/5] perf pmu: Support more complex PMU event aliasing
-To:     Jiri Olsa <jolsa@redhat.com>
-References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
- <1560521283-73314-3-git-send-email-john.garry@huawei.com>
- <20190616095844.GC2500@krava>
- <a27e65b4-b487-9206-6dd0-6f9dcec0f1f5@huawei.com>
- <20190620182519.GA15239@krava>
- <6257fc79-b737-e6ca-2fce-f71afa36e9aa@huawei.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
-        <tmricht@linux.ibm.com>, <brueckner@linux.ibm.com>,
-        <kan.liang@linux.intel.com>, <ben@decadent.org.uk>,
-        <mathieu.poirier@linaro.org>, <mark.rutland@arm.com>,
-        <will.deacon@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <zhangshaokun@hisilicon.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <cafed7d6-13c7-3a92-a826-024698bc6cc8@huawei.com>
-Date:   Thu, 27 Jun 2019 17:27:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1726464AbfF0Q3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:29:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Acwz3hHPfD+Le/jb5+cmcROosiINY+hQq7uRwwksQzk=;
+ b=gFFEYLwEZzcaYgGPwF102oxi9KMrRut1jd93LscZWuscZkJ7vz97pan3/8x2vEXXJM9WtbJlA14NR8UcJbAkHW9w3JeIedSKTFFPtORHMOvOGhoGZb7RAvRv/Y5BxudV1nlvg+ILuTvFuVVL0MF4CwUE0spAe6YVXUlUxB7bc6I=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6032.eurprd05.prod.outlook.com (20.178.127.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 16:29:45 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::f5d8:df9:731:682e%5]) with mapi id 15.20.2008.014; Thu, 27 Jun 2019
+ 16:29:45 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=E9r=F4me_Glisse?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: Re: [PATCH 12/25] memremap: add a migrate_to_ram method to struct
+ dev_pagemap_ops
+Thread-Topic: [PATCH 12/25] memremap: add a migrate_to_ram method to struct
+ dev_pagemap_ops
+Thread-Index: AQHVLBqZBQCOhXKkekmD+Za0eny3n6avsW2A
+Date:   Thu, 27 Jun 2019 16:29:45 +0000
+Message-ID: <20190627162439.GD9499@mellanox.com>
+References: <20190626122724.13313-1-hch@lst.de>
+ <20190626122724.13313-13-hch@lst.de>
+In-Reply-To: <20190626122724.13313-13-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR03CA0020.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::33) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.199.206.50]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 910ae93e-1c98-4933-e059-08d6fb1caa3b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6032;
+x-ms-traffictypediagnostic: VI1PR05MB6032:
+x-microsoft-antispam-prvs: <VI1PR05MB60323BDF1EC27F3D38D0D595CFFD0@VI1PR05MB6032.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(39860400002)(376002)(136003)(199004)(189003)(6512007)(102836004)(5660300002)(7736002)(305945005)(6116002)(486006)(478600001)(476003)(81156014)(256004)(386003)(11346002)(53936002)(76176011)(3846002)(2616005)(52116002)(446003)(81166006)(6436002)(8936002)(68736007)(66066001)(6246003)(316002)(2906002)(54906003)(229853002)(99286004)(36756003)(6486002)(26005)(6506007)(186003)(64756008)(6916009)(8676002)(7416002)(66946007)(1076003)(66476007)(14454004)(4326008)(86362001)(66556008)(66446008)(73956011)(71190400001)(71200400001)(25786009)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6032;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FQumiSKh7GVdRl14hBXAy3T/ENWqYM4HWMyt/KiMQB3yuvYG+MOIrLUCPq4S72Bqu5H/LaAUqWhI7Tr8MmgAWraK9rbKVPCD7phnzfo27BCXksIEnr+JiI8gC8Dkz4BoJWEulCIXVdw0MTHsUNYkf4YaA37Jj+hVFrb/3EAHXH56uihx5XRp67A0kIrQyIzowuvy9TMI00/W3AAZlgs8xR6rTn2nfawvNYsN6H0PQmYbU+RUQ2+60Uw5GlYfhzxUkZUBXL3GTMM2930c4vcFAHzQj/BOGwGVL7BXrCUqVPtvAy7rIu5zFs0PBD4C/zDx2ySDvoXcIZjXKZZtgXHwP25hvbKI4+zkbxKJn/yyiRnclDN67c5oFNBFejLblul4zRdK/fFAbZIVtSb6UpmyMqIdIxc06082NQNUV3bmkIg=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <D936285C7F16454CABEEFE9D1BD77309@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <6257fc79-b737-e6ca-2fce-f71afa36e9aa@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 910ae93e-1c98-4933-e059-08d6fb1caa3b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 16:29:45.6208
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/06/2019 11:42, John Garry wrote:
-> On 20/06/2019 19:25, Jiri Olsa wrote:
->> On Mon, Jun 17, 2019 at 10:06:08AM +0100, John Garry wrote:
->>> On 16/06/2019 10:58, Jiri Olsa wrote:
->>>> On Fri, Jun 14, 2019 at 10:08:00PM +0800, John Garry wrote:
->>>>> The jevent "Unit" field is used for uncore PMU alias definition.
->>>>>
->>>>> The form uncore_pmu_example_X is supported, where "X" is a wildcard,
->>>>> to support multiple instances of the same PMU in a system.
->>>>>
->>>>> Unfortunately this format not suitable for all uncore PMUs; take
->>>>> the Hisi
->>>>> DDRC uncore PMU for example, where the name is in the form
->>>>> hisi_scclX_ddrcY.
->>>>>
->>>>> For the current jevent parsing, we would be required to hardcode an
->>>>> uncore
->>>>> alias translation for each possible value of X. This is not scalable.
->>>>>
->>>>> Instead, add support for "Unit" field in the form "hisi_sccl,ddrc",
->>>>> where
->>>>> we can match by hisi_scclX and ddrcY. Tokens in Unit field are
->>>>> delimited by ','.
->>>>>
->>>>> Signed-off-by: John Garry <john.garry@huawei.com>
->>>>> ---
->>>>>  tools/perf/util/pmu.c | 39 ++++++++++++++++++++++++++++++++++-----
->>>>>  1 file changed, 34 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>>>> index 7e7299fee550..bc71c60589b5 100644
->>>>> --- a/tools/perf/util/pmu.c
->>>>> +++ b/tools/perf/util/pmu.c
->>>>> @@ -700,6 +700,39 @@ struct pmu_events_map
->>>>> *perf_pmu__find_map(struct perf_pmu *pmu)
->>>>>      return map;
->>>>>  }
->>>>>
->>>>> +static bool pmu_uncore_alias_match(const char *pmu_name, const
->>>>> char *name)
->>>>> +{
->>>>> +    char *tmp, *tok, *str;
->>>>> +    bool res;
->>>>> +
->>>>> +    str = strdup(pmu_name);
->>>>> +    if (!str)
->>>>> +        return false;
->
-> Hi Jirka,
->
->>>>> +
->>>>> +    /*
->>>>> +     * uncore alias may be from different PMU with common
->>>>> +     * prefix or matching tokens.
->>>>> +     */
->>>>> +    tok = strtok_r(str, ",", &tmp);
->
-> If str contains no delimiter, then it returns str in tok.
->
->>>>> +    if (strncmp(pmu_name, tok, strlen(tok))) {
->
-> So this above check covers the case of str with and without a delimiter.
->
->>>>
->>>
->>> Hi Jirka,
->>
->> heya,
->> sry for late reply
->>
->>>
->>>> if tok is NULL in here we crash
->>>>
->>>
->>> As I see, tok could not be NULL. If str contains no delimiters, then
->>> we just
->>> return same as str in tok.
->>>
->>> Can you see tok being NULL?
->>
->> well, if there's no ',' in the str it returns NULL, right?
->
-> No, it would return str in tok.
->
->> and IIUC this function is still called for standard uncore
->> pmu names
->>
->>>
->>>>> +        res = false;
->>>>> +        goto out;
->>>>> +    }
->>>>> +
->>>>> +    for (; tok; name += strlen(tok), tok = strtok_r(NULL, ",",
->>>>> &tmp)) {
->>>>
->>>> why is name shifted in here?
->>>
->>> I want to ensure that we match the tokens in order and also guard
->>> against
->>> possible repeated token matches in 'name'.
->>
->> i might not understand this correctly.. so
->>
->> str is the alias name that can contain ',' now, like:
->>   hisi_sccl,ddrc
->
-> For example of pmu_nmame=hisi_sccl,ddrc and pmu=hisi_sccl1_ddrc0, we
-> match in this sequence:
->
-> loop 1. tok=hisi_sccl name=hisi_sccl1_ddrc0
-> loop 2. tok=ddrc name=ddrc0
-> loop 3. tok=NULL -> breakout and return true
->
-> A couple of notes:
-> a. loop 1. could be omitted, but the code becomes a bit more complicated
-> 2. I don't have to advance name. But then we would match something like
-> hisi_ddrc0_sccl1. Maybe this is ok.
->
->>
->> and name is still pmu with no ',' ...
->> please make this or
->> proper version that in some comment
->>
->
-> I didn't really get your meaning here. Please check my replies and see
-> if you have further doubt or concern.
->
+On Wed, Jun 26, 2019 at 02:27:11PM +0200, Christoph Hellwig wrote:
+> This replaces the hacky ->fault callback, which is currently directly
+> called from common code through a hmm specific data structure as an
+> exercise in layering violations.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+> ---
+>  include/linux/hmm.h      |  6 ------
+>  include/linux/memremap.h |  6 ++++++
+>  include/linux/swapops.h  | 15 ---------------
+>  kernel/memremap.c        | 35 ++++-------------------------------
+>  mm/hmm.c                 | 13 +++++--------
+>  mm/memory.c              |  9 ++-------
+>  6 files changed, 17 insertions(+), 67 deletions(-)
 
-Hi Jirka,
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+=20
+I'ver heard there are some other use models for fault() here beyond
+migrate to ram, but we can rename it if we ever see them.
 
-I was just wondering if you have any further comments or questions here?
+> +static vm_fault_t hmm_devmem_migrate_to_ram(struct vm_fault *vmf)
+>  {
+> -	struct hmm_devmem *devmem =3D page->pgmap->data;
+> +	struct hmm_devmem *devmem =3D vmf->page->pgmap->data;
+> =20
+> -	return devmem->ops->fault(devmem, vma, addr, page, flags, pmdp);
+> +	return devmem->ops->fault(devmem, vmf->vma, vmf->address, vmf->page,
+> +			vmf->flags, vmf->pmd);
+>  }
 
-Much appreciated,
-John
+Next cycle we should probably rename this fault to migrate_to_ram as
+well and pass in the vmf..
 
+Jason
