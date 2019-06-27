@@ -2,144 +2,241 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC72CC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B364FC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B169321726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74530208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fYanVgHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfF0XiO (ORCPT
+        id S1726723AbfF0XjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:38:14 -0400
-Received: from mga07.intel.com ([134.134.136.100]:21471 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfF0XiO (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:38:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 16:38:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,425,1557212400"; 
-   d="scan'208";a="167595836"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga006.jf.intel.com with ESMTP; 27 Jun 2019 16:38:11 -0700
-Date:   Thu, 27 Jun 2019 16:38:11 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv5] mm/gup: speed up check_and_migrate_cma_pages() on huge
- page
-Message-ID: <20190627233805.GA8695@iweiny-DESK2.sc.intel.com>
-References: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
+        Thu, 27 Jun 2019 19:39:06 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56977 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfF0XjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:39:05 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RNYkfG499224
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 27 Jun 2019 16:34:46 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RNYkfG499224
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561678487;
+        bh=4zh2A0ju8nvmprth77/9ulfUQhf61S0lkDS16uIQ+2w=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=fYanVgHS1kF62oK2oZw+ogtLlnuY3gsGDM8o8MVnw4c/VrYFG1z9XwnoMBZg+y4YE
+         NQfvzTryLna8+qQckPQlJq3ZnMAQ40MaMrL5g5QEazUZKFb0S5XlSQIDZIH0OI7v2e
+         WyM3xwmEsvlWIRBf68QUfvz1m+4dM4lcssBrwdkZ6dxEbguhgxpKBuTR0Rv4pjlshE
+         utNe4c9rpqdcQKgFlqSceJTrBqcf6ph62ZxcYY/9oGplgyD78iufTCq4xqm7NJxC92
+         VvYkOiFwplZbxA1UD8zHMoknV0iK0bfG80DqMh8zxGFINFlc8fGHYmBhEiZ2K+7zZm
+         g749Yl/PofBMQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RNYjpi499221;
+        Thu, 27 Jun 2019 16:34:45 -0700
+Date:   Thu, 27 Jun 2019 16:34:45 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-46e5b64fdeb49e6f95b875fa4702cedf6c37188d@git.kernel.org>
+Cc:     tglx@linutronix.de, eranian@google.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, ricardo.neri-calderon@linux.intel.com,
+        ashok.raj@intel.com, Suravee.Suthikulpanit@amd.com,
+        ravi.v.shankar@intel.com, hpa@zytor.com, andi.kleen@intel.com
+Reply-To: ravi.v.shankar@intel.com, ricardo.neri-calderon@linux.intel.com,
+          peterz@infradead.org, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, Suravee.Suthikulpanit@amd.com,
+          ashok.raj@intel.com, hpa@zytor.com, andi.kleen@intel.com,
+          tglx@linutronix.de, eranian@google.com
+In-Reply-To: <20190623132434.140411339@linutronix.de>
+References: <20190623132434.140411339@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/timers] x86/hpet: Replace printk(KERN...) with pr_...()
+Git-Commit-ID: 46e5b64fdeb49e6f95b875fa4702cedf6c37188d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 01:15:45PM +0800, Pingfan Liu wrote:
-> Both hugetlb and thp locate on the same migration type of pageblock, since
-> they are allocated from a free_list[]. Based on this fact, it is enough to
-> check on a single subpage to decide the migration type of the whole huge
-> page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
-> similar on other archs.
-> 
-> Furthermore, when executing isolate_huge_page(), it avoid taking global
-> hugetlb_lock many times, and meanless remove/add to the local link list
-> cma_page_list.
-> 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Commit-ID:  46e5b64fdeb49e6f95b875fa4702cedf6c37188d
+Gitweb:     https://git.kernel.org/tip/46e5b64fdeb49e6f95b875fa4702cedf6c37188d
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Sun, 23 Jun 2019 15:23:42 +0200
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 28 Jun 2019 00:57:15 +0200
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+x86/hpet: Replace printk(KERN...) with pr_...()
 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Linux-kernel@vger.kernel.org
-> ---
-> v3 -> v4: fix C language precedence issue
-> v4 -> v5: drop the check PageCompound() and improve notes
->  mm/gup.c | 23 +++++++++++++++--------
->  1 file changed, 15 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ddde097..1deaad2 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1336,25 +1336,30 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
->  					struct vm_area_struct **vmas,
->  					unsigned int gup_flags)
->  {
-> -	long i;
-> +	long i, step;
->  	bool drain_allow = true;
->  	bool migrate_allow = true;
->  	LIST_HEAD(cma_page_list);
->  
->  check_again:
-> -	for (i = 0; i < nr_pages; i++) {
-> +	for (i = 0; i < nr_pages;) {
-> +
-> +		struct page *head = compound_head(pages[i]);
-> +
-> +		/*
-> +		 * gup may start from a tail page. Advance step by the left
-> +		 * part.
-> +		 */
-> +		step = (1 << compound_order(head)) - (pages[i] - head);
->  		/*
->  		 * If we get a page from the CMA zone, since we are going to
->  		 * be pinning these entries, we might as well move them out
->  		 * of the CMA zone if possible.
->  		 */
-> -		if (is_migrate_cma_page(pages[i])) {
-> -
-> -			struct page *head = compound_head(pages[i]);
-> -
-> -			if (PageHuge(head)) {
-> +		if (is_migrate_cma_page(head)) {
-> +			if (PageHuge(head))
->  				isolate_huge_page(head, &cma_page_list);
-> -			} else {
-> +			else {
->  				if (!PageLRU(head) && drain_allow) {
->  					lru_add_drain_all();
->  					drain_allow = false;
-> @@ -1369,6 +1374,8 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
->  				}
->  			}
->  		}
-> +
-> +		i += step;
->  	}
->  
->  	if (!list_empty(&cma_page_list)) {
-> -- 
-> 2.7.5
-> 
+And sanitize the format strings while at it.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Andi Kleen <andi.kleen@intel.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Link: https://lkml.kernel.org/r/20190623132434.140411339@linutronix.de
+
+---
+ arch/x86/kernel/hpet.c | 45 +++++++++++++++++++--------------------------
+ 1 file changed, 19 insertions(+), 26 deletions(-)
+
+diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+index a6aa22677768..cf3dbf43e548 100644
+--- a/arch/x86/kernel/hpet.c
++++ b/arch/x86/kernel/hpet.c
+@@ -20,6 +20,9 @@
+ #include <asm/hpet.h>
+ #include <asm/time.h>
+ 
++#undef  pr_fmt
++#define pr_fmt(fmt) "hpet: " fmt
++
+ #define HPET_MASK			CLOCKSOURCE_MASK(32)
+ 
+ #define HPET_DEV_USED_BIT		2
+@@ -137,31 +140,28 @@ EXPORT_SYMBOL_GPL(is_hpet_enabled);
+ static void _hpet_print_config(const char *function, int line)
+ {
+ 	u32 i, timers, l, h;
+-	printk(KERN_INFO "hpet: %s(%d):\n", function, line);
++	pr_info("%s(%d):\n", function, line);
+ 	l = hpet_readl(HPET_ID);
+ 	h = hpet_readl(HPET_PERIOD);
+ 	timers = ((l & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
+-	printk(KERN_INFO "hpet: ID: 0x%x, PERIOD: 0x%x\n", l, h);
++	pr_info("ID: 0x%x, PERIOD: 0x%x\n", l, h);
+ 	l = hpet_readl(HPET_CFG);
+ 	h = hpet_readl(HPET_STATUS);
+-	printk(KERN_INFO "hpet: CFG: 0x%x, STATUS: 0x%x\n", l, h);
++	pr_info("CFG: 0x%x, STATUS: 0x%x\n", l, h);
+ 	l = hpet_readl(HPET_COUNTER);
+ 	h = hpet_readl(HPET_COUNTER+4);
+-	printk(KERN_INFO "hpet: COUNTER_l: 0x%x, COUNTER_h: 0x%x\n", l, h);
++	pr_info("COUNTER_l: 0x%x, COUNTER_h: 0x%x\n", l, h);
+ 
+ 	for (i = 0; i < timers; i++) {
+ 		l = hpet_readl(HPET_Tn_CFG(i));
+ 		h = hpet_readl(HPET_Tn_CFG(i)+4);
+-		printk(KERN_INFO "hpet: T%d: CFG_l: 0x%x, CFG_h: 0x%x\n",
+-		       i, l, h);
++		pr_info("T%d: CFG_l: 0x%x, CFG_h: 0x%x\n", i, l, h);
+ 		l = hpet_readl(HPET_Tn_CMP(i));
+ 		h = hpet_readl(HPET_Tn_CMP(i)+4);
+-		printk(KERN_INFO "hpet: T%d: CMP_l: 0x%x, CMP_h: 0x%x\n",
+-		       i, l, h);
++		pr_info("T%d: CMP_l: 0x%x, CMP_h: 0x%x\n", i, l, h);
+ 		l = hpet_readl(HPET_Tn_ROUTE(i));
+ 		h = hpet_readl(HPET_Tn_ROUTE(i)+4);
+-		printk(KERN_INFO "hpet: T%d ROUTE_l: 0x%x, ROUTE_h: 0x%x\n",
+-		       i, l, h);
++		pr_info("T%d ROUTE_l: 0x%x, ROUTE_h: 0x%x\n", i, l, h);
+ 	}
+ }
+ 
+@@ -287,7 +287,7 @@ static void hpet_legacy_clockevent_register(void)
+ 	clockevents_config_and_register(&hpet_clockevent, hpet_freq,
+ 					HPET_MIN_PROG_DELTA, 0x7FFFFFFF);
+ 	global_clock_event = &hpet_clockevent;
+-	printk(KERN_DEBUG "hpet clockevent registered\n");
++	pr_debug("Clockevent registered\n");
+ }
+ 
+ static int hpet_set_periodic(struct clock_event_device *evt, int timer)
+@@ -520,8 +520,7 @@ static irqreturn_t hpet_interrupt_handler(int irq, void *data)
+ 	struct clock_event_device *hevt = &dev->evt;
+ 
+ 	if (!hevt->event_handler) {
+-		printk(KERN_INFO "Spurious HPET timer interrupt on HPET timer %d\n",
+-				dev->num);
++		pr_info("Spurious interrupt HPET timer %d\n", dev->num);
+ 		return IRQ_HANDLED;
+ 	}
+ 
+@@ -541,8 +540,7 @@ static int hpet_setup_irq(struct hpet_dev *dev)
+ 	irq_set_affinity(dev->irq, cpumask_of(dev->cpu));
+ 	enable_irq(dev->irq);
+ 
+-	printk(KERN_DEBUG "hpet: %s irq %d for MSI\n",
+-			 dev->name, dev->irq);
++	pr_debug("%s irq %d for MSI\n", dev->name, dev->irq);
+ 
+ 	return 0;
+ }
+@@ -638,7 +636,7 @@ static void hpet_msi_capability_lookup(unsigned int start_timer)
+ 			break;
+ 	}
+ 
+-	printk(KERN_INFO "HPET: %d timers in total, %d timers will be used for per-cpu timer\n",
++	pr_info("%d channels of %d reserved for per-cpu timers\n",
+ 		num_timers, num_timers_used);
+ }
+ 
+@@ -856,8 +854,7 @@ static int hpet_clocksource_register(void)
+ 	} while ((now - start) < 200000UL);
+ 
+ 	if (t1 == hpet_readl(HPET_COUNTER)) {
+-		printk(KERN_WARNING
+-		       "HPET counter not counting. HPET disabled\n");
++		pr_warn("Counter not counting. HPET disabled\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -903,9 +900,7 @@ int __init hpet_enable(void)
+ 	 */
+ 	for (i = 0; hpet_readl(HPET_CFG) == 0xFFFFFFFF; i++) {
+ 		if (i == 1000) {
+-			printk(KERN_WARNING
+-			       "HPET config register value = 0xFFFFFFFF. "
+-			       "Disabling HPET\n");
++			pr_warn("Config register invalid. Disabling HPET\n");
+ 			goto out_nohpet;
+ 		}
+ 	}
+@@ -949,7 +944,7 @@ int __init hpet_enable(void)
+ 	cfg &= ~(HPET_CFG_ENABLE | HPET_CFG_LEGACY);
+ 	hpet_writel(cfg, HPET_CFG);
+ 	if (cfg)
+-		pr_warn("Unrecognized bits %#x set in global cfg\n", cfg);
++		pr_warn("Global config: Unknown bits %#x\n", cfg);
+ 
+ 	for (i = 0; i <= last; ++i) {
+ 		cfg = hpet_readl(HPET_Tn_CFG(i));
+@@ -961,8 +956,7 @@ int __init hpet_enable(void)
+ 			 | HPET_TN_64BIT_CAP | HPET_TN_32BIT | HPET_TN_ROUTE
+ 			 | HPET_TN_FSB | HPET_TN_FSB_CAP);
+ 		if (cfg)
+-			pr_warn("Unrecognized bits %#x set in cfg#%u\n",
+-				cfg, i);
++			pr_warn("Channel #%u config: Unknown bits %#x\n", i, cfg);
+ 	}
+ 	hpet_print_config();
+ 
+@@ -1290,8 +1284,7 @@ static void hpet_rtc_timer_reinit(void)
+ 		if (hpet_rtc_flags & RTC_PIE)
+ 			hpet_pie_count += lost_ints;
+ 		if (printk_ratelimit())
+-			printk(KERN_WARNING "hpet1: lost %d rtc interrupts\n",
+-				lost_ints);
++			pr_warn("Lost %d RTC interrupts\n", lost_ints);
+ 	}
+ }
+ 
