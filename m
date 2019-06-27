@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6C9C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FF5C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200E421851
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C07EA217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595717;
-	bh=7MJO6Excqhusv+9ayIA4sVvGO1xUp3SpW948fpqsnB0=;
+	s=default; t=1561595721;
+	bh=2Rg3rhytNCFIIBZMHw/pfbljMPMzG/fPxvGHuncYIXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XLU4yUeuTtln+6+qrnjd9LZefji67V54Nb3uhCB5DYSQl8DHtg8hfKnWRVWH9NvAE
-	 4BjeQaJIAFTmlNSpV2714670gPv1HBAYqABlRrWu7QQQclEs11MIzTD2eN60IBbqEv
-	 L6yP3Xpde7hsRZyT4Gr70y1f+HIzTIFmy8+ZVtIk=
+	b=2IblV98bDgNcF19YUU2s/RHDZfbDQtBBBMod20YglMRR9LtNP4L+EtYZHnfNRR57i
+	 oI5BH1ORkld0JdMCzwfnhQZ6oFyAEC8QDXBoMOXOOlaRB+O4h2wzaq/jep8fcSk2B6
+	 P7XKzeO5KDLmKVaLcgYgvkNG9n/5csyvq/w4F4LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfF0AfQ (ORCPT
+        id S1727423AbfF0AfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:35:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39574 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfF0AfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:35:08 -0400
+        id S1728252AbfF0AfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:35:16 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AA9221851;
-        Thu, 27 Jun 2019 00:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B11217F9;
+        Thu, 27 Jun 2019 00:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595707;
-        bh=7MJO6Excqhusv+9ayIA4sVvGO1xUp3SpW948fpqsnB0=;
+        s=default; t=1561595715;
+        bh=2Rg3rhytNCFIIBZMHw/pfbljMPMzG/fPxvGHuncYIXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QP7QE3j/ShFjJyYMldF/06wVt3jR2zN6/ccPHZD29HCGP3o31ANQaz2UfvVlzzADV
-         ngaV01xfzuaCR/2+PMe+umUnQ0E2uH6NHPkVsiUQaRS1yECzt7oFF2okal7nHqdDDt
-         0gGHZImB6+55rrVbBeUx0OFe2Ufx0TT3awP+XTbI=
+        b=fLG1jwMFV5ZclKx/FPHSgVzfRBekjLbVDcNkaTOLhZ4G7XwGUa2rL63SXuQYPKWc0
+         50W7KjzIcbYl0AAWjMr7XyD3xicJx+rjss3SDFZYMhUvzWfaDSQ4anFvAOmSJHWf0J
+         wQt31Qx8628U6IaigXknggYyWEnni/2u1k4zDqfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 87/95] net: lio_core: fix potential sign-extension overflow on large shift
-Date:   Wed, 26 Jun 2019 20:30:12 -0400
-Message-Id: <20190627003021.19867-87-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.1 89/95] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
+Date:   Wed, 26 Jun 2019 20:30:14 -0400
+Message-Id: <20190627003021.19867-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -60,37 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 9476274093a0e79b905f4cd6cf6d149f65e02c17 ]
+[ Upstream commit 9739ab7eda459f0669ec9807e0d9be5020bab88c ]
 
-Left shifting the signed int value 1 by 31 bits has undefined behaviour
-and the shift amount oq_no can be as much as 63.  Fix this by using
-BIT_ULL(oq_no) instead.
+With the strict dma mask checking introduced with the switch to
+the generic DMA direct code common wifi chips on 32-bit powerbooks
+stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
+to allow them to reliably allocate dma coherent memory.
 
-Addresses-Coverity: ("Bad shift operation")
-Fixes: f21fb3ed364b ("Add support of Cavium Liquidio ethernet adapters")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 65a21b71f948 ("powerpc/dma: remove dma_nommu_dma_supported")
+Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
+Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cavium/liquidio/lio_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/page.h         | 7 +++++++
+ arch/powerpc/mm/mem.c                   | 3 ++-
+ arch/powerpc/platforms/powermac/Kconfig | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_core.c b/drivers/net/ethernet/cavium/liquidio/lio_core.c
-index 1c50c10b5a16..d7e805749a5b 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_core.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_core.c
-@@ -964,7 +964,7 @@ static void liquidio_schedule_droq_pkt_handlers(struct octeon_device *oct)
+diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+index ed870468ef6f..d408711d09fb 100644
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -330,6 +330,13 @@ struct vm_area_struct;
+ #endif /* __ASSEMBLY__ */
+ #include <asm/slice.h>
  
- 			if (droq->ops.poll_mode) {
- 				droq->ops.napi_fn(droq);
--				oct_priv->napi_mask |= (1 << oq_no);
-+				oct_priv->napi_mask |= BIT_ULL(oq_no);
- 			} else {
- 				tasklet_schedule(&oct_priv->droq_tasklet);
- 			}
++/*
++ * Allow 30-bit DMA for very limited Broadcom wifi chips on many powerbooks.
++ */
++#ifdef CONFIG_PPC32
++#define ARCH_ZONE_DMA_BITS 30
++#else
+ #define ARCH_ZONE_DMA_BITS 31
++#endif
+ 
+ #endif /* _ASM_POWERPC_PAGE_H */
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index f6787f90e158..b98ce400a889 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -255,7 +255,8 @@ void __init paging_init(void)
+ 	       (long int)((top_of_ram - total_ram) >> 20));
+ 
+ #ifdef CONFIG_ZONE_DMA
+-	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
++	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
++			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
+ #endif
+ 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
+ #ifdef CONFIG_HIGHMEM
+diff --git a/arch/powerpc/platforms/powermac/Kconfig b/arch/powerpc/platforms/powermac/Kconfig
+index f834a19ed772..c02d8c503b29 100644
+--- a/arch/powerpc/platforms/powermac/Kconfig
++++ b/arch/powerpc/platforms/powermac/Kconfig
+@@ -7,6 +7,7 @@ config PPC_PMAC
+ 	select PPC_INDIRECT_PCI if PPC32
+ 	select PPC_MPC106 if PPC32
+ 	select PPC_NATIVE
++	select ZONE_DMA if PPC32
+ 	default y
+ 
+ config PPC_PMAC64
 -- 
 2.20.1
 
