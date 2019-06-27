@@ -2,129 +2,146 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6BAC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E8AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B82420663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="QuXSG0Zb"
+	by mail.kernel.org (Postfix) with ESMTP id 6029520B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfF0Pzs (ORCPT
+        id S1726587AbfF0P4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:55:48 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:19540 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0Pzr (ORCPT
+        Thu, 27 Jun 2019 11:56:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14020 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726405AbfF0Pz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:55:47 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
-   d="scan'208";a="39277033"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jun 2019 08:55:46 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 27 Jun 2019 08:55:46 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 27 Jun 2019 08:55:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8iAj8HAjrZkWALwk/F/8dpsLp0UCnJHMEZYNW05wnJ8=;
- b=QuXSG0ZbUCXtMUMLGSqfCtvK6iejnmJy+CXLBpvBUN0zIE/rebDAo2shI862AM5nVVKfNYrUym3rPk/LVR2mJKUrpzi9RedCdYhEF34KHgFYxm9Ou1fN4DS3nmgWuyR8A2Ce3tOjP6adOIsnHo71V2g3xrfiP78ZHmmopYEbS/w=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1309.namprd11.prod.outlook.com (10.169.232.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.17; Thu, 27 Jun 2019 15:55:45 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::7d59:2a2f:90f1:2720]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::7d59:2a2f:90f1:2720%9]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
- 15:55:45 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <sboyd@kernel.org>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <mturquette@baylibre.com>
-CC:     <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <claudiu.beznea@gmail.com>
-Subject: Re: [PATCH 0/7] clk: at91: sckc: improve error path
-Thread-Topic: [PATCH 0/7] clk: at91: sckc: improve error path
-Thread-Index: AQHVIf3bUSmswP0Le0qxy3Tkv6UCZKavrwEAgAAOigA=
-Date:   Thu, 27 Jun 2019 15:55:45 +0000
-Message-ID: <d002d9ae-e84b-12e7-6c59-c76fb073f859@microchip.com>
-References: <1560440205-4604-1-git-send-email-claudiu.beznea@microchip.com>
- <20190627150337.A233320B1F@mail.kernel.org>
-In-Reply-To: <20190627150337.A233320B1F@mail.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0601CA0012.eurprd06.prod.outlook.com
- (2603:10a6:800:1e::22) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tagtoolbar-keys: D20190627185538166
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fd6d911a-d609-4847-4d95-08d6fb17e9fa
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1309;
-x-ms-traffictypediagnostic: MWHPR11MB1309:
-x-microsoft-antispam-prvs: <MWHPR11MB1309A1B15FFAACB3D94B926B87FD0@MWHPR11MB1309.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(189003)(53546011)(6506007)(76176011)(386003)(6512007)(52116002)(99286004)(229853002)(6486002)(102836004)(26005)(186003)(6436002)(110136005)(4326008)(54906003)(86362001)(31696002)(316002)(6246003)(2201001)(53936002)(4744005)(25786009)(71190400001)(71200400001)(2501003)(2906002)(256004)(14444005)(6116002)(3846002)(478600001)(8676002)(81166006)(81156014)(72206003)(68736007)(8936002)(14454004)(305945005)(7736002)(11346002)(486006)(476003)(66476007)(64756008)(2616005)(446003)(66556008)(66446008)(73956011)(66946007)(5660300002)(36756003)(31686004)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1309;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EeBsJVygxVTDkq5vSZzzM88mUqL1FfQnGqpFNKXmOqLmLm2SqzbwKULqI8CnyD7GGN/DjCi6r8rSZM/vdeBjtwecoTlJLVVlXEMbDiORk5kMpw96FOrBLbwp4S6BtWIUK6vV6GICauu5BSXoEiRbXuONCePoIPRwXhPrAO0+9NXgmnwTyW717ASDwwvwMl4UOtthWoaDnQIHJz3lRxibwqVEsw54sp5cS+Bei+5rIn80WuNuGQTnB0gLw/XCvp3kVyarRG/a6e1ODU4WQdTdVzOECfeYXNdl80E34RdgYS8gDcud53wDAf5N47ql1BN6cptLQ8D4sjgBJJScEXEv5g+Kf2qtKKYWNi+HILu0AouVerAQ14Ng9xgLai0g2gjwt+7yWwbj9/k36FVoQeSDpD3iulcyDNzrZ9lGZYRv6aw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <301B48221B79334A992F7C675039FE99@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 27 Jun 2019 11:55:59 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RFpbSY106098;
+        Thu, 27 Jun 2019 11:55:08 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tcy4redr3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jun 2019 11:55:07 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5RFruBQ112277;
+        Thu, 27 Jun 2019 11:55:07 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tcy4redpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jun 2019 11:55:06 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5RFneD7027772;
+        Thu, 27 Jun 2019 15:55:05 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2t9by77bub-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Jun 2019 15:55:05 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RFt4x749414456
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 15:55:04 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9EB08B2065;
+        Thu, 27 Jun 2019 15:55:04 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80B42B2064;
+        Thu, 27 Jun 2019 15:55:04 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 15:55:04 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6515716C2F90; Thu, 27 Jun 2019 08:55:06 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 08:55:06 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Message-ID: <20190627155506.GU26519@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190626135447.y24mvfuid5fifwjc@linutronix.de>
+ <20190626162558.GY26519@linux.ibm.com>
+ <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home>
+ <20190627153031.GA249127@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd6d911a-d609-4847-4d95-08d6fb17e9fa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 15:55:45.1531
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1309
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627153031.GA249127@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDI3LjA2LjIwMTkgMTg6MDMsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gRXh0ZXJuYWwg
-RS1NYWlsDQo+IA0KPiANCj4gUXVvdGluZyBDbGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAuY29tICgy
-MDE5LTA2LTEzIDA4OjM3OjA2KQ0KPj4gRnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6
-bmVhQG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gSGksDQo+Pg0KPj4gVGhpcyBzZXJpZXMgdHJpZXMg
-dG8gaW1wcm92ZSBlcnJvciBwYXRoIGZvciBzbG93IGNsb2NrIHJlZ2lzdHJhdGlvbnMNCj4+IGJ5
-IGFkZGluZyBmdW5jdGlvbnMgdG8gZnJlZSByZXNvdXJjZXMgYW5kIHVzaW5nIHRoZW0gb24gZmFp
-bHVyZXMuDQo+IA0KPiBJZiBwb3NzaWJsZSwgcmVzZW5kIHRoaXMgcGF0Y2ggc2VyaWVzIGluIHBs
-YWluIHRleHQuIFRoYW5rcy4NCg0KRG9uZSEgVGhhbmsgeW91IQ0KDQo+IA0K
+On Thu, Jun 27, 2019 at 11:30:31AM -0400, Joel Fernandes wrote:
+> On Thu, Jun 27, 2019 at 10:34:55AM -0400, Steven Rostedt wrote:
+> > On Thu, 27 Jun 2019 10:24:36 -0400
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > 
+> > > > What am I missing here?  
+> > > 
+> > > This issue I think is
+> > > 
+> > > (in normal process context)
+> > > spin_lock_irqsave(rq_lock); // which disables both preemption and interrupt
+> > > 			   // but this was done in normal process context,
+> > > 			   // not from IRQ handler
+> > > rcu_read_lock();
+> > >           <---------- IPI comes in and sets exp_hint
+> > 
+> > How would an IPI come in here with interrupts disabled?
+> > 
+> > -- Steve
+> 
+> This is true, could it be rcu_read_unlock_special() got called for some
+> *other* reason other than the IPI then?
+> 
+> Per Sebastian's stack trace of the recursive lock scenario, it is happening
+> during cpu_acct_charge() which is called with the rq_lock held. 
+> 
+> The only other reasons I know off to call rcu_read_unlock_special() are if
+> 1. the tick indicated that the CPU has to report a QS
+> 2. an IPI in the middle of the reader section for expedited GPs
+> 3. preemption in the middle of a preemptible RCU reader section
+
+4. Some previous reader section was IPIed or preempted, but either
+   interrupts, softirqs, or preemption was disabled across the
+   rcu_read_unlock() of that previous reader section.
+
+I -think- that this is what Sebastian is seeing.
+
+							Thanx, Paul
+
+> 1. and 2. are not possible because interrupts are disabled, that's why the
+> wakeup_softirq even happened.
+> 3. is not possible because we are holding rq_lock in the RCU reader section.
+> 
+> So I am at a bit of a loss how this can happen :-(
+> 
+> Spurious call to rcu_read_unlock_special() may be when it should not have
+> been called?
+> 
+> thanks,
+> 
+> - Joel
