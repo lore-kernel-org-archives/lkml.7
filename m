@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4BCC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDD7C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 557FA20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9477020815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596493;
-	bh=VePPAgNzl9cvWFPU4jZ/vJZ4UpG5DZzQSb54AbU1/6c=;
+	s=default; t=1561596509;
+	bh=UZwFhECehGr4hF19w2AUlwqydZGtUk6dBru7XiEMhYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jOcwiOoWi3hDgBWAXdNrCc3uy0QLitVl3b28KOu4pQJLkBkJpV9bjoNrPh91FwOSu
-	 rr6ZmkKnjUw6Dn8bv7KucjmPZhRnyTxigl8YYxK3Vw7kro4OONZszmbpMvM/Qr0VF6
-	 Ha9nlbzNoJS/VhXkoFDspjddukullJgjxtX1Ogo4=
+	b=lxSLpmTCdL18Zvk6ES4b2nm374AWihJXN8j73U/POs2MAZU+WRUjYGl60tfIXkGiP
+	 LNfxf1b9girwaFMdLlm6j52dicnU66Kqzop+kZ81eKhZlSZnj3qqewd0/v4rM2TbcU
+	 ypwnVJKjPCWMfly7XT0mxvekHUy9iZHiuv9TrpDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728844AbfF0Aia (ORCPT
+        id S1728272AbfF0As2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42772 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:48:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728820AbfF0Ai1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:38:27 -0400
+        id S1728782AbfF0AiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:38:15 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39D0A214AF;
-        Thu, 27 Jun 2019 00:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE1F214AF;
+        Thu, 27 Jun 2019 00:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595906;
-        bh=VePPAgNzl9cvWFPU4jZ/vJZ4UpG5DZzQSb54AbU1/6c=;
+        s=default; t=1561595894;
+        bh=UZwFhECehGr4hF19w2AUlwqydZGtUk6dBru7XiEMhYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgMqiA847AfkaMMweOVAUXoJ3MgJrZ1HOoB8ByRtBvU4Dt94aRRders4lOojpfGg3
-         POI5dq84uZfIou5FmnfPWrDr7Um97c4aCU+lx6vnD8hCEiQ+jDZFyfxzgj3IrJM64d
-         XKgDh8cVabbUet7vzXEleQUpuZ3PI+r9tYuzsCO4=
+        b=ZJnjHkIJKAxzczSxYJEdnyP2YBo1xyYDibByiW9q5YcgjVYLNHOQtTgQQP9Dy7bvr
+         +X36RjZN4dcx1/qQzoTJqQjW6k+L/1FE/UD18Cnu5QUcxn7bk9IkEJCYHLtwJEsv6b
+         MyyvM3cJop9EuXYYUOmqaQhLvtgCn/gwcDearqBA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Naftali Goldstein <naftali.goldstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 41/60] mac80211: do not start any work during reconfigure flow
-Date:   Wed, 26 Jun 2019 20:35:56 -0400
-Message-Id: <20190627003616.20767-41-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 37/60] mlxsw: spectrum: Disallow prio-tagged packets when PVID is removed
+Date:   Wed, 26 Jun 2019 20:35:52 -0400
+Message-Id: <20190627003616.20767-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -61,58 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naftali Goldstein <naftali.goldstein@intel.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit f8891461a277ec0afc493fd30cd975a38048a038 ]
+[ Upstream commit 4b14cc313f076c37b646cee06a85f0db59cf216c ]
 
-It is not a good idea to try to perform any work (e.g. send an auth
-frame) during reconfigure flow.
+When PVID is removed from a bridge port, the Linux bridge drops both
+untagged and prio-tagged packets. Align mlxsw with this behavior.
 
-Prevent this from happening, and at the end of the reconfigure flow
-requeue all the works.
-
-Signed-off-by: Naftali Goldstein <naftali.goldstein@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 148f472da5db ("mlxsw: reg: Add the Switch Port Acceptable Frame Types register")
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/ieee80211_i.h | 7 +++++++
- net/mac80211/util.c        | 4 ++++
- 2 files changed, 11 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/reg.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
-index 6ea64cadad00..ae9cce2d41da 100644
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -1998,6 +1998,13 @@ void __ieee80211_flush_queues(struct ieee80211_local *local,
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+index 6e8b619b769b..aee58b3892f2 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+@@ -877,7 +877,7 @@ static inline void mlxsw_reg_spaft_pack(char *payload, u8 local_port,
+ 	MLXSW_REG_ZERO(spaft, payload);
+ 	mlxsw_reg_spaft_local_port_set(payload, local_port);
+ 	mlxsw_reg_spaft_allow_untagged_set(payload, allow_untagged);
+-	mlxsw_reg_spaft_allow_prio_tagged_set(payload, true);
++	mlxsw_reg_spaft_allow_prio_tagged_set(payload, allow_untagged);
+ 	mlxsw_reg_spaft_allow_tagged_set(payload, true);
+ }
  
- static inline bool ieee80211_can_run_worker(struct ieee80211_local *local)
- {
-+	/*
-+	 * It's unsafe to try to do any work during reconfigure flow.
-+	 * When the flow ends the work will be requeued.
-+	 */
-+	if (local->in_reconfig)
-+		return false;
-+
- 	/*
- 	 * If quiescing is set, we are racing with __ieee80211_suspend.
- 	 * __ieee80211_suspend flushes the workers after setting quiescing,
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 3deaa01ebee4..f60e033f68c9 100644
---- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -2224,6 +2224,10 @@ int ieee80211_reconfig(struct ieee80211_local *local)
- 		mutex_lock(&local->mtx);
- 		ieee80211_start_next_roc(local);
- 		mutex_unlock(&local->mtx);
-+
-+		/* Requeue all works */
-+		list_for_each_entry(sdata, &local->interfaces, list)
-+			ieee80211_queue_work(&local->hw, &sdata->work);
- 	}
- 
- 	ieee80211_wake_queues_by_reason(hw, IEEE80211_MAX_QUEUE_MAP,
 -- 
 2.20.1
 
