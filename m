@@ -2,193 +2,160 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501B3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CF4C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA902083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1A62083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x6EPEtNQ"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Z7dFU7HL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfF0Nbh (ORCPT
+        id S1727013AbfF0Nbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:31:37 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40063 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfF0Nbh (ORCPT
+        Thu, 27 Jun 2019 09:31:46 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:49382 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfF0Nbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:31:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so5694347wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 06:31:35 -0700 (PDT)
+        Thu, 27 Jun 2019 09:31:46 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
+   d="scan'208";a="37590056"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jun 2019 06:31:45 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
+ chn-vm-ex01.mchp-main.com (10.10.87.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Jun 2019 06:31:40 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 27 Jun 2019 06:31:40 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Nx/BmB272/6PyF4FOxhkypacNalTBHpVEwt1YIPfykc=;
-        b=x6EPEtNQL5Fyr7ieyN2u6aDL6cmkKfd8jtC+LIg8UHZEwgpB0cD3itFHjIJxKUbnpZ
-         eixhGc917sJpCC9hyflDHMTYy/UeCZlEGCZt/qwWHIVTL1C+x7le4IYLPWj2ctypfJYB
-         Zlr6ZH/hRMNqGLcx1XJhC4uRPQwqP1YKMluu9xOZ9vxiy9qFU2zgBB6iCb7o4Cp55Uc5
-         GPMO2ol/WIKqw9EdJ+hhRUBGFzjO1I6FBRklCy2I8F3PcT2iuqui1la/aXWJwmAuLxdr
-         ptA6UOGpxqpt1qM0Txpd5YHCWBjqPw8Lq+IkwRYAI97R3lXOJjlePjRCavyLCo/6BruO
-         eg4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Nx/BmB272/6PyF4FOxhkypacNalTBHpVEwt1YIPfykc=;
-        b=E33N5Jvlk871TOvhwqGylP/Yza6HgJcbfKFumo95LiqJwBRieMsb+JRG2Tv1aY4U90
-         asRWjOU454jpkxYOwjcukRGqZCetAcQswcQTXxce0a5XKbMnxA8tfS47jairl5uYv2bJ
-         F6PCxxIvqC+2SyleVQM8ZnmgMQ6SLQoC3h5UTINnlXiJEXYKuiKqb8aFEJz7RyGCII5o
-         6oEWLxIdWygN+jVnqTKBV7Uzm3HFUF9pTk0Fkp5LFN2YjaSAbkAWYGA8I/1bj+swGL0O
-         ZFHb14a8ouNDeQbOIyH/r9filuN2SNQyZiAR74BHWxilZyuj5O/AYviyK0u/CRkjFHyc
-         z7Qg==
-X-Gm-Message-State: APjAAAWhrkfF+TxjwNSNAoZ+d7lzcvnXZkcGp01lCCKSbqD15PfUhzbn
-        ITXPoHQZpFsfdSVi8SV97Mzf9A==
-X-Google-Smtp-Source: APXvYqyc/fXKU9GMvtCMKhPqHmVlROZqI7IiTjStg27VNonU/WmWmZuqFiYI9IaXijVX/Gwvwqm7xg==
-X-Received: by 2002:a1c:f102:: with SMTP id p2mr3192205wmh.126.1561642294185;
-        Thu, 27 Jun 2019 06:31:34 -0700 (PDT)
-Received: from [192.168.0.41] (113.102.130.77.rev.sfr.net. [77.130.102.113])
-        by smtp.googlemail.com with ESMTPSA id r6sm2425438wmh.11.2019.06.27.06.31.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 06:31:33 -0700 (PDT)
-Subject: Re: [PATCH 1/2] thermal/drivers/core: Add init section table for
- self-encapsulation
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        amit.kucheria@linaro.org
-References: <20190612201325.1150-1-daniel.lezcano@linaro.org>
- <b6bbd5f4-a86a-d649-e3c0-2156f7975291@linaro.org>
- <1561641692.2096.3.camel@intel.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8be81390-a627-6bc9-1218-4d62f41eaeff@linaro.org>
-Date:   Thu, 27 Jun 2019 15:31:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1561641692.2096.3.camel@intel.com>
-Content-Type: text/plain; charset=utf-8
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MvkkDxd7qua1jKxbqrbV5M/smHOB7b/4ya5cpeUvVJc=;
+ b=Z7dFU7HL32HK4PfMOB21N4rRyPfAAjnP6ulSpv8SVeGJ3AKoghtTjsC89FBfl5WpFSzZa3+tZx4vw6KuMVQZgJG1iEu/wHbfshPn5+/amF3evEsNrDE2nZhEF4CCYaD7T8DoVururtixArya2FqS1R1o/H/X9vnMVlTwW4ik594=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1291.namprd11.prod.outlook.com (10.168.108.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 13:31:39 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::6476:ace0:bf3a:322]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::6476:ace0:bf3a:322%9]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
+ 13:31:39 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>
+CC:     <peda@axentia.se>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <Nicolas.Ferre@microchip.com>, <Ludovic.Desroches@microchip.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <pierre-yves.mordret@st.com>
+Subject: Re: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91: add
+ binding for enable-ana-filt)
+Thread-Topic: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91:
+ add binding for enable-ana-filt)
+Thread-Index: AQHVKzw4jzAkF3hUn0CaRzOhl90Jh6avgCEAgAABogA=
+Date:   Thu, 27 Jun 2019 13:31:39 +0000
+Message-ID: <eb2d87b7-437c-53ee-a1ca-37c4d3fadea6@microchip.com>
+References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
+ <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
+ <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
+ <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
+ <20190625093156.GF5690@piout.net> <20190625095533.GC1688@kunai>
+ <20190627132200.GK3692@piout.net>
+In-Reply-To: <20190627132200.GK3692@piout.net>
+Accept-Language: ro-RO, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR09CA0102.eurprd09.prod.outlook.com
+ (2603:10a6:803:78::25) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20190627162750239
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e86efaf9-7aeb-4ede-285f-08d6fb03c8bc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR11MB1291;
+x-ms-traffictypediagnostic: DM5PR11MB1291:
+x-microsoft-antispam-prvs: <DM5PR11MB12912B60821954FD8EABBAD5E8FD0@DM5PR11MB1291.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(39860400002)(396003)(199004)(189003)(53936002)(66446008)(66946007)(73956011)(2906002)(14444005)(256004)(305945005)(81166006)(478600001)(66476007)(64756008)(66556008)(6512007)(66066001)(476003)(486006)(186003)(36756003)(81156014)(14454004)(2616005)(229853002)(8676002)(11346002)(446003)(3846002)(72206003)(6116002)(7736002)(31696002)(102836004)(26005)(8936002)(6486002)(54906003)(110136005)(6506007)(53546011)(386003)(7416002)(6246003)(5660300002)(76176011)(99286004)(68736007)(86362001)(52116002)(31686004)(6436002)(25786009)(71200400001)(71190400001)(316002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1291;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2LE75PUXJdyykuNYTbjJAMwX6uENZmVBD7cTEJSO8x1eWvYGYc3lHXm03jaaskM/6AuIxgdSk6p3NSRkvWrED/r5WKKlz0mlppWX1dBe/izfrp3JBZNeIEgkHAJiw6sjdLgIpJ+X8B4ew0LJJ9jBU3b9KvK2DfRduPOj0kKdGwppWmi2gjtZ9EnBhe4QWVuScTGDHIczLonmb4XhUEjH9cveUBDxcL7F+KXaERqnePEW+BxZTRAfObUsA+WTwlGoVh0dvm6gf2qW2oJTIhnGqo8eoJkjG81kxvvvJUZXGw+rHug1YifmraroK6TeiXfmuDXGr4Ncw06UCauEyPXQQWEQ/nC4+qAFYoHzJc24R0KnTp27En65nkf8EjpX6QSKgRxYxnhQPjaW6MyiFkmcojRHLAsIM46x0Kb6nW7BR+M=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <20927CEDF033F540A4940D155C88D127@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: e86efaf9-7aeb-4ede-285f-08d6fb03c8bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 13:31:39.3694
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eugen.hristev@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1291
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/06/2019 15:21, Zhang Rui wrote:
-> On 一, 2019-06-24 at 09:32 +0200, Daniel Lezcano wrote:
->> Any chance this patch gets merged for v5.4?
->>
->> Thanks
->>   -- Daniel
->>
-> 
-> have you run compile test for the patch?
-> I got the following errors when compiling.
-
-Yes I did and also booted, changed the governor at runtime, etc ... I
-already got this error and fixed it. I probably forgot to fold or commit
-the fix ... :/
-
-
-> In file included from drivers/thermal/fair_share.c:16:0:
-> drivers/thermal/thermal_core.h:23:3: error: expected identifier or ‘(’
-> before ‘static’
->   (static typeof(name) *__thermal_table_entry_##name \
->    ^
-> drivers/thermal/thermal_core.h:26:40: note: in expansion of macro
-> ‘THERMAL_TABLE_ENTRY’
->  #define THERMAL_GOVERNOR_DECLARE(name) THERMAL_TABLE_ENTRY(governor,
-> name)
->                                         ^
-
-[ ... ]
-
->                                 ^
-> make[2]: *** [drivers/thermal/gov_bang_bang.o] Error 1
-> make[1]: *** [drivers/thermal] Error 2
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [drivers] Error 2
-> 
-> Fix the problem by removing the round brackets
-> of THERMAL_TABLE_ENTRY(), and applied.
-
-Ok, thanks for fixing it!
-
-  -- Daniel
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+DQoNCk9uIDI3LjA2LjIwMTkgMTY6MjIsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFeHRl
+cm5hbCBFLU1haWwNCj4gDQo+IA0KPiBPbiAyNS8wNi8yMDE5IDExOjU1OjMzKzAyMDAsIFdvbGZy
+YW0gU2FuZyB3cm90ZToNCj4+IE9uIFR1ZSwgSnVuIDI1LCAyMDE5IGF0IDExOjMxOjU2QU0gKzAy
+MDAsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPj4+IE9uIDI1LzA2LzIwMTkgMDk6MTQ6MTMr
+MDAwMCwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0KPj4+Pj4gUGVyaGFwcw0K
+Pj4+Pj4NCj4+Pj4+IAltaWNyb2NoaXAsZGlnaXRhbC1maWx0ZXI7DQo+Pj4+PiAJbWljcm9jaGlw
+LGFuYWxvZy1maWx0ZXI7DQo+Pj4+Pg0KPj4+Pj4gPw0KPj4+Pg0KPj4+PiBIaSBQZXRlciwNCj4+
+Pj4NCj4+Pj4gVGhhbmtzIGZvciByZXZpZXdpbmcuIFRoZSBuYW1lIG9mIHRoZSBwcm9wZXJ0eSBk
+b2VzIG5vdCBtYXR0ZXIgbXVjaCB0bw0KPj4+PiBtZSwgYW5kIHdlIGhhdmUgcHJvcGVydGllcyBw
+cmVmaXhlZCB3aXRoIHZlbmRvciwgYW5kIHNvbWUgYXJlIG5vdC4NCj4+Pj4NCj4+Pj4gQEFsZXhh
+bmRyZSBCZWxsb25pOiB3aGljaCBuYW1lIHlvdSB0aGluayBpdCdzIGJlc3QgPw0KPj4+Pg0KPj4+
+DQo+Pj4gSSdtIG5vdCBzdXJlLCBpdCBkZXBlbmRzIG9uIHdoZXRoZXIgV29sZnJhbSB0aGlua3Mg
+aXQgaXMgZ2VuZXJpYyBlbm91Z2gNCj4+PiB0byBiZSB1c2VkIHdpdGhvdXQgYSB2ZW5kb3IgcHJl
+Zml4Lg0KPj4NCj4+IEkgY291bGQgaW1hZ2luZSB0aGF0IHdlIGRlc2lnbiBhIGdlbmVyaWMgcHJv
+cGVydHkgZm9yIGZpbHRlcnMuIFRoZSBvbmVzDQo+PiBhYm92ZSBtYWtlIG1lIHdvbmRlciwgdGhv
+dWdoLCBiZWNhdXNlIHRoZXkgYXJlIGJvb2wuIEknZCB0aGluayB5b3UgY2FuDQo+PiBjb25maWd1
+cmUgdGhlIGZpbHRlcnMgaW4gc29tZSB3YXksIHRvbz8NCj4+DQo+IA0KPiBBcGFydCBmcm9tIGVu
+YWJsaW5nIHRoZSBmaWx0ZXIgdGhlcmUgaXMgaW5kZWVkIG9uZSBjb25maWd1cmF0aW9uDQo+IHNl
+dHRpbmcsIHRoZSBtYXhpbXVtIHB1bHNlIHdpZHRoIG9mIHNwaWtlcyB0byBiZSBzdXBwcmVzc2Vk
+IGJ5IHRoZSBpbnB1dA0KPiBmaWx0ZXIuDQoNCkhlbGxvLA0KDQpUaGlzIGlzIGEgbnVtYmVyIDAg
+dG8gNyAoMyBiaXRzKSB0aGF0IHJlcHJlc2VudHMgdGhlIHdpZHRoIG9mIHRoZSBzcGlrZSANCmlu
+IHBlcmlwaCBjbG9jayBjeWNsZXMuDQpJIGFtIGxvb2tpbmcgdG8gc2VlIHdoYXQgaXMgUEFERkNG
+RyAsIGFzIGl0J3MgcmVsYXRlZCB0byB0aGUgUEFEIGFuYWxvZyANCmZpbHRlciBjb25maWd1cmF0
+aW9uLiBJdCBtYXkgYmUgdW51c2VkIGJ5IHRoZSBmaWx0ZXIuDQoNCkV1Z2VuDQoNCj4gDQo+PiBJ
+IG5ldmVyIHVzZWQgc3VjaCBmaWx0ZXJpbmcsIHNvIEkgYW0gdW5hd2FyZSBvZiB0aGUgcGFyYW1l
+dGVycyBuZWVkZWQgLw0KPj4gc3VpdGFibGUuIFF1aWNrIGdyZXBwaW5nIHRocm91Z2ggSTJDIG1h
+c3RlciBkcml2ZXJzIHJldmVhbHMgdGhhdA0KPj4gaTJjLXN0bTMyZjcuYyBhbHNvIGhhbmRsZXMg
+ZmlsdGVycywgYnV0IG9ubHkgd2l0aCBkZWZhdWx0IHZhbHVlcy4gTWF5YmUNCj4+IERUIGNvbmZp
+Z3VyYXRpb24gd291bGQgYmUgYmVuZWZpdGlhbCB0byB0aGF0IGRyaXZlciwgdG9vPw0KPj4NCj4+
+IEFkZGluZyBzb21lIHBlb3BsZSB0byBDQy4NCj4+DQo+IA0KPiANCj4gDQo=
