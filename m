@@ -2,212 +2,428 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED386C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E632C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BACD32133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:52:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iYpJIifk"
+	by mail.kernel.org (Postfix) with ESMTP id 40B7A20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561654419;
+	bh=JwpZKNWregQZMeBHPkYLd36fPC6RjjJw/+IcbwZUx+E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0ha7MFs7oPmBS9EWws/9AkkxE/TK2svlCgud0gJ7k+PxQugtjAcMvk3ntREE/A5wQ
+	 Jm839ijxcSmHrS6DK7P9HveBksCkCWWE1CGoVki4KMCOaCR1xqmTndm52JYt3j2DXm
+	 x8cDajQF8LTXHNi0r2cjyadHCiXsjD9SZtUdmE1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfF0QwQ (ORCPT
+        id S1726520AbfF0Qxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:52:16 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14316 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbfF0QwN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:52:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d14f43a0000>; Thu, 27 Jun 2019 09:52:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 27 Jun 2019 09:52:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 27 Jun 2019 09:52:12 -0700
-Received: from [10.25.73.176] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Jun
- 2019 16:52:06 +0000
-Subject: Re: [PATCH V11 03/12] PCI: dwc: Perform dbi regs write lock towards
- the end
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190624091505.1711-1-vidyas@nvidia.com>
- <20190624091505.1711-4-vidyas@nvidia.com>
- <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
- <ecae46b4-54cc-7f4d-5a86-908431fd472a@nvidia.com>
- <20190627155047.GF3782@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <fbef2fee-1ca9-b894-6d1a-f2a9449968a5@nvidia.com>
-Date:   Thu, 27 Jun 2019 22:22:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 27 Jun 2019 12:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbfF0Qxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:53:37 -0400
+Received: from localhost (unknown [89.205.136.226])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D23B420659;
+        Thu, 27 Jun 2019 16:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561654416;
+        bh=JwpZKNWregQZMeBHPkYLd36fPC6RjjJw/+IcbwZUx+E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aZ9ylPiRefjXq3fppyo4skAgXAW/Icr+idnmjJt1dazQndlq8uDPV0w1ittcogANv
+         YYGtSFIIZsrqwCcKxDctYO1P/Q2tcG2fYoS+VK6FAFD6I45iiXWo0QgbsGnX43urjt
+         IALPyHhbcDjbEbTbQEo6fdNkpAJJJvz7QlQG1N10=
+Date:   Fri, 28 Jun 2019 00:53:29 +0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        atull@kernel.org, Luwei Kang <luwei.kang@intel.com>,
+        Xu Yilun <yilun.xu@intel.com>
+Subject: Re: [PATCH v4 2/2] fpga: dfl: fme: add performance reporting support
+Message-ID: <20190627165329.GB9855@kroah.com>
+References: <1561612195-6081-1-git-send-email-hao.wu@intel.com>
+ <1561612195-6081-3-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190627155047.GF3782@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561654330; bh=yvZTQ4IOvwV6hxGeLW9GOQ2PqNDwou5Z7nhqxb2MGzs=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=iYpJIifkIFk1Yn0Eghy9VIv8CWqVmaUl2NjkJCcCnw4fa44o14waMoJZ5wiY2vv4i
-         AonS5CXCnMzgLrRHT3pgAav4AlJ6wHA79wV19iTR2hU3lKQPkXn5ZeZN30IhnSEuTl
-         7j+nz+zLL7eMFU1AYZsTIvEY7gReETQa/nmiCqdp/KsBYN1ZLNckPodg5tL8PvbqWq
-         qyy9BkbegqMYkCWBvxKzXSi8ha/QC9Q0lbPnkvEN07Bphh/8hxtwnaBr0qB8/Js98s
-         qDXzoUxEMVyK/6y0EGWf0UF0sCYc+P7x/uEBCX5HiehRt9Opb3Ipyiu4L+dzJi0aHz
-         4x3HfLnIFxTEQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561612195-6081-3-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/27/2019 9:20 PM, Lorenzo Pieralisi wrote:
-> On Thu, Jun 27, 2019 at 09:03:08PM +0530, Vidya Sagar wrote:
->> On 6/27/2019 8:28 PM, Lorenzo Pieralisi wrote:
->>> On Mon, Jun 24, 2019 at 02:44:56PM +0530, Vidya Sagar wrote:
->>>> Remove multiple write enable and disable sequences of dbi registers as
->>>> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
->>>> DBI write-lock enable bit thereby not allowing any further writes to BAR-0
->>>> register in config space to take place. Hence enabling write permission at
->>>> the start of function and disabling the same only towards the end.
->>>
->>> I do not understand what this patch does, I would like to rephrase
->>> the commit log in a way that is easier to parse.
->>>
->>> In particular I do not get what you mean in relation to BAR-0, I am
->>> confused, please clarify.
->>>
->>> Lorenzo
->> Well, some of the Synopsys DesignWare core's DBI registers are
->> protected with a lock without which, they are read-only by default.
->> Existing code in dw_pcie_setup_rc() API tries to unlock and lock
->> multiple times whenever it wants to update those write-protected
->> registers. This patch attempts to unlock all such write-protected
->> registers for writing once in the beginning of the function and lock
->> them back towards the end.  As far as BAR-0 register (which is at
->> offset 0x10 in DBI space... nothing but the config space) in Tegra194
->> is concerned, it is one of those registers to which writes are
->> protected. I could have added unlock/lock pair around accessing this
->> register, but that would bloat this API with one more pair of
->> unlock/lock, instead I chose to remove unlock/lock pairs for all
->> protected registers and have unlock in the beginning and lock towards
->> the end.
+On Thu, Jun 27, 2019 at 01:09:55PM +0800, Wu Hao wrote:
+> This patch adds support for performance reporting private feature
+> for FPGA Management Engine (FME). Now it supports several different
+> performance counters, including 'basic', 'cache', 'fabric', 'vtd'
+> and 'vtd_sip'. It allows user to use standard linux tools to access
+> these performance counters.
 > 
-> Ok, so DBI space registers that require write permissions are per-IP.
-> This is clearer so the commit log must be rewritten, it is not clear at
-> all in this respect at least not as-is, if you read it you will
-> notice ;-)
-Ok. I'll update commit message in next patch series.
+> e.g. List all events by "perf list"
+> 
+>   perf list | grep fme
+> 
+>   fme0/cache_read_hit/                         [Kernel PMU event]
+>   fme0/cache_read_miss/                        [Kernel PMU event]
+>   ...
+> 
+>   fme0/fab_mmio_read/                          [Kernel PMU event]
+>   fme0/fab_mmio_write/                         [Kernel PMU event]
+>   ...
+> 
+>   fme0/fab_port_mmio_read,portid=?/            [Kernel PMU event]
+>   fme0/fab_port_mmio_write,portid=?/           [Kernel PMU event]
+>   ...
+> 
+>   fme0/vtd_port_devtlb_1g_fill,portid=?/       [Kernel PMU event]
+>   fme0/vtd_port_devtlb_2m_fill,portid=?/       [Kernel PMU event]
+>   ...
+> 
+>   fme0/vtd_sip_iotlb_1g_hit/                   [Kernel PMU event]
+>   fme0/vtd_sip_iotlb_1g_miss/                  [Kernel PMU event]
+>   ...
+> 
+>   fme0/clock                                   [Kernel PMU event]
+>   ...
+> 
+> e.g. check increased counter value after run one application using
+> "perf stat" command.
+> 
+>  perf stat -e fme0/fab_mmio_read/,fme0/fab_mmio_write/, ./test
+> 
+>  Performance counter stats for './test':
+> 
+>                  1      fme0/fab_mmio_read/
+>                  2      fme0/fab_mmio_write/
+> 
+>        1.009496520 seconds time elapsed
+> 
+> Please note that fabric counters support both fab_* and fab_port_*, but
+> actually they are sharing one set of performance counters in hardware.
+> If user wants to monitor overall data events on fab_* then fab_port_*
+> can't be supported at the same time, see example below:
+> 
+> perf stat -e fme0/fab_mmio_read/,fme0/fab_port_mmio_write,portid=0/
+> 
+>  Performance counter stats for 'system wide':
+> 
+>                  0      fme0/fab_mmio_read/
+>    <not supported>      fme0/fab_port_mmio_write,portid=0/
+> 
+>        2.141064085 seconds time elapsed
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> ---
+> v3: replace scnprintf with sprintf in sysfs interfaces.
+>     update sysfs doc kernel version and date.
+>     fix sysfs doc issue for fabric counter.
+>     refine PERF_OBJ_ATTR_* macro, doesn't count on __ATTR anymore.
+>     introduce PERF_OBJ_ATTR_F_* macro, as it needs to use different
+>     filenames for some of the sysfs attributes.
+>     remove kobject_del when destroy kobject, kobject_put is enough.
+>     do sysfs_remove_groups first when destroying perf_obj.
+>     WARN_ON_ONCE in case internal parms are wrong in read_*_count().
+> v4: rework this patch to use standard perf API as user interfaces.
+> ---
+>  drivers/fpga/Makefile       |   1 +
+>  drivers/fpga/dfl-fme-main.c |   4 +
+>  drivers/fpga/dfl-fme-perf.c | 871 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/fpga/dfl-fme.h      |   2 +
+>  4 files changed, 878 insertions(+)
+>  create mode 100644 drivers/fpga/dfl-fme-perf.c
+> 
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index 4865b74..d8e21df 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -40,6 +40,7 @@ obj-$(CONFIG_FPGA_DFL_FME_REGION)	+= dfl-fme-region.o
+>  obj-$(CONFIG_FPGA_DFL_AFU)		+= dfl-afu.o
+>  
+>  dfl-fme-objs := dfl-fme-main.o dfl-fme-pr.o dfl-fme-error.o
+> +dfl-fme-objs += dfl-fme-perf.o
+>  dfl-afu-objs := dfl-afu-main.o dfl-afu-region.o dfl-afu-dma-region.o
+>  dfl-afu-objs += dfl-afu-error.o
+>  
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index 9225b68..a11c112 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -639,6 +639,10 @@ static void fme_power_mgmt_uinit(struct platform_device *pdev,
+>  		.ops = &fme_power_mgmt_ops,
+>  	},
+>  	{
+> +		.id_table = fme_perf_id_table,
+> +		.ops = &fme_perf_ops,
+> +	},
+> +	{
+>  		.ops = NULL,
+>  	},
+>  };
+> diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
+> new file mode 100644
+> index 0000000..0d7768a
+> --- /dev/null
+> +++ b/drivers/fpga/dfl-fme-perf.c
+> @@ -0,0 +1,871 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for FPGA Management Engine (FME) Global Performance Reporting
+> + *
+> + * Copyright 2019 Intel Corporation, Inc.
+> + *
+> + * Authors:
+> + *   Kang Luwei <luwei.kang@intel.com>
+> + *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
+> + *   Wu Hao <hao.wu@intel.com>
+> + *   Xu Yilun <yilun.xu@intel.com>
+> + *   Joseph Grecco <joe.grecco@intel.com>
+> + *   Enno Luebbers <enno.luebbers@intel.com>
+> + *   Tim Whisonant <tim.whisonant@intel.com>
+> + *   Ananda Ravuri <ananda.ravuri@intel.com>
+> + *   Mitchel, Henry <henry.mitchel@intel.com>
+> + */
+> +
+> +#include <linux/perf_event.h>
+> +#include "dfl.h"
+> +#include "dfl-fme.h"
+> +
+> +/*
+> + * Performance Counter Registers for Cache.
+> + *
+> + * Cache Events are listed below as CACHE_EVNT_*.
+> + */
+> +#define CACHE_CTRL			0x8
+> +#define CACHE_RESET_CNTR		BIT_ULL(0)
+> +#define CACHE_FREEZE_CNTR		BIT_ULL(8)
+> +#define CACHE_CTRL_EVNT			GENMASK_ULL(19, 16)
+> +#define CACHE_EVNT_RD_HIT		0x0
+> +#define CACHE_EVNT_WR_HIT		0x1
+> +#define CACHE_EVNT_RD_MISS		0x2
+> +#define CACHE_EVNT_WR_MISS		0x3
+> +#define CACHE_EVNT_RSVD			0x4
+> +#define CACHE_EVNT_HOLD_REQ		0x5
+> +#define CACHE_EVNT_DATA_WR_PORT_CONTEN	0x6
+> +#define CACHE_EVNT_TAG_WR_PORT_CONTEN	0x7
+> +#define CACHE_EVNT_TX_REQ_STALL		0x8
+> +#define CACHE_EVNT_RX_REQ_STALL		0x9
+> +#define CACHE_EVNT_EVICTIONS		0xa
+> +#define CACHE_CHANNEL_SEL		BIT_ULL(20)
+> +#define CACHE_CHANNEL_RD		0
+> +#define CACHE_CHANNEL_WR		1
+> +#define CACHE_CNTR0			0x10
+> +#define CACHE_CNTR1			0x18
+> +#define CACHE_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
+> +#define CACHE_CNTR_EVNT			GENMASK_ULL(63, 60)
+> +
+> +/*
+> + * Performance Counter Registers for Fabric.
+> + *
+> + * Fabric Events are listed below as FAB_EVNT_*
+> + */
+> +#define FAB_CTRL			0x20
+> +#define FAB_RESET_CNTR			BIT_ULL(0)
+> +#define FAB_FREEZE_CNTR			BIT_ULL(8)
+> +#define FAB_CTRL_EVNT			GENMASK_ULL(19, 16)
+> +#define FAB_EVNT_PCIE0_RD		0x0
+> +#define FAB_EVNT_PCIE0_WR		0x1
+> +#define FAB_EVNT_PCIE1_RD		0x2
+> +#define FAB_EVNT_PCIE1_WR		0x3
+> +#define FAB_EVNT_UPI_RD			0x4
+> +#define FAB_EVNT_UPI_WR			0x5
+> +#define FAB_EVNT_MMIO_RD		0x6
+> +#define FAB_EVNT_MMIO_WR		0x7
+> +#define FAB_PORT_ID			GENMASK_ULL(21, 20)
+> +#define FAB_PORT_FILTER			BIT_ULL(23)
+> +#define FAB_PORT_FILTER_DISABLE		0
+> +#define FAB_PORT_FILTER_ENABLE		1
+> +#define FAB_CNTR			0x28
+> +#define FAB_CNTR_EVNT_CNTR		GENMASK_ULL(59, 0)
+> +#define FAB_CNTR_EVNT			GENMASK_ULL(63, 60)
+> +
+> +/*
+> + * Performance Counter Registers for Clock.
+> + *
+> + * Clock Counter can't be reset or frozen by SW.
+> + */
+> +#define CLK_CNTR			0x30
+> +#define BASIC_EVNT_CLK			0x0
+> +
+> +/*
+> + * Performance Counter Registers for IOMMU / VT-D.
+> + *
+> + * VT-D Events are listed below as VTD_EVNT_* and VTD_SIP_EVNT_*
+> + */
+> +#define VTD_CTRL			0x38
+> +#define VTD_RESET_CNTR			BIT_ULL(0)
+> +#define VTD_FREEZE_CNTR			BIT_ULL(8)
+> +#define VTD_CTRL_EVNT			GENMASK_ULL(19, 16)
+> +#define VTD_EVNT_AFU_MEM_RD_TRANS	0x0
+> +#define VTD_EVNT_AFU_MEM_WR_TRANS	0x1
+> +#define VTD_EVNT_AFU_DEVTLB_RD_HIT	0x2
+> +#define VTD_EVNT_AFU_DEVTLB_WR_HIT	0x3
+> +#define VTD_EVNT_DEVTLB_4K_FILL		0x4
+> +#define VTD_EVNT_DEVTLB_2M_FILL		0x5
+> +#define VTD_EVNT_DEVTLB_1G_FILL		0x6
+> +#define VTD_CNTR			0x40
+> +#define VTD_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
+> +#define VTD_CNTR_EVNT			GENMASK_ULL(63, 60)
+> +
+> +#define VTD_SIP_CTRL			0x48
+> +#define VTD_SIP_RESET_CNTR		BIT_ULL(0)
+> +#define VTD_SIP_FREEZE_CNTR		BIT_ULL(8)
+> +#define VTD_SIP_CTRL_EVNT		GENMASK_ULL(19, 16)
+> +#define VTD_SIP_EVNT_IOTLB_4K_HIT	0x0
+> +#define VTD_SIP_EVNT_IOTLB_2M_HIT	0x1
+> +#define VTD_SIP_EVNT_IOTLB_1G_HIT	0x2
+> +#define VTD_SIP_EVNT_SLPWC_L3_HIT	0x3
+> +#define VTD_SIP_EVNT_SLPWC_L4_HIT	0x4
+> +#define VTD_SIP_EVNT_RCC_HIT		0x5
+> +#define VTD_SIP_EVNT_IOTLB_4K_MISS	0x6
+> +#define VTD_SIP_EVNT_IOTLB_2M_MISS	0x7
+> +#define VTD_SIP_EVNT_IOTLB_1G_MISS	0x8
+> +#define VTD_SIP_EVNT_SLPWC_L3_MISS	0x9
+> +#define VTD_SIP_EVNT_SLPWC_L4_MISS	0xa
+> +#define VTD_SIP_EVNT_RCC_MISS		0xb
+> +#define VTD_SIP_CNTR			0X50
+> +#define VTD_SIP_CNTR_EVNT_CNTR		GENMASK_ULL(47, 0)
+> +#define VTD_SIP_CNTR_EVNT		GENMASK_ULL(63, 60)
+> +
+> +#define PERF_TIMEOUT			30
+> +
+> +#define PERF_MAX_PORT_NUM		1
+> +
+> +/**
+> + * struct fme_perf_priv - priv data structure for fme perf driver
+> + *
+> + * @dev: parent device.
+> + * @ioaddr: mapped base address of mmio region.
+> + * @pmu: pmu data structure for fme perf counters.
+> + * @id: id of this fme performance report private feature.
+> + * @fab_users: current user number on fabric counters.
+> + * @fab_port_id: used to indicate current working mode of fabric counters.
+> + * @fab_lock: lock to protect fabric counters working mode.
+> + * @events_group: events attribute group for fme perf pmu.
+> + * @attr_groups: attribute groups for fme perf pmu.
+> + */
+> +struct fme_perf_priv {
+> +	struct device *dev;
+> +	void __iomem *ioaddr;
+> +	struct pmu pmu;
+> +	u64 id;
+> +
+> +	u32 fab_users;
+> +	u32 fab_port_id;
+> +	spinlock_t fab_lock;
+> +
+> +	struct attribute_group events_group;
+> +	const struct attribute_group *attr_groups[4];
+> +};
+> +
+> +/**
+> + * struct fme_perf_event_attr - fme perf event attribute
+> + *
+> + * @attr: device attribute of fme perf event.
+> + * @event_id: id of fme perf event.
+> + * @event_type: type of fme perf event.
+> + * @is_port_event: indicate if this is a port based event.
+> + * @data: private data for fme perf event.
+> + */
+> +struct fme_perf_event_attr {
+> +	struct device_attribute attr;
+> +	u32 event_id;
+> +	u32 event_type;
+> +	bool is_port_event;
+> +	u64 data;
+> +};
+> +
+> +/**
+> + * struct fme_perf_event_ops - callbacks for fme perf events
+> + *
+> + * @event_init: callback invoked during event init.
+> + * @event_destroy: callback invoked during event destroy.
+> + * @read_counter: callback to read hardware counters.
+> + */
+> +struct fme_perf_event_ops {
+> +	int (*event_init)(struct fme_perf_priv *priv, u32 event,
+> +			  u32 port_id, u64 data);
+> +	void (*event_destroy)(struct fme_perf_priv *priv, u32 event,
+> +			      u32 port_id, u64 data);
+> +	u64 (*read_counter)(struct fme_perf_priv *priv, u32 event,
+> +			    u32 port_id, u64 data);
+> +};
+> +
+> +/**
+> + * struct fme_perf_event_group - fme perf groups
+> + *
+> + * @ev_attrs: fme perf event attributes.
+> + * @num: events number in this group.
+> + * @ops: same callbacks shared by all fme perf events in this group.
+> + */
+> +struct fme_perf_event_group {
+> +	struct fme_perf_event_attr *ev_attrs;
+> +	unsigned int num;
+> +	struct fme_perf_event_ops *ops;
+> +};
+> +
+> +#define to_fme_perf_priv(_pmu)	container_of(_pmu, struct fme_perf_priv, pmu)
+> +
+> +static cpumask_t fme_perf_cpumask = CPU_MASK_CPU0;
+> +
+> +static ssize_t cpumask_show(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
+> +{
+> +	return cpumap_print_to_pagebuf(true, buf, &fme_perf_cpumask);
+> +}
+> +static DEVICE_ATTR_RO(cpumask);
+> +
+> +static struct attribute *fme_perf_cpumask_attrs[] = {
+> +	&dev_attr_cpumask.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group fme_perf_cpumask_group = {
+> +	.attrs = fme_perf_cpumask_attrs,
+> +};
+> +
+> +#define FME_EVENT_MASK		GENMASK_ULL(11, 0)
+> +#define FME_EVTYPE_MASK		GENMASK_ULL(15, 12)
+> +#define FME_EVTYPE_BASIC	0
+> +#define FME_EVTYPE_CACHE	1
+> +#define FME_EVTYPE_FABRIC	2
+> +#define FME_EVTYPE_VTD		3
+> +#define FME_EVTYPE_VTD_SIP	4
+> +#define FME_EVTYPE_MAX		FME_EVTYPE_VTD_SIP
+> +#define FME_PORTID_MASK		GENMASK_ULL(23, 16)
+> +#define FME_PORTID_ROOT		(0xffU)
+> +
+> +PMU_FORMAT_ATTR(event,		"config:0-11");
+> +PMU_FORMAT_ATTR(evtype,		"config:12-15");
+> +PMU_FORMAT_ATTR(portid,		"config:16-23");
+> +
+> +static struct attribute *fme_perf_format_attrs[] = {
+> +	&format_attr_event.attr,
+> +	&format_attr_evtype.attr,
+> +	&format_attr_portid.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group fme_perf_format_group = {
+> +	.name = "format",
+> +	.attrs = fme_perf_format_attrs,
+> +};
 
--Vidya Sagar
-> 
-> Lorenzo
-> 
->>
->> -Vidya Sagar
->>
->>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> Reviewed-by: Thierry Reding <treding@nvidia.com>
->>>> Acked-by: Jingoo Han <jingoohan1@gmail.com>
->>>> ---
->>>> Changes since [v10]:
->>>> * None
->>>>
->>>> Changes since [v9]:
->>>> * None
->>>>
->>>> Changes since [v8]:
->>>> * None
->>>>
->>>> Changes since [v7]:
->>>> * None
->>>>
->>>> Changes since [v6]:
->>>> * None
->>>>
->>>> Changes since [v5]:
->>>> * Moved write enable to the beginning of the API and write disable to the end
->>>>
->>>> Changes since [v4]:
->>>> * None
->>>>
->>>> Changes since [v3]:
->>>> * None
->>>>
->>>> Changes since [v2]:
->>>> * None
->>>>
->>>> Changes since [v1]:
->>>> * None
->>>>
->>>>    drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
->>>>    1 file changed, 8 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> index f93252d0da5b..d3156446ff27 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>> @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>>>    	u32 val, ctrl, num_ctrls;
->>>>    	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>> +	/*
->>>> +	 * Enable DBI read-only registers for writing/updating configuration.
->>>> +	 * Write permission gets disabled towards the end of this function.
->>>> +	 */
->>>> +	dw_pcie_dbi_ro_wr_en(pci);
->>>> +
->>>>    	dw_pcie_setup(pci);
->>>>    	if (!pp->ops->msi_host_init) {
->>>> @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>>>    	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
->>>>    	/* Setup interrupt pins */
->>>> -	dw_pcie_dbi_ro_wr_en(pci);
->>>>    	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
->>>>    	val &= 0xffff00ff;
->>>>    	val |= 0x00000100;
->>>>    	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
->>>> -	dw_pcie_dbi_ro_wr_dis(pci);
->>>>    	/* Setup bus numbers */
->>>>    	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
->>>> @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
->>>>    	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
->>>> -	/* Enable write permission for the DBI read-only register */
->>>> -	dw_pcie_dbi_ro_wr_en(pci);
->>>>    	/* Program correct class for RC */
->>>>    	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
->>>> -	/* Better disable write permission right after the update */
->>>> -	dw_pcie_dbi_ro_wr_dis(pci);
->>>>    	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
->>>>    	val |= PORT_LOGIC_SPEED_CHANGE;
->>>>    	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
->>>> +
->>>> +	dw_pcie_dbi_ro_wr_dis(pci);
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
->>>> -- 
->>>> 2.17.1
->>>>
->>
+No Documentation/ABI/ entries for these sysfs files?
 
+thanks,
+
+greg k-h
