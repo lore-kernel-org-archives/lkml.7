@@ -8,66 +8,61 @@ X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EC3C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ECAC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A4E205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100BE2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBPEu6SK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkctCI91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfF0RlT (ORCPT
+        id S1727031AbfF0Rl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:41:19 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43501 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0RlT (ORCPT
+        Thu, 27 Jun 2019 13:41:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45999 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfF0Rl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:41:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cl9so1664309plb.10;
-        Thu, 27 Jun 2019 10:41:18 -0700 (PDT)
+        Thu, 27 Jun 2019 13:41:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z19so1330117pgl.12;
+        Thu, 27 Jun 2019 10:41:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=2vqCu+MS+Img9r2z6/QFX/3aEGn5jsBEl1RMM1fPhso=;
-        b=sBPEu6SKdGSe3KC2j9VKeyQAWYZFWhUaBNyBzY50g1OX35jQJxTbR1eIVKhJ3wYYlg
-         8TZ3auYUbbo76pqTOESCWFq4s+l7qWu54nsy1UmsNN0MQrwPy2bEcKXplRK1ALMgDBdn
-         Lo0Sv7JieRzOtAKtg0uvcuOIVVf/m+L9hlgzna2q40pDU536YVS70rhWUpXg59jINrii
-         aIR69ZEUmRWqLKpZODOA93V2ehqAwgJt6+YCzA9K9645HfSUXdfjmeus6hJEQb3DEXAR
-         VRKEMUKYya9WK+kUgqpf6Ill88GLTde84hbbCZgsi+0ADWTGa+AgvSD6yhK2AY70va4u
-         GERA==
+        bh=bbsWcZhbi7tBjumCYh7c25rbCEMw05IRcZEp5w+Bqv8=;
+        b=nkctCI919D3H2HAHj7Li5sMf4QI2MjWWSCS+6KMuqdSXKpN8gwJhb3MmBGllFO1ceN
+         Bgw/6wPjGv2dHNBC9Hzh1RkALT70lFkQ94x5LtmDlIUwq6gqXBN91TjeX6jsng8/DbKt
+         PAS7VMKBXomBA4aqMbdWMRguwCGlHE30zMXSP9xC1trQ0J8llH57/F196n/ZqfXLNYZF
+         NVb9pB9SupqBNIbXXB7nKOgnJfMt/4mfcRDeXx2FdK5/G1B53IlmpoiZ48vqh6/N76yF
+         ywjuJGK+WFtguWaiME4Ae24MYIQFzWKAI22S8sRUWgQ2I/UKnghH7ocQVng2YueT1+25
+         oxkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2vqCu+MS+Img9r2z6/QFX/3aEGn5jsBEl1RMM1fPhso=;
-        b=SpkQ3UH4BU9uAQTfg9OdrBimvhj1k9cR0pjmVW7B5XKSMS99V7vIPMqmtbgCq6owWF
-         PoU511phm2QjVUloLinF7bJEIs3Z6qlNlU8KSkxhB2wpnpqPfPBzMIamtYmSLeUC1CWw
-         gQWq8l1hmS7kP26DsCK7o5ZQYEbRX5wzDIL/kFy+vYFBKvAaRHaRn9Gy9pLVb6Y90RvT
-         2eIMmt5H4LzAgb1N1PRH4z6NrXgy/8/sUHpdxxuwQyUUZPXeaIklFyEaxJPusZV4spmZ
-         oA7FwoAw2KYWQoVdUDOPSDzgWB4Mdp4pN9D199LYJeppNrVbXgTFH9rbzLQ9opaSbAB9
-         ME/w==
-X-Gm-Message-State: APjAAAUdYcrOZrgKc4+SrPQ0AiMNltj4cnEwD2zoeSpBkwgOqerDqIKj
-        /+A37NLMQ92HHh/tcRfYSWM=
-X-Google-Smtp-Source: APXvYqzgLCO90CGyAwGqPwTMFiEbXZce1PzG6M5RXLVuf6Fyllzefu3WCmJL+Xt1cxzzZq5XfM4oYQ==
-X-Received: by 2002:a17:902:2862:: with SMTP id e89mr6076022plb.258.1561657278472;
-        Thu, 27 Jun 2019 10:41:18 -0700 (PDT)
+        bh=bbsWcZhbi7tBjumCYh7c25rbCEMw05IRcZEp5w+Bqv8=;
+        b=BQMoB0syiTio/j7s5dB+4YaFTVkhm3QcTADjvXeTnmrCyfD+OVC4ganvq4oMt9bthB
+         dCSWYlhGhXyCs14bRq+4zAKpXPOzq48KxbT1of3eSojIprNqLUWgZ5eh+1NaBzFYfD05
+         Vnije/HOiaxXDIgnkTyC3Vfz+2/SAsAqEzyisSbY1uILvuNb7hMZIkqbQBbG5sIaZApC
+         F/+Z+pAdH/Uinc3kiF0ryNChX8gxbjnZBIjRnDaQocuqPP4JkPS9SxODssWhAs18XOcN
+         44a/eHr1oTDlbsY5K4460kQXWi6CvLo5/wb4vqlnZgkU2f2BK+lp7XpRA338r20WxlF3
+         BDNA==
+X-Gm-Message-State: APjAAAUiYrLoHIX3JRZFnm89xuFKprrwWcyMNy4S5YfXZ70Xw+qs9dr9
+        fUbozWw7mFNf4wSMXAZVhnU=
+X-Google-Smtp-Source: APXvYqw4aAJHoEfPjueXB2Onvl7IQhmEAtujSfPEQs4jH3va43Islqk084XE58m7Ascoj5sz1OhX6Q==
+X-Received: by 2002:a63:c60b:: with SMTP id w11mr4735667pgg.356.1561657287612;
+        Thu, 27 Jun 2019 10:41:27 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id y17sm3052099pfe.148.2019.06.27.10.41.15
+        by smtp.googlemail.com with ESMTPSA id s7sm5350176pjn.28.2019.06.27.10.41.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:41:18 -0700 (PDT)
+        Thu, 27 Jun 2019 10:41:27 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 45/87] fbdev: mmp: remove memset after dma_alloc_coherent in mmpfb.c
-Date:   Fri, 28 Jun 2019 01:41:09 +0800
-Message-Id: <20190627174110.4345-1-huangfq.daxian@gmail.com>
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 46/87] usb: host: remove memset after dma_alloc_coherent in xhci
+Date:   Fri, 28 Jun 2019 01:41:20 +0800
+Message-Id: <20190627174121.4399-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,21 +77,34 @@ So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/video/fbdev/mmp/fb/mmpfb.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/usb/host/xhci-dbgcap.c | 1 -
+ drivers/usb/host/xhci-mem.c    | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/mmp/fb/mmpfb.c b/drivers/video/fbdev/mmp/fb/mmpfb.c
-index e5b56f2199df..47bc7c59bbd8 100644
---- a/drivers/video/fbdev/mmp/fb/mmpfb.c
-+++ b/drivers/video/fbdev/mmp/fb/mmpfb.c
-@@ -612,7 +612,6 @@ static int mmpfb_probe(struct platform_device *pdev)
- 		ret = -ENOMEM;
- 		goto failed_destroy_mutex;
- 	}
--	memset(fbi->fb_start, 0, fbi->fb_size);
- 	dev_info(fbi->dev, "fb %dk allocated\n", fbi->fb_size/1024);
+diff --git a/drivers/usb/host/xhci-dbgcap.c b/drivers/usb/host/xhci-dbgcap.c
+index 52e32644a4b2..93e2cca5262d 100644
+--- a/drivers/usb/host/xhci-dbgcap.c
++++ b/drivers/usb/host/xhci-dbgcap.c
+@@ -22,7 +22,6 @@ dbc_dma_alloc_coherent(struct xhci_hcd *xhci, size_t size,
  
- 	/* fb power on */
+ 	vaddr = dma_alloc_coherent(xhci_to_hcd(xhci)->self.sysdev,
+ 				   size, dma_handle, flags);
+-	memset(vaddr, 0, size);
+ 	return vaddr;
+ }
+ 
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index cf5e17962179..e16eda6e2b8b 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -2399,7 +2399,6 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
+ 			flags);
+ 	if (!xhci->dcbaa)
+ 		goto fail;
+-	memset(xhci->dcbaa, 0, sizeof *(xhci->dcbaa));
+ 	xhci->dcbaa->dma = dma;
+ 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+ 			"// Device context base array address = 0x%llx (DMA), %p (virt)",
 -- 
 2.11.0
 
