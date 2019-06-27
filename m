@@ -2,128 +2,123 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFB2C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45884C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D072064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E0BE2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mxwGBgo6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNSET3Ki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfF0SLi (ORCPT
+        id S1726716AbfF0SLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:11:38 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59958 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfF0SLi (ORCPT
+        Thu, 27 Jun 2019 14:11:44 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:35662 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfF0SLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:11:38 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RI9MIv127411;
-        Thu, 27 Jun 2019 18:09:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=t/rruMnao2wR61MPFoLKt9zfyEZplrn1UsBge3sXHjc=;
- b=mxwGBgo6P/4M62KLP3A86hDTWZOF/CX7Ejy3CZTQKmD3ZyCo2ckpBT7qYCR4SAK7PHaq
- TtDTW6VWyO5sg1ciq25hYpWjWOQkJguDjbFkDiE9OJuJjniigy0p6vgSgcm6+1co8iJ3
- CRxjIi8xmNL/Ekzf98KaYOJLr/QI7o3pw4fJObUYVIBM5pqV2lY2eUX4KdfRpuETcpVo
- VvxoJlKqqWOU+Mg7tjZ4x1e010nheAklNM/3LNwGnzlkuJ7ryGhw0PxupqlcoFVmrgbS
- pDahFNsaHcZW3RzFinHP0R6ihqR+jfb1zdO5IkyCUPOrjSx/1Q1nvLAZi2dFu31GKXXa 3Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2t9c9q1tfd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:09:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RI876F020980;
-        Thu, 27 Jun 2019 18:09:21 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t9acddck4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:09:21 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RI9HMH015017;
-        Thu, 27 Jun 2019 18:09:19 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 11:09:17 -0700
-Subject: Re: LTP hugemmap05 test case failure on arm64 with linux-next
- (next-20190613)
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1560461641.5154.19.camel@lca.pw>
- <20190614102017.GC10659@fuggles.cambridge.arm.com>
- <1560514539.5154.20.camel@lca.pw>
- <054b6532-a867-ec7c-0a72-6a58d4b2723e@arm.com>
- <EC704BC3-62FF-4DCE-8127-40279ED50D65@lca.pw>
- <20190624093507.6m2quduiacuot3ne@willie-the-truck>
- <1561381129.5154.55.camel@lca.pw> <1561411839.5154.60.camel@lca.pw>
- <ed517a19-7804-c679-da94-279565001ca1@oracle.com>
-Message-ID: <15651f16-8d30-412f-8064-41ff03f3f47d@oracle.com>
-Date:   Thu, 27 Jun 2019 11:09:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 27 Jun 2019 14:11:44 -0400
+Received: by mail-pg1-f181.google.com with SMTP id s27so1382595pgl.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:11:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=sLO/22DEBzZ9YzTHvB2P+aBIyX6ZIdYPZ+AVLvQyXi4=;
+        b=HNSET3Kig7XJjnUZ5Ide0hWJLXMNYu4LDZNoOkqz4fD8Nvu7FQ34UkprOrWYo6owJ4
+         vTuGd6jnk5DnxXAzUEAjOZFsaTBpnGtMp0x+6ygF+Rdlgxda05fHM00tsY+nCq4+jtzu
+         9mJChOYEI8b/UWtbKtKCPmmDYhiryvT8QViNBdB0LQePzpf+yTMiDeimcgpszUDWk82A
+         rBq7gNZC8D4FZPeZVAMEiYmSMZH0MummDiSmFg9ThGDsoWt2qNnHjfg5nnIKWlAAINTs
+         o6Od8P+zUREbwBetxIzOtRDLIcudV3caDibd2Ou9lFEAjS6fG7wA2hzsFuLz/JWoEHRJ
+         ASMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=sLO/22DEBzZ9YzTHvB2P+aBIyX6ZIdYPZ+AVLvQyXi4=;
+        b=ApGyKtRZeEGBAIemyJx2leRLdYnX17Xr0paWM7qVgiAf3B+XVt5JivCEEEwwOykiZJ
+         0RXOXEHYNCameFAItsZ+QMIBBgXMHvQCtkYLsYbk4rVB2wuDl4R2FJjCIqAoba8C8Z4u
+         9NueMRalugvsG/CVLHqFnlfK7i28sffsIfTyqv50g6Sm5Yy9fKbSE/X6gPjWbxh9mOcG
+         KI3Tj+7EEq5S4ZAirtxqJZI4fgCUCydzVd6vlIe+kNJtfEFBK+iVwfyVEqCp4TFMCeeT
+         0gk9tmFenQRdfm+D87XBNLM8vhhvxB+NfY/NB97UgLpERbq2A5EbeX4u4y/FXS7E+6aA
+         b1lQ==
+X-Gm-Message-State: APjAAAWwsHlNqIAIK4CwvcZVpjDIav1EEo4EiC9zF4ZppsHAwuNNyNFC
+        pnSje4xzeNWjPP/niOEZbEyP00Z3
+X-Google-Smtp-Source: APXvYqxSatuFQ8yuiFVOeRSZca4Eqd35/lgTnQRyBP+9mFROutEq01OWVr/WY20fT5YHYuHBK60dLg==
+X-Received: by 2002:a17:90a:346c:: with SMTP id o99mr7475164pjb.20.1561659103600;
+        Thu, 27 Jun 2019 11:11:43 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id j5sm3690249pfi.104.2019.06.27.11.11.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 11:11:42 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 23:41:39 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [Patch v3] staging: rtl8723bs: hal: sdio_halinit: Remove set but
+ unused varilable pHalData
+Message-ID: <20190627181139.GA3503@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <ed517a19-7804-c679-da94-279565001ca1@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270208
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270208
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/19 2:53 PM, Mike Kravetz wrote:
-> On 6/24/19 2:30 PM, Qian Cai wrote:
->> So the problem is that ipcget_public() has held the semaphore "ids->rwsem" for
->> too long seems unnecessarily and then goes to sleep sometimes due to direct
->> reclaim (other times LTP hugemmap05 [1] has hugetlb_file_setup() returns
->> -ENOMEM),
-> 
-> Thanks for looking into this!  I noticed that recent kernels could take a
-> VERY long time trying to do high order allocations.  In my case it was trying
-> to do dynamic hugetlb page allocations as well [1].  But, IMO this is more
-> of a general direct reclaim/compation issue than something hugetlb specific.
-> 
+Remove set but unsed variable pHalData in below functions
+_InitOperationMode, SetHwReg8723BS.
 
-<snip>
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+v2 add clean change log
+v3 remove unneeded blank lines
+---
+ drivers/staging/rtl8723bs/hal/sdio_halinit.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
->> Ideally, it seems only ipc_findkey() and newseg() in this path needs to hold the
->> semaphore to protect concurrency access, so it could just be converted to a
->> spinlock instead.
-> 
-> I do not have enough experience with this ipc code to comment on your proposed
-> change.  But, I will look into it.
-> 
-> [1] https://lkml.org/lkml/2019/4/23/2
-
-I only took a quick look at the ipc code, but there does not appear to be
-a quick/easy change to make.  The issue is that shared memory creation could
-take a long time.  With issue [1] above unresolved, creation of hugetlb backed
-shared memory segments could take a VERY long time.
-
-I do not believe the test failure is arm specific.  Most likely, it is just
-because testing was done on a system with memory size to trigger this issue?
-
-My plan is to focus on [1].  When that is resolved, this issue should go away.
+diff --git a/drivers/staging/rtl8723bs/hal/sdio_halinit.c b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+index 4d06ab7..5b72d61 100644
+--- a/drivers/staging/rtl8723bs/hal/sdio_halinit.c
++++ b/drivers/staging/rtl8723bs/hal/sdio_halinit.c
+@@ -606,11 +606,9 @@ static void _initSdioAggregationSetting(struct adapter *padapter)
+ 
+ static void _InitOperationMode(struct adapter *padapter)
+ {
+-	struct hal_com_data *pHalData;
+ 	struct mlme_ext_priv *pmlmeext;
+ 	u8 regBwOpMode = 0;
+ 
+-	pHalData = GET_HAL_DATA(padapter);
+ 	pmlmeext = &padapter->mlmeextpriv;
+ 
+ 	/* 1 This part need to modified according to the rate set we filtered!! */
+@@ -1413,7 +1411,6 @@ static void ReadAdapterInfo8723BS(struct adapter *padapter)
+  */
+ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+ {
+-	struct hal_com_data *pHalData;
+ 	u8 val8;
+ 
+ #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
+@@ -1433,8 +1430,6 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
+ #endif
+ #endif
+ 
+-	pHalData = GET_HAL_DATA(padapter);
+-
+ 	switch (variable) {
+ 	case HW_VAR_SET_RPWM:
+ 		/*  rpwm value only use BIT0(clock bit) , BIT6(Ack bit), and BIT7(Toggle bit) */
 -- 
-Mike Kravetz
+2.7.4
+
