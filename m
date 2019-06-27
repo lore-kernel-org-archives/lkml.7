@@ -2,160 +2,171 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC9DC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB781C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455E02086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED642084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ohUlkZ3K";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gAlVXsto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfF0WnB (ORCPT
+        id S1726729AbfF0WoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:43:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23790 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726445AbfF0WnB (ORCPT
+        Thu, 27 Jun 2019 18:44:20 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:15420 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726514AbfF0WoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:43:01 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RMgA3I089488;
-        Thu, 27 Jun 2019 18:42:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td6e30ux4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 18:42:23 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5RMgN29089882;
-        Thu, 27 Jun 2019 18:42:23 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td6e30uwp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 18:42:23 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5RMdvid032307;
-        Thu, 27 Jun 2019 22:42:22 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03dal.us.ibm.com with ESMTP id 2t9by7hcg3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 22:42:22 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RMgLUr47579548
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 22:42:21 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96D3DB2065;
-        Thu, 27 Jun 2019 22:42:21 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69D4CB2064;
-        Thu, 27 Jun 2019 22:42:21 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 22:42:21 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B3F5F16C6AC1; Thu, 27 Jun 2019 15:42:23 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 15:42:23 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Jiunn Chang <c0d1n61at3@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, joel@joelfernandes.org, corbet@lwn.net,
-        rcu@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees][PATCH] doc: RCU callback locks need only
- _bh, not necessarily _irq
-Message-ID: <20190627224223.GJ26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190627210147.19510-1-c0d1n61at3@gmail.com>
- <bc2ce605-56ab-33aa-c94d-d7774e6ce8cd@linuxfoundation.org>
- <20190627221045.GH26519@linux.ibm.com>
- <20190627182938.306ab9d9@gandalf.local.home>
+        Thu, 27 Jun 2019 18:44:20 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5RMhmm4002103;
+        Thu, 27 Jun 2019 15:43:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=+Cvc2JFBZpKARumySuB0LPSi5r91CacaQZ8f1LXTn58=;
+ b=ohUlkZ3KecMyWi5Ab8wD1opwJEftmnurJXZUVz7O+aKjtmwtOiDUluQB3Y21GRJfybQY
+ oBgtQ1X/Es6LHrKehsXPKDN1iaazOsRxIgs7q5HmQ6jUbq6cGkf4rEMZciLI9f0XYFKl
+ NdDwBlB6JbhGR7lu1K8R8/BWgoPzWwgnjMU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2tcxeyj3jc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 27 Jun 2019 15:43:48 -0700
+Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Jun 2019 15:43:47 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 27 Jun 2019 15:43:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+Cvc2JFBZpKARumySuB0LPSi5r91CacaQZ8f1LXTn58=;
+ b=gAlVXstoQDATM+pvYUtKSPDrvktb/jwBiD9S+6oHGy5z8VIcKsrAJ0b47V34Z4J6zy1t7e8Zd2JLxPTmlzMDuQ8BzPs7FsoN4+IuxczgfEJpWWeHhHP7JBG+yreCx1A39XEzfy/DfObR1KcGuBypWDzUHJz33AiPePQTlY7h0YU=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB3300.namprd15.prod.outlook.com (20.179.74.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 22:43:45 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::e594:155f:a43:92ad%6]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
+ 22:43:45 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the bpf tree
+Thread-Topic: linux-next: Fixes tag needs some work in the bpf tree
+Thread-Index: AQHVLGtWobJf9y3bFk6A9OxwhHLb36augAKAgAAXNQCAACP6AIABWokAgAAE+IA=
+Date:   Thu, 27 Jun 2019 22:43:45 +0000
+Message-ID: <20190627224341.GA29996@tower.DHCP.thefacebook.com>
+References: <20190627080521.5df8ccfc@canb.auug.org.au>
+ <20190626221347.GA17762@tower.DHCP.thefacebook.com>
+ <CAADnVQJiMH=jfuD0FGpr2JmzyQsMKHJ4pM1kfQ8jhSxrAe0XWg@mail.gmail.com>
+ <20190627114536.09c08f5d@canb.auug.org.au>
+ <134f90ff-13f8-b7c1-9693-2f2649245c38@iogearbox.net>
+In-Reply-To: <134f90ff-13f8-b7c1-9693-2f2649245c38@iogearbox.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CO1PR15CA0102.namprd15.prod.outlook.com (10.175.177.22) To
+ BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::c90f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3cec8b81-27c1-43c6-ebe4-08d6fb50e99f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR15MB3300;
+x-ms-traffictypediagnostic: BN8PR15MB3300:
+x-microsoft-antispam-prvs: <BN8PR15MB33006513B4ECD76161CDBF60BEFD0@BN8PR15MB3300.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:499;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(39860400002)(366004)(136003)(376002)(199004)(189003)(53754006)(6116002)(2906002)(6512007)(11346002)(446003)(476003)(486006)(6506007)(186003)(53546011)(386003)(9686003)(4326008)(46003)(102836004)(14454004)(6916009)(6486002)(86362001)(33656002)(229853002)(76176011)(99286004)(6436002)(71200400001)(71190400001)(5660300002)(81166006)(256004)(8936002)(81156014)(8676002)(6246003)(316002)(68736007)(66556008)(64756008)(66476007)(66446008)(73956011)(478600001)(66946007)(25786009)(1076003)(7736002)(53936002)(54906003)(305945005)(52116002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3300;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KGSuPZZJEcMQOSObyzZfbOyj8OdoYPddDDsQC+1HGf2Ie6/QdTr+fXJ4MzuObQUpjcGFP5ke5FLmTTxVgesRylbgYjTOUB3QFRxnsuiyhO0X73PuWvAPaUtt6+quBu4AD/oAQzQeeLe72/cOi/ennEXsLA5e6RWu1Cu2pzxMFYZ6ZSURrnpUqCrFE+lIOHimAs3zduRQhOMlcfx+TG5ATxW+PE0miXWQmUIHS9ZfZY4n++t2ZjAQtgGRqhq8BSvOTSTYQaFfxzp5TaqMRKjc9mdjDBTyp6XCIBhO+zSWUzQp31tc0lp+178fJVlIbg7UqZCKbROK1t+IhT/HF/CUUAHfap1spAt0T4CtwNF74I6fePPmvCBzuvUGskjquhrOuZHyU7Fkw0wnls9v1hbzucQQ1eKKizlsfYJiY3kaceI=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8D1C009488A1D24B9655713BF91AECB6@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627182938.306ab9d9@gandalf.local.home>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cec8b81-27c1-43c6-ebe4-08d6fb50e99f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 22:43:45.7429
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: guro@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3300
+X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_14:,,
  signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270262
+ mlxlogscore=892 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270263
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 06:29:38PM -0400, Steven Rostedt wrote:
-> On Thu, 27 Jun 2019 15:10:45 -0700
-> "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
-> 
-> > On Thu, Jun 27, 2019 at 04:01:35PM -0600, Shuah Khan wrote:
-> > > On 6/27/19 3:01 PM, Jiunn Chang wrote:  
-> > > >The UP.rst file calls for locks acquired within RCU callback functions
-> > > >to use _irq variants (spin_lock_irqsave() or similar), which does work,
-> > > >but can be overkill.  This commit therefore instead calls for _bh variants
-> > > >(spin_lock_bh() or similar), while noting that _irq does work.
-> > > >
-> > > >Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>  
-> > > 
-> > > Should this by Suggested-by?  
-> > 
-> > I wrote it and Jiunn converted my change to .rst, so I believe that
-> > this is correct as is.
-> 
-> Note, you did send Jiunn an explicit Signed-off-by when you wrote it,
-> correct? As Signed-off-by is equivalent to a signature.
+On Fri, Jun 28, 2019 at 12:25:54AM +0200, Daniel Borkmann wrote:
+> On 06/27/2019 03:45 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > On Wed, 26 Jun 2019 16:36:50 -0700 Alexei Starovoitov <alexei.starovoit=
+ov@gmail.com> wrote:
+> >>
+> >> On Wed, Jun 26, 2019 at 3:14 PM Roman Gushchin <guro@fb.com> wrote:
+> >>>
+> >>> On Thu, Jun 27, 2019 at 08:05:21AM +1000, Stephen Rothwell wrote: =20
+> >>>>
+> >>>> In commit
+> >>>>
+> >>>>   12771345a467 ("bpf: fix cgroup bpf release synchronization")
+> >>>>
+> >>>> Fixes tag
+> >>>>
+> >>>>   Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf fro=
+m
+> >>>>
+> >>>> has these problem(s):
+> >>>>
+> >>>>   - Subject has leading but no trailing parentheses
+> >>>>   - Subject has leading but no trailing quotes
+> >>>>
+> >>>> Please don't split Fixes tags across more than one line. =20
+> >>>
+> >>> Oops, sorry.
+> >>>
+> >>> Alexei, can you fix this in place?
+> >>> Or should I send an updated version? =20
+> >>
+> >> I cannot easily do it since -p and --signoff are incompatible flags.
+> >> I need to use -p to preserve merge commits,
+> >> but I also need to use --signoff to add my sob to all
+> >> other commits that were committed by Daniel
+> >> after your commit.
+> >>
+> >> Daniel, can you fix Roman's patch instead?
+> >> you can do:
+> >> git rebase -i -p  12771345a467^
+> >> fix Roman's, add you sob only to that one
+> >> and re-push the whole thing.
+>=20
+> (Fixed in bpf-next.)
 
-Indeed I did, but I now see that it was via private email.  Here it is
-again for public consumption, and Jiunn's patch is based on this one,
-just translated to .rst.  I once again verified that the Jiunn's version
-is word-for-word identical to mine, so Jiunn's patch should be good.  ;-)
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit a293734a310b463a0dba68409943a4e6065cd39d
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Wed Jun 26 10:16:19 2019 -0700
-
-    doc: RCU callback locks need only _bh, not necessarily _irq
-    
-    The UP.txt file calls for locks acquired within RCU callback functions
-    to use _irq variants (spin_lock_irqsave() or similar), which does work,
-    but can be overkill.  This commit therefore instead calls for _bh variants
-    (spin_lock_bh() or similar), while noting that _irq does work.
-    
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-
-diff --git a/Documentation/RCU/UP.txt b/Documentation/RCU/UP.txt
-index 53bde717017b..0edd8c5af0b5 100644
---- a/Documentation/RCU/UP.txt
-+++ b/Documentation/RCU/UP.txt
-@@ -104,12 +104,13 @@ Answer to Quick Quiz #1:
- Answer to Quick Quiz #2:
- 	What locking restriction must RCU callbacks respect?
- 
--	Any lock that is acquired within an RCU callback must be
--	acquired elsewhere using an _irq variant of the spinlock
--	primitive.  For example, if "mylock" is acquired by an
--	RCU callback, then a process-context acquisition of this
--	lock must use something like spin_lock_irqsave() to
--	acquire the lock.
-+	Any lock that is acquired within an RCU callback must be acquired
-+	elsewhere using an _bh variant of the spinlock primitive.
-+	For example, if "mylock" is acquired by an RCU callback, then
-+	a process-context acquisition of this lock must use something
-+	like spin_lock_bh() to acquire the lock.  Please note that
-+	it is also OK to use _irq variants of spinlocks, for example,
-+	spin_lock_irqsave().
- 
- 	If the process-context code were to simply use spin_lock(),
- 	then, since RCU callbacks can be invoked from softirq context,
+Thank you, Daniel!
