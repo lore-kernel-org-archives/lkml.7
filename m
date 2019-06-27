@@ -2,168 +2,90 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD1C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9BEC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9C62083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1A42086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HiozRSV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfF0LZo (ORCPT
+        id S1726762AbfF0L0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:25:44 -0400
-Received: from mga01.intel.com ([192.55.52.88]:50450 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726375AbfF0LZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:25:43 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 04:25:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="183428308"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Jun 2019 04:25:40 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH v2 3/4] kbuild: support header-test-pattern-y
-In-Reply-To: <20190627014617.600-4-yamada.masahiro@socionext.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190627014617.600-1-yamada.masahiro@socionext.com> <20190627014617.600-4-yamada.masahiro@socionext.com>
-Date:   Thu, 27 Jun 2019 14:28:26 +0300
-Message-ID: <871rzfqnc5.fsf@intel.com>
+        Thu, 27 Jun 2019 07:26:23 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35832 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfF0L0X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:26:23 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a25so1331267lfg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 04:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yf/4QsQz71xnsufXmplIhM5PQjWjtA8iRNvCLywUsCI=;
+        b=HiozRSV9jjoEd8lgVneXDXnUBP1+IEYIg+jfVj3yu3YE2rDCh0mQf6PCltXafOZuRQ
+         wgzquUBxyhWo7PDBS9m/LWFwnCANPBpvCZrQYE2oHj20GZq/2E9ThKk3E8NPw81Lz1IR
+         6wqLETMA8WyJzKNmXnDzqbNY6sUIuKzxUMVE+GnlYNfor+m9ZCB+VLKecag/t5wKJ6Jd
+         T9zmH0RwA2Aq86TTmuzE2Qjhpw0IXYMX8T1nY+VIb685SluVHK84SiGlfHixp33uk0NX
+         kmZSALvd+oLO52Ab1ZdDT5vg1sdlJ8tHsJXVo/3VFxdWskcobVYms8f/hqACvEI3a+uf
+         LmpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yf/4QsQz71xnsufXmplIhM5PQjWjtA8iRNvCLywUsCI=;
+        b=Y9U4aCxxXjLP0hm0oOKbFvYZVlMGgx3w7jpY+Mvb4Yi4MfzsU469ayaPbnrI+yVc3X
+         dEB+W01zpWXWHP5iWGELhmCVSlICpQcM4C2F2hqHcWPBOsU/XjDY55L5a67j3dIDovM1
+         ax1FtvRkq8DHC0Q7edoe6U0FHk3g9OgQmDVrgZQm6r+imkFyYpyb6UB2xzoZ+9615y0+
+         ZO9CN2PS8bAXQmlug648ll9okG9xVcC3fiZm5WZYv4ZcuSMHDRr7ubSG7H3zGw4bNxf1
+         Owdt3lD890hhN1ZPFE/ioRU7IN3YXh0UENTjLEtNa3epU2Lk8rip9i8TI0ARjc45uo+F
+         0csg==
+X-Gm-Message-State: APjAAAVJ/3pKJ3OsDstvLZ1uCUUq0qPEQ+WPuYlVrdhtSRc8kt5QcLDw
+        +qtAZHgCHIIdnGVA/I2XW4Vt15pJ1XORT+HLdoEzBw==
+X-Google-Smtp-Source: APXvYqzeLT9m0qZPhFXMQe7bGeM0G0YNhFKZNBdroL1getpvV13XvxWgav2h1PfavnIunwZFc7NAtBe9miLt5qxA34s=
+X-Received: by 2002:a19:dc0d:: with SMTP id t13mr1687908lfg.152.1561634781537;
+ Thu, 27 Jun 2019 04:26:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190626071430.28556-1-andrew@aj.id.au> <20190626071430.28556-2-andrew@aj.id.au>
+ <CACPK8Xfdd1ReAHr9f6zRbZ-WJRquDJsTdUQeT_JuEBhOzS8tig@mail.gmail.com>
+In-Reply-To: <CACPK8Xfdd1ReAHr9f6zRbZ-WJRquDJsTdUQeT_JuEBhOzS8tig@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 27 Jun 2019 12:26:10 +0100
+Message-ID: <CACRpkdZtTy-HHu2O4aOaqV5ZdxcYYPFRuxK2jjnw+_O1xcF1rg@mail.gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: pinctrl: aspeed: Split bindings document
+ in two
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-aspeed@lists.ozlabs.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> In my view, most of headers can be self-contained. So, it would be
-> tedious to add every header to header-test-y explicitly. We usually
-> end up with "all headers with some exceptions".
->
-> There are two types in exceptions:
->
-> [1] headers that are never compiled as standalone units
->
->   For examples, include/linux/compiler-gcc.h is not intended to be
->   included directly. We should always exclude such ones.
->
-> [2] headers that are conditionally compiled as standalone units
->
->   Some headers can be compiled only for particular architectures.
->   For example, include/linux/arm-cci.h can be compiled only for
->   arm/arm64 because it requires <asm/arm-cci.h> to exist.
->   Clang can compile include/soc/nps/mtm.h only for arc because
->   it contains an arch-specific register in inline assembler.
->
-> For [2], we can write Makefile like this:
->
->   header-test-$(CONFIG_ARM) += linux/arm-cci.h
->
-> The new syntax header-test-pattern-y will be useful to specify
-> "the rest".
->
-> The typical usage is like this:
->
->   header-test-pattern-y += */*.h
->
-> This adds all the headers in sub-directories to the test coverage,
-> but headers added to header-test- are excluded. In this regards,
-> header-test-pattern-y behaves like a weaker variant of header-test-y.
->
-> Caveat:
-> The patterns in header-test-pattern-y are prefixed with $(srctree)/$(src)/
-> but not $(objtree)/$(obj)/. Stale generated patterns are often left over.
-> For example, you will have ones when you traverse the git history for
-> 'git bisect' without cleaning. If a wildcard is used for generated
-> headers, it may match to stale headers.
->
-> If you really want to compile-test generated headers, I recommend to
-> add them to header-test-y explicitly. One pitfall is $(srctree)/$(src)/
-> and $(objtree)/$(obj)/ point to the same directory for in-tree building.
-> So, header-test-pattern-y should be used with care. It can potentially
-> match to generated headers, which may be stale and fail to compile.
->
-> Caveat2:
-> You could use wildcard for header-test-. For example,
->
->   header-test- += asm-generic/%
->
-> ... will exclude headers in asm-generic directory. Unfortunately, the
-> wildcard character is '%' instead of '*' because this is evaluated by
-> $(filter-out ...) whereas header-test-pattern-y is evaluated by
-> $(wildcard ...). This is a kludge, but seems useful in some places...
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Thu, Jun 27, 2019 at 4:32 AM Joel Stanley <joel@jms.id.au> wrote:
 
-Awesome! This will let us get rid of our local $(wildcard) hacks.
-
-Tested-by: Jani Nikula <jani.nikula@intel.com>
-
-> ---
+> I think we can use this as an opportunity to drop the unused g4-scu
+> compatible from the bindings. Similarly for the g5.
 >
-> Changes in v2:
->   - New patch
->
->  Documentation/kbuild/makefiles.txt | 10 ++++++++++
->  scripts/Makefile.lib               | 10 ++++++++++
->  2 files changed, 20 insertions(+)
->
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index 5080fec34609..b817e6cefb77 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -1025,6 +1025,16 @@ When kbuild executes, the following steps are followed (roughly):
->  	i.e. compilable as standalone units. If CONFIG_HEADER_TEST is enabled,
->  	this builds them as part of extra-y.
->  
-> +    header-test-pattern-y
-> +
-> +	This works as a weaker version of header-test-y, and accepts wildcard
-> +	patterns. The typical usage is:
-> +
-> +		  header-test-pattern-y += *.h
-> +
-> +	This specifies all the files that matches to '*.h' in the current
-> +	directory, but the files in 'header-test-' are excluded.
-> +
->  --- 6.7 Commands useful for building a boot image
->  
->  	Kbuild provides a few macros that are useful when building a
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 55ae1ec65342..54444933bbab 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -67,6 +67,16 @@ extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
->  endif
->  
->  # Test self-contained headers
-> +
-> +# Wildcard searches in $(srctree)/$(src)/, but not in $(objtree)/$(obj)/.
-> +# Stale generated headers are often left over, so wildcard matching should
-> +# be avoided. Please notice $(srctree)/$(src)/ and $(objtree)/$(obj) point
-> +# to the same location for in-tree building.
-> +header-test-y	+= $(filter-out $(header-test-), \
-> +		$(patsubst $(srctree)/$(src)/%, %, \
-> +		$(wildcard $(addprefix $(srctree)/$(src)/, \
-> +		$(header-test-pattern-y)))))
-> +
->  extra-$(CONFIG_HEADER_TEST) += $(addsuffix .s, $(header-test-y))
->  
->  # Add subdir path
+> Acked-by: Joel Stanley <joel@jms.id.au>
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+I assume I should wait for a new version of the patches that does
+this?
+
+Yours,
+Linus Walleij
