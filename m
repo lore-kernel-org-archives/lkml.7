@@ -2,120 +2,113 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23A2C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EB0C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A188D217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:49:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="x56ew+Nf"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1B0217D9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfF0Btr (ORCPT
+        id S1727110AbfF0Buj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:49:47 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:27093 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfF0Btq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:49:46 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x5R1kN0v032702;
-        Thu, 27 Jun 2019 10:46:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x5R1kN0v032702
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561599984;
-        bh=t/tKte8+f+WnIerV46Kqk5V4Cu5goyQEz8X3TPyTH+k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=x56ew+Nf/mRL+Y9auCSqcIA7wXTn2ja3HVYzHe0zb/E43gJ8Lggs/PguNK3OCZjgp
-         uEyvbCO2H1dT/DpTwUE6DbmQRbC6vOSL5OITz+s0Bb0odvn6gylTlEcXpF8asnjeml
-         88aMR4WR5z+A0KqVY3or1TMOqNYfDZk2Ex4sSzWca/5b84o36B0eGUd3VL7kWJzm2Z
-         ht4QKpX3nwgoUQtDo9jLHs9EQ7Dgcaxi1GdZoFz3rV7s0Tp5VvQMZ+OUmUdUW+ge61
-         tE78teOBqyznZ79jc3oTqjv6+zpNpU51id+uwMW/3dc8GBkGo5Jz2XIAR4PoONDPEu
-         JgLgECL33cJbg==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-riscv@lists.infradead.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v2 0/4] Compile-test UAPI and kernel headers
-Date:   Thu, 27 Jun 2019 10:46:13 +0900
-Message-Id: <20190627014617.600-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 26 Jun 2019 21:50:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53176 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbfF0Bui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 21:50:38 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 124E33082B6B;
+        Thu, 27 Jun 2019 01:50:33 +0000 (UTC)
+Received: from xz-x1.redhat.com (ovpn-12-42.pek2.redhat.com [10.72.12.42])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BBA55D9C6;
+        Thu, 27 Jun 2019 01:50:23 +0000 (UTC)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, peterx@redhat.com
+Subject: [PATCH v2] timer: document TIMER_PINNED
+Date:   Thu, 27 Jun 2019 09:50:19 +0800
+Message-Id: <20190627015019.21964-1-peterx@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 27 Jun 2019 01:50:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The flag hints the user that the pinned timers will always be run on a
+static CPU (because that should be what "pinned" means...) but that's
+not the truth, at least with current implementation.
 
-1/4: reworked v2.
+For example, currently if we setup a pinned timer but later on we call
+mod_timer() upon the pinned timer, the mod_timer() will still try to
+run the timer on the current processor and migrate the timer if
+necessary.  In other words, the suggested way to arm a pinned timer
+should be add_timer_on() always.  mod_timer() can be used in this case
+only if current processor is the one that we want to pin the timer on.
 
-2/4: fix a flaw I noticed when I was working on this series
+Document it a bit with the definition of TIMER_PINNED so that all
+future users will use it correctly.
 
-3/4: maybe useful for 4/4 and in some other places
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: linux-kernel@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ include/linux/timer.h | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-4/4: v2. compile as many headers as possible.
-
-
-Changes in v2:
- - Add CONFIG_CPU_{BIG,LITTLE}_ENDIAN guard to avoid build error
- - Use 'header-test-' instead of 'no-header-test'
- - Avoid weird 'find' warning when cleaning
-  - New patch
-  - New patch
-  - Add everything to test coverage, and exclude broken ones
-  - Rename 'Makefile' to 'Kbuild'
-  - Add CONFIG_KERNEL_HEADER_TEST option
-
-Masahiro Yamada (4):
-  kbuild: compile-test UAPI headers to ensure they are self-contained
-  kbuild: do not create wrappers for header-test-y
-  kbuild: support header-test-pattern-y
-  kbuild: compile-test kernel headers to ensure they are self-contained
-
- .gitignore                         |    1 -
- Documentation/dontdiff             |    1 -
- Documentation/kbuild/makefiles.txt |   13 +-
- Makefile                           |    4 +-
- include/Kbuild                     | 1134 ++++++++++++++++++++++++++++
- init/Kconfig                       |   22 +
- scripts/Makefile.build             |   10 +-
- scripts/Makefile.lib               |   12 +-
- scripts/cc-system-headers.sh       |    8 +
- usr/.gitignore                     |    1 -
- usr/Makefile                       |    2 +
- usr/include/.gitignore             |    3 +
- usr/include/Makefile               |  133 ++++
- 13 files changed, 1331 insertions(+), 13 deletions(-)
- create mode 100644 include/Kbuild
- create mode 100755 scripts/cc-system-headers.sh
- create mode 100644 usr/include/.gitignore
- create mode 100644 usr/include/Makefile
-
+diff --git a/include/linux/timer.h b/include/linux/timer.h
+index 7b066fd38248..1b96cc623a12 100644
+--- a/include/linux/timer.h
++++ b/include/linux/timer.h
+@@ -36,19 +36,31 @@ struct timer_list {
+ #define __TIMER_LOCKDEP_MAP_INITIALIZER(_kn)
+ #endif
+ 
+-/*
+- * A deferrable timer will work normally when the system is busy, but
+- * will not cause a CPU to come out of idle just to service it; instead,
+- * the timer will be serviced when the CPU eventually wakes up with a
+- * subsequent non-deferrable timer.
++/**
++ * @TIMER_DEFERRABLE: A deferrable timer will work normally when the
++ * system is busy, but will not cause a CPU to come out of idle just
++ * to service it; instead, the timer will be serviced when the CPU
++ * eventually wakes up with a subsequent non-deferrable timer.
+  *
+- * An irqsafe timer is executed with IRQ disabled and it's safe to wait for
+- * the completion of the running instance from IRQ handlers, for example,
+- * by calling del_timer_sync().
++ * @TIMER_IRQSAFE: An irqsafe timer is executed with IRQ disabled and
++ * it's safe to wait for the completion of the running instance from
++ * IRQ handlers, for example, by calling del_timer_sync().
+  *
+  * Note: The irq disabled callback execution is a special case for
+  * workqueue locking issues. It's not meant for executing random crap
+  * with interrupts disabled. Abuse is monitored!
++ *
++ * @TIMER_PINNED: A pinned timer will not be affected by any timer
++ * placement heuristics (like, NOHZ) and will always be run on the CPU
++ * when the timer was enqueued.
++ *
++ * Note: Because enqueuing of timers can actually migrate the timer
++ * from one CPU to another, pinned timers are not guaranteed to stay
++ * on the initialy selected CPU.  They move to the CPU on which the
++ * enqueue function is invoked via mod_timer() or add_timer().  If the
++ * timer should be placed on a particular CPU, then add_timer_on() has
++ * to be used.  It is also suggested that the user should always use
++ * add_timer_on() explicitly for pinned timers.
+  */
+ #define TIMER_CPUMASK		0x0003FFFF
+ #define TIMER_MIGRATING		0x00040000
 -- 
-2.17.1
+2.21.0
 
