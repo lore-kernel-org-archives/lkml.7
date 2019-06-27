@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743F1C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1529EC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E27B2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F328021783
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfF0Sn4 (ORCPT
+        id S1726631AbfF0SoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:43:56 -0400
+        Thu, 27 Jun 2019 14:44:00 -0400
 Received: from mga17.intel.com ([192.55.52.151]:56448 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfF0Sny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:43:54 -0400
+        id S1726441AbfF0Snx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:43:53 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 11:43:53 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 11:43:52 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
-   d="scan'208";a="313893973"
+   d="scan'208";a="313893967"
 Received: from unknown (HELO luv-build.sc.intel.com) ([172.25.110.25])
-  by orsmga004.jf.intel.com with ESMTP; 27 Jun 2019 11:43:53 -0700
+  by orsmga004.jf.intel.com with ESMTP; 27 Jun 2019 11:43:52 -0700
 From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
@@ -47,9 +47,9 @@ Cc:     Alan Cox <alan.cox@intel.com>, Tony Luck <tony.luck@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Peter Feiner <pfeiner@google.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 2/2] x86, mtrr: generic: Skip cache flushes on CPUs with cache self-snooping
-Date:   Thu, 27 Jun 2019 11:43:17 -0700
-Message-Id: <1561660997-21562-3-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH 1/2] x86/cpu/intel: Clear cache self-snoop capability in CPUs with known errata
+Date:   Thu, 27 Jun 2019 11:43:16 -0700
+Message-Id: <1561660997-21562-2-git-send-email-ricardo.neri-calderon@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561660997-21562-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
 References: <1561660997-21562-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
@@ -58,35 +58,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Programming MTRR registers in multi-processor systems is a rather lengthy
-process. Furthermore, all processors must program these registers in lock
-step and with interrupts disabled; the process also involves flushing
-caches and TLBs twice. As a result, the process may take a considerable
-amount of time.
+Processors which have self-snooping capability can handle conflicting
+memory type across CPUs by snooping its own cache. However, there exists
+CPU models in which having conflicting memory types still leads to
+unpredictable behavior, machine check errors, or hangs. Clear this feature
+to prevent its use. For instance, the algorithm to program the Memory Type
+Region Registers and the Page Attribute Table MSR can skip expensive cache
+flushes if self-snooping is supported.
 
-In some platforms, this can lead to a large skew of the refined-jiffies
-clock source. Early when booting, if no other clock is available (e.g.,
-booting with hpet=disabled), the refined-jiffies clock source is used to
-monitor the TSC clock source. If the skew of refined-jiffies is too large,
-Linux wrongly assumes that the TSC is unstable:
-
-  clocksource: timekeeping watchdog on CPU1: Marking clocksource
-               'tsc-early' as unstable because the skew is too large:
-  clocksource: 'refined-jiffies' wd_now: fffedc10 wd_last:
-               fffedb90 mask: ffffffff
-  clocksource: 'tsc-early' cs_now: 5eccfddebc cs_last: 5e7e3303d4
-               mask: ffffffffffffffff
-  tsc: Marking TSC unstable due to clocksource watchdog
-
-As per my measurements, around 98% of the time needed by the procedure to
-program MTRRs in multi-processor systems is spent flushing caches with
-wbinvd(). As per the Section 11.11.8 of the Intel 64 and IA 32
-Architectures Software Developer's Manual, it is not necessary to flush
-caches if the CPU supports cache self-snooping. Thus, skipping the cache
-flushes can reduce by several tens of milliseconds the time needed to
-complete the programming of the MTRR registers.
-
-Cc: Alan Cox <alan.cox@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
@@ -96,41 +75,63 @@ Cc: Peter Feiner <pfeiner@google.com>
 Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jordan Borgner <mail@jordan-borgner.de>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
 Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Reported-by: Mohammad Etemadi <mohammad.etemadi@intel.com>
+Suggested-by: Alan Cox <alan.cox@intel.com>
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
- arch/x86/kernel/cpu/mtrr/generic.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/intel.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
-index 9356c1c9024d..169672a6935c 100644
---- a/arch/x86/kernel/cpu/mtrr/generic.c
-+++ b/arch/x86/kernel/cpu/mtrr/generic.c
-@@ -743,7 +743,9 @@ static void prepare_set(void) __acquires(set_atomicity_lock)
- 	/* Enter the no-fill (CD=1, NW=0) cache mode and flush caches. */
- 	cr0 = read_cr0() | X86_CR0_CD;
- 	write_cr0(cr0);
--	wbinvd();
-+
-+	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
-+		wbinvd();
- 
- 	/* Save value of CR4 and clear Page Global Enable (bit 7) */
- 	if (boot_cpu_has(X86_FEATURE_PGE)) {
-@@ -760,7 +762,9 @@ static void prepare_set(void) __acquires(set_atomicity_lock)
- 
- 	/* Disable MTRRs, and set the default type to uncached */
- 	mtrr_wrmsr(MSR_MTRRdefType, deftype_lo & ~0xcff, deftype_hi);
--	wbinvd();
-+
-+	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
-+		wbinvd();
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index f17c1a714779..8684c66e71e0 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -66,6 +66,34 @@ void check_mpx_erratum(struct cpuinfo_x86 *c)
+ 	}
  }
  
- static void post_set(void) __releases(set_atomicity_lock)
++/*
++ * Processors which have self-snooping capability can handle conflicting
++ * memory type across CPUs by snooping its own cache. However, there exists
++ * CPU models in which having conflicting memory types still leads to
++ * unpredictable behavior, machine check errors, or hangs. Clear this feature
++ * to prevent its use. For instance, the algorithm to program the Memory Type
++ * Region Registers and the Page Attribute Table MSR can skip expensive cache
++ * flushes if self-snooping is supported.
++ */
++static void check_memory_type_self_snoop_errata(struct cpuinfo_x86 *c)
++{
++	switch (c->x86_model) {
++	case INTEL_FAM6_CORE_YONAH:
++	case INTEL_FAM6_CORE2_MEROM:
++	case INTEL_FAM6_CORE2_MEROM_L:
++	case INTEL_FAM6_CORE2_PENRYN:
++	case INTEL_FAM6_CORE2_DUNNINGTON:
++	case INTEL_FAM6_NEHALEM:
++	case INTEL_FAM6_NEHALEM_G:
++	case INTEL_FAM6_NEHALEM_EP:
++	case INTEL_FAM6_NEHALEM_EX:
++	case INTEL_FAM6_WESTMERE:
++	case INTEL_FAM6_WESTMERE_EP:
++	case INTEL_FAM6_SANDYBRIDGE:
++		setup_clear_cpu_cap(X86_FEATURE_SELFSNOOP);
++	}
++}
++
+ static bool ring3mwait_disabled __read_mostly;
+ 
+ static int __init ring3mwait_disable(char *__unused)
+@@ -311,6 +339,8 @@ static void early_init_intel(struct cpuinfo_x86 *c)
+ 	 */
+ 	if (detect_extended_topology_early(c) < 0)
+ 		detect_ht_early(c);
++
++	check_memory_type_self_snoop_errata(c);
+ }
+ 
+ #ifdef CONFIG_X86_32
 -- 
 2.17.1
 
