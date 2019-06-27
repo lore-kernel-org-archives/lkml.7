@@ -2,137 +2,188 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3DFC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65D5C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654C02064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F13F2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HPf1Foyg"
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="bf7iNudI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfF0P1X (ORCPT
+        id S1726650AbfF0P17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:27:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33216 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfF0P1X (ORCPT
+        Thu, 27 Jun 2019 11:27:59 -0400
+Received: from mx-rz-1.rrze.uni-erlangen.de ([131.188.11.20]:44159 "EHLO
+        mx-rz-1.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbfF0P16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:27:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RFOMWC080276;
-        Thu, 27 Jun 2019 15:26:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=nAWucu9SyumY3cWlPIQTvZjPFkXl1Zmmfj8lYBo0gi0=;
- b=HPf1FoygBZJOdvV5uJ/5J7gMppCi1SIhOmuRBJY/rvhVrFw5ruHJqlmkSJ7w9Hle2Ux2
- IiDbQTJKHCYtxih7lTcgmMPBZumTY/Xn0D5pBhOSaHAxYx0HDyw5vUbnmAnYHyxBw1kh
- 3aXKeTgKHtKKe6x8YyEkSUzWzD9NyHU/gwrItEykMbdnRjrAvpn9Ivc0j/8JmDaxbk02
- uPntewJENx0IdzSPtD3C+fHRecrK+WbjRj+TtsygKfQZG8gYgDlyXZUCm0FxwPM+jFcj
- VixPy7Dyz+P5gVabl+6T2NAzqBu4Ou4Z9WrLaGhgSR8x7p6u6IAnWkoWeUUkVpI1POkF fA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2t9cyqrxpu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 15:26:41 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RFPTdw094902;
-        Thu, 27 Jun 2019 15:26:40 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2tat7desuk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 15:26:40 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RFQdpU016219;
-        Thu, 27 Jun 2019 15:26:39 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 08:26:39 -0700
-Date:   Thu, 27 Jun 2019 08:26:38 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     hch@lst.de, dchinner@redhat.com, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH -next] xfs: remove duplicated include
-Message-ID: <20190627152638.GN5171@magnolia>
-References: <20190627073323.45516-1-yuehaibing@huawei.com>
+        Thu, 27 Jun 2019 11:27:58 -0400
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 45ZP0r1MlTz8srH;
+        Thu, 27 Jun 2019 17:27:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
+        t=1561649276; bh=Zd6DDfelGcmi1TCNL0D5BdOsmsLlB086IqcwKZ3A8U0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+         Subject;
+        b=bf7iNudIBz+JTRTSAUqT95wlDFCORL7gaEHak8EaE+0t8bIkdtKVEERvKwK4+fFG7
+         BHbaFOuieXqeOo5uevmCraDwbFtI6fqqpbZJSWhOmhoWLP49z7Dv93fJWJUgZNtv6e
+         1OkZkFtOpzC1Q2Xr5J3VyE+Za05Z9D+vbeynnYe7+LYrAPubdtPU7gs6V3Bk3QWjEM
+         9ggr/o9PHS/8aN80P4WNiDWTUKHVNb/6rK4xM/QOjuvRZAOrDEmlb9pDtJ/V3cw2X/
+         hgYlcK2ElaAOFnnE/jsxbTwSe142wc3jLZZc3uphqV4mJpelDNwlshaEwC6XSAi7cp
+         7cItgGGmGDR8Q==
+X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 10.21.35.53
+Received: from laptop.pool.uni-erlangen.de (faustud-010-021-035-053.pool.uni-erlangen.de [10.21.35.53])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: U2FsdGVkX1/ZqR2GOQ1IngWZuCo+nC2TA8OO1yZ0bGs=)
+        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 45ZP0n57wvz8tLT;
+        Thu, 27 Jun 2019 17:27:53 +0200 (CEST)
+From:   Fabian Schindlatz <fabian.schindlatz@fau.de>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Rudolf Marek <r.marek@assembler.cz>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Fabian Schindlatz <fabian.schindlatz@fau.de>,
+        =?UTF-8?q?Thomas=20R=C3=B6thenbacher?= 
+        <thomas.roethenbacher@fau.de>, linux-kernel@i4.cs.fau.de
+Subject: [PATCH v2] hwmon: Correct struct allocation style
+Date:   Thu, 27 Jun 2019 17:27:38 +0200
+Message-Id: <20190627152738.29645-1-fabian.schindlatz@fau.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <9160e7fe-7229-a097-48f7-d882cc760b53@roeck-us.net>
+References: <9160e7fe-7229-a097-48f7-d882cc760b53@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627073323.45516-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270178
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 03:33:23PM +0800, YueHaibing wrote:
-> Remove duplicated include.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Use sizeof(*var) instead of sizeof(struct var_type) as argument to
+kalloc() and friends to comply with the kernel coding style.
 
-NAK, Eric Sandeen already sent this to the list.
+Co-developed-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
+Signed-off-by: Thomas Röthenbacher <thomas.roethenbacher@fau.de>
+Signed-off-by: Fabian Schindlatz <fabian.schindlatz@fau.de>
+Cc: linux-kernel@i4.cs.fau.de
+---
+ drivers/hwmon/acpi_power_meter.c | 3 +--
+ drivers/hwmon/coretemp.c         | 4 ++--
+ drivers/hwmon/fschmd.c           | 2 +-
+ drivers/hwmon/sch56xx-common.c   | 2 +-
+ drivers/hwmon/via-cputemp.c      | 5 ++---
+ drivers/hwmon/w83793.c           | 2 +-
+ 6 files changed, 8 insertions(+), 10 deletions(-)
 
---D
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index 6ba1a08253f0..48c4570c61d7 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -862,8 +862,7 @@ static int acpi_power_meter_add(struct acpi_device *device)
+ 	if (!device)
+ 		return -EINVAL;
+ 
+-	resource = kzalloc(sizeof(struct acpi_power_meter_resource),
+-			   GFP_KERNEL);
++	resource = kzalloc(sizeof(*resource), GFP_KERNEL);
+ 	if (!resource)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
+index fe6618e49dc4..0361115d25dd 100644
+--- a/drivers/hwmon/coretemp.c
++++ b/drivers/hwmon/coretemp.c
+@@ -433,7 +433,7 @@ static struct temp_data *init_temp_data(unsigned int cpu, int pkg_flag)
+ {
+ 	struct temp_data *tdata;
+ 
+-	tdata = kzalloc(sizeof(struct temp_data), GFP_KERNEL);
++	tdata = kzalloc(sizeof(*tdata), GFP_KERNEL);
+ 	if (!tdata)
+ 		return NULL;
+ 
+@@ -532,7 +532,7 @@ static int coretemp_probe(struct platform_device *pdev)
+ 	struct platform_data *pdata;
+ 
+ 	/* Initialize the per-zone data structures */
+-	pdata = devm_kzalloc(dev, sizeof(struct platform_data), GFP_KERNEL);
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+ 	if (!pdata)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/hwmon/fschmd.c b/drivers/hwmon/fschmd.c
+index fa0c2f1fb443..d464dcbe5ac8 100644
+--- a/drivers/hwmon/fschmd.c
++++ b/drivers/hwmon/fschmd.c
+@@ -1090,7 +1090,7 @@ static int fschmd_probe(struct i2c_client *client,
+ 	int i, err;
+ 	enum chips kind = id->driver_data;
+ 
+-	data = kzalloc(sizeof(struct fschmd_data), GFP_KERNEL);
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/hwmon/sch56xx-common.c b/drivers/hwmon/sch56xx-common.c
+index 6c84780e358e..0d6d20814183 100644
+--- a/drivers/hwmon/sch56xx-common.c
++++ b/drivers/hwmon/sch56xx-common.c
+@@ -401,7 +401,7 @@ struct sch56xx_watchdog_data *sch56xx_watchdog_register(struct device *parent,
+ 		return NULL;
+ 	}
+ 
+-	data = kzalloc(sizeof(struct sch56xx_watchdog_data), GFP_KERNEL);
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return NULL;
+ 
+diff --git a/drivers/hwmon/via-cputemp.c b/drivers/hwmon/via-cputemp.c
+index 8264e849e588..0feb1d0b5e13 100644
+--- a/drivers/hwmon/via-cputemp.c
++++ b/drivers/hwmon/via-cputemp.c
+@@ -114,8 +114,7 @@ static int via_cputemp_probe(struct platform_device *pdev)
+ 	int err;
+ 	u32 eax, edx;
+ 
+-	data = devm_kzalloc(&pdev->dev, sizeof(struct via_cputemp_data),
+-			    GFP_KERNEL);
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+@@ -223,7 +222,7 @@ static int via_cputemp_online(unsigned int cpu)
+ 		goto exit;
+ 	}
+ 
+-	pdev_entry = kzalloc(sizeof(struct pdev_entry), GFP_KERNEL);
++	pdev_entry = kzalloc(sizeof(*pdev_entry), GFP_KERNEL);
+ 	if (!pdev_entry) {
+ 		err = -ENOMEM;
+ 		goto exit_device_put;
+diff --git a/drivers/hwmon/w83793.c b/drivers/hwmon/w83793.c
+index 46f5dfec8d0a..b37106c6f26d 100644
+--- a/drivers/hwmon/w83793.c
++++ b/drivers/hwmon/w83793.c
+@@ -1669,7 +1669,7 @@ static int w83793_probe(struct i2c_client *client,
+ 	int files_pwm = ARRAY_SIZE(w83793_left_pwm) / 5;
+ 	int files_temp = ARRAY_SIZE(w83793_temp) / 6;
+ 
+-	data = kzalloc(sizeof(struct w83793_data), GFP_KERNEL);
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data) {
+ 		err = -ENOMEM;
+ 		goto exit;
+-- 
+2.20.1
 
-> ---
->  fs/xfs/xfs_extfree_item.c | 1 -
->  fs/xfs/xfs_filestream.c   | 1 -
->  fs/xfs/xfs_pnfs.c         | 1 -
->  3 files changed, 3 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-> index 99fd40eb..e515506 100644
-> --- a/fs/xfs/xfs_extfree_item.c
-> +++ b/fs/xfs/xfs_extfree_item.c
-> @@ -13,7 +13,6 @@
->  #include "xfs_mount.h"
->  #include "xfs_defer.h"
->  #include "xfs_trans.h"
-> -#include "xfs_trans.h"
->  #include "xfs_trans_priv.h"
->  #include "xfs_buf_item.h"
->  #include "xfs_extfree_item.h"
-> diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
-> index b1869ae..a6d228c 100644
-> --- a/fs/xfs/xfs_filestream.c
-> +++ b/fs/xfs/xfs_filestream.c
-> @@ -21,7 +21,6 @@
->  #include "xfs_trace.h"
->  #include "xfs_ag_resv.h"
->  #include "xfs_trans.h"
-> -#include "xfs_shared.h"
->  
->  struct xfs_fstrm_item {
->  	struct xfs_mru_cache_elem	mru;
-> diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-> index 2d95355..6018e1c 100644
-> --- a/fs/xfs/xfs_pnfs.c
-> +++ b/fs/xfs/xfs_pnfs.c
-> @@ -17,7 +17,6 @@
->  #include "xfs_bmap_util.h"
->  #include "xfs_error.h"
->  #include "xfs_iomap.h"
-> -#include "xfs_shared.h"
->  #include "xfs_bit.h"
->  #include "xfs_pnfs.h"
->  
-> -- 
-> 2.7.4
-> 
-> 
