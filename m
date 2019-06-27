@@ -2,32 +2,33 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CF7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC041C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974CE20989
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B44E20989
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfF0DoC (ORCPT
+        id S1727065AbfF0DoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:44:02 -0400
+        Wed, 26 Jun 2019 23:44:07 -0400
 Received: from mga17.intel.com ([192.55.52.151]:21244 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbfF0DoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:44:02 -0400
+        id S1726989AbfF0DoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 23:44:06 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 20:44:01 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 20:44:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
-   d="scan'208";a="360560931"
+   d="scan'208";a="360560977"
 Received: from gvt.bj.intel.com ([10.238.158.187])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Jun 2019 20:43:59 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 26 Jun 2019 20:44:04 -0700
 From:   Tina Zhang <tina.zhang@intel.com>
 To:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -35,51 +36,39 @@ Cc:     Tina Zhang <tina.zhang@intel.com>, kraxel@redhat.com,
         zhenyuw@linux.intel.com, zhiyuan.lv@intel.com,
         zhi.a.wang@intel.com, kevin.tian@intel.com, hang.yuan@intel.com,
         alex.williamson@redhat.com
-Subject: [RFC PATCH v3 0/4] Deliver vGPU display vblank event to userspace
-Date:   Thu, 27 Jun 2019 11:37:58 +0800
-Message-Id: <20190627033802.1663-1-tina.zhang@intel.com>
+Subject: [RFC PATCH v3 2/4] vfio: Introduce vGPU display irq type
+Date:   Thu, 27 Jun 2019 11:38:00 +0800
+Message-Id: <20190627033802.1663-3-tina.zhang@intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190627033802.1663-1-tina.zhang@intel.com>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series tries to send the vGPU display vblank event to user land.
+Introduce vGPU specific irq type VFIO_IRQ_TYPE_GFX, and
+VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ as the subtype for vGPU display
 
-Instead of delivering page flip events, we choose to post display vblank
-event. Handling page flip events for both primary plane and cursor plane
-may make user space quite busy, although we have the mask/unmask mechansim
-for mitigation. Besides, there are some cases that guest app only uses
-one framebuffer for both drawing and display. In such case, guest OS won't
-do the plane page flip when the framebuffer is updated, thus the user
-land won't be notified about the updated framebuffer.
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+---
+ include/uapi/linux/vfio.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-With vGPU's vblank event working as a timer, userspace still needs to
-query the framebuffer first, before getting a new dma-buf for it.
-
-v3:
-- Deliver display vblank event instead of page flip event. (Zhenyu)
-v2:
-- Use VFIO irq chain to get eventfds from userspace instead of adding
-a new ABI. (Alex)
-v1:
-- https://patchwork.kernel.org/cover/10962341/
-
-
-Tina Zhang (4):
-  vfio: Define device specific irq type capability
-  vfio: Introduce vGPU display irq type
-  drm/i915/gvt: Register vGPU display vblank irq
-  drm/i915/gvt: Deliver vGPU vblank event to userspace
-
- drivers/gpu/drm/i915/gvt/display.c   |  14 +-
- drivers/gpu/drm/i915/gvt/gvt.h       |   6 +
- drivers/gpu/drm/i915/gvt/hypercall.h |   1 +
- drivers/gpu/drm/i915/gvt/kvmgt.c     | 193 +++++++++++++++++++++++++--
- drivers/gpu/drm/i915/gvt/mpt.h       |  17 +++
- include/uapi/linux/vfio.h            |  22 ++-
- 6 files changed, 241 insertions(+), 12 deletions(-)
-
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 600784acc4ac..c3e9c821a5cb 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -465,6 +465,9 @@ struct vfio_irq_info_cap_type {
+ 	__u32 subtype;  /* type specific */
+ };
+ 
++#define VFIO_IRQ_TYPE_GFX				(1)
++#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)
++
+ /**
+  * VFIO_DEVICE_SET_IRQS - _IOW(VFIO_TYPE, VFIO_BASE + 10, struct vfio_irq_set)
+  *
 -- 
 2.17.1
 
