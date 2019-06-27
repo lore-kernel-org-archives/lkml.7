@@ -2,103 +2,125 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC88C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8CBC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F822086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D0D120828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:47:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BTBKI9dx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZGIqytna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfF0NqO (ORCPT
+        id S1726648AbfF0Nrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:46:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39525 "EHLO
+        Thu, 27 Jun 2019 09:47:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46357 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfF0NqO (ORCPT
+        with ESMTP id S1726370AbfF0Nrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:46:14 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so2653508wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 06:46:12 -0700 (PDT)
+        Thu, 27 Jun 2019 09:47:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so2633668wrw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 06:47:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=/919te5EBO6kM914CpYGsOFLurxjc/NmMo/1QG/Xa5A=;
-        b=BTBKI9dx+mpus8NIgL8rNZrseG0p0dmEql/3XYjBX2kUKXj9ECVmhx6IvT3FV+qnnU
-         /u3zb0JXUVXZ1GqpRjMtBoCObTp5aEsYQoiWEHDm0TnaZt3hPTTJBb/KGcqGOY7sFkKL
-         TiLqV6ZhTKVP8HEx5hJkSQO9lRSdTHz/NgqzDdUu6nRk2S/yZ7sdYd/cvF80phZK6UjW
-         1KoEwAiUCoumsxJpWunQvkVNeBgTZP1FiCdjcUlP7OkWuEm4LiICXfOb4RZ+0JOcJHPV
-         YRgi1J2mJy6vvKWwKm3M3IWc/iLDaqRve6qoMshfNMxqhTSt356qB7DdSAjxDbrNL4Rt
-         O5Mw==
+        bh=pibKCnI+c/rSlOBpb0r95ES5GvDfOsIXxIlsP9rgtNk=;
+        b=ZGIqytnafn9W9KYHdRvIPI0mnz+wDCfqvovREHwYm2fi9m5/4xTx97D+OnH4DvFtG9
+         IeddSszuzt6bcu0IrL8EMQ/p0xls7alc4GB0yjkOQ+lGtGFoZFWcn4inwOvzmfXRalDY
+         D0tnk8eJ15qqAmI5OZynqo1Z+txwc7T7thL92PG2o69nAByEGwyN+PDuFsEVfbvy7l74
+         eaj9iYj9d1RuzpuIEp7l6o/JSZCn1ghaIRWU4xhubctPxKYvABnsAhm9qcm0mkYWPTob
+         j5lXCvBWCdncEICavkGfc6VtZCegNigooNRzP4HeXJIdDo6TZwN4d2MAUFXU8yACIZgX
+         mhfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=/919te5EBO6kM914CpYGsOFLurxjc/NmMo/1QG/Xa5A=;
-        b=MJ1uWcJ/R9zWAysvShyIfPjHwsI9we/3CeS6o46gFpJFniAVYKoIzwAfki3uiRppt9
-         vPpwbI+eVjfNlQ4QuhJ/Uu7IetZUVt57imh021qJZAh4HOz9AA7Y7hO5x6NuCNFFdjbg
-         WZXEgECCfQgJI3J5tXc1kNifiTOngImjmcwGREiaYz9MmMn1wDxVW6Qi6mG2f+rNd0aG
-         xM2i2Uq2Mz3LxmrVTIjTFsU3tWNd3UFSyUrAmL3YTM4uBLqKZcwYvsAZDLHwhijB5VoH
-         IVHhk+eKBXxZoLYTDXai+TWTlqwbk3jNncZaMdanmpk8j79MDWPCf/VEntyv053ZPw19
-         a93Q==
-X-Gm-Message-State: APjAAAVPvHRAqyzfs4g5PODEX6ZU+NxkXjnT9DWqP+lDC9RtA46/b5Tl
-        W1SssqjnK0Qc8cf9zlZuyzMQoQ==
-X-Google-Smtp-Source: APXvYqyzaI4+6KntP+zl6u1fbjYwGBVRfBIJ4qdqo0Zs/e5ASJSedLfMzV+TX57WdgXVuCe/Vq14ww==
-X-Received: by 2002:adf:8028:: with SMTP id 37mr3363716wrk.106.1561643172103;
-        Thu, 27 Jun 2019 06:46:12 -0700 (PDT)
+        bh=pibKCnI+c/rSlOBpb0r95ES5GvDfOsIXxIlsP9rgtNk=;
+        b=gszfLvUq6Aapw+kCBZ2C/QMa/AvDStmVxzGYc40XsxOpelevgf06F1AUK8GHD1w3ez
+         +4vFbvuk9rxtkztEGexSCAaA0lblWRyqOwNNmwYYmT9PxW9CZ2H+KkZ5mQoCH7yBYkoJ
+         iNySvUCrhLlNdQPGHuzXshUHz1Zg7j7LkTdZknH1M4mBEYmvXjCcKwzXF4BjyOfuYx2S
+         ALQyNSCVWFcBhlyKJhdNUkCr3r1sEpoVorTsHdJWSjJCxsDYRmV3Aeb6jrhsVPFY9GZr
+         yfD7/t+7QSBgJr2Su3eNtXtV+CCNb83fQhuxNWBBX/nBzlfvT6nmj2IQyoEHp8+byedl
+         Mc/g==
+X-Gm-Message-State: APjAAAVq15XCmPNomdDaRS0/alZjk75jNwSQh3C0ojNguDhBE2z6PlVo
+        t+Wd8rlLW4lPTHR1bH7rX96vYcnkp98=
+X-Google-Smtp-Source: APXvYqwp714jRoQiiBTfOVZdMMYMNpk0wu1ZV9lBtDnLP5BSZdcXUmTdATLmoLgA6vGxS7PjMRwJng==
+X-Received: by 2002:a5d:4087:: with SMTP id o7mr3398342wrp.277.1561643270675;
+        Thu, 27 Jun 2019 06:47:50 -0700 (PDT)
 Received: from dell ([2.27.35.164])
-        by smtp.gmail.com with ESMTPSA id s10sm1516126wrt.49.2019.06.27.06.46.11
+        by smtp.gmail.com with ESMTPSA id j32sm4600419wrj.43.2019.06.27.06.47.49
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 06:46:11 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 14:46:10 +0100
+        Thu, 27 Jun 2019 06:47:50 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 14:47:48 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH 2/2] mfd: madera: Fixup SPDX headers
-Message-ID: <20190627134610.GF2000@dell>
-References: <20190626133336.12466-1-ckeepax@opensource.cirrus.com>
- <20190626133336.12466-2-ckeepax@opensource.cirrus.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Chen Feng <puck.chen@hisilicon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND] mfd: hi655x-pmic: Fix missing return value check
+ for devm_regmap_init_mmio_clk
+Message-ID: <20190627134748.GG2000@dell>
+References: <20190626133007.591-1-axel.lin@ingics.com>
+ <40ae33d4-10fd-852a-30e6-db56d709ef1c@hisilicon.com>
+ <CAFRkauDFf0qWpovNaaMkB48RXAsRsGEQ_=osSM7+Ze59C8DEkw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190626133336.12466-2-ckeepax@opensource.cirrus.com>
+In-Reply-To: <CAFRkauDFf0qWpovNaaMkB48RXAsRsGEQ_=osSM7+Ze59C8DEkw@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019, Charles Keepax wrote:
+On Thu, 27 Jun 2019, Axel Lin wrote:
 
-> GPL-2.0-only is the preferred way of expressing v2 of the GPL, so switch
-> to that. Remove some redundant copyright notices and correct some
-> instances where the wrong comment type has been used in header files.
+> Hi Chen,
 > 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  drivers/mfd/cs47l15-tables.c         | 2 +-
->  drivers/mfd/cs47l35-tables.c         | 6 +-----
->  drivers/mfd/cs47l85-tables.c         | 6 +-----
->  drivers/mfd/cs47l90-tables.c         | 6 +-----
->  drivers/mfd/cs47l92-tables.c         | 2 +-
->  drivers/mfd/madera-core.c            | 6 +-----
->  drivers/mfd/madera-i2c.c             | 6 +-----
->  drivers/mfd/madera-spi.c             | 6 +-----
->  include/linux/mfd/madera/core.h      | 6 +-----
->  include/linux/mfd/madera/pdata.h     | 6 +-----
->  include/linux/mfd/madera/registers.h | 6 +-----
->  11 files changed, 11 insertions(+), 47 deletions(-)
+> Chen Feng <puck.chen@hisilicon.com> 於 2019年6月27日 週四 上午10:03寫道：
+> >
+> > Thanks
+> I assume this is an Ack.
+> If you can add your Acked-by in the reply, it's easier for maintainer to accept
+> the patch.
 
-Applied, thanks.
+Looks to me like he already Acked it.
+
+Which is looks like you already applied?
+
+> > On 2019/6/26 21:30, Axel Lin wrote:
+> > > Since devm_regmap_init_mmio_clk can fail, add return value checking.
+> > >
+> > > Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> > > Acked-by: Chen Feng <puck.chen@hisilicon.com>
+> > > ---
+> > > This was sent on https://lkml.org/lkml/2019/3/6/904
+> > >
+> > >   drivers/mfd/hi655x-pmic.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/mfd/hi655x-pmic.c b/drivers/mfd/hi655x-pmic.c
+> > > index 96c07fa1802a..6693f74aa6ab 100644
+> > > --- a/drivers/mfd/hi655x-pmic.c
+> > > +++ b/drivers/mfd/hi655x-pmic.c
+> > > @@ -112,6 +112,8 @@ static int hi655x_pmic_probe(struct platform_device *pdev)
+> > >
+> > >       pmic->regmap = devm_regmap_init_mmio_clk(dev, NULL, base,
+> > >                                                &hi655x_regmap_config);
+> > > +     if (IS_ERR(pmic->regmap))
+> > > +             return PTR_ERR(pmic->regmap);
+> > >
+> > >       regmap_read(pmic->regmap, HI655X_BUS_ADDR(HI655X_VER_REG), &pmic->ver);
+> > >       if ((pmic->ver < PMU_VER_START) || (pmic->ver > PMU_VER_END)) {
+> > >
+> >
 
 -- 
 Lee Jones [李琼斯]
