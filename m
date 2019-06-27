@@ -2,163 +2,166 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ED7C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D412FC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B7620828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A633C20828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="u4L4t4wm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dyamLpzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfF0HP7 (ORCPT
+        id S1726506AbfF0HQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:15:59 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:16276 "EHLO mx01-fr.bfs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbfF0HP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:15:59 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 824852034F;
-        Thu, 27 Jun 2019 09:15:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1561619752; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f1/5Z9n4REvDVdHCnPikWKciGEfqNbNYC3LEdIzWTAk=;
-        b=u4L4t4wmWvi8iseBfC9qiTLfnSX/ZyjAH4jO+V2ooWNuU7twJVgVwPDTDoptMW5xVg7b42
-        a0xVCp+kuWeRa1AwCgyoe5m46CrSTROnC9T5kBzxyWaZ9dO80xpPv/nuvqvDeKtmW8xltV
-        Pd1Wfa6+lKdpdXgwvkmzemzsf+VxagbMk8cy4o7TUIRC5+5exIJUm57QYU+PtdI3iH6P4Q
-        VXV+1EEgxPosP9mfyQtpyoVlGKXNiVIAmt5OIShvdNEC42YyCGQRYId6jbMOgT08HwaXhm
-        tqvjlfXVYjAAPGIYDoE4UM2jPKimEUQFU36Fg6uGT+iT0FByxAWPwzqa70mWbg==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id 4E0A2BEEBD;
-        Thu, 27 Jun 2019 09:15:52 +0200 (CEST)
-Message-ID: <5D146D28.90204@bfs.de>
-Date:   Thu, 27 Jun 2019 09:15:52 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
+        Thu, 27 Jun 2019 03:16:24 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54898 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfF0HQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 03:16:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Adl0vr62TYYsl73Le7yrJGhjQV3e374BPJaykChMxu0=; b=dyamLpzz1keSN5aTYUNqAD0Ow
+        e4n10Dl2RmO0cDmpL1WgzWoDtGx9fZhVhp/VE4pB4+KyLm6GSLi6nKfDvMq+KX/o9SDT+xTKkUOR0
+        FC9Ck/Kek6z8lCc2ynD3HiGrvJkRj/D0tFQcFkx5Mw03Tq4cUiAEZouTLb81eWltIK5Z49HxIsO+y
+        cwm38yVJiS+vV21yzwhH7BxXe39IjDTFICXvLCJrQqJ6ttUwYhNAwxoGdfHwRcYrJm7xCA9OWwiYP
+        GUErFHTQpq1Ajn8UWwwgiGJFQsulyi1lQs6l7jB7tRV/2Noj7ZIozHA1o//vwbEMC5i29hKMDuPz+
+        MTRj9QCZQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgOdd-0007RE-UE; Thu, 27 Jun 2019 07:16:10 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A2CFF20A714BA; Thu, 27 Jun 2019 09:16:08 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 09:16:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shawn Landden <shawn@git.icu>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] perf/x86/intel: Mark expected switch fall-throughs
+Message-ID: <20190627071608.GA3402@hirez.programming.kicks-ass.net>
+References: <3dc75cd4-9a8d-f454-b5fb-64c3e6d1f416@embeddedor.com>
+ <CANiq72mMS6tHcP8MHW63YRmbdFrD3ZCWMbnQEeHUVN49v7wyXQ@mail.gmail.com>
+ <20190625071846.GN3436@hirez.programming.kicks-ass.net>
+ <201906251009.BCB7438@keescook>
+ <20190625180525.GA119831@archlinux-epyc>
+ <alpine.DEB.2.21.1906252127290.32342@nanos.tec.linutronix.de>
+ <20190625202746.GA83499@archlinux-epyc>
+ <alpine.DEB.2.21.1906252255440.32342@nanos.tec.linutronix.de>
+ <20190626092432.GJ3419@hirez.programming.kicks-ass.net>
+ <CAKwvOdm3qvaFH47MxJ9PWMbhYumt9V7gTASO5-ZAzwTVBUQqyA@mail.gmail.com>
 MIME-Version: 1.0
-To:     Colin King <colin.king@canonical.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next][V2] media: vivid: fix potential integer overflow
- on left shift
-References: <20190626144746.27607-1-colin.king@canonical.com>
-In-Reply-To: <20190626144746.27607-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[xs4all.nl];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         RCPT_COUNT_FIVE(0.00)[6];
-         DKIM_SIGNED(0.00)[];
-         NEURAL_HAM(-0.00)[-0.999,0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[xs4all.nl];
-         MID_RHS_MATCH_FROM(0.00)[];
-         RCVD_TLS_ALL(0.00)[];
-         RCVD_COUNT_TWO(0.00)[2]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdm3qvaFH47MxJ9PWMbhYumt9V7gTASO5-ZAzwTVBUQqyA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 26, 2019 at 03:15:38PM -0700, Nick Desaulniers wrote:
+> On Wed, Jun 26, 2019 at 2:24 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Tue, Jun 25, 2019 at 11:47:06PM +0200, Thomas Gleixner wrote:
+> > > > On Tue, Jun 25, 2019 at 09:53:09PM +0200, Thomas Gleixner wrote:
+> >
+> > > > > but it also makes objtool unhappy:
+> > > > >
+> > > > >  arch/x86/events/intel/core.o: warning: objtool: intel_pmu_nhm_workaround()+0xb3: unreachable instruction
+> > > > >  kernel/fork.o: warning: objtool: free_thread_stack()+0x126: unreachable instruction
+> > > > >  mm/workingset.o: warning: objtool: count_shadow_nodes()+0x11f: unreachable instruction
+> > > > >  arch/x86/kernel/cpu/mtrr/generic.o: warning: objtool: get_fixed_ranges()+0x9b: unreachable instruction
+> > > > >  arch/x86/kernel/platform-quirks.o: warning: objtool: x86_early_init_platform_quirks()+0x84: unreachable instruction
+> > > > >  drivers/iommu/irq_remapping.o: warning: objtool: irq_remap_enable_fault_handling()+0x1d: unreachable instruction
+> >
+> > > I just checked two of them in the disassembly. In both cases it's jump
+> > > label related. Here is one:
+> > >
+> > >       asm volatile("1: rdmsr\n"
+> > >  410:   b9 59 02 00 00          mov    $0x259,%ecx
+> > >  415:   0f 32                   rdmsr
+> > >  417:   49 89 c6                mov    %rax,%r14
+> > >  41a:   48 89 d3                mov    %rdx,%rbx
+> > >       return EAX_EDX_VAL(val, low, high);
+> > >  41d:   48 c1 e3 20             shl    $0x20,%rbx
+> > >  421:   48 09 c3                or     %rax,%rbx
+> > >  424:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > >  429:   eb 0f                   jmp    43a <get_fixed_ranges+0xaa>
+> > >       do_trace_read_msr(msr, val, 0);
+> > >  42b:   bf 59 02 00 00          mov    $0x259,%edi   <------- "unreachable"
+> > >  430:   48 89 de                mov    %rbx,%rsi
+> > >  433:   31 d2                   xor    %edx,%edx
+> > >  435:   e8 00 00 00 00          callq  43a <get_fixed_ranges+0xaa>
+> > >  43a:   44 89 35 00 00 00 00    mov    %r14d,0x0(%rip)        # 441 <get_fixed_ranges+0xb1>
+> > >
+> > > Interestingly enough there are some more hunks of the same pattern in that
+> > > function which look all the same. Those are not upsetting objtool. Josh
+> > > might give an hint where to stare at.
+> >
+> > That's pretty atrocious code-gen :/ Does LLVM support things like label
+> > attributes? Back when we did jump labels GCC didn't, or rather, it
+> > ignored it completely when combined with asm goto (and it might still).
+> >
+> > That is, would something like this:
+> >
+> > diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
+> > index 06c3cc22a058..1761b1e76ddc 100644
+> > --- a/arch/x86/include/asm/jump_label.h
+> > +++ b/arch/x86/include/asm/jump_label.h
+> > @@ -32,7 +32,7 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
+> >                 : :  "i" (key), "i" (branch) : : l_yes);
+> >
+> >         return false;
+> > -l_yes:
+> > +l_yes: __attribute__((cold));
+> >         return true;
+> >  }
+> >
+> > @@ -49,7 +49,7 @@ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
+> >                 : :  "i" (key), "i" (branch) : : l_yes);
+> >
+> >         return false;
+> > -l_yes:
+> > +l_yes: __attribute__((hot));
+> >         return true;
+> >  }
+> >
+> > Help LLVM?
 
+As I wrote later; the above suggestion is actually wrong :/
 
-Am 26.06.2019 16:47, schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a potential integer overflow when int 2 is left shifted
-> as this is evaluated using 32 bit arithmetic but is being used in
-> a context that expects an expression of type s64.  Fix this by
-> shifting 2ULL to avoid a 32 bit overflow.
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 8a99e9faa131 ("media: vivid: add HDMI (dis)connect RX emulation")
-> Fixes: 79a792dafac6 ("media: vivid: add HDMI (dis)connect TX emulation")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> So Clang definitely complains about putting attribute hot/cold on
+> labels: https://godbolt.org/z/N-Z33Q
+> In my test case I wasn't able to influence code gen with them though
+> in GCC at -O2 or -O0.  Maybe GCC has a test case that shows how they
+> should work?
 
-Reviewed-by: wharms <wharms@bfs.de>
- looks less confusing now, thx
+As I wrote in that same later email; the way we influence the actual
+code-layout is with the __builtin_expect() thing. Let me expand on that
+in another email.
 
-
-> ---
-> V2: use intermediate variables for the shifted expression to make code
->     a bit more readable.
-> ---
->  drivers/media/platform/vivid/vivid-ctrls.c | 24 +++++++++++-----------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vivid/vivid-ctrls.c b/drivers/media/platform/vivid/vivid-ctrls.c
-> index 3e916c8befb7..df1598e81c7a 100644
-> --- a/drivers/media/platform/vivid/vivid-ctrls.c
-> +++ b/drivers/media/platform/vivid/vivid-ctrls.c
-> @@ -1613,6 +1613,8 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
->  	}
->  
->  	if (dev->num_hdmi_inputs) {
-> +		s64 hdmi_input = (2ULL << (dev->num_hdmi_inputs - 1)) - 1;
-> +
->  		dev->ctrl_dv_timings_signal_mode = v4l2_ctrl_new_custom(hdl_vid_cap,
->  					&vivid_ctrl_dv_timings_signal_mode, NULL);
->  
-> @@ -1633,12 +1635,13 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
->  			V4L2_CID_DV_RX_RGB_RANGE, V4L2_DV_RGB_RANGE_FULL,
->  			0, V4L2_DV_RGB_RANGE_AUTO);
->  		dev->ctrl_rx_power_present = v4l2_ctrl_new_std(hdl_vid_cap,
-> -			NULL, V4L2_CID_DV_RX_POWER_PRESENT, 0,
-> -			(2 << (dev->num_hdmi_inputs - 1)) - 1, 0,
-> -			(2 << (dev->num_hdmi_inputs - 1)) - 1);
-> +			NULL, V4L2_CID_DV_RX_POWER_PRESENT, 0, hdmi_input,
-> +			0, hdmi_input);
->  
->  	}
->  	if (dev->num_hdmi_outputs) {
-> +		s64 hdmi_output = (2ULL << (dev->num_hdmi_outputs - 1)) - 1;
-> +
->  		/*
->  		 * We aren't doing anything with this at the moment, but
->  		 * HDMI outputs typically have this controls.
-> @@ -1652,17 +1655,14 @@ int vivid_create_controls(struct vivid_dev *dev, bool show_ccs_cap,
->  		dev->ctrl_display_present = v4l2_ctrl_new_custom(hdl_vid_out,
->  			&vivid_ctrl_display_present, NULL);
->  		dev->ctrl_tx_hotplug = v4l2_ctrl_new_std(hdl_vid_out,
-> -			NULL, V4L2_CID_DV_TX_HOTPLUG, 0,
-> -			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
-> -			(2 << (dev->num_hdmi_outputs - 1)) - 1);
-> +			NULL, V4L2_CID_DV_TX_HOTPLUG, 0, hdmi_output,
-> +			0, hdmi_output);
->  		dev->ctrl_tx_rxsense = v4l2_ctrl_new_std(hdl_vid_out,
-> -			NULL, V4L2_CID_DV_TX_RXSENSE, 0,
-> -			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
-> -			(2 << (dev->num_hdmi_outputs - 1)) - 1);
-> +			NULL, V4L2_CID_DV_TX_RXSENSE, 0, hdmi_output,
-> +			0, hdmi_output);
->  		dev->ctrl_tx_edid_present = v4l2_ctrl_new_std(hdl_vid_out,
-> -			NULL, V4L2_CID_DV_TX_EDID_PRESENT, 0,
-> -			(2 << (dev->num_hdmi_outputs - 1)) - 1, 0,
-> -			(2 << (dev->num_hdmi_outputs - 1)) - 1);
-> +			NULL, V4L2_CID_DV_TX_EDID_PRESENT, 0, hdmi_output,
-> +			0, hdmi_output);
->  	}
->  	if ((dev->has_vid_cap && dev->has_vid_out) ||
->  	    (dev->has_vbi_cap && dev->has_vbi_out))
+Sadly, I've no clue what so ever about compiler internals, be it GCC or
+LLVM.
