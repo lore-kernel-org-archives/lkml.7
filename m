@@ -2,92 +2,152 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83631C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89119C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5296320663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561654034;
-	bh=4xUGv1/o6blMAKCCJJ4W4BVLGoWulRvdcHqF1JjKY2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kHihaECf/MQ+oKE3L3LyMH5GuVU1Pe+YYWvNyQQ46vMhiYybFq+1R8wbzaMwyU+Z6
-	 N/OqlsXJ+d4c1Dc6XJqJ99dyG+y2mf0v0NOWxp/IHV4Si/ZF3VnlpCEDPbrGXZgMVA
-	 du8NvQmE+ND3v9rltLGwmJlcyw52a40ZLK4739y4=
+	by mail.kernel.org (Postfix) with ESMTP id 622D7214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:47:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="yL54hFeM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbfF0QrN (ORCPT
+        id S1726655AbfF0Qri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfF0QrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:47:13 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BCD2054F;
-        Thu, 27 Jun 2019 16:47:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561654032;
-        bh=4xUGv1/o6blMAKCCJJ4W4BVLGoWulRvdcHqF1JjKY2g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oDIpUHGYhjrQKfQtioIrtGLI5WLEzWVGVW1ZuPbuDNGK4TeZdUEWZB1k8gKj5At/8
-         aXyF95c7d2u2o8zP78iql17oz8bmky8JtFX7D9HEkmM2+8cX7/SeNfyW71K7c05HZT
-         IKQoQLGhlMOjPS1M838B5E/acmo7oduSjvbk1ls8=
-Date:   Thu, 27 Jun 2019 17:47:06 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, will.deacon@arm.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        catalin.marinas@arm.com, lenb@kernel.org
-Subject: Re: [PATCH v5 0/4] arm64: SPE ACPI enablement
-Message-ID: <20190627164706.rdmoze4we2dcshts@willie-the-truck>
-References: <20190626213718.39423-1-jeremy.linton@arm.com>
+        Thu, 27 Jun 2019 12:47:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38758 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfF0Qrh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:47:37 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so3078727ljg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:47:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fP8Sg3qOi5RkXjx6ZyzKJn5DQ7slXEGVgd1aV4dwPMs=;
+        b=yL54hFeMZHqyW7Ixx4fI2UB2nyITEp3UG11a33d3ga9G/npgfHBKurYmAhoo6abFOB
+         dQioC/MtzJkNc4w1xvunxd2M+lI82+lvxwwgjWYYFxUHYfP/tDAIveYLx3GHA9bbXvd8
+         kE6gNmilJFrsXlgsA5QcvEvEG3hQIQw2a/bKc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fP8Sg3qOi5RkXjx6ZyzKJn5DQ7slXEGVgd1aV4dwPMs=;
+        b=p4JBu8QbKWzls3LfGprlt3tyvLBNO+8rYqV7y0F/jNJY5fiGO2fNv2MdUg0HXdrofu
+         mRSYnnTcJgwk2JpojIAhK/e05f2xVpyCsJ8xOaNp5dpE/fFStOf348hzoX7ViwdApUy6
+         /AQybrY80YXS1GPBCTloKZ9YIpE2tWFRyKQEPaSRAK6+c7Huxb307DYPvMXrcOuLQtlC
+         7hcLGuXsqj5vCgG6InupL2ZnjM1HGtBYuzXURaK8/PV5Vz7Yq14XtEXjQ/fpInea1S2M
+         +NLxcVtrL6nxZI3ey8kuN7gKDwXjBTvdK/T+sk7BE69hz3P3NaX5LdePjyjST4AAlxgh
+         Aq+g==
+X-Gm-Message-State: APjAAAVhA8KrdHe3SwbZUKYs1LaEKHMs55iYoxa+SZbXeBFdmu5Ah/HW
+        oldq6j0AUDIq5AoSXeF0GG8MK7mMLKxz1v/OxpT1cg==
+X-Google-Smtp-Source: APXvYqxw8W5U4CLprBkvfkk69su6Tl2j2dyf8Tx/LjZ+7eUUdWaQJYhaT3WTvGpyHsojfx1wvZ7M/rR1AtbR8RmWWrU=
+X-Received: by 2002:a2e:1510:: with SMTP id s16mr3152570ljd.19.1561654055489;
+ Thu, 27 Jun 2019 09:47:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190626213718.39423-1-jeremy.linton@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190626135447.y24mvfuid5fifwjc@linutronix.de>
+ <20190626162558.GY26519@linux.ibm.com> <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home> <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
+In-Reply-To: <20190627155506.GU26519@linux.ibm.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Thu, 27 Jun 2019 12:47:24 -0400
+Message-ID: <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 04:37:14PM -0500, Jeremy Linton wrote:
-> This patch series enables the Arm Statistical Profiling
-> Extension (SPE) on ACPI platforms.
-> 
-> This is possible because ACPI 6.3 uses a previously
-> reserved field in the MADT to store the SPE interrupt
-> number, similarly to how the normal PMU is described.
-> If a consistent valid interrupt exists across all the
-> cores in the system, a platform device is registered.
-> That then triggers the SPE module, which runs as normal.
-> 
-> We also add the ability to parse the PPTT for IDENTICAL
-> cores. We then use this to sanity check the single SPE
-> device we create. This creates a bit of a problem with
-> respect to the specification though. The specification
-> says that its legal for multiple tree's to exist in the
-> PPTT. We handle this fine, but what happens in the
-> case of multiple tree's is that the lack of a common
-> node with IDENTICAL set forces us to assume that there
-> are multiple non-IDENTICAL cores in the machine.
-> 
-> v4->v5: Remove error returns from arm_spe_acpi_register_device()
-> 	Add some review/test tags
+On Thu, Jun 27, 2019 at 11:55 AM Paul E. McKenney <paulmck@linux.ibm.com> wrote:
+>
+> On Thu, Jun 27, 2019 at 11:30:31AM -0400, Joel Fernandes wrote:
+> > On Thu, Jun 27, 2019 at 10:34:55AM -0400, Steven Rostedt wrote:
+> > > On Thu, 27 Jun 2019 10:24:36 -0400
+> > > Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > > > What am I missing here?
+> > > >
+> > > > This issue I think is
+> > > >
+> > > > (in normal process context)
+> > > > spin_lock_irqsave(rq_lock); // which disables both preemption and interrupt
+> > > >                      // but this was done in normal process context,
+> > > >                      // not from IRQ handler
+> > > > rcu_read_lock();
+> > > >           <---------- IPI comes in and sets exp_hint
+> > >
+> > > How would an IPI come in here with interrupts disabled?
+> > >
+> > > -- Steve
+> >
+> > This is true, could it be rcu_read_unlock_special() got called for some
+> > *other* reason other than the IPI then?
+> >
+> > Per Sebastian's stack trace of the recursive lock scenario, it is happening
+> > during cpu_acct_charge() which is called with the rq_lock held.
+> >
+> > The only other reasons I know off to call rcu_read_unlock_special() are if
+> > 1. the tick indicated that the CPU has to report a QS
+> > 2. an IPI in the middle of the reader section for expedited GPs
+> > 3. preemption in the middle of a preemptible RCU reader section
+>
+> 4. Some previous reader section was IPIed or preempted, but either
+>    interrupts, softirqs, or preemption was disabled across the
+>    rcu_read_unlock() of that previous reader section.
 
-Cheers, I've pushed this out with the acks and typo fixes.
+Hi Paul, I did not fully understand 4. The previous RCU reader section
+could not have been IPI'ed or been preempted if interrupts were
+disabled across. Also, if softirq/preempt is disabled across the
+previous reader section, the previous reader could not be preempted in
+these case.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-next/perf
+That leaves us with the only scenario where the previous reader was
+IPI'ed while softirq/preempt was disabled across it. Is that what you
+meant? But in this scenario, the previous reader should have set
+exp_hint to false in the previous reader's rcu_read_unlock_special()
+invocation itself. So I would think t->rcu_read_unlock_special should
+be 0 during the new reader's invocation thus I did not understand how
+rcu_read_unlock_special can be called because of a previous reader.
 
-Please let me know if you spot any problems.
+I'll borrow some of that confused color paint if you don't mind ;-)
+And we should document this somewhere for future sanity preservation
+:-D
 
-Will
+thanks,
+ - Joel
+
+
+
+>
+> I -think- that this is what Sebastian is seeing.
+>
+>                                                         Thanx, Paul
+>
+> > 1. and 2. are not possible because interrupts are disabled, that's why the
+> > wakeup_softirq even happened.
+> > 3. is not possible because we are holding rq_lock in the RCU reader section.
+> >
+> > So I am at a bit of a loss how this can happen :-(
+> >
+> > Spurious call to rcu_read_unlock_special() may be when it should not have
+> > been called?
+> >
+> > thanks,
+> >
+> > - Joel
