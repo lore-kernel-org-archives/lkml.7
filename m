@@ -2,136 +2,94 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1639EC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CDFC5B576
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC7D208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:31:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561671082;
-	bh=ZsseVldRJH9RSUFPVxvJz3Cdj/PcfpE19W1mrLCZhZk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=a/+MlpThQAl1bW4m+npNRNMzVnrV1YHEsdp8kgGmUPbsrQld70GtGNdh/VslmJb7i
-	 DjfSE51aPE1l2XN00bCWKAmlDDP/c/JQLa6wuOAFDi/m/qasp1Yb94jy11t9RrhU+h
-	 VvK+SbD/6nZwbKJv9yPSRQ67yr0dQe13vrTYJcNc=
+	by mail.kernel.org (Postfix) with ESMTP id DB93921726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfF0VbU (ORCPT
+        id S1726605AbfF0Vc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:31:20 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46695 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbfF0VbU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:31:20 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z23so3791643ote.13;
-        Thu, 27 Jun 2019 14:31:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x1SnWA9DFUhRdoSwMwoAjC3R75VohWjZ3wyZhwcVI0I=;
-        b=qCWKmcCJ7XpqNs2XNTW+pyy0WVpkom8KogxcCBVUpRzRP0EeD7wUD4qklLsFCX31Vq
-         GqqzlqY2gHJq6fof1PnY7CWBe3On4Q7mFyZwx35ev4BpYFnjT7gkp/ptkKqSIYmDe7j/
-         0wS0gHBCX0yTudc24etxkmIsh3I4QtFdFGgyXgNcEHLO/ED0STnsa2781jRKhhoV9oqu
-         GQtSmqS27cldxgkhQLet2lcmLxlk4sYdIP6EJyYxhpX8Vgy7Pf5zf0GvCEfUBU1asRcx
-         5aB5ipAKuHPHLuCvfo5Ax3Av7oLpKeP556TTOkRLikW2CefqDRJhB/jpoM+Kx7kfV0CZ
-         gQ/g==
-X-Gm-Message-State: APjAAAW+bKet4RlshBMr2BQq2Kfl+0QI0+f0EnJDRFGOVZ/KROXIUWqN
-        y1LceFA7+s0cJTWNZcLr5ri59plbidGD95Vtq/0=
-X-Google-Smtp-Source: APXvYqwRxpD1ZnhLRVEKbWRFwO4WTEF0OSE2DyA8cuCq4FlsfIbinxoruHvh8I0Or1KnwcZmWQAdShb2BVZGGbnG15k=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr5062269oto.118.1561671079104;
- Thu, 27 Jun 2019 14:31:19 -0700 (PDT)
+        Thu, 27 Jun 2019 17:32:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55340 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbfF0Vc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 17:32:27 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CBC2558E5C;
+        Thu, 27 Jun 2019 21:32:06 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 28CB85D9D2;
+        Thu, 27 Jun 2019 21:31:59 +0000 (UTC)
+Subject: Re: [PATCH 2/2] mm, slab: Extend vm/drop_caches to shrink kmem slabs
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>
+References: <20190624174219.25513-1-longman@redhat.com>
+ <20190624174219.25513-3-longman@redhat.com>
+ <20190626201900.GC24698@tower.DHCP.thefacebook.com>
+ <063752b2-4f1a-d198-36e7-3e642d4fcf19@redhat.com>
+ <20190627212419.GA25233@tower.DHCP.thefacebook.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <73f18141-7e74-9630-06ff-ac8cf9688e6e@redhat.com>
+Date:   Thu, 27 Jun 2019 17:31:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190627210209.32600-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20190627210209.32600-1-daniel.lezcano@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 27 Jun 2019 23:31:08 +0200
-Message-ID: <CAJZ5v0gA0sgpkaPCJwe1J7zqRynnwttGT-hcknfCF_LwBw5oHw@mail.gmail.com>
-Subject: Re: [PATCH V4 1/3] cpufreq: Move the IS_ENABLED(CPU_THERMAL) macro in
- a stub
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
-        <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190627212419.GA25233@tower.DHCP.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 27 Jun 2019 21:32:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:02 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> The cpufreq_online and the cpufreq_offline [un]register the driver as
-> a cooling device. This is done if the driver is flagged as a cooling
-> device in addition with a IS_ENABLED macro to compile out the branching
-> code.
->
-> Group this test in a stub function added in the cpufreq header instead
-> of having the IS_ENABLED in the code path.
->
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+On 6/27/19 5:24 PM, Roman Gushchin wrote:
+>>> 2) what's your long-term vision here? do you think that we need to shrink
+>>>    kmem_caches periodically, depending on memory pressure? how a user
+>>>    will use this new sysctl?
+>> Shrinking the kmem caches under extreme memory pressure can be one way
+>> to free up extra pages, but the effect will probably be temporary.
+>>> What's the problem you're trying to solve in general?
+>> At least for the slub allocator, shrinking the caches allow the number
+>> of active objects reported in slabinfo to be more accurate. In addition,
+>> this allow to know the real slab memory consumption. I have been working
+>> on a BZ about continuous memory leaks with a container based workloads.
+>> The ability to shrink caches allow us to get a more accurate memory
+>> consumption picture. Another alternative is to turn on slub_debug which
+>> will then disables all the per-cpu slabs.
+> I see... I agree with Michal here, that extending drop_caches sysctl isn't
+> the best idea. Isn't it possible to achieve the same effect using slub sysfs?
 
-This one has been queued up for 5.3 already, no need to resend.
+Yes, using the slub sysfs interface can be a possible alternative.
 
-Thanks!
+Cheers,
+Longman
 
-> ---
->  drivers/cpufreq/cpufreq.c | 6 ++----
->  include/linux/cpufreq.h   | 6 ++++++
->  2 files changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 85ff958e01f1..aee024e42618 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1378,8 +1378,7 @@ static int cpufreq_online(unsigned int cpu)
->         if (cpufreq_driver->ready)
->                 cpufreq_driver->ready(policy);
->
-> -       if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
-> -           cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV)
-> +       if (cpufreq_thermal_control_enabled(cpufreq_driver))
->                 policy->cdev = of_cpufreq_cooling_register(policy);
->
->         pr_debug("initialization complete\n");
-> @@ -1469,8 +1468,7 @@ static int cpufreq_offline(unsigned int cpu)
->                 goto unlock;
->         }
->
-> -       if (IS_ENABLED(CONFIG_CPU_THERMAL) &&
-> -           cpufreq_driver->flags & CPUFREQ_IS_COOLING_DEV) {
-> +       if (cpufreq_thermal_control_enabled(cpufreq_driver)) {
->                 cpufreq_cooling_unregister(policy->cdev);
->                 policy->cdev = NULL;
->         }
-> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> index d01a74fbc4db..a1467aa7f58b 100644
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -409,6 +409,12 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver_data);
->  const char *cpufreq_get_current_driver(void);
->  void *cpufreq_get_driver_data(void);
->
-> +static inline int cpufreq_thermal_control_enabled(struct cpufreq_driver *drv)
-> +{
-> +       return IS_ENABLED(CONFIG_CPU_THERMAL) &&
-> +               (drv->flags & CPUFREQ_IS_COOLING_DEV);
-> +}
-> +
->  static inline void cpufreq_verify_within_limits(struct cpufreq_policy *policy,
->                 unsigned int min, unsigned int max)
->  {
-> --
-> 2.17.1
->
