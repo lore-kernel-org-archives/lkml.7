@@ -2,247 +2,116 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D49AC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79561C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076C520989
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561593606;
-	bh=2//0RM0Eel4J/mpPXxL5mE1faNEGPDniF778R1+tnfw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=mg0GDHYeUxrFOtThe/WJYmOS96EH9v7oS9IfiEcG7v3Gq4E2uci3OEsx0LcuChVlh
-	 mnw8UXY7h2qO8nZr/6b28/3Tu0HLtgIuNeCbujX0QfllDGXs4EBGj2au+c1Ah2uht8
-	 uUtWD2EOt1ZhS4gbzWEWhM1/VXaDus0mt7ipl59Q=
+	by mail.kernel.org (Postfix) with ESMTP id 47E0420815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:01:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="W7K9i2pr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfF0AAE (ORCPT
+        id S1726696AbfF0ABT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:00:04 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35760 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbfF0AAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:00:04 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so759525ioo.2;
-        Wed, 26 Jun 2019 17:00:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=53IaqpMPerVQvE5lpwCouRahQV8Om4olnk1aH2ko0g8=;
-        b=fyerAui09rzodqkgck6mCAQTJNiB2/oMvJtyO4bs1E9J+RHMcLUcH5vhe2lr9T5Eqn
-         bVarnAOA05Stgo2ue12yMWpvDI/iboXBBovnatKAk8eMuPNqJ6ahEwxlsFS5DeH02EAA
-         t1gwVC/kMNI7CRCR+qa10x0r2PQAXa/lodOInEzkrRyqLzIP1/BihXpHqsxIdFdVErOf
-         GyRLLziLGjJ78vppXtcwVlAm6XPnT1jAwmqGvgr9XBjPmZhXy2/rkytn6GtWPxdekf4v
-         dBEF7khtOwhlLZ4T0fNGw6xHM1IDxXJ1E12mkZeu5URRknncTOLzR3QXOau36gQ5EAQr
-         3uMQ==
-X-Gm-Message-State: APjAAAVH2qMLklp+zijU8aPCHXngdvsKRJ3qKcowO7T10AKQ3kx4OrU7
-        kg16nnDMvYIHu/WbZ+pbZ8ExHwc=
-X-Google-Smtp-Source: APXvYqy5ezO/dANnHV+5w59X63kyA+lDVkCf1HEj3VQeONMkV/b1rEwNK5rUNDyShpwyMeIlhrynAg==
-X-Received: by 2002:a02:a384:: with SMTP id y4mr866306jak.77.1561593602990;
-        Wed, 26 Jun 2019 17:00:02 -0700 (PDT)
-Received: from localhost.localdomain ([64.188.179.243])
-        by smtp.googlemail.com with ESMTPSA id l2sm359969ioh.20.2019.06.26.17.00.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 17:00:02 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, Palmer Dabbelt <palmer@sifive.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: riscv: Limit cpus schema to only check RiscV 'cpu' nodes
-Date:   Wed, 26 Jun 2019 17:57:59 -0600
-Message-Id: <20190626235759.3615-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 26 Jun 2019 20:01:19 -0400
+Received: from ozlabs.org ([203.11.71.1]:60479 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbfF0ABS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:01:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Z0Rb1Hfbz9s3l;
+        Thu, 27 Jun 2019 10:01:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561593675;
+        bh=1lE9AUF6MyOky71wFSDxHTgjZyRnH5kKDXEGsh2PNMY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W7K9i2prjefws8sFIpZesIkplSmvPM27jioPoWN4t2FpUQH5MCEXwq/Ycue9xyNWI
+         TanvuBp9XouwFzA2vbteP29Lf9Nccr4aZPXiV842jDugOEtSOvTTibb6nz9zqqo5ru
+         sDZd/twnKNDFaNEgFgiGDBfaIrL0VNadNktcCyTqJiInJbRhg0F5gVcbA8S3nb32Ux
+         Q2c6VsmYZDiUkXqAo9f2vXK1/6TvXjHeqqOGqkGyG7o7HIzK95yANM91TojqjZzr4+
+         i78FbsozZ8smC3RdcuIPmDFUDTFi7/VMGs8LB4hq9sXhlGyCPo7lTjgktEAHB1QDAn
+         S0LETTsgkwqKA==
+Date:   Thu, 27 Jun 2019 10:01:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        sparclinux@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20190627100114.3eda815f@canb.auug.org.au>
+In-Reply-To: <20190626131318.GA5101@lst.de>
+References: <20190626225807.205f1382@canb.auug.org.au>
+        <20190626131318.GA5101@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/TmVpELSjnXhVlpZ+rR=WhJA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matching on the 'cpus' node was a bad choice because the schema is
-incorrectly applied to non-RiscV cpus nodes. As we now have a common cpus
-schema which checks the general structure, it is also redundant to do so
-in the Risc-V CPU schema.
+--Sig_/TmVpELSjnXhVlpZ+rR=WhJA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The downside is one could conceivably mix different architecture's cpu
-nodes or have typos in the compatible string. The latter problem pretty
-much exists for every schema.
+Hi Christoph,
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/riscv/cpus.yaml       | 143 ++++++++----------
- 1 file changed, 61 insertions(+), 82 deletions(-)
+On Wed, 26 Jun 2019 15:13:18 +0200 Christoph Hellwig <hch@lst.de> wrote:
+>
+> As that function is in code only there to provide compile coverage
+> something like this should fix the problem:
+>=20
+>=20
+> diff --git a/arch/sparc/include/asm/pgtable_64.h b/arch/sparc/include/asm=
+/pgtable_64.h
+> index 547ff96fb228..1599de730532 100644
+> --- a/arch/sparc/include/asm/pgtable_64.h
+> +++ b/arch/sparc/include/asm/pgtable_64.h
+> @@ -861,10 +861,12 @@ static inline unsigned long pud_page_vaddr(pud_t pu=
+d)
+>  #define pud_clear(pudp)			(pud_val(*(pudp)) =3D 0UL)
+>  #define pgd_page_vaddr(pgd)		\
+>  	((unsigned long) __va(pgd_val(pgd)))
+> -#define pgd_page(pgd)			pfn_to_page(pgd_pfn(pgd))
+>  #define pgd_present(pgd)		(pgd_val(pgd) !=3D 0U)
+>  #define pgd_clear(pgdp)			(pgd_val(*(pgdp)) =3D 0UL)
+> =20
+> +/* only used by the stubbed out hugetlb gup code, should never be called=
+ */
+> +#define pgd_page(pgd)			NULL
+> +
+>  static inline unsigned long pud_large(pud_t pud)
+>  {
+>  	pte_t pte =3D __pte(pud_val(pud));
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index 27f02ec4bb45..67e54251eb90 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -10,97 +10,76 @@ maintainers:
-   - Paul Walmsley <paul.walmsley@sifive.com>
-   - Palmer Dabbelt <palmer@sifive.com>
- 
--allOf:
--  - $ref: /schemas/cpus.yaml#
--
- properties:
--  $nodename:
--    const: cpus
--    description: Container of cpu nodes
--
--  '#address-cells':
--    const: 1
--    description: |
--      A single unsigned 32-bit integer uniquely identifies each RISC-V
--      hart in a system.  (See the "reg" node under the "cpu" node,
--      below).
--
--  '#size-cells':
--    const: 0
-+  compatible:
-+    items:
-+      - enum:
-+          - sifive,rocket0
-+          - sifive,e5
-+          - sifive,e51
-+          - sifive,u54-mc
-+          - sifive,u54
-+          - sifive,u5
-+      - const: riscv
-+    description:
-+      Identifies that the hart uses the RISC-V instruction set
-+      and identifies the type of the hart.
-+
-+  mmu-type:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/string"
-+      - enum:
-+          - riscv,sv32
-+          - riscv,sv39
-+          - riscv,sv48
-+    description:
-+      Identifies the MMU address translation mode used on this
-+      hart.  These values originate from the RISC-V Privileged
-+      Specification document, available from
-+      https://riscv.org/specifications/
-+
-+  riscv,isa:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/string"
-+      - enum:
-+          - rv64imac
-+          - rv64imafdc
-+    description:
-+      Identifies the specific RISC-V instruction set architecture
-+      supported by the hart.  These are documented in the RISC-V
-+      User-Level ISA document, available from
-+      https://riscv.org/specifications/
-+
-+  timebase-frequency:
-+    type: integer
-+    minimum: 1
-+    description:
-+      Specifies the clock frequency of the system timer in Hz.
-+      This value is common to all harts on a single system image.
-+
-+  interrupt-controller:
-+    type: object
-+    description: Describes the CPU's local interrupt controller
- 
--patternProperties:
--  '^cpu@[0-9a-f]+$':
-     properties:
--      compatible:
--        type: array
--        items:
--          - enum:
--              - sifive,rocket0
--              - sifive,e5
--              - sifive,e51
--              - sifive,u54-mc
--              - sifive,u54
--              - sifive,u5
--          - const: riscv
--        description:
--          Identifies that the hart uses the RISC-V instruction set
--          and identifies the type of the hart.
--
--      mmu-type:
--        allOf:
--          - $ref: "/schemas/types.yaml#/definitions/string"
--          - enum:
--              - riscv,sv32
--              - riscv,sv39
--              - riscv,sv48
--        description:
--          Identifies the MMU address translation mode used on this
--          hart.  These values originate from the RISC-V Privileged
--          Specification document, available from
--          https://riscv.org/specifications/
--
--      riscv,isa:
--        allOf:
--          - $ref: "/schemas/types.yaml#/definitions/string"
--          - enum:
--              - rv64imac
--              - rv64imafdc
--        description:
--          Identifies the specific RISC-V instruction set architecture
--          supported by the hart.  These are documented in the RISC-V
--          User-Level ISA document, available from
--          https://riscv.org/specifications/
-+      '#interrupt-cells':
-+        const: 1
- 
--      timebase-frequency:
--        type: integer
--        minimum: 1
--        description:
--          Specifies the clock frequency of the system timer in Hz.
--          This value is common to all harts on a single system image.
--
--      interrupt-controller:
--        type: object
--        description: Describes the CPU's local interrupt controller
--
--        properties:
--          '#interrupt-cells':
--            const: 1
--
--          compatible:
--            const: riscv,cpu-intc
--
--          interrupt-controller: true
-+      compatible:
-+        const: riscv,cpu-intc
- 
--        required:
--          - '#interrupt-cells'
--          - compatible
--          - interrupt-controller
-+      interrupt-controller: true
- 
-     required:
--      - riscv,isa
--      - timebase-frequency
-+      - '#interrupt-cells'
-+      - compatible
-       - interrupt-controller
- 
-+required:
-+  - riscv,isa
-+  - timebase-frequency
-+  - interrupt-controller
-+
- examples:
-   - |
-     // Example 1: SiFive Freedom U540G Development Kit
--- 
-2.20.1
+Thanks.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/TmVpELSjnXhVlpZ+rR=WhJA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0UB0oACgkQAVBC80lX
+0GxIZwgAhEu9RAp1zw7pbbiYTJSgyEfJ+NiUbwBPJBdW898jCXDYggkQdOge4hID
+9ycFIIX9NcWqFPEp4aZIs7WoAh+d6IhOR4AEd61u0x2l9r4JsydkQ95K0EruOQtQ
+VexF4aPCCNbFwOxRADrkHZ/ZOQIUZ/9MQCCLg1Zm3kJXITjsnm7TqSFfGJXsR1+V
+w+ekwkxnB0EYzJPhk/1mZRoXvijX+9cOdLX+G4orCEqPCLFl4/y1Z2Cse8CmAnzS
+ArQsJI3xn7BUUHdXMeE3o5kJWeAa53pgC0rwTxbnysGtXq5uJmyGb6mRnkKOf+tk
+3MM/gznYCyCM66+sWmjLLu4xb8cN2g==
+=ERSj
+-----END PGP SIGNATURE-----
+
+--Sig_/TmVpELSjnXhVlpZ+rR=WhJA--
