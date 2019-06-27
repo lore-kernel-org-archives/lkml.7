@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCBDC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162DAC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D71205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2FA21882
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596108;
-	bh=V38AR51WVZUlPALVqnX0BjGkS5IFDKpbFnNYu8LKKAo=;
+	s=default; t=1561596111;
+	bh=PQAzmDD3jp+tmpGIAwp3yNOS9nvdyTz5uCCuk/txyHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F1Etyn1IVJOtRHyr/ZoUTkjRXcbzxq2L6LIsPUdx3vXxuSMjQMsQ6KkkxSwa/eahs
-	 P3Ujm3tBEPz2DW34A4yE+4UEu+w4EJ931+FZnXUlxMC8pvHstipIadN6qMYCDQlN9/
-	 m7APlB2ZwQc4BqWQvMegN1Jq6hAbVCWi3dFTCROY=
+	b=sYfO7xv8UIvKbkXETmOOoUWv8N/cA8OSBAy5PYNiAusDAIO8pmlrmlrVshnV63ZD6
+	 G18BMt9uIBcL6YAHziPN6XLWBGeMfb5OdurbRZj9c9DoDQCPdZr6mT/+reDgRD3aSq
+	 6RNBwXZoBo7KszuniI0o5bU5JVlsI9rK0Zkrruok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfF0Alr (ORCPT
+        id S1729579AbfF0Alu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729545AbfF0All (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:41:41 -0400
+        id S1729562AbfF0Als (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:41:48 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85FB1205ED;
-        Thu, 27 Jun 2019 00:41:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA86B205ED;
+        Thu, 27 Jun 2019 00:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596100;
-        bh=V38AR51WVZUlPALVqnX0BjGkS5IFDKpbFnNYu8LKKAo=;
+        s=default; t=1561596106;
+        bh=PQAzmDD3jp+tmpGIAwp3yNOS9nvdyTz5uCCuk/txyHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SDpQCL79IdbYGLNDQWJ/qSrl5Db8V8AJ7cDgkuKPpbMu+w/Odu0dJKrIbdWvpscvb
-         DANzoeDw84t9tiuKMsX6QAFI8MJXpsOFvE3zANJn1XZgx+WsMtUQfZUDdi1eqVLX3g
-         AW8MNA2PD5wsAdDp/FYVlo0EI7JuwfPz8fiApBq4=
+        b=WJU4av8+P+znam/wZYbxAwDn1iIjcNlTWHfGmS7B9PRxOSmAniuJ9gafmxdx4zB+T
+         ZWR9BswXXxXnBbIAi4HF869z0Ckjq38ZyLZcias+LbnhRT97J+jAENhr2NZdG2W0/j
+         wJ7VfMX1/fk69RbaXEdeF3tJC58mmTOEoPFZCD/8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Takashi Iwai <tiwai@suse.de>, Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/21] mac80211: free peer keys before vif down in mesh
-Date:   Wed, 26 Jun 2019 20:41:05 -0400
-Message-Id: <20190627004122.21671-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 07/21] mwifiex: Abort at too short BSS descriptor element
+Date:   Wed, 26 Jun 2019 20:41:07 -0400
+Message-Id: <20190627004122.21671-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627004122.21671-1-sashal@kernel.org>
 References: <20190627004122.21671-1-sashal@kernel.org>
@@ -60,32 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 0112fa557c3bb3a002bc85760dc3761d737264d3 ]
+[ Upstream commit 685c9b7750bfacd6fc1db50d86579980593b7869 ]
 
-freeing peer keys after vif down is resulting in peer key uninstall
-to fail due to interface lookup failure. so fix that.
+Currently mwifiex_update_bss_desc_with_ie() implicitly assumes that
+the source descriptor entries contain the enough size for each type
+and performs copying without checking the source size.  This may lead
+to read over boundary.
 
-Signed-off-by: Pradeep Kumar Chitrapu <pradeepc@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fix this by putting the source size check in appropriate places.
+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/marvell/mwifiex/scan.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index 7f902e69530f..5c347d3a92c9 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -885,6 +885,7 @@ void ieee80211_stop_mesh(struct ieee80211_sub_if_data *sdata)
+diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
+index 674ad3405646..32b6b9efd6ae 100644
+--- a/drivers/net/wireless/marvell/mwifiex/scan.c
++++ b/drivers/net/wireless/marvell/mwifiex/scan.c
+@@ -1258,6 +1258,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
  
- 	/* flush STAs and mpaths on this iface */
- 	sta_info_flush(sdata);
-+	ieee80211_free_keys(sdata, true);
- 	mesh_path_flush_by_iface(sdata);
+ 		case WLAN_EID_FH_PARAMS:
++			if (element_len + 2 < sizeof(*fh_param_set))
++				return -EINVAL;
+ 			fh_param_set =
+ 				(struct ieee_types_fh_param_set *) current_ptr;
+ 			memcpy(&bss_entry->phy_param_set.fh_param_set,
+@@ -1266,6 +1268,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
  
- 	/* stop the beacon */
+ 		case WLAN_EID_DS_PARAMS:
++			if (element_len + 2 < sizeof(*ds_param_set))
++				return -EINVAL;
+ 			ds_param_set =
+ 				(struct ieee_types_ds_param_set *) current_ptr;
+ 
+@@ -1277,6 +1281,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
+ 
+ 		case WLAN_EID_CF_PARAMS:
++			if (element_len + 2 < sizeof(*cf_param_set))
++				return -EINVAL;
+ 			cf_param_set =
+ 				(struct ieee_types_cf_param_set *) current_ptr;
+ 			memcpy(&bss_entry->ss_param_set.cf_param_set,
+@@ -1285,6 +1291,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
+ 
+ 		case WLAN_EID_IBSS_PARAMS:
++			if (element_len + 2 < sizeof(*ibss_param_set))
++				return -EINVAL;
+ 			ibss_param_set =
+ 				(struct ieee_types_ibss_param_set *)
+ 				current_ptr;
+@@ -1294,10 +1302,14 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
+ 
+ 		case WLAN_EID_ERP_INFO:
++			if (!element_len)
++				return -EINVAL;
+ 			bss_entry->erp_flags = *(current_ptr + 2);
+ 			break;
+ 
+ 		case WLAN_EID_PWR_CONSTRAINT:
++			if (!element_len)
++				return -EINVAL;
+ 			bss_entry->local_constraint = *(current_ptr + 2);
+ 			bss_entry->sensed_11h = true;
+ 			break;
+@@ -1337,6 +1349,9 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
+ 			break;
+ 
+ 		case WLAN_EID_VENDOR_SPECIFIC:
++			if (element_len + 2 < sizeof(vendor_ie->vend_hdr))
++				return -EINVAL;
++
+ 			vendor_ie = (struct ieee_types_vendor_specific *)
+ 					current_ptr;
+ 
 -- 
 2.20.1
 
