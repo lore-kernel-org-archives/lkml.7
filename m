@@ -2,148 +2,99 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA4C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8E8C5B54D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884F92075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:42:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i6uS7I64"
+	by mail.kernel.org (Postfix) with ESMTP id 85A232063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:43:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561671790;
+	bh=9/XK3ay1VGsS/WJ7hXGAxvSGPbnHer3WkMka2Qi5wXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pzF2vbwMDf9geARig3i0e3p1RBYiNUcCwoGnVA01H3Mn5KZkyPjfiWlp+ogcIRdLV
+	 R614wAPoIF7S1IayUy8W3VVWRcPQb3/gexNaU/avG9z7PpuJq9diHvYh9u+3mwPP92
+	 DSIpZVHeGh1jtUo6SbK8jj8sv4SqA9R7BjqmZbyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfF0VmV (ORCPT
+        id S1726596AbfF0VnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:42:21 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43218 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfF0VmU (ORCPT
+        Thu, 27 Jun 2019 17:43:09 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38576 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfF0VnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:42:20 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 16so3841878ljv.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YMYPQ8HMwHsCu6Nb47E3eYy5SYkz8O/qNoaUqvE9/MA=;
-        b=i6uS7I64eUcQYgWj3c9jAsLFmKoZ/q4U1ARoqLXaf/YYG6/XKX4AFmJsVHu8ajhu8F
-         u/851Ek5TISb9oKcMr4gdoc97WJOWUN9L2EaFUzcuHcVgkAFa/aIk00P2zCsY+DEKLbb
-         QVX4X2B53szP9bzFueP7gJQs6nlm5JL1pPJAXbZ7xyVGoTv4qCLOGtK9IlKbuNK7mpS1
-         V9V4nYBBIn9uw/jdDC6NzHcOCeJdusC/cbvB5yzj/ZOuu/3cHn3fzNuEjgt+KCGgFJax
-         RMZitSXX+ZB+xjhqB/Au1y7H81Xk+YEcQEZ163jAPyP6SEOQRWfTHLbio0Upf6BZZ8CG
-         ok0w==
+        Thu, 27 Jun 2019 17:43:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z75so1602478pgz.5;
+        Thu, 27 Jun 2019 14:43:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YMYPQ8HMwHsCu6Nb47E3eYy5SYkz8O/qNoaUqvE9/MA=;
-        b=VNntjrJJ/0la/PkoOBdZvI0Y8gSh1y3qMiUe2HYQLRvAmgcyBJns/pApgFk4poOjGs
-         mX122N5lYpKhJpQwSxm64jlxwaeIwoB/My2ch4zNNaumyc3PBkEOhh9W3IGegxsTWT9U
-         aKxZF6cCRSHPPJYXrP/LIvJ11droWcFHfMo43GnlNlhR4l9JJmGZe8ajHDsck4E4mTTK
-         pTBJXkN3cXR7LhJzp+YA+TMt0UvM/NtoU+2//KefGyqu2gc1aFniiOq0wh++lEOIaVvp
-         gu8xAGKqT4oJMhyA3cAS6j7qNfTfmH5s2HxIL/w9FzblUuuFwG51IltNFRT3s0c5XWbk
-         a7VA==
-X-Gm-Message-State: APjAAAWy61A8m3VG0KfKpCNUXeaX8OmpeqbyuiwIC5aAXoKgj6hQ08tD
-        nGpE4eeqTrhU1zaqkyJULCaiXhLr9hAXzhfx3I37IhWIz5w=
-X-Google-Smtp-Source: APXvYqwjCRMWLMJwN8uYVOflAp6npBo8Enm8Kh9HtUnKPohkjA5si4zEphHh9vaaaJMztaekITPHbnUJZQJyzpu0bOI=
-X-Received: by 2002:a2e:8345:: with SMTP id l5mr3873254ljh.18.1561671737949;
- Thu, 27 Jun 2019 14:42:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ECxEwBAkmZlz+R/U2GMCP+JOckImbThC+rsHcI4sg+k=;
+        b=TkfF+jy9hX0y1Fb7WeNjVZckuzrpSj/PEFiwZNrSEg0RS3Wz2GlpiRc7VcVnedGGul
+         iLPPDtrWHW5CFnXt8I+kZWDug1j6pV8X5Zct8HuHu7j40oXvkRIgmUpqrOyujB98/1Pc
+         uzBDqIY5ddd2DB1F4b1xrKZIAdn/8s5KamFCRWh/sNHvgTbaaBgYno5RqwiU/hdNuq05
+         TeVfE45rvow/xL5CkcdP2api6QvYGcbXIz3IwQMaaZ8GsrGziOXut2nJ4qplMz87uDat
+         MYQoHOqoxsHlnfliu7y95qCqdwCZD8vtqFSD8TF7C4ucSFANg/ucj8tlzgbRAjAXZs98
+         sk2A==
+X-Gm-Message-State: APjAAAWz2+q2AFTYAhoWHvQ3qWtbEzFS8cysigtMtxIhzTm10dxTQP2I
+        Q7CjiNhLGqozBabgxtHYqUbT7+2Gs+A=
+X-Google-Smtp-Source: APXvYqy2MGlCLhKyFvZENP7n6Kdifoe3fs08NkTB518uSykdPFtEZtx8UHzGH9ePb0r/WXB1b8bkLg==
+X-Received: by 2002:a65:6083:: with SMTP id t3mr5790410pgu.342.1561671786661;
+        Thu, 27 Jun 2019 14:43:06 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id b135sm56397pfb.44.2019.06.27.14.43.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 14:43:05 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DF873403ED; Thu, 27 Jun 2019 21:43:04 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 21:43:04 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Zorro Lang <zlang@redhat.com>,
+        Amir Goldstein <amir73il@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/13] xfs: allow merging ioends over append boundaries
+Message-ID: <20190627214304.GB30113@42.do-not-panic.com>
+References: <20190627104836.25446-1-hch@lst.de>
+ <20190627104836.25446-8-hch@lst.de>
+ <20190627182309.GP5171@magnolia>
 MIME-Version: 1.0
-References: <20190625205101.33032-1-rajatja@google.com> <a755588b-1062-7c4f-7c03-f35ca23f39a4@collabora.com>
-In-Reply-To: <a755588b-1062-7c4f-7c03-f35ca23f39a4@collabora.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 27 Jun 2019 14:41:41 -0700
-Message-ID: <CACK8Z6HFzn+tAL7KRmTF4Eet2VRYwr9D2sndeQXcfrQg2qkGPw@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: lightbar: Assign drvdata during probe
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627182309.GP5171@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
+On Thu, Jun 27, 2019 at 11:23:09AM -0700, Darrick J. Wong wrote:
+> On Thu, Jun 27, 2019 at 12:48:30PM +0200, Christoph Hellwig wrote:
+> > There is no real problem merging ioends that go beyond i_size into an
+> > ioend that doesn't.  We just need to move the append transaction to the
+> > base ioend.  Also use the opportunity to use a real error code instead
+> > of the magic 1 to cancel the transactions, and write a comment
+> > explaining the scheme.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Reading through this patch, I have a feeling it fixes the crash that
+> Zorro has been seeing occasionally with generic/475...
+> 
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-On Wed, Jun 26, 2019 at 1:34 PM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Rajat,
->
-> On 25/6/19 22:51, Rajat Jain wrote:
-> > The lightbar driver never assigned the drvdata in probe method, and thus
-> > causes a panic when it is accessed at the suspend time.
->
-> Good catch, that's one of the problems I currently have with mainline on Samus.
-> The other one, that I didn't find time to look at is, that for some reason, when
-> I suspend the system reboots. Is suspend/resume working for you in current mainline?
+Zorro, can you confirm? If so it would be great to also refer to
+the respective bugzilla entry #203947 [0].
 
-I haven't tried current mainline yet. (I tried, but wasn't able to
-build it like I used to. If you have a recipe, can you share and I can
-give it a try).
-I was seeing the same symptoms on my Hatch (using 4.19) before this
-patch. I found this was the cause of the reboot, and is fixed now with
-this patch. May be you can try on Samus with its fix?
+[0] https://bugzilla.kernel.org/show_bug.cgi?id=203947
 
->
-> There is no drvdata because we don't really need extra private data for this
-> driver, the ec_dev is directly the drvdata provided by device parent. I am
-> wondering if you can just do
->
->    struct cros_ec_dev *ec_dev = to_cros_ec_dev(dev);
->
-> in the suspend/resume calls like we do in the show/store calls or get the
-> drvdata from its parent. I guess I prefer the first one.
-
-The dev in suspend() callback points to "cros-ec-lightbar" device
-instead of "cros-ec-dev", so we'd need to reach the parent. I'll send
-a new patch in a moment.
-
-Thanks,
-
-Rajat
-
-
->
-> >
->
-> Would be nice have a fixes tag here.
->
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> >  drivers/platform/chrome/cros_ec_lightbar.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-> > index d30a6650b0b5..98e514fc5830 100644
-> > --- a/drivers/platform/chrome/cros_ec_lightbar.c
-> > +++ b/drivers/platform/chrome/cros_ec_lightbar.c
-> > @@ -578,11 +578,14 @@ static int cros_ec_lightbar_probe(struct platform_device *pd)
-> >
-> >       ret = sysfs_create_group(&ec_dev->class_dev.kobj,
-> >                                &cros_ec_lightbar_attr_group);
-> > -     if (ret < 0)
-> > +     if (ret < 0) {
-> >               dev_err(dev, "failed to create %s attributes. err=%d\n",
-> >                       cros_ec_lightbar_attr_group.name, ret);
-> > +             return ret;
-> > +     }
-> >
-> > -     return ret;
-> > +     platform_set_drvdata(pd, ec_dev);
-> > +     return 0;
-> >  }
-> >
-> >  static int cros_ec_lightbar_remove(struct platform_device *pd)
-> >
->
-> Thanks,
-> ~ Enric
+  Luis
