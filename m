@@ -2,309 +2,186 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0800C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51001C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7FF2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:08:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hjXGLQ40"
+	by mail.kernel.org (Postfix) with ESMTP id 2744220989
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561644612;
+	bh=/DngtzD3s+ebdrL7sBNZ6LYRKYCMM3LinI6fdKixRbs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C4lBBCmGQdUyDE180R+L5iofIYAoolcPr11yy8qZMM7JiZ8vGQTlcBGQOd6fHp6jn
+	 dTXzQwUiVBNUkB7KulhaVW9IhAxrE6Y5EpGHPclgU6NX1xVRJCiObIjLpA8tLSg7z0
+	 T+r46SYvr6UB0XW4yYSL40SXvfiNlU+3Pj5tMQxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfF0OIt (ORCPT
+        id S1727075AbfF0OKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:08:49 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:35348 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfF0OIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:08:48 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190627140846euoutp024356187142413105860ed05d4a3e6861~sE2wu8oHK2347823478euoutp02r
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:08:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190627140846euoutp024356187142413105860ed05d4a3e6861~sE2wu8oHK2347823478euoutp02r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1561644526;
-        bh=QUHj+ijud0YQLnEdLNjj5as4RJcIrXVoCpYGX7Oob0I=;
-        h=From:Subject:To:Date:References:From;
-        b=hjXGLQ40zKF7EdNNWi9tJhTcCQy38IlVdPY+KyofyCyjifFGfMDMF8AFOQDjnSE2b
-         9GrCPuknPQud6d94g8epKpPe7q+uAhh+KJOnBuRHr97/S1GTbEMRIpD1mR49f4ARHO
-         xLbfC64PwkYAYBhQzQ6QzIGAjg5qhafDz5Sn7hiA=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190627140845eucas1p1f76ae8049ca9593a2c793f7b25b6b0c5~sE2wHY7ME1952719527eucas1p1E;
-        Thu, 27 Jun 2019 14:08:45 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6A.1F.04325.DEDC41D5; Thu, 27
-        Jun 2019 15:08:45 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190627140844eucas1p1fac4e639a3445c6ae1a51b0743289f1c~sE2vXXMAD1952319523eucas1p1V;
-        Thu, 27 Jun 2019 14:08:44 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190627140844eusmtrp21af8ea6f188e6e7cca07acb6122d7237~sE2vF1gWa0820108201eusmtrp2O;
-        Thu, 27 Jun 2019 14:08:44 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-be-5d14cdedba30
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 29.D3.04146.CEDC41D5; Thu, 27
-        Jun 2019 15:08:44 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190627140844eusmtip1fcbf84fd2dbe0c477b25fffcf6a8d1b6~sE2uyf4xl2147321473eusmtip10;
-        Thu, 27 Jun 2019 14:08:44 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 3/3] video: fbdev: mmp: fix sparse warnings about using
- incorrect types
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Message-ID: <ee796b43-f200-d41a-b18c-ae3d6bcaaa67@samsung.com>
-Date:   Thu, 27 Jun 2019 16:08:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Thu, 27 Jun 2019 10:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbfF0OKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:10:10 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB51120989;
+        Thu, 27 Jun 2019 14:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561644608;
+        bh=/DngtzD3s+ebdrL7sBNZ6LYRKYCMM3LinI6fdKixRbs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hVR26uH/NIhnY/IHahGGnvwEvj6QvHdswzSxKHLGvL4+8hpcCVSJe2rV4YRT0uhVT
+         +La7BtUB8L5o81AMMKuxkL8ZcOxRxgDen7qfMIBP76iksKRcv1IrjlkMsYB8F5j92m
+         ZA90F2/bH3dKXrpmsaC9e8ddLIOYaXGeXlf+9MEc=
+Received: by mail-qk1-f182.google.com with SMTP id l128so1823446qke.2;
+        Thu, 27 Jun 2019 07:10:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAV3L5WE5L66ycGQUhGPfqniVC57zAO+Y5FCVVMHPIXgcVCypyqq
+        WSuYcJd60hJ7EzacTjN7VokqfERNDlMoY2XHOA==
+X-Google-Smtp-Source: APXvYqzf4Zr0MF3Yow63S1uL/QA2OGEm4e5sTwKl5lupKlXsPXvUX0bhlfSmt6HmjepLO9Dl3d65W79s8N5se3FVB/I=
+X-Received: by 2002:a37:69c5:: with SMTP id e188mr3331270qkc.119.1561644608024;
+ Thu, 27 Jun 2019 07:10:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnleLIzCtJLcpLzFFi42LZduznOd23Z0ViDXZ/4bG48vU9m8WJvg+s
-        Fpd3zWFzYPa4332cyePzJrkApigum5TUnMyy1CJ9uwSujI/3jzMWvLat2LCktoFxkkkXIyeH
-        hICJxPW3O1m7GLk4hARWMEoc/rWVDcL5wihxYvc6JgjnM6PEqlu7WGBavixbDNWynFFi0uLV
-        zBDOW0aJ6/3/WEGq2ASsJCa2r2IEsYUFIiW2HnvLDmKLCCRIrJg+AyzOK2AnseHYEjYQm0VA
-        VWLfjp9gcVGBCIn7xzawQtQISpyc+QRsM7OAuMStJ/OZIGx5ie1v5zBDXHSdTWLmWQEI20Vi
-        y7c2JghbWOLV8S3sELaMxP+d88HekRBYxyjxt+MFM4SznVFi+eR/bBBV1hKHj18E2swBtEFT
-        Yv0ufYiwo8TatsOMIGEJAT6JG28FIW7gk5i0bTozRJhXoqNNCKJaTWLDsg1sMGu7dq6EOtND
-        4un6uWCvCAnESrxuvss6gVFhFpIvZyH5chaSL2ch3LOAkWUVo3hqaXFuemqxcV5quV5xYm5x
-        aV66XnJ+7iZGYPI4/e/41x2M+/4kHWIU4GBU4uFV2CkSK8SaWFZcmXuIUYKDWUmENz8MKMSb
-        klhZlVqUH19UmpNafIhRmoNFSZy3muFBtJBAemJJanZqakFqEUyWiYNTqoGxRCSAYWXEuZqX
-        DHsOvzC48+/xukW+rBzTfikEef/NP9ZkeUtZ73r9k0Ozlc0vfS3d43DwUrhAtZxK5z3R18yT
-        ns7tmcVwXcy+wYDtyQOxt/9nPOSo8TnyYPKv/xsWPzmo59FubSnYnVF/QzvL903gZ6nmiWff
-        ymcrh/dyiYt4aXUwtp1sb36qxFKckWioxVxUnAgA3FldIhoDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMLMWRmVeSWpSXmKPExsVy+t/xu7pvzorEGkw/zW9x5et7NosTfR9Y
-        LS7vmsPmwOxxv/s4k8fnTXIBTFF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkam
-        Svp2NimpOZllqUX6dgl6GR/vH2cseG1bsWFJbQPjJJMuRk4OCQETiS/LFrN2MXJxCAksZZR4
-        ee0MUxcjB1BCRuL4+jKIGmGJP9e62EBsIYHXjBJ7diqA2GwCVhIT21cxgtjCApESW4+9ZQex
-        RQQSJJ6+ng9WzytgJ7Hh2BIwm0VAVWLfjp9g9aICERJn3q9ggagRlDg58wmYzSygLvFn3iVm
-        CFtc4taT+UwQtrzE9rdzmCcw8s9C0jILScssJC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqX
-        rpecn7uJERjg24793LyD8dLG4EOMAhyMSjy8CjtFYoVYE8uKK3MPMUpwMCuJ8OaHAYV4UxIr
-        q1KL8uOLSnNSiw8xmgI9NJFZSjQ5Hxh9eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1Kz
-        U1MLUotg+pg4OKUaGBV+ZbVPEl4hb9pzhaPre7TB7NVOcu0972JuLHm8U6zXJsx4wcTnU/YI
-        3591tEIpUyb119zOtIONXdv2bw6cr1mzR2HN9+ZvRZ6bfYSL9f9vFLv/K1wlP4xzb6NdXIDT
-        Zgn5NYxLBSQZJKd/cj/kOMP6Rz83q+u2K/0T7HTjIlZOrXm8j+HZUiWW4oxEQy3mouJEAPzc
-        fS6GAgAA
-X-CMS-MailID: 20190627140844eucas1p1fac4e639a3445c6ae1a51b0743289f1c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190627140844eucas1p1fac4e639a3445c6ae1a51b0743289f1c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190627140844eucas1p1fac4e639a3445c6ae1a51b0743289f1c
-References: <CGME20190627140844eucas1p1fac4e639a3445c6ae1a51b0743289f1c@eucas1p1.samsung.com>
+References: <20190626071430.28556-1-andrew@aj.id.au> <20190626071430.28556-3-andrew@aj.id.au>
+ <CAL_JsqKXPzFYTHos-uvCUtBj-bcsNfrzt5GjxQ=PmgeXpp5J-A@mail.gmail.com> <ee0cac9e-4b39-4900-87a8-3dabb58ed883@www.fastmail.com>
+In-Reply-To: <ee0cac9e-4b39-4900-87a8-3dabb58ed883@www.fastmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 27 Jun 2019 08:09:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLiZzkJZ+CeaMDer=Arm9vFdG1Y_6F0M=AZV=82EqORFg@mail.gmail.com>
+Message-ID: <CAL_JsqLiZzkJZ+CeaMDer=Arm9vFdG1Y_6F0M=AZV=82EqORFg@mail.gmail.com>
+Subject: Re: [PATCH 2/8] dt-bindings: pinctrl: aspeed: Convert AST2400
+ bindings to json-schema
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use ->screen_buffer instead of ->screen_base in mmpfb driver.
+On Wed, Jun 26, 2019 at 6:44 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Wed, 26 Jun 2019, at 23:17, Rob Herring wrote:
+> > On Wed, Jun 26, 2019 at 1:21 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > Convert ASPEED pinctrl bindings to DT schema format using json-schema
+> >
+> > BTW, ASPEED is one of the remaining platforms needing the top-level
+> > board bindings converted.
+>
+> Okay, I'll put together patches to fix that.
+>
+> >
+> > >
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > >  .../pinctrl/aspeed,ast2400-pinctrl.txt        | 80 -------------------
+> > >  .../pinctrl/aspeed,ast2400-pinctrl.yaml       | 73 +++++++++++++++++
+> > >  2 files changed, 73 insertions(+), 80 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> >
+> > > diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> > > new file mode 100644
+> > > index 000000000000..3b8cf3e51506
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+> > > @@ -0,0 +1,73 @@
+> > > +# SPDX-License-Identifier: GPL-2.0+
+> >
+> > Do you have rights to change the license?
+>
+> Where are you coming from with this question? The bindings previously didn't list a
+> license, is there some implicit license for them? I would have thought it was GPL-2.0?
 
-[ Please see commit 17a7b0b4d974 ("fb.h: Provide alternate screen_base
-  pointer") for details. ]
+Yes, it is implicitly GPL-2.0 since it is in the kernel tree and has
+no other license text.
 
-Also fix all other sparse warnings about using incorrect types in
-mmp display subsystem.
+> IBM's (my employer's) preferred contribution license is GPL 2.0-or-later, so I was just
+> adding the SPDX marker to clarify.
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/mmp/fb/mmpfb.c    |    2 -
- drivers/video/fbdev/mmp/hw/mmp_ctrl.c |   55 +++++++++++++++++++---------------
- drivers/video/fbdev/mmp/hw/mmp_ctrl.h |   10 +++---
- drivers/video/fbdev/mmp/hw/mmp_spi.c  |    6 +--
- 4 files changed, 41 insertions(+), 32 deletions(-)
+Adding 'or-later' is a licensing change. If IBM is the copyright
+holder on all this file, then that is fine.
 
-Index: b/drivers/video/fbdev/mmp/fb/mmpfb.c
-===================================================================
---- a/drivers/video/fbdev/mmp/fb/mmpfb.c
-+++ b/drivers/video/fbdev/mmp/fb/mmpfb.c
-@@ -522,7 +522,7 @@ static int fb_info_setup(struct fb_info
- 		info->var.bits_per_pixel / 8;
- 	info->fbops = &mmpfb_ops;
- 	info->pseudo_palette = fbi->pseudo_palette;
--	info->screen_base = fbi->fb_start;
-+	info->screen_buffer = fbi->fb_start;
- 	info->screen_size = fbi->fb_size;
- 
- 	/* For FB framework: Allocate color map and Register framebuffer*/
-Index: b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-===================================================================
---- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-+++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.c
-@@ -136,19 +136,26 @@ static void overlay_set_win(struct mmp_o
- 	mutex_lock(&overlay->access_ok);
- 
- 	if (overlay_is_vid(overlay)) {
--		writel_relaxed(win->pitch[0], &regs->v_pitch_yc);
--		writel_relaxed(win->pitch[2] << 16 |
--				win->pitch[1], &regs->v_pitch_uv);
--
--		writel_relaxed((win->ysrc << 16) | win->xsrc, &regs->v_size);
--		writel_relaxed((win->ydst << 16) | win->xdst, &regs->v_size_z);
--		writel_relaxed(win->ypos << 16 | win->xpos, &regs->v_start);
-+		writel_relaxed(win->pitch[0],
-+				(void __iomem *)&regs->v_pitch_yc);
-+		writel_relaxed(win->pitch[2] << 16 | win->pitch[1],
-+				(void __iomem *)&regs->v_pitch_uv);
-+
-+		writel_relaxed((win->ysrc << 16) | win->xsrc,
-+				(void __iomem *)&regs->v_size);
-+		writel_relaxed((win->ydst << 16) | win->xdst,
-+				(void __iomem *)&regs->v_size_z);
-+		writel_relaxed(win->ypos << 16 | win->xpos,
-+				(void __iomem *)&regs->v_start);
- 	} else {
--		writel_relaxed(win->pitch[0], &regs->g_pitch);
-+		writel_relaxed(win->pitch[0], (void __iomem *)&regs->g_pitch);
- 
--		writel_relaxed((win->ysrc << 16) | win->xsrc, &regs->g_size);
--		writel_relaxed((win->ydst << 16) | win->xdst, &regs->g_size_z);
--		writel_relaxed(win->ypos << 16 | win->xpos, &regs->g_start);
-+		writel_relaxed((win->ysrc << 16) | win->xsrc,
-+				(void __iomem *)&regs->g_size);
-+		writel_relaxed((win->ydst << 16) | win->xdst,
-+				(void __iomem *)&regs->g_size_z);
-+		writel_relaxed(win->ypos << 16 | win->xpos,
-+				(void __iomem *)&regs->g_start);
- 	}
- 
- 	dmafetch_set_fmt(overlay);
-@@ -233,11 +240,11 @@ static int overlay_set_addr(struct mmp_o
- 	memcpy(&overlay->addr, addr, sizeof(struct mmp_addr));
- 
- 	if (overlay_is_vid(overlay)) {
--		writel_relaxed(addr->phys[0], &regs->v_y0);
--		writel_relaxed(addr->phys[1], &regs->v_u0);
--		writel_relaxed(addr->phys[2], &regs->v_v0);
-+		writel_relaxed(addr->phys[0], (void __iomem *)&regs->v_y0);
-+		writel_relaxed(addr->phys[1], (void __iomem *)&regs->v_u0);
-+		writel_relaxed(addr->phys[2], (void __iomem *)&regs->v_v0);
- 	} else
--		writel_relaxed(addr->phys[0], &regs->g_0);
-+		writel_relaxed(addr->phys[0], (void __iomem *)&regs->g_0);
- 
- 	return overlay->addr.phys[0];
- }
-@@ -268,16 +275,18 @@ static void path_set_mode(struct mmp_pat
- 	tmp |= dsi_rbswap & CFG_INTFRBSWAP_MASK;
- 	writel_relaxed(tmp, ctrl_regs(path) + intf_rbswap_ctrl(path->id));
- 
--	writel_relaxed((mode->yres << 16) | mode->xres, &regs->screen_active);
-+	writel_relaxed((mode->yres << 16) | mode->xres,
-+		(void __iomem *)&regs->screen_active);
- 	writel_relaxed((mode->left_margin << 16) | mode->right_margin,
--		&regs->screen_h_porch);
-+		(void __iomem *)&regs->screen_h_porch);
- 	writel_relaxed((mode->upper_margin << 16) | mode->lower_margin,
--		&regs->screen_v_porch);
-+		(void __iomem *)&regs->screen_v_porch);
- 	total_x = mode->xres + mode->left_margin + mode->right_margin +
- 		mode->hsync_len;
- 	total_y = mode->yres + mode->upper_margin + mode->lower_margin +
- 		mode->vsync_len;
--	writel_relaxed((total_y << 16) | total_x, &regs->screen_size);
-+	writel_relaxed((total_y << 16) | total_x,
-+		(void __iomem *)&regs->screen_size);
- 
- 	/* vsync ctrl */
- 	if (path->output_type == PATH_OUT_DSI)
-@@ -285,7 +294,7 @@ static void path_set_mode(struct mmp_pat
- 	else
- 		vsync_ctrl = ((mode->xres + mode->right_margin) << 16)
- 					| (mode->xres + mode->right_margin);
--	writel_relaxed(vsync_ctrl, &regs->vsync_ctrl);
-+	writel_relaxed(vsync_ctrl, (void __iomem *)&regs->vsync_ctrl);
- 
- 	/* set pixclock div */
- 	sclk_src = clk_get_rate(path_to_ctrl(path)->clk);
-@@ -366,9 +375,9 @@ static void path_set_default(struct mmp_
- 	writel_relaxed(dma_ctrl1, ctrl_regs(path) + dma_ctrl(1, path->id));
- 
- 	/* Configure default register values */
--	writel_relaxed(0x00000000, &regs->blank_color);
--	writel_relaxed(0x00000000, &regs->g_1);
--	writel_relaxed(0x00000000, &regs->g_start);
-+	writel_relaxed(0x00000000, (void __iomem *)&regs->blank_color);
-+	writel_relaxed(0x00000000, (void __iomem *)&regs->g_1);
-+	writel_relaxed(0x00000000, (void __iomem *)&regs->g_start);
- 
- 	/*
- 	 * 1.enable multiple burst request in DMA AXI
-Index: b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-===================================================================
---- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-+++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-@@ -1393,7 +1393,7 @@ struct mmphw_ctrl {
- 	/* platform related, get from config */
- 	const char *name;
- 	int irq;
--	void *reg_base;
-+	void __iomem *reg_base;
- 	struct clk *clk;
- 
- 	/* sys info */
-@@ -1429,7 +1429,7 @@ static inline struct mmphw_ctrl *overlay
- 	return path_to_ctrl(overlay->path);
- }
- 
--static inline void *ctrl_regs(struct mmp_path *path)
-+static inline void __iomem *ctrl_regs(struct mmp_path *path)
- {
- 	return path_to_ctrl(path)->reg_base;
- }
-@@ -1438,11 +1438,11 @@ static inline void *ctrl_regs(struct mmp
- static inline struct lcd_regs *path_regs(struct mmp_path *path)
- {
- 	if (path->id == PATH_PN)
--		return (struct lcd_regs *)(ctrl_regs(path) + 0xc0);
-+		return (struct lcd_regs __force *)(ctrl_regs(path) + 0xc0);
- 	else if (path->id == PATH_TV)
--		return (struct lcd_regs *)ctrl_regs(path);
-+		return (struct lcd_regs __force  *)ctrl_regs(path);
- 	else if (path->id == PATH_P2)
--		return (struct lcd_regs *)(ctrl_regs(path) + 0x200);
-+		return (struct lcd_regs __force *)(ctrl_regs(path) + 0x200);
- 	else {
- 		dev_err(path->dev, "path id %d invalid\n", path->id);
- 		BUG_ON(1);
-Index: b/drivers/video/fbdev/mmp/hw/mmp_spi.c
-===================================================================
---- a/drivers/video/fbdev/mmp/hw/mmp_spi.c
-+++ b/drivers/video/fbdev/mmp/hw/mmp_spi.c
-@@ -31,7 +31,7 @@ static inline int lcd_spi_write(struct s
- {
- 	int timeout = 100000, isr, ret = 0;
- 	u32 tmp;
--	void *reg_base =
-+	void __iomem *reg_base = (void __iomem *)
- 		*(void **)spi_master_get_devdata(spi->master);
- 
- 	/* clear ISR */
-@@ -80,7 +80,7 @@ static inline int lcd_spi_write(struct s
- 
- static int lcd_spi_setup(struct spi_device *spi)
- {
--	void *reg_base =
-+	void __iomem *reg_base = (void __iomem *)
- 		*(void **)spi_master_get_devdata(spi->master);
- 	u32 tmp;
- 
-@@ -146,7 +146,7 @@ int lcd_spi_register(struct mmphw_ctrl *
- 		return -ENOMEM;
- 	}
- 	p_regbase = spi_master_get_devdata(master);
--	*p_regbase = ctrl->reg_base;
-+	*p_regbase = (void __force *)ctrl->reg_base;
- 
- 	/* set bus num to 5 to avoid conflict with other spi hosts */
- 	master->bus_num = 5;
+> > If so, the preference is to
+> > dual license with (GPL-2.0 OR BSD-2-Clause).
+>
+> You're asking if I have the power to relicense so I can dual license it this way?
 
+It would probably be up to your company. If that's an issue, then not
+dual licensing is fine. I don't want to hold things up on that.
+
+[...]
+
+> > > +required:
+> > > +  - compatible
+> > > +
+> > > +description: |+
+> >
+> > description goes before properties.
+>
+> Okay. I wouldn't have thought the ordering mattered. Is this just a preference?
+
+Yes, just a preference.
+
+> The tools seemed to run fine as is.
+>
+> I'll re-order it regardless.
+>
+> >
+> > > +  The pin controller node should be the child of a syscon node with the
+> > > +  required property:
+> > > +
+> > > +  - compatible:     Should be one of the following:
+> > > +                    "aspeed,ast2400-scu", "syscon", "simple-mfd"
+> > > +                    "aspeed,g4-scu", "syscon", "simple-mfd"
+> > > +
+> > > +  Refer to the the bindings described in
+> > > +  Documentation/devicetree/bindings/mfd/syscon.txt
+> > > +
+> > > +  For the AST2400 pinmux, each mux function has only one associated pin group.
+> > > +  Each group is named by its function. The following values for the function
+> > > +  and groups properties are supported:
+> > > +
+> > > +  ACPI ADC0 ADC1 ADC10 ADC11 ADC12 ADC13 ADC14 ADC15 ADC2 ADC3 ADC4 ADC5 ADC6
+> > > +  ADC7 ADC8 ADC9 BMCINT DDCCLK DDCDAT EXTRST FLACK FLBUSY FLWP GPID GPID0 GPID2
+> > > +  GPID4 GPID6 GPIE0 GPIE2 GPIE4 GPIE6 I2C10 I2C11 I2C12 I2C13 I2C14 I2C3 I2C4
+> > > +  I2C5 I2C6 I2C7 I2C8 I2C9 LPCPD LPCPME LPCRST LPCSMI MAC1LINK MAC2LINK MDIO1
+> > > +  MDIO2 NCTS1 NCTS2 NCTS3 NCTS4 NDCD1 NDCD2 NDCD3 NDCD4 NDSR1 NDSR2 NDSR3 NDSR4
+> > > +  NDTR1 NDTR2 NDTR3 NDTR4 NDTS4 NRI1 NRI2 NRI3 NRI4 NRTS1 NRTS2 NRTS3 OSCCLK
+> > > +  PWM0 PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 ROM16 ROM8
+> > > +  ROMCS1 ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3 SALT4 SD1
+> > > +  SD2 SGPMCK SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCTRL SIOPBI
+> > > +  SIOPBO SIOPWREQ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PASSTHRU
+> > > +  SPICS1 TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6
+> > > +  USB11D1 USB11H2 USB2D1 USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI18 VPI24
+> > > +  VPI30 VPO12 VPO24 WDTRST1 WDTRST2
+> >
+> > This should be a schema.
+>
+> Yeah, I covered this in my cover letter. I was hoping to get away without
+> that for the moment as this seems like the first pinctrl binding to be
+> converted, however if you insist...
+
+That generally doesn't matter. You can assume common properties will
+have a schema and you don't need to define common constraints (like
+'function' is a string array). You only need what is specific to this
+binding which is possible values.
+
+Rob
