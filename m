@@ -2,123 +2,82 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182C8C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAD8C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA862183F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595696;
-	bh=qPJL1u9X3VFCl7gl6O4kHX4nwYkGxzNsrJ6SIct+sic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A3RenqWO0Rtc7dGw2XI3ovowgeNd5TUngn8OAKwRmhDwpyDcEvhHgXImRM/sqDW1i
-	 vEUIqzQNcl+luLPdMBSGKYGGHPPD/sn/vbWoY/tinjcaZ4Tn0Ih+tClTAwrhS4z/lm
-	 QJM99/UXA0JKmuozheMfv/n8N+qV27LQiOdzky/U=
+	by mail.kernel.org (Postfix) with ESMTP id AD39521874
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfF0Aey (ORCPT
+        id S1728197AbfF0AfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:34:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39128 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:35:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42526 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbfF0Aeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:34:50 -0400
-Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727435AbfF0Ae7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:34:59 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A05E22184C;
-        Thu, 27 Jun 2019 00:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595689;
-        bh=qPJL1u9X3VFCl7gl6O4kHX4nwYkGxzNsrJ6SIct+sic=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7cO6+yX7i/IuBq5Xj6eEjfFebfBbPK0yFPb01uGqY8X2taczGuppli3/GsfxlyTt
-         4xqMxyRccvHchQw8an/hnLCrMB5DOBqIw6BV+GS/OUo77tKaDrsx4Qg+rV9Z4wrqiK
-         G1PThSw/Q8Ds772vlZsZE4CUUqyyxwTdHM8Uhlz8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 80/95] IB/hfi1: Wakeup QPs orphaned on wait list after flush
-Date:   Wed, 26 Jun 2019 20:30:05 -0400
-Message-Id: <20190627003021.19867-80-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
-References: <20190627003021.19867-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 06DF9C05678B;
+        Thu, 27 Jun 2019 00:34:51 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5DFF5D9D6;
+        Thu, 27 Jun 2019 00:34:48 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v3 0/4] x86: bpf unwinder fixes
+Date:   Wed, 26 Jun 2019 19:33:51 -0500
+Message-Id: <cover.1561595111.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 27 Jun 2019 00:34:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+v3:
 
-[ Upstream commit f972775b1cc0441ae22c9f8d06dd16b118463632 ]
+- Drop even more NACKed BPF changes.
 
-Once an SDMA engine is taken down due to a link failure, any waiting QPs
-that do not have outstanding descriptors in the ring will stay
-on the dmawait list as long as the port is down.
+- Coincidentally, a separate fix has already been merged for JIT frame
+  pointers:
 
-Since there is no timer running, they will stay there for a long time.
+    fe8d9571dc50 ("bpf, x64: fix stack layout of JITed bpf code")
 
-The fix is to wake up all iowaits linked to dmawait. The send engine
-will build and post packets that get flushed back.
+- 32-bit JIT frame pointers are still broken.  I have a small patch
+  which should fix it, if anybody wants to try interacting with the
+  maintainer.
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/hfi1/sdma.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+- Split the objtool jump table detection feature into a separate patch
+  to clarify that it's a generic objtool feature.
 
-diff --git a/drivers/infiniband/hw/hfi1/sdma.c b/drivers/infiniband/hw/hfi1/sdma.c
-index b0110728f541..1cde1b8f0c8b 100644
---- a/drivers/infiniband/hw/hfi1/sdma.c
-+++ b/drivers/infiniband/hw/hfi1/sdma.c
-@@ -405,6 +405,7 @@ static void sdma_flush(struct sdma_engine *sde)
- 	struct sdma_txreq *txp, *txp_next;
- 	LIST_HEAD(flushlist);
- 	unsigned long flags;
-+	uint seq;
- 
- 	/* flush from head to tail */
- 	sdma_flush_descq(sde);
-@@ -418,6 +419,22 @@ static void sdma_flush(struct sdma_engine *sde)
- 	/* flush from flush list */
- 	list_for_each_entry_safe(txp, txp_next, &flushlist, list)
- 		complete_tx(sde, txp, SDMA_TXREQ_S_ABORTED);
-+	/* wakeup QPs orphaned on the dmawait list */
-+	do {
-+		struct iowait *w, *nw;
-+
-+		seq = read_seqbegin(&sde->waitlock);
-+		if (!list_empty(&sde->dmawait)) {
-+			write_seqlock(&sde->waitlock);
-+			list_for_each_entry_safe(w, nw, &sde->dmawait, list) {
-+				if (w->wakeup) {
-+					w->wakeup(w, SDMA_AVAIL_REASON);
-+					list_del_init(&w->list);
-+				}
-+			}
-+			write_sequnlock(&sde->waitlock);
-+		}
-+	} while (read_seqretry(&sde->waitlock, seq));
- }
- 
- /*
+Josh Poimboeuf (3):
+  objtool: Add support for C jump tables
+  bpf: Fix ORC unwinding in non-JIT BPF code
+  x86/unwind/orc: Fall back to using frame pointers for generated code
+
+Song Liu (1):
+  perf/x86: Always store regs->ip in perf_callchain_kernel()
+
+ arch/x86/events/core.c       | 10 +++++-----
+ arch/x86/kernel/unwind_orc.c | 26 ++++++++++++++++++++++----
+ kernel/bpf/core.c            |  5 ++---
+ tools/objtool/check.c        | 16 ++++++++++++++--
+ 4 files changed, 43 insertions(+), 14 deletions(-)
+
 -- 
 2.20.1
 
