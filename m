@@ -2,220 +2,140 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69EEC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E27C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE2A2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E8B2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561631226;
+	bh=+aboWwW7RRRk1C/RYk5UOWQp4PDh2UA+to5qKLSsG5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ccBq5jTTSlubweNGQmiY4jcp0GfKtMdaAl74k8rY64R7r+mhzzNkfFjVak4qWrWVu
+	 gfYstQs7JoagmZipMYcy1RmuEZLz/yscX10T6UaBdVVgINBf1denHBqaXhzMq7ymVg
+	 2d7fqZEwzwfa1ufVlVMq9PvQafEM4Fj/Y5cm2Y6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfF0K0y (ORCPT
+        id S1726604AbfF0K1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:26:54 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44771 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfF0K0y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:26:54 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r16so44922wrl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 03:26:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pEVgzphJNxLhRnDpU8kjVDD93/VZEyHkl6ALzu+tFhk=;
-        b=uio/lI6rXwSpdGY9fIb3fS+pQpHlOaqvPmVjLC1xyiQP2mbCj+Z4Pk5tgQkfOj3tpH
-         /xboiU3PSutbNyZv4ORa4huHATwO5aQWBPbUmoUOXnS54aW1ruXJ/QuksWzWpxZLWcHh
-         Q7KxXyo6FomATCrUmVe9y7Oj5/AfnqPCZCh6IOcN2sCi1MOE24mjWGDRp5wwfDdC7nML
-         e0f4S/qPpxXqK33mcuK15qJmYMlcMTlJ5dAUM98vMkieR5vy3ls873AWzn0VDcAvI3kA
-         RkF6OMPHvSCinzfRVKaCqu0PEYEZzCFvZvwmA1xUYVM/6C18Zd4pQ9mq6tLKKsaCLtIp
-         F5Mg==
-X-Gm-Message-State: APjAAAXUuaRrpJzsTV1xNUxGbd0vYGzNRJ4QgfA8SJvLOuX/ofqs04Cr
-        j0unlPIUAurPA0uYdQfFYvlxLQ==
-X-Google-Smtp-Source: APXvYqzA7x+KX45ErC+136mEWBQw3MPqr4dD2ch2iq4LJkk81G6Ik8/EeJ9botnnoqjhz+hAEEwMKQ==
-X-Received: by 2002:adf:ebc4:: with SMTP id v4mr2646600wrn.113.1561631211101;
-        Thu, 27 Jun 2019 03:26:51 -0700 (PDT)
-Received: from steredhat.homenet.telecomitalia.it (host21-207-dynamic.52-79-r.retail.telecomitalia.it. [79.52.207.21])
-        by smtp.gmail.com with ESMTPSA id v15sm1300437wrt.25.2019.06.27.03.26.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 03:26:50 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 12:26:47 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 3/4] vsock/virtio: fix flush of works during the .remove()
-Message-ID: <20190627102647.7oorfdvwed7kxnll@steredhat.homenet.telecomitalia.it>
-References: <20190528105623.27983-4-sgarzare@redhat.com>
- <9ac9fc4b-5c39-2503-dfbb-660a7bdcfbfd@redhat.com>
- <20190529105832.oz3sagbne5teq3nt@steredhat>
- <8c9998c8-1b9c-aac6-42eb-135fcb966187@redhat.com>
- <20190530101036.wnjphmajrz6nz6zc@steredhat.homenet.telecomitalia.it>
- <4c881585-8fee-0a53-865c-05d41ffb8ed1@redhat.com>
- <20190531081824.p6ylsgvkrbckhqpx@steredhat>
- <dbc9964c-65b1-0993-488b-cb44aea55e90@redhat.com>
- <20190606081109.gdx4rsly5i6gtg57@steredhat>
- <b1fa0b2f-f7d0-8117-0bde-0cb78d1a3d07@redhat.com>
+        Thu, 27 Jun 2019 06:27:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfF0K1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:27:04 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F00C420828;
+        Thu, 27 Jun 2019 10:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561631223;
+        bh=+aboWwW7RRRk1C/RYk5UOWQp4PDh2UA+to5qKLSsG5A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ufNNsQ7PR/cG5oM3QhBjje8hgBKvThE0uaI9H9xM3+okTUjOvbrBIYQPnqnHbRbNy
+         0t+KK8xaWhxO0Sb25thuG7jRqSWjh7gyuw+7eiQuFz4Jnys7TskYd/ZdNopyXT4nnP
+         fsmY0hf/CSX8CAYEu4OwsGjutyiF0uZfK+cHA1lY=
+Date:   Thu, 27 Jun 2019 11:26:57 +0100
+From:   Will Deacon <will@kernel.org>
+To:     "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>
+Cc:     Guo Ren <guoren@kernel.org>, Julien Grall <julien.grall@arm.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Anup Patel <anup.Patel@wdc.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "gary@garyguo.net" <gary@garyguo.net>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "christoffer.dall@arm.com" <christoffer.dall@arm.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+ separate file
+Message-ID: <20190627102656.elizqwby4sw4vi5j@willie-the-truck>
+References: <20190321163623.20219-1-julien.grall@arm.com>
+ <20190321163623.20219-12-julien.grall@arm.com>
+ <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
+ <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
+ <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
+ <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
+ <20190621141606.GF18954@arrakis.emea.arm.com>
+ <CAJF2gTTVUToRkRtxTmtWDotMGXy5YQCpL1h_2neTBuN3e6oz1w@mail.gmail.com>
+ <20190624102209.ngwtosgr5fvp3ler@willie-the-truck>
+ <c5be6baa-91aa-c178-6698-c83d4d82a217@jp.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1fa0b2f-f7d0-8117-0bde-0cb78d1a3d07@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <c5be6baa-91aa-c178-6698-c83d4d82a217@jp.fujitsu.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 04:57:15PM +0800, Jason Wang wrote:
+On Thu, Jun 27, 2019 at 09:41:42AM +0000, qi.fuli@fujitsu.com wrote:
 > 
-> On 2019/6/6 下午4:11, Stefano Garzarella wrote:
-> > On Fri, May 31, 2019 at 05:56:39PM +0800, Jason Wang wrote:
-> > > On 2019/5/31 下午4:18, Stefano Garzarella wrote:
-> > > > On Thu, May 30, 2019 at 07:59:14PM +0800, Jason Wang wrote:
-> > > > > On 2019/5/30 下午6:10, Stefano Garzarella wrote:
-> > > > > > On Thu, May 30, 2019 at 05:46:18PM +0800, Jason Wang wrote:
-> > > > > > > On 2019/5/29 下午6:58, Stefano Garzarella wrote:
-> > > > > > > > On Wed, May 29, 2019 at 11:22:40AM +0800, Jason Wang wrote:
-> > > > > > > > > On 2019/5/28 下午6:56, Stefano Garzarella wrote:
-> > > > > > > > > > @@ -690,6 +693,9 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
-> > > > > > > > > >       	vsock->event_run = false;
-> > > > > > > > > >       	mutex_unlock(&vsock->event_lock);
-> > > > > > > > > > +	/* Flush all pending works */
-> > > > > > > > > > +	virtio_vsock_flush_works(vsock);
-> > > > > > > > > > +
-> > > > > > > > > >       	/* Flush all device writes and interrupts, device will not use any
-> > > > > > > > > >       	 * more buffers.
-> > > > > > > > > >       	 */
-> > > > > > > > > > @@ -726,6 +732,11 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
-> > > > > > > > > >       	/* Delete virtqueues and flush outstanding callbacks if any */
-> > > > > > > > > >       	vdev->config->del_vqs(vdev);
-> > > > > > > > > > +	/* Other works can be queued before 'config->del_vqs()', so we flush
-> > > > > > > > > > +	 * all works before to free the vsock object to avoid use after free.
-> > > > > > > > > > +	 */
-> > > > > > > > > > +	virtio_vsock_flush_works(vsock);
-> > > > > > > > > Some questions after a quick glance:
-> > > > > > > > > 
-> > > > > > > > > 1) It looks to me that the work could be queued from the path of
-> > > > > > > > > vsock_transport_cancel_pkt() . Is that synchronized here?
-> > > > > > > > > 
-> > > > > > > > Both virtio_transport_send_pkt() and vsock_transport_cancel_pkt() can
-> > > > > > > > queue work from the upper layer (socket).
-> > > > > > > > 
-> > > > > > > > Setting the_virtio_vsock to NULL, should synchronize, but after a careful look
-> > > > > > > > a rare issue could happen:
-> > > > > > > > we are setting the_virtio_vsock to NULL at the start of .remove() and we
-> > > > > > > > are freeing the object pointed by it at the end of .remove(), so
-> > > > > > > > virtio_transport_send_pkt() or vsock_transport_cancel_pkt() may still be
-> > > > > > > > running, accessing the object that we are freed.
-> > > > > > > Yes, that's my point.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > > Should I use something like RCU to prevent this issue?
-> > > > > > > > 
-> > > > > > > >         virtio_transport_send_pkt() and vsock_transport_cancel_pkt()
-> > > > > > > >         {
-> > > > > > > >             rcu_read_lock();
-> > > > > > > >             vsock = rcu_dereference(the_virtio_vsock_mutex);
-> > > > > > > RCU is probably a way to go. (Like what vhost_transport_send_pkt() did).
-> > > > > > > 
-> > > > > > Okay, I'm going this way.
-> > > > > > 
-> > > > > > > >             ...
-> > > > > > > >             rcu_read_unlock();
-> > > > > > > >         }
-> > > > > > > > 
-> > > > > > > >         virtio_vsock_remove()
-> > > > > > > >         {
-> > > > > > > >             rcu_assign_pointer(the_virtio_vsock_mutex, NULL);
-> > > > > > > >             synchronize_rcu();
-> > > > > > > > 
-> > > > > > > >             ...
-> > > > > > > > 
-> > > > > > > >             free(vsock);
-> > > > > > > >         }
-> > > > > > > > 
-> > > > > > > > Could there be a better approach?
-> > > > > > > > 
-> > > > > > > > 
-> > > > > > > > > 2) If we decide to flush after dev_vqs(), is tx_run/rx_run/event_run still
-> > > > > > > > > needed? It looks to me we've already done except that we need flush rx_work
-> > > > > > > > > in the end since send_pkt_work can requeue rx_work.
-> > > > > > > > The main reason of tx_run/rx_run/event_run is to prevent that a worker
-> > > > > > > > function is running while we are calling config->reset().
-> > > > > > > > 
-> > > > > > > > E.g. if an interrupt comes between virtio_vsock_flush_works() and
-> > > > > > > > config->reset(), it can queue new works that can access the device while
-> > > > > > > > we are in config->reset().
-> > > > > > > > 
-> > > > > > > > IMHO they are still needed.
-> > > > > > > > 
-> > > > > > > > What do you think?
-> > > > > > > I mean could we simply do flush after reset once and without tx_rx/rx_run
-> > > > > > > tricks?
-> > > > > > > 
-> > > > > > > rest();
-> > > > > > > 
-> > > > > > > virtio_vsock_flush_work();
-> > > > > > > 
-> > > > > > > virtio_vsock_free_buf();
-> > > > > > My only doubt is:
-> > > > > > is it safe to call config->reset() while a worker function could access
-> > > > > > the device?
-> > > > > > 
-> > > > > > I had this doubt reading the Michael's advice[1] and looking at
-> > > > > > virtnet_remove() where there are these lines before the config->reset():
-> > > > > > 
-> > > > > > 	/* Make sure no work handler is accessing the device. */
-> > > > > > 	flush_work(&vi->config_work);
-> > > > > > 
-> > > > > > Thanks,
-> > > > > > Stefano
-> > > > > > 
-> > > > > > [1] https://lore.kernel.org/netdev/20190521055650-mutt-send-email-mst@kernel.org
-> > > > > Good point. Then I agree with you. But if we can use the RCU to detect the
-> > > > > detach of device from socket for these, it would be even better.
-> > > > > 
-> > > > What about checking 'the_virtio_vsock' in the worker functions in a RCU
-> > > > critical section?
-> > > > In this way, I can remove the rx_run/tx_run/event_run.
-> > > > 
-> > > > Do you think it's cleaner?
-> > > 
-> > > Yes, I think so.
-> > > 
-> > Hi Jason,
-> > while I was trying to use RCU also for workers, I discovered that it can
-> > not be used if we can sleep. (Workers have mutex, memory allocation, etc.).
-> > There is SRCU, but I think the rx_run/tx_run/event_run is cleaner.
-> > 
-> > So, if you agree I'd send a v2 using RCU only for the
-> > virtio_transport_send_pkt() or vsock_transport_cancel_pkt(), and leave
-> > this patch as is to be sure that no one is accessing the device while we
-> > call config->reset().
-> > 
-> > Thanks,
-> > Stefano
+> On 6/24/19 7:22 PM, Will Deacon wrote:
+> > On Mon, Jun 24, 2019 at 12:35:35AM +0800, Guo Ren wrote:
+> >> On Fri, Jun 21, 2019 at 10:16 PM Catalin Marinas
+> >> <catalin.marinas@arm.com> wrote:
+> >>> On Wed, Jun 19, 2019 at 07:51:03PM +0800, Guo Ren wrote:
+> >>>> On Wed, Jun 19, 2019 at 4:54 PM Julien Grall <julien.grall@arm.com> wrote:
+> >>>>> On 6/19/19 9:07 AM, Guo Ren wrote:
+> >>>>>> Move arm asid allocator code in a generic one is a agood idea, I've
+> >>>>>> made a patchset for C-SKY and test is on processing, See:
+> >>>>>> https://lore.kernel.org/linux-csky/1560930553-26502-1-git-send-email-guoren@kernel.org/
+> >>>>>>
+> >>>>>> If you plan to seperate it into generic one, I could co-work with you.
+> >>>>> Was the ASID allocator work out of box on C-Sky?
+> >>>> Almost done, but one question:
+> >>>> arm64 remove the code in switch_mm:
+> >>>>    cpumask_clear_cpu(cpu, mm_cpumask(prev));
+> >>>>    cpumask_set_cpu(cpu, mm_cpumask(next));
+> >>>>
+> >>>> Why? Although arm64 cache operations could affect all harts with CTC
+> >>>> method of interconnect, I think we should keep these code for
+> >>>> primitive integrity in linux. Because cpu_bitmap is in mm_struct
+> >>>> instead of mm->context.
+> >>> We didn't have a use for this in the arm64 code, so no point in
+> >>> maintaining the mm_cpumask. On some arm32 systems (ARMv6) with no
+> >>> hardware broadcast of some TLB/cache operations, we use it to track
+> >>> where the task has run to issue IPI for TLB invalidation or some
+> >>> deferred I-cache invalidation.
+> >> The operation of set/clear mm_cpumask was removed in arm64 compared to
+> >> arm32. It seems no side effect on current arm64 system, but from
+> >> software meaning it's wrong.
+> >> I think we should keep mm_cpumask just like arm32.
+> > It was a while ago now, but I remember the atomic update of the mm_cpumask
+> > being quite expensive when I was profiling this stuff, so I removed it
+> > because we don't need it for arm64 (at least, it doesn't allow us to
+> > optimise our shootdowns in practice).
 > 
-> 
-> If it work, I don't object to use that consider it was suggested by Michael.
-> You can go this way and let's see.
+> I think mm_cpumask can be used for filtering the cpus that there are TBL 
+> entries on.
 
-Okay, I'll try if it works.
+I'm aware that you want to use IPIs for broadcasting TLB invalidation
+but that is only tangentially related to this thread, which is about the
+current ASID algorithm and the need to update mm_cpumask today.
 
-> 
-> Personally I would like something more cleaner. E.g RCU + some kind of
-> reference count (kref?).
+Please don't conflate the two threads; I already made my position reasonably
+clear:
 
-I'll try to check if kref can help to have a cleaner solution in this
-case.
+https://lore.kernel.org/linux-arm-kernel/20190617170328.GJ30800@fuggles.cambridge.arm.com/
 
-Thanks for your comments,
-Stefano
+I will follow-up with another reply there.
+
+Will
