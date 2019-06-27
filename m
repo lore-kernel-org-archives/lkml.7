@@ -2,36 +2,37 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411CDC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4A0C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFAE20828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1CD20843
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfF0IB0 (ORCPT
+        id S1726505AbfF0IBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:01:26 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:38084 "EHLO
+        Thu, 27 Jun 2019 04:01:35 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:65201 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726101AbfF0IBZ (ORCPT
+        with ESMTP id S1726101AbfF0IBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:01:25 -0400
-X-UUID: a61b840fda2c490888e41684eee737f0-20190627
-X-UUID: a61b840fda2c490888e41684eee737f0-20190627
+        Thu, 27 Jun 2019 04:01:34 -0400
+X-UUID: 3d83f87573874adbbd5a1b035c8cdb1a-20190627
+X-UUID: 3d83f87573874adbbd5a1b035c8cdb1a-20190627
 Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1028844314; Thu, 27 Jun 2019 16:01:20 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 27 Jun
- 2019 16:01:19 +0800
+        with ESMTP id 101541769; Thu, 27 Jun 2019 16:01:28 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 27 Jun
+ 2019 16:01:27 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Thu, 27 Jun 2019 16:01:17 +0800
+ 15.0.1395.4 via Frontend Transport; Thu, 27 Jun 2019 16:01:25 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -57,10 +58,12 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v5 0/7] Support dsi for mt8183
-Date:   Thu, 27 Jun 2019 16:01:08 +0800
-Message-ID: <20190627080116.40264-1-jitao.shi@mediatek.com>
+Subject: [v5 5/7] drm/mediatek: add mt8183 dsi driver support
+Date:   Thu, 27 Jun 2019 16:01:13 +0800
+Message-ID: <20190627080116.40264-6-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190627080116.40264-1-jitao.shi@mediatek.com>
+References: <20190627080116.40264-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -70,42 +73,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change since v4:
- - move mipi_dsi_host_unregiter() to .remove()
- - fine tune add frame size control coding style
- - change the data type of data_rate as u32, and add DIV_ROUND_UP_ULL
- - use div_u64 when 8000000000ULL / dsi->data_rate.
+Add mt8183 dsi driver data. Enable size control and
+reg commit control.
 
-Changes since v3
- - add one more 'tab' for bitwise define.
- - add Tested-by: Ryan Case <ryandcase@chromium.org>
-	and Reviewed-by: CK Hu <ck.hu@mediatek.com>.
- - remove compare da_hs_zero to da_hs_prepare.
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Changes since v2:
- - change the video timing calc method
- - fine the dsi and mipitx init sequence
- - fine tune commit msg
-
-Changes since v1:
- - separate frame size and reg commit control independent patches.
- - fix some return values in probe
- - remove DSI_CMDW0 in "CMDQ reg address of mt8173 is different with mt2701" 
-
-Jitao Shi (7):
-  drm/mediatek: move mipi_dsi_host_register to probe
-  drm/mediatek: fixes CMDQ reg address of mt8173 is different with
-    mt2701
-  drm/mediatek: add dsi reg commit disable control
-  drm/mediatek: add frame size control
-  drm/mediatek: add mt8183 dsi driver support
-  drm/mediatek: change the dsi phytiming calculate method
-  drm: mediatek: adjust dsi and mipi_tx probe sequence
-
- drivers/gpu/drm/mediatek/mtk_drm_drv.c |   2 +-
- drivers/gpu/drm/mediatek/mtk_dsi.c     | 223 ++++++++++++++++++-------
- 2 files changed, 160 insertions(+), 65 deletions(-)
-
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 45e331055842..1621e8cdacc2 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -1225,11 +1225,19 @@ static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
+ 	.reg_cmdq_off = 0x180,
+ };
+ 
++static const struct mtk_dsi_driver_data mt8183_dsi_driver_data = {
++	.reg_cmdq_off = 0x200,
++	.has_shadow_ctl = true,
++	.has_size_ctl = true,
++};
++
+ static const struct of_device_id mtk_dsi_of_match[] = {
+ 	{ .compatible = "mediatek,mt2701-dsi",
+ 	  .data = &mt2701_dsi_driver_data },
+ 	{ .compatible = "mediatek,mt8173-dsi",
+ 	  .data = &mt8173_dsi_driver_data },
++	{ .compatible = "mediatek,mt8183-dsi",
++	  .data = &mt8183_dsi_driver_data },
+ 	{ },
+ };
+ 
 -- 
 2.21.0
 
