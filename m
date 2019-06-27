@@ -2,78 +2,127 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C078C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A699CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECE72085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE642086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561633107;
+	bh=eqIMm2IvCi/2kqSke0jwsbTzK/3H02BMhTr01hNqdt8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZOITUfqYUa2eRVCje1IiT1h1qjpBrz0Wui48dK3DMfFVLnpVWEZxhE783oTdoKXA3
+	 ToH+EYhBnPXQVqBBmAHE6Yq2ASE1hmSbf/sNwJQN9yLo2L1VaHm9yXi1fXr5uEQEJg
+	 7eZ/yxc3mdofaAezQktGb/jbf7DDb8YfXkz4O0mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfF0K6B (ORCPT
+        id S1726628AbfF0K60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:58:01 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:57062 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfF0K6B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:58:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id u25so2120330iol.23
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 03:58:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Qd5yz8D6nzHy8/WHIsu0XvDmoEeh/tbWUaUPsfPoLfU=;
-        b=kGJtkk52FaGYbfp4MGxiA3SB+qdDqWLu1ANFm2lWIYSDdf1bNWEFun3wLkSD/6C6ui
-         0d/vIeK9GNgsLVBC0jBnAbTAD3ienI7E0so/AFk3O41wMk1fRZZV0vsdfmv5ehU6O0Vr
-         s09lax4U01P7RREGUbUTe6e47zGJ1bZ6I2l902crUCqhYxw9OKJbivRUFwyC/Dc4bSdE
-         R4+uJcVEntlwPAeh6hg0mXYzqO11irY93581k2c67SduBovYYtV3M59LYPkZs5f6Fh2h
-         Uz2G9F3RbWP2xqHbW8PNHq8ZrVhpW6MzZzmsmnnixzAQ1C/S8dlNHR0nngijo3z/yBqD
-         6PXA==
-X-Gm-Message-State: APjAAAUqXj7icN1/q1mRk3oeaOffodU2DNhTECB4PnaxMLg8XGndhwfO
-        IL4atepafBFf8eemu0hBQ0cTGTL2iVVM25tyFdt9K5Ou2T8Q
-X-Google-Smtp-Source: APXvYqyFMB8ZqB5Hvwd/r6Qq21rENIAh6D36I89aMJ9OWo9sekU/qTEYVyqcJaSJdsoL2uLgqaaGvev7HQgFP9ZgljJSrVVi095A
-MIME-Version: 1.0
-X-Received: by 2002:a6b:bec7:: with SMTP id o190mr3664415iof.158.1561633080591;
- Thu, 27 Jun 2019 03:58:00 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 03:58:00 -0700
-In-Reply-To: <00000000000008f38a058bd500b9@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000009ccbc058c4c09bf@google.com>
-Subject: Re: BUG: unable to handle kernel paging request in cpuacct_account_field
-From:   syzbot <syzbot+a952f743523593b39174@syzkaller.appspotmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, fweisbec@gmail.com,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, netdev@vger.kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Thu, 27 Jun 2019 06:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726315AbfF0K6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:58:25 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F4F32085A;
+        Thu, 27 Jun 2019 10:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561633104;
+        bh=eqIMm2IvCi/2kqSke0jwsbTzK/3H02BMhTr01hNqdt8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iauW/gb5jLquigQ+Cdzh/i9Pn3zW17VkPlONdHo7xFd7dA32bVmDJ/Yyb0bkTe8EG
+         kIrY8RkURU97+7yoOa31J72E27OcFr0fIRUwyB35ALlHqV0dmT8JKXqUb21IVMoo+X
+         l5U9Ro8xIQgWHOpJmZaP0lAAll1CxzuY2yED7AZg=
+Date:   Thu, 27 Jun 2019 19:58:17 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH 00/11] tracing: of: Boot time tracing using
+ devicetree
+Message-Id: <20190627195817.211ab4bea422f37e539e47e8@kernel.org>
+In-Reply-To: <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
+References: <156113387975.28344.16009584175308192243.stgit@devnote2>
+        <CAL_JsqJOc+tkFEGcc+KN0RE8Xjg_i9icPWZ37Ynk_9sR2X1Uwg@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Hi Rob,
 
-commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
-Author: John Fastabend <john.fastabend@gmail.com>
-Date:   Sat Jun 30 13:17:47 2018 +0000
+On Wed, 26 Jun 2019 15:58:50 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-     bpf: sockhash fix omitted bucket lock in sock_close
+> On Fri, Jun 21, 2019 at 10:18 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > Here is an RFC series of patches to add boot-time tracing using
+> > devicetree.
+> >
+> > Currently, kernel support boot-time tracing using kernel command-line
+> > parameters. But that is very limited because of limited expressions
+> > and limited length of command line. Recently, useful features like
+> > histogram, synthetic events, etc. are being added to ftrace, but it is
+> > clear that we can not expand command-line options to support these
+> > features.
+> >
+> > Hoever, I've found that there is a devicetree which can pass more
+> > structured commands to kernel at boot time :) The devicetree is usually
+> > used for dscribing hardware configuration, but I think we can expand it
+> > for software configuration too (e.g. AOSP and OPTEE already introduced
+> > firmware node.) Also, grub and qemu already supports loading devicetree,
+> > so we can use it not only on embedded devices but also on x86 PC too.
+> 
+> Do the x86 versions of grub, qemu, EFI, any other bootloader actually
+> enable DT support? I didn't think so. Certainly, an x86 kernel doesn't
+> normally (other than OLPC and ce4100) have a defined way to even pass
+> a dtb from the bootloader to the kernel and the kernel doesn't
+> unflatten the dtb.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13dd1b79a00000
-start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=103d1b79a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17dd1b79a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
-dashboard link: https://syzkaller.appspot.com/bug?extid=a952f743523593b39174
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1372abc6a00000
+Sorry, the grub part, I just found this entry. I need to check this
+can work on x86 too.
 
-Reported-by: syzbot+a952f743523593b39174@syzkaller.appspotmail.com
-Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
+https://www.gnu.org/software/grub/manual/grub/html_node/devicetree.html
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Anyway, I've tested this series on qemu-x86 with --dtb option.
+The kernel boot with ACPI and DT (hardware drivers seem initialized
+by ACPI), and it seems unflatten the dtb correctly.
+
+> 
+> For arm64, the bootloader to kernel interface is DT even for ACPI
+> based systems. So unlike Frank, I'm not completely against DT being
+> the interface, but it's hardly universal across architectures and
+> something like this should be. Neither making DT the universal kernel
+> boot interface nor creating some new channel as Frank suggested seems
+> like an easy task.
+
+I don't want it making this for all architectures but an option for
+architecutres which supports DT already...
+
+Thank you,
+
+
+> 
+> Rob
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
