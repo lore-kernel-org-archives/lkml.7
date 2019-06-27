@@ -2,69 +2,66 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96474C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEFFC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7611C204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1269C204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfF0GNs (ORCPT
+        id S1726420AbfF0GTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 02:13:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:38441 "EHLO mga17.intel.com"
+        Thu, 27 Jun 2019 02:19:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60640 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfF0GNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 02:13:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 23:13:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
-   d="scan'208";a="313685035"
-Received: from pg-eswbuild-angstrom-alpha.altera.com ([10.142.34.148])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jun 2019 23:13:44 -0700
-From:   "Ong, Hean Loong" <hean.loong.ong@intel.com>
-To:     Dinh Nguyen <dinguyen@kernel.org>,
-        Thor Thayer <thor.thayer@intel.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hean.loong.ong@intel.com, chin.liang.see@intel.com,
-        Ong@vger.kernel.org
-Subject: [PATCHv1] ARM64: defconfig: Add LEDS_TRIGGERS_TIMER for blinking leds
-Date:   Thu, 27 Jun 2019 22:07:09 +0800
-Message-Id: <20190627140709.707-2-hean.loong.ong@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190627140709.707-1-hean.loong.ong@intel.com>
-References: <20190627140709.707-1-hean.loong.ong@intel.com>
+        id S1725385AbfF0GTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 02:19:47 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8751519CB81;
+        Thu, 27 Jun 2019 06:19:47 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 02C9760856;
+        Thu, 27 Jun 2019 06:19:45 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 8730911AAF; Thu, 27 Jun 2019 08:19:42 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 08:19:42 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Tina Zhang <tina.zhang@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zhenyuw@linux.intel.com,
+        zhiyuan.lv@intel.com, zhi.a.wang@intel.com, kevin.tian@intel.com,
+        hang.yuan@intel.com, alex.williamson@redhat.com
+Subject: Re: [RFC PATCH v3 1/4] vfio: Define device specific irq type
+ capability
+Message-ID: <20190627061942.k5onxbm27dju3iv5@sirius.home.kraxel.org>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
+ <20190627033802.1663-2-tina.zhang@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627033802.1663-2-tina.zhang@intel.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 27 Jun 2019 06:19:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding LED Triggers Timers for LED blinking support on ARM devices
+  Hi,
 
-Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
----
- arch/arm64/configs/defconfig |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+> +struct vfio_irq_info_cap_type {
+> +	struct vfio_info_cap_header header;
+> +	__u32 type;     /* global per bus driver */
+> +	__u32 subtype;  /* type specific */
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4d58351..6fbd651 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -595,6 +595,7 @@ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- CONFIG_LEDS_TRIGGER_CPU=y
- CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
- CONFIG_LEDS_TRIGGER_PANIC=y
-+CONFIG_LEDS_TRIGGER_TIMER=y
- CONFIG_EDAC=y
- CONFIG_EDAC_GHES=y
- CONFIG_RTC_CLASS=y
--- 
-1.7.1
+Do we really need both type and subtype?
+
+cheers,
+  Gerd
 
