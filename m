@@ -2,73 +2,67 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1333C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE83AC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5312086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EE1205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aq1KMHWJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vm8y6I5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfF0Rkv (ORCPT
+        id S1727107AbfF0Rk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:40:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37557 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbfF0Rkv (ORCPT
+        Thu, 27 Jun 2019 13:40:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34875 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfF0Rk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:40:51 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 25so1344197pgy.4;
-        Thu, 27 Jun 2019 10:40:50 -0700 (PDT)
+        Thu, 27 Jun 2019 13:40:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d126so1590795pfd.2;
+        Thu, 27 Jun 2019 10:40:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=t46mtjbtI3kfKQtCDE30bMwLgnekms1c5N/WXLRHQCM=;
-        b=Aq1KMHWJHzmkqUp/kisIB0tLK4uQnRYkLDW/KonVJWvyc6GcMMAhseSmCIpRdIdAAZ
-         Adfq5lxDw383Bw1yNCSWEaNJu4guwPQN4x1ffx9jAM9I1OfZ/juIr4tUGXPjg+LyRkU6
-         pzc2C/If59rU3wumJQorRmUk98tOSyYOFtvwn+73oDlrR0F+w24AEvex3rPRj3X+dwB8
-         isDfw6l7CgH9uO5LKaAdEezQncZKvgXfHpuKjcw+mfxgBefY6SYAWDb34IAxXPk/kDC4
-         MRtE9YHOuZrhRCYh0yq3WZROprdPUmCmpc3FpQQHLQjFQ9yhpyd9xGhD1OAJbgFrXgFB
-         RyUw==
+        bh=N8TVQBF/QL49yVSkOnME0X2To16k6lZYQYirwSFcr9Q=;
+        b=Vm8y6I5jmFwkXeu+AGRjbb3mc4CG3NUc6vBd3BASRntsR22encI0RsW2uIeqsqIbbL
+         XVauSexa8ZceR1MDT1zObfT2xOn/6qrz0/AH3tQV8Owlx/aI5lFQgN7QCzYSTdQq2kKv
+         ez7QvwCByNaO7oCPx1vtcbzzx52HyslhSmox1nufBNkP/TTTX0BGtSXyeAaAJviVLDln
+         NunmUVq2lXV4vpNPNojdUMGUpO57LMAvOxrq/cLhNCW7zfwl77NLm4XA7OejFH45MbI4
+         MHX0PbOsyt2ACFeyw9iBlqtwATLieGSizKtk6/lZIr1HanKwnGvNacyexvvl0EvGfCV1
+         +BNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=t46mtjbtI3kfKQtCDE30bMwLgnekms1c5N/WXLRHQCM=;
-        b=VsJiXdIdZ3XFvbBQvRVoi0zS1ZzZ8QYw+bpgGc9iauhQmsylp8gIaCu68X+M1n5qYc
-         tvP9S1eXwKtRAOgf1n++Mz2DoruDPtJC26xp96Errmp7S88WCYmMerCA6x3SfQCPva0c
-         6BhsSGD6FonHdUrZhfydSOcbL+WnBIaj6seZu5x5TKwNoqDy2hZT3yAJL0dY7e/cqr38
-         LweX97SLd2s9Lgs+y9XR8t1XJ/cOpSLmMGAH9sUqMWLIxNc1z4mXXrGbvuXZkb/6BVFQ
-         EpyLQoD/vM//6YEGVOsQXTpQmF2duGt79sKLO4IAzadR09o/1Qrw9iv3E7LsycvgXvR2
-         EwHg==
-X-Gm-Message-State: APjAAAWujcvFJDFJgySK5FuL5+NF7+DTTKQyBZlhv6XxQCFLvMMOXEkQ
-        uAqpJC7A2QNG7ojn0puXDpc=
-X-Google-Smtp-Source: APXvYqx5uHL095Y9377Xj6V6dq9bqSsdNQRvILwVJLCBicRDa5beyUZ6jc6HAAsA8JExMVhOk0eEwg==
-X-Received: by 2002:a65:448b:: with SMTP id l11mr4797285pgq.74.1561657250380;
-        Thu, 27 Jun 2019 10:40:50 -0700 (PDT)
+        bh=N8TVQBF/QL49yVSkOnME0X2To16k6lZYQYirwSFcr9Q=;
+        b=nVPgXzlkajUnOmR4GMBX+7d9IrKjx8WdpsEqYQ+toQtlfnuuwJMDH4O0wlATlU89Wa
+         LI9DlNEQHHx9Z5nT/AHiiKqKXcU7/bfX7AopudGRKIsAf7A4tTzGDGyRTSXiDKV2RqR1
+         GZR+rn9ohpkcoQ8VVaIENdmrNfggXWO2byPsKMtEohFXqQ8CGWHYzLaOghVokuYdUCHt
+         IIqg5GXbbX4qUvPcSAvnNrWUNvjAtDPRHorezBFeesfca48knBLDXrp2akFT49B2eFl2
+         MtyCietnKKxLpEcUwEp+Yoq48+dph7IdhJwp7SigZJB9jH8j+hMKG1F/L3v90nUk1HW6
+         +TOg==
+X-Gm-Message-State: APjAAAXM3bbjvGsc2J8+3ymXDUZPXmNFl9h0PrKAQcBr6iuW3FSEpqVn
+        hU1YObdBsKXPbO6bf/PARjk=
+X-Google-Smtp-Source: APXvYqw0wFZH+YiQV9sQUIvZXQhs1dICN+a0S6DSKIamrRGVk3ZXrYkx3q85RXcRo5MhSv0JXK/SbQ==
+X-Received: by 2002:a63:90c8:: with SMTP id a191mr5163457pge.112.1561657256382;
+        Thu, 27 Jun 2019 10:40:56 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id 125sm5862104pfg.23.2019.06.27.10.40.47
+        by smtp.googlemail.com with ESMTPSA id a18sm6211260pjq.0.2019.06.27.10.40.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:40:49 -0700 (PDT)
+        Thu, 27 Jun 2019 10:40:56 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Colin Ian King <colin.king@canonical.com>,
-        Yang Wei <albin_yang@163.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Mao Wenan <maowenan@huawei.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 38/87] ethernet: atlx: remove memset after pci_alloc_consistent in atl2.c
-Date:   Fri, 28 Jun 2019 01:40:39 +0800
-Message-Id: <20190627174040.4180-1-huangfq.daxian@gmail.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 43/87] kernel: power: replace kmalloc and memset with kzalloc
+Date:   Fri, 28 Jun 2019 01:40:48 +0800
+Message-Id: <20190627174048.4234-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,29 +70,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci_alloc_consitent calls dma_alloc_coherent directly.
-In commit af7ddd8a627c
-("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-dma_alloc_coherent has already zeroed the memory.
-So memset is not needed.
+kmalloc + memset(0) -> kzalloc
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/net/ethernet/atheros/atlx/atl2.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/power/swap.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/atheros/atlx/atl2.c b/drivers/net/ethernet/atheros/atlx/atl2.c
-index 3a3fb5ce0fee..3aba38322717 100644
---- a/drivers/net/ethernet/atheros/atlx/atl2.c
-+++ b/drivers/net/ethernet/atheros/atlx/atl2.c
-@@ -291,7 +291,6 @@ static s32 atl2_setup_ring_resources(struct atl2_adapter *adapter)
- 		&adapter->ring_dma);
- 	if (!adapter->ring_vir_addr)
- 		return -ENOMEM;
--	memset(adapter->ring_vir_addr, 0, adapter->ring_size);
- 
- 	/* Init TXD Ring */
- 	adapter->txd_dma = adapter->ring_dma ;
+diff --git a/kernel/power/swap.c b/kernel/power/swap.c
+index e1912ad13bdc..ca0fcb5ced71 100644
+--- a/kernel/power/swap.c
++++ b/kernel/power/swap.c
+@@ -974,12 +974,11 @@ static int get_swap_reader(struct swap_map_handle *handle,
+ 	last = handle->maps = NULL;
+ 	offset = swsusp_header->image;
+ 	while (offset) {
+-		tmp = kmalloc(sizeof(*handle->maps), GFP_KERNEL);
++		tmp = kzalloc(sizeof(*handle->maps), GFP_KERNEL);
+ 		if (!tmp) {
+ 			release_swap_reader(handle);
+ 			return -ENOMEM;
+ 		}
+-		memset(tmp, 0, sizeof(*tmp));
+ 		if (!handle->maps)
+ 			handle->maps = tmp;
+ 		if (last)
 -- 
 2.11.0
 
