@@ -7,64 +7,65 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C3EC48BE7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41B7C48BE9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F2E208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0AB5208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:55:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ApRrQeT5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="K1cxX4xN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfF0Tzz (ORCPT
+        id S1726787AbfF0Tz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 15:55:55 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:23412 "EHLO
+        Thu, 27 Jun 2019 15:55:57 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:23418 "EHLO
         esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfF0Tz1 (ORCPT
+        with ESMTP id S1726604AbfF0Tz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Jun 2019 15:55:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1561665325; x=1593201325;
+  t=1561665326; x=1593201326;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R4jfjZMxUWSzFwisiuVjBFLXxDAnXEO77dQqxAyI1wE=;
-  b=ApRrQeT5vkHaNV85HqQPY2zXfXYziGPf+zX8Gzv1Wn3JuIFpEzkpzDyt
-   KLKDYN6bXLIJeIhVduXnmpPuBo8lOshu/9oSoWSUC/1UX0+Qwe1QlAXFu
-   KDL255bFDnLn0Cx4p4pGueZiVPH0VusFbg+riW/K3YJdczEhz4qaR8T7y
-   7dhJze9I/JHHHgmrTjdzILbuJvXkksHbNvIIvekMFdwq3NZ98/8i2Iu1I
-   PCkySWk0TNP3rf2veFwD0CZ/jfJoCl+1gt1wXVX4egEG9PxC1Im/j53jq
-   A7dvTiaSAXPYxcnpzAcSPXBcUZemDDKLFP/74lAQ/SS44PU+mZv4OsGsJ
-   g==;
+  bh=YV3vtnK6W8FYP7RLPlwhXUIA/1X+XzIwp2SUJb3f0ok=;
+  b=K1cxX4xN1Gs8/5sb2l/eLUz8Rd7lyJjJHh3bUWAxLQ5u3PZ4AqZqCp2X
+   9KHBGj58xQ92Q+bZD1JALMVYi7YtuMu5I0mNBbpdRnRXhPRjYsIOvk1lF
+   /tSnnKDnxjDiCGgur8q6ddIiBhQ7FnFe1i5yqZkMbHkEsVI8y/0a3yU+V
+   sv/pmQzp0nRovO5nNPvbJ38ZtekaPGCjYB5SqjH06yyVnKzzgca9iaMjN
+   aG+y1HOeh59e6cM3FMemHdpDZ8JEsm/464ApDp4uvbw9vpT5Iq2SLLEii
+   8BFkeXXIcX/Je6Bpfne3k+8gTE7KGeowFhDLJDmpCZWCCoN7vzmtffu1q
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.63,424,1557158400"; 
-   d="scan'208";a="112927434"
+   d="scan'208";a="112927444"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 28 Jun 2019 03:55:24 +0800
-IronPort-SDR: c3iIjetTeO8V+oB6XyRueLgF5WP/2xbKuT3StzNHVinKFVOFmt1MtwDjZaOHuLNAwHvin8fGP8
- b62Vqaf+8v1NVijJpf5MA1oCueYFpno6VX3c778RA5zzu07gLvc8R1+BO9o2RgLM2iUp5wMxIe
- zKXkG3fOt9qVbqaXvQqVIqMmaZVEOWGEgr3i46mE+lgVBdEuYbKjND7O4wngmks7aGPzBP/Y2C
- Orfb6P8CA56W+Vj3eXpQGPPBLYnyy+4OVp2lScYowsUS4MMu8tiqSALJ8zYphYiwlOMpVcblr5
- wPb5AUsA7Vi+6FBu3lW7foPh
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jun 2019 03:55:26 +0800
+IronPort-SDR: VNIKPGONAeSF9cjwwjYVAe4wesKvkxFQPZprcsF3pAyEO6BemOyKOcGXZTGGMCywBlzKI4BqLJ
+ V2x/CeavoJwT6RTPW/Ar15i63x0fSY0T64NSTs0VYqQCnVjKSPDNNXba9fdsnq5cAqnPsJHGWG
+ UWl3HuHPDVQCWQRYT6xfNLBvOaBI5vfLNy4HDQATePiHxGxqzcNP9h+WRieEqYi7TF0Nkul66X
+ 9+NWbUtp+YG7v50PmgxNUcAjnogW2FlydRGOnIIWNFwcUbKm7jgOo+ZokUm/UTOiY5jE1VVEem
+ wAvdEpTyN3itqSf51Mc+sWgF
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP; 27 Jun 2019 12:54:38 -0700
-IronPort-SDR: zrZX6RAbOPoSs5QMZIqfjIVfLPRAfo+phS5jzwXRWAwg0bCtmLWKKOjf5WM/+ysKs88/8jV8D8
- GgQ3+6aktI6mnATTDgLps2zNlvwrwikyl1o+hnJ9W+fsGZ8kFR5LOtP7IAZsespf9vIuLZjiYa
- WFcPoI5TYkJVnyLYWLB8aMxqzD0vx1PP72A8kIWdiQUPlJGZpouXJXliay5wvI/nDfLD2olu4+
- NeVibRmlcwz/JPb2fSEFN+IVh2bBKk6khcBif0vGeMBP6FlKZDMYZtGeJHolZ65m6FEoLDE2Ke
- Vq0=
+  by uls-op-cesaep02.wdc.com with ESMTP; 27 Jun 2019 12:54:39 -0700
+IronPort-SDR: wR2/Li+PKkXWk+TQ6HUIsu8cs/pPlvKX9o/DLhatChFBOplvOrygAdijTcp9uiMv65THie53Go
+ RWv++hho/UhxpRcinXdhTK10AIj9/eeQoJpo/d/uoyxBaqbyeYUEeSYk8r2mLwafTGPC0r13Xs
+ 4FsUKrPEWjw0hNC7G8dZUPrGGgu//jndaeUuva25bbds+7NVca4knXMQoptGXZ4XNpXC1XIGUm
+ Yc5RJHJAAeTVxpZRk9JoTPnHtnC8SEE6c1Pdmeni7fLMRocSOlSFx07XfajM0eIf/C0MkyyIEo
+ K5g=
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jun 2019 12:55:25 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 27 Jun 2019 12:55:26 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Anup Patel <anup@brainfault.org>,
-        Atish Patra <atish.patra@wdc.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Johan Hovold <johan@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-riscv@lists.infradead.org,
@@ -78,13 +79,12 @@ Cc:     Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v8 1/7] Documentation: DT: arm: add support for sockets defining package boundaries
-Date:   Thu, 27 Jun 2019 12:52:56 -0700
-Message-Id: <20190627195302.28300-2-atish.patra@wdc.com>
+Subject: [PATCH v8 3/7] cpu-topology: Move cpu topology code to common code.
+Date:   Thu, 27 Jun 2019 12:52:58 -0700
+Message-Id: <20190627195302.28300-4-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190627195302.28300-1-atish.patra@wdc.com>
 References: <20190627195302.28300-1-atish.patra@wdc.com>
@@ -95,282 +95,766 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+Both RISC-V & ARM64 are using cpu-map device tree to describe
+their cpu topology. It's better to move the relevant code to
+a common place instead of duplicate code.
 
-The current ARM DT topology description provides the operating system
-with a topological view of the system that is based on leaf nodes
-representing either cores or threads (in an SMT system) and a
-hierarchical set of cluster nodes that creates a hierarchical topology
-view of how those cores and threads are grouped.
-
-However this hierarchical representation of clusters does not allow to
-describe what topology level actually represents the physical package or
-the socket boundary, which is a key piece of information to be used by
-an operating system to optimize resource allocation and scheduling.
-
-Lets add a new "socket" node type in the cpu-map node to describe the
-same.
-
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+To: Will Deacon <will.deacon@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+[Tested on QDF2400]
+Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+[Tested on Juno and other embedded platforms.]
+Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../devicetree/bindings/arm/topology.txt      | 172 ++++++++++--------
- 1 file changed, 99 insertions(+), 73 deletions(-)
+ arch/arm64/include/asm/topology.h |  23 ---
+ arch/arm64/kernel/topology.c      | 303 +-----------------------------
+ drivers/base/arch_topology.c      | 296 +++++++++++++++++++++++++++++
+ include/linux/arch_topology.h     |  28 +++
+ include/linux/topology.h          |   1 +
+ 5 files changed, 329 insertions(+), 322 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-index b0d80c0fb265..3b8febb46dad 100644
---- a/Documentation/devicetree/bindings/arm/topology.txt
-+++ b/Documentation/devicetree/bindings/arm/topology.txt
-@@ -9,6 +9,7 @@ ARM topology binding description
- In an ARM system, the hierarchy of CPUs is defined through three entities that
- are used to describe the layout of physical CPUs in the system:
+diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
+index 0524f2438649..a4d945db95a2 100644
+--- a/arch/arm64/include/asm/topology.h
++++ b/arch/arm64/include/asm/topology.h
+@@ -4,29 +4,6 @@
  
-+- socket
- - cluster
- - core
- - thread
-@@ -63,21 +64,23 @@ nodes are listed.
+ #include <linux/cpumask.h>
  
- 	The cpu-map node's child nodes can be:
- 
--	- one or more cluster nodes
-+	- one or more cluster nodes or
-+	- one or more socket nodes in a multi-socket system
- 
- 	Any other configuration is considered invalid.
- 
--The cpu-map node can only contain three types of child nodes:
-+The cpu-map node can only contain 4 types of child nodes:
- 
-+- socket node
- - cluster node
- - core node
- - thread node
- 
- whose bindings are described in paragraph 3.
- 
--The nodes describing the CPU topology (cluster/core/thread) can only
--be defined within the cpu-map node and every core/thread in the system
--must be defined within the topology.  Any other configuration is
-+The nodes describing the CPU topology (socket/cluster/core/thread) can
-+only be defined within the cpu-map node and every core/thread in the
-+system must be defined within the topology.  Any other configuration is
- invalid and therefore must be ignored.
- 
- ===========================================
-@@ -85,26 +88,44 @@ invalid and therefore must be ignored.
- ===========================================
- 
- cpu-map child nodes must follow a naming convention where the node name
--must be "clusterN", "coreN", "threadN" depending on the node type (ie
--cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes which
--are siblings within a single common parent node must be given a unique and
-+must be "socketN", "clusterN", "coreN", "threadN" depending on the node type
-+(ie socket/cluster/core/thread) (where N = {0, 1, ...} is the node number; nodes
-+which are siblings within a single common parent node must be given a unique and
- sequential N value, starting from 0).
- cpu-map child nodes which do not share a common parent node can have the same
- name (ie same number N as other cpu-map child nodes at different device tree
- levels) since name uniqueness will be guaranteed by the device tree hierarchy.
- 
- ===========================================
--3 - cluster/core/thread node bindings
-+3 - socket/cluster/core/thread node bindings
- ===========================================
- 
--Bindings for cluster/cpu/thread nodes are defined as follows:
-+Bindings for socket/cluster/cpu/thread nodes are defined as follows:
-+
-+- socket node
-+
-+	 Description: must be declared within a cpu-map node, one node
-+		      per physical socket in the system. A system can
-+		      contain single or multiple physical socket.
-+		      The association of sockets and NUMA nodes is beyond
-+		      the scope of this bindings, please refer [2] for
-+		      NUMA bindings.
-+
-+	This node is optional for a single socket system.
-+
-+	The socket node name must be "socketN" as described in 2.1 above.
-+	A socket node can not be a leaf node.
-+
-+	A socket node's child nodes must be one or more cluster nodes.
-+
-+	Any other configuration is considered invalid.
- 
- - cluster node
- 
- 	 Description: must be declared within a cpu-map node, one node
- 		      per cluster. A system can contain several layers of
--		      clustering and cluster nodes can be contained in parent
--		      cluster nodes.
-+		      clustering within a single physical socket and cluster
-+		      nodes can be contained in parent cluster nodes.
- 
- 	The cluster node name must be "clusterN" as described in 2.1 above.
- 	A cluster node can not be a leaf node.
-@@ -164,90 +185,93 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
- 4 - Example dts
- ===========================================
- 
--Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
-+Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
-+physical socket):
- 
- cpus {
- 	#size-cells = <0>;
- 	#address-cells = <2>;
- 
- 	cpu-map {
--		cluster0 {
-+		socket0 {
- 			cluster0 {
--				core0 {
--					thread0 {
--						cpu = <&CPU0>;
--					};
--					thread1 {
--						cpu = <&CPU1>;
-+				cluster0 {
-+					core0 {
-+						thread0 {
-+							cpu = <&CPU0>;
-+						};
-+						thread1 {
-+							cpu = <&CPU1>;
-+						};
- 					};
--				};
- 
--				core1 {
--					thread0 {
--						cpu = <&CPU2>;
--					};
--					thread1 {
--						cpu = <&CPU3>;
-+					core1 {
-+						thread0 {
-+							cpu = <&CPU2>;
-+						};
-+						thread1 {
-+							cpu = <&CPU3>;
-+						};
- 					};
- 				};
--			};
- 
--			cluster1 {
--				core0 {
--					thread0 {
--						cpu = <&CPU4>;
--					};
--					thread1 {
--						cpu = <&CPU5>;
-+				cluster1 {
-+					core0 {
-+						thread0 {
-+							cpu = <&CPU4>;
-+						};
-+						thread1 {
-+							cpu = <&CPU5>;
-+						};
- 					};
--				};
+-struct cpu_topology {
+-	int thread_id;
+-	int core_id;
+-	int package_id;
+-	int llc_id;
+-	cpumask_t thread_sibling;
+-	cpumask_t core_sibling;
+-	cpumask_t llc_sibling;
+-};
 -
--				core1 {
--					thread0 {
--						cpu = <&CPU6>;
--					};
--					thread1 {
--						cpu = <&CPU7>;
--					};
--				};
--			};
--		};
+-extern struct cpu_topology cpu_topology[NR_CPUS];
+-
+-#define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
+-#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
+-#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
+-#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
+-#define topology_llc_cpumask(cpu)	(&cpu_topology[cpu].llc_sibling)
+-
+-void init_cpu_topology(void);
+-void store_cpu_topology(unsigned int cpuid);
+-void remove_cpu_topology(unsigned int cpuid);
+-const struct cpumask *cpu_coregroup_mask(int cpu);
+-
+ #ifdef CONFIG_NUMA
  
--		cluster1 {
--			cluster0 {
--				core0 {
--					thread0 {
--						cpu = <&CPU8>;
--					};
--					thread1 {
--						cpu = <&CPU9>;
--					};
--				};
--				core1 {
--					thread0 {
--						cpu = <&CPU10>;
--					};
--					thread1 {
--						cpu = <&CPU11>;
-+					core1 {
-+						thread0 {
-+							cpu = <&CPU6>;
-+						};
-+						thread1 {
-+							cpu = <&CPU7>;
-+						};
- 					};
- 				};
- 			};
+ struct pci_bus;
+diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+index 0825c4a856e3..6b95c91e7d67 100644
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@ -14,250 +14,13 @@
+ #include <linux/acpi.h>
+ #include <linux/arch_topology.h>
+ #include <linux/cacheinfo.h>
+-#include <linux/cpu.h>
+-#include <linux/cpumask.h>
+ #include <linux/init.h>
+ #include <linux/percpu.h>
+-#include <linux/node.h>
+-#include <linux/nodemask.h>
+-#include <linux/of.h>
+-#include <linux/sched.h>
+-#include <linux/sched/topology.h>
+-#include <linux/slab.h>
+-#include <linux/smp.h>
+-#include <linux/string.h>
  
- 			cluster1 {
--				core0 {
--					thread0 {
--						cpu = <&CPU12>;
-+				cluster0 {
-+					core0 {
-+						thread0 {
-+							cpu = <&CPU8>;
-+						};
-+						thread1 {
-+							cpu = <&CPU9>;
-+						};
- 					};
--					thread1 {
--						cpu = <&CPU13>;
-+					core1 {
-+						thread0 {
-+							cpu = <&CPU10>;
-+						};
-+						thread1 {
-+							cpu = <&CPU11>;
-+						};
- 					};
- 				};
--				core1 {
--					thread0 {
--						cpu = <&CPU14>;
+ #include <asm/cpu.h>
+ #include <asm/cputype.h>
+ #include <asm/topology.h>
+ 
+-static int __init get_cpu_for_node(struct device_node *node)
+-{
+-	struct device_node *cpu_node;
+-	int cpu;
+-
+-	cpu_node = of_parse_phandle(node, "cpu", 0);
+-	if (!cpu_node)
+-		return -1;
+-
+-	cpu = of_cpu_node_to_id(cpu_node);
+-	if (cpu >= 0)
+-		topology_parse_cpu_capacity(cpu_node, cpu);
+-	else
+-		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+-
+-	of_node_put(cpu_node);
+-	return cpu;
+-}
+-
+-static int __init parse_core(struct device_node *core, int package_id,
+-			     int core_id)
+-{
+-	char name[10];
+-	bool leaf = true;
+-	int i = 0;
+-	int cpu;
+-	struct device_node *t;
+-
+-	do {
+-		snprintf(name, sizeof(name), "thread%d", i);
+-		t = of_get_child_by_name(core, name);
+-		if (t) {
+-			leaf = false;
+-			cpu = get_cpu_for_node(t);
+-			if (cpu >= 0) {
+-				cpu_topology[cpu].package_id = package_id;
+-				cpu_topology[cpu].core_id = core_id;
+-				cpu_topology[cpu].thread_id = i;
+-			} else {
+-				pr_err("%pOF: Can't get CPU for thread\n",
+-				       t);
+-				of_node_put(t);
+-				return -EINVAL;
+-			}
+-			of_node_put(t);
+-		}
+-		i++;
+-	} while (t);
+-
+-	cpu = get_cpu_for_node(core);
+-	if (cpu >= 0) {
+-		if (!leaf) {
+-			pr_err("%pOF: Core has both threads and CPU\n",
+-			       core);
+-			return -EINVAL;
+-		}
+-
+-		cpu_topology[cpu].package_id = package_id;
+-		cpu_topology[cpu].core_id = core_id;
+-	} else if (leaf) {
+-		pr_err("%pOF: Can't get CPU for leaf core\n", core);
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+-static int __init parse_cluster(struct device_node *cluster, int depth)
+-{
+-	char name[10];
+-	bool leaf = true;
+-	bool has_cores = false;
+-	struct device_node *c;
+-	static int package_id __initdata;
+-	int core_id = 0;
+-	int i, ret;
+-
+-	/*
+-	 * First check for child clusters; we currently ignore any
+-	 * information about the nesting of clusters and present the
+-	 * scheduler with a flat list of them.
+-	 */
+-	i = 0;
+-	do {
+-		snprintf(name, sizeof(name), "cluster%d", i);
+-		c = of_get_child_by_name(cluster, name);
+-		if (c) {
+-			leaf = false;
+-			ret = parse_cluster(c, depth + 1);
+-			of_node_put(c);
+-			if (ret != 0)
+-				return ret;
+-		}
+-		i++;
+-	} while (c);
+-
+-	/* Now check for cores */
+-	i = 0;
+-	do {
+-		snprintf(name, sizeof(name), "core%d", i);
+-		c = of_get_child_by_name(cluster, name);
+-		if (c) {
+-			has_cores = true;
+-
+-			if (depth == 0) {
+-				pr_err("%pOF: cpu-map children should be clusters\n",
+-				       c);
+-				of_node_put(c);
+-				return -EINVAL;
+-			}
+-
+-			if (leaf) {
+-				ret = parse_core(c, package_id, core_id++);
+-			} else {
+-				pr_err("%pOF: Non-leaf cluster with core %s\n",
+-				       cluster, name);
+-				ret = -EINVAL;
+-			}
+-
+-			of_node_put(c);
+-			if (ret != 0)
+-				return ret;
+-		}
+-		i++;
+-	} while (c);
+-
+-	if (leaf && !has_cores)
+-		pr_warn("%pOF: empty cluster\n", cluster);
+-
+-	if (leaf)
+-		package_id++;
+-
+-	return 0;
+-}
+-
+-static int __init parse_dt_topology(void)
+-{
+-	struct device_node *cn, *map;
+-	int ret = 0;
+-	int cpu;
+-
+-	cn = of_find_node_by_path("/cpus");
+-	if (!cn) {
+-		pr_err("No CPU information found in DT\n");
+-		return 0;
+-	}
+-
+-	/*
+-	 * When topology is provided cpu-map is essentially a root
+-	 * cluster with restricted subnodes.
+-	 */
+-	map = of_get_child_by_name(cn, "cpu-map");
+-	if (!map)
+-		goto out;
+-
+-	ret = parse_cluster(map, 0);
+-	if (ret != 0)
+-		goto out_map;
+-
+-	topology_normalize_cpu_scale();
+-
+-	/*
+-	 * Check that all cores are in the topology; the SMP code will
+-	 * only mark cores described in the DT as possible.
+-	 */
+-	for_each_possible_cpu(cpu)
+-		if (cpu_topology[cpu].package_id == -1)
+-			ret = -EINVAL;
+-
+-out_map:
+-	of_node_put(map);
+-out:
+-	of_node_put(cn);
+-	return ret;
+-}
+-
+-/*
+- * cpu topology table
+- */
+-struct cpu_topology cpu_topology[NR_CPUS];
+-EXPORT_SYMBOL_GPL(cpu_topology);
+-
+-const struct cpumask *cpu_coregroup_mask(int cpu)
+-{
+-	const cpumask_t *core_mask = cpumask_of_node(cpu_to_node(cpu));
+-
+-	/* Find the smaller of NUMA, core or LLC siblings */
+-	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
+-		/* not numa in package, lets use the package siblings */
+-		core_mask = &cpu_topology[cpu].core_sibling;
+-	}
+-	if (cpu_topology[cpu].llc_id != -1) {
+-		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
+-			core_mask = &cpu_topology[cpu].llc_sibling;
+-	}
+-
+-	return core_mask;
+-}
+-
+-static void update_siblings_masks(unsigned int cpuid)
+-{
+-	struct cpu_topology *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
+-	int cpu;
+-
+-	/* update core and thread sibling masks */
+-	for_each_online_cpu(cpu) {
+-		cpu_topo = &cpu_topology[cpu];
+-
+-		if (cpuid_topo->llc_id == cpu_topo->llc_id) {
+-			cpumask_set_cpu(cpu, &cpuid_topo->llc_sibling);
+-			cpumask_set_cpu(cpuid, &cpu_topo->llc_sibling);
+-		}
+-
+-		if (cpuid_topo->package_id != cpu_topo->package_id)
+-			continue;
+-
+-		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
+-		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
+-
+-		if (cpuid_topo->core_id != cpu_topo->core_id)
+-			continue;
+-
+-		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
+-		cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
+-	}
+-}
+-
+ void store_cpu_topology(unsigned int cpuid)
+ {
+ 	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
+@@ -296,59 +59,19 @@ void store_cpu_topology(unsigned int cpuid)
+ 	update_siblings_masks(cpuid);
+ }
+ 
+-static void clear_cpu_topology(int cpu)
+-{
+-	struct cpu_topology *cpu_topo = &cpu_topology[cpu];
+-
+-	cpumask_clear(&cpu_topo->llc_sibling);
+-	cpumask_set_cpu(cpu, &cpu_topo->llc_sibling);
+-
+-	cpumask_clear(&cpu_topo->core_sibling);
+-	cpumask_set_cpu(cpu, &cpu_topo->core_sibling);
+-	cpumask_clear(&cpu_topo->thread_sibling);
+-	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
+-}
+-
+-static void __init reset_cpu_topology(void)
+-{
+-	unsigned int cpu;
+-
+-	for_each_possible_cpu(cpu) {
+-		struct cpu_topology *cpu_topo = &cpu_topology[cpu];
+-
+-		cpu_topo->thread_id = -1;
+-		cpu_topo->core_id = 0;
+-		cpu_topo->package_id = -1;
+-		cpu_topo->llc_id = -1;
+-
+-		clear_cpu_topology(cpu);
+-	}
+-}
+-
+-void remove_cpu_topology(unsigned int cpu)
+-{
+-	int sibling;
+-
+-	for_each_cpu(sibling, topology_core_cpumask(cpu))
+-		cpumask_clear_cpu(cpu, topology_core_cpumask(sibling));
+-	for_each_cpu(sibling, topology_sibling_cpumask(cpu))
+-		cpumask_clear_cpu(cpu, topology_sibling_cpumask(sibling));
+-	for_each_cpu(sibling, topology_llc_cpumask(cpu))
+-		cpumask_clear_cpu(cpu, topology_llc_cpumask(sibling));
+-
+-	clear_cpu_topology(cpu);
+-}
+-
+ #ifdef CONFIG_ACPI
+ /*
+  * Propagate the topology information of the processor_topology_node tree to the
+  * cpu_topology array.
+  */
+-static int __init parse_acpi_topology(void)
++int __init parse_acpi_topology(void)
+ {
+ 	bool is_threaded;
+ 	int cpu, topology_id;
+ 
++	if (acpi_disabled)
++		return 0;
 +
-+				cluster1 {
-+					core0 {
-+						thread0 {
-+							cpu = <&CPU12>;
-+						};
-+						thread1 {
-+							cpu = <&CPU13>;
-+						};
- 					};
--					thread1 {
--						cpu = <&CPU15>;
-+					core1 {
-+						thread0 {
-+							cpu = <&CPU14>;
-+						};
-+						thread1 {
-+							cpu = <&CPU15>;
-+						};
- 					};
- 				};
- 			};
-@@ -473,3 +497,5 @@ cpus {
- ===============================================================================
- [1] ARM Linux kernel documentation
-     Documentation/devicetree/bindings/arm/cpus.yaml
-+[2] Devicetree NUMA binding description
-+    Documentation/devicetree/bindings/numa.txt
+ 	is_threaded = read_cpuid_mpidr() & MPIDR_MT_BITMASK;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -384,24 +107,6 @@ static int __init parse_acpi_topology(void)
+ 
+ 	return 0;
+ }
+-
+-#else
+-static inline int __init parse_acpi_topology(void)
+-{
+-	return -EINVAL;
+-}
+ #endif
+ 
+-void __init init_cpu_topology(void)
+-{
+-	reset_cpu_topology();
+ 
+-	/*
+-	 * Discard anything that was parsed if we hit an error so we
+-	 * don't use partial information.
+-	 */
+-	if (!acpi_disabled && parse_acpi_topology())
+-		reset_cpu_topology();
+-	else if (of_have_populated_dt() && parse_dt_topology())
+-		reset_cpu_topology();
+-}
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 1739d7e1952a..5781bb4c457c 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -15,6 +15,11 @@
+ #include <linux/string.h>
+ #include <linux/sched/topology.h>
+ #include <linux/cpuset.h>
++#include <linux/cpumask.h>
++#include <linux/init.h>
++#include <linux/percpu.h>
++#include <linux/sched.h>
++#include <linux/smp.h>
+ 
+ DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
+ 
+@@ -244,3 +249,294 @@ static void parsing_done_workfn(struct work_struct *work)
+ #else
+ core_initcall(free_raw_capacity);
+ #endif
++
++#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
++static int __init get_cpu_for_node(struct device_node *node)
++{
++	struct device_node *cpu_node;
++	int cpu;
++
++	cpu_node = of_parse_phandle(node, "cpu", 0);
++	if (!cpu_node)
++		return -1;
++
++	cpu = of_cpu_node_to_id(cpu_node);
++	if (cpu >= 0)
++		topology_parse_cpu_capacity(cpu_node, cpu);
++	else
++		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
++
++	of_node_put(cpu_node);
++	return cpu;
++}
++
++static int __init parse_core(struct device_node *core, int package_id,
++			     int core_id)
++{
++	char name[10];
++	bool leaf = true;
++	int i = 0;
++	int cpu;
++	struct device_node *t;
++
++	do {
++		snprintf(name, sizeof(name), "thread%d", i);
++		t = of_get_child_by_name(core, name);
++		if (t) {
++			leaf = false;
++			cpu = get_cpu_for_node(t);
++			if (cpu >= 0) {
++				cpu_topology[cpu].package_id = package_id;
++				cpu_topology[cpu].core_id = core_id;
++				cpu_topology[cpu].thread_id = i;
++			} else {
++				pr_err("%pOF: Can't get CPU for thread\n",
++				       t);
++				of_node_put(t);
++				return -EINVAL;
++			}
++			of_node_put(t);
++		}
++		i++;
++	} while (t);
++
++	cpu = get_cpu_for_node(core);
++	if (cpu >= 0) {
++		if (!leaf) {
++			pr_err("%pOF: Core has both threads and CPU\n",
++			       core);
++			return -EINVAL;
++		}
++
++		cpu_topology[cpu].package_id = package_id;
++		cpu_topology[cpu].core_id = core_id;
++	} else if (leaf) {
++		pr_err("%pOF: Can't get CPU for leaf core\n", core);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int __init parse_cluster(struct device_node *cluster, int depth)
++{
++	char name[10];
++	bool leaf = true;
++	bool has_cores = false;
++	struct device_node *c;
++	static int package_id __initdata;
++	int core_id = 0;
++	int i, ret;
++
++	/*
++	 * First check for child clusters; we currently ignore any
++	 * information about the nesting of clusters and present the
++	 * scheduler with a flat list of them.
++	 */
++	i = 0;
++	do {
++		snprintf(name, sizeof(name), "cluster%d", i);
++		c = of_get_child_by_name(cluster, name);
++		if (c) {
++			leaf = false;
++			ret = parse_cluster(c, depth + 1);
++			of_node_put(c);
++			if (ret != 0)
++				return ret;
++		}
++		i++;
++	} while (c);
++
++	/* Now check for cores */
++	i = 0;
++	do {
++		snprintf(name, sizeof(name), "core%d", i);
++		c = of_get_child_by_name(cluster, name);
++		if (c) {
++			has_cores = true;
++
++			if (depth == 0) {
++				pr_err("%pOF: cpu-map children should be clusters\n",
++				       c);
++				of_node_put(c);
++				return -EINVAL;
++			}
++
++			if (leaf) {
++				ret = parse_core(c, package_id, core_id++);
++			} else {
++				pr_err("%pOF: Non-leaf cluster with core %s\n",
++				       cluster, name);
++				ret = -EINVAL;
++			}
++
++			of_node_put(c);
++			if (ret != 0)
++				return ret;
++		}
++		i++;
++	} while (c);
++
++	if (leaf && !has_cores)
++		pr_warn("%pOF: empty cluster\n", cluster);
++
++	if (leaf)
++		package_id++;
++
++	return 0;
++}
++
++static int __init parse_dt_topology(void)
++{
++	struct device_node *cn, *map;
++	int ret = 0;
++	int cpu;
++
++	cn = of_find_node_by_path("/cpus");
++	if (!cn) {
++		pr_err("No CPU information found in DT\n");
++		return 0;
++	}
++
++	/*
++	 * When topology is provided cpu-map is essentially a root
++	 * cluster with restricted subnodes.
++	 */
++	map = of_get_child_by_name(cn, "cpu-map");
++	if (!map)
++		goto out;
++
++	ret = parse_cluster(map, 0);
++	if (ret != 0)
++		goto out_map;
++
++	topology_normalize_cpu_scale();
++
++	/*
++	 * Check that all cores are in the topology; the SMP code will
++	 * only mark cores described in the DT as possible.
++	 */
++	for_each_possible_cpu(cpu)
++		if (cpu_topology[cpu].package_id == -1)
++			ret = -EINVAL;
++
++out_map:
++	of_node_put(map);
++out:
++	of_node_put(cn);
++	return ret;
++}
++
++/*
++ * cpu topology table
++ */
++struct cpu_topology cpu_topology[NR_CPUS];
++EXPORT_SYMBOL_GPL(cpu_topology);
++
++const struct cpumask *cpu_coregroup_mask(int cpu)
++{
++	const cpumask_t *core_mask = cpumask_of_node(cpu_to_node(cpu));
++
++	/* Find the smaller of NUMA, core or LLC siblings */
++	if (cpumask_subset(&cpu_topology[cpu].core_sibling, core_mask)) {
++		/* not numa in package, lets use the package siblings */
++		core_mask = &cpu_topology[cpu].core_sibling;
++	}
++	if (cpu_topology[cpu].llc_id != -1) {
++		if (cpumask_subset(&cpu_topology[cpu].llc_sibling, core_mask))
++			core_mask = &cpu_topology[cpu].llc_sibling;
++	}
++
++	return core_mask;
++}
++
++void update_siblings_masks(unsigned int cpuid)
++{
++	struct cpu_topology *cpu_topo, *cpuid_topo = &cpu_topology[cpuid];
++	int cpu;
++
++	/* update core and thread sibling masks */
++	for_each_online_cpu(cpu) {
++		cpu_topo = &cpu_topology[cpu];
++
++		if (cpuid_topo->llc_id == cpu_topo->llc_id) {
++			cpumask_set_cpu(cpu, &cpuid_topo->llc_sibling);
++			cpumask_set_cpu(cpuid, &cpu_topo->llc_sibling);
++		}
++
++		if (cpuid_topo->package_id != cpu_topo->package_id)
++			continue;
++
++		cpumask_set_cpu(cpuid, &cpu_topo->core_sibling);
++		cpumask_set_cpu(cpu, &cpuid_topo->core_sibling);
++
++		if (cpuid_topo->core_id != cpu_topo->core_id)
++			continue;
++
++		cpumask_set_cpu(cpuid, &cpu_topo->thread_sibling);
++		cpumask_set_cpu(cpu, &cpuid_topo->thread_sibling);
++	}
++}
++
++static void clear_cpu_topology(int cpu)
++{
++	struct cpu_topology *cpu_topo = &cpu_topology[cpu];
++
++	cpumask_clear(&cpu_topo->llc_sibling);
++	cpumask_set_cpu(cpu, &cpu_topo->llc_sibling);
++
++	cpumask_clear(&cpu_topo->core_sibling);
++	cpumask_set_cpu(cpu, &cpu_topo->core_sibling);
++	cpumask_clear(&cpu_topo->thread_sibling);
++	cpumask_set_cpu(cpu, &cpu_topo->thread_sibling);
++}
++
++static void __init reset_cpu_topology(void)
++{
++	unsigned int cpu;
++
++	for_each_possible_cpu(cpu) {
++		struct cpu_topology *cpu_topo = &cpu_topology[cpu];
++
++		cpu_topo->thread_id = -1;
++		cpu_topo->core_id = -1;
++		cpu_topo->package_id = -1;
++		cpu_topo->llc_id = -1;
++
++		clear_cpu_topology(cpu);
++	}
++}
++
++void remove_cpu_topology(unsigned int cpu)
++{
++	int sibling;
++
++	for_each_cpu(sibling, topology_core_cpumask(cpu))
++		cpumask_clear_cpu(cpu, topology_core_cpumask(sibling));
++	for_each_cpu(sibling, topology_sibling_cpumask(cpu))
++		cpumask_clear_cpu(cpu, topology_sibling_cpumask(sibling));
++	for_each_cpu(sibling, topology_llc_cpumask(cpu))
++		cpumask_clear_cpu(cpu, topology_llc_cpumask(sibling));
++
++	clear_cpu_topology(cpu);
++}
++
++__weak int __init parse_acpi_topology(void)
++{
++	return 0;
++}
++
++void __init init_cpu_topology(void)
++{
++	reset_cpu_topology();
++
++	/*
++	 * Discard anything that was parsed if we hit an error so we
++	 * don't use partial information.
++	 */
++	if (parse_acpi_topology())
++		reset_cpu_topology();
++	else if (of_have_populated_dt() && parse_dt_topology())
++		reset_cpu_topology();
++}
++#endif
+diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+index d9bdc1a7f4e7..d4e76e0a283f 100644
+--- a/include/linux/arch_topology.h
++++ b/include/linux/arch_topology.h
+@@ -33,4 +33,32 @@ unsigned long topology_get_freq_scale(int cpu)
+ 	return per_cpu(freq_scale, cpu);
+ }
+ 
++struct cpu_topology {
++	int thread_id;
++	int core_id;
++	int package_id;
++	int llc_id;
++	cpumask_t thread_sibling;
++	cpumask_t core_sibling;
++	cpumask_t llc_sibling;
++};
++
++#ifdef CONFIG_GENERIC_ARCH_TOPOLOGY
++extern struct cpu_topology cpu_topology[NR_CPUS];
++
++#define topology_physical_package_id(cpu)	(cpu_topology[cpu].package_id)
++#define topology_core_id(cpu)		(cpu_topology[cpu].core_id)
++#define topology_core_cpumask(cpu)	(&cpu_topology[cpu].core_sibling)
++#define topology_sibling_cpumask(cpu)	(&cpu_topology[cpu].thread_sibling)
++#define topology_llc_cpumask(cpu)	(&cpu_topology[cpu].llc_sibling)
++void init_cpu_topology(void);
++void store_cpu_topology(unsigned int cpuid);
++const struct cpumask *cpu_coregroup_mask(int cpu);
++#endif
++
++#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
++void update_siblings_masks(unsigned int cpu);
++#endif
++void remove_cpu_topology(unsigned int cpuid);
++
+ #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
+diff --git a/include/linux/topology.h b/include/linux/topology.h
+index cb0775e1ee4b..4b3755d65812 100644
+--- a/include/linux/topology.h
++++ b/include/linux/topology.h
+@@ -27,6 +27,7 @@
+ #ifndef _LINUX_TOPOLOGY_H
+ #define _LINUX_TOPOLOGY_H
+ 
++#include <linux/arch_topology.h>
+ #include <linux/cpumask.h>
+ #include <linux/bitops.h>
+ #include <linux/mmzone.h>
 -- 
 2.21.0
 
