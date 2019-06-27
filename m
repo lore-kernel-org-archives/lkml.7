@@ -2,179 +2,111 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8FEC4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47813C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E25208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151A2208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="B32g3G2Y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UVBQ6nLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfF0WO5 (ORCPT
+        id S1726871AbfF0WPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:14:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51731 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF0WO4 (ORCPT
+        Thu, 27 Jun 2019 18:15:22 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:42668 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbfF0WPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:14:56 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RMEaDF472501
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 15:14:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RMEaDF472501
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561673677;
-        bh=TdcGloUbyqQ/luaBLnxjyqNVk1Xv5mfcOZdI2GjSl9k=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=B32g3G2Yd+wiCKIQPHLOHe3hxw9UvMBN2Xaz87Sax9h4oTZlTEk92++PRfDKuqGvb
-         kRgBVrqnCV8IpGGlKElKdXqc7Am75osIRQWCg2vE8b1mqzvOuujpUt4JpL9S1CIhzP
-         b2IkCXyAtKKgvGZLZ/WaFyhxilfx6SgrSewbyAMJUCi7mGEyajrsiQaxow7E9loT/b
-         zz6Gt3Eq0HfrcM/Sxs6wGVHmQP4hlY17mH+gZbhBjN52kV6Fd7Lagxi0vBUc8/jna1
-         xNa7SOuOAXiD0YMx98/mUfLVAn0s2dCm3UuVZCgE+yvtE9SQvr/DPjun5JjI9W7A41
-         Tf3AKIIWfej4Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RMEakm472493;
-        Thu, 27 Jun 2019 15:14:36 -0700
-Date:   Thu, 27 Jun 2019 15:14:36 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andy Lutomirski <tipbot@zytor.com>
-Message-ID: <tip-918ce325098a4eef99daad7b6796da33cebaf03a@git.kernel.org>
-Cc:     keescook@chromium.org, tglx@linutronix.de, mingo@kernel.org,
-        luto@kernel.org, fweimer@redhat.com, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, jannh@google.com
-Reply-To: luto@kernel.org, mingo@kernel.org, fweimer@redhat.com,
-          keescook@chromium.org, tglx@linutronix.de, jannh@google.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com
-In-Reply-To: <8016afffe0eab497be32017ad7f6f7030dc3ba66.1561610354.git.luto@kernel.org>
-References: <8016afffe0eab497be32017ad7f6f7030dc3ba66.1561610354.git.luto@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/entry] x86/vsyscall: Show something useful on a read fault
-Git-Commit-ID: 918ce325098a4eef99daad7b6796da33cebaf03a
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 27 Jun 2019 18:15:22 -0400
+Received: by mail-yb1-f193.google.com with SMTP id w9so2402866ybe.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=854kgvZIGVmpx/zJerLitPu72zAj/sPCDRSpo5mcVm8=;
+        b=UVBQ6nLgJ7hyBK0VTX31wB+Js1VvwXnP/nwFcgPtwaFJewTCuj1osJwrFqHfTvwRhj
+         oIEIEkV6bUU7HdJznqd+1RtNHgQN60jvIObmjdR9ZV6sXOox4bxgplduaGihqvQpxbvl
+         /CXqzEI/lNWPklsLCFGyCyO1foahYXwHMW0q74DVX3P0B/psWgckT6IoYyN0X7S0cTQC
+         9Iymb0dP/l61XFeczgOkCa0eM7NbRnqpXJTxNSm5iVfCS2ry7VGHBJveWCE/2qDtz0bf
+         HRZalvnhhWyQm037wDc+4cY+nzn9yf2PfyzaG8fcy2SYeTDplVyStgoCZDdma/1jWHz7
+         5xtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=854kgvZIGVmpx/zJerLitPu72zAj/sPCDRSpo5mcVm8=;
+        b=fuBEn+MnVA4Nqbz6FdD2iC7HRyOw3yg2uj35Jy4vJQSR9kIDFXFwJnnDcZecAxlAL4
+         fp3Xg7JsydbrZiWhTVIk0wv0TxVwMdU42dvSKT/harDXQCv8e4NPa8IudcUhfkkBJqLf
+         DBUdSCsbj11dlgOcg7OcB9sqCVo1zy8/ae+4joUVcyCXNVCJQi5zmOqtE6xBZLAXp+2a
+         09XTZ5ux6Xo4OYtB8IioJuj99xLSYr8uLXY/FwiJRETMinS6hHdnbc44NCWSTdu/tWnx
+         4EPxyn5nQlrr30EzzlrD5rlr3MACEo4m+H9U4dkEtGLFqwV8J//DC+G2/VeFVRouQZPv
+         OBLA==
+X-Gm-Message-State: APjAAAW3keVNOtMLXdjdvpWDh1iIWsfZ49aVZwt863c758NW6I1iA6OW
+        oWX/64DwnQ7tWLKbyTe/r9a4R7GLQ2WvDuuTggbf2Q==
+X-Google-Smtp-Source: APXvYqxMzrMu9bHCfF1krZKE2+fiz57EFVSx8H1XhM1TKzJ4TURRZ421f3iW3YcRI3sBA2MZJWPVsd1sDFh4dqVLNZQ=
+X-Received: by 2002:a25:d156:: with SMTP id i83mr4645824ybg.67.1561673721316;
+ Thu, 27 Jun 2019 15:15:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190627214738.112614-1-rajatja@google.com>
+In-Reply-To: <20190627214738.112614-1-rajatja@google.com>
+From:   Gwendal Grignou <gwendal@google.com>
+Date:   Thu, 27 Jun 2019 15:15:08 -0700
+Message-ID: <CAMHSBOWrzQ6NEDEML-Jk8Y+M5iE6yHXn8FWpUP77VZAV7HGzhQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: lightbar: Get drvdata from parent in suspend/resume
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        rajatxjain@gmail.com, Evan Green <evgreen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  918ce325098a4eef99daad7b6796da33cebaf03a
-Gitweb:     https://git.kernel.org/tip/918ce325098a4eef99daad7b6796da33cebaf03a
-Author:     Andy Lutomirski <luto@kernel.org>
-AuthorDate: Wed, 26 Jun 2019 21:45:04 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:04:39 +0200
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
 
-x86/vsyscall: Show something useful on a read fault
 
-Just segfaulting the application when it tries to read the vsyscall page in
-xonly mode is not helpful for those who need to debug it.
-
-Emit a hint.
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Link: https://lkml.kernel.org/r/8016afffe0eab497be32017ad7f6f7030dc3ba66.1561610354.git.luto@kernel.org
-
----
- arch/x86/entry/vsyscall/vsyscall_64.c | 19 ++++++++++++++++++-
- arch/x86/include/asm/vsyscall.h       |  6 ++++--
- arch/x86/mm/fault.c                   | 11 +++++------
- 3 files changed, 27 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index fedd7628f3a6..9c58ab807aeb 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -117,7 +117,8 @@ static bool write_ok_or_segv(unsigned long ptr, size_t size)
- 	}
- }
- 
--bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
-+bool emulate_vsyscall(unsigned long error_code,
-+		      struct pt_regs *regs, unsigned long address)
- {
- 	struct task_struct *tsk;
- 	unsigned long caller;
-@@ -126,6 +127,22 @@ bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
- 	long ret;
- 	unsigned long orig_dx;
- 
-+	/* Write faults or kernel-privilege faults never get fixed up. */
-+	if ((error_code & (X86_PF_WRITE | X86_PF_USER)) != X86_PF_USER)
-+		return false;
-+
-+	if (!(error_code & X86_PF_INSTR)) {
-+		/* Failed vsyscall read */
-+		if (vsyscall_mode == EMULATE)
-+			return false;
-+
-+		/*
-+		 * User code tried and failed to read the vsyscall page.
-+		 */
-+		warn_bad_vsyscall(KERN_INFO, regs, "vsyscall read attempt denied -- look up the vsyscall kernel parameter if you need a workaround");
-+		return false;
-+	}
-+
- 	/*
- 	 * No point in checking CS -- the only way to get here is a user mode
- 	 * trap to a high address, which means that we're in 64-bit user code.
-diff --git a/arch/x86/include/asm/vsyscall.h b/arch/x86/include/asm/vsyscall.h
-index b986b2ca688a..ab60a71a8dcb 100644
---- a/arch/x86/include/asm/vsyscall.h
-+++ b/arch/x86/include/asm/vsyscall.h
-@@ -13,10 +13,12 @@ extern void set_vsyscall_pgtable_user_bits(pgd_t *root);
-  * Called on instruction fetch fault in vsyscall page.
-  * Returns true if handled.
-  */
--extern bool emulate_vsyscall(struct pt_regs *regs, unsigned long address);
-+extern bool emulate_vsyscall(unsigned long error_code,
-+			     struct pt_regs *regs, unsigned long address);
- #else
- static inline void map_vsyscall(void) {}
--static inline bool emulate_vsyscall(struct pt_regs *regs, unsigned long address)
-+static inline bool emulate_vsyscall(unsigned long error_code,
-+				    struct pt_regs *regs, unsigned long address)
- {
- 	return false;
- }
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 46df4c6aae46..288a5462076f 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1369,16 +1369,15 @@ void do_user_addr_fault(struct pt_regs *regs,
- 
- #ifdef CONFIG_X86_64
- 	/*
--	 * Instruction fetch faults in the vsyscall page might need
--	 * emulation.  The vsyscall page is at a high address
--	 * (>PAGE_OFFSET), but is considered to be part of the user
--	 * address space.
-+	 * Faults in the vsyscall page might need emulation.  The
-+	 * vsyscall page is at a high address (>PAGE_OFFSET), but is
-+	 * considered to be part of the user address space.
- 	 *
- 	 * The vsyscall page does not have a "real" VMA, so do this
- 	 * emulation before we go searching for VMAs.
- 	 */
--	if ((hw_error_code & X86_PF_INSTR) && is_vsyscall_vaddr(address)) {
--		if (emulate_vsyscall(regs, address))
-+	if (is_vsyscall_vaddr(address)) {
-+		if (emulate_vsyscall(hw_error_code, regs, address))
- 			return;
- 	}
- #endif
+On Thu, Jun 27, 2019 at 2:47 PM Rajat Jain <rajatja@google.com> wrote:
+>
+> The lightbar driver never assigned the drvdata in probe method, and
+> thus there is nothing there. Need to get the ec_dev from the parent's
+> drvdata.
+>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+>  drivers/platform/chrome/cros_ec_lightbar.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+> index d30a6650b0b5..26117a8991b3 100644
+> --- a/drivers/platform/chrome/cros_ec_lightbar.c
+> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+> @@ -600,7 +600,7 @@ static int cros_ec_lightbar_remove(struct platform_device *pd)
+>
+>  static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
+>  {
+> -       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
+> +       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
+>
+>         if (userspace_control)
+>                 return 0;
+> @@ -610,7 +610,7 @@ static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
+>
+>  static int __maybe_unused cros_ec_lightbar_suspend(struct device *dev)
+>  {
+> -       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
+> +       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
+>
+>         if (userspace_control)
+>                 return 0;
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
