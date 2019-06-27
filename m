@@ -2,251 +2,121 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76B7C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38D2C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC4020B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82F820B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Y6a0QfMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfF0PhS (ORCPT
+        id S1726576AbfF0PhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:37:18 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50162 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfF0PhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:37:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 08:37:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
-   d="scan'208";a="173170326"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga002.jf.intel.com with ESMTP; 27 Jun 2019 08:37:17 -0700
-Date:   Thu, 27 Jun 2019 08:40:33 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 15/22] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-Message-ID: <20190627084033.650dc7ed@jacob-builder>
-In-Reply-To: <1cffc7c7-b71b-767a-a35f-d6063dc64b2b@linux.intel.com>
-References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1560087862-57608-16-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1cffc7c7-b71b-767a-a35f-d6063dc64b2b@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 27 Jun 2019 11:37:24 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46446 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726472AbfF0PhY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:37:24 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so2802711ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 08:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dAiAhNcqqN83HV89jHOtQmAjXiR+1D1hV8qVzm4kOU8=;
+        b=Y6a0QfMeusE49Ow+gzUNmBUFqbgGMHCmtrJxOwnQ1MeKB4oeIz2c1FjE6XfWiDKqcc
+         MuUDD5UDha0tq/z87lL2noiWB5GadljzQX29Uzd2+g2Wc8RJDsGA+bSD1uLLdueeGqXY
+         AYELY011UNU6k3vC4YWhRcgU7bHMetl7JeuVE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dAiAhNcqqN83HV89jHOtQmAjXiR+1D1hV8qVzm4kOU8=;
+        b=IJxcx3PedXtrjJJuPuMU0ZgcTeDW2xBtlmj6YKEPSTA5yGxLWyWqHzV9lzBoQVbk2n
+         /jsCQw8HaSY6GSYpLIdIc5JM27UwziGkG/uXnXdZPLnr233qiQlygyh2u5Hlcup1FE62
+         r/aGN9wj5IOwSrMMXy33y1gNJU+xFwyGKtF+YGROflPMGrKmnOXsX7MAwoCEeN+Fugtu
+         n1YM5Tr3DwMbp5YkOfauggKNPH2A/RWktA48rvuTbpTpBahyJw+zBgMPpUZP2Sa0360f
+         aIJjPN/u6HhN+vcZivTv45VuZVAIIhlJtWxqwDDm0rYRdwxu2V9pnpotEI5XInrjNYMJ
+         6iKA==
+X-Gm-Message-State: APjAAAU5aNXx/uqtLbxi+xeBREn+RTn6g5rdEdkctRxh7oGV+1Z1qAyW
+        apRW9i/ZxAk1lYmJRchQBTN3pbagY5dSy0jm3lKtjw==
+X-Google-Smtp-Source: APXvYqzNFkRWe/SoiGTQbadQfRPFwDyBo4PC+WzGPLG3NhGCymU6wRDcrcjauByJfvCIrZCSyHzLTrwl7bQCjE8lsY8=
+X-Received: by 2002:a2e:7315:: with SMTP id o21mr2995067ljc.3.1561649841872;
+ Thu, 27 Jun 2019 08:37:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190626135447.y24mvfuid5fifwjc@linutronix.de>
+ <20190626162558.GY26519@linux.ibm.com> <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home> <20190627153031.GA249127@google.com>
+In-Reply-To: <20190627153031.GA249127@google.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Thu, 27 Jun 2019 11:37:10 -0400
+Message-ID: <CAEXW_YT5LgdP_9SrachU4ZrhV9a7o_DM8eBfgxj=n7yRRyS-TQ@mail.gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 09:53:11 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Thu, Jun 27, 2019 at 11:30 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> On Thu, Jun 27, 2019 at 10:34:55AM -0400, Steven Rostedt wrote:
+> > On Thu, 27 Jun 2019 10:24:36 -0400
+> > Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > > > What am I missing here?
+> > >
+> > > This issue I think is
+> > >
+> > > (in normal process context)
+> > > spin_lock_irqsave(rq_lock); // which disables both preemption and interrupt
+> > >                        // but this was done in normal process context,
+> > >                        // not from IRQ handler
+> > > rcu_read_lock();
+> > >           <---------- IPI comes in and sets exp_hint
+> >
+> > How would an IPI come in here with interrupts disabled?
+> >
+> > -- Steve
+>
+> This is true, could it be rcu_read_unlock_special() got called for some
+> *other* reason other than the IPI then?
+>
+> Per Sebastian's stack trace of the recursive lock scenario, it is happening
+> during cpu_acct_charge() which is called with the rq_lock held.
+>
+> The only other reasons I know off to call rcu_read_unlock_special() are if
+> 1. the tick indicated that the CPU has to report a QS
+> 2. an IPI in the middle of the reader section for expedited GPs
+> 3. preemption in the middle of a preemptible RCU reader section
+>
+> 1. and 2. are not possible because interrupts are disabled, that's why the
+> wakeup_softirq even happened.
+> 3. is not possible because we are holding rq_lock in the RCU reader section.
+>
+> So I am at a bit of a loss how this can happen :-(
 
-> Hi Jacob,
-> 
-> On 6/9/19 9:44 PM, Jacob Pan wrote:
-> > Make use of generic IOASID code to manage PASID allocation,
-> > free, and lookup. Replace Intel specific code.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >   drivers/iommu/intel-iommu.c | 11 +++++------
-> >   drivers/iommu/intel-pasid.c | 36
-> > ------------------------------------ drivers/iommu/intel-svm.c   |
-> > 37 +++++++++++++++++++++---------------- 3 files changed, 26
-> > insertions(+), 58 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index 5b84994..39b63fe 100644
-> > --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -5167,7 +5167,7 @@ static void auxiliary_unlink_device(struct
-> > dmar_domain *domain, domain->auxd_refcnt--;
-> >   
-> >   	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> > -		intel_pasid_free_id(domain->default_pasid);
-> > +		ioasid_free(domain->default_pasid);
-> >   }
-> >   
-> >   static int aux_domain_add_dev(struct dmar_domain *domain,
-> > @@ -5185,10 +5185,9 @@ static int aux_domain_add_dev(struct
-> > dmar_domain *domain, if (domain->default_pasid <= 0) {
-> >   		int pasid;
-> >   
-> > -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
-> > -
-> > pci_max_pasids(to_pci_dev(dev)),
-> > -					     GFP_KERNEL);
-> > -		if (pasid <= 0) {
-> > +		pasid = ioasid_alloc(NULL, PASID_MIN,
-> > pci_max_pasids(to_pci_dev(dev)) - 1,
-> > +				domain);
-> > +		if (pasid == INVALID_IOASID) {
-> >   			pr_err("Can't allocate default pasid\n");
-> >   			return -ENODEV;
-> >   		}
-> > @@ -5224,7 +5223,7 @@ static int aux_domain_add_dev(struct
-> > dmar_domain *domain, spin_unlock(&iommu->lock);
-> >   	spin_unlock_irqrestore(&device_domain_lock, flags);
-> >   	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> > -		intel_pasid_free_id(domain->default_pasid);
-> > +		ioasid_free(domain->default_pasid);
-> >   
-> >   	return ret;
-> >   }
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index 69fddd3..1e25539 100644
-> > --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -26,42 +26,6 @@
-> >    */
-> >   static DEFINE_SPINLOCK(pasid_lock);
-> >   u32 intel_pasid_max_id = PASID_MAX;
-> > -static DEFINE_IDR(pasid_idr);
-> > -
-> > -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
-> > -{
-> > -	int ret, min, max;
-> > -
-> > -	min = max_t(int, start, PASID_MIN);
-> > -	max = min_t(int, end, intel_pasid_max_id);
-> > -
-> > -	WARN_ON(in_interrupt());
-> > -	idr_preload(gfp);
-> > -	spin_lock(&pasid_lock);
-> > -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
-> > -	spin_unlock(&pasid_lock);
-> > -	idr_preload_end();
-> > -
-> > -	return ret;
-> > -}
-> > -
-> > -void intel_pasid_free_id(int pasid)
-> > -{
-> > -	spin_lock(&pasid_lock);
-> > -	idr_remove(&pasid_idr, pasid);
-> > -	spin_unlock(&pasid_lock);
-> > -}
-> > -
-> > -void *intel_pasid_lookup_id(int pasid)
-> > -{
-> > -	void *p;
-> > -
-> > -	spin_lock(&pasid_lock);
-> > -	p = idr_find(&pasid_idr, pasid);
-> > -	spin_unlock(&pasid_lock);
-> > -
-> > -	return p;
-> > -}
-> >   
-> >   int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid) {
-> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> > index 8f87304..9cbcc1f 100644
-> > --- a/drivers/iommu/intel-svm.c
-> > +++ b/drivers/iommu/intel-svm.c
-> > @@ -25,6 +25,7 @@
-> >   #include <linux/dmar.h>
-> >   #include <linux/interrupt.h>
-> >   #include <linux/mm_types.h>
-> > +#include <linux/ioasid.h>
-> >   #include <asm/page.h>
-> >   
-> >   #include "intel-pasid.h"
-> > @@ -332,16 +333,15 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (pasid_max >
-> > intel_pasid_max_id) pasid_max = intel_pasid_max_id;
-> >   
-> > -		/* Do not use PASID 0 in caching mode (virtualised
-> > IOMMU) */
-> > -		ret = intel_pasid_alloc_id(svm,
-> > -					   !!cap_caching_mode(iommu->cap),
-> > -					   pasid_max - 1,
-> > GFP_KERNEL);
-> > -		if (ret < 0) {
-> > +		/* Do not use PASID 0, reserved for RID to PASID */
-> > +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
-> > +					pasid_max - 1, svm);
-> > +		if (svm->pasid == INVALID_IOASID) {
-> >   			kfree(svm);
-> >   			kfree(sdev);
-> > +			ret = ENOSPC;
-> >   			goto out;
-> >   		}
-> > -		svm->pasid = ret;
-> >   		svm->notifier.ops = &intel_mmuops;
-> >   		svm->mm = mm;
-> >   		svm->flags = flags;
-> > @@ -351,7 +351,7 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (mm) {
-> >   			ret =
-> > mmu_notifier_register(&svm->notifier, mm); if (ret) {
-> > -				intel_pasid_free_id(svm->pasid);
-> > +				ioasid_free(svm->pasid);
-> >   				kfree(svm);
-> >   				kfree(sdev);
-> >   				goto out;
-> > @@ -367,7 +367,7 @@ int intel_svm_bind_mm(struct device *dev, int
-> > *pasid, int flags, struct svm_dev_ if (ret) {
-> >   			if (mm)
-> >   				mmu_notifier_unregister(&svm->notifier,
-> > mm);
-> > -			intel_pasid_free_id(svm->pasid);
-> > +			ioasid_free(svm->pasid);
-> >   			kfree(svm);
-> >   			kfree(sdev);
-> >   			goto out;
-> > @@ -400,7 +400,12 @@ int intel_svm_unbind_mm(struct device *dev,
-> > int pasid) if (!iommu)
-> >   		goto out;
-> >   
-> > -	svm = intel_pasid_lookup_id(pasid);
-> > +	svm = ioasid_find(NULL, pasid, NULL);
-> > +	if (IS_ERR(svm)) {
-> > +		ret = PTR_ERR(svm);
-> > +		goto out;
-> > +	}
-> > +
-> >   	if (!svm)
-> >   		goto out;
-> >     
-> 
-> How about using IS_ERR_OR_NULL() here?
-> 
-makes sense, same below. thanks!
->  [...]  
-> 
-> Same here.
-> 
->  [...]  
-> 
-> Ditto.
-> 
->  [...]  
-> 
-> Best regards,
-> Baolu
+Sebastian it would be nice if possible to trace where the
+t->rcu_read_unlock_special is set for this scenario of calling
+rcu_read_unlock_special, to give a clear idea about whether it was
+really because of an IPI. I guess we could also add additional RCU
+debug fields to task_struct (just for debugging) to see where there
+unlock_special is set.
 
-[Jacob Pan]
+Is there a test to reproduce this, or do I just boot an intel x86_64
+machine with "threadirqs" and run into it?
