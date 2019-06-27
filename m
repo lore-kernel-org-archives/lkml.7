@@ -2,95 +2,95 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5ACC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA506C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F8E2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5C820828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfF0OaI (ORCPT
+        id S1726807AbfF0Oaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:30:08 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:60145 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfF0OaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:30:08 -0400
-Received: from orion.localdomain ([77.7.61.149]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M5fdC-1heqS92wkU-007ASL; Thu, 27 Jun 2019 16:30:03 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     amitkarwar@gmail.com, siva8118@gmail.com, kvalo@codeaurora.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] drivers: net: wireless: rsi: return explicit error values
-Date:   Thu, 27 Jun 2019 16:30:02 +0200
-Message-Id: <1561645802-1279-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:LD1XqncTtp4Z4IX2vE/ddO3xe3+A4yTOO84WkoCTzL4iY55/4EI
- IvYDyUIepL04Be8NzulLbuAO8xKrQHjFCrvhg03O+X5OlkfCMiuKc4ixdRKv/jWeK2TyAGp
- wLiSCwJfqg0JiYlt5i1AGpJFoysqyKc/dHPsbo25v3yMN67zdtTx2O7gz3WggstEPCfb3oB
- 4M2VrucesCj2G8maAiQ+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VX1ooUieOIM=:fRd9ZmsoM1/T5whX34GEcE
- nz1xYDLGuUfXhijW02HVftdL+eUaFMjDdppCX29QBN4YV+oGSaUzoO3dClTohbZbVo/uOM8fI
- rrOH/JMLj0LwB4JCgQK+1iR6o1jNxyLKC7mWo8yzXHmnzMdKzikwb7D4LPBjDW7SPQE6PR6I8
- Gjtlkb/DWa7z9VDsmqSw1idHT62vyixIgHGb7FlpXIxbsMIbXguxuaD6F/qcPFeKOwV6OEXHd
- H6hEggsGV9yB/eBA9qjxuNp5Ek3mt8TFZ01FohUTdtJaTgb96q2CWGYhcUOiVeQBkVOp0fdma
- tFJ7eO+uQpHVw4XXCMBFjzhPK9SHb94XMEc+0dNx2D6XfFTeyALFgQ9lrfKmDAwRLhdOhlYeD
- cub0g7WUVAY7QXrqqOC6t+D5d06/K5Sc3A2L9gjKfd/pE73ZiopLZFTk44jDrhsDXQwhjeelC
- O0YEUVR7riR8WB0Ki9yshlXeir0rjxr4Eb0AzbNAOVl1UCfk9fen7EXdUHDYO3CWA4Dl8Ngip
- IBj0DJNkD3Tyl4hWBsogKL667PbLnqkNbNj2bL8Xg0701QiKsylkeiaPLYRFU3jGOwCWHcCIS
- aLL2jozhYQdXd/Uqiya9+2Cfcqvyp3tgHe8xNWMQeXOROSLZDGgr0zNxWvieqr34BjY3HooI+
- aWc0uBRK90JYz9wiRX/Lw6Y0WBujloA2qCx1tWEDCb8JBC2ZtWgvnVy58rJBqQh6R9gy32BjT
- 6l6SfZWXmR01HKlBsyV8os6hbGarnMXxfq7XaQ==
+        Thu, 27 Jun 2019 10:30:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37850 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfF0Oaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:30:46 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3BB1FC78B537B291C284;
+        Thu, 27 Jun 2019 22:30:43 +0800 (CST)
+Received: from [127.0.0.1] (10.65.87.206) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 27 Jun 2019
+ 22:30:38 +0800
+Subject: Re: [PATCH] irqchip/gic: Add dependency for ARM_GIC
+To:     Marc Zyngier <marc.zyngier@arm.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <linus.walleij@linaro.org>
+References: <1561644707-25191-1-git-send-email-xiaojiangfeng@huawei.com>
+ <2934608c-9eb6-76b0-ff34-dd22bf670318@arm.com>
+CC:     <linux-kernel@vger.kernel.org>
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <a6c1662b-0713-1116-baf5-bff520d03187@huawei.com>
+Date:   Thu, 27 Jun 2019 22:30:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <2934608c-9eb6-76b0-ff34-dd22bf670318@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.87.206]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
 
-Explicitly return constants instead of variable (and rely on
-it to be explicitly initialized), if the value is supposed
-to be fixed anyways. Align it with the rest of the driver,
-which does it the same way.
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/net/wireless/rsi/rsi_91x_sdio.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 2019/6/27 22:20, Marc Zyngier wrote:
+> On 27/06/2019 15:11, Jiangfeng Xiao wrote:
+>> Not every arch has ARM_GIC, it is strange
+>> to see ARM_GIC_MAX_NR in the .config file
+>> of the x86 and IA-64 architecture. so fix
+>> build by adding necessary dependency.
+>>
+>> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+>> ---
+>>  drivers/irqchip/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>> index 659c5e0..e338b471 100644
+>> --- a/drivers/irqchip/Kconfig
+>> +++ b/drivers/irqchip/Kconfig
+>> @@ -19,6 +19,7 @@ config ARM_GIC_PM
+>>  
+>>  config ARM_GIC_MAX_NR
+>>  	int
+>> +	depends on ARM_GIC
+>>  	default 2 if ARCH_REALVIEW
+>>  	default 1
+>>  
+>>
+> 
+> Isn't that the patch[1] that has already been in -next for the past 10 
+> days or so?
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/irqchip-next&id=702655234dd1d07e76f9bff9575e438c969fc32c
+> 
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-index b42cd50..2a3577d 100644
---- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-@@ -844,11 +844,11 @@ static int rsi_init_sdio_interface(struct rsi_hw *adapter,
- 				   struct sdio_func *pfunction)
- {
- 	struct rsi_91x_sdiodev *rsi_91x_dev;
--	int status = -ENOMEM;
-+	int status;
- 
- 	rsi_91x_dev = kzalloc(sizeof(*rsi_91x_dev), GFP_KERNEL);
- 	if (!rsi_91x_dev)
--		return status;
-+		return -ENOMEM;
- 
- 	adapter->rsi_dev = rsi_91x_dev;
- 
-@@ -890,7 +890,7 @@ static int rsi_init_sdio_interface(struct rsi_hw *adapter,
- #ifdef CONFIG_RSI_DEBUGFS
- 	adapter->num_debugfs_entries = MAX_DEBUGFS_ENTRIES;
- #endif
--	return status;
-+	return 0;
- fail:
- 	sdio_disable_func(pfunction);
- 	sdio_release_host(pfunction);
--- 
-1.9.1
+I am very sorry. I thought that this patch was not reviewed,
+so I pushed it again. I asked my colleagues how to get information
+about whether the patch is included.
+
+Will not make this low-level mistake again.
+
+Thanks.
 
