@@ -2,97 +2,114 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44FC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF0C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BAB205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:30:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="foFvp30D"
+	by mail.kernel.org (Postfix) with ESMTP id 3E1CC21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbfF0SaG (ORCPT
+        id S1726599AbfF0Sab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:30:06 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39769 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfF0SaF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:30:05 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r21so2627172otq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7E3kE8wu6XArETAHziQvnZYV/Eha0av5p2dljNuncOs=;
-        b=foFvp30DG07jcUeEQRk8SMFfwd/Wva8/DnhLRWyqOIEHY3iQ0bH3xBBjNEWt1UAb9i
-         aSc3lqlBun4TcabEhTjxpZ+OkIyuycNXsXlxccJejQbd632UL5dTF0ReYx9tgjN1LZpK
-         mBX/S+GBhEMY+hKQwLcUyojf3H+OPilbFg/JD2SVMM8M3MT8ZlLkX9kEa99YULT2J3wq
-         SG/RSlHZrZLlAxovfeBCH2Ijpak7jmNP8mbWhWYFIOM4MtwTQ47fcYTztP21tUI+pIKW
-         0YYfQqSutj9IcqcAXAchA74/rzypF+j+tEfioCqOTkayP1R9aOB5o1e55rrlVcQGp0yZ
-         oBsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7E3kE8wu6XArETAHziQvnZYV/Eha0av5p2dljNuncOs=;
-        b=LbBKY9jvel2dYvRM9XrO726K3CTbyo1gMGj0Jt5nPqQB45dqKpiYn26dUpKqL/fzAU
-         RMPrDn0Fso2yLOyoDG2W10YKMCPK21K9LgIK0S2Ua5XWvz2dDjlbW70hnGA81gs1mVCf
-         PS7hr3ZARig96Ln8Sng12Ia0HnJkEaxmyHM3uzNoL6QAZIjxC33YxFdCwee1RhsxQkPQ
-         +XZHq6q6+8Z2ke8ousPRycfCRH/idHYW8Hwq+Yet+8hNDw6nahO6FTkgjD9Cmr6PHTM0
-         rwALXYDxti1JM0zRoH7bu7MZz1WgKwpVgxSvJHi2vr3rbssd/FQTYbyKAaetwbmyjQaU
-         x8eA==
-X-Gm-Message-State: APjAAAW//Vyk6S2OUTws3FEsMYL+TSSm5+4ioT5Smq98dItEu6I3nFrn
-        Q2M2LIkSBmPoim+FnTFmhhaGrmlxbZANypSqW0QQhg==
-X-Google-Smtp-Source: APXvYqzR6jmVs33hZDIYobItCy5fbsq9anYEdod2Ip+FjFmtBNmx0NXxWd92xbXTibPcVqTURkcFzBgWlQkkEVlfzdE=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr4463320oto.207.1561660204791;
- Thu, 27 Jun 2019 11:30:04 -0700 (PDT)
+        Thu, 27 Jun 2019 14:30:31 -0400
+Received: from smtp3.jd.com ([59.151.64.88]:2124 "EHLO smtp3.jd.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbfF0Sab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:30:31 -0400
+Received: from BJMAILD1MBX38.360buyAD.local (172.31.0.38) by
+ BJMAILD1MBX49.360buyAD.local (172.31.0.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1466.3; Fri, 28 Jun 2019 02:30:27 +0800
+Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
+ BJMAILD1MBX38.360buyAD.local (172.31.0.38) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Fri, 28 Jun 2019 02:30:27 +0800
+Received: from BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893]) by
+ BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893%24]) with mapi id
+ 15.01.1415.002; Fri, 28 Jun 2019 02:30:27 +0800
+From:   =?gb2312?B?u8bA1g==?= <huangle1@jd.com>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Topic: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Index: AQHVLRYrJwxAvKxXXkKWwBVCcQfpAw==
+Date:   Thu, 27 Jun 2019 18:30:27 +0000
+Message-ID: <720b91b1204b4c73be1b6ec2ff44dbab@jd.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.31.14.12]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
-In-Reply-To: <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 27 Jun 2019 11:29:53 -0700
-Message-ID: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 9:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Thu, Jun 27, 2019 at 5:34 AM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Wed, Jun 26, 2019 at 05:15:45PM -0700, Dan Williams wrote:
-> > > Ever since the conversion of DAX to the Xarray a RocksDB benchmark has
-> > > been encountering intermittent lockups. The backtraces always include
-> > > the filesystem-DAX PMD path, multi-order entries have been a source of
-> > > bugs in the past, and disabling the PMD path allows a test that fails in
-> > > minutes to run for an hour.
-> >
-> > On May 4th, I asked you:
-> >
-> > Since this is provoked by a fatal signal, it must have something to do
-> > with a killable or interruptible sleep.  There's only one of those in the
-> > DAX code; fatal_signal_pending() in dax_iomap_actor().  Does rocksdb do
-> > I/O with write() or through a writable mmap()?  I'd like to know before
-> > I chase too far down this fault tree analysis.
->
-> RocksDB in this case is using write() for writes and mmap() for reads.
-
-It's not clear to me that a fatal signal is a component of the failure
-as much as it's the way to detect that the benchmark has indeed locked
-up.
+ZnJvbTogSHVhbmcgTGUgPGh1YW5nbGUxQGpkLmNvbT4NCg0KSW4gbW92ZV90b19jbG9zZV9scnUo
+KSwgd2hpY2ggb25seSBiZSBjYWxsZWQgb24gcGF0aCBvZiBuZnNkNCBDTE9TRSBvcCwNCnRoZSBj
+b2RlIGNvdWxkIHdhaXQgZm9yIGl0cyBzdGlkIHJlZiBjb3VudCBkcm9wIHRvIDIgd2hpbGUgaG9s
+ZGluZyBpdHMNCnN0YXRlIG93bmVyIHJlcGxheSBtdXRleC4gIEhvd2V2ZXIsIHRoZSBvdGhlciBz
+dGlkIHJlZiBob2xkZXIgKG5vcm1hbGx5DQphIHBhcmFsbGVsIENMT1NFIG9wKSB0aGF0IG1vdmVf
+dG9fY2xvc2VfbHJ1KCkgaXMgd2FpdGluZyBmb3IgbWlnaHQgYmUNCmFjY3F1aXJpbmcgdGhlIHNh
+bWUgcmVwbGF5IG11dGV4Lg0KDQpUaGlzIHBhdGNoIGZpeCB0aGUgaXNzdWUgYnkgY2xlYXJpbmcg
+dGhlIHJlcGxheSBvd25lciBiZWZvcmUgd2FpdGluZywgYW5kDQphc3NpZ24gaXQgYmFjayBhZnRl
+ciB0aGVuLg0KDQpTaWduZWQtb2ZmLWJ5OiBIdWFuZyBMZSA8aHVhbmdsZTFAamQuY29tPg0KLS0t
+DQoNCkkgZ3Vlc3Mgd2Ugc2hvdWxkIGNjIHRoaXMgcGF0Y2ggdG8gc3RhYmxlIHRyZWUsIHNpbmNl
+IGEgbWFsaWNpb3VzIGNsaWVudA0KY291bGQgY3JhZnQgcGFyYWxsZWwgQ0xPU0Ugb3BzIHRvIHB1
+dCBhbGwgbmZzZCB0YXNrcyBpbiBEIHN0YXRlIHNob3J0bHkuDQoNCmRpZmYgLS1naXQgYS9mcy9u
+ZnNkL25mczRzdGF0ZS5jIGIvZnMvbmZzZC9uZnM0c3RhdGUuYw0KaW5kZXggNjE4ZTY2MC4uNWY2
+YTQ4ZiAxMDA2NDQNCi0tLSBhL2ZzL25mc2QvbmZzNHN0YXRlLmMNCisrKyBiL2ZzL25mc2QvbmZz
+NHN0YXRlLmMNCkBAIC0zODI5LDEyICszODI5LDEyIEBAIHN0YXRpYyB2b2lkIG5mczRfZnJlZV9v
+cGVub3duZXIoc3RydWN0IG5mczRfc3RhdGVvd25lciAqc28pDQogICogdGhlbSBiZWZvcmUgcmV0
+dXJuaW5nIGhvd2V2ZXIuDQogICovDQogc3RhdGljIHZvaWQNCi1tb3ZlX3RvX2Nsb3NlX2xydShz
+dHJ1Y3QgbmZzNF9vbF9zdGF0ZWlkICpzLCBzdHJ1Y3QgbmV0ICpuZXQpDQorbW92ZV90b19jbG9z
+ZV9scnUoc3RydWN0IG5mc2Q0X2NvbXBvdW5kX3N0YXRlICpjc3RhdGUsIHN0cnVjdCBuZnM0X29s
+X3N0YXRlaWQgKnMsDQorCQlzdHJ1Y3QgbmV0ICpuZXQpDQogew0KIAlzdHJ1Y3QgbmZzNF9vbF9z
+dGF0ZWlkICpsYXN0Ow0KIAlzdHJ1Y3QgbmZzNF9vcGVub3duZXIgKm9vID0gb3Blbm93bmVyKHMt
+PnN0X3N0YXRlb3duZXIpOw0KLQlzdHJ1Y3QgbmZzZF9uZXQgKm5uID0gbmV0X2dlbmVyaWMocy0+
+c3Rfc3RpZC5zY19jbGllbnQtPm5ldCwNCi0JCQkJCQluZnNkX25ldF9pZCk7DQorCXN0cnVjdCBu
+ZnNkX25ldCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsNCiANCiAJZHByaW50
+aygiTkZTRDogbW92ZV90b19jbG9zZV9scnUgbmZzNF9vcGVub3duZXIgJXBcbiIsIG9vKTsNCiAN
+CkBAIC0zODQ2LDggKzM4NDYsMTkgQEAgc3RhdGljIHZvaWQgbmZzNF9mcmVlX29wZW5vd25lcihz
+dHJ1Y3QgbmZzNF9zdGF0ZW93bmVyICpzbykNCiAJICogV2FpdCBmb3IgdGhlIHJlZmNvdW50IHRv
+IGRyb3AgdG8gMi4gU2luY2UgaXQgaGFzIGJlZW4gdW5oYXNoZWQsDQogCSAqIHRoZXJlIHNob3Vs
+ZCBiZSBubyBkYW5nZXIgb2YgdGhlIHJlZmNvdW50IGdvaW5nIGJhY2sgdXAgYWdhaW4gYXQNCiAJ
+ICogdGhpcyBwb2ludC4NCisJICoNCisJICogQmVmb3JlIHdhaXRpbmcsIHdlIGNsZWFyIGNzdGF0
+ZS0+cmVwbGF5X293bmVyIHRvIHJlbGVhc2UgaXRzDQorCSAqIHNvX3JlcGxheS5ycF9tdXRleCwg
+c2luY2Ugb3RoZXIgcmVmZXJlbmNlIGhvbGRlciBtaWdodCBiZSBhY2NxdWlyaW5nDQorCSAqIHRo
+ZSBzYW1lIG11dGV4IGJlZm9yZSB0aGV5IGNvdWxkIGRyb3AgdGhlIHJlZmVyZW5jZXMuICBUaGUg
+cmVwbGF5X293bmVyDQorCSAqIGNhbiBiZSBhc3NpZ25lZCBiYWNrIHNhZmVseSBhZnRlciB0aGV5
+IGRvbmUgdGhlaXIgam9icy4NCiAJICovDQotCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50
+X3JlYWQoJnMtPnN0X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwlpZiAocmVmY291bnRfcmVhZCgm
+cy0+c3Rfc3RpZC5zY19jb3VudCkgIT0gMikgew0KKwkJc3RydWN0IG5mczRfc3RhdGVvd25lciAq
+c28gPSBjc3RhdGUtPnJlcGxheV9vd25lcjsNCisNCisJCW5mc2Q0X2NzdGF0ZV9jbGVhcl9yZXBs
+YXkoY3N0YXRlKTsNCisJCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50X3JlYWQoJnMtPnN0
+X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwkJbmZzZDRfY3N0YXRlX2Fzc2lnbl9yZXBsYXkoY3N0
+YXRlLCBzbyk7DQorCX0NCiANCiAJcmVsZWFzZV9hbGxfYWNjZXNzKHMpOw0KIAlpZiAocy0+c3Rf
+c3RpZC5zY19maWxlKSB7DQpAQCAtNTUzMSw3ICs1NTQyLDggQEAgc3RhdGljIGlubGluZSB2b2lk
+IG5mczRfc3RhdGVpZF9kb3duZ3JhZGUoc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqc3RwLCB1MzIg
+dG9fYWMNCiAJcmV0dXJuIHN0YXR1czsNCiB9DQogDQotc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vf
+b3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnM0X29sX3N0YXRlaWQgKnMpDQorc3RhdGljIHZvaWQgbmZz
+ZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnNkNF9jb21wb3VuZF9zdGF0ZSAqY3N0YXRl
+LA0KKwkJc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqcykNCiB7DQogCXN0cnVjdCBuZnM0X2NsaWVu
+dCAqY2xwID0gcy0+c3Rfc3RpZC5zY19jbGllbnQ7DQogCWJvb2wgdW5oYXNoZWQ7DQpAQCAtNTU0
+OSw3ICs1NTYxLDcgQEAgc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVj
+dCBuZnM0X29sX3N0YXRlaWQgKnMpDQogCQlzcGluX3VubG9jaygmY2xwLT5jbF9sb2NrKTsNCiAJ
+CWZyZWVfb2xfc3RhdGVpZF9yZWFwbGlzdCgmcmVhcGxpc3QpOw0KIAkJaWYgKHVuaGFzaGVkKQ0K
+LQkJCW1vdmVfdG9fY2xvc2VfbHJ1KHMsIGNscC0+bmV0KTsNCisJCQltb3ZlX3RvX2Nsb3NlX2xy
+dShjc3RhdGUsIHMsIGNscC0+bmV0KTsNCiAJfQ0KIH0NCiANCkBAIC01NTg3LDcgKzU1OTksNyBA
+QCBzdGF0aWMgdm9pZCBuZnNkNF9jbG9zZV9vcGVuX3N0YXRlaWQoc3RydWN0IG5mczRfb2xfc3Rh
+dGVpZCAqcykNCiAJICovDQogCW5mczRfaW5jX2FuZF9jb3B5X3N0YXRlaWQoJmNsb3NlLT5jbF9z
+dGF0ZWlkLCAmc3RwLT5zdF9zdGlkKTsNCiANCi0JbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0
+cCk7DQorCW5mc2Q0X2Nsb3NlX29wZW5fc3RhdGVpZChjc3RhdGUsIHN0cCk7DQogCW11dGV4X3Vu
+bG9jaygmc3RwLT5zdF9tdXRleCk7DQogDQogCS8qIHY0LjErIHN1Z2dlc3RzIHRoYXQgd2Ugc2Vu
+ZCBhIHNwZWNpYWwgc3RhdGVpZCBpbiBoZXJlLCBzaW5jZSB0aGU=
