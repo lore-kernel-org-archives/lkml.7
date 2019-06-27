@@ -2,82 +2,60 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1999C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03C5C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE842080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561594865;
-	bh=IKe35oEhJZvYqgsiz7udgblC47kDC5uRQtBrjdadAbw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jet/h6VADkfvJjeem/xUYRbcl0vI9rv+2/AuzhELiwN/qcIOBwkBBiRqJirpTemUZ
-	 vtjJLTMipJKjVhbJ5cpoEIK1GZaQmK4+yXN7SjQxW4is0j+ToeRcESnHMF1SCi+X2R
-	 BWrwQBi4kBQz7PVBFEYE+Z+OyVhmVDAllL81GMR8=
+	by mail.kernel.org (Postfix) with ESMTP id A161E20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfF0AVE (ORCPT
+        id S1726813AbfF0AVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:21:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58218 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:21:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:65362 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfF0AVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:21:04 -0400
-Received: from localhost (unknown [107.242.116.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CA6A20663;
-        Thu, 27 Jun 2019 00:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561594863;
-        bh=IKe35oEhJZvYqgsiz7udgblC47kDC5uRQtBrjdadAbw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iD/DDI2CXJP3dJmOfa4DT3q516vkPrfaAch+8LK8Nvv9WrHx1vFcY1Xg4AGm4OIES
-         VhA/cWHDBRb6/Aq+SCgOmBZvr0VYmRrtx8e8L3zBcfdNibPkU3Dnm+kAl3MhbfUMoH
-         qMvDdR4O4/xqhUGZyNzDoN9PSP2CIvmYLrR3CHms=
-Date:   Wed, 26 Jun 2019 20:20:59 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.1 07/51] ASoC: soc-dpm: fixup DAI active
- unbalance
-Message-ID: <20190627002059.GN7898@sasha-vm>
-References: <20190626034117.23247-1-sashal@kernel.org>
- <20190626034117.23247-7-sashal@kernel.org>
- <20190626100315.GS5316@sirena.org.uk>
+        id S1726521AbfF0AVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:21:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 17:21:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,421,1557212400"; 
+   d="scan'208";a="156052762"
+Received: from mwsinger-mobl3.ger.corp.intel.com ([10.252.48.211])
+  by orsmga008.jf.intel.com with ESMTP; 26 Jun 2019 17:21:05 -0700
+Message-ID: <4402fd48b978dc7982912359b775a0d74564b287.camel@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] char: tpm: add new driver for tpm i2c ptp
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Oshri Alkoby <oshrialkoby85@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org, oshri.alkoby@nuvoton.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, gcwilson@us.ibm.com,
+        kgoldman@us.ibm.com, nayna@linux.vnet.ibm.com,
+        tomer.maimon@nuvoton.com
+Date:   Thu, 27 Jun 2019 03:21:17 +0300
+In-Reply-To: <20190625223503.367710-3-oshrialkoby85@gmail.com>
+References: <20190625223503.367710-1-oshrialkoby85@gmail.com>
+         <20190625223503.367710-3-oshrialkoby85@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190626100315.GS5316@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:03:15AM +0100, Mark Brown wrote:
->On Tue, Jun 25, 2019 at 11:40:23PM -0400, Sasha Levin wrote:
->> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->>
->> [ Upstream commit f7c4842abfa1a219554a3ffd8c317e8fdd979bec ]
->>
->> snd_soc_dai_link_event() is updating snd_soc_dai :: active,
->> but it is unbalance.
->> It counts up if it has startup callback.
->
->Are you *sure* this doesn't have dependencies?
+On Wed, 2019-06-26 at 01:35 +0300, Oshri Alkoby wrote:
+> Signed-off-by: Oshri Alkoby <oshrialkoby85@gmail.com>
 
-The actual code seems to correspond with the issue described in the
-commit message, so I'd think not.
+...
 
-I can remove this patch if you're not confident about it.
+/Jarkko
 
---
-Thanks,
-Sasha
