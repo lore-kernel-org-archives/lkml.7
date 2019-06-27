@@ -2,98 +2,75 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF13C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69B8C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238BA20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="e3m2MG4R"
+	by mail.kernel.org (Postfix) with ESMTP id 8E27620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfF0ITC (ORCPT
+        id S1726594AbfF0ITM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:19:02 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:38748 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726375AbfF0ITC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:19:02 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5R8EWH3001077;
-        Thu, 27 Jun 2019 03:18:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=SPMSdJWUdq28cBBokDIr/2PnNB0Q1pKbztAnSEHceO8=;
- b=e3m2MG4RIvL7IAJHAnWX867w01y82a5PoyXHRMlVdhxf3zBazZvlJ+k5Y3GZjSGSKL+7
- +D2vZzMNLQZUhRpk6CQw17jaevyKtq+BCpm2yozrxqES2VAwblsJiDlMYu0k9Wpzfz+1
- O4L7SuJDtte5YcpfTLsz1byhet/A6VOKTTL6XVPS2As3TZmC7Q8PkzhIHkW7VngeRQ3n
- PsVVQqifXLqPi6AUJGtIlknZ2YEZfu8PPdyCmkI4JzwZk7v6qOQI3gVbEDoMRQLmLZa9
- TgX//CmjU4RuKKilMZ3uhgi/bOVZGyW7yXNrGDO5MAyJh6MBKxHXFR9n3QVa9wOSV9Cd rQ== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail2.cirrus.com (mail2.cirrus.com [141.131.128.20])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2t9hr2gnb7-1;
-        Thu, 27 Jun 2019 03:18:32 -0500
-Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
-        by mail2.cirrus.com (Postfix) with ESMTP id 169CC605A6A7;
-        Thu, 27 Jun 2019 03:18:32 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 27 Jun
- 2019 09:18:31 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Thu, 27 Jun 2019 09:18:31 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 6715C45;
-        Thu, 27 Jun 2019 09:18:31 +0100 (BST)
-Date:   Thu, 27 Jun 2019 09:18:31 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>,
-        <jarkko.nikula@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v7 2/6] i2c: acpi: Use available IRQ helper functions
-Message-ID: <20190627081831.GF54126@ediswmail.ad.cirrus.com>
-References: <20190626150302.22703-1-ckeepax@opensource.cirrus.com>
- <20190626150302.22703-3-ckeepax@opensource.cirrus.com>
- <20190626190906.GA9224@smile.fi.intel.com>
+        Thu, 27 Jun 2019 04:19:12 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:60114 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbfF0ITL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 04:19:11 -0400
+Received: from wf0413.dip.tu-dresden.de ([141.76.181.157] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hgPcN-0006oO-B4; Thu, 27 Jun 2019 10:18:55 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Tony Xie <tony.xie@rock-chips.com>, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
+        xsf@rock-chips.com, zhangqing@rock-chips.com,
+        huangtao@rock-chips.com
+Subject: Re: [PATCH v10 0/6] support a new type of PMIC,including two chips(rk817 and rk809)
+Date:   Thu, 27 Jun 2019 10:18:54 +0200
+Message-ID: <2084806.DiqCa91xLP@phil>
+In-Reply-To: <20190626115251.GR21119@dell>
+References: <20190621103258.8154-1-tony.xie@rock-chips.com> <20190626115251.GR21119@dell>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190626190906.GA9224@smile.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=696 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 10:09:06PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 26, 2019 at 04:02:58PM +0100, Charles Keepax wrote:
-> > Use the available IRQ helper functions, most of the functions have
-> > additional helpful side affects like configuring the trigger type of the
-> > IRQ.
-> 
-> > -	acpi_dev_free_resource_list(&resource_list);
-> 
-> I have thought that we can drop completely the resource_list, though ACPI
-> doesn't allow this. So, I would rather withdraw this change to be on the safe
-> (symmetrical) side.
-> 
+Hi Lee,
 
-Yeah would be my preference as well, will do another spin.
+Am Mittwoch, 26. Juni 2019, 13:52:51 CEST schrieb Lee Jones:
+> On Fri, 21 Jun 2019, Tony Xie wrote:
+> 
+> > Most of functions and registers of the rk817 and rk808 are the same,
+> > so they can share allmost all codes.
+> > 
+> > Their specifications are as follows:
+> >   1) The RK809 and RK809 consist of 5 DCDCs, 9 LDOs and have the same
+> > registers
+> >      for these components except dcdc5.
+> >   2) The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+> >   3) The RK817 has one switch but The Rk809 has two.
+> 
+> Just tried to apply this set to a v5.2-rc1 base, but it doesn't seem
+> to do so cleanly.  Would you be able to rebase and resend please?
 
-Thanks,
-Charles
+I took the liberty of rebasing patch 3 accordingly and sent it as reply
+to the original patch3 as (v10.1). The other patches did apply cleanly
+after that.
+
+
+Heiko
+
+
