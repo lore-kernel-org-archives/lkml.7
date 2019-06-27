@@ -2,108 +2,61 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD61C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2316C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF7A20815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:02:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yOPKf6xw"
+	by mail.kernel.org (Postfix) with ESMTP id B08762080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbfF0JCX (ORCPT
+        id S1726668AbfF0JC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 05:02:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38529 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfF0JCX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:02:23 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5R916VP204146
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 02:01:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5R916VP204146
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561626067;
-        bh=HpbNo9Qe7lPUyV2D2rP07ZTdrh3ANbJinCRhdfyfJ/0=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=yOPKf6xwbptWGtvZzlBxWdgMP80tsnwakW4J8QFALtuIlJa7S7ZpykjH2BJ8Yvce6
-         MGsGNeUHOz72jjAhiLPIHXlDVoZDVKAiAJ28mMI+sHtF3UtVdPYnJkgrquJunjdTWJ
-         DQVcLzGh6ZmQ5LNudd6IV7efZ/nywJ6jPnN97FEj/Q6gHniXve/StBORKgm0hX9I/t
-         JPRB+ItdDeMM6YRVypmLMCMgdSG0zg7lHDwMgNBVdDYPsJYRZI6OSt9ClAYTf7VSl6
-         1WpLHBDueCna3VJCicnXDLl0zR/wuHP6puNe9JfBhhBvW42q3uWA/wd6Zgyk8DsGjm
-         P0ApbBdtyiolA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5R915rQ204143;
-        Thu, 27 Jun 2019 02:01:05 -0700
-Date:   Thu, 27 Jun 2019 02:01:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Xiaoyao Li <tipbot@zytor.com>
-Message-ID: <tip-2238246ff8d533a5f2327d1f953375876d8a013c@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de, hpa@zytor.com, bp@alien8.de,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
-        xiaoyao.li@linux.intel.com
-Reply-To: fenghua.yu@intel.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, xiaoyao.li@linux.intel.com,
-          tglx@linutronix.de, hpa@zytor.com, bp@alien8.de
-In-Reply-To: <20190627045525.105266-1-xiaoyao.li@linux.intel.com>
-References: <20190627045525.105266-1-xiaoyao.li@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/boot] x86/boot: Make the GDT 8-byte aligned
-Git-Commit-ID: 2238246ff8d533a5f2327d1f953375876d8a013c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 27 Jun 2019 05:02:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:50822 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfF0JC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 05:02:28 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 75ECC68BFE; Thu, 27 Jun 2019 11:01:54 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 11:01:54 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190627090154.GA11548@lst.de>
+References: <20190620161240.22738-1-logang@deltatee.com> <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2238246ff8d533a5f2327d1f953375876d8a013c
-Gitweb:     https://git.kernel.org/tip/2238246ff8d533a5f2327d1f953375876d8a013c
-Author:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-AuthorDate: Thu, 27 Jun 2019 12:55:25 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Thu, 27 Jun 2019 10:56:11 +0200
+On Wed, Jun 26, 2019 at 12:31:08PM -0600, Logan Gunthorpe wrote:
+> > we have a hole behind len where we could store flag.  Preferably
+> > optionally based on a P2P or other magic memory types config
+> > option so that 32-bit systems with 32-bit phys_addr_t actually
+> > benefit from the smaller and better packing structure.
+> 
+> That seems sensible. The one thing that's unclear though is how to get
+> the PCI Bus address when appropriate. Can we pass that in instead of the
+> phys_addr with an appropriate flag? Or will we need to pass the actual
+> physical address and then, at the map step, the driver has to some how
+> lookup the PCI device to figure out the bus offset?
 
-x86/boot: Make the GDT 8-byte aligned
-
-The segment descriptors are loaded with an implicitly LOCK-ed instruction,
-which could trigger the split lock #AC exception if the variable is not
-properly aligned and crosses a cache line.
-
-Align the GDT properly so the descriptors are all 8 byte aligned.
-
-Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Link: https://lkml.kernel.org/r/20190627045525.105266-1-xiaoyao.li@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/boot/compressed/head_64.S | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index fafb75c6c592..6233ae35d0d9 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -659,6 +659,7 @@ no_longmode:
- gdt64:
- 	.word	gdt_end - gdt
- 	.quad   0
-+	.balign	8
- gdt:
- 	.word	gdt_end - gdt
- 	.long	gdt
+Yes, I think we'll need a lookup mechanism of some kind.
