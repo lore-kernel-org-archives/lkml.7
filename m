@@ -2,198 +2,178 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30114C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C72C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CC920B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="WMEfiSZ3"
+	by mail.kernel.org (Postfix) with ESMTP id D50422080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfF0Puc (ORCPT
+        id S1726619AbfF0Pux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:50:32 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36067 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0Puc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:50:32 -0400
-Received: by mail-pl1-f195.google.com with SMTP id k8so1528762plt.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 08:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tMDVUbLTOCls0VIHnjsoh7DWeqSSrubUVJ0usmY9Ymg=;
-        b=WMEfiSZ3TlXa+mXfYTEgWVlwNbrgesrqc3XR79vxkvHrCzhuWJgIuAIempAYwIwEza
-         +JbFajU0wgwOxn61DReXpfWvf/9nm8EdoB+v2KwaYdQBWCk5VZCJGSRPJX3qYpVlXp+Y
-         Mp8e7iPlgGpVEzsvWFScb8jg5Trk/+H7sHpMVd1zbEjPTWn4wEYuK6bV3J6PW5W392o2
-         WDqBlav0fct1ZocreCrRkhtbWnjmt1uXYnO30s0S7bKhPoxoKJ7PgDElmIwb9xxMMow9
-         vU8GdgiwMsawoOHQ1SBCVFiiNQNfc/1bqnNY5UkQ62MSgdwVLVS5jDzkzC3AfUkCZBom
-         lanA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tMDVUbLTOCls0VIHnjsoh7DWeqSSrubUVJ0usmY9Ymg=;
-        b=LMXJeEeLZcy07gd1YCWKDj9+CzgfQwB0DXz6EOX5ILCyliLxKr3hd2quVBrpaOQ7sb
-         DpbWJoO8ULYdJ0SkO2fWELoyAIrsmzYM1n8mKruiEp2L7kYYjXzw5vGCSU0d8yVqQxGS
-         kvZNd7J8aTdo8DL7gKTKU30uf/QRiq33SjIfrw+kJDOJbxH1VTivftaJrXH29JioXKo5
-         yXuSPLPhxeZmyatAjyQDE/fZH3zvSRQCxSmX568/rMHmwE8ayKX070ykIgTOC+liSXwU
-         1iCN2XGnd8hLZQqPvGRiqX0bEMqJFsZULPyCeKn9daj10tH2ynRXHhKkrw+7wgtdUdFw
-         HyRg==
-X-Gm-Message-State: APjAAAVFUjfZO7x4CUTaE0ekVQtNnxPpxfVNYqzsk4uhozvuXC7zl4kX
-        klqgDS2J9vRP6BR1lLqs2wlqWw==
-X-Google-Smtp-Source: APXvYqw3r0cYpfY5r6R1izaOj1roYmsKppsSAS7/NBo2PdrS4F8EMasOOzJOZ1QVfuDiJDKOcGoLIQ==
-X-Received: by 2002:a17:902:848c:: with SMTP id c12mr5348356plo.17.1561650631033;
-        Thu, 27 Jun 2019 08:50:31 -0700 (PDT)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id p6sm2693091pgs.77.2019.06.27.08.50.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 08:50:30 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 08:50:29 -0700
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, bpf@vger.kernel.org,
-        lkp@01.org
-Subject: Re: [bpf/tools] cd17d77705:
- kernel_selftests.bpf.test_sock_addr.sh.fail
-Message-ID: <20190627155029.GC4866@mini-arch>
-References: <20190627090446.GG7221@shao2-debian>
+        Thu, 27 Jun 2019 11:50:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:57440 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726384AbfF0Pux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:50:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11E7B360;
+        Thu, 27 Jun 2019 08:50:52 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C7413F246;
+        Thu, 27 Jun 2019 08:50:49 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 16:50:47 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V11 03/12] PCI: dwc: Perform dbi regs write lock towards
+ the end
+Message-ID: <20190627155047.GF3782@e121166-lin.cambridge.arm.com>
+References: <20190624091505.1711-1-vidyas@nvidia.com>
+ <20190624091505.1711-4-vidyas@nvidia.com>
+ <20190627145800.GD3782@e121166-lin.cambridge.arm.com>
+ <ecae46b4-54cc-7f4d-5a86-908431fd472a@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627090446.GG7221@shao2-debian>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <ecae46b4-54cc-7f4d-5a86-908431fd472a@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/27, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-7):
-> 
-> commit: cd17d77705780e2270937fb3cbd2b985adab3edc ("bpf/tools: sync bpf.h")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> 
-> in testcase: kernel_selftests
-> with following parameters:
-> 
-> 	group: kselftests-00
-> 
-> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> 
-> 
-> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> # ; int connect_v6_prog(struct bpf_sock_addr *ctx)
-> # 0: (bf) r6 = r1
-> # 1: (18) r1 = 0x100000000000000
-> # ; tuple.ipv6.daddr[0] = bpf_htonl(DST_REWRITE_IP6_0);
-> # 3: (7b) *(u64 *)(r10 -16) = r1
-> # 4: (b7) r1 = 169476096
-> # ; memset(&tuple.ipv6.sport, 0, sizeof(tuple.ipv6.sport));
-> # 5: (63) *(u32 *)(r10 -8) = r1
-> # 6: (b7) r7 = 0
-> # ; tuple.ipv6.daddr[0] = bpf_htonl(DST_REWRITE_IP6_0);
-> # 7: (7b) *(u64 *)(r10 -24) = r7
-> # 8: (7b) *(u64 *)(r10 -32) = r7
-> # 9: (7b) *(u64 *)(r10 -40) = r7
-> # ; if (ctx->type != SOCK_STREAM && ctx->type != SOCK_DGRAM)
-> # 10: (61) r1 = *(u32 *)(r6 +32)
-> # ; if (ctx->type != SOCK_STREAM && ctx->type != SOCK_DGRAM)
-> # 11: (bf) r2 = r1
-> # 12: (07) r2 += -1
-> # 13: (67) r2 <<= 32
-> # 14: (77) r2 >>= 32
-> # 15: (25) if r2 > 0x1 goto pc+33
-> #  R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=1,var_off=(0x0; 0x1)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=00000000 fp-32=00000000 fp-40=00000000
-> # ; else if (ctx->type == SOCK_STREAM)
-> # 16: (55) if r1 != 0x1 goto pc+8
-> #  R1=inv1 R2=inv(id=0,umax_value=1,var_off=(0x0; 0x1)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=00000000 fp-32=00000000 fp-40=00000000
-> # 17: (bf) r2 = r10
-> # ; sk = bpf_sk_lookup_tcp(ctx, &tuple, sizeof(tuple.ipv6),
-> # 18: (07) r2 += -40
-> # 19: (bf) r1 = r6
-> # 20: (b7) r3 = 36
-> # 21: (b7) r4 = -1
-> # 22: (b7) r5 = 0
-> # 23: (85) call bpf_sk_lookup_tcp#84
-> # 24: (05) goto pc+7
-> # ; if (!sk)
-> # 32: (15) if r0 == 0x0 goto pc+16
-> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
-> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
-> # 33: (61) r1 = *(u32 *)(r0 +28)
-> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
-> # 34: (61) r2 = *(u32 *)(r10 -24)
-> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
-> # 35: (5d) if r1 != r2 goto pc+11
-> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
-> # ; sk->src_ip6[1] != tuple.ipv6.daddr[1] ||
-> # 36: (61) r1 = *(u32 *)(r0 +32)
-> # ; sk->src_ip6[1] != tuple.ipv6.daddr[1] ||
-> # 37: (61) r2 = *(u32 *)(r10 -20)
-> # ; sk->src_ip6[1] != tuple.ipv6.daddr[1] ||
-> # 38: (5d) if r1 != r2 goto pc+8
-> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
-> # ; sk->src_ip6[2] != tuple.ipv6.daddr[2] ||
-> # 39: (61) r1 = *(u32 *)(r0 +36)
-> # ; sk->src_ip6[2] != tuple.ipv6.daddr[2] ||
-> # 40: (61) r2 = *(u32 *)(r10 -16)
-> # ; sk->src_ip6[2] != tuple.ipv6.daddr[2] ||
-> # 41: (5d) if r1 != r2 goto pc+5
-> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
-> # ; sk->src_ip6[3] != tuple.ipv6.daddr[3] ||
-> # 42: (61) r1 = *(u32 *)(r0 +40)
-> # ; sk->src_ip6[3] != tuple.ipv6.daddr[3] ||
-> # 43: (61) r2 = *(u32 *)(r10 -12)
-> # ; sk->src_ip6[3] != tuple.ipv6.daddr[3] ||
-> # 44: (5d) if r1 != r2 goto pc+2
-> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
-> # ; sk->src_port != DST_REWRITE_PORT6) {
-> # 45: (61) r1 = *(u32 *)(r0 +44)
-> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
-> # 46: (15) if r1 == 0x1a0a goto pc+4
-> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
-> # ; bpf_sk_release(sk);
-> # 47: (bf) r1 = r0
-> # 48: (85) call bpf_sk_release#86
-> # ; }
-> # 49: (bf) r0 = r7
-> # 50: (95) exit
-> # 
-> # from 46 to 51: R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv6666 R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
-> # ; bpf_sk_release(sk);
-> # 51: (bf) r1 = r0
-> # 52: (85) call bpf_sk_release#86
-> # 53: (b7) r1 = 2586
-> # ; ctx->user_port = bpf_htons(DST_REWRITE_PORT6);
-> # 54: (63) *(u32 *)(r6 +24) = r1
-> # 55: (18) r1 = 0x100000000000000
-> # ; ctx->user_ip6[2] = bpf_htonl(DST_REWRITE_IP6_2);
-> # 57: (7b) *(u64 *)(r6 +16) = r1
-> # invalid bpf_context access off=16 size=8
-This looks like clang doing single u64 write for user_ip6[2] and
-user_ip6[3] instead of two u32. I don't think we allow that.
+On Thu, Jun 27, 2019 at 09:03:08PM +0530, Vidya Sagar wrote:
+> On 6/27/2019 8:28 PM, Lorenzo Pieralisi wrote:
+> > On Mon, Jun 24, 2019 at 02:44:56PM +0530, Vidya Sagar wrote:
+> > > Remove multiple write enable and disable sequences of dbi registers as
+> > > Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
+> > > DBI write-lock enable bit thereby not allowing any further writes to BAR-0
+> > > register in config space to take place. Hence enabling write permission at
+> > > the start of function and disabling the same only towards the end.
+> > 
+> > I do not understand what this patch does, I would like to rephrase
+> > the commit log in a way that is easier to parse.
+> > 
+> > In particular I do not get what you mean in relation to BAR-0, I am
+> > confused, please clarify.
+> > 
+> > Lorenzo
+> Well, some of the Synopsys DesignWare core's DBI registers are
+> protected with a lock without which, they are read-only by default.
+> Existing code in dw_pcie_setup_rc() API tries to unlock and lock
+> multiple times whenever it wants to update those write-protected
+> registers. This patch attempts to unlock all such write-protected
+> registers for writing once in the beginning of the function and lock
+> them back towards the end.  As far as BAR-0 register (which is at
+> offset 0x10 in DBI space... nothing but the config space) in Tegra194
+> is concerned, it is one of those registers to which writes are
+> protected. I could have added unlock/lock pair around accessing this
+> register, but that would bloat this API with one more pair of
+> unlock/lock, instead I chose to remove unlock/lock pairs for all
+> protected registers and have unlock in the beginning and lock towards
+> the end.
 
-I've seen this a couple of times myself while playing with some
-progs, but not sure what's the right way to 'fix' it.
+Ok, so DBI space registers that require write permissions are per-IP.
+This is clearer so the commit log must be rewritten, it is not clear at
+all in this respect at least not as-is, if you read it you will
+notice ;-)
 
-> # processed 49 insns (limit 1000000) max_states_per_insn 0 total_states 13 peak_states 13 mark_read 11
-> # 
-> # libbpf: -- END LOG --
-> # libbpf: failed to load program 'cgroup/connect6'
-> # libbpf: failed to load object './connect6_prog.o'
-> # (test_sock_addr.c:752: errno: Bad file descriptor) >>> Loading program (./connect6_prog.o) error.
+Lorenzo
+
+> 
+> -Vidya Sagar
+> 
+> > 
+> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > > Reviewed-by: Thierry Reding <treding@nvidia.com>
+> > > Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> > > ---
+> > > Changes since [v10]:
+> > > * None
+> > > 
+> > > Changes since [v9]:
+> > > * None
+> > > 
+> > > Changes since [v8]:
+> > > * None
+> > > 
+> > > Changes since [v7]:
+> > > * None
+> > > 
+> > > Changes since [v6]:
+> > > * None
+> > > 
+> > > Changes since [v5]:
+> > > * Moved write enable to the beginning of the API and write disable to the end
+> > > 
+> > > Changes since [v4]:
+> > > * None
+> > > 
+> > > Changes since [v3]:
+> > > * None
+> > > 
+> > > Changes since [v2]:
+> > > * None
+> > > 
+> > > Changes since [v1]:
+> > > * None
+> > > 
+> > >   drivers/pci/controller/dwc/pcie-designware-host.c | 14 ++++++++------
+> > >   1 file changed, 8 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index f93252d0da5b..d3156446ff27 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -628,6 +628,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> > >   	u32 val, ctrl, num_ctrls;
+> > >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > > +	/*
+> > > +	 * Enable DBI read-only registers for writing/updating configuration.
+> > > +	 * Write permission gets disabled towards the end of this function.
+> > > +	 */
+> > > +	dw_pcie_dbi_ro_wr_en(pci);
+> > > +
+> > >   	dw_pcie_setup(pci);
+> > >   	if (!pp->ops->msi_host_init) {
+> > > @@ -650,12 +656,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> > >   	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_1, 0x00000000);
+> > >   	/* Setup interrupt pins */
+> > > -	dw_pcie_dbi_ro_wr_en(pci);
+> > >   	val = dw_pcie_readl_dbi(pci, PCI_INTERRUPT_LINE);
+> > >   	val &= 0xffff00ff;
+> > >   	val |= 0x00000100;
+> > >   	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+> > > -	dw_pcie_dbi_ro_wr_dis(pci);
+> > >   	/* Setup bus numbers */
+> > >   	val = dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+> > > @@ -687,15 +691,13 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> > >   	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+> > > -	/* Enable write permission for the DBI read-only register */
+> > > -	dw_pcie_dbi_ro_wr_en(pci);
+> > >   	/* Program correct class for RC */
+> > >   	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+> > > -	/* Better disable write permission right after the update */
+> > > -	dw_pcie_dbi_ro_wr_dis(pci);
+> > >   	dw_pcie_rd_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, &val);
+> > >   	val |= PORT_LOGIC_SPEED_CHANGE;
+> > >   	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+> > > +
+> > > +	dw_pcie_dbi_ro_wr_dis(pci);
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(dw_pcie_setup_rc);
+> > > -- 
+> > > 2.17.1
+> > > 
+> 
