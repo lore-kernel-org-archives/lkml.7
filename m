@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3F5C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A33C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4059C20815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9D920815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596356;
-	bh=FH+vV4aIuRmvocafl9jlq28inan4+BCmmDnzm4Z5STo=;
+	s=default; t=1561596364;
+	bh=+ZN2H1Rhb2nLG7GYH4zcFDSdXLZMZUmax+jn/se6dp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNLwWO2VA9jueaf89iIS0RYH8JAAOgPfLc8gbg5isQq53vAOFx7f1hYcy5eTXItGd
-	 6JgRO1x2qdLXeOT3DcOuWSX4Zk0nf0BCIAdWXGAiCguubN3+BuzeusAMLG9dyb3RDy
-	 d8U49EciN4puaUSHOPzQHeck1y7TLG58t21sNsM8=
+	b=m3AonbhRJdH2a7T75KdnBO5G/59FkmBxU70GNJLFT/J4NykKtV6AP0klze2FEiFRr
+	 i8UQJJCzN9llvDO5+9pc9Em/CC4BcZjkn7oTtRpKdyzIOzv3+cyarYQC8VaJJvtFDS
+	 XUmhl+4WZ6pBW8qRrleL5XL8tOq1FwC/F5s9Yb+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbfF0Apz (ORCPT
+        id S1728689AbfF0Akd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44694 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727445AbfF0Aku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:40:50 -0400
+        id S1729343AbfF0Ak3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:40:29 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC16D205ED;
-        Thu, 27 Jun 2019 00:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 158A621855;
+        Thu, 27 Jun 2019 00:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596049;
-        bh=FH+vV4aIuRmvocafl9jlq28inan4+BCmmDnzm4Z5STo=;
+        s=default; t=1561596027;
+        bh=+ZN2H1Rhb2nLG7GYH4zcFDSdXLZMZUmax+jn/se6dp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ws2vKH9uhONhWMAvxELfAEG4uuKUwszB35l4Mg5sOv5lTvDu8lDhf5R+35VKFUrTa
-         Oy99FM49oRAn6rkHwPNawLxE7lcSekoNlq2j/K2jeWDIsWClEVMXIb4QUXaPWR9L/9
-         ld9QIJwNlAcXOE3Bdw4BzoYttHpdESE6Ltb09p7w=
+        b=F8rLymC1voCubgjjSe6GfohXY2pq6MoRFmkcv1KcxOVBlBPFM2dN6APiqQbxONx9Q
+         54vtcSik55G8+XtWptqAJYUz/R08UArVHs3X0kKiZUNHnC9IBTsbcVD0x0BP4bB9YA
+         cQI4dT7lAu4iFov604S4T15fMRE/xstdtzzFskcE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yibo Zhao <yiboz@codeaurora.org>,
-        Zhi Chen <zhichen@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 24/35] mac80211: only warn once on chanctx_conf being NULL
-Date:   Wed, 26 Jun 2019 20:39:12 -0400
-Message-Id: <20190627003925.21330-24-sashal@kernel.org>
+Cc:     Teresa Remmet <t.remmet@phytec.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 18/35] ARM: dts: am335x phytec boards: Fix cd-gpios active level
+Date:   Wed, 26 Jun 2019 20:39:06 -0400
+Message-Id: <20190627003925.21330-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
 References: <20190627003925.21330-1-sashal@kernel.org>
@@ -61,49 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yibo Zhao <yiboz@codeaurora.org>
+From: Teresa Remmet <t.remmet@phytec.de>
 
-[ Upstream commit 563572340173865a9a356e6bb02579e6998a876d ]
+[ Upstream commit 8a0098c05a272c9a68f6885e09755755b612459c ]
 
-In multiple SSID cases, it takes time to prepare every AP interface
-to be ready in initializing phase. If a sta already knows everything it
-needs to join one of the APs and sends authentication to the AP which
-is not fully prepared at this point of time, AP's channel context
-could be NULL. As a result, warning message occurs.
+Active level of the mmc1 cd gpio needs to be low instead of high.
+Fix PCM-953 and phyBOARD-WEGA.
 
-Even worse, if the AP is under attack via tools such as MDK3 and massive
-authentication requests are received in a very short time, console will
-be hung due to kernel warning messages.
-
-WARN_ON_ONCE() could be a better way for indicating warning messages
-without duplicate messages to flood the console.
-
-Johannes: We still need to address the underlying problem, but we
-          don't really have a good handle on it yet. Suppress the
-          worst side-effects for now.
-
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Yibo Zhao <yiboz@codeaurora.org>
-[johannes: add note, change subject]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/ieee80211_i.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/am335x-pcm-953.dtsi | 2 +-
+ arch/arm/boot/dts/am335x-wega.dtsi    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
-index 894937bcd479..9765a54d7dbe 100644
---- a/net/mac80211/ieee80211_i.h
-+++ b/net/mac80211/ieee80211_i.h
-@@ -1405,7 +1405,7 @@ ieee80211_get_sband(struct ieee80211_sub_if_data *sdata)
- 	rcu_read_lock();
- 	chanctx_conf = rcu_dereference(sdata->vif.chanctx_conf);
+diff --git a/arch/arm/boot/dts/am335x-pcm-953.dtsi b/arch/arm/boot/dts/am335x-pcm-953.dtsi
+index 1ec8e0d80191..572fbd254690 100644
+--- a/arch/arm/boot/dts/am335x-pcm-953.dtsi
++++ b/arch/arm/boot/dts/am335x-pcm-953.dtsi
+@@ -197,7 +197,7 @@
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
  
--	if (WARN_ON(!chanctx_conf)) {
-+	if (WARN_ON_ONCE(!chanctx_conf)) {
- 		rcu_read_unlock();
- 		return NULL;
- 	}
+diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
+index 8ce541739b24..83e4fe595e37 100644
+--- a/arch/arm/boot/dts/am335x-wega.dtsi
++++ b/arch/arm/boot/dts/am335x-wega.dtsi
+@@ -157,7 +157,7 @@
+ 	bus-width = <4>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.20.1
 
