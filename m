@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A13C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59541C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01CF02082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDCF20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596653;
-	bh=tdF87nFJwnoC6wKG5yAiEGQ54gedFNILpUaj46a0uC8=;
+	s=default; t=1561596677;
+	bh=6lHAk4zJ0iSlsYDMP4HoMrYKp9CdTKIpkONXq1HGL/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOpRsFzw4W4noXNYJRLlkcXS9Z2DSOa5ixT9tyt2olvZxhHEjaGvNsLC4zBsAG1n4
-	 06J13SBUY0Hi4YMb85Q/2CNMBP2+refy7wp4dwsu5yE0vbClJQ5QOKzsDlE6Y/YPF3
-	 iR3GFWpeZVsDLv1H2DAt1coj7G1nGyMco+JDDU/E=
+	b=VBzn/YCZDkaqi2S1Y97UtnfAKwuM9wCJD1arl1JxuNWisHRzenkXDGacFIHlSn8/o
+	 yn7yjgJtXnLAaEXf6F/OpnrlOGWCz8pvyzq79Gf+eiW5ZzesCpo+rCtSvFE3MHo+ma
+	 j/E/wLpPqhQTP47oozXVgtWWa020WtZY3RlHSQk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfF0Auv (ORCPT
+        id S1728043AbfF0Ae1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39180 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727290AbfF0Aex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:34:53 -0400
+        id S1727430AbfF0AeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:34:23 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69097217F4;
-        Thu, 27 Jun 2019 00:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 862492182B;
+        Thu, 27 Jun 2019 00:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595692;
-        bh=tdF87nFJwnoC6wKG5yAiEGQ54gedFNILpUaj46a0uC8=;
+        s=default; t=1561595662;
+        bh=6lHAk4zJ0iSlsYDMP4HoMrYKp9CdTKIpkONXq1HGL/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gz4reelR8SwowZsO3Bp1nrkEXK+EdIUBCQvdQMYJmtPYmvX76I9jtlV8IknqjCkJm
-         TwBJhvxOFRNT5gZg7aM2CJQlSX5vf+FihPAvzUS48q/tCpHCXiEUAz/tH+utIICnvA
-         aZDiD8hjiITAA9GRpPB43dhb9bHsX0W0dWjaga2o=
+        b=TY8xWrrz1rLISxOerRnY+GB9P2kVQDveui3cVXCRhXwucdIW/LJ1Qj0xND9xdTTFL
+         1tfbr4IvUYyDZ4EODGREPiBH16SwLT8uomoPKeAir/Npo/rIDklN5yM2mcWha2rWoG
+         uEFSVIbpTTjv6m38IDMAUky/TgwRpt/TNwOSUPc4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 81/95] IB/hfi1: Handle wakeup of orphaned QPs for pio
-Date:   Wed, 26 Jun 2019 20:30:06 -0400
-Message-Id: <20190627003021.19867-81-sashal@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 71/95] bpf, x64: fix stack layout of JITed bpf code
+Date:   Wed, 26 Jun 2019 20:29:56 -0400
+Message-Id: <20190627003021.19867-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -60,52 +59,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Alexei Starovoitov <ast@kernel.org>
 
-[ Upstream commit 099a884ba4c00145cef283d36e050726311c2e95 ]
+[ Upstream commit fe8d9571dc50232b569242fac7ea6332a654f186 ]
 
-Once a send context is taken down due to a link failure, any QPs waiting
-for pio credits will stay on the waitlist indefinitely.
+Since commit 177366bf7ceb the %rbp stopped pointing to %rbp of the
+previous stack frame. That broke frame pointer based stack unwinding.
+This commit is a partial revert of it.
+Note that the location of tail_call_cnt is fixed, since the verifier
+enforces MAX_BPF_STACK stack size for programs with tail calls.
 
-Fix by wakeing up all QPs linked to piowait list.
-
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fixes: 177366bf7ceb ("bpf: change x86 JITed program stack layout")
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/pio.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/net/bpf_jit_comp.c | 74 +++++++++++--------------------------
+ 1 file changed, 21 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/pio.c b/drivers/infiniband/hw/hfi1/pio.c
-index a1de566fe95e..1ee47838d4de 100644
---- a/drivers/infiniband/hw/hfi1/pio.c
-+++ b/drivers/infiniband/hw/hfi1/pio.c
-@@ -952,6 +952,22 @@ void sc_disable(struct send_context *sc)
- 		}
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index afabf597c855..d88bc0935886 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -190,9 +190,7 @@ struct jit_context {
+ #define BPF_MAX_INSN_SIZE	128
+ #define BPF_INSN_SAFETY		64
+ 
+-#define AUX_STACK_SPACE		40 /* Space for RBX, R13, R14, R15, tailcnt */
+-
+-#define PROLOGUE_SIZE		37
++#define PROLOGUE_SIZE		20
+ 
+ /*
+  * Emit x86-64 prologue code for BPF program and check its size.
+@@ -203,44 +201,19 @@ static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf)
+ 	u8 *prog = *pprog;
+ 	int cnt = 0;
+ 
+-	/* push rbp */
+-	EMIT1(0x55);
+-
+-	/* mov rbp,rsp */
+-	EMIT3(0x48, 0x89, 0xE5);
+-
+-	/* sub rsp, rounded_stack_depth + AUX_STACK_SPACE */
+-	EMIT3_off32(0x48, 0x81, 0xEC,
+-		    round_up(stack_depth, 8) + AUX_STACK_SPACE);
+-
+-	/* sub rbp, AUX_STACK_SPACE */
+-	EMIT4(0x48, 0x83, 0xED, AUX_STACK_SPACE);
+-
+-	/* mov qword ptr [rbp+0],rbx */
+-	EMIT4(0x48, 0x89, 0x5D, 0);
+-	/* mov qword ptr [rbp+8],r13 */
+-	EMIT4(0x4C, 0x89, 0x6D, 8);
+-	/* mov qword ptr [rbp+16],r14 */
+-	EMIT4(0x4C, 0x89, 0x75, 16);
+-	/* mov qword ptr [rbp+24],r15 */
+-	EMIT4(0x4C, 0x89, 0x7D, 24);
+-
++	EMIT1(0x55);             /* push rbp */
++	EMIT3(0x48, 0x89, 0xE5); /* mov rbp, rsp */
++	/* sub rsp, rounded_stack_depth */
++	EMIT3_off32(0x48, 0x81, 0xEC, round_up(stack_depth, 8));
++	EMIT1(0x53);             /* push rbx */
++	EMIT2(0x41, 0x55);       /* push r13 */
++	EMIT2(0x41, 0x56);       /* push r14 */
++	EMIT2(0x41, 0x57);       /* push r15 */
+ 	if (!ebpf_from_cbpf) {
+-		/*
+-		 * Clear the tail call counter (tail_call_cnt): for eBPF tail
+-		 * calls we need to reset the counter to 0. It's done in two
+-		 * instructions, resetting RAX register to 0, and moving it
+-		 * to the counter location.
+-		 */
+-
+-		/* xor eax, eax */
+-		EMIT2(0x31, 0xc0);
+-		/* mov qword ptr [rbp+32], rax */
+-		EMIT4(0x48, 0x89, 0x45, 32);
+-
++		/* zero init tail_call_cnt */
++		EMIT2(0x6a, 0x00);
+ 		BUILD_BUG_ON(cnt != PROLOGUE_SIZE);
  	}
- 	spin_unlock(&sc->release_lock);
-+
-+	write_seqlock(&sc->waitlock);
-+	while (!list_empty(&sc->piowait)) {
-+		struct iowait *wait;
-+		struct rvt_qp *qp;
-+		struct hfi1_qp_priv *priv;
-+
-+		wait = list_first_entry(&sc->piowait, struct iowait, list);
-+		qp = iowait_to_qp(wait);
-+		priv = qp->priv;
-+		list_del_init(&priv->s_iowait.list);
-+		priv->s_iowait.lock = NULL;
-+		hfi1_qp_wakeup(qp, RVT_S_WAIT_PIO | HFI1_S_WAIT_PIO_DRAIN);
-+	}
-+	write_sequnlock(&sc->waitlock);
-+
- 	spin_unlock_irq(&sc->alloc_lock);
+-
+ 	*pprog = prog;
  }
  
+@@ -285,13 +258,13 @@ static void emit_bpf_tail_call(u8 **pprog)
+ 	 * if (tail_call_cnt > MAX_TAIL_CALL_CNT)
+ 	 *	goto out;
+ 	 */
+-	EMIT2_off32(0x8B, 0x85, 36);              /* mov eax, dword ptr [rbp + 36] */
++	EMIT2_off32(0x8B, 0x85, -36 - MAX_BPF_STACK); /* mov eax, dword ptr [rbp - 548] */
+ 	EMIT3(0x83, 0xF8, MAX_TAIL_CALL_CNT);     /* cmp eax, MAX_TAIL_CALL_CNT */
+ #define OFFSET2 (30 + RETPOLINE_RAX_BPF_JIT_SIZE)
+ 	EMIT2(X86_JA, OFFSET2);                   /* ja out */
+ 	label2 = cnt;
+ 	EMIT3(0x83, 0xC0, 0x01);                  /* add eax, 1 */
+-	EMIT2_off32(0x89, 0x85, 36);              /* mov dword ptr [rbp + 36], eax */
++	EMIT2_off32(0x89, 0x85, -36 - MAX_BPF_STACK); /* mov dword ptr [rbp -548], eax */
+ 
+ 	/* prog = array->ptrs[index]; */
+ 	EMIT4_off32(0x48, 0x8B, 0x84, 0xD6,       /* mov rax, [rsi + rdx * 8 + offsetof(...)] */
+@@ -1040,19 +1013,14 @@ xadd:			if (is_imm8(insn->off))
+ 			seen_exit = true;
+ 			/* Update cleanup_addr */
+ 			ctx->cleanup_addr = proglen;
+-			/* mov rbx, qword ptr [rbp+0] */
+-			EMIT4(0x48, 0x8B, 0x5D, 0);
+-			/* mov r13, qword ptr [rbp+8] */
+-			EMIT4(0x4C, 0x8B, 0x6D, 8);
+-			/* mov r14, qword ptr [rbp+16] */
+-			EMIT4(0x4C, 0x8B, 0x75, 16);
+-			/* mov r15, qword ptr [rbp+24] */
+-			EMIT4(0x4C, 0x8B, 0x7D, 24);
+-
+-			/* add rbp, AUX_STACK_SPACE */
+-			EMIT4(0x48, 0x83, 0xC5, AUX_STACK_SPACE);
+-			EMIT1(0xC9); /* leave */
+-			EMIT1(0xC3); /* ret */
++			if (!bpf_prog_was_classic(bpf_prog))
++				EMIT1(0x5B); /* get rid of tail_call_cnt */
++			EMIT2(0x41, 0x5F);   /* pop r15 */
++			EMIT2(0x41, 0x5E);   /* pop r14 */
++			EMIT2(0x41, 0x5D);   /* pop r13 */
++			EMIT1(0x5B);         /* pop rbx */
++			EMIT1(0xC9);         /* leave */
++			EMIT1(0xC3);         /* ret */
+ 			break;
+ 
+ 		default:
 -- 
 2.20.1
 
