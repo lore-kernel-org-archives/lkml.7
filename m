@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EE4C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE271C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D0E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B924120828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfF0IBq (ORCPT
+        id S1726576AbfF0IBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:01:46 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:5635 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726544AbfF0IBl (ORCPT
+        Thu, 27 Jun 2019 04:01:39 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:13803 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726455AbfF0IBh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:01:41 -0400
-X-UUID: af4a2c27b60c4198b5025a5939c6f097-20190627
-X-UUID: af4a2c27b60c4198b5025a5939c6f097-20190627
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Thu, 27 Jun 2019 04:01:37 -0400
+X-UUID: e832c994c4974a4cabdf1e440b89444e-20190627
+X-UUID: e832c994c4974a4cabdf1e440b89444e-20190627
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1262622998; Thu, 27 Jun 2019 16:01:27 +0800
+        with ESMTP id 393272168; Thu, 27 Jun 2019 16:01:22 +0800
 Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
  (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 27 Jun
- 2019 16:01:25 +0800
+ 2019 16:01:20 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Thu, 27 Jun 2019 16:01:23 +0800
+ 15.0.1395.4 via Frontend Transport; Thu, 27 Jun 2019 16:01:19 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         "Mark Rutland" <mark.rutland@arm.com>,
@@ -58,9 +58,9 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v5 4/7] drm/mediatek: add frame size control
-Date:   Thu, 27 Jun 2019 16:01:12 +0800
-Message-ID: <20190627080116.40264-5-jitao.shi@mediatek.com>
+Subject: [v5 1/7] drm/mediatek: move mipi_dsi_host_register to probe
+Date:   Thu, 27 Jun 2019 16:01:09 +0800
+Message-ID: <20190627080116.40264-2-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190627080116.40264-1-jitao.shi@mediatek.com>
 References: <20190627080116.40264-1-jitao.shi@mediatek.com>
@@ -68,62 +68,199 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24720.003
-X-TM-AS-Result: No-7.797800-8.000000-10
-X-TMASE-MatchedRID: 4fIxLVRlVoz935chln091FZ85UImhNta+eBf9ovw8I2RoQLwUmtov7BZ
-        szSz1qei2XHJ0L4jOITTDbyTDLiYnZxBJWVIsdLqA9lly13c/gE5B3KUNlRt51VkJxysad/IJTn
-        jWSezJPZBXFYsxXKTlvssoJBke0RlqZWpk+GKRVNIUlKkz3wfmX0tCKdnhB589yM15V5aWpj6C0
-        ePs7A07RQEL0GGu6SDsXWDONKz/s5QaPnzkRZpYjy4hCRTklRkE6fTC+T7uQ4=
+X-TM-AS-Result: No-7.110300-8.000000-10
+X-TMASE-MatchedRID: usamOvt1jXSiXdgrlKZp5/3HILfxLV/93V4UShoTXad0FoS1aixTNT7s
+        j+R9FMn6NBAJbldcKgW8sMFSGTsyAdpsFVyqUNwXQ4srjeRbxTZLXPA26IG0hN9RlPzeVuQQhqJ
+        xi9IzezJKBVbsqgRiwDEua3P66jtsdpvo/nKASz4XK/dRaOWlvaDzzrtsjCZTTFmQ5D//V2mPKV
+        zaGaT8FsmfTf3tAqfJu1ODjDi7RA9wWpD0snGz80LhYg/sa1gs3YSaHlnZL83mTInKzpSFSUjYb
+        j4tH6TbMOHyrjcZo6KFhnNm59A/TOG1W8jesiDJfzgVmnL/olV9LQinZ4QefPcjNeVeWlqY+gtH
+        j7OwNO0UQCQtpNwWelQr3pKYQmVmvbaUI5qOTyRMrQLzfNR1jflwnnsh3VrI
 X-TM-AS-User-Approved-Sender: No
 X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--7.797800-8.000000
+X-TMASE-Result: 10--7.110300-8.000000
 X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24720.003
-X-TM-SNTS-SMTP: C8B5EEBD7AA18A239CFB080C5B9AB92E1996F13A41DB17C5AA1328425E81A0FC2000:8
+X-TM-SNTS-SMTP: 09CA99ED57FD0182758A7D3C7F0FFF515B248FC850EDADDFAB1B90369B3BD8722000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our new DSI chip has frame size control.
-So add the driver data to control for different chips.
+DSI panel driver need attach function which is inculde in
+mipi_dsi_host_ops.
+
+If mipi_dsi_host_register is not in probe, dsi panel will
+probe more delay.
+
+So move the mipi_dsi_host_register to probe from bind.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 53 +++++++++++++++++-------------
+ 1 file changed, 31 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 6b6550926db6..45e331055842 100644
+index b00eb2d2e086..595b3b047c7b 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -78,6 +78,7 @@
- #define DSI_VBP_NL		0x24
- #define DSI_VFP_NL		0x28
- #define DSI_VACT_NL		0x2C
-+#define DSI_SIZE_CON		0x38
- #define DSI_HSA_WC		0x50
- #define DSI_HBP_WC		0x54
- #define DSI_HFP_WC		0x58
-@@ -162,6 +163,7 @@ struct phy;
- struct mtk_dsi_driver_data {
- 	const u32 reg_cmdq_off;
- 	bool has_shadow_ctl;
-+	bool has_size_ctl;
- };
+@@ -528,7 +528,7 @@ static s32 mtk_dsi_switch_to_cmd_mode(struct mtk_dsi *dsi, u8 irq_flag, u32 t)
  
- struct mtk_dsi {
-@@ -430,6 +432,10 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
- 	writel(vm->vfront_porch, dsi->regs + DSI_VFP_NL);
- 	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
+ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+ {
+-	struct device *dev = dsi->dev;
++	struct device *dev = dsi->->host.dev;
+ 	int ret;
+ 	u64 pixel_clock, total_bits;
+ 	u32 htotal, htotal_bits, bit_per_pixel, overhead_cycles, overhead_bits;
+@@ -1045,12 +1045,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+ 		return ret;
+ 	}
  
-+	if (dsi->driver_data->has_size_ctl)
-+		writel(vm->vactive << 16 | vm->hactive,
-+		       dsi->regs + DSI_SIZE_CON);
+-	ret = mipi_dsi_host_register(&dsi->host);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to register DSI host: %d\n", ret);
+-		goto err_ddp_comp_unregister;
+-	}
+-
+ 	ret = mtk_dsi_create_conn_enc(drm, dsi);
+ 	if (ret) {
+ 		DRM_ERROR("Encoder create failed with %d\n", ret);
+@@ -1060,8 +1054,6 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
+ 
+ err_unregister:
+-	mipi_dsi_host_unregister(&dsi->host);
+-err_ddp_comp_unregister:
+ 	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+ 	return ret;
+ }
+@@ -1073,7 +1065,6 @@ static void mtk_dsi_unbind(struct device *dev, struct device *master,
+ 	struct mtk_dsi *dsi = dev_get_drvdata(dev);
+ 
+ 	mtk_dsi_destroy_conn_enc(dsi);
+-	mipi_dsi_host_unregister(&dsi->host);
+ 	mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+ }
+ 
+@@ -1097,31 +1088,36 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+ 
+ 	dsi->host.ops = &mtk_dsi_ops;
+ 	dsi->host.dev = dev;
++	ret = mipi_dsi_host_register(&dsi->host);
++	if (ret < 0) {
++		dev_err(dev, "failed to register DSI host: %d\n", ret);
++		return ret;
++	}
+ 
+ 	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0,
+ 					  &dsi->panel, &dsi->bridge);
+ 	if (ret)
+-		return ret;
++		goto err_unregister_host;
+ 
+ 	dsi->engine_clk = devm_clk_get(dev, "engine");
+ 	if (IS_ERR(dsi->engine_clk)) {
+ 		ret = PTR_ERR(dsi->engine_clk);
+ 		dev_err(dev, "Failed to get engine clock: %d\n", ret);
+-		return ret;
++		goto err_unregister_host;
+ 	}
+ 
+ 	dsi->digital_clk = devm_clk_get(dev, "digital");
+ 	if (IS_ERR(dsi->digital_clk)) {
+ 		ret = PTR_ERR(dsi->digital_clk);
+ 		dev_err(dev, "Failed to get digital clock: %d\n", ret);
+-		return ret;
++		goto err_unregister_host;
+ 	}
+ 
+ 	dsi->hs_clk = devm_clk_get(dev, "hs");
+ 	if (IS_ERR(dsi->hs_clk)) {
+ 		ret = PTR_ERR(dsi->hs_clk);
+ 		dev_err(dev, "Failed to get hs clock: %d\n", ret);
+-		return ret;
++		goto err_unregister_host;
+ 	}
+ 
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -1129,33 +1125,35 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dsi->regs)) {
+ 		ret = PTR_ERR(dsi->regs);
+ 		dev_err(dev, "Failed to ioremap memory: %d\n", ret);
+-		return ret;
++		goto err_unregister_host;
+ 	}
+ 
+ 	dsi->phy = devm_phy_get(dev, "dphy");
+ 	if (IS_ERR(dsi->phy)) {
+ 		ret = PTR_ERR(dsi->phy);
+ 		dev_err(dev, "Failed to get MIPI-DPHY: %d\n", ret);
+-		return ret;
++		goto err_unregister_host;
+ 	}
+ 
+ 	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DSI);
+ 	if (comp_id < 0) {
+ 		dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
+-		return comp_id;
++		ret = comp_id;
++		goto err_unregister_host;
+ 	}
+ 
+ 	ret = mtk_ddp_comp_init(dev, dev->of_node, &dsi->ddp_comp, comp_id,
+ 				&mtk_dsi_funcs);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to initialize component: %d\n", ret);
+-		return ret;
++		goto err_unregister_host;
+ 	}
+ 
+ 	irq_num = platform_get_irq(pdev, 0);
+ 	if (irq_num < 0) {
+-		dev_err(&pdev->dev, "failed to request dsi irq resource\n");
+-		return -EPROBE_DEFER;
++		dev_err(&pdev->dev, "failed to get dsi irq_num: %d\n", irq_num);
++		ret = irq_num;
++		goto err_unregister_host;
+ 	}
+ 
+ 	irq_set_status_flags(irq_num, IRQ_TYPE_LEVEL_LOW);
+@@ -1163,14 +1161,24 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+ 			       IRQF_TRIGGER_LOW, dev_name(&pdev->dev), dsi);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to request mediatek dsi irq\n");
+-		return -EPROBE_DEFER;
++		goto err_unregister_host;
+ 	}
+ 
+ 	init_waitqueue_head(&dsi->irq_wait_queue);
+ 
+ 	platform_set_drvdata(pdev, dsi);
+ 
+-	return component_add(&pdev->dev, &mtk_dsi_component_ops);
++	ret = component_add(&pdev->dev, &mtk_dsi_component_ops);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to add component: %d\n", ret);
++		goto err_unregister_host;
++	}
 +
- 	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
++	return 0;
++
++err_unregister_host:
++	mipi_dsi_host_unregister(&dsi->host);
++	return ret;
+ }
  
- 	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+ static int mtk_dsi_remove(struct platform_device *pdev)
+@@ -1179,6 +1187,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+ 
+ 	mtk_output_dsi_disable(dsi);
+ 	component_del(&pdev->dev, &mtk_dsi_component_ops);
++	mipi_dsi_host_unregister(&dsi->host);
+ 
+ 	return 0;
+ }
 -- 
 2.21.0
 
