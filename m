@@ -2,115 +2,211 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB783C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D545C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33442146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:42:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LHdsJdpo"
+	by mail.kernel.org (Postfix) with ESMTP id 2FBA0208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfF0QmQ (ORCPT
+        id S1726561AbfF0Qmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:42:16 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:26335 "EHLO
-        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726470AbfF0QmN (ORCPT
+        Thu, 27 Jun 2019 12:42:50 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47562 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfF0Qmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:42:13 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x5RGdDPu001384;
-        Fri, 28 Jun 2019 01:39:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x5RGdDPu001384
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561653555;
-        bh=gmui0wDo25dBFORH/YJIka6km4EHEw6EORwEfx2o9yQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LHdsJdpohHEYXa83KNz44gcdbSGWwuH8/i52iXtlPRu1GaI0q1AIx+uhiZPjHD+z5
-         DuAejfYBz1ERCd2/UEO+AX31hXfRB+q54megCy3CibiEP6HvQxVWjnWOs45HCaF/1v
-         svegg5xjoWH1Nyji+k19J2kFhp8cBCa3WLF4tFizjrni8vK+F5L1uhpXRV3iLegiR5
-         10g+kzx64nxuVStvUP5W0JRs+1HhG7fKuerU2btKzoJvU2KSNdGHewmxZAQ7sXFeN6
-         9Ka0JHlHITKQRFO42QeQ+Z1F0cFcDwb6auRWANJTCWTkPeJI9xac1Jcl7bd/3v1Z3B
-         JmLIbr58SXI/Q==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Jani Nikula <jani.nikula@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        linux-riscv@lists.infradead.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Colin Cross <ccross@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v3 0/4] Compile-test UAPI and kernel headers
-Date:   Fri, 28 Jun 2019 01:38:58 +0900
-Message-Id: <20190627163903.28398-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Jun 2019 12:42:50 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 12000286389
+Subject: Re: [PATCH v2] platform/chrome: Expose resume result via debugfs
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+References: <20190617215234.260982-1-evgreen@chromium.org>
+ <20190625130515.GJ21119@dell>
+ <e9e6e090-7c9b-ff5c-7389-702f9deb6712@collabora.com>
+ <CAE=gft5TCcWGz_i3AaqexNWx6XvwcxNqTcXqrGn_4bFaMQFtjA@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <1be4bbbe-783c-ea91-8283-624ee66be00c@collabora.com>
+Date:   Thu, 27 Jun 2019 18:42:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <CAE=gft5TCcWGz_i3AaqexNWx6XvwcxNqTcXqrGn_4bFaMQFtjA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1/4: Compile-test exported headers (reworked in v2)
+Hi Evan,
 
-2/4: fix a flaw I noticed when I was working on this series.
-     Avoid generating intermediate wrappers.
+On 27/6/19 18:07, Evan Green wrote:
+> On Wed, Jun 26, 2019 at 1:55 PM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+>>
+>> Hi Evan,
+>>
+>> Two few comments and I think I'm fine with it.
+>>
+>> On 25/6/19 15:05, Lee Jones wrote:
+>>> On Mon, 17 Jun 2019, Evan Green wrote:
+>>>
+>>>> For ECs that support it, the EC returns the number of slp_s0
+>>>> transitions and whether or not there was a timeout in the resume
+>>>> response. Expose the last resume result to usermode via debugfs so
+>>>> that usermode can detect and report S0ix timeouts.
+>>>>
+>>>> Signed-off-by: Evan Green <evgreen@chromium.org>
+>>>
+>>> This still needs a platform/chrome Ack.
+>>>
+>>>> ---
+>>>>
+>>>> Changes in v2:
+>>>>  - Moved from sysfs to debugfs (Enric)
+>>>>  - Added documentation (Enric)
+>>>>
+>>>>
+>>>> ---
+>>>>  Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
+>>>>  drivers/mfd/cros_ec.c                     |  6 +++++-
+>>>>  drivers/platform/chrome/cros_ec_debugfs.c |  7 +++++++
+>>>>  include/linux/mfd/cros_ec.h               |  1 +
+>>>>  4 files changed, 35 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+>>>> index 573a82d23c89..008b31422079 100644
+>>>> --- a/Documentation/ABI/testing/debugfs-cros-ec
+>>>> +++ b/Documentation/ABI/testing/debugfs-cros-ec
+>>>> @@ -32,3 +32,25 @@ Description:
+>>>>              is used for synchronizing the AP host time with the EC
+>>>>              log. An error is returned if the command is not supported
+>>>>              by the EC or there is a communication problem.
+>>>> +
+>>>> +What:               /sys/kernel/debug/cros_ec/last_resume_result
+>>
+>> Thinking about it, as other the other interfaces, I'd do
+>>
+>> s/cros_ec/<cros-ec-device>/
+>>
+>> I know that for now only cros_ec supports that, but we don't know what will
+>> happen in the future, specially now that the number of cros devices is incrementing.
+> 
+> See my comment below, I suppose the fate of these two comments are
+> tied together.
+> 
+>>
+>>>> +Date:               June 2019
+>>>> +KernelVersion:      5.3
+>>>> +Description:
+>>>> +            Some ECs have a feature where they will track transitions to
+>>>> +            the (Intel) processor's SLP_S0 line, in order to detect cases
+>>>> +            where a system failed to go into S0ix. When the system resumes,
+>>>> +            an EC with this feature will return a summary of SLP_S0
+>>>> +            transitions that occurred. The last_resume_result file returns
+>>>> +            the most recent response from the AP's resume message to the EC.
+>>>> +
+>>>> +            The bottom 31 bits contain a count of the number of SLP_S0
+>>>> +            transitions that occurred since the suspend message was
+>>>> +            received. Bit 31 is set if the EC attempted to wake the
+>>>> +            system due to a timeout when watching for SLP_S0 transitions.
+>>>> +            Callers can use this to detect a wake from the EC due to
+>>>> +            S0ix timeouts. The result will be zero if no suspend
+>>>> +            transitions have been attempted, or the EC does not support
+>>>> +            this feature.
+>>>> +
+>>>> +            Output will be in the format: "0x%08x\n".
+>>>> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+>>>> index 5d5c41ac3845..2a9ac5213893 100644
+>>>> --- a/drivers/mfd/cros_ec.c
+>>>> +++ b/drivers/mfd/cros_ec.c
+>>>> @@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+>>>>
+>>>>      /* For now, report failure to transition to S0ix with a warning. */
+>>>>      if (ret >= 0 && ec_dev->host_sleep_v1 &&
+>>>> -        (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
+>>>> +        (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
+>>>> +            ec_dev->last_resume_result =
+>>>> +                    buf.u.resp1.resume_response.sleep_transitions;
+>>>> +
+>>>>              WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+>>>>                        EC_HOST_RESUME_SLEEP_TIMEOUT,
+>>>>                        "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
+>>>>                        buf.u.resp1.resume_response.sleep_transitions &
+>>>>                        EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
+>>>> +    }
+>>>>
+>>>>      return ret;
+>>>>  }
+>>>> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+>>>> index cd3fb9c22a44..663bebf699bf 100644
+>>>> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+>>>> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+>>>> @@ -447,6 +447,13 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+>>>>      debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+>>>>                          &cros_ec_uptime_fops);
+>>>>
+>>>> +    if (!strcmp(ec->class_dev.kobj.name, CROS_EC_DEV_NAME)) {
+>>
+>> For debugfs I don't care having the file exposed even is not supported, anyway
+>> there are some CROS_EC_DEV_NAME that won't support it, so just make this simple
+>> and create the file always.
+> 
+> Aw, really? This file is very specific to system suspend/resume. My
+> original patch had it everywhere, but I was finding it very ugly that
+> this was showing up on things like the fingerprint device. I can
+> change it if you think it's better to have it everywhere, but it also
+> seems like an easy change to make in the future if this file is for
+> some reason needed on other EC types.
+> 
 
-3/4: maybe useful for 4/4 and in some other places.
-     Add header-test-pattern-y syntax.
+I'd think different if it was a sysfs property but it's a debugfs.
 
-4/4: Compile-test kernel-space headers in include/.
-     v2: compile as many headers as possible.
-     v3: exclude more headers causing build errors
+Right now we have:
 
+#define CROS_EC_DEV_NAME        "cros_ec"
+#define CROS_EC_DEV_FP_NAME     "cros_fp"
+#define CROS_EC_DEV_ISH_NAME    "cros_ish"
+#define CROS_EC_DEV_PD_NAME     "cros_pd"
+#define CROS_EC_DEV_SCP_NAME    "cros_scp"
+#define CROS_EC_DEV_TP_NAME     "cros_tp"
 
-Masahiro Yamada (4):
-  kbuild: compile-test UAPI headers to ensure they are self-contained
-  kbuild: do not create wrappers for header-test-y
-  kbuild: support header-test-pattern-y
-  kbuild: compile-test kernel headers to ensure they are self-contained
+Is really the named cros_ec the only that has this feature? What about cros_scp
+(is not supposed to run the same base code as cros_ec)? And cros_ish ?
 
- .gitignore                         |    1 -
- Documentation/dontdiff             |    1 -
- Documentation/kbuild/makefiles.txt |   13 +-
- Makefile                           |    4 +-
- include/Kbuild                     | 1250 ++++++++++++++++++++++++++++
- init/Kconfig                       |   22 +
- scripts/Makefile.build             |   10 +-
- scripts/Makefile.lib               |   13 +-
- scripts/cc-system-headers.sh       |    8 +
- usr/.gitignore                     |    1 -
- usr/Makefile                       |    2 +
- usr/include/.gitignore             |    3 +
- usr/include/Makefile               |  134 +++
- 13 files changed, 1449 insertions(+), 13 deletions(-)
- create mode 100644 include/Kbuild
- create mode 100755 scripts/cc-system-headers.sh
- create mode 100644 usr/include/.gitignore
- create mode 100644 usr/include/Makefile
+And all the named cros_ec devices have this feature? Maybe is supported by
+Nocturne but not Veyron? Wouldn't be exposed also on those cros_ec that doesn't
+support it?
 
--- 
-2.17.1
+And don't have the answer to all these questions, hence my concerns.
 
+As per your documentation
+
+ +                ...           The result will be zero if no suspend
+ +            transitions have been attempted, or the EC does not support
+ +            this feature.
+
+I can accept if _all_ the CROS_EC_DEV_NAMEs and _only_ the CROS_EC_DEV_NAME
+supports it, is that the case?
+
+But if you are anyway exposing this on CROS_EC_DEV_NAMEs that doesn't support it
+why not just expose to all and skip a future bunch of code to filter, it is
+clear what a 0 means and at the end it's just a debugfs file.
+
+~ Enric
+
+> -Evan
+> 
