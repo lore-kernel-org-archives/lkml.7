@@ -4,90 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B07C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3647C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5903F2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A223D2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfF0Poe (ORCPT
+        id S1726514AbfF0PtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:44:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51960 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbfF0Poe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:44:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2C23F5F79B;
-        Thu, 27 Jun 2019 15:44:34 +0000 (UTC)
-Received: from ovpn-112-33.rdu2.redhat.com (ovpn-112-33.rdu2.redhat.com [10.10.112.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4021660BE0;
-        Thu, 27 Jun 2019 15:44:32 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 15:44:31 +0000 (UTC)
-From:   Sage Weil <sweil@redhat.com>
-X-X-Sender: sage@piezo.novalocal
-To:     Jeff Layton <jlayton@kernel.org>
-cc:     Luis Henriques <lhenriques@suse.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] ceph: initialize superblock s_time_gran to 1
-In-Reply-To: <0459c2a46200194c14b7474f55071b12fbc3d594.camel@kernel.org>
-Message-ID: <alpine.DEB.2.11.1906271543440.17148@piezo.novalocal>
-References: <20190627135122.12817-1-lhenriques@suse.com> <0459c2a46200194c14b7474f55071b12fbc3d594.camel@kernel.org>
-User-Agent: Alpine 2.11 (DEB 23 2013-08-11)
+        Thu, 27 Jun 2019 11:49:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47070 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfF0PtC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:49:02 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 9D6C2285135
+Subject: Re: [PATCH 2/2] iio: common: cros_ec_sensors: set default frequencies
+To:     Fabien Lahoudere <fabien.lahoudere@collabora.com>
+Cc:     kernel@collabora.com, Nick Vaccaro <nvaccaro@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1561642224.git.fabien.lahoudere@collabora.com>
+ <7d3972d1200065fe6e98a310e66f53a7ed12e281.1561642224.git.fabien.lahoudere@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <6ca7ee49-51f9-a65f-5f71-0eac04ee9434@collabora.com>
+Date:   Thu, 27 Jun 2019 17:48:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 27 Jun 2019 15:44:34 +0000 (UTC)
+In-Reply-To: <7d3972d1200065fe6e98a310e66f53a7ed12e281.1561642224.git.fabien.lahoudere@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Jeff Layton wrote:
-> On Thu, 2019-06-27 at 14:51 +0100, Luis Henriques wrote:
-> > Having granularity set to 1us results in having inode timestamps with a
-> > accurancy different from the fuse client (i.e. atime, ctime and mtime will
-> > always end with '000').  This patch normalizes this behaviour and sets the
-> > granularity to 1.
-> > 
-> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > ---
-> >  fs/ceph/super.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > Hi!
-> > 
-> > As far as I could see there are no other side-effects of changing
-> > s_time_gran but I'm really not sure why it was initially set to 1000 in
-> > the first place so I may be missing something.
-> > 
-> > diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-> > index d57fa60dcd43..35dd75bc9cd0 100644
-> > --- a/fs/ceph/super.c
-> > +++ b/fs/ceph/super.c
-> > @@ -980,7 +980,7 @@ static int ceph_set_super(struct super_block *s, void *data)
-> >  	s->s_d_op = &ceph_dentry_ops;
-> >  	s->s_export_op = &ceph_export_ops;
-> >  
-> > -	s->s_time_gran = 1000;  /* 1000 ns == 1 us */
-> > +	s->s_time_gran = 1;
-> >  
-> >  	ret = set_anon_super(s, NULL);  /* what is that second arg for? */
-> >  	if (ret != 0)
-> 
-> 
-> Looks like it was set that way since the client code was originally
-> merged. Was this an earlier limitation of ceph that is no longer
-> applicable?
-> 
-> In any case, I see no need at all to keep this at 1000, so:
+Hi Fabien,
 
-As long as the encoded on-write time value is at ns resolution, I 
-agree!  No recollection of why I did this :(
+On 27/6/19 16:04, Fabien Lahoudere wrote:
+> Version 3 of the EC protocol provides min and max frequencies for EC sensors.
+> Default frequencies are provided for earlier protocol.
+> 
 
-Reviewed-by: Sage Weil <sage@redhat.com>
+This patch should really go together with a respin of your previous patchset to
+'Expose cros_ec_sensors frequency range via iio sysfs' [1]
+
+[1] https://www.spinics.net/lists/linux-iio/msg44963.html
+
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.com>
+> Signed-off-by: Nick Vaccaro <nvaccaro@chromium.org>
+> ---
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 44 +++++++++++++++++++
+>  .../linux/iio/common/cros_ec_sensors_core.h   |  3 ++
+>  2 files changed, 47 insertions(+)
+> 
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 2e0f97448e64..72f56d54cccd 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -50,6 +50,37 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+>  	return ret;
+>  }
+>  
+> +static void get_default_min_max_freq(enum motionsensor_type type,
+> +				     u32 *min_freq,
+> +				     u32 *max_freq)
+> +{
+> +	switch (type) {
+> +	case MOTIONSENSE_TYPE_ACCEL:
+> +	case MOTIONSENSE_TYPE_GYRO:
+> +		*min_freq = 12500;
+> +		*max_freq = 100000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_MAG:
+> +		*min_freq = 5000;
+> +		*max_freq = 25000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_PROX:
+> +	case MOTIONSENSE_TYPE_LIGHT:
+> +		*min_freq = 100;
+> +		*max_freq = 50000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_BARO:
+> +		*min_freq = 250;
+> +		*max_freq = 20000;
+> +		break;
+> +	case MOTIONSENSE_TYPE_ACTIVITY:
+> +	default:
+> +		*min_freq = 0;
+> +		*max_freq = 0;
+> +		break;
+> +	}
+> +}
+> +
+>  int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  			      struct iio_dev *indio_dev,
+>  			      bool physical_device)
+> @@ -100,6 +131,19 @@ int cros_ec_sensors_core_init(struct platform_device *pdev,
+>  		}
+>  		state->type = state->resp->info.type;
+>  		state->loc = state->resp->info.location;
+> +
+> +		/* Value to stop the device */
+> +		state->frequencies[0] = 0;
+> +		if (state->msg->version < 3) {
+> +			get_default_min_max_freq(state->resp->info.type,
+> +						 &state->frequencies[1],
+> +						 &state->frequencies[2]);
+> +		} else {
+> +			state->frequencies[1] =
+> +			    state->resp->info_3.min_frequency;
+> +			state->frequencies[2] =
+> +			    state->resp->info_3.max_frequency;
+> +		}
+>  	}
+>  
+>  	return 0;
+> diff --git a/include/linux/iio/common/cros_ec_sensors_core.h b/include/linux/iio/common/cros_ec_sensors_core.h
+> index 0c636b9fe8d7..94c87da22c04 100644
+> --- a/include/linux/iio/common/cros_ec_sensors_core.h
+> +++ b/include/linux/iio/common/cros_ec_sensors_core.h
+> @@ -70,6 +70,9 @@ struct cros_ec_sensors_core_state {
+>  				    unsigned long scan_mask, s16 *data);
+>  
+>  	int curr_sampl_freq;
+> +
+> +	/* Disable, Min and Max Sampling Frequency in mHz */
+> +	int frequencies[3];
+>  };
+>  
+>  /**
+> 
