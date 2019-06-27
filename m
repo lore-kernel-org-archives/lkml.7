@@ -2,194 +2,120 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46C2C48BDA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23A2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91A25217D9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A188D217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="GPMwtTE+"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="x56ew+Nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfF0Btj (ORCPT
+        id S1727254AbfF0Btr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:49:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36980 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfF0Bth (ORCPT
+        Wed, 26 Jun 2019 21:49:47 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:27093 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfF0Btq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:49:37 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bh12so350834plb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 18:49:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=WM6uPUMLAmx7AP//rA8fowctOYQ/AmGg6H1et0/fxeQ=;
-        b=GPMwtTE+s4FHnzPCcPaRaca9fFeyCQYdJ+4Pqg5rcV3ZwX+TwMkiFLiXjV7VmYZu0A
-         1nqQJfF8eMw4jnIntXT1hv8EkQ40QlF4yk/dLswm4q4y2Feza716oSK+ZuJdrAXPJBj2
-         6ox2mI9ni7ucak56kwY5tWcZ650K94V5UXoNE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=WM6uPUMLAmx7AP//rA8fowctOYQ/AmGg6H1et0/fxeQ=;
-        b=J9dE+fFz5z2eU7InKtnliaEJuypgOn/GAoHLfhQ76CPvbX5/0EZlOv8J18br/WPxa/
-         zApdL91TbJ/96hL3jpEtc3ZVwRLR6Y4BEmPgPlFqpqV6+Qvdy/UptDcYrMvn5RBrUeLR
-         Su+j9Gc62mCAR7IXmy6XnklMgy5rttdvs1bbgZWJWMA1y/6M1cqBW2YyRd9G0k3IzDWJ
-         Ivf2dObrsy/UYWVMvRkpz1B0wfSKK0Qb/f5EWWppEpfDuvLt9BQHh54okttfoNny6z0W
-         mGU7pA0vH/ei+fYrVn31xeesHd2dHjtA7qKId90FEWxSjxH/nRABDjgaR7HQpyQMY6vA
-         GYbA==
-X-Gm-Message-State: APjAAAUx4ifwcwepPnMSaHvNOjUlDoRyiwVn57G+TV1eM/ArrYZl+z/I
-        vTekLSnywknPALU9NCXwHalCUQ==
-X-Google-Smtp-Source: APXvYqz+uoebBzItdHu2Us8YV0WufO2pkkQ1yhMaFQpW1MFBuEml17h0fcZryss2oo99cskp93paUw==
-X-Received: by 2002:a17:902:e582:: with SMTP id cl2mr1492748plb.60.1561600176417;
-        Wed, 26 Jun 2019 18:49:36 -0700 (PDT)
-Received: from localhost (ppp167-251-205.static.internode.on.net. [59.167.251.205])
-        by smtp.gmail.com with ESMTPSA id o16sm395909pgi.36.2019.06.26.18.49.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 18:49:35 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Matthew Garrett <matthewgarrett@google.com>, jmorris@namei.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        David Howells <dhowells@redhat.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: [PATCH V34 19/29] Lock down module params that specify hardware parameters (eg. ioport)
-In-Reply-To: <20190622000358.19895-20-matthewgarrett@google.com>
-References: <20190622000358.19895-1-matthewgarrett@google.com> <20190622000358.19895-20-matthewgarrett@google.com>
-Date:   Thu, 27 Jun 2019 11:49:30 +1000
-Message-ID: <87ef3f3ihh.fsf@dja-thinkpad.axtens.net>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 26 Jun 2019 21:49:46 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x5R1kN0v032702;
+        Thu, 27 Jun 2019 10:46:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x5R1kN0v032702
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561599984;
+        bh=t/tKte8+f+WnIerV46Kqk5V4Cu5goyQEz8X3TPyTH+k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=x56ew+Nf/mRL+Y9auCSqcIA7wXTn2ja3HVYzHe0zb/E43gJ8Lggs/PguNK3OCZjgp
+         uEyvbCO2H1dT/DpTwUE6DbmQRbC6vOSL5OITz+s0Bb0odvn6gylTlEcXpF8asnjeml
+         88aMR4WR5z+A0KqVY3or1TMOqNYfDZk2Ex4sSzWca/5b84o36B0eGUd3VL7kWJzm2Z
+         ht4QKpX3nwgoUQtDo9jLHs9EQ7Dgcaxi1GdZoFz3rV7s0Tp5VvQMZ+OUmUdUW+ge61
+         tE78teOBqyznZ79jc3oTqjv6+zpNpU51id+uwMW/3dc8GBkGo5Jz2XIAR4PoONDPEu
+         JgLgECL33cJbg==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Tony Luck <tony.luck@intel.com>, linux-doc@vger.kernel.org,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        linux-riscv@lists.infradead.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        xdp-newbies@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Colin Cross <ccross@android.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kees Cook <keescook@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH v2 0/4] Compile-test UAPI and kernel headers
+Date:   Thu, 27 Jun 2019 10:46:13 +0900
+Message-Id: <20190627014617.600-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Garrett <matthewgarrett@google.com> writes:
 
-> From: David Howells <dhowells@redhat.com>
->
-> Provided an annotation for module parameters that specify hardware
-> parameters (such as io ports, iomem addresses, irqs, dma channels, fixed
-> dma buffers and other types).
->
-> Suggested-by: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Matthew Garrett <mjg59@google.com>
-> ---
->  include/linux/security.h     |  1 +
->  kernel/params.c              | 27 ++++++++++++++++++++++-----
->  security/lockdown/lockdown.c |  1 +
->  3 files changed, 24 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 61e3f4a62d16..88064d7f6827 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -92,6 +92,7 @@ enum lockdown_reason {
->  	LOCKDOWN_ACPI_TABLES,
->  	LOCKDOWN_PCMCIA_CIS,
->  	LOCKDOWN_TIOCSSERIAL,
-> +	LOCKDOWN_MODULE_PARAMETERS,
->  	LOCKDOWN_INTEGRITY_MAX,
->  	LOCKDOWN_CONFIDENTIALITY_MAX,
->  };
-> diff --git a/kernel/params.c b/kernel/params.c
-> index ce89f757e6da..f94fe79e331d 100644
-> --- a/kernel/params.c
-> +++ b/kernel/params.c
-> @@ -24,6 +24,7 @@
->  #include <linux/err.h>
->  #include <linux/slab.h>
->  #include <linux/ctype.h>
-> +#include <linux/security.h>
->  
->  #ifdef CONFIG_SYSFS
->  /* Protects all built-in parameters, modules use their own param_lock */
-> @@ -108,13 +109,19 @@ bool parameq(const char *a, const char *b)
->  	return parameqn(a, b, strlen(a)+1);
->  }
->  
-> -static void param_check_unsafe(const struct kernel_param *kp)
-> +static bool param_check_unsafe(const struct kernel_param *kp,
-> +			       const char *doing)
->  {
->  	if (kp->flags & KERNEL_PARAM_FL_UNSAFE) {
->  		pr_notice("Setting dangerous option %s - tainting kernel\n",
->  			  kp->name);
->  		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
->  	}
-> +
-> +	if (kp->flags & KERNEL_PARAM_FL_HWPARAM &&
-> +	    security_locked_down(LOCKDOWN_MODULE_PARAMETERS))
-> +		return false;
-> +	return true;
->  }
+1/4: reworked v2.
 
-Should this test occur before tainting the kernel?
+2/4: fix a flaw I noticed when I was working on this series
 
-Regards,
-Daniel
+3/4: maybe useful for 4/4 and in some other places
 
->  
->  static int parse_one(char *param,
-> @@ -144,8 +151,10 @@ static int parse_one(char *param,
->  			pr_debug("handling %s with %p\n", param,
->  				params[i].ops->set);
->  			kernel_param_lock(params[i].mod);
-> -			param_check_unsafe(&params[i]);
-> -			err = params[i].ops->set(val, &params[i]);
-> +			if (param_check_unsafe(&params[i], doing))
-> +				err = params[i].ops->set(val, &params[i]);
-> +			else
-> +				err = -EPERM;
->  			kernel_param_unlock(params[i].mod);
->  			return err;
->  		}
-> @@ -553,6 +562,12 @@ static ssize_t param_attr_show(struct module_attribute *mattr,
->  	return count;
->  }
->  
-> +#ifdef CONFIG_MODULES
-> +#define mod_name(mod) (mod)->name
-> +#else
-> +#define mod_name(mod) "unknown"
-> +#endif
-> +
->  /* sysfs always hands a nul-terminated string in buf.  We rely on that. */
->  static ssize_t param_attr_store(struct module_attribute *mattr,
->  				struct module_kobject *mk,
-> @@ -565,8 +580,10 @@ static ssize_t param_attr_store(struct module_attribute *mattr,
->  		return -EPERM;
->  
->  	kernel_param_lock(mk->mod);
-> -	param_check_unsafe(attribute->param);
-> -	err = attribute->param->ops->set(buf, attribute->param);
-> +	if (param_check_unsafe(attribute->param, mod_name(mk->mod)))
-> +		err = attribute->param->ops->set(buf, attribute->param);
-> +	else
-> +		err = -EPERM;
->  	kernel_param_unlock(mk->mod);
->  	if (!err)
->  		return len;
-> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
-> index c89046dc2155..d03c4c296af7 100644
-> --- a/security/lockdown/lockdown.c
-> +++ b/security/lockdown/lockdown.c
-> @@ -28,6 +28,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
->  	[LOCKDOWN_ACPI_TABLES] = "modified ACPI tables",
->  	[LOCKDOWN_PCMCIA_CIS] = "direct PCMCIA CIS storage",
->  	[LOCKDOWN_TIOCSSERIAL] = "reconfiguration of serial port IO",
-> +	[LOCKDOWN_MODULE_PARAMETERS] = "unsafe module parameters",
->  	[LOCKDOWN_INTEGRITY_MAX] = "integrity",
->  	[LOCKDOWN_CONFIDENTIALITY_MAX] = "confidentiality",
->  };
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
+4/4: v2. compile as many headers as possible.
+
+
+Changes in v2:
+ - Add CONFIG_CPU_{BIG,LITTLE}_ENDIAN guard to avoid build error
+ - Use 'header-test-' instead of 'no-header-test'
+ - Avoid weird 'find' warning when cleaning
+  - New patch
+  - New patch
+  - Add everything to test coverage, and exclude broken ones
+  - Rename 'Makefile' to 'Kbuild'
+  - Add CONFIG_KERNEL_HEADER_TEST option
+
+Masahiro Yamada (4):
+  kbuild: compile-test UAPI headers to ensure they are self-contained
+  kbuild: do not create wrappers for header-test-y
+  kbuild: support header-test-pattern-y
+  kbuild: compile-test kernel headers to ensure they are self-contained
+
+ .gitignore                         |    1 -
+ Documentation/dontdiff             |    1 -
+ Documentation/kbuild/makefiles.txt |   13 +-
+ Makefile                           |    4 +-
+ include/Kbuild                     | 1134 ++++++++++++++++++++++++++++
+ init/Kconfig                       |   22 +
+ scripts/Makefile.build             |   10 +-
+ scripts/Makefile.lib               |   12 +-
+ scripts/cc-system-headers.sh       |    8 +
+ usr/.gitignore                     |    1 -
+ usr/Makefile                       |    2 +
+ usr/include/.gitignore             |    3 +
+ usr/include/Makefile               |  133 ++++
+ 13 files changed, 1331 insertions(+), 13 deletions(-)
+ create mode 100644 include/Kbuild
+ create mode 100755 scripts/cc-system-headers.sh
+ create mode 100644 usr/include/.gitignore
+ create mode 100644 usr/include/Makefile
+
+-- 
+2.17.1
+
