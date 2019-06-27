@@ -2,68 +2,71 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6276C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60C8C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D5A20644
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F3320644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GO/fnGWQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6LC9hZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfF0RoW (ORCPT
+        id S1727251AbfF0Roa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:44:22 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43548 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbfF0RoU (ORCPT
+        Thu, 27 Jun 2019 13:44:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42913 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbfF0Ro2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:44:20 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f25so1336914pgv.10;
-        Thu, 27 Jun 2019 10:44:20 -0700 (PDT)
+        Thu, 27 Jun 2019 13:44:28 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so1583459pff.9;
+        Thu, 27 Jun 2019 10:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=jTEpnDLcJgOgMeNGqNa8r3yAUVyGipHsMFib578GHIM=;
-        b=GO/fnGWQJZ9eBKz+jiSVxT3PzpO3nUo8WbF7XRHHP15WyaBEQpcR7qPFB2vOMcU3As
-         NnaF5+EuAen9WSupT3Lk2YuPgZEOKP1EtA7C4Z8e2Kq0Zh4pOFuxTs9QWLTggnJJwjBv
-         mYH4Pkcyb4lnBuZynDdti+MgBPMszSahByWOem3dzdjSpLbP4F1FMjjoKozbe9xhs1Xj
-         /V0eCeqfF9dr0VXTyx8ubgKWaP/9dajHbGh8iMLUhEa4T9VZd1G+tVdtkvjqcuEqXku2
-         saEpotKA4iwR/y3oGHTpZYMEdKGx09Pute+n9JHNot2rjvTYhoG5YvhrYGDJaSRLsPep
-         kLaQ==
+        bh=SBYZqfoyt3K/CiQ07Hd+w3JcvKRR1GsSR4h2B9nj7xg=;
+        b=T6LC9hZenINjqqDXUyOQ8cpWIotOtfsGNBmVYBfyibVD1fEoRavsY5Vge//7qZVKcK
+         bwx1l6dnQfLhaSrdxzw3QhFwp6OJhXkkNRBneMosZ4CYyOv6TMV6jgXkONMSH8FYJTC/
+         p2rVBMrjgLv/DwQiDJVLLK/UpGZUyhAD0RR330lwN49Lm+TzWNoANXeLciBUG3D+ujCs
+         8wNVTOeN3kLutE6dvBbWfgO6Bj7/4RREgmzhuK5E9SWz9+stX9DSR4YZ+wF5PUFHSIZ2
+         QPG9iihcOOV7Tz81M1OrN2g8mnvTsesUffKMvkDCUgPvFRp80EwnQWdLIrp+X2mvDkly
+         q4dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jTEpnDLcJgOgMeNGqNa8r3yAUVyGipHsMFib578GHIM=;
-        b=MLHfhh+A0J3vFMxE/yKr0IEFW7b6g/D/0/xeeTpGzC41E4KLefOW3VnuD5yTI46WwP
-         swRJQsbI14IjQjRqhRRaziJyded5BuSYIHcP0kpDrHl4+q1PFWRMy9mgD026fn+meCSO
-         lXyv+lHEKd8LEZVQmh7+YpuSs8UJasl9VVP6UQo688smb8mJdyLAzRsAWbs5mD6uNn6/
-         vNRc0ipjBXFYhO8Zb2ojvYpZ57E/UjcXEclNnrXnHUVdnU31USOjnLmxAbzOyYyi9tDZ
-         fgu1W7Mf0/lGG3ryOri9frZ3yFGNLkvvPY8jBw+0eSpJWMAgnz1U/5oSIeLDTYMvg+Hl
-         WYow==
-X-Gm-Message-State: APjAAAX1blcXYQMh4XQfjWI4+XDT06UpKSvrjyIquOAU7K8oJC6en+UL
-        iWLZ0SJNxDYSYpAJK6QSjRsHa3P9wdBiHQ==
-X-Google-Smtp-Source: APXvYqwZ4n5gMkO5mN+hcC9u5z1H8ijW4j1IVjgz149vY7alsqnjYZjyo3t2zRROvqsKy45x+IZYeg==
-X-Received: by 2002:a63:1d5:: with SMTP id 204mr5013007pgb.207.1561657459905;
-        Thu, 27 Jun 2019 10:44:19 -0700 (PDT)
+        bh=SBYZqfoyt3K/CiQ07Hd+w3JcvKRR1GsSR4h2B9nj7xg=;
+        b=RxybbMHo3+rx1YmB6dvUVBIK9Q844owmRxBGQ1pLad2e0fE6E9eftdGqXebXewgoGD
+         AplGKlnPV1DjdhMsCjHESew5nbfj3OphslCnI2dpsrgWSnNzJBqcyL6JciOAfIYIgc7w
+         SWxN+XLrbeDYXeCFnQv8KXj/bXlB1EpLdn+RVKu77qR7OtfSbi9Lzb3+SrigfEBycrYA
+         54Rzhf2mtYIoxYGKWmDZzZIygrRljNKS0Ktxli1Ap4jwC5X3mV13FhC4hEzwHtVpgkaG
+         YCmwU/vnW4WLytmuSfHZmTyc1KMBuNoJvH87tndETntnQY/CzcpjEIGqmHbK6sutXW2p
+         XtIg==
+X-Gm-Message-State: APjAAAU6JQr134+ZbZm42AVinxCneSgMSCcO11Kyy1H3HM1UND6+eKjh
+        Bz4Ez8NJQsGVC0bGwibqNfc=
+X-Google-Smtp-Source: APXvYqwE7v/Y/QRUQ3xwREW6I4PY0Fav0OD7fG5EREhwO0AnfYmtHTMxD60KAXBzvjSzya4y8RtTOQ==
+X-Received: by 2002:a63:e53:: with SMTP id 19mr4815445pgo.137.1561657467705;
+        Thu, 27 Jun 2019 10:44:27 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id x128sm5280391pfd.17.2019.06.27.10.44.17
+        by smtp.googlemail.com with ESMTPSA id q1sm3962760pfg.84.2019.06.27.10.44.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:44:19 -0700 (PDT)
+        Thu, 27 Jun 2019 10:44:27 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        Rahul Verma <rahulv@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 82/87] ethernet: netxen: remove memset after pci_alloc_persistent
-Date:   Fri, 28 Jun 2019 01:44:13 +0800
-Message-Id: <20190627174413.5413-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 60/87] scsi: megaraid: remove memset after kcalloc
+Date:   Fri, 28 Jun 2019 01:44:20 +0800
+Message-Id: <20190627174420.5466-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,40 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pci_alloc_persistent calls dma_alloc_coherent directly.
-In commit af7ddd8a627c
-("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-dma_alloc_coherent has already zeroed the memory.
-So memset is not needed.
+kcalloc already zeros the memory.
+memset is unneeded.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c b/drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c
-index 433052f734ed..5e9f8ee99800 100644
---- a/drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c
-+++ b/drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c
-@@ -442,10 +442,8 @@ nx_fw_cmd_create_tx_ctx(struct netxen_adapter *adapter)
- 		goto out_free_rq;
- 	}
- 
--	memset(rq_addr, 0, rq_size);
- 	prq = rq_addr;
- 
--	memset(rsp_addr, 0, rsp_size);
- 	prsp = rsp_addr;
- 
- 	prq->host_rsp_dma_addr = cpu_to_le64(rsp_phys_addr);
-@@ -755,7 +753,6 @@ int netxen_alloc_hw_resources(struct netxen_adapter *adapter)
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 3dd1df472dc6..342b39bc9210 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -4141,8 +4141,6 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
  		return -ENOMEM;
  	}
  
--	memset(addr, 0, sizeof(struct netxen_ring_ctx));
- 	recv_ctx->hwctx = addr;
- 	recv_ctx->hwctx->ctx_id = cpu_to_le32(port);
- 	recv_ctx->hwctx->cmd_consumer_offset =
+-	memset(instance->cmd_list, 0, sizeof(struct megasas_cmd *) *max_cmd);
+-
+ 	for (i = 0; i < max_cmd; i++) {
+ 		instance->cmd_list[i] = kmalloc(sizeof(struct megasas_cmd),
+ 						GFP_KERNEL);
 -- 
 2.11.0
 
