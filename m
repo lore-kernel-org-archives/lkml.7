@@ -2,198 +2,167 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB52C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B149FC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94332133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92900208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:18:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gecuNsfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfF0TPf (ORCPT
+        id S1726564AbfF0TSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 15:15:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726426AbfF0TPf (ORCPT
+        Thu, 27 Jun 2019 15:18:42 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46438 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0TSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 15:15:35 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RJDC05007511
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:15:33 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td2fh3n6e-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:15:33 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 27 Jun 2019 20:15:32 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Jun 2019 20:15:29 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RJFSf855443806
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 19:15:28 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF19BB206B;
-        Thu, 27 Jun 2019 19:15:28 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1111B2064;
-        Thu, 27 Jun 2019 19:15:28 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 19:15:28 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B480316C5D5C; Thu, 27 Jun 2019 12:15:30 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 12:15:30 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Reply-To: paulmck@linux.ibm.com
-References: <20190626162558.GY26519@linux.ibm.com>
- <20190627142436.GD215968@google.com>
- <20190627103455.01014276@gandalf.local.home>
- <20190627153031.GA249127@google.com>
- <CAEXW_YT5LgdP_9SrachU4ZrhV9a7o_DM8eBfgxj=n7yRRyS-TQ@mail.gmail.com>
- <20190627154011.vbje64x6auaknhx4@linutronix.de>
- <CAEXW_YTvkSTqwi_jOE2Pr+uD-GC4Xv0CtBEL9YO7=LvJcM3FBQ@mail.gmail.com>
- <CAEXW_YTmx3wFKuiLyrQO6uSPYAL179EPa6N3WO7qZahccCs-pg@mail.gmail.com>
- <20190627181112.GY26519@linux.ibm.com>
- <20190627182722.GA216610@google.com>
+        Thu, 27 Jun 2019 15:18:41 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so8109281edr.13;
+        Thu, 27 Jun 2019 12:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V9/DvrSm1tuMxgh9gCPc5feOBQeRzRI5OCgy1Wf79Gk=;
+        b=gecuNsfA+4DkKar9EsBNVwySmvxGtn5QjxCfGe0pL3C8P5PP1Xy2qhhhZDcoqqpsMt
+         o6a5PIeN7eNQMIhzmvUeQoUvUM6ihzgxXWIq70u7fu9iVoHK0FzMDxAxRgwfjJ4Y/0Np
+         eAncgvXBOQ0xmiVv1lecus3bfWyVdHk5VwzGFxCT2/GbeqlKb/P18E1rbb80hy5diF/H
+         4YdJAru4bKV8H2mbVgheU4JQmdx7/dddyh73C9Mp5lr4a6BOUu8eCcrxqeIzo0SKJiFZ
+         5sPJgJAVAr2Bwv73DAJQk97UYRN7q89boMhZV+hgUVehyd/t4CV8IjUq7W/y3RK4iS23
+         l2yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V9/DvrSm1tuMxgh9gCPc5feOBQeRzRI5OCgy1Wf79Gk=;
+        b=TP+oXsWK9wC0B3f6/oM6FMEKVdaf7abZmk6PpmmArXpRLFar6AygTpJfa2GlzqUZ8+
+         am2lC4cQwvPp9OvFT/jpek6JwQ5UwKbPEi+BoyCwOsXvAHWo9CJWlmOHzvjVjN+DMLXf
+         3K6xbQldBZi9gIsUR3nYIG7HBXY4mPPwqbHQDIW6Hc/fXK0RHWPnYcqqjWkfEkxz2fUK
+         Ul4N+qpehdDaPo0BVjWgurzS7pExxQk3Oe3tR2ArDctMUNIv1gEX44B1Cad+Pq/EQkpT
+         vxlxBA0iewrIHuAfYnyWUXg66rUNNYYyg/ocX+EJ4ClwrfMPUr+fK3GeqZrx5Jq43fdP
+         VJsQ==
+X-Gm-Message-State: APjAAAWkrxL/xlwj60944GO6mM6IlJ1MUYSybiMYMjLICpOBr22PiR7G
+        cLj078D7b8Q9eigZMr4OZwHZ7ob2F4c87g==
+X-Google-Smtp-Source: APXvYqzo3o22jNRP11IR4sgG0M1LkCQD4a9v4DkJtwgfurt3ukcs5ifOVNN2Vcr8awUGY9pHnFRL3A==
+X-Received: by 2002:a50:a56d:: with SMTP id z42mr6430929edb.241.1561663119763;
+        Thu, 27 Jun 2019 12:18:39 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id bs5sm575800ejb.10.2019.06.27.12.18.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 12:18:39 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 12:18:37 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] PCI: rpaphp: Avoid a sometimes-uninitialized warning
+Message-ID: <20190627191837.GA111331@archlinux-epyc>
+References: <20190603174323.48251-1-natechancellor@gmail.com>
+ <20190603221157.58502-1-natechancellor@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627182722.GA216610@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062719-0052-0000-0000-000003D70E18
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011342; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224129; UDB=6.00644263; IPR=6.01005318;
- MB=3.00027493; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 19:15:32
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062719-0053-0000-0000-0000617BC05E
-Message-Id: <20190627191530.GC26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270219
+In-Reply-To: <20190603221157.58502-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 02:27:22PM -0400, Joel Fernandes wrote:
-> On Thu, Jun 27, 2019 at 11:11:12AM -0700, Paul E. McKenney wrote:
-> > On Thu, Jun 27, 2019 at 01:46:27PM -0400, Joel Fernandes wrote:
-> > > On Thu, Jun 27, 2019 at 1:43 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > >
-> > > > On Thu, Jun 27, 2019 at 11:40 AM Sebastian Andrzej Siewior
-> > > > <bigeasy@linutronix.de> wrote:
-> > > > >
-> > > > > On 2019-06-27 11:37:10 [-0400], Joel Fernandes wrote:
-> > > > > > Sebastian it would be nice if possible to trace where the
-> > > > > > t->rcu_read_unlock_special is set for this scenario of calling
-> > > > > > rcu_read_unlock_special, to give a clear idea about whether it was
-> > > > > > really because of an IPI. I guess we could also add additional RCU
-> > > > > > debug fields to task_struct (just for debugging) to see where there
-> > > > > > unlock_special is set.
-> > > > > >
-> > > > > > Is there a test to reproduce this, or do I just boot an intel x86_64
-> > > > > > machine with "threadirqs" and run into it?
-> > > > >
-> > > > > Do you want to send me a patch or should I send you my kvm image which
-> > > > > triggers the bug on boot?
-> > > >
-> > > > I could reproduce this as well just booting Linus tree with threadirqs
-> > > > command line and running rcutorture. In 15 seconds or so it locks
-> > > > up... gdb backtrace shows the recursive lock:
-> > > 
-> > > Sorry that got badly wrapped, so I pasted it here:
-> > > https://hastebin.com/ajivofomik.shell
-> > 
-> > Which rcutorture scenario would that be?  TREE03 is thus far refusing
-> > to fail for me when run this way:
-> > 
-> > $ tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --trust-make --configs "TREE03" --bootargs "threadirqs"
+On Mon, Jun 03, 2019 at 03:11:58PM -0700, Nathan Chancellor wrote:
+> When building with -Wsometimes-uninitialized, clang warns:
 > 
-> I built x86_64_defconfig with CONFIG_PREEMPT enabled, then I ran it with
-> following boot params:
-> rcutorture.shutdown_secs=60 rcutorture.n_barrier_cbs=4 rcutree.kthread_prio=2
+> drivers/pci/hotplug/rpaphp_core.c:243:14: warning: variable 'fndit' is
+> used uninitialized whenever 'for' loop exits because its condition is
+> false [-Wsometimes-uninitialized]
+>         for (j = 0; j < entries; j++) {
+>                     ^~~~~~~~~~~
+> drivers/pci/hotplug/rpaphp_core.c:256:6: note: uninitialized use occurs
+> here
+>         if (fndit)
+>             ^~~~~
+> drivers/pci/hotplug/rpaphp_core.c:243:14: note: remove the condition if
+> it is always true
+>         for (j = 0; j < entries; j++) {
+>                     ^~~~~~~~~~~
+> drivers/pci/hotplug/rpaphp_core.c:233:14: note: initialize the variable
+> 'fndit' to silence this warning
+>         int j, fndit;
+>                     ^
+>                      = 0
 > 
-> and also "threadirqs"
+> fndit is only used to gate a sprintf call, which can be moved into the
+> loop to simplify the code and eliminate the local variable, which will
+> fix this warning.
 > 
-> This was not a TREE config, but just my simple RCU test using qemu.
+> Link: https://github.com/ClangBuiltLinux/linux/issues/504
+> Fixes: 2fcf3ae508c2 ("hotplug/drc-info: Add code to search ibm,drc-info property")
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
 > 
+> v1 -> v2:
 > 
-> I will try this diff and let you know.
+> * Eliminate fndit altogether by shuffling the sprintf call into the for
+>   loop and changing the if conditional, as suggested by Nick.
 > 
-> > If it had failed, I would have tried the patch shown below.  I know that
-> > Sebastian has some concerns about the bug happening anyway, but we have
-> > to start somewhere!  ;-)
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index 82c925df1d92..be7bafc2c0a0 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -624,25 +624,16 @@ static void rcu_read_unlock_special(struct task_struct *t)
-> >  		      (rdp->grpmask & rnp->expmask) ||
-> >  		      tick_nohz_full_cpu(rdp->cpu);
-> >  		// Need to defer quiescent state until everything is enabled.
-> > -		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
-> > -		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
-> > -			// Using softirq, safe to awaken, and we get
-> > -			// no help from enabling irqs, unlike bh/preempt.
-> > -			raise_softirq_irqoff(RCU_SOFTIRQ);
-> > -		} else {
-> > -			// Enabling BH or preempt does reschedule, so...
-> > -			// Also if no expediting or NO_HZ_FULL, slow is OK.
-> > -			set_tsk_need_resched(current);
-> > -			set_preempt_need_resched();
-> > -			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
-> > -			    !rdp->defer_qs_iw_pending && exp) {
-> > -				// Get scheduler to re-evaluate and call hooks.
-> > -				// If !IRQ_WORK, FQS scan will eventually IPI.
-> > -				init_irq_work(&rdp->defer_qs_iw,
-> > -					      rcu_preempt_deferred_qs_handler);
-> > -				rdp->defer_qs_iw_pending = true;
-> > -				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
-> > -			}
-> > +		set_tsk_need_resched(current);
-> > +		set_preempt_need_resched();
-> > +		if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
-> > +		    !rdp->defer_qs_iw_pending && exp) {
-> > +			// Get scheduler to re-evaluate and call hooks.
-> > +			// If !IRQ_WORK, FQS scan will eventually IPI.
-> > +			init_irq_work(&rdp->defer_qs_iw,
-> > +				      rcu_preempt_deferred_qs_handler);
-> > +			rdp->defer_qs_iw_pending = true;
-> > +			irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+>  drivers/pci/hotplug/rpaphp_core.c | 18 +++++++-----------
+>  1 file changed, 7 insertions(+), 11 deletions(-)
 > 
-> Nice to see the code here got simplified ;-)
+> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+> index bcd5d357ca23..c3899ee1db99 100644
+> --- a/drivers/pci/hotplug/rpaphp_core.c
+> +++ b/drivers/pci/hotplug/rpaphp_core.c
+> @@ -230,7 +230,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+>  	struct of_drc_info drc;
+>  	const __be32 *value;
+>  	char cell_drc_name[MAX_DRC_NAME_LEN];
+> -	int j, fndit;
+> +	int j;
+>  
+>  	info = of_find_property(dn->parent, "ibm,drc-info", NULL);
+>  	if (info == NULL)
+> @@ -245,17 +245,13 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+>  
+>  		/* Should now know end of current entry */
+>  
+> -		if (my_index > drc.last_drc_index)
+> -			continue;
+> -
+> -		fndit = 1;
+> -		break;
+> +		/* Found it */
+> +		if (my_index <= drc.last_drc_index) {
+> +			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
+> +				my_index);
+> +			break;
+> +		}
+>  	}
+> -	/* Found it */
+> -
+> -	if (fndit)
+> -		sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix, 
+> -			my_index);
+>  
+>  	if (((drc_name == NULL) ||
+>  	     (drc_name && !strcmp(drc_name, cell_drc_name))) &&
+> -- 
+> 2.22.0.rc3
+> 
 
-Assuming that it still works...  But it also looks to be unnecessary,
-at least in brief testing.  I will of course be adding a threadirqs
-to TREE03.boot.  :-/
+Gentle ping, can someone pick this up?
 
-							Thanx, Paul
-
+Cheers,
+Nathan
