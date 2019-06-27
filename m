@@ -2,161 +2,88 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB1DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A9CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AD5208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B8A20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 16:13:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CbXK4cnl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfF0QNs (ORCPT
+        id S1726558AbfF0QN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 12:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbfF0QNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 12:13:47 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B1A20659;
-        Thu, 27 Jun 2019 16:13:46 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 12:13:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 4/7] powerpc/ftrace: Additionally nop out the
- preceding mflr with -mprofile-kernel
-Message-ID: <20190627121344.25b5449a@gandalf.local.home>
-In-Reply-To: <1561648598.uvetvkj39x.naveen@linux.ibm.com>
-References: <cover.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-        <841386feda429a1f0d4b7442c3ede1ed91466f92.1561634177.git.naveen.n.rao@linux.vnet.ibm.com>
-        <20190627110819.4892780f@gandalf.local.home>
-        <1561648598.uvetvkj39x.naveen@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 27 Jun 2019 12:13:58 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40004 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0QN6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 12:13:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id n5so5978313ioc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 09:13:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=YuETa3oDVUrfM1AlnG0XabGhzbNGHx9EIaL7BfD2Dwk=;
+        b=CbXK4cnlfsLqgcWbk9J1O19cC7jqM5R1GyFC5RXTsmRqwoUEV2NJ9LPi2EmzXe+1vG
+         qCoPj1cMOEmcGu7KLw8WXb3lc/xVqslxMXana0Sg4KkAdtyQUoLcgGJ7QdndwmAR188i
+         8DcpkgAbLey+JqExVPrENeLIes2OsFyyBDyedRY3g3n6pmy8gKn7GuNEHTTBhGBZBNh9
+         bPMLkc/2qSQ8GfEfUbzTK7euEZicmfeApx6Ym7qA9lay+DlWcKVsFYcKuE5E8I6BLdiG
+         M+chfQoe+Vq9l2wmRUZRlBOEZeQhj9ljVpVNOQyC15iPt4MJWD1zPw60BZIChkPn2p5Q
+         hSIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=YuETa3oDVUrfM1AlnG0XabGhzbNGHx9EIaL7BfD2Dwk=;
+        b=FHqE+d+licZK84amZfWmlhelY8XbPrzEUxPS+U+i0xwY0HwZnu12UlAX3Yb9bjI6q6
+         HtwVfbfyLdpGVtq2Ef7re+wtaesvxpTrjM7ymTLozfuQpMr5ch0xhHpgXeboYuG6Z62z
+         nzyvzqLgglJMP1FeKwdmU8Oinv65QpTXFREOektyXpK38JZT6wnwtHHsFW3wB5usb9Cb
+         TNw2/Z+uX2auDBJpvSzOZQhBAVZLXL1yy4FF+SpoX0NXaHx88B0YcO9hbyRPshwjUI2b
+         BlBzPnbQfl6xtenKlRT0NsvOQ6WlzAASziTi/sMsIgjU6TzBK8PCiJb/zOqq8IF7jtWH
+         r/Iw==
+X-Gm-Message-State: APjAAAW4rZ1Yt1ufg1jF8iu2tEtGb/W5K3fQcldUamGbJXBN6VnwnuF3
+        iB6A+eBrUR/tJDnH1XVveV8Jwq0NPFo=
+X-Google-Smtp-Source: APXvYqzBXnSDmyScYxc36jaGMDBkMY9zvxNr9TAKEWXWOEcTbptqw9f6F4ZC/j0rxrwTCJUPKOYG0w==
+X-Received: by 2002:a05:6638:3d6:: with SMTP id r22mr5561768jaq.71.1561652037218;
+        Thu, 27 Jun 2019 09:13:57 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id p3sm2749248iog.70.2019.06.27.09.13.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 09:13:56 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 09:13:55 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Yash Shah <yash.shah@sifive.com>
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        palmer@sifive.com, aou@eecs.berkeley.edu, sachin.ghadi@sifive.com
+Subject: Re: [PATCH] riscv: ccache: Remove unused variable
+In-Reply-To: <1561624486-22867-1-git-send-email-yash.shah@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1906270911270.12689@viisi.sifive.com>
+References: <1561624486-22867-1-git-send-email-yash.shah@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019 20:58:20 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+On Thu, 27 Jun 2019, Yash Shah wrote:
 
+> Reading the count register clears the interrupt signal. Currently, the
+> count registers are read into 'regval' variable but the variable is
+> never used. Therefore remove it.
 > 
-> > But interesting, I don't see a synchronize_rcu_tasks() call
-> > there.  
-> 
-> We felt we don't need it in this case. We patch the branch to ftrace 
-> with a nop first. Other cpus should see that first. But, now that I 
-> think about it, should we add a memory barrier to ensure the writes get 
-> ordered properly?
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 
-Do you send an ipi to the other CPUs. I would just to be safe.
+This is a good start.  Could you also add comments in the code that 
+describe what those reads are doing, as you did in the patch description?  
+Otherwise they look pretty mysterious.
 
-> >> -	if (patch_instruction((unsigned int *)ip, pop)) {
-> >> +	/*
-> >> +	 * Our original call site looks like:
-> >> +	 *
-> >> +	 * bl <tramp>
-> >> +	 * ld r2,XX(r1)
-> >> +	 *
-> >> +	 * Milton Miller pointed out that we can not simply nop the branch.
-> >> +	 * If a task was preempted when calling a trace function, the nops
-> >> +	 * will remove the way to restore the TOC in r2 and the r2 TOC will
-> >> +	 * get corrupted.
-> >> +	 *
-> >> +	 * Use a b +8 to jump over the load.
-> >> +	 */
-> >> +	if (patch_instruction((unsigned int *)ip, PPC_INST_BRANCH | 8)) {
-> >>  		pr_err("Patching NOP failed.\n");
-> >>  		return -EPERM;
-> >>  	}
-> >> +#endif /* CONFIG_MPROFILE_KERNEL */
-> >>  
-> >>  	return 0;
-> >>  }
-> >> @@ -421,6 +429,26 @@ static int __ftrace_make_nop_kernel(struct dyn_ftrace *rec, unsigned long addr)
-> >>  		return -EPERM;
-> >>  	}
-> >>  
-> >> +#ifdef CONFIG_MPROFILE_KERNEL  
-> > 
-> > I would think you need to break this up into two parts as well, with a
-> > synchronize_rcu_tasks() in between.
-> > 
-> > Imagine this scenario:
-> > 
-> > 	<func>:
-> > 	nop <-- interrupt comes here, and preempts the task
-> > 	nop
-> > 
-> > First change.
-> > 
-> > 	<func>:
-> > 	mflr	r0
-> > 	nop
-> > 
-> > Second change.
-> > 
-> > 	<func>:
-> > 	mflr	r0
-> > 	bl	_mcount
-> > 
-> > Task returns from interrupt
-> > 
-> > 	<func>:
-> > 	mflr	r0
-> > 	bl	_mcount <-- executes here
-> > 
-> > It never did the mflr r0, because the last command that was executed
-> > was a nop before it was interrupted. And yes, it can be interrupted
-> > on a nop!  
-> 
-> We are handling this through ftrace_replace_code() and 
-> __ftrace_make_call_prep() below. For FTRACE_UPDATE_MAKE_CALL, we patch 
-> in the mflr, followed by smp_call_function(isync) and 
-> synchronize_rcu_tasks() before we proceed to patch the branch to ftrace.
-> 
-> I don't see any other scenario where we end up in 
-> __ftrace_make_nop_kernel() without going through ftrace_replace_code().  
-> For kernel modules, this can happen during module load/init and so, I 
-> patch out both instructions in __ftrace_make_call() above without any 
-> synchronization.
-> 
-> Am I missing anything?
-> 
 
-No, I think I got confused ;-), it's the patch out that I was worried
-about, but when I was going through the scenario, I somehow turned it
-into the patching in (which I already audited :-p). I was going to
-reply with just the top part of this email, but then the confusion
-started :-/
-
-OK, yes, patching out should be fine, and you already covered the
-patching in. Sorry for the noise.
-
-Just to confirm and totally remove the confusion, the patch does:
-
-	<func>:
-	mflr	r0 <-- preempt here
-	bl	_mcount
-
-	<func>:
-	mflr	r0
-	nop
-
-And this is fine regardless.
-
-OK, Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
+- Paul
