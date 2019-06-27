@@ -2,93 +2,144 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D4CC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB76C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7834D2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E1420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:18:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JATFfirz"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="n84QFvk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfF0LRJ (ORCPT
+        id S1726623AbfF0LSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:17:09 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42365 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfF0LRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:17:08 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t28so1897186lje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 04:17:07 -0700 (PDT)
+        Thu, 27 Jun 2019 07:18:04 -0400
+Received: from mail-eopbgr760097.outbound.protection.outlook.com ([40.107.76.97]:51342
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbfF0LSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 07:18:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h+M32KORGemVLrEhCU+mugrqZ6KHhAjcB7ktP25bgUw=;
-        b=JATFfirzIRvl4Bn0MzZWqLXi3Ey2itUpvEWgha059qAjA3IR4c2e1wMYo0c8Z9yL/L
-         WyGOxZrDK3Wnpu+UNfnPJmkwU9xOdh+bOAd5U+upstomSDHtE62P4UarRnshyBxTZwJC
-         GXuAX0YXnoWrBeA4RM3Qn1INmR+BJS6DN+IzO5VbLtp3T6R99ZjdyYG6rtknT6+hXXwJ
-         DPoPboHY7TP74z5yaajm17KS0cWKWMGHFArJHx42qzxQyRY1KKg7LMdAMfkwaPbuyatE
-         kXX7rKx4ZmsGCoeVQpyujljI9AIVkuBs6ld7AtEB4hCOp/+cjbUg8oBHYZu0nmkh8mI7
-         CsLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h+M32KORGemVLrEhCU+mugrqZ6KHhAjcB7ktP25bgUw=;
-        b=HKGwG5OMfmpayJyrKb6L/BeP0iN2wUJXTL/ymR3tYiPqXaEtO1A+YvizZvfjCkBptZ
-         k+2NDqtb4Ppr38376uWZxveTFLJkgCyZmhc3mcS/PyeDD+eukfdCAT0/HkqI8o4ZTHZo
-         hJZw3X7sN91HjezkrWXHKspTYoVW0SesT9f3JEDM9gZmcwsKYumrkXDpY6tnfXusfIhy
-         0UfcEHRCfwQIyjpxXZsgT1bKPyjlYNgINgs6anfWR7PYPYSmtJ/b14JEFn7an4431Kdl
-         oBR/+9IhNrzCDHl2WTIUDgwrsUhPEdNfJwGczFG5ZmGAH0zPJaL4zeKH2W8RaLlMnZw2
-         BjGQ==
-X-Gm-Message-State: APjAAAUQxewGCEXoZJJJVbF6vGoFFOqUqVmNobvKkpuX3xm/kBk7MqUw
-        wNz4FnxCmeyXhuIdKj5x76WzsjMCmxftxkrT5nZ6Vg==
-X-Google-Smtp-Source: APXvYqwhIrf7JDRO2BMtKtOJvp54agYbc9d0DQAtQ0T63qMEcpkYpkkimqLDdz3gA69lWL5g0fktxZUtlvgv/RN7KDI=
-X-Received: by 2002:a2e:8756:: with SMTP id q22mr2370304ljj.108.1561634226615;
- Thu, 27 Jun 2019 04:17:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190625163434.13620-1-brgl@bgdev.pl> <20190625163434.13620-7-brgl@bgdev.pl>
-In-Reply-To: <20190625163434.13620-7-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Jun 2019 12:16:55 +0100
-Message-ID: <CACRpkdZdKigQ08bf5P9sYf-EhWFn5LmMRPQoMS2O5ouB9h6=MQ@mail.gmail.com>
-Subject: Re: [PATCH 06/12] ARM: davinci: da850-evm: model the backlight GPIO
- as an actual device
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ d=os.amperecomputing.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rPksX9kTKCzYCXwG24gRwSMKH1dwPvwYcTm0uG09s8o=;
+ b=n84QFvk5ZqMJzHVSoL1riHfmgpB591XYvxtW7Tob7LiAj5ePFXt6flNRGsXU0UXMNNePBEJ5/zMv+z8spKYpK6VrjGReTc2hZqPvDdlceGH/M1cGL9w5m110d8dTba9/kA+Z0sY5mrGBDbrmPGFXvSqzlr1+zwj2DE+i6JqE5G0=
+Received: from DM6PR01MB4825.prod.exchangelabs.com (20.177.218.222) by
+ DM6PR01MB4906.prod.exchangelabs.com (20.176.119.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2032.18; Thu, 27 Jun 2019 11:17:59 +0000
+Received: from DM6PR01MB4825.prod.exchangelabs.com
+ ([fe80::390e:9996:6dec:d60f]) by DM6PR01MB4825.prod.exchangelabs.com
+ ([fe80::390e:9996:6dec:d60f%6]) with mapi id 15.20.2032.016; Thu, 27 Jun 2019
+ 11:17:59 +0000
+From:   Aaron Lindsay OS <aaron@os.amperecomputing.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Hoan Tran OS <hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Open Source Submission <patches@amperecomputing.com>
+Subject: Re: [PATCH 0/5] Enable CONFIG_NODES_SPAN_OTHER_NODES by default for
+ NUMA
+Thread-Topic: [PATCH 0/5] Enable CONFIG_NODES_SPAN_OTHER_NODES by default for
+ NUMA
+Thread-Index: AQHVK6WT5IKFNhd5LECqV06L4uyCQKatFN0AgAJHxoA=
+Date:   Thu, 27 Jun 2019 11:17:58 +0000
+Message-ID: <20190627111755.GJ7133@okra.localdomain>
+References: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
+ <CAADWXX8wdEPNZ26SFJUfwrhQson3HPTrZ7D2jju3RhEeMuc+QQ@mail.gmail.com>
+In-Reply-To: <CAADWXX8wdEPNZ26SFJUfwrhQson3HPTrZ7D2jju3RhEeMuc+QQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR04CA0016.namprd04.prod.outlook.com
+ (2603:10b6:208:d4::29) To DM6PR01MB4825.prod.exchangelabs.com
+ (2603:10b6:5:6b::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aaron@os.amperecomputing.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2600:3c03::f03c:91ff:febb:cdda]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41020974-51cb-4a3d-32c1-08d6faf11be8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR01MB4906;
+x-ms-traffictypediagnostic: DM6PR01MB4906:
+x-microsoft-antispam-prvs: <DM6PR01MB490676652E3A18AA2A5EE7738AFD0@DM6PR01MB4906.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(39850400004)(396003)(189003)(199004)(54906003)(71200400001)(71190400001)(52116002)(46003)(8936002)(25786009)(8676002)(316002)(6116002)(81166006)(81156014)(1076003)(99286004)(446003)(186003)(11346002)(7416002)(386003)(6506007)(478600001)(486006)(102836004)(476003)(4326008)(33656002)(14454004)(76176011)(2906002)(14444005)(256004)(305945005)(5660300002)(7736002)(66946007)(6436002)(73956011)(45080400002)(9686003)(6512007)(68736007)(229853002)(66556008)(64756008)(6486002)(66476007)(86362001)(66446008)(107886003)(53936002)(6916009)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR01MB4906;H:DM6PR01MB4825.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: os.amperecomputing.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S716oI9qHr9HoTifdQqNcAn+wRHxHq8BZGRzkdC9r3kNYPJ0F8JFHXzYx0SUOMq7ebgM62lCx+oVLzPlCypRkfyBve7WzA8ySs9nYANe2AjFY4bNJfJIZ2OONOm8zg0DMl/4TJtLFA8wg7EhvQp8zAFDre7IfLPXk/TLYKEM9ryqa+D1HtNpPnIMjuloBa7MejlWhifKAIVoL57h6X9ZzWrr9dbVpntQYKJGa8/ttYTwvgdVSPEmzauMFrB1ym2iCTn/fzAb2ttKXWkYyk88Yyfoa1DW6AKYrLYSJ3PiIs2rUeNjtGE4mmV/IcZCOUY7REJeaTXGK4Yit4lDLoLYa0JjtqNSjERT40U7jXVxNvg5Q2kFiZXA3krua9Em2Km6etMvmIhXSFW1sWtXqxljUVvr2n6EBUlal8Pd9Rhu+Oc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DE70FA20B7464849A9C1EC473C6D4C0A@prod.exchangelabs.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41020974-51cb-4a3d-32c1-08d6faf11be8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 11:17:59.0263
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Aaron@os.amperecomputing.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB4906
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 25, 2019 at 5:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Jun 26 08:28, Linus Torvalds wrote:
+> This is not a comment on the patch series itself, it is a comment on the =
+emails.
+>=20
+> Your email is mis-configured and ends up all being marked as spam for
+> me, because you go through the wrong smtp server (or maybe your smtp
+> server itself is miconfigured)
+>=20
+> All your emails fail dmarc, because the "From" header is
+> os.amperecomputing.com, but the DKIM signature is for
+> amperemail.onmicrosoft.com.
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Instead of enabling the panel backlight in a callback defined in board
-> file using deprecated legacy GPIO API calls, model the line as a GPIO
-> backlight device.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+It appears Microsoft enables DKIM by default, but does so using keys
+advertised at *.onmicrosoft.com domains, and our IT folks didn't
+initially notice this. We believe we've rectified the situation, so
+please let us know if our emails (including this one) continue to be an
+issue.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> End result: it wil all go into the spam box of anybody who checks DKIM.
 
-Yours,
-Linus Walleij
+Interestingly, *some* receiving mail servers (at least gmail.com) were
+reporting DKIM/DMARC pass for emails sent directly from our domain
+(though not those sent through a mailing list), which I believe allowed
+our IT to falsely think they had everything configured correctly.
+
+-Aaron
