@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ADCC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257E9C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D98512187F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E737321855
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596039;
-	bh=4ITl3QuNc8xFedtEz5sYcmIts+U+MRtFaUu1LY8uZw0=;
+	s=default; t=1561596043;
+	bh=dxCMh4AyURDy0RdFE7zP+vLJWNXPE0T3TUyKRGk1E2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rkmxXtQKU1xVOMBtCeur58HjeaOZ+sHFsTud552BypPP+L6uqDzhakXKRO14zjqf0
-	 I9Af6W3WKkhFfYW3Ty9P7dhLQ1gTeV/gal2Zva07AgzfaVGNZY+QBGOXfAeXK7HHhO
-	 gaqa0wdE90FAvieihE+SS7dgCfRvRdGfTKDGM2ag=
+	b=vO+zYlWqAnsPRDcBAhspaXzU5oodweRolxHZclnYVB/C9eQqd7BqsZBnkdIv6TYKa
+	 xQo47RzJ7qPEGRTe2/L2I5RxmY2taapX2aXtLmVVTeQAdxwrFMtBKnNsN8nbSUT9Lz
+	 KGUyr+zA1XqtJFoRHF5LrIrmDlXiD78XAro+UqJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfF0Aki (ORCPT
+        id S1729369AbfF0Akl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:40:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44542 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:40:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729371AbfF0Akg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:40:36 -0400
+        id S1729371AbfF0Akj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:40:39 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2298205ED;
-        Thu, 27 Jun 2019 00:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FD5521855;
+        Thu, 27 Jun 2019 00:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596035;
-        bh=4ITl3QuNc8xFedtEz5sYcmIts+U+MRtFaUu1LY8uZw0=;
+        s=default; t=1561596038;
+        bh=dxCMh4AyURDy0RdFE7zP+vLJWNXPE0T3TUyKRGk1E2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wSTl4E/lsaN7v9EquELztD9S5hAVweGL8RRDiQOo8WCEkq8VzHeBfA+4GzZ0K1K27
-         Xzo7kaFforjG9T6hUimPONsneHr1pL8A4xsCQ49TQsZWjraHOEW5xla8bS0D/925nd
-         Pk3O3jtJoi8nVcilxjxpH71WS+9wtf4BrapGuFQw=
+        b=lsmLjM3RJUmLpBKcPuM305qShxd1DfrQlXDu6TEY/UFLVtKntJasQWmnN+U4jGs1b
+         vs1nTsK0eH9TEBtFcpTX0vy8KdTuePrRtodsO8Bko8IkoXZGnU/I/1etQ4W6Cl9/xs
+         XR8IEk0sFd8jNrQcSwj7aJgmUNcwlHiymnA7Lyok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.14 20/35] KVM: arm/arm64: vgic: Fix kvm_device leak in vgic_its_destroy
-Date:   Wed, 26 Jun 2019 20:39:08 -0400
-Message-Id: <20190627003925.21330-20-sashal@kernel.org>
+Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 21/35] mlxsw: spectrum: Disallow prio-tagged packets when PVID is removed
+Date:   Wed, 26 Jun 2019 20:39:09 -0400
+Message-Id: <20190627003925.21330-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
 References: <20190627003925.21330-1-sashal@kernel.org>
@@ -60,45 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Martin <Dave.Martin@arm.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 4729ec8c1e1145234aeeebad5d96d77f4ccbb00a ]
+[ Upstream commit 4b14cc313f076c37b646cee06a85f0db59cf216c ]
 
-kvm_device->destroy() seems to be supposed to free its kvm_device
-struct, but vgic_its_destroy() is not currently doing this,
-resulting in a memory leak, resulting in kmemleak reports such as
-the following:
+When PVID is removed from a bridge port, the Linux bridge drops both
+untagged and prio-tagged packets. Align mlxsw with this behavior.
 
-unreferenced object 0xffff800aeddfe280 (size 128):
-  comm "qemu-system-aar", pid 13799, jiffies 4299827317 (age 1569.844s)
-  [...]
-  backtrace:
-    [<00000000a08b80e2>] kmem_cache_alloc+0x178/0x208
-    [<00000000dcad2bd3>] kvm_vm_ioctl+0x350/0xbc0
-
-Fix it.
-
-Cc: Andre Przywara <andre.przywara@arm.com>
-Fixes: 1085fdc68c60 ("KVM: arm64: vgic-its: Introduce new KVM ITS device")
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 148f472da5db ("mlxsw: reg: Add the Switch Port Acceptable Frame Types register")
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-its.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlxsw/reg.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-index dc06f5e40041..526d808ecbbd 100644
---- a/virt/kvm/arm/vgic/vgic-its.c
-+++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -1677,6 +1677,7 @@ static void vgic_its_destroy(struct kvm_device *kvm_dev)
- 	mutex_unlock(&its->its_lock);
- 
- 	kfree(its);
-+	kfree(kvm_dev);/* alloc by kvm_ioctl_create_device, free by .destroy */
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/reg.h b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+index 5acfbe5b8b9d..8ab7a4f98a07 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/reg.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/reg.h
+@@ -911,7 +911,7 @@ static inline void mlxsw_reg_spaft_pack(char *payload, u8 local_port,
+ 	MLXSW_REG_ZERO(spaft, payload);
+ 	mlxsw_reg_spaft_local_port_set(payload, local_port);
+ 	mlxsw_reg_spaft_allow_untagged_set(payload, allow_untagged);
+-	mlxsw_reg_spaft_allow_prio_tagged_set(payload, true);
++	mlxsw_reg_spaft_allow_prio_tagged_set(payload, allow_untagged);
+ 	mlxsw_reg_spaft_allow_tagged_set(payload, true);
  }
  
- int vgic_its_has_attr_regs(struct kvm_device *dev,
 -- 
 2.20.1
 
