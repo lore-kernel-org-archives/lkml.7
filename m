@@ -2,76 +2,86 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D52C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E34C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE28A2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD5A2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfF0NTG (ORCPT
+        id S1726897AbfF0NTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:19:06 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32100 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfF0NTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:19:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 06:19:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="162634373"
-Received: from unknown (HELO jsakkine-mobl1) ([10.252.36.47])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Jun 2019 06:19:02 -0700
-Message-ID: <f98b870d8be4d3710f8114a2e864b18995d7929d.camel@linux.intel.com>
-Subject: Re: [PATCH v7 1/2] fTPM: firmware TPM running in TEE
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
-        thiruan@microsoft.com, bryankel@microsoft.com,
-        tee-dev@lists.linaro.org, ilias.apalodimas@linaro.org,
-        sumit.garg@linaro.org, rdunlap@infradead.org
-Date:   Thu, 27 Jun 2019 16:19:01 +0300
-In-Reply-To: <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
-References: <20190625201341.15865-1-sashal@kernel.org>
-         <20190625201341.15865-2-sashal@kernel.org>
-         <673dd30d03e8ed9825bb46ef21b2efef015f6f2a.camel@linux.intel.com>
-         <20190626235653.GL7898@sasha-vm>
-         <b688e845ccbe011c54b10043fbc3c0de8f0befc2.camel@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Thu, 27 Jun 2019 09:19:14 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:60182 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfF0NTO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 09:19:14 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1hgUIz-0006BR-AX; Thu, 27 Jun 2019 09:19:13 -0400
+Message-ID: <2f94b350ce562701bf31820d0ba745a06c983223.camel@surriel.com>
+Subject: Re: [PATCH v9 4/6] khugepaged: rename collapse_shmem() and
+ khugepaged_scan_shmem()
+From:   Rik van Riel <riel@surriel.com>
+To:     Song Liu <songliubraving@fb.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     matthew.wilcox@oracle.com, kirill.shutemov@linux.intel.com,
+        kernel-team@fb.com, william.kucharski@oracle.com,
+        akpm@linux-foundation.org, hdanton@sina.com
+Date:   Thu, 27 Jun 2019 09:19:12 -0400
+In-Reply-To: <20190625001246.685563-5-songliubraving@fb.com>
+References: <20190625001246.685563-1-songliubraving@fb.com>
+         <20190625001246.685563-5-songliubraving@fb.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-XX3VlRGl2hyUPeG85tjf"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-27 at 16:17 +0300, Jarkko Sakkinen wrote:
-> On Wed, 2019-06-26 at 19:56 -0400, Sasha Levin wrote:
-> > > You've used so much on this so shouldn't this have that somewhat new
-> > > co-developed-by tag? I'm also wondering can this work at all
-> > 
-> > Honestly, I've just been massaging this patch more than "authoring" it.
-> > If you feel strongly about it feel free to add a Co-authored patch with
-> > my name, but in my mind this is just Thiru's work.
-> 
-> This is just my subjective view but writing code is easier than making
-> it work in the mainline in 99% of cases. If this patch was doing
-> something revolutional, lets say a new outstanding scheduling algorithm,
-> then I would think otherwise. It is not. You without question deserve
-> both credit and also the blame (if this breaks everything) :-)
 
-Not like I'm putting the pressure on this. You make the call
-with the tag. Put it if you wwant. I'm cool with either.
+--=-XX3VlRGl2hyUPeG85tjf
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-/Jarkko
+On Mon, 2019-06-24 at 17:12 -0700, Song Liu wrote:
+> Next patch will add khugepaged support of non-shmem files. This patch
+> renames these two functions to reflect the new functionality:
+>=20
+>     collapse_shmem()        =3D>  collapse_file()
+>     khugepaged_scan_shmem() =3D>  khugepaged_scan_file()
+>=20
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+
+Acked-by: Rik van Riel <riel@surriel.com>
+
+--=20
+All Rights Reversed.
+
+--=-XX3VlRGl2hyUPeG85tjf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl0UwlEACgkQznnekoTE
+3oMxUQgAifzfEQEqWrpF79WAQuJKF6M1RfFVcdGX22cjDZlnZKZdbZM16fG55kdN
+0AsMM+3LHgBLS1mYq/8d/sjFPxCH8UH3qebrvr8RgZSOIQ6Yiy+GWoPMYgkfDqPd
+RX08C+un8MGcnzIcHnot4Ha8v4i/+AUFcYWcEdChkrXvaooEdjjOUPeoAaNt3um/
+lAP/vIGiFh+7paL/LSk0VGG5OUMn5EXtIBWiCRdcU8adw+2tcprzDBexQH5kGnA/
+qUpJSGlHjJzLgb/zan9+kc8ajJRqf2ybIMCTLmhpuFFHLOnhfly8aYkZiwOtvlmL
+nGKZ3qK9CZZrKTTQJwpQ70zomYRxQg==
+=37zQ
+-----END PGP SIGNATURE-----
+
+--=-XX3VlRGl2hyUPeG85tjf--
 
