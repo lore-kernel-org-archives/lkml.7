@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E477C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26560C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9E921726
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECBFC21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:35:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HmLmCk5m"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r5eThZKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfF0BfC (ORCPT
+        id S1727039AbfF0BfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:35:02 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56302 "EHLO
+        Wed, 26 Jun 2019 21:35:16 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56444 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfF0BfC (ORCPT
+        with ESMTP id S1726631AbfF0BfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:35:02 -0400
+        Wed, 26 Jun 2019 21:35:16 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R1Y5xl126661;
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R1Y7f9126686;
         Thu, 27 Jun 2019 01:34:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=+IsAOfMVpzahGu2lDbM+oEICyaMhBCIcRgFcY79hLpo=;
- b=HmLmCk5mOS2Hl697fF6mT3oFeYxccBJUKqCmzBDChJ6ALADIC/S42/t9XgqopWiHSgaY
- nPntzf40Pa93q7CFh1bumRyf1Xlhx4E9UvNFmUt9hIs/2iF89SIvfkg6zxKenACbc1h8
- HuSdMQYAxgnoOoeNgmn06JWYj1WntrL0hcCr+XVTFB+ZamaiKPeeBPB1Yf1XbJlK/+Lq
- +YfSSTe2yWc9jL4fJQ2eqjHceeVWitc0oGPq3mIOWdFIew8f7quXVfkOw0OmazB+ExcU
- 9KLTVBcHMg/DYljN3xnxEj2dcxtIla1yUqanOWHAoGGKVSSCVLGz68XdVFKvzyWyHSOV xw== 
+ bh=a9xr0ftUygGbe17n4LV66UNhDktetQVNmeRiOg3colM=;
+ b=r5eThZKJiCb2FqA1NijJ4sdwbkeLoMrSLtV/3ZYr+7junX54Jf75FdKxfkWZdEbXQud9
+ B/yzr7OZ/zkiydLAJ+NNFUXog6nMmi7VyC+FuzYb+8ETuLnumqzBHCGE/fqRiwFz+rHt
+ XecyNtmPlSzRmNMpgxATTvKuedxEo07UVbuy3Wd0DVuuV8S/ci0g9WUzPZQ3Va6WyoAF
+ DvvagwUOBwgkg+xZt9q1SCXVArbGwQYzF/ZMH7a7Wa6xjQ6V6cdgAs3MK7mBW4bWYK/r
+ BMjdxHYckLAeA/zqUF0p3AIFtfE99iA7OX39+ImNuHu+Dwtx7ha/KgLPwdH7K0Qz2Shh qA== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2t9c9pwdkx-1
+        by aserp2120.oracle.com with ESMTP id 2t9c9pwdky-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 27 Jun 2019 01:34:30 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R1Xw7R160506;
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R1Xuru160444;
         Thu, 27 Jun 2019 01:34:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2t99f4rpm9-1
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2t99f4rpma-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 27 Jun 2019 01:34:30 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5R1YSXv009362;
-        Thu, 27 Jun 2019 01:34:28 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5R1YR5r005643;
+        Thu, 27 Jun 2019 01:34:27 GMT
 Received: from smazumda-Precision-T1600.us.oracle.com (/10.132.91.175)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Jun 2019 18:34:28 -0700
+        with ESMTP ; Wed, 26 Jun 2019 18:34:27 -0700
 From:   subhra mazumdar <subhra.mazumdar@oracle.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
@@ -58,9 +58,9 @@ Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
         daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
         viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
         mgorman@techsingularity.net
-Subject: [PATCH v3 4/7] sched: add sched feature to disable idle core search
-Date:   Wed, 26 Jun 2019 18:29:16 -0700
-Message-Id: <20190627012919.4341-5-subhra.mazumdar@oracle.com>
+Subject: [PATCH v3 2/7] sched: introduce per-cpu var next_cpu to track search limit
+Date:   Wed, 26 Jun 2019 18:29:14 -0700
+Message-Id: <20190627012919.4341-3-subhra.mazumdar@oracle.com>
 X-Mailer: git-send-email 2.9.3
 In-Reply-To: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
 References: <20190627012919.4341-1-subhra.mazumdar@oracle.com>
@@ -80,26 +80,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new sched feature SIS_CORE to have an option to disable idle core
-search (select_idle_core).
+Introduce a per-cpu variable to track the limit upto which idle cpu search
+was done in select_idle_cpu(). This will help to start the search next time
+from there. This is necessary for rotating the search window over entire
+LLC domain.
 
 Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
 ---
- kernel/sched/features.h | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/core.c  | 2 ++
+ kernel/sched/sched.h | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/kernel/sched/features.h b/kernel/sched/features.h
-index 858589b..de4d506 100644
---- a/kernel/sched/features.h
-+++ b/kernel/sched/features.h
-@@ -57,6 +57,7 @@ SCHED_FEAT(TTWU_QUEUE, true)
-  */
- SCHED_FEAT(SIS_AVG_CPU, false)
- SCHED_FEAT(SIS_PROP, true)
-+SCHED_FEAT(SIS_CORE, true)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 874c427..80657fc 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -24,6 +24,7 @@
+ #include <trace/events/sched.h>
  
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
++DEFINE_PER_CPU_SHARED_ALIGNED(int, next_cpu);
+ 
+ #if defined(CONFIG_SCHED_DEBUG) && defined(CONFIG_JUMP_LABEL)
  /*
-  * Issue a WARN when we do multiple update_rq_clock() calls
+@@ -5966,6 +5967,7 @@ void __init sched_init(void)
+ 	for_each_possible_cpu(i) {
+ 		struct rq *rq;
+ 
++		per_cpu(next_cpu, i) = -1;
+ 		rq = cpu_rq(i);
+ 		raw_spin_lock_init(&rq->lock);
+ 		rq->nr_running = 0;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index b52ed1a..4cecfa2 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -994,6 +994,7 @@ static inline void update_idle_core(struct rq *rq) { }
+ #endif
+ 
+ DECLARE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
++DECLARE_PER_CPU_SHARED_ALIGNED(int, next_cpu);
+ 
+ #define cpu_rq(cpu)		(&per_cpu(runqueues, (cpu)))
+ #define this_rq()		this_cpu_ptr(&runqueues)
 -- 
 2.9.3
 
