@@ -2,101 +2,104 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6480C5B576
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2F4C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB4D2133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9F7208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:28:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="CzGrhDeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfF0W0E (ORCPT
+        id S1726660AbfF0W17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:26:04 -0400
-Received: from www62.your-server.de ([213.133.104.62]:47700 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF0W0E (ORCPT
+        Thu, 27 Jun 2019 18:27:59 -0400
+Received: from one.firstfloor.org ([193.170.194.197]:49284 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbfF0W16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:26:04 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hgcq3-0005kW-R6; Fri, 28 Jun 2019 00:25:55 +0200
-Received: from [178.193.45.231] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hgcq3-000Rce-LN; Fri, 28 Jun 2019 00:25:55 +0200
-Subject: Re: linux-next: Fixes tag needs some work in the bpf tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Roman Gushchin <guro@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190627080521.5df8ccfc@canb.auug.org.au>
- <20190626221347.GA17762@tower.DHCP.thefacebook.com>
- <CAADnVQJiMH=jfuD0FGpr2JmzyQsMKHJ4pM1kfQ8jhSxrAe0XWg@mail.gmail.com>
- <20190627114536.09c08f5d@canb.auug.org.au>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <134f90ff-13f8-b7c1-9693-2f2649245c38@iogearbox.net>
-Date:   Fri, 28 Jun 2019 00:25:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Thu, 27 Jun 2019 18:27:58 -0400
+X-Greylist: delayed 446 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Jun 2019 18:27:57 EDT
+Received: from firstfloor.org (c-71-238-43-142.hsd1.or.comcast.net [71.238.43.142])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by one.firstfloor.org (Postfix) with ESMTPSA id 1CBCF86712;
+        Fri, 28 Jun 2019 00:20:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1561674026;
+        bh=XoR8yTCqfAt67Rp1x+70ueZjQuZxGxj6NraAHdT9T4c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CzGrhDebeLcx+ftjos04x7Yk3/Mn/0Fgyw6VOBTCXxuDhUq3EBbeTMOO7DjHbmq0v
+         B29hTrYmSipwXDgDlV/NMlWfpHIO11cAlGADaRWyZ7+UxIeXcbjPzrgiTWLHgZSSiR
+         EFZ0F/YAZ3XqLYgRuvc7k5uiHPRt2WASw4OzJjBQ=
+Received: by firstfloor.org (Postfix, from userid 1000)
+        id 4DB7FA0B2E; Thu, 27 Jun 2019 15:20:22 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     acme@kernel.org
+Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH] perf tools: Fix bison warnings for pure parser
+Date:   Thu, 27 Jun 2019 15:20:21 -0700
+Message-Id: <20190627222021.14980-1-andi@firstfloor.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190627114536.09c08f5d@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25493/Thu Jun 27 10:06:16 2019)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/27/2019 03:45 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> On Wed, 26 Jun 2019 16:36:50 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->>
->> On Wed, Jun 26, 2019 at 3:14 PM Roman Gushchin <guro@fb.com> wrote:
->>>
->>> On Thu, Jun 27, 2019 at 08:05:21AM +1000, Stephen Rothwell wrote:  
->>>>
->>>> In commit
->>>>
->>>>   12771345a467 ("bpf: fix cgroup bpf release synchronization")
->>>>
->>>> Fixes tag
->>>>
->>>>   Fixes: 4bfc0bb2c60e ("bpf: decouple the lifetime of cgroup_bpf from
->>>>
->>>> has these problem(s):
->>>>
->>>>   - Subject has leading but no trailing parentheses
->>>>   - Subject has leading but no trailing quotes
->>>>
->>>> Please don't split Fixes tags across more than one line.  
->>>
->>> Oops, sorry.
->>>
->>> Alexei, can you fix this in place?
->>> Or should I send an updated version?  
->>
->> I cannot easily do it since -p and --signoff are incompatible flags.
->> I need to use -p to preserve merge commits,
->> but I also need to use --signoff to add my sob to all
->> other commits that were committed by Daniel
->> after your commit.
->>
->> Daniel, can you fix Roman's patch instead?
->> you can do:
->> git rebase -i -p  12771345a467^
->> fix Roman's, add you sob only to that one
->> and re-push the whole thing.
+From: Andi Kleen <ak@linux.intel.com>
 
-(Fixed in bpf-next.)
+bison 3.4.1 complains during a perf build:
+
+util/parse-events.y:1.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
+    1 | %pure-parser
+      | ^~~~~~~~~~~~
+  CC       /home/andi/lsrc/obj-perf/ui/browsers/map.o
+util/parse-events.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+
+util/expr.y:13.1-12: warning: deprecated directive, use ‘%define api.pure’ [-Wdeprecated]
+   13 | %pure-parser
+      | ^~~~~~~~~~~~
+util/expr.y: warning: fix-its can be applied.  Rerun with option '--update'. [-Wother]
+
+Change the declarations to %define api.pure
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/util/expr.y         | 2 +-
+ tools/perf/util/parse-events.y | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 432b8560cf51..803c0929c205 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -10,7 +10,7 @@
+ #define MAXIDLEN 256
+ %}
+ 
+-%pure-parser
++%define api.pure
+ %parse-param { double *final_val }
+ %parse-param { struct parse_ctx *ctx }
+ %parse-param { const char **pp }
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 6ad8d4914969..4eb10c27c30f 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -1,4 +1,4 @@
+-%pure-parser
++%define api.pure
+ %parse-param {void *_parse_state}
+ %parse-param {void *scanner}
+ %lex-param {void* scanner}
+-- 
+2.21.0
+
