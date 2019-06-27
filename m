@@ -2,75 +2,175 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C768C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C92C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A932063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 518872063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:23:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OsHZIxUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfF0HXN (ORCPT
+        id S1726536AbfF0HXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:23:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:50142 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbfF0HXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:23:13 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id DCFEF68B20; Thu, 27 Jun 2019 09:22:40 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 09:22:40 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/4] powerpc/powernv: remove unused NPU DMA code
-Message-ID: <20190627072240.GA9916@lst.de>
-References: <20190625145239.2759-1-hch@lst.de> <20190625145239.2759-4-hch@lst.de> <7bde96e0-7bc5-d5fe-f151-52c29660633c@ozlabs.ru> <20190626074935.GA25452@lst.de> <027a5095-a22c-2799-8ff6-42d0bc4d2bc9@ozlabs.ru>
+        Thu, 27 Jun 2019 03:23:37 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56347 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfF0HXg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 03:23:36 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190627072334euoutp01ee8beb1fb2d03a1e2d156408d20a6bb7~r-U_xWXSP0395003950euoutp01f
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 07:23:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190627072334euoutp01ee8beb1fb2d03a1e2d156408d20a6bb7~r-U_xWXSP0395003950euoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1561620214;
+        bh=oGuHAPxwcWpfOMlWoWrei2vmhmacWVvsFMAeQZ+RIf0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=OsHZIxUFjWmECSIISSofxGe+YIg2bIThD6t83Pj6MlhVYXoPrLpToBU204O5BZb0B
+         dia05kg9jUQy4zL5DcLmQeE8KXBW8xwJFN0b0y/NDTTPyIyQnKhKqCS7jQuP6cSnZJ
+         0/TI/gpgCX4+r5rvQVKqB2y6/DtASVd7LBFETti4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190627072333eucas1p204fec7f4ebf1f64a40a89d832d3c06f6~r-U91uXJb0553205532eucas1p2u;
+        Thu, 27 Jun 2019 07:23:33 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 55.40.04325.5FE641D5; Thu, 27
+        Jun 2019 08:23:33 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190627072332eucas1p19e61c94d225e7ff2a154e98fc4354047~r-U8-0tI41949519495eucas1p12;
+        Thu, 27 Jun 2019 07:23:32 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190627072332eusmtrp1c81dde32bcab36a468160b74f8323886~r-U8xsNPf1956919569eusmtrp1V;
+        Thu, 27 Jun 2019 07:23:32 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-fe-5d146ef5a0ca
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 52.7B.04146.4FE641D5; Thu, 27
+        Jun 2019 08:23:32 +0100 (BST)
+Received: from [106.109.129.180] (unknown [106.109.129.180]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190627072331eusmtip138c32d2e43c4ee49c9702f84e0b44316~r-U8G6Ho12895628956eusmtip1Y;
+        Thu, 27 Jun 2019 07:23:31 +0000 (GMT)
+Subject: Re: [PATCH bpf v4 2/2] xdp: fix hang while unregistering device
+ bound to xdp socket
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+From:   Ilya Maximets <i.maximets@samsung.com>
+Message-ID: <30d4e214-f53b-ac2d-e7f7-99bbd7b96b8f@samsung.com>
+Date:   Thu, 27 Jun 2019 10:23:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <027a5095-a22c-2799-8ff6-42d0bc4d2bc9@ozlabs.ru>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190626113427.761cc845@cakuba.netronome.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGKsWRmVeSWpSXmKPExsWy7djP87pf80RiDaZ9FrD407aB0eLzkeNs
+        FosXfmO2mHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
+        nbPusnss3vOSyaPrxiVmj+ndD5k9+rasYvT4vEkugD2KyyYlNSezLLVI3y6BK+PVib+MBTc5
+        K1ZsrWpg3MvexcjJISFgInH7xE0gm4tDSGAFo8SeSZtZIJwvjBJLHl5hg3A+M0rc3N0HVMYB
+        1vLshh9EfDmjxOZl/xkhnI+MEndu7mcBmSssECex/3o7mC0iYCjx68YUVpAiZoHrTBL3b29m
+        BkmwCehInFp9hBHE5hWwk3i57zgTiM0ioCox4/MjMFtUIELi8pZdUDWCEidnPmEBuYJTwFri
+        2hQDkDCzgLhE05eVrBC2vMT2t3OYQXZJCDxil5j96zILxKMuEvPXfGeFsIUlXh3fAg0AGYnT
+        k3ugauol7re8ZIRo7mCUmH7oHxNEwl5iy+tzYO8zC2hKrN+lDxF2lNh24z0TJFT4JG68FYS4
+        gU9i0rbpzBBhXomONiGIahWJ3weXM0PYUhI3331mn8CoNAvJY7OQfDMLyTezEPYuYGRZxSie
+        Wlqcm55abJyXWq5XnJhbXJqXrpecn7uJEZi6Tv87/nUH474/SYcYBTgYlXh4V+wUjhViTSwr
+        rsw9xCjBwawkwpsfJhIrxJuSWFmVWpQfX1Sak1p8iFGag0VJnLea4UG0kEB6YklqdmpqQWoR
+        TJaJg1OqgXHj7sn3PbfEBN88k3t1637P/L+KixL9XgZe0njBe3i62NqLJozn2V8JCp1UFw05
+        //juoYTXam/Wr9qycxqD1utJJ9cJ9srkxj1rvNhX+E3zRDvDin2xZw/ZlZq86gpb0jD31C37
+        Cm412Yd6LpYrlvltjtu1fZ5NTPaJqsqnN/99jJt3qMWras8WJZbijERDLeai4kQAHD3j+lkD
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsVy+t/xu7pf8kRiDd6+F7X407aB0eLzkeNs
+        FosXfmO2mHO+hcXiSvtPdotjL1rYLHatm8lscXnXHDaLFYdOAMUWiFls79/H6MDtsWXlTSaP
+        nbPusnss3vOSyaPrxiVmj+ndD5k9+rasYvT4vEkugD1Kz6Yov7QkVSEjv7jEVina0MJIz9DS
+        Qs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+PVib+MBTc5K1ZsrWpg3MvexcjBISFgIvHs
+        hl8XIxeHkMBSRom7qzYwdzFyAsWlJH78usAKYQtL/LnWxQZR9J5R4s/UeWwgCWGBOIkHDQfB
+        GkQEDCV+3ZjCClLELHCdSeLOwcesEB0fGCU+PlrCAlLFJqAjcWr1EUYQm1fATuLlvuNMIDaL
+        gKrEjM+PwGxRgQiJvrbZbBA1ghInZz5hATmVU8Ba4toUA5Aws4C6xJ95l5ghbHGJpi8rWSFs
+        eYntb+cwT2AUmoWkexaSlllIWmYhaVnAyLKKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMFq3
+        Hfu5eQfjpY3BhxgFOBiVeHhX7BSOFWJNLCuuzD3EKMHBrCTCmx8mEivEm5JYWZValB9fVJqT
+        WnyI0RTot4nMUqLJ+cBEklcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+J
+        g1OqgdHEfNuR7woLGnsyUl5OYOX9Pfvv3bObGeW6BZXqFJv/fV5yQeJCZ8P52WeCD19e+pbX
+        6NNmX7X/HnYTzi7dbaby7/qU0wlF6/QfzM/P9lobKq9zRvOo/8tWTgf+fdNWXXBPVuieF7TL
+        fI3h8labs9Ofp/R0vVEK1rXduf2bKP8ds1Wsz748yjVTYinOSDTUYi4qTgQAaKZHDuwCAAA=
+X-CMS-MailID: 20190627072332eucas1p19e61c94d225e7ff2a154e98fc4354047
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190626181528eucas1p190f20427a1d2a64f2efa6cedcfac0826
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190626181528eucas1p190f20427a1d2a64f2efa6cedcfac0826
+References: <20190626181515.1640-1-i.maximets@samsung.com>
+        <CGME20190626181528eucas1p190f20427a1d2a64f2efa6cedcfac0826@eucas1p1.samsung.com>
+        <20190626181515.1640-3-i.maximets@samsung.com>
+        <20190626113427.761cc845@cakuba.netronome.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:21:55AM +1000, Alexey Kardashevskiy wrote:
-> > Which comment?  Last time I asked you complaint "it is still used in
-> > exactly the same way as before" which you later clarified that you
-> > have a hidden out of tree user somewhere, and you only objected to
+On 26.06.2019 21:34, Jakub Kicinski wrote:
+> On Wed, 26 Jun 2019 21:15:15 +0300, Ilya Maximets wrote:
+>> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+>> index 267b82a4cbcf..56729e74cbea 100644
+>> --- a/net/xdp/xdp_umem.c
+>> +++ b/net/xdp/xdp_umem.c
+>> @@ -140,34 +140,38 @@ int xdp_umem_assign_dev(struct xdp_umem *umem, struct net_device *dev,
+>>  	return err;
+>>  }
+>>  
+>> -static void xdp_umem_clear_dev(struct xdp_umem *umem)
+>> +void xdp_umem_clear_dev(struct xdp_umem *umem)
+>>  {
+>> +	bool lock = rtnl_is_locked();
 > 
-> It is not hidden, anyone can download and inspect that GPL driver.
+> How do you know it's not just locked by someone else?  You need to pass
+> the locked state in if this is called from different paths, some of
+> which already hold rtnl.
 
-For one no one has ever posted a link.  And second as mentioned
-countless times it doesn't matter, it only matters if it is in mainline,
-or as a special exception actively trying to go mainline.
+Oh. That's a shame. I need more sleep.
 
-> > the word "dead".  That has been fixed and there were no further
-> > comments.
+Thanks for spotting. I'll re-work this part.
+
+Best regards, Ilya Maximets.
+
 > 
-> You still have it in the cover letter so at very least 3/4 is not a part
-> of this patchset then.
+> Preferably factor the code which needs the lock out into a separate
+> function like this:
 > 
-> And I still want to see a formal statement about out-of-tree drivers
-> support/tolerance. If you manage to remove this code, I'll have to post
-> a revert (again and again) but I would rather know the exact list of
-> what we do and what we do not do about such drivers and if the list 1)
-> exists 2) is reasonable then I could try to come up with a better
-> solution or point others to the policy and push them to do the right
-> thing. Right now it is just you pretending that the nVidia driver does
-> not exist, this is not helping. Thanks,
-
-We had that discussion at kernel summit and it was reported.  Anyway,
-adding Greg, who usually has some pretty good prewritten letters for
-this kind of thing.
+> void __function()
+> {
+> 	do();
+> 	the();
+> 	things();
+> 	under();
+> 	the();
+> 	lock();
+> }
+> 
+> void function()
+> {
+> 	rtnl_lock();
+> 	__function();
+> 	rtnl_unlock();
+> }
+> 
+>>  	struct netdev_bpf bpf;
+>>  	int err;
+>>  
+>> +	if (!lock)
+>> +		rtnl_lock();
+> 
+> 
+> 
