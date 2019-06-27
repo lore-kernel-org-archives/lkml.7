@@ -2,295 +2,148 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CFCC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7852C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9157120815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F75C20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8/gCEeR"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="g9H0EqGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfF0AF3 (ORCPT
+        id S1726756AbfF0AGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:05:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37321 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbfF0AF1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:05:27 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 19so264633pfa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 17:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KKZ1R9QgEMrkGcZ9YLvKRKzkpMRTcKXcwCOxP+teR7M=;
-        b=L8/gCEeRIbIoy4dFbDu3aEhSPRF7rPfAvmRCx3ItHECNXHr8HCgKjM5mXTC9wUyNb+
-         nrwS1zeX/UJfOPKYmEwGKVHcruUS1znp6TN5vQdfI6b+Y9H9BFcsfEseAINmMZxhStlc
-         TWZydfC6tN4zj88A97CBxhrzFDd0ti0kMTr/cu0YxAbGMXlEHBEdlOAi6SMiewszVXs4
-         tjHCgRLCojzI+WbS+S1y0aA/Xq96zu61RfJ8CIwkL7VdAC9ftOckX4/U6suQeLl1pxPk
-         S14J2HjbLRLV7EnZm9hwujt2kW8WGbocpgogTslAlxCeXfFnyXJuzl1ibcVD4NJR7iWw
-         Fh1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KKZ1R9QgEMrkGcZ9YLvKRKzkpMRTcKXcwCOxP+teR7M=;
-        b=G5wY2kDQvIM2l4dvNojHUhS64C5wjJ8pygVcafvsjV9eYahEFpQ+jMia6UPgLVJM0r
-         ZhJoFXRKilC4I83RLilSjq85mA/r1sAJA8+4TrMxd0bep1WsyaJsEndbLOQfMb6k5hA+
-         dlBiaP5yFDgBiFods+jKVeRm4cnH7tSj+7DsMPqX/irZ2PPA/IAUj3Zg0jlyQ9/Jg4Fb
-         AM/8zJElIwADPglqziEf01PL0+RFdbci3Tum0FpKLcwj0rJk93ZOTC4psNSW0VKcBZ2J
-         LBMMLFTJ4Ed8mkunzo6EhwHmbU6Wq9FQWJ6o9ss3YbhqiiRr+XNqNBj8DRQpiKo6cPbi
-         eXWQ==
-X-Gm-Message-State: APjAAAUIGV3bkBNFv1ZZtt4it0Yd7RUynwdT2zjLhDW387Z+P4EvGJmi
-        PC6/qtTa4RohiXDlnMKeLXF2iAQZEju3KTiqC5Ax4A==
-X-Google-Smtp-Source: APXvYqw0luNcANHXyMUiFoyyUu0AVErgnzQun0+KNERaAUHA3h78Phk03thaTOrgTG//zK4/DgIcpxo61LJZY0ft9FY=
-X-Received: by 2002:a63:b919:: with SMTP id z25mr654931pge.201.1561593925659;
- Wed, 26 Jun 2019 17:05:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190617082613.109131-1-brendanhiggins@google.com>
- <20190617082613.109131-2-brendanhiggins@google.com> <20190620001526.93426218BE@mail.kernel.org>
- <CAFd5g46Jhxsz6_VXHEVYvTeDRwwzgKpr=aUWLL5b3S4kUukb8g@mail.gmail.com>
- <20190625214427.GN19023@42.do-not-panic.com> <CAFd5g47OABqN127cPKqoCOA_Wr9w=LFh_0XkF7LXu2iY9sFkSw@mail.gmail.com>
- <20190625230253.GQ19023@42.do-not-panic.com> <CAFd5g45fSdpytudDyD3Yo1ti=kU_JJ6S9yz53_L=pnZTjQFU9A@mail.gmail.com>
- <20190626220204.GZ19023@42.do-not-panic.com>
-In-Reply-To: <20190626220204.GZ19023@42.do-not-panic.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 26 Jun 2019 17:05:13 -0700
-Message-ID: <CAFd5g46yp3B6SB9OZRoum8-CDA-BW_En7BGz5WH8qFRx1d=8iA@mail.gmail.com>
-Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        Wed, 26 Jun 2019 20:06:22 -0400
+Received: from ozlabs.org ([203.11.71.1]:57061 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbfF0AGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:06:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Z0YP74Bsz9s3l;
+        Thu, 27 Jun 2019 10:06:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561593978;
+        bh=8Hr8+8sV64MiYrtvdI2lrD9HaUyy8PmtsfdtCacMw54=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=g9H0EqGdNbqlbtj25nvoH/11hrDm8DuMaOp1WI2LIIcnmMWaYtU7IDhdzf63mWfUi
+         ol8nRp003otS79GiD1mz9pfHW9SYHi3ndgpmfqmIom1GKo6YfExsGeJet7CdAxlst1
+         d4jYVioAs9+LNVT8/+zGe17hND8oy9RK9Dp3LI124Qgkjbj5CD+UuWerqnY5wnxZUT
+         4b/BFhZvU464RccRBcYJ7lOjjTWMNoSKec3cK7S++SCAWsOq45UdHKwwRijv3mLgpA
+         IqvHH2J76vNfh2Jt23VRpL/IiYb/CQBVft3fZm6oXSh4kKzbCzYiZhAkco0w2mowg9
+         FMfDj5RvPZK9w==
+Date:   Thu, 27 Jun 2019 10:06:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org
+Subject: Re: [PATCH] powerpc/64s/radix: Define arch_ioremap_p4d_supported()
+Message-ID: <20190627100617.74c74e79@canb.auug.org.au>
+In-Reply-To: <1561555260-17335-1-git-send-email-anshuman.khandual@arm.com>
+References: <1561555260-17335-1-git-send-email-anshuman.khandual@arm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/n9_h8L+fKQmZXfOCydxkhZu"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 3:02 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+--Sig_/n9_h8L+fKQmZXfOCydxkhZu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Anshuman,
+
+On Wed, 26 Jun 2019 18:51:00 +0530 Anshuman Khandual <anshuman.khandual@arm=
+.com> wrote:
 >
-> On Tue, Jun 25, 2019 at 11:41:47PM -0700, Brendan Higgins wrote:
-> > On Tue, Jun 25, 2019 at 4:02 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > >
-> > > On Tue, Jun 25, 2019 at 03:14:45PM -0700, Brendan Higgins wrote:
-> > > > On Tue, Jun 25, 2019 at 2:44 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> > > > > Since its a new architecture and since you seem to imply most tests
-> > > > > don't require locking or even IRQs disabled, I think its worth to
-> > > > > consider the impact of adding such extreme locking requirements for
-> > > > > an initial ramp up.
-> > > >
-> > > > Fair enough, I can see the point of not wanting to use irq disabled
-> > > > until we get someone complaining about it, but I think making it
-> > > > thread safe is reasonable. It means there is one less thing to confuse
-> > > > a KUnit user and the only penalty paid is some very minor performance.
-> > >
-> > > One reason I'm really excited about kunit is speed... so by all means I
-> > > think we're at a good point to analyze performance optimizationsm if
-> > > they do make sense.
-> >
-> > Yeah, but I think there are much lower hanging fruit than this (as you
-> > point out below). I am all for making/keeping KUnit super fast, but I
-> > also don't want to waste time with premature optimizations and I think
-> > having thread safe expectations and non-thread safe expectations hurts
-> > usability.
-> >
-> > Still, I am on board with making this a mutex instead of a spinlock for now.
-> >
-> > > While on the topic of parallization, what about support for running
-> > > different test cases in parallel? Or at the very least different kunit
-> > > modules in parallel.  Few questions come up based on this prospect:
-> > >
-> > >   * Why not support parallelism from the start?
-> >
-> > Just because it is more work and there isn't much to gain from it right now.
-> >
-> > Some numbers:
-> > I currently have a collection of 86 test cases in the branch that this
-> > patchset is from.
->
-> Impressive, imagine 86 tests and kunit is not even *merged yet*.
+> Recent core ioremap changes require HAVE_ARCH_HUGE_VMAP subscribing archs
+> provide arch_ioremap_p4d_supported() failing which will result in a build
+> failure like the following.
+>=20
+> ld: lib/ioremap.o: in function `.ioremap_huge_init':
+> ioremap.c:(.init.text+0x3c): undefined reference to
+> `.arch_ioremap_p4d_supported'
+>=20
+> This defines a stub implementation for arch_ioremap_p4d_supported() keepi=
+ng
+> it disabled for now to fix the build problem.
+>=20
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-next@vger.kernel.org
+>=20
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This has been just build tested and fixes the problem reported earlier.
+>=20
+>  arch/powerpc/mm/book3s64/radix_pgtable.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/b=
+ook3s64/radix_pgtable.c
+> index 8904aa1..c81da88 100644
+> --- a/arch/powerpc/mm/book3s64/radix_pgtable.c
+> +++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+> @@ -1124,6 +1124,11 @@ void radix__ptep_modify_prot_commit(struct vm_area=
+_struct *vma,
+>  	set_pte_at(mm, addr, ptep, pte);
+>  }
+> =20
+> +int __init arch_ioremap_p4d_supported(void)
+> +{
+> +	return 0;
+> +}
+> +
+>  int __init arch_ioremap_pud_supported(void)
+>  {
+>  	/* HPT does not cope with large pages in the vmalloc area */
+> --=20
+> 2.7.4
+>=20
 
-Full disclaimer, about half of them are KUnit tests for KUnit - to
-make sure KUnit works, so I don't know if you consider that cheating.
+I will add that as a merge resolution patch for the akpm-current tree
+merge today.
 
-> > I turned on PRINTK_TIME and looked at the first
-> > KUnit output and the last. On UML, start time was 0.090000, and end
-> > time was 0.090000. Looks like sched_clock is not very good on UML.
->
-> Since you have a python thing that kicks tests, what if you just run
-> time on it?
+--=20
+Cheers,
+Stephen Rothwell
 
-That's what I did on the this following paragraph (I just couldn't
-time the tests by themselves in this case):
+--Sig_/n9_h8L+fKQmZXfOCydxkhZu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> > Still it seems quite likely that all of these tests run around 0.01
-> > seconds or less on UML: I ran KUnit with only 2 test cases enabled
-> > three times and got an average runtime of 1.55867 seconds with a
-> > standard deviation of 0.0346747. I then ran it another three times
-> > with all test cases enabled and got an average runtime of 1.535
-> > seconds with a standard deviation of 0.0150997. The second average is
-> > less, but that doesn't really mean anything because it is well within
-> > one standard deviation with a very small sample size. Nevertheless, we
-> > can conclude that the actual runtime of those 84 test cases is most
-> > likely within one standard deviation, so on the order of 0.01 seconds.
-> >
-> > On x86 running on QEMU, first message from KUnit was printed at
-> > 0.194251 and the last KUnit message was printed at 0.340915, meaning
-> > that all 86 test cases ran in about 0.146664 seconds.
->
-> Pretty impressive numbers. But can you blame me for expressing the
-> desire to possibly being able to do better? I am not saying -- let's
-> definitely have parallelism in place *now*. Just wanted to hear out
-> tangibles of why we *don't* want it now.
+-----BEGIN PGP SIGNATURE-----
 
-I agree, faster is almost always better in these types of things, and
-certainly is in this case.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0UCHkACgkQAVBC80lX
+0GzSRwf7BzDnZme1lz1V4QMONN1IuVY+pZX1QXKrRyb02gfpevX+bps5fVXU900w
+Ba2QoMMkdVL042M4+W390SZxydX+BTcEfgxSgEFxQNKNv+3qolu6YKdQGszWhl5y
+8I6VTUln4K3U+5QrEsx2GOfr+TP1ktGlrDQRvn58tkfr0GBy8eu5VvKMM+3zyh/L
+iYqND4uA2ufFY550R3KI9uCh2y7nbaOIm6GWqIiBmwEQBiRctcL1EQMuKqQii938
+bFS8SbP7WHkdRGB9L6AMACbjEPGLPwWodrMd0oA1yhcfYz38wkIJPVrI1cTmltS0
+jmhRFG6gblzMWAbvnlBmbS3Zrs33bg==
+=UR4X
+-----END PGP SIGNATURE-----
 
-In fairness to you, I also short sold the speed of KUnit in the cover
-letter. I was too lazy to do this complete of an analysis back when I
-wrote it (even if I did a complete timing like this, I would have to
-put a bunch of asterisks since it wouldn't include the time to "boot"
-the kernel or to build it, which vastly outstrip the speed of
-individual test cases). And given the original numbers, I think
-speeding things up would probably seem more urgent. So no, I really
-cannot blame you.
-
-Sorry if it came across that I was frustrated or impatient, but I am
-actually glad you asked because I now have this public email where I
-did the full analysis of how fast KUnit really is which I can refer to
-in the future.
-
-> And.. also, since we are reviewing now, try to target so that the code
-> can later likely get a face lift to support parallelism without
-> requiring much changes.
-
-Also fair.
-
-> > In any case, running KUnit tests in parallel is definitely something I
-> > plan on adding it eventually, but it just doesn't really seem worth it
-> > right now.
->
-> Makes sense!
->
-> > I find the incremental build time of the kernel to
-> > typically be between 3 and 30 seconds, and a clean build to be between
-> > 30 seconds to several minutes, depending on the number of available
-> > cores, so I don't think most users would even notice the amount of
-> > runtime contributed by the actual unit tests until we start getting
-> > into the 1000s of test cases. I don't suspect it will become an issue
-> > until we get into the 10,000s of test cases. I think we are a pretty
-> > long way off from that.
->
-> All makes sense, and agreed based on the numbers you are providing.
-> Thanks for the details!
->
-> > >   * Are you opposed to eventually having this added? For instance, there is
-> > >     enough code on lib/test_kmod.c for batching tons of kthreads each
-> > >     one running its own thing for testing purposes which could be used
-> > >     as template.
-> >
-> > I am not opposed to adding it eventually at all. I actually plan on
-> > doing so, just not in this patchset. There are a lot of additional
-> > features, improvements, and sugar that I really want to add, so much
-> > so that most of it doesn't belong in this patchset; I just think this
-> > is one of those things that belongs in a follow up. I tried to boil
-> > down this patchset to as small as I could while still being useful;
-> > this is basically an MVP. Maybe after this patchset gets merged I
-> > should post a list of things I have ready for review, or would like to
-> > work on, and people can comment on what things they want to see next.
->
-> Groovy.
-
-Cool, I will do that then!
-
-> > >   * If we eventually *did* support it:
-> > >     - Would logs be skewed?
-> >
-> > Probably, before I went with the TAP approach, I was tagging each
-> > message with the test case it came from and I could have parsed it and
-> > assembled a coherent view of the logs using that; now that I am using
-> > TAP conforming output, that won't work. I haven't really thought too
-> > hard about how to address it, but there are ways. For the UML users, I
-> > am planning on adding a feature to guarantee hermeticity between tests
-> > running in different modules by adding a feature that allows a single
-> > kernel to be built with all tests included, and then determine which
-> > tests get run by passing in command line arguments or something. This
-> > way you can get the isolation from running tests in separate
-> > environments without increasing the build cost. We could also use this
-> > method to achieve parallelism by dispatching multiple kernels at once.
->
-> Indeed. Or... wait for it... containers... There tools for these sorts
-> of things already. And I'm evaluating such prospects now for some other
-> tests I care for.
-
-Containers could definitely be useful in the long run. I have a long
-term goal to build and run just parts of the kernel as I have
-mentioned to you, and doing so in a totally hermetic environment could
-provide a lot of value; in this case I would probably only want a
-chroot, but if I want to deploy tests to run on different machines
-containers could be very useful.
-
-Actually, on the topic of containers for running tests, the presubmit
-system I have set up for KUnit uses containers for deploying KUnit on
-servers for testing[1]. Actually, I have some experimental patches to
-make it work with LKML instead of Gerrit, but I am not sure whether it
-makes more sense to go that route, with one of the many patchworks
-clones that support presubmit, or something else.
-
-> > That only works for UML, but I imagine you could do something similar
-> > for users running tests under qemu.
->
-> Or containers.
->
-> > >     - Could we have a way to query: give me log for only kunit module
-> > >       named "foo"?
-> >
-> > Yeah, I think that would make sense as part of the hermeticity thing I
-> > mentioned above.
-> >
-> > Hope that seems reasonable!
->
-> All groovy. Thanks for the details!
-
-[1] https://kunit-review.googlesource.com/c/linux/+/1809/2#message-c243e1c9086d9432d2dcabc67a42a977b8a020ff
+--Sig_/n9_h8L+fKQmZXfOCydxkhZu--
