@@ -2,170 +2,71 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6038C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA263C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746CC2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F3920843
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GsJ767+B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pCvMyR8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfF0I7G (ORCPT
+        id S1726498AbfF0I72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:59:06 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46986 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfF0I7F (ORCPT
+        Thu, 27 Jun 2019 04:59:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38592 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbfF0I71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:59:05 -0400
-Received: by mail-ed1-f68.google.com with SMTP id d4so6265397edr.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 01:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LGczOakCSLer9ILQE8tNaqgNPozV8pb7PqeHtCzn1g0=;
-        b=GsJ767+Bz59YQxnCnFMvFcSYh9soByANcFXUQ+dxUx5Q/FTIOZmR4kAWwuk9/HT1Gi
-         raBZ4yVpCvC1kmTcyiq97Fnn6tEjrLxXJryKVmWHYVVzhGFre9eg61bQxVCoeFBrPx5W
-         nbFSeFVId7v0Y/+FBuoxSRqzo2aQP3RbWafpk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=LGczOakCSLer9ILQE8tNaqgNPozV8pb7PqeHtCzn1g0=;
-        b=IJZ6dCPtkDqfbrof1YnZBzvWe1+NpIObGqaVOrz90Y9T1CcooJksPpYN0DASUUaXOq
-         dFaDMb76tSdnIQ9aiZuNPqaM3WfmqyhpdH/cpFn0KROeHxt7thNG9r8TPBzkmai1WJaP
-         xDwc3JVad+ufDSqZCYO3ii8O8HDz5YrTSjeQlqnnDHX9kYrFhPJvkIgPIy8udwoE1L0p
-         QrWgUYfZ53dLZgXWPwbkuFchVRpMcGUNQb33ZZT+pBUyivv9IXeg4NcJOV5Rp55M0SNr
-         GKeafnAfMZZzq+7iROK0MAi6anXe5qIxeQ0B71xRSKC7Ilq5SM03oid4UGSthyUa0MHC
-         Fksg==
-X-Gm-Message-State: APjAAAUh1ma7NRsSJmbUmEZGU3v+FH/q4BEQJ09k7BkHefPLXqrAxAiT
-        ymcHFPilb34V5mCfcO3BtHbMBg==
-X-Google-Smtp-Source: APXvYqztF4cKNAF9DjpaD52JmFXj0BdZd5GbwscnxOS6ZW0fc4x9KnKm97t+ztQ3ANKwIhFX1OJPwA==
-X-Received: by 2002:a17:906:2f0b:: with SMTP id v11mr1993434eji.200.1561625944030;
-        Thu, 27 Jun 2019 01:59:04 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id s26sm309794eja.81.2019.06.27.01.59.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 01:59:03 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 10:59:00 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] drm/bochs: fix framebuffer setup.
-Message-ID: <20190627085900.GI12905@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190627081206.23135-1-kraxel@redhat.com>
+        Thu, 27 Jun 2019 04:59:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UdPPM47sb/7Te8Jd7ck1t2jr+yk4nMMu5ZlyAWmGh4U=; b=pCvMyR8x4xw/hpNND5pi6MT+z
+        DChsNg0OC2A6xPjQglftVfoAF4un8V3nmOVaoBXcFNKvQz3NIkKGGWGL30JD1JzLR6/9MfQTGyjh6
+        xgB0rtNfvOKIappaoRDipmrdZDe8fb6xizO366dxdMjiwZeGLwourt0J4cz87Mmxbjc7yt1leiQ2t
+        vEm8R0fnCpFjRVSfFK/XW3uytPtRZIntRLxyqmjzJZ3KEhgyrAU6uwx6UvjcbmgLM4sBRdorbP0cR
+        17K25/odK7fVGUFkfkxN1gXaXTpiBzWX5OmNaaWZSI8SnWkpXlxn0zMQNQBGkkEtFhQyyEVqMNtX0
+        y19HFkpyA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgQFa-0006As-NS; Thu, 27 Jun 2019 08:59:26 +0000
+Date:   Thu, 27 Jun 2019 01:59:26 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        paul.walmsley@sifive.com, palmer@sifive.com, aou@eecs.berkeley.edu,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH] riscv: ccache: Remove unused variable
+Message-ID: <20190627085926.GA15810@infradead.org>
+References: <1561624486-22867-1-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627081206.23135-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1561624486-22867-1-git-send-email-yash.shah@sifive.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:12:06AM +0200, Gerd Hoffmann wrote:
-> The driver doesn't consider framebuffer pitch and offset, leading to a
-> wrong display in case offset != 0 or pitch != width * bpp.  Fix it.
+On Thu, Jun 27, 2019 at 02:04:46PM +0530, Yash Shah wrote:
+> Reading the count register clears the interrupt signal. Currently, the
+> count registers are read into 'regval' variable but the variable is
+> never used. Therefore remove it.
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-Yeah this looks more like it.
-
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
->  drivers/gpu/drm/bochs/bochs.h     |  2 +-
->  drivers/gpu/drm/bochs/bochs_hw.c  | 14 ++++++++++----
->  drivers/gpu/drm/bochs/bochs_kms.c |  3 ++-
->  3 files changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bochs/bochs.h b/drivers/gpu/drm/bochs/bochs.h
-> index cc35d492142c..2a65434500ee 100644
-> --- a/drivers/gpu/drm/bochs/bochs.h
-> +++ b/drivers/gpu/drm/bochs/bochs.h
-> @@ -86,7 +86,7 @@ void bochs_hw_setmode(struct bochs_device *bochs,
->  void bochs_hw_setformat(struct bochs_device *bochs,
->  			const struct drm_format_info *format);
->  void bochs_hw_setbase(struct bochs_device *bochs,
-> -		      int x, int y, u64 addr);
-> +		      int x, int y, int stride, u64 addr);
->  int bochs_hw_load_edid(struct bochs_device *bochs);
->  
->  /* bochs_mm.c */
-> diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
-> index 791ab2f79947..ebfea8744fe6 100644
-> --- a/drivers/gpu/drm/bochs/bochs_hw.c
-> +++ b/drivers/gpu/drm/bochs/bochs_hw.c
-> @@ -255,16 +255,22 @@ void bochs_hw_setformat(struct bochs_device *bochs,
->  }
->  
->  void bochs_hw_setbase(struct bochs_device *bochs,
-> -		      int x, int y, u64 addr)
-> +		      int x, int y, int stride, u64 addr)
->  {
-> -	unsigned long offset = (unsigned long)addr +
-> +	unsigned long offset;
-> +	unsigned int vx, vy, vwidth;
-> +
-> +	bochs->stride = stride;
+>  arch/riscv/mm/sifive_l2_cache.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Might be nice to ditch these global/not-so-atomic things like
-bochs->stride/bpp eventually.
--Daniel
-
-> +	offset = (unsigned long)addr +
->  		y * bochs->stride +
->  		x * (bochs->bpp / 8);
-> -	int vy = offset / bochs->stride;
-> -	int vx = (offset % bochs->stride) * 8 / bochs->bpp;
-> +	vy = offset / bochs->stride;
-> +	vx = (offset % bochs->stride) * 8 / bochs->bpp;
-> +	vwidth = stride * 8 / bochs->bpp;
->  
->  	DRM_DEBUG_DRIVER("x %d, y %d, addr %llx -> offset %lx, vx %d, vy %d\n",
->  			 x, y, addr, offset, vx, vy);
-> +	bochs_dispi_write(bochs, VBE_DISPI_INDEX_VIRT_WIDTH, vwidth);
->  	bochs_dispi_write(bochs, VBE_DISPI_INDEX_X_OFFSET, vx);
->  	bochs_dispi_write(bochs, VBE_DISPI_INDEX_Y_OFFSET, vy);
->  }
-> diff --git a/drivers/gpu/drm/bochs/bochs_kms.c b/drivers/gpu/drm/bochs/bochs_kms.c
-> index 5904eddc83a5..bc19dbd531ef 100644
-> --- a/drivers/gpu/drm/bochs/bochs_kms.c
-> +++ b/drivers/gpu/drm/bochs/bochs_kms.c
-> @@ -36,7 +36,8 @@ static void bochs_plane_update(struct bochs_device *bochs,
->  	bochs_hw_setbase(bochs,
->  			 state->crtc_x,
->  			 state->crtc_y,
-> -			 gbo->bo.offset);
-> +			 state->fb->pitches[0],
-> +			 state->fb->offsets[0] + gbo->bo.offset);
->  	bochs_hw_setformat(bochs, state->fb->format);
->  }
->  
-> -- 
-> 2.18.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Unrelated note:  that driver absolutely does not belong into
+arch/riscv/mm.  arch/$(ARCH)/mm is for architecte-specific memory
+management code, not for random drivers.
