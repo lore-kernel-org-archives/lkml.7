@@ -2,114 +2,140 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A225C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B534AC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D7220989
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDD4217D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 04:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tvHKF0SW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Sa9WR5qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfF0EJe (ORCPT
+        id S1726885AbfF0EQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 00:09:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45277 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfF0EJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 00:09:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Z5y20RXPz9s8m;
-        Thu, 27 Jun 2019 14:09:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561608570;
-        bh=LsIp4MOsb8p6EEYoMgfZs22cxz+dk7gDFUx8sf0mkdA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tvHKF0SWsqwGEv/46sF7wh4vP029CvmQW0vg5RmUfVA4aeL0dkUzGtiN/nm9IV7wu
-         84mqme1tU6L89lGBH+BtsVLkjwuistEMh+PzFOlmAp1DQiPGfYvEmNiBWsjRN/040E
-         0yWeYZYEt/G9EznXy6uv/3SuOimWwiHo04Szbt1hVP3Ol662YPvnUz6kVkK68vbshH
-         jMeYL1h6ehgi+A531naEh2ZzSbiidC+sVvzxrYKbT27Ap1+ElWVPefE5WzPwzUOcYb
-         p6V6crluP5IoMaQqVa4Z2Ase0ieS2GEmlRK4o3+aIov8bv5hj+7ZHMP/9gfycqqhdK
-         WbgnmbpYjXc5Q==
-Date:   Thu, 27 Jun 2019 14:09:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Leon Romanovsky <leon@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yevgeny Kliteynik <kliteyn@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Eli Britstein <elibr@mellanox.com>,
-        Jianbo Liu <jianbol@mellanox.com>
-Subject: linux-next: manual merge of the mlx5-next tree with the net-next
- tree
-Message-ID: <20190627140929.74ae7da6@canb.auug.org.au>
+        Thu, 27 Jun 2019 00:16:47 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42031 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfF0EQr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 00:16:47 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k13so370390pgq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 21:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6gmGlKkeqWK/vz05TafXDuU/dsP6RPyTWS+m9MTdDaQ=;
+        b=Sa9WR5qoLPyRTseXtozsm/nm3JiSZHZntSQIi2UVlFapQhPDvxwKtn7f3DVNvE4Ojs
+         KQKqFPrujlfR5k6yWemovrOFA+HGURYa+f9Qv0UuShjdurOEAqY+odpgMjdm7wuvn3nG
+         jVfv4XW7NjtlGZoLjFcOTi4bzaf1p4GtoRqQI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6gmGlKkeqWK/vz05TafXDuU/dsP6RPyTWS+m9MTdDaQ=;
+        b=iK5EuqwUvxtsSA+xvEcjCPXtkeqw93BOR039g5XJbhHHpzN8IMkBCzJ+NzSL7TFHTR
+         IndNrdvKBkWYYDrEAPLaq4NJJNpqz3/CIWq36CyDAPFLDmI9saz5F8SD1sVVtVSHqViC
+         0hAz2jgSoi75HedSQMkCV95Fp50ybwwBI3TVKPMTEb6+XA2msr3JTGCVWB0YK8kKhdPC
+         8FRMcTZiDEhSbrqXxDl+rEnpDqIWpqj/UmWmYArkZnMPUys0nrgGvTcsiZCE6CGtkG7U
+         Zlf8HwsXDf39Mx2Xu28U5UIJ1YUcxooaQaj1qH3+cTQepLkZOF4LjI762gLSyP8pZ8HK
+         +r1g==
+X-Gm-Message-State: APjAAAWa1VGNlyDsQwDNxe5ySk8oQ+MLQWvbc7Oy0HYMKxgwYrDgpFh8
+        mJHN1be/70cW+DsZoi8lUjl07TpyoSU=
+X-Google-Smtp-Source: APXvYqzjHWC/IYmnMqP5JiyMycCyiDn9+OIPaCNfkYAuxgSu3TAep5hU0SP0G/yoNUeDsh390He9Gw==
+X-Received: by 2002:a63:1d53:: with SMTP id d19mr1682686pgm.152.1561609006707;
+        Wed, 26 Jun 2019 21:16:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a3sm927324pfi.63.2019.06.26.21.16.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Jun 2019 21:16:45 -0700 (PDT)
+Date:   Wed, 26 Jun 2019 21:16:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH 08/16] nfsd: escape high characters in binary data
+Message-ID: <201906262100.00C1C22@keescook>
+References: <1561042275-12723-1-git-send-email-bfields@redhat.com>
+ <1561042275-12723-9-git-send-email-bfields@redhat.com>
+ <20190621174544.GC25590@fieldses.org>
+ <201906211431.E6552108@keescook>
+ <20190622190058.GD5343@fieldses.org>
+ <201906221320.5BFC134713@keescook>
+ <20190624210512.GA20331@fieldses.org>
+ <20190626162149.GB4144@fieldses.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/QoQkQBfE9+wL/NEtPF.A9T8"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626162149.GB4144@fieldses.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/QoQkQBfE9+wL/NEtPF.A9T8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 26, 2019 at 12:21:49PM -0400, J. Bruce Fields wrote:
+> On Mon, Jun 24, 2019 at 05:05:12PM -0400, J. Bruce Fields wrote:
+> > On Sat, Jun 22, 2019 at 01:22:56PM -0700, Kees Cook wrote:
+> > > On Sat, Jun 22, 2019 at 03:00:58PM -0400, J. Bruce Fields wrote:
+> > > > The logic around ESCAPE_NP and the "only" string is really confusing.  I
+> > > > started assuming I could just add an ESCAPE_NONASCII flag and stick "
+> > > > and \ into the "only" string, but it doesn't work that way.
+> > > 
+> > > Yeah, if ESCAPE_NP isn't specified, the "only" characters are passed
+> > > through. It'd be nice to have an "add" or a clearer way to do actual
+> > > ctype subsets, etc. If there isn't an obviously clear way to refactor
+> > > it, just skip it for now and I'm happy to ack your original patch. :)
+> > 
+> > There may well be some simplification possible here....  There aren't
+> > really many users of "only", for example.  I'll look into it some more.
+> 
+> The printk users are kind of mysterious to me.  I did a grep for
+> 
+> 	git grep '%[0-9.*]pE'
+> 
+> which got 75 hits.  All of them for pE.  I couldn't find any of the
+> other pE[achnops] variants.  pE is equivalent to ESCAPE_ANY|ESCAPE_NP.
 
-Hi all,
+I saw pEn and pEhp and pEp:
 
-Today's linux-next merge of the mlx5-next tree got a conflict in:
+drivers/staging/rtl8192e/rtllib.h:      snprintf(escaped, sizeof(escaped), "%*pEn", essid_len, essid);
+drivers/staging/rtl8192u/ieee80211/ieee80211.h: snprintf(escaped, sizeof(escaped), "%*pEn", essid_len, essid);
+drivers/staging/wlan-ng/prism2sta.c: netdev_info(wlandev->netdev, "Prism2 card SN: %*pEhp\n",
+drivers/thunderbolt/xdomain.c:  return sprintf(buf, "%*pEp\n", (int)strlen(svc->key), svc->key);
 
-  drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+However, every use was insufficient, AFAICT.
 
-between commits:
+This:
+	git grep -2 '\bescape_essid\b'
+Shows that all the staging uses end up getting logged as: '%s' so their
+escaping is insufficient.
 
-  955858009708 ("net/mlx5e: Fix number of vports for ingress ACL configurat=
-ion")
-  d4a18e16c570 ("net/mlx5e: Enable setting multiple match criteria for flow=
- group")
+> Confusingly, ESCAPE_NP doesn't mean "escape non-printable", it means
+> "don't escape printable".  So things like carriage returns aren't
+> escaped.
 
-from the net-next tree and commits:
+Right -- any they're almost all logged surrounded by ' or " which means
+those would need to be escaped as well. The prism2 is leaking newlines
+too, as well as the thunderbolt sysfs printing.
 
-  7445cfb1169c ("net/mlx5: E-Switch, Tag packet with vport number in VF vpo=
-rts and uplink ingress ACLs")
-  c01cfd0f1115 ("net/mlx5: E-Switch, Add match on vport metadata for rule i=
-n fast path")
+So... seems like we should fix this. :P
 
-from the mlx5-next tree.
+> Of those 57 were in drivers/net/wireless, and from a quick check seemed
+> mostly to be for SSIDs in debug messages.  I *think* SSIDs can be
+> arbitrary bytes?  If they really want them escaped then I suspect they
+> want more than just nonprintable characters escaped.
+> 
+> One of the hits outside wireless code was in drm_dp_cec_adap_status,
+> which was printing some device ID into a debugfs file with "ID: %*pE\n".
+> If the ID actually needs escaping, then I suspect the meant to escape \n
+> too to prevent misparsing that output.
 
-I fixed it up (I basically used the latter versions) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
+I think we need to make the default produce "loggable" output.
+non-ascii, non-printables, \, ', and " need to be escaped. Maybe " "
+too?
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/QoQkQBfE9+wL/NEtPF.A9T8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0UQXkACgkQAVBC80lX
-0GwLEgf/bVWJXuP70coqS1/vunI8Z7J7mRV2/FWSXyVt6F/eBGOUYxNgZdUmn+Sd
-lHke3vl4fFHUI0JqVNvrnOYbAxTBaPsZFFtdyRAzMrzs8ZCKKzyYRvAzCRyvcvl/
-lURKaUAL1Oj0OvEU1Eyl+lBbArTcpc16WhhPcSys3mMNmgLwhqkGJ68rry/xKOo2
-oTb7smt/wAvmVqxV4RHvLILM+fXFI4q48MZEociyPn5L3wZyouk1mQe8XM20J2Al
-YdJXsaTZXotWVd3I1sa7O2RiK6i4lN1RHoIU8rYmwnwBbE8hYcj7iMTNijlbIliV
-SRPXhdxnmk28cDkEWD3qiMSrq9+Tfg==
-=DxZn
------END PGP SIGNATURE-----
-
---Sig_/QoQkQBfE9+wL/NEtPF.A9T8--
+-- 
+Kees Cook
