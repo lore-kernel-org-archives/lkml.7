@@ -2,189 +2,114 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4901C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BEDC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933B1205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED01205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfF0SbR (ORCPT
+        id S1726725AbfF0Sb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:31:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8918 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbfF0SbQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:31:16 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RINg8w094655;
-        Thu, 27 Jun 2019 14:30:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td0frfxak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 14:30:23 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5RIPkTR110005;
-        Thu, 27 Jun 2019 14:30:23 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td0frfx9a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 14:30:23 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5RIUFtn024033;
-        Thu, 27 Jun 2019 18:30:22 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04dal.us.ibm.com with ESMTP id 2t9by7871q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Jun 2019 18:30:22 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RIUL8E54526270
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:30:21 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35F55B205F;
-        Thu, 27 Jun 2019 18:30:21 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0FEEDB2066;
-        Thu, 27 Jun 2019 18:30:21 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 18:30:20 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 1522116C2ACE; Thu, 27 Jun 2019 11:30:23 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 11:30:23 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
-Message-ID: <20190627183022.GZ26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190626135447.y24mvfuid5fifwjc@linutronix.de>
- <20190626162558.GY26519@linux.ibm.com>
- <20190627142436.GD215968@google.com>
- <20190627103455.01014276@gandalf.local.home>
- <20190627153031.GA249127@google.com>
- <CAEXW_YT5LgdP_9SrachU4ZrhV9a7o_DM8eBfgxj=n7yRRyS-TQ@mail.gmail.com>
- <20190627154011.vbje64x6auaknhx4@linutronix.de>
- <CAEXW_YTvkSTqwi_jOE2Pr+uD-GC4Xv0CtBEL9YO7=LvJcM3FBQ@mail.gmail.com>
- <CAEXW_YTmx3wFKuiLyrQO6uSPYAL179EPa6N3WO7qZahccCs-pg@mail.gmail.com>
- <20190627181112.GY26519@linux.ibm.com>
+        Thu, 27 Jun 2019 14:31:26 -0400
+Received: from smtp3.jd.com ([59.151.64.88]:2125 "EHLO smtp3.jd.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726482AbfF0Sb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:31:26 -0400
+Received: from BJMAILD1MBX34.360buyAD.local (172.31.0.34) by
+ BJMAILD1MBX47.360buyAD.local (172.31.0.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Fri, 28 Jun 2019 02:16:12 +0800
+Received: from BJMAILD1MBX36.360buyAD.local (172.31.0.36) by
+ BJMAILD1MBX34.360buyAD.local (172.31.0.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1415.2; Fri, 28 Jun 2019 02:16:12 +0800
+Received: from BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893]) by
+ BJMAILD1MBX36.360buyAD.local ([fe80::2116:e90b:d89d:e893%24]) with mapi id
+ 15.01.1415.002; Fri, 28 Jun 2019 02:16:12 +0800
+From:   =?gb2312?B?u8bA1g==?= <huangle1@jd.com>
+To:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Topic: [PATCH] nfsd4: fix a deadlock on state owner replay mutex
+Thread-Index: AQHVLRO5+DwH6sZb20Kr9KpGEIfK+A==
+Date:   Thu, 27 Jun 2019 18:16:12 +0000
+Message-ID: <a14e4c797451401cb360e1f9d1bad63c@jd.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.31.14.12]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627181112.GY26519@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270209
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:11:12AM -0700, Paul E. McKenney wrote:
-> On Thu, Jun 27, 2019 at 01:46:27PM -0400, Joel Fernandes wrote:
-> > On Thu, Jun 27, 2019 at 1:43 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > >
-> > > On Thu, Jun 27, 2019 at 11:40 AM Sebastian Andrzej Siewior
-> > > <bigeasy@linutronix.de> wrote:
-> > > >
-> > > > On 2019-06-27 11:37:10 [-0400], Joel Fernandes wrote:
-> > > > > Sebastian it would be nice if possible to trace where the
-> > > > > t->rcu_read_unlock_special is set for this scenario of calling
-> > > > > rcu_read_unlock_special, to give a clear idea about whether it was
-> > > > > really because of an IPI. I guess we could also add additional RCU
-> > > > > debug fields to task_struct (just for debugging) to see where there
-> > > > > unlock_special is set.
-> > > > >
-> > > > > Is there a test to reproduce this, or do I just boot an intel x86_64
-> > > > > machine with "threadirqs" and run into it?
-> > > >
-> > > > Do you want to send me a patch or should I send you my kvm image which
-> > > > triggers the bug on boot?
-> > >
-> > > I could reproduce this as well just booting Linus tree with threadirqs
-> > > command line and running rcutorture. In 15 seconds or so it locks
-> > > up... gdb backtrace shows the recursive lock:
-> > 
-> > Sorry that got badly wrapped, so I pasted it here:
-> > https://hastebin.com/ajivofomik.shell
-> 
-> Which rcutorture scenario would that be?  TREE03 is thus far refusing
-> to fail for me when run this way:
-> 
-> $ tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 5 --trust-make --configs "TREE03" --bootargs "threadirqs"
-
-Ah, but I was running -rcu.  TREE03 fails at 38 seconds for me on v5.2.
-
-Now to find out which -rcu commit fixed it.  Or at least made it much
-less probable, to Sebastian's point.
-
-> If it had failed, I would have tried the patch shown below.  I know that
-> Sebastian has some concerns about the bug happening anyway, but we have
-> to start somewhere!  ;-)
-
-This patch might thus be completely unnecessary.
-
-							Thanx, Paul
-
-> ------------------------------------------------------------------------
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 82c925df1d92..be7bafc2c0a0 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -624,25 +624,16 @@ static void rcu_read_unlock_special(struct task_struct *t)
->  		      (rdp->grpmask & rnp->expmask) ||
->  		      tick_nohz_full_cpu(rdp->cpu);
->  		// Need to defer quiescent state until everything is enabled.
-> -		if ((exp || in_irq()) && irqs_were_disabled && use_softirq &&
-> -		    (in_irq() || !t->rcu_read_unlock_special.b.deferred_qs)) {
-> -			// Using softirq, safe to awaken, and we get
-> -			// no help from enabling irqs, unlike bh/preempt.
-> -			raise_softirq_irqoff(RCU_SOFTIRQ);
-> -		} else {
-> -			// Enabling BH or preempt does reschedule, so...
-> -			// Also if no expediting or NO_HZ_FULL, slow is OK.
-> -			set_tsk_need_resched(current);
-> -			set_preempt_need_resched();
-> -			if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
-> -			    !rdp->defer_qs_iw_pending && exp) {
-> -				// Get scheduler to re-evaluate and call hooks.
-> -				// If !IRQ_WORK, FQS scan will eventually IPI.
-> -				init_irq_work(&rdp->defer_qs_iw,
-> -					      rcu_preempt_deferred_qs_handler);
-> -				rdp->defer_qs_iw_pending = true;
-> -				irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
-> -			}
-> +		set_tsk_need_resched(current);
-> +		set_preempt_need_resched();
-> +		if (IS_ENABLED(CONFIG_IRQ_WORK) && irqs_were_disabled &&
-> +		    !rdp->defer_qs_iw_pending && exp) {
-> +			// Get scheduler to re-evaluate and call hooks.
-> +			// If !IRQ_WORK, FQS scan will eventually IPI.
-> +			init_irq_work(&rdp->defer_qs_iw,
-> +				      rcu_preempt_deferred_qs_handler);
-> +			rdp->defer_qs_iw_pending = true;
-> +			irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
->  		}
->  		t->rcu_read_unlock_special.b.deferred_qs = true;
->  		local_irq_restore(flags);
-> 
+ZnJvbTogSHVhbmcgTGUgPGh1YW5nbGUxQGpkLmNvbT4NCg0KSW4gbW92ZV90b19jbG9zZV9scnUo
+KSwgd2hpY2ggb25seSBiZSBjYWxsZWQgb24gcGF0aCBvZiBuZnNkNCBDTE9TRSBvcCwNCnRoZSBj
+b2RlIGNvdWxkIHdhaXQgZm9yIGl0cyBzdGlkIHJlZiBjb3VudCBkcm9wIHRvIDIgd2hpbGUgaG9s
+ZGluZyBpdHMNCnN0YXRlIG93bmVyIHJlcGxheSBtdXRleC4gIEhvd2V2ZXIsIHRoZSBvdGhlciBz
+dGlkIHJlZiBob2xkZXIgKG5vcm1hbGx5DQphIHBhcmFsbGVsIENMT1NFIG9wKSB0aGF0IG1vdmVf
+dG9fY2xvc2VfbHJ1KCkgaXMgd2FpdGluZyBmb3IgbWlnaHQgYmUNCmFjY3F1aXJpbmcgdGhlIHNh
+bWUgcmVwbGF5IG11dGV4Lg0KDQpUaGlzIHBhdGNoIGZpeCB0aGUgaXNzdWUgYnkgY2xlYXJpbmcg
+dGhlIHJlcGxheSBvd25lciBiZWZvcmUgd2FpdGluZywgYW5kDQphc3NpZ24gaXQgYmFjayBhZnRl
+ciB0aGVuLg0KDQpTaWduZWQtb2ZmLWJ5OiBIdWFuZyBMZSA8aHVhbmdsZTFAamQuY29tPg0KLS0t
+DQoNCkkgZ3Vlc3Mgd2Ugc2hvdWxkIGNjIHRoaXMgcGF0Y2ggdG8gc3RhYmxlIHRyZWUsIHNpbmNl
+IGEgbWFsaWNpb3VzIGNsaWVudA0KY291bGQgY3JhZnQgcGFyYWxsZWwgQ0xPU0Ugb3BzIHRvIHB1
+dCBhbGwgbmZzZCB0YXNrcyBpbiBEIHN0YXRlIHNob3J0bHkuDQoNCmRpZmYgLS1naXQgYS9mcy9u
+ZnNkL25mczRzdGF0ZS5jIGIvZnMvbmZzZC9uZnM0c3RhdGUuYw0KaW5kZXggNjE4ZTY2MC4uNWY2
+YTQ4ZiAxMDA2NDQNCi0tLSBhL2ZzL25mc2QvbmZzNHN0YXRlLmMNCisrKyBiL2ZzL25mc2QvbmZz
+NHN0YXRlLmMNCkBAIC0zODI5LDEyICszODI5LDEyIEBAIHN0YXRpYyB2b2lkIG5mczRfZnJlZV9v
+cGVub3duZXIoc3RydWN0IG5mczRfc3RhdGVvd25lciAqc28pDQogICogdGhlbSBiZWZvcmUgcmV0
+dXJuaW5nIGhvd2V2ZXIuDQogICovDQogc3RhdGljIHZvaWQNCi1tb3ZlX3RvX2Nsb3NlX2xydShz
+dHJ1Y3QgbmZzNF9vbF9zdGF0ZWlkICpzLCBzdHJ1Y3QgbmV0ICpuZXQpDQorbW92ZV90b19jbG9z
+ZV9scnUoc3RydWN0IG5mc2Q0X2NvbXBvdW5kX3N0YXRlICpjc3RhdGUsIHN0cnVjdCBuZnM0X29s
+X3N0YXRlaWQgKnMsDQorCQlzdHJ1Y3QgbmV0ICpuZXQpDQogew0KIAlzdHJ1Y3QgbmZzNF9vbF9z
+dGF0ZWlkICpsYXN0Ow0KIAlzdHJ1Y3QgbmZzNF9vcGVub3duZXIgKm9vID0gb3Blbm93bmVyKHMt
+PnN0X3N0YXRlb3duZXIpOw0KLQlzdHJ1Y3QgbmZzZF9uZXQgKm5uID0gbmV0X2dlbmVyaWMocy0+
+c3Rfc3RpZC5zY19jbGllbnQtPm5ldCwNCi0JCQkJCQluZnNkX25ldF9pZCk7DQorCXN0cnVjdCBu
+ZnNkX25ldCAqbm4gPSBuZXRfZ2VuZXJpYyhuZXQsIG5mc2RfbmV0X2lkKTsNCiANCiAJZHByaW50
+aygiTkZTRDogbW92ZV90b19jbG9zZV9scnUgbmZzNF9vcGVub3duZXIgJXBcbiIsIG9vKTsNCiAN
+CkBAIC0zODQ2LDggKzM4NDYsMTkgQEAgc3RhdGljIHZvaWQgbmZzNF9mcmVlX29wZW5vd25lcihz
+dHJ1Y3QgbmZzNF9zdGF0ZW93bmVyICpzbykNCiAJICogV2FpdCBmb3IgdGhlIHJlZmNvdW50IHRv
+IGRyb3AgdG8gMi4gU2luY2UgaXQgaGFzIGJlZW4gdW5oYXNoZWQsDQogCSAqIHRoZXJlIHNob3Vs
+ZCBiZSBubyBkYW5nZXIgb2YgdGhlIHJlZmNvdW50IGdvaW5nIGJhY2sgdXAgYWdhaW4gYXQNCiAJ
+ICogdGhpcyBwb2ludC4NCisJICoNCisJICogQmVmb3JlIHdhaXRpbmcsIHdlIGNsZWFyIGNzdGF0
+ZS0+cmVwbGF5X293bmVyIHRvIHJlbGVhc2UgaXRzDQorCSAqIHNvX3JlcGxheS5ycF9tdXRleCwg
+c2luY2Ugb3RoZXIgcmVmZXJlbmNlIGhvbGRlciBtaWdodCBiZSBhY2NxdWlyaW5nDQorCSAqIHRo
+ZSBzYW1lIG11dGV4IGJlZm9yZSB0aGV5IGNvdWxkIGRyb3AgdGhlIHJlZmVyZW5jZXMuICBUaGUg
+cmVwbGF5X293bmVyDQorCSAqIGNhbiBiZSBhc3NpZ25lZCBiYWNrIHNhZmVseSBhZnRlciB0aGV5
+IGRvbmUgdGhlaXIgam9icy4NCiAJICovDQotCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50
+X3JlYWQoJnMtPnN0X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwlpZiAocmVmY291bnRfcmVhZCgm
+cy0+c3Rfc3RpZC5zY19jb3VudCkgIT0gMikgew0KKwkJc3RydWN0IG5mczRfc3RhdGVvd25lciAq
+c28gPSBjc3RhdGUtPnJlcGxheV9vd25lcjsNCisNCisJCW5mc2Q0X2NzdGF0ZV9jbGVhcl9yZXBs
+YXkoY3N0YXRlKTsNCisJCXdhaXRfZXZlbnQoY2xvc2Vfd3EsIHJlZmNvdW50X3JlYWQoJnMtPnN0
+X3N0aWQuc2NfY291bnQpID09IDIpOw0KKwkJbmZzZDRfY3N0YXRlX2Fzc2lnbl9yZXBsYXkoY3N0
+YXRlLCBzbyk7DQorCX0NCiANCiAJcmVsZWFzZV9hbGxfYWNjZXNzKHMpOw0KIAlpZiAocy0+c3Rf
+c3RpZC5zY19maWxlKSB7DQpAQCAtNTUzMSw3ICs1NTQyLDggQEAgc3RhdGljIGlubGluZSB2b2lk
+IG5mczRfc3RhdGVpZF9kb3duZ3JhZGUoc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqc3RwLCB1MzIg
+dG9fYWMNCiAJcmV0dXJuIHN0YXR1czsNCiB9DQogDQotc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vf
+b3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnM0X29sX3N0YXRlaWQgKnMpDQorc3RhdGljIHZvaWQgbmZz
+ZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVjdCBuZnNkNF9jb21wb3VuZF9zdGF0ZSAqY3N0YXRl
+LA0KKwkJc3RydWN0IG5mczRfb2xfc3RhdGVpZCAqcykNCiB7DQogCXN0cnVjdCBuZnM0X2NsaWVu
+dCAqY2xwID0gcy0+c3Rfc3RpZC5zY19jbGllbnQ7DQogCWJvb2wgdW5oYXNoZWQ7DQpAQCAtNTU0
+OSw3ICs1NTYxLDcgQEAgc3RhdGljIHZvaWQgbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0cnVj
+dCBuZnM0X29sX3N0YXRlaWQgKnMpDQogCQlzcGluX3VubG9jaygmY2xwLT5jbF9sb2NrKTsNCiAJ
+CWZyZWVfb2xfc3RhdGVpZF9yZWFwbGlzdCgmcmVhcGxpc3QpOw0KIAkJaWYgKHVuaGFzaGVkKQ0K
+LQkJCW1vdmVfdG9fY2xvc2VfbHJ1KHMsIGNscC0+bmV0KTsNCisJCQltb3ZlX3RvX2Nsb3NlX2xy
+dShjc3RhdGUsIHMsIGNscC0+bmV0KTsNCiAJfQ0KIH0NCiANCkBAIC01NTg3LDcgKzU1OTksNyBA
+QCBzdGF0aWMgdm9pZCBuZnNkNF9jbG9zZV9vcGVuX3N0YXRlaWQoc3RydWN0IG5mczRfb2xfc3Rh
+dGVpZCAqcykNCiAJICovDQogCW5mczRfaW5jX2FuZF9jb3B5X3N0YXRlaWQoJmNsb3NlLT5jbF9z
+dGF0ZWlkLCAmc3RwLT5zdF9zdGlkKTsNCiANCi0JbmZzZDRfY2xvc2Vfb3Blbl9zdGF0ZWlkKHN0
+cCk7DQorCW5mc2Q0X2Nsb3NlX29wZW5fc3RhdGVpZChjc3RhdGUsIHN0cCk7DQogCW11dGV4X3Vu
+bG9jaygmc3RwLT5zdF9tdXRleCk7DQogDQogCS8qIHY0LjErIHN1Z2dlc3RzIHRoYXQgd2Ugc2Vu
+ZCBhIHNwZWNpYWwgc3RhdGVpZCBpbiBoZXJlLCBzaW5jZSB0aGUNCg==
