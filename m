@@ -2,127 +2,124 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C700C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC82AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F1420815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="IxwC9YWH"
+	by mail.kernel.org (Postfix) with ESMTP id C800020815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfF0JZ1 (ORCPT
+        id S1726519AbfF0J1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 05:25:27 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:15950 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbfF0JZ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:25:27 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5R9JNak028107;
-        Thu, 27 Jun 2019 04:24:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=B+394Sjh49YTANUIpkYVAnYh1gDLxJnQIttHOhfNw5A=;
- b=IxwC9YWHGMyIo8e8B0nbtdW4nmSJrpcGxM4Qdf/c5FWVYiRCk48ev2ViS0gmm5nPTRxa
- 7/eeSSIBIXH3wLNqHihs2Qg8onOuoUg0vdElicpV6Ad+wIQwCdD+2NZJNoHilZR6jWK0
- 2t5exEVx6BFHHKApnHPNhhytGzfkuE8QjUV4oARs/8byN/VGLKsIqQpFxbPFG5yD3Dv9
- UKpMzhjMK7/BJSvNJG9zh+tPSaj68OzwTi8a280SjqTApCeSRtL9cEoiw9cPfuy5AKVu
- XxoOgXC+oRKFwkWfoiOWM3X7Frzyv2IX0z+srmYEOH/94rMfkFWJ2vlgPRAyItdhZceD aQ== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail3.cirrus.com ([87.246.76.56])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2tc7gt9n61-1;
-        Thu, 27 Jun 2019 04:24:12 -0500
-Received: from EDIEX02.ad.cirrus.com (ediex02.ad.cirrus.com [198.61.84.81])
-        by mail3.cirrus.com (Postfix) with ESMTP id D23846155F5C;
-        Thu, 27 Jun 2019 04:25:00 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 27 Jun
- 2019 10:24:12 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Thu, 27 Jun 2019 10:24:11 +0100
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E505E2DA;
-        Thu, 27 Jun 2019 10:24:11 +0100 (BST)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>
-CC:     <jarkko.nikula@linux.intel.com>,
-        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v8 1/6] i2c: core: Allow whole core to use i2c_dev_irq_from_resources
-Date:   Thu, 27 Jun 2019 10:24:06 +0100
-Message-ID: <20190627092411.26123-2-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190627092411.26123-1-ckeepax@opensource.cirrus.com>
-References: <20190627092411.26123-1-ckeepax@opensource.cirrus.com>
+        Thu, 27 Jun 2019 05:27:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:49994 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfF0J1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 05:27:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EA992B;
+        Thu, 27 Jun 2019 02:27:23 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BA343F718;
+        Thu, 27 Jun 2019 02:27:19 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 10:27:17 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>
+Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
+Message-ID: <20190627092715.GB2790@e103592.cambridge.arm.com>
+References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+ <20190502111003.GO3567@e103592.cambridge.arm.com>
+ <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=683 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270109
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVZCzh+KFCF6ijuf4QEPn=R2gJ8FHLpyFd=n+pNOMMMjA@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the static from i2c_dev_irq_from _resources so that other parts
-of the core code can use this helper function.
+On Wed, Jun 26, 2019 at 10:14:07AM -0700, Andy Lutomirski wrote:
+> On Thu, May 2, 2019 at 4:10 AM Dave Martin <Dave.Martin@arm.com> wrote:
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+[...]
 
-No change since v7.
+> > A couple of questions before I look in more detail:
+> >
+> > 1) Can we rely on PT_GNU_PROPERTY being present in the phdrs to describe
+> > the NT_GNU_PROPERTY_TYPE_0 note?  If so, we can avoid trying to parse
+> > irrelevant PT_NOTE segments.
+> >
+> >
+> > 2) Are there standard types for things like the program property header?
+> > If not, can we add something in elf.h?  We should try to coordinate with
+> > libc on that.  Something like
+> >
+> 
+> Where did PT_GNU_PROPERTY come from?  Are there actual docs for it?
+> Can someone here tell us what the actual semantics of this new ELF
+> thingy are?  From some searching, it seems like it's kind of an ELF
+> note but kind of not.  An actual description would be fantastic.
 
-Thanks,
-Charles
+https://github.com/hjl-tools/linux-abi/wiki/linux-abi-draft.pdf
 
- drivers/i2c/i2c-core-base.c | 4 ++--
- drivers/i2c/i2c-core.h      | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+I don't know _when_ it was added, and the description is minimal, but
+it's there.
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index e77bab2fb4670..2a0a9cc8b8fbd 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -679,8 +679,8 @@ static void i2c_dev_set_name(struct i2c_adapter *adap,
- 		     i2c_encode_flags_to_addr(client));
- }
- 
--static int i2c_dev_irq_from_resources(const struct resource *resources,
--				      unsigned int num_resources)
-+int i2c_dev_irq_from_resources(const struct resource *resources,
-+			       unsigned int num_resources)
- {
- 	struct irq_data *irqd;
- 	int i;
-diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-index 851c11b4c0f3a..2a3b28bf826b1 100644
---- a/drivers/i2c/i2c-core.h
-+++ b/drivers/i2c/i2c-core.h
-@@ -19,6 +19,8 @@ extern struct list_head	__i2c_board_list;
- extern int		__i2c_first_dynamic_bus_num;
- 
- int i2c_check_7bit_addr_validity_strict(unsigned short addr);
-+int i2c_dev_irq_from_resources(const struct resource *resources,
-+			       unsigned int num_resources);
- 
- /*
-  * We only allow atomic transfers for very late communication, e.g. to send
--- 
-2.11.0
+(I'd say it's fairly obvious how it should be used, but it could do with
+some clarification...)
 
+> Also, I don't think there's any actual requirement that the upstream
+> kernel recognize existing CET-enabled RHEL 8 binaries as being
+> CET-enabled.  I tend to think that RHEL 8 jumped the gun here.  While
+> the upstream kernel should make some reasonble effort to make sure
+> that RHEL 8 binaries will continue to run, I don't see why we need to
+> go out of our way to keep the full set of mitigations available for
+> binaries that were developed against a non-upstream kernel.
+
+If that's an accpetable approach, it should certainly make our life
+easier.
+
+> In fact, if we handle the legacy bitmap differently from RHEL 8, we
+> may *have* to make sure that we don't recognize existing RHEL 8
+> binaries as CET-enabled.
+
+Can't comment on that.  If the existing RHEL 8 binaries strictly don't
+have the PT_GNU_PROPERTY phdr, then this might serve a dual purpose ...
+otherwise, x86 might need some additional annotation for new binaries.
+
+I'll leave it for others to comment.
+
+Cheers
+---Dave
