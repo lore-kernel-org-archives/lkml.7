@@ -2,114 +2,174 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD17C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878EBC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3122084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7672084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561678074;
+	bh=mwvETRIDqMs7L43FSkQDKbGmizxBXYSx/D3C9rFWcpg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=R80+SK/wcwRpJMPp6EvLGf7fkWq79JYE+5Txf3WNbecDWQwiWFvaG/Q0rlUloCFtM
+	 yt7DsAG48g8yNhUaq/b2q/uMwTD/hvql9DMtxGG35y5WeO4yaMLtMEQA0/e9vAwKDr
+	 Qjt7tDY7E3Lcsb381euszYlORw+JxL/0Zm3IQ8kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfF0X0p (ORCPT
+        id S1726702AbfF0X1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:26:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726574AbfF0X0o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:26:44 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RNQcIV111569
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:26:43 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2td695teb7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 19:26:43 -0400
-Received: from localhost
-        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Fri, 28 Jun 2019 00:26:42 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 28 Jun 2019 00:26:39 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RNQbRX59703622
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 23:26:38 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E22737805E;
-        Thu, 27 Jun 2019 23:26:37 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89E317805C;
-        Thu, 27 Jun 2019 23:26:36 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.85.218.134])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 23:26:36 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH] ima: Update MAX_TEMPLATE_NAME_LEN to fit largest reasonable definition
-Date:   Thu, 27 Jun 2019 20:25:46 -0300
-X-Mailer: git-send-email 2.21.0
+        Thu, 27 Jun 2019 19:27:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbfF0X1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:27:51 -0400
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 741B821743
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 23:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561678069;
+        bh=mwvETRIDqMs7L43FSkQDKbGmizxBXYSx/D3C9rFWcpg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TKcI4mKIbOmTQAT+gptb7xEcJi4etDhygArFA35kutGNdsj68LZpy/Y2k+t9XZ4RD
+         k2hodjkdeER/jYb592nL5NxQtWUYolm4AK99A/+7CH0+U2eHtJ16X0Qt3gPl9ajXNk
+         1FZBm1Fck2MmbTz+1IDkXYMN9WKOo3h1LIKY9O6s=
+Received: by mail-wr1-f42.google.com with SMTP id c2so4291079wrm.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:27:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAWoTBxCsfpFt4MHtjiqXz/PZMqvkzcFRSCQJ4zaUqQaqTgjUNEA
+        fhzE1lQT8+T/F0eUlsU0zKrdvm3pH0ARUjCHbG91Qw==
+X-Google-Smtp-Source: APXvYqyAYKXxXWMLzoz8Fys8e53yvJg6wXXB6yJBpGm1WRY2+7qHEjSZsNcG9ZRaiLfHnA5ZGOFRrL6ahv9YYxNZdI4=
+X-Received: by 2002:adf:dd0f:: with SMTP id a15mr3198059wrm.265.1561678067927;
+ Thu, 27 Jun 2019 16:27:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062723-0012-0000-0000-00001749BB66
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011343; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224213; UDB=6.00644313; IPR=6.01005401;
- MB=3.00027497; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 23:26:41
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062723-0013-0000-0000-000057DBE90C
-Message-Id: <20190627232546.28746-1-bauerman@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270272
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+ <20190621011941.186255-25-matthewgarrett@google.com> <CALCETrVUwQP7roLnW6kFG80Cc5U6X_T6AW+BTAftLccYGp8+Ow@mail.gmail.com>
+ <alpine.LRH.2.21.1906270621080.28132@namei.org> <6E53376F-01BB-4795-BC02-24F9CAE00001@amacapital.net>
+ <bce70c8b-9efd-6362-d536-cfbbcf70b0b7@tycho.nsa.gov>
+In-Reply-To: <bce70c8b-9efd-6362-d536-cfbbcf70b0b7@tycho.nsa.gov>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 27 Jun 2019 16:27:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrXwt43w6rQY6zt0J_3HOaad=+E5PushJNdSOZDBuaYV+Q@mail.gmail.com>
+Message-ID: <CALCETrXwt43w6rQY6zt0J_3HOaad=+E5PushJNdSOZDBuaYV+Q@mail.gmail.com>
+Subject: Re: [PATCH V33 24/30] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     James Morris <jmorris@namei.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        linux-security@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MAX_TEMPLATE_NAME_LEN is used when restoring measurements carried over from
-a kexec. It should be set to the length of a template containing all fields
-except for 'd' and 'n', which don't need to be accounted for since they
-shouldn't be defined in the same template description as 'd-ng' and 'n-ng'.
+On Thu, Jun 27, 2019 at 7:35 AM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+>
+> On 6/26/19 8:57 PM, Andy Lutomirski wrote:
+> >
+> >
+> >> On Jun 26, 2019, at 1:22 PM, James Morris <jmorris@namei.org> wrote:
+> >>
+> >> [Adding the LSM mailing list: missed this patchset initially]
+> >>
+> >>> On Thu, 20 Jun 2019, Andy Lutomirski wrote:
+> >>>
+> >>> This patch exemplifies why I don't like this approach:
+> >>>
+> >>>> @@ -97,6 +97,7 @@ enum lockdown_reason {
+> >>>>         LOCKDOWN_INTEGRITY_MAX,
+> >>>>         LOCKDOWN_KCORE,
+> >>>>         LOCKDOWN_KPROBES,
+> >>>> +       LOCKDOWN_BPF,
+> >>>>         LOCKDOWN_CONFIDENTIALITY_MAX,
+> >>>
+> >>>> --- a/security/lockdown/lockdown.c
+> >>>> +++ b/security/lockdown/lockdown.c
+> >>>> @@ -33,6 +33,7 @@ static char *lockdown_reasons[LOCKDOWN_CONFIDENTIA=
+LITY_MAX+1] =3D {
+> >>>>         [LOCKDOWN_INTEGRITY_MAX] =3D "integrity",
+> >>>>         [LOCKDOWN_KCORE] =3D "/proc/kcore access",
+> >>>>         [LOCKDOWN_KPROBES] =3D "use of kprobes",
+> >>>> +       [LOCKDOWN_BPF] =3D "use of bpf",
+> >>>>         [LOCKDOWN_CONFIDENTIALITY_MAX] =3D "confidentiality",
+> >>>
+> >>> The text here says "use of bpf", but what this patch is *really* doin=
+g
+> >>> is locking down use of BPF to read kernel memory.  If the details
+> >>> change, then every LSM needs to get updated, and we risk breaking use=
+r
+> >>> policies that are based on LSMs that offer excessively fine
+> >>> granularity.
+> >>
+> >> Can you give an example of how the details might change?
+> >>
+> >>> I'd be more comfortable if the LSM only got to see "confidentiality"
+> >>> or "integrity".
+> >>
+> >> These are not sufficient for creating a useful policy for the SELinux
+> >> case.
+> >>
+> >>
+> >
+> > I may have misunderstood, but I thought that SELinux mainly needed to a=
+llow certain privileged programs to bypass the policy.  Is there a real exa=
+mple of what SELinux wants to do that can=E2=80=99t be done in the simplifi=
+ed model?
+> >
+> > The think that specifically makes me uneasy about exposing all of these=
+ precise actions to LSMs is that they will get exposed to userspace in a wa=
+y that forces us to treat them as stable ABIs.
+>
+> There are two scenarios where finer-grained distinctions make sense:
+>
+> - Users may need to enable specific functionality that falls under the
+> umbrella of "confidentiality" or "integrity" lockdown.  Finer-grained
+> lockdown reasons free them from having to make an all-or-nothing choice
+> between lost functionality or no lockdown at all. This can be supported
+> directly by the lockdown module without any help from SELinux or other
+> security modules; we just need the ability to specify these
+> finer-grained lockdown levels via the boot parameters and securityfs node=
+s.
+>
+> - Different processes/programs may need to use different sets of
+> functionality restricted via lockdown confidentiality or integrity
+> categories.  If we have to allow all-or-none for the set of
+> interfaces/functionality covered by the generic confidentiality or
+> integrity categories, then we'll end up having to choose between lost
+> functionality or overprivileged processes, neither of which is optimal.
+>
+> Is it truly the case that everything under the "confidentiality"
+> category poses the same level of risk to kernel confidentiality, and
+> similarly for everything under the "integrity" category?  If not, then
+> being able to distinguish them definitely has benefit.
+>
 
-That length is greater than the current 15, so update using a sizeof() to
-show where the number comes from and also can be visually shown to be
-correct. The sizeof() is calculated at compile time.
+They're really quite similar in my mind.  Certainly some things in the
+"integrity" category give absolutely trivial control over the kernel
+(e.g. modules) while others make it quite challenging (ioperm), but
+the end result is very similar.  And quite a few "confidentiality"
+things genuinely do allow all kernel memory to be read.
 
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
- security/integrity/ima/ima_template.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index a01a17e5c581..7343e8e0ae2f 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -47,7 +47,13 @@ static const struct ima_template_field supported_fields[] = {
- 	{.field_id = "buf", .field_init = ima_eventbuf_init,
- 	 .field_show = ima_show_template_buf},
- };
--#define MAX_TEMPLATE_NAME_LEN 15
-+
-+/*
-+ * Used when restoring measurements carried over from a kexec. 'd' and 'n' don't
-+ * need to be accounted for since they shouldn't be defined in the same template
-+ * description as 'd-ng' and 'n-ng' respectively.
-+ */
-+#define MAX_TEMPLATE_NAME_LEN sizeof("d-ng|n-ng|sig|buf")
- 
- static struct ima_template_desc *ima_template;
- 
-
+I agree that finer-grained distinctions could be useful. My concern is
+that it's a tradeoff, and the other end of the tradeoff is an ABI
+stability issue.  If someone decides down the road that some feature
+that is currently "integrity" can be split into a narrow "integrity"
+feature and a "confidentiality" feature then, if the user policy knows
+about the individual features, there's a risk of breaking people's
+systems.  If we keep the fine-grained control, do we have a clear
+compatibility story?
