@@ -2,157 +2,147 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435A8C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329A8C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC842085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FA420828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:23:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="HWjU5uE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfF0KVL (ORCPT
+        id S1726562AbfF0KXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:21:11 -0400
-Received: from app1.whu.edu.cn ([202.114.64.88]:49312 "EHLO whu.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726441AbfF0KVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:21:11 -0400
-Received: from localhost (unknown [111.202.192.3])
-        by email1 (Coremail) with SMTP id AQBjCgDHUWOJmBRdKbQaAA--.41508S2;
-        Thu, 27 Jun 2019 18:21:02 +0800 (CST)
-From:   Peng Wang <rocking@whu.edu.cn>
-To:     tj@kernel.org, lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Wang <rocking@whu.edu.cn>
-Subject: [PATCH] cgroup: provide a macro helper to iterate a cgroup's ancestors
-Date:   Thu, 27 Jun 2019 18:19:01 +0800
-Message-Id: <20190627101901.26714-1-rocking@whu.edu.cn>
-X-Mailer: git-send-email 2.19.1
+        Thu, 27 Jun 2019 06:23:24 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:38152 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfF0KXX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:23:23 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
+   d="scan'208";a="40635198"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jun 2019 03:23:11 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.87.151) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Jun 2019 03:23:11 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 27 Jun 2019 03:23:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=UoXvXCGdWPxZM8QyCQ3dHvBRethP37s6BSlXWZHt1Esf3yYmKA9uGMJQYEbo0T8cSeXhKABeKAI0F8Ky1J0JaywOT6HbDrma0G98a8/ebgSyHVsD7hMnW1xoAeCeSP8kOi0uUbNg2yi8I27fZ9MEPQhRLZU/uKTHXdycOZ117d4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xk7Q7cPpHrDcx5gv6G4AsNOONZ3amReZ9FSlg4N6AcA=;
+ b=ORhM3vr+Qfn9oTJF3MlhqMb4VqpYBZ8rklZ87U8nXexRJPmJKEp0sAOXg6HBt87Xovq3hIRoh78w0+XsR45/ldfVVEfrqFnSYyYbC3vvwN62X6bImhM2Xg/nsYj6fjhDydNSXWo2py+Gat5s+2hsTNjNkNUAF2byDVuh3WsMoN0=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xk7Q7cPpHrDcx5gv6G4AsNOONZ3amReZ9FSlg4N6AcA=;
+ b=HWjU5uE4wxDJ9/GSjB0YbSypmUmrPvWltJAv0R8+VomZPOvVctAE6MbHGKJrcQUMuXFPV7YFWOctzF/7ygQJcnGi6HCb7FztHFMTRUrbnIxzsXGC+JSZptCvZEY95+rN4elOyus8LaFipN01oeXMcYvbL48qcDdJJHKektvuNPQ=
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
+ MWHPR11MB1536.namprd11.prod.outlook.com (10.172.53.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.16; Thu, 27 Jun 2019 10:23:08 +0000
+Received: from MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::7d59:2a2f:90f1:2720]) by MWHPR11MB1549.namprd11.prod.outlook.com
+ ([fe80::7d59:2a2f:90f1:2720%9]) with mapi id 15.20.2008.018; Thu, 27 Jun 2019
+ 10:23:08 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <sboyd@kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <mark.rutland@arm.com>, <mturquette@baylibre.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 4/4] clk: at91: sckc: add support for SAM9X60
+Thread-Topic: [PATCH v4 4/4] clk: at91: sckc: add support for SAM9X60
+Thread-Index: AQHVD72Q4ne6wpY5kEOC3wMr7TLsAQ==
+Date:   Thu, 27 Jun 2019 10:23:08 +0000
+Message-ID: <cc8b808e-d6b5-8ba1-13ff-218876d1b398@microchip.com>
+References: <1558433454-27971-1-git-send-email-claudiu.beznea@microchip.com>
+ <1558433454-27971-5-git-send-email-claudiu.beznea@microchip.com>
+ <20190626183658.BA53A216FD@mail.kernel.org>
+In-Reply-To: <20190626183658.BA53A216FD@mail.kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR04CA0071.eurprd04.prod.outlook.com
+ (2603:10a6:802:2::42) To MWHPR11MB1549.namprd11.prod.outlook.com
+ (2603:10b6:301:c::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20190627132300653
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 31398580-f122-44ba-737b-08d6fae972b5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR11MB1536;
+x-ms-traffictypediagnostic: MWHPR11MB1536:
+x-microsoft-antispam-prvs: <MWHPR11MB153635DD96F349AC202ED1C187FD0@MWHPR11MB1536.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 008184426E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(396003)(376002)(346002)(189003)(199004)(4326008)(8676002)(2501003)(486006)(446003)(66946007)(66556008)(66446008)(11346002)(64756008)(476003)(73956011)(86362001)(81156014)(2201001)(81166006)(5660300002)(8936002)(2616005)(66476007)(6246003)(31696002)(7736002)(66066001)(4744005)(25786009)(305945005)(31686004)(72206003)(68736007)(2906002)(71200400001)(71190400001)(256004)(14454004)(36756003)(478600001)(53936002)(6512007)(99286004)(6436002)(6486002)(110136005)(316002)(52116002)(76176011)(3846002)(53546011)(102836004)(26005)(186003)(386003)(6506007)(6116002)(229853002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1536;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GX3PYNlv8z9aJ7NN26nmePu+j2ub3VFciQt+O3fRMA+USxMIdZTAyqQgJWspZLENignE5O7gJBT+lGw3iXUudKBeIynqABauebJIdHu1ZMgLH2HFqdY+F2K6rmMnbXtXDf7Z34Z010OtmNJDoeIJXZqtuNlYY6a8g3ti5Qjp1sXi8vVEbjCgfRhXnboZdxMLEPgXtBy5NG371MjLzJpJ71HTGJx6Akif3NNX9gqA1b9+MsMVxXChBYh7hFHMppYNRFiKyzfK9si+t2YruLaMkyQ/Rtko+FUavgQ6o4kFj9CtGlRvJGZeT27f6gYd4FeDRY8Lw7Tj+BV6d0L+nK1abxeGscgc8rcRxYag9/rhDwmBtrexqaRVovbhNm/ew0EcJIW8j6XJINIwS2AeCBbFOtxn74ZHOiNx6T7QB0R5Xyk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F8DE88AC1A63DC43A1B6B0C9677F015F@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQBjCgDHUWOJmBRdKbQaAA--.41508S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWr43Kw17uF1fuF1fJFW5Jrb_yoW5KF15pF
-        4kAa43t3yakr1UtrWvq34qvFnagw4Fqw1UGw48tw1Syr43Jwn0qr1DCFy3WFyjyFZ2kFW3
-        Xr4Yy34jkw40yF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkq14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gw1l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUboKZJUUUUU==
-X-CM-SenderInfo: qsqrijaqrviiqqxyq4lkxovvfxof0/
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31398580-f122-44ba-737b-08d6fae972b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 10:23:08.2905
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: claudiu.beznea@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1536
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use for_each_ancestor macro to iterate a cgroup's ancestors for clarity.
-
-Signed-off-by: Peng Wang <rocking@whu.edu.cn>
----
- include/linux/cgroup.h  | 11 +++++++++++
- kernel/cgroup/cgroup.c  |  7 +++----
- kernel/cgroup/freezer.c |  2 +-
- kernel/cgroup/rstat.c   |  4 ++--
- 4 files changed, 17 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index 0297f930a56e..00b0a16bbc30 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -298,6 +298,17 @@ void css_task_iter_end(struct css_task_iter *it);
- 			;						\
- 		else
- 
-+/**
-+ * for_each_ancestor - iterate a cgroup's ancestors
-+ * @tcgrp: the loop cursor
-+ * @cgrp: cgroup whose ancestors to iterate
-+ *
-+ * Iterate ancestors of @cgrp.
-+ */
-+#define for_each_ancestor(tcgrp, cgrp)					\
-+	for ((tcgrp) = cgroup_parent((cgrp)); (tcgrp);			\
-+		(tcgrp) = cgroup_parent((tcgrp)))
-+
- /*
-  * Inline functions.
-  */
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index bf9dbffd46b1..32fa09679209 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -404,7 +404,7 @@ static bool cgroup_is_valid_domain(struct cgroup *cgrp)
- 		return false;
- 
- 	/* but the ancestors can't be unless mixable */
--	while ((cgrp = cgroup_parent(cgrp))) {
-+	for_each_ancestor(cgrp, cgrp) {
- 		if (!cgroup_is_mixable(cgrp) && cgroup_is_thread_root(cgrp))
- 			return false;
- 		if (cgroup_is_threaded(cgrp))
-@@ -4987,8 +4987,7 @@ static void css_release_work_fn(struct work_struct *work)
- 			cgroup_rstat_flush(cgrp);
- 
- 		spin_lock_irq(&css_set_lock);
--		for (tcgrp = cgroup_parent(cgrp); tcgrp;
--		     tcgrp = cgroup_parent(tcgrp))
-+		for_each_ancestor(tcgrp, cgrp)
- 			tcgrp->nr_dying_descendants--;
- 		spin_unlock_irq(&css_set_lock);
- 
-@@ -5518,7 +5517,7 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
- 		parent->nr_threaded_children--;
- 
- 	spin_lock_irq(&css_set_lock);
--	for (tcgrp = cgroup_parent(cgrp); tcgrp; tcgrp = cgroup_parent(tcgrp)) {
-+	for_each_ancestor(tcgrp, cgrp) {
- 		tcgrp->nr_descendants--;
- 		tcgrp->nr_dying_descendants++;
- 		/*
-diff --git a/kernel/cgroup/freezer.c b/kernel/cgroup/freezer.c
-index 8cf010680678..4dfc2f04a82d 100644
---- a/kernel/cgroup/freezer.c
-+++ b/kernel/cgroup/freezer.c
-@@ -21,7 +21,7 @@ static void cgroup_propagate_frozen(struct cgroup *cgrp, bool frozen)
- 	 *
- 	 * Otherwise, all ancestor cgroups are forced into the non-frozen state.
- 	 */
--	while ((cgrp = cgroup_parent(cgrp))) {
-+	for_each_ancestor(cgrp, cgrp) {
- 		if (frozen) {
- 			cgrp->freezer.nr_frozen_descendants += desc;
- 			if (!test_bit(CGRP_FROZEN, &cgrp->flags) &&
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index ca19b4c8acf5..58d352e0d76a 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -49,8 +49,7 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
- 	raw_spin_lock_irqsave(cpu_lock, flags);
- 
- 	/* put @cgrp and all ancestors on the corresponding updated lists */
--	for (parent = cgroup_parent(cgrp); parent;
--	     cgrp = parent, parent = cgroup_parent(cgrp)) {
-+	for_each_ancestor(parent, cgrp) {
- 		struct cgroup_rstat_cpu *rstatc = cgroup_rstat_cpu(cgrp, cpu);
- 		struct cgroup_rstat_cpu *prstatc = cgroup_rstat_cpu(parent, cpu);
- 
-@@ -63,6 +62,7 @@ void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
- 
- 		rstatc->updated_next = prstatc->updated_children;
- 		prstatc->updated_children = cgrp;
-+		cgrp = parent;
- 	}
- 
- 	raw_spin_unlock_irqrestore(cpu_lock, flags);
--- 
-2.19.1
-
+DQoNCk9uIDI2LjA2LjIwMTkgMjE6MzYsIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gUXVvdGluZyBD
+bGF1ZGl1LkJlem5lYUBtaWNyb2NoaXAuY29tICgyMDE5LTA1LTIxIDAzOjExOjMzKQ0KPj4gRnJv
+bTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4g
+QWRkIHN1cHBvcnQgZm9yIFNBTTlYNjAncyBzbG93IGNsb2NrLg0KPj4NCj4+IFNpZ25lZC1vZmYt
+Ynk6IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KPj4gQWNr
+ZWQtYnk6IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbT4N
+Cj4+IC0tLQ0KPiANCj4gRllJLCB0aGlzIHBhdGNoIGlzIGJhc2U2NCBlbmNvZGVkIGFuZCBjYXVz
+ZXMgbXkgTVVBIHRvIGhhdmUgbG90cyBvZg0KPiBwYWluLiBJdCB3b3VsZCBiZSBuaWNlIGlmIHlv
+dSBjb3VsZCBzZW5kIHBsYWluIHRleHQgZW1haWxzLCBvdGhlcndpc2UgaXQNCj4gdGFrZXMgbWUg
+YSBmZXcgbW9yZSBzZWNvbmRzIHRvIGV4dHJhY3QgdGhlIHBhdGNoLiBPZiBjb3Vyc2UsIGl0IHJl
+bWluZHMNCj4gbWUgdGhhdCBJIG5lZWQgdG8gZml4IG15IE1VQSBzbyBtYXliZSB0aGlzIGlzIE9L
+IQ0KPiANCg0KU29ycnkgZm9yIHRoYXQsIEkgd2lsbCByZXNlbmQgYWxsIHNlcmllcy4gSSBzZWUg
+dGhhdCBhbGwgcGF0Y2hlcyBpbiB0aGlzIHNlcmllcw0KYXJlIGFmZmVjdGVkLg0KDQpUaGFuayB5
+b3UsDQpDbGF1ZGl1IEJlem5lYQ0K
