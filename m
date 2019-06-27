@@ -2,204 +2,95 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D5EC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528A7C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D620645
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="UVzm5lEw"
+	by mail.kernel.org (Postfix) with ESMTP id 2BB4420B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 19:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561662088;
+	bh=SiphXzRsjkt9u/8qMecCrA/HDYZQ8r7Ed2YaFAJ3ydE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uqYum8X0s7HCTHJNT/HXY4afKo7mbm0M8ZGQIQPcmP/TyZL2hQ607rKssLw9mzBnj
+	 JQ0/EVTqfgGeIlJWEXycZLzhufyyvnWmBwUTxqQlZ+9s5qMAT8pMJaNuyDooDO9/Ye
+	 9fc3AGbyHmi791w3enF5IYZuAadLy1rD+RzKD7cQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfF0S6Y (ORCPT
+        id S1726590AbfF0TB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:58:24 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46176 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfF0S6X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:58:23 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z23so3345776ote.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Buh4vYpE7LbYuKttCx2Cpr/a4GmgOyG3kH9utY0SGvg=;
-        b=UVzm5lEwjmSVdXZ/dYYxW4VxfyylgZoSDFKKznMhT/DZQDkRdkfD4dF/nEqGh68zaM
-         +3YpvYStDIekqEbuXuBZN58wRAUHTVoiBHVKl+9NGKGF/kpEmlvFH15MPa+nTCB+74r8
-         V/EpgUV/qh9XsZwcMwyXnBdQeDazJdE03aVafP+sfQpPouimkrNjlyd7/gYgRIZu5SZ9
-         nLrnX7WKLJGDNHyGUs9E1D2GFupQzbXMXIh3hcXuarKwBOdUsZk92+XY2xehCf36rcsP
-         GTTy6vXV6xZOaQ3hr/cm0XuWVAUgklXz1YC4JsFJrKhPgZI1KsLncL6rQ/rn3/Vt15LE
-         scxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Buh4vYpE7LbYuKttCx2Cpr/a4GmgOyG3kH9utY0SGvg=;
-        b=uSlGRVzWd+WuGOhFXuAcqGWX6uJ6fmx5UGmUhGCixTX8HOvzvPMCBwptKC2Yg4yLba
-         Jaw6x2r2/ctEX+Eo1eJHatINWZnFIkmBeBhIG+inofdnGwTz/ZP1sIcLAr+XInP5TWCB
-         +YZ9cqtQes0LpcAnBPMXUe1CQ2Q0Ylzi+YPUveTufOy0N6CmuY87kT5kOToke2W+xB+R
-         U2c2z8A1sLvE9FYUmHDyfVXKe95q9CHPUjgl9boy0xQmxgrJMGv4+hYKWb14Y1KsubZy
-         NmAv6CXUqz2Z9lx1GMRpPAtFiAqS81WImxYZIBuhiG5DG/ID6jOq13IBQuCRPKaHlGnP
-         S2yg==
-X-Gm-Message-State: APjAAAXx5flzS72lJhblsQlcStC7wvXs0StXzZ+jTP2sJ+MKIfXNYJVy
-        Gjm+IwCNz4m8lAkcBgVoV7u7qimfbTgDttsfEaK4QQ==
-X-Google-Smtp-Source: APXvYqxZzA0OhG2w6y05Ufc3lrkT11UvPecZsn+mzZCDhjjL01pL3ybEOaSVC61vjyT57hy6ydReTOdG+lBiHcpQk+g=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr4560030oto.207.1561661902921;
- Thu, 27 Jun 2019 11:58:22 -0700 (PDT)
+        Thu, 27 Jun 2019 15:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfF0TB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 15:01:26 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D39B720645;
+        Thu, 27 Jun 2019 19:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561662085;
+        bh=SiphXzRsjkt9u/8qMecCrA/HDYZQ8r7Ed2YaFAJ3ydE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FOZc8IQyuJ7j3PvBsrfrZOP9Q8hYRNwMr6PTulP3yWA5XPyRMa2AMso654M2Acwhs
+         oXutCbF68J/zxN+Lel285WNGKP5treE4rpmT70Fl4N06DdqTEyrUvUVWVSy7Q0T/JV
+         70df5JUSMn6mDgGCICoBmLYxf1/bLaPS8x3OgQbU=
+Date:   Thu, 27 Jun 2019 12:01:23 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     John Fastabend <john.fastabend@gmail.com>
+Cc:     Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        davem@davemloft.net, glider@google.com,
+        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+6f50c99e8f6194bf363f@syzkaller.appspotmail.com>
+Subject: Re: [net/tls] Re: KMSAN: uninit-value in aesti_encrypt
+Message-ID: <20190627190123.GA669@sol.localdomain>
+References: <000000000000a97a15058c50c52e@google.com>
+ <20190627164627.GF686@sol.localdomain>
+ <5d1508c79587a_e392b1ee39f65b45b@john-XPS-13-9370.notmuch>
 MIME-Version: 1.0
-References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
- <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
-In-Reply-To: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 27 Jun 2019 11:58:12 -0700
-Message-ID: <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
-Subject: Re: [PATCH] filesystem-dax: Disable PMD support
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
-        stable <stable@vger.kernel.org>,
-        Robert Barror <robert.barror@intel.com>,
-        Seema Pandit <seema.pandit@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d1508c79587a_e392b1ee39f65b45b@john-XPS-13-9370.notmuch>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 11:29 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Thu, Jun 27, 2019 at 9:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Thu, Jun 27, 2019 at 5:34 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > On Wed, Jun 26, 2019 at 05:15:45PM -0700, Dan Williams wrote:
-> > > > Ever since the conversion of DAX to the Xarray a RocksDB benchmark has
-> > > > been encountering intermittent lockups. The backtraces always include
-> > > > the filesystem-DAX PMD path, multi-order entries have been a source of
-> > > > bugs in the past, and disabling the PMD path allows a test that fails in
-> > > > minutes to run for an hour.
-> > >
-> > > On May 4th, I asked you:
-> > >
-> > > Since this is provoked by a fatal signal, it must have something to do
-> > > with a killable or interruptible sleep.  There's only one of those in the
-> > > DAX code; fatal_signal_pending() in dax_iomap_actor().  Does rocksdb do
-> > > I/O with write() or through a writable mmap()?  I'd like to know before
-> > > I chase too far down this fault tree analysis.
-> >
-> > RocksDB in this case is using write() for writes and mmap() for reads.
->
-> It's not clear to me that a fatal signal is a component of the failure
-> as much as it's the way to detect that the benchmark has indeed locked
-> up.
+On Thu, Jun 27, 2019 at 11:19:51AM -0700, John Fastabend wrote:
+> Eric Biggers wrote:
+> > [+TLS maintainers]
+> > 
+> > Very likely a net/tls bug, not a crypto bug.
+> > 
+> > Possibly a duplicate of other reports such as "KMSAN: uninit-value in gf128mul_4k_lle (3)"
+> > 
+> > See https://lore.kernel.org/netdev/20190625055019.GD17703@sol.localdomain/ for
+> > the list of 17 other open syzbot bugs I've assigned to the TLS subsystem.  TLS
+> > maintainers, when are you planning to look into these?
+> > 
+> > On Thu, Jun 27, 2019 at 09:37:05AM -0700, syzbot wrote:
+> 
+> I'm looking at this issue now. There is a series on bpf list now to address
+> many of those 17 open issues but this is a separate issue. I can reproduce
+> it locally so should have a fix soon.
+> 
 
-Even though db_bench is run with the mmap_read=1 option:
+Okay, great!  However, just to clarify, the 17 syzbot bugs I assigned to TLS are
+in addition to the 30 I assigned to BPF
+(https://lore.kernel.org/lkml/20190624050114.GA30702@sol.localdomain/).
+(Well, since I sent that it's actually up to 35 now.)
 
-  cmd="${rocksdb_dir}/db_bench $params_r --benchmarks=readwhilewriting \
-       --use_existing_db=1 \
-        --mmap_read=1 \
-       --num=$num_keys \
-       --threads=$num_read_threads \
+I do expect most of these are duplicates, so when you are fixing the bugs, it
+would be really helpful (for everyone, including you in the future :-) ) if you
+would include the corresponding Reported-by syzbot line for *every* syzbot
+report you think is addressed, so they get closed.
 
-When the lockup occurs there are db_bench processes in the write fault path:
-
-[ 1666.635212] db_bench        D    0  2492   2435 0x00000000
-[ 1666.641339] Call Trace:
-[ 1666.644072]  ? __schedule+0x24f/0x680
-[ 1666.648162]  ? __switch_to_asm+0x34/0x70
-[ 1666.652545]  schedule+0x29/0x90
-[ 1666.656054]  get_unlocked_entry+0xcd/0x120
-[ 1666.660629]  ? dax_iomap_actor+0x270/0x270
-[ 1666.665206]  grab_mapping_entry+0x14f/0x230
-[ 1666.669878]  dax_iomap_pmd_fault.isra.42+0x14d/0x950
-[ 1666.675425]  ? futex_wait+0x122/0x230
-[ 1666.679518]  ext4_dax_huge_fault+0x16f/0x1f0
-[ 1666.684288]  __handle_mm_fault+0x411/0x1350
-[ 1666.688961]  ? do_futex+0xca/0xbb0
-[ 1666.692760]  ? __switch_to_asm+0x34/0x70
-[ 1666.697144]  handle_mm_fault+0xbe/0x1e0
-[ 1666.701429]  __do_page_fault+0x249/0x4f0
-[ 1666.705811]  do_page_fault+0x32/0x110
-[ 1666.709903]  ? page_fault+0x8/0x30
-[ 1666.713702]  page_fault+0x1e/0x30
-
-...where __handle_mm_fault+0x411 is in wp_huge_pmd():
-
-(gdb) li *(__handle_mm_fault+0x411)
-0xffffffff812713d1 is in __handle_mm_fault (mm/memory.c:3800).
-3795    static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf,
-pmd_t orig_pmd)
-3796    {
-3797            if (vma_is_anonymous(vmf->vma))
-3798                    return do_huge_pmd_wp_page(vmf, orig_pmd);
-3799            if (vmf->vma->vm_ops->huge_fault)
-3800                    return vmf->vma->vm_ops->huge_fault(vmf, PE_SIZE_PMD);
-3801
-3802            /* COW handled on pte level: split pmd */
-3803            VM_BUG_ON_VMA(vmf->vma->vm_flags & VM_SHARED, vmf->vma);
-3804            __split_huge_pmd(vmf->vma, vmf->pmd, vmf->address, false, NULL);
-
-This bug feels like we failed to unlock, or unlocked the wrong entry
-and this hunk in the bisected commit looks suspect to me. Why do we
-still need to drop the lock now that the radix_tree_preload() calls
-are gone?
-
-                /*
-                 * Besides huge zero pages the only other thing that gets
-                 * downgraded are empty entries which don't need to be
-                 * unmapped.
-                 */
--               if (pmd_downgrade && dax_is_zero_entry(entry))
--                       unmap_mapping_pages(mapping, index & ~PG_PMD_COLOUR,
--                                                       PG_PMD_NR, false);
--
--               err = radix_tree_preload(
--                               mapping_gfp_mask(mapping) & ~__GFP_HIGHMEM);
--               if (err) {
--                       if (pmd_downgrade)
--                               put_locked_mapping_entry(mapping, index);
--                       return ERR_PTR(err);
--               }
--               xa_lock_irq(&mapping->i_pages);
--
--               if (!entry) {
--                       /*
--                        * We needed to drop the i_pages lock while calling
--                        * radix_tree_preload() and we didn't have an entry to
--                        * lock.  See if another thread inserted an entry at
--                        * our index during this time.
--                        */
--                       entry = __radix_tree_lookup(&mapping->i_pages, index,
--                                       NULL, &slot);
--                       if (entry) {
--                               radix_tree_preload_end();
--                               xa_unlock_irq(&mapping->i_pages);
--                               goto restart;
--                       }
-+               if (dax_is_zero_entry(entry)) {
-+                       xas_unlock_irq(xas);
-+                       unmap_mapping_pages(mapping,
-+                                       xas->xa_index & ~PG_PMD_COLOUR,
-+                                       PG_PMD_NR, false);
-+                       xas_reset(xas);
-+                       xas_lock_irq(xas);
-                }
-
--               if (pmd_downgrade) {
--                       dax_disassociate_entry(entry, mapping, false);
--                       radix_tree_delete(&mapping->i_pages, index);
--                       mapping->nrexceptional--;
--                       dax_wake_mapping_entry_waiter(&mapping->i_pages,
--                                       index, entry, true);
--               }
-+               dax_disassociate_entry(entry, mapping, false);
-+               xas_store(xas, NULL);   /* undo the PMD join */
-+               dax_wake_entry(xas, entry, true);
-+               mapping->nrexceptional--;
+- Eric
