@@ -2,103 +2,156 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C35C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822AEC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70CD20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6185D20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfF0PyP (ORCPT
+        id S1726565AbfF0Py5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:54:15 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:19440 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbfF0PyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:54:13 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
-   d="scan'208";a="39276665"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jun 2019 08:54:12 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 27 Jun 2019 08:54:10 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 27 Jun 2019 08:54:08 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>
-CC:     <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 7/7] clk: at91: sckc: use dedicated functions to unregister clock
-Date:   Thu, 27 Jun 2019 18:53:45 +0300
-Message-ID: <1561650825-11213-8-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561650825-11213-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1561650825-11213-1-git-send-email-claudiu.beznea@microchip.com>
+        Thu, 27 Jun 2019 11:54:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52050 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726405AbfF0Py5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:54:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8CAD7AD12;
+        Thu, 27 Jun 2019 15:54:55 +0000 (UTC)
+Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+References: <20190627122348.5833-1-kraxel@redhat.com>
+ <20190627122348.5833-2-kraxel@redhat.com>
+ <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
+ <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
+Date:   Thu, 27 Jun 2019 17:54:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use at91 specific functions to free all resources in case of error.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO
+Content-Type: multipart/mixed; boundary="5aKuOwci0HBAv9zVXFDlQwFppkudXPOMv";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, Maxime Ripard
+ <maxime.ripard@bootlin.com>, open list <linux-kernel@vger.kernel.org>,
+ David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+Message-ID: <bd472b0a-faec-c97f-39a6-ffd0bd8fdd78@suse.de>
+Subject: Re: [PATCH v3 1/5] gem/vram: pin to vram in vmap
+References: <20190627122348.5833-1-kraxel@redhat.com>
+ <20190627122348.5833-2-kraxel@redhat.com>
+ <8a52b578-b255-3e11-3a0c-0b68f0cb649e@suse.de>
+ <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
+In-Reply-To: <20190627151633.j3xf3lkihklb2wzh@sirius.home.kraxel.org>
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/clk/at91/sckc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--5aKuOwci0HBAv9zVXFDlQwFppkudXPOMv
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-index f7ad3e9414dc..42502830a56a 100644
---- a/drivers/clk/at91/sckc.c
-+++ b/drivers/clk/at91/sckc.c
-@@ -514,13 +514,13 @@ static void __init of_sam9x60_sckc_setup(struct device_node *np)
- 	return;
- 
- unregister_td_slck:
--	clk_hw_unregister(clk_data->hws[1]);
-+	at91_clk_unregister_sam9x5_slow(clk_data->hws[1]);
- unregister_md_slck:
- 	clk_hw_unregister(clk_data->hws[0]);
- clk_data_free:
- 	kfree(clk_data);
- unregister_slow_osc:
--	clk_hw_unregister(slow_osc);
-+	at91_clk_unregister_slow_osc(slow_osc);
- unregister_slow_rc:
- 	clk_hw_unregister(slow_rc);
- }
--- 
-2.7.4
+Hi
 
+Am 27.06.19 um 17:16 schrieb Gerd Hoffmann:
+>   Hi,
+>=20
+>>  1) Introduce a default_placement field in struct drm_gem_vram_helper
+>> where this flag can be configured. I'd favor this option.
+>=20
+>>  2) Introduce a separate callback function for pinning to vram. The
+>> driver would have to set the correct function pointers.
+>=20
+>>  3) Pin the fb console buffer manually from within the bochs driver.
+>=20
+> Hmm.  Before calling drm_fbdev_generic_setup() the bo doesn't exist yet=
+
+> and when the function returns it is already vmapped and pinned I think.=
+
+>=20
+> So (3) isn't easily doable.  (1) looks best to me.
+
+For my patches, it's OK to have to BO pinned to VRAM by default. As the
+BO will be unmapped most of the time, I can change this flag at any time.=
+
+
+Best regards
+Thomas
+
+> cheers,
+>   Gerd
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--5aKuOwci0HBAv9zVXFDlQwFppkudXPOMv--
+
+--tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl0U5soACgkQaA3BHVML
+eiNQeAf+NnjuxqrjNx6kGfqn9NwnbfJLfP67MLbaMk5zgiP57zfMw/CAdHENVBtT
+fVlNbTQ2Y5894tk+TgvZUmtAbql242FJ8nPLTYoWoipUN5IgZ6m+dt/kCSZ80ci7
+jffxxMeosDdXc8RGLIntkKJn/axK0S+L3h3dt8Jd6LyOhd7pUu4JM76IknYY6pUr
+TEJpYUzwiUW7OD7+eXBNxfK5fshT/gGmWUIItkWwCVMNQegPIHAfvqkpv4BHK+A2
+3U38OZLODh64Z+Xnzz01mm+QM7jlXizRtVPAz6LzqUJtApf3OrnSSvMxhC+e1Ela
+A2NOCN5NpkxMCmsfPnmS3C1Sdux9yg==
+=USKJ
+-----END PGP SIGNATURE-----
+
+--tBTTJRDtS7CMLIYpOYJXPvr7feH33XgYO--
