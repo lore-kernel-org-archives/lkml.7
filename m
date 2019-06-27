@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8545C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11165C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94FB20645
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F57204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 06:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfF0GUf (ORCPT
+        id S1726828AbfF0GUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 02:20:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58947 "EHLO
+        Thu, 27 Jun 2019 02:20:42 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:26822 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726725AbfF0GU1 (ORCPT
+        with ESMTP id S1726659AbfF0GUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 02:20:27 -0400
-X-UUID: 56a46122ef674518aada4afad981ddcd-20190627
-X-UUID: 56a46122ef674518aada4afad981ddcd-20190627
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        Thu, 27 Jun 2019 02:20:25 -0400
+X-UUID: d57e7ba711c0475db580bf7e93a5b9a5-20190627
+X-UUID: d57e7ba711c0475db580bf7e93a5b9a5-20190627
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1344197306; Thu, 27 Jun 2019 14:20:08 +0800
+        with ESMTP id 1711659741; Thu, 27 Jun 2019 14:20:08 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Thu, 27 Jun 2019 14:20:07 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -52,93 +52,91 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v9 06/12] soc: mediatek: cmdq: clear the event in cmdq initial flow
-Date:   Thu, 27 Jun 2019 14:19:52 +0800
-Message-ID: <20190627061958.9488-7-bibby.hsieh@mediatek.com>
+Subject: [PATCH v9 07/12] soc: mediatek: cmdq: reorder the parameter
+Date:   Thu, 27 Jun 2019 14:19:53 +0800
+Message-ID: <20190627061958.9488-8-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190627061958.9488-1-bibby.hsieh@mediatek.com>
 References: <20190627061958.9488-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 1D2F05AD395B5B6454C8267598C6C38C93A2EF6FB7264B0057A6014CBE6569602000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCE hardware stored event information in own internal sysram,
-if the initial value in those sysram is not zero value
-it will cause a situation that gce can wait the event immediately
-after client ask gce to wait event but not really trigger the
-corresponding hardware.
-
-In order to make sure that the wait event function is
-exactly correct, we need to clear the sysram value in
-cmdq initial flow.
-
-Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+The order of gce instructions is [subsys offset value]
+so reorder the parameter of cmdq_pkt_write_mask
+and cmdq_pkt_write function.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
- include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
- include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/soc/mediatek/mtk-cmdq-helper.c |  6 +++---
+ include/linux/soc/mediatek/mtk-cmdq.h  | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 69daaadc3a5f..9a6ce9f5a7db 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -21,6 +21,7 @@
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
-+#define CMDQ_SYNC_TOKEN_UPDATE		0x68
- #define CMDQ_THR_SLOT_CYCLES		0x30
- #define CMDQ_THR_BASE			0x100
- #define CMDQ_THR_SIZE			0x80
-@@ -104,8 +105,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
- 
- static void cmdq_init(struct cmdq *cmdq)
- {
-+	int i;
-+
- 	WARN_ON(clk_enable(cmdq->clock) < 0);
- 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-+	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-+		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
- 	clk_disable(cmdq->clock);
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index ff9fef5a032b..082b8978651e 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -136,7 +136,7 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+ 	return 0;
  }
  
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index ccb73422c2fa..911475da7a53 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -19,6 +19,8 @@
- #define CMDQ_WFE_UPDATE			BIT(31)
- #define CMDQ_WFE_WAIT			BIT(15)
- #define CMDQ_WFE_WAIT_VALUE		0x1
-+/** cmdq event maximum */
-+#define CMDQ_MAX_EVENT			0x3ff
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value)
+ {
+ 	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+ 		    (subsys << CMDQ_SUBSYS_SHIFT);
+@@ -145,8 +145,8 @@ int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
+ }
+ EXPORT_SYMBOL(cmdq_pkt_write);
  
- /*
-  * CMDQ_CODE_MASK:
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+-			u32 subsys, u32 offset, u32 mask)
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
++			u32 offset, u32 value, u32 mask)
+ {
+ 	u32 offset_mask = offset;
+ 	int err = 0;
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 54ade13a9b15..4e8899972db4 100644
+index 4e8899972db4..39d813dde4b4 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -13,9 +13,6 @@
+@@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+ /**
+  * cmdq_pkt_write() - append write command to the CMDQ packet
+  * @pkt:	the CMDQ packet
+- * @value:	the specified target register value
+  * @subsys:	the CMDQ sub system code
+  * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
++int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 subsys, u32 offset, u32 value);
  
- #define CMDQ_NO_TIMEOUT		0xffffffffu
+ /**
+  * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+  * @pkt:	the CMDQ packet
+- * @value:	the specified target register value
+  * @subsys:	the CMDQ sub system code
+  * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
+  * @mask:	the specified target register mask
+  *
+  * Return: 0 for success; else the error code is returned
+  */
+-int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+-			u32 subsys, u32 offset, u32 mask);
++int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 subsys,
++			u32 offset, u32 value, u32 mask);
  
--/** cmdq event maximum */
--#define CMDQ_MAX_EVENT				0x3ff
--
- struct cmdq_pkt;
- 
- struct cmdq_client {
+ /**
+  * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
 -- 
 2.18.0
 
