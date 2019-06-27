@@ -2,103 +2,165 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694C6C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E792FC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4070F205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98E12086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:34:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kwcYh9FZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="n/ziMy77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfF0Neq (ORCPT
+        id S1727035AbfF0Nex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:34:46 -0400
-Received: from sauhun.de ([88.99.104.3]:38636 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726832AbfF0Neo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:34:44 -0400
-Received: from localhost (p54B33130.dip0.t-ipconnect.de [84.179.49.48])
-        by pokefinder.org (Postfix) with ESMTPSA id 230072C3112;
-        Thu, 27 Jun 2019 15:34:41 +0200 (CEST)
-Date:   Thu, 27 Jun 2019 15:34:40 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Eugen.Hristev@microchip.com
-Cc:     alexandre.belloni@bootlin.com, peda@axentia.se, robh+dt@kernel.org,
-        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
-        Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        pierre-yves.mordret@st.com
-Subject: Re: I2C filtering (was Re: [PATCH v2 6/9] dt-bindings: i2c: at91:
- add binding for enable-ana-filt)
-Message-ID: <20190627133440.GA7158@ninjato>
-References: <1561449642-26956-1-git-send-email-eugen.hristev@microchip.com>
- <1561449642-26956-7-git-send-email-eugen.hristev@microchip.com>
- <4e81d3c9-25f3-ca6e-f2d5-17fad5905bb8@axentia.se>
- <84628b5e-bea7-7d91-f790-f3a2650040fa@microchip.com>
- <20190625093156.GF5690@piout.net>
- <20190625095533.GC1688@kunai>
- <20190627132200.GK3692@piout.net>
- <eb2d87b7-437c-53ee-a1ca-37c4d3fadea6@microchip.com>
+        Thu, 27 Jun 2019 09:34:53 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37456 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfF0Ner (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 09:34:47 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BCB5C60E75; Thu, 27 Jun 2019 13:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561642486;
+        bh=3W21pQMFNZFtYVC6GlWd+gVxHXzD/QUiLxcs6mipQqU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kwcYh9FZ62DG0esKAw45uS1++60L+pG1LE5YlnFzCZJ9gi1HiqPHq2eW1ONZVWIdl
+         nS2RGhQ7RwMIrT65ZoxWnsxtUYcOQYVnbPfgzX7FUXgdw8kDqNaeRena5IY4O/rOsJ
+         UbUNo3ghZiAhQuEiq2nPabffpSl2PinuASHvQU3s=
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCF6460C8B;
+        Thu, 27 Jun 2019 13:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561642485;
+        bh=3W21pQMFNZFtYVC6GlWd+gVxHXzD/QUiLxcs6mipQqU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n/ziMy77wzDA1k2VuMRaSUiLXp/tZilMDVQe9oYy8VY5CrhLJfXPc1NZnBpvvT5IX
+         ZdIfvdeQ9xiWFY0EI703Od/CizMUljxE3E1X/QRHQE2y7L2IOsaqeuy7EJyqNYrGbj
+         Qa92WpLcvYgditEMgvayLGbi6/PwUtkyy6qfOEdM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCF6460C8B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        georgi.djakov@linaro.org
+Cc:     agross@kernel.org, david.brown@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH RFC 2/4] OPP: Add and export helper to set bandwidth
+Date:   Thu, 27 Jun 2019 19:04:22 +0530
+Message-Id: <20190627133424.4980-3-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190627133424.4980-1-sibis@codeaurora.org>
+References: <20190627133424.4980-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Content-Disposition: inline
-In-Reply-To: <eb2d87b7-437c-53ee-a1ca-37c4d3fadea6@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add and export 'dev_pm_opp_set_bw' to set the bandwidth
+levels associated with an OPP for a given frequency.
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
+ drivers/opp/core.c     | 46 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pm_opp.h |  6 ++++++
+ 2 files changed, 52 insertions(+)
 
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index c85c04dc2c7de..78f42960860d1 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -746,6 +746,52 @@ static int _set_required_opps(struct device *dev,
+ 	return ret;
+ }
+ 
++/**
++ * dev_pm_opp_set_bw() - Configures OPP bandwidth levels
++ * @dev:	device for which we do this operation
++ * @freq:	bandwidth values to set with matching 'freq'
++ *
++ * This configures the bandwidth to the levels specified
++ * by the OPP corresponding to the given frequency.
++ *
++ * Return: 0 on success or a negative error value.
++ */
++int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
++{
++	struct opp_table *opp_table;
++	struct dev_pm_opp *opp;
++	int ret = 0;
++	int i;
++
++	opp = dev_pm_opp_find_freq_exact(dev, freq, true);
++	if (IS_ERR(opp))
++		return PTR_ERR(opp);
++
++	opp_table = _find_opp_table(dev);
++	if (IS_ERR(opp_table)) {
++		dev_err(dev, "%s: device opp table doesn't exist\n", __func__);
++		ret = PTR_ERR(opp_table);
++		goto put_opp;
++	}
++
++	if (IS_ERR_OR_NULL(opp_table->paths)) {
++		ret = -ENODEV;
++		goto put_opp_table;
++	}
++
++	for (i = 0; i < opp_table->path_count; i++) {
++		ret = icc_set_bw(opp_table->paths[i], opp->bandwidth[i].avg,
++				 opp->bandwidth[i].peak);
++	}
++
++put_opp_table:
++	dev_pm_opp_put_opp_table(opp_table);
++put_opp:
++	dev_pm_opp_put(opp);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_set_bw);
++
+ /**
+  * dev_pm_opp_set_rate() - Configure new OPP based on frequency
+  * @dev:	 device for which we do this operation
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index a17c462974851..1cdc2d0a2b20e 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -152,6 +152,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev, const char **names
+ void dev_pm_opp_detach_genpd(struct opp_table *opp_table);
+ int dev_pm_opp_xlate_performance_state(struct opp_table *src_table, struct opp_table *dst_table, unsigned int pstate);
+ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq);
++int dev_pm_opp_set_bw(struct device *dev, unsigned long freq);
+ int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask);
+ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
+ void dev_pm_opp_remove_table(struct device *dev);
+@@ -336,6 +337,11 @@ static inline int dev_pm_opp_set_rate(struct device *dev, unsigned long target_f
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int dev_pm_opp_set_bw(struct device *dev, unsigned long freq)
++{
++	return -ENOTSUPP;
++}
++
+ static inline int dev_pm_opp_set_sharing_cpus(struct device *cpu_dev, const struct cpumask *cpumask)
+ {
+ 	return -ENOTSUPP;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> > Apart from enabling the filter there is indeed one configuration
-> > setting, the maximum pulse width of spikes to be suppressed by the input
-> > filter.
-
-Yup, this is what I anticipated.
-
-> This is a number 0 to 7 (3 bits) that represents the width of the spike=
-=20
-> in periph clock cycles.
-
-For a generic binding, we would need some time-value as a parameter and
-convert it to clock cycles in the driver then, I'd think.
-
-> I am looking to see what is PADFCFG , as it's related to the PAD analog=
-=20
-> filter configuration. It may be unused by the filter.
-
-Thanks!
-
-
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0UxewACgkQFA3kzBSg
-KbbBxw/+PKlsndFyCPTuBvbsZv6QYFNcJSE6IMOwxnfLjInOoY8cAl/2uc55yh8K
-uVXgbOdp9bQEtjjgva8oMOZdT+8N6EOqm+Bjqu2Nw44UsQ6HQXUM+LJU9J35Me4T
-USjBCsZL+3rf9SUBq4xDSUa05wBuKN0ZC1Mss55kkBD/R4ULrd9VoVx0rpSe6oAF
-/XQeBDsWhqDG15zoZysXgQ/he7kLCGgtPf+dz0vA80JefsflXEyrr3Al9rggVP/F
-gK3+4UqBE8YLn0Iepd0HKsk7z3Qs7uLfjZex7fbd9Ul81JCN2yHn4PFIuV+NJf86
-C7Nh7zYojp41vxBF1llxMvm+2E4z23KkQ/SKmTqOshOxxEcYH2OdfvuWPyLBctHr
-Ex3IKFo/wESvBs12NPz1AAC/EadHG6elpaHNkdNaGjWMA4eIchDF+vaVXVsr34gT
-FYSfwVLHx4WZEKBzF+jWds5EBUbNWhSF0+e5vBOkL6BsGJpU5PTgxuvbO3L6jqCj
-nbCIkxFFM+pJCcwnb1eaDG9I9IUb1962hciz4tjFWMLog+QJdtWrwSk+az1237Jc
-0okdeuwS1ztxn84GLBuELSkDizc0GlYEJbz0+ICd2ZLXXFRwytpC/b3Sj/QgGOWM
-GNZtPtRGoadH2jxHySVRG+j9veFm1US51dR4b25SHUzlWyAR62A=
-=tCqi
------END PGP SIGNATURE-----
-
---7AUc2qLy4jB3hD7Z--
