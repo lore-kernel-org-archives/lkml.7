@@ -2,148 +2,260 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE42C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF42C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0446D216E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MH3wkoDX"
+	by mail.kernel.org (Postfix) with ESMTP id 645422083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561595513;
+	bh=DMqbglHczQUbFpxbS6oqWVek22jHR8khubzyZS+CpQU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zmIx/vXCWNzpVkzz6Y9BtFJVOoAVWAPPMG+FkhSrL26pcNbAjK3E07LcXXfDxPIWS
+	 3+PIU4ojCs1CcLDgX5GLY8+ceTTjeWbHw/da/Ti7fWJFLAxc2r/QY29n8uWhySgTRe
+	 SFMQwLWiWwIalg5nbzS5FvAirttq0C2x2wGNiUcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfF0Abo (ORCPT
+        id S1727298AbfF0Abw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:31:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36937 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727193AbfF0Abj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:31:39 -0400
-Received: by mail-io1-f66.google.com with SMTP id e5so864411iok.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 17:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ne57qfOBbrpWTmSwKmjlTjKmsCo+Sn2qKc5QwP4b3qo=;
-        b=MH3wkoDXHfXF5fF0q+4ozL7+zgvn5SeiKtLiHYzCNIcqFHXPkPAwLMDAdDzk2aiIwQ
-         J78PjhZZ31NuKv8zy1/s8y3MRPBSFAVisSCw3pC/YBe5ea4C6Y+uFm5wHpal8nsxZLgB
-         17lsiKG0OIZo1/fcOW8X2bMD/PSdyDvCVff3iu2G8wmtMH1QHqrOcCB6eOgDt4VuNjyk
-         Poo9nGwiL6andopg9rnVNY+S336HW1WgpryVcFd4HvLr9UhpPKVIrzsbJAzaKITb3fvh
-         sahpopsxSkGUr9VegYM/UOtFcnxFerQwnrKs330QIqOEtyCvWxY78rUw69KxygSiqpv1
-         hjdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ne57qfOBbrpWTmSwKmjlTjKmsCo+Sn2qKc5QwP4b3qo=;
-        b=t6Re5+X86nR0LgzHr4bHd8GCRuPBlFKmfFTA1OcpLGqlHdHwOAl8TBNGipmBqYll/C
-         CzQsV2wh4ncYDqTibmDMsQJeLa4U/dTc2yOPA/Nx2b/YRcICo8hLDpPnaUSq8RwJ3+PN
-         5xay0CyJTAnyCglWJgwaO/d2Ba95Wi4snXSS3ctKvRAVp2C2csFQYOb9sV6IV1jMwyHa
-         jQnMdV9kwCJZxIO/iGECB1sOY0EbCmQakXQVLU70fc3uVpy/KGNx9rrC8T7WxyPickDs
-         ybUUjfPF5G3RQ4kl2bkJNC79phdYgDPOkMiN+4bCD3CLn92TxA/AZK35QaKikV8m6Kjw
-         kHzw==
-X-Gm-Message-State: APjAAAUVyAeGB06p24M6obOiIV+RjuxxjjpfhRV/lt/t8StDZQ3a2LPe
-        n0nhuFQJ+jl5gzndRR87CWgXUQ==
-X-Google-Smtp-Source: APXvYqzkfD/79362o4UBWtnH1yN59+5ocrB6dWn1PQrF9lxmChizX5AwqLnfXA+vMES0ciXEXr5ebA==
-X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr1187601iob.271.1561595498768;
-        Wed, 26 Jun 2019 17:31:38 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id n26sm410757ioc.74.2019.06.26.17.31.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 17:31:38 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 17:31:37 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Atish Patra <atish.patra@wdc.com>
-cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v7 1/7] Documentation: DT: arm: add support for sockets
- defining package boundaries
-In-Reply-To: <20190617185920.29581-2-atish.patra@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1906261724000.23534@viisi.sifive.com>
-References: <20190617185920.29581-1-atish.patra@wdc.com> <20190617185920.29581-2-atish.patra@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Wed, 26 Jun 2019 20:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727222AbfF0Abr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:31:47 -0400
+Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C9E22083B;
+        Thu, 27 Jun 2019 00:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561595506;
+        bh=DMqbglHczQUbFpxbS6oqWVek22jHR8khubzyZS+CpQU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IFs8Sylb8+G50sbOzxMZ2QJ6NN7YtEK2EOroZ1eGdGG7CYVYxJ7oZ9k+3cHjR001j
+         XQb888dLIfezhxExGuwKq8q1x5cjcg3OvFTxOaVXFGtj+X5uii5G2MUOdBeEDZJMAd
+         m92Z9sQ5pAF77Twk280FUqcr0ja8VTJqsZn1PXD8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 25/95] iwlwifi: fix load in rfkill flow for unified firmware
+Date:   Wed, 26 Jun 2019 20:29:10 -0400
+Message-Id: <20190627003021.19867-25-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
+References: <20190627003021.19867-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep, Atish,
+From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
 
-On Mon, 17 Jun 2019, Atish Patra wrote:
+[ Upstream commit b3500b472c880b5abe90ffd5c4a25aa736f906ad ]
 
-> From: Sudeep Holla <sudeep.holla@arm.com>
-> 
-> The current ARM DT topology description provides the operating system
-> with a topological view of the system that is based on leaf nodes
-> representing either cores or threads (in an SMT system) and a
-> hierarchical set of cluster nodes that creates a hierarchical topology
-> view of how those cores and threads are grouped.
-> 
-> However this hierarchical representation of clusters does not allow to
-> describe what topology level actually represents the physical package or
-> the socket boundary, which is a key piece of information to be used by
-> an operating system to optimize resource allocation and scheduling.
-> 
-> Lets add a new "socket" node type in the cpu-map node to describe the
-> same.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+When we have a single image (same firmware image for INIT and
+OPERATIONAL), we couldn't load the driver and register to the
+stack if we had hardware RF-Kill asserted.
 
-This one doesn't apply cleanly here on top of v5.2-rc2, Linus's master 
-branch, and next-20190626.  The reject file is below.  Am I missing 
-a patch?
+Fix this. This required a few changes:
 
+1) Run the firmware as part of the INIT phase even if its
+   ucode_type is not IWL_UCODE_INIT.
+2) Send the commands that are sent to the unified image in
+   INIT flow even in RF-Kill.
+3) Don't ask the transport to stop the hardware upon RF-Kill
+   interrupt if the RF-Kill is asserted.
+4) Allow the RF-Kill interrupt to take us out of L1A so that
+   the RF-Kill interrupt will be received by the host (to
+   enable the radio).
 
-- Paul
+Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c   | 23 ++++++++++++++-----
+ .../net/wireless/intel/iwlwifi/mvm/mac80211.c |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/ops.c  | 17 ++++++++++----
+ .../wireless/intel/iwlwifi/pcie/internal.h    |  2 +-
+ 5 files changed, 33 insertions(+), 13 deletions(-)
 
---- Documentation/devicetree/bindings/arm/topology.txt
-+++ Documentation/devicetree/bindings/arm/topology.txt
-@@ -185,13 +206,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
- 4 - Example dts
- ===========================================
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index ab68b5d53ec9..153717587aeb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -311,6 +311,8 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
+ 	int ret;
+ 	enum iwl_ucode_type old_type = mvm->fwrt.cur_fw_img;
+ 	static const u16 alive_cmd[] = { MVM_ALIVE };
++	bool run_in_rfkill =
++		ucode_type == IWL_UCODE_INIT || iwl_mvm_has_unified_ucode(mvm);
  
--Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters):
-+Example 1 (ARM 64-bit, 16-cpu system, two clusters of clusters in a single
-+physical socket):
+ 	if (ucode_type == IWL_UCODE_REGULAR &&
+ 	    iwl_fw_dbg_conf_usniffer(mvm->fw, FW_DBG_START_FROM_ALIVE) &&
+@@ -328,7 +330,12 @@ static int iwl_mvm_load_ucode_wait_alive(struct iwl_mvm *mvm,
+ 				   alive_cmd, ARRAY_SIZE(alive_cmd),
+ 				   iwl_alive_fn, &alive_data);
  
- cpus {
- 	#size-cells = <0>;
- 	#address-cells = <2>;
+-	ret = iwl_trans_start_fw(mvm->trans, fw, ucode_type == IWL_UCODE_INIT);
++	/*
++	 * We want to load the INIT firmware even in RFKILL
++	 * For the unified firmware case, the ucode_type is not
++	 * INIT, but we still need to run it.
++	 */
++	ret = iwl_trans_start_fw(mvm->trans, fw, run_in_rfkill);
+ 	if (ret) {
+ 		iwl_fw_set_current_image(&mvm->fwrt, old_type);
+ 		iwl_remove_notification(&mvm->notif_wait, &alive_wait);
+@@ -433,7 +440,8 @@ static int iwl_run_unified_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ 	 * commands
+ 	 */
+ 	ret = iwl_mvm_send_cmd_pdu(mvm, WIDE_ID(SYSTEM_GROUP,
+-						INIT_EXTENDED_CFG_CMD), 0,
++						INIT_EXTENDED_CFG_CMD),
++				   CMD_SEND_IN_RFKILL,
+ 				   sizeof(init_cfg), &init_cfg);
+ 	if (ret) {
+ 		IWL_ERR(mvm, "Failed to run init config command: %d\n",
+@@ -457,7 +465,8 @@ static int iwl_run_unified_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ 	}
  
- 	cpu-map {
-+		socket0 {
- 			cluster0 {
- 				cluster0 {
- 					core0 {
+ 	ret = iwl_mvm_send_cmd_pdu(mvm, WIDE_ID(REGULATORY_AND_NVM_GROUP,
+-						NVM_ACCESS_COMPLETE), 0,
++						NVM_ACCESS_COMPLETE),
++				   CMD_SEND_IN_RFKILL,
+ 				   sizeof(nvm_complete), &nvm_complete);
+ 	if (ret) {
+ 		IWL_ERR(mvm, "Failed to run complete NVM access: %d\n",
+@@ -482,6 +491,8 @@ static int iwl_run_unified_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ 		}
+ 	}
+ 
++	mvm->rfkill_safe_init_done = true;
++
+ 	return 0;
+ 
+ error:
+@@ -526,7 +537,7 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ 
+ 	lockdep_assert_held(&mvm->mutex);
+ 
+-	if (WARN_ON_ONCE(mvm->calibrating))
++	if (WARN_ON_ONCE(mvm->rfkill_safe_init_done))
+ 		return 0;
+ 
+ 	iwl_init_notification_wait(&mvm->notif_wait,
+@@ -576,7 +587,7 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ 		goto remove_notif;
+ 	}
+ 
+-	mvm->calibrating = true;
++	mvm->rfkill_safe_init_done = true;
+ 
+ 	/* Send TX valid antennas before triggering calibrations */
+ 	ret = iwl_send_tx_ant_cfg(mvm, iwl_mvm_get_valid_tx_ant(mvm));
+@@ -612,7 +623,7 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
+ remove_notif:
+ 	iwl_remove_notification(&mvm->notif_wait, &calib_wait);
+ out:
+-	mvm->calibrating = false;
++	mvm->rfkill_safe_init_done = false;
+ 	if (iwlmvm_mod_params.init_dbg && !mvm->nvm_data) {
+ 		/* we want to debug INIT and we have no NVM - fake */
+ 		mvm->nvm_data = kzalloc(sizeof(struct iwl_nvm_data) +
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 6a3b11dd2edf..4ddf620c267d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -1211,7 +1211,7 @@ static void iwl_mvm_restart_cleanup(struct iwl_mvm *mvm)
+ 
+ 	mvm->scan_status = 0;
+ 	mvm->ps_disabled = false;
+-	mvm->calibrating = false;
++	mvm->rfkill_safe_init_done = false;
+ 
+ 	/* just in case one was running */
+ 	iwl_mvm_cleanup_roc_te(mvm);
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+index a50dc53df086..b698d55ace1b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
+@@ -877,7 +877,7 @@ struct iwl_mvm {
+ 	struct iwl_mvm_vif *bf_allowed_vif;
+ 
+ 	bool hw_registered;
+-	bool calibrating;
++	bool rfkill_safe_init_done;
+ 	bool support_umac_log;
+ 
+ 	u32 ampdu_ref;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/ops.c b/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
+index 13681b03c10e..20115770e75a 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/ops.c
+@@ -1222,7 +1222,8 @@ void iwl_mvm_set_hw_ctkill_state(struct iwl_mvm *mvm, bool state)
+ static bool iwl_mvm_set_hw_rfkill_state(struct iwl_op_mode *op_mode, bool state)
+ {
+ 	struct iwl_mvm *mvm = IWL_OP_MODE_GET_MVM(op_mode);
+-	bool calibrating = READ_ONCE(mvm->calibrating);
++	bool rfkill_safe_init_done = READ_ONCE(mvm->rfkill_safe_init_done);
++	bool unified = iwl_mvm_has_unified_ucode(mvm);
+ 
+ 	if (state)
+ 		set_bit(IWL_MVM_STATUS_HW_RFKILL, &mvm->status);
+@@ -1231,15 +1232,23 @@ static bool iwl_mvm_set_hw_rfkill_state(struct iwl_op_mode *op_mode, bool state)
+ 
+ 	iwl_mvm_set_rfkill_state(mvm);
+ 
+-	/* iwl_run_init_mvm_ucode is waiting for results, abort it */
+-	if (calibrating)
++	 /* iwl_run_init_mvm_ucode is waiting for results, abort it. */
++	if (rfkill_safe_init_done)
+ 		iwl_abort_notification_waits(&mvm->notif_wait);
+ 
++	/*
++	 * Don't ask the transport to stop the firmware. We'll do it
++	 * after cfg80211 takes us down.
++	 */
++	if (unified)
++		return false;
++
+ 	/*
+ 	 * Stop the device if we run OPERATIONAL firmware or if we are in the
+ 	 * middle of the calibrations.
+ 	 */
+-	return state && (mvm->fwrt.cur_fw_img != IWL_UCODE_INIT || calibrating);
++	return state && (mvm->fwrt.cur_fw_img != IWL_UCODE_INIT ||
++			 rfkill_safe_init_done);
+ }
+ 
+ static void iwl_mvm_free_skb(struct iwl_op_mode *op_mode, struct sk_buff *skb)
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+index 59213164f35e..2afce5c41322 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/internal.h
+@@ -948,7 +948,7 @@ static inline void iwl_enable_rfkill_int(struct iwl_trans *trans)
+ 					   MSIX_HW_INT_CAUSES_REG_RF_KILL);
+ 	}
+ 
+-	if (trans->cfg->device_family == IWL_DEVICE_FAMILY_9000) {
++	if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_9000) {
+ 		/*
+ 		 * On 9000-series devices this bit isn't enabled by default, so
+ 		 * when we power down the device we need set the bit to allow it
+-- 
+2.20.1
+
