@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CCEC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971FEC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8BB20815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2C020815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596332;
-	bh=z9pdV52WHflzhUlfpqpAVU/dJKl9bkk6wov+ChM5aPg=;
+	s=default; t=1561596347;
+	bh=7/1DSFg69VhOmR5parl9oVNvXdxXXvIKGHrdgROtRvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eXu53BEuXdtGd1dwueswQ1sMa2hUDZhDFpnzPkgw7Yk9c6+xnvJehycHTJztjiUA8
-	 qUn+n/XoE9NjCT4G1SeYEJjgGTVy6sT+Zc5d/zT3sgr9BtHlXIvfcThhumTKBEovLS
-	 gVt5lMluYBNCT2USqKermpeJv/D7Tn7LLIgRJmJM=
+	b=ntw+Q4iTxSIGIkJvrg2u8cegFcV/qeJYyprKuYRcGM0ur2rVIYyNROSI/qe3jGoI4
+	 2zpT9tBay0o5AFdVWHtXbWTny+Xlr1bn0/8iMVKgGthyC3M/OnWwiVrI2xnTXDA9rX
+	 Bmt/qLArkUzEuF0SYo7alTjmap+u8sbXMWVllktw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbfF0Apb (ORCPT
+        id S1729444AbfF0App (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:45:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:45:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbfF0AlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:41:05 -0400
+        id S1728661AbfF0Akz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:40:55 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C46821852;
-        Thu, 27 Jun 2019 00:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD127205ED;
+        Thu, 27 Jun 2019 00:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596064;
-        bh=z9pdV52WHflzhUlfpqpAVU/dJKl9bkk6wov+ChM5aPg=;
+        s=default; t=1561596054;
+        bh=7/1DSFg69VhOmR5parl9oVNvXdxXXvIKGHrdgROtRvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zHl+sMV6SMUPGmnXOVQvkpOVP08x0WBRq6wqw6XFGRFR0tayLM5Q5432FnV3UgoMD
-         b5kUN2nIU2ElIPwVAdPzjyey76NxdoZQLd94hfErdtyGFkvjzAvpq+89gOH+SyS5Rh
-         SN4498aOIbJTm+xZeGjGf2uw7/PaRUKBoE8zTAMs=
+        b=0qFEmI5aa9W0XBLWl2sNq5cOxgSXlJGcdyh9xf4S+dF5DZ3oOnFEbJM121OURDZWJ
+         GFMbu9yd43Bfh+C68F+z5/Bjz9ZGuX88eHVIpC67lM2Tm6AgnaNdFpyE94Y60wMFet
+         JwVgbDw/d0uJCNGxvbvV5qiIenqUS3CPwux0xxfs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+Cc:     Reinhard Speyerer <rspmn@arcor.de>,
+        Daniele Palmas <dnlplm@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/35] bnx2x: Check if transceiver implements DDM before access
-Date:   Wed, 26 Jun 2019 20:39:17 -0400
-Message-Id: <20190627003925.21330-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 26/35] qmi_wwan: avoid RCU stalls on device disconnect when in QMAP mode
+Date:   Wed, 26 Jun 2019 20:39:14 -0400
+Message-Id: <20190627003925.21330-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
 References: <20190627003925.21330-1-sashal@kernel.org>
@@ -60,63 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Mauro S. M. Rodrigues" <maurosr@linux.vnet.ibm.com>
+From: Reinhard Speyerer <rspmn@arcor.de>
 
-[ Upstream commit cf18cecca911c0db96b868072665347efe6df46f ]
+[ Upstream commit a8fdde1cb830e560208af42b6c10750137f53eb3 ]
 
-Some transceivers may comply with SFF-8472 even though they do not
-implement the Digital Diagnostic Monitoring (DDM) interface described in
-the spec. The existence of such area is specified by the 6th bit of byte
-92, set to 1 if implemented.
+Switch qmimux_unregister_device() and qmi_wwan_disconnect() to
+use unregister_netdevice_queue() and unregister_netdevice_many()
+instead of unregister_netdevice(). This avoids RCU stalls which
+have been observed on device disconnect in certain setups otherwise.
 
-Currently, without checking this bit, bnx2x fails trying to read sfp
-module's EEPROM with the follow message:
-
-ethtool -m enP5p1s0f1
-Cannot get Module EEPROM data: Input/output error
-
-Because it fails to read the additional 256 bytes in which it is assumed
-to exist the DDM data.
-
-This issue was noticed using a Mellanox Passive DAC PN 01FT738. The EEPROM
-data was confirmed by Mellanox as correct and similar to other Passive
-DACs from other manufacturers.
-
-Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
-Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
+Cc: Daniele Palmas <dnlplm@gmail.com>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c | 3 ++-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h    | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-index 3fd1085a093f..65bc1929d1a8 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-@@ -1581,7 +1581,8 @@ static int bnx2x_get_module_info(struct net_device *dev,
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 023bb2daa72f..a77223887022 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -247,13 +247,14 @@ static int qmimux_register_device(struct net_device *real_dev, u8 mux_id)
+ 	return err;
+ }
+ 
+-static void qmimux_unregister_device(struct net_device *dev)
++static void qmimux_unregister_device(struct net_device *dev,
++				     struct list_head *head)
+ {
+ 	struct qmimux_priv *priv = netdev_priv(dev);
+ 	struct net_device *real_dev = priv->real_dev;
+ 
+ 	netdev_upper_dev_unlink(real_dev, dev);
+-	unregister_netdevice(dev);
++	unregister_netdevice_queue(dev, head);
+ 
+ 	/* Get rid of the reference to real_dev */
+ 	dev_put(real_dev);
+@@ -424,7 +425,7 @@ static ssize_t del_mux_store(struct device *d,  struct device_attribute *attr, c
+ 		ret = -EINVAL;
+ 		goto err;
  	}
+-	qmimux_unregister_device(del_dev);
++	qmimux_unregister_device(del_dev, NULL);
  
- 	if (!sff8472_comp ||
--	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ)) {
-+	    (diag_type & SFP_EEPROM_DIAG_ADDR_CHANGE_REQ) ||
-+	    !(diag_type & SFP_EEPROM_DDM_IMPLEMENTED)) {
- 		modinfo->type = ETH_MODULE_SFF_8079;
- 		modinfo->eeprom_len = ETH_MODULE_SFF_8079_LEN;
- 	} else {
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-index b7d251108c19..7115f5025664 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.h
-@@ -62,6 +62,7 @@
- #define SFP_EEPROM_DIAG_TYPE_ADDR		0x5c
- #define SFP_EEPROM_DIAG_TYPE_SIZE		1
- #define SFP_EEPROM_DIAG_ADDR_CHANGE_REQ		(1<<2)
-+#define SFP_EEPROM_DDM_IMPLEMENTED		(1<<6)
- #define SFP_EEPROM_SFF_8472_COMP_ADDR		0x5e
- #define SFP_EEPROM_SFF_8472_COMP_SIZE		1
+ 	if (!qmimux_has_slaves(dev))
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
+@@ -1423,6 +1424,7 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 	struct qmi_wwan_state *info;
+ 	struct list_head *iter;
+ 	struct net_device *ldev;
++	LIST_HEAD(list);
  
+ 	/* called twice if separate control and data intf */
+ 	if (!dev)
+@@ -1435,8 +1437,9 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
+ 		}
+ 		rcu_read_lock();
+ 		netdev_for_each_upper_dev_rcu(dev->net, ldev, iter)
+-			qmimux_unregister_device(ldev);
++			qmimux_unregister_device(ldev, &list);
+ 		rcu_read_unlock();
++		unregister_netdevice_many(&list);
+ 		rtnl_unlock();
+ 		info->flags &= ~QMI_WWAN_FLAG_MUX;
+ 	}
 -- 
 2.20.1
 
