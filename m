@@ -2,125 +2,77 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119A9C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4352C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E177D2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B402083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfF0JJJ (ORCPT
+        id S1726508AbfF0JJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 05:09:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:49694 "EHLO foss.arm.com"
+        Thu, 27 Jun 2019 05:09:18 -0400
+Received: from verein.lst.de ([213.95.11.211]:50859 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbfF0JJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:09:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0B772B;
-        Thu, 27 Jun 2019 02:09:07 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06B373F718;
-        Thu, 27 Jun 2019 02:09:05 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 10:09:03 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Peng Fan <peng.fan@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        ", Sascha Hauer" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Message-ID: <20190627090903.GD13572@e107155-lin>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-3-peng.fan@nxp.com>
- <CABb+yY1wW-arSMQSYjrezXOZ0Ar_shAr78MOyUD3hBxXohWx3g@mail.gmail.com>
- <AM0PR04MB44813A4DE544E53EB7B6F02B88E30@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY38MAZqVOhjyV+GByPvpFcTfKbNG1rJ8YDRd1vi1F4fqg@mail.gmail.com>
- <AM0PR04MB44814D3BD59033ECDDE3094C88E20@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <e49278ba-f734-e019-ab44-53afe558bd85@gmail.com>
- <CABb+yY2B_bGqZhd3HRm2qOwGNXG8UYvRo0_uBmwGbx_1gA-vfA@mail.gmail.com>
+        id S1725385AbfF0JJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 05:09:17 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 7C50668B20; Thu, 27 Jun 2019 11:08:43 +0200 (CEST)
+Date:   Thu, 27 Jun 2019 11:08:43 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+Message-ID: <20190627090843.GB11548@lst.de>
+References: <20190624072752.GA3954@lst.de> <558a27ba-e7c9-9d94-cad0-377b8ee374a6@deltatee.com> <20190625072008.GB30350@lst.de> <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com> <20190625170115.GA9746@lst.de> <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com> <20190626065708.GB24531@lst.de> <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com> <20190626202107.GA5850@ziepe.ca> <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABb+yY2B_bGqZhd3HRm2qOwGNXG8UYvRo0_uBmwGbx_1gA-vfA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 01:27:41PM -0500, Jassi Brar wrote:
-> On Wed, Jun 26, 2019 at 11:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >
-> > On 6/26/19 6:31 AM, Peng Fan wrote:
-> > >>> The firmware driver might not have func-id, such as SCMI/SCPI.
-> > >>> So add an optional func-id to let smc mailbox driver could
-> > >>> use smc SiP func id.
-> > >>>
-> > >> There is no end to conforming to protocols. Controller drivers should
-> > >> be written having no particular client in mind.
-> > >
-> > > If the func-id needs be passed from user, then the chan_id suggested
-> > > by Sudeep should also be passed from user, not in mailbox driver.
-> > >
-> > > Jassi, so from your point, arm_smc_send_data just send a0 - a6
-> > > to firmware, right?
-> > >
-> > > Sudeep, Andre, Florian,
-> > >
-> > > What's your suggestion? SCMI not support, do you have
-> > > plan to add smc transport in SCMI?
-> >
-> > On the platforms that I work with, we have taken the liberty of
-> > implementing SCMI in our monitor firmware because the other MCU we use
-> > for dynamic voltage and frequency scaling did not have enough memory to
-> > support that and we still had the ability to make that firmware be
-> > trusted enough we could give it power management responsibilities. I
-> > would certainly feel more comfortable if the SCMI specification was
-> > amended to indicate that the Agent could be such a software entity,
-> > still residing on the same host CPU as the Platform(s), but if not,
-> > that's fine.
-> >
-> > This has lead us to implement a mailbox driver that uses a proprietary
-> > SMC call for the P2A path ("tx" channel) and the return being done via
-> > either that same SMC or through SGI. You can take a look at it in our
-> > downstream tree here actually:
-> >
-> > https://github.com/Broadcom/stblinux-4.9/blob/master/linux/drivers/mailbox/brcmstb-mailbox.c
-> >
-> > If we can get rid of our own driver and uses a standard SMC based
-> > mailbox driver that supports our use case that involves interrupts (we
-> > can always change their kind without our firmware/boot loader since FDT
-> > is generated from that component), that would be great.
-> >
-> static irqreturn_t brcm_isr(void)
-> {
->          mbox_chan_received_data(&chans[0], NULL);
->          return IRQ_HANDLED;
-> }
+On Wed, Jun 26, 2019 at 02:45:38PM -0600, Logan Gunthorpe wrote:
+> > The bar info would give the exporting struct device and any other info
+> > we need to make the iommu mapping.
 > 
-> Sorry, I fail to understand why the irq can't be moved inside the
-> client driver itself? There can't be more cost to it and there
-> definitely is no functionality lost.
+> Well, the IOMMU mapping is the normal thing the mapping driver will
+> always do. We'd really just need the submitting driver to, when
+> appropriate, inform the mapping driver that this is a pci bus address
+> and not to call dma_map_xxx(). Then, for special mappings for the CMB
+> like Christoph is talking about, it's simply a matter of doing a range
+> compare on the PCI Bus address and converting the bus address to a BAR
+> and offset.
 
-What if there are multiple clients ?
-And I assume you are referring to case like this where IRQ is not tied
-to the mailbox IP.
+Well, range compare on the physical address.  We have a few different
+options here:
 
---
-Regards,
-Sudeep
+ (a) a range is normal RAM, DMA mapping works as usual
+ (b) a range is another devices BAR, in which case we need to do a
+     map_resource equivalent (which really just means don't bother with
+     cache flush on non-coherent architectures) and apply any needed
+     offset, fixed or iommu based
+ (c) a range points to a BAR on the acting device. In which case we
+     don't need to DMA map at all, because no dma is happening but just an
+     internal transfer.  And depending on the device that might also require
+     a different addressing mode
 
+I guess it might make sense to just have a block layer flag that (b) or
+(c) might be contained in a bio.  Then we always look up the data
+structure, but can still fall back to (a) if nothing was found.  That
+even allows free mixing and matching of memory types, at least as long
+as they are contained to separate bio_vec segments.
