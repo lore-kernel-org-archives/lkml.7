@@ -2,337 +2,180 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB01C004E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E685FC004E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF77A2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561668015;
-	bh=Dz6NmGEziT5+z2lRBaSuqYCY/5n4nnXgcLlA3Atw/1U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yBdt2FxXngF6iwXGIbxOp3R6w3pGheZCg6dM8uy5bc/FY32PzKo8+1nLmkK1RN953
-	 Tr0/2PUeEv/BXmm8DES0TZ+1OGaURxa3P3WIk6EpLWK1pnXPYmo+YNuIFoSx8lDnkH
-	 WRDTXJZJCcFJ2efAjktszEc+f9vGDeUdif4jh/Fk=
+	by mail.kernel.org (Postfix) with ESMTP id B96C12075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="htCcE9P6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfF0UkO (ORCPT
+        id S1726505AbfF0Uox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 16:40:14 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39475 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfF0UkM (ORCPT
+        Thu, 27 Jun 2019 16:44:53 -0400
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:39780 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0Uox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:40:12 -0400
-Received: by mail-qt1-f193.google.com with SMTP id i34so3979365qta.6;
-        Thu, 27 Jun 2019 13:40:11 -0700 (PDT)
+        Thu, 27 Jun 2019 16:44:53 -0400
+Received: by mail-pl1-f173.google.com with SMTP id b7so1915165pls.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 13:44:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=asaU2u3+qE2V/tXvNuPV0itByGZXwrnNGauZ3AE0x8Q=;
-        b=mWIjFi6ksn5M294UtD6OzjBoCcGAe+stAI7ZEU++C0SLPFQDR1HBVYjwQJCYLPaUlL
-         wgPZe4orHMigt/L29ffRXdcLiUyd+1zty+hko8XcOLFP85nKpVkRPaPWPYiDj5H7iqgx
-         pC5XDK6I0MHokMJ5E9gVGffJBBFLXPtPkpPIgs3jRXt/bDf2pgkCQzNKfnoO9D+ag2Ph
-         jybYItkKi6WJHM/vxAeDgtZ3bh0bYcGRZ1anuBwPj2iQLxLyDoXSINEpVF/8d5j1QYSq
-         cU7qp5tB9tLDjlvEdqwP04/TIf4lVNRgweY1tu98OiJaJnAyqchLjGCv4bqCEnCvy01F
-         838A==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S/m1U+lqJYg3VKkeMxYY/dgUDheHdcRzphwpkMYg2ec=;
+        b=htCcE9P6tU7YLAH84xFrgeN8/gqdt0UqSYCN9MIoMVjxemJx8RytlWuk8ig6sg9cvK
+         7Efir32UIyTnB6txtTISWhgvEUZLLoMGNvqvgOnljn2E6CEdCUpOKNihXW0LpAL+20km
+         cHv8nyWNudjSEsmvJAPEwCVPwNFsTsQo7nURI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=asaU2u3+qE2V/tXvNuPV0itByGZXwrnNGauZ3AE0x8Q=;
-        b=j7IFaXETdf2cwn7kxQM9KmimTzNeWAc7LvlM9Vb2VFRIsVN/pVzMPaUrU7Px2ah0f2
-         3KgHkbXIgyI3BbDPOYD2hzyQixjjj15BTzuAEmABLLDCbJVN9ZYjcmfol9Zn3W0P329E
-         OM0IjqWAAvN2qyv6HZt8YuLgTl+sjTwhA5NxE9X4mTvGFD03gJpMoCGesrnA2hxYOD8D
-         v6f4YTh47YLb2KLf9ufG414nks/4z+46fO8HOqeLgmdNqk2lRHOmmf1OKO0Rdnm56Yhe
-         RkslnWIhlSgRLxVe5YXVCKZ6poHlUWJYrQ8N47Dur09o7cN0F5rtwwRO0I5H8gxo0xu/
-         N1xw==
-X-Gm-Message-State: APjAAAUQi4I4wF8bygQwmwed4ldiLJ3vxJQcEl+MCm9jFx4KhHaqHrnC
-        KQ5cL2v3KyRbJlsTgHFoznk=
-X-Google-Smtp-Source: APXvYqxEisVOKnA5w+z3iVn+487JJc2VnADsPPw/D/sgNAIpFIMI0h6sXlh2IuEY4rPXtLOql2AbEA==
-X-Received: by 2002:a0c:93a3:: with SMTP id f32mr5198677qvf.14.1561668010735;
-        Thu, 27 Jun 2019 13:40:10 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::5a51])
-        by smtp.gmail.com with ESMTPSA id h18sm60802qkj.134.2019.06.27.13.40.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 13:40:10 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     jack@suse.cz, josef@toxicpanda.com, clm@fb.com, dsterba@suse.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, kernel-team@fb.com,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 5/5] blkcg: implement REQ_CGROUP_PUNT
-Date:   Thu, 27 Jun 2019 13:39:52 -0700
-Message-Id: <20190627203952.386785-6-tj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190627203952.386785-1-tj@kernel.org>
-References: <20190627203952.386785-1-tj@kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S/m1U+lqJYg3VKkeMxYY/dgUDheHdcRzphwpkMYg2ec=;
+        b=KEgru6W8+Nx4ynTr8Rd+PaZipp/0sdM9ePFuo4EYvv6z6wadWg+81/KRUAZ6pzjYua
+         WKqY8Ax4kxrPAXS0zYC+hSLCuRnRhMguLr4xfXtAu0vyqcstQTa40qJT/KcDEAxfZYhW
+         adWLK5w0KGYYF6ZfMChA5ITQ8gr7Ea1tedtsdaqYEqgxzZ8WbAnUtfZt235SCOrgLVJg
+         GAXAiOEQl7vHeZNc5Ly+3EnTON1NRMgO4aGJCO+Dct9uIArsfAiMZCYckwk8hNwtjHTe
+         qFri6U0atC3jN2Fk5Mo3kUUG4qZuy1V2ecvGxIksQE/d7mbmb93KsSxwjPlAoYupvEhJ
+         YoEg==
+X-Gm-Message-State: APjAAAXhWlsEIwEovLkJ8ceL2zaZ5kOaYxOMeerYO9XQeVFmzA4q2x06
+        TF6WwTEVybQ3PJt+kbCHIOE+MQ==
+X-Google-Smtp-Source: APXvYqyezMICBPX4VVgvMvN81c/kUJuYMUFTAaKCZOT/11B9lfr+nQbcXU2t8Jr7E2lJcy1/wnWgpg==
+X-Received: by 2002:a17:902:4e25:: with SMTP id f34mr6870553ple.305.1561668292322;
+        Thu, 27 Jun 2019 13:44:52 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id d1sm37054pgd.50.2019.06.27.13.44.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 27 Jun 2019 13:44:51 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+Subject: [PATCH v3] platform/chrome: Expose resume result via debugfs
+Date:   Thu, 27 Jun 2019 13:44:45 -0700
+Message-Id: <20190627204446.52499-1-evgreen@chromium.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a shared kthread needs to issue a bio for a cgroup, doing so
-synchronously can lead to priority inversions as the kthread can be
-trapped waiting for that cgroup.  This patch implements
-REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
-to a dedicated per-blkcg work item to avoid such priority inversions.
+For ECs that support it, the EC returns the number of slp_s0
+transitions and whether or not there was a timeout in the resume
+response. Expose the last resume result to usermode via debugfs so
+that usermode can detect and report S0ix timeouts.
 
-This will be used to fix priority inversions in btrfs compression and
-should be generally useful as we grow filesystem support for
-comprehensive IO control.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Chris Mason <clm@fb.com>
+Signed-off-by: Evan Green <evgreen@chromium.org>
 ---
- block/blk-cgroup.c          | 53 +++++++++++++++++++++++++++++++++++++
- block/blk-core.c            |  3 +++
- include/linux/backing-dev.h |  1 +
- include/linux/blk-cgroup.h  | 16 ++++++++++-
- include/linux/blk_types.h   | 10 +++++++
- include/linux/writeback.h   | 13 ++++++---
- 6 files changed, 92 insertions(+), 4 deletions(-)
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 3319ab4ff262..921a3ef329aa 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -54,6 +54,7 @@ static struct blkcg_policy *blkcg_policy[BLKCG_MAX_POLS];
- static LIST_HEAD(all_blkcgs);		/* protected by blkcg_pol_mutex */
- 
- static bool blkcg_debug_stats = false;
-+static struct workqueue_struct *blkcg_punt_bio_wq;
- 
- static bool blkcg_policy_enabled(struct request_queue *q,
- 				 const struct blkcg_policy *pol)
-@@ -88,6 +89,8 @@ static void __blkg_release(struct rcu_head *rcu)
- {
- 	struct blkcg_gq *blkg = container_of(rcu, struct blkcg_gq, rcu_head);
- 
-+	WARN_ON(!bio_list_empty(&blkg->async_bios));
+Changes in v3:
+ - Expose the debugfs file on all EC types (Enric)
+
+Changes in v2:
+ - Moved from sysfs to debugfs (Enric)
+ - Added documentation (Enric)
+
+
+---
+ Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
+ drivers/mfd/cros_ec.c                     |  6 +++++-
+ drivers/platform/chrome/cros_ec_debugfs.c |  5 +++++
+ include/linux/mfd/cros_ec.h               |  1 +
+ 4 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+index 573a82d23c89..1fe0add99a2a 100644
+--- a/Documentation/ABI/testing/debugfs-cros-ec
++++ b/Documentation/ABI/testing/debugfs-cros-ec
+@@ -32,3 +32,25 @@ Description:
+ 		is used for synchronizing the AP host time with the EC
+ 		log. An error is returned if the command is not supported
+ 		by the EC or there is a communication problem.
 +
- 	/* release the blkcg and parent blkg refs this blkg has been holding */
- 	css_put(&blkg->blkcg->css);
- 	if (blkg->parent)
-@@ -113,6 +116,23 @@ static void blkg_release(struct percpu_ref *ref)
- 	call_rcu(&blkg->rcu_head, __blkg_release);
++What:		/sys/kernel/debug/<cros-ec-device>/last_resume_result
++Date:		June 2019
++KernelVersion:	5.3
++Description:
++		Some ECs have a feature where they will track transitions to
++		the (Intel) processor's SLP_S0 line, in order to detect cases
++		where a system failed to go into S0ix. When the system resumes,
++		an EC with this feature will return a summary of SLP_S0
++		transitions that occurred. The last_resume_result file returns
++		the most recent response from the AP's resume message to the EC.
++
++		The bottom 31 bits contain a count of the number of SLP_S0
++		transitions that occurred since the suspend message was
++		received. Bit 31 is set if the EC attempted to wake the
++		system due to a timeout when watching for SLP_S0 transitions.
++		Callers can use this to detect a wake from the EC due to
++		S0ix timeouts. The result will be zero if no suspend
++		transitions have been attempted, or the EC does not support
++		this feature.
++
++		Output will be in the format: "0x%08x\n".
+diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+index 5d5c41ac3845..2a9ac5213893 100644
+--- a/drivers/mfd/cros_ec.c
++++ b/drivers/mfd/cros_ec.c
+@@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+ 
+ 	/* For now, report failure to transition to S0ix with a warning. */
+ 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
+-	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
++	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
++		ec_dev->last_resume_result =
++			buf.u.resp1.resume_response.sleep_transitions;
++
+ 		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TIMEOUT,
+ 			  "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
+ 			  buf.u.resp1.resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
++	}
+ 
+ 	return ret;
  }
+diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+index 7ee060743844..967c78abfdd3 100644
+--- a/drivers/platform/chrome/cros_ec_debugfs.c
++++ b/drivers/platform/chrome/cros_ec_debugfs.c
+@@ -447,6 +447,11 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+ 	debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+ 			    &cros_ec_uptime_fops);
  
-+static void blkg_async_bio_workfn(struct work_struct *work)
-+{
-+	struct blkcg_gq *blkg = container_of(work, struct blkcg_gq,
-+					     async_bio_work);
-+	struct bio_list bios = BIO_EMPTY_LIST;
-+	struct bio *bio;
++	debugfs_create_x32("last_resume_result",
++			   0444,
++			   debug_info->dir,
++			   &ec->ec_dev->last_resume_result);
 +
-+	/* as long as there are pending bios, @blkg can't go away */
-+	spin_lock_bh(&blkg->async_bio_lock);
-+	bio_list_merge(&bios, &blkg->async_bios);
-+	bio_list_init(&blkg->async_bios);
-+	spin_unlock_bh(&blkg->async_bio_lock);
-+
-+	while ((bio = bio_list_pop(&bios)))
-+		submit_bio(bio);
-+}
-+
- /**
-  * blkg_alloc - allocate a blkg
-  * @blkcg: block cgroup the new blkg is associated with
-@@ -141,6 +161,9 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
+ 	ec->debug_info = debug_info;
  
- 	blkg->q = q;
- 	INIT_LIST_HEAD(&blkg->q_node);
-+	spin_lock_init(&blkg->async_bio_lock);
-+	bio_list_init(&blkg->async_bios);
-+	INIT_WORK(&blkg->async_bio_work, blkg_async_bio_workfn);
- 	blkg->blkcg = blkcg;
- 
- 	for (i = 0; i < BLKCG_MAX_POLS; i++) {
-@@ -1527,6 +1550,25 @@ void blkcg_policy_unregister(struct blkcg_policy *pol)
- }
- EXPORT_SYMBOL_GPL(blkcg_policy_unregister);
- 
-+bool __blkcg_punt_bio_submit(struct bio *bio)
-+{
-+	struct blkcg_gq *blkg = bio->bi_blkg;
-+
-+	/* consume the flag first */
-+	bio->bi_opf &= ~REQ_CGROUP_PUNT;
-+
-+	/* never bounce for the root cgroup */
-+	if (!blkg->parent)
-+		return false;
-+
-+	spin_lock_bh(&blkg->async_bio_lock);
-+	bio_list_add(&blkg->async_bios, bio);
-+	spin_unlock_bh(&blkg->async_bio_lock);
-+
-+	queue_work(blkcg_punt_bio_wq, &blkg->async_bio_work);
-+	return true;
-+}
-+
- /*
-  * Scale the accumulated delay based on how long it has been since we updated
-  * the delay.  We only call this when we are adding delay, in case it's been a
-@@ -1727,5 +1769,16 @@ void blkcg_add_delay(struct blkcg_gq *blkg, u64 now, u64 delta)
- 	atomic64_add(delta, &blkg->delay_nsec);
- }
- 
-+static int __init blkcg_init(void)
-+{
-+	blkcg_punt_bio_wq = alloc_workqueue("blkcg_punt_bio",
-+					    WQ_MEM_RECLAIM | WQ_FREEZABLE |
-+					    WQ_UNBOUND | WQ_SYSFS, 0);
-+	if (!blkcg_punt_bio_wq)
-+		return -ENOMEM;
-+	return 0;
-+}
-+subsys_initcall(blkcg_init);
-+
- module_param(blkcg_debug_stats, bool, 0644);
- MODULE_PARM_DESC(blkcg_debug_stats, "True if you want debug stats, false if not");
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 5d1fc8e17dd1..812052c835fc 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1127,6 +1127,9 @@ EXPORT_SYMBOL_GPL(direct_make_request);
-  */
- blk_qc_t submit_bio(struct bio *bio)
- {
-+	if (blkcg_punt_bio_submit(bio))
-+		return BLK_QC_T_NONE;
-+
- 	/*
- 	 * If it's a regular read/write or a barrier with data attached,
- 	 * go through the normal accounting stuff before submission.
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index f9b029180241..35b31d176f74 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -48,6 +48,7 @@ extern spinlock_t bdi_lock;
- extern struct list_head bdi_list;
- 
- extern struct workqueue_struct *bdi_wq;
-+extern struct workqueue_struct *bdi_async_bio_wq;
- 
- static inline bool wb_has_dirty_io(struct bdi_writeback *wb)
- {
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index 33f23a858438..689a58231288 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -132,13 +132,17 @@ struct blkcg_gq {
- 
- 	struct blkg_policy_data		*pd[BLKCG_MAX_POLS];
- 
--	struct rcu_head			rcu_head;
-+	spinlock_t			async_bio_lock;
-+	struct bio_list			async_bios;
-+	struct work_struct		async_bio_work;
- 
- 	atomic_t			use_delay;
- 	atomic64_t			delay_nsec;
- 	atomic64_t			delay_start;
- 	u64				last_delay;
- 	int				last_use;
-+
-+	struct rcu_head			rcu_head;
+ 	dev_set_drvdata(&pd->dev, ec);
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index 5ddca44be06d..45aba26db964 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -155,6 +155,7 @@ struct cros_ec_device {
+ 	struct ec_response_get_next_event_v1 event_data;
+ 	int event_size;
+ 	u32 host_event_wake_mask;
++	u32 last_resume_result;
  };
  
- typedef struct blkcg_policy_data *(blkcg_pol_alloc_cpd_fn)(gfp_t gfp);
-@@ -701,6 +705,15 @@ static inline bool blk_throtl_bio(struct request_queue *q, struct blkcg_gq *blkg
- 				  struct bio *bio) { return false; }
- #endif
- 
-+bool __blkcg_punt_bio_submit(struct bio *bio);
-+
-+static inline bool blkcg_punt_bio_submit(struct bio *bio)
-+{
-+	if (bio->bi_opf & REQ_CGROUP_PUNT)
-+		return __blkcg_punt_bio_submit(bio);
-+	else
-+		return false;
-+}
- 
- static inline void blkcg_bio_issue_init(struct bio *bio)
- {
-@@ -848,6 +861,7 @@ static inline char *blkg_path(struct blkcg_gq *blkg) { return NULL; }
- static inline void blkg_get(struct blkcg_gq *blkg) { }
- static inline void blkg_put(struct blkcg_gq *blkg) { }
- 
-+static inline bool blkcg_punt_bio_submit(struct bio *bio) { return false; }
- static inline void blkcg_bio_issue_init(struct bio *bio) { }
- static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 					 struct bio *bio) { return true; }
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 6a53799c3fe2..feff3fe4467e 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -311,6 +311,14 @@ enum req_flag_bits {
- 	__REQ_RAHEAD,		/* read ahead, can fail anytime */
- 	__REQ_BACKGROUND,	/* background IO */
- 	__REQ_NOWAIT,           /* Don't wait if request will block */
-+	/*
-+	 * When a shared kthread needs to issue a bio for a cgroup, doing
-+	 * so synchronously can lead to priority inversions as the kthread
-+	 * can be trapped waiting for that cgroup.  CGROUP_PUNT flag makes
-+	 * submit_bio() punt the actual issuing to a dedicated per-blkcg
-+	 * work item to avoid such priority inversions.
-+	 */
-+	__REQ_CGROUP_PUNT,
- 
- 	/* command specific flags for REQ_OP_WRITE_ZEROES: */
- 	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
-@@ -337,6 +345,8 @@ enum req_flag_bits {
- #define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
- #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
- #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
-+#define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
-+
- #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
- #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
- 
-diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-index e056a22075cf..8945aac31392 100644
---- a/include/linux/writeback.h
-+++ b/include/linux/writeback.h
-@@ -78,6 +78,8 @@ struct writeback_control {
- 	 */
- 	unsigned no_cgroup_owner:1;
- 
-+	unsigned punt_to_cgroup:1;	/* cgrp punting, see __REQ_CGROUP_PUNT */
-+
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	struct bdi_writeback *wb;	/* wb this writeback is issued under */
- 	struct inode *inode;		/* inode being written out */
-@@ -94,12 +96,17 @@ struct writeback_control {
- 
- static inline int wbc_to_write_flags(struct writeback_control *wbc)
- {
-+	int flags = 0;
-+
-+	if (wbc->punt_to_cgroup)
-+		flags = REQ_CGROUP_PUNT;
-+
- 	if (wbc->sync_mode == WB_SYNC_ALL)
--		return REQ_SYNC;
-+		flags |= REQ_SYNC;
- 	else if (wbc->for_kupdate || wbc->for_background)
--		return REQ_BACKGROUND;
-+		flags |= REQ_BACKGROUND;
- 
--	return 0;
-+	return flags;
- }
- 
- static inline struct cgroup_subsys_state *
+ /**
 -- 
-2.17.1
+2.20.1
 
