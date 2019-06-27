@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86468C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5350DC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6068020644
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3026020644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KY7Zmbkl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jf7n5fH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfF0Rpe (ORCPT
+        id S1727356AbfF0Rpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:45:34 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44130 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfF0Rpd (ORCPT
+        Thu, 27 Jun 2019 13:45:38 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46980 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727338AbfF0Rpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:45:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so1579519pfe.11;
-        Thu, 27 Jun 2019 10:45:33 -0700 (PDT)
+        Thu, 27 Jun 2019 13:45:36 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e5so1661158pls.13;
+        Thu, 27 Jun 2019 10:45:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=KsHBBlQbrCLiejasWVdLGkq8oWdlc6LBhKtDSdN6QwI=;
-        b=KY7Zmbkl7qw6LDvC3ZwNK5HTCeKRuj9VSWuC8yGWbfgWyys4s5tnioNfTLidt0Yw4H
-         okf+F/crK+d6udKSUXt0keoA1Kh5n5zMs5hgq5sxPZAfvujOdfEqjVJzQzjP/m1tunIL
-         C+14CfjUqB+HOIdCQPBwrlQ/XdUiedpd0p4gbQ6FGsLMXhOUuxDboWts0OJ8RX9RiAOe
-         Q++wZSoGCR0PAmuWxm1Rc+BSqDaD3MfwO+4Ht62bxl/J/dX0A/em5dF44Mxx7b9N4Epf
-         knu+dlnACDd2mTX8R5D+qGajwfX0uqZOjtBIBM4PsERdRZBGDCCZIMv3RlxiYBE6Lz+c
-         aEZw==
+        bh=YcrOIML8x2OsusC75WoEHjxhMdfGqgM3ZNHf/dMTePc=;
+        b=jf7n5fH2A5HNpS8PTM3S811DsWred9JfeFur4PDK5+BudkEiGv0uONGRk5LPBKX5G1
+         igwiiPl5vGHIZPuIqoEe5l0Qs+cin2RFFIMudj7GJPW0mPr66sKSrbwTUKz249EJoPSn
+         8Hs7tWuLze0yhunJHSGizmLFFeiJw1o1IfQxO04RFUiW4KlfMkSZlJD6Z6L4W7C9ei4U
+         X1li4zYSgq37mTn1irKNa1ka/hTFpj0qgHUsNHsiM9uMWD1hSSpiGrnJ9rOHWYQwnOeh
+         B1pYgzlYTDmPbk2zt7ht/oTG6uJ34b/ldweUXOBJXiIDRBLwMqAA0fdEwR8lwPbU8Q7o
+         /IZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KsHBBlQbrCLiejasWVdLGkq8oWdlc6LBhKtDSdN6QwI=;
-        b=fq3ggpMATTlrjt6yfu2J7iYEm374CCk1Z4SzWNC4J/V+rNKqwj6KbWsoutgv8+twMC
-         ScKXFt3CVd1WWeD4Xak62QgKk9MXbVQuwWTW/anv8NtHemsWq0tenM91e2+XKn3CgPam
-         1ZujlD7qa1NhS5yEfDyTOh6+L0gO5XehqX3T8F/pDfanH6SPUO+jHrso4bGMhY+2uUXl
-         6ANwccCTgOyFPk2EM/Hw7AGKHAnl/754XekZR4bvKkuC0pv/dPdK081kf8AA04zSyQ6g
-         YfxBAjXrbH7mCeUbazGVj8uHBd2YWzeyqCxWKWCX3URE8wCmqT1rD1AjrCAYcMvXzCsh
-         sctQ==
-X-Gm-Message-State: APjAAAWMUhHhxFyI61KODtMQZbnlj9MNXOX0694zFsASls7fVq0lhx5E
-        YSs1dUBE0gl5JX1rhP+v198=
-X-Google-Smtp-Source: APXvYqyZtS7FMaw4a4j8BfcYCwdI54uw7GmeSz+cjw4tU6m37ZYKtM3INsA421+ZjDSnCsDBZrmlLQ==
-X-Received: by 2002:a17:90a:30e4:: with SMTP id h91mr7166684pjb.37.1561657532831;
-        Thu, 27 Jun 2019 10:45:32 -0700 (PDT)
+        bh=YcrOIML8x2OsusC75WoEHjxhMdfGqgM3ZNHf/dMTePc=;
+        b=pk1oU4DNJxScnN9bfqKfiPypsK1CFN4daa0K4N5CVizhGtXnNaiwqDrq3f4E1DYiJh
+         Ll61wgyuRzIYGOuKP7Ef2evnUPTPdZn69/F9+nqFIUoBsPxU0EMOMK1G+WdfQsoG1ai/
+         GHk3msa/X+75yoSccD/88EwcVWw+QR0kAqnjFHizLnMvcdvOtPsP/4onCfH3laYija4x
+         VszOu9g/NFZDFS8/iBH7aSazWaDQADVDqa0e5kWOjky307NzgS7Sj/2Te9rRt1IyxrNF
+         bHppZXZwWa03x5gWbxSCXeimaA3+j1t+1z1tJyfDiSAQ85QeBA0kzAM7oZz13WytwdSz
+         ZYtA==
+X-Gm-Message-State: APjAAAXXqHgWHffws9dxtVcnYPdbxanNaU4zhPxhAJPtl1i/GEVuvNHC
+        p4AEn9Ks72Ui2F5ae9E4Src=
+X-Google-Smtp-Source: APXvYqzbE72vwOnzbiDPERLuny3jJnLY2gpyWJh7MxzsMwmFnRrKeXVhleKt5228V1zkdGf43LmBdw==
+X-Received: by 2002:a17:902:110b:: with SMTP id d11mr6279856pla.213.1561657535820;
+        Thu, 27 Jun 2019 10:45:35 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id d9sm2591082pgj.34.2019.06.27.10.45.30
+        by smtp.googlemail.com with ESMTPSA id t7sm4641393pjq.15.2019.06.27.10.45.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:45:32 -0700 (PDT)
+        Thu, 27 Jun 2019 10:45:35 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        QLogic-Storage-Upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 66/87] scsi: bnx2fc: remove memset after dma_alloc_coherent in bnx2fc_io.c
-Date:   Fri, 28 Jun 2019 01:45:26 +0800
-Message-Id: <20190627174526.5940-1-huangfq.daxian@gmail.com>
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 78/87] wireless: ath10k: remove memset after dma_alloc_coherent
+Date:   Fri, 28 Jun 2019 01:45:27 +0800
+Message-Id: <20190627174527.5987-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,22 +78,32 @@ So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/scsi/bnx2fc/bnx2fc_io.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/wireless/ath/ath10k/ce.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
-index 8def63c0755f..92b289466797 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_io.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
-@@ -614,8 +614,6 @@ int bnx2fc_init_mp_req(struct bnx2fc_cmd *io_req)
- 		bnx2fc_free_mp_resc(io_req);
- 		return FAILED;
+diff --git a/drivers/net/wireless/ath/ath10k/ce.c b/drivers/net/wireless/ath/ath10k/ce.c
+index eca87f7c5b6c..294fbc1e89ab 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.c
++++ b/drivers/net/wireless/ath/ath10k/ce.c
+@@ -1704,9 +1704,6 @@ ath10k_ce_alloc_dest_ring_64(struct ath10k *ar, unsigned int ce_id,
+ 	/* Correctly initialize memory to 0 to prevent garbage
+ 	 * data crashing system when download firmware
+ 	 */
+-	memset(dest_ring->base_addr_owner_space_unaligned, 0,
+-	       nentries * sizeof(struct ce_desc_64) + CE_DESC_RING_ALIGN);
+-
+ 	dest_ring->base_addr_owner_space =
+ 			PTR_ALIGN(dest_ring->base_addr_owner_space_unaligned,
+ 				  CE_DESC_RING_ALIGN);
+@@ -2019,8 +2016,6 @@ void ath10k_ce_alloc_rri(struct ath10k *ar)
+ 		value |= ar->hw_ce_regs->upd->mask;
+ 		ath10k_ce_write32(ar, ce_base_addr + ctrl1_regs, value);
  	}
--	memset(mp_req->req_buf, 0, CNIC_PAGE_SIZE);
--	memset(mp_req->resp_buf, 0, CNIC_PAGE_SIZE);
+-
+-	memset(ce->vaddr_rri, 0, CE_COUNT * sizeof(u32));
+ }
+ EXPORT_SYMBOL(ath10k_ce_alloc_rri);
  
- 	/* Allocate and map mp_req_bd and mp_resp_bd */
- 	sz = sizeof(struct fcoe_bd_ctx);
 -- 
 2.11.0
 
