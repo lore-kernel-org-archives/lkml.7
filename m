@@ -2,159 +2,462 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C084C004E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A2C004E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EE720644
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lcXiMKYy"
+	by mail.kernel.org (Postfix) with ESMTP id EDE6C20828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfF0USM (ORCPT
+        id S1726553AbfF0UT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 16:18:12 -0400
-Received: from mail-pf1-f182.google.com ([209.85.210.182]:39710 "EHLO
-        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfF0USM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:18:12 -0400
-Received: by mail-pf1-f182.google.com with SMTP id j2so1772539pfe.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 13:18:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=S0lkRqMuPGYVFDWL/aCSm9jlU++otPFj3p6mx8+rEfU=;
-        b=lcXiMKYy7faHTeobky/d/atpZ34DqKNpFa5w/YRy+2wzQioqbugwenqZuVgZ9qqR01
-         UtG5m7TVMIqxtREqc5LGU4ZmDErwg5uU2i84zvYNkhkHDZAk+rLoNYmWmg5ck5XTfrZg
-         gVOXUB5HmN4D3RGUkQlXsDx/3R4bbn6aD5bQBEFjLCg3OEeCBIoSspKUuRYfM28xmWPJ
-         8T+l6ZNKDOi4kXlQ4R2GAqLCiwJ7/afzkXcTcL9pH/ky4e2bNYtTG7gwqliOVTUchuiw
-         EBZmXYBiY0Pb2+UdhnPMkeCrdvB4yCOtqjrUKvZ9puwRPT49A39ia0hPl9Ik6SHMh5b1
-         Nl4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=S0lkRqMuPGYVFDWL/aCSm9jlU++otPFj3p6mx8+rEfU=;
-        b=NSgVRBcE/JzM2tU4k2tXpkl4v1dq+bVl8UsjL4ihLSjqIKalDHpPlVW/YE7YktkAcT
-         bOhu7tV7AIwxeD677m/c944gBKNXT4oqUVWErnsmyKepwpk0eqb6G6nUEK1UWi0G9cZ6
-         DrNKTGf27G9amEeh+l6RB5c3m6YouZ2vflbei0+QeZMW899l3sF7Faw0jurlfWj61p83
-         IWCVMfwWLsEwyuQXQ0AYZ24I8C6seRar246IMYc8414Szn1FLWExppE/mCCg+TvF3Fkc
-         LlTqQGQNj/NrfQ2rYeJxWbG/TCqrN+wqvQI0x6RKtpT2Bw/ksc+6ioBExBkNkRx5rUGa
-         /n8Q==
-X-Gm-Message-State: APjAAAX+ZLaOJwqQT5FIyySI6XVyjnuGNvYOsL5hIO/U7ZoIcMVwvpLh
-        40+UBaMfxD1KmpERdtFydGFbJQ==
-X-Google-Smtp-Source: APXvYqz4AyDMwOD9smVbccYFLy+DFv7kGRObLxqzYEhKkrb1XeOnl/OR5abLy2zGkUpCVl6omu+cQA==
-X-Received: by 2002:a17:90a:26e4:: with SMTP id m91mr8314065pje.93.1561666690816;
-        Thu, 27 Jun 2019 13:18:10 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id m10sm12524pgq.67.2019.06.27.13.18.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 13:18:09 -0700 (PDT)
-From:   bsegall@google.com
-To:     Dave Chiluk <chiluk+linux@indeed.com>
-Cc:     Phil Auld <pauld@redhat.com>, Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, cgroups@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Kyle Anderson <kwa@yelp.com>,
-        Gabriel Munos <gmunoz@netflix.com>,
-        John Hammond <jhammond@indeed.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH v4 1/1] sched/fair: Return all runtime when cfs_b has very little remaining.
-References: <1558121424-2914-1-git-send-email-chiluk+linux@indeed.com>
-        <1561391404-14450-1-git-send-email-chiluk+linux@indeed.com>
-        <1561391404-14450-2-git-send-email-chiluk+linux@indeed.com>
-        <xm26tvcex50s.fsf@bsegall-linux.svl.corp.google.com>
-        <CAC=E7cUxcNkc7T7AXCr3PO6rqqxrk269JW3SDnXG-LtO-6-BVQ@mail.gmail.com>
-Date:   Thu, 27 Jun 2019 13:18:08 -0700
-In-Reply-To: <CAC=E7cUxcNkc7T7AXCr3PO6rqqxrk269JW3SDnXG-LtO-6-BVQ@mail.gmail.com>
-        (Dave Chiluk's message of "Wed, 26 Jun 2019 17:10:04 -0500")
-Message-ID: <xm26pnmywznj.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Thu, 27 Jun 2019 16:19:29 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14877 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfF0UT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 16:19:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 13:19:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
+   d="scan'208";a="164847078"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga003.jf.intel.com with ESMTP; 27 Jun 2019 13:19:27 -0700
+Date:   Thu, 27 Jun 2019 13:22:44 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 20/22] iommu/vt-d: Add bind guest PASID support
+Message-ID: <20190627132244.351c7426@jacob-builder>
+In-Reply-To: <f183139b-b5a8-f6b5-58e6-f93e01f7be6a@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1560087862-57608-21-git-send-email-jacob.jun.pan@linux.intel.com>
+        <f183139b-b5a8-f6b5-58e6-f93e01f7be6a@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave Chiluk <chiluk+linux@indeed.com> writes:
+On Thu, 27 Jun 2019 10:50:11 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-> On Mon, Jun 24, 2019 at 10:33:07AM -0700, bsegall@google.com wrote:
->> This still has a similar cost as reducing min_cfs_rq_runtime to 0 - we
->> now take a tg-global lock on every group se dequeue. Setting min=0 means
->> that we have to take it on both enqueue and dequeue, while baseline
->> means we take it once per min_cfs_rq_runtime in the worst case.
-> Yep, it's only slightly better than simply setting min_cfs_rq_runtime=0.
-> There's definitely a tradeoff of having to grab the lock every time.
->
-> The other non-obvious benefit to this is that when the application
-> starts hitting throttling the entire application starts hitting
-> throttling closer to simultaneously.  Previously, threads that don't do
-> much could continue sipping on their 1ms of min_cfs_rq_runtime, while
-> main threads were throttled.  With this the application would more or
-> less halt within 5ms of full quota usage.
->
->> In addition how much this helps is very dependent on the exact pattern
->> of sleep/wake - you can still strand all but 15ms of runtime with a
->> pretty reasonable pattern.
->
-> I thought this change would have an upper bound stranded time of:
-> NUMCPUs * min_cfs_rq_runtime - 3 * sched_cfs_bandwidth_slice().
-> From the stranding of 1ms on each queue minues the amount that we'd
-> return when we forcibly hit the 3 x bandwidth slice Am I missing
-> something here? Additionally that's worst case, and would require that
-> threads be scheduled on distinct cpus mostly sequentially, and then
-> never run again.
+> Hi Jacob and Yi,
+> 
+> On 6/9/19 9:44 PM, Jacob Pan wrote:
+> > When supporting guest SVA with emulated IOMMU, the guest PASID
+> > table is shadowed in VMM. Updates to guest vIOMMU PASID table
+> > will result in PASID cache flush which will be passed down to
+> > the host as bind guest PASID calls.
+> > 
+> > For the SL page tables, it will be harvested from device's
+> > default domain (request w/o PASID), or aux domain in case of
+> > mediated device.
+> > 
+> >      .-------------.  .---------------------------.
+> >      |   vIOMMU    |  | Guest process CR3, FL only|
+> >      |             |  '---------------------------'
+> >      .----------------/
+> >      | PASID Entry |--- PASID cache flush -
+> >      '-------------'                       |
+> >      |             |                       V
+> >      |             |                CR3 in GPA
+> >      '-------------'
+> > Guest
+> > ------| Shadow |--------------------------|--------
+> >        v        v                          v
+> > Host
+> >      .-------------.  .----------------------.
+> >      |   pIOMMU    |  | Bind FL for GVA-GPA  |
+> >      |             |  '----------------------'
+> >      .----------------/  |
+> >      | PASID Entry |     V (Nested xlate)
+> >      '----------------\.------------------------------.
+> >      |             |   |SL for GPA-HPA, default domain|
+> >      |             |   '------------------------------'
+> >      '-------------'
+> > Where:
+> >   - FL = First level/stage one page tables
+> >   - SL = Second level/stage two page tables
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> > ---
+> >   drivers/iommu/intel-iommu.c |   4 +
+> >   drivers/iommu/intel-svm.c   | 187
+> > ++++++++++++++++++++++++++++++++++++++++++++
+> > include/linux/intel-iommu.h |  13 ++- include/linux/intel-svm.h
+> > |  17 ++++ 4 files changed, 219 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index 7cfa0eb..3b4d712 100644
+> > --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -5782,6 +5782,10 @@ const struct iommu_ops intel_iommu_ops = {
+> >   	.dev_enable_feat	= intel_iommu_dev_enable_feat,
+> >   	.dev_disable_feat	= intel_iommu_dev_disable_feat,
+> >   	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+> > +#ifdef CONFIG_INTEL_IOMMU_SVM
+> > +	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+> > +	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+> > +#endif
+> >   };
+> >   
+> >   static void quirk_iommu_g4x_gfx(struct pci_dev *dev)
+> > diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+> > index 66d98e1..f06a82f 100644
+> > --- a/drivers/iommu/intel-svm.c
+> > +++ b/drivers/iommu/intel-svm.c
+> > @@ -229,6 +229,193 @@ static LIST_HEAD(global_svm_list);
+> >   	list_for_each_entry(sdev, &svm->devs, list)	\
+> >   	if (dev == sdev->dev)				\
+> >   
+> > +int intel_svm_bind_gpasid(struct iommu_domain *domain,
+> > +			struct device *dev,
+> > +			struct gpasid_bind_data *data)
+> > +{
+> > +	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
+> > +	struct intel_svm_dev *sdev;
+> > +	struct intel_svm *svm = NULL;
+> > +	struct dmar_domain *ddomain;
+> > +	int ret = 0;
+> > +
+> > +	if (WARN_ON(!iommu) || !data)
+> > +		return -EINVAL;
+> > +
+> > +	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+> > +		data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> > +		return -EINVAL;
+> > +
+> > +	if (dev_is_pci(dev)) {
+> > +		/* VT-d supports devices with full 20 bit PASIDs
+> > only */
+> > +		if (pci_max_pasids(to_pci_dev(dev)) != PASID_MAX)
+> > +			return -EINVAL;
+> > +	}
+> > +
+> > +	/*
+> > +	 * We only check host PASID range, we have no knowledge to
+> > check
+> > +	 * guest PASID range nor do we use the guest PASID.
+> > +	 */
+> > +	if (data->hpasid <= 0 || data->hpasid >= PASID_MAX)
+> > +		return -EINVAL;
+> > +
+> > +	ddomain = to_dmar_domain(domain);
+> > +	/* REVISIT:
+> > +	 * Sanity check adddress width and paging mode support
+> > +	 * width matching in two dimensions:
+> > +	 * 1. paging mode CPU <= IOMMU
+> > +	 * 2. address width Guest <= Host.
+> > +	 */
+> > +	mutex_lock(&pasid_mutex);
+> > +	svm = ioasid_find(NULL, data->hpasid, NULL);
+> > +	if (IS_ERR(svm)) {
+> > +		ret = PTR_ERR(svm);
+> > +		goto out;
+> > +	}
+> > +	if (svm) {
+> > +		/*
+> > +		 * If we found svm for the PASID, there must be at
+> > +		 * least one device bond, otherwise svm should be
+> > freed.
+> > +		 */
+> > +		BUG_ON(list_empty(&svm->devs));
+> > +
+> > +		for_each_svm_dev() {
+> > +			/* In case of multiple sub-devices of the
+> > same pdev assigned, we should
+> > +			 * allow multiple bind calls with the same
+> > PASID and pdev.
+> > +			 */
+> > +			sdev->users++;
+> > +			goto out;
+> > +		}
+> > +	} else {
+> > +		/* We come here when PASID has never been bond to
+> > a device. */
+> > +		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
+> > +		if (!svm) {
+> > +			ret = -ENOMEM;
+> > +			goto out;
+> > +		}
+> > +		/* REVISIT: upper layer/VFIO can track host
+> > process that bind the PASID.
+> > +		 * ioasid_set = mm might be sufficient for vfio to
+> > check pasid VMM
+> > +		 * ownership.
+> > +		 */
+> > +		svm->mm = get_task_mm(current);
+> > +		svm->pasid = data->hpasid;
+> > +		if (data->flags & IOMMU_SVA_GPASID_VAL) {
+> > +			svm->gpasid = data->gpasid;
+> > +			svm->flags &= SVM_FLAG_GUEST_PASID;  
+> 
+> I am guessing that you want to set this flag bit, so it should be
+> 
+> 			svm->flags |= SVM_FLAG_GUEST_PASID;
+> 
+you are right, this will be used when we have non-identity G-H pasid
+mapping. thanks.
+> > +		}
+> > +		refcount_set(&svm->refs, 0);
+> > +		ioasid_set_data(data->hpasid, svm);
+> > +		INIT_LIST_HEAD_RCU(&svm->devs);
+> > +		INIT_LIST_HEAD(&svm->list);
+> > +
+> > +		mmput(svm->mm);
+> > +	}
+> > +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
+> > +	if (!sdev) {
+> > +		ret = -ENOMEM;
+> > +		goto out;  
+> 
+> I think you need to clean up svm if its device list is empty here, as
+> you said above:
+> 
+No, we come here only if the device list is not empty and the new
+device to bind is different than any existing device in the list. If we
+cannot allocate memory for the new device, should not free the existing
+SVM, right?
 
-Yeah, to be exact it's that. It's just that this is only relevant at all
-when NUMCPUs*min_cfs_rq_runtime is at least a significant fraction of
-quota, and when "scheduled on distinct cpus, and then never run again"
-happens. How sequential it needs to be depends on the threads vs num
-cpus.
+>   +	if (svm) {
+>   +		/*
+>   +		 * If we found svm for the PASID, there must be at
+>   +		 * least one device bond, otherwise svm should be
+> freed.
+>   +		 */
+>   +		BUG_ON(list_empty(&svm->devs));
+>   +
+> 
+> > +	}
+> > +	sdev->dev = dev;
+> > +	sdev->users = 1;
+> > +
+> > +	/* Set up device context entry for PASID if not enabled
+> > already */
+> > +	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to enable PASID
+> > capability\n");
+> > +		kfree(sdev);
+> > +		goto out;
+> > +	}
+> > +
+> > +	/*
+> > +	 * For guest bind, we need to set up PASID table entry as
+> > follows:
+> > +	 * - FLPM matches guest paging mode
+> > +	 * - turn on nested mode
+> > +	 * - SL guest address width matching
+> > +	 */
+> > +	ret = intel_pasid_setup_nested(iommu,
+> > +				dev,
+> > +				(pgd_t *)data->gpgd,
+> > +				data->hpasid,
+> > +				data->flags,
+> > +				ddomain,
+> > +				data->addr_width);
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to set up PASID %llu in
+> > nested mode, Err %d\n",
+> > +			data->hpasid, ret);
+> > +		kfree(sdev);
+> > +		goto out;
+> > +	}
+> > +	svm->flags |= SVM_FLAG_GUEST_MODE;
+> > +
+> > +	init_rcu_head(&sdev->rcu);
+> > +	refcount_inc(&svm->refs);
+> > +	list_add_rcu(&sdev->list, &svm->devs);
+> > + out:
+> > +	mutex_unlock(&pasid_mutex);
+> > +	return ret;
+> > +}
+> > +
+> > +int intel_svm_unbind_gpasid(struct device *dev, int pasid)
+> > +{
+> > +	struct intel_svm_dev *sdev;
+> > +	struct intel_iommu *iommu;
+> > +	struct intel_svm *svm;
+> > +	int ret = -EINVAL;
+> > +
+> > +	mutex_lock(&pasid_mutex);
+> > +	iommu = intel_svm_device_to_iommu(dev);
+> > +	if (!iommu)
+> > +		goto out;
+> > +
+> > +	svm = ioasid_find(NULL, pasid, NULL);
+> > +	if (IS_ERR(svm)) {
+> > +		ret = PTR_ERR(svm);
+> > +		goto out;
+> > +	}
+> > +
+> > +	if (!svm)
+> > +		goto out;
+> > +
+> > +	for_each_svm_dev() {
+> > +		ret = 0;
+> > +		sdev->users--;
+> > +		if (!sdev->users) {
+> > +			list_del_rcu(&sdev->list);
+> > +			intel_pasid_tear_down_entry(iommu, dev,
+> > svm->pasid);
+> > +			/* TODO: Drain in flight PRQ for the PASID
+> > since it
+> > +			 * may get reused soon, we don't want to
+> > +			 * confuse with its previous live.
+> > +			 * intel_svm_drain_prq(dev, pasid);
+> > +			 */
+> > +			kfree_rcu(sdev, rcu);
+> > +
+> > +			if (list_empty(&svm->devs)) {
+> > +				list_del(&svm->list);
+> > +				kfree(svm);
+> > +				/*
+> > +				 * We do not free PASID here until
+> > explicit call
+> > +				 * from VFIO to free. The PASID
+> > life cycle
+> > +				 * management is largely tied to
+> > VFIO management
+> > +				 * of assigned device life cycles.
+> > In case of
+> > +				 * guest exit without a explicit
+> > free PASID call,
+> > +				 * the responsibility lies in VFIO
+> > layer to free
+> > +				 * the PASIDs allocated for the
+> > guest.
+> > +				 * For security reasons, VFIO has
+> > to track the
+> > +				 * PASID ownership per guest
+> > anyway to ensure
+> > +				 * that PASID allocated by one
+> > guest cannot be
+> > +				 * used by another.
+> > +				 */
+> > +				ioasid_set_data(pasid, NULL);
+> > +			}
+> > +		}
+> > +		break;
+> > +	}
+> > + out:
+> > +	mutex_unlock(&pasid_mutex);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >   int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
+> > struct svm_dev_ops *ops) {
+> >   	struct intel_iommu *iommu =
+> > intel_svm_device_to_iommu(dev); diff --git
+> > a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h index
+> > b75f17d..94d3a9a 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -677,7 +677,9 @@ int intel_iommu_enable_pasid(struct intel_iommu
+> > *iommu, struct device *dev); int intel_svm_init(struct intel_iommu
+> > *iommu); extern int intel_svm_enable_prq(struct intel_iommu *iommu);
+> >   extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+> > -
+> > +extern int intel_svm_bind_gpasid(struct iommu_domain *domain,
+> > +		struct device *dev, struct gpasid_bind_data *data);
+> > +extern int intel_svm_unbind_gpasid(struct device *dev, int pasid);
+> >   struct svm_dev_ops;
+> >   
+> >   struct intel_svm_dev {
+> > @@ -693,12 +695,19 @@ struct intel_svm_dev {
+> >   
+> >   struct intel_svm {
+> >   	struct mmu_notifier notifier;
+> > -	struct mm_struct *mm;
+> > +	union {
+> > +		struct mm_struct *mm;
+> > +		u64 gcr3;  
+> 
+> I didn't see gcr3 being used anywhere? Anything I missed?
+> 
+You are right, not used for now. We directly used guest PGD from passed
+in parameters to program first level pointer. I guess we don't need to
+store it. I will remove it. Thanks.
 
+> > +	};
+> >   	struct intel_iommu *iommu;
+> >   	int flags;
+> >   	int pasid;
+> > +	int gpasid; /* Guest PASID in case of vSVA bind with
+> > non-identity host
+> > +		     * to guest PASID mapping.
+> > +		     */
+> >   	struct list_head devs;
+> >   	struct list_head list;
+> > +	refcount_t refs; /* Number of devices sharing this PASID */
+> >   };
+> >   
+> >   extern struct intel_iommu *intel_svm_device_to_iommu(struct
+> > device *dev); diff --git a/include/linux/intel-svm.h
+> > b/include/linux/intel-svm.h index e3f7631..577d5df 100644
+> > --- a/include/linux/intel-svm.h
+> > +++ b/include/linux/intel-svm.h
+> > @@ -52,6 +52,23 @@ struct svm_dev_ops {
+> >    * do such IOTLB flushes automatically.
+> >    */
+> >   #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
+> > +/*
+> > + * The SVM_FLAG_GUEST_MODE flag is used when a guest process bind
+> > to a device.
+> > + * In this case the mm_struct is in the guest kernel or userspace,
+> > its life
+> > + * cycle is managed by VMM and VFIO layer. For IOMMU driver, this
+> > API provides
+> > + * means to bind/unbind guest CR3 with PASIDs allocated for a
+> > device.
+> > + */
+> > +#define SVM_FLAG_GUEST_MODE	(1<<2)
+> > +/*
+> > + * The SVM_FLAG_GUEST_PASID flag is used when a guest has its own
+> > PASID space,
+> > + * which requires guest and host PASID translation at both
+> > directions. We keep
+> > + * track of guest PASID in order to provide lookup service to
+> > device drivers.
+> > + * One such example is a physical function (PF) driver that
+> > supports mediated
+> > + * device (mdev) assignment. Guest programming of mdev
+> > configuration space can
+> > + * only be done with guest PASID, therefore PF driver needs to
+> > find the matching
+> > + * host PASID to program the real hardware.
+> > + */
+> > +#define SVM_FLAG_GUEST_PASID	(1<<3)
+> >   
+> >   #ifdef CONFIG_INTEL_IOMMU_SVM
+> >   
+> >   
+> 
+> Best regards,
+> Baolu
 
->
->> If the cost of taking this global lock across all cpus without a
->> ratelimit was somehow not a problem, I'd much prefer to just set
->> min_cfs_rq_runtime = 0. (Assuming it is, I definitely prefer the "lie
->> and sorta have 2x period 2x runtime" solution of removing expiration)
->
-> Can I take this as an technical ack of the v3 patchset?  Do you have any
-> other comments for that patchset you'd like to see corrected before it
-> gets integrated?  If you are indeed good with that patchset, I'll clean
-> up the comment and Documentation text and re-submit as a v5 patchset. I
->
-> actually like that patchset best as well, for all the reasons already
-> discussed.  Especially the one where it's been running like this for 5
-> years prior to 512ac999.
->
-> Also given my new-found understanding of min_cfs_rq_runtime, doesn't
-> this mean that if we don't expire runtime we could potentially have a
-> worst case of 1ms * NUMCPUs of extra runtime instead of 2x runtime?
-> This is because min_cfs_rq_runtime could theoretically live on a per-cpu
-> indefinitely?  Still this is actually much smaller than I previously had
-> feared.  Also it still holds that average runtime is still bounded by
-> runtime/period on average.
-
-Yeah, I think I was misremembering or thinking only about one example or
-something. Meanwhile I'm thinking this is potentially /worse/ than just
-2x runtime per 2x period, though obviously it depends on cpus vs quota.
-
-
-One thing I'm trying now is if we made the slack timer go and collect
-all the min_cfs_rq_runtime left behind, which would provide something
-similar to the min=0 case for fixing not only this but other cases of
-stranding bandwidth, but also some level of rate limiting.
-
-
-
->
-> Thanks
+Thank you!
+[Jacob Pan]
