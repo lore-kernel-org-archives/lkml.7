@@ -2,119 +2,108 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958F7C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B919BC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B082082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC4F2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SCdBkO+j"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ahjkHtiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfF0Ie6 (ORCPT
+        id S1726480AbfF0IhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:34:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33934 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfF0Ie5 (ORCPT
+        Thu, 27 Jun 2019 04:37:01 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:19530 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfF0IhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:34:57 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c85so866925pfc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 01:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pL8dIdDRRR0f0oihVWvRAV0Y3VQl+T0ytK1Ju8LVSAk=;
-        b=SCdBkO+jaQI/+32tsem4MYwzEIOMI3hZVuw9WMUP+0FE7yL9ObALw9j28rf2xf1fB2
-         0k4ChEaKwpDNuJFt8Tq5B0TyP+w/jxmZzR/6VaJL8AD7ERyFf2whc9aHd04XDY2rhz8l
-         gxA+2qt5QwU9jN5yDFUmKfpxF2Umndj7fxKmMiwbrYbRDMgl69fS4aEd1t82BpCpI6Pb
-         yVRc92Gs409pSpHO0uM0ChMDieNkSvMPtLCtHXp66jykOqer+Jzrh1XxA7rxTsIEnWHp
-         sEQGlVa9v4BcMQmow+58cBwGzSBFsBKfi26+KpJWDyMZ0IKWKcz+JtgDj6di0RtXYPvc
-         Q1MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pL8dIdDRRR0f0oihVWvRAV0Y3VQl+T0ytK1Ju8LVSAk=;
-        b=r2sazLapZ8ndllquAeFYBFJx/ZKa1wHVDKS/69sElmjKifhd6qufB6wi5vcGzF0mH5
-         6VWlcdIUCWkImBJeIuqyFMLm0YNhMLtn7EJc2pT83m6iC/zx2C3H5AiZDuUMoi4WpMMi
-         j2KoLl6lWqSoEf7APJvTGhVI5D0PV+y4l/js2EPDz5QtOJJiJoEAacCjYO//H0aG5ZFU
-         9yXzGaauNMFI7W8fzRGkUzFDB/WxC2M/3o0EwBiV814OQ1803Ci5pIVHuH1SgzICQXT9
-         KqAjY/1AshCc4xTPLaPbodlfRXNuyJaweKoaN9ZX3CK8TcFbDgzA9vKhrbSH0YKy4hl8
-         wbAQ==
-X-Gm-Message-State: APjAAAUAapOlpKjbBqItpHjGnpaMtNhNi/cxYLcBXrteKR1V3YUIub5I
-        T4z41nHzN4auBcboL0c1ky6JCg==
-X-Google-Smtp-Source: APXvYqxH22kQuUNW79tCt4NQgJA3jxTp6iros6Z7j9hPr0a1EPw4lm+Na1LtfqSElnEUcJXDR9/eAw==
-X-Received: by 2002:a65:63c3:: with SMTP id n3mr2571078pgv.139.1561624496816;
-        Thu, 27 Jun 2019 01:34:56 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id n19sm4001003pfa.11.2019.06.27.01.34.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 27 Jun 2019 01:34:55 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        paul.walmsley@sifive.com
-Cc:     palmer@sifive.com, aou@eecs.berkeley.edu, sachin.ghadi@sifive.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] riscv: ccache: Remove unused variable
-Date:   Thu, 27 Jun 2019 14:04:46 +0530
-Message-Id: <1561624486-22867-1-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 27 Jun 2019 04:37:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d14802b0000>; Thu, 27 Jun 2019 01:36:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Jun 2019 01:37:00 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Jun 2019 01:37:00 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Jun
+ 2019 08:36:57 +0000
+Subject: Re: [PATCH 4.4 0/1] 4.4.184-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190626083604.894288021@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <217e73e4-7777-558c-186f-c94658447ae0@nvidia.com>
+Date:   Thu, 27 Jun 2019 09:36:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190626083604.894288021@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561624619; bh=SbCX0SL6eqFrPHJ08VgcjdHO9dt/tQEV1PoVfugs1V0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ahjkHtizw91I334aow3iq0t4gpcZKBHQoNoV+qAfrmqMbkdf+S5AQb/mSaKymdySK
+         jVotCBgx8Bb5GBoRgUC4NFknOswkrSnZ+/2QDv/gBakLoUu3f4g9pR9+nofnkhNpqu
+         RYy6NdkxSw8it14V0QM1MvmjU9stEdXnzdUaEOaF7CbTkeI4LffSAmLu6M21FkwUgw
+         uLZLIFoW73614d2jSBs+UYyHt8+mLXzInsf7cISLOOMUTrInzWgUr7ko/e3q4S+rp3
+         tJvzM5azHJR8NdVC1onsYrZBQ+zK+qDU0zz/Lh0rxWBimHRq9WhrAa3qsXSB9R1LTC
+         BoibfjP5azKfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reading the count register clears the interrupt signal. Currently, the
-count registers are read into 'regval' variable but the variable is
-never used. Therefore remove it.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/mm/sifive_l2_cache.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 26/06/2019 09:45, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.184 release.
+> There are 1 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 28 Jun 2019 08:35:42 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.184-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
-index 4eb6461..3052a42 100644
---- a/arch/riscv/mm/sifive_l2_cache.c
-+++ b/arch/riscv/mm/sifive_l2_cache.c
-@@ -109,13 +109,13 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
- 
- static irqreturn_t l2_int_handler(int irq, void *device)
- {
--	unsigned int regval, add_h, add_l;
-+	unsigned int add_h, add_l;
- 
- 	if (irq == g_irq[DIR_CORR]) {
- 		add_h = readl(l2_base + SIFIVE_L2_DIRECCFIX_HIGH);
- 		add_l = readl(l2_base + SIFIVE_L2_DIRECCFIX_LOW);
- 		pr_err("L2CACHE: DirError @ 0x%08X.%08X\n", add_h, add_l);
--		regval = readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
-+		readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
- 		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
- 					   "DirECCFix");
- 	}
-@@ -123,7 +123,7 @@ static irqreturn_t l2_int_handler(int irq, void *device)
- 		add_h = readl(l2_base + SIFIVE_L2_DATECCFIX_HIGH);
- 		add_l = readl(l2_base + SIFIVE_L2_DATECCFIX_LOW);
- 		pr_err("L2CACHE: DataError @ 0x%08X.%08X\n", add_h, add_l);
--		regval = readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
-+		readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
- 		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
- 					   "DatECCFix");
- 	}
-@@ -131,7 +131,7 @@ static irqreturn_t l2_int_handler(int irq, void *device)
- 		add_h = readl(l2_base + SIFIVE_L2_DATECCFAIL_HIGH);
- 		add_l = readl(l2_base + SIFIVE_L2_DATECCFAIL_LOW);
- 		pr_err("L2CACHE: DataFail @ 0x%08X.%08X\n", add_h, add_l);
--		regval = readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
-+		readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
- 		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_UE,
- 					   "DatECCFail");
- 	}
+All tests are passing for Tegra ...
+
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
+
+Linux version:	4.4.184-rc1-g5f1824292521
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-1.9.1
-
+nvpublic
