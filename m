@@ -2,175 +2,93 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1BFC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F7DC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04A02063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QVlWniVz"
+	by mail.kernel.org (Postfix) with ESMTP id 8A47E2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 07:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfF0HaR (ORCPT
+        id S1726429AbfF0Hd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 03:30:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42464 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfF0HaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:30:17 -0400
-Received: by mail-io1-f66.google.com with SMTP id u19so2551980ior.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 00:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m9mecs4e5Wsida9t8S/le8lj8VgFqltg0rd2WgLjRdc=;
-        b=QVlWniVzQr9Py3FoYfYhI3tAE9t1jqAW8O721fa4F7WDZGwC1Q8r7YhYQgHkTOG8ML
-         YRjz2cBsi+H22F0DlDJZWhozSgiGJc6WDy3roWiQW11NRN/x0io2PXng3GThqpASfpCr
-         VZBD8l2LiaOg4uCFdC91k+D0lK8EQnDNhSfDpqSBOM2R+BHlX0+9YIu4TeFCXE8nEKla
-         1vYLaVrjhi5DJ73S3Y/X+tW6YEhyGK/WTdqHhmgDq7VyvKp2neTdkiL0zBPoQcpgkoeJ
-         naicjOUlw6R2sBfF8e+JuIzo8Vf8JRCqzrapuDLfLlQHgid6kDxS/5MqV2N8uXpZQ9hN
-         CdmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m9mecs4e5Wsida9t8S/le8lj8VgFqltg0rd2WgLjRdc=;
-        b=DglOPsZKUIt4cUnMbk8bcUelSYnwdL+Syx3D8y28sBMg+kxU6gyXO9CmF7nGT6axTB
-         y710izIEc9Mtq4qjQtdmifTvSqreu7PLFO9FMkPOK8kBOuvr+O2rOCrs6u8AKLwJVitj
-         AZvu6cVlCnjBH88e8g8X3XlbI4mjdhwUrcLHVRNxOjARIkmygmpz9879YJcGeO6jsIIx
-         wEiVAOoMnbj/pCCLRgdRjtgxymC50HYo222PPfNKVgJrE8m09fyFlGH8jPDUO2/DxVXM
-         764jfu4foqJaH8j/ziQONLKK0iWUP+bxN+CYWNGIWLNBt5Hqt7EZqnGtDeA2pFeofgWx
-         uosw==
-X-Gm-Message-State: APjAAAWvFsUnATQO2VgQPmoUe94N3xZMm53cyaFpbSxWYLIj9Hegs2gP
-        qndO8c++RgCXS1zbScMYcshSZYg7Jw2HLQv7iekFAg==
-X-Google-Smtp-Source: APXvYqzuqK2wYgvAi4gnFHr8y8d8JWXs8r4UGoduhVCUJRqklO+uoYhGS+229c8Zigv0u4UFt5yV7DpkpAgbyQvg8z4=
-X-Received: by 2002:a05:6602:98:: with SMTP id h24mr2966317iob.49.1561620615992;
- Thu, 27 Jun 2019 00:30:15 -0700 (PDT)
+        Thu, 27 Jun 2019 03:33:57 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19086 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726059AbfF0Hd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 03:33:56 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 582B4B17A415822EB0EA;
+        Thu, 27 Jun 2019 15:33:53 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 27 Jun 2019
+ 15:33:44 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <darrick.wong@oracle.com>, <hch@lst.de>, <dchinner@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] xfs: remove duplicated include
+Date:   Thu, 27 Jun 2019 15:33:23 +0800
+Message-ID: <20190627073323.45516-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <201906261343.5F26328@keescook>
-In-Reply-To: <201906261343.5F26328@keescook>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 27 Jun 2019 09:30:03 +0200
-Message-ID: <CAKv+Gu9Tnrw3BpDNBDvo5bc4Zi4EzbF3w7JdkwAsbX_d2Ty_eA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Move jump_label_init() before parse_early_param()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 at 22:51, Kees Cook <keescook@chromium.org> wrote:
->
-> While jump_label_init() was moved earlier in the boot process in commit
-> efd9e03facd0 ("arm64: Use static keys for CPU features"), it wasn't
-> early enough for early params to use it. The old state of things was as
-> described here...
->
-> init/main.c calls out to arch-specific things before general jump
-> label and early param handling:
->
-> asmlinkage __visible void __init start_kernel(void)
-> {
->         ...
->         setup_arch(&command_line);
->         ...
->         smp_prepare_boot_cpu();
->         ...
->         /* parameters may set static keys */
->         jump_label_init();
->         parse_early_param();
->         ...
-> }
->
-> x86 setup_arch() wants those earlier, so it handles jump label and
-> early param:
->
-> void __init setup_arch(char **cmdline_p)
-> {
->         ...
->         jump_label_init();
->         ...
->         parse_early_param();
->         ...
-> }
->
-> arm64 setup_arch() only had early param:
->
-> void __init setup_arch(char **cmdline_p)
-> {
->         ...
->         parse_early_param();
->         ...
-> }
->
-> with jump label later in smp_prepare_boot_cpu():
->
-> void __init smp_prepare_boot_cpu(void)
-> {
->         ...
->         jump_label_init();
->         ...
-> }
->
-> This moves arm64 jump_label_init() from smp_prepare_boot_cpu() to
-> setup_arch(), as done already on x86, in preparation from early param
-> usage in the init_on_alloc/free() series:
-> https://lkml.kernel.org/r/1561572949.5154.81.camel@lca.pw
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Remove duplicated include.
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/xfs/xfs_extfree_item.c | 1 -
+ fs/xfs/xfs_filestream.c   | 1 -
+ fs/xfs/xfs_pnfs.c         | 1 -
+ 3 files changed, 3 deletions(-)
 
-> ---
->  arch/arm64/kernel/setup.c | 5 +++++
->  arch/arm64/kernel/smp.c   | 5 -----
->  2 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 7e541f947b4c..9c4bad7d7131 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -283,6 +283,11 @@ void __init setup_arch(char **cmdline_p)
->
->         setup_machine_fdt(__fdt_pointer);
->
-> +       /*
-> +        * Initialise the static keys early as they may be enabled by the
-> +        * cpufeature code and early parameters.
-> +        */
-> +       jump_label_init();
->         parse_early_param();
->
->         /*
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 6dcf9607d770..20c456b3862c 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -424,11 +424,6 @@ void __init smp_cpus_done(unsigned int max_cpus)
->  void __init smp_prepare_boot_cpu(void)
->  {
->         set_my_cpu_offset(per_cpu_offset(smp_processor_id()));
-> -       /*
-> -        * Initialise the static keys early as they may be enabled by the
-> -        * cpufeature code.
-> -        */
-> -       jump_label_init();
->         cpuinfo_store_boot_cpu();
->
->         /*
-> --
-> 2.17.1
->
->
-> --
-> Kees Cook
+diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+index 99fd40eb..e515506 100644
+--- a/fs/xfs/xfs_extfree_item.c
++++ b/fs/xfs/xfs_extfree_item.c
+@@ -13,7 +13,6 @@
+ #include "xfs_mount.h"
+ #include "xfs_defer.h"
+ #include "xfs_trans.h"
+-#include "xfs_trans.h"
+ #include "xfs_trans_priv.h"
+ #include "xfs_buf_item.h"
+ #include "xfs_extfree_item.h"
+diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
+index b1869ae..a6d228c 100644
+--- a/fs/xfs/xfs_filestream.c
++++ b/fs/xfs/xfs_filestream.c
+@@ -21,7 +21,6 @@
+ #include "xfs_trace.h"
+ #include "xfs_ag_resv.h"
+ #include "xfs_trans.h"
+-#include "xfs_shared.h"
+ 
+ struct xfs_fstrm_item {
+ 	struct xfs_mru_cache_elem	mru;
+diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
+index 2d95355..6018e1c 100644
+--- a/fs/xfs/xfs_pnfs.c
++++ b/fs/xfs/xfs_pnfs.c
+@@ -17,7 +17,6 @@
+ #include "xfs_bmap_util.h"
+ #include "xfs_error.h"
+ #include "xfs_iomap.h"
+-#include "xfs_shared.h"
+ #include "xfs_bit.h"
+ #include "xfs_pnfs.h"
+ 
+-- 
+2.7.4
+
+
