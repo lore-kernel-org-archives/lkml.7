@@ -2,72 +2,44 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79169C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA986C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5002E2189F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4s1vftu"
+	by mail.kernel.org (Postfix) with ESMTP id BDC5E2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 05:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfF0FEc (ORCPT
+        id S1727191AbfF0FIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 01:04:32 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46771 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbfF0FE3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 01:04:29 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z23so916070ote.13;
-        Wed, 26 Jun 2019 22:04:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nsP4OPoyyuGVsj56a75vPqGS9PQmlg/dei1pXS0wrVA=;
-        b=H4s1vftufXCodbOeURMTzz5H0zLx9FKRH5i4Lj1xJRnjKWBNUaMIvJRVpY3+WZm1wB
-         d0oP9wM38G6/W7VbvJSsHCT4k5e60hSEnqZDbbshh05nthhn0nnFTZH2RYy2W6aglkee
-         28VbZDzty8L2VLUBapKwa5oSY70Lh3LFwiadchO8ygReuPSJSO/lXLxFrFgvzoCjbK3C
-         3l/he5/QsKgc4CLrWaXilKEQNbTUOoqqMvF9mlgGdoFzt3j+PPRjPolllNXXPvOp7k+i
-         NjLVsZ2eu1wPm764ESk1JEcgR0YTBzw64uAepMmxF+s6WIfkWCiNNR5Y6XlDP0QJI4Ns
-         XtAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nsP4OPoyyuGVsj56a75vPqGS9PQmlg/dei1pXS0wrVA=;
-        b=N7MNr0jiqTZYNF5frdxJY48ia1gMjoXXO47sMCwxZE4It6eSOiA4wotYOLda0BkLdq
-         rwWVI3ma+w5xNeMrG9gi4pQIl+a2W4tB9DsNGJVJoVdQXKWT9eXSGTJqPO7JD3Cspdn0
-         1nRKjFJ7uOf48YclA7LZWOJr+SrHrFQelTVVLSybj29/lhd6QenJXv60MWAccQp1sfXx
-         /cjJlrnWGWdrPMK5JeeaWEVM5eAtYBsGBfKAfx0pNnzkDDWw+3v1thZgeXrRe27Z78CD
-         +lkXbca7EbKX38zVPjFwNc2U+WxlfYEG6mB6YnbJiwFvheP/D0PEf3PsrBc3IzQb9slw
-         brqA==
-X-Gm-Message-State: APjAAAX+t2rkqrNU6lThM0UPY39izbWMFAemxi4RSodJ/rMsZDtULbTG
-        OqW1p2RmZ5DVtkmobqWWwCQ=
-X-Google-Smtp-Source: APXvYqwxKC3A5AYTVKV6MY6xj+cu9+9YYA6FAWmYeB4ViGjNN5w8dp6BdGXjNfxZc2fl9W7cLd/a7A==
-X-Received: by 2002:a9d:588a:: with SMTP id x10mr1832241otg.144.1561611869236;
-        Wed, 26 Jun 2019 22:04:29 -0700 (PDT)
-Received: from rYz3n.attlocal.net ([2600:1700:210:3790::48])
-        by smtp.googlemail.com with ESMTPSA id v18sm613318otn.17.2019.06.26.22.04.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 22:04:28 -0700 (PDT)
-From:   Jiunn Chang <c0d1n61at3@gmail.com>
-To:     skhan@linuxfoundation.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        johannes@sipsolutions.net
-Subject: [Linux-kernel-mentees][PATCH v3] nl80211: Fix undefined behavior in bit shift
-Date:   Thu, 27 Jun 2019 00:04:26 -0500
-Message-Id: <20190627050426.17925-3-c0d1n61at3@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190627032532.18374-4-c0d1n61at3@gmail.com>
-References: <20190627032532.18374-4-c0d1n61at3@gmail.com>
+        Thu, 27 Jun 2019 01:08:36 -0400
+Received: from mga04.intel.com ([192.55.52.120]:46663 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726578AbfF0FIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 01:08:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jun 2019 22:08:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,422,1557212400"; 
+   d="scan'208";a="162522642"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.48.10])
+  by fmsmga008.fm.intel.com with ESMTP; 26 Jun 2019 22:08:31 -0700
+From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/boot: Make gdt 8-byte aligned
+Date:   Thu, 27 Jun 2019 12:55:25 +0800
+Message-Id: <20190627045525.105266-1-xiaoyao.li@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,34 +47,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shifting signed 32-bit value by 31 bits is undefined.  Changing most
-significant bit to unsigned.
+When loading segment descriptor, it uses lock implicitly. Align gdt here
+to avoid potential split lock from crossing cache lines case.
 
-Signed-off-by: Jiunn Chang <c0d1n61at3@gmail.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
 ---
-Changes included in v3:
-  - remove change log from patch description
+ arch/x86/boot/compressed/head_64.S | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes included in v2:
-  - use subsystem specific subject lines
-  - CC required mailing lists
-
- include/uapi/linux/nl80211.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/nl80211.h b/include/uapi/linux/nl80211.h
-index 6f09d1500960..fa7ebbc6ff27 100644
---- a/include/uapi/linux/nl80211.h
-+++ b/include/uapi/linux/nl80211.h
-@@ -5314,7 +5314,7 @@ enum nl80211_feature_flags {
- 	NL80211_FEATURE_TDLS_CHANNEL_SWITCH		= 1 << 28,
- 	NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR		= 1 << 29,
- 	NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR	= 1 << 30,
--	NL80211_FEATURE_ND_RANDOM_MAC_ADDR		= 1 << 31,
-+	NL80211_FEATURE_ND_RANDOM_MAC_ADDR		= 1U << 31,
- };
- 
- /**
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index fafb75c6c592..6233ae35d0d9 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -659,6 +659,7 @@ no_longmode:
+ gdt64:
+ 	.word	gdt_end - gdt
+ 	.quad   0
++	.balign	8
+ gdt:
+ 	.word	gdt_end - gdt
+ 	.long	gdt
 -- 
-2.22.0
+2.19.1
 
