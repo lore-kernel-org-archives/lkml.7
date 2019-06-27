@@ -2,72 +2,92 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A59BC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B07C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6417820B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5903F2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfF0Pnr (ORCPT
+        id S1726606AbfF0Poe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:43:47 -0400
-Received: from smtprelay0036.hostedemail.com ([216.40.44.36]:54977 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726370AbfF0Pnq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:43:46 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 4EEEB182CF670;
-        Thu, 27 Jun 2019 15:43:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: whip50_2088efb52ed39
-X-Filterd-Recvd-Size: 1590
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 27 Jun 2019 15:43:43 +0000 (UTC)
-Message-ID: <d28bb3dce55ade3024109d8e808b58cdd4441181.camel@perches.com>
-Subject: Re: [PATCH] scripts: helper for mailing patches from git to the
- maintainers
-From:   Joe Perches <joe@perches.com>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 27 Jun 2019 08:43:42 -0700
-In-Reply-To: <1561647544-12685-1-git-send-email-info@metux.net>
-References: <1561647544-12685-1-git-send-email-info@metux.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Thu, 27 Jun 2019 11:44:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51960 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbfF0Poe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 11:44:34 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C23F5F79B;
+        Thu, 27 Jun 2019 15:44:34 +0000 (UTC)
+Received: from ovpn-112-33.rdu2.redhat.com (ovpn-112-33.rdu2.redhat.com [10.10.112.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4021660BE0;
+        Thu, 27 Jun 2019 15:44:32 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 15:44:31 +0000 (UTC)
+From:   Sage Weil <sweil@redhat.com>
+X-X-Sender: sage@piezo.novalocal
+To:     Jeff Layton <jlayton@kernel.org>
+cc:     Luis Henriques <lhenriques@suse.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] ceph: initialize superblock s_time_gran to 1
+In-Reply-To: <0459c2a46200194c14b7474f55071b12fbc3d594.camel@kernel.org>
+Message-ID: <alpine.DEB.2.11.1906271543440.17148@piezo.novalocal>
+References: <20190627135122.12817-1-lhenriques@suse.com> <0459c2a46200194c14b7474f55071b12fbc3d594.camel@kernel.org>
+User-Agent: Alpine 2.11 (DEB 23 2013-08-11)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 27 Jun 2019 15:44:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-27 at 16:59 +0200, Enrico Weigelt, metux IT consult
-wrote:
-> This is a little helper script for mailing patches out of a git
-> branch to the corresponding maintainers.
+On Thu, 27 Jun 2019, Jeff Layton wrote:
+> On Thu, 2019-06-27 at 14:51 +0100, Luis Henriques wrote:
+> > Having granularity set to 1us results in having inode timestamps with a
+> > accurancy different from the fuse client (i.e. atime, ctime and mtime will
+> > always end with '000').  This patch normalizes this behaviour and sets the
+> > granularity to 1.
+> > 
+> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > ---
+> >  fs/ceph/super.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > Hi!
+> > 
+> > As far as I could see there are no other side-effects of changing
+> > s_time_gran but I'm really not sure why it was initially set to 1000 in
+> > the first place so I may be missing something.
+> > 
+> > diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+> > index d57fa60dcd43..35dd75bc9cd0 100644
+> > --- a/fs/ceph/super.c
+> > +++ b/fs/ceph/super.c
+> > @@ -980,7 +980,7 @@ static int ceph_set_super(struct super_block *s, void *data)
+> >  	s->s_d_op = &ceph_dentry_ops;
+> >  	s->s_export_op = &ceph_export_ops;
+> >  
+> > -	s->s_time_gran = 1000;  /* 1000 ns == 1 us */
+> > +	s->s_time_gran = 1;
+> >  
+> >  	ret = set_anon_super(s, NULL);  /* what is that second arg for? */
+> >  	if (ret != 0)
 > 
-> Essentially, it scans the touched files, asks get_maintainer.pl
-> for their maintainers and calls git-send-email for mailing out
-> the patches.
-[]
-> +get_maintainers() {
-> +    $KERNELSRC/scripts/get_maintainer.pl --m --l --remove-duplicates `get_files` |
+> 
+> Looks like it was set that way since the client code was originally
+> merged. Was this an earlier limitation of ceph that is no longer
+> applicable?
+> 
+> In any case, I see no need at all to keep this at 1000, so:
 
---noroles --norolestats
+As long as the encoded on-write time value is at ns resolution, I 
+agree!  No recollection of why I did this :(
 
-It's also useful to separate the --to and --cc lines
-where the --to goes only to direct maintainers and
---cc goes to others.
-
-> +        grep -v "$LKML" | \
-> +        grep -E "(maintainer|reviewer|open list)" | \
-> +        grep -o '[[:alnum:]+\.\_\-]*@[[:alnum:]+\.\_\-]*'
-
-
+Reviewed-by: Sage Weil <sage@redhat.com>
