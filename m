@@ -2,143 +2,187 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D91C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BCCC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259CC2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:41:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AkgGzLnh"
+	by mail.kernel.org (Postfix) with ESMTP id 8D81320656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561636457;
+	bh=+qucawHskd5OShS2t/98goWwzq5s42RAwJ4ACghXm4g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zT9KUvYOEBWGvV9P3SyXHmZAPoVmvOQvNHO/D/qPhUPgX75X7S3EsHnwEzOvgYTcq
+	 bh6waawQRi6zJ1lu7iBfFLmC1r9X02bb/iXrbWZOEscdtVVn3BsmrOOdl74uRmkuHE
+	 a84uqTzTCinFBKHSB7Djc1auM47U4LooUssbbFhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfF0LlW (ORCPT
+        id S1726571AbfF0LyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:41:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40365 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfF0LlW (ORCPT
+        Thu, 27 Jun 2019 07:54:16 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46138 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbfF0LyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:41:22 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a93so1163318pla.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 04:41:21 -0700 (PDT)
+        Thu, 27 Jun 2019 07:54:16 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 81so1101450pfy.13;
+        Thu, 27 Jun 2019 04:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sHz/AfhQwEVWkqaotDnf7ZzBPyziK/3d7LRXEfP5eGA=;
-        b=AkgGzLnhHXCQnmw6FduZTWDTYYGIPuKqiNiLKtexcTOQApmJfihPxJW3ca7yzF8EL+
-         uQc0ADCowfRL/9/rtuAPqtn6kTpgLru9T+AH4ra94+U9swoWF9vc5dxTUdvuThkt9YZ+
-         e/eUOfApp2hPTNVi+79QXOOk8otpq4m7ZOK8W08MGwlLR8bUPc06SFe4JgudoJCiJZ+s
-         ptcZTIPbqH3LcuCK8dbaIGDEiuSKSTu58+4spKJMplZj/08AetfbbWavkdM1vml7O72R
-         2WYqSkKtAkQ/lqf/mb6IJWtQzCyp7Mn5iAb9xruyjZ8X+8jaiHX3Jlp4mCzg+djDOfsL
-         buqA==
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uBobCJvUi1gowBXqDw03EU0Ml7quxJ1JQosDRG7xm1o=;
+        b=Ia1UX23bxS0nM3Tx5wUheW7ibikUb3hh5/mcXpIwpGEKCl6/3rOs7+ZDR0nCL2mhdV
+         dWuWamXIghUeQacGKDXTcrpb7h1srGz9hjVDUzswI4iMlshlLHx2ilxDORSgkBFibKzC
+         WsxkUNukp0rZvv67oGG49chJtS96I8X4KVsJO3lASvIufo2BXIQPk/IKBTVABv66g9/b
+         BMn7ujUhPRf1xx8TSDeiT7ze7KsqQEJdGwVZ+tEFaHF/+h5H3Ao6Eh2E4UQziZ/RcJpi
+         OwncinVaDpjVuHit6CWNx8SCfGd0OeTPZzzbrSBEO8x5bxHcK8QOCLNLAcbmnlk5JKdN
+         LOrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sHz/AfhQwEVWkqaotDnf7ZzBPyziK/3d7LRXEfP5eGA=;
-        b=VEczQaH/NK2CU6jSAjNsJUx/83Mf5oD6WxzSra89RdVtOJZxmsD5p/sCZYiY0Mp/At
-         PckNIk70FnZyyN2DY/JT4nRmLLOdNtpPCV5791UtOE/1HepZzYgKm4qHXdFg3z/hWZau
-         hEzKhuidhjTzJeqgRTVV6nadEOfAd2X0r/6YZHNW39z02l70Z3t+YmUtyPBdZR7GmX95
-         8czedNM4eBrIhkJDs/uIU0Np2LhApmhvrAkzbBylr2krK+E2DuJVL/3Dm3W4CEYee3m2
-         Q1d8PkrAdNPvDUz25pzc1Mc0/5bGMB14mSw1M16BYbFMLzZF4Q7ErosdQTta4RziINgU
-         PEeQ==
-X-Gm-Message-State: APjAAAXMaIaVTyjX9GdK1NIO6cK9gBCvzesetjZpWvdGR3KpoO97dxlo
-        bBN79RiPElfMfxwTRR7/tw==
-X-Google-Smtp-Source: APXvYqx7R0Tn+WVu4DUHf30QWa/pZQgT6H2A8qoLrDmHcMgb7nqHLTSmX/BtCFJZu0ur3PS/CqP3eQ==
-X-Received: by 2002:a17:902:2be8:: with SMTP id l95mr3869213plb.231.1561635681618;
-        Thu, 27 Jun 2019 04:41:21 -0700 (PDT)
-Received: from DESKTOP (softbank126011121060.bbtec.net. [126.11.121.60])
-        by smtp.gmail.com with ESMTPSA id t7sm3551663pjq.15.2019.06.27.04.41.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Jun 2019 04:41:20 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 20:41:16 +0900
-From:   Takeshi Misawa <jeliantsurux@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Fix memory leak in tracing_err_log_open()
-Message-ID: <20190627114116.GA2533@DESKTOP>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=uBobCJvUi1gowBXqDw03EU0Ml7quxJ1JQosDRG7xm1o=;
+        b=B/soYa3lRVEpg3gjUeSKsob+FPlVekCrylbIBD7zvlLTmpv88y3QycY8SUt75OubVY
+         e5OUC+QebvVtajMRFuPNLjTTh5hld9ijM3hn/GpJgHaS8Wpct0Kf7ABKt2vDebAto+9o
+         lfiMeIwS3MJsS1SLo6g9tpAyt+qalPyolk6kGjuDeiWVqyJ8YagD5tiUfGvifzIHMyXT
+         XRXaCxcV2JDShvmD/RgB+KjJlSODGrmZLesWM24Vqhq/pTdrAa8DQ/85MbmlOFs6G1Ts
+         sCoDrEBhRDYJHNF/HNVoznxXq+KPNGyq6HSBzhBwRscmf7XelZZM+rop9xG5JxFPI/3w
+         rF4A==
+X-Gm-Message-State: APjAAAXhFzq9VSnCsZV3CpF+AjnCbRWCQ63bilAXjG7bHQIJW21lBJOX
+        TgDmz3BZ2ptAbmnwjD32ZMbbS4ro
+X-Google-Smtp-Source: APXvYqy4QMow2C4473WHef5Gt5kQIBXHZ0K2Uj+3vgkLBrPlaZ4/gN3yLt674ez0KnWu0GcQIXRbBA==
+X-Received: by 2002:a65:6656:: with SMTP id z22mr3291953pgv.197.1561636454835;
+        Thu, 27 Jun 2019 04:54:14 -0700 (PDT)
+Received: from bbox-1.seo.corp.google.com ([2401:fa00:d:0:d988:f0f2:984f:445b])
+        by smtp.gmail.com with ESMTPSA id x14sm3241419pfq.158.2019.06.27.04.54.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 04:54:13 -0700 (PDT)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v3 0/5] Introduce MADV_COLD and MADV_PAGEOUT
+Date:   Thu, 27 Jun 2019 20:54:00 +0900
+Message-Id: <20190627115405.255259-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If tracing_err_log_open() call seq_open(), allocated memory is not freed.
+This patch is part of previous series:
+https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/T/#u
+Originally, it was created for external madvise hinting feature.
 
-kmemleak report:
+https://lkml.org/lkml/2019/5/31/463
+Michal wanted to separte the discussion from external hinting interface
+so this patchset includes only first part of my entire patchset
 
-unreferenced object 0xffff92c0781d1100 (size 128):
-  comm "tail", pid 15116, jiffies 4295163855 (age 22.704s)
-  hex dump (first 32 bytes):
-    00 f0 08 e5 c0 92 ff ff 00 10 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000000d0687d5>] kmem_cache_alloc+0x11f/0x1e0
-    [<000000003e3039a8>] seq_open+0x2f/0x90
-    [<000000008dd36b7d>] tracing_err_log_open+0x67/0x140
-    [<000000005a431ae2>] do_dentry_open+0x1df/0x3a0
-    [<00000000a2910603>] vfs_open+0x2f/0x40
-    [<0000000038b0a383>] path_openat+0x2e8/0x1690
-    [<00000000fe025bda>] do_filp_open+0x9b/0x110
-    [<00000000483a5091>] do_sys_open+0x1ba/0x260
-    [<00000000c558b5fd>] __x64_sys_openat+0x20/0x30
-    [<000000006881ec07>] do_syscall_64+0x5a/0x130
-    [<00000000571c2e94>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  - introduce MADV_COLD and MADV_PAGEOUT hint to madvise.
 
-Fix this by calling seq_release() in tracing_err_log_fops.release().
+However, I keep entire description for others for easier understanding
+why this kinds of hint was born.
 
-Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
----
-Dear Steven Rostedt
+Thanks.
 
-I found kmemleak in tracing subsystem, and try to create a patch.
-Please consider this memory leak and patch.
+This patchset is against on next-20190530.
 
-Regards.
----
- kernel/trace/trace.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Below is description of previous entire patchset.
+================= &< =====================
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 83e08b78dbee..574648798978 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -7126,12 +7126,24 @@ static ssize_t tracing_err_log_write(struct file *file,
- 	return count;
- }
- 
-+static int tracing_err_log_release(struct inode *inode, struct file *file)
-+{
-+	struct trace_array *tr = inode->i_private;
-+
-+	trace_array_put(tr);
-+
-+	if (file->private_data)
-+		seq_release(inode, file);
-+
-+	return 0;
-+}
-+
- static const struct file_operations tracing_err_log_fops = {
- 	.open           = tracing_err_log_open,
- 	.write		= tracing_err_log_write,
- 	.read           = seq_read,
- 	.llseek         = seq_lseek,
--	.release	= tracing_release_generic_tr,
-+	.release        = tracing_err_log_release,
- };
- 
- static int tracing_buffers_open(struct inode *inode, struct file *filp)
+- Background
+
+The Android terminology used for forking a new process and starting an app
+from scratch is a cold start, while resuming an existing app is a hot start.
+While we continually try to improve the performance of cold starts, hot
+starts will always be significantly less power hungry as well as faster so
+we are trying to make hot start more likely than cold start.
+
+To increase hot start, Android userspace manages the order that apps should
+be killed in a process called ActivityManagerService. ActivityManagerService
+tracks every Android app or service that the user could be interacting with
+at any time and translates that into a ranked list for lmkd(low memory
+killer daemon). They are likely to be killed by lmkd if the system has to
+reclaim memory. In that sense they are similar to entries in any other cache.
+Those apps are kept alive for opportunistic performance improvements but
+those performance improvements will vary based on the memory requirements of
+individual workloads.
+
+- Problem
+
+Naturally, cached apps were dominant consumers of memory on the system.
+However, they were not significant consumers of swap even though they are
+good candidate for swap. Under investigation, swapping out only begins
+once the low zone watermark is hit and kswapd wakes up, but the overall
+allocation rate in the system might trip lmkd thresholds and cause a cached
+process to be killed(we measured performance swapping out vs. zapping the
+memory by killing a process. Unsurprisingly, zapping is 10x times faster
+even though we use zram which is much faster than real storage) so kill
+from lmkd will often satisfy the high zone watermark, resulting in very
+few pages actually being moved to swap.
+
+- Approach
+
+The approach we chose was to use a new interface to allow userspace to
+proactively reclaim entire processes by leveraging platform information.
+This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
+that are known to be cold from userspace and to avoid races with lmkd
+by reclaiming apps as soon as they entered the cached state. Additionally,
+it could provide many chances for platform to use much information to
+optimize memory efficiency.
+
+To achieve the goal, the patchset introduce two new options for madvise.
+One is MADV_COLD which will deactivate activated pages and the other is
+MADV_PAGEOUT which will reclaim private pages instantly. These new options
+complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
+gain some free memory space. MADV_PAGEOUT is similar to MADV_DONTNEED in a way
+that it hints the kernel that memory region is not currently needed and
+should be reclaimed immediately; MADV_COLD is similar to MADV_FREE in a way
+that it hints the kernel that memory region is not currently needed and
+should be reclaimed when memory pressure rises.
+
+Minchan Kim (5):
+  mm: introduce MADV_COLD
+  mm: change PAGEREF_RECLAIM_CLEAN with PAGE_REFRECLAIM
+  mm: account nr_isolated_xxx in [isolate|putback]_lru_page
+  mm: introduce MADV_PAGEOUT
+  mm: factor out pmd young/dirty bit handling and THP split
+
+ include/linux/huge_mm.h                |   3 -
+ include/linux/swap.h                   |   2 +
+ include/uapi/asm-generic/mman-common.h |   2 +
+ mm/compaction.c                        |   2 -
+ mm/gup.c                               |   7 +-
+ mm/huge_memory.c                       |  74 -----
+ mm/internal.h                          |   2 +-
+ mm/khugepaged.c                        |   3 -
+ mm/madvise.c                           | 438 ++++++++++++++++++++++++-
+ mm/memory-failure.c                    |   3 -
+ mm/memory_hotplug.c                    |   4 -
+ mm/mempolicy.c                         |   6 +-
+ mm/migrate.c                           |  37 +--
+ mm/oom_kill.c                          |   2 +-
+ mm/swap.c                              |  42 +++
+ mm/vmscan.c                            |  86 ++++-
+ 16 files changed, 566 insertions(+), 147 deletions(-)
+
 -- 
-2.17.1
+2.22.0.410.gd8fdbe21b5-goog
 
