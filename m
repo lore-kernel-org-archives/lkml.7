@@ -2,103 +2,124 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60811C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDA4C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BB42063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA142075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N921I7so"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BqiOtcMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfF0Vr4 (ORCPT
+        id S1726545AbfF0VwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:47:56 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:43406 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfF0Vrz (ORCPT
+        Thu, 27 Jun 2019 17:52:07 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53967 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbfF0VwH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:47:55 -0400
-Received: by mail-vk1-f201.google.com with SMTP id j140so1021197vke.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Jlmh+4kvOZQk9V9h6xlrXM5stBpJondK1dVakdnE3YI=;
-        b=N921I7sobL6tUfzVAJrxbRSoqp9aoCJA4aKLgZUYxvjD4LM1wKRjDuPguikbjutYLB
-         /AXcOI2nAoqZfSt3Qy0JIwrQ3t4qI/PbCejCfP/7T5RWDihEPONFK2Soe/tcyFxY54Lt
-         6i5t640suQlraueInzE4Xubx2HXj2wGc+UnbhoEdhY4fqDK+VtR2uA6L+C06m1JqiTP4
-         +YyFAu87vktTuzTccLPP9KVVQKG2IVmo7ot1G20GckAB0liJRgw64G27XGB3LBmjcfeD
-         m943yvQM2PnkWUFatGA/FDsL2aSTEHkuaVc5dDe587a64V2uiNkW6wY1g60z437/clwE
-         5aYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Jlmh+4kvOZQk9V9h6xlrXM5stBpJondK1dVakdnE3YI=;
-        b=QQe0JhGFfUR6izKcA9BJhh+yChaf5rDIiv0F93ZVnB3vhHO1G+UhHofyQwkwfbK5sU
-         TPLgWoNXHcA7hhhgXrOx/taSkWffH1eS0yqG1O13eI63ts4Lh9dDWsGWjMCI9UnYlu+/
-         lsEkWrZ/4DaA8B/rILPQfChCPfRLbiQ4BQho/X3XabJ2UvOlgUlKLJjTVQrvyeHby6vK
-         V7+Ko0+YOYffFrxSJUux7MLTuctB09oWRHF18WHicEuTUaonDd5kGWk7NGpjmybGwWUJ
-         mCUJiHhQGtlKkhZXJnt7AZCbOVnA7tY3UBPeaeuiEY1RQR0HPTj0q3cdqVIWMdcwZP3m
-         hGPw==
-X-Gm-Message-State: APjAAAVdaXhRhhycVnpNCoT36UAphkZ7vgVep41FfjoUAIrWrGvyvPZH
-        tSOoIInuJfN0Cl2yDzKHcw1NAEZ+xP+j
-X-Google-Smtp-Source: APXvYqz9eC2+az4dNGWYs0TEc4YFYXGPHi1c3sr2ANx5AnmF7NkzK45LURCUh9ojkfs/n/TxqXZ2I7AiUZpc
-X-Received: by 2002:a1f:3692:: with SMTP id d140mr2487711vka.88.1561672074496;
- Thu, 27 Jun 2019 14:47:54 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 14:47:38 -0700
-Message-Id: <20190627214738.112614-1-rajatja@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH] platform/chrome: lightbar: Get drvdata from parent in suspend/resume
-From:   Rajat Jain <rajatja@google.com>
-To:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, rajatxjain@gmail.com,
-        evgreen@google.com, gwendal@google.com
-Cc:     Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Jun 2019 17:52:07 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RLq0nd464952
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 27 Jun 2019 14:52:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RLq0nd464952
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561672321;
+        bh=IKXKz9MOR485MGNyLlQ8hSJHcee3ENsDy3/j9pz90pA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=BqiOtcMv3dp6AhndbAAIhINa5XuKa9j4QumszoTPnE14dfDZla/b877M177Uomyhc
+         DFgAoS+9xesUbFICgwEPVhDzT1psESDpJAguzJPdnHwyAu3fE4bQ7nNGGRKsmBtU8f
+         BhMFxK3AS9m9KH0LSjQQqtd/2bTmu1BttOrbvgyXKBiZ/vd2rus1JejG9nPdo7L842
+         8tQytJBCzEcLpr8qkPVls9GIJjudtfeJUV5v8uwbzGWT5BNIXtZq09FQ25EbBOT1H7
+         N8nqdpQf6Hdr8bKvb8NfMRmVtFVN9Aq4DwMbwtJ0xDNdsP6jCYaTcWTZhJGDkjwwIB
+         1eYrbGUmh3oIA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RLq0so464949;
+        Thu, 27 Jun 2019 14:52:00 -0700
+Date:   Thu, 27 Jun 2019 14:52:00 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Dianzhang Chen <tipbot@zytor.com>
+Message-ID: <tip-31a2fbb390fee4231281b939e1979e810f945415@git.kernel.org>
+Cc:     dianzhangchen0@gmail.com, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de
+Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, dianzhangchen0@gmail.com
+In-Reply-To: <1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com>
+References: <1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/pti] x86/ptrace: Fix possible spectre-v1 in
+ ptrace_get_debugreg()
+Git-Commit-ID: 31a2fbb390fee4231281b939e1979e810f945415
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lightbar driver never assigned the drvdata in probe method, and
-thus there is nothing there. Need to get the ec_dev from the parent's
-drvdata.
+Commit-ID:  31a2fbb390fee4231281b939e1979e810f945415
+Gitweb:     https://git.kernel.org/tip/31a2fbb390fee4231281b939e1979e810f945415
+Author:     Dianzhang Chen <dianzhangchen0@gmail.com>
+AuthorDate: Tue, 25 Jun 2019 23:30:17 +0800
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Thu, 27 Jun 2019 23:48:04 +0200
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
+x86/ptrace: Fix possible spectre-v1 in ptrace_get_debugreg()
+
+The index to access the threads ptrace_bps is controlled by userspace via
+syscall: sys_ptrace(), hence leading to a potential exploitation of the
+Spectre variant 1 vulnerability.
+
+The index can be controlled from:
+    ptrace -> arch_ptrace -> ptrace_get_debugreg.
+
+Fix this by sanitizing the user supplied index before using it access
+thread->ptrace_bps.
+
+Signed-off-by: Dianzhang Chen <dianzhangchen0@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: hpa@zytor.com
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1561476617-3759-1-git-send-email-dianzhangchen0@gmail.com
+
 ---
- drivers/platform/chrome/cros_ec_lightbar.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/ptrace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-index d30a6650b0b5..26117a8991b3 100644
---- a/drivers/platform/chrome/cros_ec_lightbar.c
-+++ b/drivers/platform/chrome/cros_ec_lightbar.c
-@@ -600,7 +600,7 @@ static int cros_ec_lightbar_remove(struct platform_device *pd)
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index a166c960bc9e..cbac64659dc4 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -25,6 +25,7 @@
+ #include <linux/rcupdate.h>
+ #include <linux/export.h>
+ #include <linux/context_tracking.h>
++#include <linux/nospec.h>
  
- static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
+ #include <linux/uaccess.h>
+ #include <asm/pgtable.h>
+@@ -643,9 +644,11 @@ static unsigned long ptrace_get_debugreg(struct task_struct *tsk, int n)
  {
--	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
-+	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
+ 	struct thread_struct *thread = &tsk->thread;
+ 	unsigned long val = 0;
++	int index = n;
  
- 	if (userspace_control)
- 		return 0;
-@@ -610,7 +610,7 @@ static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
+ 	if (n < HBP_NUM) {
+-		struct perf_event *bp = thread->ptrace_bps[n];
++		index = array_index_nospec(index, HBP_NUM);
++		struct perf_event *bp = thread->ptrace_bps[index];
  
- static int __maybe_unused cros_ec_lightbar_suspend(struct device *dev)
- {
--	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
-+	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
- 
- 	if (userspace_control)
- 		return 0;
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+ 		if (bp)
+ 			val = bp->hw.info.address;
