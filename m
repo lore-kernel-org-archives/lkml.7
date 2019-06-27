@@ -2,104 +2,117 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC1C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A03CC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE0D216E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="CIH3DEPi"
+	by mail.kernel.org (Postfix) with ESMTP id 3CB82216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 03:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561606427;
+	bh=0dO2e9dDOv4lvbr1mCKY3vuoEjzBbc2ekCbhR3JLgok=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=XJlIfnA4qpEVuCXzwjJYrgh55LPxBHATsKZAUEu6lbYZmhddoyO1mGG+CC5uVBePY
+	 3IFVcgPtUprSLzCQ+wbtESdHnzG+HxG+VMebHt5g4Tjr3BFd46i7CJ4ovSN0BBP4Z9
+	 xcXHheSvQ9JC8B6b3EQ4BSA9IfWBSP8quhBeTlAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfF0Ddk (ORCPT
+        id S1727028AbfF0Ddq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 23:33:40 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46868 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbfF0Ddj (ORCPT
+        Wed, 26 Jun 2019 23:33:46 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39777 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726447AbfF0Ddp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 23:33:39 -0400
-Received: by mail-qk1-f193.google.com with SMTP id x18so511456qkn.13;
-        Wed, 26 Jun 2019 20:33:39 -0700 (PDT)
+        Wed, 26 Jun 2019 23:33:45 -0400
+Received: by mail-io1-f65.google.com with SMTP id r185so1560272iod.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 20:33:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2KVsZBY5LFFo4gY6VFlLWm4C7+0s80NQB68c0PwknKs=;
-        b=CIH3DEPisvLbPTZi3wGI1i0TO6B3EfYZ4CM7za6PasawEQwEPzSBOS2EYItAnRotMN
-         nOB68MyZj2/cOYouVjFwjG2GMNoScQjVrcU9FtqqisfIN3GYQi/GI6j2w7t0LZspAEZY
-         OxPlsgmasoWbTm8XsFglyvqYvmDiZcPezKJzM=
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XF+G4LWc6yTM0hyPsvbwF5/LSakqPeCeR1RaSYQ/rMM=;
+        b=Gtk/s27Nxe/bxqfxezqklb5PLo4t4BYzFBlEZXxwx5hLrBG8QMBJwhXV2kuiXyBl4G
+         EPCP12KLE805t0XFmIbOyGfB8KAL0T0thPeyBaseCHIaQA4XpZ4EgVrkMrlHhDRMBihx
+         SZeFnEfbuAlYUB1+NtR91+lfPpWqbXcxxeX/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2KVsZBY5LFFo4gY6VFlLWm4C7+0s80NQB68c0PwknKs=;
-        b=AbMniBJ9iQh1Fw9qHz3xZngiBfF0Buo1KA7s04fv0y0ZT0D+Pk7Xwab2kUAot+ITCD
-         ERkh+qGTZrqndiKaqxEwYvi2p3d7UlPW3G2TOhmXyIH82Dmpd20fK8fvmiRftbzbB9GL
-         Lv50ye6HpkqpfeAufx08sK3gKqvAegyWsj14Lgg9qzAQFrgpL5JgYi8SlKHLrEZwfITM
-         HK7xLM0ZT3HB6IBJzgV9ajxjdHlxgFmQpr0huKOPxrsbnyX47trsTU6kV5VJFmyUCavd
-         o4Ov2jOS7uhLUEov4kdIzRrRyHNujhF1GDOVbvD55zfOMnPt7MRweCa5/AQiJ6JR8dW2
-         +fOQ==
-X-Gm-Message-State: APjAAAWjUUh5Srcct4A7Q9TFkzORRV8W8HX9xsMeGejg1UH5a/gPI3Zx
-        H+entpxFkF3TsJbFMTu57+YwEb+yqhvn3E5ucv0=
-X-Google-Smtp-Source: APXvYqwXbb3SH4AresCUU4pzniix+MHNP2zt84LdWlLd+3IFX0N+wQdttTRFErJ2Y5pcpv3VABkcH8J/i1o8Fv56cF4=
-X-Received: by 2002:a05:620a:1113:: with SMTP id o19mr1389916qkk.330.1561606418450;
- Wed, 26 Jun 2019 20:33:38 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XF+G4LWc6yTM0hyPsvbwF5/LSakqPeCeR1RaSYQ/rMM=;
+        b=VJ8BPctbrybkSBB/Ksi2FN4jnhu15LIqpgMGLRm1Qumez3rSMBFU9aBM2oiGIQ/Toh
+         WYvJMFZdwnfkuAQPOGjuVRnGNzz+u/U+O8FQVvvyLtnzus8Hi8q+sdXlFlV5kqvQG7Jc
+         X4u/0grk2iBOhQ1X0eQqgmkmBKXc4ZUXw5l8ueQ7zKpqY38oRgjj8h3FhQuVndFGB//G
+         1fsFcrCkbEyRCWCoFeLN6/2r8cH7b1VcCb3WJ1EY5sn4//rp4HH6SF6i47yUKg8FUpcE
+         9Hjo9Dx9/Jb6+vgpclqC+WeNGb6DTORuMg6bsCu/PEHLNP5vbWhWcdsLlzNEpE8hVCgN
+         Suag==
+X-Gm-Message-State: APjAAAWWyyD5V/hQJFgUx2gJ54aa4gB4hDA6T8YIh/wbxzHCihWAbmKv
+        Kq6fTn7d5KJZTwmDOKGVHI3hig==
+X-Google-Smtp-Source: APXvYqzAo6yx8WGJzDGlrEkLktFBWHOfEKaDWfKHRUoRoNvEvVme1VLQk7Pg6XOU4F7VA7sj7lFcgA==
+X-Received: by 2002:a5d:968b:: with SMTP id m11mr2069612ion.16.1561606424694;
+        Wed, 26 Jun 2019 20:33:44 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id c17sm778788ioo.82.2019.06.26.20.33.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Jun 2019 20:33:44 -0700 (PDT)
+Subject: Re: [Linux-kernel-mentees][PATCH v2] drm/amdkfd: Fix undefined
+ behavior in bit shift
+To:     Jiunn Chang <c0d1n61at3@gmail.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        oded.gabbay@gmail.com,
+        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
+References: <20190627010137.5612-3-c0d1n61at3@gmail.com>
+ <20190627032532.18374-3-c0d1n61at3@gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <59d3169d-4c74-4e75-7a48-93c0e99ae1f2@linuxfoundation.org>
+Date:   Wed, 26 Jun 2019 21:33:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190626071430.28556-1-andrew@aj.id.au> <20190626071430.28556-7-andrew@aj.id.au>
-In-Reply-To: <20190626071430.28556-7-andrew@aj.id.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 27 Jun 2019 03:33:26 +0000
-Message-ID: <CACPK8Xf2xvQAm8sad-xTt_yNO0-ed+PG8mVDujS8EsXzZw4J0A@mail.gmail.com>
-Subject: Re: [PATCH 6/8] pinctrl: aspeed: Clarify comment about strapping W1C
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-gpio@vger.kernel.org, Ryan Chen <ryan_chen@aspeedtech.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-aspeed@lists.ozlabs.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190627032532.18374-3-c0d1n61at3@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019 at 07:16, Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> Writes of 1 to SCU7C clear set bits in SCU70, the hardware strapping
-> register. The information was correct if you squinted while reading, but
-> hopefully switching the order of the registers as listed conveys it
-> better.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-
-Acked-by: Joel Stanley <joel@jms.id.au>
-
+On 6/26/19 9:25 PM, Jiunn Chang wrote:
+> Shifting signed 32-bit value by 31 bits is undefined.  Changing most
+> significant bit to unsigned.
+> 
+> Changes included in v2:
+>    - use subsystem specific subject lines
+>    - CC required mailing lists
+> 
+> Signed-off-by: Jiunn Chang <c0d1n61at3@gmail.com>
 > ---
->  drivers/pinctrl/aspeed/pinctrl-aspeed.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> index 4c775b8ffdc4..b510bb475851 100644
-> --- a/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> +++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-> @@ -209,7 +209,7 @@ static int aspeed_sig_expr_set(const struct aspeed_sig_expr *expr,
->                 if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP2)
->                         continue;
->
-> -               /* On AST2500, Set bits in SCU7C are cleared from SCU70 */
-> +               /* On AST2500, Set bits in SCU70 are cleared from SCU7C */
->                 if (desc->ip == ASPEED_IP_SCU && desc->reg == HW_STRAP1) {
->                         unsigned int rev_id;
->
-> --
-> 2.20.1
->
+
+Move version change lines here.
+
+>   include/uapi/linux/kfd_ioctl.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/kfd_ioctl.h b/include/uapi/linux/kfd_ioctl.h
+> index dc067ed0b72d..ae5669272303 100644
+> --- a/include/uapi/linux/kfd_ioctl.h
+> +++ b/include/uapi/linux/kfd_ioctl.h
+> @@ -339,7 +339,7 @@ struct kfd_ioctl_acquire_vm_args {
+>   #define KFD_IOC_ALLOC_MEM_FLAGS_USERPTR		(1 << 2)
+>   #define KFD_IOC_ALLOC_MEM_FLAGS_DOORBELL	(1 << 3)
+>   /* Allocation flags: attributes/access options */
+> -#define KFD_IOC_ALLOC_MEM_FLAGS_WRITABLE	(1 << 31)
+> +#define KFD_IOC_ALLOC_MEM_FLAGS_WRITABLE	(1U << 31)
+>   #define KFD_IOC_ALLOC_MEM_FLAGS_EXECUTABLE	(1 << 30)
+>   #define KFD_IOC_ALLOC_MEM_FLAGS_PUBLIC		(1 << 29)
+>   #define KFD_IOC_ALLOC_MEM_FLAGS_NO_SUBSTITUTE	(1 << 28)
+> 
+
+thanks,
+-- Shuah
