@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA4C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B97C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B522083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34E8216E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595575;
-	bh=x0tnoCKzwMTbTEg97X/tWGRnfg/9tEHvhYDSiwOpIs8=;
+	s=default; t=1561595580;
+	bh=pQKQ339g9+kyf4YsJLcT9olQk5Ox9kkrT3p5Hx86/pQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sZkgZI50DHhAL7NMw6jfIX+MeySxx4smzogkzMxQAQRjDv/ho4Jjhe4F2/KMBdfnG
-	 KuRx6N37wxkhqRgRkaqndkeXlsf12q3c21I6vKAiNM9RRm7xAR+1lufUCkPXyU3ouZ
-	 x3DnHLf/rCKl18gTX2A4jZXM2t2ivj+9c64+fp3g=
+	b=x2dlKmTySxFovF/RFa7H4KpkZPMFdPdSYcc2dD3L59oJD4HbRV5yIL8541yX+8H06
+	 F0sJzd8BznqSWczpl9IrhnerdxCRQYMExz/EqSYK4cQzOMerJdpBiGfwtUzA5ifp3m
+	 Y4mrda4qJ7bmtaCVC3wiNhoqBKpuzSspDj9bYkcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfF0Acx (ORCPT
+        id S1726809AbfF0Ac7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36642 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727038AbfF0Acu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:32:50 -0400
+        id S1727618AbfF0Acw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:32:52 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C720A216E3;
-        Thu, 27 Jun 2019 00:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 640492083B;
+        Thu, 27 Jun 2019 00:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595569;
-        bh=x0tnoCKzwMTbTEg97X/tWGRnfg/9tEHvhYDSiwOpIs8=;
+        s=default; t=1561595572;
+        bh=pQKQ339g9+kyf4YsJLcT9olQk5Ox9kkrT3p5Hx86/pQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKolNvQhiTm1XqfpMo0hQSqXLhpsx5ozSaqbqMllXtC93Iue0yIy5W02DU9Wxfn8r
-         oLDFfCjM0YfN7LDY9YyMheSodv+wVI/GJfh1isqwArj5Jh4AbYBMv67/GXmqYSryej
-         3Ccg14aeLo7aYiBwJPIRpfrJMdmMIDm8WgoYFfok=
+        b=o255pYHaBHMuc0FxUshFegjPHOA0czzNGgpfPMDo8mYS73m7dN9uDyqKm5NQ3m1Nd
+         YvReOBrgwuNOkcWfEZa+P3sqUZBjKhXoYjJ0IzYN9MiTSO1zlDo1F2BHoj8CZmymWj
+         AoTuzoV+Lh6AY/RejOOPTnNQGKcwl2MGHPqzv0lM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.1 43/95] ibmvnic: Do not close unopened driver during reset
-Date:   Wed, 26 Jun 2019 20:29:28 -0400
-Message-Id: <20190627003021.19867-43-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 44/95] ibmvnic: Refresh device multicast list after reset
+Date:   Wed, 26 Jun 2019 20:29:29 -0400
+Message-Id: <20190627003021.19867-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -62,33 +62,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 1f94608b0ce141be5286dde31270590bdf35b86a ]
+[ Upstream commit be32a24372cf162e825332da1a7ccef058d4f20b ]
 
-Check driver state before halting it during a reset. If the driver is
-not running, do nothing. Otherwise, a request to deactivate a down link
-can cause an error and the reset will fail.
+It was observed that multicast packets were no longer received after
+a device reset.  The fix is to resend the current multicast list to
+the backing device after recovery.
 
 Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 3dfb2d131eb7..71bf895409a1 100644
+index 71bf895409a1..664e52fa7919 100644
 --- a/drivers/net/ethernet/ibm/ibmvnic.c
 +++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1751,7 +1751,8 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+@@ -1851,6 +1851,9 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+ 		return 0;
+ 	}
  
- 	ibmvnic_cleanup(netdev);
- 
--	if (adapter->reset_reason != VNIC_RESET_MOBILITY &&
-+	if (reset_state == VNIC_OPEN &&
-+	    adapter->reset_reason != VNIC_RESET_MOBILITY &&
- 	    adapter->reset_reason != VNIC_RESET_FAILOVER) {
- 		rc = __ibmvnic_close(netdev);
- 		if (rc)
++	/* refresh device's multicast list */
++	ibmvnic_set_multi(netdev);
++
+ 	/* kick napi */
+ 	for (i = 0; i < adapter->req_rx_queues; i++)
+ 		napi_schedule(&adapter->napi[i]);
 -- 
 2.20.1
 
