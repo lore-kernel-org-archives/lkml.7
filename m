@@ -2,78 +2,91 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F94C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45496C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD04120828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1818C2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:27:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LSSz5tEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfF0MYY (ORCPT
+        id S1726736AbfF0M1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 08:24:24 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53513 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbfF0MYX (ORCPT
+        Thu, 27 Jun 2019 08:27:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57688 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfF0M1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 08:24:23 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgTRs-00026w-11; Thu, 27 Jun 2019 14:24:20 +0200
-Date:   Thu, 27 Jun 2019 14:24:19 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
-cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
-        hpa@zytor.com, boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, peterz@infradead.org,
-        srinivas.eeda@oracle.com
-Subject: Re: [PATCH v2 0/7] misc fixes to PV extentions code
-In-Reply-To: <ab80e007-1d7e-ff13-d11a-10999d198ad3@oracle.com>
-Message-ID: <alpine.DEB.2.21.1906271423310.32342@nanos.tec.linutronix.de>
-References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com> <alpine.DEB.2.21.1906261511180.32342@nanos.tec.linutronix.de> <ab80e007-1d7e-ff13-d11a-10999d198ad3@oracle.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 27 Jun 2019 08:27:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RCOvkT118930;
+        Thu, 27 Jun 2019 12:27:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=zN2Zg/SRNDfb3CjVSZPYtadej8e83QgIVYu0JKeZv2M=;
+ b=LSSz5tEtvsn30+kW/ZMiVwWDJhDNdEbl4poSKdZ6DVKP1endvdQmtuPDqeV23SQIBFkd
+ 5x8uTEvWLyalfQF4XuVXqkWPiriKoX2qJR1Jye3znYRIpgGRLWP/2MkIcTcqLHREv4DB
+ 1HVzRKRdb7zZo799JKRZiEfm5ruRNm5sg3Z2t8dy77Axr5myTjHWnACRGxDWoa7yXycz
+ MnV/ak611NQwjovqYd/fIQyt9A9kSrH4XpwO65SFV+a6kuEVTXw22p+DDY7wGq07NzXw
+ lxNf+rwwwCaVfCdBBAr4jPRq/2HyRzZVJ8Hquft/pvK58SzPZdtcPw9MCLAZq/qccR14 lg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t9cyqqwsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 12:27:02 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RCPYKS034383;
+        Thu, 27 Jun 2019 12:27:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t9acd7c4c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 12:27:01 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5RCQrMe001253;
+        Thu, 27 Jun 2019 12:26:53 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Jun 2019 05:26:52 -0700
+Date:   Thu, 27 Jun 2019 15:26:43 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lukas Schneider <lukas.s.schneider@fau.de>
+Cc:     leobras.c@gmail.com, digholebhagyashri@gmail.com,
+        bhanusreemahesh@gmail.com, daniel.vetter@ffwll.ch,
+        der_wolf_@web.de, payal.s.kshirsagar.98@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Jannik Moritz <jannik.moritz@fau.de>, linux-kernel@i4.cs.fau.de
+Subject: Re: [PATCH] fbtft: Cleanup line over 80 character warnings
+Message-ID: <20190627122643.GB19015@kadam>
+References: <20190627121240.31584-1-lukas.s.schneider@fau.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1429891856-1561638260=:32342"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190627121240.31584-1-lukas.s.schneider@fau.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906270146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906270147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Sorry, I don't feel like this makes it more readable.
 
---8323329-1429891856-1561638260=:32342
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+regards,
+dan carpenter
 
-Zhenzhong,
-
-On Thu, 27 Jun 2019, Zhenzhong Duan wrote:
-> On 2019/6/26 21:39, Thomas Gleixner wrote:
-> > Documentation/process/submitting-patches.rst clearly explains why it is a
-> > bad idea to send random collections of patches especially if some patches
-> > are independent and contain bug fixes.
-> > 
-> > These rules exist for a reason and are not subject to personal
-> > interpretation. You want your patches to be reviewed and merged, so pretty
-> > please make the life of those who need to do that as easy as possible.
-> > 
-> > It's not the job of reviewers and maintainers to distangle your randomly
-> > ordered patch series.
-> 
-> Ok，understood.  I'll send independent and unrelated patch seperately.
-
-Much appreciated.
-
-Thanks,
-
-	tglx
---8323329-1429891856-1561638260=:32342--
