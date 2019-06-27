@@ -2,92 +2,105 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A03C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8598AC48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E66020663
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S+FOaFSk"
+	by mail.kernel.org (Postfix) with ESMTP id 425A521726
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfF0BCY (ORCPT
+        id S1726873AbfF0BHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:02:24 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32869 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbfF0BCY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:02:24 -0400
-Received: by mail-io1-f65.google.com with SMTP id u13so1028510iop.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Jun 2019 18:02:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=LukHuzspVdtsbWmPrQxtJofMfIkJuuBn4KLHq+hXvnA=;
-        b=S+FOaFSkDCDJ8fulPJ2UtIixLPm6C3blKm64Y26FpWliH1L0Kug+UoWJSnPzdI0Hcj
-         WIpQSV5+lHeemPxtT7Xcm9l2PGDireS9Cy5y9WyCF6nc8MvNf86DT26n4Uj7szEVflXK
-         7TdcSck6au5p+xNo79U3stPs5H1RUiTS20Kh1vpGpP8BZLL1aurZbclNgue4GAr053eG
-         IbbEFmsd4K4jnK/HKIBOTzUgeV8PgouYszZgI9mVl29aXMFMCPbfE0b+q6K1Srmh1sdH
-         CjXuVDZOcP7s9hMhGovvS1kStrCycR0lygvxsnRqkr3dk1iFcCEqAziHpxKtYM1HyLRb
-         9oCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=LukHuzspVdtsbWmPrQxtJofMfIkJuuBn4KLHq+hXvnA=;
-        b=IN3SS/hg41KgY2gbAOzhEdV4MlBKFNByeKVHiOawslFUn8kgziPWxRBabLxZFdiG2h
-         WD0nGxQ8ijM65mhdkj8EvQ1toBrtlOkS7hnowolwPgfiAQVG3GwPUafOBsLSBiQE0p/1
-         IPN18h4V9lXCUb6QiMlUvObm1GWuQ/JeN7ahTzllXdmihNhHbRYbZ8Hlp7/tHpViaVhS
-         5y8g9P5/x2wRJ8LuYodeoz8O9ep3Sc+k6XaPt3C+pNoHEC/5hFuTjezUP+qtq+Jj7QjS
-         XeI81/S+GBS5/kMmix9ULHvAv/kyPThdhB7kZkrtIbwQZuzpfdRT7zOj5uLynhxNibDi
-         7kgw==
-X-Gm-Message-State: APjAAAVio1iCI8q5I7f6j8aWeyt3J93rOgrdKTBDwroIBEUi6uihJUme
-        hU8Nbx1982SBLbpInmcPGlk+KQ==
-X-Google-Smtp-Source: APXvYqxH6d/kyIhVX9FR3/pclmA0eMPc/eQpoi25e5p7JBHqOX5DR5DbYu4JLM1fBKxoY3ScgDchXQ==
-X-Received: by 2002:a6b:f711:: with SMTP id k17mr1267637iog.273.1561597343694;
-        Wed, 26 Jun 2019 18:02:23 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id p10sm1457892iob.54.2019.06.26.18.02.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 26 Jun 2019 18:02:23 -0700 (PDT)
-Date:   Wed, 26 Jun 2019 18:02:22 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Rob Herring <robh@kernel.org>
-cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] dt-bindings: arm: Limit cpus schema to only check Arm
- 'cpu' nodes
-In-Reply-To: <20190627000044.12739-1-robh@kernel.org>
-Message-ID: <alpine.DEB.2.21.9999.1906261759390.29311@viisi.sifive.com>
-References: <20190627000044.12739-1-robh@kernel.org>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Wed, 26 Jun 2019 21:07:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32852 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfF0BHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 21:07:03 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 70C99308A963;
+        Thu, 27 Jun 2019 01:07:01 +0000 (UTC)
+Received: from treble (ovpn-126-66.rdu2.redhat.com [10.10.126.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E21701001284;
+        Thu, 27 Jun 2019 01:06:55 +0000 (UTC)
+Date:   Wed, 26 Jun 2019 20:06:53 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v3 3/4] bpf: Fix ORC unwinding in non-JIT BPF code
+Message-ID: <20190627010653.yovvztgmimaywaz5@treble>
+References: <cover.1561595111.git.jpoimboe@redhat.com>
+ <a5a486434d31d77297d39c4adccea22fac3027c1.1561595111.git.jpoimboe@redhat.com>
+ <CAADnVQL2z4BPUvtem-1C_JxzSgc_L8ED=VjGLu7ypPSq3wwC4w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQL2z4BPUvtem-1C_JxzSgc_L8ED=VjGLu7ypPSq3wwC4w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 27 Jun 2019 01:07:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Jun 2019, Rob Herring wrote:
-
-> Matching on the 'cpus' node was a bad choice because the schema is
-> incorrectly applied to non-Arm cpus nodes. As we now have a common cpus
-> schema which checks the general structure, it is also redundant to do so
-> in the Arm CPU schema.
+On Wed, Jun 26, 2019 at 05:57:08PM -0700, Alexei Starovoitov wrote:
+> On Wed, Jun 26, 2019 at 5:36 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > Objtool previously ignored ___bpf_prog_run() because it didn't
+> > understand the jump table.  This resulted in the ORC unwinder not being
+> > able to unwind through non-JIT BPF code.
+> >
+> > Now that objtool knows how to read jump tables, remove the whitelist and
+> > rename the variable to "jump_table" so objtool can recognize it.
+> >
+> > Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> > Reported-by: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > ---
+> >  kernel/bpf/core.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > index 080e2bb644cc..ff66294882f8 100644
+> > --- a/kernel/bpf/core.c
+> > +++ b/kernel/bpf/core.c
+> > @@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> >  {
+> >  #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+> >  #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+> > -       static const void *jumptable[256] = {
+> > +       static const void *jump_table[256] = {
+> >                 [0 ... 255] = &&default_label,
+> >                 /* Now overwrite non-defaults ... */
+> >                 BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
+> > @@ -1315,7 +1315,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> >  #define CONT_JMP ({ insn++; goto select_insn; })
+> >
+> >  select_insn:
+> > -       goto *jumptable[insn->code];
+> > +       goto *jump_table[insn->code];
 > 
-> The downside is one could conceivably mix different architecture's cpu
-> nodes or have typos in the compatible string. The latter problem pretty
-> much exists for every schema.
+> I thought we were clear that it is a nack?
+> Either live it alone or rename to something like jump_table_bpf_interpreter
+> or bpf_interpreter_jump_table.
 
-The RISC-V patch applies cleanly, but this one doesn't apply here on 
-either master or next-20190626.  Is there a different base commit?
+As I have said many times:
 
+The jump table detection is a generic objtool feature.  It makes no
+sense to give a bpf-specific name to a generic objtool feature which can
+be used by other components.
 
-- Paul
+-- 
+Josh
