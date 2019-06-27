@@ -2,114 +2,210 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CB8C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAF2C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080CE208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE314204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 11:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SoZyw62D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h1AzhMzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfF0LDk (ORCPT
+        id S1726539AbfF0LG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 07:03:40 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40704 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfF0LDk (ORCPT
+        Thu, 27 Jun 2019 07:06:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55064 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfF0LG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:03:40 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so1915820qtn.7;
-        Thu, 27 Jun 2019 04:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gk3rjcJt6XXWFQZunDpF0ijEbS8Fw6hpWgbRfLD/Qxg=;
-        b=SoZyw62DKtJdsURVCR9dNz86hTp16nKnqInqHoLUIgZjn44OTmzpWxOyP3/mRw/zYi
-         pjMfGAxwyH2RPFIMJ2gHECBGNzKcAHcqmuiGhBaZtu58Yl6z+C8LZxyDNhD3v35Cpd37
-         VBij2TWq+5C7EFYlx8y4ik3VzTrl+QPMbe3RsWdn6GOPxAd3tR2qNpgkRpot3K7nlQSx
-         5achQ2ty1CTNT1k3YTu9ft9wSxkDrMpVa/StpK1B/LDoQFCebSRb0ee/6JbrZ9B4FlqV
-         ioo0KXbHfl5JUv3M2vAQFXgVtLNeWU1JDIIr2bUazY+eWffGz4unwL1/godDnmiFMaWX
-         7LSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gk3rjcJt6XXWFQZunDpF0ijEbS8Fw6hpWgbRfLD/Qxg=;
-        b=Mlhem+U+OkIvYGpxbG6lgsKQV7GPJ+EVZoqYT/8ngWsTYefGhHuTSm7esNawoDXUC5
-         WQ8mgwVtSCdjThtH8rUCn467anSl4BEbVDPZNCmr3lDjVLYFbCiyLCUhqdVW7WxZugtN
-         E/jDOJ5DIzHC8V2GRF2/dWKgZlfUF3HnJFU/gz8nsgzbKfSiD4HW0QoBs+CwP/s6jQKJ
-         kjT2U7a5XbCMWrlSjfT3Elthcc0gJdFmJfIwQjYXo7inmrSY8zmS+BxnWvZsGCOD8SRS
-         7pOnqw9w4q3UMzWCyoV8cmq6kTQhz4cPjThlgnV9rUYlhZjhSaTaxDPgoxK19eygot3T
-         R67g==
-X-Gm-Message-State: APjAAAX1b5yAzmtJdS6S8dVhH7XzWhbgkR99jjfa57fOsNnTwBWQanqM
-        n+yVsuycp3uHdmg3ms2bvbr6JNch
-X-Google-Smtp-Source: APXvYqzOjmEwNVwNJ62aefD48cZAruAwQrjcI0rClxU03aNnYJQs8w4xX9mAMLw2JHDlcysNfSc5Aw==
-X-Received: by 2002:aed:3961:: with SMTP id l88mr2557530qte.246.1561633418859;
-        Thu, 27 Jun 2019 04:03:38 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-240-133-106.3g.claro.net.br. [179.240.133.106])
-        by smtp.gmail.com with ESMTPSA id 79sm702958qkf.110.2019.06.27.04.03.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 04:03:37 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5E79841153; Thu, 27 Jun 2019 08:03:34 -0300 (-03)
-Date:   Thu, 27 Jun 2019 08:03:34 -0300
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        dwarves@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: ANNOUNCE: pahole v1.14 (Bug fixes)
-Message-ID: <20190627110334.GC9599@kernel.org>
-References: <20190626211613.GE3902@kernel.org>
- <20190627014906.GA6181@mit.edu>
+        Thu, 27 Jun 2019 07:06:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=XcdY86W4sS3UnwKK7EUNoOiaNw0em85s29XC/aoBx2Y=; b=h1AzhMzKGiNoMbNL5qYGirzXe
+        dTYmXjVOkNiRprvriDInKW8AD/Ph9DGf7FiZLOXRWMlFA/Zr0HrUgmymKAScEzeiQy/Oqx2fhP77g
+        XzfDvbdh0pi1PDYmwMrNFJDHzgbvx5JqQZ39foHuGQJuVq80K2Bob8Em5WNL1HaKZAtXf6qpJUXsq
+        kshU24mLEMAWC5VMzp+ut9ayjqtQlYHkyfje29M81x+VdSBUUAZIqB9h2MOKh3oaMAE2RuI2X++bT
+        2jf5Rm32n9sEfA6o6hyh9D7Ru8rNOo/WLkPGGSCnY/ITuzQM/N1pZOuxzBGZvMLi1WWJmGxjxbszA
+        e1uU7mvkA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgSEw-0003tR-Ev; Thu, 27 Jun 2019 11:06:54 +0000
+Date:   Thu, 27 Jun 2019 04:06:54 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     syzbot <syzbot+b75afdbe271a0d7ac4f6@syzkaller.appspotmail.com>
+Cc:     darrick.wong@oracle.com, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in xlog_alloc_log
+Message-ID: <20190627110654.GA13946@infradead.org>
+References: <000000000000783d99058c489257@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190627014906.GA6181@mit.edu>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <000000000000783d99058c489257@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Jun 26, 2019 at 09:49:06PM -0400, Theodore Ts'o escreveu:
-> On Wed, Jun 26, 2019 at 06:16:13PM -0300, Arnaldo Carvalho de Melo wrote:
-> > 	The v1.14 release of pahole and its friends is out, available at
-> > the usual places
+It seems like this is the xlog_alloc_log error path.  We didn't
+really change anything in the circular ioclogs queue handling, so
+maybe thish has been there before, but xfs_buf wasn't wired up to
+kasan to catch it?
+
+Either way I suspect the right thing to do is to replace the list
+with an array based lookup.  I'll look into that, maybe a reproducer
+appears until then.
+
+On Wed, Jun 26, 2019 at 11:50:06PM -0700, syzbot wrote:
+> Hello,
 > 
-> Looks like you forgot to update the version number.
-
-Sigh, I tested 'pahole --version' locally, but forgot to commit it,
-stupid mistake, thanks for pointing it out.
-
-I bumped the version to v1.15 and pushed it out, should be ok now:
-
-[acme@quaco pahole]$ git remote update origin
-Fetching origin
-From git://git.kernel.org/pub/scm/devel/pahole/pahole
-   7005757fd573..529903571037  master     -> origin/master
-[acme@quaco pahole]$ git log --oneline -5
-529903571037 (HEAD -> master, tag: v1.15, origin/master, origin/HEAD, github/master, acme.korg/master) v1.15: New release
-3ed9a67967cf (tag: v1.14) fprintf: Avoid null dereference with NULL configs
-568dae4bd498 printf: Fixup printing "const" early with "const void"
-68f261d8dfff fprintf: Fix recursively printing named structs in --expand_types
-139a3b337381 ostra: Initial python3 conversion
-[acme@quaco pahole]$
-[acme@quaco pahole]$ rpm -q dwarves
-dwarves-1.15-1.fc29.x86_64
-[acme@quaco pahole]$ rpm -qf /usr/bin/pahole
-dwarves-1.15-1.fc29.x86_64
-[acme@quaco pahole]$ /usr/bin/pahole --version
-v1.15
-[acme@quaco pahole]$
-
-- Arnaldo
+> syzbot found the following crash on:
+> 
+> HEAD commit:    1dd45f17 Add linux-next specific files for 20190626
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=172479e9a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c1222640552e42a5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b75afdbe271a0d7ac4f6
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+b75afdbe271a0d7ac4f6@syzkaller.appspotmail.com
+> 
+> XFS (loop5): Mounting V4 Filesystem
+> ==================================================================
+> BUG: KASAN: use-after-free in xlog_alloc_log+0x1266/0x1380
+> fs/xfs/xfs_log.c:1478
+> Read of size 8 at addr ffff8880693e2990 by task syz-executor.5/12241
+> 
+> CPU: 1 PID: 12241 Comm: syz-executor.5 Not tainted 5.2.0-rc6-next-20190626
+> #23
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+>  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+>  kasan_report+0x12/0x17 mm/kasan/common.c:614
+>  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+>  xlog_alloc_log+0x1266/0x1380 fs/xfs/xfs_log.c:1478
+>  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:580
+>  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:815
+>  xfs_fs_fill_super+0xca6/0x16c0 fs/xfs/xfs_super.c:1740
+>  mount_bdev+0x304/0x3c0 fs/super.c:1346
+>  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1814
+>  legacy_get_tree+0x108/0x220 fs/fs_context.c:661
+>  vfs_get_tree+0x8e/0x390 fs/super.c:1476
+>  do_new_mount fs/namespace.c:2791 [inline]
+>  do_mount+0x138c/0x1c00 fs/namespace.c:3111
+>  ksys_mount+0xdb/0x150 fs/namespace.c:3320
+>  __do_sys_mount fs/namespace.c:3334 [inline]
+>  __se_sys_mount fs/namespace.c:3331 [inline]
+>  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3331
+>  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x45bf6a
+> Code: b8 a6 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 9d 8d fb ff c3 66 2e 0f
+> 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff
+> 0f 83 7a 8d fb ff c3 66 0f 1f 84 00 00 00 00 00
+> RSP: 002b:00007fac99605a88 EFLAGS: 00000206 ORIG_RAX: 00000000000000a5
+> RAX: ffffffffffffffda RBX: 00007fac99605b40 RCX: 000000000045bf6a
+> RDX: 00007fac99605ae0 RSI: 0000000020000000 RDI: 00007fac99605b00
+> RBP: 0000000000000001 R08: 00007fac99605b40 R09: 00007fac99605ae0
+> R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000004
+> R13: 00000000004c858e R14: 00000000004df0e0 R15: 00000000ffffffff
+> 
+> Allocated by task 12241:
+>  save_stack+0x23/0x90 mm/kasan/common.c:71
+>  set_track mm/kasan/common.c:79 [inline]
+>  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+>  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+>  __do_kmalloc mm/slab.c:3656 [inline]
+>  __kmalloc+0x163/0x770 mm/slab.c:3665
+>  kmalloc include/linux/slab.h:556 [inline]
+>  kmem_alloc+0xd2/0x200 fs/xfs/kmem.c:24
+>  kmem_zalloc fs/xfs/kmem.h:73 [inline]
+>  xlog_alloc_log+0xbf4/0x1380 fs/xfs/xfs_log.c:1420
+>  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:580
+>  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:815
+>  xfs_fs_fill_super+0xca6/0x16c0 fs/xfs/xfs_super.c:1740
+>  mount_bdev+0x304/0x3c0 fs/super.c:1346
+>  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1814
+>  legacy_get_tree+0x108/0x220 fs/fs_context.c:661
+>  vfs_get_tree+0x8e/0x390 fs/super.c:1476
+>  do_new_mount fs/namespace.c:2791 [inline]
+>  do_mount+0x138c/0x1c00 fs/namespace.c:3111
+>  ksys_mount+0xdb/0x150 fs/namespace.c:3320
+>  __do_sys_mount fs/namespace.c:3334 [inline]
+>  __se_sys_mount fs/namespace.c:3331 [inline]
+>  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3331
+>  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Freed by task 12241:
+>  save_stack+0x23/0x90 mm/kasan/common.c:71
+>  set_track mm/kasan/common.c:79 [inline]
+>  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+>  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x10a/0x2c0 mm/slab.c:3757
+>  kvfree+0x61/0x70 mm/util.c:488
+>  kmem_free fs/xfs/kmem.h:66 [inline]
+>  xlog_alloc_log+0xea9/0x1380 fs/xfs/xfs_log.c:1480
+>  xfs_log_mount+0xdc/0x780 fs/xfs/xfs_log.c:580
+>  xfs_mountfs+0xdb9/0x1be0 fs/xfs/xfs_mount.c:815
+>  xfs_fs_fill_super+0xca6/0x16c0 fs/xfs/xfs_super.c:1740
+>  mount_bdev+0x304/0x3c0 fs/super.c:1346
+>  xfs_fs_mount+0x35/0x40 fs/xfs/xfs_super.c:1814
+>  legacy_get_tree+0x108/0x220 fs/fs_context.c:661
+>  vfs_get_tree+0x8e/0x390 fs/super.c:1476
+>  do_new_mount fs/namespace.c:2791 [inline]
+>  do_mount+0x138c/0x1c00 fs/namespace.c:3111
+>  ksys_mount+0xdb/0x150 fs/namespace.c:3320
+>  __do_sys_mount fs/namespace.c:3334 [inline]
+>  __se_sys_mount fs/namespace.c:3331 [inline]
+>  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3331
+>  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> The buggy address belongs to the object at ffff8880693e2900
+>  which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 144 bytes inside of
+>  1024-byte region [ffff8880693e2900, ffff8880693e2d00)
+> The buggy address belongs to the page:
+> page:ffffea0001a4f880 refcount:1 mapcount:0 mapping:ffff8880aa400c40
+> index:0x0 compound_mapcount: 0
+> flags: 0x1fffc0000010200(slab|head)
+> raw: 01fffc0000010200 ffffea00018ec788 ffffea0002473908 ffff8880aa400c40
+> raw: 0000000000000000 ffff8880693e2000 0000000100000007 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff8880693e2880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  ffff8880693e2900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ffff8880693e2980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                          ^
+>  ffff8880693e2a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff8880693e2a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+---end quoted text---
