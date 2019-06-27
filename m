@@ -8,61 +8,67 @@ X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58139C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E9AC48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC6A2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B166C2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mE9CT/Qt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQeEpo4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfF0RfX (ORCPT
+        id S1726857AbfF0Rfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:35:23 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35357 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfF0RfW (ORCPT
+        Thu, 27 Jun 2019 13:35:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33099 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfF0Rfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:35:22 -0400
-Received: by mail-pf1-f194.google.com with SMTP id d126so1583407pfd.2;
-        Thu, 27 Jun 2019 10:35:22 -0700 (PDT)
+        Thu, 27 Jun 2019 13:35:33 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m4so1347272pgk.0;
+        Thu, 27 Jun 2019 10:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=G8HET8JWQuc+colOd4dh+X+1LMXfRXZOvk+H7Ks4laY=;
-        b=mE9CT/QtAQT9IgiVEICs9I7qhxosev+Tj7R4SflJDIpj6qsuTJ72ZU0m6lerNIDubX
-         o40Y6M50noQYe6noFEMvPMWhB8oYt0jAeGMd9ZgdJ+rEBFR9/EtwnbWq0wZa3DTmn1+Y
-         GEZQI5ZvE6pQ4lBh3NNHTqU73j2jfzUZm6UpwBfRv+Kp6jlAe0iwgziIcYqBMbMaDn/F
-         rcqo+ak++nHZ4FGzP7U7HYU0iLwXace8QiExhm+qCb+h9TvejxijnhyrL+e+bNzgR0Od
-         21W2a/4PwaMlWuKFtVzFGg5DG80zU0VqY9n6pEZQ+yJhFoRAPNhueFEiRQ9F4+sSB18y
-         R7GQ==
+        bh=84ahqC+50mO9UAvH/8d+QbUCMmIMaV0w1CUferEMczw=;
+        b=PQeEpo4wE9FmqoMEGX+E1GRBFCAtoLnmlmwiA3EMaSdvtKw48PTDtpIl+OEA0Q7n/L
+         rsX1UoffZBqTwE+9nK/4H0ZY9fqoFM/APDLPfJzqFkxHWFBvLZi5mp9iDqP492hXf0hb
+         TJRc7/Cs3J9xEHPlNQ1BDXvhsCYdSXIk3bxCfbt/eJxCX9Bb3P9BPoF+JE35+e3MsinN
+         qbOYzYeV9Pq4eGXZ2bmO46Mj6UMSwPp2akfLm2ZaCg5eWSG97fIoS/dL3NusrsCnZxxJ
+         TbkDgvxaVSuX4fGJv5qWzhcNY77KV6UEg09VOqDRCi5EXyQMvpEypYdFXGNNnY+pyvvt
+         y2Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=G8HET8JWQuc+colOd4dh+X+1LMXfRXZOvk+H7Ks4laY=;
-        b=Zjl/7zhW1ng/P/cqxxGN92fBOrgW9HC3ZOGMt6gn5wUpt8eYvFPCzbEafjIr7z0LXD
-         AOmQEp9LmmuqX2B+XvBpa1K683baZnUZrhlVP755P0XCRx9WciDiSqmuimcP3ArcicIW
-         sb5jQzXB4K3NUxSX+X0HyH3DNP4gmati4T/mJpOJYuyfeiwqjKDC4Nh3mpYdDlLQ6d0e
-         QxFUTGmo2nb/EXMxb6SPp/ibcAGixXwB0pIwLRzcjlwfTySEDXr2202xWxOjgrOxPXzH
-         qDy0wL4O+7yknxt+/xFCDQzE3TrajOV9RPdGGqXl75wAxND+e0NSMUi2VzX4KiMu/nhi
-         nVzw==
-X-Gm-Message-State: APjAAAViRDI8vZM3wNllAgNBHZ2O5NVVBuZ7jjeKnMyDFIeWC1ieHX1o
-        FWZpicRDXeHH7IprtD07pfw=
-X-Google-Smtp-Source: APXvYqy0HqXkmztdVZNb1ex60RgjtPQ+8mjXCh0HbwzqcEfEMShFH8f8647D+Ubiflrb9gqrPuXfvw==
-X-Received: by 2002:a63:6ec1:: with SMTP id j184mr4852692pgc.225.1561656921930;
-        Thu, 27 Jun 2019 10:35:21 -0700 (PDT)
+        bh=84ahqC+50mO9UAvH/8d+QbUCMmIMaV0w1CUferEMczw=;
+        b=DKtVBRqZti4Z7m393uJ2rh8AGdLOFBY9LN69wWtNoimFuPseIAXVXxN6GuxnIF8ixP
+         HsQJb+HKYC4+ltun78d/C+HDUlAnQFtom/jtMMWlDWhjPMl0EBp+KsOndpq+nKYlZ7BI
+         MXuJvwVW4tRw6IsogBYAXFeDiUn9cT37CczSHDIhVCUuOnB21W/5cm0EzX3Iwq4Au4H4
+         3QfXVGV0rHwUCtu3G5AjW2QDWd1CwDFMJPpowL4BxyHVbx07QeHTmdM5HNLWjq4wah/S
+         OIr7GaKXZrhnRscL1/zPo/oc0C0vttkTgftybH9lUx0A2iejP6zxHazhAfCMjrEGUtnC
+         0WQQ==
+X-Gm-Message-State: APjAAAWqZpHuAroiL+syH2BWaQLJO4dH4G6LoXjmEdY6hHfaPPpiKzQv
+        6HviKx7uGdRrGJp8snw2arg=
+X-Google-Smtp-Source: APXvYqxeCvY50jYpTWVeQxBWVRm9La51KkeHY6C5ZyqNYd1dHoCt4hRfyl9lKtVVM4bUl7byG1qlKg==
+X-Received: by 2002:a63:18c:: with SMTP id 134mr4728426pgb.432.1561656932949;
+        Thu, 27 Jun 2019 10:35:32 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id a6sm6721366pfa.51.2019.06.27.10.35.20
+        by smtp.googlemail.com with ESMTPSA id c130sm3739317pfc.184.2019.06.27.10.35.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:35:21 -0700 (PDT)
+        Thu, 27 Jun 2019 10:35:32 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/87] block: skd_main.c: Remove call to memset after dma_alloc_coherent
-Date:   Fri, 28 Jun 2019 01:35:16 +0800
-Message-Id: <20190627173516.2351-1-huangfq.daxian@gmail.com>
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 11/87] crypto: amcc: Remove call to memset after dma_alloc_coherent
+Date:   Fri, 28 Jun 2019 01:35:23 +0800
+Message-Id: <20190627173524.2403-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,28 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit af7ddd8a627c
+    In commit af7ddd8a627c
 ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-dma_alloc_coherent has already zeroed the memory.
-So memset is not needed.
+    dma_alloc_coherent has already zeroed the memory.
+    So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/block/skd_main.c | 1 -
+ drivers/crypto/amcc/crypto4xx_core.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
-index c479235862e5..51569c199a6c 100644
---- a/drivers/block/skd_main.c
-+++ b/drivers/block/skd_main.c
-@@ -2694,7 +2694,6 @@ static int skd_cons_skmsg(struct skd_device *skdev)
- 		     (FIT_QCMD_ALIGN - 1),
- 		     "not aligned: msg_buf %p mb_dma_address %pad\n",
- 		     skmsg->msg_buf, &skmsg->mb_dma_address);
--		memset(skmsg->msg_buf, 0, SKD_N_FITMSG_BYTES);
+diff --git a/drivers/crypto/amcc/crypto4xx_core.c b/drivers/crypto/amcc/crypto4xx_core.c
+index 16d911aaa508..5e7f2e233406 100644
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -182,7 +182,6 @@ static u32 crypto4xx_build_pdr(struct crypto4xx_device *dev)
+ 				  dev->pdr_pa);
+ 		return -ENOMEM;
  	}
- 
- err_out:
+-	memset(dev->pdr, 0, sizeof(struct ce_pd) * PPC4XX_NUM_PD);
+ 	dev->shadow_sa_pool = dma_alloc_coherent(dev->core_dev->device,
+ 				   sizeof(union shadow_sa_buf) * PPC4XX_NUM_PD,
+ 				   &dev->shadow_sa_pool_pa,
 -- 
 2.11.0
 
