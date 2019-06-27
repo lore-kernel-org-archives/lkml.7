@@ -2,131 +2,204 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3792C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D5EC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF3A20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9D620645
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IMj5MLbF"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="UVzm5lEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfF0SyJ (ORCPT
+        id S1726645AbfF0S6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:54:09 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33590 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfF0SyI (ORCPT
+        Thu, 27 Jun 2019 14:58:24 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46176 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfF0S6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:54:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h24so615781qto.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:54:08 -0700 (PDT)
+        Thu, 27 Jun 2019 14:58:23 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z23so3345776ote.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:58:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pzbB0dauErUy58OAB+4MrG23QuVRtPqScjaalstzwrY=;
-        b=IMj5MLbFKg5nIySk6MNr7pGBSFgPun/hMMfqHAFbw+gs+sXmnZI/YJ6yx9DxrnPn/M
-         QRNQbKVXiLYW9d6o+pC1IOrku5yeFSDdf0frb5Zr5hH9Td9FzgcGkll/NB8A19kxZJn3
-         ktBiqfLyRIDZFPDaABir1oywPqLMKWNLpoAKHLc8PXNaqHbcj1oW8rR8KoBHLMI/wjF7
-         xre+HIl9mYIV9WK6nyul/BZtwQqKQdOxwLYHQW03RnofOUscSAKVEXZFybj1+GRfcQg1
-         yhJ58xE4bBrjw2uRapYqq2/Ll0SfPqtNy8LfrEwYXV7nNk9DRGU9DWYCX6O48Nf9lfIz
-         po2Q==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Buh4vYpE7LbYuKttCx2Cpr/a4GmgOyG3kH9utY0SGvg=;
+        b=UVzm5lEwjmSVdXZ/dYYxW4VxfyylgZoSDFKKznMhT/DZQDkRdkfD4dF/nEqGh68zaM
+         +3YpvYStDIekqEbuXuBZN58wRAUHTVoiBHVKl+9NGKGF/kpEmlvFH15MPa+nTCB+74r8
+         V/EpgUV/qh9XsZwcMwyXnBdQeDazJdE03aVafP+sfQpPouimkrNjlyd7/gYgRIZu5SZ9
+         nLrnX7WKLJGDNHyGUs9E1D2GFupQzbXMXIh3hcXuarKwBOdUsZk92+XY2xehCf36rcsP
+         GTTy6vXV6xZOaQ3hr/cm0XuWVAUgklXz1YC4JsFJrKhPgZI1KsLncL6rQ/rn3/Vt15LE
+         scxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pzbB0dauErUy58OAB+4MrG23QuVRtPqScjaalstzwrY=;
-        b=MsVC2gj5wLGwvSy4OAuWepyYnK8ZwyZSyxPpOjAMMr+luLysnq+Wb8sgK5xKnwe0Wf
-         EyDInLA8PRA2Hh1OQvx1RaCdarJJY2iBE+t84ZENImBHflknudiW4BECHry7l6P7GPh9
-         197Lk4kV7bdvjFnxGgWSa+DCs/C7rsvxA9QdMYz0jIsv/M+1XzfzOIhTwfSYT7UCu4AK
-         UVw1rZjni7zPtNED+k7vSf8W0+ETzJGfpriJv1lI02BjXmSKpRLfX7ZV1Wg2fSUL9V9O
-         j4gz6I8ae4M0LYxBl9AzQN4xXBDH7FM3ZSxVg3VDhVQyPDP59AUsUX9fdxzo6qRaE36J
-         OFPA==
-X-Gm-Message-State: APjAAAXSDb9m7vHifcgkK6GeiC9oB+clRcGEHkBjF5dPQ9kgv3xCbGc0
-        bpCRxkYgSSLpqo+Fl6wLDqtLfA==
-X-Google-Smtp-Source: APXvYqxNXDq0uMmaGEPN7R9AoWFo8lEgE/pofnzH9twSLd5sQ1GF9FdCN33tuaiRfgzCkgzDsXHjiA==
-X-Received: by 2002:ac8:2b01:: with SMTP id 1mr4621099qtu.177.1561661647731;
-        Thu, 27 Jun 2019 11:54:07 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n184sm1276105qkc.114.2019.06.27.11.54.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 11:54:07 -0700 (PDT)
-Message-ID: <1561661645.5154.89.camel@lca.pw>
-Subject: Re: LTP hugemmap05 test case failure on arm64 with linux-next
- (next-20190613)
-From:   Qian Cai <cai@lca.pw>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Thu, 27 Jun 2019 14:54:05 -0400
-In-Reply-To: <15651f16-8d30-412f-8064-41ff03f3f47d@oracle.com>
-References: <1560461641.5154.19.camel@lca.pw>
-         <20190614102017.GC10659@fuggles.cambridge.arm.com>
-         <1560514539.5154.20.camel@lca.pw>
-         <054b6532-a867-ec7c-0a72-6a58d4b2723e@arm.com>
-         <EC704BC3-62FF-4DCE-8127-40279ED50D65@lca.pw>
-         <20190624093507.6m2quduiacuot3ne@willie-the-truck>
-         <1561381129.5154.55.camel@lca.pw> <1561411839.5154.60.camel@lca.pw>
-         <ed517a19-7804-c679-da94-279565001ca1@oracle.com>
-         <15651f16-8d30-412f-8064-41ff03f3f47d@oracle.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Buh4vYpE7LbYuKttCx2Cpr/a4GmgOyG3kH9utY0SGvg=;
+        b=uSlGRVzWd+WuGOhFXuAcqGWX6uJ6fmx5UGmUhGCixTX8HOvzvPMCBwptKC2Yg4yLba
+         Jaw6x2r2/ctEX+Eo1eJHatINWZnFIkmBeBhIG+inofdnGwTz/ZP1sIcLAr+XInP5TWCB
+         +YZ9cqtQes0LpcAnBPMXUe1CQ2Q0Ylzi+YPUveTufOy0N6CmuY87kT5kOToke2W+xB+R
+         U2c2z8A1sLvE9FYUmHDyfVXKe95q9CHPUjgl9boy0xQmxgrJMGv4+hYKWb14Y1KsubZy
+         NmAv6CXUqz2Z9lx1GMRpPAtFiAqS81WImxYZIBuhiG5DG/ID6jOq13IBQuCRPKaHlGnP
+         S2yg==
+X-Gm-Message-State: APjAAAXx5flzS72lJhblsQlcStC7wvXs0StXzZ+jTP2sJ+MKIfXNYJVy
+        Gjm+IwCNz4m8lAkcBgVoV7u7qimfbTgDttsfEaK4QQ==
+X-Google-Smtp-Source: APXvYqxZzA0OhG2w6y05Ufc3lrkT11UvPecZsn+mzZCDhjjL01pL3ybEOaSVC61vjyT57hy6ydReTOdG+lBiHcpQk+g=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr4560030oto.207.1561661902921;
+ Thu, 27 Jun 2019 11:58:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <156159454541.2964018.7466991316059381921.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190627123415.GA4286@bombadil.infradead.org> <CAPcyv4jQP-SFJGor-Q3VCRQ0xwt3MuVpH2qHx2wzyRA88DGQww@mail.gmail.com>
+ <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+In-Reply-To: <CAPcyv4jjqooboxivY=AsfEPhCvxdwU66GpwE9vM+cqrZWvtX3g@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 27 Jun 2019 11:58:12 -0700
+Message-ID: <CAPcyv4h6HgNE38RF5TxO3C268ZvrxgcPNrPWOt94MnO5gP_pjw@mail.gmail.com>
+Subject: Re: [PATCH] filesystem-dax: Disable PMD support
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>, Jan Kara <jack@suse.cz>,
+        stable <stable@vger.kernel.org>,
+        Robert Barror <robert.barror@intel.com>,
+        Seema Pandit <seema.pandit@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-27 at 11:09 -0700, Mike Kravetz wrote:
-> On 6/24/19 2:53 PM, Mike Kravetz wrote:
-> > On 6/24/19 2:30 PM, Qian Cai wrote:
-> > > So the problem is that ipcget_public() has held the semaphore "ids->rwsem" 
-> > > for
-> > > too long seems unnecessarily and then goes to sleep sometimes due to
-> > > direct
-> > > reclaim (other times LTP hugemmap05 [1] has hugetlb_file_setup() returns
-> > > -ENOMEM),
-> > 
-> > Thanks for looking into this!  I noticed that recent kernels could take a
-> > VERY long time trying to do high order allocations.  In my case it was
-> > trying
-> > to do dynamic hugetlb page allocations as well [1].  But, IMO this is more
-> > of a general direct reclaim/compation issue than something hugetlb specific.
-> > 
-> 
-> <snip>
-> 
-> > > Ideally, it seems only ipc_findkey() and newseg() in this path needs to
-> > > hold the
-> > > semaphore to protect concurrency access, so it could just be converted to
-> > > a
-> > > spinlock instead.
-> > 
-> > I do not have enough experience with this ipc code to comment on your
-> > proposed
-> > change.  But, I will look into it.
-> > 
-> > [1] https://lkml.org/lkml/2019/4/23/2
-> 
-> I only took a quick look at the ipc code, but there does not appear to be
-> a quick/easy change to make.  The issue is that shared memory creation could
-> take a long time.  With issue [1] above unresolved, creation of hugetlb backed
-> shared memory segments could take a VERY long time.
-> 
-> I do not believe the test failure is arm specific.  Most likely, it is just
-> because testing was done on a system with memory size to trigger this issue?
+On Thu, Jun 27, 2019 at 11:29 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Thu, Jun 27, 2019 at 9:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Thu, Jun 27, 2019 at 5:34 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > On Wed, Jun 26, 2019 at 05:15:45PM -0700, Dan Williams wrote:
+> > > > Ever since the conversion of DAX to the Xarray a RocksDB benchmark has
+> > > > been encountering intermittent lockups. The backtraces always include
+> > > > the filesystem-DAX PMD path, multi-order entries have been a source of
+> > > > bugs in the past, and disabling the PMD path allows a test that fails in
+> > > > minutes to run for an hour.
+> > >
+> > > On May 4th, I asked you:
+> > >
+> > > Since this is provoked by a fatal signal, it must have something to do
+> > > with a killable or interruptible sleep.  There's only one of those in the
+> > > DAX code; fatal_signal_pending() in dax_iomap_actor().  Does rocksdb do
+> > > I/O with write() or through a writable mmap()?  I'd like to know before
+> > > I chase too far down this fault tree analysis.
+> >
+> > RocksDB in this case is using write() for writes and mmap() for reads.
+>
+> It's not clear to me that a fatal signal is a component of the failure
+> as much as it's the way to detect that the benchmark has indeed locked
+> up.
 
-I think it is because the arm64 machine has the default hugepage size in 512M
-instead of 2M on other arches, but the test case still blindly try to allocate
-around 200 of hugepages which the system can't handle gracefully, i.e., return
--ENOMEM in reasonable time.
+Even though db_bench is run with the mmap_read=1 option:
 
-> 
-> My plan is to focus on [1].  When that is resolved, this issue should go away.
+  cmd="${rocksdb_dir}/db_bench $params_r --benchmarks=readwhilewriting \
+       --use_existing_db=1 \
+        --mmap_read=1 \
+       --num=$num_keys \
+       --threads=$num_read_threads \
+
+When the lockup occurs there are db_bench processes in the write fault path:
+
+[ 1666.635212] db_bench        D    0  2492   2435 0x00000000
+[ 1666.641339] Call Trace:
+[ 1666.644072]  ? __schedule+0x24f/0x680
+[ 1666.648162]  ? __switch_to_asm+0x34/0x70
+[ 1666.652545]  schedule+0x29/0x90
+[ 1666.656054]  get_unlocked_entry+0xcd/0x120
+[ 1666.660629]  ? dax_iomap_actor+0x270/0x270
+[ 1666.665206]  grab_mapping_entry+0x14f/0x230
+[ 1666.669878]  dax_iomap_pmd_fault.isra.42+0x14d/0x950
+[ 1666.675425]  ? futex_wait+0x122/0x230
+[ 1666.679518]  ext4_dax_huge_fault+0x16f/0x1f0
+[ 1666.684288]  __handle_mm_fault+0x411/0x1350
+[ 1666.688961]  ? do_futex+0xca/0xbb0
+[ 1666.692760]  ? __switch_to_asm+0x34/0x70
+[ 1666.697144]  handle_mm_fault+0xbe/0x1e0
+[ 1666.701429]  __do_page_fault+0x249/0x4f0
+[ 1666.705811]  do_page_fault+0x32/0x110
+[ 1666.709903]  ? page_fault+0x8/0x30
+[ 1666.713702]  page_fault+0x1e/0x30
+
+...where __handle_mm_fault+0x411 is in wp_huge_pmd():
+
+(gdb) li *(__handle_mm_fault+0x411)
+0xffffffff812713d1 is in __handle_mm_fault (mm/memory.c:3800).
+3795    static inline vm_fault_t wp_huge_pmd(struct vm_fault *vmf,
+pmd_t orig_pmd)
+3796    {
+3797            if (vma_is_anonymous(vmf->vma))
+3798                    return do_huge_pmd_wp_page(vmf, orig_pmd);
+3799            if (vmf->vma->vm_ops->huge_fault)
+3800                    return vmf->vma->vm_ops->huge_fault(vmf, PE_SIZE_PMD);
+3801
+3802            /* COW handled on pte level: split pmd */
+3803            VM_BUG_ON_VMA(vmf->vma->vm_flags & VM_SHARED, vmf->vma);
+3804            __split_huge_pmd(vmf->vma, vmf->pmd, vmf->address, false, NULL);
+
+This bug feels like we failed to unlock, or unlocked the wrong entry
+and this hunk in the bisected commit looks suspect to me. Why do we
+still need to drop the lock now that the radix_tree_preload() calls
+are gone?
+
+                /*
+                 * Besides huge zero pages the only other thing that gets
+                 * downgraded are empty entries which don't need to be
+                 * unmapped.
+                 */
+-               if (pmd_downgrade && dax_is_zero_entry(entry))
+-                       unmap_mapping_pages(mapping, index & ~PG_PMD_COLOUR,
+-                                                       PG_PMD_NR, false);
+-
+-               err = radix_tree_preload(
+-                               mapping_gfp_mask(mapping) & ~__GFP_HIGHMEM);
+-               if (err) {
+-                       if (pmd_downgrade)
+-                               put_locked_mapping_entry(mapping, index);
+-                       return ERR_PTR(err);
+-               }
+-               xa_lock_irq(&mapping->i_pages);
+-
+-               if (!entry) {
+-                       /*
+-                        * We needed to drop the i_pages lock while calling
+-                        * radix_tree_preload() and we didn't have an entry to
+-                        * lock.  See if another thread inserted an entry at
+-                        * our index during this time.
+-                        */
+-                       entry = __radix_tree_lookup(&mapping->i_pages, index,
+-                                       NULL, &slot);
+-                       if (entry) {
+-                               radix_tree_preload_end();
+-                               xa_unlock_irq(&mapping->i_pages);
+-                               goto restart;
+-                       }
++               if (dax_is_zero_entry(entry)) {
++                       xas_unlock_irq(xas);
++                       unmap_mapping_pages(mapping,
++                                       xas->xa_index & ~PG_PMD_COLOUR,
++                                       PG_PMD_NR, false);
++                       xas_reset(xas);
++                       xas_lock_irq(xas);
+                }
+
+-               if (pmd_downgrade) {
+-                       dax_disassociate_entry(entry, mapping, false);
+-                       radix_tree_delete(&mapping->i_pages, index);
+-                       mapping->nrexceptional--;
+-                       dax_wake_mapping_entry_waiter(&mapping->i_pages,
+-                                       index, entry, true);
+-               }
++               dax_disassociate_entry(entry, mapping, false);
++               xas_store(xas, NULL);   /* undo the PMD join */
++               dax_wake_entry(xas, entry, true);
++               mapping->nrexceptional--;
