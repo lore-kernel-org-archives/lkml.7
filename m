@@ -2,94 +2,138 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FAEC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CB7C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047D120828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235212084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 14:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfF0Oik (ORCPT
+        id S1726944AbfF0Oio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 10:38:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56202 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfF0Oik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 10:38:40 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgVXj-0006CB-G4; Thu, 27 Jun 2019 16:38:31 +0200
-Date:   Thu, 27 Jun 2019 16:38:30 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Octavio Alvarez <octallk1@alvarezp.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiang Biao <jiang.biao2@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: PROBLEM: Marvell 88E8040 (sky2) fails after hibernation
-In-Reply-To: <098de4c3-5f71-f84d-8b49-d2f43e18ed91@alvarezp.org>
-Message-ID: <alpine.DEB.2.21.1906271632300.32342@nanos.tec.linutronix.de>
-References: <aba1c363-92de-66d7-4aac-b555f398e70a@alvarezp.org> <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org> <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de> <95539fd9-ffdb-b91c-935f-7fd54d048fdf@alvarezp.org>
- <alpine.DEB.2.21.1906221523340.5503@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906231448540.32342@nanos.tec.linutronix.de> <098de4c3-5f71-f84d-8b49-d2f43e18ed91@alvarezp.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 27 Jun 2019 10:38:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:55674 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726431AbfF0Oin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 10:38:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72489360;
+        Thu, 27 Jun 2019 07:38:42 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD71B3F246;
+        Thu, 27 Jun 2019 07:38:39 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 15:38:37 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V11 01/12] PCI: Add #defines for some of PCIe spec r4.0
+ features
+Message-ID: <20190627143837.GC3782@e121166-lin.cambridge.arm.com>
+References: <20190624091505.1711-1-vidyas@nvidia.com>
+ <20190624091505.1711-2-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624091505.1711-2-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Octavio,
-
-On Mon, 24 Jun 2019, Octavio Alvarez wrote:
-> On 6/23/19 7:54 AM, Thomas Gleixner wrote:
-> >   Load the driver on Linus master with the following module parameter:
-> > 
-> >     disable_msi=1
-> > 
-> > That switches to INTx usage. Does the machine resume proper with that?
+On Mon, Jun 24, 2019 at 02:44:54PM +0530, Vidya Sagar wrote:
+> Add #defines only for the Data Link Feature and Physical Layer 16.0 GT/s
+> features.
 > 
-> I did two tests:
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes since [v10]:
+> * None
 > 
-> If I boot with sky2.disable_msi=1 on the kernel cmdline then the problem goes
-> away (when back from hibernation, the NIC works OK).
+> Changes since [v9]:
+> * None
 > 
-> If I boot regularly (disable_msi not set) and then do modprobe -r sky2;
-> modprobe sky2 disable_msi=1, the problem stays (when back from hibernation,
-> the NIC does not work).
+> Changes since [v8]:
+> * None
+> 
+> Changes since [v7]:
+> * None
+> 
+> Changes since [v6]:
+> * None
+> 
+> Changes since [v5]:
+> * None
+> 
+> Changes since [v4]:
+> * None
+> 
+> Changes since [v3]:
+> * None
+> 
+> Changes since [v2]:
+> * Updated commit message and description to explicitly mention that defines are
+>   added only for some of the features and not all.
+> 
+> Changes since [v1]:
+> * None
+> 
+>  include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 
-Interesting. Did you verify that the driver still uses INTx after
-hibernation in /proc/interrupts?
+I need Bjorn's ACK to merge this patch.
 
- cat /proc/interrupts | grep eth0
+Lorenzo
 
-The 6st column should show IO-APIC for INTx. If it shows PCI-MSI then
-something went wrong.
-
-Also please check Linus suspicion about the module being reloaded after
-hibernation through some distro magic.
-
-Thanks,
-
-	tglx
-
-
-
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f28e562d7ca8..1c79f6a097d2 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -713,7 +713,9 @@
+>  #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
+> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
+>  
+>  #define PCI_EXT_CAP_DSN_SIZEOF	12
+>  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+> @@ -1053,4 +1055,22 @@
+>  #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>  #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+>  
+> +/* Data Link Feature */
+> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
+> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
+> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+> +#define PCI_DLF_STS		0x08	/* Status Register */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
+> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
+> +
+> +/* Physical Layer 16.0 GT/s */
+> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
+> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
+> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
+> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
+> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
+> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
+> +
+>  #endif /* LINUX_PCI_REGS_H */
+> -- 
+> 2.17.1
+> 
