@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A33C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170B3C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9D920815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95D820815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596364;
-	bh=+ZN2H1Rhb2nLG7GYH4zcFDSdXLZMZUmax+jn/se6dp4=;
+	s=default; t=1561596370;
+	bh=5RpzVDfEqU6N+flh0xCkhbrpD3LejRIpqDfYAkBGBtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m3AonbhRJdH2a7T75KdnBO5G/59FkmBxU70GNJLFT/J4NykKtV6AP0klze2FEiFRr
-	 i8UQJJCzN9llvDO5+9pc9Em/CC4BcZjkn7oTtRpKdyzIOzv3+cyarYQC8VaJJvtFDS
-	 XUmhl+4WZ6pBW8qRrleL5XL8tOq1FwC/F5s9Yb+E=
+	b=wAIqO39tDGk1ZKqqcDeojEVZYy+DdonHTicza4IsegFgKIN85uzjMNmyNg2ZQf6dz
+	 eqk6UNWgqZPGG+tss8shH6dazeZUWWYSR/Zzg1r/RidQj+8inmmcukhc4z7uI0V5A8
+	 NQBJ1DG7STLasG6DLGfIeyO1TGIWb4i7S7UcXz6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbfF0Akd (ORCPT
+        id S1729339AbfF0Ak1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44436 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:40:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729343AbfF0Ak3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:40:29 -0400
+        id S1727232AbfF0Ak0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:40:26 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 158A621855;
-        Thu, 27 Jun 2019 00:40:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37C4D205ED;
+        Thu, 27 Jun 2019 00:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596027;
-        bh=+ZN2H1Rhb2nLG7GYH4zcFDSdXLZMZUmax+jn/se6dp4=;
+        s=default; t=1561596025;
+        bh=5RpzVDfEqU6N+flh0xCkhbrpD3LejRIpqDfYAkBGBtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F8rLymC1voCubgjjSe6GfohXY2pq6MoRFmkcv1KcxOVBlBPFM2dN6APiqQbxONx9Q
-         54vtcSik55G8+XtWptqAJYUz/R08UArVHs3X0kKiZUNHnC9IBTsbcVD0x0BP4bB9YA
-         cQI4dT7lAu4iFov604S4T15fMRE/xstdtzzFskcE=
+        b=nO+wiHwD/ic04qilL9hRp8TPRTSuHBZQJKmRpuJMGSNhe8A/SQomzeImzvT/sXBTp
+         9VPzqZUNrssoUGeKx5KOsfl16HhWdZojFz19X/V4xI0RudqJwLwFn3UlTfnc1tJr2S
+         uwLWPDrvgsMiAK9uaB25T+1ROtyK31C/k/2mNFQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Teresa Remmet <t.remmet@phytec.de>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 18/35] ARM: dts: am335x phytec boards: Fix cd-gpios active level
-Date:   Wed, 26 Jun 2019 20:39:06 -0400
-Message-Id: <20190627003925.21330-18-sashal@kernel.org>
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 17/35] ibmvnic: Refresh device multicast list after reset
+Date:   Wed, 26 Jun 2019 20:39:05 -0400
+Message-Id: <20190627003925.21330-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
 References: <20190627003925.21330-1-sashal@kernel.org>
@@ -60,47 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Teresa Remmet <t.remmet@phytec.de>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 8a0098c05a272c9a68f6885e09755755b612459c ]
+[ Upstream commit be32a24372cf162e825332da1a7ccef058d4f20b ]
 
-Active level of the mmc1 cd gpio needs to be low instead of high.
-Fix PCM-953 and phyBOARD-WEGA.
+It was observed that multicast packets were no longer received after
+a device reset.  The fix is to resend the current multicast list to
+the backing device after recovery.
 
-Signed-off-by: Teresa Remmet <t.remmet@phytec.de>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am335x-pcm-953.dtsi | 2 +-
- arch/arm/boot/dts/am335x-wega.dtsi    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am335x-pcm-953.dtsi b/arch/arm/boot/dts/am335x-pcm-953.dtsi
-index 1ec8e0d80191..572fbd254690 100644
---- a/arch/arm/boot/dts/am335x-pcm-953.dtsi
-+++ b/arch/arm/boot/dts/am335x-pcm-953.dtsi
-@@ -197,7 +197,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index c914b338691b..956fbb164e6f 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1489,6 +1489,9 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+ 		return 0;
+ 	}
  
-diff --git a/arch/arm/boot/dts/am335x-wega.dtsi b/arch/arm/boot/dts/am335x-wega.dtsi
-index 8ce541739b24..83e4fe595e37 100644
---- a/arch/arm/boot/dts/am335x-wega.dtsi
-+++ b/arch/arm/boot/dts/am335x-wega.dtsi
-@@ -157,7 +157,7 @@
- 	bus-width = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
++	/* refresh device's multicast list */
++	ibmvnic_set_multi(netdev);
++
+ 	/* kick napi */
+ 	for (i = 0; i < adapter->req_rx_queues; i++)
+ 		napi_schedule(&adapter->napi[i]);
 -- 
 2.20.1
 
