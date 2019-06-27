@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F708C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16184C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FF020815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4BF620815
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596298;
-	bh=Zi6biv8kg2/XHqxH7NsHVbWatWP396x7iSjC6Tjqg8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HeOjvdDMudg/5O9DccOBJdk/q2UzCPzL8NhPnaElVV1ZMv6FcGXOIuneN8CwAp3KN
-	 cO4HYGLhHpPcQzd0hpol22/FN1niJxT+POFLEES0u801iQ7eO+ciUb8oXHRI/08Qdo
-	 YYTcOlD8HpyYYaRtmX0OFzruvuq9HZ0GBEyl8kMU=
+	s=default; t=1561596312;
+	bh=dwqc2rFbSqG/hi4drS0Ek1cR6Me27uLedH4ij06eCdU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qfVbotqqRLo1t94yTE2FR1Tfd2dYhsRd/vPpRZ+5nWd3G+tIMqh5+7reHNWlhS0pK
+	 0GGgfRZauq8n4VDdIp9BsgCYtv+9qB3YnyhlP18e0EYbsBxawZ0Qz6Vl3HjbcmYPLx
+	 gXJvRLAOCOGkqH3BfL/DpGeaDmcdKvBP5SzlA4kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729503AbfF0Ao4 (ORCPT
+        id S1729509AbfF0Ald (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:41:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbfF0Alo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:41:44 -0400
+        id S1726984AbfF0Al3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:41:29 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 553A821855;
-        Thu, 27 Jun 2019 00:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 025A3205ED;
+        Thu, 27 Jun 2019 00:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596104;
-        bh=Zi6biv8kg2/XHqxH7NsHVbWatWP396x7iSjC6Tjqg8o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJKKHqp0NL66YX2pcso5Sc3DMN2SiH/RkolqIfNilmhhktckCmbO9TpU5Hk/U8RpM
-         OPyUgO6sXSGQUnhmOuqf40ch0vEA2DrGjZCpqhp5OGoQxtmfk8qI4bJYGfH20rzqlH
-         kG+3noXlcV80F3Cwl+UBR9ObSddcd9dRI8wJERgU=
+        s=default; t=1561596088;
+        bh=dwqc2rFbSqG/hi4drS0Ek1cR6Me27uLedH4ij06eCdU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XR3MhGxm4QrrOKH1PDm4o+5ZQWX7E5/Mdg540gH01hXrsDzzkOE0ihyFs9ZjwWHHx
+         Z7xWNyEXVzsFiMoyOX1q/R+yPI+zY5mmx5ZIDDmh3jiUdvANOd4bmXIfdviHN7ZB9J
+         1+mTmf6rrvdfVEvdB7SLi6w85zPIHTKuPj7ozGRQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, huangwen <huangwen@venustech.com.cn>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/21] mwifiex: Fix possible buffer overflows at parsing bss descriptor
-Date:   Wed, 26 Jun 2019 20:41:06 -0400
-Message-Id: <20190627004122.21671-6-sashal@kernel.org>
+Cc:     Aaron Ma <aaron.ma@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/21] Input: elantech - enable middle button support on 2 ThinkPads
+Date:   Wed, 26 Jun 2019 20:41:01 -0400
+Message-Id: <20190627004122.21671-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627004122.21671-1-sashal@kernel.org>
-References: <20190627004122.21671-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,49 +57,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Aaron Ma <aaron.ma@canonical.com>
 
-[ Upstream commit 13ec7f10b87f5fc04c4ccbd491c94c7980236a74 ]
+[ Upstream commit aa440de3058a3ef530851f9ef373fbb5f694dbc3 ]
 
-mwifiex_update_bss_desc_with_ie() calls memcpy() unconditionally in
-a couple places without checking the destination size.  Since the
-source is given from user-space, this may trigger a heap buffer
-overflow.
+Adding 2 new touchpad PNPIDs to enable middle button support.
 
-Fix it by putting the length check before performing memcpy().
-
-This fix addresses CVE-2019-3846.
-
-Reported-by: huangwen <huangwen@venustech.com.cn>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/scan.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/input/mouse/elantech.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index 78d59a67f7e1..674ad3405646 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1236,6 +1236,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 		}
- 		switch (element_id) {
- 		case WLAN_EID_SSID:
-+			if (element_len > IEEE80211_MAX_SSID_LEN)
-+				return -EINVAL;
- 			bss_entry->ssid.ssid_len = element_len;
- 			memcpy(bss_entry->ssid.ssid, (current_ptr + 2),
- 			       element_len);
-@@ -1245,6 +1247,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
+diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
+index 38edf8f5bf8a..15be3ee6cc50 100644
+--- a/drivers/input/mouse/elantech.c
++++ b/drivers/input/mouse/elantech.c
+@@ -1187,6 +1187,8 @@ static const char * const middle_button_pnp_ids[] = {
+ 	"LEN2132", /* ThinkPad P52 */
+ 	"LEN2133", /* ThinkPad P72 w/ NFC */
+ 	"LEN2134", /* ThinkPad P72 */
++	"LEN0407",
++	"LEN0408",
+ 	NULL
+ };
  
- 		case WLAN_EID_SUPP_RATES:
-+			if (element_len > MWIFIEX_SUPPORTED_RATES)
-+				return -EINVAL;
- 			memcpy(bss_entry->data_rates, current_ptr + 2,
- 			       element_len);
- 			memcpy(bss_entry->supported_rates, current_ptr + 2,
 -- 
 2.20.1
 
