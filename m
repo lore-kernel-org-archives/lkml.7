@@ -2,108 +2,164 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC6FC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23575C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ADF20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F400C2086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfF0MDz (ORCPT
+        id S1726930AbfF0ME3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 08:03:55 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:18162 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfF0MDw (ORCPT
+        Thu, 27 Jun 2019 08:04:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45366 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726882AbfF0ME3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 08:03:52 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="Codrin.Ciubotariu@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Codrin.Ciubotariu@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
-   d="scan'208";a="39140563"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jun 2019 05:03:52 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 27 Jun 2019 05:03:50 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Thu, 27 Jun 2019 05:03:47 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-CC:     <lars@metafoo.de>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <perex@perex.cz>, <tiwai@suse.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 2/2] ASoC: codecs: ad193x: Reset used registers at probe
-Date:   Thu, 27 Jun 2019 15:02:08 +0300
-Message-ID: <20190627120208.4661-2-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627120208.4661-1-codrin.ciubotariu@microchip.com>
-References: <20190627120208.4661-1-codrin.ciubotariu@microchip.com>
+        Thu, 27 Jun 2019 08:04:29 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RBwDPR072879
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 08:04:28 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tcubge0nx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 08:04:27 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 27 Jun 2019 13:04:25 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Jun 2019 13:04:23 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RC4L9026018156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 12:04:21 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 190C3A4066;
+        Thu, 27 Jun 2019 12:04:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA0B8A4067;
+        Thu, 27 Jun 2019 12:04:20 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.115])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 12:04:20 +0000 (GMT)
+Date:   Thu, 27 Jun 2019 14:04:19 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v9 4/4] s390: ap: kvm: Enable PQAP/AQIC facility for the
+ guest
+In-Reply-To: <69ca50bd-3f5c-98b1-3b39-04af75151baf@de.ibm.com>
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+        <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
+        <69ca50bd-3f5c-98b1-3b39-04af75151baf@de.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062712-0020-0000-0000-0000034DE34E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062712-0021-0000-0000-000021A15DED
+Message-Id: <20190627140419.1df5f519.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the ad193x codecs have no software reset, we have to reinitialize the
-registers after a hardware reset to assure no previous values are kept.
+On Tue, 25 Jun 2019 22:13:12 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- sound/soc/codecs/ad193x.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> 
+> 
+> On 21.05.19 17:34, Pierre Morel wrote:
+> > AP Queue Interruption Control (AQIC) facility gives
+> > the guest the possibility to control interruption for
+> > the Cryptographic Adjunct Processor queues.
+> > 
+> > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> > Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> > ---
+> >  arch/s390/tools/gen_facilities.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
+> > index 61ce5b5..aed14fc 100644
+> > --- a/arch/s390/tools/gen_facilities.c
+> > +++ b/arch/s390/tools/gen_facilities.c
+> > @@ -114,6 +114,7 @@ static struct facility_def facility_defs[] = {
+> >  		.bits = (int[]){
+> >  			12, /* AP Query Configuration Information */
+> >  			15, /* AP Facilities Test */
+> > +			65, /* AP Queue Interruption Control */
+> >  			156, /* etoken facility */
+> >  			-1  /* END */
+> >  		}
+> > 
+> 
+> I think we should only set stfle.65 if we have the aiv facility (Because we do not
+> have a GISA otherwise)
+> 
+> So something like this instead?
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 28ebd64..1501cd6 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2461,6 +2461,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>                 set_kvm_facility(kvm->arch.model.fac_list, 147);
+>         }
+>  
+> +       if (css_general_characteristics.aiv)
+> +               set_kvm_facility(kvm->arch.model.fac_mask, 65);
+> +       
+>         kvm->arch.model.cpuid = kvm_s390_get_initial_cpuid();
+>         kvm->arch.model.ibc = sclp.ibc & 0x0fff;
 
-diff --git a/sound/soc/codecs/ad193x.c b/sound/soc/codecs/ad193x.c
-index f944228f014e..80dab5df9633 100644
---- a/sound/soc/codecs/ad193x.c
-+++ b/sound/soc/codecs/ad193x.c
-@@ -425,12 +425,22 @@ static void ad193x_reg_default_init(struct ad193x_priv *ad193x)
- 		{  0, 0x99 },	/* PLL_CLK_CTRL0: pll input: mclki/xi 12.288Mhz */
- 		{  1, 0x04 },	/* PLL_CLK_CTRL1: no on-chip Vref */
- 		{  2, 0x40 },	/* DAC_CTRL0: TDM mode */
-+		{  3, 0x00 },	/* DAC_CTRL1: reset */
- 		{  4, 0x1A },	/* DAC_CTRL2: 48kHz de-emphasis, unmute dac */
- 		{  5, 0x00 },	/* DAC_CHNL_MUTE: unmute DAC channels */
-+		{  6, 0x00 },	/* DAC_L1_VOL: no attenuation */
-+		{  7, 0x00 },	/* DAC_R1_VOL: no attenuation */
-+		{  8, 0x00 },	/* DAC_L2_VOL: no attenuation */
-+		{  9, 0x00 },	/* DAC_R2_VOL: no attenuation */
-+		{ 10, 0x00 },	/* DAC_L3_VOL: no attenuation */
-+		{ 11, 0x00 },	/* DAC_R3_VOL: no attenuation */
-+		{ 12, 0x00 },	/* DAC_L4_VOL: no attenuation */
-+		{ 13, 0x00 },	/* DAC_R4_VOL: no attenuation */
- 	};
- 	const struct ad193x_reg_default reg_adc_init[] = {
- 		{ 14, 0x03 },	/* ADC_CTRL0: high-pass filter enable */
- 		{ 15, 0x43 },	/* ADC_CTRL1: sata delay=1, adc aux mode */
-+		{ 16, 0x00 },	/* ADC_CTRL2: reset */
- 	};
- 	int i;
+I will go with this option because it is more readable (easier to find)
+IMHO. Will also add a chech for host sltfle.65. So I end up with:
+
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 28ebd647784c..1c4113f0f2a8 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -2461,6 +2461,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+                set_kvm_facility(kvm->arch.model.fac_list, 147);
+        }
  
--- 
-2.20.1
++       if (css_general_characteristics.aiv && test_facility(65))
++               set_kvm_facility(kvm->arch.model.fac_mask, 65);
++
+        kvm->arch.model.cpuid = kvm_s390_get_initial_cpuid();
+        kvm->arch.model.ibc = sclp.ibc & 0x0fff;
+ 
+diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
+index d52f537b7169..cead9e0dcffb 100644
+--- a/arch/s390/tools/gen_facilities.c
++++ b/arch/s390/tools/gen_facilities.c
+@@ -111,7 +111,6 @@ static struct facility_def facility_defs[] = {
+                .bits = (int[]){
+                        12, /* AP Query Configuration Information */
+                        15, /* AP Facilities Test */
+-                       65, /* AP Queue Interruption Control */
+                        156, /* etoken facility */
+                        -1  /* END */
+
 
