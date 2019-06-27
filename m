@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307D3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77930C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0431321852
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F45C21871
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596087;
-	bh=+p/GKUJ0vIJ3/9b60kp1RMUYg6exC3/Pfeg8m+wUofw=;
+	s=default; t=1561596098;
+	bh=ot/6uJw/B4UWi3+CoLxc+GP6vTTK+Bxizzmegvr2GrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kI5LX1p5EJfkavGTXsNJx16azC/ZM/5DoSoVX6rm3kBF1a/lZsTwfdsZouCJEuikg
-	 8KFQ2jjMcUQcszLxV2wDFiCjQU/cAGZIIQDvfsLgCqtjVQn8kXzSr40B/rzj7Us5Bi
-	 1V9ggfYVGOGBlAuME7XPWkLheBGPyzh5/L016wJg=
+	b=0TeRSW8mheuF/srdWFXrhlVMigLxOQTh+pqrX8EQlYFbI7q1tmVn4kKKyQZ4f+Dhy
+	 GeJbhZ0rflQwl88folOV/TFzDvSqoaJbeuvyvh0X3RNEWk0WcqemmxI438nJG+O++4
+	 QS72vNEtdVjLoeuWUrHUIDq6mERQBAVmm8zkWzIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbfF0AlZ (ORCPT
+        id S1728868AbfF0Alf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45122 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:41:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbfF0AlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:41:18 -0400
+        id S1729083AbfF0Ald (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:41:33 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B706C205ED;
-        Thu, 27 Jun 2019 00:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3BAA21852;
+        Thu, 27 Jun 2019 00:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596077;
-        bh=+p/GKUJ0vIJ3/9b60kp1RMUYg6exC3/Pfeg8m+wUofw=;
+        s=default; t=1561596092;
+        bh=ot/6uJw/B4UWi3+CoLxc+GP6vTTK+Bxizzmegvr2GrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rqDNjGey5mWPtzz2EOQ1RxTQ5KZXkDzgp4GEjfXaMU1TzBCSp4n2n5gTHVil3VnG4
-         a6cfpMnNTYxm4AUWk0ivigA9b1jpZL2Y/65UrUEgiI1OJejjjpiDPakny1NOL7WqdY
-         imn8cKDocafpSGpJ/Dtnb3cr8xDIeWlmdpCmcNHM=
+        b=SrQAEM47pN/EZ/DYSyGGL44pZMzgeSARN0PuiMNkVNZstGXRV3PNk7Zm56CUOJoLu
+         mxADS84vUNvLDFWQ+4gSRPrIP919tzKSFipZykr2lv32Bp0Kb2KFAzerOVsFa7BOpF
+         sT7ztyFA1kSkhXMNlfLeSrbpjbIef0f9mQmjRAvo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 34/35] net: dsa: mv88e6xxx: fix shift of FID bits in mv88e6185_g1_vtu_loadpurge()
-Date:   Wed, 26 Jun 2019 20:39:22 -0400
-Message-Id: <20190627003925.21330-34-sashal@kernel.org>
+Cc:     Chang-Hsien Tsai <luke.tw@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 02/21] samples, bpf: fix to change the buffer size for read()
+Date:   Wed, 26 Jun 2019 20:41:02 -0400
+Message-Id: <20190627004122.21671-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
-References: <20190627003925.21330-1-sashal@kernel.org>
+In-Reply-To: <20190627004122.21671-1-sashal@kernel.org>
+References: <20190627004122.21671-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,34 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+From: Chang-Hsien Tsai <luke.tw@gmail.com>
 
-[ Upstream commit 48620e341659f6e4b978ec229f6944dabe6df709 ]
+[ Upstream commit f7c2d64bac1be2ff32f8e4f500c6e5429c1003e0 ]
 
-The comment is correct, but the code ends up moving the bits four
-places too far, into the VTUOp field.
+If the trace for read is larger than 4096, the return
+value sz will be 4096. This results in off-by-one error
+on buf:
 
-Fixes: 11ea809f1a74 (net: dsa: mv88e6xxx: support 256 databases)
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    static char buf[4096];
+    ssize_t sz;
+
+    sz = read(trace_fd, buf, sizeof(buf));
+    if (sz > 0) {
+        buf[sz] = 0;
+        puts(buf);
+    }
+
+Signed-off-by: Chang-Hsien Tsai <luke.tw@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/global1_vtu.c | 2 +-
+ samples/bpf/bpf_load.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/global1_vtu.c b/drivers/net/dsa/mv88e6xxx/global1_vtu.c
-index 8c8a0ec3d6e9..f260bd30c73a 100644
---- a/drivers/net/dsa/mv88e6xxx/global1_vtu.c
-+++ b/drivers/net/dsa/mv88e6xxx/global1_vtu.c
-@@ -416,7 +416,7 @@ int mv88e6185_g1_vtu_loadpurge(struct mv88e6xxx_chip *chip,
- 		 * VTU DBNum[7:4] are located in VTU Operation 11:8
- 		 */
- 		op |= entry->fid & 0x000f;
--		op |= (entry->fid & 0x00f0) << 8;
-+		op |= (entry->fid & 0x00f0) << 4;
- 	}
+diff --git a/samples/bpf/bpf_load.c b/samples/bpf/bpf_load.c
+index 97913e109b14..99e5a2f63e76 100644
+--- a/samples/bpf/bpf_load.c
++++ b/samples/bpf/bpf_load.c
+@@ -369,7 +369,7 @@ void read_trace_pipe(void)
+ 		static char buf[4096];
+ 		ssize_t sz;
  
- 	return mv88e6xxx_g1_vtu_op(chip, op);
+-		sz = read(trace_fd, buf, sizeof(buf));
++		sz = read(trace_fd, buf, sizeof(buf) - 1);
+ 		if (sz > 0) {
+ 			buf[sz] = 0;
+ 			puts(buf);
 -- 
 2.20.1
 
