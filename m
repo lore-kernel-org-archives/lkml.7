@@ -2,133 +2,107 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7528EC5B576
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5970C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE872086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF5720B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hZ6aUdZs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p+RXdIQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfF0XQq (ORCPT
+        id S1726694AbfF0XQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:16:46 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35553 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbfF0XQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:16:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45ZbPg2THBz9s4V;
-        Fri, 28 Jun 2019 09:16:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561677401;
-        bh=Q05Nw0HVE70a4aFv0eZt8fTUgrJWUZka4HLCio2Chwg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hZ6aUdZswkJ1qrdAxLYiDmROiI57O1ISMTO7RITbgoPJy9YfaAsaAYz0gXdFiOTuJ
-         sywRmB9gm/hNvf7WA5U3LZUCt6Ass/BVFEOf8r8kn41C5JwKXSj/jmjt+EYpWNndMF
-         hR5J6+lwb9GHV6FaPO2i1aXrZ6k/68lRMCLag63VGL/J78dW6bCqRa3ejijip08vBL
-         vyvGNRqtIDCwW73DKkKlXLi2E0Hk5UT6maES4QHVHgkCOP1S6/rylIjCK6fn3meDuy
-         C0DH12wyw3+CsFTxh/D8QCnVbfQiDBgSeUCvqUCEZxdd/gzW2BiqEdoMks51BWouYb
-         yrFs2/3+1cA/A==
-Date:   Fri, 28 Jun 2019 09:16:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Russell King <rmk@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: linux-next: manual merge of the samsung-krzk tree with the arm
- tree
-Message-ID: <20190628091634.12fdc79c@canb.auug.org.au>
-In-Reply-To: <20190621093347.36987c97@canb.auug.org.au>
-References: <20190621093347.36987c97@canb.auug.org.au>
+        Thu, 27 Jun 2019 19:16:51 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40196 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbfF0XQu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:16:50 -0400
+Received: by mail-io1-f68.google.com with SMTP id n5so8511009ioc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l09Vp/UFzjV2DgL5GelYaPoe+l0vquG8kvrDE5UvKZ4=;
+        b=p+RXdIQ9LdOUo9HMqEjolw7nVtxtU9esOCN/xbbHp1vRG8hYQOlh+KveY/OvRL2Dk7
+         /Sgzz0KeR4Q8yEuZM0OMJsjc+IHH6W0vlWIS3We0QKUMy4r+wXV5mzL2CMPPpLc7MU9E
+         nihwmXvu6kxkmZt0zF2OFHwzLYMt8EvlDQloKxfK9UTQjiLCOEDnBHLWTpVh4ebm7DTR
+         hDzQbz5nPxZ7KW9nhlq+/LEYTqO7mykeJsKaUKHQyCEvYsRyiOdQE8mlaeXkmO67/htL
+         TDe4QO4KlswqnZf5MQ5sqfIuXUvKtpXkOiBvmW4yjA4YOlbbldqAB3GGpBkkLZGRuWDY
+         Mefg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l09Vp/UFzjV2DgL5GelYaPoe+l0vquG8kvrDE5UvKZ4=;
+        b=l4GsmMvUAcq4XWQvG68TFXj5OrU3QaEWdcgKKprvTTaGtxFB3G1qQiQApaQt2ijNvu
+         pbziyRTGCaJ2v8ecdMKT/FwAM/xYOeyPhN1iygWU+ZS5tSGLIx1xGrLwe5p0H1QmsVD4
+         hEK4Wk/W7BZRDvG7FgboREo5scBah6jvdEhB0cLo/Dg0VV0WGFIGbcYxyqJxMv8tf5tt
+         RRJrNzGRqaC5NUw697HVgkhtC58c2SWEME0jwel/A5tmnmi6cli4fHlInT3DugpwMQLN
+         QHueKBdQNVZy93lKl4SByqV04grJLBbff1af7lS04OWQpja8Bt7+hghNKNmBt32di9Ee
+         6Mtw==
+X-Gm-Message-State: APjAAAWsc3p9J0ds7TPuJ5m5SQcIvSwDnEeeaYw0PO2kb6zj/pEIJDRh
+        1bUQhP75G5hKf84mw7lI91YAWrTqSnLSufEFP2tMgA==
+X-Google-Smtp-Source: APXvYqwhWpwuqv8JIHwubX3lZlHutL4a69xEX/nsI5R2vEJeO+7JbyaxQ07hwkqSiA02QGSjTt+drzLx9imS1tYMhQw=
+X-Received: by 2002:a02:ab99:: with SMTP id t25mr7575038jan.113.1561677408975;
+ Thu, 27 Jun 2019 16:16:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/OJPZYXv17hFl./GZ7eVF/Ea"; protocol="application/pgp-signature"
+References: <20190621011941.186255-1-matthewgarrett@google.com>
+ <20190621011941.186255-25-matthewgarrett@google.com> <CALCETrVUwQP7roLnW6kFG80Cc5U6X_T6AW+BTAftLccYGp8+Ow@mail.gmail.com>
+ <alpine.LRH.2.21.1906270621080.28132@namei.org> <6E53376F-01BB-4795-BC02-24F9CAE00001@amacapital.net>
+ <bce70c8b-9efd-6362-d536-cfbbcf70b0b7@tycho.nsa.gov> <alpine.LRH.2.21.1906280332500.17363@namei.org>
+ <de8b15eb-ba6c-847a-7435-42742203d4a5@tycho.nsa.gov>
+In-Reply-To: <de8b15eb-ba6c-847a-7435-42742203d4a5@tycho.nsa.gov>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Thu, 27 Jun 2019 16:16:36 -0700
+Message-ID: <CACdnJuuG8cR7h9v3pNcBKsxyckAzpKuBJs1GQxsz77jk5DRoQA@mail.gmail.com>
+Subject: Re: [PATCH V33 24/30] bpf: Restrict bpf when kernel lockdown is in
+ confidentiality mode
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     James Morris <jmorris@namei.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-security@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Chun-Yi Lee <jlee@suse.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/OJPZYXv17hFl./GZ7eVF/Ea
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 27, 2019 at 1:16 PM Stephen Smalley <sds@tycho.nsa.gov> wrote:
+> That would only allow the LSM to further lock down the system above the
+> lockdown level set at boot, not grant exemptions for specific
+> functionality/interfaces required by the user or by a specific
+> process/program. You'd have to boot with lockdown=none (or your
+> lockdown=custom suggestion) in order for the LSM to allow anything
+> covered by the integrity or confidentiality levels.  And then the kernel
+> would be unprotected prior to full initialization of the LSM, including
+> policy load.
+>
+> It seems like one would want to be able to boot with lockdown=integrity
+> to protect the kernel initially, then switch over to allowing the LSM to
+> selectively override it.
 
-Hi all,
-
-On Fri, 21 Jun 2019 09:33:47 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Today's linux-next merge of the samsung-krzk tree got a conflict in:
->=20
->   arch/arm/configs/exynos_defconfig
->=20
-> between commit:
->=20
->   5f41f9198f29 ("ARM: 8864/1: Add workaround for I-Cache line size mismat=
-ch between CPU cores")
->=20
-> from the arm tree and commit:
->=20
->   9f532d26c75c ("ARM: exynos_defconfig: Trim and reorganize with savedefc=
-onfig")
->=20
-> from the samsung-krzk tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> diff --cc arch/arm/configs/exynos_defconfig
-> index 9b959afaaa12,f140532ddca7..000000000000
-> --- a/arch/arm/configs/exynos_defconfig
-> +++ b/arch/arm/configs/exynos_defconfig
-> @@@ -4,12 -5,7 +5,8 @@@ CONFIG_PREEMPT=3D
->   CONFIG_CGROUPS=3Dy
->   CONFIG_BLK_DEV_INITRD=3Dy
->   CONFIG_PERF_EVENTS=3Dy
-> - CONFIG_MODULES=3Dy
-> - CONFIG_MODULE_UNLOAD=3Dy
-> - CONFIG_PARTITION_ADVANCED=3Dy
->   CONFIG_ARCH_EXYNOS=3Dy
-> - CONFIG_ARCH_EXYNOS3=3Dy
->  +CONFIG_CPU_ICACHE_MISMATCH_WORKAROUND=3Dy
->   CONFIG_SMP=3Dy
->   CONFIG_BIG_LITTLE=3Dy
->   CONFIG_NR_CPUS=3D8
-
-This is now a conflict between the arm-soc tree and the arm tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/OJPZYXv17hFl./GZ7eVF/Ea
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0VTlIACgkQAVBC80lX
-0Gzb8AgAkr/zl+SHq23CQEifsWT7dCMUdarzVZNqwDzNzAK7Ml+qgj7cpDMQTOg/
-VPJmPuk6shOgrW+gUg13OxdYguPjebJy/zpbzcQFbLIClLgQtJL7jtXc3aNDWChP
-UIzDsK8u1L5qAm+yyQpcI/WCU60Vwjf1DL34ZQF5mde+VgbhnTQMyT9l7MwFBlJ+
-sLsd0mOUjawtucfB7YFRyJI24YDgjR2wPFP/GlBqVnV+4ykij674fuhMf+o2gxA+
-Id+/LskwXenuHwAY0QWuv+6FJ3vVUFPlK9+60KSA1qYjV+799cHJwk1lc7em0rLI
-SKcwXFYSP6sLaqxHJQHLDMIJcn72hA==
-=WKW+
------END PGP SIGNATURE-----
-
---Sig_/OJPZYXv17hFl./GZ7eVF/Ea--
+One option would be to allow modules to be "unstacked" at runtime, but
+there's still something of a problem here - how do you ensure that
+your userland can be trusted to load a new policy before it does so?
+If you're able to assert that your early userland is trustworthy
+(perhaps because it's in an initramfs that's part of your signed boot
+payload), there's maybe an argument that most of the lockdown
+integrity guarantees are unnecessary before handoff - just using the
+lockdown LSM to protect against attacks via kernel parameters would be
+sufficient.
