@@ -2,179 +2,74 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA85EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91919C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9BE52064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3B42064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfF0IRH (ORCPT
+        id S1726561AbfF0IRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:17:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:46096 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfF0IRG (ORCPT
+        Thu, 27 Jun 2019 04:17:49 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33378 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfF0IRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:17:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id s83so1737013iod.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 01:17:06 -0700 (PDT)
+        Thu, 27 Jun 2019 04:17:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so6464556wme.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 01:17:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VuXIC8tjNDuCVmmGPrtEeKuF98440ya/Wk/74x0ugyM=;
-        b=h/03yfLaNYJVJP+APmKN4cjnsB5nDtaUJcACQY31ejE0ApQALXB3Xseh5HsB5Pht00
-         rwFSwRLaRTwHDtVHGtWTO29MdAUnbMGZBH2NYfjVA8ICaFWOakvNC8JaX4AYsPz9eCb5
-         01wvIQcd+CeVCH+TYh2h7VQqY+lG3cf8eNS4k5MnRwCHR4C6ibNm7ynXlWt6MhRQeyT1
-         6mlCagbrmLyPNkJvy1P6wHeh5vEBvPuSyQwThskX4LHqFgrYpNjh9k8EWh8jfrv0Yc3h
-         yGA4BbuQT4xzues688o+IggHkxaktpeQuMdR7poyo0OoFILvsKvXXqJrw+tYT7vSOTjY
-         3N3A==
-X-Gm-Message-State: APjAAAXyc0Z+omV2lhycmM7VGDt3Jf13mzOuGAmsVuUdaIpvlEzj3Pse
-        tvWvLBXi4LTuzVfCWMH6whIIlh6UD1CGj0UG646WLiWB2Qou
-X-Google-Smtp-Source: APXvYqx1Pnmkl1otcLTMDrcx9gDvgdezl75gB6MoowgjWuCpY3TtRKtWiSHU4FhMMavN0tc5QkXsbxyzt6mtm/C9Vs1dphnc0qJR
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RmjFFyBvDQn6Xfu0Q/BuVkvS+UCn+TuhSSD5OUjhRJI=;
+        b=Q8OvIxCAwdZ5y28z+ncxJt5db2YlH98XF81P/+iAgocHHOf3nnQ7VwS/BEBB+Qq8cB
+         1B+gkH7wgEuSUzPyW3zBm98fTFYNh58h8z741CgAOL1J0unIQanI/bwbDvUCKYRdj4wh
+         Dl/x4ECK4SIJodD/cs2VemCONdfRrm5581Z0MULBbCaSQyq3aFlMjSCotg4TWhEt0egW
+         otsDPd/4PWnmxXxbNl0fDO/QsHAUaJCTkr47Hymatk/PYNoINDnaInT3PfiX6omCdLbm
+         jlMUoe+NT8EMiGq8ld3I7eU8n5l0DI20hIQjmDp035NZDiTo6Bvu7+GfyRPrFYkMJfqC
+         3CTA==
+X-Gm-Message-State: APjAAAXO0Lx3fq1pFPckMwj6OAYfPRj4h+M8L7s6VzeUonrOscSAF8VC
+        7fPzs/mKIgAYr7C7JfQ4fefF3A==
+X-Google-Smtp-Source: APXvYqz3R18OS3WEjLZ+sqKqP/ULCckrvtGOJ16Yd4BZO4NaYsCWsUcLjTip7leqUVtkXS2VltM4KA==
+X-Received: by 2002:a7b:c3d5:: with SMTP id t21mr2010355wmj.87.1561623466915;
+        Thu, 27 Jun 2019 01:17:46 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:41bc:c7e6:75c9:c69f? ([2001:b07:6468:f312:41bc:c7e6:75c9:c69f])
+        by smtp.gmail.com with ESMTPSA id i25sm1753308wrc.91.2019.06.27.01.17.45
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 01:17:46 -0700 (PDT)
+Subject: Re: [PATCH 0/2] scsi: add support for request batching
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jejb@linux.ibm.com, linux-scsi@vger.kernel.org, stefanha@redhat.com
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+ <746ad64a-4047-1597-a0d4-f14f3529cc19@redhat.com>
+ <yq1lfxnk8ar.fsf@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <48c7d581-6ec8-260a-b4ba-217aef516305@redhat.com>
+Date:   Thu, 27 Jun 2019 10:17:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-Received: by 2002:a02:16c5:: with SMTP id a188mr3184472jaa.86.1561623425654;
- Thu, 27 Jun 2019 01:17:05 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 01:17:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008f288c058c49c986@google.com>
-Subject: memory leak in ip_mc_add_src (2)
-From:   syzbot <syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <yq1lfxnk8ar.fsf@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 27/06/19 05:37, Martin K. Petersen wrote:
+>> Ping?  Are there any more objections?
+> It's a core change so we'll need some more reviews. I suggest you
+> resubmit.
 
-syzbot found the following crash on:
+Resubmit exactly the same patches?
 
-HEAD commit:    249155c2 Merge branch 'parisc-5.2-4' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=122594ada00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1db8bd6825f9661c
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ca1abd0db68b5173a4f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15dc46eea00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ee5aada00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6ca1abd0db68b5173a4f@syzkaller.appspotmail.com
-
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88811450f140 (size 64):
-   comm "softirq", pid 0, jiffies 4294942448 (age 32.070s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000c7bad083>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
-     [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
-     [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
-     [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
-     [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
-     [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930  
-net/ipv4/ip_sockglue.c:959
-     [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
-     [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
-     [<000000009383a786>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3126
-     [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
-     [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
-     [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
-     [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
-     [<00000000420d395e>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88810ec5ab40 (size 64):
-   comm "softirq", pid 0, jiffies 4294943651 (age 20.040s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000c7bad083>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
-     [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
-     [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
-     [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
-     [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
-     [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930  
-net/ipv4/ip_sockglue.c:959
-     [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
-     [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
-     [<000000009383a786>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3126
-     [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
-     [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
-     [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
-     [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
-     [<00000000420d395e>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff888112a6e080 (size 64):
-   comm "softirq", pid 0, jiffies 4294944252 (age 14.030s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 ff ff ff ff 00 00 00 00  ................
-     00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<00000000c7bad083>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<00000000c7bad083>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<00000000c7bad083>] slab_alloc mm/slab.c:3326 [inline]
-     [<00000000c7bad083>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<000000009acc4151>] kmalloc include/linux/slab.h:547 [inline]
-     [<000000009acc4151>] kzalloc include/linux/slab.h:742 [inline]
-     [<000000009acc4151>] ip_mc_add1_src net/ipv4/igmp.c:1976 [inline]
-     [<000000009acc4151>] ip_mc_add_src+0x36b/0x400 net/ipv4/igmp.c:2100
-     [<000000004ac14566>] ip_mc_msfilter+0x22d/0x310 net/ipv4/igmp.c:2484
-     [<0000000052d8f995>] do_ip_setsockopt.isra.0+0x1795/0x1930  
-net/ipv4/ip_sockglue.c:959
-     [<000000004ee1e21f>] ip_setsockopt+0x3b/0xb0 net/ipv4/ip_sockglue.c:1248
-     [<0000000066cdfe74>] udp_setsockopt+0x4e/0x90 net/ipv4/udp.c:2618
-     [<000000009383a786>] sock_common_setsockopt+0x38/0x50  
-net/core/sock.c:3126
-     [<00000000d8ac0c94>] __sys_setsockopt+0x98/0x120 net/socket.c:2072
-     [<000000001b1e9666>] __do_sys_setsockopt net/socket.c:2083 [inline]
-     [<000000001b1e9666>] __se_sys_setsockopt net/socket.c:2080 [inline]
-     [<000000001b1e9666>] __x64_sys_setsockopt+0x26/0x30 net/socket.c:2080
-     [<00000000420d395e>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<000000007fd83a4b>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Paolo
