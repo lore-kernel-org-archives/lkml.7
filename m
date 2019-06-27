@@ -2,316 +2,113 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA041C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA3DC4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989F92063F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B822063F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:32:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MvgBepWi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="APnj14df"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfF0Waz (ORCPT
+        id S1726748AbfF0Wcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:30:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41782 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF0Waz (ORCPT
+        Thu, 27 Jun 2019 18:32:50 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42884 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfF0Wcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:30:55 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RMUYwf007799;
-        Thu, 27 Jun 2019 22:30:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=CXr3iKkSmSQSIcXuq9VIyjsTo6qK3758OvE/A9ICWUc=;
- b=MvgBepWika6C9lF7+24nwJWkhsnm6Z0N+oSpolFKYLudD3i+jJFaKrKcugAC42pHbFrl
- YRylsPVdD0AjWlymBxwgQfmphzfVa1V5GgAJNn9u4b3+ngddBiA1yWC1K6aSEF7fzNyf
- YOppxBS3CcslUB6p8QACsZI/iRLxlW/WM+ouJj0QefyhtOGJ+0H9DBBEVOkiE0I2poGc
- bBTxzOpZWNHXm3YoMbjojUEtilPRsmG3vdBMYnlMKTw11nDNwawgOvOqT0x9wHwrfStC
- qSY3OP20fTeZ6ecyFQhy+HBBZXDPqSEVgdpFqiV29GA/0zH9cXBjFZkwPE9L9lHQtj5t pw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t9brtjrkp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 22:30:33 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5RMTo7l007786;
-        Thu, 27 Jun 2019 22:30:32 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2t9acdgmjt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 22:30:32 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5RMUUi9013338;
-        Thu, 27 Jun 2019 22:30:30 GMT
-Received: from localhost (/10.145.179.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 15:30:30 -0700
-Date:   Thu, 27 Jun 2019 15:30:30 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/13] xfs: remove XFS_TRANS_NOFS
-Message-ID: <20190627223030.GS5171@magnolia>
-References: <20190627104836.25446-1-hch@lst.de>
- <20190627104836.25446-7-hch@lst.de>
+        Thu, 27 Jun 2019 18:32:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ay6so2031025plb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IhP7OCM25XXvVoqn42DaxOsI4TszTgSwcMwliaWKfKU=;
+        b=APnj14df+CUg5mOEsoFJjH7YBNebYWhtkQjolLJgYPARmsWJQImqMpyxDo8U2saVad
+         Ot+T60wL7vukQ2mTuVDLfeK+PAtXkQ5z70JhplcMeNdhqbHS7MzK9GbLPf8uZIN+s+iU
+         Mw5Vi5zl9rWOLviihNFfDmQervkxHqbOtE6F/jEFk3QrR7nEJQgti7gB+2egkK5Lg2bP
+         yfvTEhzhGPHsb+HO9RZ0gudIUHJL5R5z5b4qCIc1dJ0SbbwKmw918vZsuQ0Jg9JCzTtc
+         S1t/jcjDk/mJbKmEiJi5o0ZDhgx+zWgEpe+lpe4686gCe12wvwmY3j+kceVdjwkxr8f0
+         BvJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IhP7OCM25XXvVoqn42DaxOsI4TszTgSwcMwliaWKfKU=;
+        b=X5oq40UCMy+4uGLaQLqUTWlquYOEMLaX3EJGnQf/cx/zoq5okf8wB3X3XSCRCvd1FE
+         i7pcoHaRNcRuJnOWfIJe4wj0fvEoViC63ALToMGrcUeX5dYCmoMHdedEcuKbUfw4q/jd
+         VSoOBMDUrKO2366UIxSvR5XfdY8IIO/kxOWeR+VGdZ14q4vWDYBHaiMTOiGjf02E6Mlr
+         IRcPjKltedBZo65+ZcdCbHCKlhjPv8YwXyL4N9x/n4pQY+5u1z0JrBerZhT6qC8hOJ9v
+         8fE/wsKn5NZkGHn7ZsYeAxjooDgbQDrhBQB8Mu9GeXP8STT3zy+Ncvqw93WHnWruiDvw
+         bPkw==
+X-Gm-Message-State: APjAAAVpefyTcRH/xZovuoK/OAdz2SKWUCPQ4cuBdacJ4wTO61n4SOH8
+        mhmXVlIdhjkMxFY1Risv2RYX2yKhyf701KbZMr0MIA==
+X-Google-Smtp-Source: APXvYqzy9jb/It/pkCG4p03Ml+J2Pe8uvS0xgOJ5bJFDSuWv5BAe2P4TqaToD+bMcK566LHPLHIuAYf3Iz61pFm3gpk=
+X-Received: by 2002:a17:902:9f93:: with SMTP id g19mr7307719plq.223.1561674769064;
+ Thu, 27 Jun 2019 15:32:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190627104836.25446-7-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270259
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9301 signatures=668688
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270260
+References: <20190627222220.89175-1-nhuck@google.com>
+In-Reply-To: <20190627222220.89175-1-nhuck@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 27 Jun 2019 15:32:38 -0700
+Message-ID: <CAKwvOd=RhoKvXzuGVe0PaQik8NEFhDkxuwv-T_s6KAtXCDVVvg@mail.gmail.com>
+Subject: Re: [PATCH] clk: rockchip: Fix -Wunused-const-variable
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, heiko@sntech.de,
+        andy.yan@rock-chips.com, zhangqing@rock-chips.com,
+        linux-clk@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-rockchip@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 12:48:29PM +0200, Christoph Hellwig wrote:
-> Instead of a magic flag for xfs_trans_alloc, just ensure all callers
-> that can't relclaim through the file system use memalloc_nofs_save to
-> set the per-task nofs flag.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/libxfs/xfs_shared.h |  1 -
->  fs/xfs/xfs_aops.c          | 35 ++++++++++++++++++++++-------------
->  fs/xfs/xfs_file.c          | 12 +++++++++---
->  fs/xfs/xfs_iomap.c         |  2 +-
->  fs/xfs/xfs_reflink.c       |  4 ++--
->  fs/xfs/xfs_trans.c         |  4 +---
->  6 files changed, 35 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-> index b9094709bc79..c45acbd3add9 100644
-> --- a/fs/xfs/libxfs/xfs_shared.h
-> +++ b/fs/xfs/libxfs/xfs_shared.h
-> @@ -65,7 +65,6 @@ void	xfs_log_get_max_trans_res(struct xfs_mount *mp,
->  #define XFS_TRANS_DQ_DIRTY	0x10	/* at least one dquot in trx dirty */
->  #define XFS_TRANS_RESERVE	0x20    /* OK to use reserved data blocks */
->  #define XFS_TRANS_NO_WRITECOUNT 0x40	/* do not elevate SB writecount */
-> -#define XFS_TRANS_NOFS		0x80	/* pass KM_NOFS to kmem_alloc */
->  /*
->   * LOWMODE is used by the allocator to activate the lowspace algorithm - when
->   * free space is running low the extent allocator may choose to allocate an
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 243548b9d0cc..8b3070a40245 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -138,8 +138,7 @@ xfs_setfilesize_trans_alloc(
->  	struct xfs_trans	*tp;
->  	int			error;
->  
-> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0,
-> -				XFS_TRANS_NOFS, &tp);
-> +	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
->  	if (error)
->  		return error;
->  
-> @@ -240,8 +239,16 @@ xfs_end_ioend(
->  	struct xfs_inode	*ip = XFS_I(ioend->io_inode);
->  	xfs_off_t		offset = ioend->io_offset;
->  	size_t			size = ioend->io_size;
-> +	unsigned int		nofs_flag;
->  	int			error;
->  
-> +	/*
-> +	 * We can do memory allocation here, but aren't in transactional
-> +	 * context.  To avoid memory allocation deadlocks set the task-wide
-> +	 * nofs context for the following operations.
+On Thu, Jun 27, 2019 at 3:22 PM 'Nathan Huckleberry' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> Clang produces the following warning
+>
+> drivers/clk/rockchip/clk-rv1108.c:125:7: warning: unused variable
+> 'mux_pll_src_3plls_p' [-Wunused-const-variable]
+> PNAME(mux_pll_src_3plls_p)      = { "apll", "gpll", "dpll" };
+>
+> Looks like this variable was never used. Deleting it to remove the
+> warning.
 
-I think the wording of this is too indirect.  The reason we need to set
-NOFS is because we could be doing writeback as part of reclaiming
-memory, which means that we cannot recurse back into filesystems to
-satisfy the memory allocation needed to create a transaction.  The NOFS
-part applies to any memory allocation, of course.
+Indeed, looks like it was dead when introduced in:
+commit e44dde279492 ("clk: rockchip: add clock controller for rk1108")
 
-If you're fine with the wording below I'll just edit that into the
-patch:
+I don't see a pattern between when mux_pll_src_4plls_p vs
+mux_pll_src_2plls_p is used, so it's not clear where or even if
+mux_pll_src_3plls_p should be used.  Given that there hasn't been a
+response to your original question
+(https://groups.google.com/forum/#!topic/clang-built-linux/NqJT9OPH5C8)
+and this patch is no functional change as the variable is already
+dead, I don't think it will hurt to remove it.  It should also boost
+the signal to noise ratio of this warning.
 
-	/*
-	 * We can allocate memory here while doing writeback on behalf of
-	 * memory reclaim.  To avoid memory allocation deadlocks set the
-	 * task-wide nofs context for the following operations.
-	 */
-	nofs_flag = memalloc_nofs_save();
+Thanks for looking into it, and the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> +	 */
-> +	nofs_flag = memalloc_nofs_save();
-> +
->  	/*
->  	 * Just clean up the in-memory strutures if the fs has been shut down.
->  	 */
-> @@ -282,6 +289,8 @@ xfs_end_ioend(
->  		list_del_init(&ioend->io_list);
->  		xfs_destroy_ioend(ioend, error);
->  	}
-> +
-> +	memalloc_nofs_restore(nofs_flag);
->  }
->  
->  /*
-> @@ -641,21 +650,19 @@ xfs_submit_ioend(
->  	struct xfs_ioend	*ioend,
->  	int			status)
->  {
-> +	unsigned int		nofs_flag;
-> +
-> +	/*
-> +	 * We can do memory allocation here, but aren't in transactional
-> +	 * context.  To avoid memory allocation deadlocks set the task-wide
-> +	 * nofs context for the following operations.
-> +	 */
-> +	nofs_flag = memalloc_nofs_save();
-> +
->  	/* Convert CoW extents to regular */
->  	if (!status && ioend->io_fork == XFS_COW_FORK) {
-> -		/*
-> -		 * Yuk. This can do memory allocation, but is not a
-> -		 * transactional operation so everything is done in GFP_KERNEL
-> -		 * context. That can deadlock, because we hold pages in
-> -		 * writeback state and GFP_KERNEL allocations can block on them.
-> -		 * Hence we must operate in nofs conditions here.
-> -		 */
-> -		unsigned nofs_flag;
-> -
-> -		nofs_flag = memalloc_nofs_save();
->  		status = xfs_reflink_convert_cow(XFS_I(ioend->io_inode),
->  				ioend->io_offset, ioend->io_size);
-> -		memalloc_nofs_restore(nofs_flag);
->  	}
->  
->  	/* Reserve log space if we might write beyond the on-disk inode size. */
-> @@ -666,6 +673,8 @@ xfs_submit_ioend(
->  	    !ioend->io_append_trans)
->  		status = xfs_setfilesize_trans_alloc(ioend);
->  
-> +	memalloc_nofs_restore(nofs_flag);
-> +
->  	ioend->io_bio->bi_private = ioend;
->  	ioend->io_bio->bi_end_io = xfs_end_bio;
->  
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 916a35cae5e9..f2d806ef8f06 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -379,6 +379,7 @@ xfs_dio_write_end_io(
->  	struct inode		*inode = file_inode(iocb->ki_filp);
->  	struct xfs_inode	*ip = XFS_I(inode);
->  	loff_t			offset = iocb->ki_pos;
-> +	unsigned int		nofs_flag;
->  	int			error = 0;
->  
->  	trace_xfs_end_io_direct_write(ip, offset, size);
-> @@ -395,10 +396,11 @@ xfs_dio_write_end_io(
->  	 */
->  	XFS_STATS_ADD(ip->i_mount, xs_write_bytes, size);
->  
-> +	nofs_flag = memalloc_nofs_save();
+> diff --git a/drivers/clk/rockchip/clk-rv1108.c b/drivers/clk/rockchip/clk-rv1108.c
+> index 96cc6af5632c..5947d3192866 100644
+> --- a/drivers/clk/rockchip/clk-rv1108.c
+> +++ b/drivers/clk/rockchip/clk-rv1108.c
+> @@ -122,7 +122,6 @@ PNAME(mux_usb480m_pre_p)    = { "usbphy", "xin24m" };
+>  PNAME(mux_hdmiphy_phy_p)       = { "hdmiphy", "xin24m" };
+>  PNAME(mux_dclk_hdmiphy_pre_p)  = { "dclk_hdmiphy_src_gpll", "dclk_hdmiphy_src_dpll" };
+>  PNAME(mux_pll_src_4plls_p)     = { "dpll", "gpll", "hdmiphy", "usb480m" };
+> -PNAME(mux_pll_src_3plls_p)     = { "apll", "gpll", "dpll" };
 
-Hmm, do we need this here?  I can't remember if there was a need for
-setting NOFS under xfs_reflink_end_cow from a dio completion or if that
-was purely the buffered writeback case...
-
---D
-
->  	if (flags & IOMAP_DIO_COW) {
->  		error = xfs_reflink_end_cow(ip, offset, size);
->  		if (error)
-> -			return error;
-> +			goto out;
->  	}
->  
->  	/*
-> @@ -407,8 +409,10 @@ xfs_dio_write_end_io(
->  	 * earlier allows a racing dio read to find unwritten extents before
->  	 * they are converted.
->  	 */
-> -	if (flags & IOMAP_DIO_UNWRITTEN)
-> -		return xfs_iomap_write_unwritten(ip, offset, size, true);
-> +	if (flags & IOMAP_DIO_UNWRITTEN) {
-> +		error = xfs_iomap_write_unwritten(ip, offset, size, true);
-> +		goto out;
-> +	}
->  
->  	/*
->  	 * We need to update the in-core inode size here so that we don't end up
-> @@ -430,6 +434,8 @@ xfs_dio_write_end_io(
->  		spin_unlock(&ip->i_flags_lock);
->  	}
->  
-> +out:
-> +	memalloc_nofs_restore(nofs_flag);
->  	return error;
->  }
->  
-> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> index 6b29452bfba0..461ea023b910 100644
-> --- a/fs/xfs/xfs_iomap.c
-> +++ b/fs/xfs/xfs_iomap.c
-> @@ -782,7 +782,7 @@ xfs_iomap_write_unwritten(
->  		 * complete here and might deadlock on the iolock.
->  		 */
->  		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
-> -				XFS_TRANS_RESERVE | XFS_TRANS_NOFS, &tp);
-> +				XFS_TRANS_RESERVE, &tp);
->  		if (error)
->  			return error;
->  
-> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-> index 680ae7662a78..0b23c2b29609 100644
-> --- a/fs/xfs/xfs_reflink.c
-> +++ b/fs/xfs/xfs_reflink.c
-> @@ -572,7 +572,7 @@ xfs_reflink_cancel_cow_range(
->  
->  	/* Start a rolling transaction to remove the mappings */
->  	error = xfs_trans_alloc(ip->i_mount, &M_RES(ip->i_mount)->tr_write,
-> -			0, 0, XFS_TRANS_NOFS, &tp);
-> +			0, 0, 0, &tp);
->  	if (error)
->  		goto out;
->  
-> @@ -631,7 +631,7 @@ xfs_reflink_end_cow_extent(
->  
->  	resblks = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
->  	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
-> -			XFS_TRANS_RESERVE | XFS_TRANS_NOFS, &tp);
-> +			XFS_TRANS_RESERVE, &tp);
->  	if (error)
->  		return error;
->  
-> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-> index b026f87608ce..2ad3faa12206 100644
-> --- a/fs/xfs/xfs_trans.c
-> +++ b/fs/xfs/xfs_trans.c
-> @@ -264,9 +264,7 @@ xfs_trans_alloc(
->  	 * GFP_NOFS allocation context so that we avoid lockdep false positives
->  	 * by doing GFP_KERNEL allocations inside sb_start_intwrite().
->  	 */
-> -	tp = kmem_zone_zalloc(xfs_trans_zone,
-> -		(flags & XFS_TRANS_NOFS) ? KM_NOFS : KM_SLEEP);
-> -
-> +	tp = kmem_zone_zalloc(xfs_trans_zone, KM_SLEEP);
->  	if (!(flags & XFS_TRANS_NO_WRITECOUNT))
->  		sb_start_intwrite(mp->m_super);
->  
-> -- 
-> 2.20.1
-> 
+Thanks,
+~Nick Desaulniers
