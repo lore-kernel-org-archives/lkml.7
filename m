@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7607FC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEA3C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450AA2086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D208120B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:45:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbEbfsVy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgJp0l9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbfF0RpI (ORCPT
+        id S1727301AbfF0RpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:45:08 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39100 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfF0RpG (ORCPT
+        Thu, 27 Jun 2019 13:45:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43377 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbfF0RpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:45:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j2so1590227pfe.6;
-        Thu, 27 Jun 2019 10:45:05 -0700 (PDT)
+        Thu, 27 Jun 2019 13:45:15 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so1579412pfg.10;
+        Thu, 27 Jun 2019 10:45:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=E5PSrIdH38k8HkYvx/lRZBmcEXNwInSCli6rz8zupUE=;
-        b=HbEbfsVy0dhIgQtumWKMqbE4ZugwZflXn90XqBlldJgqsvF2KVfAernoa0tkvrKL96
-         ijj4XcJQ52DVmnp/dVJ9eCA+lpNxmoKpvHf393j0bZamonbt3nEl5vXbRTkRj9PjWslu
-         ua2S6MvqpmZNsiEG6oCkT3mpN+6lfsc/rkeFFFXbAD1SI67/ExA7DH/xkufio7p0E1N/
-         7AAIYX4B6qkfa+u0jJ2/HnXqy5Rhy92o7qRdw5bF6aNZGPQTgmkAvTwmLDuyK+rlal20
-         kLI+TalyoZppV+dXA4t7K8NgN+dQe+NJ2nfMQYTxZIXBUBlHKowJzTylvREPtDUCJqLM
-         EddQ==
+        bh=Az20ntNgOiNfE75TLIeOz+3xo6iXHd7mcZEjc88o7WM=;
+        b=rgJp0l9R/1IGDTNpD1iIEL3CbrCaoRTb5rAvLPTABF1tfUO/2GDz5E+UafnsvI/64I
+         KAw1+4bIzVJLUG9HzSdxC1/9OEE3cJQQGduZy/FkQFHgO1V+SzaUDbO6Z5Yv823aLVEl
+         Lp929nbuyGf5RWJai+luwBoS+OUF4aoMRPfLy6VlgeiffPD9xwWWZaLZZd0if5GHFKx/
+         linRSeB7LgKWAqacJ8nGoqCsU4nwAUwL33qansQaNSqcABJr9m88/fsMbtgvb+09lPms
+         BT0wicM3hM+DUspfjFs2SWn1UiaLUuaIaFQTp43tQtjr/fFwNzKf9HHQJznDIClSz6Ik
+         QLnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=E5PSrIdH38k8HkYvx/lRZBmcEXNwInSCli6rz8zupUE=;
-        b=qZmPqGHD3btlSzIvco4fXpYxw90BfLigBLpUrIeD8nwuu2aasOOZGlJx4UlVc19a4k
-         +Bd8aCTiHMpyuSecGX/nPROeRgob84qmdix7P4AWiJ01o/4ArRr9YfvHqn/lFI3nLiDJ
-         aVEDyFovlxa9TbtG5kqiRJxVEf0dCzCcCP9TBz2kqADN8WhYWA5gCpL3QR0AlbHtgJ3j
-         ikScnMLxUUaFXESeu0nzzCXlGxGdL5RiKqTsnb+vTur7OsJVGjWsFdJn3tN7MsccDV5n
-         4+19Fi9Klv9hMXVf6gGQkR6BRFd5BUksAQ5Wa3hUNhU/wjWnbf8r56xa/dsmG3tTKRKF
-         ZUHg==
-X-Gm-Message-State: APjAAAXZgUFnY9Gkzl7QJ2M0tAX4+56ISwfffa7p5AmFnF5C1StqhvFM
-        /8S1/IB4kNLik7ixVAkKf88=
-X-Google-Smtp-Source: APXvYqzN2H+1WkLNaaA/8AhAzVTwkUlYuHGOSlbQmer3dOb4yxYQnynt/Vx6eU5ezCfzwfZyRdVoXQ==
-X-Received: by 2002:a65:498f:: with SMTP id r15mr5023618pgs.37.1561657505388;
-        Thu, 27 Jun 2019 10:45:05 -0700 (PDT)
+        bh=Az20ntNgOiNfE75TLIeOz+3xo6iXHd7mcZEjc88o7WM=;
+        b=qGQGm4GZ3mTZXkF5+ywoDtm1+kpsMILQ5It1A20Q55Kgyxn2V/UqhavIox1n0HdfbL
+         EdTsrHSlyIpaUhex/44NovUhM1VKG6kM/I5uWO9Ebm5PgxcdSqF0hBACkTp9DbyiCu1c
+         CwKQEVcUT5/XIGbtKPPw0zl5gFR6XHXVZfp5POY1KkrUbWEvQbQJX9yTife0bH5dcriy
+         /vtYE9RWGS9p8MOqvUoK4eAH+VHFzoi/ImijrV1IMnAYQudha/rHAQbS0hqGEKXenZlJ
+         liFYKqYjvBzC8xv44Qtlez1SEuv3krln10De23dzTNuIupIq2dUEIU9WjUzNtW5HnysZ
+         t2SA==
+X-Gm-Message-State: APjAAAUCG279hk5UGrfzwSsCI4aKMJLsSg42XWof7Sl7Gts42Luq1QMK
+        w4ESEwgU+TbxOTIl/9OwM3w=
+X-Google-Smtp-Source: APXvYqwWBHozb7Z4b0OqpDej8q3pFQfqKIYxsvHl5L16ci4Aot2GeuALHwIW1AiLxcKCMZ7ThIiMXw==
+X-Received: by 2002:a17:90a:8c18:: with SMTP id a24mr7231560pjo.111.1561657515034;
+        Thu, 27 Jun 2019 10:45:15 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id h6sm6879656pjs.2.2019.06.27.10.45.03
+        by smtp.googlemail.com with ESMTPSA id z20sm7877761pfk.72.2019.06.27.10.45.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:45:05 -0700 (PDT)
+        Thu, 27 Jun 2019 10:45:14 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 63/87] scsi: ips.c: remove memset after dma_alloc_coherent
-Date:   Fri, 28 Jun 2019 01:44:57 +0800
-Message-Id: <20190627174458.5730-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 64/87] scsi: esas2r: remove memset after dma_alloc_coherent
+Date:   Fri, 28 Jun 2019 01:45:08 +0800
+Message-Id: <20190627174508.5782-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,22 +78,21 @@ So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/scsi/ips.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/scsi/esas2r/esas2r_init.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/scsi/ips.c b/drivers/scsi/ips.c
-index e8bc8d328bab..ad941bb28060 100644
---- a/drivers/scsi/ips.c
-+++ b/drivers/scsi/ips.c
-@@ -4322,8 +4322,6 @@ ips_allocatescbs(ips_ha_t * ha)
- 		return 0;
- 	}
+diff --git a/drivers/scsi/esas2r/esas2r_init.c b/drivers/scsi/esas2r/esas2r_init.c
+index 950cd92df2ff..67e7a78f408b 100644
+--- a/drivers/scsi/esas2r/esas2r_init.c
++++ b/drivers/scsi/esas2r/esas2r_init.c
+@@ -390,7 +390,6 @@ int esas2r_init_adapter(struct Scsi_Host *host, struct pci_dev *pcid,
+ 		     a->uncached,
+ 		     upper_32_bits(bus_addr),
+ 		     lower_32_bits(bus_addr));
+-	memset(a->uncached, 0, a->uncached_size);
+ 	next_uncached = a->uncached;
  
--	memset(ha->scbs, 0, ha->max_cmds * sizeof (ips_scb_t));
--
- 	for (i = 0; i < ha->max_cmds; i++) {
- 		scb_p = &ha->scbs[i];
- 		scb_p->scb_busaddr = command_dma + sizeof (ips_scb_t) * i;
+ 	if (!esas2r_init_adapter_struct(a,
 -- 
 2.11.0
 
