@@ -2,111 +2,104 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47813C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906F6C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151A2208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BEF208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UVBQ6nLg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FUoTSiWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfF0WPW (ORCPT
+        id S1726880AbfF0WPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:15:22 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42668 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF0WPW (ORCPT
+        Thu, 27 Jun 2019 18:15:34 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:49954 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfF0WPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:15:22 -0400
-Received: by mail-yb1-f193.google.com with SMTP id w9so2402866ybe.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:15:22 -0700 (PDT)
+        Thu, 27 Jun 2019 18:15:33 -0400
+Received: by mail-pf1-f201.google.com with SMTP id x9so2426328pfm.16
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:15:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=854kgvZIGVmpx/zJerLitPu72zAj/sPCDRSpo5mcVm8=;
-        b=UVBQ6nLgJ7hyBK0VTX31wB+Js1VvwXnP/nwFcgPtwaFJewTCuj1osJwrFqHfTvwRhj
-         oIEIEkV6bUU7HdJznqd+1RtNHgQN60jvIObmjdR9ZV6sXOox4bxgplduaGihqvQpxbvl
-         /CXqzEI/lNWPklsLCFGyCyO1foahYXwHMW0q74DVX3P0B/psWgckT6IoYyN0X7S0cTQC
-         9Iymb0dP/l61XFeczgOkCa0eM7NbRnqpXJTxNSm5iVfCS2ry7VGHBJveWCE/2qDtz0bf
-         HRZalvnhhWyQm037wDc+4cY+nzn9yf2PfyzaG8fcy2SYeTDplVyStgoCZDdma/1jWHz7
-         5xtQ==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Symvyf/Uz9S5oKdNsFmtumlityXOKZm70HtIggCwFnk=;
+        b=FUoTSiWGUAtMmT6Erkt4yAeuT0+qjeYcWls6gB3JPv82xDHkgN1hirWiFjVAqnnOVq
+         j3Z9Td4BjBrcCMOH4skPnJx3La72XnsWPgIHKbkYMkKrnLi/LFiskUO8f5MhH+PQ6C4e
+         KObEoLRcNyNt5RjzC3mElSNiGYJYULWFrsg3bezwh3jABhgWyneK+vjFogRmjHykQlLG
+         pWevR8tpcYknyHIgomouTnrqo+1ywloJhMER3s2boTItwF3cssClvvIVSZ0lh6YyFYQq
+         9Ik5+4zmwGMCXlH03L6WSLUMi7or2zDUnDFVYXyfNH8gVHiYWki8yp+UMawuPW1mVK8/
+         yMgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=854kgvZIGVmpx/zJerLitPu72zAj/sPCDRSpo5mcVm8=;
-        b=fuBEn+MnVA4Nqbz6FdD2iC7HRyOw3yg2uj35Jy4vJQSR9kIDFXFwJnnDcZecAxlAL4
-         fp3Xg7JsydbrZiWhTVIk0wv0TxVwMdU42dvSKT/harDXQCv8e4NPa8IudcUhfkkBJqLf
-         DBUdSCsbj11dlgOcg7OcB9sqCVo1zy8/ae+4joUVcyCXNVCJQi5zmOqtE6xBZLAXp+2a
-         09XTZ5ux6Xo4OYtB8IioJuj99xLSYr8uLXY/FwiJRETMinS6hHdnbc44NCWSTdu/tWnx
-         4EPxyn5nQlrr30EzzlrD5rlr3MACEo4m+H9U4dkEtGLFqwV8J//DC+G2/VeFVRouQZPv
-         OBLA==
-X-Gm-Message-State: APjAAAW3keVNOtMLXdjdvpWDh1iIWsfZ49aVZwt863c758NW6I1iA6OW
-        oWX/64DwnQ7tWLKbyTe/r9a4R7GLQ2WvDuuTggbf2Q==
-X-Google-Smtp-Source: APXvYqxMzrMu9bHCfF1krZKE2+fiz57EFVSx8H1XhM1TKzJ4TURRZ421f3iW3YcRI3sBA2MZJWPVsd1sDFh4dqVLNZQ=
-X-Received: by 2002:a25:d156:: with SMTP id i83mr4645824ybg.67.1561673721316;
- Thu, 27 Jun 2019 15:15:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190627214738.112614-1-rajatja@google.com>
-In-Reply-To: <20190627214738.112614-1-rajatja@google.com>
-From:   Gwendal Grignou <gwendal@google.com>
-Date:   Thu, 27 Jun 2019 15:15:08 -0700
-Message-ID: <CAMHSBOWrzQ6NEDEML-Jk8Y+M5iE6yHXn8FWpUP77VZAV7HGzhQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/chrome: lightbar: Get drvdata from parent in suspend/resume
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        rajatxjain@gmail.com, Evan Green <evgreen@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Symvyf/Uz9S5oKdNsFmtumlityXOKZm70HtIggCwFnk=;
+        b=k7Yzv72FErCSGg91VRd2UydN8ZUiuMo17/I7RuauhgB7L1dnzfGf4lXypy7YDcAzf3
+         Y7H7xWbKDEMb3LToDCTXwKSBtzzCjrh5Sn/P+EVC5heIg0YkU5nEONny5TV9n72U3Xud
+         /BAM1vRyE5YyOGu/BmFdUMvmmxEsXLZb7eZN+yi05uykLqxPFkMCzJ++x6JQiXmlsKGx
+         fP/MdprgwNjiU8p7H+gQ3tuqCCb0uCaEdADEp7INW5NfiPmD+5yf45HJjSbn4Jc+0seH
+         PMjbYEu350RcwAJ2P5ljEruIGhngiGXMoG8l/m7ITsbULx4/Ed+jHpaNi4FigYDXlpJy
+         d+BQ==
+X-Gm-Message-State: APjAAAVvgirfYkZ8EsnrzKZRBJ6TFZUjFijpz3V68MVkJicp8LZAE1BX
+        W+t+HUZxwFv82hEQUfUTb2F2oVe0jw==
+X-Google-Smtp-Source: APXvYqxUVrAymwj/ugIGi6sQXo8Sqq04CVHfX4dFLvmyXHderTB1493KLtyO4xlY6inwpt5jVs2FxtQjAQ==
+X-Received: by 2002:a65:6656:: with SMTP id z22mr5733329pgv.197.1561673732735;
+ Thu, 27 Jun 2019 15:15:32 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 15:15:07 -0700
+Message-Id: <20190627221507.83942-1-nhuck@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH] clk: mediatek: Fix -Wunused-const-variable
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, matthias.bgg@gmail.com,
+        fparent@baylibre.com
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Clang produces the following warning
 
+drivers/clk/mediatek/clk-mt8516.c:234:27: warning: unused variable
+'ddrphycfg_parents' [-Wunused-const-variable] static const char * const
+ddrphycfg_parents[] __initconst = {
 
-On Thu, Jun 27, 2019 at 2:47 PM Rajat Jain <rajatja@google.com> wrote:
->
-> The lightbar driver never assigned the drvdata in probe method, and
-> thus there is nothing there. Need to get the ec_dev from the parent's
-> drvdata.
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
->  drivers/platform/chrome/cros_ec_lightbar.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-> index d30a6650b0b5..26117a8991b3 100644
-> --- a/drivers/platform/chrome/cros_ec_lightbar.c
-> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
-> @@ -600,7 +600,7 @@ static int cros_ec_lightbar_remove(struct platform_device *pd)
->
->  static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
->  {
-> -       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
-> +       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
->
->         if (userspace_control)
->                 return 0;
-> @@ -610,7 +610,7 @@ static int __maybe_unused cros_ec_lightbar_resume(struct device *dev)
->
->  static int __maybe_unused cros_ec_lightbar_suspend(struct device *dev)
->  {
-> -       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev);
-> +       struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
->
->         if (userspace_control)
->                 return 0;
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+This variable has never been used. Deleting it to cleanup the warning.
+
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/523
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+---
+ drivers/clk/mediatek/clk-mt8516.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/drivers/clk/mediatek/clk-mt8516.c b/drivers/clk/mediatek/clk-mt8516.c
+index 26fe43cc9ea2..9d4261ecc760 100644
+--- a/drivers/clk/mediatek/clk-mt8516.c
++++ b/drivers/clk/mediatek/clk-mt8516.c
+@@ -231,11 +231,6 @@ static const char * const nfi1x_pad_parents[] __initconst = {
+ 	"nfi1x_ck"
+ };
+ 
+-static const char * const ddrphycfg_parents[] __initconst = {
+-	"clk26m_ck",
+-	"mainpll_d16"
+-};
+-
+ static const char * const usb_78m_parents[] __initconst = {
+ 	"clk_null",
+ 	"clk26m_ck",
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
