@@ -2,484 +2,168 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DE1C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ADBC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CF7208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D1C32083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfF0KB6 (ORCPT
+        id S1726520AbfF0KDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:01:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:50654 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfF0KB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:01:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C86992B;
-        Thu, 27 Jun 2019 03:01:55 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F8E63F718;
-        Thu, 27 Jun 2019 03:01:53 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 11:01:51 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Huw Davies <huw@codeweavers.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        linux-kselftest@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Russell King <linux@armlinux.org.uk>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Shijith Thotton <sthotton@marvell.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v7 04/25] arm64: Substitute gettimeofday with C
- implementation
-Message-ID: <20190627100150.GC2790@e103592.cambridge.arm.com>
-References: <20190621095252.32307-1-vincenzo.frascino@arm.com>
- <20190621095252.32307-5-vincenzo.frascino@arm.com>
- <20190625153336.GZ2790@e103592.cambridge.arm.com>
- <f5ac379a-731d-0662-2f5b-bd046e3bd1c5@arm.com>
- <20190626161413.GA2790@e103592.cambridge.arm.com>
- <19ebd45a-b666-d7de-fd9e-2b72e18892d9@arm.com>
+        Thu, 27 Jun 2019 06:03:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40002 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbfF0KDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 06:03:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5DE11ABD2;
+        Thu, 27 Jun 2019 10:03:30 +0000 (UTC)
+Subject: Re: [PATCH] mm/mempolicy: Fix an incorrect rebind node in
+ mpol_rebind_nodemask
+To:     zhong jiang <zhongjiang@huawei.com>, akpm@linux-foundation.org,
+        osalvador@suse.de, khandual@linux.vnet.ibm.com, mhocko@suse.com,
+        mgorman@techsingularity.net, aarcange@redhat.com
+Cc:     rcampbell@nvidia.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1558768043-23184-1-git-send-email-zhongjiang@huawei.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ef6a69c6-c052-b067-8f2c-9d615c619bb9@suse.cz>
+Date:   Thu, 27 Jun 2019 11:59:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19ebd45a-b666-d7de-fd9e-2b72e18892d9@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1558768043-23184-1-git-send-email-zhongjiang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 08:01:58PM +0100, Vincenzo Frascino wrote:
+On 5/25/19 9:07 AM, zhong jiang wrote:
+> We bind an different node to different vma, Unluckily,
+> it will bind different vma to same node by checking the /proc/pid/numa_maps.   
+> Commit 213980c0f23b ("mm, mempolicy: simplify rebinding mempolicies when updating cpusets")
+> has introduced the issue.  when we change memory policy by seting cpuset.mems,
+> A process will rebind the specified policy more than one times. 
+> if the cpuset_mems_allowed is not equal to user specified nodes. hence the issue will trigger.
+> Maybe result in the out of memory which allocating memory from same node.
 
-[...]
+OK, how about this instead?
 
-> On 6/26/19 5:14 PM, Dave Martin wrote:
-> > On Wed, Jun 26, 2019 at 02:27:59PM +0100, Vincenzo Frascino wrote:
-> >> Hi Dave,
-> >>
-> >> On 25/06/2019 16:33, Dave Martin wrote:
-> >>> On Fri, Jun 21, 2019 at 10:52:31AM +0100, Vincenzo Frascino wrote:
-> >>>> To take advantage of the commonly defined vdso interface for
-> >>>> gettimeofday the architectural code requires an adaptation.
-> >>>>
-> >>>> Re-implement the gettimeofday vdso in C in order to use lib/vdso.
-> >>>>
-> >>>> With the new implementation arm64 gains support for CLOCK_BOOTTIME
-> >>>> and CLOCK_TAI.
-> >>>>
-> >>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >>>> Cc: Will Deacon <will.deacon@arm.com>
-> >>>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> >>>> Tested-by: Shijith Thotton <sthotton@marvell.com>
-> >>>> Tested-by: Andre Przywara <andre.przywara@arm.com>
-> >>>
-> >>> [...]
-> >>>
-> >>>> diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-> >>>> new file mode 100644
-> >>>> index 000000000000..bc3cb6738051
-> >>>> --- /dev/null
-> >>>> +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-> >>>> @@ -0,0 +1,86 @@
-> >>>> +/* SPDX-License-Identifier: GPL-2.0 */
-> >>>> +/*
-> >>>> + * Copyright (C) 2018 ARM Limited
-> >>>> + */
-> >>>> +#ifndef __ASM_VDSO_GETTIMEOFDAY_H
-> >>>> +#define __ASM_VDSO_GETTIMEOFDAY_H
-> >>>> +
-> >>>> +#ifndef __ASSEMBLY__
-> >>>> +
-> >>>> +#include <asm/unistd.h>
-> >>>> +#include <uapi/linux/time.h>
-> >>>> +
-> >>>> +#define VDSO_HAS_CLOCK_GETRES		1
-> >>>> +
-> >>>> +static __always_inline int gettimeofday_fallback(
-> >>>> +					struct __kernel_old_timeval *_tv,
-> >>>> +					struct timezone *_tz)
-> >>>
-> >>> Out of interest, does this need to be __always_inline?
-> >>>
-> >>
-> >> It is a design choice. Philosophically, I prefer to control and reduce the scope
-> >> of the decisions the compiler has to make in order to not have surprises.
-> >>
-> >>>> +{
-> >>>> +	register struct timezone *tz asm("x1") = _tz;
-> >>>> +	register struct __kernel_old_timeval *tv asm("x0") = _tv;
-> >>>> +	register long ret asm ("x0");
-> >>>> +	register long nr asm("x8") = __NR_gettimeofday;
-> >>>> +
-> >>>> +	asm volatile(
-> >>>> +	"       svc #0\n"
-> >>>
-> >>> Can inlining of this function result in non-trivial expressions being
-> >>> substituted for _tz or _tv?
-> >>>
-> >>> A function call can clobber register asm vars that are assigned to the
-> >>> caller-save registers or that the PCS uses for function arguments, and
-> >>> the situations where this can happen are poorly defined AFAICT.  There's
-> >>> also no reliable way to detect at build time whether the compiler has
-> >>> done this, and no robust way to stop if happening.
-> >>>
-> >>> (IMHO the compiler is wrong to do this, but it's been that way for ever,
-> >>> and I think I saw GCC 9 show this behaviour recently when I was
-> >>> investigating something related.)
-> >>>
-> >>>
-> >>> To be safe, it's better to put this out of line, or remove the reg asm()
-> >>> specifiers, mark x0-x18 and lr as clobbered here (so that the compiler
-> >>> doesn't map arguments to them), and put movs in the asm to move things
-> >>> into the right registers.  The syscall number can be passed with an "i"
-> >>> constraint.  (And yes, this sucks.)
-> >>>
-> >>> If the code this is inlined in is simple enough though, we can be fairly
-> >>> confident of getting away with it.
-> >>>
-> >>
-> >> I took very seriously what you are mentioning here because I think
-> >> that robustness of the code comes before than everything especially
-> >> in the kernel and I carried on some experiments to try to verify if
-> >> in this case is safe to assume that the compiler is doing the right
-> >> thing.
-> >>
-> >> Based on my investigation and on previous observations of the
-> >> generation of the vDSO library, I can conclude that the approach
-> >> seems safe due to the fact that the usage of this code is very
-> >> limited, the code itself is simple enough and that gcc would inline
-> >> this code anyway based on the current compilation options.
-> > 
-> > I'd caution about "seems safe".  A lot of subtly wrong code not only
-> > seems safe, but _is_ safe in its original context, in practice.  Add
-> > some code to the vdso over time though, or tweak the compilation options
-> > at some point in the future, or use a different compiler, and things
-> > could still go wrong.
-> > 
-> > (Further comments below.)
-> > 
+mpol_rebind_nodemask() is called for MPOL_BIND and MPOL_INTERLEAVE
+mempoclicies when the tasks's cpuset's mems_allowed changes. For
+policies created without MPOL_F_STATIC_NODES or MPOL_F_RELATIVE_NODES,
+it works by remapping the policy's allowed nodes (stored in v.nodes)
+using the previous value of mems_allowed (stored in
+w.cpuset_mems_allowed) as the domain of map and the new mems_allowed
+(passed as nodes) as the range of the map (see the comment of
+bitmap_remap() for details).
+
+The result of remapping is stored back as policy's nodemask in v.nodes,
+and the new value of mems_allowed should be stored in
+w.cpuset_mems_allowed to facilitate the next rebind, if it happens.
+
+However, commit 213980c0f23b ("mm, mempolicy: simplify rebinding
+mempolicies when updating cpusets") introduced a bug where the result of
+remapping is stored in w.cpuset_mems_allowed instead. Thus, a
+mempolicy's allowed nodes can evolve in an unexpected way after a series
+of rebinding due to cpuset mems_allowed changes, possibly binding to a
+wrong node or a smaller number of nodes which may e.g. overload them.
+This patch fixes the bug so rebinding again works as intended.
+
+> Fixes: 213980c0f23b ("mm, mempolicy: simplify rebinding mempolicies when updating cpusets") 
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+
+(an example of what exactly was the sequence of set_mempolicy and cpuset
+mems changes with expected wrt actual results would be nice, but I think
+the above should be fine by itself)
+
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+
+> ---
+>  mm/mempolicy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Allow me to provide a clarification on "seems safe" vs "is safe": my approach
-> "seems safe" because I am providing empirical evidence to support my thesis, but
-> I guess we both know that there is no simple way to prove in one way or another
-> that the problem has a complete solution.
-> The proposed problem involves suppositions on potential future code additions
-> and changes of behavior of the compiler that I can't either control or prevent.
-> In other words, I can comment and propose solutions only based on the current
-> status of the things, and it is what my analysis targets, not on what will
-> happen in future.
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index e3ab1d9..a60a3be 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -345,7 +345,7 @@ static void mpol_rebind_nodemask(struct mempolicy *pol, const nodemask_t *nodes)
+>  	else {
+>  		nodes_remap(tmp, pol->v.nodes,pol->w.cpuset_mems_allowed,
+>  								*nodes);
+> -		pol->w.cpuset_mems_allowed = tmp;
+> +		pol->w.cpuset_mems_allowed = *nodes;
+>  	}
+>  
+>  	if (nodes_empty(tmp))
 > 
-> I will reply point by point below.
-> 
-> >> The experiment that I did was to define some self-contained code that
-> >> tries to mimic what you are describing and compile it with 3
-> >> different versions of gcc (6.4, 8.1 and 8.3) and in all the tree
-> >> cases the behavior seems correct.
-> >>
-> >> Code:
-> >> =====
-> >>
-> >> typedef int ssize_t;
-> >> typedef int size_t;
-> >>
-> >> static int my_strlen(const char *s)
-> >> {
-> >> 	int i = 0;
-> >>
-> >> 	while (s[i] == '\0')
-> >> 		i++;
-> >>
-> >> 	return i;
-> >> }
-> >>
-> >> static inline ssize_t my_syscall(int fd, const void *buf, size_t count)
-> >> {
-> >> 	register ssize_t arg1 asm ("x0") = fd;
-> >> 	register const void *arg2 asm ("x1") = buf;
-> >> 	register size_t arg3 asm ("x2") = count;
-> >>
-> >> 	__asm__ volatile (
-> >> 		"mov x8, #64\n"
-> >> 		"svc #0\n"
-> >> 		: "=&r" (arg1)
-> >> 		: "r" (arg2), "r" (arg3)
-> >> 		: "x8"
-> >>         );
-> >>
-> >>         return arg1;
-> >> }
-> >>
-> >> void sys_caller(const char *s)
-> >> {
-> >> 	my_syscall(1, s, my_strlen(s));
-> >> }
-> >>
-> >>
-> >> GCC 8.3.0:
-> >> ==========
-> >>
-> >> main.8.3.0.o:     file format elf64-littleaarch64
-> >>
-> >>
-> >> Disassembly of section .text:
-> >>
-> >> 0000000000000000 <sys_caller>:
-> >>    0:	39400001 	ldrb	w1, [x0]
-> >>    4:	35000161 	cbnz	w1, 30 <sys_caller+0x30>
-> >>    8:	d2800023 	mov	x3, #0x1                   	// #1
-> >>    c:	d1000404 	sub	x4, x0, #0x1
-> >>   10:	2a0303e2 	mov	w2, w3
-> >>   14:	91000463 	add	x3, x3, #0x1
-> >>   18:	38636881 	ldrb	w1, [x4, x3]
-> >>   1c:	34ffffa1 	cbz	w1, 10 <sys_caller+0x10>
-> >>   20:	aa0003e1 	mov	x1, x0
-> >>   24:	d2800808 	mov	x8, #0x40                  	// #64
-> >>   28:	d4000001 	svc	#0x0
-> >>   2c:	d65f03c0 	ret
-> >>   30:	52800002 	mov	w2, #0x0                   	// #0
-> >>   34:	17fffffb 	b	20 <sys_caller+0x20>
-> >>
-> >>
-> >> GCC 8.1.0:
-> >> ==========
-> >>
-> >> main.8.1.0.o:     file format elf64-littleaarch64
-> >>
-> >>
-> >> Disassembly of section .text:
-> >>
-> >> 0000000000000000 <sys_caller>:
-> >>    0:	39400001 	ldrb	w1, [x0]
-> >>    4:	35000161 	cbnz	w1, 30 <sys_caller+0x30>
-> >>    8:	d2800023 	mov	x3, #0x1                   	// #1
-> >>    c:	d1000404 	sub	x4, x0, #0x1
-> >>   10:	2a0303e2 	mov	w2, w3
-> >>   14:	91000463 	add	x3, x3, #0x1
-> >>   18:	38636881 	ldrb	w1, [x4, x3]
-> >>   1c:	34ffffa1 	cbz	w1, 10 <sys_caller+0x10>
-> >>   20:	aa0003e1 	mov	x1, x0
-> >>   24:	d2800808 	mov	x8, #0x40                  	// #64
-> >>   28:	d4000001 	svc	#0x0
-> >>   2c:	d65f03c0 	ret
-> >>   30:	52800002 	mov	w2, #0x0                   	// #0
-> >>   34:	17fffffb 	b	20 <sys_caller+0x20>
-> >>
-> >>
-> >>
-> >> GCC 6.4.0:
-> >> ==========
-> >>
-> >> main.6.4.0.o:     file format elf64-littleaarch64
-> >>
-> >>
-> >> Disassembly of section .text:
-> >>
-> >> 0000000000000000 <sys_caller>:
-> >>    0:	39400001 	ldrb	w1, [x0]
-> >>    4:	35000161 	cbnz	w1, 30 <sys_caller+0x30>
-> >>    8:	d2800023 	mov	x3, #0x1                   	// #1
-> >>    c:	d1000404 	sub	x4, x0, #0x1
-> >>   10:	2a0303e2 	mov	w2, w3
-> >>   14:	91000463 	add	x3, x3, #0x1
-> >>   18:	38636881 	ldrb	w1, [x4, x3]
-> >>   1c:	34ffffa1 	cbz	w1, 10 <sys_caller+0x10>
-> >>   20:	aa0003e1 	mov	x1, x0
-> >>   24:	d2800808 	mov	x8, #0x40                  	// #64
-> >>   28:	d4000001 	svc	#0x0
-> >>   2c:	d65f03c0 	ret
-> >>   30:	52800002 	mov	w2, #0x0                   	// #0
-> >>   34:	17fffffb 	b	20 <sys_caller+0x20>
-> > 
-> > Thanks for having a go at this.  If the compiler can show the
-> > problematic behaviour, it looks like your could could probably trigger
-> > it, and as you observe, it doesn't trigger.
-> > 
-> > I am sure I have seen it in the past, but today I am struggling
-> > to tickle the compiler in the right way.  My original reproducer may
-> > have involved LTO, but either way I don't still have it :(
-> >
-> 
-> vDSO library is a shared object not compiled with LTO as far as I can
-> see, hence if this involved LTO should not applicable in this case.
 
-That turned to be a spurious hypothesis on my part -- LTO isn't the
-smoking gun.  (See below.)
-
-> > The classic example of this (triggered directly and not due to inlining)
-> > would be something like:
-> > 
-> > int bar(int, int);
-> > 
-> > void foo(int x, int y)
-> > {
-> > 	register int x_ asm("r0") = x;
-> > 	register int y_ asm("r1") = bar(x, y);
-> > 
-> > 	asm volatile (
-> > 		"svc	#0"
-> > 		:: "r" (x_), "r" (y_)
-> > 		: "memory"
-> > 	);
-> > }
-> > 
-> > ->
-> > 
-> > 0000000000000000 <foo>:
-> >    0:   a9bf7bfd        stp     x29, x30, [sp, #-16]!
-> >    4:   910003fd        mov     x29, sp
-> >    8:   94000000        bl      0 <bar>
-> >    c:   2a0003e1        mov     w1, w0
-> >   10:   d4000001        svc     #0x0
-> >   14:   a8c17bfd        ldp     x29, x30, [sp], #16
-> >   18:   d65f03c0        ret
-> >
-> 
-> Contextualized to what my vdso fallback functions do, this should not be a
-> concern because in no case a function result is directly set to a variable
-> declared as register.
-> 
-> Since the vdso fallback functions serve a very specific and limited purpose, I
-> do not expect that that code is going to change much in future.
-> 
-> The only thing that can happen is something similar to what I wrote in my
-> example, which as I empirically proved does not trigger the problematic behavior.
-> 
-> > 
-> > The gcc documentation is vague and ambiguous about precisely whan this
-> > can happen and about how to avoid it.
-> > 
-> 
-> On this I agree, it is not very clear, but this seems more something to raise
-> with the gcc folks in order to have a more "explicit" description that leaves no
-> room to the interpretation.
-> 
-> ...
-> 
-> > 
-> > However, the workaround is cheap, and to avoid the chance of subtle
-> > intermittent code gen bugs it may be worth it:
-> > 
-> > void foo(int x, int y)
-> > {
-> > 	asm volatile (
-> > 		"mov	x0, %0\n\t"
-> > 		"mov	x1, %1\n\t"
-> > 		"svc	#0"
-> > 		:: "r" (x), "r" (bar(x, y))
-> > 		: "r0", "r1", "memory"
-> > 	);
-> > }
-> > 
-> > ->
-> > 
-> > 0000000000000000 <foo>:
-> >    0:   a9be7bfd        stp     x29, x30, [sp, #-32]!
-> >    4:   910003fd        mov     x29, sp
-> >    8:   f9000bf3        str     x19, [sp, #16]
-> >    c:   2a0003f3        mov     w19, w0
-> >   10:   94000000        bl      0 <bar>
-> >   14:   2a0003e2        mov     w2, w0
-> >   18:   aa1303e0        mov     x0, x19
-> >   1c:   aa0203e1        mov     x1, x2
-> >   20:   d4000001        svc     #0x0
-> >   24:   f9400bf3        ldr     x19, [sp, #16]
-> >   28:   a8c27bfd        ldp     x29, x30, [sp], #32
-> >   2c:   d65f03c0        ret
-> > 
-> > 
-> > What do you think?
-> >
-> 
-> The solution seems ok, thanks for providing it, but IMHO I think we
-> should find a workaround for something that is broken, which, unless
-> I am missing something major, this seems not the case.
-
-So, after a bit of further experimentation, I found that I could trigger
-it with implicit function calls on an older compiler.  I couldn't show
-it with explicit function calls (as in your example).
-
-With the following code, inlining if an expression that causes an
-implicit call to a libgcc helper can trigger this issue, but I had to
-try an older compiler:
-
-int foo(int x, int y)
-{
-	register int res asm("r0");
-	register const int x_ asm("r0") = x;
-	register const int y_ asm("r1") = y;
-
-	asm volatile (
-		"svc	#0"
-		: "=r" (res)
-		: "r" (x_), "r" (y_)
-		: "memory"
-	);
-
-	return res;
-}
-
-int bar(int x, int y)
-{
-	return foo(x, x / y);
-}
-
--> (arm-linux-gnueabihf-gcc 9.1 -O2)
-
-00000000 <foo>:
-   0:   df00            svc     0
-   2:   4770            bx      lr
-
-00000004 <bar>:
-   4:   b510            push    {r4, lr}
-   6:   4604            mov     r4, r0
-   8:   f7ff fffe       bl      0 <__aeabi_idiv>
-   c:   4601            mov     r1, r0
-   e:   4620            mov     r0, r4
-  10:   df00            svc     0
-  12:   bd10            pop     {r4, pc}
-
--> (arm-linux-gnueabihf-gcc 5.1 -O2)
-
-00000000 <foo>:
-   0:   df00            svc     0
-   2:   4770            bx      lr
-
-00000004 <bar>:
-   4:   b508            push    {r3, lr}
-   6:   f7ff fffe       bl      0 <__aeabi_idiv>
-   a:   4601            mov     r1, r0
-   c:   df00            svc     0
-   e:   bd08            pop     {r3, pc}
-
-I was struggling to find a way to emit an implicit function call for
-AArch64, except for 128-bit divide, which would complicate things since
-uint128_t doesn't fit in a single register anyway.
-
-Maybe this was considered a bug and fixed sometime after GCC 5, but I
-think the GCC documentation is still quite unclear on the semantics of
-register asm vars that alias call-clobbered registers in the PCS.
-
-If we can get a promise out of the GCC folks that this will not happen
-with any future compiler, then maybe we could just require a new enough
-compiler to be used.
-
-Then of course there is clang.
-
-Cheers
----Dave
