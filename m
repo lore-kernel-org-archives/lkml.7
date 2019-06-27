@@ -2,68 +2,68 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5F5C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFD5C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674E92086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B782320644
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKQTwtwX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dm7DjZf+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbfF0Rm5 (ORCPT
+        id S1727140AbfF0RnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:42:57 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46716 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbfF0Rmz (ORCPT
+        Thu, 27 Jun 2019 13:43:12 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44635 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfF0RnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:42:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so1657694pls.13;
-        Thu, 27 Jun 2019 10:42:55 -0700 (PDT)
+        Thu, 27 Jun 2019 13:43:11 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t7so1670046plr.11;
+        Thu, 27 Jun 2019 10:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=czn3EWz06kwMCEMtsQe0/flLmYYN2GTMsUHF6cAN/yM=;
-        b=hKQTwtwX7167NpH+v1Asuggh/g7b2T9ttFn/pEdyb/QY5b0CVyWCaGAkvF5pN4s/g3
-         /nIu5Dv628pzTE96YEsfu/QT/xe5/+sXNePvQAtJ/E9h59Vp+Z+nFyTafCFy561pnyUD
-         vcgHOdyecU3wdePTXqdZBecqfe0OPWsZqc/P0uonQY9Iv79lOZxUP7C0ir9EDd9UKS3i
-         /Cz2UEwwvpNTnivGdiB5A9JVAWYFwSyiJhdR59sLtVc0q2vlXHSeFeQSy1juuC68IPc8
-         lMyxUt787XM3PS7QXl+bUth+7brG0ccknxXkZ75WRURtwnF/XjgwXzjQyFKCAlgB9cSu
-         vzdw==
+        bh=XMtbDy7ICVx9sNVDO5hcGRd0P6kv9+a3LFvIsYsOFnw=;
+        b=Dm7DjZf+RwRrSgNYf08NJEWY1VKzGCc3XD4H35gEIFM4doU6DVgCiyjsX6z0YPheLa
+         O2vqEOOrlEC/azUiCg9//zCHoxNq83yybTGLCOiA6jEakmBLhPQMtwAVmSL0ON92hTmy
+         64J2MHEy2DRRFI+RN+ANhn5y3JLzI0HPXMozKp4BBki6Ij343zd976mGyINBEmr6VMa/
+         mDryKUpWWVWzY4cUnoO1cMCqLI8E7r1bE5PpKxqtwX5AM9XDBxDkbkvVPijmZ8ljSDx+
+         TKI9joJueSnCnVl6g/rD6wjWJDiU/QXCJRpWwtp8+KdgUiaDhuxgFXE2rWwsmYLJofiz
+         1olQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=czn3EWz06kwMCEMtsQe0/flLmYYN2GTMsUHF6cAN/yM=;
-        b=tqWDeJfL9nS9vTfSL4Kp1VbrDjvn/bMa9PEk15EHQb/IM1UuSs9w9V7hZ3t82sEwpd
-         YBBR2kqJ2Ea8X/JRcRo5Wc63vtln95WOnJdb8HT78czcSvNF5rDwSAwtenyNxloam83x
-         mopGiBudVKvGeDfel2dbtT5OpCpo1PqsHgbcRPsbo4mXBulN9qji22tcbiso+Szx5PtN
-         lVed7zNVcP3nZEJ7W6DyRJzRLPoYsTelbhhP9P3cgPdQOcciNw/ATiXilIvWZbjCr1Tf
-         NvD/4CcugWmU/m179dQJTAEJCMml01rabZZiEP4EpAf+MWJSK4S/vkFfQTLePUAr6NQ/
-         21lA==
-X-Gm-Message-State: APjAAAUv7BFGXzpaDi6gVJTI/WvLVk4hUJLqHCa0vnYmPgyqP0nCxW6m
-        AG2cK2G4N3ZAILbO8wuaBZQ=
-X-Google-Smtp-Source: APXvYqzOJM+wi7hC4AdeABa1mwhVC+Rgm36FaAEoqyjwEVgn83VRXKJ39qmMhXRB1+SrxAtm1Kep8w==
-X-Received: by 2002:a17:902:9b81:: with SMTP id y1mr6298339plp.194.1561657374827;
-        Thu, 27 Jun 2019 10:42:54 -0700 (PDT)
+        bh=XMtbDy7ICVx9sNVDO5hcGRd0P6kv9+a3LFvIsYsOFnw=;
+        b=nsgkxVfV6z3+BUhBV8TB6TBcWgl86VMu24bKwPuNsEnW8+c8whiPPRKhmY/+uSpju3
+         5lP5H9AHS9VATasyyf0iOrkUaebp+iJQDEdToT4CpTpjDf9uCX3v5veFYqs7TCAVFYou
+         7H71ZDyDJR66bPVxjVetT0CGEKoLHQYVJCkrUrCkqNLBpeLjg4+ogOkbH7+z8vfrImMu
+         i6MWPlDtbt64sXOu3BPwEHuddZN7hMXIu+pEjXowCZPpAuY8p0CWkx3smFT355P+zDQZ
+         lJL0BehCRm+S4+P5s4ZkjUpusTzvszl+2uJ/KSB4X7kdDsd55AKTyDcRyw6/gnb/2lCo
+         lnaw==
+X-Gm-Message-State: APjAAAWQ0D+Rw1PHLzhzObEGjGnTbwQro0/xUFt//SJO04kXjs51CF6N
+        IeBdl+Kctk4wPv0xAddXL7U=
+X-Google-Smtp-Source: APXvYqzy3Ztt7IQZDJ9RrtSVSX7ny+ia2LX8OvP/XAwNpY7O/YPhbm/2B6k0+I+ofyI6EVTYeA9/Kw==
+X-Received: by 2002:a17:902:b187:: with SMTP id s7mr5927238plr.309.1561657391050;
+        Thu, 27 Jun 2019 10:43:11 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id i123sm4791784pfe.147.2019.06.27.10.42.52
+        by smtp.googlemail.com with ESMTPSA id j21sm3240723pfh.86.2019.06.27.10.43.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:42:54 -0700 (PDT)
+        Thu, 27 Jun 2019 10:43:10 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        QLogic-Storage-Upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 53/87] scsi: qla4xxx: remove memset after dma_alloc_coherent
-Date:   Fri, 28 Jun 2019 01:42:47 +0800
-Message-Id: <20190627174248.4830-1-huangfq.daxian@gmail.com>
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 85/87] ethernet: mellanox: mlx5: remove memset after kvzalloc
+Date:   Fri, 28 Jun 2019 01:43:01 +0800
+Message-Id: <20190627174301.4983-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,42 +71,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit af7ddd8a627c
-("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-dma_alloc_coherent has already zeroed the memory.
-So memset is not needed.
+kvzalloc already zeroes the memory.
+So memset is unneeded.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/scsi/qla4xxx/ql4_mbx.c | 1 -
- drivers/scsi/qla4xxx/ql4_os.c  | 2 --
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c          | 1 -
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 2 --
  2 files changed, 3 deletions(-)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_mbx.c
-index dac9a7013208..eb3167186586 100644
---- a/drivers/scsi/qla4xxx/ql4_mbx.c
-+++ b/drivers/scsi/qla4xxx/ql4_mbx.c
-@@ -2354,7 +2354,6 @@ int qla4_84xx_config_acb(struct scsi_qla_host *ha, int acb_config)
- 		rval = QLA_ERROR;
- 		goto exit_config_acb;
- 	}
--	memset(acb, 0, acb_len);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 6a921e24cd5e..587c51fa3985 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -2391,7 +2391,6 @@ int mlx5_eswitch_get_vport_stats(struct mlx5_eswitch *esw,
+ 	MLX5_SET(query_vport_counter_in, in, vport_number, vport->vport);
+ 	MLX5_SET(query_vport_counter_in, in, other_vport, 1);
  
- 	switch (acb_config) {
- 	case ACB_CONFIG_DISABLE:
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index 8c674eca09f1..8666d4fc93da 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -9478,8 +9478,6 @@ static int qla4xxx_context_reset(struct scsi_qla_host *ha)
- 		goto exit_port_reset;
+-	memset(out, 0, outlen);
+ 	err = mlx5_cmd_exec(esw->dev, in, sizeof(in), out, outlen);
+ 	if (err)
+ 		goto free_out;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+index 47b446d30f71..ef5fe3bd95f9 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+@@ -993,7 +993,6 @@ static int esw_create_offloads_fdb_tables(struct mlx5_eswitch *esw, int nvports)
  	}
  
--	memset(acb, 0, acb_len);
--
- 	rval = qla4xxx_get_acb(ha, acb_dma, PRIMARI_ACB, acb_len);
- 	if (rval != QLA_SUCCESS) {
- 		rval = -EIO;
+ 	/* create send-to-vport group */
+-	memset(flow_group_in, 0, inlen);
+ 	MLX5_SET(create_flow_group_in, flow_group_in, match_criteria_enable,
+ 		 MLX5_MATCH_MISC_PARAMETERS);
+ 
+@@ -1151,7 +1150,6 @@ static int esw_create_vport_rx_group(struct mlx5_eswitch *esw, int nvports)
+ 		return -ENOMEM;
+ 
+ 	/* create vport rx group */
+-	memset(flow_group_in, 0, inlen);
+ 	MLX5_SET(create_flow_group_in, flow_group_in, match_criteria_enable,
+ 		 MLX5_MATCH_MISC_PARAMETERS);
+ 
 -- 
 2.11.0
 
