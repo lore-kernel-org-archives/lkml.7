@@ -2,88 +2,170 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDCEC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B94C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03293217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561600255;
-	bh=kCCG90D35IV6/JmLNcgUS4jnvzH9yFn+nds5+DI2754=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2J0/WOppILLHoVzEWUF9UzZHIYrn6Lb1ASLkQ46v0ek9SlSUsefz9nOde0itfbHTV
-	 cBg0H0cpEBLEpZkOVYYdmNV6pNom6S79vkprgCHi5CubkqQUhZx3HV0E3LZv9m/8Ob
-	 vFxjd29vPQUewSgKSP/THEvuzDWTNEko8OEOujG8=
+	by mail.kernel.org (Postfix) with ESMTP id BBB7E21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 01:57:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKmuAx0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfF0Bux (ORCPT
+        id S1727082AbfF0B5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 21:50:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbfF0Bux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 21:50:53 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C88A2182B;
-        Thu, 27 Jun 2019 01:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561600252;
-        bh=kCCG90D35IV6/JmLNcgUS4jnvzH9yFn+nds5+DI2754=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bi7erOcR7QL1tePUbWhxhRfVOdK7TUZAMULCWZL9xnLFzz30Srg/V8mE7CCxhLBK5
-         WX11pFvjEm1RflWFQ6Jt/8NGtOslRE6425qqHv/RhKVUzUFXrCIoBgRS9v1Zx+DZGO
-         g4JomsMEaY5kaE95S+ODC+MHKwIR5p6il9nIZ1RM=
-Received: by mail-wr1-f41.google.com with SMTP id k11so524389wrl.1;
-        Wed, 26 Jun 2019 18:50:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAUevrsFASnPdDROqGNGDSS0aQahtdNcmAxrnPCOewSrbMiJg8N0
-        UPuluxoya7QpDpQ2SxMyscXpw+CRU/yw51+Epjg=
-X-Google-Smtp-Source: APXvYqzSoiCCwTva2gZnnCXkLLyAW+tzKHN3GTfbeiNhlGr44n/II6VYQL1m25Vd73mFO8g1zpf1AARDHFO6xBB6VR0=
-X-Received: by 2002:adf:f483:: with SMTP id l3mr626375wro.256.1561600251203;
- Wed, 26 Jun 2019 18:50:51 -0700 (PDT)
+        Wed, 26 Jun 2019 21:57:12 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44214 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbfF0B5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 21:57:11 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so5421199edr.11;
+        Wed, 26 Jun 2019 18:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+RYkXAvqY8Ibx3IpyCaGL2CQcHDuy3e5cBUf4u/Tp/M=;
+        b=EKmuAx0YE8zGnIn16nAVwfLy8jupcGyNhEpKgRhlRVTs/JbVjBDzwFMLg8b5Thbjf3
+         JBTkK0v4uy4NmZiGqSK3y5yNqqFCN6gh2y3rN/h+sIDsx6ingt26hFUTEZBH+Uq6oe10
+         R94ppMNzcI1fJPqbM6Lx/UmigIJvy6v7kjnniG1IISPLU53pflf0DCNWx2dgZe841g9k
+         NyELytBCDan+NYVVDzWlMmXkSVpDsfNxRpI9mm0IKihuSlXKtoE+skbdugYIJ8o1yNt6
+         oV9oBOOys6tzr3B0lNmhmRcbKxrxWrqlVvx3ZyWdYiCLHxoV6Nm5glZyyZphJeU39ZOP
+         PDPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+RYkXAvqY8Ibx3IpyCaGL2CQcHDuy3e5cBUf4u/Tp/M=;
+        b=QrXeSlEwBr3vjJZ1Ae+de9HFVaaQqRAgFlDpc2KOHcdwX5MOgEF9hnBdDpHonfytOA
+         7YHVwHoJiHIiIfTed8upPyJaW9aRl6k5Ub3qg/ZEHVwENtMRDm2Ea25/+gM2wYQsdXgs
+         MpKUgdIz+JWfrTjOvNY0HWWD3n71OYn1nDS70ig1kEWW6cMUMYyGehZSuGM9+/VZXqLj
+         SudEEKZn4Y2IM9c3k+4outSss8+5FwahXIKIDLPGi/PmLkuVuyi2U2n+IYg6zhSAj7tg
+         VLB9lMrvQ8HnrwxCNolp52zVXpDNK94hvhpLB45zWq8FvXHvhWnKu+XjIdd1P6uJ9lwM
+         j9OQ==
+X-Gm-Message-State: APjAAAWi4W4Z78bDTRPF+RRCEbOoHpzhyGczlspZw0xsrWBwLhMxA30o
+        Z6QYBuR9GTsrqhYPtnsX6QLOdNIFG0R/ElMH5u4=
+X-Google-Smtp-Source: APXvYqxxvl9NPGvEuUHgHk0kixOVXn9H07WTnpiqX6Y5Ae5tVNuS4k9zysYn1D9KqeMJGvpUUZfpMlEU/0Qtlqwz1qE=
+X-Received: by 2002:a50:b1db:: with SMTP id n27mr1094773edd.62.1561600628882;
+ Wed, 26 Jun 2019 18:57:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1561531557.git.han_mao@c-sky.com> <d874d7782d9acdad5d98f2f5c4a6fb26fbe41c5d.1561531557.git.han_mao@c-sky.com>
- <CAJF2gTRyma8sDMJaWCde1eOe6KSwn4_e=tJOT4d3kgmvzOxz8g@mail.gmail.com> <20190626185156.GC3902@kernel.org>
-In-Reply-To: <20190626185156.GC3902@kernel.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Thu, 27 Jun 2019 09:50:39 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTGX-UO3WPJZHn0ANk=sgAqimfyq14bFbm-Kz=ydcX+YQ@mail.gmail.com>
-Message-ID: <CAJF2gTTGX-UO3WPJZHn0ANk=sgAqimfyq14bFbm-Kz=ydcX+YQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf annotate csky: Add perf annotate support
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mao Han <han_mao@c-sky.com>, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
+References: <20190624083352.29257-1-rasmus.villemoes@prevas.dk>
+ <CA+FuTSeHhz1kntLyeUfAB4ZbtYjO1=Ornwse-yQbPwo5c-_2=g@mail.gmail.com>
+ <ff8160d4-3357-9b4f-1840-bbe46195da5a@prevas.dk> <CAF=yD-KyWJwdESFmY=CvbkTBT8yey2atKDY-tgd19yAeMf525g@mail.gmail.com>
+ <838ce911-7205-f828-4fc5-79cebc32322a@prevas.dk>
+In-Reply-To: <838ce911-7205-f828-4fc5-79cebc32322a@prevas.dk>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Wed, 26 Jun 2019 21:56:32 -0400
+Message-ID: <CAF=yD-L5AmCeHiDA8RUr_E41FFzGdnudCVzTAHFi-Q1rHGPazQ@mail.gmail.com>
+Subject: Re: [PATCH net-next] can: dev: call netif_carrier_off() in register_candev()
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 2:52 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Wed, Jun 26, 2019 at 5:19 PM Rasmus Villemoes
+<rasmus.villemoes@prevas.dk> wrote:
 >
-> Em Wed, Jun 26, 2019 at 02:56:55PM +0800, Guo Ren escreveu:
-> > Thx Mao,
+> On 26/06/2019 16.17, Willem de Bruijn wrote:
+> > On Wed, Jun 26, 2019 at 5:31 AM Rasmus Villemoes
+> > <rasmus.villemoes@prevas.dk> wrote:
+> >>
+> >> On 24/06/2019 19.26, Willem de Bruijn wrote:
+> >>> On Mon, Jun 24, 2019 at 4:34 AM Rasmus Villemoes
+> >>> <rasmus.villemoes@prevas.dk> wrote:
+> >>>>
+> >>>> Make sure the LED always reflects the state of the CAN device.
+> >>>
+> >>> Should this target net?
+> >>
+> >> No, I think this should go through the CAN tree. Perhaps I've
+> >> misunderstood when to use the net-next prefix - is that only for things
+> >> that should be applied directly to the net-next tree? If so, sorry.
 > >
-> > Approved!
+> > I don't see consistent behavior on the list, so this is probably fine.
+> > It would probably help to target can (for fixes) or can-next (for new
+> > features).
+> >
+> > Let me reframe the question: should this target can, instead of can-next?
 >
-> I guess I can take this as a:
+> Ah, now I see what you meant, but at least I learned when to use
+> net/net-next.
 >
-> Acked-by: Guo Ren <guoren@kernel.org>
+> I think can-next is fine, especially this late in the rc cycle. But I'll
+> leave it to the CAN maintainer(s).
 >
-> Or would this better be:
+> >>> Regardless of CONFIG_CAN_LEDS deprecation,
+> >>> this is already not initialized properly if that CONFIG is disabled
+> >>> and a can_led_event call at device probe is a noop.
+> >>
+> >> I'm not sure I understand this part. The CONFIG_CAN_LEDS support for
+> >> showing the state of the interface is implemented via hooking into the
+> >> ndo_open/ndo_stop callbacks, and does not look at or touch the
+> >> __LINK_STATE_NOCARRIER bit at all.
+> >>
+> >> Other than via the netdev LED trigger I don't think one can even observe
+> >> the slightly odd initial state of the __LINK_STATE_NOCARRIER bit for CAN
+> >> devices,
+> >
+> > it's still incorrect, though I guess that's moot in practice.
+> Exactly.
 >
-> Reviewed-by: Guo Ren <guoren@kernel.org>
-Reviewed-by is OK.
-Thx for help to merge.
+> >> which is why I framed this as a fix purely to allow the netdev
+> >> trigger to be a closer drop-in replacement for CONFIG_CAN_LEDS.
+> >
+> > So the entire CONFIG_CAN_LEDS code is to be removed? What exactly is
+> > this netdev trigger replacement, if not can_led_event? Sorry, I
+> > probably miss some context.
+>
+> drivers/net/can/Kconfig contains these comments
+>
+>         # The netdev trigger (LEDS_TRIGGER_NETDEV) should be able to do
+>         # everything that this driver is doing. This is marked as broken
+>         # because it uses stuff that is intended to be changed or removed.
+>         # Please consider switching to the netdev trigger and confirm it
+>         # fulfills your needs instead of fixing this driver.
+>
+> introduced by the commit 30f3b42147ba6 which also marked CONFIG_CAN_LEDS
+> as (depends on) BROKEN. So while a .dts for using the CAN led trigger
+> might be
+>
+>                 cana {
+>                         label = "cana:green:activity";
+>                         gpios = <&gpio0 10 0>;
+>                         default-state = "off";
+>                         linux,default-trigger = "can0-rxtx";
+>                 };
+>
+> one can achieve mostly the same thing with CAN_LEDS=n,
+> LEDS_TRIGGER_NETDEV=y setting linux,default-trigger = "netdev" plus a
+> small init script (or udev rule or whatever works) that does
+>
+> d=/sys/class/leds/cana:green:activity
+> echo can0 > $d/device_name
+> echo 1 > $d/link
+> echo 1 > $d/rx
+> echo 1 > $d/tx
+>
+> to tie the cana LED to the can0 device, plus configure it to show "link"
+> state as well as blink on rx and tx.
+>
+> This works just fine, except for the initial state of the LED. AFAIU,
+> the netdev trigger doesn't need cooperation from each device driver
+> since it simply works of a timer that periodically checks for changes in
+> dev_get_stats().
 
-Best regards
- Guo Ren
+Thanks, I had to read up on that code. Makes sense.
+
+Acked-by: Willem de Bruijn <willemb@google.com>
