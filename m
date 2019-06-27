@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED6EC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6244C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C661C217F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893C3217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561595460;
-	bh=EoVevRrncZLwzRFqE1UttWd6FrNKzV+ovzUOIn7khe8=;
+	s=default; t=1561595465;
+	bh=TX5449Bxly9CAVEiVBJslEWtUYm3dHGwcXI7s6qoS0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+6yiDSd+URhxM5otfE1GjA/Djn8y/ruE8vSCO5eaeEjIZdxJtfTF6FkWD5C69N1d
-	 XgR0mG+NWxXHJcY/lTvJu6hYFDVoOcHQeChi1b0xQJSYx2W0o08r38ow6aq7c7uoVR
-	 YYe0cnP7z86SyCURBqDVHu3hLDf8qebKRLnYtU0A=
+	b=QArjzWXOFx4HP9mUIO+srN0qcOPtKCuDR5kkEPlfqoPugcnM9GRqeb/FtVChSBZfr
+	 abi++BjzJ2Zaygy3Y2oXtf9qxpS/d0txI72Css2jUPJTfAkFwa7Rif0PyDBvLo4g0U
+	 ugBB8y/05Va5LU6BpwzVWlNPfGM9uPHXMdjgvZC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfF0Aa7 (ORCPT
+        id S1727014AbfF0AbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:31:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726956AbfF0Aay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:30:54 -0400
+        id S1726579AbfF0AbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:31:01 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9F602083B;
-        Thu, 27 Jun 2019 00:30:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B861217F4;
+        Thu, 27 Jun 2019 00:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595454;
-        bh=EoVevRrncZLwzRFqE1UttWd6FrNKzV+ovzUOIn7khe8=;
+        s=default; t=1561595460;
+        bh=TX5449Bxly9CAVEiVBJslEWtUYm3dHGwcXI7s6qoS0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GjUPdg8XmdOhHZu7grKIjVpIPnqvA271FbHIfFfqB9oafi2rUfsUD4icMxMCXjrrr
-         iaCMSdoztvIHD7sVN692kYC2P6c8aT5ADkxiBvBL2GE4BdeRXU3sSEJksgfrqJv8En
-         PWwWnzCx7faxovz/++9E8Y/pRD+tMOdfOYLUlWY0=
+        b=qHK9HhSWjh14ZP0uLaD98RCel1GSZmkpFmkcfZQ1u/7tpr/X1TMCIYwrtC1xyWtGS
+         cBlCvOb26gY9ChyahPugexbcRUSUz8S/eXVOAQGaaeSBA7hAgkBm495xdSc4+jQSZ1
+         vE11IYs71bmDQzW+7jFz9O+j8pH42MsfCn1Fyjyo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matteo Croce <mcroce@redhat.com>,
+Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 10/95] samples, bpf: suppress compiler warning
-Date:   Wed, 26 Jun 2019 20:28:55 -0400
-Message-Id: <20190627003021.19867-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 12/95] bpf: sockmap, restore sk_write_space when psock gets dropped
+Date:   Wed, 26 Jun 2019 20:28:57 -0400
+Message-Id: <20190627003021.19867-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,48 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-[ Upstream commit a195cefff49f60054998333e81ee95170ce8bf92 ]
+[ Upstream commit 186bcc3dcd106dc52d706117f912054b616666e1 ]
 
-GCC 9 fails to calculate the size of local constant strings and produces a
-false positive:
+Once psock gets unlinked from its sock (sk_psock_drop), user-space can
+still trigger a call to sk->sk_write_space by setting TCP_NOTSENT_LOWAT
+socket option. This causes a null-ptr-deref because we try to read
+psock->saved_write_space from sk_psock_write_space:
 
-samples/bpf/task_fd_query_user.c: In function ‘test_debug_fs_uprobe’:
-samples/bpf/task_fd_query_user.c:242:67: warning: ‘%s’ directive output may be truncated writing up to 255 bytes into a region of size 215 [-Wformat-truncation=]
-  242 |  snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
-      |                                                                   ^~
-  243 |    event_type, event_alias);
-      |                ~~~~~~~~~~~
-samples/bpf/task_fd_query_user.c:242:2: note: ‘snprintf’ output between 45 and 300 bytes into a destination of size 256
-  242 |  snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  243 |    event_type, event_alias);
-      |    ~~~~~~~~~~~~~~~~~~~~~~~~
+==================================================================
+BUG: KASAN: null-ptr-deref in sk_psock_write_space+0x69/0x80
+Read of size 8 at addr 00000000000001a0 by task sockmap-echo/131
 
-Workaround this by lowering the buffer size to a reasonable value.
-Related GCC Bugzilla: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=83431
+CPU: 0 PID: 131 Comm: sockmap-echo Not tainted 5.2.0-rc1-00094-gf49aa1de9836 #81
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
+Call Trace:
+ ? sk_psock_write_space+0x69/0x80
+ __kasan_report.cold.2+0x5/0x3f
+ ? sk_psock_write_space+0x69/0x80
+ kasan_report+0xe/0x20
+ sk_psock_write_space+0x69/0x80
+ tcp_setsockopt+0x69a/0xfc0
+ ? tcp_shutdown+0x70/0x70
+ ? fsnotify+0x5b0/0x5f0
+ ? remove_wait_queue+0x90/0x90
+ ? __fget_light+0xa5/0xf0
+ __sys_setsockopt+0xe6/0x180
+ ? sockfd_lookup_light+0xb0/0xb0
+ ? vfs_write+0x195/0x210
+ ? ksys_write+0xc9/0x150
+ ? __x64_sys_read+0x50/0x50
+ ? __bpf_trace_x86_fpu+0x10/0x10
+ __x64_sys_setsockopt+0x61/0x70
+ do_syscall_64+0xc5/0x520
+ ? vmacache_find+0xc0/0x110
+ ? syscall_return_slowpath+0x110/0x110
+ ? handle_mm_fault+0xb4/0x110
+ ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+ ? trace_hardirqs_off_caller+0x4b/0x120
+ ? trace_hardirqs_off_thunk+0x1a/0x3a
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f2e5e7cdcce
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb b1 66 2e 0f 1f 84 00 00 00 00 00
+0f 1f 44 00 00 f3 0f 1e fa 49 89 ca b8 36 00 00 00 0f 05 <48> 3d 01 f0 ff
+ff 73 01 c3 48 8b 0d 8a 11 0c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffed011b778 EFLAGS: 00000206 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f2e5e7cdcce
+RDX: 0000000000000019 RSI: 0000000000000006 RDI: 0000000000000007
+RBP: 00007ffed011b790 R08: 0000000000000004 R09: 00007f2e5e84ee80
+R10: 00007ffed011b788 R11: 0000000000000206 R12: 00007ffed011b78c
+R13: 00007ffed011b788 R14: 0000000000000007 R15: 0000000000000068
+==================================================================
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Restore the saved sk_write_space callback when psock is being dropped to
+fix the crash.
+
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/task_fd_query_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/skmsg.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/samples/bpf/task_fd_query_user.c b/samples/bpf/task_fd_query_user.c
-index aff2b4ae914e..e39938058223 100644
---- a/samples/bpf/task_fd_query_user.c
-+++ b/samples/bpf/task_fd_query_user.c
-@@ -216,7 +216,7 @@ static int test_debug_fs_uprobe(char *binary_path, long offset, bool is_return)
+diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+index 178a3933a71b..50ced8aba9db 100644
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -351,6 +351,8 @@ static inline void sk_psock_update_proto(struct sock *sk,
+ static inline void sk_psock_restore_proto(struct sock *sk,
+ 					  struct sk_psock *psock)
  {
- 	const char *event_type = "uprobe";
- 	struct perf_event_attr attr = {};
--	char buf[256], event_alias[256];
-+	char buf[256], event_alias[sizeof("test_1234567890")];
- 	__u64 probe_offset, probe_addr;
- 	__u32 len, prog_id, fd_type;
- 	int err, res, kfd, efd;
++	sk->sk_write_space = psock->saved_write_space;
++
+ 	if (psock->sk_proto) {
+ 		sk->sk_prot = psock->sk_proto;
+ 		psock->sk_proto = NULL;
 -- 
 2.20.1
 
