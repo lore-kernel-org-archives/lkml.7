@@ -2,101 +2,99 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19121C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37748C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C4D2133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:36:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ujl1mwOM"
+	by mail.kernel.org (Postfix) with ESMTP id 14FC92133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfF0Rgu (ORCPT
+        id S1726801AbfF0Rgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Jun 2019 13:36:54 -0400
+Received: from mga12.intel.com ([192.55.52.136]:4681 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726906AbfF0Rgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Jun 2019 13:36:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42211 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfF0Rgs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:36:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so1573654pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 10:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=T7nDlxgAbHwIPfNOE7F83rtRIAmZKxOzk4AlOTCiOZQ=;
-        b=Ujl1mwOMHwV1d6/BYCi5LNmxPksXeTW4Q6NpgeQx2HkTbe+Y4jMd3sKbj44KdAb6GF
-         zpNnI/WveW/NRlDkjb6xgUApufF8v13jMNZMzq4X6FBV+hZ/l9sqByFNIexL/ran+ljR
-         sev0uchO6Nb2OLtSEIhYDE6deil6NvRlicSBGfGaW/+RkrrHTVLmGUZ9sgBm6avFE2Tm
-         fFocFI+qUuIo9o1ynqwV4K3ihId2QgM1zCnosV82v3xgEz6KWlOsE0JF1pzjNGtVo4NK
-         EVOOtlYAcm2syoPxBoIwHfK8eihGWP65/X0P8wvNGayftOfZG7OZyuBGnBi8F/vgzcTS
-         PeRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=T7nDlxgAbHwIPfNOE7F83rtRIAmZKxOzk4AlOTCiOZQ=;
-        b=nRCbK4cJk2BLvqMWTGBrDmAL9yI1gO29sbWtifGMH5wyQCJOAi65uos/0jGc13ewbj
-         8nEJBs7gWCbLbKaOcL4GPTwDbz/FSsXqiKZ2E4P6ENJIoxVPbzgPgZac7FzPf3uSzo7Y
-         a5mJgC6viGGrbx9ixL5fus28Zka9pzPk9KvNHVqdVOF+RI+7fYc6M0dpVrMRP7uGQ1+j
-         udVUBf71fzLyG0ViSOXrHVRsN4aUdi+GdwZXx1BLTAB6448rrRlmVQFCt2UccY/8XyEd
-         N1Kr5vRNe/1ls2VCVZ0r7e5Mn5AZ6VF4xXpS7cl7KRg+DCzVTXaAUbjvnPtDmoApwbjd
-         cZXw==
-X-Gm-Message-State: APjAAAWd9l+0jJ+WnCoaRM8D08K3TDnIfDrr1k5cGx/ukEvp/XyKuU2d
-        XDbDY0pC/S0C/3f0IehXFJupo3sdtTh2Yg==
-X-Google-Smtp-Source: APXvYqwOGe41/aVWH3nFXJGYtJo7kL6W6anx9Wkp3js7xNTLCEJIB3I5BMcvsSY4tEAO+dNr5LvEww==
-X-Received: by 2002:a65:4348:: with SMTP id k8mr4934574pgq.219.1561657007423;
-        Thu, 27 Jun 2019 10:36:47 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id 201sm7441791pfz.24.2019.06.27.10.36.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:36:47 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Fuqian Huang <huangfq.daxian@gmail.com>, Rex Zhu <rex.zhu@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Huang Rui <ray.huang@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 10:36:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,424,1557212400"; 
+   d="scan'208";a="156307617"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga008.jf.intel.com with ESMTP; 27 Jun 2019 10:36:49 -0700
+Date:   Thu, 27 Jun 2019 10:36:49 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     James Morse <james.morse@arm.com>
+Cc:     Eiichi Tsukata <devel@etsukata.com>, bp@alien8.de,
+        mchehab@kernel.org, linux-edac@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 18/87] gpu: drm: Remove call to memset after kzalloc in tonga_smumgr.c
-Date:   Fri, 28 Jun 2019 01:36:38 +0800
-Message-Id: <20190627173639.2779-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+Subject: Re: [PATCH] EDAC: Fix global-out-of-bounds write when setting
+ edac_mc_poll_msec
+Message-ID: <20190627173649.GA18346@agluck-desk2.amr.corp.intel.com>
+References: <20190626054011.30044-1-devel@etsukata.com>
+ <ee91dd9d-e9ac-4fee-d7f2-152195995ecb@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee91dd9d-e9ac-4fee-d7f2-152195995ecb@arm.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kzalloc has already zeroes the memory.
-So memset is unneeded.
+On Thu, Jun 27, 2019 at 06:11:18PM +0100, James Morse wrote:
+> Hello,
+> 
+> (CC: +Tony Luck.
+>  Original Patch: lore.kernel.org/r/20190626054011.30044-1-devel@etsukata.com )
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/gpu/drm/amd/powerplay/smumgr/tonga_smumgr.c | 2 --
- 1 file changed, 2 deletions(-)
+Heh: My mail agent "helpfully" made that clickable, but as a "mailto:"
+URL rather than an https: one!
+> 
+> On 26/06/2019 06:40, Eiichi Tsukata wrote:
+> > Commit 9da21b1509d8 ("EDAC: Poll timeout cannot be zero, p2") assumes
+> > edac_mc_poll_msec to be unsigned long, but the type of the variable still
+> > remained as int. Setting edac_mc_poll_msec can trigger out-of-bounds
+> > write.
+> 
+> Thanks for catching this!
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smumgr/tonga_smumgr.c b/drivers/gpu/drm/amd/powerplay/smumgr/tonga_smumgr.c
-index 3ed6c5f1e5cf..60462c7211e3 100644
---- a/drivers/gpu/drm/amd/powerplay/smumgr/tonga_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/tonga_smumgr.c
-@@ -3114,8 +3114,6 @@ static int tonga_initialize_mc_reg_table(struct pp_hwmgr *hwmgr)
- 	cgs_write_register(hwmgr->device, mmMC_SEQ_WR_CTL_2_LP,
- 			cgs_read_register(hwmgr->device, mmMC_SEQ_WR_CTL_2));
- 
--	memset(table, 0x00, sizeof(pp_atomctrl_mc_reg_table));
--
- 	result = atomctrl_initialize_mc_reg_table(hwmgr, module_index, table);
- 
- 	if (!result)
--- 
-2.11.0
+Ditto & likewise.
+> 
+> 
+> > Fix it by changing the type of edac_mc_poll_msec to unsigned int.
+> 
+> This means reverting more of 9da21b1509d8, but it also fixes signed/unsigned issues:
+> | root@debian-guest:/sys/module/edac_core/parameters# echo 4294967295 >  edac_mc_poll_msec
+> | root@debian-guest:/sys/module/edac_core/parameters# cat edac_mc_poll_msec
+> | -1
+> | root@debian-guest:/sys/module/edac_core/parameters# echo -1 > edac_mc_poll_msec
+> | -bash: echo: write error: Invalid argument
+> 
+> 
+> > The reason why this patch adopts unsigned int rather than unsigned long
+> > is msecs_to_jiffies() assumes arg to be unsigned int.
+> 
+> Ah, so the range is limited anyway.
+> 
+> It looks like it was switched to long to be consistent with edac_mc_workq_setup(), which
+> has since been removed in preference to msecs_to_jiffies().
+> 
+> 
+> Reviewed-by: James Morse <james.morse@arm.com>
 
+Applied. (Boris left me in charge of EDAC bits for the
+next few weeks). It will show up in the for_5.3 branch
+of:
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git
+after test builds complete.
+
+-Tony
