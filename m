@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A07C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BD1C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECE52082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC69C2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596713;
-	bh=Z2FQXOTKv+1PDnULnMt3wLBqjLRrQA1FAvv1gewbimQ=;
+	s=default; t=1561596725;
+	bh=If2G9GQvdAwhPPWjNUdvW+SrABwh/XflP0jCuvscpdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r8FMsV2vSCLm3uFedb4KS6AFe0SEK77Yn7+NfIWjghIRwEFgLYl9EDRj7BpHmLj5A
-	 Bq6lXtQWUIgTkruBVUw5yCWOyLDUQQ6kxtDLVpEplZxfZuPrtmLh6TG99+Jw9BhXTT
-	 JeElP4BBM8iuubqtMtQYhpeDrUmJd7IN7fgcKItA=
+	b=Qg3mLffupM6a5wxs4qKMjHtudRcQxF+mMtE/addJQjnkOSavf8J3sgkkx3/IQrilB
+	 Lbp9xshS8dRuwMIHvQchYYL70eTroImJQyEck3Iux9R8EfFMPAf+Des/TCJlqWtFMx
+	 w5LhkETZEUm0FDmNUq/CYgz2ORdaSO0CEW62CCBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbfF0AeG (ORCPT
+        id S1727891AbfF0Ad7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbfF0Ad7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Jun 2019 20:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727876AbfF0Adx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:33:53 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD5F217D8;
-        Thu, 27 Jun 2019 00:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F79A216E3;
+        Thu, 27 Jun 2019 00:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595638;
-        bh=Z2FQXOTKv+1PDnULnMt3wLBqjLRrQA1FAvv1gewbimQ=;
+        s=default; t=1561595633;
+        bh=If2G9GQvdAwhPPWjNUdvW+SrABwh/XflP0jCuvscpdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghrRlHI7YTakET364VtMGgPpNmNcvphOLevt5FchW3tyEnlm3KlZthQ0ZiUR1w3KB
-         n83KXBU948tWCelgC1pF7gJCy3OD7mca6JyTvgmTKhQoNZtK4OmUUC7x7hrG/M5rx5
-         TniBpqnUmKf4kkwf/V1npkmu5TX1DLUpSD/dsYNE=
+        b=Vw5rbfCzlHptPgebGUyJpPvF1NXoGuvpy42zBQ+wrZDnKw/aB08dwvO/j+N9YMc3s
+         qTJg3lCN6sXSpPBs55ZSq8axnvsSLRvjjvBNRMG+tQzqVFRCOxGOkaVOO1rJS+84yp
+         7wTgfEo4t3IOjHBRC0OsFSGJl2GcWa3Y3lG8amlo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.1 63/95] gpu: ipu-v3: image-convert: Fix image downsize coefficients
-Date:   Wed, 26 Jun 2019 20:29:48 -0400
-Message-Id: <20190627003021.19867-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 61/95] gpu: ipu-v3: image-convert: Fix input bytesperline width/height align
+Date:   Wed, 26 Jun 2019 20:29:46 -0400
+Message-Id: <20190627003021.19867-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
 References: <20190627003021.19867-1-sashal@kernel.org>
@@ -62,49 +62,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Steve Longerbeam <slongerbeam@gmail.com>
 
-[ Upstream commit 912bbf7e9ca422099935dd69d3ff0fd62db24882 ]
+[ Upstream commit ff391ecd65a1b8324c49046c3db98d9c8ab29af9 ]
 
-The output of the IC downsizer unit in both dimensions must be <= 1024
-before being passed to the IC resizer unit. This was causing corrupted
-images when:
+The output width and height alignment values were being used in the
+input bytesperline calculation. Fix by separating local vars w_align
+and h_align into w_align_in, h_align_in, w_align_out, and h_align_out.
 
-input_dim > 1024, and
-input_dim / 2 < output_dim < input_dim
-
-Some broken examples were 1920x1080 -> 1024x768 and 1920x1080 ->
-1280x1080.
-
-Fixes: 70b9b6b3bcb21 ("gpu: ipu-v3: image-convert: calculate per-tile
-resize coefficients")
+Fixes: d966e23d61a2c ("gpu: ipu-v3: image-convert: fix bytesperline
+adjustment")
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-image-convert.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/ipu-v3/ipu-image-convert.c | 32 +++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 19d3b85e0e98..e9803e2151f9 100644
+index 13103ab86050..0d971985f8c9 100644
 --- a/drivers/gpu/ipu-v3/ipu-image-convert.c
 +++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -409,12 +409,14 @@ static int calc_image_resize_coefficients(struct ipu_image_convert_ctx *ctx,
- 	if (WARN_ON(resized_width == 0 || resized_height == 0))
- 		return -EINVAL;
+@@ -1885,7 +1885,8 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
+ 			      enum ipu_rotate_mode rot_mode)
+ {
+ 	const struct ipu_image_pixfmt *infmt, *outfmt;
+-	u32 w_align, h_align;
++	u32 w_align_out, h_align_out;
++	u32 w_align_in, h_align_in;
  
--	while (downsized_width >= resized_width * 2) {
-+	while (downsized_width > 1024 ||
-+	       downsized_width >= resized_width * 2) {
- 		downsized_width >>= 1;
- 		downsize_coeff_h++;
+ 	infmt = get_format(in->pix.pixelformat);
+ 	outfmt = get_format(out->pix.pixelformat);
+@@ -1917,22 +1918,31 @@ void ipu_image_convert_adjust(struct ipu_image *in, struct ipu_image *out,
  	}
  
--	while (downsized_height >= resized_height * 2) {
-+	while (downsized_height > 1024 ||
-+	       downsized_height >= resized_height * 2) {
- 		downsized_height >>= 1;
- 		downsize_coeff_v++;
- 	}
+ 	/* align input width/height */
+-	w_align = ilog2(tile_width_align(IMAGE_CONVERT_IN, infmt, rot_mode));
+-	h_align = ilog2(tile_height_align(IMAGE_CONVERT_IN, infmt, rot_mode));
+-	in->pix.width = clamp_align(in->pix.width, MIN_W, MAX_W, w_align);
+-	in->pix.height = clamp_align(in->pix.height, MIN_H, MAX_H, h_align);
++	w_align_in = ilog2(tile_width_align(IMAGE_CONVERT_IN, infmt,
++					    rot_mode));
++	h_align_in = ilog2(tile_height_align(IMAGE_CONVERT_IN, infmt,
++					     rot_mode));
++	in->pix.width = clamp_align(in->pix.width, MIN_W, MAX_W,
++				    w_align_in);
++	in->pix.height = clamp_align(in->pix.height, MIN_H, MAX_H,
++				     h_align_in);
+ 
+ 	/* align output width/height */
+-	w_align = ilog2(tile_width_align(IMAGE_CONVERT_OUT, outfmt, rot_mode));
+-	h_align = ilog2(tile_height_align(IMAGE_CONVERT_OUT, outfmt, rot_mode));
+-	out->pix.width = clamp_align(out->pix.width, MIN_W, MAX_W, w_align);
+-	out->pix.height = clamp_align(out->pix.height, MIN_H, MAX_H, h_align);
++	w_align_out = ilog2(tile_width_align(IMAGE_CONVERT_OUT, outfmt,
++					     rot_mode));
++	h_align_out = ilog2(tile_height_align(IMAGE_CONVERT_OUT, outfmt,
++					      rot_mode));
++	out->pix.width = clamp_align(out->pix.width, MIN_W, MAX_W,
++				     w_align_out);
++	out->pix.height = clamp_align(out->pix.height, MIN_H, MAX_H,
++				      h_align_out);
+ 
+ 	/* set input/output strides and image sizes */
+ 	in->pix.bytesperline = infmt->planar ?
+-		clamp_align(in->pix.width, 2 << w_align, MAX_W, w_align) :
++		clamp_align(in->pix.width, 2 << w_align_in, MAX_W,
++			    w_align_in) :
+ 		clamp_align((in->pix.width * infmt->bpp) >> 3,
+-			    2 << w_align, MAX_W, w_align);
++			    2 << w_align_in, MAX_W, w_align_in);
+ 	in->pix.sizeimage = infmt->planar ?
+ 		(in->pix.height * in->pix.bytesperline * infmt->bpp) >> 3 :
+ 		in->pix.height * in->pix.bytesperline;
 -- 
 2.20.1
 
