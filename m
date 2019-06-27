@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2AFC48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35192C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BD220815
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092B5208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596465;
-	bh=OaJ8YQFmVlqIGTvmOIj3W8cEQP2IORmxLmRcS7NdN1k=;
+	s=default; t=1561596483;
+	bh=pf3TY0qhiBRSgL4uXDgcr/l4Y53BKYcGEPOf2PFRwlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EfdCRC4edfEQXOHoOl7oxPxPrl25/QW6WgyoAQi6ip5zp0W2HTfgF4yA4tpvLClE2
-	 INjNHBTl24ikXNA/ElqzeK4GMcXLCBota6o9Eoj1fdRCHytrnfL6up7RUsC9kZIb2c
-	 Mew8U0m+cn/z/r4Acm+Fv9JAwcHZFcXxTqBP4QG8=
+	b=D2MIRrTvI7fcu0Tn9X73CD821ZcM+VZabxHe7oIDdz2bvX+MtcV011tng0PHjz9o8
+	 CJHIMhqoH5C3uuDue808guvIhFWyWkBn0brnEB2JVSmXTjD39mEUTb96UcSYUdX4T+
+	 4x1L3bZOgbykqDFcsNAaU09pFEk5uVqBDylALY1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbfF0Ait (ORCPT
+        id S1728292AbfF0Aik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43024 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728902AbfF0Aiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:38:46 -0400
+        id S1727078AbfF0Aih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:38:37 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7289221852;
-        Thu, 27 Jun 2019 00:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 865CC217F9;
+        Thu, 27 Jun 2019 00:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595925;
-        bh=OaJ8YQFmVlqIGTvmOIj3W8cEQP2IORmxLmRcS7NdN1k=;
+        s=default; t=1561595916;
+        bh=pf3TY0qhiBRSgL4uXDgcr/l4Y53BKYcGEPOf2PFRwlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2cju8i6xXCk6FxKFqWupVm5jr207S+/tptHbzJE95W2ENQDpRD/NQJ6aki1h1slf
-         Ipe7H9Ho/HnADPKpew2AvzXOxnaxKpbqZwrFFBzbcwJiQ5NAqqtdn+MV1z6Q1hF7qu
-         6HLaDIwE6kaxhTZexHcKLVf3M5pATDQk9on3lCOM=
+        b=GYCu65WGmmIADgoddOX2rVgEYgKbh5qZXL7lheJ4REsARGzghxodD6aCpkTNHP9/n
+         wEHSd7g/wCTsP/p7wH/CV0NY8mGG43GE9ATkpLygrgiK1+q5jcnxV3+UpBjSiCWASV
+         jY9yRRl8nRUVJtpeA7q6tih1KEKyE3QPCLpG3eEY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Reinhard Speyerer <rspmn@arcor.de>,
-        Daniele Palmas <dnlplm@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 47/60] qmi_wwan: avoid RCU stalls on device disconnect when in QMAP mode
-Date:   Wed, 26 Jun 2019 20:36:02 -0400
-Message-Id: <20190627003616.20767-47-sashal@kernel.org>
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 44/60] bpf, devmap: Add missing RCU read lock on flush
+Date:   Wed, 26 Jun 2019 20:35:59 -0400
+Message-Id: <20190627003616.20767-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -61,73 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinhard Speyerer <rspmn@arcor.de>
+From: Toshiaki Makita <toshiaki.makita1@gmail.com>
 
-[ Upstream commit a8fdde1cb830e560208af42b6c10750137f53eb3 ]
+[ Upstream commit 86723c8640633bee4b4588d3c7784ee7a0032f65 ]
 
-Switch qmimux_unregister_device() and qmi_wwan_disconnect() to
-use unregister_netdevice_queue() and unregister_netdevice_many()
-instead of unregister_netdevice(). This avoids RCU stalls which
-have been observed on device disconnect in certain setups otherwise.
+.ndo_xdp_xmit() assumes it is called under RCU. For example virtio_net
+uses RCU to detect it has setup the resources for tx. The assumption
+accidentally broke when introducing bulk queue in devmap.
 
-Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
-Cc: Daniele Palmas <dnlplm@gmail.com>
-Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 5d053f9da431 ("bpf: devmap prepare xdp frames for bulking")
+Reported-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Toshiaki Makita <toshiaki.makita1@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ kernel/bpf/devmap.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index fd3d078a1923..4165113c435a 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -247,13 +247,14 @@ static int qmimux_register_device(struct net_device *real_dev, u8 mux_id)
- 	return err;
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index 357d456d57b9..fc500ca464d0 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -282,6 +282,7 @@ void __dev_map_flush(struct bpf_map *map)
+ 	unsigned long *bitmap = this_cpu_ptr(dtab->flush_needed);
+ 	u32 bit;
+ 
++	rcu_read_lock();
+ 	for_each_set_bit(bit, bitmap, map->max_entries) {
+ 		struct bpf_dtab_netdev *dev = READ_ONCE(dtab->netdev_map[bit]);
+ 		struct xdp_bulk_queue *bq;
+@@ -297,6 +298,7 @@ void __dev_map_flush(struct bpf_map *map)
+ 
+ 		__clear_bit(bit, bitmap);
+ 	}
++	rcu_read_unlock();
  }
  
--static void qmimux_unregister_device(struct net_device *dev)
-+static void qmimux_unregister_device(struct net_device *dev,
-+				     struct list_head *head)
- {
- 	struct qmimux_priv *priv = netdev_priv(dev);
- 	struct net_device *real_dev = priv->real_dev;
+ /* rcu_read_lock (from syscall and BPF contexts) ensures that if a delete and/or
+@@ -389,6 +391,7 @@ static void dev_map_flush_old(struct bpf_dtab_netdev *dev)
  
- 	netdev_upper_dev_unlink(real_dev, dev);
--	unregister_netdevice(dev);
-+	unregister_netdevice_queue(dev, head);
+ 		int cpu;
  
- 	/* Get rid of the reference to real_dev */
- 	dev_put(real_dev);
-@@ -424,7 +425,7 @@ static ssize_t del_mux_store(struct device *d,  struct device_attribute *attr, c
- 		ret = -EINVAL;
- 		goto err;
- 	}
--	qmimux_unregister_device(del_dev);
-+	qmimux_unregister_device(del_dev, NULL);
- 
- 	if (!qmimux_has_slaves(dev))
- 		info->flags &= ~QMI_WWAN_FLAG_MUX;
-@@ -1434,6 +1435,7 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
- 	struct qmi_wwan_state *info;
- 	struct list_head *iter;
- 	struct net_device *ldev;
-+	LIST_HEAD(list);
- 
- 	/* called twice if separate control and data intf */
- 	if (!dev)
-@@ -1446,8 +1448,9 @@ static void qmi_wwan_disconnect(struct usb_interface *intf)
++		rcu_read_lock();
+ 		for_each_online_cpu(cpu) {
+ 			bitmap = per_cpu_ptr(dev->dtab->flush_needed, cpu);
+ 			__clear_bit(dev->bit, bitmap);
+@@ -396,6 +399,7 @@ static void dev_map_flush_old(struct bpf_dtab_netdev *dev)
+ 			bq = per_cpu_ptr(dev->bulkq, cpu);
+ 			bq_xmit_all(dev, bq, XDP_XMIT_FLUSH, false);
  		}
- 		rcu_read_lock();
- 		netdev_for_each_upper_dev_rcu(dev->net, ldev, iter)
--			qmimux_unregister_device(ldev);
-+			qmimux_unregister_device(ldev, &list);
- 		rcu_read_unlock();
-+		unregister_netdevice_many(&list);
- 		rtnl_unlock();
- 		info->flags &= ~QMI_WWAN_FLAG_MUX;
++		rcu_read_unlock();
  	}
+ }
+ 
 -- 
 2.20.1
 
