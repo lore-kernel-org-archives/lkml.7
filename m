@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3586C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B2BC48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C606421855
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A3B21855
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596008;
-	bh=CXvPtPhMJMnEZMnJHiTFIt8lLMf9rloZWRT1DqeQ9Zo=;
+	s=default; t=1561596014;
+	bh=6Sp5x8S886L5spv2yGt0k07vOzOJRvdAmBeiH7wNofc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nTokR9MIXBrLzXdZOM6sHD8Jd7CpKka4f5YnOFO5DUjaeWvKwkhZ2LbfcrNt3cR1I
-	 lLm/shfJTi1+z2wln8lxnnxyarM00okrNSuNkLKXo+N2fu9gw94cml1Dp1EF2L1M0N
-	 5s2Qwlye18k/uBFdg//An2RsXGzf82u919TAExV4=
+	b=ItZ1zfk7Doze1OWSvvnu0+Rx+e1ZYkBQ13HGhoPW6xqVpwiw/7VRR074su+1X9fLt
+	 zJN0V04ju65BlbhVU0CPIEviCJNbrJi4tdA/LADuET7nhBMI/ErsPR5EE1ZM2Ws/4j
+	 Go5BSjLGY/kV1NY4D9PgH0IA11NgmCBPrORR6uF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfF0AkH (ORCPT
+        id S1729296AbfF0AkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:40:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44094 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729216AbfF0AkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:40:00 -0400
+        id S1728410AbfF0AkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:40:10 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A4D21897;
-        Thu, 27 Jun 2019 00:39:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEF0205ED;
+        Thu, 27 Jun 2019 00:40:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596000;
-        bh=CXvPtPhMJMnEZMnJHiTFIt8lLMf9rloZWRT1DqeQ9Zo=;
+        s=default; t=1561596009;
+        bh=6Sp5x8S886L5spv2yGt0k07vOzOJRvdAmBeiH7wNofc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aaioL5qgNKMFkvHxkAQ1A7X1CWAnOZI17SOsWfcB2DDXhYiglS7DyarEp+X5y/V/N
-         +5fVXMO8/NrivUfwMuetKdKdI3TRJQ7/JoIQ2sMGs8vAV6b7AtBASNqhZ2ggl/OOFM
-         ZG/2ByfVmLSSvaG55udqOZZV7/XBc0ttdawc4S2g=
+        b=vCQT2dVRw59oMvIidEmTDrl9thxIuHp5sztTPgbBSjHEzgwCIwaGBoOhERthfrfNy
+         rc0xnHZqigm5FlRmtmE0/GfkaIo3IqoLVEH8CfwA8++DCa50nIKivu/5znZnRCLAg+
+         Ib9doaAn33I3cN/3IqJop23JqTz+WwzZCGCsPU0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin KaFai Lau <kafai@fb.com>, Tom Herbert <tom@herbertland.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/35] bpf: udp: Avoid calling reuseport's bpf_prog from udp_gro
-Date:   Wed, 26 Jun 2019 20:38:58 -0400
-Message-Id: <20190627003925.21330-10-sashal@kernel.org>
+Cc:     Sean Nyekjaer <sean@geanix.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/35] dt-bindings: can: mcp251x: add mcp25625 support
+Date:   Wed, 26 Jun 2019 20:39:01 -0400
+Message-Id: <20190627003925.21330-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
 References: <20190627003925.21330-1-sashal@kernel.org>
@@ -61,59 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Sean Nyekjaer <sean@geanix.com>
 
-[ Upstream commit 257a525fe2e49584842c504a92c27097407f778f ]
+[ Upstream commit 0df82dcd55832a99363ab7f9fab954fcacdac3ae ]
 
-When the commit a6024562ffd7 ("udp: Add GRO functions to UDP socket")
-added udp[46]_lib_lookup_skb to the udp_gro code path, it broke
-the reuseport_select_sock() assumption that skb->data is pointing
-to the transport header.
+Fully compatible with mcp2515, the mcp25625 have integrated transceiver.
 
-This patch follows an earlier __udp6_lib_err() fix by
-passing a NULL skb to avoid calling the reuseport's bpf_prog.
+This patch add the mcp25625 to the device tree bindings documentation.
 
-Fixes: a6024562ffd7 ("udp: Add GRO functions to UDP socket")
-Cc: Tom Herbert <tom@herbertland.com>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/udp.c | 6 +++++-
- net/ipv6/udp.c | 2 +-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index b89920c0f226..54343dc29cb4 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -563,7 +563,11 @@ static inline struct sock *__udp4_lib_lookup_skb(struct sk_buff *skb,
- struct sock *udp4_lib_lookup_skb(struct sk_buff *skb,
- 				 __be16 sport, __be16 dport)
- {
--	return __udp4_lib_lookup_skb(skb, sport, dport, &udp_table);
-+	const struct iphdr *iph = ip_hdr(skb);
-+
-+	return __udp4_lib_lookup(dev_net(skb->dev), iph->saddr, sport,
-+				 iph->daddr, dport, inet_iif(skb),
-+				 inet_sdif(skb), &udp_table, NULL);
- }
- EXPORT_SYMBOL_GPL(udp4_lib_lookup_skb);
- 
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 8d185a0fc5af..fa743776c459 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -308,7 +308,7 @@ struct sock *udp6_lib_lookup_skb(struct sk_buff *skb,
- 
- 	return __udp6_lib_lookup(dev_net(skb->dev), &iph->saddr, sport,
- 				 &iph->daddr, dport, inet6_iif(skb),
--				 inet6_sdif(skb), &udp_table, skb);
-+				 inet6_sdif(skb), &udp_table, NULL);
- }
- EXPORT_SYMBOL_GPL(udp6_lib_lookup_skb);
- 
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+index ee3723beb701..33b38716b77f 100644
+--- a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+@@ -4,6 +4,7 @@ Required properties:
+  - compatible: Should be one of the following:
+    - "microchip,mcp2510" for MCP2510.
+    - "microchip,mcp2515" for MCP2515.
++   - "microchip,mcp25625" for MCP25625.
+  - reg: SPI chip select.
+  - clocks: The clock feeding the CAN controller.
+  - interrupt-parent: The parent interrupt controller.
 -- 
 2.20.1
 
