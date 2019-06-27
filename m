@@ -2,179 +2,140 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45125C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D327DC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAEF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561629138;
-	bh=dsxNdh4gY62N/UPVf6ljab0fgCB+ykVARHPpTFDzkdI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YpaplU0fHPcnzv4cWhjU+MfVyT1JDX/O4wg7q4OAzeu7qn0vn0vOQPrePI+7R5KDB
-	 Lm+MXgMnf/9qkydgW5YzAa+RHE6JIUaWTA85Tkrv5kZMMKw9pHJIS8Mmck0v7izsHn
-	 oztVMjt8UAXg5kKK4rRQRUQTWHBOY99iBvvKcxUM=
+	by mail.kernel.org (Postfix) with ESMTP id A6E292083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 09:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="G0wG3LIG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfF0JwR (ORCPT
+        id S1726596AbfF0JxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 05:52:17 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37319 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfF0JwQ (ORCPT
+        Thu, 27 Jun 2019 05:53:00 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37524 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbfF0JxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 05:52:16 -0400
-Received: by mail-ot1-f68.google.com with SMTP id s20so1650278otp.4;
-        Thu, 27 Jun 2019 02:52:15 -0700 (PDT)
+        Thu, 27 Jun 2019 05:53:00 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so965181pfa.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 02:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eSti7nNxGlkHMPeNaufOPNsxXSw1/a1T6eOCbwJcR44=;
+        b=G0wG3LIGXYb5Tu8AeTGsf4L7a2ukWIRgwZj5WGdhvin5vS27CtwZi3qWiBt6DAntMZ
+         lRL1+R4wZpmnsf2s0i9xMo6bDECRfX5BrWTKcUQxSZsS/Sx8MTlQ5jKzYKSIL631srt0
+         piCtmwxW1Cajnz/tTWW8MgTwe8yqORSV/3YnC4px811/hmnPbyl4c4WLHYaHQ+SUsz7g
+         nI0ZPd7gaJQnuwxcGieVjUKrGogHyOWu1HDhDI8q8iJ5kSCx36x9GKtubm04qvtkKk0/
+         Wqt80KKS3s4GEdgSsNuYhyzO+pnSjgjiLJrsD34JCUoP+nTpeUCdC9RpVfGboENcS5Ej
+         hCaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2n+Gc7hO2AU1TLtw3/ye/KC5SAeP8IrV7BHFI2StPVA=;
-        b=c7oFQ+8ELBrNPFwm1GudVMEILV0mFOd4LE5mcu6GZxbKp4WMRkCrrJzCUNyUqcvNiW
-         p+p7HzWc7hUmWId06eqNKhohX5Sr7LIeBXptiqs4IYEPut4wfeib6kGNd5dhLpclYs29
-         FBxpDQnrEpfIjW+nPE6gHMQ3NIB0gBe8gAeFUN7yDU2Ajcbpu09VZkXOMfVdmRE/Ep2M
-         Rr+chyHn2chlYrjE8MdNo/QVshZluu5wPFn7hgzuQEYjn11tV6M4M56wv2xfEc+VTTTN
-         EVdgvH5bZNO/oTqX5uK/Wpj8twuxy9mhehPNwN1Jq+qi4bAer0aEZfMHZyz+KcuiRmGa
-         qU3A==
-X-Gm-Message-State: APjAAAVDzp9scz6GLPjKvIl+MRnTxOovMpIUL+D/hON214Og9TbBaHwE
-        jwlCK5cnCknQmzXunpxExcm4+uRBt/yjXSf8w4Fvrf8j
-X-Google-Smtp-Source: APXvYqy5p1QYnxFFUJg6W1UKJdijrVQj91QwgDho/fzE0+8B24BvA7cQyBBIVhv4+JU26how5rfKiJHKnJZWbftrkFQ=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr2512472otp.189.1561629135333;
- Thu, 27 Jun 2019 02:52:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eSti7nNxGlkHMPeNaufOPNsxXSw1/a1T6eOCbwJcR44=;
+        b=ohWzeZFe4RYJO7O3mFMdo07rhBmAMu3bnSaIKXI+F0cZtLI3/rw+as9nFNXnAxMoxF
+         dyc4/KWRVYMrblqLPP/ko6dzTjxzEEE/FSe/C+4csIF2/05J1OphWoyCi47Lm47BqG18
+         /0gWRmYe8SSkpuAAnCQTO6qdmgqcbKi8gEKhVtOlGufKclVSNwMZPqytD/CQv05E2RBq
+         66zjJy48kYVL4Cz9Kd2WZ0oBfA/wNntBakXaOz8riY5EHSYLXy/o6daDMVfufPfTb2AL
+         /ZJ3SZXYP9ZvNihjqek+cAekSmjL4Xu2ErLvyLHeO04DOaMuU7CcDLEcO8lIOF/Ng2Dk
+         U8zw==
+X-Gm-Message-State: APjAAAXsuuQVZ5dJtK72m++An6MfH1PlPOixW0/YvOh0cwKHT5PQQ1FZ
+        7fsORCmtAtLSSRD2auYqF8hRVw==
+X-Google-Smtp-Source: APXvYqwThA5c5tolZNtd9PZAt1ZfD9D1vZXSf7f0FwowKXSR7Ra1Wy8QnbI+BmVviA4UB9KjXHwqtA==
+X-Received: by 2002:a65:4387:: with SMTP id m7mr2883842pgp.287.1561629179022;
+        Thu, 27 Jun 2019 02:52:59 -0700 (PDT)
+Received: from localhost.localdomain (220-133-8-232.HINET-IP.hinet.net. [220.133.8.232])
+        by smtp.gmail.com with ESMTPSA id p15sm15635118pjf.27.2019.06.27.02.52.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 27 Jun 2019 02:52:58 -0700 (PDT)
+From:   Chris Chiu <chiu@endlessm.com>
+To:     jes.sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+Subject: [PATCH] rtl8xxxu: Fix wifi low signal strength issue of RTL8723BU
+Date:   Thu, 27 Jun 2019 17:52:47 +0800
+Message-Id: <20190627095247.8792-1-chiu@endlessm.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-References: <cover.1560999838.git.viresh.kumar@linaro.org> <88da7cfabad5e19a361fe2843e5ef547d50fd221.1560999838.git.viresh.kumar@linaro.org>
- <20190627050048.b44kitdfuenxnzfi@vireshk-i7>
-In-Reply-To: <20190627050048.b44kitdfuenxnzfi@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 27 Jun 2019 11:52:04 +0200
-Message-ID: <CAJZ5v0h+1eZGsxgJ5G5OfJiWcyd2GEqxbiU6v4yy9uMvzoAOvw@mail.gmail.com>
-Subject: Re: [PATCH V2 2/5] cpufreq: Replace few CPUFREQ_CONST_LOOPS checks
- with has_target()
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 7:00 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 20-06-19, 08:35, Viresh Kumar wrote:
-> > > CPUFREQ_CONST_LOOPS was introduced in a very old commit from pre-2.6
-> > > kernel release commit 6a4a93f9c0d5 ("[CPUFREQ] Fix 'out of sync'
-> > > issue").
-> > >
-> > > Probably the initial idea was to just avoid these checks for set_policy
-> > > type drivers and then things got changed over the years. And it is very
-> > > unclear why these checks are there at all.
-> > >
-> > > Replace the CPUFREQ_CONST_LOOPS check with has_target(), which makes
-> > > more sense now.
-> > >
-> > > cpufreq_notify_transition() is only called for has_target() type driver
-> > > and not for set_policy type, and the check is simply redundant. Remove
-> > > it as well.
-> > >
-> > > Also remove () around freq comparison statement as they aren't required
-> > > and checkpatch also warns for them.
-> > >
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > ---
-> > >  drivers/cpufreq/cpufreq.c | 13 +++++--------
-> > >  1 file changed, 5 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > index 54befd775bd6..41ac701e324f 100644
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -359,12 +359,10 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
-> > >              * which is not equal to what the cpufreq core thinks is
-> > >              * "old frequency".
-> > >              */
-> > > -           if (!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
-> > > -                   if (policy->cur && (policy->cur != freqs->old)) {
-> > > -                           pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
-> > > -                                    freqs->old, policy->cur);
-> > > -                           freqs->old = policy->cur;
-> > > -                   }
-> > > +           if (policy->cur && policy->cur != freqs->old) {
-> > > +                   pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
-> > > +                            freqs->old, policy->cur);
-> > > +                   freqs->old = policy->cur;
-> > >             }
-> > >
-> > >             srcu_notifier_call_chain(&cpufreq_transition_notifier_list,
-> > > @@ -1618,8 +1616,7 @@ static unsigned int __cpufreq_get(struct cpufreq_policy *policy)
-> > >     if (policy->fast_switch_enabled)
-> > >             return ret_freq;
-> > >
-> > > -   if (ret_freq && policy->cur &&
-> > > -           !(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
-> > > +   if (has_target() && ret_freq && policy->cur) {
-> > >             /* verify no discrepancy between actual and
-> > >                                     saved value exists */
-> > >             if (unlikely(ret_freq != policy->cur)) {
->
-> @Rafael: Here are your comments from the IRC exchange we had
-> yesterday:
->
-> > <rafael>:
-> >
-> > so the problem is that, because of the CPUFREQ_CONST_LOOPS check in
-> > __cpufreq_get(), it almost never does the cpufreq_out_of_sync() thing
-> > now. Because many drivers set CPUFREQ_CONST_LOOPS most of the time,
-> > some of them even unconditionally. This patch changes the code that
-> > runs very rarely into code that runs relatively often.
->
-> Right, we will do the frequency verification on has_target() platforms
-> with CPUFREQ_CONST_LOOPS set after this patch. But why is it the wrong
-> thing to do ?
+The WiFi tx power of RTL8723BU is extremely low after booting. So
+the WiFi scan gives very limited AP list and it always fails to
+connect to the selected AP. This module only supports 1x1 antenna
+and the antenna is switched to bluetooth due to some incorrect
+register settings.
 
-Well, my point was exactly what I said.
+This commit hand over the antenna control to PTA, the wifi signal
+will be back to normal and the bluetooth scan can also work at the
+same time. However, the btcoexist still needs to be handled under
+different circumstances. If there's a BT connection established,
+the wifi still fails to connect until disconneting the BT.
 
-The patch pretended to be a cleanup and changed the code in a
-meaningful way (at least for some drivers).
+Signed-off-by: Chris Chiu <chiu@endlessm.com>
+---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c | 9 ++++++---
+ drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  | 3 ++-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-> What we do here is that we verify that the cached value of current
-> frequency is same as the real frequency the hardware is running at. It
-> makes sense to not do this check for setpolicy type drivers as the
-> cpufreq core isn't always aware of what the driver will end up doing
-> with the frequency and so no verification.
->
-> But for has_target() type drivers, cpufreq core caches the value with
-> it and it should check it to make sure everything is fine. I don't see
-> a correlation with CPUFREQ_CONST_LOOPS flag here, that's it. Either we
-> do this verification or we don't, but there is no reason (as per my
-> understanding) of skipping it using this flag.
->
-> So if you look at the commit I pointed in the history git [1], it does
-> two things:
-> - It adds the verification code (which is quite similar today as
->   well).
-> - And it sets the CPUFREQ_CONST_LOOPS flag only for setpolicy drivers,
->   rightly so.
->
-> The problem happened when we started to use CPUFREQ_CONST_LOOPS for
-> constant loops-per-jiffy thing as well and many has_target() drivers
-> started using the same flag and unknowingly skipped the verification
-> of frequency.
->
-> So, I think the current code is doing the wrong thing by skipping the
-> verification using CPUFREQ_CONST_LOOPS flag.
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+index 3adb1d3d47ac..6c3c70d93ac1 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8723b.c
+@@ -1525,7 +1525,7 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+ 	/*
+ 	 * WLAN action by PTA
+ 	 */
+-	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x04);
++	rtl8xxxu_write8(priv, REG_WLAN_ACT_CONTROL_8723B, 0x0c);
+ 
+ 	/*
+ 	 * BT select S0/S1 controlled by WiFi
+@@ -1568,9 +1568,12 @@ static void rtl8723b_enable_rf(struct rtl8xxxu_priv *priv)
+ 	rtl8xxxu_gen2_h2c_cmd(priv, &h2c, sizeof(h2c.ant_sel_rsv));
+ 
+ 	/*
+-	 * 0x280, 0x00, 0x200, 0x80 - not clear
++	 * Different settings per different antenna position.
++	 * Antenna switch to BT: 0x280, 0x00 (inverse)
++	 * Antenna switch to WiFi: 0x0, 0x280 (inverse)
++	 * Antenna controlled by PTA: 0x200, 0x80 (inverse)
+ 	 */
+-	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x00);
++	rtl8xxxu_write32(priv, REG_S0S1_PATH_SWITCH, 0x80);
+ 
+ 	/*
+ 	 * Software control, antenna at WiFi side
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+index 8136e268b4e6..87b2179a769e 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
+@@ -3891,12 +3891,13 @@ static int rtl8xxxu_init_device(struct ieee80211_hw *hw)
+ 
+ 	/* Check if MAC is already powered on */
+ 	val8 = rtl8xxxu_read8(priv, REG_CR);
++	val16 = rtl8xxxu_read16(priv, REG_SYS_CLKR);
+ 
+ 	/*
+ 	 * Fix 92DU-VC S3 hang with the reason is that secondary mac is not
+ 	 * initialized. First MAC returns 0xea, second MAC returns 0x00
+ 	 */
+-	if (val8 == 0xea)
++	if (val8 == 0xea || !(val16 & BIT(11)))
+ 		macpower = false;
+ 	else
+ 		macpower = true;
+-- 
+2.11.0
 
-All right then, thanks for explaining it here.
-
-The patch is a bug fix, not a cleanup, and it fixes the changes that
-caused CPUFREQ_CONST_LOOPS to be used for a different purpose without
-adjusting the original code accordingly.
-
-I can agree with this rationale, but please fix the changelog.
