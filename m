@@ -2,127 +2,105 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B7CC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2921FC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8B120656
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:55:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZLYYb7UF"
+	by mail.kernel.org (Postfix) with ESMTP id 0985F20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 08:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfF0IzH (ORCPT
+        id S1726632AbfF0Iz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 04:55:07 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:41116 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfF0IzH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 04:55:07 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R8sCA5058141;
-        Thu, 27 Jun 2019 08:54:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=5KptyXNJmsTfP77XZt6SnuUAhHI9DQzGxKm5f7pgB/c=;
- b=ZLYYb7UFwgWFaRYyu6JpYhO5fd6M2quAU8xGVS5kQ8hcr2oFJ38wen5HoT81YUMJpqyE
- 6oxiA5DRsjp4irhvb5WgbndwNQyfZx6wtw3Cv/VgPxTsen4zZKRjvKtrqdlmAZG59DPc
- RZeeoQEUXg3IVo2If1FgItoTJxeaYPqssea6Ukl20L4ejILxLuSZosnH1LQDNDYEUpVF
- FWCdid540riv/M6bRtOirnUh57w6PhS6Erf3GFLjcgjkd1oRd0yTvZoHGSv2odX5K+wZ
- 09yg2cXJ4Ce1Awma+6PcOTpAB/qWNsZrNlGnyw7ILBzbYUCr50WkAgWV1vp/uf45P5my jA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2t9c9py1ks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 08:54:23 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5R8pvea017707;
-        Thu, 27 Jun 2019 08:52:23 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2t99f4w3j3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 08:52:23 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5R8qLWd027247;
-        Thu, 27 Jun 2019 08:52:21 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Jun 2019 01:52:20 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH RESEND] locking/spinlocks, paravirt, hyperv: Correct the hv_nopvspin case
-Date:   Wed, 26 Jun 2019 16:56:01 +0800
-Message-Id: <1561539361-29313-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906270104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9300 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906270105
+        Thu, 27 Jun 2019 04:55:26 -0400
+Received: from mga02.intel.com ([134.134.136.20]:39937 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfF0IzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 04:55:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 01:55:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,423,1557212400"; 
+   d="scan'208";a="156170938"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga008.jf.intel.com with ESMTP; 27 Jun 2019 01:55:24 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 27 Jun 2019 01:55:24 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Jun 2019 01:55:23 -0700
+Received: from shsmsx104.ccr.corp.intel.com (10.239.4.70) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 27 Jun 2019 01:55:23 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.87]) by
+ SHSMSX104.ccr.corp.intel.com ([169.254.5.185]) with mapi id 14.03.0439.000;
+ Thu, 27 Jun 2019 16:55:22 +0800
+From:   "Zhang, Tina" <tina.zhang@intel.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>
+Subject: RE: [RFC PATCH v3 1/4] vfio: Define device specific irq type
+ capability
+Thread-Topic: [RFC PATCH v3 1/4] vfio: Define device specific irq type
+ capability
+Thread-Index: AQHVLJqY892xL/jYXUCHg0oNNo51Q6augUsAgACuxqA=
+Date:   Thu, 27 Jun 2019 08:55:21 +0000
+Message-ID: <237F54289DF84E4997F34151298ABEBC87683644@SHSMSX101.ccr.corp.intel.com>
+References: <20190627033802.1663-1-tina.zhang@intel.com>
+ <20190627033802.1663-2-tina.zhang@intel.com>
+ <20190627061942.k5onxbm27dju3iv5@sirius.home.kraxel.org>
+In-Reply-To: <20190627061942.k5onxbm27dju3iv5@sirius.home.kraxel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZWFhMDI3NzQtZDYwMC00YjQ4LTg2NzEtYmY4MjQxM2UyNWE3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWWRINGo5MDRjMDBpcThxZ1JQb2JaTUZjQlFObEdLM3JDU2pBYzBQT2g0RXFJNmMzbHNHeWVPSUpGSUVzZXorOCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the boot parameter "hv_nopvspin" specified a Hyperv guest should
-not make use of paravirt spinlocks, but behave as if running on bare
-metal. This is not true, however, as the qspinlock code will fall back
-to a test-and-set scheme when it is detecting a hypervisor.
-
-In order to avoid this disable the virt_spin_lock_key.
-
-Same change for XEN is already in Commit e6fd28eb3522
-("locking/spinlocks, paravirt, xen: Correct the xen_nopvspin case")
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: linux-hyperv@vger.kernel.org
----
- arch/x86/hyperv/hv_spinlock.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
-index 07f21a0..d90b4b0 100644
---- a/arch/x86/hyperv/hv_spinlock.c
-+++ b/arch/x86/hyperv/hv_spinlock.c
-@@ -64,6 +64,9 @@ __visible bool hv_vcpu_is_preempted(int vcpu)
- 
- void __init hv_init_spinlocks(void)
- {
-+	if (unlikely(!hv_pvspin))
-+		static_branch_disable(&virt_spin_lock_key);
-+
- 	if (!hv_pvspin || !apic ||
- 	    !(ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) ||
- 	    !(ms_hyperv.features & HV_X64_MSR_GUEST_IDLE_AVAILABLE)) {
--- 
-1.8.3.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogaW50ZWwtZ3Z0LWRldiBb
+bWFpbHRvOmludGVsLWd2dC1kZXYtYm91bmNlc0BsaXN0cy5mcmVlZGVza3RvcC5vcmddIE9uDQo+
+IEJlaGFsZiBPZiBHZXJkIEhvZmZtYW5uDQo+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDI3LCAyMDE5
+IDI6MjAgUE0NCj4gVG86IFpoYW5nLCBUaW5hIDx0aW5hLnpoYW5nQGludGVsLmNvbT4NCj4gQ2M6
+IFRpYW4sIEtldmluIDxrZXZpbi50aWFuQGludGVsLmNvbT47IGt2bUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyB6aGVueXV3QGxpbnV4LmludGVsLmNv
+bTsgWXVhbiwgSGFuZw0KPiA8aGFuZy55dWFuQGludGVsLmNvbT47IGFsZXgud2lsbGlhbXNvbkBy
+ZWRoYXQuY29tOyBMdiwgWmhpeXVhbg0KPiA8emhpeXVhbi5sdkBpbnRlbC5jb20+OyBpbnRlbC1n
+dnQtZGV2QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgV2FuZywgWmhpIEENCj4gPHpoaS5hLndhbmdA
+aW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCB2MyAxLzRdIHZmaW86IERlZmlu
+ZSBkZXZpY2Ugc3BlY2lmaWMgaXJxIHR5cGUNCj4gY2FwYWJpbGl0eQ0KPiANCj4gICBIaSwNCj4g
+DQo+ID4gK3N0cnVjdCB2ZmlvX2lycV9pbmZvX2NhcF90eXBlIHsNCj4gPiArCXN0cnVjdCB2Zmlv
+X2luZm9fY2FwX2hlYWRlciBoZWFkZXI7DQo+ID4gKwlfX3UzMiB0eXBlOyAgICAgLyogZ2xvYmFs
+IHBlciBidXMgZHJpdmVyICovDQo+ID4gKwlfX3UzMiBzdWJ0eXBlOyAgLyogdHlwZSBzcGVjaWZp
+YyAqLw0KPiANCj4gRG8gd2UgcmVhbGx5IG5lZWQgYm90aCB0eXBlIGFuZCBzdWJ0eXBlPw0KVGhl
+biwgaWYgb25lIGRldmljZSBoYXMgc2V2ZXJhbCBpcnFzLCBob3cgY2FuIHdlIGlkZW50aWZ5IHRo
+ZW0/DQpUaGFua3MuDQoNCkJSLA0KdGluYQ0KPiANCj4gY2hlZXJzLA0KPiAgIEdlcmQNCj4gDQo+
+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGludGVs
+LWd2dC1kZXYgbWFpbGluZyBsaXN0DQo+IGludGVsLWd2dC1kZXZAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnDQo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vaW50
+ZWwtZ3Z0LWRldg0K
