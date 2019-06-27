@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495E6C48BD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C870C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FFE620665
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E353520665
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596567;
-	bh=olae8FD6AOzHuigK2TB6iDVUyLn0a91lN8EGRApJj1M=;
+	s=default; t=1561596570;
+	bh=wo4WAj4au1VlSy+57N3W9NobVAEXVXkth8KrqhYeEX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ep/8+Imp77/3EqHCl7rGPMoh3rHMt+NfCtUrafDNj100wUycSZXTzn4qqcK89NOAs
-	 h/8mNmNCDrF/e2iNc/RqARHrFLqFhyow3CgCbuPCeik2YvqH1FDftKod4De5YhM1lS
-	 jQAFpEF9kzOdO+6Te7A6YhZQ6LOA4hYlG7vaebz0=
+	b=Q6XnQoLYLDTJDospg/imfz32JpWmGYG4UjW7jz74Q3o0LvDrUmYkjZo6j76S/Ss65
+	 bKYZbarwYuxnqYkunBln079UFcy7qCSTtlutBboLMb2OaufFRNiuo70Urq9Mc7ci+7
+	 +BzI5cMT8w45JCVx/mgU7jWFSGABynuCol2hB0e8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbfF0AhM (ORCPT
+        id S1728795AbfF0At2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:37:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbfF0AhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:37:00 -0400
+        id S1728518AbfF0AhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:37:13 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DD87217F9;
-        Thu, 27 Jun 2019 00:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77818217F9;
+        Thu, 27 Jun 2019 00:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595818;
-        bh=olae8FD6AOzHuigK2TB6iDVUyLn0a91lN8EGRApJj1M=;
+        s=default; t=1561595832;
+        bh=wo4WAj4au1VlSy+57N3W9NobVAEXVXkth8KrqhYeEX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0f/iunySzp+s9uU/TZTUmDKql2sp0thF2gYxQTfldGTGTR+XKnPeLsV5etXMOoG/p
-         vXpN0eTH8MqGqoE4ppi16RFQe+gDGOKgYAJohrlf2IKaTKt+hAVeiV5iKahM4fclz0
-         A28QfZCDSuWJ3aZBkszofJlK/lgIvrf3OM6aLuCQ=
+        b=o0GF0uH+4MZwDUJ+Bv7jLXf/DainsimTvizEiNRRRrPDnvcspoMgmBt6d7UDm1MNT
+         PCMWrMkcJAlTkn+y3DBTdG/Q3L7m/of7kgRpOMwfSQnkDqiUK0q3lBavkTRWtWRwqq
+         JjictsHU3xYqZefS0BWTC/R9W2vp9MbUnkq0xwbs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/60] mwifiex: Abort at too short BSS descriptor element
-Date:   Wed, 26 Jun 2019 20:35:29 -0400
-Message-Id: <20190627003616.20767-14-sashal@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/60] soundwire: intel: set dai min and max channels correctly
+Date:   Wed, 26 Jun 2019 20:35:34 -0400
+Message-Id: <20190627003616.20767-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
 References: <20190627003616.20767-1-sashal@kernel.org>
@@ -59,89 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 685c9b7750bfacd6fc1db50d86579980593b7869 ]
+[ Upstream commit 39194128701bf2af9bbc420ffe6e3cb5d2c16061 ]
 
-Currently mwifiex_update_bss_desc_with_ie() implicitly assumes that
-the source descriptor entries contain the enough size for each type
-and performs copying without checking the source size.  This may lead
-to read over boundary.
+Looks like there is a copy paste error.
+This patch fixes it!
 
-Fix this by putting the source size check in appropriate places.
-
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/scan.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/soundwire/intel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/scan.c b/drivers/net/wireless/marvell/mwifiex/scan.c
-index ddf985fb93ab..80136153a8e8 100644
---- a/drivers/net/wireless/marvell/mwifiex/scan.c
-+++ b/drivers/net/wireless/marvell/mwifiex/scan.c
-@@ -1269,6 +1269,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 0a8990e758f9..a6e2581ada70 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -651,8 +651,8 @@ static int intel_create_dai(struct sdw_cdns *cdns,
+ 				return -ENOMEM;
+ 			}
  
- 		case WLAN_EID_FH_PARAMS:
-+			if (element_len + 2 < sizeof(*fh_param_set))
-+				return -EINVAL;
- 			fh_param_set =
- 				(struct ieee_types_fh_param_set *) current_ptr;
- 			memcpy(&bss_entry->phy_param_set.fh_param_set,
-@@ -1277,6 +1279,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
- 
- 		case WLAN_EID_DS_PARAMS:
-+			if (element_len + 2 < sizeof(*ds_param_set))
-+				return -EINVAL;
- 			ds_param_set =
- 				(struct ieee_types_ds_param_set *) current_ptr;
- 
-@@ -1288,6 +1292,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
- 
- 		case WLAN_EID_CF_PARAMS:
-+			if (element_len + 2 < sizeof(*cf_param_set))
-+				return -EINVAL;
- 			cf_param_set =
- 				(struct ieee_types_cf_param_set *) current_ptr;
- 			memcpy(&bss_entry->ss_param_set.cf_param_set,
-@@ -1296,6 +1302,8 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
- 
- 		case WLAN_EID_IBSS_PARAMS:
-+			if (element_len + 2 < sizeof(*ibss_param_set))
-+				return -EINVAL;
- 			ibss_param_set =
- 				(struct ieee_types_ibss_param_set *)
- 				current_ptr;
-@@ -1305,10 +1313,14 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
- 
- 		case WLAN_EID_ERP_INFO:
-+			if (!element_len)
-+				return -EINVAL;
- 			bss_entry->erp_flags = *(current_ptr + 2);
- 			break;
- 
- 		case WLAN_EID_PWR_CONSTRAINT:
-+			if (!element_len)
-+				return -EINVAL;
- 			bss_entry->local_constraint = *(current_ptr + 2);
- 			bss_entry->sensed_11h = true;
- 			break;
-@@ -1349,6 +1361,9 @@ int mwifiex_update_bss_desc_with_ie(struct mwifiex_adapter *adapter,
- 			break;
- 
- 		case WLAN_EID_VENDOR_SPECIFIC:
-+			if (element_len + 2 < sizeof(vendor_ie->vend_hdr))
-+				return -EINVAL;
-+
- 			vendor_ie = (struct ieee_types_vendor_specific *)
- 					current_ptr;
- 
+-			dais[i].playback.channels_min = 1;
+-			dais[i].playback.channels_max = max_ch;
++			dais[i].capture.channels_min = 1;
++			dais[i].capture.channels_max = max_ch;
+ 			dais[i].capture.rates = SNDRV_PCM_RATE_48000;
+ 			dais[i].capture.formats = SNDRV_PCM_FMTBIT_S16_LE;
+ 		}
 -- 
 2.20.1
 
