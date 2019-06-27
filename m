@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79C9C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F2CC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9219A20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2E32086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6/y93bY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pBK+PQ7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfF0Rir (ORCPT
+        id S1727059AbfF0Ri6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:38:47 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37096 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbfF0Riq (ORCPT
+        Thu, 27 Jun 2019 13:38:58 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37424 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfF0Ri5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:38:46 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so1587784pfa.4;
-        Thu, 27 Jun 2019 10:38:46 -0700 (PDT)
+        Thu, 27 Jun 2019 13:38:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 25so1342029pgy.4;
+        Thu, 27 Jun 2019 10:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=ILvJeXXrJtIpar6XfvJXT/7Myht5vQDgIN3UR4dQtvM=;
-        b=o6/y93bY03CS3Hh0zXZTxAOSkT2wDSwUwRQT0pXSrPY28PCoSMMxKejNC7sCFWt9qJ
-         A2/HdkX5KHDUGpOR1sQVjKPX+CN7M/aGmxUyo3ftfS7ghtMKPn01ItVZGpzoOszRz0LS
-         KmM8o9nsVTHDCbfDLdYsFuSUEUSCCd+HPLH4CPg46NwdXRWu1ynrKILuByxx7rcc3A/8
-         hlFg+F7OIWriCFcqunyT/ZdOa24ycIwZ7GAWdSRChY86+CSoEvFxlVTD14uj0qoUl98f
-         nygUVmrK3Xl57QcDyslwhqR5iommy8XswWxDcElMH3qEVNL4/iE/kdh7ksYZOY+v2UO1
-         E8Vg==
+        bh=l77SWRoBIHoK9a0cWIJB2K1I9BXAHdpgkh62i7lteaI=;
+        b=pBK+PQ7vNNXMUNvRrKgmwSOYumr4wHPBKPoKeTMmK+F1WTR6caF7ck3f7bub+oSbq5
+         b7QwhT3Blnqb3gUDdfPXWpKZTfpG9QROQ/9JxwEOWr7EkHuaymVllWYfai2wXmICmF1r
+         +PcOlI1fhfWY9hm9+Zg9wwQXA2bW+jVO69oRsVs6Kk6BWSh6T4JxTFOskvVx2TV4JE6L
+         NRl2ZrHpuhkYh8xmv/CoY/H+Q75dwdx974SJd/M4gwU1q8sKx6sYzgRCNvPvGkH6oraJ
+         gUPlU1J/m/wmscVlEiUnYVwGYiIFTc0dsVgMtuSnIfuE3WgJKSn9ZzAn89M/QlXWbYU/
+         DDNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ILvJeXXrJtIpar6XfvJXT/7Myht5vQDgIN3UR4dQtvM=;
-        b=hiv/0dqZLLMcTGGz76QE01gxRkIQhSxnOOB/Gv9AreJX//z2JbGn8BBKY8zEkx0Vok
-         RLcLH/eOTHJbWzrE16Z9WR8i1Xzw7d82n87XtF0bF0ZrFx3g3YmNZ3xP/s7qOoIOPCLr
-         AMVnUQW16c9dkrdy7jjSRy1Y4TSwyQhrWtwy554cinQ6oHJ8BGvPNT01BUa4aUYrXIHy
-         j0tovhxQciPseVE3JKgiQabkcOg2H4cd5/WKX0gPhiiiJVFR+t9iozRoRd68m7X+xIg0
-         fDKEmCrkyTUR0p3+LNY89oYM0sPGy3lers4rN+9NNbSRI+uNtAB2Ed41kwYI0G6lS77s
-         eQ5A==
-X-Gm-Message-State: APjAAAWI/WBuennTchdARhzgWHw4PZpdZAisPJ8pxzRU4TZWDXrs85CN
-        uoef1g2P+E3dbBRGZZha19svlr7NKrpEyQ==
-X-Google-Smtp-Source: APXvYqzJ94WZYLrg+GzEnmZ/FVsSAAVSrinsjqrv1x92ZgviqosaudTwXRwBB8jwUbywDlDdMBuytA==
-X-Received: by 2002:a17:90a:3aed:: with SMTP id b100mr7503627pjc.63.1561657125744;
-        Thu, 27 Jun 2019 10:38:45 -0700 (PDT)
+        bh=l77SWRoBIHoK9a0cWIJB2K1I9BXAHdpgkh62i7lteaI=;
+        b=TRjmyHm6SPe1nOm+6LT8/baZK0EGvFzFgjsFkEJwBbqQrALPoJMze7iPVFt9ndQT7F
+         wguaTIlVCu9ao6OCBNtlmRKwawlAXJTk03jurxYbNYRNEKSH44z3Ivdoa+CNmXX7kRf2
+         23f6qtzb5hiLU5qNUVYpnScNdzXC+EMhHACCqyTPYV/kZwMkmpYcb5CCG2Pi+febjbAB
+         3jS5y+UNKeQo+UCJif5b49ryM/UV9VbOLOeCDOn7mJNgTH7XRHJrZ49zib/13vsazA/P
+         emujz30jf5EAbL1sqpcuzrWCrUEKXm/jixTPqfCqXTRlPWkIK/D3XAfZ0lYpBETtGt0k
+         uEVg==
+X-Gm-Message-State: APjAAAVs2pplaZZSYCzpcFCa6ZQZMYk6hBeDaNKg/apub1h48Gt8Yked
+        lFJuP7kiS3KcJVGLlAvtqco=
+X-Google-Smtp-Source: APXvYqyFDmdsOVzz5JMrB7B1rJfLVQ15Sj8U3x0L1xsIz0tFY90YloEg+3C4yrtXHqA1wG7jTHv1pA==
+X-Received: by 2002:a65:6495:: with SMTP id e21mr4726679pgv.383.1561657136560;
+        Thu, 27 Jun 2019 10:38:56 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id n98sm6576526pjc.26.2019.06.27.10.38.43
+        by smtp.googlemail.com with ESMTPSA id h6sm3862006pfn.79.2019.06.27.10.38.54
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:38:45 -0700 (PDT)
+        Thu, 27 Jun 2019 10:38:56 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
         Mike Isely <isely@pobox.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 32/87] usb: pvrusb2: replace kmalloc and memset with kzalloc in pvrusb2-eeprom.c
-Date:   Fri, 28 Jun 2019 01:38:39 +0800
-Message-Id: <20190627173840.3519-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 33/87] usb: pvrusb2: replace kmalloc and memset with kzalloc
+Date:   Fri, 28 Jun 2019 01:38:50 +0800
+Message-Id: <20190627173850.3571-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,14 +74,14 @@ kmalloc + memset(0) -> kzalloc
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/media/usb/pvrusb2/pvrusb2-eeprom.c | 3 +--
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c b/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c
-index 79f0e0c6df37..fac90af8b537 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-eeprom.c
-@@ -39,7 +39,7 @@ static u8 *pvr2_eeprom_fetch(struct pvr2_hdw *hdw)
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+index 70b5cb08d65b..ff75b4a53dfa 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
+@@ -3309,7 +3309,7 @@ static u8 *pvr2_full_eeprom_fetch(struct pvr2_hdw *hdw)
  	int ret;
  	int mode16 = 0;
  	unsigned pcnt,tcnt;
@@ -90,7 +90,7 @@ index 79f0e0c6df37..fac90af8b537 100644
  	if (!eeprom) {
  		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
  			   "Failed to allocate memory required to read eeprom");
-@@ -74,7 +74,6 @@ static u8 *pvr2_eeprom_fetch(struct pvr2_hdw *hdw)
+@@ -3344,7 +3344,6 @@ static u8 *pvr2_full_eeprom_fetch(struct pvr2_hdw *hdw)
  	   (1) we're only fetching part of the eeprom, and (2) if we were
  	   getting the whole thing our I2C driver can't grab it in one
  	   pass - which is what tveeprom is otherwise going to attempt */
