@@ -2,75 +2,78 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE3EC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F94C48BD6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE62120828
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD04120828
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 12:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfF0MX5 (ORCPT
+        id S1727005AbfF0MYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 08:23:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48482 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbfF0MX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 08:23:57 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 09B73C04FFF1;
-        Thu, 27 Jun 2019 12:23:57 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86BF21A8F5;
-        Thu, 27 Jun 2019 12:23:54 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id D2EA216E19; Thu, 27 Jun 2019 14:23:48 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     tzimmermann@suse.de, Gerd Hoffmann <kraxel@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 1/5] gem/vram: pin to vram in vmap
-Date:   Thu, 27 Jun 2019 14:23:44 +0200
-Message-Id: <20190627122348.5833-2-kraxel@redhat.com>
-In-Reply-To: <20190627122348.5833-1-kraxel@redhat.com>
-References: <20190627122348.5833-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 27 Jun 2019 12:23:57 +0000 (UTC)
+        Thu, 27 Jun 2019 08:24:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53513 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfF0MYX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 08:24:23 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hgTRs-00026w-11; Thu, 27 Jun 2019 14:24:20 +0200
+Date:   Thu, 27 Jun 2019 14:24:19 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, peterz@infradead.org,
+        srinivas.eeda@oracle.com
+Subject: Re: [PATCH v2 0/7] misc fixes to PV extentions code
+In-Reply-To: <ab80e007-1d7e-ff13-d11a-10999d198ad3@oracle.com>
+Message-ID: <alpine.DEB.2.21.1906271423310.32342@nanos.tec.linutronix.de>
+References: <1561377779-28036-1-git-send-email-zhenzhong.duan@oracle.com> <alpine.DEB.2.21.1906261511180.32342@nanos.tec.linutronix.de> <ab80e007-1d7e-ff13-d11a-10999d198ad3@oracle.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-1429891856-1561638260=:32342"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm clients like the generic framebuffer emulation keep a permanent
-vmap active, which in turn has a permanent pin.  This pin needs to
-be in vram, otherwise we can't display the framebuffer.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/drm_gem_vram_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--8323329-1429891856-1561638260=:32342
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-index 4de782ca26b2..c724876c6f2a 100644
---- a/drivers/gpu/drm/drm_gem_vram_helper.c
-+++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-@@ -592,7 +592,7 @@ void *drm_gem_vram_driver_gem_prime_vmap(struct drm_gem_object *gem)
- 	int ret;
- 	void *base;
- 
--	ret = drm_gem_vram_pin(gbo, 0);
-+	ret = drm_gem_vram_pin(gbo, DRM_GEM_VRAM_PL_FLAG_VRAM);
- 	if (ret)
- 		return NULL;
- 	base = drm_gem_vram_kmap(gbo, true, NULL);
--- 
-2.18.1
+Zhenzhong,
 
+On Thu, 27 Jun 2019, Zhenzhong Duan wrote:
+> On 2019/6/26 21:39, Thomas Gleixner wrote:
+> > Documentation/process/submitting-patches.rst clearly explains why it is a
+> > bad idea to send random collections of patches especially if some patches
+> > are independent and contain bug fixes.
+> > 
+> > These rules exist for a reason and are not subject to personal
+> > interpretation. You want your patches to be reviewed and merged, so pretty
+> > please make the life of those who need to do that as easy as possible.
+> > 
+> > It's not the job of reviewers and maintainers to distangle your randomly
+> > ordered patch series.
+> 
+> Ok，understood.  I'll send independent and unrelated patch seperately.
+
+Much appreciated.
+
+Thanks,
+
+	tglx
+--8323329-1429891856-1561638260=:32342--
