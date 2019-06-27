@@ -2,100 +2,131 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5838EC004E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342F6C004E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E09020665
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C4E20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 20:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfF0UdA convert rfc822-to-8bit (ORCPT
+        id S1726525AbfF0UgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 16:33:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11761 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfF0UdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 16:33:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jun 2019 13:32:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,425,1557212400"; 
-   d="scan'208";a="153164120"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by orsmga007.jf.intel.com with ESMTP; 27 Jun 2019 13:32:59 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.97]) by
- ORSMSX108.amr.corp.intel.com ([169.254.2.227]) with mapi id 14.03.0439.000;
- Thu, 27 Jun 2019 13:32:58 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: RE: [PATCH v20 22/28] x86/traps: Attempt to fixup exceptions in
- vDSO before signaling
-Thread-Topic: [PATCH v20 22/28] x86/traps: Attempt to fixup exceptions in
- vDSO before signaling
-Thread-Index: AQHVK2zZgzHDWzFJwEGh+L3RXyNlXaav93CQ
-Date:   Thu, 27 Jun 2019 20:32:58 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F6551B873@ORSMSX116.amr.corp.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190417103938.7762-23-jarkko.sakkinen@linux.intel.com>
- <20190625154341.GA7046@linux.intel.com>
-In-Reply-To: <20190625154341.GA7046@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjA1NDc5NTktYTdlOC00ZmM5LTgzYTYtN2E3MmQ5Y2Q0NWRkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTlV4b3BLVFNDUEI1ZGw0Y3lzU1BwbnY4RlZsRWZuQ0NHRGtpdzY1K2NvMTFQTUkxOGtpT01hK053SmxJaGVYbiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 27 Jun 2019 16:36:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35438 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726445AbfF0UgS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 16:36:18 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RKVh1Q008540
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:36:17 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2td4sv8fvw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:36:17 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 27 Jun 2019 21:36:16 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Jun 2019 21:36:11 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RKaAig35717430
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 20:36:10 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EFA9B205F;
+        Thu, 27 Jun 2019 20:36:10 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4109AB2065;
+        Thu, 27 Jun 2019 20:36:10 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 20:36:10 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 664E416C5D5C; Thu, 27 Jun 2019 13:36:12 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 13:36:12 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC] Deadlock via recursive wakeup via RCU with threadirqs
+Reply-To: paulmck@linux.ibm.com
+References: <20190626162558.GY26519@linux.ibm.com>
+ <20190627142436.GD215968@google.com>
+ <20190627103455.01014276@gandalf.local.home>
+ <20190627153031.GA249127@google.com>
+ <20190627155506.GU26519@linux.ibm.com>
+ <CAEXW_YSEN_OL3ftTLN=M-W70WSuCgHJqU-R9VhS=A3uVj_AL+A@mail.gmail.com>
+ <20190627173831.GW26519@linux.ibm.com>
+ <20190627181638.GA209455@google.com>
+ <20190627184107.GA26519@linux.ibm.com>
+ <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13761fee4b71cc004ad0d6709875ce917ff28fce.camel@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062720-0052-0000-0000-000003D71592
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011342; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01224156; UDB=6.00644279; IPR=6.01005345;
+ MB=3.00027495; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 20:36:14
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062720-0053-0000-0000-0000617BF024
+Message-Id: <20190627203612.GD26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=926 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270236
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-sgx-owner@vger.kernel.org [mailto:linux-sgx-
-> owner@vger.kernel.org] On Behalf Of Jarkko Sakkinen
-> Sent: Tuesday, June 25, 2019 8:44 AM
+On Thu, Jun 27, 2019 at 03:17:27PM -0500, Scott Wood wrote:
+> On Thu, 2019-06-27 at 11:41 -0700, Paul E. McKenney wrote:
+> > On Thu, Jun 27, 2019 at 02:16:38PM -0400, Joel Fernandes wrote:
+> > > 
+> > > I think the fix should be to prevent the wake-up not based on whether we
+> > > are
+> > > in hard/soft-interrupt mode but that we are doing the rcu_read_unlock()
+> > > from
+> > > a scheduler path (if we can detect that)
+> > 
+> > Or just don't do the wakeup at all, if it comes to that.  I don't know
+> > of any way to determine whether rcu_read_unlock() is being called from
+> > the scheduler, but it has been some time since I asked Peter Zijlstra
+> > about that.
+> > 
+> > Of course, unconditionally refusing to do the wakeup might not be happy
+> > thing for NO_HZ_FULL kernels that don't implement IRQ work.
 > 
-> I went through the vDSO changes just to revisit couple of details that I
-> had forgotten. Sean, if you don't mind I'd squash this and prepending
-> patch.
+> Couldn't smp_send_reschedule() be used instead?
 
-Just a reminder that #DB/#BP shall be treated differently because they are used by debuggers. So instead of branching to the fixup address, the kernel shall just signal the process. 
+Good point.  If current -rcu doesn't fix things for Sebastian's case,
+that would be well worth looking at.  But there must be some reason
+why Peter Zijlstra didn't suggest it when he instead suggested using
+the IRQ work approach.
 
-> 
-> Is there any obvious reason why #PF fixup is in its own patch and the
-> rest are collected to the same patch? I would not find it confusing if
-> there was one patch per exception but really don't get this division.
-> 
-> /Jarkko
+Peter, thoughts?
+
+							Thanx, Paul
+
