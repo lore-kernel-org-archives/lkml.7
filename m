@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739B3C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FD5C48BD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FF62187F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9EC21852
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 00:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561596055;
-	bh=Kny27XQSV5AM0M1aWHSCaDqnRLDvZOKQOAbY5pDm614=;
+	s=default; t=1561596060;
+	bh=j1GUYaiCZcexAtzUmVTur61ILYbN9uxfHuWzcidjug4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1iDOj/M50eSUGiOBMdcop8Fhf4xxPLxh4S1Uq18hfnhEBp10NsQtZqy8gTwqpKpM+
-	 6X427UsnmW7P5lGa8tjaftjX6/GkqHgR5731pEJcRPGm6aGfJbbRO5k3tY51jEJgds
-	 6WHWrB8UQH99t53U1TUlF5zku0w7fZdhqnPOX+ew=
+	b=S90OBjm6ZhJpLKkafcbwpr5crawO0VhCc0M+Tnt0E80JQj/W/EETieZ2rifbhNM3R
+	 cjwNXeIP3tsf6T0I9d9u7iMtJHDupWx7neFvG87q1ym1L8e2hhOb3DpHQOI1njYtV5
+	 Q52UQY45ZWNNmrNC1d6Aj54lr/3Y3NEjLMteg9O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbfF0Akx (ORCPT
+        id S1728678AbfF0Ak6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Jun 2019 20:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
+        Wed, 26 Jun 2019 20:40:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727499AbfF0Akr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:40:47 -0400
+        id S1729400AbfF0Akx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:40:53 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E2C52187F;
-        Thu, 27 Jun 2019 00:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4532187F;
+        Thu, 27 Jun 2019 00:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561596046;
-        bh=Kny27XQSV5AM0M1aWHSCaDqnRLDvZOKQOAbY5pDm614=;
+        s=default; t=1561596052;
+        bh=j1GUYaiCZcexAtzUmVTur61ILYbN9uxfHuWzcidjug4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rYjxcyk1OHBPVv8PAx0aWO6BJqgW1g7T+jEadM2Zuya+mXY/KSVduvpk2PQYoy7Qk
-         xoup3Nk17BlULos75YS6nurFOicNBZ10X1dXKM/wPIkK9Ge4XmJ9IDfGqdNAePI5AM
-         h3FMHwfs0QQaQ6kPLBOzCR4YJKEDKC8CQBRjvMjU=
+        b=gqAUCRUS51ScWclphFlsAXLYUwZgQ1x/JvI3gxs+pu3kCnfqWMCjpperwdN6jPVjY
+         lZTzjGFxxH//8zRx9pphzwHBqT1S+N+/auuq/+vN7zDlaxROIO7GYgsliWNQa9leoE
+         fOn93kvF94n35NVcViaLnsxZYYt0vgYDb74bkiSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 23/35] ARM: davinci: da8xx: specify dma_coherent_mask for lcdc
-Date:   Wed, 26 Jun 2019 20:39:11 -0400
-Message-Id: <20190627003925.21330-23-sashal@kernel.org>
+Cc:     Reinhard Speyerer <rspmn@arcor.de>,
+        Daniele Palmas <dnlplm@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 25/35] qmi_wwan: add support for QMAP padding in the RX path
+Date:   Wed, 26 Jun 2019 20:39:13 -0400
+Message-Id: <20190627003925.21330-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627003925.21330-1-sashal@kernel.org>
 References: <20190627003925.21330-1-sashal@kernel.org>
@@ -58,66 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Reinhard Speyerer <rspmn@arcor.de>
 
-[ Upstream commit 68f2515bb31a664ba3e2bc1eb78dd9f529b10067 ]
+[ Upstream commit 61356088ace1866a847a727d4d40da7bf00b67fc ]
 
-The lcdc device is missing the dma_coherent_mask definition causing the
-following warning on da850-evm:
+The QMAP code in the qmi_wwan driver is based on the CodeAurora GobiNet
+driver which does not process QMAP padding in the RX path correctly.
+Add support for QMAP padding to qmimux_rx_fixup() according to the
+description of the rmnet driver.
 
-da8xx_lcdc da8xx_lcdc.0: found Sharp_LK043T1DG01 panel
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at kernel/dma/mapping.c:247 dma_alloc_attrs+0xc8/0x110
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper Not tainted 5.2.0-rc3-00077-g16d72dd4891f #18
-Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
-[<c000fce8>] (unwind_backtrace) from [<c000d900>] (show_stack+0x10/0x14)
-[<c000d900>] (show_stack) from [<c001a4f8>] (__warn+0xec/0x114)
-[<c001a4f8>] (__warn) from [<c001a634>] (warn_slowpath_null+0x3c/0x48)
-[<c001a634>] (warn_slowpath_null) from [<c0065860>] (dma_alloc_attrs+0xc8/0x110)
-[<c0065860>] (dma_alloc_attrs) from [<c02820f8>] (fb_probe+0x228/0x5a8)
-[<c02820f8>] (fb_probe) from [<c02d3e9c>] (platform_drv_probe+0x48/0x9c)
-[<c02d3e9c>] (platform_drv_probe) from [<c02d221c>] (really_probe+0x1d8/0x2d4)
-[<c02d221c>] (really_probe) from [<c02d2474>] (driver_probe_device+0x5c/0x168)
-[<c02d2474>] (driver_probe_device) from [<c02d2728>] (device_driver_attach+0x58/0x60)
-[<c02d2728>] (device_driver_attach) from [<c02d27b0>] (__driver_attach+0x80/0xbc)
-[<c02d27b0>] (__driver_attach) from [<c02d047c>] (bus_for_each_dev+0x64/0xb4)
-[<c02d047c>] (bus_for_each_dev) from [<c02d1590>] (bus_add_driver+0xe4/0x1d8)
-[<c02d1590>] (bus_add_driver) from [<c02d301c>] (driver_register+0x78/0x10c)
-[<c02d301c>] (driver_register) from [<c000a5c0>] (do_one_initcall+0x48/0x1bc)
-[<c000a5c0>] (do_one_initcall) from [<c05cae6c>] (kernel_init_freeable+0x10c/0x1d8)
-[<c05cae6c>] (kernel_init_freeable) from [<c048a000>] (kernel_init+0x8/0xf4)
-[<c048a000>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)
-Exception stack(0xc6837fb0 to 0xc6837ff8)
-7fa0:                                     00000000 00000000 00000000 00000000
-7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
----[ end trace 8a8073511be81dd2 ]---
-
-Add a 32-bit mask to the platform device's definition.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Fixes: c6adf77953bc ("net: usb: qmi_wwan: add qmap mux protocol support")
+Cc: Daniele Palmas <dnlplm@gmail.com>
+Signed-off-by: Reinhard Speyerer <rspmn@arcor.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-davinci/devices-da8xx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/usb/qmi_wwan.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index 22440c05d66a..7120f93eab0b 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -699,6 +699,9 @@ static struct platform_device da8xx_lcdc_device = {
- 	.id		= 0,
- 	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
- 	.resource	= da8xx_lcdc_resources,
-+	.dev		= {
-+		.coherent_dma_mask	= DMA_BIT_MASK(32),
-+	}
- };
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index c2d6c501dd85..023bb2daa72f 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -153,7 +153,7 @@ static bool qmimux_has_slaves(struct usbnet *dev)
  
- int __init da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata)
+ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ {
+-	unsigned int len, offset = 0;
++	unsigned int len, offset = 0, pad_len, pkt_len;
+ 	struct qmimux_hdr *hdr;
+ 	struct net_device *net;
+ 	struct sk_buff *skbn;
+@@ -171,10 +171,16 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		if (hdr->pad & 0x80)
+ 			goto skip;
+ 
++		/* extract padding length and check for valid length info */
++		pad_len = hdr->pad & 0x3f;
++		if (len == 0 || pad_len >= len)
++			goto skip;
++		pkt_len = len - pad_len;
++
+ 		net = qmimux_find_dev(dev, hdr->mux_id);
+ 		if (!net)
+ 			goto skip;
+-		skbn = netdev_alloc_skb(net, len);
++		skbn = netdev_alloc_skb(net, pkt_len);
+ 		if (!skbn)
+ 			return 0;
+ 		skbn->dev = net;
+@@ -191,7 +197,7 @@ static int qmimux_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 			goto skip;
+ 		}
+ 
+-		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, len);
++		skb_put_data(skbn, skb->data + offset + qmimux_hdr_sz, pkt_len);
+ 		if (netif_rx(skbn) != NET_RX_SUCCESS)
+ 			return 0;
+ 
 -- 
 2.20.1
 
