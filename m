@@ -2,124 +2,146 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DD2C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146A9C48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6B4208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D41208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbfF0SAN (ORCPT
+        id S1726709AbfF0SAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:00:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48768 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726405AbfF0SAN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:00:13 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RHvBj8102602
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:00:12 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2td2nd85es-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 14:00:11 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 27 Jun 2019 19:00:10 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Jun 2019 19:00:06 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RI05xC54067698
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Jun 2019 18:00:05 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 377F8B2064;
-        Thu, 27 Jun 2019 18:00:05 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 242E4B206B;
-        Thu, 27 Jun 2019 18:00:05 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Jun 2019 18:00:05 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 252A116C0E68; Thu, 27 Jun 2019 11:00:07 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 11:00:07 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH RT 4/4] rcutorture: Avoid problematic critical
- section nesting
-Reply-To: paulmck@linux.ibm.com
-References: <20190619011908.25026-1-swood@redhat.com>
- <20190619011908.25026-5-swood@redhat.com>
- <20190620211826.GX26519@linux.ibm.com>
- <20190621163821.rm2rhsnvfo5tnjul@linutronix.de>
- <20190621235955.GK26519@linux.ibm.com>
- <20190626110847.2dfdf72c@gandalf.local.home>
- <8462f30720637ec0da377aa737d26d2cad424d36.camel@redhat.com>
+        Thu, 27 Jun 2019 14:00:51 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:38904 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbfF0SAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 14:00:50 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hgYhL-00046B-JH; Thu, 27 Jun 2019 12:00:40 -0600
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190625072008.GB30350@lst.de>
+ <f0f002bf-2b94-cd18-d18f-5d0b08311495@deltatee.com>
+ <20190625170115.GA9746@lst.de>
+ <41235a05-8ed1-e69a-e7cd-48cae7d8a676@deltatee.com>
+ <20190626065708.GB24531@lst.de>
+ <c15d5997-9ba4-f7db-0e7a-a69e75df316c@deltatee.com>
+ <20190626202107.GA5850@ziepe.ca>
+ <8a0a08c3-a537-bff6-0852-a5f337a70688@deltatee.com>
+ <20190627090843.GB11548@lst.de>
+ <89889319-e778-7772-ab36-dc55b59826be@deltatee.com>
+ <20190627170027.GE10652@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e63d0259-e17f-effe-b76d-43dbfda8ae3a@deltatee.com>
+Date:   Thu, 27 Jun 2019 12:00:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8462f30720637ec0da377aa737d26d2cad424d36.camel@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062718-2213-0000-0000-000003A5D520
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011342; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01224104; UDB=6.00644247; IPR=6.01005293;
- MB=3.00027492; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-27 18:00:09
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062718-2214-0000-0000-00005F04DBB5
-Message-Id: <20190627180007.GA27126@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906270205
+In-Reply-To: <20190627170027.GE10652@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 11:49:16AM -0500, Scott Wood wrote:
-> On Wed, 2019-06-26 at 11:08 -0400, Steven Rostedt wrote:
-> > On Fri, 21 Jun 2019 16:59:55 -0700
-> > "Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
-> > 
-> > > I have no objection to the outlawing of a number of these sequences in
-> > > mainline, but am rather pointing out that until they really are outlawed
-> > > and eliminated, rcutorture must continue to test them in mainline.
-> > > Of course, an rcutorture running in -rt should avoid testing things that
-> > > break -rt, including these sequences.
-> > 
-> > We should update lockdep to complain about these sequences. That would
-> > "outlaw" them in mainline. That is, after we clean up all the current
-> > sequences in the code. And we also need to get Linus's approval of this
-> > as I believe he was against enforcing this in the past.
+
+
+On 2019-06-27 11:00 a.m., Christoph Hellwig wrote:
+> It is not.  (c) is fundamentally very different as it is not actually
+> an operation that ever goes out to the wire at all, and which is why the
+> actual physical address on the wire does not matter at all.
+> Some interfaces like NVMe have designed it in a way that it the commands
+> used to do this internal transfer look like (b2), but that is just their
+> (IMHO very questionable) interface design choice, that produces a whole
+> chain of problems.
+
+From the mapping device's driver's perspective yes, but from the
+perspective of a submitting driver they would be the same.
+
+>>> I guess it might make sense to just have a block layer flag that (b) or
+>>> (c) might be contained in a bio.  Then we always look up the data
+>>> structure, but can still fall back to (a) if nothing was found.  That
+>>> even allows free mixing and matching of memory types, at least as long
+>>> as they are contained to separate bio_vec segments.
+>>
+>> IMO these three cases should be reflected in flags in the bio_vec. We'd
+>> probably still need a queue flag to indicate support for mapping these,
+>> but a flag on the bio that indicates special cases *might* exist in the
+>> bio_vec and the driver has to do extra work to somehow distinguish the
+>> three types doesn't seem useful. bio_vec flags also make it easy to
+>> support mixing segments from different memory types.
 > 
-> Was the opposition to prohibiting some specific sequence?  It's only certain
-> misnesting scenarios that are problematic.  The rcu_read_lock/
-> local_irq_disable restriction can be dropped with the IPI-to-self added in
-> Paul's tree.  Are there any known instances of the other two (besides
-> rcutorture)?
+> So I іnitially suggested these flags.  But without a pgmap we absolutely
+> need a lookup operation to find which phys address ranges map to which
+> device.  And once we do that the data structure the only thing we need
+> is a flag saying that we need that information, and everything else
+> can be in the data structure returned from that lookup.
 
-Given the failure scenario Sebastian Siewior reported today, there
-apparently are some, at least when running threaded interrupt handlers.
+Yes, you did suggest them. But what I'm trying to suggest is we don't
+*necessarily* need the lookup. For demonstration purposes only, a
+submitting driver could very roughly potentially do:
 
-							Thanx, Paul
+struct bio_vec vec;
+dist = pci_p2pdma_dist(provider_pdev, mapping_pdev);
+if (dist < 0) {
+     /* use regular memory */
+     vec.bv_addr = virt_to_phys(kmalloc(...));
+     vec.bv_flags = 0;
+} else if (dist & PCI_P2PDMA_THRU_HOST_BRIDGE) {
+     vec.bv_addr = pci_p2pmem_alloc_phys(provider_pdev, ...);
+     vec.bv_flags = BVEC_MAP_RESOURCE;
+} else {
+     vec.bv_addr = pci_p2pmem_alloc_bus_addr(provider_pdev, ...);
+     vec.bv_flags = BVEC_MAP_BUS_ADDR;
+}
 
+-- And a mapping driver would roughly just do:
+
+dma_addr_t dma_addr;
+if (vec.bv_flags & BVEC_MAP_BUS_ADDR) {
+     if (pci_bus_addr_in_bar(mapping_pdev, vec.bv_addr, &bar, &off))  {
+          /* case (c) */
+          /* program the DMA engine with bar and off */
+     } else {
+          /* case (b2) */
+          dma_addr = vec.bv_addr;
+     }
+} else if (vec.bv_flags & BVEC_MAP_RESOURCE) {
+     /* case (b1) */
+     dma_addr = dma_map_resource(mapping_dev, vec.bv_addr, ...);
+} else {
+     /* case (a) */
+     dma_addr = dma_map_page(..., phys_to_page(vec.bv_addr), ...);
+}
+
+The real difficulty here is that you'd really want all the above handled
+by a dma_map_bvec() so it can combine every vector hitting the IOMMU
+into a single continuous IOVA -- but it's hard to fit case (c) into that
+equation. So it might be that a dma_map_bvec() handles cases (a), (b1)
+and (b2) and the mapping driver has to then check each resulting DMA
+vector for pci_bus_addr_in_bar() while it is programming the DMA engine
+to deal with case (c).
+
+Logan
