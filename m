@@ -2,39 +2,41 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE705C48BD9
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C74DC48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D64720659
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3097620665
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 17:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfF0RQT (ORCPT
+        id S1726655AbfF0RQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 13:16:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:59198 "EHLO foss.arm.com"
+        Thu, 27 Jun 2019 13:16:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:59226 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfF0RQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 13:16:18 -0400
+        id S1726561AbfF0RQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 13:16:21 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4E69360;
-        Thu, 27 Jun 2019 10:16:17 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0194142F;
+        Thu, 27 Jun 2019 10:16:20 -0700 (PDT)
 Received: from e107049-lin.arm.com (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E3D23F718;
-        Thu, 27 Jun 2019 10:16:16 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9AFBA3F718;
+        Thu, 27 Jun 2019 10:16:19 -0700 (PDT)
 From:   Douglas RAILLARD <douglas.raillard@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
         rjw@rjwysocki.net, viresh.kumar@linaro.org, quentin.perret@arm.com,
         douglas.raillard@arm.com, patrick.bellasi@arm.com,
         dietmar.eggemann@arm.com
-Subject: [RFC PATCH v2 0/5] sched/cpufreq: Make schedutil energy aware
-Date:   Thu, 27 Jun 2019 18:15:58 +0100
-Message-Id: <20190627171603.14767-1-douglas.raillard@arm.com>
+Subject: [RFC PATCH v2 2/5] sched/cpufreq: Attach perf domain to sugov policy
+Date:   Thu, 27 Jun 2019 18:16:00 +0100
+Message-Id: <20190627171603.14767-3-douglas.raillard@arm.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190627171603.14767-1-douglas.raillard@arm.com>
+References: <20190627171603.14767-1-douglas.raillard@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,84 +44,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make schedutil cpufreq governor energy-aware.
+Attach an Energy Model perf_domain to each sugov_policy to prepare the
+ground for energy-aware schedutil.
 
-- patch 1 introduces a function to retrieve a frequency given a base
-  frequency and an energy cost margin.
-- patch 2 links Energy Model perf_domain to sugov_policy.
-- patch 3 updates get_next_freq() to make use of the Energy Model.
-- patch 4 adds sugov_cpu_ramp_boost() function.
-- patch 5 updates sugov_update_(single|shared)() to make use of
-  sugov_cpu_ramp_boost().
+Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
+---
+ kernel/sched/cpufreq_schedutil.c | 39 ++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-The benefits of using the EM in schedutil are twofold:
-
-1) Selecting the highest possible frequency for a given cost. Some
-   platforms can have lower frequencies that are less efficient than
-   higher ones, in which case they should be skipped for most purposes.
-   They can still be useful to give more freedom to thermal throttling
-   mechanisms, but not under normal circumstances.
-   note: the EM framework will warn about such OPPs "hertz/watts ratio
-   non-monotonically decreasing"
-
-2) Driving the frequency selection with power in mind, in addition to
-   maximizing the utilization of the non-idle CPUs in the system.
-
-Point 1) is implemented in "PM: Introduce em_pd_get_higher_freq()" and
-enabled in schedutil by
-"sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()".
-
-Point 2) is enabled in
-"sched/cpufreq: Boost schedutil frequency ramp up". It allows using
-higher frequencies when it is known that the true utilization of
-currently running tasks is exceeding their previous stable point.
-The benefits are:
-
-* Boosting the frequency when the behavior of a runnable task changes,
-  leading to an increase in utilization. That shortens the frequency
-  ramp up duration, which in turns allows the utilization signal to
-  reach stable values quicker.  Since the allowed frequency boost is
-  bounded in energy, it will behave consistently across platforms,
-  regardless of the OPP cost range.
-
-* The boost is only transient, and should not impact a lot the energy
-  consumed of workloads with very stable utilization signals.
-
-This has been ligthly tested with a rtapp task ramping from 10% to 75%
-utilisation on a big core. Results are improved by fast ramp-up
-EWMA [1], since it greatly reduces the oscillation in frequency at first
-idle when ramping up.
-
-[1] [PATCH] sched/fair: util_est: fast ramp-up EWMA on utilization increases
-    Message-ID: <20190620150555.15717-1-patrick.bellasi@arm.com>
-    https://lore.kernel.org/lkml/20190620150555.15717-1-patrick.bellasi@arm.com/
-
-
-v1 -> v2:
-
-  * Split the new sugov_cpu_ramp_boost() from the existing
-    sugov_cpu_is_busy() as they seem to seek a different goal.
-
-  * Implement sugov_cpu_ramp_boost() based on CFS util_avg and
-    util_est_enqueued signals, rather than using idle calls count.
-    This makes the ramp boost much more accurate in finding boost
-    opportunities, and give a "continuous" output rather than a boolean.
-
-  * Add EM_COST_MARGIN_SCALE=1024 to represent the
-    margin values of em_pd_get_higher_freq().
-
-
-Douglas RAILLARD (5):
-  PM: Introduce em_pd_get_higher_freq()
-  sched/cpufreq: Attach perf domain to sugov policy
-  sched/cpufreq: Hook em_pd_get_higher_power() into get_next_freq()
-  sched/cpufreq: Introduce sugov_cpu_ramp_boost
-  sched/cpufreq: Boost schedutil frequency ramp up
-
- include/linux/energy_model.h     |  53 ++++++++++++++++
- kernel/sched/cpufreq_schedutil.c | 106 ++++++++++++++++++++++++++++++-
- 2 files changed, 156 insertions(+), 3 deletions(-)
-
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 9c0419087260..0a3ccc20adeb 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -41,6 +41,10 @@ struct sugov_policy {
+ 	bool			work_in_progress;
+ 
+ 	bool			need_freq_update;
++
++#ifdef CONFIG_ENERGY_MODEL
++	struct em_perf_domain *pd;
++#endif
+ };
+ 
+ struct sugov_cpu {
+@@ -65,6 +69,38 @@ static DEFINE_PER_CPU(struct sugov_cpu, sugov_cpu);
+ 
+ /************************ Governor internals ***********************/
+ 
++#ifdef CONFIG_ENERGY_MODEL
++static void sugov_policy_attach_pd(struct sugov_policy *sg_policy)
++{
++	struct em_perf_domain *pd;
++	struct cpufreq_policy *policy = sg_policy->policy;
++
++	sg_policy->pd = NULL;
++	pd = em_cpu_get(policy->cpu);
++	if (!pd)
++		return;
++
++	if (cpumask_equal(policy->related_cpus, to_cpumask(pd->cpus)))
++		sg_policy->pd = pd;
++	else
++		pr_warn("%s: Not all CPUs in schedutil policy %u share the same perf domain, no perf domain for that policy will be registered\n",
++			__func__, policy->cpu);
++}
++
++static struct em_perf_domain *sugov_policy_get_pd(
++						struct sugov_policy *sg_policy)
++{
++	return sg_policy->pd;
++}
++#else /* CONFIG_ENERGY_MODEL */
++static void sugov_policy_attach_pd(struct sugov_policy *sg_policy) {}
++static struct em_perf_domain *sugov_policy_get_pd(
++						struct sugov_policy *sg_policy)
++{
++	return NULL;
++}
++#endif /* CONFIG_ENERGY_MODEL */
++
+ static bool sugov_should_update_freq(struct sugov_policy *sg_policy, u64 time)
+ {
+ 	s64 delta_ns;
+@@ -850,6 +886,9 @@ static int sugov_start(struct cpufreq_policy *policy)
+ 							sugov_update_shared :
+ 							sugov_update_single);
+ 	}
++
++	sugov_policy_attach_pd(sg_policy);
++
+ 	return 0;
+ }
+ 
 -- 
 2.22.0
 
