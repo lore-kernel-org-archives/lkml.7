@@ -2,58 +2,112 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AC5C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2554FC48BE7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742592064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8252064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfF0SRH (ORCPT
+        id S1726805AbfF0SR5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:17:07 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:57844 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfF0SRG (ORCPT
+        Thu, 27 Jun 2019 14:17:57 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:56069 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbfF0SR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:17:06 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E3A47133E9BFD;
-        Thu, 27 Jun 2019 11:17:05 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 11:17:05 -0700 (PDT)
-Message-Id: <20190627.111705.1141002003036720021.davem@davemloft.net>
-To:     linyunsheng@huawei.com
-Cc:     hkallweit1@gmail.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        pbonzini@redhat.com, rkrcmar@redhat.com, kvm@vger.kernel.org,
-        xuwei5@huawei.com
-Subject: Re: [PATCH net-next] net: link_watch: prevent starvation when
- processing linkwatch wq
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <5c06e5dd-cfb1-870c-a0a3-42397b59c734@huawei.com>
-References: <20190528.235806.323127882998745493.davem@davemloft.net>
-        <6e9b41c9-6edb-be7f-07ee-5480162a227e@huawei.com>
-        <5c06e5dd-cfb1-870c-a0a3-42397b59c734@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Jun 2019 11:17:06 -0700 (PDT)
+        Thu, 27 Jun 2019 14:17:57 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E710424000D;
+        Thu, 27 Jun 2019 18:17:46 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 20:17:42 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     liaoweixiong <liaoweixiong@allwinnertech.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "Richard Weinberger" <richard@nod.at>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [RESEND PATCH v2] mtd: spinand: read return badly if the last
+ page has bitflips
+Message-ID: <20190627201742.34059cdf@xps13>
+In-Reply-To: <20190627190644.25aaaf31@xps13>
+References: <1561424549-784-1-git-send-email-liaoweixiong@allwinnertech.com>
+        <20190625030807.GA11074@kroah.com>
+        <97adf58f-4771-90f1-bdaf-5a9d00eef768@kontron.de>
+        <20190627190644.25aaaf31@xps13>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Date: Tue, 25 Jun 2019 10:28:04 +0800
+Hi Miquel,
 
-> So It is ok for me to fall back to reschedule the link watch wq
-> every 100 items, or is there a better way to fix it properly?
+Miquel Raynal <miquel.raynal@bootlin.com> wrote on Thu, 27 Jun 2019
+19:06:44 +0200:
 
-Yes, that is fine for now.
+> Hello,
+> 
+> Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Tue, 25 Jun
+> 2019 07:04:06 +0000:
+> 
+> > Hi liaoweixiong,
+> > 
+> > On 25.06.19 05:08, Greg KH wrote:  
+> > > On Tue, Jun 25, 2019 at 09:02:29AM +0800, liaoweixiong wrote:    
+> > >> In case of the last page containing bitflips (ret > 0),
+> > >> spinand_mtd_read() will return that number of bitflips for the last
+> > >> page. But to me it looks like it should instead return max_bitflips like
+> > >> it does when the last page read returns with 0.
+> > >>
+> > >> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>  
+> 
+> Please write your entire official first/last name(s)
+> 
+> > >> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > >> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>  
+> 
+> I am waiting your next version with Acked-by instead of Rewieved-by
+> tags and Greg's comment addressed.
+
+Sorry for the mistake, R-b tags are fine here, don't touch that.
+The rest needs to be fixed though.
+
+> > >> Fixes: 7529df465248 ("mtd: nand: Add core infrastructure to support SPI NANDs")  
+> 
+> Finally, when we ask you to resend a patch, it means sending a new
+> version of the patch. So in the subject, you should not use the
+> [RESEND] keyword (which means you are sending something again exactly
+> as it was before, you just got ignored, for example) but instead you
+> should increment the version number (v3) and also write a nice
+> changelog after the three dashes '---' (will be ignored by Git when
+> applying).
+> 
+> I would like to queue this for the next release so if you can do it
+> ASAP, that would be great.
+> 
+> Thank you,
+> Miquèl
+
+
+
+
+Thanks,
+Miquèl
