@@ -2,100 +2,111 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F20C48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820B3C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1220D208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63237208E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 18:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FYhogf0z"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="m6y4j+Yl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfF0SFw (ORCPT
+        id S1726726AbfF0SGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 14:05:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41027 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfF0SFv (ORCPT
+        Thu, 27 Jun 2019 14:06:05 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46516 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfF0SGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 14:05:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so1611368pff.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:05:51 -0700 (PDT)
+        Thu, 27 Jun 2019 14:06:05 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d4so7915137edr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 11:06:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7ZFHIM+9ACuJTE5JeAEtpKhLckRWZf8AG+zsqIufowA=;
-        b=FYhogf0z45V2UHOffa575V4s88hm4x6/QA3IBteH61ORTHx68RMuHYhejlt2KqpXLw
-         iszYSJgjoc+J8MNYjUEC5YGeoxp+o4jGUR1m8gIaCM8lK6KSPkceOLezFofUr0v66dIt
-         dkQcE9FNnWDNOMyGGNFgwibVXu67jc5S4KQ1XKoOQ3Xjt5VMGhSr7V0L7K6BM609NEBy
-         t9F+YJ5isjwswLuThvLZb8FS0LWIHU2LbdO701hCkji6tll5R8bcD+tSf0CoVu+yRvFg
-         kTFCVCfoHb1Irfyt6oCb0wvnqKoDLv4uUOsihyli2xOk6RFf6C94ABFMciaXBJ8u5xmL
-         q1nw==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=GNTzyha5uolkaXE/AKF7PBU/m2fQYAR8jso3b3bQxho=;
+        b=m6y4j+YlgNsr629H/6PD1n/d7eQF/bkBheIl52SPCTGjhkZInu9kwhWyV6xo8kNYKD
+         yW9xvLn6tcc/UhZ1t9w/7oCSIK6Vc7cAeNF1ujw0cWYoJ9L/EQaeAzVlDBsh5qQ+HxLB
+         cH8PNBx5HRUIS74qnr91FI0M1RH074hNCCfXwE6ggsWmq6s/U7RoOlHwvpFF7HgPvyyw
+         mjUyDP0Ghj3HoGxJp9lxEM2ZpSP6k9xFp1U/VO4rny6J3/W+RU9TtSfWSvoedcg/FZM3
+         kNrp0BPWz4YjtLT0DHh2S/BgmzEt18f4tLKDNfLy9n9rAu/D4lhFEBrdEyZkl6qjrCpG
+         +NjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7ZFHIM+9ACuJTE5JeAEtpKhLckRWZf8AG+zsqIufowA=;
-        b=iz4rYmHyP04cvUDibK9kelrTiEME1jJZ17TtWh3Ahs0df/HPxGGEct6H72PIOoKu0+
-         qmtp5egsZ28ArZ86n3xSGwE6SE0BWMqCq1G+4MO/ICZ0rim/Hd6ARqcxuYnvzyq2AM2z
-         3lPT/TkgHWj5aWQJTVpUumpE1cPitHc8vUA7vyHKdrOQJxU5FuvK8I0u0T3X05G601Pq
-         YqLe0vmdCXL7mI/cLantm1eiFY9Cn5njvLDUp2S0yqq1VvzQF6Y+MUO86+VTEjq9+44l
-         OfNtk6PFPbuT96E+gMdwl8sg6BZLxe/1FEUGYXtzhStJlJtNzixBsmVs7cSHUklA4YxC
-         1bVQ==
-X-Gm-Message-State: APjAAAWdaj+GBJhYPxpAEL1VDSYyepfwNTv2mgibTgwRIzx0UBKdqsla
-        Cseh87lAuIEwBR7OkUPafs4=
-X-Google-Smtp-Source: APXvYqzox8DkrIK20YIRK4bK4hjXsHcTPAOhqjwZBqOsQJGVAhHLTvpzy953y39BuSm2jry+rlP2HA==
-X-Received: by 2002:a17:90a:2666:: with SMTP id l93mr7511494pje.16.1561658750919;
-        Thu, 27 Jun 2019 11:05:50 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id br18sm5836565pjb.20.2019.06.27.11.05.48
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GNTzyha5uolkaXE/AKF7PBU/m2fQYAR8jso3b3bQxho=;
+        b=N/kzz3zpvYkGFJZuvujpL6tWTKHhuG/OGy1M6cy/kQZYFddWLAp2hJPou8DgSEg+CA
+         +gyqKHoYRVEYQiGNs9mU7fD1RGX74THgCZGOp/tLbXmG0SW4xBgSqXhej+h4dLy8cesb
+         X3+nWZ4Qk8XflrdoSLFHqkccliM5mw8GjBm9gIosF/+cutbBRAgSNn9F9DkuZMPWJGou
+         mcUAp2okxM+EkNZspDw12Os3r+85eLfWI6B5X1N4ehYwlFs31Za1vLhW/ptZB+rRfC5Z
+         EFImmre343PxgQ1oa7+RYl9WsBZeeZ1h+SOQ4fk/exDM3MBWm52SRhfmhGep9d6eiifu
+         YENA==
+X-Gm-Message-State: APjAAAVwAaYLFydy1WsYGFDdJjzX3hJt01nIzLpFlQys3e2nOTcUuagl
+        +5xY37e85BcHfQF5UbSAuQBx5g==
+X-Google-Smtp-Source: APXvYqzGenvzx0Y0XnRI9xMYTAF7M9wkR56sl8+MbNVoy/EGzYm6e5vo9AYG/tf+nQsmZ+uVL9oupw==
+X-Received: by 2002:a50:ac46:: with SMTP id w6mr6202710edc.238.1561658763449;
+        Thu, 27 Jun 2019 11:06:03 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id d36sm934170ede.23.2019.06.27.11.06.02
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 11:05:50 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 23:35:46 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: hal: sdio_halinit: Remove set but
- unused varilable pHalData
-Message-ID: <20190627180546.GA3240@hari-Inspiron-1545>
-References: <20190626174459.GA8539@hari-Inspiron-1545>
- <20190627063835.GH28859@kadam>
+        Thu, 27 Jun 2019 11:06:02 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E28C7103747; Thu, 27 Jun 2019 21:06:01 +0300 (+03)
+Date:   Thu, 27 Jun 2019 21:06:01 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v3 0/5] Introduce MADV_COLD and MADV_PAGEOUT
+Message-ID: <20190627180601.xcppuzia3gk57lq2@box>
+References: <20190627115405.255259-1-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190627063835.GH28859@kadam>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627115405.255259-1-minchan@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 09:38:35AM +0300, Dan Carpenter wrote:
-> On Wed, Jun 26, 2019 at 11:14:59PM +0530, Hariprasad Kelam wrote:
-> > @@ -1433,7 +1430,6 @@ static void SetHwReg8723BS(struct adapter *padapter, u8 variable, u8 *val)
-> >  #endif
-> >  #endif
-> >  
-> > -	pHalData = GET_HAL_DATA(padapter);
-> >  
-> >  	switch (variable) {
+On Thu, Jun 27, 2019 at 08:54:00PM +0900, Minchan Kim wrote:
+> - Problem
 > 
-> We need to delete one of those blank lines or it introduces a new
-> checkpatch warning.
->
-Yes thanks for correcting this .  Will resend the patch.
+> Naturally, cached apps were dominant consumers of memory on the system.
+> However, they were not significant consumers of swap even though they are
+> good candidate for swap. Under investigation, swapping out only begins
+> once the low zone watermark is hit and kswapd wakes up, but the overall
+> allocation rate in the system might trip lmkd thresholds and cause a cached
+> process to be killed(we measured performance swapping out vs. zapping the
+> memory by killing a process. Unsurprisingly, zapping is 10x times faster
+> even though we use zram which is much faster than real storage) so kill
+> from lmkd will often satisfy the high zone watermark, resulting in very
+> few pages actually being moved to swap.
 
-Thanks,
-Hariprasad k
+Maybe we should look if we do The Right Thing™ at system-wide level before
+introducing new API? How changing swappiness affects your workloads? What
+is swappiness value in your setup?
 
-> regards,
-> dan carpenter
-> 
+-- 
+ Kirill A. Shutemov
