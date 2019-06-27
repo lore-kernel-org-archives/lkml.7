@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4C5C48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F23CC48BD7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 520D62086D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FB22086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 10:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gSWBeDz2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gm6dKltS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfF0Ks6 (ORCPT
+        id S1726795AbfF0KtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 06:48:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52038 "EHLO
+        Thu, 27 Jun 2019 06:49:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52104 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbfF0Ksv (ORCPT
+        with ESMTP id S1726748AbfF0KtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 06:48:51 -0400
+        Thu, 27 Jun 2019 06:49:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TGc9yLWYMRKUlmT5Jk1NJHMqo8d/maIMu2xcm8St/gc=; b=gSWBeDz261P2c7rK9N9ZPqrL6W
-        1a8MdRl52KGmnzBgaOaeXLt27Ll3bMPBuYkvkeolv9yhyjThm0OZflhaM5/+XKdjoKszr6PzpwAGX
-        jIvx36JG2i1zpIuyMRRCFfkKlnML4efpAl1KU65rnH23EqvxHbadPJkQg0axJbooKUzPnk6LVmn9Z
-        dRTOxj0Z7sm8z55Hydf13mP2UZefLsdGL5tiTysf+ak3uY9HXwOhZhQFaViSTJkGKLF2W9JeoL92J
-        kTtVOkEq/Hp+wOpT7ONthyHQBGwxQOqg4m67DPlCxSPxD7LvDQZelxM+58helHmjB6SivYpXOWkhE
-        YLaYo9xw==;
+        bh=2yvHT618NnovgFgJsjPpwcRncjLi75iioGv1+Lk+glw=; b=Gm6dKltSVJUY2JooJvnqOHubwq
+        RxVZ1Pvw8jYycr4/bEM+4rbq24oMAayMyj9SzYDljkAOpxmu6irXFxWOvGG5/ZP7h16MTt8Jy0vBf
+        xi38zY0wFgbIaifMrB/EmbAC13tk0xEfGomZL+9Sn0HYRp8E0hWc1EpzsAYoLdyq0Cx8sycAoi2tI
+        4btHhONtwu1yIaBWj7rih5GajxOTA3JNYijrBu2131yyvURrSWRX0s1h10Lj1uwcIUF8PhEuj5tHi
+        +Aqit2geKwD45FLCp/+P5SyzY7dEqxVekkba5MWGplLRovoiq9NKytlin5+1nBra44WMz9ZpZclVf
+        JNEe2VMg==;
 Received: from 089144214055.atnat0023.highway.a1.net ([89.144.214.55] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgRxR-00053b-4m; Thu, 27 Jun 2019 10:48:49 +0000
+        id 1hgRxb-000574-Jw; Thu, 27 Jun 2019 10:49:00 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Darrick J . Wong" <darrick.wong@oracle.com>
 Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
         Andreas Gruenbacher <agruenba@redhat.com>,
         linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 03/13] xfs: fix a comment typo in xfs_submit_ioend
-Date:   Thu, 27 Jun 2019 12:48:26 +0200
-Message-Id: <20190627104836.25446-4-hch@lst.de>
+Subject: [PATCH 07/13] xfs: allow merging ioends over append boundaries
+Date:   Thu, 27 Jun 2019 12:48:30 +0200
+Message-Id: <20190627104836.25446-8-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190627104836.25446-1-hch@lst.de>
 References: <20190627104836.25446-1-hch@lst.de>
@@ -58,27 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fail argument is long gone, update the comment.
+There is no real problem merging ioends that go beyond i_size into an
+ioend that doesn't.  We just need to move the append transaction to the
+base ioend.  Also use the opportunity to use a real error code instead
+of the magic 1 to cancel the transactions, and write a comment
+explaining the scheme.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_aops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_aops.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 73c291aeae17..8f7b2d91d9a4 100644
+index 8b3070a40245..4ef8343c3759 100644
 --- a/fs/xfs/xfs_aops.c
 +++ b/fs/xfs/xfs_aops.c
-@@ -626,7 +626,7 @@ xfs_map_blocks(
-  * reference to the ioend to ensure that the ioend completion is only done once
-  * all bios have been submitted and the ioend is really done.
-  *
-- * If @fail is non-zero, it means that we have a situation where some part of
-+ * If @status is non-zero, it means that we have a situation where some part of
-  * the submission process has failed after we have marked paged for writeback
-  * and unlocked them. In this situation, we need to fail the bio and ioend
-  * rather than submit it to IO. This typically only happens on a filesystem
+@@ -314,11 +314,28 @@ xfs_ioend_can_merge(
+ 		return false;
+ 	if (ioend->io_offset + ioend->io_size != next->io_offset)
+ 		return false;
+-	if (xfs_ioend_is_append(ioend) != xfs_ioend_is_append(next))
+-		return false;
+ 	return true;
+ }
+ 
++/*
++ * If the to be merged ioend has a preallocated transaction for file
++ * size updates we need to ensure the ioend it is merged into also
++ * has one.  If it already has one we can simply cancel the transaction
++ * as it is guaranteed to be clean.
++ */
++static void
++xfs_ioend_merge_append_transactions(
++	struct xfs_ioend	*ioend,
++	struct xfs_ioend	*next)
++{
++	if (!ioend->io_append_trans) {
++		ioend->io_append_trans = next->io_append_trans;
++		next->io_append_trans = NULL;
++	} else {
++		xfs_setfilesize_ioend(next, -ECANCELED);
++	}
++}
++
+ /* Try to merge adjacent completions. */
+ STATIC void
+ xfs_ioend_try_merge(
+@@ -327,7 +344,6 @@ xfs_ioend_try_merge(
+ {
+ 	struct xfs_ioend	*next_ioend;
+ 	int			ioend_error;
+-	int			error;
+ 
+ 	if (list_empty(more_ioends))
+ 		return;
+@@ -341,10 +357,8 @@ xfs_ioend_try_merge(
+ 			break;
+ 		list_move_tail(&next_ioend->io_list, &ioend->io_list);
+ 		ioend->io_size += next_ioend->io_size;
+-		if (ioend->io_append_trans) {
+-			error = xfs_setfilesize_ioend(next_ioend, 1);
+-			ASSERT(error == 1);
+-		}
++		if (next_ioend->io_append_trans)
++			xfs_ioend_merge_append_transactions(ioend, next_ioend);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
