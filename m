@@ -2,161 +2,141 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E871C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F73C5B576
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B657208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4985208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:20:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="v9jRMpKc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ey/CguYM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfF0WSv (ORCPT
+        id S1726707AbfF0WUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:18:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59007 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbfF0WSv (ORCPT
+        Thu, 27 Jun 2019 18:20:24 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43089 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbfF0WUY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:18:51 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RMIAO2473318
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 27 Jun 2019 15:18:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RMIAO2473318
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561673891;
-        bh=JeYe5M8OdcYKuK4UMRuFplJR52KjbndV9b7BUqLhHlk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=v9jRMpKcUXuHRJW2Ucgm6eUv+rvQaavCBa9PYEoYm1pwRxDgbMs18f+j+3eJ0vClo
-         5gWwTXvadc1DaQOwNh+M5hpZvHaB9DFehy9WG4OUj63G0M8tf5lV7e9KF2cEPNhiHo
-         +BYr1rnS8XSOHnNtwF2+tcuc568Yx5PjeE8myP2tExBhRbJ06ARnuLQd0ibHYuvCiY
-         1SQ71k5sLmzpY49YpPc/mqrNjAqUebNjT5BC6NiCSVRSEwbGk9WU8N7AlnLs0a6ZL6
-         +LPpkkkIdyFRnlcPREWr2lTN36RroK/lkbPtodUbsfW4WRTfcDqN3dcPoU4WQqZNep
-         JemStwPh5qBGA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RMIA7x473313;
-        Thu, 27 Jun 2019 15:18:10 -0700
-Date:   Thu, 27 Jun 2019 15:18:10 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andy Lutomirski <tipbot@zytor.com>
-Message-ID: <tip-7f0a5e0755832301e7b010eab46fb715c483ba60@git.kernel.org>
-Cc:     fweimer@redhat.com, jannh@google.com, peterz@infradead.org,
-        hpa@zytor.com, tglx@linutronix.de, bp@alien8.de, luto@kernel.org,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, keescook@chromium.org
-Reply-To: bp@alien8.de, tglx@linutronix.de, fweimer@redhat.com,
-          hpa@zytor.com, jannh@google.com, peterz@infradead.org,
-          mingo@kernel.org, keescook@chromium.org,
-          kernel-hardening@lists.openwall.com,
-          linux-kernel@vger.kernel.org, luto@kernel.org
-In-Reply-To: <0fe34229a9330e8f9de9765967939cc4f1cf26b1.1561610354.git.luto@kernel.org>
-References: <0fe34229a9330e8f9de9765967939cc4f1cf26b1.1561610354.git.luto@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/entry] selftests/x86: Add a test for process_vm_readv() on
- the vsyscall page
-Git-Commit-ID: 7f0a5e0755832301e7b010eab46fb715c483ba60
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 27 Jun 2019 18:20:24 -0400
+Received: by mail-qk1-f196.google.com with SMTP id m14so3166353qka.10;
+        Thu, 27 Jun 2019 15:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pHwqVupckS7iQ/Vo8HGZ1yqr6p+z2egzqb95y8RNiPg=;
+        b=ey/CguYMNjzs5Wf+bFIERswkUx+TInEm+IUNWdLwoN9wduV874WGCcpyYSTuUy51g+
+         eiBKIewiIohO/1tyRkkRIRrwIxboExJFVHmzHUJG2LGJXkukJ0119eFQ6II1RAvBSjWx
+         Lt+YodTeVhEhBXecml0hApRX5dVVp0Nrmz+IsB+00HT6TAm1u23tKquNQ73jhIuAr5MV
+         FvMkYMPBAsSN3YEixXTLGZAyFDs1l1D5tRoPxLwyLZhIJV6DObdq8H/WKSAy9axf3oq1
+         0O7V4hAx0PEF/Hm7CW7w6EMAseRbwDgNGfxmkcmoYJgNghsJIWxwcIqZFJBoNTcQXUOZ
+         rdqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pHwqVupckS7iQ/Vo8HGZ1yqr6p+z2egzqb95y8RNiPg=;
+        b=FKtI+2TVIWgvztuwQaUh1unIikzLcBOQiYt4SsMCNMir3HsfPdaIidrAnnoc1N909V
+         W+f9LVJsWMdjClx1jpL0GoGAHO2ERo3Y+XRz58UoqgfM6lf7HoVMhDspWlrRq33CB0yM
+         SEl4sxSjQQC58RaUyk+0UWbZITbm8wVpvy6o3VH2IiyBtS77fugY0JuEroz2tu3yltYw
+         RU7b4nOs1VsA+wSCH1RHmo4sApD1Ts+B/7Rg399LE5Bd5oqRZPF1w2SL3K/83T4MUN0s
+         8rw43avKNHSQeuaxvG2BdCA3/DPOFPjV38pFVw4ueYzU5IPQLT9eeC80sFngone7kOTD
+         w1Tw==
+X-Gm-Message-State: APjAAAV6t8BsyNLVBPD3iw7YOWcZ57OkLKQVqQoHnzYAr9xk0B/H/Je+
+        050biyZANfj/vUVf2yK3Y/6Cbwto
+X-Google-Smtp-Source: APXvYqxl9Fa+EGoj4vPrZ5xnM5JnECxMrNXTrs0KC1zx+TpDFaiEZPL0DjqEdVIRaEgrJNgSTZUc+g==
+X-Received: by 2002:ae9:e887:: with SMTP id a129mr5678787qkg.347.1561674022903;
+        Thu, 27 Jun 2019 15:20:22 -0700 (PDT)
+Received: from willemb.nyc.corp.google.com ([2620:0:1003:315:55eb:ba49:fa6:b843])
+        by smtp.gmail.com with ESMTPSA id o33sm203092qtk.67.2019.06.27.15.20.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 27 Jun 2019 15:20:22 -0700 (PDT)
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, linux-kernel@vger.kernel.org,
+        Willem de Bruijn <willemb@google.com>,
+        syzbot <syzkaller@googlegroups.com>
+Subject: [PATCH] media: gp8psk: check return value in gp8psk_power_ctrl
+Date:   Thu, 27 Jun 2019 18:20:20 -0400
+Message-Id: <20190627222020.45909-1-willemdebruijn.kernel@gmail.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7f0a5e0755832301e7b010eab46fb715c483ba60
-Gitweb:     https://git.kernel.org/tip/7f0a5e0755832301e7b010eab46fb715c483ba60
-Author:     Andy Lutomirski <luto@kernel.org>
-AuthorDate: Wed, 26 Jun 2019 21:45:09 -0700
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 28 Jun 2019 00:04:40 +0200
+From: Willem de Bruijn <willemb@google.com>
 
-selftests/x86: Add a test for process_vm_readv() on the vsyscall page
+One caller of gp8psk_power_ctrl fails to check the return value.
 
-get_gate_page() is a piece of somewhat alarming code to make
-get_user_pages() work on the vsyscall page.  Test it via
-process_vm_readv().
+Syzbot KMSAN found a use of uninitialized data. This path is also
+exercised when no such device exists, as in this cloud environment.
 
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/0fe34229a9330e8f9de9765967939cc4f1cf26b1.1561610354.git.luto@kernel.org
+Argument status is not set if gp8psk_power_ctrl returns early.
 
+Tests its return value in this case, too.
+
+BUG: KMSAN: uninit-value in gp8psk_power_ctrl+0x33e/0xca0 drivers/media/usb/dvb-usb/gp8psk.c:193
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+ kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+ __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+ gp8psk_power_ctrl+0x33e/0xca0 drivers/media/usb/dvb-usb/gp8psk.c:193
+ dvb_usb_device_power_ctrl drivers/media/usb/dvb-usb/dvb-usb-init.c:226 [inline]
+ dvb_usb_init drivers/media/usb/dvb-usb/dvb-usb-init.c:160 [inline]
+ dvb_usb_device_init+0x15ad/0x2cc0 drivers/media/usb/dvb-usb/dvb-usb-init.c:277
+ gp8psk_usb_probe+0xa2/0x190 drivers/media/usb/dvb-usb/gp8psk.c:307
+ usb_probe_interface+0xd66/0x1320 drivers/usb/core/driver.c:361
+ really_probe+0xdae/0x1d80 drivers/base/dd.c:513
+ driver_probe_device+0x1b3/0x4f0 drivers/base/dd.c:671
+ __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:778
+ bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
+ __device_attach+0x454/0x730 drivers/base/dd.c:844
+ device_initial_probe+0x4a/0x60 drivers/base/dd.c:891
+ bus_probe_device+0x137/0x390 drivers/base/bus.c:514
+ device_add+0x288d/0x30e0 drivers/base/core.c:2106
+ usb_set_configuration+0x30dc/0x3750 drivers/usb/core/message.c:2027
+ generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
+ usb_probe_device+0x14c/0x200 drivers/usb/core/driver.c:266
+ [..snip..]
+
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 ---
- tools/testing/selftests/x86/test_vsyscall.c | 35 +++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/media/usb/dvb-usb/gp8psk.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
-index 34a1d35995ef..4602326b8f5b 100644
---- a/tools/testing/selftests/x86/test_vsyscall.c
-+++ b/tools/testing/selftests/x86/test_vsyscall.c
-@@ -18,6 +18,7 @@
- #include <sched.h>
- #include <stdbool.h>
- #include <setjmp.h>
-+#include <sys/uio.h>
- 
- #ifdef __x86_64__
- # define VSYS(x) (x)
-@@ -459,6 +460,38 @@ static int test_vsys_x(void)
- 	return 0;
- }
- 
-+static int test_process_vm_readv(void)
-+{
-+#ifdef __x86_64__
-+	char buf[4096];
-+	struct iovec local, remote;
+diff --git a/drivers/media/usb/dvb-usb/gp8psk.c b/drivers/media/usb/dvb-usb/gp8psk.c
+index 1282f701f1857..b666644f06d7b 100644
+--- a/drivers/media/usb/dvb-usb/gp8psk.c
++++ b/drivers/media/usb/dvb-usb/gp8psk.c
+@@ -184,9 +184,13 @@ static int gp8psk_power_ctrl(struct dvb_usb_device *d, int onoff)
+ {
+ 	u8 status, buf;
+ 	int gp_product_id = le16_to_cpu(d->udev->descriptor.idProduct);
 +	int ret;
-+
-+	printf("[RUN]\tprocess_vm_readv() from vsyscall page\n");
-+
-+	local.iov_base = buf;
-+	local.iov_len = 4096;
-+	remote.iov_base = (void *)0xffffffffff600000;
-+	remote.iov_len = 4096;
-+	ret = process_vm_readv(getpid(), &local, 1, &remote, 1, 0);
-+	if (ret != 4096) {
-+		printf("[OK]\tprocess_vm_readv() failed (ret = %d, errno = %d)\n", ret, errno);
-+		return 0;
-+	}
-+
-+	if (vsyscall_map_r) {
-+		if (!memcmp(buf, (const void *)0xffffffffff600000, 4096)) {
-+			printf("[OK]\tIt worked and read correct data\n");
-+		} else {
-+			printf("[FAIL]\tIt worked but returned incorrect data\n");
-+			return 1;
-+		}
-+	}
-+#endif
-+
-+	return 0;
-+}
-+
- #ifdef __x86_64__
- #define X86_EFLAGS_TF (1UL << 8)
- static volatile sig_atomic_t num_vsyscall_traps;
-@@ -533,6 +566,8 @@ int main(int argc, char **argv)
- 	nerrs += test_vsys_r();
- 	nerrs += test_vsys_x();
  
-+	nerrs += test_process_vm_readv();
+ 	if (onoff) {
+-		gp8psk_usb_in_op(d, GET_8PSK_CONFIG,0,0,&status,1);
++		ret = gp8psk_usb_in_op(d, GET_8PSK_CONFIG, 0, 0, &status, 1);
++		if (ret)
++			return ret;
 +
- #ifdef __x86_64__
- 	nerrs += test_emulation();
- #endif
+ 		if (! (status & bm8pskStarted)) {  /* started */
+ 			if(gp_product_id == USB_PID_GENPIX_SKYWALKER_CW3K)
+ 				gp8psk_usb_out_op(d, CW3K_INIT, 1, 0, NULL, 0);
+-- 
+2.22.0.410.gd8fdbe21b5-goog
+
