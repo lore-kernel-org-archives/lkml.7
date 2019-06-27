@@ -2,72 +2,99 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FD0C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C40C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B3D208E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31487208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfF0WHQ (ORCPT
+        id S1726805AbfF0WJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:07:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35652 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbfF0WHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:07:15 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2F340309264C;
-        Thu, 27 Jun 2019 22:07:07 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EBE31608C1;
-        Thu, 27 Jun 2019 22:07:04 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAF=yD-Kgdwt5=0iboxhvZz4zvNewSGow74U15mQQvO1u8VUGcw@mail.gmail.com>
-References: <CAF=yD-Kgdwt5=0iboxhvZz4zvNewSGow74U15mQQvO1u8VUGcw@mail.gmail.com> <156096279115.28733.8761881995303698232.stgit@warthog.procyon.org.uk> <156096287188.28733.15342608110117616221.stgit@warthog.procyon.org.uk>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     dhowells@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>,
-        keyrings@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        linux-afs@lists.infradead.org, dwalsh@redhat.com,
-        vgoyal@redhat.com, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 8/9] keys: Network namespace domain tag [ver #4]
+        Thu, 27 Jun 2019 18:09:05 -0400
+Received: from smtprelay0191.hostedemail.com ([216.40.44.191]:36952 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726557AbfF0WJE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 18:09:04 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 2A88D837F24D;
+        Thu, 27 Jun 2019 22:09:03 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: alley15_31b2a6b628109
+X-Filterd-Recvd-Size: 2706
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 27 Jun 2019 22:09:01 +0000 (UTC)
+Message-ID: <3740b16e5d0a3144e2d48af7cf56ae8020c3f9af.camel@perches.com>
+Subject: Re: [tip:timers/core] hrtimer: Use a bullet for the returns bullet
+ list
+From:   Joe Perches <joe@perches.com>
+To:     corbet@lwn.net, linux-doc@vger.kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, mchehab@infradead.org, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        linux-tip-commits@vger.kernel.org
+Cc:     docutils-develop@lists.sourceforge.net
+Date:   Thu, 27 Jun 2019 15:08:59 -0700
+In-Reply-To: <tip-516337048fa40496ae5ca9863c367ec991a44d9a@git.kernel.org>
+References: <74ddad7dac331b4e5ce4a90e15c8a49e3a16d2ac.1561372382.git.mchehab+samsung@kernel.org>
+         <tip-516337048fa40496ae5ca9863c367ec991a44d9a@git.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <30672.1561673224.1@warthog.procyon.org.uk>
-Date:   Thu, 27 Jun 2019 23:07:04 +0100
-Message-ID: <30674.1561673224@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 27 Jun 2019 22:07:15 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
-
-> > +#ifdef CONFIG_KEYS
-> > +out_free_2:
-> > +       kmem_cache_free(net_cachep, net);
+On Thu, 2019-06-27 at 14:46 -0700, tip-bot for Mauro Carvalho Chehab
+wrote:
+> Commit-ID:  516337048fa40496ae5ca9863c367ec991a44d9a
+> Gitweb:     https://git.kernel.org/tip/516337048fa40496ae5ca9863c367ec991a44d9a
+> Author:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> AuthorDate: Mon, 24 Jun 2019 07:33:26 -0300
+> Committer:  Thomas Gleixner <tglx@linutronix.de>
+> CommitDate: Thu, 27 Jun 2019 23:30:04 +0200
 > 
-> needs
->             net = NULL;
+> hrtimer: Use a bullet for the returns bullet list
 > 
-> to signal failure
+> That gets rid of this warning:
 > 
-> > +#endif
+>    ./kernel/time/hrtimer.c:1119: WARNING: Block quote ends without a blank line; unexpected unindent.
 
-I've folded that into the patch and retagged, remerged and repushed.
+Doesn't this form occur multiple dozens of times in
+kernel sources?
 
-David
+For instance:
+
+$ git grep -B3 -A5 -P "^ \* Returns:?$" | \
+  grep -P -A8 '\-\s+\*\s*@\w+:'
+
+I think the warning is odd at best and docutils might
+be updated or the warning ignored or suppressed.
+
+> and displays nicely both at the source code and at the produced
+> documentation.
+
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+[]
+> @@ -1114,9 +1114,10 @@ EXPORT_SYMBOL_GPL(hrtimer_start_range_ns);
+>   * @timer:	hrtimer to stop
+>   *
+>   * Returns:
+> - *  0 when the timer was not active
+> - *  1 when the timer was active
+> - * -1 when the timer is currently executing the callback function and
+> + *
+> + *  *  0 when the timer was not active
+> + *  *  1 when the timer was active
+> + *  * -1 when the timer is currently executing the callback function and
+>   *    cannot be stopped
+>   */
+>  int hrtimer_try_to_cancel(struct hrtimer *timer)
+
