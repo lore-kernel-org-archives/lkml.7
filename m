@@ -2,104 +2,177 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4465DC48BD6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DEFC48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 175C22084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x2D9uYjD"
+	by mail.kernel.org (Postfix) with ESMTP id CB3002086D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 13:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfF0NSX (ORCPT
+        id S1726809AbfF0NSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 09:18:23 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56802 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfF0NSX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 09:18:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5RDIM8T095093;
-        Thu, 27 Jun 2019 08:18:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561641502;
-        bh=rHpj0mT9tggfORmwu7tiNcTVTbNMHVQathpDxVOS0yY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=x2D9uYjDWhRkaRr/gD53SrHIwFEa/UXCDrsXqRF0bO1DhZ4lfCApJol6IrKvQYHRO
-         bRavzSiw83mhnUC1AmdvajJe4AG3Tq5KX4w7uW77zdvCBj0mvS0vscki2j/LFp+CZF
-         4D0LX+ioH/l5Nh6Ag3ujVdnr17oa3hkcKIR6c9/s=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5RDIMOg091462
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Jun 2019 08:18:22 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 27
- Jun 2019 08:18:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 27 Jun 2019 08:18:22 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5RDIKwb026763;
-        Thu, 27 Jun 2019 08:18:21 -0500
-Subject: Re: [GIT PULL v2] PHY: for 5.2-rc
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <20190612102803.25398-1-kishon@ti.com>
- <3c16d177-adb3-5c42-7e90-49ddae9723cb@ti.com>
- <20190621064019.GA12643@kroah.com>
- <105a126a-5897-5607-e371-1af958523631@ti.com>
-Message-ID: <194c1b99-aff4-6118-b853-6745b306567f@ti.com>
-Date:   Thu, 27 Jun 2019 18:46:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 27 Jun 2019 09:18:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:54218 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbfF0NSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 09:18:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE85F360;
+        Thu, 27 Jun 2019 06:18:36 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F4D83F246;
+        Thu, 27 Jun 2019 06:18:36 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 14:18:34 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        vincenzo.frascino@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [RFC] arm64: Detecting tagged addresses
+Message-ID: <20190627131834.GE34530@e119886-lin.cambridge.arm.com>
+References: <20190619121619.GV20984@e119886-lin.cambridge.arm.com>
+ <20190626174502.GH29672@arrakis.emea.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <105a126a-5897-5607-e371-1af958523631@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190626174502.GH29672@arrakis.emea.arm.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On 21/06/19 12:50 PM, Kishon Vijay Abraham I wrote:
+On Wed, Jun 26, 2019 at 06:45:03PM +0100, Catalin Marinas wrote:
+> Hi Andrew,
 > 
+> Cc'ing Luc (sparse maintainer) who's been involved in the past
+> discussions around static checking of user pointers:
 > 
-> On 21/06/19 12:10 PM, Greg Kroah-Hartman wrote:
->> On Fri, Jun 21, 2019 at 11:41:26AM +0530, Kishon Vijay Abraham I wrote:
->>> Hi Greg,
->>>
->>> On 12/06/19 3:57 PM, Kishon Vijay Abraham I wrote:
->>>> Hi Greg,
->>>>
->>>> Please find the updated pull request for 5.2 -rc cycle. Here I dropped
->>>> the patch that added "static" for a function to fix sparse warning.
->>>>
->>>> I'm also sending the patches along with this pull request in case you'd
->>>> like to look them.
->>>>
->>>> Consider merging it in this -rc cycle and let me know if you want me
->>>> to make any further changes.
->>>
->>> Are you planning to merge this?
->>
->> Ugh, fell through the cracks of my huge TODO mbox at the moment, sorry.
->> It's still there, should get to it next week...
+> https://lore.kernel.org/linux-arm-kernel/20180905190316.a34yycthgbamx2t3@ltop.local/
 > 
-> All right, thanks!
+> So I think the difference here from the previous approach is that we
+> explicitly mark functions that cannot take tagged addresses (like
+> find_vma()) and identify the callers.
 
-I think it's not merged yet. If you think it's too late, I can send it along
-with the merge window pull request.
+Indeed.
 
-Thanks
-Kishon
+
+> 
+> More comments below:
+> 
+> On Wed, Jun 19, 2019 at 01:16:20PM +0100, Andrew Murray wrote:
+> > The proposed introduction of a relaxed ARM64 ABI [1] will allow tagged memory
+> > addresses to be passed through the user-kernel syscall ABI boundary. Tagged
+> > memory addresses are those which contain a non-zero top byte (the hardware
+> > has always ignored this top byte due to TCR_EL1.TBI0) and may be useful
+> > for features such as HWASan.
+> > 
+> > To permit this relaxation a proposed patchset [2] strips the top byte (tag)
+> > from user provided memory addresses prior to use in kernel functions which
+> > require untagged addresses (for example comparasion/arithmetic of addresses).
+> > The author of this patchset relied on a variety of techniques [2] (such as
+> > grep, BUG_ON, sparse etc) to identify as many instances of possible where
+> > tags need to be stipped.
+> > 
+> > To support this effort and to catch future regressions (e.g. in new syscalls
+> > or ioctls), I've devised an additional approach for detecting the use of
+> > tagged addresses in functions that do not want them. This approach makes
+> > use of Smatch [3] and is outlined in this RFC. Due to the ability of Smatch
+> > to do flow analysis I believe we can annotate the kernel in fewer places
+> > than a similar approach in sparse.
+> > 
+> > I'm keen for feedback on the likely usefulness of this approach.
+> > 
+> > We first add some new annotations that are exclusively consumed by Smatch:
+> > 
+> > --- a/include/linux/compiler_types.h
+> > +++ b/include/linux/compiler_types.h
+> > @@ -19,6 +19,7 @@
+> >  # define __cond_lock(x,c)      ((c) ? ({ __acquire(x); 1; }) : 0)
+> >  # define __percpu      __attribute__((noderef, address_space(3)))
+> >  # define __rcu         __attribute__((noderef, address_space(4)))
+> > +# define __untagged    __attribute__((address_space(5)))
+> >  # define __private     __attribute__((noderef))
+> >  extern void __chk_user_ptr(const volatile void __user *);
+> >  extern void __chk_io_ptr(const volatile void __iomem *);
+> [...]
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -2224,7 +2224,7 @@ get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
+> >  EXPORT_SYMBOL(get_unmapped_area);
+> >  
+> >  /* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
+> > -struct vm_area_struct *find_vma(struct mm_struct *mm, unsigned long addr)
+> > +struct vm_area_struct *find_vma(struct mm_struct *mm, unsigned long __untagged addr)
+> >  {
+> >         struct rb_node *rb_node;
+> >         struct vm_area_struct *vma;
+> [...]
+> > This can be further improved - the problem here is that for a given function,
+> > e.g. find_vma we look for callers where *any* of the parameters
+> > passed to find_vma are tagged addresses from userspace - i.e. not *just*
+> > the annotated parameter. This is also true for find_vma's callers' callers'.
+> > This results in the call tree having false positives.
+> > 
+> > It *is* possible to track parameters (e.g. find_vma arg 1 comes from arg 3 of
+> > do_pages_stat_array etc), but this is limited as if functions modify the
+> > data then the tracking is stopped (however this can be fixed).
+> [...]
+> > An example of a false positve is do_mlock. We untag the address and pass that
+> > to apply_vma_lock_flags - however we also pass a length - because the length
+> > came from userspace and could have the top bits set - it's flagged. However
+> > with improved parameter tracking we can remove this false positive and similar.
+> 
+> Could we track only the conversions from __user * that eventually end up
+> as __untagged? (I'm not familiar with smatch, so not sure what it can
+> do).
+
+I assume you mean 'that eventually end up as an argument annotated __untagged'?
+
+The warnings smatch currently produce relate to only the conversions you
+mention - however further work is needed in smatch to improve the scripts that
+retrospectively provide call traces (without false positives).
+
+
+> We could assume that an unsigned long argument to a syscall is
+> default __untagged, unless explicitly marked as __tagged. For example,
+> sys_munmap() is allowed to take a tagged address.
+
+I'll give this some further thought.
+
+
+> 
+> > Prior to smatch I attempted a similar approach with sparse - however it seemed
+> > necessary to propogate the __untagged annotation in every function up the call tree,
+> > and resulted in adding the __untagged annotation to functions that would never
+> > get near user provided data. This leads to a littering of __untagged all over the
+> > kernel which doesn't seem appealing.
+> 
+> Indeed. We attempted this last year (see the above thread).
+> 
+> > Smatch is more capable, however it almost
+> > certainly won't pick up 100% of issues due to the difficulity of making flow
+> > analysis understand everything a compiler can.
+> > 
+> > Is it likely to be acceptable to use the __untagged annotation in user-path
+> > functions that require untagged addresses across the kernel?
+> 
+> If it helps with identifying missing untagged_addr() calls, I would say
+> yes (as long as we keep them to a minimum).
+
+Thanks for the feedback.
+
+Andrew Murray
+
+> 
+> > [1] https://lkml.org/lkml/2019/6/13/534
+> > [2] https://patchwork.kernel.org/cover/10989517/
+> > [3] http://smatch.sourceforge.net/
+> 
+> -- 
+> Catalin
