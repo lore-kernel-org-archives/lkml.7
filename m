@@ -2,152 +2,198 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5BAC48BD7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30114C48BD9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA5320B7C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CC920B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 15:50:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LnfYL9dE"
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="WMEfiSZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfF0PtZ (ORCPT
+        id S1726583AbfF0Puc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 11:49:25 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39926 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbfF0PtZ (ORCPT
+        Thu, 27 Jun 2019 11:50:32 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36067 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfF0Puc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 11:49:25 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so3149507wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 08:49:24 -0700 (PDT)
+        Thu, 27 Jun 2019 11:50:32 -0400
+Received: by mail-pl1-f195.google.com with SMTP id k8so1528762plt.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 08:50:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=44Mu8dUj9L0ids6Sb6CWNDIoEklnO4VYTdbwKc4aKyc=;
-        b=LnfYL9dENRWp68RK7vG0qlql3IoqqpP/rxklMtbkkjRQYXe39yb7G4ucSqJIgltNt4
-         XhSr8NGEnd2Oag74G7xFEbVqtPwuaPpyHD7J8B2GHjzh5DiKFrDPFdQORgv1maS6vjcs
-         KX41MbperZUATOEY2X29oQFxm0MvGxCKGw93sVcHgSpilZHjtAGxOU+uYwlvdQe81hqr
-         evEnE2CcXdGYVoFT8OFTIqPE+AmdmGtIK7Av7XSSfUnuWJANIeqDkkMDeqwFFAPVW6mq
-         CfALUOifrtw7WkfXULktuWj6djEi59osVSAET/syisCCbdFgO44iRn+3Cay10GR1smxJ
-         l81A==
+         :content-disposition:in-reply-to:user-agent;
+        bh=tMDVUbLTOCls0VIHnjsoh7DWeqSSrubUVJ0usmY9Ymg=;
+        b=WMEfiSZ3TlXa+mXfYTEgWVlwNbrgesrqc3XR79vxkvHrCzhuWJgIuAIempAYwIwEza
+         +JbFajU0wgwOxn61DReXpfWvf/9nm8EdoB+v2KwaYdQBWCk5VZCJGSRPJX3qYpVlXp+Y
+         Mp8e7iPlgGpVEzsvWFScb8jg5Trk/+H7sHpMVd1zbEjPTWn4wEYuK6bV3J6PW5W392o2
+         WDqBlav0fct1ZocreCrRkhtbWnjmt1uXYnO30s0S7bKhPoxoKJ7PgDElmIwb9xxMMow9
+         vU8GdgiwMsawoOHQ1SBCVFiiNQNfc/1bqnNY5UkQ62MSgdwVLVS5jDzkzC3AfUkCZBom
+         lanA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=44Mu8dUj9L0ids6Sb6CWNDIoEklnO4VYTdbwKc4aKyc=;
-        b=fMziKMHBtRxWdwm9HnSktqTgsJQN0nfu2ChTimPeOJ1DLIiwKAz1DDC4j/bfLL5QyF
-         LI1R2mWgGdE1kV4wTeB7iUw1gGO5ze+YOo3bwMT5RTIwhvAEI+V4/R71vTCT10RNfWYL
-         dgujGz8TR7MXvg+n92Yp3nPvQrh6kbRHGcQ8+jPEzl7K1GkTzcuz3dpNX0MVl4STV5+p
-         z9VA03Lm1hEmZvFqAl0t4UCQcNkapaZbhMG6pzCdGg7wnqwNrh+MHHmbFh29sUYF2oDx
-         nJoCT1f/uaLK9RO9fO8KcAoztPHDeqhK8YV2o54uczifWmFDiBVgsTm/grLTMyqPzhe+
-         iVCQ==
-X-Gm-Message-State: APjAAAXhRaOPekV8Z7QpQzohUFTCh/nh1GrA4qJBjQT5g1H/HkgyJqv3
-        gF9agiFDx5vZnoAr80ZZiOFU4g==
-X-Google-Smtp-Source: APXvYqysjCQU6AMMnWNSo+srDbMEz+UGbQKDPhC9Sr5nPHf9OFgk/UI30HaXEVLBgefpPDnGRYn9Fw==
-X-Received: by 2002:adf:afe8:: with SMTP id y40mr3651106wrd.328.1561650563346;
-        Thu, 27 Jun 2019 08:49:23 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id 35sm3904679wrj.87.2019.06.27.08.49.22
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tMDVUbLTOCls0VIHnjsoh7DWeqSSrubUVJ0usmY9Ymg=;
+        b=LMXJeEeLZcy07gd1YCWKDj9+CzgfQwB0DXz6EOX5ILCyliLxKr3hd2quVBrpaOQ7sb
+         DpbWJoO8ULYdJ0SkO2fWELoyAIrsmzYM1n8mKruiEp2L7kYYjXzw5vGCSU0d8yVqQxGS
+         kvZNd7J8aTdo8DL7gKTKU30uf/QRiq33SjIfrw+kJDOJbxH1VTivftaJrXH29JioXKo5
+         yXuSPLPhxeZmyatAjyQDE/fZH3zvSRQCxSmX568/rMHmwE8ayKX070ykIgTOC+liSXwU
+         1iCN2XGnd8hLZQqPvGRiqX0bEMqJFsZULPyCeKn9daj10tH2ynRXHhKkrw+7wgtdUdFw
+         HyRg==
+X-Gm-Message-State: APjAAAVFUjfZO7x4CUTaE0ekVQtNnxPpxfVNYqzsk4uhozvuXC7zl4kX
+        klqgDS2J9vRP6BR1lLqs2wlqWw==
+X-Google-Smtp-Source: APXvYqw3r0cYpfY5r6R1izaOj1roYmsKppsSAS7/NBo2PdrS4F8EMasOOzJOZ1QVfuDiJDKOcGoLIQ==
+X-Received: by 2002:a17:902:848c:: with SMTP id c12mr5348356plo.17.1561650631033;
+        Thu, 27 Jun 2019 08:50:31 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id p6sm2693091pgs.77.2019.06.27.08.50.30
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 27 Jun 2019 08:49:22 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 16:49:20 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 3/4] backlight: pwm_bl: Set scale type for CIE 1931 curves
-Message-ID: <20190627154920.aucjtaguatd5yd4m@holly.lan>
-References: <20190613194326.180889-1-mka@chromium.org>
- <20190613194326.180889-4-mka@chromium.org>
- <61ed137c-31bb-c695-4174-0484fe667d6c@linaro.org>
- <20190627092453.GB2000@dell>
+        Thu, 27 Jun 2019 08:50:30 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 08:50:29 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, bpf@vger.kernel.org,
+        lkp@01.org
+Subject: Re: [bpf/tools] cd17d77705:
+ kernel_selftests.bpf.test_sock_addr.sh.fail
+Message-ID: <20190627155029.GC4866@mini-arch>
+References: <20190627090446.GG7221@shao2-debian>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190627092453.GB2000@dell>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190627090446.GG7221@shao2-debian>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 10:24:53AM +0100, Lee Jones wrote:
-> On Fri, 21 Jun 2019, Daniel Thompson wrote:
+On 06/27, kernel test robot wrote:
+> FYI, we noticed the following commit (built with gcc-7):
 > 
-> > On 13/06/2019 20:43, Matthias Kaehlcke wrote:
-> > > For backlight curves calculated with the CIE 1931 algorithm set
-> > > the brightness scale type property accordingly. This makes the
-> > > scale type available to userspace via the 'scale' sysfs attribute.
-> > > 
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > 
-> > I'd like to keep discussion on patch 2 open a bit longer (it's not part of
-> > the thread below patch 2 but Pavel had concerns about the sysfs interface)
-> > so this ack won't really push things forward but FWIW:
-> > 
-> > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> commit: cd17d77705780e2270937fb3cbd2b985adab3edc ("bpf/tools: sync bpf.h")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 > 
-> Does this depend on patch 2, or is it orthogonal?
-
-IIRC it depends on patch 2 (since that't what introduces props.scale ).
-
-
-Daniel.
-
+> in testcase: kernel_selftests
+> with following parameters:
 > 
-> > > ---
-> > >   drivers/video/backlight/pwm_bl.c | 5 ++++-
-> > >   1 file changed, 4 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> > > index fb45f866b923..f067fe7aa35d 100644
-> > > --- a/drivers/video/backlight/pwm_bl.c
-> > > +++ b/drivers/video/backlight/pwm_bl.c
-> > > @@ -553,6 +553,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
-> > >   		goto err_alloc;
-> > >   	}
-> > > +	memset(&props, 0, sizeof(struct backlight_properties));
-> > > +
-> > >   	if (data->levels) {
-> > >   		/*
-> > >   		 * For the DT case, only when brightness levels is defined
-> > > @@ -591,6 +593,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
-> > >   			pb->levels = data->levels;
-> > >   		}
-> > > +
-> > > +		props.scale = BACKLIGHT_SCALE_CIE1931;
-> > >   	} else {
-> > >   		/*
-> > >   		 * That only happens for the non-DT case, where platform data
-> > > @@ -601,7 +605,6 @@ static int pwm_backlight_probe(struct platform_device *pdev)
-> > >   	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
-> > > -	memset(&props, 0, sizeof(struct backlight_properties));
-> > >   	props.type = BACKLIGHT_RAW;
-> > >   	props.max_brightness = data->max_brightness;
-> > >   	bl = backlight_device_register(dev_name(&pdev->dev), &pdev->dev, pb,
-> > > 
-> > 
+> 	group: kselftests-00
 > 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> 
+> 
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> 
+> # ; int connect_v6_prog(struct bpf_sock_addr *ctx)
+> # 0: (bf) r6 = r1
+> # 1: (18) r1 = 0x100000000000000
+> # ; tuple.ipv6.daddr[0] = bpf_htonl(DST_REWRITE_IP6_0);
+> # 3: (7b) *(u64 *)(r10 -16) = r1
+> # 4: (b7) r1 = 169476096
+> # ; memset(&tuple.ipv6.sport, 0, sizeof(tuple.ipv6.sport));
+> # 5: (63) *(u32 *)(r10 -8) = r1
+> # 6: (b7) r7 = 0
+> # ; tuple.ipv6.daddr[0] = bpf_htonl(DST_REWRITE_IP6_0);
+> # 7: (7b) *(u64 *)(r10 -24) = r7
+> # 8: (7b) *(u64 *)(r10 -32) = r7
+> # 9: (7b) *(u64 *)(r10 -40) = r7
+> # ; if (ctx->type != SOCK_STREAM && ctx->type != SOCK_DGRAM)
+> # 10: (61) r1 = *(u32 *)(r6 +32)
+> # ; if (ctx->type != SOCK_STREAM && ctx->type != SOCK_DGRAM)
+> # 11: (bf) r2 = r1
+> # 12: (07) r2 += -1
+> # 13: (67) r2 <<= 32
+> # 14: (77) r2 >>= 32
+> # 15: (25) if r2 > 0x1 goto pc+33
+> #  R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=1,var_off=(0x0; 0x1)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=00000000 fp-32=00000000 fp-40=00000000
+> # ; else if (ctx->type == SOCK_STREAM)
+> # 16: (55) if r1 != 0x1 goto pc+8
+> #  R1=inv1 R2=inv(id=0,umax_value=1,var_off=(0x0; 0x1)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=00000000 fp-32=00000000 fp-40=00000000
+> # 17: (bf) r2 = r10
+> # ; sk = bpf_sk_lookup_tcp(ctx, &tuple, sizeof(tuple.ipv6),
+> # 18: (07) r2 += -40
+> # 19: (bf) r1 = r6
+> # 20: (b7) r3 = 36
+> # 21: (b7) r4 = -1
+> # 22: (b7) r5 = 0
+> # 23: (85) call bpf_sk_lookup_tcp#84
+> # 24: (05) goto pc+7
+> # ; if (!sk)
+> # 32: (15) if r0 == 0x0 goto pc+16
+> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
+> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
+> # 33: (61) r1 = *(u32 *)(r0 +28)
+> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
+> # 34: (61) r2 = *(u32 *)(r10 -24)
+> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
+> # 35: (5d) if r1 != r2 goto pc+11
+> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
+> # ; sk->src_ip6[1] != tuple.ipv6.daddr[1] ||
+> # 36: (61) r1 = *(u32 *)(r0 +32)
+> # ; sk->src_ip6[1] != tuple.ipv6.daddr[1] ||
+> # 37: (61) r2 = *(u32 *)(r10 -20)
+> # ; sk->src_ip6[1] != tuple.ipv6.daddr[1] ||
+> # 38: (5d) if r1 != r2 goto pc+8
+> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
+> # ; sk->src_ip6[2] != tuple.ipv6.daddr[2] ||
+> # 39: (61) r1 = *(u32 *)(r0 +36)
+> # ; sk->src_ip6[2] != tuple.ipv6.daddr[2] ||
+> # 40: (61) r2 = *(u32 *)(r10 -16)
+> # ; sk->src_ip6[2] != tuple.ipv6.daddr[2] ||
+> # 41: (5d) if r1 != r2 goto pc+5
+> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
+> # ; sk->src_ip6[3] != tuple.ipv6.daddr[3] ||
+> # 42: (61) r1 = *(u32 *)(r0 +40)
+> # ; sk->src_ip6[3] != tuple.ipv6.daddr[3] ||
+> # 43: (61) r2 = *(u32 *)(r10 -12)
+> # ; sk->src_ip6[3] != tuple.ipv6.daddr[3] ||
+> # 44: (5d) if r1 != r2 goto pc+2
+> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
+> # ; sk->src_port != DST_REWRITE_PORT6) {
+> # 45: (61) r1 = *(u32 *)(r0 +44)
+> # ; if (sk->src_ip6[0] != tuple.ipv6.daddr[0] ||
+> # 46: (15) if r1 == 0x1a0a goto pc+4
+> #  R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
+> # ; bpf_sk_release(sk);
+> # 47: (bf) r1 = r0
+> # 48: (85) call bpf_sk_release#86
+> # ; }
+> # 49: (bf) r0 = r7
+> # 50: (95) exit
+> # 
+> # from 46 to 51: R0=sock(id=0,ref_obj_id=2,off=0,imm=0) R1=inv6666 R2=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6=ctx(id=0,off=0,imm=0) R7=inv0 R10=fp0,call_-1 fp-8=????mmmm fp-16=mmmmmmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm refs=2
+> # ; bpf_sk_release(sk);
+> # 51: (bf) r1 = r0
+> # 52: (85) call bpf_sk_release#86
+> # 53: (b7) r1 = 2586
+> # ; ctx->user_port = bpf_htons(DST_REWRITE_PORT6);
+> # 54: (63) *(u32 *)(r6 +24) = r1
+> # 55: (18) r1 = 0x100000000000000
+> # ; ctx->user_ip6[2] = bpf_htonl(DST_REWRITE_IP6_2);
+> # 57: (7b) *(u64 *)(r6 +16) = r1
+> # invalid bpf_context access off=16 size=8
+This looks like clang doing single u64 write for user_ip6[2] and
+user_ip6[3] instead of two u32. I don't think we allow that.
+
+I've seen this a couple of times myself while playing with some
+progs, but not sure what's the right way to 'fix' it.
+
+> # processed 49 insns (limit 1000000) max_states_per_insn 0 total_states 13 peak_states 13 mark_read 11
+> # 
+> # libbpf: -- END LOG --
+> # libbpf: failed to load program 'cgroup/connect6'
+> # libbpf: failed to load object './connect6_prog.o'
+> # (test_sock_addr.c:752: errno: Bad file descriptor) >>> Loading program (./connect6_prog.o) error.
