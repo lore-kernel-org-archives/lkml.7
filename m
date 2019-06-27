@@ -2,110 +2,96 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D321C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC77C5B576
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532992084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123852146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 23:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561677806;
-	bh=kXB0eS8pT4D+hcUPC2PR+0kOliEd8dU5IchIN1Hskt8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=biqztaqwPf6PVzPMZ/gJPL58pgn1ijmFdlPVG/U9aqcs+E6vGDtEVdgzAnzitLuAS
-	 BGxS7zluu+RJ8YgdhkWfz4h/4cHGc/rSvUby/t/MPGP01nRNYmDay+Zxu9wyEV0JtD
-	 vYvX/3b0IQc+QO8bnlAn+dFFGl/dzQTMcjX88hNQ=
+	s=default; t=1561677915;
+	bh=kNW9UJec5ndIC20H3O0Fi4cKff5mPU8oiMT2u9UKNAc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pIPz4cSu6oJBZDcmiE4Obzhs9TApTKyF1bRX1mNhQ3fNzbDjK+25fIlX8g+HY6K4o
+	 jD9/wAe/xkizIk/U6NZvHtOvroWjf/uIL+Vezh8VPCIcymXw2s92vJbXN0H5kBD9kz
+	 sNVNSqPsUEfzaxpzAre2EmBKUuaIqXZq+z+kqs4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfF0XXZ (ORCPT
+        id S1726658AbfF0XZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 19:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
+        Thu, 27 Jun 2019 19:25:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726579AbfF0XXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 19:23:24 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726566AbfF0XZN (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 27 Jun 2019 19:25:13 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57FF21726
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 23:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F5120B7C;
+        Thu, 27 Jun 2019 23:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561677803;
-        bh=kXB0eS8pT4D+hcUPC2PR+0kOliEd8dU5IchIN1Hskt8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Rzq1Mbzi52Cqr9tKPeg9PIx8m2rEDwxZVowrCg4wXtLlpuP3Jtc9v39mqsgGyUHQK
-         B2+ijaiqQJoVHPKsrkPR0z6M98vReMp2FiiOoxvRob9yvo2r8Pc/wvGfzpI3jaEGyw
-         a2EWhBxJIOcI/YW0Ql/gicAhLgjR8qyIc6OQWpyA=
-Received: by mail-wr1-f42.google.com with SMTP id p13so4276692wru.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 16:23:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAXaJemIUjLiVU69+y6I+oWS/DDMu32oLwibcy7kA868NHetQYRh
-        Ugzfx7sNAaZAMhukSWo4RUiaOfd69ux9eybo6CYTrA==
-X-Google-Smtp-Source: APXvYqzjr/QH+PIoGqS71dCctuNtbCVXYhiRJONwF8d9fXg29Z5HH0Te+o3LGa7ZOuGFyx26xlvsCSwEDCX8Q8cBEy0=
-X-Received: by 2002:a5d:6a42:: with SMTP id t2mr5110416wrw.352.1561677801383;
- Thu, 27 Jun 2019 16:23:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190621011941.186255-1-matthewgarrett@google.com>
- <20190621011941.186255-25-matthewgarrett@google.com> <CALCETrVUwQP7roLnW6kFG80Cc5U6X_T6AW+BTAftLccYGp8+Ow@mail.gmail.com>
- <alpine.LRH.2.21.1906270621080.28132@namei.org> <6E53376F-01BB-4795-BC02-24F9CAE00001@amacapital.net>
- <bce70c8b-9efd-6362-d536-cfbbcf70b0b7@tycho.nsa.gov> <alpine.LRH.2.21.1906280332500.17363@namei.org>
- <de8b15eb-ba6c-847a-7435-42742203d4a5@tycho.nsa.gov> <CACdnJuuG8cR7h9v3pNcBKsxyckAzpKuBJs1GQxsz77jk5DRoQA@mail.gmail.com>
-In-Reply-To: <CACdnJuuG8cR7h9v3pNcBKsxyckAzpKuBJs1GQxsz77jk5DRoQA@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 27 Jun 2019 16:23:10 -0700
-X-Gmail-Original-Message-ID: <CALCETrU7JVH7LR3d_=s-O=b2bjevTLw2rSm5g50UjaUB2PTY5A@mail.gmail.com>
-Message-ID: <CALCETrU7JVH7LR3d_=s-O=b2bjevTLw2rSm5g50UjaUB2PTY5A@mail.gmail.com>
-Subject: Re: [PATCH V33 24/30] bpf: Restrict bpf when kernel lockdown is in
- confidentiality mode
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        James Morris <jmorris@namei.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        linux-security@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Chun-Yi Lee <jlee@suse.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        LSM List <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1561677912;
+        bh=kNW9UJec5ndIC20H3O0Fi4cKff5mPU8oiMT2u9UKNAc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vMJvFxPKezf+akCGBbS2o82bRQ7sHszgHAXZOe3/FHVG9GsJ/sIbmXcG2uVbE1HLh
+         CNlsy5NMinvlRYEnkynhONCRaUAGWckCTwiZYlA5C2v43HxFd6ruuGrLMZ1f4QOR47
+         oGngagpjO/hSp5S+6GDLPxYyDwe5gdN2ByAsgjso=
+Date:   Thu, 27 Jun 2019 16:25:11 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     Linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv5] mm/gup: speed up check_and_migrate_cma_pages() on
+ huge page
+Message-Id: <20190627162511.1cf10f5b04538c955c329408@linux-foundation.org>
+In-Reply-To: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
+References: <1561612545-28997-1-git-send-email-kernelfans@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 27, 2019 at 4:16 PM Matthew Garrett <mjg59@google.com> wrote:
->
-> On Thu, Jun 27, 2019 at 1:16 PM Stephen Smalley <sds@tycho.nsa.gov> wrote:
-> > That would only allow the LSM to further lock down the system above the
-> > lockdown level set at boot, not grant exemptions for specific
-> > functionality/interfaces required by the user or by a specific
-> > process/program. You'd have to boot with lockdown=none (or your
-> > lockdown=custom suggestion) in order for the LSM to allow anything
-> > covered by the integrity or confidentiality levels.  And then the kernel
-> > would be unprotected prior to full initialization of the LSM, including
-> > policy load.
-> >
-> > It seems like one would want to be able to boot with lockdown=integrity
-> > to protect the kernel initially, then switch over to allowing the LSM to
-> > selectively override it.
->
-> One option would be to allow modules to be "unstacked" at runtime, but
-> there's still something of a problem here - how do you ensure that
-> your userland can be trusted to load a new policy before it does so?
-> If you're able to assert that your early userland is trustworthy
-> (perhaps because it's in an initramfs that's part of your signed boot
-> payload), there's maybe an argument that most of the lockdown
-> integrity guarantees are unnecessary before handoff - just using the
-> lockdown LSM to protect against attacks via kernel parameters would be
-> sufficient.
+On Thu, 27 Jun 2019 13:15:45 +0800 Pingfan Liu <kernelfans@gmail.com> wrote:
 
-I think that, if you don't trust your system enough to avoid
-compromising itself before policy load, then your MAC policy is more
-or less dead in the water.  It seems to be that it ought to be good
-enough to boot with lockdown=none and then have a real policy loaded
-along with the rest of the MAC policy.  Or, for applications that need
-to be stricter, you accept that MAC policy can't override lockdown.
+> Both hugetlb and thp locate on the same migration type of pageblock, since
+> they are allocated from a free_list[]. Based on this fact, it is enough to
+> check on a single subpage to decide the migration type of the whole huge
+> page. By this way, it saves (2M/4K - 1) times loop for pmd_huge on x86,
+> similar on other archs.
+> 
+> Furthermore, when executing isolate_huge_page(), it avoid taking global
+> hugetlb_lock many times, and meanless remove/add to the local link list
+> cma_page_list.
+>
+
+Thanks, looks good to me.  Have any timing measurements been taken?
+ 
+> ...
+>
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1336,25 +1336,30 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+>  					struct vm_area_struct **vmas,
+>  					unsigned int gup_flags)
+>  {
+> -	long i;
+> +	long i, step;
+
+I'll make these variables unsigned long - to match nr_pages and because
+we have no need for them to be negative.
+
+> ...
