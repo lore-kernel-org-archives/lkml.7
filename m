@@ -2,73 +2,149 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1101C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9E0C4646D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FFA208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B995B208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 21:12:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBVQo2NI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfF0VKM (ORCPT
+        id S1726576AbfF0VM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 17:10:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59868 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfF0VKK (ORCPT
+        Thu, 27 Jun 2019 17:12:26 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39137 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfF0VM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 17:10:10 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hgbei-0000Fz-SI; Thu, 27 Jun 2019 23:10:08 +0200
-Date:   Thu, 27 Jun 2019 23:10:08 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Xu <peterx@redhat.com>
-cc:     linux-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>
-Subject: Re: [PATCH v2] timer: document TIMER_PINNED
-In-Reply-To: <20190627015019.21964-1-peterx@redhat.com>
-Message-ID: <alpine.DEB.2.21.1906272304480.32342@nanos.tec.linutronix.de>
-References: <20190627015019.21964-1-peterx@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 27 Jun 2019 17:12:26 -0400
+Received: by mail-lf1-f65.google.com with SMTP id p24so2526159lfo.6;
+        Thu, 27 Jun 2019 14:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CBc6n3CYBkvzlHwB103ylCdVYWoXy633oQ/H/yLj6/w=;
+        b=IBVQo2NIxQgWfrMsSBV/CHWRUTOIIF9Xagubni4fRrQxJNeWq3bbXN1Qb10t1LDe/I
+         +Ndj9PzHav8EWxvP2tQJkDUIWLrO4R3OhRtMM9gCDv/ZBkKl8U0ZyUt41D7CjGf8b2j2
+         XwOsUwEmYxfq1whLJgzPDJcLPRTlTbnT8stnDJkYvYIVuIR9ZJGSaoaxloBhDiUUEtMZ
+         Nj3KIw22UYd1KPDvv9IIA18T/JsrEf599L3QmuwY1ihE8Pn02SkZ+KLZ2D5UZccIL84a
+         VzaZON9wBf6uDdk4GV9X625QLhJIzYZ0q/QP1iMBZ0C+RpBR0SgdJgdLN44DeUfBYnG7
+         IwrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CBc6n3CYBkvzlHwB103ylCdVYWoXy633oQ/H/yLj6/w=;
+        b=UB6XfqXlOAoUucHK6ZC3jhfsC8EvGeur/VqvR/spxuwWATY0r1bg47UpXd+VKe2Skl
+         e08+5iFPpN7f2ru9TTuX8b38CkFHTmkVkP3JCuCqMyH/ddApoNuHIZGGvGILeGVnQCKp
+         KyeqrSFvbcpbf79y/PYnnJ7EDcyp8uFE9iL6F3Z3LtuMlIYRMFFtGEJ3nl1Axs0YO5yt
+         I7bJfBdK6OP1svY7yvti0eo2THyYKwp1wSNdAaBgy5nJwHnRUhAGOU3VZsqe/sxS0/0j
+         pKXZmnfTQH4vv1EUQyeG6N7CtoFerpX62ZzKUekP0Z7YrZFk1v2AA1FLlbtVQG+VL57x
+         VQyQ==
+X-Gm-Message-State: APjAAAWR6tovM5apYj90gKX0JPet3Hjtdo/OxzlQzocMJjLcY6Zo8CVn
+        qpP+nPN6nqEK3GBorBQsXpw=
+X-Google-Smtp-Source: APXvYqx/N1+0rPOFfGO+DAGSU3BX6/9MST9BPLoWWDpXv3liIvxdN7ty5A1jm6+tx0wK2VCm4zmW/A==
+X-Received: by 2002:ac2:4839:: with SMTP id 25mr3154376lft.79.1561669943453;
+        Thu, 27 Jun 2019 14:12:23 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id p29sm30485ljp.87.2019.06.27.14.12.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Jun 2019 14:12:22 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/22] More improvements for Tegra30 devfreq driver
+Date:   Fri, 28 Jun 2019 00:10:53 +0300
+Message-Id: <20190627211115.21138-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Jun 2019, Peter Xu wrote:
-> + * @TIMER_PINNED: A pinned timer will not be affected by any timer
-> + * placement heuristics (like, NOHZ) and will always be run on the CPU
-> + * when the timer was enqueued.
+Hello,
 
-s/when/on which/
+This series addresses some additional review comments that were made by
+Thierry Reding to [1] and makes several important changes to the driver,
+fixing excessive interrupts activity. In the end I'm proposing myself as
+a maintainer for the Tegra devfreq drivers.
 
-> + *
-> + * Note: Because enqueuing of timers can actually migrate the timer
-> + * from one CPU to another, pinned timers are not guaranteed to stay
-> + * on the initialy selected CPU.  They move to the CPU on which the
-> + * enqueue function is invoked via mod_timer() or add_timer().  If the
-> + * timer should be placed on a particular CPU, then add_timer_on() has
-> + * to be used.  It is also suggested that the user should always use
-> + * add_timer_on() explicitly for pinned timers.
+[1] https://lore.kernel.org/lkml/0fb50eb1-a173-1756-6889-2526a10ac707@gmail.com/T/
 
-That last sentence is not correct. add_timer_on() has limitations over
-mod_timer(). As pinned prevents the timer from being queued on a remote CPU
-mod timer is perfectly fine for many cases.
+Changelog:
 
-add_timer_on() is really about queueing a timer on a dedicated CPU, which
-is often enough a remote CPU.
+v3:  Added support for tracepoints, replacing the debug messages.
+     Fixed few more bugs with the help of tracepoints.
 
-Thanks,
+     New patches in this version:
 
-	tglx
+       PM / devfreq: tegra30: Use tracepoints for debugging
+       PM / devfreq: tegra30: Optimize CPUFreq notifier
+       PM / devfreq: tegra30: Optimize upper consecutive watermark selection
+       PM / devfreq: tegra30: Optimize upper average watermark selection
+       PM / devfreq: tegra30: Include appropriate header
+
+     Some of older patches of this series also got some extra minor polish.
+
+v2:  Added more patches that are cleaning driver's code further and
+     squashing another kHz conversion bug.
+
+     The patch "Rework frequency management logic" of the v1 series is now
+     converted to "Set up watermarks properly" because I found some problems
+     in the original patch and then realized that there is no need to change
+     the logic much. So the logic mostly preserved and only got improvements.
+
+     The series is based on the today's linux-next (25 Jun) and takes into
+     account minor changes that MyungJoo Ham made to the already queued
+     patches from the first batch [1].
+
+Dmitry Osipenko (22):
+  PM / devfreq: tegra30: Change irq type to unsigned int
+  PM / devfreq: tegra30: Keep interrupt disabled while governor is
+    stopped
+  PM / devfreq: tegra30: Handle possible round-rate error
+  PM / devfreq: tegra30: Drop write-barrier
+  PM / devfreq: tegra30: Set up watermarks properly
+  PM / devfreq: tegra30: Tune up boosting thresholds
+  PM / devfreq: tegra30: Use CPUFreq notifier
+  PM / devfreq: tegra30: Move clk-notifier's registration to governor's
+    start
+  PM / devfreq: tegra30: Reset boosting on startup
+  PM / devfreq: tegra30: Don't enable consecutive-down interrupt on
+    startup
+  PM / devfreq: tegra30: Add debug messages
+  PM / devfreq: tegra30: Inline all one-line functions
+  PM / devfreq: tegra30: Constify structs
+  PM / devfreq: tegra30: Ensure that target freq won't overflow
+  PM / devfreq: tegra30: Fix integer overflow on CPU's freq max out
+  PM / devfreq: tegra30: Use kHz units uniformly in the code
+  PM / devfreq: tegra30: Use tracepoints for debugging
+  PM / devfreq: tegra30: Optimize CPUFreq notifier
+  PM / devfreq: tegra30: Optimize upper consecutive watermark selection
+  PM / devfreq: tegra30: Optimize upper average watermark selection
+  PM / devfreq: tegra30: Include appropriate header
+  PM / devfreq: tegra20/30: Add Dmitry as a maintainer
+
+ MAINTAINERS                            |   9 +
+ drivers/devfreq/tegra30-devfreq.c      | 631 ++++++++++++++++++-------
+ include/trace/events/tegra30_devfreq.h | 105 ++++
+ 3 files changed, 583 insertions(+), 162 deletions(-)
+ create mode 100644 include/trace/events/tegra30_devfreq.h
+
+-- 
+2.22.0
+
