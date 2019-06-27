@@ -2,104 +2,167 @@ Return-Path: <SRS0=pEez=U2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906F6C4321A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE25C4321A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68BEF208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53DF2208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Jun 2019 22:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FUoTSiWG"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eLCHTMjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfF0WPe (ORCPT
+        id S1726885AbfF0WP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Jun 2019 18:15:34 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:49954 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfF0WPd (ORCPT
+        Thu, 27 Jun 2019 18:15:56 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33229 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfF0WP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Jun 2019 18:15:33 -0400
-Received: by mail-pf1-f201.google.com with SMTP id x9so2426328pfm.16
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Jun 2019 15:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Symvyf/Uz9S5oKdNsFmtumlityXOKZm70HtIggCwFnk=;
-        b=FUoTSiWGUAtMmT6Erkt4yAeuT0+qjeYcWls6gB3JPv82xDHkgN1hirWiFjVAqnnOVq
-         j3Z9Td4BjBrcCMOH4skPnJx3La72XnsWPgIHKbkYMkKrnLi/LFiskUO8f5MhH+PQ6C4e
-         KObEoLRcNyNt5RjzC3mElSNiGYJYULWFrsg3bezwh3jABhgWyneK+vjFogRmjHykQlLG
-         pWevR8tpcYknyHIgomouTnrqo+1ywloJhMER3s2boTItwF3cssClvvIVSZ0lh6YyFYQq
-         9Ik5+4zmwGMCXlH03L6WSLUMi7or2zDUnDFVYXyfNH8gVHiYWki8yp+UMawuPW1mVK8/
-         yMgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Symvyf/Uz9S5oKdNsFmtumlityXOKZm70HtIggCwFnk=;
-        b=k7Yzv72FErCSGg91VRd2UydN8ZUiuMo17/I7RuauhgB7L1dnzfGf4lXypy7YDcAzf3
-         Y7H7xWbKDEMb3LToDCTXwKSBtzzCjrh5Sn/P+EVC5heIg0YkU5nEONny5TV9n72U3Xud
-         /BAM1vRyE5YyOGu/BmFdUMvmmxEsXLZb7eZN+yi05uykLqxPFkMCzJ++x6JQiXmlsKGx
-         fP/MdprgwNjiU8p7H+gQ3tuqCCb0uCaEdADEp7INW5NfiPmD+5yf45HJjSbn4Jc+0seH
-         PMjbYEu350RcwAJ2P5ljEruIGhngiGXMoG8l/m7ITsbULx4/Ed+jHpaNi4FigYDXlpJy
-         d+BQ==
-X-Gm-Message-State: APjAAAVvgirfYkZ8EsnrzKZRBJ6TFZUjFijpz3V68MVkJicp8LZAE1BX
-        W+t+HUZxwFv82hEQUfUTb2F2oVe0jw==
-X-Google-Smtp-Source: APXvYqxUVrAymwj/ugIGi6sQXo8Sqq04CVHfX4dFLvmyXHderTB1493KLtyO4xlY6inwpt5jVs2FxtQjAQ==
-X-Received: by 2002:a65:6656:: with SMTP id z22mr5733329pgv.197.1561673732735;
- Thu, 27 Jun 2019 15:15:32 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 15:15:07 -0700
-Message-Id: <20190627221507.83942-1-nhuck@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH] clk: mediatek: Fix -Wunused-const-variable
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, matthias.bgg@gmail.com,
-        fparent@baylibre.com
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Jun 2019 18:15:56 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5RMFImh472851
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 27 Jun 2019 15:15:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5RMFImh472851
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019061801; t=1561673719;
+        bh=8ZTuFEkOgg6P4ySct4Z1PzgcWHbNGCdp1oLL8agGzvs=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=eLCHTMjYgAxz6SBFeKpoHl3LPl/4iksicuPt06p+S2RjpJBTXxx3NWq2r5tzSOGnT
+         71+eNG7vDDRUdMm1ORNy2alTpHQ90Pa66jYglckghCLFFqmo/lcZn4XpjjB67u87Ns
+         b236J1zdoNTYaXMsV3QMMw6eLe4TGuprUQDcfspLc7K0TTAB6ukRyR9jq2fka5C7CG
+         iFIcLyZDIzGBPT76n+H9aF/bp1ywLVmUI2S+HgZ6yOJ6SMFmT29vFjxmO6JtSNNu6t
+         jNB5ZS2nY2sHTfddNBR/KcZEH3de20ZJSGpS0+3T1by62iJLxlgT3+8F8S6OOoGysF
+         oP8UIkNiaJmiQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5RMFIxv472848;
+        Thu, 27 Jun 2019 15:15:18 -0700
+Date:   Thu, 27 Jun 2019 15:15:18 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andy Lutomirski <tipbot@zytor.com>
+Message-ID: <tip-e0a446ce394a7915f2ffc03f9bb610c5ac4dbbf1@git.kernel.org>
+Cc:     hpa@zytor.com, mingo@kernel.org,
+        kernel-hardening@lists.openwall.com, keescook@chromium.org,
+        fweimer@redhat.com, luto@kernel.org, bp@alien8.de,
+        jannh@google.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        peterz@infradead.org
+Reply-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
+          jannh@google.com, tglx@linutronix.de, bp@alien8.de,
+          luto@kernel.org, fweimer@redhat.com,
+          kernel-hardening@lists.openwall.com, keescook@chromium.org,
+          hpa@zytor.com, mingo@kernel.org
+In-Reply-To: <75c91855fd850649ace162eec5495a1354221aaa.1561610354.git.luto@kernel.org>
+References: <75c91855fd850649ace162eec5495a1354221aaa.1561610354.git.luto@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/entry] x86/vsyscall: Document odd SIGSEGV error code for
+ vsyscalls
+Git-Commit-ID: e0a446ce394a7915f2ffc03f9bb610c5ac4dbbf1
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang produces the following warning
+Commit-ID:  e0a446ce394a7915f2ffc03f9bb610c5ac4dbbf1
+Gitweb:     https://git.kernel.org/tip/e0a446ce394a7915f2ffc03f9bb610c5ac4dbbf1
+Author:     Andy Lutomirski <luto@kernel.org>
+AuthorDate: Wed, 26 Jun 2019 21:45:05 -0700
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 28 Jun 2019 00:04:39 +0200
 
-drivers/clk/mediatek/clk-mt8516.c:234:27: warning: unused variable
-'ddrphycfg_parents' [-Wunused-const-variable] static const char * const
-ddrphycfg_parents[] __initconst = {
+x86/vsyscall: Document odd SIGSEGV error code for vsyscalls
 
-This variable has never been used. Deleting it to cleanup the warning.
+Even if vsyscall=none, user page faults on the vsyscall page are reported
+as though the PROT bit in the error code was set.  Add a comment explaining
+why this is probably okay and display the value in the test case.
 
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/523
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+While at it, explain why the behavior is correct with respect to PKRU.
+
+Modify also the selftest to print the odd error code so that there is a
+way to demonstrate the odd behaviour.
+
+If anyone really cares about more accurate emulation, the behaviour could
+be changed. But that needs a real good justification.
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/75c91855fd850649ace162eec5495a1354221aaa.1561610354.git.luto@kernel.org
+
 ---
- drivers/clk/mediatek/clk-mt8516.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/x86/mm/fault.c                         | 7 +++++++
+ tools/testing/selftests/x86/test_vsyscall.c | 9 ++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/mediatek/clk-mt8516.c b/drivers/clk/mediatek/clk-mt8516.c
-index 26fe43cc9ea2..9d4261ecc760 100644
---- a/drivers/clk/mediatek/clk-mt8516.c
-+++ b/drivers/clk/mediatek/clk-mt8516.c
-@@ -231,11 +231,6 @@ static const char * const nfi1x_pad_parents[] __initconst = {
- 	"nfi1x_ck"
- };
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 288a5462076f..58e4f1f00bbc 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -710,6 +710,10 @@ static void set_signal_archinfo(unsigned long address,
+ 	 * To avoid leaking information about the kernel page
+ 	 * table layout, pretend that user-mode accesses to
+ 	 * kernel addresses are always protection faults.
++	 *
++	 * NB: This means that failed vsyscalls with vsyscall=none
++	 * will have the PROT bit.  This doesn't leak any
++	 * information and does not appear to cause any problems.
+ 	 */
+ 	if (address >= TASK_SIZE_MAX)
+ 		error_code |= X86_PF_PROT;
+@@ -1375,6 +1379,9 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 	 *
+ 	 * The vsyscall page does not have a "real" VMA, so do this
+ 	 * emulation before we go searching for VMAs.
++	 *
++	 * PKRU never rejects instruction fetches, so we don't need
++	 * to consider the PF_PK bit.
+ 	 */
+ 	if (is_vsyscall_vaddr(address)) {
+ 		if (emulate_vsyscall(hw_error_code, regs, address))
+diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
+index 0b4f1cc2291c..4c9a8d76dba0 100644
+--- a/tools/testing/selftests/x86/test_vsyscall.c
++++ b/tools/testing/selftests/x86/test_vsyscall.c
+@@ -183,9 +183,13 @@ static inline long sys_getcpu(unsigned * cpu, unsigned * node,
+ }
  
--static const char * const ddrphycfg_parents[] __initconst = {
--	"clk26m_ck",
--	"mainpll_d16"
--};
--
- static const char * const usb_78m_parents[] __initconst = {
- 	"clk_null",
- 	"clk26m_ck",
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+ static jmp_buf jmpbuf;
++static volatile unsigned long segv_err;
+ 
+ static void sigsegv(int sig, siginfo_t *info, void *ctx_void)
+ {
++	ucontext_t *ctx = (ucontext_t *)ctx_void;
++
++	segv_err =  ctx->uc_mcontext.gregs[REG_ERR];
+ 	siglongjmp(jmpbuf, 1);
+ }
+ 
+@@ -416,8 +420,11 @@ static int test_vsys_r(void)
+ 	} else if (!can_read && should_read_vsyscall) {
+ 		printf("[FAIL]\tWe don't have read access, but we should\n");
+ 		return 1;
++	} else if (can_read) {
++		printf("[OK]\tWe have read access\n");
+ 	} else {
+-		printf("[OK]\tgot expected result\n");
++		printf("[OK]\tWe do not have read access: #PF(0x%lx)\n",
++		       segv_err);
+ 	}
+ #endif
+ 
